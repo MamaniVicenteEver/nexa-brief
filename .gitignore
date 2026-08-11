@@ -1,0 +1,47 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+output/
+
+# Librería local de assets reutilizables (imágenes/música acumuladas por el
+# pipeline + config.json archivados) — binarios generados, mismo trato que output/
+nexa-brief-server/data/image_library/
+nexa-brief-server/data/music_library/
+nexa-brief-server/data/video_library/
+nexa-brief-server/data/template_configs/
+
+# Virtual environments
+.venv
+salida_fscheck-test.txt
+
+# Secretos — NUNCA commitear (tokens / API keys / credenciales OAuth)
+.env
+accounts.json
+client_secret*.json
+*apiKey*.csv
+*api-key*.csv
+*apikey*.csv
+
+# Audios de prueba generados
+output_economia/
+output_qwen/
+output_qwen_economia/
+
+# Dependencias Node
+node_modules/
+
+# Salidas de render de prueba (nexa-brief-video-test)
+nexa-brief-video-test/out/
+
+# Binarios de audio/video de prueba — no se versionan
+*.mp4
+*.mp3
+*.mov
+*.webm
+*.mkv
+*.wav
