@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "system": "Nexa-Brief v3 — DeepSeek Vision Report",
+    "generated_at": "2026-06-21 18:26:29",
+    "folder": "01_arte_japones_shan",
+    "query": "arte japones shan shui pagoda niebla sakura paisaje pintur",
+    "context": "Busco fondos de pantalla de estilo Shan Shui (tinta china). Elementos obligatorios: montañas kársticas neblinosas, una pagoda tradicional en la cima de un acantilado, cascada suave, agua reflectante, una pequeña barca con pescador, y en primer plano ramas de cerezo rosa enmarcando la imagen. Debe tener un sello rojo de caligrafía en una esquina. Colores: gris tinta, blanco niebla, rosa pastel. Sin marcas de agua, sin bordes, alta definición.",
+    "pool_size": 1,
+    "top_keep": 2,
+    "pool_folder": "01_arte_japones_shan/pool/"
+  },
+  "deepseek_evaluations": [
+    {
+      "rank": 1,
+      "pool_file": "pool_01_arte_japones_shan.jpg",
+      "url": "https://i.pinimg.com/originals/d7/f5/74/d7f5740bc0a261e54d82c460f0008e16.jpg",
+      "dimensions": "1600×893",
+      "file_size_kb": 172.4,
+      "tech_score": 60.0,
+      "deepseek_score": 0.0,
+      "approved": false,
+      "subject": "Error de evaluación DeepSeek",
+      "description": "La API falló: HTTP 400: {\"error\":{\"message\":\"Failed to deserialize the JSON body into the target type: messages[1]: unknown variant `image_url`, expected `text` at line 1 column 2341\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
+      "strengths": [],
+      "weaknesses": [
+        "Error de API DeepSeek"
+      ],
+      "rejection_reason": "HTTP 400: {\"error\":{\"message\":\"Failed to deserialize the JSON body into the target type: messages[1]: unknown variant `image_url`, expected `text` at line 1 column 2341\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
+      "api_error": true
+    }
+  ],
+  "top_selected": [
+    {
+      "rank": 1,
+      "url": "https://i.pinimg.com/originals/d7/f5/74/d7f5740bc0a261e54d82c460f0008e16.jpg",
+      "final_filename": "01_arte_japones_shan/01_arte_japones_shan.jpg",
+      "pool_file": "pool_01_arte_japones_shan.jpg",
+      "score": 0.0,
+      "subject": "Error de evaluación DeepSeek"
+    }
+  ]
+}
