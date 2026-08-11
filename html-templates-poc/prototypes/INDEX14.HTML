@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Meditación · Atmósfera Zen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+            /* Lado izquierdo blanco (#fff), Lado derecho negro (#000) */
+            background: -webkit-linear-gradient(right, #000 50.99%, #fff 51%);
+            background: linear-gradient(to left, #000 50.99%, #fff 51%);
+            font-family: 'Shippori Mincho B1', 'Yu Mincho', 'Georgia', serif;
+            transition: background 0.5s ease;
+        }
+
+        body {
+            width: 100%;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meditationBox {
+            position: relative;
+            width: 100%;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .meditation {
+            width: 320px;
+            height: 320px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -160px 0 0 -160px;
+            border-radius: 50%;
+            box-shadow: 0px 0px 100px rgba(124, 160, 184, 0.4);
+            animation: aura 5s ease-in-out infinite alternate;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: transform 0.3s ease;
+        }
+
+        .meditation:hover {
+            transform: scale(1.03);
+        }
+
+        .meditation svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes aura {
+            0% {
+                box-shadow: 0px 0px 100px rgba(124, 160, 184, 0.45);
+            }
+            100% {
+                box-shadow: 0px 0px 30px rgba(43, 52, 56, 0.25);
+            }
+        }
+
+        /* Colores del Buda Yin-Yang */
+        .st2 {
+            fill: #FFFFFF; /* Mitad derecha visible en fondo negro */
+        }
+        .st3 {
+            fill: #E5E5E5;
+        }
+
+        /* Panel izquierdo (Fondo Blanco -> Letras Negras) */
+        .side-text-left {
+            position: absolute;
+            left: 8%;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #111111; /* Contraste perfecto sobre blanco */
+            z-index: 10;
+            writing-mode: vertical-rl;
+            text-orientation: upright; /* Fuerza a las letras a no rotar sideways */
+            font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+            letter-spacing: 0.4em;
+            font-weight: 700;
+            line-height: 2.2;
+            pointer-events: none;
+            user-select: none;
+            font-family: 'Shippori Mincho B1', serif;
+            animation: cascadeFallLeft 4s ease-out forwards;
+        }
+
+        /* Panel derecho (Fondo Negro -> Letras Blancas) */
+        .side-text-right {
+            position: absolute;
+            right: 8%;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffffff; /* Contraste perfecto sobre negro */
+            z-index: 10;
+            writing-mode: vertical-rl;
+            text-orientation: upright; /* Fuerza a las letras a no rotar sideways */
+            font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+            letter-spacing: 0.4em;
+            font-weight: 700;
+            line-height: 2.2;
+            pointer-events: none;
+            user-select: none;
+            font-family: 'Shippori Mincho B1', serif;
+            animation: cascadeFallRight 4s ease-out forwards;
+        }
+
+        @keyframes cascadeFallLeft {
+            0% {
+                opacity: 0;
+                transform: translateY(-60%) scaleY(0.9);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) scaleY(1);
+                filter: blur(0px);
+            }
+        }
+
+        @keyframes cascadeFallRight {
+            0% {
+                opacity: 0;
+                transform: translateY(-40%) scaleY(0.9);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) scaleY(1);
+                filter: blur(0px);
+            }
+        }
+
+        /* Cápsula de cristal para visibilidad absoluta sobre el corte de la pantalla */
+        .bottom-haiku {
+            position: absolute;
+            bottom: 6vh;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff;
+            font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+            letter-spacing: 0.25em;
+            text-align: center;
+            font-style: italic;
+            z-index: 10;
+            white-space: nowrap;
+            background: rgba(15, 15, 20, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.6rem 2.4rem;
+            border-radius: 40px;
+            font-family: 'Shippori Mincho B1', serif;
+            animation: pulseBreath 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseBreath {
+            0% {
+                opacity: 0.8;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            }
+            100% {
+                opacity: 1;
+                box-shadow: 0 10px 40px rgba(124, 160, 184, 0.25);
+            }
+        }
+
+        /* Botón discreto indicador de reproducción */
+        .sound-indicator {
+            position: absolute;
+            top: 4vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Shippori Mincho B1', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.3em;
+            color: #888888;
+            opacity: 0.7;
+            text-transform: uppercase;
+            z-index: 12;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .side-text-left {
+                left: 3%;
+                font-size: 1.1rem;
+            }
+            .side-text-right {
+                right: 3%;
+                font-size: 1.1rem;
+            }
+            .meditation {
+                width: 260px;
+                height: 260px;
+                margin: -130px 0 0 -130px;
+            }
+            .bottom-haiku {
+                font-size: 0.75rem;
+                letter-spacing: 0.15em;
+                padding: 0.5rem 1.5rem;
+            }
+        }
+    </style>
+    <!-- Importando tipografía Mincho de inspiración oriental japonesa -->
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Columna izquierda en fondo blanco: Letras Negras -->
+    <div class="side-text-left">
+        SILENCIO<br>CALMA<br>ARMONÍA
+    </div>
+
+    <!-- Columna derecha en fondo negro: Letras Blancas -->
+    <div class="side-text-right">
+        RESPIRA<br>PAZ<br>VACÍO
+    </div>
+
+    <!-- Indicador de audio discreto -->
+    <div class="sound-indicator" id="audio-status">Click para meditar</div>
+
+    <div class="meditationBox" id="meditation-trigger">
+        <div class="meditation">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
+                <g id="medetationMan">
+                    <g>
+                        <!-- Mitad derecha del Buda (Visible en negro) -->
+                        <path class="st2" d="M180.8,151.9c-3.6,10-5.8,20.3-6,30.9c-0.1,5.4,3.8,9.9,4.1,15.4c0.4,6.2,2.7,9.7,10.1,10.5
+                            c22.3,2.5,40.2,14.7,57.7,27.6c4.1,3,6.3,10.2,4.8,14.8c-1.9,5.8-7.7,10.5-13.4,10.6c-13.6,0.2-27.2-2.1-40.8-0.9
+                            c-9.2,0.8-18.5,1-27.5-0.3c-9.7-1.4-12.5-1.3-22.1-2.7c1.7-0.5-0.2,0.8,0.6-0.3c2-2.6-0.9-9.3-0.1-14.6
+                            c-0.1-65.1-0.1-130.3-0.1-195.4c0-3.5,0-7-2-10.1c11.5-3.8,20.9,5.2,21.6,18.4c0.1,2.2-0.2,4.1,1.5,6.4c1.8,2.5-0.5,6.2-1.8,9.1
+                            c-1.8,4-3.8,7.9-5.8,11.8c-1.6,3.1-1.5,5.1,2.1,7.2c5.6,3.3,11.6,5.9,17.6,8.3c8.3,3.3,10.6,9.9,12.6,17.6
+                            c2.2,8.5,1.2,17.5,4.7,25.8c3.1,7.4,5.4,15.2,7.4,23.1c0.5,2.1,1.9,4.2,3.5,5.8c7.5,7.2,13.4,15.7,20.3,23.5
+                            c3.5,3.9,6.7,8.1,11.2,10.9c2.3,1.4,4.5,2.2,6.3-0.7c2.9-4.7,7.5-3.2,10.3-1.2c4.4,3.3,9.6,7.4,8,14.1c-0.9,4,1.4,4.4,3.9,5
+                            c1.1,0.3,2.3,0.2,3.5,0.1c1.1,0,2.3,0.4,2.4,1.3c0.1,1-1.1,1.4-2,1.8c-3.2,1.4-6.6,2.4-10,1.7c-3.6-0.7-7.2-1-10.8-0.9
+                            c-3,0.1-3.9-2.6-5.6-4c-12.1-9.6-25.4-17.5-37.8-26.7c-13.2-9.8-21.8-22-25.3-37.9c-0.4-1.7-0.7-3.5-1.1-5.2
+                            C182.2,152.4,182.2,150.8,180.8,151.9z"/>
+                        <!-- Mitad izquierda del Buda (Visible en blanco, por defecto negro) -->
+                        <path d="M145.2,37.6c1.8-0.2,3.3-1.2,3.8-0.4c0.5,0.9-0.1,3.7-0.1,5.1c0,21.6,0,43.2,0,64.9c0,46.7,0,93.5,0,140.2
+                            c0,5.1,1,9-0.4,10.2c-1.2,1.1-4.5-0.2-8.7,0.3c-15.4-2.1-30.3,1.9-45.3,4c-6.5,0.9-12.8,2-19.3,1c-6.8-1-9.7-5.8-11.4-11.7
+                            c-1.6-5.6,0-10,4.7-13.6c9.4-6.9,18.6-14.1,29.1-19.3c5.4-2.7,10.8-5.2,16.9-5.7c2.6-0.2,3.1-1.4,3.3-3.8
+                            c0.3-6.2,1.6-12.2,3.9-18c2.3-5.8,2.8-11.5,1.3-17.5c-1.3-5.3-2.1-10.8-3.1-16.2c-0.4-2.2-1.2-4-3.3-5.6
+                            c-1.2,3.8-2.6,7.2-3.4,10.6c-3,13-9.9,23.3-20.8,31.1c-8.9,6.5-17.4,13.4-26.9,19c-4.7,2.7-9.1,6.2-13.3,9.7
+                            c-8,6.8-17,5.4-26.1,3.5c-0.5-0.1-0.9-0.9-1.3-1.3c0.5-0.4,0.9-1.1,1.4-1.2c1.1-0.2,2.3,0,3.5-0.2c3-0.4,5.2-0.7,4.3-5.1
+                            c-1.2-6.2,6.1-14.6,12.3-15.1c1.3-0.1,2.5,0,3.7,1c5.2,4.5,6.7,4.4,11.8-0.5c6.4-6.1,11.9-13.1,17.6-19.8
+                            c0.3-0.4,0.6-0.9,0.9-1.2c14-11.7,17-28.9,22.3-44.8c2.6-7.8,2-16.4,4.1-24.5c1.6-6.3,4.7-10.7,10.9-13.2
+                            c5.7-2.3,11.1-5.4,16.7-7.8c4.3-1.8,5.2-4.8,3.6-8.7c-1.3-3.2-2.8-6.4-4.5-9.3c-2.5-4.2-5.3-8-1.9-13.3c1.2-1.8,0.1-4.9,0.3-7.4
+                            C132.2,44.6,136.7,39.5,145.2,37.6z"/>
+                        <!-- Pequeños acentos contrastantes -->
+                        <path class="st3" d="M45.1,207.9c-1.6,2.9-2.8,5.6-2.9,8.7c0,1.1,0.4,2.8-1.3,2.7c-1.6-0.1-3.8-0.5-3.8-2.5
+                            c-0.1-2.9-0.8-6.4,3.4-7.5C41.9,209,42.8,207.5,45.1,207.9z"/>
+                    </g>
+                    <path d="M254.4,205.7c1.6,4,2.9,7.7,2.8,11.7c0,1.4-0.6,3.6,1.3,3.6c1.8,0,4.3-0.4,4.5-3c0.3-3.9,1.2-8.5-3.4-10.2
+                        C258,207.3,257,205.2,254.4,205.7z"/>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <div class="bottom-haiku">
+        La mente en calma · como el agua del estanque · reflejo del ser
+    </div>
+
+    <!-- Reproductor de Audio nativo -->
+    <audio id="ambient-audio" loop>
+        <source src="https://github.com/BlackStar1991/AudioSharing/blob/master/Meditation/Meditation.mp3?raw=true" type="audio/mpeg">
+        <source src="https://github.com/BlackStar1991/AudioSharing/blob/master/Meditation/Meditation.ogg?raw=true" type="audio/ogg">
+    </audio>
+
+    <script type="module">
+        const audio = document.getElementById('ambient-audio');
+        const trigger = document.getElementById('meditation-trigger');
+        const statusText = document.getElementById('audio-status');
+
+        let audioCtx;
+
+        function startAudio() {
+            // Inicializar el contexto en la primera interacción del usuario para cumplir con las políticas
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            if (audio.paused) {
+                audio.play().then(() => {
+                    statusText.innerText = "Respiración Activa";
+                    statusText.style.opacity = "0.4";
+                }).catch(e => {
+                    console.log("Error al reproducir audio:", e);
+                });
+            } else {
+                audio.pause();
+                statusText.innerText = "Click para meditar";
+                statusText.style.opacity = "0.7";
+            }
+        }
+
+        // Permitir reproducir/pausar haciendo click en cualquier parte del Buda o la pantalla
+        trigger.addEventListener('click', startAudio);
+        document.body.addEventListener('click', (e) => {
+            if (e.target === document.body) {
+                startAudio();
+            }
+        });
+    </script>
+</body>
+</html>

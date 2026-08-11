@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexa-Brief Core Engine - Crimson Stage</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #ff0000; /* Fondo rojo puro e intenso calcado de la imagen */
+      font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Capa de viñeta lateral negra idéntica a las curvas oscuras de los bordes de la imagen */
+    .vignette-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      background: 
+        radial-gradient(circle at left, rgba(0,0,0,0.9) 0%, transparent 25%),
+        radial-gradient(circle at right, rgba(0,0,0,0.9) 0%, transparent 25%);
+      pointer-events: none;
+    }
+
+    /* Pulso atmosférico sutil adaptado al nuevo contraste */
+    .neon-pulse-glow {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+    }
+
+    /* Tipografía cinemática de fondo (Detrás del personaje) */
+    .cinematic-bg-text {
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      gap: 14vw;
+      padding: 0 40px;
+      user-select: none;
+    }
+
+    .giant-letter {
+      font-size: clamp(8rem, 26vw, 25rem);
+      font-weight: 900;
+      color: rgba(0, 0, 0, 0.15); /* Cambiado a negro transparente para mimetizarse con el arte */
+      letter-spacing: -0.05em;
+    }
+
+    /* Contenedor del Personaje */
+    .character-container {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 95vh;
+      z-index: 5;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    /* Aura / Snake Light ajustada a tonos oscuros/blancos para complementar el alto contraste del manga */
+    .character-container::before {
+      content: '';
+      position: absolute;
+      bottom: 10vh;
+      width: 40vw;
+      height: 70vh;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.4) 35%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 70%,
+        transparent 100%
+      );
+      z-index: -1;
+      filter: blur(80px);
+      animation: snakeLightOrbit 10s linear infinite;
+    }
+
+    @keyframes snakeLightOrbit {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Renderizado nativo del personaje en blanco y negro puro */
+    .character-medium {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      user-select: none;
+      /* Filtros optimizados para limpiar el fondo grisáceo del render y dejarlo en tinta pura sobre el fondo rojo */
+      filter: drop-shadow(0 15px 50px rgba(0, 0, 0, 0.95)) contrast(1.4) brightness(1.05);
+    }
+
+    /* Ecualizador flotando sobre la zona superior */
+    #visualizer-canvas {
+      position: fixed;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 60px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    /* Interfaz HUD Operacional */
+    .hud-interface {
+      position: fixed;
+      inset: 0;
+      z-index: 7;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    /* Animación del texto flotante en pantalla */
+    .hud-phrase-container {
+      position: absolute;
+      top: 28%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: space-between;
+      font-size: clamp(1.2rem, 3vw, 2.2rem);
+      font-weight: 900;
+      letter-spacing: 0.4em;
+      color: #ffffff;
+      z-index: 8;
+      user-select: none;
+      animation: textAtmosphericBreath 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes textAtmosphericBreath {
+      0% {
+        opacity: 0.3;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      100% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+      }
+    }
+
+    .hud-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .hud-meta-block {
+      line-height: 1.8;
+    }
+
+    .text-dim {
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="vignette-overlay"></div>
+  <div class="neon-pulse-glow"></div>
+
+  <div class="cinematic-bg-text">
+    <span class="giant-letter">V</span>
+    <span class="giant-letter" style="opacity: 0.02;">X</span>
+    <span class="giant-letter">R</span>
+  </div>
+
+  <div class="character-container">
+    <img class="character-medium" src="https://i.imgur.com/E8S9p9M.png" alt="Manga Character Back">
+  </div>
+
+  <canvas id="visualizer-canvas"></canvas>
+
+  <div class="hud-phrase-container">
+    <span>UNSTOPPABLE</span>
+    <span>ENERGY</span>
+  </div>
+
+  <div class="hud-interface">
+    <div class="hud-row">
+      <div class="hud-meta-block">
+        <span class="text-dim">SYSTEM_ID //</span><br>
+        CRIMSON_SHADOW.EXE
+      </div>
+      <div class="hud-meta-block" style="text-align: right;">
+        [ AUDIO_CONNECTED ]<br>
+        SPECTRUM_ACTIVE
+      </div>
+    </div>
+
+    <div class="hud-row" style="align-items: flex-end;">
+      <div class="hud-meta-block">
+        <span class="text-dim">STREAM_SOURCE</span><br>
+        DARK_PHONK_TRACK.MP3
+      </div>
+      <div class="hud-meta-block" style="text-align: right;">
+        <span class="text-dim">ELAPSED_TIME</span><br>
+        <span id="telemetry-timer">00:00:00</span>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop preload="auto" crossorigin="anonymous" style="display:none;"></audio>
+
+  <script type="module">
+    let audioCtx, analyser, dataArray, canvas, ctx, animationFrameId;
+    const timerEl = document.getElementById('telemetry-timer');
+    const audio = document.getElementById('audio');
+
+    function initVisualizer() {
+      canvas = document.getElementById('visualizer-canvas');
+      ctx = canvas.getContext('2d');
+
+      canvas.width = 400;
+      canvas.height = 60;
+
+      // Pipeline del Web Audio API
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 64; 
+      analyser.smoothingTimeConstant = 0.82;
+
+      const source = audioCtx.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      const bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+
+      renderSpectrumLoop();
+    }
+
+    let startTime = null;
+
+    function renderSpectrumLoop(timestamp) {
+      animationFrameId = requestAnimationFrame(renderSpectrumLoop);
+
+      if (!startTime) startTime = timestamp || performance.now();
+      const elapsed = ((timestamp || performance.now()) - startTime) / 1000;
+
+      // Actualización de cronómetro UI
+      const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+      const secs = Math.floor(elapsed % 60).toString().padStart(2, '0');
+      const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+      timerEl.textContent = `${mins}:${secs}:${ms}`;
+
+      analyser.getByteFrequencyData(dataArray);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const barCount = dataArray.length - 12; 
+      const barWidth = 4;
+      const gap = 6;
+      
+      const totalWidth = (barCount * barWidth) + ((barCount - 1) * gap);
+      let x = (canvas.width - totalWidth) / 2;
+
+      for (let i = 0; i < barCount; i++) {
+        const normalizedValue = dataArray[i] / 255;
+        const barHeight = Math.max(4, normalizedValue * canvas.height * 0.9);
+        const y = (canvas.height - barHeight) / 2; 
+
+        // Gradiente de color adaptado: barras que van de blanco puro a gris oscuro/negro para mantener estética manga
+        const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
+        gradient.addColorStop(0, '#ffffff');   
+        gradient.addColorStop(0.5, '#888888'); 
+        gradient.addColorStop(1, '#111111');   
+
+        ctx.fillStyle = gradient;
+        
+        ctx.beginPath();
+        ctx.roundRect(x, y, barWidth, barHeight, 2);
+        ctx.fill();
+
+        x += barWidth + gap;
+      }
+    }
+
+    // Activación automática ante interacción o carga del DOM
+    const startAudioSystem = () => {
+      if (!audioCtx) {
+        initVisualizer();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      audio.play().catch(() => {});
+      window.removeEventListener('click', startAudioSystem);
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      audio.play().then(() => {
+        initVisualizer();
+      }).catch(() => {
+        // Si el navegador bloquea el autoplay, se activa inmediatamente con el primer click en la pantalla
+        window.addEventListener('click', startAudioSystem);
+      });
+    });
+
+    window.addEventListener('beforeunload', () => {
+      cancelAnimationFrame(animationFrameId);
+      if (audioCtx) audioCtx.close();
+    });
+  </script>
+</body>
+</html>

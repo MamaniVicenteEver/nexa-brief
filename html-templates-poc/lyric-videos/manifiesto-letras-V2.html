@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MANIFIESTO LETRAS V2 — Colapso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --paper: #F4F2EE; --ink: #0A0A0A; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #060607; cursor: pointer; }
+  body { opacity: 0; transition: opacity 0.7s ease; }
+  body.ready { opacity: 1; }
+
+  /* fondo: video del auto (CONFIG.bg) muy oscurecido; si no hay src, negro editorial puro */
+  #bgFallback {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 70vw 50vh at 22% 12%, rgba(255,255,255,0.035), transparent 65%),
+      radial-gradient(ellipse 60vw 60vh at 82% 88%, rgba(255,255,255,0.02), transparent 70%),
+      linear-gradient(160deg, #101012 0%, #070708 55%, #030304 100%);
+  }
+  #bgMedia {
+    position: fixed; inset: -4%; width: 108%; height: 108%; object-fit: cover; z-index: 0;
+    display: none; animation: bgDrift 52s ease-in-out infinite alternate; will-change: transform;
+  }
+  @keyframes bgDrift {
+    0%   { transform: scale(1.0); }
+    100% { transform: scale(1.06) translate(0.7%, -0.6%); }
+  }
+  /* velo para que el video nunca compita con el tipo */
+  #veil {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%, rgba(3,3,4,0.30) 0%, rgba(3,3,4,0.66) 78%, rgba(2,2,3,0.85) 100%);
+  }
+
+  /* metadata viva en las 4 esquinas (V2: sin marco de hairlines alrededor) */
+  .meta {
+    position: fixed; z-index: 6; pointer-events: none;
+    font-family: "Space Grotesk", sans-serif; font-weight: 400;
+    font-size: 1.25vh; letter-spacing: 0.32em; color: rgba(244,242,238,0.55);
+    text-transform: uppercase; white-space: nowrap;
+  }
+  #metaTL { top: 1.1vh; left: 2.4vw; }
+  #metaTR { top: 1.1vh; right: 2.4vw; font-variant-numeric: tabular-nums; }
+  #metaBL { bottom: 1.1vh; left: 2.4vw; font-variant-numeric: tabular-nums; }
+  #metaBR { bottom: 1.1vh; right: 2.4vw; font-variant-numeric: tabular-nums; }
+  body.contraActive .meta { color: rgba(10,10,10,0.62); }
+
+  /* mundo del tipo: push-in lentísimo por lámina (el corte lo resetea en seco) */
+  #world { position: fixed; inset: 0; z-index: 3; will-change: transform; }
+
+  /* LÁMINA: composición editorial a pantalla completa; entra a CORTE (sin transición) */
+  .lamina {
+    position: absolute; inset: 0; display: flex;
+    align-items: center; justify-content: center;
+    color: var(--paper); text-transform: uppercase;
+  }
+  .lamina .inner { transform: scale(var(--fit, 1)); }
+  /* cada palabra se revela EN SECO en su timestamp: visible o no, sin fade */
+  .lamina span.w { visibility: hidden; }
+  .lamina span.w.on { visibility: visible; }
+
+  /* PLENO: la palabra dominante a lo ancho, el resto en línea técnica debajo */
+  .lamina.pleno .inner { display: flex; flex-direction: column; align-items: center; gap: 2.4vh; text-align: center; }
+  .lamina.pleno .big { font-family: "Archivo", sans-serif; font-weight: 900; line-height: 0.86; letter-spacing: -0.015em; white-space: nowrap; }
+  .lamina.pleno .rest { display: flex; gap: 0.5em; font-family: "Space Grotesk", sans-serif; font-weight: 500; font-size: 1.9vh; letter-spacing: 0.44em; white-space: nowrap; }
+
+  /* COLUMNA: bloque a la izquierda con hairline e índice de lámina */
+  .lamina.columna { justify-content: flex-start; }
+  .lamina.columna .inner {
+    margin-left: 9vw; padding-left: 2.2vw; border-left: 1px solid rgba(244,242,238,0.34);
+    display: flex; flex-direction: column; gap: 0.6vh; transform-origin: left center;
+  }
+  .lamina.columna .idx {
+    font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 1.5vh;
+    letter-spacing: 0.5em; color: rgba(244,242,238,0.5); margin-bottom: 2.2vh;
+  }
+  .lamina.columna .w { font-family: "Archivo", sans-serif; font-weight: 700; line-height: 1.02; letter-spacing: -0.005em; display: block; white-space: nowrap; }
+
+  /* CONTRA: frame invertido completo — papel pleno, tinta negra (frase clave) */
+  .lamina.contra { background: var(--paper); color: var(--ink); }
+  .lamina.contra .inner { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 0.28em; text-align: center; padding: 0 6vw; }
+  .lamina.contra .w { font-family: "Archivo", sans-serif; font-weight: 900; line-height: 0.9; letter-spacing: -0.01em; white-space: nowrap; }
+
+  /* MICRO: susurro técnico centrado con marcas de registro */
+  .lamina.micro .inner { position: relative; padding: 3.4vh 3.2vw; }
+  .lamina.micro .txt { display: flex; gap: 0.6em; font-family: "Space Grotesk", sans-serif; font-weight: 500; font-size: 2.5vh; letter-spacing: 0.6em; white-space: nowrap; }
+  .lamina.micro .c { position: absolute; width: 1.6vh; height: 1.6vh; border-color: rgba(244,242,238,0.75); border-style: solid; border-width: 0; }
+  .lamina.micro .c1 { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+  .lamina.micro .c2 { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+  .lamina.micro .c3 { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+  .lamina.micro .c4 { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+  /* BORDE: palabra sangrada que el margen corta, estilo póster */
+  .lamina.borde { overflow: hidden; }
+  .lamina.borde .inner { position: absolute; inset: 0; transform: none; }
+  .lamina.borde .big {
+    position: absolute; left: 50%; font-family: "Archivo", sans-serif; font-weight: 900;
+    line-height: 0.8; letter-spacing: -0.02em; white-space: nowrap;
+  }
+  .lamina.borde .big.abajo { bottom: 0; transform: translate(-50%, 0.16em) scale(var(--fit, 1)); transform-origin: bottom center; }
+  .lamina.borde .big.arriba { top: 0; transform: translate(-50%, -0.16em) scale(var(--fit, 1)); transform-origin: top center; }
+  .lamina.borde .rest {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 0.55em; font-family: "Space Grotesk", sans-serif; font-weight: 500;
+    font-size: 1.8vh; letter-spacing: 0.44em; white-space: nowrap;
+  }
+  .lamina.borde .rest.abajo { top: 12vh; }
+  .lamina.borde .rest.arriba { bottom: 12vh; }
+
+  /* corte a blanco de 2 frames cuando entra una CONTRA */
+  #cut { position: fixed; inset: 0; z-index: 7; background: var(--paper); opacity: 0; pointer-events: none; }
+
+  /* grano finísimo — filmico pero casi invisible (minimal) */
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 5; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.035; mix-blend-mode: overlay; animation: gsh 1.1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+  /* intro / outro: claqueta editorial en negro */
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2.6vh; text-align: center;
+    transition: opacity 0.9s ease; text-transform: uppercase; background: #060607;
+  }
+  .cardScreen .reg { font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 2.4vh; color: rgba(244,242,238,0.5); }
+  .cardScreen .artist { font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 1.7vh; letter-spacing: 0.55em; padding-left: 0.55em; color: rgba(244,242,238,0.72); }
+  .cardScreen .title { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 15vh; line-height: 0.9; letter-spacing: -0.015em; color: var(--paper); }
+  .cardScreen .sub { font-family: "Space Grotesk", sans-serif; font-weight: 500; font-size: 2vh; letter-spacing: 0.44em; padding-left: 0.44em; color: var(--paper); }
+  .cardScreen .feats { font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 1.3vh; letter-spacing: 0.34em; color: rgba(244,242,238,0.5); margin-top: 2.6vh; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  body.outroActive #world, body.outroActive #bgMedia, body.outroActive #bgFallback {
+    opacity: 0.10; transition: opacity 1.6s ease;
+  }
+  /* ============ DEBUG HUD — BORRAR ESTE BLOQUE (CSS) PARA PRODUCCIÓN ============ */
+  #debugHud {
+    position: fixed; left: 0; bottom: 0; width: 100vw; z-index: 20;
+    font-family: "Courier New", monospace; font-size: 12px; color: #cfcecb;
+    background: rgba(0,0,0,0.4); padding: 4px 10px; opacity: 0.55;
+    pointer-events: none; white-space: pre;
+  }
+  /* ================================================================================ */
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    .cardScreen .title { font-size: min(15vh, 17vw); }
+    .cardScreen .artist { font-size: min(1.7vh, 3.4vw); letter-spacing: 0.34em; }
+    .cardScreen .sub { font-size: min(2vh, 3.8vw); letter-spacing: 0.3em; }
+    .cardScreen .feats { font-size: min(1.3vh, 2.8vw); letter-spacing: 0.22em; }
+    .lamina.pleno .rest { font-size: min(1.9vh, 3vw); letter-spacing: 0.26em; }
+    .lamina.columna .inner { margin-left: 6vw; padding-left: 3.2vw; }
+    .lamina.columna .idx { font-size: min(1.5vh, 2.8vw); letter-spacing: 0.34em; }
+    .lamina.micro .txt { font-size: min(2.5vh, 3.6vw); letter-spacing: 0.4em; }
+    .lamina.borde .rest { font-size: min(1.8vh, 3vw); letter-spacing: 0.26em; }
+    .meta { font-size: min(1.25vh, 2.4vw); letter-spacing: 0.2em; }
+  }
+</style>
+</head>
+<body>
+<div id="bgFallback"></div>
+<img id="bgMedia" alt="">
+<div id="veil"></div>
+<div id="world"></div>
+<div id="grain"></div>
+<div class="meta" id="metaTL"></div>
+<div class="meta" id="metaTR">00:00.00</div>
+<div class="meta" id="metaBL">000 / 000</div>
+<div class="meta" id="metaBR">0%</div>
+<div id="cut"></div>
+<div id="intro" class="cardScreen">
+  <div class="reg">+</div>
+  <div class="artist"></div><div class="title"></div><div class="sub"></div><div class="feats"></div>
+</div>
+<div id="outro" class="cardScreen">
+  <div class="reg">+</div>
+  <div class="artist"></div><div class="title"></div><div class="sub"></div><div class="feats"></div>
+</div>
+<!-- ============ DEBUG HUD — BORRAR ESTA LÍNEA (HTML) PARA PRODUCCIÓN ============ -->
+<div id="debugHud"></div>
+<!-- ================================================================================ -->
+<audio id="audio" preload="auto"></audio>
+<script type="module">
+/* ================================ CONFIG ================================
+   MANIFIESTO V2 — igual que V1 pero: SIN marco de hairlines alrededor,
+   SIN cartel de "click para empezar" (el click igual enciende el audio),
+   y responsive reforzado para las dos pantallas (móvil vertical aprovecha
+   más ancho en PLENO/COLUMNA/CONTRA; desktop queda idéntico).
+   ------------------------------------------------------------------------
+   MANIFIESTO — editorial suizo blanco/negro, cortes de cine en seco.
+   La letra se agrupa en FRASES; cada frase es una LÁMINA a pantalla
+   completa que REEMPLAZA a la anterior con CORTE SECO (nada de easing:
+   el impacto ES el corte). Dentro de la lámina cada palabra aparece EN
+   SECO en su timestamp exacto. 5 modos de lámina barajados con semilla
+   (sin repetir consecutivo): PLENO (palabra dominante a lo ancho),
+   COLUMNA (bloque con hairline e índice), CONTRA (frame invertido papel
+   completo, con cooldown para que siga siendo especial), MICRO (susurro
+   con marcas de registro) y BORDE (gigante sangrada que el margen corta).
+   Marco de hairlines + metadata viva (timecode real, % de progreso,
+   wordmark) en las esquinas, siempre. Cámara: solo un push-in lentísimo
+   por lámina; sin paneos, sin sacudidas — precisión.
+   Fondo pensado para un VIDEO (p.ej. un auto de noche) muy filtrado:
+   bg.type "video" | "image" | "none"; con src vacío usa el negro
+   editorial generativo. La letra se consume 100% de lyricsUrl (formato
+   Whisper: { segments: [ { words: [ { word, start, end } ] } ] }).
+   Servir por HTTP (Live Server / python3 -m http.server), no file://.
+   ========================================================================== */
+const CONFIG = {
+  audio: { src: "𝙆𝙚𝙫𝙞𝙣 𝙆𝙖𝙖𝙧𝙡 𝘾𝙤𝙡𝙖𝙥𝙨𝙤 𝙇𝙚𝙩𝙧𝙖.mp3" },
+  lyricsUrl: "lyrics-kevin-kaarl-colapso.json",
+  bg: {
+    type: "none",              /* "video" | "image" | "none" — poné acá tu video del auto */
+    src: "",
+    filter: "grayscale(1) contrast(1.25) brightness(0.32)"
+  },
+  colors: { paper: "#F4F2EE", ink: "#0A0A0A" },
+  wordmark: "NEXA BRIEF — MANIFIESTO",
+  intro: { artist: "Kevin Kaarl", title: "Colapso", sub: "Manifiesto", feats: "NEXA BRIEF" },
+  outro: { leadSec: 8, title: "Gracias", sub: "Por ver", feats: "Suscríbete · NEXA BRIEF" },
+  /* DEBUG HUD: poner en false (o borrar los bloques marcados) para producción */
+  debug: { enabled: true },
+  phrase: {
+    gapSec: 0.52,          /* pausa que corta una frase */
+    maxWords: 5,
+    maxChars: 24
+  },
+  laminas: {
+    /* mazo de modos: se baraja con semilla y se roba en orden (sin repetir consecutivo) */
+    deck: ["pleno","pleno","columna","pleno","micro","borde","columna","contra","pleno","borde","micro","columna"],
+    contraCooldownSec: 6,  /* mínimo entre frames invertidos */
+    pushScale: 1.028,      /* push-in lentísimo por lámina */
+    pushSec: 7
+  },
+  seed: 17
+};
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, world = $("world"), audio = $("audio");
+let vw = innerWidth, vh = innerHeight;
+addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; });
+doc.documentElement.style.setProperty("--paper", C.colors.paper);
+doc.documentElement.style.setProperty("--ink", C.colors.ink);
+$("metaTL").textContent = C.wordmark;
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+/* ---- intro / outro ---- */
+function buildCard(id, cfg) {
+  const i = $(id);
+  i.querySelector(".artist").textContent = cfg.artist ?? "";
+  i.querySelector(".title").textContent = cfg.title;
+  i.querySelector(".sub").textContent = cfg.sub;
+  i.querySelector(".feats").textContent = cfg.feats;
+}
+buildCard("intro", C.intro);
+buildCard("outro", C.outro);
+
+/* ---- lyrics: agrupar en FRASES conservando el timestamp de CADA palabra ---- */
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const flat = [];
+    for (const seg of j.segments) for (const w of seg.words) {
+      const clean = w.word.trim().replace(/[.,;!?¡¿"']/g, "");
+      if (clean) flat.push({ t: w.start, text: clean });
+    }
+    if (!flat.length) throw new Error("sin palabras");
+    return groupPhrases(flat);
+  } catch (e) {
+    console.warn("[manifiesto] No se pudo cargar", C.lyricsUrl,
+                 "— sirve el HTML por HTTP (Live Server), no por file://.", e);
+    return [];
+  }
+}
+function groupPhrases(flat) {
+  const out = [];
+  let cur = null;
+  for (const w of flat) {
+    const fits = cur && cur.words.length < C.phrase.maxWords &&
+                 (cur.chars + w.text.length + 1) <= C.phrase.maxChars &&
+                 (w.t - cur.lastT) < C.phrase.gapSec;
+    if (fits) {
+      cur.words.push(w); cur.chars += w.text.length + 1; cur.lastT = w.t;
+    } else {
+      if (cur) out.push(cur);
+      cur = { t: w.t, words: [w], chars: w.text.length, lastT: w.t };
+    }
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+
+/* ---- mazo de modos: barajado con semilla, sin repetir consecutivo ---- */
+let deck = [], deckPos = 0, lastMode = "", lastContraT = -99;
+function shuffledDeck() {
+  const d = [...C.laminas.deck];
+  for (let i = d.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1)); [d[i], d[j]] = [d[j], d[i]];
+  }
+  return d;
+}
+function nextMode(t) {
+  if (deckPos >= deck.length) { deck = shuffledDeck(); deckPos = 0; }
+  let m = deck[deckPos++];
+  if (m === lastMode) m = deck[deckPos % deck.length];   /* evita el repetido seco */
+  if (m === "contra" && (t - lastContraT) < C.laminas.contraCooldownSec) m = "pleno";
+  if (m === "contra") lastContraT = t;
+  lastMode = m;
+  return m;
+}
+
+/* ---- helpers tipográficos ---- */
+const longestIdx = words => {
+  let idx = 0;
+  for (let i = 1; i < words.length; i++)
+    if (words[i].text.length > words[idx].text.length) idx = i;
+  return idx;
+};
+const span = (w, cls) => {
+  const s = doc.createElement("span");
+  s.className = "w " + (cls || "");
+  s.textContent = w.text;
+  return s;
+};
+/* si la composición excede el ancho útil, se encoge entera con --fit */
+let lastFit = null;   /* última lámina medida: se re-mide si la fuente llega después */
+function fitInner(inner, share = 0.9) {
+  lastFit = { inner, share };
+  requestAnimationFrame(() => {
+    const r = inner.getBoundingClientRect();
+    if (r.width > vw * share) inner.style.setProperty("--fit", (vw * share / r.width).toFixed(3));
+  });
+}
+/* la medición corre con la fuente que haya; si Archivo carga DESPUÉS de medir,
+   el ancho real crece y la palabra se saldría — re-ajustar la lámina activa */
+if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(() => {
+  if (!lastFit || !lastFit.inner.isConnected) return;
+  lastFit.inner.style.removeProperty("--fit");
+  fitInner(lastFit.inner, lastFit.share);
+});
+
+/* ---- construcción de cada modo de lámina ---- */
+let colIdx = 0;   /* índice incremental de las láminas COLUMNA: 01 —, 02 —, ... */
+function buildPleno(el, words, seq) {
+  const inner = doc.createElement("div"); inner.className = "inner";
+  const bi = longestIdx(words), big = words[bi];
+  const rest = words.filter((_, i) => i !== bi);
+  const bigEl = span(big, "big");
+  /* móvil vertical: la palabra dominante aprovecha más ancho (desktop no cambia) */
+  const share = vw < vh ? 0.94 : 0.9;
+  const fs = Math.min(vw * share / (Math.max(2, big.text.length) * 0.62), vh * 0.34);
+  bigEl.style.fontSize = fs + "px";
+  inner.appendChild(bigEl);
+  seq.push({ t: big.t, el: bigEl });
+  if (rest.length) {
+    const row = doc.createElement("div"); row.className = "rest";
+    for (const w of rest) { const s = span(w); row.appendChild(s); seq.push({ t: w.t, el: s }); }
+    inner.appendChild(row);
+  }
+  el.appendChild(inner);
+  fitInner(inner, vw < vh ? 0.94 : 0.9);
+}
+function buildColumna(el, words, seq) {
+  const inner = doc.createElement("div"); inner.className = "inner";
+  const idx = doc.createElement("div"); idx.className = "idx";
+  idx.textContent = String(++colIdx).padStart(2, "0") + " —";
+  inner.appendChild(idx);
+  const maxLen = Math.max(...words.map(w => w.text.length), 2);
+  /* móvil vertical: la columna ocupa más ancho de pantalla (desktop no cambia) */
+  const fs = Math.min(vw * (vw < vh ? 0.75 : 0.6) / (maxLen * 0.6), vh * 0.095);
+  for (const w of words) {
+    const s = span(w); s.style.fontSize = fs + "px";
+    inner.appendChild(s); seq.push({ t: w.t, el: s });
+  }
+  el.appendChild(inner);
+  fitInner(inner, vw < vh ? 0.9 : 0.8);
+}
+function buildContra(el, words, seq) {
+  const inner = doc.createElement("div"); inner.className = "inner";
+  const chars = words.reduce((n, w) => n + w.text.length + 1, 0);
+  const fs = Math.min(vw * (vw < vh ? 0.92 : 0.86) / (Math.max(4, chars) * 0.6), vh * 0.22);
+  for (const w of words) {
+    const s = span(w); s.style.fontSize = fs + "px";
+    inner.appendChild(s); seq.push({ t: w.t, el: s });
+  }
+  el.appendChild(inner);
+}
+function buildMicro(el, words, seq) {
+  const inner = doc.createElement("div"); inner.className = "inner";
+  for (const cls of ["c c1", "c c2", "c c3", "c c4"]) {
+    const c = doc.createElement("i"); c.className = cls; inner.appendChild(c);
+  }
+  const row = doc.createElement("div"); row.className = "txt";
+  for (const w of words) { const s = span(w); row.appendChild(s); seq.push({ t: w.t, el: s }); }
+  inner.appendChild(row);
+  el.appendChild(inner);
+  fitInner(inner, 0.86);
+}
+function buildBorde(el, words, seq) {
+  const inner = doc.createElement("div"); inner.className = "inner";
+  const edge = rng() < 0.6 ? "abajo" : "arriba";
+  const bi = longestIdx(words), big = words[bi];
+  const rest = words.filter((_, i) => i !== bi);
+  const bigEl = span(big, "big " + edge);
+  const fs = Math.min(vw * 1.02 / (Math.max(2, big.text.length) * 0.62), vh * 0.42);
+  bigEl.style.fontSize = fs + "px";
+  inner.appendChild(bigEl);
+  seq.push({ t: big.t, el: bigEl });
+  if (rest.length) {
+    const row = doc.createElement("div"); row.className = "rest " + edge;
+    for (const w of rest) { const s = span(w); row.appendChild(s); seq.push({ t: w.t, el: s }); }
+    inner.appendChild(row);
+  }
+  el.appendChild(inner);
+}
+const builders = { pleno: buildPleno, columna: buildColumna, contra: buildContra, micro: buildMicro, borde: buildBorde };
+
+/* ---- corte: la lámina nueva reemplaza a la anterior EN SECO ---- */
+let active = null;   /* { seq: [{t, el}] ordenado, next } */
+function placeLamina(cl) {
+  const mode = nextMode(cl.t);
+  world.replaceChildren();                       /* CORTE — nada de fades */
+  doc.body.classList.toggle("contraActive", mode === "contra");
+  if (mode === "contra") {                       /* 2 frames de flash a papel */
+    const cut = $("cut");
+    cut.style.transition = "none"; cut.style.opacity = 0.9;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      cut.style.transition = "opacity 0.12s ease-out"; cut.style.opacity = 0;
+    }));
+  }
+  const el = doc.createElement("div");
+  el.className = "lamina " + mode;
+  const seq = [];
+  builders[mode](el, cl.words, seq);
+  world.appendChild(el);
+  seq.sort((a, b) => a.t - b.t);
+  active = { seq, next: 0 };
+
+  /* push-in: reset en seco y arranque del empuje lentísimo */
+  world.style.transition = "none";
+  world.style.transform = "scale(1)";
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    world.style.transition = `transform ${C.laminas.pushSec}s cubic-bezier(0.25, 0, 0.75, 1)`;
+    world.style.transform = `scale(${C.laminas.pushScale})`;
+  }));
+}
+
+/* ---- reloj: audio si suena; si no, rAF ---- */
+let rafT0 = null, rafNow = 0, started = false;
+const clock = () => (!audio.paused && audio.currentTime > 0.05)
+  ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+
+async function begin() {
+  if (started) return;
+  started = true;
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+/* el click SIEMPRE reintenta el audio (el begin() del arranque no consume el gesto) */
+addEventListener("pointerdown", () => {
+  begin();
+  if (audio.paused) audio.play().catch(() => {});
+});
+
+/* ---- outro por el final REAL del audio ---- */
+let outroShown = false;
+function maybeOutro() {
+  if (outroShown) return;
+  const dur = audio.duration;
+  if (!isFinite(dur) || dur <= 0) return;
+  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
+    outroShown = true;
+    doc.body.classList.add("outroActive");
+    doc.body.classList.remove("contraActive");
+    $("intro").classList.add("gone");
+    $("outro").classList.add("show");
+  }
+}
+audio.addEventListener("ended", maybeOutro);
+
+/* ---- metadata viva en esquinas ---- */
+function updateMeta(t) {
+  const cs = Math.floor((t % 1) * 100);
+  const mm = String(Math.floor(t / 60)).padStart(2, "0");
+  const ss = String(Math.floor(t % 60)).padStart(2, "0");
+  $("metaTR").textContent = `${mm}:${ss}.${String(cs).padStart(2, "0")}`;
+  $("metaBL").textContent = `${String(ptr).padStart(3, "0")} / ${String(phrases.length).padStart(3, "0")}`;
+  const dur = audio.duration;
+  $("metaBR").textContent = (isFinite(dur) && dur > 0)
+    ? Math.round(audio.currentTime / dur * 100) + "%" : "—";
+}
+
+/* ============ DEBUG HUD — BORRAR ESTE BLOQUE (JS) PARA PRODUCCIÓN ============ */
+function updateDebug() {
+  if (!C.debug.enabled) return;
+  const dur = isFinite(audio.duration) ? audio.duration.toFixed(1) : "?";
+  const state = audio.ended ? "ended" : audio.paused ? "paused" : "playing";
+  const next = phrases[ptr];
+  const nextIn = outroShown ? "outro activo" : next ? (next.t - clock()).toFixed(1) + "s" : "—(sin más letra)";
+  $("debugHud").textContent =
+    `t=${audio.currentTime.toFixed(1)}s / ${dur}s  ·  audio:${state}  ·  lámina ${ptr}/${phrases.length}  ·  próxima en ${nextIn}  ·  modo:${lastMode}`;
+}
+/* =============================================================================== */
+
+/* ---- main ---- */
+let phrases = [], ptr = 0, introGone = false;
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  const t = clock();
+  maybeOutro();
+  if (!outroShown) {
+    while (ptr < phrases.length && t >= phrases[ptr].t) {
+      if (!introGone) { $("intro").classList.add("gone"); introGone = true; }
+      placeLamina(phrases[ptr]);
+      ptr++;
+    }
+    /* revelar EN SECO las palabras de la lámina activa que ya se cantaron */
+    if (active) {
+      while (active.next < active.seq.length && t >= active.seq[active.next].t) {
+        active.seq[active.next].el.classList.add("on");
+        active.next++;
+      }
+    }
+  }
+  updateMeta(t);
+  updateDebug();
+  requestAnimationFrame(frame);
+}
+
+/* ---- fondo video/imagen con filtro del CONFIG (o negro editorial puro) ---- */
+function setupBg() {
+  if (!C.bg || C.bg.type === "none" || !C.bg.src) return;
+  let el = $("bgMedia");
+  if (C.bg.type === "video") {
+    const v = doc.createElement("video");
+    v.id = "bgMedia"; v.muted = true; v.loop = true; v.autoplay = true;
+    v.setAttribute("playsinline", "");
+    el.replaceWith(v); el = v;
+    v.play && v.play().catch(() => {});
+  }
+  el.src = encodeURI(C.bg.src);
+  el.style.display = "block";
+  el.style.filter = C.bg.filter || "";
+}
+
+setupBg();
+deck = shuffledDeck();
+audio.src = encodeURI(C.audio.src);
+loadLyrics().then(p => { phrases = p; });
+begin();
+doc.body.classList.add("ready");
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<style>
+    /* Fondo Estético de Interfaz */
+    body {
+        background-color: #050505;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(to right, #0a0a0a 1px, transparent 1px),
+            linear-gradient(to bottom, #0a0a0a 1px, transparent 1px);
+        background-size: 30px 30px, 100px 100px, 100px 100px;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'Courier New', Courier, monospace; /* Fuente más técnica */
+        color: #555;
+        overflow: hidden;
+    }
+
+    .ui-wrapper {
+        position: relative;
+        width: 95vw;
+        height: 90vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Render Central */
+    .main-render {
+        position: relative;
+        width: 480px;
+        z-index: 10;
+        filter: drop-shadow(0 0 50px rgba(0,0,0,1));
+    }
+    .main-render img { width: 100%; height: auto; }
+
+    /* Elementos de Texto y Decoración */
+    .element { position: absolute; pointer-events: none; }
+
+    /* Esquina Superior Izquierda: Número y Título */
+    .top-left { top: 20px; left: 20px; border-left: 1px solid #b30000; padding-left: 15px; }
+    .num-big { font-size: 80px; font-weight: 900; color: #1a1a1a; line-height: 0.8; margin-bottom: 10px; }
+    .title-sub { font-size: 10px; letter-spacing: 5px; color: #888; }
+
+    /* Esquina Superior Derecha: Datos de Sistema */
+    .top-right { top: 20px; right: 20px; text-align: right; font-size: 9px; line-height: 1.5; letter-spacing: 2px; }
+    .red-txt { color: #b30000; }
+
+    /* Texto Vertical Lateral */
+    .vertical-text { 
+        right: 40px; 
+        top: 50%; 
+        transform: translateY(-50%) rotate(90deg); 
+        font-size: 11px; 
+        letter-spacing: 10px;
+        white-space: nowrap;
+    }
+
+    /* Kanji Principal con Degradado Animado */
+    .kanji-main {
+        position: absolute;
+        bottom: 50px;
+        font-size: 85px;
+        letter-spacing: 25px;
+        background: linear-gradient(to right, #220000, #b30000, #ff4d4d, #220000);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: flow 4s linear infinite;
+        z-index: 11;
+        font-family: serif;
+    }
+
+    /* Bloque de texto estilo "Créditos/Poema" (Abajo Izquierda) */
+    .bottom-left { 
+        bottom: 40px; 
+        left: 40px; 
+        max-width: 250px; 
+        font-size: 8px; 
+        text-align: justify; 
+        color: #333;
+        line-height: 1.4;
+    }
+
+    /* Micro-detalles (Coordenadas) */
+    .coords { bottom: 20px; right: 20px; font-size: 10px; color: #222; }
+
+    /* Animación del degradado */
+    @keyframes flow { to { background-position: 200% center; } }
+
+    /* Línea de escaneo decorativa */
+    .scan-line {
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background: rgba(179, 0, 0, 0.1);
+        top: 0;
+        animation: scan 8s linear infinite;
+    }
+    @keyframes scan { from { top: 0; } to { top: 100%; } }
+</style>
+
+<div class="ui-wrapper">
+    <div class="scan-line"></div>
+
+    <div class="element top-left">
+        <div class="num-big">14</div>
+        <div class="title-sub">MODELO / 2026<br>ESTÉTICA ORIENTAL</div>
+    </div>
+
+    <div class="element top-right">
+        [ ACCESO GARANTIZADO ]<br>
+        <span class="red-txt">VERSION 3.0.4</span><br>
+        紅色の夢 / CARMESÍ<br>
+        COORD: 35.6895 N, 139.6917 E
+    </div>
+
+    <div class="element vertical-text">
+        TRANSICIÓN DE SOMBRAS ——————— 0% 50% 100%
+    </div>
+
+    <div class="main-render">
+        <img src="https://u.cubeupload.com/zmonochrome/df7dary6b55d3b711b74.png" alt="Kimono Art">
+    </div>
+
+    <div class="kanji-main">美学</div> <div class="element bottom-left">
+        EL ARTE DEL KIMONO NO ES SOLO VESTIR,<br>
+        ES UNA NARRATIVA VISUAL DE LA PACIENCIA.<br>
+        <span style="color:#666">
+            SILENCIO / SERENIDAD / OSCURIDAD<br>
+            ....................................<br>
+            CADA HILO ESTÁ CONECTADO A UNA MEMORIA ANTIGUA QUE FLOTA EN ESTE ESPACIO DIGITAL.
+        </span>
+    </div>
+
+    <div class="element coords">
+        ID: 8B68-DARY-3B71 // SEC: 03
+    </div>
+</div>

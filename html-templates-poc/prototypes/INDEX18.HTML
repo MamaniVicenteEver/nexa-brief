@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shizuku Edit</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@900&family=Noto+Serif+JP:wght@900&family=Italiana&family=Space+Mono:ital,wght@0,400;1,700&family=Bodoni+Moda:ital,wght@1,900&display=swap');
+
+        :root {
+            --bg-color: #050505;
+            --white: #ffffff;
+            --gray: #444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--white);
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Space Mono', monospace;
+            height: 100vh;
+        }
+
+        /* --- EL RENDER GIGANTE --- */
+        .main-render {
+            position: absolute;
+            bottom: -5%;
+            left: 50%;
+            transform: translateX(-55%); /* Un poco descentrado para arte */
+            width: 85vh; /* Mucho más grande */
+            height: auto;
+            z-index: 2;
+            opacity: 0.35;
+            filter: grayscale(1) brightness(1.2) contrast(1.1);
+            mask-image: linear-gradient(to top, transparent 5%, black 40%, black 80%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* --- CAPAS DE TEXTO --- */
+        .layer-back { z-index: 1; position: absolute; width: 100%; height: 100%; }
+        .layer-front { z-index: 5; position: absolute; width: 100%; height: 100%; pointer-events: none; }
+
+        /* --- TEXTOS ESTÉTICOS --- */
+        .giant-kanji {
+            position: absolute;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 15rem;
+            color: rgba(255,255,255,0.02);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+        }
+
+        .vertical-text {
+            position: absolute;
+            left: 3%;
+            top: 20%;
+            writing-mode: vertical-rl;
+            font-family: 'Italiana', serif;
+            font-size: 1.2rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
+        .quote-box {
+            position: absolute;
+            left: 8%;
+            bottom: 15%;
+            max-width: 280px;
+        }
+
+        .quote-box h2 {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-size: 2.5rem;
+            margin: 0;
+            line-height: 0.9;
+        }
+
+        .quote-box p {
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            margin-top: 15px;
+            border-top: 1px solid white;
+            padding-top: 10px;
+        }
+
+        /* --- SECCIÓN DEL GIF (DERECHA) --- */
+        .right-zone {
+            position: absolute;
+            right: 8%;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+        }
+
+        .circle-wrap {
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        .circle-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid white;
+            position: relative;
+        }
+
+        .circle-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .shizuku-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 4rem;
+            line-height: 1;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            letter-spacing: 12px;
+            opacity: 0.5;
+            margin-top: -5px;
+        }
+
+        /* --- DECORACIONES --- */
+        .scanline {
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            position: absolute;
+            top: 30%;
+        }
+
+        .tag-black {
+            background: white;
+            color: black;
+            padding: 5px 20px;
+            font-weight: 900;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="layer-back">
+        <div class="giant-kanji">死を忘れない</div> <div class="scanline"></div>
+    </div>
+
+    <img src="https://u.cubeupload.com/zmonochrome/31f89d41d51f1a2a3832.png" class="main-render" alt="Shizuku Render Central">
+
+    <div class="layer-front">
+        <div class="vertical-text">Cold Blooded / Vacuum</div>
+        
+        <div class="quote-box">
+            <h2 style="color: rgba(255,255,255,0.8);">VOID</h2>
+            <h2 style="padding-left: 30px;">ENTITY</h2>
+            <p>
+                No hay rastro de sangre, no hay rastro de memoria. 
+                Todo lo que entra en el vacío deja de existir en este plano.
+                <br><br>
+                <span style="opacity: 0.4;">[ 08 - THE SPIDER ]</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="right-zone">
+        <div class="circle-wrap">
+            <div class="circle-inner">
+                <img src="https://u.cubeupload.com/zmonochrome/82d6e4df645b9e9b6552.gif" alt="Shizuku GIF">
+            </div>
+        </div>
+        
+        <h1 class="shizuku-title">SHIZUKU</h1>
+        <div class="subtitle">シズク・紫</div>
+        
+        <div class="tag-black">DELETE ALL DATA</div>
+        
+        <p style="font-size: 0.6rem; width: 250px; margin-top: 30px; opacity: 0.6; font-style: italic;">
+            "If I forget, it means it wasn't important."
+            <br>
+            — 忘却は、静かな救済。
+        </p>
+    </div>
+
+    <div style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; letter-spacing: 8px; opacity: 0.3;">
+        ANTI-MEMORIAM / RYODAN 08
+    </div>
+
+</body>
+</html>

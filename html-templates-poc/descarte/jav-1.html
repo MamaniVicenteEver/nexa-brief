@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>花は散り · Portada Zen Interactiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;900&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            background: #0d0f12;
+            font-family: 'Shippori Mincho', serif;
+            -webkit-font-smoothing: antialiased;
+            cursor: pointer;
+        }
+
+        /* Contenedor principal de escena */
+        #scene {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100dvh;
+            z-index: 3;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .vignette-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 4;
+            background: radial-gradient(circle at center, transparent 30%, rgba(13, 15, 18, 0.6) 100%);
+            pointer-events: none;
+        }
+
+        /* Branding minimalista de Nexa */
+        .nexa-brief-brand {
+            position: fixed;
+            top: 40px;
+            right: 60px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Montserrat', sans-serif;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.6;
+            transition: opacity 1.5s ease;
+        }
+
+        .brand-nexa {
+            font-size: 1.05rem;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            color: #1c1c1e;
+            transition: color 1.2s ease;
+        }
+
+        .brand-divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(28, 28, 30, 0.25);
+            transition: background 1.2s ease;
+        }
+
+        .brand-brief {
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 0.4em;
+            color: #D68D9C;
+            transition: color 1.2s ease;
+        }
+
+        /* Tipografía del Haiku Sumi-e */
+        .haiku {
+            position: fixed;
+            top: 10dvh;
+            left: 7.5vw;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-family: "Shippori Mincho", "Yu Mincho", serif;
+            font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+            line-height: 2.2;
+            color: rgba(28, 28, 30, 0.35);
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            user-select: none;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .haiku span {
+            display: inline-block;
+            transition: color 1s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 1s ease, transform 0.8s ease;
+            will-change: color, transform;
+        }
+
+        /* Banner indicador inicial */
+        .audio-indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            pointer-events: none;
+            transition: opacity 1s ease, transform 1s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(13, 15, 18, 0.4);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .audio-indicator.playing {
+            opacity: 0;
+            transform: translate(-50%, 20px);
+        }
+
+        .indicator-pulse {
+            width: 8px;
+            height: 8px;
+            background-color: #D68D9C;
+            border-radius: 50%;
+            animation: pulse-glow 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(214, 141, 156, 0.7); }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 10px 4px rgba(214, 141, 156, 0.4); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="vignette-overlay"></div>
+
+    <div class="nexa-brief-brand" id="brand-container">
+        <span class="brand-nexa" id="brand-nexa-text">NEXA</span>
+        <span class="brand-divider" id="brand-div-line"></span>
+        <span class="brand-brief" id="brand-brief-text">BRIEF</span>
+    </div>
+
+    <div class="haiku" lang="jp">
+        花は散り<br>
+        名を覚えている<br>
+        風ばかり
+    </div>
+
+    <!-- Indicador de acción para habilitar sonido en navegadores modernos -->
+    <div class="audio-indicator" id="sound-hint">
+        <div class="indicator-pulse"></div>
+        <span>Haz clic para activar música y arte dinámico</span>
+    </div>
+
+    <canvas id="scene"></canvas>
+
+    <!-- Motor de audio nativo -->
+    <audio id="audio-engine" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" loop crossorigin="anonymous" style="display:none;"></audio>
+
+    <script type="module">
+        const canvas = document.getElementById("scene");
+        const ctx = canvas.getContext("2d");
+        const audio = document.getElementById("audio-engine");
+        const soundHint = document.getElementById("sound-hint");
+
+        const brandContainer = document.getElementById("brand-container");
+        const brandNexa = document.getElementById("brand-nexa-text");
+        const brandDiv = document.getElementById("brand-div-line");
+        const brandBrief = document.getElementById("brand-brief-text");
+
+        // Canvas auxiliar offscreen para renderizar el fondo, auras y cascadas antes de aplicar reflejo líquido
+        const offscreenCanvas = document.createElement("canvas");
+        const oCtx = offscreenCanvas.getContext("2d");
+
+        let width, height, waterLevel;
+        let petals = [], fogs = [], clouds = [], birds = [], fireflies = [], waterfalls = [];
+        let spiritAura;
+
+        // Carga de Imagen de Fondo mediante Canvas (Sin usar crossOrigin ya que causaba fallos de CORS en Pinterest)
+        const bgImg = new Image();
+        bgImg.src = 'https://i.pinimg.com/1200x/9c/aa/fe/9caafe6f260ed3087f82e34df7abacb6.jpg';
+
+        // Estado físico de interacción (Cursor y Giroscopio)
+        let mouseX = 0, mouseY = 0;
+        let camX = 0, camY = 0;
+
+        // Motores de Audio y Reactividad
+        let audioCtx = null, analyser = null, dataArray = null, isPlaying = false;
+        const audioImpact = { bass: 0, mid: 0, treble: 0, smoothedBass: 0 };
+
+        const settings = {
+            minWind: 1.2,
+            maxWind: 4.8,
+            minSize: 10,
+            maxSize: 32,
+            emitterY: 0.15,
+            emitterSpread: 0.75,
+            gravity: 0.22,
+            turbulence: 0.55,
+            rotationSpeed: 0.012,
+            tumbleStrength: 0.45,
+            staticTilt: 10,
+            petalCount: 160,
+            fogCount: 6,
+            cloudCount: 4,
+            fireflyCount: 45,
+            birdChance: 0.0025,
+            direction: -1
+        };
+
+        const cache = { minSize: 0, maxSize: 0, minWind: 0, maxWind: 0, tiltRad: 0 };
+
+        function updateCache() {
+            cache.minSize = Math.min(settings.minSize, settings.maxSize);
+            cache.maxSize = Math.max(settings.minSize, settings.maxSize);
+            cache.minWind = Math.min(settings.minWind, settings.maxWind);
+            cache.maxWind = Math.max(settings.minWind, settings.maxWind);
+            cache.tiltRad = (settings.staticTilt * Math.PI) / 180;
+            waterLevel = height * 0.62; // El espejo de agua se establece al 62% del viewport vertical
+        }
+
+        // Paleta de pétalos sumi-e tradicionales
+        const petalPalette = [
+            { fill: "#F4C2C2", stroke: "#D68D9C", vein: "rgba(200,140,155,0.6)" },
+            { fill: "#F7A8B8", stroke: "#C97A8B", vein: "rgba(190,110,130,0.6)" },
+            { fill: "#D68D9C", stroke: "#B36374", vein: "rgba(165,90,105,0.6)" },
+            { fill: "#FFF0F2", stroke: "#F0C4C8", vein: "rgba(210,160,170,0.55)" },
+            { fill: "#FADADD", stroke: "#E8A0AA", vein: "rgba(200,140,150,0.6)" }
+        ];
+
+        function createPetalImage(colorObj) {
+            const tempCanvas = document.createElement("canvas");
+            tempCanvas.width = 52;
+            tempCanvas.height = 52;
+            const tCtx = tempCanvas.getContext("2d");
+            tCtx.save();
+            tCtx.translate(26, 26);
+            tCtx.shadowColor = "rgba(140, 100, 110, 0.4)";
+            tCtx.shadowBlur = 6;
+            tCtx.beginPath();
+            tCtx.moveTo(0, -16);
+            tCtx.bezierCurveTo(12, -12, 16, -3, 13, 7);
+            tCtx.bezierCurveTo(8, 14, 0, 11, 0, 11);
+            tCtx.bezierCurveTo(0, 11, -8, 14, -13, 7);
+            tCtx.bezierCurveTo(-16, -3, -12, -12, 0, -16);
+            tCtx.closePath();
+            const gradient = tCtx.createLinearGradient(-9, -13, 11, 9);
+            gradient.addColorStop(0, colorObj.fill);
+            gradient.addColorStop(0.5, colorObj.stroke);
+            gradient.addColorStop(1, "#B36374");
+            tCtx.fillStyle = gradient;
+            tCtx.fill();
+            tCtx.shadowBlur = 0;
+            tCtx.shadowColor = "transparent";
+            tCtx.strokeStyle = colorObj.vein;
+            tCtx.lineWidth = 0.6;
+            tCtx.beginPath();
+            tCtx.moveTo(0, -12);
+            tCtx.lineTo(0, 8);
+            tCtx.stroke();
+            tCtx.beginPath();
+            tCtx.moveTo(0, -4);
+            tCtx.quadraticCurveTo(-4, 1, -7, 3);
+            tCtx.stroke();
+            tCtx.beginPath();
+            tCtx.moveTo(0, -3);
+            tCtx.quadraticCurveTo(4, 1, 7, 3);
+            tCtx.stroke();
+            tCtx.restore();
+            const img = new Image();
+            img.src = tempCanvas.toDataURL();
+            return img;
+        }
+        const petalImages = petalPalette.map(color => createPetalImage(color));
+
+        function rotateVector(x, y, z, ax, ay, az) {
+            let cos = Math.cos(az), sin = Math.sin(az);
+            const x1 = x * cos - y * sin, y1 = x * sin + y * cos, z1 = z;
+            cos = Math.cos(ay); sin = Math.sin(ay);
+            const x2 = x1 * cos + z1 * sin, y2 = y1, z2 = -x1 * sin + z1 * cos;
+            cos = Math.cos(ax); sin = Math.sin(ax);
+            return {
+                x: x2,
+                y: y2 * cos - z2 * sin,
+                z: y2 * sin + z2 * cos
+            };
+        }
+
+        // --- SISTEMAS DE ENTIDADES AVANZADOS ---
+
+        // 1. Pétalo Sumi-e interactivo (Efecto Viento)
+        class Petal {
+            constructor(initOnScreen = false) { this.reset(initOnScreen); }
+            reset(initOnScreen = false) {
+                this.image = petalImages[Math.floor(Math.random() * petalImages.length)];
+                this.width = cache.minSize + Math.random() * (cache.maxSize - cache.minSize);
+                this.height = this.width;
+                const centerY = height * settings.emitterY;
+                const spreadHeight = height * settings.emitterSpread;
+                const minY = centerY - spreadHeight / 2;
+                const maxY = centerY + spreadHeight / 2;
+                this.y = minY + Math.random() * (maxY - minY);
+                if (initOnScreen) {
+                    this.x = Math.random() * width;
+                } else {
+                    this.x = settings.direction === -1 ? width + this.width + Math.random() * width : -this.width - Math.random() * width;
+                }
+                const sizeFactor = (this.width - cache.minSize) / (cache.maxSize - cache.minSize || 1);
+                this.windFactor = 1 - (sizeFactor * 0.45 + Math.random() * 0.4);
+                this.windFactor = Math.max(0.15, Math.min(1, this.windFactor));
+                this.vx = 0; this.vy = 0;
+                this.waveOffset = Math.random() * Math.PI * 2;
+                this.angleZ = Math.random() * Math.PI * 2;
+                this.spinZ = (Math.random() - 0.5) * settings.rotationSpeed;
+                this.angleX = 0; this.angleY = 0;
+                this.spinX = (Math.random() - 0.5) * 0.08;
+                this.spinY = (Math.random() - 0.5) * 0.08;
+            }
+            update(windVelocity) {
+                const targetSpeed = (windVelocity + audioImpact.smoothedBass * 3.5) * this.windFactor;
+                this.vx += (targetSpeed - this.vx) * 0.05;
+                this.x += this.vx * settings.direction;
+                const gravityMod = (1.3 - this.windFactor) * (1.0 + audioImpact.smoothedBass * 0.5);
+                this.vy += settings.gravity * 0.05 * gravityMod;
+                const wave = Math.sin(this.x * 0.008 * settings.direction + this.waveOffset);
+                this.vy += wave * (settings.turbulence + audioImpact.smoothedBass * 0.8) * 0.05;
+                this.vy *= 0.98;
+                this.y += this.vy;
+                const spinMult = 1.0 + audioImpact.smoothedBass * 2.0;
+                this.angleZ += (this.spinZ + this.vx * 0.001) * spinMult;
+                if (settings.tumbleStrength > 0) {
+                    this.angleX += this.spinX * settings.tumbleStrength * spinMult;
+                    this.angleY += this.spinY * settings.tumbleStrength * spinMult;
+                }
+                const buffer = 150;
+                const outByX = settings.direction === -1 ? this.x < -buffer : this.x > width + buffer;
+                if (outByX || this.y > height + buffer || this.y < -buffer) this.reset(false);
+            }
+            draw() {
+                const vecU = rotateVector(1, 0, 0, this.angleX, this.angleY + cache.tiltRad, this.angleZ);
+                const vecV = rotateVector(0, 1, 0, this.angleX, this.angleY + cache.tiltRad, this.angleZ);
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.transform(vecU.x, vecU.y, vecV.x, vecV.y, 0, 0);
+                ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+                ctx.restore();
+            }
+        }
+
+        // 2. Nubes Dinámicas (Capa de Fondo de Cielo)
+        class CloudDrift {
+            constructor(initOnScreen = false) { this.reset(initOnScreen); }
+            reset(initOnScreen = false) {
+                this.width = 220 + Math.random() * 180;
+                this.height = 65 + Math.random() * 45;
+                this.y = (height * 0.05) + Math.random() * (height * 0.25);
+                this.x = initOnScreen ? Math.random() * width : width + this.width;
+                this.speed = 0.06 + Math.random() * 0.12;
+                this.opacity = 0.06 + Math.random() * 0.06;
+                this.waveAmplitude = 8 + Math.random() * 10;
+                this.wavePhase = Math.random() * Math.PI * 2;
+                this.waveSpeed = 0.002 + Math.random() * 0.003;
+
+                this.bubbles = [];
+                const bubbleCount = 5 + Math.floor(Math.random() * 4);
+                for (let i = 0; i < bubbleCount; i++) {
+                    this.bubbles.push({
+                        offsetX: (Math.random() - 0.5) * this.width * 0.65,
+                        offsetY: (Math.random() - 0.45) * this.height * 0.45,
+                        radiusX: (0.4 + Math.random() * 0.45) * this.width * 0.5,
+                        radiusY: (0.4 + Math.random() * 0.45) * this.height * 0.6,
+                        opacityMult: 0.55 + Math.random() * 0.45
+                    });
+                }
+            }
+            update() {
+                this.x -= this.speed;
+                this.wavePhase += this.waveSpeed;
+                if (this.x < -this.width * 1.5) this.reset(false);
+            }
+            draw(targetCtx) {
+                targetCtx.save();
+                const baseX = this.x;
+                const baseY = this.y + Math.sin(this.wavePhase) * this.waveAmplitude;
+
+                for (const b of this.bubbles) {
+                    const cx = baseX + b.offsetX;
+                    const cy = baseY + b.offsetY;
+                    const rx = Math.max(1, b.radiusX);
+                    const ry = Math.max(1, b.radiusY);
+                    const op = this.opacity * b.opacityMult;
+
+                    const rad = Math.max(rx, ry);
+                    const gradient = targetCtx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+                    gradient.addColorStop(0, `rgba(255, 255, 255, ${op})`);
+                    gradient.addColorStop(0.4, `rgba(242, 240, 245, ${op * 0.75})`);
+                    gradient.addColorStop(0.8, `rgba(225, 222, 230, ${op * 0.15})`);
+                    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+                    targetCtx.fillStyle = gradient;
+                    targetCtx.beginPath();
+                    targetCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+                    targetCtx.fill();
+                }
+                targetCtx.restore();
+            }
+        }
+
+        // 3. Neblina Tradicional Sumi-e con Algoritmo de Flujo Dinámico (Ink Mist)
+        class InkMist {
+            constructor() { this.reset(); this.x = Math.random() * width; }
+            reset() {
+                this.x = -250 - Math.random() * 250;
+                this.y = height * 0.35 + Math.random() * (height * 0.3);
+                this.radiusX = 220 + Math.random() * 210;
+                this.radiusY = 75 + Math.random() * 75;
+                this.speed = 0.15 + Math.random() * 0.25;
+                this.opacity = 0.04 + Math.random() * 0.05;
+                this.time = Math.random() * 100;
+                this.scaleYOffset = Math.random() * Math.PI;
+            }
+            update() {
+                this.x += this.speed * (1.0 + audioImpact.smoothedBass * 1.6);
+                this.time += 0.008;
+                // Efecto de deformación que simula absorción de tinta mojada
+                this.currentRadiusX = this.radiusX * (1 + Math.sin(this.time * 0.4) * 0.15);
+                this.currentRadiusY = this.radiusY * (1 + Math.cos(this.time * 0.6 + this.scaleYOffset) * 0.2);
+                if (this.x > width + this.radiusX) this.reset();
+            }
+            draw(targetCtx) {
+                targetCtx.save();
+                const grad = targetCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.currentRadiusX);
+                const r = 245, g = 245, b = 247; // Mist blanco de papel antiguo
+                grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${this.opacity})`);
+                grad.addColorStop(0.4, `rgba(${r - 10}, ${g - 10}, ${b - 5}, ${this.opacity * 0.45})`);
+                grad.addColorStop(1, 'rgba(13, 15, 18, 0)');
+                targetCtx.fillStyle = grad;
+                targetCtx.beginPath();
+                targetCtx.ellipse(this.x, this.y, this.currentRadiusX, this.currentRadiusY, Math.sin(this.time * 0.08) * 0.08, 0, Math.PI * 2);
+                targetCtx.fill();
+                targetCtx.restore();
+            }
+        }
+
+        // 4. Luciérnagas Reactivas y Magnéticas (Hotaru Glow)
+        class Firefly {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = 1.5 + Math.random() * 2.5;
+                this.alpha = 0.1 + Math.random() * 0.55;
+                this.baseAlpha = this.alpha;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = -0.2 - Math.random() * 0.7;
+                this.angle = Math.random() * Math.PI * 2;
+                this.angleSpeed = 0.015 + Math.random() * 0.025;
+                this.wobble = 0.4 + Math.random() * 0.8;
+                this.hue = Math.random() > 0.4 ? 43 : 340; // Oro brillante (43) o Sakura (340)
+            }
+            update() {
+                this.angle += this.angleSpeed;
+                const waveX = Math.sin(this.angle) * this.wobble;
+                this.x += this.vx + waveX;
+                this.y += this.vy;
+
+                // Atracción suave hacia el cursor del usuario
+                const mx = (mouseX + 1) * 0.5 * width;
+                const my = (mouseY + 1) * 0.5 * height;
+                const dx = mx - this.x;
+                const dy = my - this.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < 280) {
+                    const attractionForce = (280 - dist) / 280;
+                    this.x += (dx / dist) * attractionForce * 3.5;
+                    this.y += (dy / dist) * attractionForce * 3.5;
+                }
+
+                // Las luciérnagas brillan y pulsan fuertemente con las frecuencias altas de la música
+                const pulse = 1.0 + audioImpact.treble * 2.2;
+                this.alpha = Math.max(0.1, Math.min(1.0, this.baseAlpha * pulse * (0.6 + Math.sin(this.angle * 2.5) * 0.4)));
+
+                if (this.y < -30 || this.x < -30 || this.x > width + 30) {
+                    this.reset();
+                    this.y = height + 10;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalCompositeOperation = 'screen';
+                const colorStr = this.hue === 43 ? '255, 205, 75' : '214, 141, 156';
+                const pulseSize = this.size * (1.0 + audioImpact.treble * 0.6);
+                const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, pulseSize * 6);
+                grad.addColorStop(0, `rgba(${colorStr}, ${this.alpha})`);
+                grad.addColorStop(0.3, `rgba(${colorStr}, ${this.alpha * 0.25})`);
+                grad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, pulseSize * 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // 5. Aura Espiritual en el Corazón de la Escena (Spirit Aura)
+        class SpiritAura {
+            constructor() {
+                this.x = width * 0.66;
+                this.y = height * 0.42;
+                this.baseRadius = 135;
+                this.particles = [];
+            }
+            update() {
+                // Se desplaza en consonancia con la cámara de paralaje
+                this.x = width * 0.66 + camX * 12;
+                this.y = height * 0.42 + camY * 12;
+
+                const auraStrength = 1 + audioImpact.smoothedBass * 3.2;
+                if (Math.random() < 0.38 * auraStrength) {
+                    this.particles.push({
+                        x: this.x + (Math.random() - 0.5) * 45,
+                        y: this.y + (Math.random() - 0.5) * 45,
+                        vx: (Math.random() - 0.5) * 1.8,
+                        vy: -1.2 - Math.random() * 2.2 - audioImpact.smoothedBass * 5,
+                        life: 1.0,
+                        decay: 0.012 + Math.random() * 0.018,
+                        size: 20 + Math.random() * 30,
+                        color: Math.random() > 0.4 ? '#D68D9C' : '#FFF0F2'
+                    });
+                }
+
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life -= p.decay;
+                    if (p.life <= 0) this.particles.splice(i, 1);
+                }
+            }
+            draw(targetCtx) {
+                const pulse = 1.0 + audioImpact.smoothedBass * 0.55;
+                const grad = targetCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.baseRadius * pulse);
+                grad.addColorStop(0, `rgba(214, 141, 156, ${0.45 * pulse})`);
+                grad.addColorStop(0.5, `rgba(214, 141, 156, ${0.18 * pulse})`);
+                grad.addColorStop(1, 'rgba(214, 141, 156, 0)');
+                
+                targetCtx.save();
+                targetCtx.globalCompositeOperation = 'screen';
+                targetCtx.fillStyle = grad;
+                targetCtx.beginPath();
+                targetCtx.arc(this.x, this.y, this.baseRadius * pulse, 0, Math.PI * 2);
+                targetCtx.fill();
+
+                // Fuego de aura espiritual ascendente
+                for (const p of this.particles) {
+                    targetCtx.globalAlpha = p.life * 0.55;
+                    const pGrad = targetCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+                    pGrad.addColorStop(0, p.color);
+                    pGrad.addColorStop(0.3, `rgba(214, 141, 156, ${p.life * 0.45})`);
+                    pGrad.addColorStop(1, 'rgba(214, 141, 156, 0)');
+                    targetCtx.fillStyle = pGrad;
+                    targetCtx.beginPath();
+                    targetCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    targetCtx.fill();
+                }
+                targetCtx.restore();
+            }
+        }
+
+        // 6. Cascada Procedural con Salpicaduras Interactivas (Water Flow)
+        class Waterfall {
+            constructor(x, y, h, width = 14) {
+                this.x = x;
+                this.y = y;
+                this.h = h;
+                this.width = width;
+                this.streams = [];
+                for (let i = 0; i < 30; i++) {
+                    this.streams.push({
+                        offsetY: Math.random() * this.h,
+                        speed: 1.8 + Math.random() * 2.8,
+                        len: 20 + Math.random() * 25,
+                        alpha: 0.25 + Math.random() * 0.55
+                    });
+                }
+            }
+            update() {
+                const flowMultiplier = 1.0 + audioImpact.smoothedBass * 1.8;
+                for (const s of this.streams) {
+                    s.offsetY += s.speed * flowMultiplier;
+                    if (s.offsetY > this.h) {
+                        s.offsetY = 0;
+                        s.len = 20 + Math.random() * 25;
+                        s.alpha = 0.25 + Math.random() * 0.55;
+                    }
+                }
+            }
+            draw(targetCtx) {
+                targetCtx.save();
+                // Base del agua cayendo
+                const grad = targetCtx.createLinearGradient(this.x, this.y, this.x, this.y + this.h);
+                grad.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+                grad.addColorStop(0.85, 'rgba(255, 255, 255, 0.35)');
+                grad.addColorStop(1, 'rgba(255, 255, 255, 0.65)');
+                targetCtx.fillStyle = grad;
+                targetCtx.fillRect(this.x - this.width / 2, this.y, this.width, this.h);
+
+                // Líneas blancas individuales de agua en tinta
+                targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+                targetCtx.lineCap = 'round';
+                for (const s of this.streams) {
+                    // Genera una leve ondulación según descienda por el acantilado
+                    const sx = this.x + (Math.sin(s.offsetY * 0.04) * 1.5);
+                    targetCtx.lineWidth = 0.8 + Math.random() * 1.4;
+                    targetCtx.globalAlpha = s.alpha;
+                    targetCtx.beginPath();
+                    targetCtx.moveTo(sx, this.y + s.offsetY);
+                    targetCtx.lineTo(sx, Math.min(this.y + this.h, this.y + s.offsetY + s.len));
+                    targetCtx.stroke();
+                }
+
+                // Bruma/Splash en la base del impacto
+                const intensity = 1.0 + audioImpact.smoothedBass * 2.2;
+                targetCtx.globalAlpha = 0.45 * intensity;
+                const splashGrad = targetCtx.createRadialGradient(this.x, this.y + this.h, 2, this.x, this.y + this.h, this.width * 2.2 * intensity);
+                splashGrad.addColorStop(0, '#ffffff');
+                splashGrad.addColorStop(0.5, 'rgba(240, 245, 255, 0.42)');
+                splashGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                targetCtx.fillStyle = splashGrad;
+                targetCtx.beginPath();
+                targetCtx.arc(this.x, this.y + this.h, this.width * 2.2 * intensity, 0, Math.PI * 2);
+                targetCtx.fill();
+
+                targetCtx.restore();
+            }
+        }
+
+        // 7. Grulla en Vuelo Zen (Crane)
+        class Crane {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = -50;
+                this.y = (height * 0.08) + Math.random() * (height * 0.22);
+                this.size = 12 + Math.random() * 14;
+                this.speedX = 0.5 + Math.random() * 0.65;
+                this.speedY = -0.04 - Math.random() * 0.07;
+                this.wingPhase = Math.random() * Math.PI * 2;
+                this.wingSpeed = 0.07 + Math.random() * 0.05;
+                this.opacity = 0;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.wingPhase += this.wingSpeed;
+                if (this.x < 150) this.opacity += 0.012;
+                else if (this.x > width - 200) this.opacity -= 0.009;
+                this.opacity = Math.max(0, Math.min(0.65, this.opacity));
+                if (this.x > width + 50 || this.y < -50) this.reset();
+            }
+            draw(targetCtx) {
+                if (this.opacity <= 0) return;
+                targetCtx.save();
+                targetCtx.globalAlpha = this.opacity;
+                targetCtx.strokeStyle = "#1a1a1a";
+                targetCtx.lineWidth = 1.5;
+                targetCtx.lineJoin = "round";
+                targetCtx.lineCap = "round";
+                const wingY = Math.sin(this.wingPhase) * (this.size * 0.4);
+                targetCtx.beginPath();
+                targetCtx.moveTo(this.x - this.size * 0.4, this.y + 1);
+                targetCtx.lineTo(this.x, this.y);
+                targetCtx.lineTo(this.x + this.size * 0.4, this.y + 1);
+                targetCtx.moveTo(this.x, this.y);
+                targetCtx.quadraticCurveTo(this.x - this.size * 0.3, this.y - this.size * 0.2 + wingY, this.x - this.size * 0.7, this.y - wingY);
+                targetCtx.moveTo(this.x, this.y);
+                targetCtx.quadraticCurveTo(this.x + this.size * 0.3, this.y - this.size * 0.2 + wingY, this.x + this.size * 0.7, this.y - wingY);
+                targetCtx.stroke();
+                targetCtx.restore();
+            }
+        }
+
+        // --- SISTEMA DE CONTROL DE PANTALLA Y ENTORNO ---
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            offscreenCanvas.width = width;
+            offscreenCanvas.height = height;
+
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+            oCtx.imageSmoothingEnabled = true;
+            oCtx.imageSmoothingQuality = "high";
+
+            updateCache();
+        }
+
+        function initEntities() {
+            petals = []; fogs = []; clouds = []; birds = []; fireflies = []; waterfalls = [];
+            
+            // Instanciar pétalos
+            for (let i = 0; i < settings.petalCount; i++) {
+                const p = new Petal(false);
+                p.x += Math.random() * width * 1.5;
+                petals.push(p);
+            }
+            
+            // Instanciar neblina ink Sumi-e
+            for (let i = 0; i < settings.fogCount; i++) {
+                fogs.push(new InkMist());
+            }
+
+            // Instanciar nubes volumetricas
+            for (let i = 0; i < settings.cloudCount; i++) {
+                clouds.push(new CloudDrift(true));
+            }
+
+            // Luciérnagas Hotaru Glow
+            for (let i = 0; i < settings.fireflyCount; i++) {
+                fireflies.push(new Firefly());
+            }
+
+            // Crear cascadas procedimentales posicionadas en huecos lógicos de la pintura
+            waterfalls.push(new Waterfall(width * 0.26, height * 0.15, height * 0.22, 11));
+            waterfalls.push(new Waterfall(width * 0.51, height * 0.20, height * 0.18, 14));
+
+            // Instanciar aura espiritual en el templo principal de la imagen
+            spiritAura = new SpiritAura();
+
+            // Grullas
+            birds.push(new Crane());
+        }
+
+        // Dibuja un paisaje procedural sumi-e interactivo como salvaguarda si la imagen falla
+        function drawProceduralLandscape(targetCtx, offsetX, offsetY) {
+            // Degradado de fondo (papel o cielo nocturno oriental)
+            const skyGrad = targetCtx.createLinearGradient(0, 0, 0, height);
+            skyGrad.addColorStop(0, '#0a0d12');
+            skyGrad.addColorStop(0.6, '#141923');
+            skyGrad.addColorStop(1, '#1b202e');
+            targetCtx.fillStyle = skyGrad;
+            targetCtx.fillRect(0, 0, width, height);
+
+            // Sol naciente carmesí difuminado
+            targetCtx.save();
+            const sunX = width * 0.7 + offsetX * 0.15;
+            const sunY = height * 0.28 + offsetY * 0.15;
+            const sunRad = Math.min(width, height) * 0.14;
+            const sunGrad = targetCtx.createRadialGradient(sunX, sunY, sunRad * 0.1, sunX, sunY, sunRad);
+            sunGrad.addColorStop(0, 'rgba(214, 141, 156, 0.5)');
+            sunGrad.addColorStop(0.4, 'rgba(179, 57, 57, 0.2)');
+            sunGrad.addColorStop(1, 'rgba(13, 15, 18, 0)');
+            targetCtx.fillStyle = sunGrad;
+            targetCtx.beginPath();
+            targetCtx.arc(sunX, sunY, sunRad, 0, Math.PI * 2);
+            targetCtx.fill();
+            targetCtx.restore();
+
+            // Capas de montañas Shan Shui generadas mediante curvas senoidales
+            const layers = [
+                { colorStart: 'rgba(25, 30, 42, 0.3)', colorEnd: 'rgba(13, 15, 18, 0.1)',  scale: 0.3,  speed: 0.1,  seed: 1.2,  h: height * 0.35 }, 
+                { colorStart: 'rgba(20, 25, 35, 0.55)', colorEnd: 'rgba(13, 15, 18, 0.2)', scale: 0.5,  speed: 0.2,  seed: 3.7,  h: height * 0.42 }, 
+                { colorStart: 'rgba(15, 19, 27, 0.8)', colorEnd: 'rgba(13, 15, 18, 0.4)',  scale: 0.8,  speed: 0.35, seed: 6.4,  h: height * 0.50 }, 
+                { colorStart: 'rgba(8, 10, 15, 1.0)',   colorEnd: 'rgba(13, 15, 18, 0.7)',  scale: 1.1,  speed: 0.5,  seed: 9.1,  h: height * 0.58 }  
+            ];
+
+            layers.forEach(layer => {
+                targetCtx.save();
+                const lX = offsetX * layer.speed;
+                const lY = offsetY * layer.speed;
+                targetCtx.translate(lX, lY);
+
+                const mountainGrad = targetCtx.createLinearGradient(0, layer.h - 120, 0, height);
+                mountainGrad.addColorStop(0, layer.colorStart);
+                mountainGrad.addColorStop(0.7, layer.colorEnd);
+                mountainGrad.addColorStop(1, 'rgba(13, 15, 18, 0)');
+
+                targetCtx.fillStyle = mountainGrad;
+                targetCtx.beginPath();
+                targetCtx.moveTo(-100, height + 100);
+
+                const points = 40;
+                const step = (width + 200) / points;
+                for (let i = 0; i <= points; i++) {
+                    const px = -100 + i * step;
+                    
+                    const wave1 = Math.sin(i * 0.18 + layer.seed) * 70;
+                    const wave2 = Math.cos(i * 0.07 - layer.seed * 1.3) * 45;
+                    const wave3 = Math.sin(i * 0.35 + layer.seed * 2.2) * 15;
+                    const py = layer.h + wave1 + wave2 + wave3;
+                    
+                    if (i === 0) {
+                        targetCtx.lineTo(px, py);
+                    } else {
+                        const prevPx = -100 + (i - 1) * step;
+                        const prevWave1 = Math.sin((i - 1) * 0.18 + layer.seed) * 70;
+                        const prevWave2 = Math.cos((i - 1) * 0.07 - layer.seed * 1.3) * 45;
+                        const prevWave3 = Math.sin((i - 1) * 0.35 + layer.seed * 2.2) * 15;
+                        const prevPy = layer.h + prevWave1 + prevWave2 + prevWave3;
+                        
+                        const cx = (prevPx + px) / 2;
+                        const cy = (prevPy + py) / 2;
+                        targetCtx.quadraticCurveTo(prevPx, prevPy, cx, cy);
+                    }
+                }
+
+                targetCtx.lineTo(width + 100, height + 100);
+                targetCtx.closePath();
+                targetCtx.fill();
+                targetCtx.restore();
+            });
+        }
+
+        // Renderizado del Canvas de Fondo con ajuste tipo Cover y paralaje
+        function drawSceneBackground(targetCtx, offsetX, offsetY) {
+            // Verificamos si la imagen se encuentra cargada correctamente y no está en estado roto
+            if (!bgImg.complete || bgImg.naturalWidth === 0) {
+                drawProceduralLandscape(targetCtx, offsetX, offsetY);
+                return;
+            }
+
+            // Para que la imagen cubra completamente y permita el movimiento de paralaje sin bordes vacíos
+            const zoom = 1.15;
+            const w = width * zoom;
+            const h = height * zoom;
+            const x = (width - w) / 2 + offsetX;
+            const y = (height - h) / 2 + offsetY;
+
+            try {
+                targetCtx.drawImage(bgImg, x, y, w, h);
+            } catch (e) {
+                // Doble capa de seguridad: Si drawImage arroja excepción, pintamos el paisaje procedural
+                drawProceduralLandscape(targetCtx, offsetX, offsetY);
+            }
+        }
+
+        let windCycle = 0;
+
+        // --- CORE LOOP ANIMATION (60 FPS) ---
+        function animate(timestamp) {
+            const elapsed = timestamp / 1000;
+            ctx.clearRect(0, 0, width, height);
+            oCtx.clearRect(0, 0, width, height);
+
+            // 1. Obtención de Espectro de Audio y Reactividad
+            if (isPlaying && analyser) {
+                analyser.getByteFrequencyData(dataArray);
+                let bSum = 0, mSum = 0, tSum = 0;
+                for (let i = 0; i < 5; i++) bSum += dataArray[i];
+                for (let i = 6; i < 16; i++) mSum += dataArray[i];
+                for (let i = 17; i < 32; i++) tSum += dataArray[i];
+                audioImpact.bass = bSum / 5 / 255;
+                audioImpact.mid = mSum / 10 / 255;
+                audioImpact.treble = tSum / 15 / 255;
+            } else {
+                // Simulación física orgánica en caso de que el usuario no haya iniciado el reproductor
+                const beatFreq = (elapsed % 0.72) / 0.72;
+                const simPulse = Math.pow(Math.max(0, Math.cos(beatFreq * Math.PI)), 4);
+                audioImpact.bass = simPulse * 0.42;
+                audioImpact.mid = Math.sin(elapsed * 1.6) * 0.12 + 0.18;
+                audioImpact.treble = Math.cos(elapsed * 2.8) * 0.08 + 0.12;
+            }
+            // Suavizado del canal de graves (Bass)
+            audioImpact.smoothedBass += (audioImpact.bass - audioImpact.smoothedBass) * 0.12;
+
+            // 2. Interpolación Fluida de Cámara para Paralaje 3D (Depth Drift)
+            const targetCamX = mouseX * 22;
+            const targetCamY = mouseY * 12;
+            camX += (targetCamX - camX) * 0.05;
+            camY += (targetCamY - camY) * 0.05;
+
+            // 3. Renderizar Escena Superior en Canvas Offscreen (Fondo, Aura, Cascadas, Nubes)
+            drawSceneBackground(oCtx, camX * 0.35, camY * 0.35);
+            
+            // Aura espiritual mística detrás de elementos del plano medio
+            spiritAura.update();
+            spiritAura.draw(oCtx);
+
+            // Cascadas procedimentales tridimensionales
+            for (const waterfall of waterfalls) {
+                waterfall.update();
+                waterfall.draw(oCtx);
+            }
+
+            // Nubes en movimiento
+            for (const cloud of clouds) {
+                cloud.update();
+                cloud.draw(oCtx);
+            }
+
+            // Grullas sumi-e
+            if (Math.random() < settings.birdChance && birds.length < 3) birds.push(new Crane());
+            for (let i = birds.length - 1; i >= 0; i--) {
+                birds[i].update();
+                birds[i].draw(oCtx);
+                if (birds[i].x > width + 50 && birds.length > 1) birds.splice(i, 1);
+            }
+
+            // 4. Copiar escena aérea directa (Plano Aéreo Real de la Mitad Superior)
+            ctx.drawImage(offscreenCanvas, 0, 0, width, waterLevel, 0, 0, width, waterLevel);
+
+            // 5. Aplicar Reflejo Líquido Distorsionado en la Mitad Inferior (Water Ripples)
+            const reflectionHeight = height - waterLevel;
+            const rippleTime = elapsed * 4.2;
+            // El impacto armónico del Bass expande las ondas fractales del agua en vivo
+            const baseRippleAmp = 2.4;
+            const bassRippleAmp = audioImpact.smoothedBass * 18.0;
+            const rippleAmp = baseRippleAmp + bassRippleAmp;
+
+            for (let y = 0; y < reflectionHeight; y++) {
+                const destY = waterLevel + y;
+                const srcY = waterLevel - y; // Mapeado inverso vertical de la escena offscreen
+                if (srcY < 0) break;
+
+                // Ondulaciones cuya frecuencia e intensidad de perspectiva aumentan de forma realista hacia el primer plano
+                const freq = 0.065 + (y * 0.0022);
+                const waveOffset = Math.sin(y * freq - rippleTime) * rippleAmp * (0.8 + (y / reflectionHeight) * 0.6);
+
+                // Dibujar fila por fila con desplazamiento horizontal
+                ctx.drawImage(offscreenCanvas, 0, srcY, width, 1, waveOffset, destY, width, 1);
+            }
+
+            // Capa de modificación de tinta en el agua para mayor profundidad oriental
+            ctx.save();
+            const lakeOverlayGrad = ctx.createLinearGradient(0, waterLevel, 0, height);
+            lakeOverlayGrad.addColorStop(0, 'rgba(13, 15, 18, 0.42)');
+            lakeOverlayGrad.addColorStop(1, 'rgba(28, 28, 30, 0.85)');
+            ctx.fillStyle = lakeOverlayGrad;
+            ctx.fillRect(0, waterLevel, width, reflectionHeight);
+            ctx.restore();
+
+            // 6. Elementos del Plano Frontal y Atmosférico (Ink Mist, Pétalos, Luciérnagas)
+            // Neblina de tinta difusa interactiva
+            for (const fog of fogs) {
+                fog.update();
+                fog.draw(ctx);
+            }
+
+            // Sistema de partículas de Luciérnagas (Hotaru Glow)
+            for (const fly of fireflies) {
+                fly.update();
+                fly.draw();
+            }
+
+            // Sistema de caída de pétalos sumi-e con viento
+            windCycle += 0.003;
+            const baseWind = cache.minWind + (cache.maxWind - cache.minWind) * (Math.sin(windCycle) * Math.cos(windCycle * 0.5) * 0.5 + 0.5);
+            for (const petal of petals) {
+                petal.update(baseWind);
+                petal.draw();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // --- SISTEMA INTEGRADOR DEL HAIKU COMO MEDIDOR DE RITMO (BPM SYNC) ---
+        (function() {
+            const haikuNode = document.querySelector('.haiku');
+            const textContent = haikuNode.innerHTML.trim();
+            haikuNode.innerHTML = '';
+            const lines = textContent.split('<br>');
+            
+            lines.forEach((line, lineIdx) => {
+                const lineDiv = document.createElement('div');
+                lineDiv.style.display = 'inline-block';
+                lineDiv.style.verticalAlign = 'top';
+                if (lineIdx > 0) lineDiv.style.marginRight = '1.8rem';
+                
+                [...line].forEach(char => {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    lineDiv.appendChild(span);
+                });
+                haikuNode.appendChild(lineDiv);
+            });
+
+            const spans = document.querySelectorAll('.haiku span');
+            let currentCycle = 'black', charIndex = 0;
+            let haikuTimer = 0;
+
+            // Procesamos la coloración sincronizada directamente en el loop de animación
+            // de modo que la velocidad dependa exactamente de los graves de la música
+            function tickHaiku() {
+                // Aumentamos el "tempo" de la transición basándonos en la vibración del Bass
+                const speedMultiplier = 1.0 + audioImpact.smoothedBass * 3.8;
+                haikuTimer += (16.67 * speedMultiplier); // Milisegundos virtuales por fotograma
+
+                const stepThreshold = 180;  // Tiempo base entre cambio de caracteres (ms)
+                const holdThreshold = 2800; // Tiempo de espera en el clímax de color (ms)
+
+                if (charIndex < spans.length) {
+                    if (haikuTimer >= stepThreshold) {
+                        haikuTimer = 0;
+                        const targetSpan = spans[charIndex];
+                        if (currentCycle === 'black') {
+                            targetSpan.style.color = '#1c1c1e';
+                            targetSpan.style.textShadow = '0 0 15px rgba(28, 28, 30, 0.4)';
+                            targetSpan.style.transform = 'scale(1.08) translateY(-3px)';
+                        } else {
+                            targetSpan.style.color = '#D68D9C';
+                            targetSpan.style.textShadow = '0 0 20px rgba(214, 141, 156, 0.75)';
+                            targetSpan.style.transform = 'scale(1.04) translateY(-2px)';
+                        }
+                        charIndex++;
+                    }
+                } else {
+                    if (haikuTimer >= holdThreshold) {
+                        haikuTimer = 0;
+                        spans.forEach(span => span.style.transform = 'scale(1.0) translateY(0)');
+                        
+                        if (currentCycle === 'black') {
+                            brandContainer.style.opacity = "0.9";
+                            brandBrief.style.color = "#D68D9C";
+                            brandBrief.style.textShadow = "0 0 15px rgba(214, 141, 156, 0.4)";
+                        } else {
+                            brandContainer.style.opacity = "0.5";
+                            brandBrief.style.color = "#1c1c1e";
+                            brandBrief.style.textShadow = "none";
+                        }
+                        
+                        currentCycle = currentCycle === 'black' ? 'pink' : 'black';
+                        charIndex = 0;
+                    }
+                }
+                setTimeout(() => requestAnimationFrame(tickHaiku), 16.67);
+            }
+            
+            setTimeout(tickHaiku, 1000);
+        })();
+
+        // --- INICIALIZADOR DE AUDIO INTEGRADO CON CONTEXT ---
+        function initAudioContext() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 64;
+            analyser.smoothingTimeConstant = 0.82;
+            const source = audioCtx.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination);
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }
+
+        // Listener de interacción en pantalla
+        window.addEventListener('click', async () => {
+            if (!audioCtx) {
+                initAudioContext();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
+            
+            if (audio.paused) {
+                audio.play().then(() => { 
+                    isPlaying = true;
+                    soundHint.classList.add("playing");
+                }).catch(err => console.warn("Interacción requerida por el navegador para reproducir:", err));
+            } else {
+                audio.pause();
+                isPlaying = false;
+                soundHint.classList.remove("playing");
+            }
+        });
+
+        // Captura de movimientos del mouse
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+        });
+
+        // Captura del giroscopio en móviles para paralaje cinematográfico
+        window.addEventListener('deviceorientation', (e) => {
+            if (e.beta !== null && e.gamma !== null) {
+                // beta: inclinación adelante-atrás [-180, 180]
+                // gamma: inclinación izquierda-derecha [-90, 90]
+                mouseX = Math.max(-1, Math.min(1, e.gamma / 24));
+                mouseY = Math.max(-1, Math.min(1, (e.beta - 45) / 20));
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            resize();
+            updateCache();
+            initEntities();
+            requestAnimationFrame(animate);
+            window.addEventListener('resize', () => {
+                resize();
+                initEntities();
+            });
+        });
+    </script>
+</body>
+</html>

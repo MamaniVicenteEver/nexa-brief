@@ -1,0 +1,67 @@
+{
+  "activeId": "colapso",
+  "configs": [
+    {
+      "id": "colapso",
+      "description": "Corrido/urbano duro — tinta roja sangre sobre fondo casi negro y difuso, frases que SE ARMAN palabra a palabra a estampa, barras de cine. Caso actual: Kevin Kaarl — Colapso (letra), con textos de intro heredados de Hola Remix. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "𝙆𝙚𝙫𝙞𝙣 𝙆𝙖𝙖𝙧𝙡 𝘾𝙤𝙡𝙖𝙥𝙨𝙤 𝙇𝙚𝙩𝙧𝙖.mp3" },
+      "lyricsUrl": "lyrics-kevin-kaarl-colapso.json",
+      "bg": {
+        "type": "image",
+        "src": "bg8.jpg",
+        "filter": "grayscale(0.5) brightness(0.20) contrast(1.25) saturate(1.3) blur(7px)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&display=swap",
+        "display": "\"Anton\", sans-serif"
+      },
+      "colors": { "ink": "#D2222A", "feats": "#8f8f92", "hint": "#a09da0" },
+      "intro": { "title": "Hola\nRemix", "sub": "Dalex · Chencho Corleone · Juhn · Lenny Tavárez", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": true },
+      "cluster": {
+        "gapSec": 0.55,
+        "maxWords": 5,
+        "maxChars": 26,
+        "bigMaxVh": 0.26,
+        "smallRatio": 0.3,
+        "skewBase": -8,
+        "skewJitter": 3,
+        "rotJitter": 1.2,
+        "shakePx": 6
+      },
+      "seed": 23
+    },
+    {
+      "id": "colapso-dorado",
+      "description": "Mismo audio (Kevin Kaarl — Colapso) con tema alternativo: tinta dorada tipo placa, créditos de intro correctos y fondo un punto más cálido. Demuestra cómo un segundo objeto del config cambia tema/colores sin tocar la plantilla. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "𝙆𝙚𝙫𝙞𝙣 𝙆𝙖𝙖𝙧𝙡 𝘾𝙤𝙡𝙖𝙥𝙨𝙤 𝙇𝙚𝙩𝙧𝙖.mp3" },
+      "lyricsUrl": "lyrics-kevin-kaarl-colapso.json",
+      "bg": {
+        "type": "image",
+        "src": "bg8.jpg",
+        "filter": "grayscale(0.4) brightness(0.22) contrast(1.2) sepia(0.25) saturate(1.2) blur(7px)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&display=swap",
+        "display": "\"Anton\", sans-serif"
+      },
+      "colors": { "ink": "#E8B84B", "feats": "#9a917d", "hint": "#b3a98f" },
+      "intro": { "title": "Colapso", "sub": "Kevin Kaarl", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por escuchar", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": true },
+      "cluster": {
+        "gapSec": 0.55,
+        "maxWords": 5,
+        "maxChars": 26,
+        "bigMaxVh": 0.26,
+        "smallRatio": 0.3,
+        "skewBase": -8,
+        "skewJitter": 3,
+        "rotJitter": 1.2,
+        "shakePx": 6
+      },
+      "seed": 41
+    }
+  ]
+}

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Yourself // Still Form</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,700;0,900;1,900&family=Noto+Sans+JP:wght@700;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --spotlight-x: 50%;
+      --spotlight-y: 50%;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #f0f0f0;
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .background-scene {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #f2f2f2;
+      background-image: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=1945&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      pointer-events: none;
+    }
+
+    .background-scene.base-gray {
+      filter: grayscale(1) contrast(1.5) brightness(0.95);
+      z-index: 1;
+    }
+
+    .background-scene.reveal-color {
+      filter: none;
+      z-index: 2;
+      -webkit-mask-image: radial-gradient(circle 240px at var(--spotlight-x) var(--spotlight-y), black 20%, transparent 80%);
+      mask-image: radial-gradient(circle 240px at var(--spotlight-x) var(--spotlight-y), black 20%, transparent 80%);
+    }
+
+    .ink-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      background: radial-gradient(circle at 30% 40%, transparent 40%, rgba(0,0,0,0.05) 100%);
+      pointer-events: none;
+    }
+
+    .typography-bg-container {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 5vw;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .brush-text {
+      font-weight: 900;
+      font-style: italic;
+      text-transform: uppercase;
+      line-height: 0.85;
+      color: #ffffff;
+      letter-spacing: -0.03em;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+    }
+
+    .brush-text.main {
+      font-size: clamp(8rem, 18vw, 22rem);
+    }
+
+    .brush-text.sub {
+      font-size: clamp(4rem, 10vw, 12rem);
+      padding-left: 2vw;
+      color: #ffffff;
+    }
+
+    .brush-text span {
+      display: inline-block;
+      transform-origin: center center;
+      will-change: transform;
+    }
+
+    .japanese-sidebar {
+      position: fixed;
+      right: 4vw;
+      top: 15%;
+      z-index: 3;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 900;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: clamp(3.5rem, 3vw, 3.5rem);
+      color: #ffffff;
+      letter-spacing: 0.2em;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+      pointer-events: none;
+      user-select: none;
+      display: block;
+    }
+
+    .japanese-sidebar #jp-main,
+    .japanese-sidebar #jp-sub {
+      display: inline;
+    }
+
+    .japanese-sidebar .sub-text {
+      font-size: 0.45em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #ffffff;
+      margin-top: 0;
+    }
+
+    .japanese-sidebar span {
+      display: inline-block;
+      transition: color 1.5s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 1.5s ease;
+      color: #ffffff;
+    }
+
+    .character-container {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding-right: 10vw;
+      pointer-events: none;
+    }
+
+    .character-medium {
+      height: 85%;
+      width: auto;
+      object-fit: contain;
+      user-select: none;
+      transform: scaleX(-1) translateY(2vh);
+      position: absolute;
+      bottom: 0;
+    }
+
+    .character-container.base-gray-container {
+      z-index: 4;
+    }
+
+    .character-medium.base-gray {
+      filter: grayscale(1) contrast(1.3) saturate(0) brightness(0.85) drop-shadow(-15px 25px 30px rgba(0, 0, 0, 0.15));
+    }
+
+    .character-container.reveal-color-container {
+      z-index: 5;
+      -webkit-mask-image: radial-gradient(circle 240px at var(--spotlight-x) var(--spotlight-y), black 20%, transparent 80%);
+      mask-image: radial-gradient(circle 240px at var(--spotlight-x) var(--spotlight-y), black 20%, transparent 80%);
+    }
+
+    .character-medium.reveal-color {
+      filter: drop-shadow(-15px 25px 30px rgba(0, 0, 0, 0.35)) contrast(1.1) saturate(1.1);
+    }
+
+    .red-seal {
+      position: fixed;
+      bottom: 40px;
+      right: 60px;
+      width: 45px;
+      height: 45px;
+      border: 3px solid #ff3333;
+      color: #ff3333;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      z-index: 7;
+      opacity: 0.9;
+      background: rgba(0,0,0,0.2);
+      text-shadow: none;
+    }
+
+    .spotlight-lens-flare {
+      position: fixed;
+      inset: 0;
+      z-index: 6;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      background: radial-gradient(circle 300px at var(--spotlight-x) var(--spotlight-y), rgba(255, 245, 220, 0.15) 0%, rgba(255, 0, 0, 0.03) 40%, transparent 100%);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-scene base-gray"></div>
+  <div class="background-scene reveal-color"></div>
+  <div class="ink-overlay"></div>
+
+  <div class="typography-bg-container">
+    <h1 class="brush-text main" id="text-focus">Focus</h1>
+    <h1 class="brush-text sub" id="text-yourself">Yourself</h1>
+  </div>
+
+  <div class="japanese-sidebar">
+    <div id="jp-main">集中しろ</div>
+    <div id="jp-sub" class="sub-text">技は心から生まれる。</div>
+  </div>
+
+  <div class="character-container base-gray-container">
+    <img class="character-medium base-gray" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/Japan/girl.png" alt="Martial Artist Stand">
+  </div>
+
+  <div class="character-container reveal-color-container">
+    <img class="character-medium reveal-color" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/Japan/girl.png" alt="Martial Artist Stand Reveal">
+  </div>
+
+  <div class="spotlight-lens-flare"></div>
+
+  <div class="red-seal">芯</div>
+
+  <script>
+    function splitWords(elementId) {
+      const el = document.getElementById(elementId);
+      const text = el.textContent.trim();
+      el.innerHTML = '';
+      [...text].forEach(char => {
+        const span = document.createElement('span');
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        el.appendChild(span);
+      });
+    }
+
+    splitWords('text-focus');
+    splitWords('text-yourself');
+
+    const focusSpans = document.querySelectorAll('#text-focus span');
+    const yourselfSpans = document.querySelectorAll('#text-yourself span');
+
+    const jpSpans = [];
+    
+    function splitJapaneseNode(nodeId) {
+      const node = document.getElementById(nodeId);
+      const text = node.textContent.trim();
+      node.innerHTML = '';
+      [...text].forEach(char => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        node.appendChild(span);
+        jpSpans.push(span);
+      });
+    }
+
+    splitJapaneseNode('jp-main');
+    splitJapaneseNode('jp-sub');
+
+    let jpPhase = 'to-red';
+    let currentJpIdx = 0;
+    let jpLastUpdateTime = 0;
+    const JP_STEP_DELAY = 220;
+    const JP_PHASE_PAUSE = 2800;
+    let jpPauseStartTime = 0;
+
+    function updateJapaneseSidebar(now) {
+      if (jpPauseStartTime > 0) {
+        if (now - jpPauseStartTime >= JP_PHASE_PAUSE) {
+          jpPauseStartTime = 0;
+          currentJpIdx = 0;
+        }
+        return;
+      }
+
+      if (now - jpLastUpdateTime >= JP_STEP_DELAY) {
+        jpLastUpdateTime = now;
+
+        if (jpPhase === 'to-red') {
+          if (currentJpIdx < jpSpans.length) {
+            jpSpans[currentJpIdx].style.color = '#b30006';
+            jpSpans[currentJpIdx].style.textShadow = '0 0 10px rgba(179, 0, 6, 0.7)';
+            currentJpIdx++;
+          } else {
+            jpPhase = 'to-white';
+            jpPauseStartTime = now;
+          }
+        } else if (jpPhase === 'to-white') {
+          if (currentJpIdx < jpSpans.length) {
+            jpSpans[currentJpIdx].style.color = '#ffffff';
+            jpSpans[currentJpIdx].style.textShadow = '2px 2px 0px rgba(0,0,0,0.4)';
+            currentJpIdx++;
+          } else {
+            jpPhase = 'to-red';
+            jpPauseStartTime = now;
+          }
+        }
+      }
+    }
+
+    const root = document.documentElement;
+    let globalStartTime = performance.now();
+
+    function renderLoop(timestamp) {
+      requestAnimationFrame(renderLoop);
+
+      const elapsed = (timestamp - globalStartTime) / 1000;
+      const now = Date.now();
+
+      const t = elapsed * 0.45;
+      const sX = 50 + Math.sin(t * 1.6) * 35;
+      const sY = 50 + Math.cos(t * 0.9) * 28;
+
+      root.style.setProperty('--spotlight-x', `${sX}%`);
+      root.style.setProperty('--spotlight-y', `${sY}%`);
+
+      focusSpans.forEach((span, i) => {
+        const offset = i * 0.16;
+        const wave = Math.sin(elapsed * 1.1 - offset);
+        const scale = 0.96 + wave * 0.12;
+        const translateY = wave * -8;
+        span.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+      });
+
+      yourselfSpans.forEach((span, i) => {
+        const offset = (i + focusSpans.length) * 0.16;
+        const wave = Math.sin(elapsed * 1.1 - offset);
+        const scale = 0.96 + wave * 0.12;
+        const translateY = wave * -8;
+        span.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+      });
+
+      updateJapaneseSidebar(now);
+    }
+
+    requestAnimationFrame(renderLoop);
+  </script>
+</body>
+</html>

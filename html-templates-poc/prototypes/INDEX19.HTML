@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Castorice // Quantum Archive - Yuffie Edition</title>
+    <style>
+        :root {
+            --bg-deep: #000000;
+            --castorice-lavender: #d8b4fe; 
+            --lavender-glow: rgba(216, 180, 254, 0.15);
+            --pearl-white: #ffffff;
+            --text-dim: #3a3a3a;
+        }
+
+        /* CURSOR Y SEGURIDAD */
+        * { 
+            -webkit-user-drag: none; 
+            -webkit-user-select: none; 
+            user-select: none;
+            outline: none;
+            cursor: url('https://u.cubeupload.com/zmonochrome/starscursor.png'), auto;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg-deep);
+            color: var(--pearl-white);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            letter-spacing: 1.5px;
+        }
+
+        .security-shield {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 999; background: transparent;
+        }
+
+        /* AURA GÉLIDA */
+        .aura-visual {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+        }
+
+        .aura-glow {
+            position: absolute;
+            top: 50%; left: 65%;
+            width: 65vw; height: 65vh;
+            background: radial-gradient(circle, rgba(216, 180, 254, 0.05) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: pulseAura 12s infinite alternate ease-in-out;
+            filter: blur(100px);
+        }
+
+        @keyframes pulseAura {
+            from { opacity: 0.2; transform: translate(-50%, -50%) scale(1); }
+            to { opacity: 0.4; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        /* REPRODUCTOR - TAMAÑO GRANDE SEGÚN PEDISTE */
+        .mini-player {
+            position: fixed;
+            top: 45px; left: 50px;
+            z-index: 1001;
+            width: 190px;
+            opacity: 0.25;
+            transition: opacity 0.5s ease;
+        }
+
+        .mini-player:hover { opacity: 1; }
+
+        .player-info {
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: var(--castorice-lavender);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #playBtn {
+            background: none;
+            border: 1px solid var(--castorice-lavender);
+            color: var(--castorice-lavender);
+            font-size: 8px;
+            padding: 4px 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .progress-bar { width: 100%; height: 1px; background: rgba(255,255,255,0.05); margin-top: 10px; }
+        #progressFill { width: 0%; height: 100%; background: var(--castorice-lavender); }
+
+        /* RENDER ORIGINAL */
+        .render-container {
+            position: absolute;
+            left: -80px; bottom: -5vh;
+            height: 110vh; z-index: 4;
+            pointer-events: none;
+            filter: drop-shadow(10px 0 20px rgba(0,0,0,0.8));
+        }
+
+        .render-container img {
+            height: 100%;
+            mask-image: linear-gradient(to right, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+        }
+
+        /* KANJI - MUCHO MÁS A LA DERECHA */
+        .kanji-main {
+            position: absolute;
+            right: 8%; 
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            z-index: 2;
+        }
+
+        .kanji-main span {
+            font-family: "YuMincho", serif; font-size: 65px; 
+            color: var(--castorice-lavender); letter-spacing: 15px;
+            opacity: 0.2;
+        }
+
+        /* CABECERA 08 - LETRAS PEQUEÑAS */
+        .header-element {
+            position: absolute;
+            top: 50px; right: 60px;
+            text-align: right; z-index: 5;
+        }
+
+        .header-element h1 {
+            font-family: 'Georgia', serif; font-size: 70px; margin: 0; 
+            color: var(--pearl-white); font-style: italic;
+            font-weight: 100; line-height: 0.75;
+            opacity: 0.8;
+        }
+
+        .header-sub-details {
+            margin-top: 10px;
+            font-size: 6px; 
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-sub-details span { display: block; margin-bottom: 2px; }
+
+        .yuffie-tag-small {
+            color: var(--castorice-lavender);
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 9px;
+            letter-spacing: 3px;
+            margin-bottom: 8px !important;
+            opacity: 0.9;
+        }
+
+        /* INFO INFERIOR - LETRAS PEQUEÑAS */
+        .footer-info {
+            position: absolute; bottom: 60px; right: 60px;
+            text-align: right; z-index: 5;
+        }
+
+        .footer-info .main-text {
+            color: var(--text-dim);
+            font-size: 8px; 
+            border-left: 1px solid var(--castorice-lavender);
+            padding-left: 10px; margin-bottom: 5px;
+            text-transform: uppercase;
+            line-height: 1.5;
+        }
+
+        /* FIRMA BY NAI - TAMAÑO GRANDE SEGÚN PEDISTE */
+        .author-tag {
+            position: fixed; bottom: 35px; left: 40px;
+            z-index: 1000; display: flex; align-items: center; gap: 12px;
+        }
+        .author-dot { 
+            width: 8px; height: 8px; 
+            background: var(--castorice-lavender); 
+            transform: rotate(45deg); 
+            box-shadow: 0 0 10px var(--lavender-glow);
+        }
+        .author-name { 
+            font-size: 10px; 
+            letter-spacing: 3px; 
+            color: var(--castorice-lavender); 
+            opacity: 0; 
+            transition: 0.5s; 
+            font-weight: bold;
+        }
+        .author-tag:hover .author-name { opacity: 1; }
+
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.03; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div class="security-shield"></div>
+    <div class="aura-visual"><div class="aura-glow"></div></div>
+    <div id="stars"></div>
+
+    <audio id="audio" loop>
+        <source src="https://dl.dropboxusercontent.com/scl/fi/kc64i64gt2y79ena0fox6/Doomed-DIEI2YLYg6o.mp3?rlkey=p3z7sovg9tuezp5z5h0iqoxmn" type="audio/mpeg">
+    </audio>
+
+    <div class="mini-player">
+        <div class="player-info">Track // Doomed</div>
+        <button id="playBtn">Play</button>
+        <div class="progress-bar"><div id="progressFill"></div></div>
+    </div>
+
+    <div class="render-container">
+        <img src="https://u.cubeupload.com/zmonochrome/castorice.png" alt="Protected">
+    </div>
+
+    <div class="kanji-main"><span>戦乙女</span></div>
+
+    <div class="header-element">
+        <h1>08</h1>
+        <div class="header-sub-details">
+            <span class="yuffie-tag-small">> OWNER: YUFFIE</span>
+            <span>ARCHIVE_TYPE: CRITICAL_SYNC</span>
+            <span>LOC: 40.7128° N, 74.0060° W</span>
+        </div>
+    </div>
+
+    <div class="footer-info">
+        <div class="main-text">
+            FRAGMENTED MEMORY <span style="color:var(--pearl-white)">WITHIN THE VOID</span><br>
+            SEEKING ECHOES IN THE <span style="color:var(--castorice-lavender)">QUANTUM SEA</span>
+        </div>
+        <div style="font-size: 6px; letter-spacing: 2px; opacity: 0.3; text-transform: uppercase;">
+            STABILITY: <span style="color:var(--pearl-white)">99.8%</span> // OBSERVER: <span style="color:var(--castorice-lavender)">ACTIVE</span>
+        </div>
+    </div>
+
+    <div class="author-tag">
+        <div class="author-dot"></div>
+        <div class="author-name">BY NAI.</div>
+    </div>
+
+    <script>
+        document.onkeydown = (e) => {
+            if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 73)) return false;
+        };
+
+        const audio = document.getElementById('audio');
+        const btn = document.getElementById('playBtn');
+        const fill = document.getElementById('progressFill');
+
+        btn.onclick = () => {
+            if (audio.paused) { audio.play(); btn.innerText = "Pause"; }
+            else { audio.pause(); btn.innerText = "Play"; }
+        };
+
+        audio.ontimeupdate = () => {
+            fill.style.width = (audio.currentTime / audio.duration) * 100 + "%";
+        };
+
+        document.body.addEventListener('click', () => {
+            if (audio.paused && audio.currentTime === 0) {
+                audio.play(); btn.innerText = "Pause";
+            }
+        }, { once: true });
+
+        const container = document.getElementById('stars');
+        for (let i = 0; i < 15; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = '1px'; star.style.height = '1px';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            container.appendChild(star);
+        }
+    </script>
+</body>
+</html>

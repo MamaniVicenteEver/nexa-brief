@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LA EDICIÓN — PT</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: none; }
+  body { opacity: 0; transition: opacity 0.9s ease; }
+  body.ready { opacity: 1; }
+  #world { position: fixed; inset: 0; will-change: transform; }
+  #mediaWrap { position: absolute; inset: 0; z-index: 1; will-change: transform, filter; }
+  #media, #mediaImg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #tintOverlay { position: absolute; inset: 0; z-index: 2; mix-blend-mode: overlay; pointer-events: none; }
+  #ghost {
+    position: absolute; z-index: 3; width: 100%; text-align: center; top: 30%;
+    font-family: "Arial Black", Impact, sans-serif; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.04em; line-height: 0.8;
+    pointer-events: none; user-select: none;
+  }
+  #sparks { position: absolute; inset: 0; z-index: 4; }
+  #lyricStage { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+  .word {
+    position: absolute; font-family: "Arial Black", Impact, sans-serif;
+    font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em;
+    white-space: nowrap; will-change: transform, opacity, filter;
+    user-select: none;
+  }
+  .word.passed { transition: opacity 0.5s ease, transform 0.6s ease, filter 0.5s ease; }
+  @keyframes popC {
+    0%   { transform: translate(-50%,-50%) scale(0.25) rotate(-4deg); opacity: 0; filter: blur(10px); }
+    55%  { transform: translate(-50%,-50%) scale(1.28) rotate(1.5deg); opacity: 1; filter: blur(0); }
+    100% { transform: translate(-50%,-50%) scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes slamL {
+    0%   { transform: translate(-160%,-50%) skewX(-14deg) scale(1.3); opacity: 0; filter: blur(8px); }
+    60%  { transform: translate(-44%,-50%) skewX(4deg) scale(1.06); opacity: 1; filter: blur(0); }
+    100% { transform: translate(-50%,-50%) skewX(0) scale(1); opacity: 1; }
+  }
+  @keyframes slamR {
+    0%   { transform: translate(60%,-50%) skewX(14deg) scale(1.3); opacity: 0; filter: blur(8px); }
+    60%  { transform: translate(-56%,-50%) skewX(-4deg) scale(1.06); opacity: 1; filter: blur(0); }
+    100% { transform: translate(-50%,-50%) skewX(0) scale(1); opacity: 1; }
+  }
+  @keyframes riseU {
+    0%   { transform: translate(-50%,30%) scale(0.7); opacity: 0; filter: blur(6px); }
+    100% { transform: translate(-50%,-50%) scale(1); opacity: 1; filter: blur(0); }
+  }
+  @keyframes glitchIn {
+    0%   { transform: translate(-48%,-52%) scale(1.15); opacity: 0; clip-path: inset(0 0 70% 0); }
+    30%  { transform: translate(-53%,-49%) scale(1.1); opacity: 1; clip-path: inset(40% 0 10% 0); }
+    55%  { transform: translate(-49%,-50%) scale(1.04); clip-path: inset(10% 0 45% 0); }
+    100% { transform: translate(-50%,-50%) scale(1); opacity: 1; clip-path: inset(0 0 0 0); }
+  }
+  #flash { position: fixed; inset: 0; z-index: 8; opacity: 0; pointer-events: none; mix-blend-mode: screen; }
+  #vignette {
+    position: fixed; inset: 0; z-index: 9; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(0,0,0,0.55) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 10; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.07; mix-blend-mode: overlay; animation: grainShift 0.9s steps(4) infinite;
+  }
+  @keyframes grainShift {
+    0% { transform: translate(0,0); } 25% { transform: translate(-2%,1%); }
+    50% { transform: translate(1%,-2%); } 75% { transform: translate(-1%,2%); } 100% { transform: translate(0,0); }
+  }
+  #eq { position: fixed; left: 0; bottom: 0; width: 100vw; z-index: 11; }
+  #brand {
+    position: fixed; right: 3vw; top: 4vh; z-index: 12;
+    font-family: "Arial Black", sans-serif; font-weight: 900; font-size: 0.7rem;
+    letter-spacing: 0.5em; text-transform: uppercase; user-select: none;
+  }
+</style>
+</head>
+<body>
+<div id="world">
+  <div id="mediaWrap">
+    <video id="media" muted loop playsinline autoplay></video>
+    <img id="mediaImg" alt="" style="display:none">
+    <div id="tintOverlay"></div>
+    <div id="ghost"></div>
+  </div>
+  <canvas id="sparks"></canvas>
+  <div id="lyricStage"></div>
+</div>
+<div id="flash"></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<canvas id="eq"></canvas>
+<div id="brand">NEXA BRIEF</div>
+<audio id="audio" src="song.mp3" loop preload="auto"></audio>
+<script type="module">
+/* ============ CONFIG — the ONLY block the AI fills (vision JSON + music JSON) ============ */
+const CONFIG = {
+  media: { type: "video", src: "../seamless/test2.mp4", w: 720, h: 1280 },   /* "video" | "image" */
+  colors: { ink: "#F2F2F5", hot: "#FF2E3C", tint: "#1B2735", ghost: "rgba(240,240,245,0.05)" },
+  ghostWord: "AURA",                       /* faint giant word living behind the lyrics */
+  /* lyrics: word-by-word, seconds. emphasis 0..2 (2 = screen-punch). style optional:
+     "pop" | "slam-left" | "slam-right" | "rise" | "glitch" | "auto" (seeded unpredictable) */
+  lyrics: [
+    { t: 0.6,  text: "SIENTE",       emphasis: 0 },
+    { t: 1.35, text: "EL",           emphasis: 0 },
+    { t: 1.8,  text: "PODER",        emphasis: 1 },
+    { t: 2.8,  text: "NO",           emphasis: 0 },
+    { t: 3.2,  text: "HAY",          emphasis: 0 },
+    { t: 3.6,  text: "LÍMITES",      emphasis: 1 },
+    { t: 4.9,  text: "ROMPE",        emphasis: 1 },
+    { t: 5.7,  text: "EL",           emphasis: 0 },
+    { t: 6.1,  text: "SILENCIO",     emphasis: 1 },
+    { t: 7.4,  text: "AURA",         emphasis: 2 },
+    { t: 9.0,  text: "IMPARABLE",    emphasis: 2 }
+  ],
+  /* sections drive intensity: "calm" | "build" | "drop" */
+  sections: [
+    { from: 0,   to: 4.8, mode: "build" },
+    { from: 4.8, to: 7.3, mode: "drop"  },
+    { from: 7.3, to: 12,  mode: "drop"  }
+  ],
+  adrenaline: {
+    maxBounce: 0.055,            /* world scale on bass hits */
+    flashOpacity: 0.5, flashCooldownMs: 380,   /* WCAG-safe: max ~2.6/s */
+    shakePx: 9,                  /* screen shake on drops */
+    jolt: true                   /* brief RGB/contrast jolt on drops */
+  },
+  audio: { src: "song.mp3", simulatedBpm: 96 },
+  seed: 21
+};
+/* ========================================================================================= */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, world = $("world"), wrap = $("mediaWrap");
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+/* ---- media + chrome ---- */
+const vid = $("media"), img = $("mediaImg");
+if (C.media.type === "video") { vid.src = C.media.src; }
+else { vid.style.display = "none"; img.style.display = "block"; img.src = C.media.src; }
+$("tintOverlay").style.background = `linear-gradient(180deg, transparent 30%, ${C.colors.tint} 130%)`;
+$("brand").style.color = C.colors.ink;
+$("flash").style.background = C.colors.ink;
+const ghost = $("ghost");
+ghost.textContent = C.ghostWord;
+ghost.style.color = C.colors.ghost;
+ghost.style.webkitTextStroke = `1.5px ${C.colors.ghost.replace(/[\d.]+\)$/, "0.14)")}`;
+
+/* ---- canvases ---- */
+const sparks = $("sparks"), sctx = sparks.getContext("2d");
+const eq = $("eq"), ectx = eq.getContext("2d");
+let vw = 0, vh = 0;
+function layout() {
+  vw = innerWidth; vh = innerHeight;
+  for (const [c, hFrac] of [[sparks, 1], [eq, 0]]) {
+    const hh = hFrac ? vh : Math.min(70, Math.max(40, vh * 0.05));
+    c.width = vw * devicePixelRatio; c.height = hh * devicePixelRatio;
+    c.style.width = vw + "px"; c.style.height = hh + "px";
+    c.getContext("2d").setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  }
+  ghost.style.fontSize = Math.min(vw / (C.ghostWord.length * 0.6), vh * 0.5) + "px";
+}
+let rq = false;
+addEventListener("resize", () => { if (!rq) { rq = true; requestAnimationFrame(() => { rq = false; layout(); }); } });
+
+/* ---- audio clock + analyser + simulated beats ---- */
+const audio = $("audio");
+audio.src = C.audio.src;
+let analyser = null, freq = null, hasSignal = false;
+async function initAudio() {
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const src = ac.createMediaElementSource(audio);
+    analyser = ac.createAnalyser();
+    analyser.fftSize = 128; analyser.smoothingTimeConstant = 0.72;
+    src.connect(analyser); analyser.connect(ac.destination);
+    freq = new Uint8Array(analyser.frequencyBinCount);
+    if (ac.state === "suspended") await ac.resume();
+    await audio.play();
+  } catch (e) { /* simulated engine takes over */ }
+  vid.play && vid.play().catch(() => {});
+}
+addEventListener("DOMContentLoaded", initAudio);
+addEventListener("pointerdown", () => initAudio(), { once: true });
+
+/* clock: audio time if playing, else wall time (same lyrics either way) */
+let t0 = performance.now();
+const clock = () => (!audio.paused && audio.currentTime > 0.05) ? audio.currentTime : (performance.now() - t0) / 1000;
+
+/* energy: analyser bass or simulated kick pattern */
+let smBass = 0, avgBass = 0.12;
+function energy(tSec) {
+  let b = 0;
+  if (analyser && freq) {
+    analyser.getByteFrequencyData(freq);
+    for (let i = 0; i < 8; i++) b += freq[i];
+    b = b / 8 / 255;
+    hasSignal = b > 0.02 || hasSignal;
+  }
+  if (!hasSignal) {
+    const beat = 60 / C.audio.simulatedBpm;
+    const ph = (tSec % beat) / beat;
+    b = Math.pow(Math.max(0, 1 - ph * 3), 2) * 0.85;              /* kick */
+    if (Math.floor(tSec / beat) % 8 === 4) b = Math.min(1, b + 0.25); /* accent */
+  }
+  smBass += (b - smBass) * 0.25;
+  avgBass += (smBass - avgBass) * 0.015;
+  return { b: smBass, onset: smBass > avgBass * 1.55 && smBass > 0.18 };
+}
+
+/* ---- section mode ---- */
+function modeAt(tSec) {
+  for (const s of C.sections) if (tSec >= s.from && tSec < s.to) return s.mode;
+  return "build";
+}
+const INTENSITY = { calm: 0.35, build: 0.7, drop: 1.0 };
+
+/* ---- kinetic lyric engine: unpredictable but seeded ---- */
+const STYLES = ["popC", "slamL", "slamR", "riseU", "glitchIn"];
+const SLOTS = [ [50, 42], [30, 30], [70, 32], [32, 66], [68, 64], [50, 72] ]; /* % x,y */
+const styleOf = w => ({ "pop": "popC", "slam-left": "slamL", "slam-right": "slamR",
+                        "rise": "riseU", "glitch": "glitchIn" })[w.style] ||
+                     STYLES[Math.floor(rng() * STYLES.length)];
+let prevSlot = -1;
+const pickSlot = w => {
+  if (w.emphasis >= 2) { prevSlot = 0; return SLOTS[0]; }   /* punches own the center */
+  let i;
+  do { i = 1 + Math.floor(rng() * (SLOTS.length - 1)); } while (i === prevSlot);
+  prevSlot = i;
+  return SLOTS[i];
+};
+const plan = C.lyrics.map((w, i) => ({
+  ...w,
+  anim: styleOf(w),
+  slot: pickSlot(w),
+  rot: (rng() - 0.5) * (w.emphasis ? 5 : 8),
+  fired: false
+}));
+let lyricPtr = 0;
+const stage = $("lyricStage");
+let liveWords = [];
+function fireWord(w, mode) {
+  /* previous words scatter */
+  for (const lw of liveWords) {
+    lw.el.classList.add("passed");
+    lw.el.style.opacity = "0.06";
+    lw.el.style.filter = "blur(3px)";
+    lw.el.style.transform += ` translateY(${-16 - rng() * 22}px) scale(0.94)`;
+    setTimeout(() => lw.el.remove(), 450);
+  }
+  liveWords = [];
+  const el = doc.createElement("div");
+  el.className = "word";
+  el.textContent = w.text;
+  const base = w.emphasis >= 2 ? vh * 0.24 : w.emphasis === 1 ? vh * 0.15 : vh * 0.085;
+  el.style.fontSize = Math.min(base, vw / (w.text.length * 0.62)) + "px";
+  el.style.left = w.slot[0] + "%";
+  el.style.top = w.slot[1] + "%";
+  el.style.color = w.emphasis ? C.colors.hot : C.colors.ink;
+  el.style.textShadow = w.emphasis
+    ? `0 0 22px ${C.colors.hot}, 3px 0 0 rgba(0,255,255,0.35), -3px 0 0 rgba(255,0,60,0.35)`
+    : `2px 0 0 rgba(0,255,255,0.22), -2px 0 0 rgba(255,0,60,0.22)`;
+  const dur = w.emphasis >= 2 ? 0.55 : 0.38;
+  el.style.animation = `${w.anim} ${dur}s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards`;
+  el.style.transform = "translate(-50%,-50%)";
+  stage.appendChild(el);
+  el.style.rotate = w.rot + "deg";
+  liveWords.push({ el });
+  if (w.emphasis >= 2) { triggerFlash(); triggerShake(); burst(vw * w.slot[0] / 100, vh * w.slot[1] / 100); if (C.adrenaline.jolt) jolt(); }
+  else if (w.emphasis === 1 && mode === "drop") triggerShake(0.6);
+}
+
+/* ---- adrenaline actuators ---- */
+let lastFlash = -1e9, shakeUntil = 0, shakeAmp = 0, joltUntil = 0;
+function triggerFlash() {
+  const now = performance.now();
+  if (now - lastFlash < C.adrenaline.flashCooldownMs) return;
+  lastFlash = now;
+  const f = $("flash");
+  f.style.transition = "none"; f.style.opacity = C.adrenaline.flashOpacity;
+  requestAnimationFrame(() => { f.style.transition = "opacity 0.16s ease-out"; f.style.opacity = "0"; });
+}
+function triggerShake(mult = 1) { shakeUntil = performance.now() + 240; shakeAmp = C.adrenaline.shakePx * mult; }
+function jolt() { joltUntil = performance.now() + 130; }
+
+/* ---- spark bursts ---- */
+let sparkList = [];
+function burst(x, y) {
+  for (let i = 0; i < 26; i++) {
+    const a = rng() * Math.PI * 2, v = 3 + rng() * 7;
+    sparkList.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 2, life: 1 });
+  }
+}
+function drawSparks() {
+  sctx.clearRect(0, 0, vw, vh);
+  sparkList = sparkList.filter(s => s.life > 0);
+  for (const s of sparkList) {
+    s.x += s.vx; s.y += s.vy; s.vy += 0.25; s.life -= 0.03;
+    sctx.globalAlpha = Math.max(0, s.life);
+    sctx.fillStyle = rng() < 0.4 ? C.colors.hot : C.colors.ink;
+    sctx.fillRect(s.x, s.y, 3, 3);
+  }
+  sctx.globalAlpha = 1;
+}
+
+/* ---- main loop ---- */
+let lastOnset = -1e9;
+function frame() {
+  const tSec = clock();
+  const mode = modeAt(tSec), inten = INTENSITY[mode];
+  const { b, onset } = energy(tSec);
+
+  /* bass bounce (whole world) + shake */
+  const now = performance.now();
+  let sx = 0, sy = 0;
+  if (now < shakeUntil) {
+    const d = (shakeUntil - now) / 240;
+    sx = (rng() - 0.5) * shakeAmp * 2 * d; sy = (rng() - 0.5) * shakeAmp * 2 * d;
+  }
+  const sc = 1 + b * C.adrenaline.maxBounce * inten;
+  world.style.transform = `translate3d(${sx}px,${sy}px,0) scale(${sc})`;
+
+  /* drop-onset side effects */
+  if (onset && now - lastOnset > 260) {
+    lastOnset = now;
+    if (mode === "drop") { triggerFlash(); if (C.adrenaline.jolt && rng() < 0.5) jolt(); }
+  }
+  wrap.style.filter = now < joltUntil
+    ? `contrast(1.35) saturate(1.45) hue-rotate(${(rng() - 0.5) * 30}deg)`
+    : "";
+
+  /* ghost word breathes */
+  ghost.style.transform = `scale(${1 + b * 0.04}) translateZ(0)`;
+
+  /* lyrics */
+  while (lyricPtr < plan.length && tSec >= plan[lyricPtr].t) {
+    fireWord(plan[lyricPtr], mode); plan[lyricPtr].fired = true; lyricPtr++;
+  }
+  if (lyricPtr >= plan.length && tSec < 0.4) {         /* looped media/audio → reset */
+    lyricPtr = 0; for (const p of plan) p.fired = false;
+  }
+
+  drawSparks();
+
+  /* spectrum bars */
+  const eh = eq.height / devicePixelRatio;
+  ectx.clearRect(0, 0, vw, eh);
+  const BARS = 48, bw = vw / BARS;
+  for (let i = 0; i < BARS; i++) {
+    let v = 0;
+    if (hasSignal && freq) v = freq[Math.floor(i * freq.length / BARS)] / 255;
+    else v = b * Math.pow(Math.max(0, Math.sin(i * 0.4 + tSec * 5)), 2);
+    ectx.fillStyle = i % 7 === 3 ? C.colors.hot : C.colors.ink;
+    ectx.globalAlpha = 0.75;
+    const bh = Math.max(2, v * (eh - 4) * inten);
+    ectx.fillRect(i * bw + bw * 0.2, eh - bh, bw * 0.6, bh);
+  }
+  ectx.globalAlpha = 1;
+  requestAnimationFrame(frame);
+}
+
+/* ---- boot ---- */
+function start() {
+  layout();
+  doc.body.classList.add("ready");
+  t0 = performance.now();
+  requestAnimationFrame(frame);
+}
+if (C.media.type === "video") {
+  if (vid.readyState >= 1) start(); else vid.addEventListener("loadedmetadata", start);
+} else {
+  if (img.complete) start(); else img.onload = start;
+}
+setTimeout(() => { if (!doc.body.classList.contains("ready")) start(); }, 1500);
+</script>
+</body>
+</html>

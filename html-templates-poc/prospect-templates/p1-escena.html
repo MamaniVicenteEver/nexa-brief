@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escena Viva — P1</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: none; }
+  body { opacity: 0; transition: opacity 1.4s ease; }
+  body.ready { opacity: 1; }
+  #bgwrap { position: fixed; inset: 0; z-index: 1; will-change: transform; }
+  #bg { position: absolute; }
+  #vignette {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, transparent 52%, rgba(10,8,14,0.38) 100%);
+  }
+  #scene { position: fixed; inset: 0; z-index: 3; }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 4; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.05; mix-blend-mode: overlay; animation: grainShift 1.1s steps(4) infinite;
+  }
+  @keyframes grainShift {
+    0% { transform: translate(0,0); } 25% { transform: translate(-2%,1%); }
+    50% { transform: translate(1%,-2%); } 75% { transform: translate(-1%,2%); } 100% { transform: translate(0,0); }
+  }
+  #haiku {
+    position: fixed; z-index: 5;
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-family: "Shippori Mincho", "Noto Serif JP", "Yu Mincho", serif;
+    font-weight: 600; letter-spacing: 0.34em; line-height: 2.1;
+    user-select: none; pointer-events: none; white-space: pre;
+  }
+  #haiku span {
+    display: inline-block; opacity: 0;
+    transition: color 1.3s ease, opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.3, 1);
+    transform: translateY(-16px);
+  }
+  #haiku span.in { opacity: 1; transform: translateY(0); }
+  #brand {
+    position: fixed; right: 3.2vw; bottom: 4.5vh; z-index: 6;
+    font-family: "Montserrat", "Arial Black", sans-serif; font-weight: 900;
+    font-size: 0.72rem; letter-spacing: 0.55em; text-transform: uppercase;
+    transition: color 1.3s ease; user-select: none;
+  }
+</style>
+</head>
+<body>
+<div id="bgwrap"><img id="bg" alt=""></div>
+<div id="vignette"></div>
+<canvas id="scene"></canvas>
+<div id="grain"></div>
+<div id="haiku"></div>
+<div id="brand">NEXA BRIEF</div>
+<audio id="audio" src="song.mp3" loop preload="auto"></audio>
+<script type="module">
+/* ============ CONFIG — the ONLY block the AI fills from the vision JSON ============ */
+const CONFIG = {
+  /* full-screen cover; focal = the point (image px) that must stay visible/centered */
+  img:   { src: "p1-demo.jpg", w: 1920, h: 1080, focal: [1440, 640] },
+  scene: { biome: "sakura", description: "dusk ink-wash valley, pagoda on the ridge, lone tree" },
+  palette: {
+    petals: ["#C98F9C", "#B97B8B", "#A56374", "#D6A5AF", "#8F5060"], /* from the image */
+    fog:  "216,206,214",          /* rgb triplet of the haze tint */
+    bird: "#2A2430",              /* silhouette color from the darkest ink tone */
+    textCycle: ["#3A3242", "#B4677A"],  /* falling text alternates between these */
+    brand: "#8d8090"
+  },
+  /* falling vertical text: placed in the calmest area reported by the vision JSON */
+  text:  { lines: ["古城の影", "風に散る花", "物語はつづく"], xPct: 6.5, yPct: 10,
+           fontMin: 18, fontMax: 30, stepMs: 170, pauseMs: 2600 },
+  /* birds spawn from the edge/band of open sky reported by the vision JSON */
+  birds: { edge: "left", bandPct: [0.10, 0.34], max: 4, chance: 0.0045 },
+  motion: { kenburns: 0.045, driftX: 14, driftY: 9, speed: 0.05 },  /* image is alive */
+  physics: { petalCount: 120, wind: 0.55, gravity: 0.32, turbulence: 0.5, fogCount: 6 },
+  audio: { src: "song.mp3", simulatedBpm: 84 },
+  seed: 7
+};
+/* ==================================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const bgWrap = $("bgwrap"), bgEl = $("bg"), cv = $("scene"), ctx = cv.getContext("2d");
+const C = CONFIG;
+
+/* ---- seeded RNG (deterministic recordings) ---- */
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+/* ---- full-screen cover with focal point ---- */
+let vw = 0, vh = 0, k = 1, bx = 0, by = 0;
+function layout() {
+  vw = innerWidth; vh = innerHeight;
+  cv.width = vw * devicePixelRatio; cv.height = vh * devicePixelRatio;
+  cv.style.width = vw + "px"; cv.style.height = vh + "px";
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  const pad = 1 + C.motion.kenburns + 0.02;          /* margin so drift never shows edges */
+  k = Math.max(vw / C.img.w, vh / C.img.h) * pad;
+  const [fx, fy] = C.img.focal;
+  bx = Math.min(0, Math.max(vw - C.img.w * k, vw / 2 - fx * k));
+  by = Math.min(0, Math.max(vh - C.img.h * k, vh / 2 - fy * k));
+  bgEl.style.cssText = `position:absolute;left:${bx}px;top:${by}px;width:${C.img.w * k}px;height:${C.img.h * k}px;`;
+  const h = $("haiku");
+  h.style.left = C.text.xPct + "vw";
+  h.style.top = C.text.yPct + "vh";
+  h.style.fontSize = Math.max(C.text.fontMin, Math.min(C.text.fontMax, vh * 0.028)) + "px";
+  h.style.maxHeight = (92 - C.text.yPct) + "vh";
+}
+
+/* ---- falling vertical text with color cycle ---- */
+const haikuEl = $("haiku");
+let chars = [];
+function buildText() {
+  haikuEl.innerHTML = "";
+  chars = [];
+  C.text.lines.forEach((line, li) => {
+    if (li) haikuEl.appendChild(doc.createTextNode("\n"));
+    for (const ch of line) {
+      const s = doc.createElement("span");
+      s.textContent = ch;
+      s.style.color = C.palette.textCycle[0];
+      haikuEl.appendChild(s);
+      chars.push(s);
+    }
+  });
+  $("brand").style.color = C.palette.brand;
+}
+let tPtr = 0, tCycle = 0, tNext = 900;
+function textTick(now) {
+  if (now < tNext) return;
+  if (tPtr < chars.length) {
+    const s = chars[tPtr];
+    s.classList.add("in");
+    s.style.color = C.palette.textCycle[(tCycle + 1) % 2];
+    tPtr++; tNext = now + C.text.stepMs;
+    if (tPtr === chars.length) { tCycle++; tNext = now + C.text.pauseMs; }
+  } else { tPtr = 0; }
+  if (tCycle % 2) $("brand").style.color = C.palette.textCycle[1];
+  else $("brand").style.color = C.palette.brand;
+}
+
+/* ---- sprites: one offscreen petal per palette color ---- */
+function petalSprite(color) {
+  const s = doc.createElement("canvas"); s.width = s.height = 48;
+  const c = s.getContext("2d");
+  c.translate(24, 24);
+  const g = c.createLinearGradient(0, -16, 0, 16);
+  g.addColorStop(0, color); g.addColorStop(1, shade(color, -28));
+  c.fillStyle = g;
+  c.beginPath();
+  c.moveTo(0, -16);
+  c.bezierCurveTo(13, -10, 12, 8, 0, 17);
+  c.bezierCurveTo(-12, 8, -13, -10, 0, -16);
+  c.fill();
+  return s;
+}
+function shade(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, Math.min(255, (n >> 16) + amt)),
+        g = Math.max(0, Math.min(255, (n >> 8 & 255) + amt)),
+        b = Math.max(0, Math.min(255, (n & 255) + amt));
+  return `rgb(${r},${g},${b})`;
+}
+const sprites = C.palette.petals.map(petalSprite);
+
+/* ---- entities ---- */
+class Petal {
+  constructor(init) { this.reset(init); }
+  reset(init) {
+    this.x = rng() * vw;
+    this.y = init ? rng() * vh : -30 - rng() * 60;
+    this.size = 10 + rng() * 16;
+    this.spr = sprites[Math.floor(rng() * sprites.length)];
+    this.vx = (rng() - 0.3) * C.physics.wind;
+    this.vy = 0.4 + rng() * C.physics.gravity * 2;
+    this.rot = rng() * Math.PI * 2;
+    this.rotV = (rng() - 0.5) * 0.06;
+    this.tum = rng() * Math.PI * 2;
+    this.tumV = 0.02 + rng() * 0.05;
+    this.ph = rng() * Math.PI * 2;
+  }
+  step(t, bass) {
+    const m = 1 + bass * 0.9;
+    this.x += (this.vx + Math.sin(t * 0.001 + this.ph) * C.physics.turbulence) * m;
+    this.y += this.vy * m;
+    this.rot += this.rotV * m;
+    this.tum += this.tumV * m;
+    if (this.y > vh + 40 || this.x < -60 || this.x > vw + 60) this.reset(false);
+  }
+  draw() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rot);
+    ctx.scale(this.size / 24, (this.size / 24) * (0.35 + 0.65 * Math.abs(Math.cos(this.tum))));
+    ctx.globalAlpha = 0.92;
+    ctx.drawImage(this.spr, -24, -24);
+    ctx.restore();
+  }
+}
+class Fog {
+  constructor() {
+    this.x = rng() * vw; this.y = vh * (0.35 + rng() * 0.55);
+    this.r = vw * (0.12 + rng() * 0.16); this.v = 0.08 + rng() * 0.14;
+    this.a = 0.05 + rng() * 0.06;
+  }
+  step(bass) { this.x += this.v * (1 + bass * 0.5); if (this.x - this.r > vw) this.x = -this.r; }
+  draw() {
+    const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+    g.addColorStop(0, `rgba(${C.palette.fog},${this.a})`);
+    g.addColorStop(1, `rgba(${C.palette.fog},0)`);
+    ctx.fillStyle = g;
+    ctx.fillRect(this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
+  }
+}
+class Bird {
+  constructor() {
+    const [b0, b1] = C.birds.bandPct;
+    this.fromLeft = C.birds.edge === "left" || (C.birds.edge === "both" && rng() < 0.5);
+    this.x = this.fromLeft ? -40 : vw + 40;
+    this.y = vh * (b0 + rng() * (b1 - b0));
+    this.v = (1.1 + rng() * 0.9) * (this.fromLeft ? 1 : -1);
+    this.s = 7 + rng() * 8;
+    this.ph = rng() * Math.PI * 2;
+    this.life = 0;
+  }
+  step() { this.x += this.v; this.y += Math.sin(this.x * 0.01 + this.ph) * 0.35; this.life++; }
+  get gone() { return this.fromLeft ? this.x > vw + 60 : this.x < -60; }
+  draw(t) {
+    const flap = Math.sin(t * 0.012 + this.ph) * 0.9;
+    const a = Math.min(1, this.life / 40);
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.scale(this.fromLeft ? 1 : -1, 1);
+    ctx.globalAlpha = 0.85 * a;
+    ctx.strokeStyle = C.palette.bird;
+    ctx.lineWidth = Math.max(1.4, this.s * 0.16);
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(-this.s, -flap * this.s * 0.8);
+    ctx.quadraticCurveTo(-this.s * 0.3, 0, 0, 0);
+    ctx.quadraticCurveTo(this.s * 0.55, 0, this.s, -flap * this.s * 0.9);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+let petals = [], fogs = [], birds = [];
+function seedEntities() {
+  petals = Array.from({ length: C.physics.petalCount }, () => new Petal(true));
+  fogs = Array.from({ length: C.physics.fogCount }, () => new Fog());
+  birds = [];
+}
+
+/* ---- audio: real analyser with simulated-pulse fallback ---- */
+const audio = $("audio");
+audio.src = C.audio.src;
+let analyser = null, freq = null, smoothedBass = 0;
+async function initAudio() {
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const src = ac.createMediaElementSource(audio);
+    analyser = ac.createAnalyser();
+    analyser.fftSize = 64; analyser.smoothingTimeConstant = 0.82;
+    src.connect(analyser); analyser.connect(ac.destination);
+    freq = new Uint8Array(analyser.frequencyBinCount);
+    if (ac.state === "suspended") await ac.resume();
+    await audio.play();
+  } catch (e) { /* falls back to the simulated pulse */ }
+}
+addEventListener("DOMContentLoaded", initAudio);
+addEventListener("pointerdown", () => initAudio(), { once: true });
+function bassNow(t) {
+  let b = 0;
+  if (analyser && freq) {
+    analyser.getByteFrequencyData(freq);
+    for (let i = 0; i < 6; i++) b += freq[i];
+    b = b / 6 / 255;
+  }
+  if (b < 0.02) {           /* no signal → simulated pulse keeps the scene alive */
+    const period = 60 / C.audio.simulatedBpm;
+    b = Math.pow(Math.max(0, Math.sin((t / 1000) * Math.PI * 2 / period)), 3) * 0.55;
+  }
+  smoothedBass += (b - smoothedBass) * 0.12;
+  return smoothedBass;
+}
+
+/* ---- main loop: ken-burns drift + canvas scene + text ---- */
+function frame(t) {
+  const bass = bassNow(t);
+  /* the image is alive: slow breathing zoom + drift (never reveals edges) */
+  const kb = C.motion.kenburns, sp = C.motion.speed;
+  const sc = 1 + kb * 0.5 + kb * 0.5 * Math.sin(t * 0.0001 * sp * 20) + bass * 0.006;
+  const dx = Math.sin(t * 0.00006 * sp * 20) * C.motion.driftX;
+  const dy = Math.cos(t * 0.00004 * sp * 20) * C.motion.driftY;
+  bgWrap.style.transform = `translate3d(${dx}px,${dy}px,0) scale(${sc})`;
+
+  ctx.clearRect(0, 0, vw, vh);
+  for (const f of fogs) { f.step(bass); f.draw(); }
+  if (birds.length < C.birds.max && rng() < C.birds.chance) birds.push(new Bird());
+  birds = birds.filter(b => !b.gone);
+  for (const b of birds) { b.step(); b.draw(t); }
+  for (const p of petals) { p.step(t, bass); p.draw(); }
+
+  textTick(t);
+  requestAnimationFrame(frame);
+}
+
+/* ---- boot ---- */
+let rq = false;
+function queueLayout() { if (!rq) { rq = true; requestAnimationFrame(() => { rq = false; layout(); seedEntities(); }); } }
+addEventListener("resize", queueLayout);
+bgEl.src = C.img.src;
+function start() {
+  layout(); buildText(); seedEntities();
+  doc.body.classList.add("ready");
+  requestAnimationFrame(frame);
+}
+if (bgEl.complete) start(); else bgEl.onload = start;
+</script>
+</body>
+</html>

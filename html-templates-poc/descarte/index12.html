@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>S.D.E. VISUALIZER // VOL-3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@900&family=Orbitron:wght@900&family=Cinzel:wght@900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #000000;
+      --color-secondary: #7a0016;
+      --color-accent: #fff200;
+      --color-accent-glow: rgba(255, 242, 0, 0.3);
+      --dst-scale: 1.28;
+      --dst-rotation: -2deg;
+      --dst-skew: -4deg;
+      --dst-contrast: 1.38;
+      --dst-saturate: 1.15;
+      --dst-brightness: 0.82;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--color-primary); }
+
+    /* ── ARQUETIPO 1: THE ASYMMETRIC ATTACK ── */
+    .layout-container {
+      display: grid;
+      grid-template-columns: 15% 1fr 20%;
+      grid-template-rows: 100vh;
+      gap: 0;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .title-block {
+      grid-column: 1;
+      grid-row: 1;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-family: 'Orbitron', 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(4rem, 12vw, 12rem);
+      letter-spacing: -0.05em;
+      color: rgba(122, 0, 22, 0.18);
+      text-shadow: 0 0 55px var(--color-accent-glow), 0 0 120px rgba(255,242,0,0.15);
+      transform: skewY(-8deg);
+      transition: text-shadow 0.06s ease-out, transform 0.06s ease-out;
+      white-space: nowrap;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .canvas-container {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      z-index: 3;
+      opacity: 0.65;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+    #visualizer-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .character-section {
+      grid-column: 3;
+      grid-row: 1;
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .character-img {
+      height: 110vh;
+      width: auto;
+      object-fit: contain;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      transform: scale(1.4) translateX(15%);
+      filter: contrast(var(--dst-contrast)) saturate(var(--dst-saturate)) brightness(var(--dst-brightness))
+              drop-shadow(0 25px 60px rgba(0,0,0,0.98)) drop-shadow(0 0 50px var(--color-accent-glow));
+      will-change: transform, filter;
+      transition: transform 0.08s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+    }
+
+    .particles-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    #particles-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.85) 70%, #000000 100%);
+    }
+
+    .noise-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.1;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+    .noise-overlay svg { width: 100%; height: 100%; }
+
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.06;
+      background-image:
+        repeating-linear-gradient(0deg, var(--color-accent) 0px, var(--color-accent) 1px, transparent 1px, transparent 35px),
+        repeating-linear-gradient(90deg, var(--color-accent) 0px, var(--color-accent) 1px, transparent 1px, transparent 35px);
+    }
+
+    .hud-btn {
+      position: absolute;
+      top: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--color-accent);
+      color: var(--color-accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      padding: 0.6rem 2rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px var(--color-accent-glow);
+      transition: all 0.2s ease;
+      pointer-events: auto;
+    }
+    .hud-btn:hover {
+      background: var(--color-accent);
+      color: #000000;
+      box-shadow: 0 0 35px var(--color-accent);
+    }
+
+    .hud-bottom-left {
+      position: absolute;
+      bottom: 2.2rem;
+      left: 2.5rem;
+      z-index: 20;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--color-accent);
+      text-shadow: 0 0 10px var(--color-accent-glow);
+      pointer-events: none;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .hud-bottom-right {
+      position: absolute;
+      bottom: 2.2rem;
+      right: 2.5rem;
+      z-index: 20;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--color-accent);
+      text-shadow: 0 0 10px var(--color-accent-glow);
+      pointer-events: none;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .hud-clock {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="audio-control" class="hud-btn">PLAY // SYSTEM_INIT</button>
+
+  <div class="layout-container">
+    <div class="title-block" id="giant-text">VOLTAJE</div>
+    <div class="canvas-container">
+      <canvas id="visualizer-canvas"></canvas>
+    </div>
+    <div class="character-section" id="subject-container">
+      <img class="character-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVHwF7EOhmgsZPBsI1rAmhEmbPsFMfmqRc_dyo9wwm5JwSMCtbs1DoU2Yf&s=10" alt="urban model" crossorigin="anonymous">
+    </div>
+  </div>
+
+  <div class="particles-layer">
+    <canvas id="particles-canvas"></canvas>
+  </div>
+
+  <div class="vignette"></div>
+  <div class="noise-overlay">
+    <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="4" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#noise)" opacity="1"/>
+    </svg>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <div class="hud-bottom-left">
+    <span>STREAMING ACTIVE</span>
+    <span>DRIFT PHONK // 112 BPM</span>
+    <span>RESOLUTION: 4K_DSLR</span>
+  </div>
+  <div class="hud-bottom-right">
+    <span>ELAPSED TIME</span>
+    <span class="hud-clock" id="hud-clock">00:00:00:00</span>
+  </div>
+
+  <audio id="audio-engine" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" loop crossorigin="anonymous" style="display:none;"></audio>
+
+  <script>
+    (() => {
+      const giantText = document.getElementById('giant-text');
+      const subjectContainer = document.getElementById('subject-container');
+      const clockEl = document.getElementById('hud-clock');
+      const audioBtn = document.getElementById('audio-control');
+      const audioEl = document.getElementById('audio-engine');
+      const particlesCanvas = document.getElementById('particles-canvas');
+      const pCtx = particlesCanvas.getContext('2d');
+      const visualizerCanvas = document.getElementById('visualizer-canvas');
+      const vCtx = visualizerCanvas.getContext('2d');
+
+      let audioCtx = null;
+      let analyser = null;
+      let freqData = null;
+      let audioReady = false;
+      let simulationMode = true;
+      let globalBass = 0;
+      let globalMid = 0;
+
+      const PARTICLE_COUNT = 80;
+      let particles = [];
+      let pWidth, pHeight;
+      let vWidth, vHeight;
+
+      const BPM = 112;
+      const beatInterval = 60000 / BPM;
+
+      function initParticles() {
+        particles = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          particles.push({
+            x: Math.random() * pWidth,
+            y: Math.random() * pHeight,
+            size: Math.random() * 2.2 + 0.5,
+            baseSpeedY: -(Math.random() * 0.4 + 0.12),
+            speedX: (Math.random() - 0.5) * 0.45,
+            alpha: Math.random() * 0.55 + 0.18,
+            life: Math.random()
+          });
+        }
+      }
+
+      function resizeParticlesCanvas() {
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+        pWidth = particlesCanvas.width;
+        pHeight = particlesCanvas.height;
+        initParticles();
+      }
+      window.addEventListener('resize', resizeParticlesCanvas);
+      resizeParticlesCanvas();
+
+      function resizeVisualizerCanvas() {
+        const container = visualizerCanvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        vWidth = rect.width;
+        vHeight = rect.height;
+        visualizerCanvas.width = vWidth;
+        visualizerCanvas.height = vHeight;
+      }
+      window.addEventListener('resize', resizeVisualizerCanvas);
+      resizeVisualizerCanvas();
+
+      function getSimulatedBeat(now) {
+        const pulse = (now % beatInterval) / beatInterval;
+        let bass = pulse < 0.25 ? 1 - (pulse / 0.25) : 0;
+        bass = Math.pow(bass, 0.6) * 0.48;
+        const mid = Math.sin(now * 0.01) * 0.5 + 0.5;
+        return { bass, mid };
+      }
+
+      async function initAudio() {
+        if (audioReady) return;
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioCtx();
+          if (audioCtx.state === 'suspended') await audioCtx.resume();
+          const source = audioCtx.createMediaElementSource(audioEl);
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 256;
+          analyser.smoothingTimeConstant = 0.78;
+          freqData = new Uint8Array(analyser.frequencyBinCount);
+          source.connect(analyser);
+          analyser.connect(audioCtx.destination);
+          await audioEl.play();
+          audioReady = true;
+          simulationMode = false;
+          audioBtn.textContent = 'STREAMING // LIVE';
+        } catch (e) {
+          console.warn('Audio playback blocked, running simulation mode.');
+          audioBtn.textContent = 'SIMULATION // ACTIVE';
+        }
+      }
+
+      audioBtn.addEventListener('click', initAudio);
+
+      function getAudioIntensity() {
+        if (audioReady && analyser && freqData) {
+          analyser.getByteFrequencyData(freqData);
+          let sum = 0;
+          for (let i = 0; i < freqData.length; i++) sum += freqData[i];
+          return sum / (freqData.length * 255);
+        }
+        return 0;
+      }
+
+      function render(timestamp) {
+        requestAnimationFrame(render);
+        const now = Date.now();
+
+        const sim = getSimulatedBeat(now);
+        const realIntensity = getAudioIntensity();
+
+        if (simulationMode) {
+          globalBass = globalBass * 0.82 + sim.bass * 0.18;
+          globalMid = globalMid * 0.85 + sim.mid * 0.15;
+        } else {
+          globalBass = globalBass * 0.75 + realIntensity * 0.25;
+          globalMid = globalMid * 0.8 + realIntensity * 0.2;
+        }
+
+        const date = new Date();
+        const h = String(date.getHours()).padStart(2, '0');
+        const m = String(date.getMinutes()).padStart(2, '0');
+        const s = String(date.getSeconds()).padStart(2, '0');
+        const ms = String(date.getMilliseconds()).padStart(2, '0').slice(0, 2);
+        clockEl.textContent = `${h}:${m}:${s}:${ms}`;
+
+        const blurRadius = 55 + globalBass * 110 + globalMid * 40;
+        giantText.style.textShadow = `
+          0 0 ${blurRadius}px rgba(255, 242, 0, ${0.18 + globalBass * 0.7}),
+          0 0 ${blurRadius * 2}px rgba(255, 242, 0, ${0.1 + globalBass * 0.45})
+        `;
+        giantText.style.transform = `skewY(-8deg) scale(${1 + globalBass * 0.04})`;
+
+        const scaleX = 1 + globalBass * 0.035;
+        const scaleY = 1 - globalBass * 0.07;
+        subjectContainer.style.transform = `scaleX(${scaleX.toFixed(3)}) scaleY(${scaleY.toFixed(3)})`;
+
+        pCtx.clearRect(0, 0, pWidth, pHeight);
+        for (let p of particles) {
+          const speedMod = 1 + globalBass * 6;
+          p.y += p.baseSpeedY * speedMod;
+          p.x += p.speedX;
+          p.life += 0.003;
+          if (p.y < -20 || p.y > pHeight + 20 || p.x < -20 || p.x > pWidth + 20 || p.life > 1) {
+            p.x = Math.random() * pWidth;
+            p.y = pHeight + 20;
+            p.life = 0;
+            p.alpha = Math.random() * 0.55 + 0.18;
+          }
+          const alpha = p.alpha * (1 - p.life) * (0.55 + globalBass * 0.6);
+          pCtx.beginPath();
+          pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          pCtx.fillStyle = '#fff200';
+          pCtx.globalAlpha = alpha;
+          pCtx.shadowColor = '#fff200';
+          pCtx.shadowBlur = p.size * 3;
+          pCtx.fill();
+        }
+        pCtx.globalAlpha = 1;
+        pCtx.shadowBlur = 0;
+
+        vCtx.clearRect(0, 0, vWidth, vHeight);
+        const barCount = 64;
+        const barMaxHeight = vHeight * 0.7;
+        const barWidth = (vWidth / (barCount * 2)) * 0.65;
+        const gap = (vWidth / (barCount * 2)) * 0.35;
+        const baseline = vHeight * 0.55;
+        const centerX = vWidth / 2;
+
+        const gradient = vCtx.createLinearGradient(0, baseline, 0, baseline - barMaxHeight);
+        gradient.addColorStop(0, '#fff200');
+        gradient.addColorStop(0.5, '#7a0016');
+        gradient.addColorStop(1, '#ffffff');
+        vCtx.fillStyle = gradient;
+        vCtx.shadowColor = '#fff200';
+        vCtx.shadowBlur = 10;
+
+        for (let i = 0; i < barCount; i++) {
+          const simVal = Math.sin(now * 0.016 + i * 0.55) * 0.5 + 0.5;
+          const peak = Math.max(simVal, globalBass * 1.6);
+          const barHeight = barMaxHeight * (0.05 + peak * 0.95);
+          const rightX = centerX + i * (barWidth + gap) + gap / 2;
+          const leftX = centerX - (i + 1) * (barWidth + gap) + gap / 2;
+          vCtx.fillRect(rightX, baseline - barHeight, barWidth, barHeight);
+          vCtx.fillRect(leftX, baseline - barHeight, barWidth, barHeight);
+        }
+        vCtx.shadowBlur = 0;
+
+        if (Math.random() > 0.94) {
+          giantText.style.transform = `translate(${(Math.random()-0.5)*12}px, ${(Math.random()-0.5)*12}px) skewY(-8deg)`;
+          setTimeout(() => giantText.style.transform = 'translate(0,0) skewY(-8deg)', 80);
+        }
+      }
+
+      requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>

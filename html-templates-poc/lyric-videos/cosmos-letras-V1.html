@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COSMOS LETRAS V1 — Flyday Chinatown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Michroma&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100vw; height: 100vh; overflow: hidden; cursor: pointer;
+    background:
+      radial-gradient(ellipse at 30% 20%, #0a0a1e 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 80%, #120820 0%, transparent 50%),
+      #020208;
+  }
+
+  /* cielo: canvas de estrellas con parallax + estrellas fugaces (JS) */
+  #sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* nebulosas que respiran detrás del mundo */
+  .neb { position: fixed; z-index: 1; pointer-events: none; mix-blend-mode: screen; will-change: transform; }
+  #nebA {
+    inset: -25% 25% 15% -25%;
+    background: radial-gradient(ellipse at 42% 45%, rgba(88,43,217,0.30) 0%, rgba(88,43,217,0.08) 45%, transparent 68%);
+    animation: nebDriftA 90s ease-in-out infinite alternate;
+  }
+  #nebB {
+    inset: 25% -30% -30% 30%;
+    background: radial-gradient(ellipse at 58% 55%, rgba(0,150,205,0.22) 0%, rgba(0,150,205,0.06) 48%, transparent 70%);
+    animation: nebDriftB 70s ease-in-out infinite alternate;
+  }
+  #nebC {
+    inset: 40% 30% -20% -15%;
+    background: radial-gradient(ellipse at 50% 50%, rgba(255,62,165,0.10) 0%, transparent 62%);
+    animation: nebDriftA 110s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes nebDriftA { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(4%, -3%) scale(1.12); } }
+  @keyframes nebDriftB { 0% { transform: translate(0,0) scale(1.08); } 100% { transform: translate(-5%, 2%) scale(1); } }
+
+  /* mundo 3D de verdad: perspectiva en el viewport, cámara = transformación inversa */
+  #viewport { position: fixed; inset: 0; z-index: 2; overflow: hidden; }
+  #world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+
+  .w {
+    position: absolute; left: 0; top: 0; white-space: nowrap; text-transform: uppercase;
+    will-change: transform, opacity; line-height: 1; opacity: 0;
+    transition: opacity 1.4s ease, filter 1.4s ease;
+  }
+  .w.star { font-family: "Audiowide", cursive; font-weight: 400; }
+  .w.void { font-family: "Michroma", sans-serif; color: transparent !important; letter-spacing: 0.04em; }
+  .w.on   { opacity: 1; animation: materialize 0.9s cubic-bezier(0.2, 0.7, 0.3, 1); }
+  /* nace como polvo de estrellas disperso y se condensa en la palabra */
+  @keyframes materialize {
+    0%  { opacity: 0; letter-spacing: 0.45em; filter: blur(18px) brightness(3.2); }
+    55% { opacity: 1; filter: blur(2px) brightness(1.6); }
+  }
+  .w.cold { opacity: 0.4; filter: brightness(0.7) saturate(0.65); }
+
+  /* palabras-portal: anillo orbital alrededor, la cámara las atraviesa */
+  .w.portal::before {
+    content: ""; position: absolute; inset: -0.42em -0.55em;
+    border: 2px solid rgba(255,62,165,0.55); border-radius: 50%;
+    box-shadow: 0 0 26px rgba(255,62,165,0.35), inset 0 0 30px rgba(255,62,165,0.18);
+    animation: ringPulse 3.2s ease-in-out infinite;
+  }
+  @keyframes ringPulse { 0%,100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.05); opacity: 0.5; } }
+
+  /* líneas de constelación entre palabras consecutivas (crecen al encenderse) */
+  .beam {
+    position: absolute; left: 0; top: 0; height: 2px; width: 0;
+    transform-origin: 0 50%; opacity: 0;
+    background: linear-gradient(90deg, transparent, rgba(120,225,255,0.55) 22%, rgba(120,225,255,0.55) 78%, transparent);
+    box-shadow: 0 0 8px rgba(120,225,255,0.35);
+    transition: width 0.8s cubic-bezier(0.3, 0.8, 0.3, 1), opacity 0.8s ease;
+    pointer-events: none;
+  }
+  .beam.on { opacity: 0.5; }
+
+  /* destello al materializarse una palabra */
+  .flare {
+    position: absolute; left: 0; top: 0; width: 34vh; height: 34vh; pointer-events: none;
+    background: radial-gradient(circle, rgba(140,235,255,0.5) 0%, rgba(90,60,220,0.18) 40%, transparent 70%);
+    animation: flarePop 1s ease-out forwards;
+  }
+  .flare.big {
+    width: 70vh; height: 70vh;
+    background: radial-gradient(circle, rgba(255,62,165,0.4) 0%, rgba(120,40,220,0.16) 45%, transparent 72%);
+  }
+  @keyframes flarePop { 0% { opacity: 0; } 12% { opacity: 1; } 100% { opacity: 0; } }
+
+  #vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(1,1,8,0.82) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 6; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.05; mix-blend-mode: overlay; animation: gsh 1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+  /* #intro y #outro comparten maquetado (.cardScreen), textos desde CONFIG */
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2.4vh; text-align: center;
+    transition: opacity 1.4s ease; text-transform: uppercase;
+  }
+  .cardScreen .artist { font-family: "Audiowide", cursive; font-size: 4.6vh; }
+  .cardScreen .title  { font-family: "Michroma", sans-serif; font-size: 14vh; color: transparent; letter-spacing: 0.06em; line-height: 1.05; }
+  .cardScreen .sub    { font-family: "Audiowide", cursive; font-size: 4.8vh; letter-spacing: 0.6em; padding-left: 0.6em; }
+  .cardScreen .feats  { font-family: "Michroma", sans-serif; font-size: 1.6vh; letter-spacing: 0.4em; opacity: 0.85; margin-top: 3vh; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  /* cuando aparece el outro, el universo se apaga suavemente detrás */
+  body.outroActive #viewport, body.outroActive .neb, body.outroActive #sky {
+    opacity: 0.10; transition: opacity 2s ease;
+  }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: "Michroma", sans-serif; font-size: 1.5vh; letter-spacing: 0.5em;
+    opacity: 0.55; animation: hintPulse 2s ease infinite; pointer-events: none; color: #EAFBFF;
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+  /* ============ DEBUG HUD — BORRAR ESTE BLOQUE (CSS) PARA PRODUCCIÓN ============ */
+  #debugHud {
+    position: fixed; left: 0; bottom: 0; width: 100vw; z-index: 20;
+    font-family: "Courier New", monospace; font-size: 12px; letter-spacing: 0.03em;
+    color: #aee6ff; background: rgba(0,0,10,0.35); padding: 4px 10px;
+    opacity: 0.55; pointer-events: none; white-space: pre;
+  }
+  /* ================================================================================ */
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    .cardScreen .artist { font-size: min(4.6vh, 7.5vw); }
+    .cardScreen .title  { font-size: min(14vh, 17vw); }
+    .cardScreen .sub    { font-size: min(4.8vh, 7vw); letter-spacing: 0.42em; padding-left: 0.42em; }
+    .cardScreen .feats  { font-size: min(1.6vh, 3.2vw); letter-spacing: 0.26em; }
+  }
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="neb" id="nebA"></div>
+<div class="neb" id="nebB"></div>
+<div class="neb" id="nebC"></div>
+<div id="viewport"><div id="world"></div></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="intro" class="cardScreen">
+  <div class="artist"></div>
+  <div class="title"></div>
+  <div class="sub"></div>
+  <div class="feats"></div>
+</div>
+<div id="outro" class="cardScreen">
+  <div class="artist"></div>
+  <div class="title"></div>
+  <div class="sub"></div>
+  <div class="feats"></div>
+</div>
+<div id="hint">CLICK PARA DESPEGAR</div>
+<!-- ============ DEBUG HUD — BORRAR ESTA LÍNEA (HTML) PARA PRODUCCIÓN ============ -->
+<div id="debugHud"></div>
+<!-- ================================================================================ -->
+<audio id="audio" preload="auto"></audio>
+<script type="module">
+/* ================================ CONFIG ================================
+   COSMOS: la letra es un vuelo espacial en 3D REAL. Cada palabra nace más
+   adelante en una ruta tridimensional que vira, sube y baja de forma
+   impredecible; la cámara vuela detrás con alabeo (banking) de nave,
+   atraviesa palabras-portal gigantes y deja atrás constelaciones unidas
+   por líneas de luz. Fondo 100% generativo (estrellas + nebulosas), no
+   necesita imagen.
+   La letra se consume 100% de lyricsUrl (formato Whisper:
+   { metadata, segments: [ { words: [ { word, start, end }, ... ] } ] } ).
+   Si el fetch falla (p.ej. abierto por file:// sin servidor), la pieza
+   arranca igual con solo la intro — revisa la consola para el aviso. */
+const CONFIG = {
+  audio: { src: "Yasuha - Flyday Chinatown.mp3" },
+  lyricsUrl: "lyrics-yasuha-flyday-chinatown.json",
+  intro: { artist: "Yasuha", title: "Flyday", sub: "Chinatown", feats: "City Pop · NEXA BRIEF" },
+  /* pantalla de cierre: aparece sola cuando falta poco para el final REAL
+     del audio (no cuando se acaba la letra — ver leadSec) */
+  outro: {
+    leadSec: 8,
+    songTitle: "Flyday Chinatown",
+    title: "Gracias",
+    sub: "Por ver",
+    feats: "Suscríbete · NEXA BRIEF"
+  },
+  /* DEBUG HUD: poner en false (o borrar los bloques marcados) para producción */
+  debug: { enabled: true },
+  palette: { core: "#EAFBFF", glow: "#3FD5FF", deep: "#5B2BD9", portal: "#FF3EA5" },
+  flight: {
+    stepVh: 95,                 /* distancia entre palabras a lo largo de la ruta (% de vh) */
+    followVh: 104,              /* distancia de la cámara detrás de la última palabra */
+    turnPerWord: 0.16,          /* rad que vira la ruta por palabra durante una maniobra */
+    pitchMax: 0.15,             /* inclinación máxima al subir/bajar */
+    maneuverWords: [3, 7],      /* cada maniobra dura entre N y M palabras */
+    /* IMPREDECIBLE: qué hace la ruta a continuación */
+    weights: { straight: 0.34, bankL: 0.18, bankR: 0.18, climb: 0.15, dive: 0.15 },
+    portalChance: 0.5,          /* palabras >= 6 letras → portal gigante en el eje de vuelo */
+    soloChance: 0.12,           /* palabras cortas que igual van de portal */
+    starChance: 0.5             /* proporción tipografía "star" (llena) vs "void" (contorno) */
+  },
+  seed: 7
+};
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, world = $("world"), viewport = $("viewport"), audio = $("audio");
+let vw = innerWidth, vh = innerHeight, persp = Math.max(vw, vh);
+function onResize() {
+  vw = innerWidth; vh = innerHeight; persp = Math.max(vw, vh);
+  viewport.style.perspective = persp + "px";
+  sizeSky();
+}
+addEventListener("resize", onResize);
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+/* ---- estilo estelar ---- */
+const P = C.palette;
+const starGlow = s => `0 0 ${s*0.15}px ${P.core}, 0 0 ${s*0.4}px ${P.glow}, 0 0 ${s*1}px ${P.glow}, 0 0 ${s*2}px ${P.deep}, 0 0 ${s*3.2}px ${P.deep}`;
+function styleStar(el, fs, outline, portal) {
+  const glow = portal ? P.portal : P.glow;
+  if (outline) {
+    el.style.webkitTextStroke = Math.max(1.4, fs * 0.04) + "px " + P.core;
+    el.style.filter = `drop-shadow(0 0 ${Math.max(2, fs*0.05)}px ${P.core}) ` +
+                      `drop-shadow(0 0 ${fs*0.18}px ${glow}) ` +
+                      `drop-shadow(0 0 ${fs*0.45}px ${P.deep})`;
+  } else {
+    el.style.color = P.core;
+    el.style.textShadow = starGlow(Math.max(10, fs * 0.18));
+    if (portal) el.style.textShadow += `, 0 0 ${fs*0.6}px ${P.portal}`;
+  }
+}
+
+/* ---- intro / outro: mismo maquetado (.cardScreen), textos distintos ---- */
+function buildCard(id, cfg) {
+  const i = $(id);
+  const a = i.querySelector(".artist"), t = i.querySelector(".title"),
+        s = i.querySelector(".sub"), f = i.querySelector(".feats");
+  a.textContent = cfg.artist ?? cfg.songTitle ?? "";
+  t.textContent = cfg.title; s.textContent = cfg.sub; f.textContent = cfg.feats;
+  styleStar(a, vh * 0.046, false, false);
+  styleStar(t, vh * 0.14, true, false);
+  styleStar(s, vh * 0.048, false, false);
+  f.style.color = P.core; f.style.textShadow = starGlow(7);
+}
+buildCard("intro", C.intro);
+buildCard("outro", C.outro);
+
+/* ---- lyrics: 100% desde lyricsUrl (JSON de Whisper) ---- */
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const out = [];
+    for (const seg of j.segments) for (const w of seg.words)
+      out.push({ t: w.start, text: w.word.trim() });
+    if (!out.length) throw new Error("lyrics.json sin palabras");
+    return out;
+  } catch (e) {
+    console.warn("[cosmos-letras-V1] No se pudo cargar", C.lyricsUrl,
+                 "— sirve el HTML por HTTP (Live Server), no por file://.", e);
+    return [];
+  }
+}
+
+/* ---- ruta de vuelo 3D: maniobras impredecibles ---- */
+const path = { x: 0, y: 0, z: 0, yaw: 0, pitch: 0 };
+let man = { type: "straight", left: 4 };
+function pickManeuver() {
+  const w = C.flight.weights, keys = ["straight", "bankL", "bankR", "climb", "dive"];
+  let r = rng() * keys.reduce((s, k) => s + w[k], 0), type = "straight";
+  for (const k of keys) { if ((r -= w[k]) < 0) { type = k; break; } }
+  const [a, b] = C.flight.maneuverWords;
+  man = { type, left: a + Math.floor(rng() * (b - a + 1)) };
+}
+/* vector "hacia adelante" de la ruta/cámara (CSS: -Z entra en pantalla, Y baja) */
+function fwd(yaw, pitch) {
+  const cp = Math.cos(pitch);
+  return { x: -Math.sin(yaw) * cp, y: Math.sin(pitch), z: -Math.cos(yaw) * cp };
+}
+function advancePath(dist) {
+  if (--man.left <= 0) pickManeuver();
+  const F = C.flight;
+  if (man.type === "bankL")      path.yaw += F.turnPerWord * (0.75 + rng() * 0.5);
+  else if (man.type === "bankR") path.yaw -= F.turnPerWord * (0.75 + rng() * 0.5);
+  else if (man.type === "climb") path.pitch = Math.max(-F.pitchMax, path.pitch - 0.055);
+  else if (man.type === "dive")  path.pitch = Math.min(F.pitchMax, path.pitch + 0.055);
+  else                           path.pitch *= 0.72;   /* nivelar en recta */
+  const f = fwd(path.yaw, path.pitch);
+  path.x += f.x * dist; path.y += f.y * dist; path.z += f.z * dist;
+}
+
+/* ---- tamaño de fuente compensado por la distancia de cámara en 3D ---- */
+function fontSizeFor(text, portal) {
+  const len = Math.max(2, text.length);
+  const followD = vh * (C.flight.followVh / 100);
+  const comp = (persp + followD) / persp;   /* a esta distancia, la perspectiva reduce ~1/comp */
+  const wShare = vw < vh ? 0.62 : 0.34;
+  let fs = Math.min(vw * wShare / (len * 0.58), portal ? vh * 0.30 : vh * 0.13) * comp;
+  fs *= 0.85 + rng() * 0.3;
+  return Math.max(vh * 0.05 * comp, Math.min(fs, vh * 0.55));
+}
+
+/* ---- colocar palabras en el espacio + constelaciones ---- */
+let placed = [], lastPos = null, lastPlaceMs = 0;
+const cam = { x: 0, y: 0, z: 0, yaw: 0, pitch: 0, roll: 0 };
+const camT = { x: 0, y: 0, z: 0, yaw: 0, pitch: 0 };
+
+function makeBeam(a, b) {
+  const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+  const L = Math.hypot(dx, dy, dz);
+  if (!L) return null;
+  const phi = Math.asin(dy / L), theta = Math.atan2(-dz, dx);
+  const el = doc.createElement("div");
+  el.className = "beam";
+  el.style.transform = `translate3d(${a.x}px, ${a.y}px, ${a.z}px) rotateY(${theta}rad) rotateZ(${phi}rad)`;
+  world.appendChild(el);
+  requestAnimationFrame(() => { el.classList.add("on"); el.style.width = L + "px"; });
+  return el;
+}
+function spawnFlare(pos, yaw, big) {
+  const el = doc.createElement("div");
+  el.className = "flare" + (big ? " big" : "");
+  el.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${yaw}rad) translate(-50%, -50%)`;
+  world.appendChild(el);
+  setTimeout(() => el.remove(), 1100);
+}
+
+function placeWord(w) {
+  const F = C.flight;
+  const clean = w.text.replace(/[.,;!?¡¿"']/g, "");
+  if (!clean) return false;
+  const portal = clean.length >= 6 ? rng() < F.portalChance : rng() < F.soloChance;
+  advancePath(vh * (F.stepVh / 100) * (0.85 + rng() * 0.4) * (portal ? 1.7 : 1));
+  const yaw = path.yaw, f = fwd(yaw, path.pitch);
+  const right = { x: Math.cos(yaw), z: -Math.sin(yaw) };
+  const latW = vw < vh ? 0.10 : 0.20;
+  /* los portales van clavados en el eje de vuelo: la cámara los atraviesa */
+  const pos = portal ? { x: path.x, y: path.y, z: path.z } : {
+    x: path.x + right.x * (rng() - 0.5) * vw * latW * 2,
+    y: path.y + (rng() - 0.5) * vh * 0.30,
+    z: path.z + right.z * (rng() - 0.5) * vw * latW * 2
+  };
+
+  const el = doc.createElement("div");
+  const outline = rng() > F.starChance;
+  el.className = "w " + (outline ? "void" : "star") + (portal ? " portal" : "");
+  el.textContent = clean;
+  const fs = fontSizeFor(clean, portal);
+  el.style.fontSize = fs + "px";
+  styleStar(el, fs, outline, portal);
+  const tilt = (rng() - 0.5) * 9;
+  el.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${yaw}rad) rotateZ(${tilt}deg) translate(-50%, -50%)`;
+  world.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("on"));
+  spawnFlare(pos, yaw, portal);
+
+  const beam = lastPos ? makeBeam(lastPos, pos) : null;
+  lastPos = pos;
+  placed.push({ el, beam });
+  for (let i = 0; i < placed.length - 1; i++) placed[i].el.classList.add("cold");
+  if (placed.length > 26) {
+    const o = placed.shift();
+    o.el.remove(); if (o.beam) o.beam.remove();
+  }
+
+  /* cámara: detrás de la palabra, mirando en la dirección de la ruta */
+  const followD = vh * (F.followVh / 100) * (vw < vh ? 0.85 : 1);
+  const side = vw < vh ? 0 : (rng() - 0.5) * vw * 0.10;   /* composición: descentrar un poco en desktop */
+  camT.x = pos.x - f.x * followD + right.x * side;
+  camT.y = pos.y - f.y * followD - vh * 0.02;
+  camT.z = pos.z - f.z * followD + right.z * side;
+  camT.yaw = yaw; camT.pitch = path.pitch;
+  lastPlaceMs = performance.now();
+  return true;
+}
+
+/* ---- reloj: audio si suena; si no, rAF ---- */
+let rafT0 = null, rafNow = 0, started = false;
+const clock = () => (!audio.paused && audio.currentTime > 0.05)
+  ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+
+async function begin() {
+  if (started) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+/* ---- outro: se dispara por el FINAL REAL del audio, no por la letra ---- */
+let outroShown = false;
+function maybeOutro() {
+  if (outroShown) return;
+  const dur = audio.duration;
+  if (!isFinite(dur) || dur <= 0) return;
+  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
+    outroShown = true;
+    doc.body.classList.add("outroActive");
+    $("intro").classList.add("gone");
+    $("outro").classList.add("show");
+    for (const p of placed) p.el.classList.add("cold");
+  }
+}
+audio.addEventListener("ended", maybeOutro);
+
+/* ---- cielo: estrellas con parallax de cámara + fugaces (canvas) ---- */
+const sky = $("sky"), ctx = sky.getContext("2d");
+let stars = [], shoot = null, nextShootMs = 5000;
+function sizeSky() {
+  sky.width = vw; sky.height = vh;
+  const n = Math.round(vw * vh / 8000);
+  stars = Array.from({ length: n }, () => ({
+    x: rng() * vw, y: rng() * vh,
+    d: 0.25 + rng() * 0.75,                    /* profundidad → parallax */
+    a: 0.25 + rng() * 0.75,
+    tw: 0.0006 + rng() * 0.0035, ph: rng() * 6.28
+  }));
+}
+function drawSky(now, yawVel, spd) {
+  ctx.clearRect(0, 0, vw, vh);
+  for (const s of stars) {
+    s.x -= yawVel * vw * 1.7 * s.d;            /* girar la cámara barre el cielo */
+    const ddx = s.x - vw / 2, ddy = s.y - vh / 2;
+    s.x += ddx * spd * 0.00013 * s.d;          /* avanzar = las estrellas huyen del centro */
+    s.y += ddy * spd * 0.00013 * s.d;
+    if (s.x < -4) s.x += vw + 8; if (s.x > vw + 4) s.x -= vw + 8;
+    if (s.y < -4) s.y += vh + 8; if (s.y > vh + 4) s.y -= vh + 8;
+    const al = s.a * (0.55 + 0.45 * Math.sin(now * s.tw + s.ph));
+    ctx.fillStyle = `rgba(214,238,255,${al.toFixed(3)})`;
+    const r = s.d > 0.8 ? 1.6 : 1;
+    ctx.fillRect(s.x, s.y, r, r);
+  }
+  /* estrella fugaz ocasional */
+  if (!shoot && now > nextShootMs) {
+    shoot = { x: rng() * vw, y: rng() * vh * 0.5, vx: (rng() > 0.5 ? 1 : -1) * (6 + rng() * 5), vy: 2 + rng() * 2, life: 1 };
+    nextShootMs = now + 7000 + rng() * 9000;
+  }
+  if (shoot) {
+    const g = ctx.createLinearGradient(shoot.x, shoot.y, shoot.x - shoot.vx * 9, shoot.y - shoot.vy * 9);
+    g.addColorStop(0, `rgba(200,240,255,${(0.9 * shoot.life).toFixed(3)})`);
+    g.addColorStop(1, "rgba(200,240,255,0)");
+    ctx.strokeStyle = g; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(shoot.x, shoot.y);
+    ctx.lineTo(shoot.x - shoot.vx * 9, shoot.y - shoot.vy * 9); ctx.stroke();
+    shoot.x += shoot.vx; shoot.y += shoot.vy; shoot.life -= 0.02;
+    if (shoot.life <= 0) shoot = null;
+  }
+}
+
+/* ============ DEBUG HUD — BORRAR ESTE BLOQUE (JS) PARA PRODUCCIÓN ============
+   Muestra abajo: tiempo actual / duración total, estado del audio, cuántas
+   palabras van colocadas y en cuánto llega la próxima. */
+function updateDebug() {
+  if (!C.debug.enabled) return;
+  const dur = isFinite(audio.duration) ? audio.duration.toFixed(1) : "?";
+  const cur = audio.currentTime.toFixed(1);
+  const state = audio.ended ? "ended" : audio.paused ? "paused" : "playing";
+  const next = words[ptr];
+  const nextIn = outroShown ? "outro activo (sin más palabras)"
+               : next ? (next.t - clock()).toFixed(1) + "s" : "—(sin más letra)";
+  $("debugHud").textContent =
+    `t=${cur}s / ${dur}s  ·  audio:${state}  ·  palabra ${ptr}/${words.length}  ·  próxima en ${nextIn}`;
+}
+/* =============================================================================== */
+
+/* ---- utilidades de ángulo (la cámara vira por el camino corto) ---- */
+const wrapAng = a => { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; };
+
+/* ---- main ---- */
+let words = [], ptr = 0, introGone = false, prevYaw = 0, prevCam = { x: 0, y: 0, z: 0 };
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  const t = clock();
+  maybeOutro();
+  if (!outroShown) {
+    while (ptr < words.length && t >= words[ptr].t) {
+      if (!introGone) { $("intro").classList.add("gone"); introGone = true; }
+      placeWord(words[ptr]);
+      ptr++;
+    }
+    /* pausa instrumental: la nave no se queda clavada, deriva hacia adelante */
+    if (lastPlaceMs && now - lastPlaceMs > 2200 && ptr < words.length) {
+      const f = fwd(camT.yaw, camT.pitch), drift = vh * 0.0009 * 16;
+      camT.x += f.x * drift; camT.y += f.y * drift; camT.z += f.z * drift;
+    }
+  }
+
+  cam.x += (camT.x - cam.x) * 0.05;
+  cam.y += (camT.y - cam.y) * 0.05;
+  cam.z += (camT.z - cam.z) * 0.05;
+  const yawErr = wrapAng(camT.yaw - cam.yaw);
+  cam.yaw += yawErr * 0.055;
+  cam.pitch += (camT.pitch - cam.pitch) * 0.055;
+  /* alabeo de nave: se inclina hacia el interior del viraje + balanceo sutil */
+  const rollT = Math.max(-0.26, Math.min(0.26, -yawErr * 1.6)) + Math.sin(now * 0.0003) * 0.02;
+  cam.roll += (rollT - cam.roll) * 0.08;
+  world.style.transform =
+    `rotateZ(${-cam.roll}rad) rotateX(${-cam.pitch}rad) rotateY(${-cam.yaw}rad) ` +
+    `translate3d(${-cam.x}px, ${-cam.y}px, ${-cam.z}px)`;
+
+  const yawVel = wrapAng(cam.yaw - prevYaw); prevYaw = cam.yaw;
+  const spd = Math.hypot(cam.x - prevCam.x, cam.y - prevCam.y, cam.z - prevCam.z);
+  prevCam.x = cam.x; prevCam.y = cam.y; prevCam.z = cam.z;
+  drawSky(now, yawVel, spd);
+
+  updateDebug();                        /* DEBUG HUD: borrar esta línea también */
+  requestAnimationFrame(frame);
+}
+
+onResize();
+audio.src = encodeURI(C.audio.src);
+loadLyrics().then(w => { words = w; });
+begin();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

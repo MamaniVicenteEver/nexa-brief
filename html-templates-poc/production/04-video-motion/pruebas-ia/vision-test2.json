@@ -1,0 +1,64 @@
+{
+  "scene_overview": {
+    "short_description": "A silhouetted warrior with glowing white hair rises through monochrome mist.",
+    "style": "cinematic monochrome, atmospheric",
+    "background_analysis": "Gray fog with soft vertical light shafts — multiple gray tones blending, no flat field."
+  },
+  "canvas_analysis": {
+    "file_width_px": 720, "file_height_px": 1280,
+    "rotation_to_upright_deg": 0,
+    "rotation_evidence": "none",
+    "rotation_reasoning": "stored orientation matches scene content, no rotation cues found",
+    "upright_canvas": { "width_px": 720, "height_px": 1280 },
+    "content_box_px": { "x0": 0, "y0": 0, "x1": 720, "y1": 1280 },
+    "is_letterboxed": false,
+    "content_orientation": "portrait",
+    "notes": "Full-canvas content, no bars, upright."
+  },
+  "motion_estimate": {
+    "capture_is_single_frame": true,
+    "margin_pct_applied": 12,
+    "expected_movement": "Mist drifts; subject breathes and glows; slight vertical float expected."
+  },
+  "color_calibration": {
+    "dominant_background_color": "#3E444B",
+    "secondary_background_color": null,
+    "background_is_flat": false,
+    "high_contrast_text_color": "#F2F4F6",
+    "palette_notes": "Cool desaturated gray, B>R by ~13 points; darker corners (#14181A-#263032), lighter center shaft (#5E6C75). Excluded the semi-transparent 'mylivewallpapers.com' watermark strip at the bottom from all samples."
+  },
+  "background_layout": {
+    "type": "complex",
+    "regions": [],
+    "notes": "Monochrome fog with 3+ luminance bands blending — blur mode."
+  },
+  "embedded_text": [
+    { "content": "mylivewallpapers.com", "rect_px": { "x0": 140, "y0": 1210, "x1": 580, "y1": 1280 },
+      "role": "watermark", "on_color": "#2E3339", "size_class": "subordinate" }
+  ],
+  "main_subject": {
+    "label": "glowing-haired silhouette",
+    "is_cropped_by_frame": false,
+    "absolute_bounding_box": { "top_y_px": 340, "bottom_y_px": 1180, "left_x_px": 180,
+      "right_x_px": 560, "total_width_px": 380, "total_height_px": 840 },
+    "contour_zones": {
+      "top_zone":    { "description": "white hair + head, inflated", "y_start_px": 340, "y_end_px": 520,
+                       "left_edge_x_px": 240, "right_edge_x_px": 500 },
+      "middle_zone": { "description": "torso and fists, inflated", "y_start_px": 520, "y_end_px": 850,
+                       "left_edge_x_px": 180, "right_edge_x_px": 560 },
+      "bottom_zone": { "description": "fading legs, inflated", "y_start_px": 850, "y_end_px": 1180,
+                       "left_edge_x_px": 220, "right_edge_x_px": 520 }
+    }
+  },
+  "safe_typography_zones": {
+    "strategy_description": "Flank the silhouette; keep the bottom watermark strip clear. Watermark is subordinate, so the words may echo the video's rising-power theme.",
+    "typography_style": "default",
+    "preferred_anchor": "bottom",
+    "left_text_block":  { "suggested_text": "RISE", "anchor_edge": "subject_left_edge",
+      "placement": { "top_y_px": 850, "left_x_px": 20, "max_width_px": 190, "max_height_px": 330 } },
+    "right_text_block": { "suggested_text": "SILENT", "anchor_edge": "subject_right_edge",
+      "placement": { "top_y_px": 850, "left_x_px": 530, "max_width_px": 180, "max_height_px": 330 } }
+  },
+  "equalizer_canvas_zone": { "position": "bottom", "y_start_px": 1180, "y_end_px": 1210,
+    "overlaps_subject": false, "notes": "Sits above the watermark strip." }
+}

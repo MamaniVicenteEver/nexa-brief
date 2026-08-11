@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOLA REMIX — KINETIC LYRICS</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #050508;
+    --neon-orange: #ff4a00;
+    --neon-peach: #ffd0b5;
+    --glow-intense: 0 0 10px #ff4a00, 0 0 25px #ff4a00, 0 0 50px #ff4a00;
+    --glow-outline: 0 0 8px rgba(255, 74, 0, 0.8), 0 0 20px rgba(255, 74, 0, 0.4);
+    --font-display: 'Montserrat', sans-serif;
+    --font-sub: 'Syncopate', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg-color);
+    font-family: var(--font-display);
+    color: #fff;
+  }
+
+  /* Contenedor del mundo (soporta shake y bounce) */
+  #world {
+    position: fixed;
+    inset: 0;
+    will-change: transform;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Fondo de video y desenfoque */
+  #mediaWrap {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    will-change: transform, filter;
+  }
+
+  #bgblur {
+    position: absolute;
+    inset: -10%;
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    filter: blur(40px) brightness(0.25) saturate(1.5);
+    z-index: 1;
+  }
+
+  #media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    opacity: 0.45;
+  }
+
+  #tintOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: radial-gradient(circle at center, transparent 30%, rgba(5, 5, 8, 0.85) 100%);
+    pointer-events: none;
+  }
+
+  /* Lienzo de partículas y efectos */
+  #particles {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  /* --- CARTA DE INTRODUCCIÓN (Title Card) --- */
+  #intro-card {
+    position: absolute;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 90%;
+    max-width: 800px;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  #intro-card.hidden {
+    opacity: 0;
+    transform: scale(0.85);
+    pointer-events: none;
+  }
+
+  .intro-artist {
+    font-family: var(--font-sub);
+    font-size: clamp(1.2rem, 3vw, 2.5rem);
+    color: var(--neon-peach);
+    text-shadow: 0 0 10px rgba(255, 74, 0, 0.6);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .intro-title {
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+
+  .intro-remix {
+    font-size: clamp(2rem, 5vw, 4rem);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+  }
+
+  .intro-features {
+    font-family: var(--font-sub);
+    font-size: clamp(0.7rem, 1.8vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* --- MOTOR DE LETRAS: STACK EN GRADA + SHIFT --- */
+  #lyricStage {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Bloque activo de letras (en el centro) */
+  .lyric-block {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 900px;
+    z-index: 5;
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  /* Palabras individuales */
+  .lyric-word {
+    font-size: clamp(2.5rem, 8vw, 6.5rem);
+    text-transform: uppercase;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    transform: scale(0.5) translateY(30px);
+    transition: opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin: 5px 0;
+  }
+
+  .lyric-word.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  /* Estilos de Neón */
+  .neon-inline {
+    color: var(--neon-peach);
+    text-shadow: 0 0 5px #fff, var(--glow-intense);
+  }
+
+  .neon-outline {
+    color: transparent;
+    -webkit-text-stroke: 3px var(--neon-orange);
+    text-shadow: var(--glow-outline);
+  }
+
+  /* Desplazamiento a los laterales (Historias) */
+  .history-left {
+    transform: translate(-130%, -50%) scale(0.48) rotate(-6deg) !important;
+    opacity: 0.15 !important;
+    filter: blur(2px) grayscale(0.5);
+  }
+
+  .history-right {
+    transform: translate(30%, -50%) scale(0.48) rotate(6deg) !important;
+    opacity: 0.15 !important;
+    filter: blur(2px) grayscale(0.5);
+  }
+
+  /* --- CORTINILLAS DE ADRENALINA --- */
+  #flash {
+    position: fixed;
+    inset: 0;
+    z-index: 8;
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    background: #fff;
+  }
+
+  #vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+  }
+
+  #grain {
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 10;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    animation: grainShift 0.8s steps(4) infinite;
+  }
+
+  @keyframes grainShift {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(-2%,1%); }
+    50% { transform: translate(1%,-2%); }
+    75% { transform: translate(-1%,2%); }
+    100% { transform: translate(0,0); }
+  }
+
+  /* Ecualizador */
+  #eq {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    z-index: 11;
+  }
+
+  /* Botón interactivo de reproducción */
+  #btn-play {
+    position: fixed;
+    z-index: 100;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 74, 0, 0.15);
+    border: 2px solid var(--neon-orange);
+    color: #fff;
+    padding: 20px 40px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    border-radius: 50px;
+    box-shadow: 0 0 20px rgba(255, 74, 0, 0.4), inset 0 0 15px rgba(255, 74, 0, 0.2);
+    text-shadow: 0 0 8px #fff;
+    font-family: var(--font-display);
+    transition: all 0.3s ease;
+  }
+
+  #btn-play:hover {
+    background: var(--neon-orange);
+    box-shadow: 0 0 35px var(--neon-orange);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  #btn-play.hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<button id="btn-play">INICIAR COMPOSICIÓN</button>
+
+<div id="world">
+  <div id="mediaWrap">
+    <video id="bgblur" muted loop playsinline></video>
+    <video id="media" muted loop playsinline></video>
+    <div id="tintOverlay"></div>
+  </div>
+
+  <canvas id="particles"></canvas>
+  <div id="lyricStage">
+    <!-- Intro Card -->
+    <div id="intro-card">
+      <div class="intro-artist">Dalex</div>
+      <div class="intro-title neon-outline">Hola</div>
+      <div class="intro-remix neon-inline">Remix</div>
+      <div class="intro-features">
+        <span>Lenny Tavárez</span>
+        <span>•</span>
+        <span>Chencho Corleone</span>
+        <span>•</span>
+        <span>Juhn</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="flash"></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<canvas id="eq"></canvas>
+
+<audio id="audio" loop preload="auto"></audio>
+
+<script type="module">
+/* ============ CONFIG — exact timing and setup for Hola Remix ============ */
+const CONFIG = {
+  media: {
+    videoSrc: "test2.mp4",
+    audioSrc: "song.mp3",
+    simulatedBpm: 96
+  },
+  colors: {
+    tint: "#050508",
+    accent: "#ff4a00",
+    peach: "#ffd0b5"
+  },
+  introDuration: 3.5, // Seconds to display the intro card
+  lyrics: [
+    // Esa nena cuando baila, me vuelve loco y yo pago ese show
+    { t: 3.5, text: "Esa", style: "inline" },
+    { t: 4.1, text: "nena", style: "outline" },
+    { t: 4.8, text: "cuando", style: "inline" },
+    { t: 5.5, text: "baila,", style: "inline", isLineEnd: true },
+
+    { t: 6.6, text: "me", style: "outline" },
+    { t: 7.0, text: "vuelve", style: "inline" },
+    { t: 7.4, text: "loco", style: "inline" },
+    { t: 7.8, text: "y", style: "outline" },
+    { t: 8.1, text: "yo", style: "inline" },
+    { t: 8.4, text: "pago", style: "outline" },
+    { t: 8.8, text: "ese", style: "inline" },
+    { t: 9.1, text: "show", style: "inline", isLineEnd: true, punch: true },
+
+    // Es calla’ita, pero la motiva el dembow
+    { t: 10.1, text: "Es", style: "outline" },
+    { t: 10.5, text: "calla'ita,", style: "inline" },
+    { t: 11.2, text: "pero", style: "outline" },
+    { t: 11.6, text: "la", style: "inline" },
+    { t: 12.0, text: "motiva", style: "inline" },
+    { t: 12.5, text: "el", style: "outline" },
+    { t: 13.0, text: "dembow", style: "inline", isLineEnd: true, punch: true },
+
+    // Y si la llego a besar / Yo sé que tú te vas a estremecer
+    { t: 14.5, text: "Y", style: "outline" },
+    { t: 14.8, text: "si", style: "inline" },
+    { t: 15.1, text: "la", style: "outline" },
+    { t: 15.4, text: "llego", style: "inline" },
+    { t: 15.8, text: "a", style: "outline" },
+    { t: 16.2, text: "besar", style: "inline", isLineEnd: true },
+
+    { t: 17.5, text: "Yo", style: "outline" },
+    { t: 17.8, text: "sé", style: "inline" },
+    { t: 18.1, text: "que", style: "outline" },
+    { t: 18.4, text: "tú", style: "inline" },
+    { t: 18.7, text: "te", style: "outline" },
+    { t: 19.0, text: "vas", style: "inline" },
+    { t: 19.3, text: "a", style: "outline" },
+    { t: 19.7, text: "estremecer", style: "inline", isLineEnd: true, punch: true },
+
+    // Después me pedirás un poco más / Haré que se te erice to’a la piel
+    { t: 21.5, text: "Después", style: "outline" },
+    { t: 22.0, text: "me", style: "inline" },
+    { t: 22.4, text: "pedirás", style: "outline" },
+    { t: 23.0, text: "un", style: "inline" },
+    { t: 23.4, text: "poco", style: "outline" },
+    { t: 23.8, text: "más", style: "inline", isLineEnd: true },
+
+    { t: 25.0, text: "Haré", style: "outline" },
+    { t: 25.4, text: "que", style: "inline" },
+    { t: 25.8, text: "se", style: "outline" },
+    { t: 26.2, text: "te", style: "inline" },
+    { t: 26.6, text: "erice", style: "inline" },
+    { t: 27.0, text: "to'a", style: "outline" },
+    { t: 27.4, text: "la", style: "inline" },
+    { t: 27.8, text: "piel", style: "inline", isLineEnd: true, punch: true },
+
+    // (This is the remix)
+    { t: 29.5, text: "(This", style: "outline" },
+    { t: 30.0, text: "is", style: "inline" },
+    { t: 30.4, text: "the", style: "outline" },
+    { t: 30.8, text: "remix)", style: "inline", isLineEnd: true },
+
+    // Hola / No sé si te acuerdas de mí
+    { t: 32.5, text: "HOLA", style: "inline", isLineEnd: true, punch: true },
+
+    { t: 34.0, text: "No", style: "outline" },
+    { t: 34.3, text: "sé", style: "inline" },
+    { t: 34.6, text: "si", style: "outline" },
+    { t: 34.9, text: "te", style: "inline" },
+    { t: 35.2, text: "acuerdas", style: "inline" },
+    { t: 35.6, text: "de", style: "outline" },
+    { t: 36.0, text: "mí", style: "inline", isLineEnd: true },
+
+    // Hace tiempo no te veo por ahí
+    { t: 37.5, text: "Hace", style: "outline" },
+    { t: 37.9, text: "tiempo", style: "inline" },
+    { t: 38.3, text: "no", style: "outline" },
+    { t: 38.7, text: "te", style: "inline" },
+    { t: 39.0, text: "veo", style: "inline" },
+    { t: 39.4, text: "por", style: "outline" },
+    { t: 39.8, text: "ahí", style: "inline", isLineEnd: true, punch: true },
+
+    // Soy yo
+    { t: 41.0, text: "Soy", style: "outline" },
+    { t: 41.4, text: "yo", style: "inline", isLineEnd: true },
+
+    // El que siempre le hablaba de ti
+    { t: 42.5, text: "El", style: "outline" },
+    { t: 42.8, text: "que", style: "inline" },
+    { t: 43.1, text: "siempre", style: "outline" },
+    { t: 43.5, text: "le", style: "inline" },
+    { t: 43.9, text: "hablaba", style: "inline" },
+    { t: 44.3, text: "de", style: "outline" },
+    { t: 44.7, text: "ti", style: "inline", isLineEnd: true },
+
+    // A tu mejor amiga pa’ que me tire la buena
+    { t: 45.8, text: "A", style: "outline" },
+    { t: 46.1, text: "tu", style: "inline" },
+    { t: 46.4, text: "mejor", style: "outline" },
+    { t: 46.7, text: "amiga", style: "inline" },
+    { t: 47.1, text: "pa'", style: "outline" },
+    { t: 47.5, text: "que", style: "inline" },
+    { t: 47.8, text: "me", style: "outline" },
+    { t: 48.2, text: "tire", style: "inline" },
+    { t: 48.5, text: "la", style: "outline" },
+    { t: 48.9, text: "buena", style: "inline", isLineEnd: true, punch: true }
+  ],
+  adrenaline: {
+    maxBounce: 0.05,
+    shakePx: 8,
+    flashOpacity: 0.5,
+    flashCooldownMs: 380
+  },
+  seed: 42
+};
+
+const doc = document, $ = id => doc.getElementById(id);
+const world = $("world"), pCanvas = $("particles"), pCtx = pCanvas.getContext("2d");
+const eqCanvas = $("eq"), eqCtx = eqCanvas.getContext("2d");
+const mediaEl = $("media"), blurEl = $("bgblur"), audioEl = $("audio");
+
+// Seeded RNG
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const rng = mulberry32(CONFIG.seed);
+
+// Setup Media sources
+mediaEl.src = CONFIG.media.videoSrc;
+blurEl.src = CONFIG.media.videoSrc;
+audioEl.src = CONFIG.media.audioSrc;
+
+// Canvas resizing
+let vw = 0, vh = 0;
+function resize() {
+  vw = innerWidth; vh = innerHeight;
+  const dpr = devicePixelRatio || 1;
+  
+  pCanvas.width = vw * dpr;
+  pCanvas.height = vh * dpr;
+  pCanvas.style.width = vw + "px";
+  pCanvas.style.height = vh + "px";
+  pCtx.scale(dpr, dpr);
+
+  const eqH = Math.min(80, Math.max(40, vh * 0.06));
+  eqCanvas.width = vw * dpr;
+  eqCanvas.height = eqH * dpr;
+  eqCanvas.style.width = vw + "px";
+  eqCanvas.style.height = eqH + "px";
+  eqCtx.scale(dpr, dpr);
+}
+addEventListener("resize", resize);
+resize();
+
+// Audio context & analyzer
+let analyser = null, freqData = null, hasAudioSignal = false;
+async function startPlayback() {
+  $("btn-play").classList.add("hidden");
+  
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = ctx.createMediaElementSource(audioEl);
+    analyser = ctx.createAnalyser();
+    analyser.fftSize = 128;
+    analyser.smoothingTimeConstant = 0.75;
+    source.connect(analyser);
+    analyser.connect(ctx.destination);
+    freqData = new Uint8Array(analyser.frequencyBinCount);
+    
+    if (ctx.state === "suspended") await ctx.resume();
+    await audioEl.play();
+  } catch (e) {
+    console.log("Real audio context failed or blocked. Running fallback engine.");
+  }
+  
+  mediaEl.play().catch(() => {});
+  blurEl.play().catch(() => {});
+  t0 = performance.now();
+  requestAnimationFrame(tick);
+}
+$("btn-play").addEventListener("click", startPlayback);
+
+// Clocks and Audio extraction
+let t0 = performance.now();
+const getAudioTime = () => {
+  if (audioEl.paused || audioEl.currentTime === 0) {
+    return (performance.now() - t0) / 1000;
+  }
+  return audioEl.currentTime;
+};
+
+let smoothBass = 0, avgBass = 0.15;
+function getBassEnergy(t) {
+  let raw = 0;
+  if (analyser && freqData) {
+    analyser.getByteFrequencyData(freqData);
+    for (let i = 0; i < 6; i++) raw += freqData[i];
+    raw = (raw / 6) / 255;
+    if (raw > 0.02) hasAudioSignal = true;
+  }
+  if (!hasAudioSignal) {
+    // Fallback simulated kick
+    const beatLen = 60 / CONFIG.media.simulatedBpm;
+    const beatPhase = (t % beatLen) / beatLen;
+    raw = Math.pow(Math.max(0, 1 - beatPhase * 3.5), 2) * 0.85;
+  }
+  smoothBass += (raw - smoothBass) * 0.22;
+  avgBass += (smoothBass - avgBass) * 0.02;
+  return {
+    val: smoothBass,
+    isBeat: smoothBass > avgBass * 1.5 && smoothBass > 0.2
+  };
+}
+
+// Particle System
+let particles = [];
+function spawnSparks(x, y) {
+  for (let i = 0; i < 20; i++) {
+    const angle = rng() * Math.PI * 2;
+    const speed = 2 + rng() * 6;
+    particles.push({
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 1.5,
+      alpha: 1,
+      color: rng() < 0.5 ? CONFIG.colors.accent : CONFIG.colors.peach
+    });
+  }
+}
+
+function updateAndDrawParticles() {
+  pCtx.clearRect(0, 0, vw, vh);
+  particles = particles.filter(p => p.alpha > 0);
+  for (const p of particles) {
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.18; // gravity
+    p.alpha -= 0.025;
+    pCtx.globalAlpha = Math.max(0, p.alpha);
+    pCtx.fillStyle = p.color;
+    pCtx.shadowBlur = 8;
+    pCtx.shadowColor = p.color;
+    pCtx.fillRect(p.x, p.y, 4, 4);
+  }
+  pCtx.globalAlpha = 1;
+  pCtx.shadowBlur = 0;
+}
+
+// Flash and Shake triggers
+let lastFlashTime = -1e9, shakeTime = 0, shakeIntensity = 0;
+function triggerFlash() {
+  const now = performance.now();
+  if (now - lastFlashTime < CONFIG.adrenaline.flashCooldownMs) return;
+  lastFlashTime = now;
+  const f = $("flash");
+  f.style.transition = "none";
+  f.style.opacity = CONFIG.adrenaline.flashOpacity;
+  requestAnimationFrame(() => {
+    f.style.transition = "opacity 0.2s ease-out";
+    f.style.opacity = "0";
+  });
+}
+
+function triggerShake(mult = 1) {
+  shakeTime = performance.now() + 250;
+  shakeIntensity = CONFIG.adrenaline.shakePx * mult;
+}
+
+// Lyric Engine: Stacked "en grada" + unpredictable shifting
+const stage = $("lyricStage");
+let activeBlock = null;
+let wordIndex = 0;
+
+// Create active block
+function createNewBlock() {
+  const b = doc.createElement("div");
+  b.className = "lyric-block";
+  stage.appendChild(b);
+  activeBlock = b;
+}
+
+function shiftActiveBlock() {
+  if (!activeBlock) return;
+  
+  // Decide side (left or right) unpredictably using the mulberry32 generator
+  const side = rng() < 0.5 ? "left" : "right";
+  const oldBlock = activeBlock;
+  
+  // Animate the block to the side
+  oldBlock.classList.add(side === "left" ? "history-left" : "history-right");
+  
+  // Remove after the transition finishes
+  setTimeout(() => {
+    oldBlock.remove();
+  }, 1000);
+  
+  activeBlock = null;
+}
+
+function addWordToBlock(word) {
+  if (!activeBlock) createNewBlock();
+  
+  const wEl = doc.createElement("div");
+  wEl.className = `lyric-word ${word.style === "inline" ? "neon-inline" : "neon-outline"}`;
+  wEl.textContent = word.text;
+  activeBlock.appendChild(wEl);
+  
+  // Trigger entry animation on next frame
+  requestAnimationFrame(() => {
+    wEl.classList.add("active");
+  });
+  
+  // If the word has a punch effect
+  if (word.punch) {
+    triggerFlash();
+    triggerShake(1.2);
+    // Spawn sparks at the word's approximate location
+    const rect = wEl.getBoundingClientRect();
+    if (rect.width > 0) {
+      spawnSparks(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    } else {
+      spawnSparks(vw / 2, vh / 2);
+    }
+  }
+}
+
+// Main Game Loop (tick)
+let introHidden = false;
+function tick() {
+  const t = getAudioTime();
+  const { val: bass, isBeat } = getBassEnergy(t);
+  
+  // Handle Intro card fade-out
+  if (!introHidden && t >= CONFIG.introDuration) {
+    $("intro-card").classList.add("hidden");
+    introHidden = true;
+  }
+  
+  // World scale (bass bounce) + shake offsets
+  let dx = 0, dy = 0;
+  const now = performance.now();
+  if (now < shakeTime) {
+    const factor = (shakeTime - now) / 250;
+    dx = (rng() - 0.5) * shakeIntensity * 2 * factor;
+    dy = (rng() - 0.5) * shakeIntensity * 2 * factor;
+  }
+  const scale = 1 + bass * CONFIG.adrenaline.maxBounce;
+  world.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${scale})`;
+  
+  // Beat hit side-effects
+  if (isBeat && introHidden) {
+    if (rng() < 0.25) triggerFlash();
+    if (rng() < 0.3) triggerShake(0.5);
+  }
+  
+  // Lyrics logic
+  while (wordIndex < CONFIG.lyrics.length && t >= CONFIG.lyrics[wordIndex].t) {
+    const word = CONFIG.lyrics[wordIndex];
+    addWordToBlock(word);
+    
+    // If it is the end of a line, schedule a block shift
+    if (word.isLineEnd) {
+      // Delay shifting slightly so the user can read the completed sentence
+      const currentBlock = activeBlock;
+      setTimeout(() => {
+        if (activeBlock === currentBlock) {
+          shiftActiveBlock();
+        }
+      }, 700);
+    }
+    
+    wordIndex++;
+  }
+  
+  // Reset loop if audio repeats or cycles
+  if (wordIndex >= CONFIG.lyrics.length && t < 0.2) {
+    wordIndex = 0;
+    stage.innerHTML = "";
+    introHidden = false;
+    $("intro-card").classList.remove("hidden");
+    createNewBlock();
+  }
+  
+  updateAndDrawParticles();
+  
+  // Equalizer draw
+  const eqH = eqCanvas.height / (devicePixelRatio || 1);
+  eqCtx.clearRect(0, 0, vw, eqH);
+  const barsCount = 36;
+  const barWidth = vw / barsCount;
+  eqCtx.fillStyle = CONFIG.colors.accent;
+  eqCtx.shadowBlur = 6;
+  eqCtx.shadowColor = CONFIG.colors.accent;
+  
+  for (let i = 0; i < barsCount; i++) {
+    let amp = 0;
+    if (analyser && freqData) {
+      amp = freqData[Math.floor(i * freqData.length / barsCount)] / 255;
+    } else {
+      amp = bass * Math.pow(Math.max(0, Math.sin(i * 0.45 + t * 4)), 2);
+    }
+    const bh = Math.max(3, amp * (eqH - 6));
+    eqCtx.fillRect(i * barWidth + barWidth * 0.2, eqH - bh, barWidth * 0.6, bh);
+  }
+  eqCtx.shadowBlur = 0;
+  
+  requestAnimationFrame(tick);
+}
+</script>
+</body>
+</html>

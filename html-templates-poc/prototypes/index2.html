@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa-Brief Core Engine | Neon Void Stage</title>
+    <style>
+        :root {
+            --void: #06060d;
+            --cyan: #00e5ff;
+            --white: #ffffff;
+            --coral: #ff3b5c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--void);
+            font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            cursor: default;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background:
+                linear-gradient(180deg, var(--void) 0%, rgba(0, 229, 255, 0.03) 40%, rgba(255, 59, 92, 0.02) 70%, var(--void) 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.015) 2px, rgba(0, 229, 255, 0.015) 3px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 229, 255, 0.01) 2px, rgba(0, 229, 255, 0.01) 3px);
+            animation: gridDrift 20s linear infinite;
+        }
+
+        @keyframes gridDrift {
+            0% {
+                background-position: 0 0, 0 0, 0 0;
+            }
+            100% {
+                background-position: 0 0, 0 60px, 60px 0;
+            }
+        }
+
+        .radial-pulse {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            background: radial-gradient(ellipse at 50% 55%, rgba(0, 229, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 45%, rgba(255, 59, 92, 0.04) 0%, transparent 45%);
+            pointer-events: none;
+            animation: pulseBreath 6s ease-in-out infinite;
+        }
+
+        @keyframes pulseBreath {
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .vignette-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            background: radial-gradient(circle at center, transparent 40%, var(--void) 90%);
+            pointer-events: none;
+        }
+
+        .cinematic-bg-text {
+            position: fixed;
+            inset: 0;
+            z-index: 4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            gap: 8vw;
+            padding: 0 40px;
+            user-select: none;
+        }
+
+        .giant-letter {
+            font-size: clamp(7rem, 22vw, 22rem);
+            font-weight: 200;
+            color: rgba(255, 255, 255, 0.06);
+            letter-spacing: -0.04em;
+            text-shadow: 0 0 60px rgba(0, 229, 255, 0.08);
+            transition: text-shadow 0.8s ease;
+        }
+
+        .giant-letter.accent {
+            color: rgba(255, 59, 92, 0.05);
+            text-shadow: 0 0 60px rgba(255, 59, 92, 0.1);
+        }
+
+        .figure-container {
+            position: fixed;
+            bottom: -1vh;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 88vh;
+            z-index: 5;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .figure-container::before {
+            content: '';
+            position: absolute;
+            bottom: 2vh;
+            width: 40vw;
+            height: 78vh;
+            border-radius: 50% 50% 0 0;
+            background: conic-gradient(from 0deg,
+                    transparent 0%,
+                    rgba(0, 229, 255, 0.55) 20%,
+                    rgba(255, 255, 255, 0.15) 30%,
+                    rgba(255, 59, 92, 0.45) 42%,
+                    transparent 55%,
+                    transparent 100%);
+            z-index: -1;
+            filter: blur(55px);
+            animation: snakeOrbit 8s linear infinite;
+        }
+
+        @keyframes snakeOrbit {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .geometric-figure {
+            height: 100%;
+            width: auto;
+            filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.95));
+        }
+
+        #visualizer-canvas {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 420px;
+            height: 75px;
+            z-index: 6;
+            pointer-events: none;
+            border-radius: 4px;
+        }
+
+        .hud-phrase-container {
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            font-size: clamp(0.9rem, 2vw, 1.5rem);
+            font-weight: 300;
+            letter-spacing: 0.35em;
+            color: rgba(255, 255, 255, 0.9);
+            z-index: 8;
+            user-select: none;
+        }
+
+        .brand-nexa {
+            position: fixed;
+            top: 6vh;
+            right: 6vw;
+            z-index: 10;
+            pointer-events: none;
+            user-select: none;
+            text-align: right;
+            font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .brand-nexa .nexa-title {
+            font-size: 1.53rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 0.35em;
+            display: block;
+            line-height: 1;
+            text-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+        }
+
+        .brand-nexa .brief-sub {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: rgba(255, 59, 92, 0.65);
+            letter-spacing: 0.65em;
+            display: block;
+            margin-top: 6px;
+            text-shadow: 0 0 18px rgba(255, 59, 92, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="radial-pulse"></div>
+    <div class="vignette-overlay"></div>
+
+    <div class="cinematic-bg-text">
+        <span class="giant-letter">S</span>
+        <span class="giant-letter accent">I</span>
+        <span class="giant-letter">G</span>
+        <span class="giant-letter accent">N</span>
+        <span class="giant-letter">A</span>
+        <span class="giant-letter accent">L</span>
+    </div>
+
+    <div class="figure-container">
+        <svg class="geometric-figure" viewBox="0 0 400 700" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="gradCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.9" />
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0.5" />
+                </linearGradient>
+                <linearGradient id="gradCoral" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ff3b5c" stop-opacity="0.85" />
+                    <stop offset="100%" stop-color="#06060d" stop-opacity="0.9" />
+                </linearGradient>
+                <linearGradient id="gradBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.3" />
+                    <stop offset="40%" stop-color="#ffffff" stop-opacity="0.15" />
+                    <stop offset="100%" stop-color="#ff3b5c" stop-opacity="0.35" />
+                </linearGradient>
+                <filter id="glowFilter">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <polygon points="200,30 260,120 200,200 140,120" fill="url(#gradCyan)" opacity="0.7" filter="url(#glowFilter)" />
+            <polygon points="200,200 260,120 310,220 250,310" fill="url(#gradBody)" opacity="0.5" />
+            <polygon points="200,200 140,120 90,220 150,310" fill="url(#gradCoral)" opacity="0.45" />
+            <polygon points="200,200 250,310 200,420 150,310" fill="url(#gradBody)" opacity="0.55" />
+            <polygon points="200,420 250,310 280,450 220,540" fill="url(#gradCyan)" opacity="0.35" />
+            <polygon points="200,420 150,310 120,450 180,540" fill="url(#gradCoral)" opacity="0.4" />
+            <polygon points="200,420 220,540 200,640 180,540" fill="url(#gradBody)" opacity="0.5" />
+            <line x1="200" y1="30" x2="200" y2="640" stroke="rgba(255,255,255,0.25)" stroke-width="1" />
+            <circle cx="200" cy="28" r="3" fill="#ffffff" opacity="0.9" filter="url(#glowFilter)" />
+            <circle cx="260" cy="118" r="2" fill="#00e5ff" opacity="0.7" filter="url(#glowFilter)" />
+            <circle cx="140" cy="118" r="2" fill="#ff3b5c" opacity="0.7" filter="url(#glowFilter)" />
+            <circle cx="310" cy="218" r="1.5" fill="#ffffff" opacity="0.5" />
+            <circle cx="90" cy="218" r="1.5" fill="#ffffff" opacity="0.5" />
+        </svg>
+    </div>
+
+    <div class="hud-phrase-container">
+        <span>OBSESSED</span>
+        <span>WITH</span>
+    </div>
+
+    <div class="brand-nexa">
+        <span class="nexa-title">NEXA</span>
+        <span class="brief-sub">BRIEF</span>
+    </div>
+
+    <audio id="audio" src="song.mp3" loop preload="auto" style="display:none;"></audio>
+
+    <script type="module">
+        let audioCtx, analyser, dataArray, canvas, ctx, animationFrameId;
+        const audio = document.getElementById('audio');
+
+        function initVisualizer() {
+            canvas = document.getElementById('visualizer-canvas');
+            ctx = canvas.getContext('2d');
+
+            canvas.width = 420;
+            canvas.height = 75;
+
+            audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 64;
+            analyser.smoothingTimeConstant = 0.84;
+
+            try {
+                const source = audioCtx.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioCtx.destination);
+            } catch (e) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                gain.gain.value = 0.08;
+                osc.type = 'triangle';
+                osc.frequency.value = 60;
+                osc.connect(gain);
+                gain.connect(analyser);
+                analyser.connect(audioCtx.destination);
+                osc.start();
+            }
+
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+
+            renderSpectrumLoop();
+        }
+
+        function renderSpectrumLoop(timestamp) {
+            animationFrameId = requestAnimationFrame(renderSpectrumLoop);
+
+            analyser.getByteFrequencyData(dataArray);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const barCount = Math.min(dataArray.length - 8, 26);
+            const barWidth = 4;
+            const gap = 6;
+            const totalWidth = (barCount * barWidth) + ((barCount - 1) * gap);
+            let x = (canvas.width - totalWidth) / 2;
+
+            for (let i = 0; i < barCount; i++) {
+                const normalizedValue = dataArray[i] / 255;
+                const barHeight = Math.max(3, normalizedValue * canvas.height * 0.9);
+                const y = (canvas.height - barHeight) / 2;
+
+                const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
+                gradient.addColorStop(0, '#00e5ff');
+                gradient.addColorStop(0.45, '#ffffff');
+                gradient.addColorStop(0.55, '#ffffff');
+                gradient.addColorStop(1, '#ff3b5c');
+
+                ctx.fillStyle = gradient;
+                ctx.shadowColor = normalizedValue > 0.5 ? '#00e5ff' : '#ff3b5c';
+                ctx.shadowBlur = normalizedValue * 8;
+
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(x, y, barWidth, barHeight, 2);
+                } else {
+                    ctx.fillRect(x, y, barWidth, barHeight);
+                }
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+                x += barWidth + gap;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            audio.play().catch(() => {
+                setTimeout(() => audio.play().catch(() => {}), 300);
+            });
+            initVisualizer();
+        });
+
+        window.addEventListener('beforeunload', () => {
+            cancelAnimationFrame(animationFrameId);
+            if (audioCtx) audioCtx.close();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>秋風の山 · Mountain Haiku Scene</title>
+    <style>
+        :root {
+            --primary-text: #1a1a1a;
+            --accent-red: #b82626;
+            --panel-bg: rgba(255, 255, 255, 0.75);
+            --panel-border: rgba(255, 255, 255, 0.4);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            background: #fdfbf7;
+            font-family: "Yu Mincho", "Hiragino Mincho ProN", "MS Mincho", "Georgia", serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Ambient Canvas background */
+        #scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* SVG Layout Overlays */
+        .svg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none; /* Let canvas handle pointer/drags underneath */
+        }
+
+        /* Elegant wind-swept Japanese Pine Tree (Left Foreground) */
+        .pine-tree {
+            position: absolute;
+            left: -20px;
+            bottom: -10px;
+            height: 55vh;
+            width: auto;
+            filter: drop-shadow(4px 4px 15px rgba(0,0,0,0.15));
+            transform-origin: bottom left;
+            animation: gentle-sway 8s ease-in-out infinite alternate;
+        }
+
+        /* Majestic Pagoda Temple (Right Foreground) */
+        .pagoda {
+            position: absolute;
+            right: 2%;
+            bottom: -5px;
+            height: 65vh;
+            width: auto;
+            filter: drop-shadow(-4px 4px 20px rgba(0,0,0,0.18));
+        }
+
+        /* Flying Red-Crowned Crane soaring through the sky */
+        .crane {
+            position: absolute;
+            left: 35%;
+            top: 15vh;
+            width: 180px;
+            height: auto;
+            filter: drop-shadow(3px 10px 12px rgba(0,0,0,0.1));
+            animation: bird-glide 12s ease-in-out infinite alternate;
+        }
+
+        /* Vertical traditional Japanese calligraphy style Haiku */
+        .haiku-box {
+            position: absolute;
+            top: 8dvh;
+            left: 8%;
+            z-index: 10;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            line-height: 2.3;
+            color: var(--primary-text);
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.15));
+            pointer-events: auto;
+            transition: color 1s ease;
+        }
+
+        .haiku-title {
+            font-size: 1.1rem;
+            color: var(--accent-red);
+            font-weight: bold;
+            margin-left: 15px;
+            letter-spacing: 0.1em;
+            opacity: 0.85;
+        }
+
+        .haiku-line {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+        }
+
+        .haiku-translation {
+            writing-mode: horizontal-tb;
+            position: absolute;
+            left: 8%;
+            top: 72dvh;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: var(--primary-text);
+            max-width: 250px;
+            opacity: 0.75;
+            pointer-events: none;
+            filter: drop-shadow(1px 1px 2px rgba(255,255,255,0.6));
+            transition: color 1s ease;
+        }
+
+        /* Instruction for the Interactive Wind Chime */
+        .instruction {
+            position: absolute;
+            bottom: 30px;
+            left: 8%;
+            z-index: 10;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            color: var(--primary-text);
+            opacity: 0.5;
+            text-transform: uppercase;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            pointer-events: auto;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        .instruction:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.4);
+        }
+
+        /* Glassmorphic Minimalist Control Panel */
+        .control-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .control-toggle:hover {
+            transform: rotate(45deg) scale(1.05);
+        }
+
+        .control-panel {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            z-index: 99;
+            width: 280px;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #333;
+        }
+
+        .control-panel.open {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .panel-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 8px;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .control-group {
+            margin-bottom: 14px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Styled Sliders & Selects */
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .theme-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .btn-theme {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 6px;
+            font-size: 0.7rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-theme.active {
+            background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.6);
+            border: 1px solid rgba(0,0,0,0.15);
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Animation Keyframes */
+        @keyframes gentle-sway {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(1.5deg); }
+        }
+
+        @keyframes bird-glide {
+            0% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) translateX(-5px) rotate(-1deg); }
+            100% { transform: translateY(5px) translateX(10px) rotate(1deg); }
+        }
+
+        /* Responsive scaling adjustments */
+        @media (max-width: 768px) {
+            .haiku-box {
+                top: 6dvh;
+                left: 5%;
+                line-height: 2.1;
+            }
+            .haiku-line {
+                font-size: 1.6rem;
+            }
+            .haiku-translation {
+                left: 5%;
+                top: 74dvh;
+                font-size: 0.9rem;
+                max-width: 180px;
+            }
+            .pine-tree {
+                height: 40vh;
+            }
+            .pagoda {
+                height: 45vh;
+            }
+            .crane {
+                width: 110px;
+                left: 40%;
+                top: 18vh;
+            }
+            .instruction {
+                bottom: 20px;
+                left: 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Calligraphy Scroll / Floating Text -->
+    <div class="haiku-box">
+        <div class="haiku-title">秋風の峰</div>
+        <div class="haiku-line">秋風や</div>
+        <div class="haiku-line">峰を彩る</div>
+        <div class="haiku-line">金ともみじ</div>
+    </div>
+
+    <!-- Poetry translation -->
+    <div class="haiku-translation">
+        "Autumn wind drifts—<br>
+        coloring the mountain peaks<br>
+        in maple red and gold."
+    </div>
+
+    <!-- Interactive Chime Bell Bell-Sound Trigger -->
+    <div class="instruction" onclick="triggerWindChime()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H7M19 10H5M21 15H3"/>
+        </svg>
+        <span>触れて鐘を鳴らす / Tap to Ring Chime</span>
+    </div>
+
+    <!-- Dynamic Canvas for Layered Mountain Backdrop and Weather Effects -->
+    <canvas id="scene"></canvas>
+
+    <!-- Exquisite SVG Overlays (Coordinates perfectly with the scenery, no background box) -->
+    <div class="svg-container">
+        
+        <!-- Wind-swept Japanese Pine Branch / Bonsai (Left Foreground) -->
+        <svg class="pine-tree" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="trunkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#241e12"/>
+                    <stop offset="100%" stop-color="#0f0d08"/>
+                </linearGradient>
+                <linearGradient id="foliageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#1b3021"/>
+                    <stop offset="100%" stop-color="#0a140d"/>
+                </linearGradient>
+            </defs>
+            <!-- Detailed Gnarled Trunk -->
+            <path d="M -10,400 Q 55,340 45,280 Q 32,230 52,170 Q 72,110 52,65 Q 46,55 35,52 L 38,45 Q 56,50 63,68 Q 80,110 60,170 Q 42,235 52,285 Q 62,335 -10,410 Z" fill="url(#trunkGrad)" />
+            <!-- Branches branching out left and right -->
+            <path d="M 45,300 Q 15,270 -15,275 L -15,266 Q 10,260 45,290 Z" fill="url(#trunkGrad)" />
+            <path d="M 48,220 Q 95,200 125,215 L 120,222 Q 92,210 46,230 Z" fill="url(#trunkGrad)" />
+            <path d="M 52,160 Q 18,130 3,135 L 5,126 Q 22,122 54,150 Z" fill="url(#trunkGrad)" />
+            <path d="M 58,130 Q 102,100 138,105 L 135,112 Q 100,108 56,138 Z" fill="url(#trunkGrad)" />
+            
+            <!-- Foliage needle clusters -->
+            <path d="M -20,270 C -32,260 -25,245 -8,250 C 3,240 20,245 14,260 C 26,260 21,275 3,275 C -8,285 -25,280 -20,270 Z" fill="url(#foliageGrad)" opacity="0.95"/>
+            <path d="M 105,215 C 93,200 105,185 120,190 C 131,180 148,190 142,205 C 154,210 149,225 131,225 C 120,235 105,230 105,215 Z" fill="url(#foliageGrad)" opacity="0.95"/>
+            <path d="M -2,130 C -14,120 -8,105 8,110 C 19,100 36,105 30,120 C 42,120 37,135 19,135 C 8,145 -8,140 -2,130 Z" fill="url(#foliageGrad)" opacity="0.95"/>
+            <path d="M 122,105 C 110,90 122,75 137,80 C 148,70 165,80 159,95 C 171,100 166,115 148,115 C 137,125 122,120 122,105 Z" fill="url(#foliageGrad)" opacity="0.95"/>
+            <path d="M 38,60 C 26,45 42,30 58,35 C 69,25 86,35 80,50 C 92,55 87,70 69,70 C 58,80 42,75 38,60 Z" fill="url(#foliageGrad)" opacity="0.95"/>
+        </svg>
+
+        <!-- Traditional Pagoda Architecture (Right Foreground) -->
+        <svg class="pagoda" viewBox="0 0 160 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="pagodaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#262422"/>
+                    <stop offset="100%" stop-color="#0f0e0d"/>
+                </linearGradient>
+            </defs>
+            <!-- Platform Foundation -->
+            <path d="M8,292 L152,292 L142,272 L18,272 Z" fill="url(#pagodaGrad)" />
+            <!-- Level 1 Body -->
+            <rect x="38" y="222" width="84" height="50" fill="url(#pagodaGrad)" />
+            <!-- Highlight pillars -->
+            <rect x="44" y="222" width="6" height="50" fill="#a32e2e" />
+            <rect x="110" y="222" width="6" height="50" fill="#a32e2e" />
+            <rect x="76" y="222" width="8" height="50" fill="#a32e2e" />
+            
+            <!-- Curved Roof 1 -->
+            <path d="M10,227 Q80,210 150,227 L138,202 Q80,195 22,202 Z" fill="url(#pagodaGrad)" />
+            
+            <!-- Level 2 Body -->
+            <rect x="44" y="162" width="72" height="40" fill="url(#pagodaGrad)" />
+            <rect x="50" y="162" width="5" height="40" fill="#a32e2e" />
+            <rect x="105" y="162" width="5" height="40" fill="#a32e2e" />
+            <!-- Curved Roof 2 -->
+            <path d="M18,167 Q80,153 142,167 L131,144 Q80,138 29,144 Z" fill="url(#pagodaGrad)" />
+            
+            <!-- Level 3 Body -->
+            <rect x="50" y="112" width="60" height="32" fill="url(#pagodaGrad)" />
+            <rect x="55" y="112" width="4" height="32" fill="#a32e2e" />
+            <rect x="101" y="112" width="4" height="32" fill="#a32e2e" />
+            <!-- Curved Roof 3 -->
+            <path d="M26,117 Q80,105 134,117 L124,96 Q80,90 36,96 Z" fill="url(#pagodaGrad)" />
+            
+            <!-- Level 4 Top Roof Structure -->
+            <rect x="56" y="72" width="48" height="24" fill="url(#pagodaGrad)" />
+            <path d="M34,74 Q80,65 126,74 L117,56 Q80,52 43,56 Z" fill="url(#pagodaGrad)" />
+            
+            <!-- Finial Spire (Sorin) -->
+            <path d="M78,56 L82,56 L81,15 Q83,12 80,10 Q77,12 79,15 Z" fill="url(#pagodaGrad)" />
+            <ellipse cx="80" cy="21" rx="4" ry="1.5" fill="#d49e35" />
+            <ellipse cx="80" cy="27" rx="5" ry="1.5" fill="#d49e35" />
+            <ellipse cx="80" cy="33" rx="6" ry="1.5" fill="#d49e35" />
+            <ellipse cx="80" cy="39" rx="7" ry="1.5" fill="url(#pagodaGrad)" />
+            <ellipse cx="80" cy="45" rx="8" ry="1.5" fill="url(#pagodaGrad)" />
+        </svg>
+
+        <!-- Red-Crowned Crane in flight (Soaring through skies) -->
+        <svg class="crane" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Sleek silhouette of crane wings, body, neck, tail and red crown highlights -->
+            <!-- Back wing -->
+            <path d="M 40,30 C 50,15 65,5 82,2 C 78,12 74,25 65,34 C 62,31 52,28 40,30 Z" fill="#1b1c1e" />
+            <!-- Trailing legs -->
+            <path d="M 52,43 L 15,75 L 8,92 L 13,85 L 25,72 Z" fill="#1b1c1e" />
+            <!-- Main Body, head, long neck -->
+            <path d="M 112,5 Q 115,1 118,3 Q 120,6 116,9 L 98,22 Q 85,28 72,35 C 55,42 42,48 35,52 C 38,48 45,44 55,41 C 60,39 65,35 62,31 C 58,28 50,33 45,36 L 105,8 Z" fill="#ffffff" stroke="#1b1c1e" stroke-width="0.5"/>
+            <!-- Front Wing -->
+            <path d="M 70,36 C 85,30 105,28 115,35 C 105,42 90,48 76,46 C 72,44 68,40 70,36 Z" fill="#ffffff" stroke="#1b1c1e" stroke-width="0.5" />
+            <!-- Red Crown (Accento rojo de la grulla) -->
+            <circle cx="117" cy="4" r="2.5" fill="#cf1d1d" />
+            <!-- Tail flight feathers (Black highlights) -->
+            <path d="M 45,43 Q 32,50 24,55 Q 32,45 42,40 Z" fill="#1b1c1e" />
+        </svg>
+    </div>
+
+    <!-- Toggle Gear Button -->
+    <button class="control-toggle" onclick="togglePanel()" title="Ajustes Zen">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+    </button>
+
+    <!-- Settings panel -->
+    <div class="control-panel" id="ctrlPanel">
+        <h3 class="panel-title">
+            <span>風水設定 (Ajustes Zen)</span>
+            <span style="font-size: 0.75rem; color: var(--accent-red); cursor:pointer;" onclick="togglePanel()">閉じる ✕</span>
+        </h3>
+
+        <!-- Preset Time-of-day/scenery colors -->
+        <div class="control-group">
+            <label>時間帯 (Momento del Día)</label>
+            <div class="theme-buttons">
+                <button class="btn-theme active" onclick="setTheme('sunrise', this)">朝萌 (Oro)</button>
+                <button class="btn-theme" onclick="setTheme('sunset', this)">夕楓 (Ocre)</button>
+                <button class="btn-theme" onclick="setTheme('sumie', this)">水墨 (Tinta)</button>
+            </div>
+        </div>
+
+        <!-- Leaves Count -->
+        <div class="control-group">
+            <label id="lblCount">葉の量 (Cantidad de Hojas: 120)</label>
+            <input type="range" class="slider" id="sliderCount" min="30" max="250" value="120" oninput="updateSettings()">
+        </div>
+
+        <!-- Wind Intensity -->
+        <div class="control-group">
+            <label id="lblWind">風の強さ (Fuerza del Viento: x1.0)</label>
+            <input type="range" class="slider" id="sliderWind" min="1" max="10" value="4" oninput="updateSettings()">
+        </div>
+
+        <!-- Mist Level -->
+        <div class="control-group">
+            <label id="lblMist">山霧の深さ (Densidad de Niebla: 60%)</label>
+            <input type="range" class="slider" id="sliderMist" min="0" max="100" value="60" oninput="updateSettings()">
+        </div>
+
+        <!-- Leaf Type Selector -->
+        <div class="control-group">
+            <label>落葉の種類 (Tipo de Hojas)</label>
+            <select class="select-input" id="selectLeaf" onchange="updateSettings()">
+                <option value="mixed">紅葉と銀杏 (Mezcla Momiji y Ginkgo)</option>
+                <option value="maple">紅葉のみ (Solo Arce Rojo - Momiji)</option>
+                <option value="ginkgo">銀杏のみ (Solo Ginkgo Dorado)</option>
+            </select>
+        </div>
+    </div>
+
+    <script>
+        // Set up the scene variables
+        const canvas = document.getElementById("scene");
+        const ctx = canvas.getContext("2d");
+
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        let particles = [];
+        let mistClouds = [];
+        
+        // Sound Engine Variables
+        let audioCtx = null;
+
+        // Custom theme configuration definitions
+        const themes = {
+            sunrise: {
+                skyStart: "#fdfbf7",
+                skyMiddle: "#fcecd2",
+                skyEnd: "#fad5c0",
+                sunColor: "#f7fcfb",
+                sunHalo: "rgba(251, 197, 137, 0.4)",
+                mountains: [
+                    { fill: "rgba(180, 163, 150, 0.22)", yOffset: 0.45, curve: 80 },
+                    { fill: "rgba(138, 120, 108, 0.38)", yOffset: 0.58, curve: 110 },
+                    { fill: "rgba(92, 75, 68, 0.65)", yOffset: 0.72, curve: 140 },
+                    { fill: "rgba(58, 43, 38, 0.85)", yOffset: 0.85, curve: 90 }
+                ],
+                fog: "rgba(253, 251, 247, 0.22)",
+                text: "#221c17",
+                accent: "#b53e3e"
+            },
+            sunset: {
+                skyStart: "#2d1b33",
+                skyMiddle: "#7d3640",
+                skyEnd: "#b84f3d",
+                sunColor: "#fce9be",
+                sunHalo: "rgba(235, 94, 85, 0.5)",
+                mountains: [
+                    { fill: "rgba(80, 36, 52, 0.25)", yOffset: 0.45, curve: 90 },
+                    { fill: "rgba(64, 25, 41, 0.45)", yOffset: 0.58, curve: 130 },
+                    { fill: "rgba(46, 15, 30, 0.72)", yOffset: 0.72, curve: 150 },
+                    { fill: "rgba(24, 5, 17, 0.9)", yOffset: 0.85, curve: 100 }
+                ],
+                fog: "rgba(102, 45, 62, 0.25)",
+                text: "#ffd9c2",
+                accent: "#ffdd40"
+            },
+            sumie: {
+                skyStart: "#ffffff",
+                skyMiddle: "#ededed",
+                skyEnd: "#cfcfcf",
+                sunColor: "#ffffff",
+                sunHalo: "rgba(255, 255, 255, 0.7)",
+                mountains: [
+                    { fill: "rgba(210, 210, 210, 0.3)", yOffset: 0.42, curve: 100 },
+                    { fill: "rgba(150, 150, 150, 0.48)", yOffset: 0.55, curve: 140 },
+                    { fill: "rgba(90, 90, 90, 0.68)", yOffset: 0.7, curve: 120 },
+                    { fill: "rgba(28, 28, 28, 0.95)", yOffset: 0.82, curve: 80 }
+                ],
+                fog: "rgba(255, 255, 255, 0.35)",
+                text: "#111111",
+                accent: "#4a4a4a"
+            }
+        };
+
+        let currentThemeKey = 'sunrise';
+        let currentTheme = themes.sunrise;
+
+        // Custom leaf parameters
+        let settings = {
+            leafType: 'mixed',
+            windSpeed: 2,
+            mistDensity: 60,
+            particleCount: 120,
+            direction: -1 // Right to Left
+        };
+
+        // Cache for procedurally drawn canvas images of leaves
+        let leafTextures = {};
+
+        function togglePanel() {
+            document.getElementById("ctrlPanel").classList.toggle("open");
+        }
+
+        function setTheme(themeKey, btn) {
+            currentThemeKey = themeKey;
+            currentTheme = themes[themeKey];
+
+            // Update UI buttons active state
+            document.querySelectorAll(".btn-theme").forEach(b => b.classList.remove("active"));
+            if(btn) btn.classList.add("active");
+
+            // Update typography colors seamlessly
+            document.querySelector(".haiku-box").style.color = currentTheme.text;
+            document.querySelector(".haiku-translation").style.color = currentTheme.text;
+            document.documentElement.style.setProperty('--primary-text', currentTheme.text);
+            document.documentElement.style.setProperty('--accent-red', currentTheme.accent);
+
+            // Trigger visual update
+            rebuildMist();
+        }
+
+        // Build procedural Leaf shapes on invisible canvases for crisp rendering at high FPS
+        function generateTextures() {
+            // 1. Bright Red Maple (Momiji)
+            leafTextures['maple_red'] = drawMapleLeaf("#cf3621", "#961303");
+            // 2. Deep Gold Maple (Momiji)
+            leafTextures['maple_orange'] = drawMapleLeaf("#ea7317", "#9e4002");
+            // 3. Golden Ginkgo (Ichō)
+            leafTextures['ginkgo_gold'] = drawGinkgoLeaf("#fec619", "#bf8d02");
+        }
+
+        // Programmatic drawing of Japanese Maple Leaf (Momiji)
+        function drawMapleLeaf(baseColor, shadowColor) {
+            const canvasTex = document.createElement("canvas");
+            canvasTex.width = 64;
+            canvasTex.height = 64;
+            const tCtx = canvasTex.getContext("2d");
+
+            tCtx.translate(32, 32);
+            tCtx.beginPath();
+            
+            // Stem
+            tCtx.moveTo(0, 5);
+            tCtx.lineTo(0, 24);
+            tCtx.strokeStyle = shadowColor;
+            tCtx.lineWidth = 2;
+            tCtx.stroke();
+
+            // Maple Leaf Path (7 intricate lobes)
+            tCtx.beginPath();
+            tCtx.moveTo(0, 0);
+
+            for (let i = 0; i < 7; i++) {
+                // Angle distribution across 200 degrees
+                const angle = -Math.PI/2 + (i - 3) * 0.46;
+                const length = i === 3 ? 24 : (i === 2 || i === 4 ? 20 : (i === 1 || i === 5 ? 15 : 10));
+
+                const sideAngleLeft = angle - 0.16;
+                const sideAngleRight = angle + 0.16;
+
+                // Points of the lobe with organic barbs
+                tCtx.lineTo(Math.cos(sideAngleLeft) * (length * 0.7), Math.sin(sideAngleLeft) * (length * 0.7));
+                tCtx.lineTo(Math.cos(angle) * length, Math.sin(angle) * length);
+                tCtx.lineTo(Math.cos(sideAngleRight) * (length * 0.7), Math.sin(sideAngleRight) * (length * 0.7));
+            }
+            tCtx.closePath();
+
+            // Artistic gradient
+            const grad = tCtx.createRadialGradient(0, -2, 2, 0, 0, 24);
+            grad.addColorStop(0, baseColor);
+            grad.addColorStop(0.8, baseColor);
+            grad.addColorStop(1, shadowColor);
+            tCtx.fillStyle = grad;
+            tCtx.fill();
+
+            // Subtle vein highlights
+            tCtx.beginPath();
+            for (let i = 1; i < 6; i++) {
+                const angle = -Math.PI/2 + (i - 3) * 0.46;
+                const length = i === 3 ? 20 : (i === 2 || i === 4 ? 16 : 10);
+                tCtx.moveTo(0, 0);
+                tCtx.lineTo(Math.cos(angle) * length, Math.sin(angle) * length);
+            }
+            tCtx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+            tCtx.lineWidth = 1;
+            tCtx.stroke();
+
+            const img = new Image();
+            img.src = canvasTex.toDataURL();
+            return img;
+        }
+
+        // Programmatic drawing of Golden Ginkgo Leaf
+        function drawGinkgoLeaf(baseColor, shadowColor) {
+            const canvasTex = document.createElement("canvas");
+            canvasTex.width = 64;
+            canvasTex.height = 64;
+            const tCtx = canvasTex.getContext("2d");
+
+            tCtx.translate(32, 32);
+            tCtx.beginPath();
+
+            // Long elegant stem
+            tCtx.moveTo(0, 10);
+            tCtx.quadraticCurveTo(2, 18, 0, 26);
+            tCtx.strokeStyle = shadowColor;
+            tCtx.lineWidth = 1.8;
+            tCtx.stroke();
+
+            // Beautiful fan-shaped ginkgo leaf with centered notch
+            tCtx.beginPath();
+            tCtx.moveTo(0, 10);
+            tCtx.quadraticCurveTo(-15, 6, -24, -5);
+            tCtx.bezierCurveTo(-26, -22, -8, -26, -2, -18); // Left fan peak
+            tCtx.lineTo(0, -12); // Center notch
+            tCtx.bezierCurveTo(8, -26, 26, -22, 24, -5); // Right fan peak
+            tCtx.quadraticCurveTo(15, 6, 0, 10);
+            tCtx.closePath();
+
+            const grad = tCtx.createRadialGradient(0, -5, 2, 0, 0, 26);
+            grad.addColorStop(0, "#fff5a1");
+            grad.addColorStop(0.7, baseColor);
+            grad.addColorStop(1, shadowColor);
+            tCtx.fillStyle = grad;
+            tCtx.fill();
+
+            tCtx.strokeStyle = "rgba(179, 128, 2, 0.3)";
+            tCtx.lineWidth = 1;
+            tCtx.stroke();
+
+            // Radiating fan veins
+            tCtx.beginPath();
+            for (let angle = -2.2; angle < -0.9; angle += 0.2) {
+                tCtx.moveTo(0, 10);
+                tCtx.lineTo(Math.cos(angle) * 20, Math.sin(angle) * 20);
+            }
+            tCtx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+            tCtx.lineWidth = 0.8;
+            tCtx.stroke();
+
+            const img = new Image();
+            img.src = canvasTex.toDataURL();
+            return img;
+        }
+
+        // Particle class for falling leaves
+        class LeafParticle {
+            constructor(initOnScreen = false) {
+                this.reset(initOnScreen);
+            }
+
+            reset(initOnScreen = false) {
+                // Select Texture randomly based on settings
+                const textures = [];
+                if (settings.leafType === 'mixed' || settings.leafType === 'maple') {
+                    textures.push(leafTextures['maple_red'], leafTextures['maple_orange']);
+                }
+                if (settings.leafType === 'mixed' || settings.leafType === 'ginkgo') {
+                    textures.push(leafTextures['ginkgo_gold']);
+                }
+                this.image = textures[Math.floor(Math.random() * textures.length)];
+
+                // Sizing with perspective variations
+                this.size = 14 + Math.random() * 24;
+                
+                // Position initialization
+                this.y = Math.random() * height * 0.85;
+                if (initOnScreen) {
+                    this.x = Math.random() * width;
+                } else {
+                    this.x = settings.direction === -1 ? width + this.size + Math.random() * 150 : -this.size - Math.random() * 150;
+                }
+
+                // Complex physics & drift properties
+                this.weight = 0.4 + Math.random() * 0.6;
+                this.windFactor = 0.3 + Math.random() * 0.7;
+                this.waveOffset = Math.random() * Math.PI * 2;
+                this.waveSpeed = 0.01 + Math.random() * 0.025;
+
+                this.vx = 0;
+                this.vy = 0;
+
+                // Rotational physics (Tumbling on X, Y and Z axes for genuine 3D feel)
+                this.angleZ = Math.random() * Math.PI * 2;
+                this.spinZ = (Math.random() - 0.5) * 0.04;
+                this.angleX = Math.random() * Math.PI;
+                this.angleY = Math.random() * Math.PI;
+                this.spinX = (Math.random() - 0.5) * 0.08;
+                this.spinY = (Math.random() - 0.5) * 0.08;
+            }
+
+            update(mouseX, mouseY) {
+                // Global Ambient Wind
+                const targetVx = (settings.windSpeed * 0.9 + 1.2) * this.windFactor;
+                this.vx += (targetVx - this.vx) * 0.05;
+                this.x += this.vx * settings.direction;
+
+                // Gravity & Flutter falling
+                this.vy += 0.05 * this.weight;
+                const wave = Math.sin(this.x * this.waveSpeed + this.waveOffset);
+                this.vy += wave * 0.08;
+                this.vy *= 0.97; // air friction
+                this.y += this.vy;
+
+                // Realtime interactive cursor breeze
+                if (mouseX !== undefined && mouseY !== undefined) {
+                    const dx = this.x - mouseX;
+                    const dy = this.y - mouseY;
+                    const distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < 160) {
+                        const force = (160 - distance) / 160;
+                        const angle = Math.atan2(dy, dx);
+                        // Accelerate leaf away from cursor
+                        this.x += Math.cos(angle) * force * 15;
+                        this.y += Math.sin(angle) * force * 15;
+                        this.spinZ += (Math.random() - 0.5) * 0.2; // faster tumbling
+                    }
+                }
+
+                // 3D rotations
+                this.angleZ += this.spinZ + this.vx * 0.001;
+                this.angleX += this.spinX * 0.3;
+                this.angleY += this.spinY * 0.3;
+
+                // Boundary check
+                const buffer = 100;
+                const isOutOfScreenX = settings.direction === -1 ? this.x < -buffer : this.x > width + buffer;
+                if (isOutOfScreenX || this.y > height + buffer || this.y < -buffer) {
+                    this.reset(false);
+                }
+            }
+
+            draw() {
+                if (!this.image) return;
+
+                // 3D vector Projection approximations inside standard Canvas transformations
+                const cosX = Math.cos(this.angleX);
+                const cosY = Math.cos(this.angleY + 0.2); // slight tilt
+                const sinZ = Math.sin(this.angleZ);
+                const cosZ = Math.cos(this.angleZ);
+
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                
+                // Matrix transform to represent genuine 3D rotating leaf surface
+                ctx.transform(
+                    cosZ * cosY, 
+                    sinZ * cosY, 
+                    -sinZ * cosX, 
+                    cosZ * cosX, 
+                    0, 0
+                );
+
+                ctx.drawImage(this.image, -this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        // Particle Class for the ambient drifting mountain mist
+        class MistCloud {
+            constructor(initOnScreen = false) {
+                this.reset(initOnScreen);
+            }
+
+            reset(initOnScreen = false) {
+                this.radius = 150 + Math.random() * 250;
+                this.y = height * 0.2 + Math.random() * height * 0.65;
+                this.x = initOnScreen ? Math.random() * width : width + this.radius + Math.random() * 200;
+                this.vx = 0.15 + Math.random() * 0.35;
+                this.opacity = 0.03 + Math.random() * 0.14;
+            }
+
+            update() {
+                // Move slowly from right to left
+                this.x -= this.vx;
+                if (this.x < -this.radius) {
+                    this.reset(false);
+                }
+            }
+
+            draw() {
+                // Radial mist gradients
+                const grad = ctx.createRadialGradient(this.x, this.y, this.radius * 0.1, this.x, this.y, this.radius);
+                grad.addColorStop(0, currentTheme.fog);
+                grad.addColorStop(0.5, currentTheme.fog.replace(/[\d\.]+\)$/, `${this.opacity * 0.6})`));
+                grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Populate system arrays
+        function initScene() {
+            generateTextures();
+
+            // Populate Leaves
+            particles = [];
+            for (let i = 0; i < settings.particleCount; i++) {
+                particles.push(new LeafParticle(true));
+            }
+
+            // Populate Mist
+            rebuildMist();
+        }
+
+        function rebuildMist() {
+            mistClouds = [];
+            const cloudCount = Math.floor(settings.mistDensity / 5);
+            for (let i = 0; i < cloudCount; i++) {
+                mistClouds.push(new MistCloud(true));
+            }
+        }
+
+        // Main Loop drawing background & updating elements
+        let mouse = { x: undefined, y: undefined };
+
+        function animate() {
+            // 1. Draw atmospheric background gradient
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
+            skyGrad.addColorStop(0, currentTheme.skyStart);
+            skyGrad.addColorStop(0.4, currentTheme.skyMiddle);
+            skyGrad.addColorStop(1, currentTheme.skyEnd);
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            // 2. Draw traditional glowing sun/moon (Sumi-e / Nihonga inspired)
+            const sunRadius = Math.min(width, height) * 0.14;
+            const sunX = width * 0.52;
+            const sunY = height * 0.38;
+            
+            const sunHalo = ctx.createRadialGradient(sunX, sunY, sunRadius * 0.3, sunX, sunY, sunRadius * 2);
+            sunHalo.addColorStop(0, currentTheme.sunHalo);
+            sunHalo.addColorStop(1, "rgba(255, 255, 255, 0)");
+            ctx.fillStyle = sunHalo;
+            ctx.beginPath();
+            ctx.arc(sunX, sunY, sunRadius * 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = currentTheme.sunColor;
+            ctx.beginPath();
+            ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 3. Draw Parallax Landscape Mountains
+            currentTheme.mountains.forEach((layer, idx) => {
+                ctx.fillStyle = layer.fill;
+                ctx.beginPath();
+                ctx.moveTo(0, height);
+                
+                // Left peak boundary
+                ctx.lineTo(0, height * layer.yOffset);
+                
+                // Intricate peaks using natural sine combinations (Bezier curve style mountains)
+                const segments = 6;
+                const segmentWidth = width / segments;
+                for (let i = 1; i <= segments; i++) {
+                    const x = i * segmentWidth;
+                    // Introduce distinctive peak variations (Fuji slope representation)
+                    let offset = Math.sin(i * 1.8) * layer.curve;
+                    if (idx === 1 && i === 3) offset -= 70; // Mt. Fuji peak shape center
+                    
+                    const y = height * layer.yOffset + offset;
+                    const prevX = (i - 1) * segmentWidth;
+                    const cpX = prevX + segmentWidth / 2;
+                    ctx.quadraticCurveTo(cpX, y - 40, x, y);
+                }
+                ctx.lineTo(width, height);
+                ctx.closePath();
+                ctx.fill();
+
+                // Layer mist directly in-between valleys for realistic volumetric depth
+                if (idx < 3) {
+                    ctx.fillStyle = currentTheme.fog;
+                    ctx.fillRect(0, height * (layer.yOffset - 0.05), width, height * 0.15);
+                }
+            });
+
+            // 4. Update and Draw Mist Clouds
+            mistClouds.forEach(cloud => {
+                cloud.update();
+                cloud.draw();
+            });
+
+            // 5. Update and Draw Falling Leaves
+            particles.forEach(p => {
+                p.update(mouse.x, mouse.y);
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Web Audio Synthesizer to ring metallic Japanese temple wind chimes (Fūrin)
+        function triggerWindChime() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                // Resume in case browser autoplay policy was active
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const now = audioCtx.currentTime;
+                // Elegant traditional pentatonic scale: E5, G5, A5, B5, D6
+                const pentatonic = [659.25, 783.99, 880.00, 987.77, 1174.66];
+                const baseFreq = pentatonic[Math.floor(Math.random() * pentatonic.length)];
+
+                // Traditional bell sound consists of high inharmonic overtones
+                const overtones = [1.0, 2.3, 4.4, 5.7, 7.8];
+                const amplitudes = [0.4, 0.22, 0.11, 0.07, 0.03];
+
+                const masterGain = audioCtx.createGain();
+                masterGain.gain.setValueAtTime(0, now);
+                masterGain.gain.linearRampToValueAtTime(0.35, now + 0.015);
+                masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2); // Slow resonance decay
+                masterGain.connect(audioCtx.destination);
+
+                overtones.forEach((ratio, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const toneGain = audioCtx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(baseFreq * ratio, now);
+                    // Slight frequency pitch warp representing metal strike stretch
+                    osc.frequency.exponentialRampToValueAtTime(baseFreq * ratio * 0.995, now + 0.15);
+
+                    toneGain.gain.setValueAtTime(amplitudes[i], now);
+                    // Higher partial frequencies decay faster
+                    toneGain.gain.exponentialRampToValueAtTime(0.0001, now + (3.2 / (ratio * 0.6)));
+
+                    osc.connect(toneGain);
+                    toneGain.connect(masterGain);
+
+                    osc.start(now);
+                    osc.stop(now + 3.3);
+                });
+
+                // Subtle background acoustic wind swoosh along with chime
+                const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+                const noiseData = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < noiseBuffer.length; i++) {
+                    noiseData[i] = Math.random() * 2 - 1;
+                }
+                
+                const noiseNode = audioCtx.createBufferSource();
+                noiseNode.buffer = noiseBuffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(120, now);
+                filter.frequency.exponentialRampToValueAtTime(450, now + 0.5);
+                filter.frequency.exponentialRampToValueAtTime(80, now + 2.0);
+
+                const noiseGain = audioCtx.createGain();
+                noiseGain.gain.setValueAtTime(0, now);
+                noiseGain.gain.linearRampToValueAtTime(0.08, now + 0.4);
+                noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
+
+                noiseNode.connect(filter);
+                filter.connect(noiseGain);
+                noiseGain.connect(audioCtx.destination);
+
+                noiseNode.start(now);
+                noiseNode.stop(now + 2.1);
+
+            } catch (err) {
+                console.log("Audio not fully loaded or supported yet:", err);
+            }
+        }
+
+        // Live settings panel updates
+        function updateSettings() {
+            const countVal = parseInt(document.getElementById("sliderCount").value);
+            const windVal = parseInt(document.getElementById("sliderWind").value);
+            const mistVal = parseInt(document.getElementById("sliderMist").value);
+            const typeVal = document.getElementById("selectLeaf").value;
+
+            // Labels update
+            document.getElementById("lblCount").innerText = `葉の量 (Cantidad de Hojas: ${countVal})`;
+            document.getElementById("lblWind").innerText = `風の強さ (Fuerza del Viento: x${(windVal/4).toFixed(1)})`;
+            document.getElementById("lblMist").innerText = `山霧の深さ (Densidad de Niebla: ${mistVal}%)`;
+
+            // Apply updates
+            settings.windSpeed = windVal / 2;
+            settings.mistDensity = mistVal;
+            settings.leafType = typeVal;
+
+            if (countVal !== settings.particleCount) {
+                settings.particleCount = countVal;
+                // Re-adjust array sizes dynamically
+                while (particles.length < settings.particleCount) {
+                    particles.push(new LeafParticle(false));
+                }
+                if (particles.length > settings.particleCount) {
+                    particles.splice(settings.particleCount);
+                }
+            }
+
+            rebuildMist();
+        }
+
+        // Interactivity events
+        function trackInput(e) {
+            const rect = canvas.getBoundingClientRect();
+            // Works for both touch and mouse positions
+            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            mouse.x = x;
+            mouse.y = y;
+        }
+
+        function clearInput() {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        }
+
+        window.addEventListener("mousemove", trackInput);
+        window.addEventListener("touchmove", trackInput, { passive: true });
+        window.addEventListener("touchend", () => {
+            clearInput();
+            triggerWindChime(); // Ring chime on touch-release as well!
+        });
+        window.addEventListener("mouseleave", clearInput);
+        window.addEventListener("click", (e) => {
+            // Avoid triggering sound if clicking the control elements
+            if (!e.target.closest(".control-panel") && !e.target.closest(".control-toggle")) {
+                triggerWindChime();
+            }
+        });
+
+        // Window resize
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+        }
+
+        window.addEventListener("resize", () => {
+            resize();
+            initScene();
+        });
+
+        // Setup Init
+        resize();
+        initScene();
+        animate();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+{
+  "scene_overview": {
+    "short_description": "A white-haired figure in god-form stands front and center, engulfed by a luminous aura that floods the lower third of the frame.",
+    "style": "high-energy anime, divine glow on dark field",
+    "background_analysis": "Upper two thirds: cool near-black field with drifting particles. Lower third: the subject's own luminous mist floods the frame edge to edge — no flat color can tile the page seamlessly."
+  },
+  "canvas_analysis": {
+    "file_width_px": 720, "file_height_px": 1290,
+    "rotation_to_upright_deg": 0,
+    "rotation_evidence": "none",
+    "rotation_reasoning": "stored orientation matches scene content, no rotation cues found",
+    "upright_canvas": { "width_px": 720, "height_px": 1290 },
+    "content_box_px": { "x0": 0, "y0": 0, "x1": 720, "y1": 1290 },
+    "is_letterboxed": false,
+    "content_orientation": "portrait",
+    "notes": "Full-canvas content, no bars, upright."
+  },
+  "motion_estimate": {
+    "capture_is_single_frame": true,
+    "margin_pct_applied": 12,
+    "expected_movement": "Aura flames flicker and swirl; mist at the feet churns; subject breathes."
+  },
+  "color_calibration": {
+    "dominant_background_color": "#15161C",
+    "secondary_background_color": "#94969B",
+    "background_is_flat": false,
+    "high_contrast_text_color": "#F2F1EE",
+    "palette_notes": "Upper field is a cool near-black, B>R by ~6 points (#15161C-ish, corners measured #16161D/#15151B). The lower third is flooded by the subject's own bright mist (~#94969B at the bottom corners) reaching both frame edges, so no single flat fill works — complex. No embedded marks found."
+  },
+  "background_layout": {
+    "type": "complex",
+    "regions": [],
+    "notes": "Dark field + luminous mist flood + colored flame accents = 3+ blending tones. Blur mode; the blurred underlay absorbs the aura seamlessly."
+  },
+  "embedded_text": [],
+  "main_subject": {
+    "label": "god-form figure with engulfing aura",
+    "is_cropped_by_frame": true,
+    "absolute_bounding_box": { "top_y_px": 20, "bottom_y_px": 1290, "left_x_px": 30,
+      "right_x_px": 690, "total_width_px": 660, "total_height_px": 1270 },
+    "contour_zones": {
+      "top_zone":    { "description": "white hair + flame aura crown, inflated", "y_start_px": 20, "y_end_px": 320,
+                       "left_edge_x_px": 150, "right_edge_x_px": 580 },
+      "middle_zone": { "description": "torso, fists and smoke wisps, inflated", "y_start_px": 320, "y_end_px": 760,
+                       "left_edge_x_px": 60, "right_edge_x_px": 660 },
+      "bottom_zone": { "description": "legs + luminous mist flooding full width, cropped", "y_start_px": 760, "y_end_px": 1290,
+                       "left_edge_x_px": 0, "right_edge_x_px": 720 }
+    }
+  },
+  "safe_typography_zones": {
+    "strategy_description": "Top zone holds the face (hero detail) and the bottom zone is flooded edge-to-edge by the glow, so the pair anchors at the middle zone's narrow flanks; on wide viewports the page margins give them room.",
+    "typography_style": "default",
+    "preferred_anchor": "middle",
+    "left_text_block":  { "suggested_text": "AWAKEN", "anchor_edge": "subject_left_edge",
+      "placement": { "top_y_px": 380, "left_x_px": 6, "max_width_px": 50, "max_height_px": 340 } },
+    "right_text_block": { "suggested_text": "UNBOUND", "anchor_edge": "subject_right_edge",
+      "placement": { "top_y_px": 380, "left_x_px": 665, "max_width_px": 50, "max_height_px": 340 } }
+  },
+  "equalizer_canvas_zone": { "position": "bottom", "y_start_px": 1250, "y_end_px": 1290,
+    "overlaps_subject": true, "notes": "The mist reaches the bottom edge; overlap unavoidable, but the strip is bright and the bars stay readable." }
+}

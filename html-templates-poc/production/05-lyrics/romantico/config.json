@@ -1,0 +1,73 @@
+{
+  "activeId": "dueles-tan-bien",
+  "configs": [
+    {
+      "id": "dueles-tan-bien",
+      "description": "Romántica — carta escrita a mano: serif itálica marfil + caligrafía rosa viejo que se escribe carácter a carácter, bokeh cálido y latido en las líneas enfatizadas. Caso actual: Bruses — Dueles Tan Bien, con textos de intro heredados de Colapso. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "Bruses Dueles Tan Bien Audio.mp3" },
+      "lyricsUrl": "lyrics-bruses-dueles-tan-bien.json",
+      "bg": {
+        "type": "image",
+        "src": "bg8.jpg",
+        "filter": "grayscale(0.35) brightness(0.30) contrast(1.05) sepia(0.35) hue-rotate(-24deg) saturate(1.25)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Great+Vibes&display=swap",
+        "serif": "\"Playfair Display\", serif",
+        "script": "\"Great Vibes\", cursive"
+      },
+      "colors": { "serif": "#F2E7DA", "script": "#D89A9E", "muted": "#cbb8ad" },
+      "intro": { "artist": "Kevin Kaarl", "title": "Colapso", "sub": "", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "por escuchar", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": true },
+      "layout": {
+        "groupGapSec": 0.42,
+        "maxRowChars": 22,
+        "rowGapVh": 3.6,
+        "anchorVhFrac": 0.55,
+        "scriptChanceSolo": 0.75,
+        "scriptChanceMulti": 0.22,
+        "sideAlignChance": 0.3,
+        "maxTiltDeg": 1.6,
+        "charStepMs": 55,
+        "oldAfter": 3
+      },
+      "bokeh": { "count": 16, "tint": "216,140,140" },
+      "seed": 14
+    },
+    {
+      "id": "dueles-tan-bien-rosa",
+      "description": "Mismo audio (Bruses — Dueles Tan Bien) con tema alternativo: créditos de intro correctos, caligrafía rosa más encendida y bokeh más rosado. Demuestra cómo un segundo objeto del config cambia textos y paleta sin tocar la plantilla. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "Bruses Dueles Tan Bien Audio.mp3" },
+      "lyricsUrl": "lyrics-bruses-dueles-tan-bien.json",
+      "bg": {
+        "type": "image",
+        "src": "bg8.jpg",
+        "filter": "grayscale(0.3) brightness(0.30) contrast(1.05) sepia(0.3) hue-rotate(-30deg) saturate(1.35)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Great+Vibes&display=swap",
+        "serif": "\"Playfair Display\", serif",
+        "script": "\"Great Vibes\", cursive"
+      },
+      "colors": { "serif": "#F5E9E2", "script": "#E4A0AC", "muted": "#c9b3b0" },
+      "intro": { "artist": "Bruses", "title": "Dueles Tan Bien", "sub": "", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "por escuchar", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": true },
+      "layout": {
+        "groupGapSec": 0.42,
+        "maxRowChars": 22,
+        "rowGapVh": 3.6,
+        "anchorVhFrac": 0.55,
+        "scriptChanceSolo": 0.75,
+        "scriptChanceMulti": 0.22,
+        "sideAlignChance": 0.3,
+        "maxTiltDeg": 1.6,
+        "charStepMs": 55,
+        "oldAfter": 3
+      },
+      "bokeh": { "count": 18, "tint": "228,150,168" },
+      "seed": 31
+    }
+  ]
+}

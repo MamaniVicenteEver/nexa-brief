@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[ADRENALINE] // NEXA BRIEF</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #f4f4f6;
+      font-family: 'Orbitron', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .background-grain {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='none'/%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .colossal-bg-text {
+      position: fixed;
+      top: 45%;
+      left: 58%;
+      transform: translate(-50%, -50%) rotate(-4deg);
+      font-size: clamp(6rem, 16vw, 22rem);
+      font-weight: 900;
+      color: transparent;
+      -webkit-text-stroke: 1.8px rgba(0, 0, 0, 0.08);
+      letter-spacing: 0.05em;
+      z-index: 2;
+      pointer-events: none;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .brand-nexa {
+      position: fixed;
+      top: 6vh;
+      right: 6vw;
+      z-index: 10;
+      font-family: 'Orbitron', sans-serif;
+      pointer-events: none;
+      user-select: none;
+      text-align: right;
+    }
+
+    .brand-nexa .nexa-title {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #000000;
+      letter-spacing: 0.35em;
+      display: block;
+      line-height: 1;
+    }
+
+    .brand-nexa .brief-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #7a0016;
+      letter-spacing: 0.65em;
+      display: block;
+      margin-top: 6px;
+    }
+
+    .character-container {
+      position: fixed;
+      bottom: 0;
+      left: -2vw;
+      height: 100vh;
+      width: 48vw;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .character-img {
+      height: 110%;
+      width: auto;
+      object-fit: contain;
+      object-position: bottom left;
+      filter: contrast(1.4) brightness(0.95) drop-shadow(25px 10px 35px rgba(0,0,0,0.25));
+      will-change: transform;
+    }
+
+    .right-interface-wrapper {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 54vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-right: 4vw;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .typography-block {
+      text-align: center;
+      position: relative;
+      width: 100%;
+      margin-bottom: 2vh;
+    }
+
+    .main-title {
+      font-size: clamp(2.5rem, 5vw, 5.5rem);
+      font-weight: 900;
+      color: #000000;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .main-title span.bracket {
+      font-size: 130%;
+      color: #7a0016;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 0.7;
+    }
+
+    .trend-arrow-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 2vh;
+      margin-bottom: 2vh;
+    }
+
+    .trend-arrow {
+      width: 180px;
+      height: auto;
+      opacity: 0.85;
+    }
+
+    .dagger-zone {
+      width: 460px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2vh;
+    }
+
+    #dagger-canvas {
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-grain"></div>
+
+  <div class="colossal-bg-text">ADRENALINE</div>
+
+  <div class="brand-nexa">
+    <span class="nexa-title">NEXA</span>
+    <span class="brief-sub">BRIEF_SYSTEMS</span>
+  </div>
+
+  <div class="character-container">
+    <img class="character-img" id="char-img" src="/docs//prot/6.png" alt="Toji Fushiguro Berserk">
+  </div>
+
+  <div class="right-interface-wrapper">
+    
+    <div class="typography-block">
+      <h1 class="main-title"><span class="bracket">[</span>ADRENALINE<span class="bracket">]</span></h1>
+    </div>
+
+    <div class="trend-arrow-box">
+      <svg class="trend-arrow" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 50 L35 50 L55 30 L80 42 L112 12" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M94 12 H112 V30" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div class="dagger-zone">
+      <canvas id="dagger-canvas"></canvas>
+    </div>
+
+  </div>
+
+  <audio id="audio-core" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" loop autoplay muted preload="auto" style="display:none;" crossorigin="anonymous"></audio>
+
+ <script type="module">
+    let audioCtx, analyser, dataArray, canvas, ctx, animationFrameId;
+    const audio = document.getElementById('audio-core');
+    const charImg = document.getElementById('char-img');
+
+    let startTime = performance.now();
+
+    function initEngine() {
+      canvas = document.getElementById('dagger-canvas');
+      ctx = canvas.getContext('2d');
+      
+      canvas.width = 460;
+      canvas.height = 150;
+
+      renderLoop();
+    }
+
+    function renderLoop(timestamp) {
+      animationFrameId = requestAnimationFrame(renderLoop);
+
+      const elapsed = (performance.now() - startTime) / 1000;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const centerY = canvas.height / 2;
+      const points = 60;
+      const sliceWidth = canvas.width / (points - 1);
+
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, centerY - 30);
+      ctx.lineTo(canvas.width, centerY - 30);
+      ctx.moveTo(0, centerY + 30);
+      ctx.lineTo(canvas.width, centerY + 30);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+      ctx.fillRect(0, centerY - 1, canvas.width, 2);
+
+      let maxPeak = 0;
+
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
+      ctx.beginPath();
+      for (let i = 0; i < points; i++) {
+        const x = i * sliceWidth;
+        const edgeFade = Math.sin((i / (points - 1)) * Math.PI);
+        const osc = Math.sin(i * 0.15 + elapsed * 5.0) * Math.cos(i * 0.08 - elapsed * 2.5);
+        const heightVal = osc * 35 * edgeFade;
+        const y = centerY + heightVal;
+        
+        if (Math.abs(heightVal) > maxPeak) {
+          maxPeak = Math.abs(heightVal);
+        }
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.stroke();
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#7a0016";
+      ctx.beginPath();
+      for (let i = 0; i < points; i++) {
+        const x = i * sliceWidth;
+        const edgeFade = Math.sin((i / (points - 1)) * Math.PI);
+        const osc = Math.cos(i * 0.25 - elapsed * 8.0) * Math.sin(i * 0.1 + elapsed * 3.5);
+        const heightVal = osc * 45 * edgeFade;
+        const y = centerY + heightVal;
+
+        if (Math.abs(heightVal) > maxPeak) {
+          maxPeak = Math.abs(heightVal);
+        }
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = "#000000";
+      for (let i = 0; i < points; i += 4) {
+        const x = i * sliceWidth;
+        const edgeFade = Math.sin((i / (points - 1)) * Math.PI);
+        const osc = Math.sin(i * 0.3 + elapsed * 10.0);
+        const heightVal = Math.abs(osc) * 55 * edgeFade;
+        
+        ctx.fillRect(x - 2, centerY - heightVal, 4, heightVal * 2);
+        
+        ctx.fillStyle = "#7a0016";
+        ctx.fillRect(x - 2, centerY - heightVal - 3, 4, 2);
+        ctx.fillRect(x - 2, centerY + heightVal + 1, 4, 2);
+        ctx.fillStyle = "#000000";
+      }
+
+      const pulseFactor = 1.0 + (maxPeak / 55) * 0.06;
+      const breatheOffset = Math.sin(elapsed * 1.5) * 8;
+      charImg.style.transform = `scale(${pulseFactor}) translateY(${breatheOffset}px)`;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initEngine();
+      
+      window.addEventListener('click', () => {
+        if (audio.muted) {
+          audio.muted = false;
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>

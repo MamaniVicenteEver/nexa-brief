@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moth - Denso Gótico</title>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Crimson+Text:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wine-red: #4d0000;
+            --silver: #999999;
+            --dust: #d1d1d1;
+            --blood: #800000;
+        }
+
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            cursor: url('https://cur.cursors-4u.net/symbols/sym-1/sym57.cur'), auto; 
+        }
+
+        body, html {
+            height: 100%;
+            background-color: #000;
+            color: var(--silver);
+            font-family: 'Crimson Text', serif;
+            text-transform: uppercase;
+            overflow: hidden;
+        }
+
+        .wallpaper-bg {
+            position: absolute;
+            inset: 0;
+            background: url('https://u.cubeupload.com/zmonochrome/01.png') center/cover no-repeat;
+            filter: grayscale(1) brightness(0.1) blur(12px);
+            transform: scale(1.1);
+            z-index: 0;
+        }
+
+        .snow-container { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+        .snowflake { position: absolute; background: #fff; border-radius: 50%; opacity: 0.2; animation: fall linear infinite; }
+        @keyframes fall { 0% { transform: translateY(-10vh); } 100% { transform: translateY(110vh); } }
+
+        /* --- TEXTOS LATERALES (NUEVO) --- */
+        .side-verse {
+            position: absolute;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            opacity: 0.4;
+            height: 60vh;
+            display: flex;
+            justify-content: space-between;
+            z-index: 5;
+        }
+        .v-left { left: 20px; top: 20vh; border-left: 1px solid var(--wine-red); padding-left: 5px; }
+        .v-right { right: 20px; top: 20vh; border-right: 1px solid var(--wine-red); padding-right: 5px; transform: rotate(180deg); }
+
+        /* --- UI ELEMENTS CARGADOS --- */
+        .ui-elements {
+            position: absolute;
+            inset: 0;
+            padding: 40px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .corner-tag { position: absolute; font-size: 0.7rem; letter-spacing: 4px; opacity: 0.6; }
+        .tag-tl { top: 40px; left: 40px; }
+        .tag-tr { top: 40px; right: 40px; text-align: right; }
+        .tag-bl { bottom: 40px; left: 40px; color: var(--wine-red); }
+        .tag-br { bottom: 40px; right: 40px; border-top: 1px solid var(--wine-red); padding-top: 5px; }
+
+        .symbols-xxx {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            letter-spacing: 25px;
+            font-size: 1.2rem;
+            color: var(--wine-red);
+        }
+
+        /* --- RITUAL / HASHTAG BOX DENSO --- */
+        .ritual-box {
+            position: absolute;
+            top: 10vh;
+            right: 4vw;
+            z-index: 6;
+            text-align: right;
+            width: 250px;
+        }
+
+        .ritual-header { font-size: 0.6rem; letter-spacing: 5px; color: var(--wine-red); border-bottom: 1px solid var(--wine-red); margin-bottom: 10px; }
+        .ht-tag { font-size: 2.2rem; color: var(--dust); font-family: 'UnifrakturMaguntia', serif; text-transform: none; margin: 5px 0; }
+        
+        .manifesto {
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            line-height: 1.6;
+            color: var(--silver);
+            opacity: 0.7;
+            text-align: justify;
+        }
+
+        /* --- REPRODUCTOR --- */
+        .music-player {
+            position: absolute;
+            bottom: 12vh;
+            left: 4vw;
+            z-index: 15;
+            pointer-events: all;
+        }
+
+        .track-box { border-left: 2px solid var(--wine-red); padding-left: 15px; }
+        .song-name { color: var(--dust); font-size: 0.85rem; letter-spacing: 2px; font-weight: bold; }
+        .artist-name { color: var(--wine-red); font-size: 0.6rem; letter-spacing: 4px; margin-top: 2px; }
+        .player-controls { display: flex; gap: 20px; font-size: 0.7rem; margin-top: 10px; }
+        #play-btn { color: var(--wine-red); cursor: pointer; border: 1px solid var(--wine-red); padding: 2px 10px; }
+
+        /* --- RENDER --- */
+        .character-overlay {
+            position: absolute;
+            height: 95vh;
+            z-index: 3;
+            display: flex;
+            align-items: flex-end;
+            filter: contrast(1.1) brightness(0.6) grayscale(0.5);
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        }
+        .character-overlay img { height: 100%; object-fit: contain; }
+
+        /* --- TITULO --- */
+        .center-content {
+            position: relative;
+            z-index: 6;
+            text-align: center;
+            margin-top: 2vh;
+        }
+
+        .main-title {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: clamp(6rem, 22vw, 15rem);
+            color: var(--dust);
+            line-height: 0.75;
+            text-shadow: 10px 10px 30px #000;
+        }
+        .cross { font-family: serif; color: var(--blood); vertical-align: middle; }
+
+        .sub-label {
+            font-size: 0.8rem;
+            letter-spacing: 18px;
+            color: var(--wine-red);
+            margin-top: 10px;
+        }
+
+        /* --- INFO PANELS --- */
+        .info-panels {
+            position: absolute;
+            bottom: 50px; width: 100%;
+            display: flex; justify-content: center; gap: 8vw; z-index: 6;
+        }
+        .panel { border-left: 1px solid rgba(153, 153, 153, 0.2); padding-left: 15px; }
+        .p-h { font-size: 0.55rem; color: var(--wine-red); letter-spacing: 4px; margin-bottom: 5px; }
+        .p-d { font-size: 1rem; color: #fff; font-family: 'UnifrakturMaguntia', serif; text-transform: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="wallpaper-bg"></div>
+    <div class="snow-container" id="snow"></div>
+
+    <div class="side-verse v-left">REQUIEM AETERNAM DONA EIS DOMINE ET LUX PERPETUA LUCEAT EIS</div>
+    <div class="side-verse v-right">TIMOR MORTIS CONTURBAT ME QUIA IN INFERNO NULLA EST REDEMPTIO</div>
+
+    <div style="position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+        
+        <div class="ui-elements">
+            <p class="corner-tag tag-tl">FRAGMENTUM_092<br>NOCTURNAL_ENTITY</p>
+            <p class="corner-tag tag-tr">† SACRED RITES †<br>COVEN OF THE BANSHEE</p>
+            <p class="corner-tag tag-bl">00.00.00 // ETERNITY<br>BEYOND THE VEIL</p>
+            <p class="corner-tag tag-br">MOTH_01.X<br>SOUL_COLLECTION</p>
+            <p class="symbols-xxx">† † †</p>
+        </div>
+
+        <div class="ritual-box">
+            <p class="ritual-header">PROPERTIES OF THE SOUL</p>
+            <p class="ht-tag">Moth</p>
+            <p class="ht-sub">In Tenebris</p>
+            <p class="manifesto">
+                The echo of a voice that never spoke. A presence felt in the cold corners of the room. 
+                Bound by shadows, released by death. No salvation in the light, no peace in the silence.
+            </p>
+        </div>
+
+        <div class="music-player">
+            <div class="track-box">
+                <p class="song-name">In The Room Where You Sleep</p>
+                <p class="artist-name">Dead Man's Bones // 2009</p>
+                <div class="player-controls">
+                    <span>PREV</span> 
+                    <span id="play-btn">PLAY / PAUSE</span> 
+                    <span>NEXT</span>
+                </div>
+            </div>
+            <audio id="audio-element" src="https://www.dropbox.com/scl/fi/3r8b6dneea8unnly20hc1/Dead-Man-s-Bones-In-The-Room-Where-You-Sleep.mp3?rlkey=dofq7fzfa1kte9c2j4686oycy&raw=1"></audio>
+        </div>
+
+        <div class="character-overlay">
+            <img src="https://u.cubeupload.com/zmonochrome/vivi.png" alt="Moth">
+        </div>
+
+        <div class="center-content">
+            <h1 class="main-title"><span class="cross">†</span>Moth</h1>
+            <p class="sub-label">A REQUIEM FOR THE DAMNED</p>
+        </div>
+
+        <div class="info-panels">
+            <div class="panel"><p class="p-h">CLASS.</p><p class="p-d">Spectral</p></div>
+            <div class="panel"><p class="p-h">ORIGIN.</p><p class="p-d">The Void</p></div>
+            <div class="panel"><p class="p-h">ESSENCE.</p><p class="p-d">Nocturnal</p></div>
+            <div class="panel"><p class="p-h">RITUAL.</p><p class="p-d">Complete</p></div>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('audio-element');
+        const playBtn = document.getElementById('play-btn');
+        playBtn.addEventListener('click', () => {
+            audio.paused ? audio.play() : audio.pause();
+        });
+
+        const snow = document.getElementById('snow');
+        for (let i = 0; i < 60; i++) {
+            let f = document.createElement('div');
+            f.className = 'snowflake';
+            let s = Math.random() * 2 + 2 + 'px';
+            f.style.width = s; f.style.height = s;
+            f.style.left = Math.random() * 100 + 'vw';
+            f.style.animationDuration = Math.random() * 6 + 4 + 's';
+            f.style.animationDelay = Math.random() * 5 + 's';
+            snow.appendChild(f);
+        }
+    </script>
+</body>
+</html>

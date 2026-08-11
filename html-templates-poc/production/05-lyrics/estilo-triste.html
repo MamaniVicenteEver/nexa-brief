@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LETRAS TRISTE V1 — Dueles Tan Bien</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #07090c; cursor: pointer; }
+  body { opacity: 0; transition: opacity 1.2s ease; }
+  body.ready { opacity: 1; }
+
+  /* fondo imagen/video con filtro frío (CONFIG.bg) */
+  #bgMedia {
+    position: fixed; inset: -6%; width: 112%; height: 112%; object-fit: cover; z-index: 0;
+    animation: bgBreath 54s ease-in-out infinite alternate; will-change: transform;
+  }
+  #bgFallback {
+    position: fixed; inset: 0; z-index: -1;
+    background: linear-gradient(170deg, #10151c 0%, #090c10 55%, #050608 100%);
+  }
+  @keyframes bgBreath {
+    0%   { transform: scale(1.01); }
+    100% { transform: scale(1.055) translate(-0.9%, 0.7%); }
+  }
+  #coldTint {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 30%, rgba(110,150,190,0.07) 0%, rgba(8,12,18,0.6) 74%, rgba(4,6,9,0.85) 100%);
+    mix-blend-mode: multiply;
+  }
+
+  #rain { position: fixed; inset: 0; z-index: 2; }
+
+  #viewport { position: fixed; inset: 0; overflow: hidden; z-index: 3; }
+  #world { position: absolute; left: 0; top: 0; width: 100%; will-change: transform; }
+
+  .row {
+    position: absolute; left: 6vw; right: 6vw; text-align: center;
+    text-transform: uppercase; will-change: transform, opacity, filter;
+    opacity: 0; transform: translateY(-42px) rotate(var(--rot, 0deg));
+    transition: opacity 1.1s ease, transform 1.3s cubic-bezier(0.25, 0.9, 0.35, 1.08), filter 1.6s ease;
+    line-height: 1.1;
+  }
+  .row.in { opacity: 1; transform: translateY(0) rotate(var(--rot, 0deg)); }
+  .row.cond { font-family: "Oswald", sans-serif; font-weight: 700; color: #C9D6E2; text-shadow: 0 2px 12px rgba(0,0,0,0.65); }
+  .row.type { font-family: "Special Elite", cursive; color: #7FA6C4; text-shadow: 0 0 12px rgba(110,160,200,0.22), 0 2px 8px rgba(0,0,0,0.6); text-transform: none !important; }
+  .row.alignL { text-align: left; padding-left: 3vw; }
+  .row.alignR { text-align: right; padding-right: 3vw; }
+  /* al envejecer, las líneas SE HUNDEN (gravedad) además de apagarse */
+  .row.old { opacity: 0.12; filter: blur(2.5px); transform: translateY(26px) rotate(var(--rot, 0deg)); }
+  /* parpadeo de lámpara moribunda en algunas líneas typewriter */
+  @keyframes dying {
+    0%, 100% { opacity: 1; }
+    82% { opacity: 1; } 84% { opacity: 0.45; } 86% { opacity: 1; }
+    91% { opacity: 0.6; } 93% { opacity: 1; }
+  }
+  .row.dying.in { animation: dying 3.4s ease 0.9s 2; }
+
+  #vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 42%, transparent 36%, rgba(3,5,8,0.8) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 5; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.05; mix-blend-mode: overlay; animation: gsh 1.2s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2vh; text-align: center;
+    transition: opacity 1.5s ease; text-transform: uppercase; padding: 0 6vw;
+  }
+  .cardScreen .artist { font-family: "Special Elite", cursive; font-size: 2.8vh; color: #8fa6b8; letter-spacing: 0.14em; text-transform: none; }
+  .cardScreen .title  { font-family: "Oswald", sans-serif; font-weight: 700; font-size: 11vh; color: #C9D6E2; line-height: 1.02; letter-spacing: 0.03em; text-shadow: 0 0 24px rgba(140,180,215,0.2); }
+  .cardScreen .sub    { font-family: "Special Elite", cursive; font-size: 2.6vh; color: #7FA6C4; text-transform: none; }
+  .cardScreen .feats  { font-family: "Oswald", sans-serif; font-size: 1.6vh; letter-spacing: 0.32em; opacity: 0.6; color: #8fa6b8; margin-top: 2.4vh; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  body.outroActive #viewport, body.outroActive #bgMedia { opacity: 0.10; transition: opacity 2s ease; }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: "Oswald", sans-serif; font-size: 1.4vh; letter-spacing: 0.42em;
+    opacity: 0.5; animation: hintPulse 2.2s ease infinite; pointer-events: none; color: #8fa6b8;
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.15; } 50% { opacity: 0.55; } }
+
+  /* ============ DEBUG HUD — BORRAR ESTE BLOQUE (CSS) PARA PRODUCCIÓN ============ */
+  #debugHud {
+    position: fixed; left: 0; bottom: 0; width: 100vw; z-index: 20;
+    font-family: "Courier New", monospace; font-size: 12px; color: #b8d2e8;
+    background: rgba(0,0,0,0.35); padding: 4px 10px; opacity: 0.55;
+    pointer-events: none; white-space: pre;
+  }
+  /* ================================================================================ */
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    .cardScreen .artist { font-size: min(2.8vh, 5vw); }
+    .cardScreen .title  { font-size: min(11vh, 16vw); }
+    .cardScreen .sub    { font-size: min(2.6vh, 4.6vw); }
+    .cardScreen .feats  { font-size: min(1.6vh, 3.2vw); letter-spacing: 0.22em; }
+  }
+</style>
+</head>
+<body>
+<div id="bgFallback"></div>
+<img id="bgMedia" alt="" style="display:none">
+<div id="coldTint"></div>
+<canvas id="rain"></canvas>
+<div id="viewport"><div id="world"></div></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="intro" class="cardScreen">
+  <div class="artist"></div><div class="title"></div><div class="sub"></div><div class="feats"></div>
+</div>
+<div id="outro" class="cardScreen">
+  <div class="artist"></div><div class="title"></div><div class="sub"></div><div class="feats"></div>
+</div>
+<div id="hint">CLICK PARA EMPEZAR</div>
+<!-- ============ DEBUG HUD — BORRAR ESTA LÍNEA (HTML) PARA PRODUCCIÓN ============ -->
+<div id="debugHud"></div>
+<!-- ================================================================================ -->
+<audio id="audio" preload="auto"></audio>
+<script type="module">
+/* ================================ CONFIG ================================
+   PLANTILLA TRISTE — "lluvia en la ventana"
+   Mecánica: paleta fría azul-acero; las líneas CAEN desde arriba (gravedad
+   con leve rebote) y, al envejecer, SE HUNDEN hacia abajo mientras se
+   difuminan — todo empuja hacia abajo, como la lluvia. Lluvia real en
+   canvas (trazos finos + gotas). Alterna condensada dura (Oswald) con
+   máquina de escribir (Special Elite); algunas líneas typewriter parpadean
+   como lámpara moribunda. Cámara con deriva descendente lenta.
+   Para otra canción: cambiar audio.src, lyricsUrl, intro/outro, bg.filter.
+   ========================================================================== */
+const CONFIG = {
+  audio: { src: "Bruses Dueles Tan Bien Audio.mp3" },
+  lyricsUrl: "lyrics-bruses-dueles-tan-bien.json",
+  bg: {
+    type: "image",             /* "image" | "video" | "none" */
+    src: "bg8.jpg",
+    filter: "grayscale(0.75) brightness(0.26) contrast(1.12) hue-rotate(178deg) saturate(1.35)"
+  },
+  intro: { artist: "Bruses", title: "Dueles\nTan Bien", sub: "", feats: "" },
+  outro: { leadSec: 8, title: "Gracias", sub: "por ver", feats: "Suscríbete · NEXA BRIEF" },
+  /* DEBUG HUD: poner en false (o borrar los bloques marcados) para producción */
+  debug: { enabled: true },
+  layout: {
+    groupGapSec: 0.32,
+    maxRowChars: 16,
+    rowGapVh: 3.4,
+    anchorVhFrac: 0.52,
+    typeChanceSolo: 0.6,      /* líneas de 1 palabra → typewriter azul */
+    typeChanceMulti: 0.2,
+    dyingChance: 0.3,         /* prob. de parpadeo de lámpara en líneas typewriter */
+    sideAlignChance: 0.3,
+    maxTiltDeg: 1.8,
+    oldAfter: 3
+  },
+  rain: { streaks: 70, tint: "150,180,210" },
+  seed: 11
+};
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, world = $("world"), audio = $("audio");
+let vw = innerWidth, vh = innerHeight;
+addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; });
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+/* ---- intro / outro ---- */
+function buildCard(id, cfg) {
+  const i = $(id);
+  i.querySelector(".artist").textContent = cfg.artist ?? "";
+  i.querySelector(".title").textContent = cfg.title;
+  i.querySelector(".sub").textContent = cfg.sub;
+  i.querySelector(".feats").textContent = cfg.feats;
+}
+buildCard("intro", C.intro);
+buildCard("outro", C.outro);
+
+/* ---- lyrics desde whisper JSON, agrupadas ---- */
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const flat = [];
+    for (const seg of j.segments) for (const w of seg.words)
+      flat.push({ t: w.start, text: w.word.trim() });
+    if (!flat.length) throw new Error("sin palabras");
+    return groupIntoRows(flat);
+  } catch (e) {
+    console.warn("[triste] No se pudo cargar", C.lyricsUrl,
+                 "— sirve el HTML por HTTP (Live Server), no por file://.", e);
+    return [];
+  }
+}
+function groupIntoRows(flat) {
+  const rows = [];
+  let cur = null;
+  for (const w of flat) {
+    const clean = w.text.replace(/[.,;!?¡¿"']/g, "");
+    if (!clean) continue;
+    if (cur && (w.t - cur.lastT) < C.layout.groupGapSec &&
+        (cur.text + " " + clean).length <= C.layout.maxRowChars) {
+      cur.text += " " + clean; cur.lastT = w.t; cur.words++;
+    } else {
+      if (cur) rows.push(cur);
+      cur = { t: w.t, text: clean, lastT: w.t, words: 1 };
+    }
+  }
+  if (cur) rows.push(cur);
+  return rows;
+}
+
+/* ---- colocación: caída con gravedad ---- */
+let rowY = 0, placed = [];
+
+function fontSizeFor(text, words, type) {
+  const len = Math.max(2, text.length);
+  const base = words <= 1 ? vh * (type ? 0.095 : 0.125) : vh * 0.07;
+  /* móvil vertical: aprovecha más ancho (desktop no cambia) */
+  const wShare = vw < vh ? 0.94 : 0.84;
+  let fs = Math.min(vw * wShare / (len * 0.56), base);
+  fs *= 0.9 + rng() * 0.2;
+  return Math.max(vh * 0.042, fs);
+}
+
+function placeRow(r) {
+  const L = C.layout;
+  const typeChance = r.words <= 1 ? L.typeChanceSolo : L.typeChanceMulti;
+  const type = rng() < typeChance;
+
+  const el = doc.createElement("div");
+  let cls = "row " + (type ? "type" : "cond");
+  if (type && rng() < L.dyingChance) cls += " dying";
+  if (rng() < L.sideAlignChance) cls += rng() < 0.5 ? " alignL" : " alignR";
+  el.className = cls;
+  el.style.setProperty("--rot", ((rng() - 0.5) * 2 * L.maxTiltDeg).toFixed(2) + "deg");
+  el.textContent = type ? r.text.toLowerCase() : r.text;
+  const fs = fontSizeFor(r.text, r.words, type);
+  el.style.fontSize = fs + "px";
+  el.style.top = rowY + "px";
+  world.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("in"));
+
+  const height = fs * 1.18;
+  const y = rowY;
+  rowY += height + vh * (L.rowGapVh / 100);
+
+  placed.push(el);
+  const cutoff = placed.length - L.oldAfter;
+  for (let i = 0; i < placed.length; i++) if (i < cutoff) placed[i].classList.add("old");
+  if (placed.length > 16) { const old = placed.shift(); old.remove(); }
+
+  return { y, h: height };
+}
+
+/* ---- cámara vertical (deriva descendente constante muy leve) ---- */
+let camY = 0, camTY = 0;
+function aimCamera(r) { if (r) camTY = r.y + r.h / 2 - vh * C.layout.anchorVhFrac; }
+
+/* ---- lluvia en canvas ---- */
+const rain = $("rain"), rctx = rain.getContext("2d");
+let drops = [];
+function seedRain() {
+  drops = Array.from({ length: C.rain.streaks }, () => ({
+    x: rng() * vw, y: rng() * vh,
+    len: 8 + rng() * 22, v: 2.4 + rng() * 4.2,
+    a: 0.05 + rng() * 0.12, drift: 0.3 + rng() * 0.5
+  }));
+}
+function drawRain() {
+  rain.width = vw; rain.height = vh;
+  rctx.clearRect(0, 0, vw, vh);
+  rctx.lineWidth = 1;
+  for (const d of drops) {
+    d.y += d.v; d.x -= d.drift;
+    if (d.y > vh + 30) { d.y = -30; d.x = rng() * (vw + 80); }
+    rctx.strokeStyle = `rgba(${C.rain.tint},${d.a})`;
+    rctx.beginPath();
+    rctx.moveTo(d.x, d.y);
+    rctx.lineTo(d.x - d.drift * 3, d.y - d.len);
+    rctx.stroke();
+  }
+}
+
+/* ---- reloj: audio si suena; si no, rAF ---- */
+let rafT0 = null, rafNow = 0, started = false;
+const clock = () => (!audio.paused && audio.currentTime > 0.05)
+  ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+
+async function begin() {
+  if (started) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+/* ---- outro por el final REAL del audio ---- */
+let outroShown = false;
+function maybeOutro() {
+  if (outroShown) return;
+  const dur = audio.duration;
+  if (!isFinite(dur) || dur <= 0) return;
+  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
+    outroShown = true;
+    doc.body.classList.add("outroActive");
+    $("intro").classList.add("gone");
+    $("outro").classList.add("show");
+    for (const el of placed) el.classList.add("old");
+  }
+}
+audio.addEventListener("ended", maybeOutro);
+
+/* ============ DEBUG HUD — BORRAR ESTE BLOQUE (JS) PARA PRODUCCIÓN ============ */
+function updateDebug() {
+  if (!C.debug.enabled) return;
+  const dur = isFinite(audio.duration) ? audio.duration.toFixed(1) : "?";
+  const state = audio.ended ? "ended" : audio.paused ? "paused" : "playing";
+  const next = rows[ptr];
+  const nextIn = outroShown ? "outro activo" : next ? (next.t - clock()).toFixed(1) + "s" : "—(sin más letra)";
+  $("debugHud").textContent =
+    `t=${audio.currentTime.toFixed(1)}s / ${dur}s  ·  audio:${state}  ·  línea ${ptr}/${rows.length}  ·  próxima en ${nextIn}`;
+}
+/* =============================================================================== */
+
+/* ---- main ---- */
+let rows = [], ptr = 0, introGone = false;
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  const t = clock();
+  maybeOutro();
+  if (!outroShown) {
+    while (ptr < rows.length && t >= rows[ptr].t) {
+      if (!introGone) { $("intro").classList.add("gone"); introGone = true; }
+      aimCamera(placeRow(rows[ptr]));
+      ptr++;
+    }
+  }
+  camY += (camTY - camY) * 0.055;
+  world.style.transform = `translate3d(0, ${-camY}px, 0)`;
+  drawRain();
+  updateDebug();
+  requestAnimationFrame(frame);
+}
+
+/* ---- fondo imagen/video con filtro del CONFIG ---- */
+function setupBg() {
+  if (!C.bg || C.bg.type === "none" || !C.bg.src) return;
+  let el = $("bgMedia");
+  if (C.bg.type === "video") {
+    const v = doc.createElement("video");
+    v.id = "bgMedia"; v.muted = true; v.loop = true; v.autoplay = true;
+    v.setAttribute("playsinline", "");
+    el.replaceWith(v); el = v;
+    v.play && v.play().catch(() => {});
+  }
+  el.src = encodeURI(C.bg.src);
+  el.style.display = "block";
+  el.style.filter = C.bg.filter || "";
+}
+
+setupBg();
+audio.src = encodeURI(C.audio.src);
+loadLyrics().then(r => { rows = r; });
+begin();
+seedRain();
+doc.body.classList.add("ready");
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>花は散り · Haiku Scene</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;900&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            background: #0d0f12;
+            font-family: 'Shippori Mincho', serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .background-stage {
+            position: fixed;
+            inset: -4%;
+            width: 108vw;
+            height: 108dvh;
+            background: url('https://i.pinimg.com/1200x/9c/aa/fe/9caafe6f260ed3087f82e34df7abacb6.jpg') center/cover no-repeat;
+            z-index: 1;
+            filter: contrast(1.05) brightness(0.96) saturate(1.02) sepia(0.04);
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        .vignette-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            background: radial-gradient(circle at center, transparent 35%, rgba(13, 15, 18, 0.4) 100%);
+            pointer-events: none;
+        }
+
+        .nexa-brief-brand {
+            position: fixed;
+            top: 40px;
+            right: 60px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Montserrat', sans-serif;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.6;
+            transition: opacity 1.5s ease;
+        }
+
+        .brand-nexa {
+            font-size: 1.05rem;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            color: #1c1c1e;
+            transition: color 1.2s ease;
+        }
+
+        .brand-divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(28, 28, 30, 0.25);
+            transition: background 1.2s ease;
+        }
+
+        .brand-brief {
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 0.4em;
+            color: #D68D9C;
+            transition: color 1.2s ease;
+        }
+
+        .haiku {
+            position: fixed;
+            top: 10dvh;
+            left: 7.5vw;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-family: "Shippori Mincho", "Yu Mincho", serif;
+            font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+            line-height: 2.2;
+            color: rgba(28, 28, 30, 0.35);
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            user-select: none;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .haiku span {
+            display: inline-block;
+            transition: color 1.2s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 1.2s ease, transform 1s ease;
+            will-change: color, transform;
+        }
+
+        #scene {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100dvh;
+            z-index: 3;
+            pointer-events: none;
+            will-change: transform;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-stage" id="bg-stage"></div>
+    <div class="vignette-overlay"></div>
+
+    <div class="nexa-brief-brand" id="brand-container">
+        <span class="brand-nexa" id="brand-nexa-text">NEXA</span>
+        <span class="brand-divider" id="brand-div-line"></span>
+        <span class="brand-brief" id="brand-brief-text">BRIEF</span>
+    </div>
+
+    <div class="haiku" lang="jp">
+        花は散り<br>
+        名を覚えている<br>
+        風ばかり
+    </div>
+
+    <canvas id="scene"></canvas>
+
+    <audio id="audio-engine" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" loop autoplay crossorigin="anonymous" style="display:none;"></audio>
+
+    <script type="module">
+        const canvas = document.getElementById("scene");
+        const ctx = canvas.getContext("2d");
+        const bgStage = document.getElementById("bg-stage");
+        const audio = document.getElementById("audio-engine");
+
+        const brandContainer = document.getElementById("brand-container");
+        const brandNexa = document.getElementById("brand-nexa-text");
+        const brandDiv = document.getElementById("brand-div-line");
+        const brandBrief = document.getElementById("brand-brief-text");
+
+        let width, height;
+        let petals = [], fogs = [], clouds = [], birds = [];
+
+        let audioCtx = null, analyser = null, dataArray = null, isPlaying = false;
+        const audioImpact = { bass: 0, mid: 0, treble: 0, smoothedBass: 0 };
+
+        const settings = {
+            minWind: 1.2,
+            maxWind: 4.8,
+            minSize: 10,
+            maxSize: 32,
+            emitterY: 0.15,
+            emitterSpread: 0.75,
+            gravity: 0.22,
+            turbulence: 0.55,
+            rotationSpeed: 0.012,
+            tumbleStrength: 0.45,
+            staticTilt: 10,
+            petalCount: 150,
+            fogCount: 8,
+            cloudCount: 5,
+            birdChance: 0.002,
+            direction: -1
+        };
+
+        const cache = { minSize: 0, maxSize: 0, minWind: 0, maxWind: 0, tiltRad: 0 };
+
+        function updateCache() {
+            cache.minSize = Math.min(settings.minSize, settings.maxSize);
+            cache.maxSize = Math.max(settings.minSize, settings.maxSize);
+            cache.minWind = Math.min(settings.minWind, settings.maxWind);
+            cache.maxWind = Math.max(settings.minWind, settings.maxWind);
+            cache.tiltRad = (settings.staticTilt * Math.PI) / 180;
+        }
+
+        const petalPalette = [
+            { fill: "#F4C2C2", stroke: "#D68D9C", vein: "rgba(200,140,155,0.6)" },
+            { fill: "#F7A8B8", stroke: "#C97A8B", vein: "rgba(190,110,130,0.6)" },
+            { fill: "#D68D9C", stroke: "#B36374", vein: "rgba(165,90,105,0.6)" },
+            { fill: "#FFF0F2", stroke: "#F0C4C8", vein: "rgba(210,160,170,0.55)" },
+            { fill: "#FADADD", stroke: "#E8A0AA", vein: "rgba(200,140,150,0.6)" }
+        ];
+
+        function createPetalImage(colorObj) {
+            const tempCanvas = document.createElement("canvas");
+            tempCanvas.width = 52;
+            tempCanvas.height = 52;
+            const tCtx = tempCanvas.getContext("2d");
+            tCtx.save();
+            tCtx.translate(26, 26);
+            tCtx.shadowColor = "rgba(140, 100, 110, 0.4)";
+            tCtx.shadowBlur = 6;
+            tCtx.beginPath();
+            tCtx.moveTo(0, -16);
+            tCtx.bezierCurveTo(12, -12, 16, -3, 13, 7);
+            tCtx.bezierCurveTo(8, 14, 0, 11, 0, 11);
+            tCtx.bezierCurveTo(0, 11, -8, 14, -13, 7);
+            tCtx.bezierCurveTo(-16, -3, -12, -12, 0, -16);
+            tCtx.closePath();
+            const gradient = tCtx.createLinearGradient(-9, -13, 11, 9);
+            gradient.addColorStop(0, colorObj.fill);
+            gradient.addColorStop(0.5, colorObj.stroke);
+            gradient.addColorStop(1, "#B36374");
+            tCtx.fillStyle = gradient;
+            tCtx.fill();
+            tCtx.shadowBlur = 0;
+            tCtx.shadowColor = "transparent";
+            tCtx.strokeStyle = colorObj.vein;
+            tCtx.lineWidth = 0.6;
+            tCtx.beginPath();
+            tCtx.moveTo(0, -12);
+            tCtx.lineTo(0, 8);
+            tCtx.stroke();
+            tCtx.beginPath();
+            tCtx.moveTo(0, -4);
+            tCtx.quadraticCurveTo(-4, 1, -7, 3);
+            tCtx.stroke();
+            tCtx.beginPath();
+            tCtx.moveTo(0, -3);
+            tCtx.quadraticCurveTo(4, 1, 7, 3);
+            tCtx.stroke();
+            tCtx.restore();
+            const img = new Image();
+            img.src = tempCanvas.toDataURL();
+            return img;
+        }
+        const petalImages = petalPalette.map(color => createPetalImage(color));
+
+        function rotateVector(x, y, z, ax, ay, az) {
+            let cos = Math.cos(az), sin = Math.sin(az);
+            const x1 = x * cos - y * sin, y1 = x * sin + y * cos, z1 = z;
+            cos = Math.cos(ay); sin = Math.sin(ay);
+            const x2 = x1 * cos + z1 * sin, y2 = y1, z2 = -x1 * sin + z1 * cos;
+            cos = Math.cos(ax); sin = Math.sin(ax);
+            return {
+                x: x2,
+                y: y2 * cos - z2 * sin,
+                z: y2 * sin + z2 * cos
+            };
+        }
+
+        class Petal {
+            constructor(initOnScreen = false) { this.reset(initOnScreen); }
+            reset(initOnScreen = false) {
+                this.image = petalImages[Math.floor(Math.random() * petalImages.length)];
+                this.width = cache.minSize + Math.random() * (cache.maxSize - cache.minSize);
+                this.height = this.width;
+                const centerY = height * settings.emitterY;
+                const spreadHeight = height * settings.emitterSpread;
+                const minY = centerY - spreadHeight / 2;
+                const maxY = centerY + spreadHeight / 2;
+                this.y = minY + Math.random() * (maxY - minY);
+                if (initOnScreen) {
+                    this.x = Math.random() * width;
+                } else {
+                    this.x = settings.direction === -1 ? width + this.width + Math.random() * width : -this.width - Math.random() * width;
+                }
+                const sizeFactor = (this.width - cache.minSize) / (cache.maxSize - cache.minSize || 1);
+                this.windFactor = 1 - (sizeFactor * 0.45 + Math.random() * 0.4);
+                this.windFactor = Math.max(0.15, Math.min(1, this.windFactor));
+                this.vx = 0; this.vy = 0;
+                this.waveOffset = Math.random() * Math.PI * 2;
+                this.angleZ = Math.random() * Math.PI * 2;
+                this.spinZ = (Math.random() - 0.5) * settings.rotationSpeed;
+                this.angleX = 0; this.angleY = 0;
+                this.spinX = (Math.random() - 0.5) * 0.08;
+                this.spinY = (Math.random() - 0.5) * 0.08;
+            }
+            update(windVelocity) {
+                const targetSpeed = (windVelocity + audioImpact.smoothedBass * 3.5) * this.windFactor;
+                this.vx += (targetSpeed - this.vx) * 0.05;
+                this.x += this.vx * settings.direction;
+                const gravityMod = (1.3 - this.windFactor) * (1.0 + audioImpact.smoothedBass * 0.5);
+                this.vy += settings.gravity * 0.05 * gravityMod;
+                const wave = Math.sin(this.x * 0.008 * settings.direction + this.waveOffset);
+                this.vy += wave * (settings.turbulence + audioImpact.smoothedBass * 0.8) * 0.05;
+                this.vy *= 0.98;
+                this.y += this.vy;
+                const spinMult = 1.0 + audioImpact.smoothedBass * 2.0;
+                this.angleZ += (this.spinZ + this.vx * 0.001) * spinMult;
+                if (settings.tumbleStrength > 0) {
+                    this.angleX += this.spinX * settings.tumbleStrength * spinMult;
+                    this.angleY += this.spinY * settings.tumbleStrength * spinMult;
+                }
+                const buffer = 150;
+                const outByX = settings.direction === -1 ? this.x < -buffer : this.x > width + buffer;
+                if (outByX || this.y > height + buffer || this.y < -buffer) this.reset(false);
+            }
+            draw() {
+                const vecU = rotateVector(1, 0, 0, this.angleX, this.angleY + cache.tiltRad, this.angleZ);
+                const vecV = rotateVector(0, 1, 0, this.angleX, this.angleY + cache.tiltRad, this.angleZ);
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.transform(vecU.x, vecU.y, vecV.x, vecV.y, 0, 0);
+                ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+                ctx.restore();
+            }
+        }
+
+        class CloudDrift {
+            constructor(initOnScreen = false) { this.reset(initOnScreen); }
+            reset(initOnScreen = false) {
+                this.width = 220 + Math.random() * 180;
+                this.height = 65 + Math.random() * 45;
+                this.y = (height * 0.08) + Math.random() * (height * 0.28);
+                this.x = initOnScreen ? Math.random() * width : width + this.width;
+                this.speed = 0.06 + Math.random() * 0.12;
+                this.opacity = 0.06 + Math.random() * 0.06;
+                this.waveAmplitude = 8 + Math.random() * 10;
+                this.wavePhase = Math.random() * Math.PI * 2;
+                this.waveSpeed = 0.002 + Math.random() * 0.003;
+
+                this.bubbles = [];
+                const bubbleCount = 5 + Math.floor(Math.random() * 4);
+                for (let i = 0; i < bubbleCount; i++) {
+                    this.bubbles.push({
+                        offsetX: (Math.random() - 0.5) * this.width * 0.65,
+                        offsetY: (Math.random() - 0.45) * this.height * 0.45,
+                        radiusX: (0.4 + Math.random() * 0.45) * this.width * 0.5,
+                        radiusY: (0.4 + Math.random() * 0.45) * this.height * 0.6,
+                        opacityMult: 0.55 + Math.random() * 0.45
+                    });
+                }
+            }
+            update() {
+                this.x -= this.speed;
+                this.wavePhase += this.waveSpeed;
+                if (this.x < -this.width * 1.5) this.reset(false);
+            }
+            draw() {
+                ctx.save();
+                ctx.globalCompositeOperation = "destination-over";
+                
+                const baseX = this.x;
+                const baseY = this.y + Math.sin(this.wavePhase) * this.waveAmplitude;
+
+                for (const b of this.bubbles) {
+                    const cx = baseX + b.offsetX;
+                    const cy = baseY + b.offsetY;
+                    const rx = Math.max(1, b.radiusX);
+                    const ry = Math.max(1, b.radiusY);
+                    const op = this.opacity * b.opacityMult;
+
+                    const rad = Math.max(rx, ry);
+                    const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+                    gradient.addColorStop(0, `rgba(255, 255, 255, ${op})`);
+                    gradient.addColorStop(0.4, `rgba(242, 240, 245, ${op * 0.7})`);
+                    gradient.addColorStop(0.8, `rgba(225, 222, 230, ${op * 0.15})`);
+                    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        class FogParticle {
+            constructor(initOnScreen = false) { this.reset(initOnScreen); }
+            reset(initOnScreen = false) {
+                this.radius = 180 + Math.random() * 150;
+                this.y = (height * 0.3) + Math.random() * (height * 0.45);
+                this.x = initOnScreen ? Math.random() * width : width + this.radius;
+                this.speed = 0.12 + Math.random() * 0.25;
+                this.opacity = 0.05 + Math.random() * 0.07;
+            }
+            update() {
+                this.x -= this.speed * (1.0 + audioImpact.smoothedBass * 1.5);
+                if (this.x < -this.radius) this.reset(false);
+            }
+            draw() {
+                ctx.save();
+                ctx.globalCompositeOperation = "destination-over";
+                const gradient = ctx.createRadialGradient(this.x, this.y, 10, this.x, this.y, this.radius);
+                gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
+                gradient.addColorStop(0.5, `rgba(240, 240, 240, ${this.opacity * 0.4})`);
+                gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class Crane {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = -50;
+                this.y = (height * 0.1) + Math.random() * (height * 0.25);
+                this.size = 12 + Math.random() * 14;
+                this.speedX = 0.6 + Math.random() * 0.7;
+                this.speedY = -0.05 - Math.random() * 0.08;
+                this.wingPhase = Math.random() * Math.PI * 2;
+                this.wingSpeed = 0.08 + Math.random() * 0.05;
+                this.opacity = 0;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.wingPhase += this.wingSpeed;
+                if (this.x < 150) this.opacity += 0.01;
+                else if (this.x > width - 200) this.opacity -= 0.008;
+                this.opacity = Math.max(0, Math.min(0.7, this.opacity));
+                if (this.x > width + 50 || this.y < -50) this.reset();
+            }
+            draw() {
+                if (this.opacity <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.strokeStyle = "#1a1a1a";
+                ctx.lineWidth = 1.5;
+                ctx.lineJoin = "round";
+                ctx.lineCap = "round";
+                const wingY = Math.sin(this.wingPhase) * (this.size * 0.4);
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.size * 0.4, this.y + 1);
+                ctx.lineTo(this.x, this.y);
+                ctx.lineTo(this.x + this.size * 0.4, this.y + 1);
+                ctx.moveTo(this.x, this.y);
+                ctx.quadraticCurveTo(this.x - this.size * 0.3, this.y - this.size * 0.2 + wingY, this.x - this.size * 0.7, this.y - wingY);
+                ctx.moveTo(this.x, this.y);
+                ctx.quadraticCurveTo(this.x + this.size * 0.3, this.y - this.size * 0.2 + wingY, this.x + this.size * 0.7, this.y - wingY);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+        }
+
+        function initEntities() {
+            petals = []; fogs = []; clouds = []; birds = [];
+            for (let i = 0; i < settings.petalCount; i++) {
+                const p = new Petal(false);
+                p.x += Math.random() * width * 1.5;
+                petals.push(p);
+            }
+            for (let i = 0; i < settings.fogCount; i++) fogs.push(new FogParticle(true));
+            for (let i = 0; i < settings.cloudCount; i++) clouds.push(new CloudDrift(true));
+            birds.push(new Crane());
+        }
+
+        let windCycle = 0;
+        function animate(timestamp) {
+            const elapsed = timestamp / 1000;
+            ctx.clearRect(0, 0, width, height);
+
+            if (isPlaying && analyser) {
+                analyser.getByteFrequencyData(dataArray);
+                let bSum = 0, mSum = 0, tSum = 0;
+                for (let i = 0; i < 5; i++) bSum += dataArray[i];
+                for (let i = 6; i < 16; i++) mSum += dataArray[i];
+                for (let i = 17; i < 32; i++) tSum += dataArray[i];
+                audioImpact.bass = bSum / 5 / 255;
+                audioImpact.mid = mSum / 10 / 255;
+                audioImpact.treble = tSum / 15 / 255;
+            } else {
+                const beatFreq = (elapsed % 0.71) / 0.71;
+                const simPulse = Math.pow(Math.max(0, Math.cos(beatFreq * Math.PI)), 4);
+                audioImpact.bass = simPulse * 0.45;
+                audioImpact.mid = Math.sin(elapsed * 1.5) * 0.15 + 0.2;
+                audioImpact.treble = Math.cos(elapsed * 3.0) * 0.1 + 0.15;
+            }
+            audioImpact.smoothedBass += (audioImpact.bass - audioImpact.smoothedBass) * 0.12;
+
+            const pX = Math.sin(elapsed * 0.35) * 1.5;
+            const pY = Math.cos(elapsed * 0.2) * 1.0;
+            bgStage.style.transform = `scale(1.05) translate3d(${pX}%, ${pY}%, 0)`;
+            canvas.style.transform = `translate3d(${-pX * 0.3}%, ${-pY * 0.3}%, 0)`;
+
+            for (const cloud of clouds) { cloud.update(); cloud.draw(); }
+            for (const fog of fogs) { fog.update(); fog.draw(); }
+            
+            if (Math.random() < settings.birdChance && birds.length < 3) birds.push(new Crane());
+            for (let i = birds.length - 1; i >= 0; i--) {
+                birds[i].update(); birds[i].draw();
+                if (birds[i].x > width + 50 && birds.length > 1) birds.splice(i, 1);
+            }
+
+            windCycle += 0.003;
+            const baseWind = cache.minWind + (cache.maxWind - cache.minWind) * (Math.sin(windCycle) * Math.cos(windCycle * 0.5) * 0.5 + 0.5);
+            for (const petal of petals) { petal.update(baseWind); petal.draw(); }
+
+            requestAnimationFrame(animate);
+        }
+
+        (function() {
+            const haikuNode = document.querySelector('.haiku');
+            const textContent = haikuNode.innerHTML.trim();
+            haikuNode.innerHTML = '';
+            const lines = textContent.split('<br>');
+            lines.forEach((line, lineIdx) => {
+                const lineDiv = document.createElement('div');
+                lineDiv.style.display = 'inline-block';
+                lineDiv.style.verticalAlign = 'top';
+                if (lineIdx > 0) lineDiv.style.marginRight = '1.8rem';
+                [...line].forEach(char => {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    lineDiv.appendChild(span);
+                });
+                haikuNode.appendChild(lineDiv);
+            });
+            const spans = document.querySelectorAll('.haiku span');
+            let currentCycle = 'black', charIndex = 0;
+            const colorStepDelay = 180, cycleHoldDelay = 3000;
+            function updateHaikuColors() {
+                if (charIndex < spans.length) {
+                    const targetSpan = spans[charIndex];
+                    if (currentCycle === 'black') {
+                        targetSpan.style.color = '#1c1c1e';
+                        targetSpan.style.textShadow = '0 0 15px rgba(28, 28, 30, 0.4)';
+                        targetSpan.style.transform = 'scale(1.08) translateY(-3px)';
+                    } else {
+                        targetSpan.style.color = '#D68D9C';
+                        targetSpan.style.textShadow = '0 0 20px rgba(214, 141, 156, 0.75)';
+                        targetSpan.style.transform = 'scale(1.04) translateY(-2px)';
+                    }
+                    charIndex++;
+                    setTimeout(updateHaikuColors, colorStepDelay);
+                } else {
+                    setTimeout(() => {
+                        spans.forEach(span => span.style.transform = 'scale(1.0) translateY(0)');
+                        if (currentCycle === 'black') {
+                            brandContainer.style.opacity = "0.9";
+                            brandBrief.style.color = "#D68D9C";
+                            brandBrief.style.textShadow = "0 0 15px rgba(214, 141, 156, 0.4)";
+                        } else {
+                            brandContainer.style.opacity = "0.5";
+                            brandBrief.style.color = "#1c1c1e";
+                            brandBrief.style.textShadow = "none";
+                        }
+                        currentCycle = currentCycle === 'black' ? 'pink' : 'black';
+                        charIndex = 0;
+                        updateHaikuColors();
+                    }, cycleHoldDelay);
+                }
+            }
+            setTimeout(updateHaikuColors, 1000);
+        })();
+
+        function initAudioContext() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 64;
+            analyser.smoothingTimeConstant = 0.82;
+            const source = audioCtx.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination);
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }
+
+        window.addEventListener('click', async () => {
+            if (!audioCtx) initAudioContext();
+            if (audioCtx && audioCtx.state === 'suspended') await audioCtx.resume();
+            if (audio.paused) {
+                audio.play().then(() => { isPlaying = true; }).catch(err => console.warn(err));
+            } else {
+                audio.pause();
+                isPlaying = false;
+            }
+        }, { once: true });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            resize();
+            updateCache();
+            initEntities();
+            requestAnimationFrame(animate);
+            window.addEventListener('resize', () => {
+                resize();
+                initEntities();
+            });
+        });
+    </script>
+</body>
+</html>

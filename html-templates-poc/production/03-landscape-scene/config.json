@@ -1,0 +1,55 @@
+{
+  "img": { "src": "img/jav2.png", "w": 1672, "h": 941, "focal": [869, 282] },
+  "palette": {
+    "petals": [
+      { "fill": "#FFA500", "stroke": "#FF4500", "vein": "rgba(255,200,150,0.8)" },
+      { "fill": "#FF4500", "stroke": "#D2691E", "vein": "rgba(255,180,100,0.7)" },
+      { "fill": "#FFD700", "stroke": "#B8860B", "vein": "rgba(255,255,200,0.9)" },
+      { "fill": "#FF8C00", "stroke": "#8B0000", "vein": "rgba(255,150,100,0.8)" },
+      { "fill": "#D2691E", "stroke": "#5C2E0B", "vein": "rgba(200,100,50,0.6)" }
+    ],
+    "fog": "110,55,75",
+    "bird": "#ff9a6c",
+    "textCycle": ["#421A25", "#FFA500"],
+    "brand": "#ff9a6c",
+    "firefly": "rgba(255, 215, 0, 0.6)",
+    "star": "rgba(255, 240, 220, 0.85)"
+  },
+  "text": {
+    "lines": ["花は散り", "名を覚えている", "風ばかり"],
+    "orientation": "vertical",
+    "xPct": 10.0,
+    "yPct": 10.0,
+    "letterSpacing": 0.28,
+    "lineHeight": 2.2,
+    "lineGap": 2.4,
+    "fontMin": 32,
+    "fontMax": 55
+  },
+  "brand": { "nexa": "NEXA", "brief": "BRIEF" },
+  "birds": { "max": 5, "chance": 0.007 },
+  "physics": {
+    "direction": -1,
+    "petalCount": 160,
+    "fogCount": 8,
+    "cloudCount": 5,
+    "gravity": 0.18,
+    "turbulence": 0.6,
+    "minWind": 1.5,
+    "maxWind": 5.2,
+    "minSize": 12,
+    "maxSize": 34,
+    "emitterY": 0.18,
+    "emitterSpread": 0.80,
+    "rotationSpeed": 0.014,
+    "tumbleStrength": 0.55,
+    "staticTilt": 12,
+    "fireflyCount": 35,
+    "fireflyEnabled": true,
+    "repulsionRadius": 140,
+    "repulsionStrength": 2.2
+  },
+  "audio": { "src": "song.mp3" },
+  "intro": { "artist": "SHIBUYA BASS", "title": "SORCERER KILLER", "sub": "Dark", "feats": "Jujutsu High" },
+  "outro": { "leadSec": 7, "songTitle": "SORCERER KILLER", "title": "Gracias", "sub": "Por ver", "feats": "Suscribete" }
+}

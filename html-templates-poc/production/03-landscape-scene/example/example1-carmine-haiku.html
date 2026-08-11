@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>花は散り · Carmine Haiku</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;900&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            background: #0b0c0e;
+            font-family: 'Shippori Mincho', serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================================
+           FONDO DE PANTALLA
+           Imagen local sin filtros, nitidez original preservada.
+           ============================================================ */
+        .background-stage {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100dvh;
+            background: url('../img/jav2.png') center/cover no-repeat;
+            z-index: 1;
+            filter: none;
+            will-change: transform;
+            pointer-events: none;
+            image-rendering: auto;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* Viñeta muy suave para dar profundidad sin perder detalle */
+        .vignette-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            background: radial-gradient(circle at center, transparent 50%, rgba(8, 9, 12, 0.15) 100%);
+            pointer-events: none;
+        }
+
+        /* Marca NEXA BRIEF */
+        .nexa-brief-brand {
+            position: fixed;
+            top: 40px;
+            right: 60px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Montserrat', sans-serif;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.7;
+            transition: opacity 1.5s ease;
+        }
+
+        .brand-nexa {
+            font-size: 1.05rem;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            color: #b89a8a;
+            transition: color 1.2s ease;
+        }
+
+        .brand-divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(180, 140, 120, 0.35);
+            transition: background 1.2s ease;
+        }
+
+        .brand-brief {
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 0.4em;
+            color: #C15B4A;
+            transition: color 1.2s ease;
+        }
+
+        /* Haiku en vertical */
+        .haiku {
+            position: fixed;
+            top: 10dvh;
+            left: 7.5vw;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-family: "Shippori Mincho", "Yu Mincho", serif;
+            font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+            line-height: 2.2;
+            color: rgba(180, 145, 125, 0.45);
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            user-select: none;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .haiku span {
+            display: inline-block;
+            transition: color 1.2s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 1.2s ease, transform 1s ease;
+            will-change: color, transform;
+        }
+
+        #scene {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100dvh;
+            z-index: 3;
+            pointer-events: none;
+            will-change: transform;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-stage" id="bg-stage"></div>
+    <div class="vignette-overlay"></div>
+
+    <div class="nexa-brief-brand" id="brand-container">
+        <span class="brand-nexa" id="brand-nexa-text">NEXA</span>
+        <span class="brand-divider" id="brand-div-line"></span>
+        <span class="brand-brief" id="brand-brief-text">BRIEF</span>
+    </div>
+
+    <div class="haiku" lang="jp">
+        花は散り<br>
+        名を覚えている<br>
+        風ばかり
+    </div>
+
+    <canvas id="scene"></canvas>
+
+    <!-- Audio opcional (se activa con el primer clic) -->
+    <audio id="audio-engine" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" loop crossorigin="anonymous" style="display:none;"></audio>
+
+    <script type="module">
+        // ============================================================
+        // CONFIGURACIÓN GENERAL DE LA ESCENA
+        // Ajusta el comportamiento de viento, pétalos, niebla y aves.
+        // ============================================================
+        const canvas = document.getElementById("scene");
+        const ctx = canvas.getContext("2d", { alpha: true, desynchronized: false });
+        const bgStage = document.getElementById("bg-stage");
+        const audio = document.getElementById("audio-engine");
+
+        const brandContainer = document.getElementById("brand-container");
+        const brandBrief = document.getElementById("brand-brief-text");
+
+        let width, height;
+        let petals = [], fogs = [], clouds = [], birds = [];
+
+        let audioCtx = null, analyser = null, dataArray = null, isPlaying = false;
+        const audioImpact = { bass: 0, mid: 0, treble: 0, smoothedBass: 0 };
+
+        /**
+         * Parámetros maestros de la simulación
+         * - petalCount: número total de pétalos activos
+         * - birdChance: probabilidad por frame de generar una nueva grulla
+         * - maxBirds: límite de grullas simultáneas en pantalla
+         */
+        const settings = {
+            minWind: 1.5,
+            maxWind: 5.2,
+            minSize: 12,
+            maxSize: 34,
+            emitterY: 0.18,
+            emitterSpread: 0.80,
+            gravity: 0.18,
+            turbulence: 0.6,
+            rotationSpeed: 0.014,
+            tumbleStrength: 0.55,
+            staticTilt: 12,
+            petalCount: 180,
+            fogCount: 10,
+            cloudCount: 6,
+            birdChance: 0.006,   // Aumentado para más grullas
+            maxBirds: 6,         // Hasta 6 grullas al mismo tiempo
+            direction: -1
+        };
+
+        const cache = { minSize: 0, maxSize: 0, minWind: 0, maxWind: 0, tiltRad: 0 };
+
+        function updateCache() {
+            cache.minSize = Math.min(settings.minSize, settings.maxSize);
+            cache.maxSize = Math.max(settings.minSize, settings.maxSize);
+            cache.minWind = Math.min(settings.minWind, settings.maxWind);
+            cache.maxWind = Math.max(settings.minWind, settings.maxWind);
+            cache.tiltRad = (settings.staticTilt * Math.PI) / 180;
+        }
+
+        // ============================================================
+        // PALETA DE PÉTALOS OTOÑALES
+        // Cada objeto define el color de relleno, borde y venas.
+        // ============================================================
+        const petalPalette = [
+            { fill: "#B22222", stroke: "#8B0000", vein: "rgba(180,90,70,0.7)" },  // Carmesí fuego
+            { fill: "#A52A2A", stroke: "#6B1A1A", vein: "rgba(190,110,80,0.7)" },  // Marrón rojizo
+            { fill: "#CC3333", stroke: "#9B1C1C", vein: "rgba(210,120,90,0.7)" },  // Rojo intenso
+            { fill: "#D35400", stroke: "#A04000", vein: "rgba(220,140,100,0.7)" },  // Naranja quemado
+            { fill: "#C0392B", stroke: "#7B241C", vein: "rgba(200,100,75,0.7)" }   // Granate oscuro
+        ];
+
+        /**
+         * Crea una imagen de pétalo dibujada en un canvas offscreen.
+         * @param {Object} colorObj - colores fill, stroke y vein
+         * @returns {Image} imagen lista para usar en drawImage
+         */
+        function createPetalImage(colorObj) {
+            const tempCanvas = document.createElement("canvas");
+            tempCanvas.width = 56;
+            tempCanvas.height = 56;
+            const tCtx = tempCanvas.getContext("2d");
+            tCtx.save();
+            tCtx.translate(28, 28);
+            tCtx.shadowColor = "rgba(60, 20, 15, 0.55)";
+            tCtx.shadowBlur = 8;
+            tCtx.beginPath();
+            tCtx.moveTo(0, -18);
+            tCtx.bezierCurveTo(14, -14, 18, -4, 15, 8);
+            tCtx.bezierCurveTo(10, 16, 0, 13, 0, 13);
+            tCtx.bezierCurveTo(0, 13, -10, 16, -15, 8);
+            tCtx.bezierCurveTo(-18, -4, -14, -14, 0, -18);
+            tCtx.closePath();
+            const gradient = tCtx.createLinearGradient(-10, -15, 12, 10);
+            gradient.addColorStop(0, colorObj.fill);
+            gradient.addColorStop(0.5, colorObj.stroke);
+            gradient.addColorStop(1, "#4A1510");
+            tCtx.fillStyle = gradient;
+            tCtx.fill();
+            tCtx.shadowBlur = 0;
+            tCtx.shadowColor = "transparent";
+            tCtx.strokeStyle = colorObj.vein;
+            tCtx.lineWidth = 0.7;
+            // Vena central
+            tCtx.beginPath();
+            tCtx.moveTo(0, -14);
+            tCtx.lineTo(0, 10);
+            tCtx.stroke();
+            // Venas secundarias
+            tCtx.beginPath();
+            tCtx.moveTo(0, -5);
+            tCtx.quadraticCurveTo(-5, 2, -9, 4);
+            tCtx.stroke();
+            tCtx.beginPath();
+            tCtx.moveTo(0, -4);
+            tCtx.quadraticCurveTo(5, 2, 9, 4);
+            tCtx.stroke();
+            tCtx.restore();
+            const img = new Image();
+            img.src = tempCanvas.toDataURL();
+            return img;
+        }
+        const petalImages = petalPalette.map(color => createPetalImage(color));
+
+        /**
+         * Rota un vector en 3D alrededor de los ejes X, Y, Z.
+         * Se utiliza para orientar los pétalos en el espacio.
+         */
+        function rotateVector(x, y, z, ax, ay, az) {
+            let cos = Math.cos(az), sin = Math.sin(az);
+            const x1 = x * cos - y * sin, y1 = x * sin + y * cos, z1 = z;
+            cos = Math.cos(ay); sin = Math.sin(ay);
+            const x2 = x1 * cos + z1 * sin, y2 = y1, z2 = -x1 * sin + z1 * cos;
+            cos = Math.cos(ax); sin = Math.sin(ax);
+            return {
+                x: x2,
+                y: y2 * cos - z2 * sin,
+                z: y2 * sin + z2 * cos
+            };
+        }
+
+        // ============================================================
+        // COMPONENTE: PÉTALO (Petal)
+        // Representa una hoja que cae con física de viento, gravedad
+        // y rotación 3D. Se reinicia al salir de pantalla.
+        // ============================================================
+        class Petal {
+            constructor(initOnScreen = false) { this.reset(initOnScreen); }
+            reset(initOnScreen = false) {
+                this.image = petalImages[Math.floor(Math.random() * petalImages.length)];
+                this.width = cache.minSize + Math.random() * (cache.maxSize - cache.minSize);
+                this.height = this.width;
+                const centerY = height * settings.emitterY;
+                const spreadHeight = height * settings.emitterSpread;
+                this.y = centerY - spreadHeight / 2 + Math.random() * spreadHeight;
+                this.x = initOnScreen ? Math.random() * width : (settings.direction === -1 ? width + this.width + Math.random() * width : -this.width - Math.random() * width);
+                const sizeFactor = (this.width - cache.minSize) / (cache.maxSize - cache.minSize || 1);
+                this.windFactor = Math.max(0.15, Math.min(1, 1 - (sizeFactor * 0.45 + Math.random() * 0.4)));
+                this.vx = 0; this.vy = 0;
+                this.waveOffset = Math.random() * Math.PI * 2;
+                this.angleZ = Math.random() * Math.PI * 2;
+                this.spinZ = (Math.random() - 0.5) * settings.rotationSpeed;
+                this.angleX = 0; this.angleY = 0;
+                this.spinX = (Math.random() - 0.5) * 0.1;
+                this.spinY = (Math.random() - 0.5) * 0.1;
+            }
+            update(windVelocity) {
+                const targetSpeed = (windVelocity + audioImpact.smoothedBass * 4.0) * this.windFactor;
+                this.vx += (targetSpeed - this.vx) * 0.06;
+                this.x += this.vx * settings.direction;
+                this.vy += settings.gravity * 0.05 * (1.4 - this.windFactor) * (1.0 + audioImpact.smoothedBass * 0.7);
+                this.vy += Math.sin(this.x * 0.009 * settings.direction + this.waveOffset) * (settings.turbulence + audioImpact.smoothedBass * 1.0) * 0.05;
+                this.vy *= 0.98;
+                this.y += this.vy;
+                const spinMult = 1.0 + audioImpact.smoothedBass * 2.5;
+                this.angleZ += (this.spinZ + this.vx * 0.0012) * spinMult;
+                this.angleX += this.spinX * settings.tumbleStrength * spinMult;
+                this.angleY += this.spinY * settings.tumbleStrength * spinMult;
+                if ((settings.direction === -1 && this.x < -150) || (settings.direction === 1 && this.x > width + 150) || this.y > height + 150 || this.y < -150) {
+                    this.reset(false);
+                }
+            }
+            draw() {
+                const vecU = rotateVector(1, 0, 0, this.angleX, this.angleY + cache.tiltRad, this.angleZ);
+                const vecV = rotateVector(0, 1, 0, this.angleX, this.angleY + cache.tiltRad, this.angleZ);
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.transform(vecU.x, vecU.y, vecV.x, vecV.y, 0, 0);
+                ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+                ctx.restore();
+            }
+        }
+
+        // ============================================================
+        // COMPONENTE: NUBE LEJANA (CloudDrift)
+        // Nubes suaves formadas por burbujas semitransparentes.
+        // ============================================================
+        class CloudDrift {
+            constructor(initOnScreen = false) { this.reset(initOnScreen); }
+            reset(initOnScreen = false) {
+                this.width = 200 + Math.random() * 180;
+                this.height = 60 + Math.random() * 50;
+                this.y = (height * 0.06) + Math.random() * (height * 0.32);
+                this.x = initOnScreen ? Math.random() * width : width + this.width;
+                this.speed = 0.04 + Math.random() * 0.1;
+                this.opacity = 0.04 + Math.random() * 0.05;
+                this.waveAmplitude = 6 + Math.random() * 12;
+                this.wavePhase = Math.random() * Math.PI * 2;
+                this.waveSpeed = 0.0015 + Math.random() * 0.003;
+                this.bubbles = [];
+                for (let i = 0; i < 4 + Math.floor(Math.random() * 5); i++) {
+                    this.bubbles.push({
+                        offsetX: (Math.random() - 0.5) * this.width * 0.7,
+                        offsetY: (Math.random() - 0.4) * this.height * 0.5,
+                        radiusX: (0.35 + Math.random() * 0.5) * this.width * 0.5,
+                        radiusY: (0.35 + Math.random() * 0.5) * this.height * 0.6,
+                        opacityMult: 0.5 + Math.random() * 0.5
+                    });
+                }
+            }
+            update() {
+                this.x -= this.speed;
+                this.wavePhase += this.waveSpeed;
+                if (this.x < -this.width * 1.6) this.reset(false);
+            }
+            draw() {
+                ctx.save();
+                ctx.globalCompositeOperation = "destination-over";
+                const baseX = this.x;
+                const baseY = this.y + Math.sin(this.wavePhase) * this.waveAmplitude;
+                for (const b of this.bubbles) {
+                    const cx = baseX + b.offsetX, cy = baseY + b.offsetY;
+                    const rad = Math.max(b.radiusX, b.radiusY);
+                    const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+                    gradient.addColorStop(0, `rgba(220, 200, 180, ${this.opacity * b.opacityMult})`);
+                    gradient.addColorStop(0.5, `rgba(190, 160, 140, ${this.opacity * b.opacityMult * 0.5})`);
+                    gradient.addColorStop(1, "rgba(180, 150, 130, 0)");
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.ellipse(cx, cy, b.radiusX, b.radiusY, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // ============================================================
+        // COMPONENTE: NIEBLA (FogParticle)
+        // Partículas de niebla que se desplazan lentamente.
+        // ============================================================
+        class FogParticle {
+            constructor(initOnScreen = false) { this.reset(initOnScreen); }
+            reset(initOnScreen = false) {
+                this.radius = 160 + Math.random() * 160;
+                this.y = (height * 0.28) + Math.random() * (height * 0.5);
+                this.x = initOnScreen ? Math.random() * width : width + this.radius;
+                this.speed = 0.1 + Math.random() * 0.25;
+                this.opacity = 0.04 + Math.random() * 0.08;
+            }
+            update() {
+                this.x -= this.speed * (1.0 + audioImpact.smoothedBass * 2.0);
+                if (this.x < -this.radius) this.reset(false);
+            }
+            draw() {
+                ctx.save();
+                ctx.globalCompositeOperation = "destination-over";
+                const gradient = ctx.createRadialGradient(this.x, this.y, 8, this.x, this.y, this.radius);
+                gradient.addColorStop(0, `rgba(230, 215, 195, ${this.opacity})`);
+                gradient.addColorStop(0.5, `rgba(200, 180, 160, ${this.opacity * 0.4})`);
+                gradient.addColorStop(1, "rgba(180, 160, 140, 0)");
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // ============================================================
+        // COMPONENTE: GRULLA (Crane)
+        // Silueta de ave en vuelo, con aleteo cíclico y opacidad
+        // gradual al entrar/salir de escena.
+        // ============================================================
+        class Crane {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = -60;
+                this.y = (height * 0.08) + Math.random() * (height * 0.3);
+                this.size = 10 + Math.random() * 12;
+                this.speedX = 0.5 + Math.random() * 0.6;
+                this.speedY = -0.04 - Math.random() * 0.07;
+                this.wingPhase = Math.random() * Math.PI * 2;
+                this.wingSpeed = 0.07 + Math.random() * 0.05;
+                this.opacity = 0;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.wingPhase += this.wingSpeed;
+                // Fundido de entrada / salida
+                if (this.x < 180) this.opacity += 0.012;
+                else if (this.x > width - 220) this.opacity -= 0.008;
+                this.opacity = Math.max(0, Math.min(0.65, this.opacity));
+                if (this.x > width + 60 || this.y < -60) this.reset();
+            }
+            draw() {
+                if (this.opacity <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.strokeStyle = "#2E241C";
+                ctx.lineWidth = 1.3;
+                ctx.lineJoin = "round";
+                ctx.lineCap = "round";
+                const wingY = Math.sin(this.wingPhase) * (this.size * 0.35);
+                // Cuerpo central
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.size * 0.35, this.y + 1);
+                ctx.lineTo(this.x, this.y);
+                ctx.lineTo(this.x + this.size * 0.35, this.y + 1);
+                // Ala izquierda
+                ctx.moveTo(this.x, this.y);
+                ctx.quadraticCurveTo(this.x - this.size * 0.25, this.y - this.size * 0.18 + wingY, this.x - this.size * 0.65, this.y - wingY);
+                // Ala derecha
+                ctx.moveTo(this.x, this.y);
+                ctx.quadraticCurveTo(this.x + this.size * 0.25, this.y - this.size * 0.18 + wingY, this.x + this.size * 0.65, this.y - wingY);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+        }
+
+        /**
+         * Inicializa todas las entidades: pétalos, niebla, nubes y al menos una grulla.
+         */
+        function initEntities() {
+            petals = []; fogs = []; clouds = []; birds = [];
+            for (let i = 0; i < settings.petalCount; i++) {
+                const p = new Petal(false);
+                p.x += Math.random() * width * 1.8;
+                petals.push(p);
+            }
+            for (let i = 0; i < settings.fogCount; i++) fogs.push(new FogParticle(true));
+            for (let i = 0; i < settings.cloudCount; i++) clouds.push(new CloudDrift(true));
+            // Comenzamos con 2-3 grullas para dar más vida desde el inicio
+            for (let i = 0; i < 3; i++) {
+                const crane = new Crane();
+                crane.x = Math.random() * width * 0.8; // repartidas por la pantalla
+                crane.opacity = 0.4 + Math.random() * 0.3;
+                birds.push(crane);
+            }
+        }
+
+        let windCycle = 0;
+
+        /**
+         * Bucle principal de animación.
+         * Actualiza y dibuja todas las capas y entidades.
+         */
+        function animate(timestamp) {
+            const elapsed = timestamp / 1000;
+            ctx.clearRect(0, 0, width, height);
+
+            // Simulación de audio o pulso rítmico
+            if (isPlaying && analyser) {
+                analyser.getByteFrequencyData(dataArray);
+                let bSum = 0;
+                for (let i = 0; i < 6; i++) bSum += dataArray[i];
+                audioImpact.bass = bSum / 6 / 255;
+                audioImpact.smoothedBass += (audioImpact.bass - audioImpact.smoothedBass) * 0.1;
+            } else {
+                const beatFreq = (elapsed % 0.68) / 0.68;
+                audioImpact.bass = Math.pow(Math.max(0, Math.cos(beatFreq * Math.PI)), 4) * 0.5;
+                audioImpact.smoothedBass += (audioImpact.bass - audioImpact.smoothedBass) * 0.09;
+            }
+
+            // Movimiento sutil del fondo y canvas (parallax)
+            const pX = Math.sin(elapsed * 0.3) * 1.2;
+            const pY = Math.cos(elapsed * 0.22) * 0.8;
+            bgStage.style.transform = `scale(1.02) translate3d(${pX}%, ${pY}%, 0)`;
+            canvas.style.transform = `translate3d(${-pX * 0.25}%, ${-pY * 0.25}%, 0)`;
+
+            // Dibujar nubes y niebla (detrás de los pétalos)
+            for (const cloud of clouds) { cloud.update(); cloud.draw(); }
+            for (const fog of fogs) { fog.update(); fog.draw(); }
+
+            // Gestión de grullas (aparición y límite máximo)
+            if (Math.random() < settings.birdChance && birds.length < settings.maxBirds) {
+                birds.push(new Crane());
+            }
+            for (let i = birds.length - 1; i >= 0; i--) {
+                birds[i].update();
+                birds[i].draw();
+                // Eliminar grullas que han salido completamente si hay más de una
+                if (birds[i].x > width + 60 && birds.length > 1) {
+                    birds.splice(i, 1);
+                }
+            }
+
+            // Viento ondulante para los pétalos
+            windCycle += 0.003;
+            const baseWind = cache.minWind + (cache.maxWind - cache.minWind) * (Math.sin(windCycle) * Math.cos(windCycle * 0.5) * 0.5 + 0.5);
+            for (const petal of petals) { petal.update(baseWind); petal.draw(); }
+
+            requestAnimationFrame(animate);
+        }
+
+        // ============================================================
+        // ANIMACIÓN DEL HAIKU Y LA MARCA
+        // Ciclos de color en los caracteres y cambios en el logo.
+        // ============================================================
+        (function() {
+            const haikuNode = document.querySelector('.haiku');
+            const textContent = haikuNode.innerHTML.trim();
+            haikuNode.innerHTML = '';
+            const lines = textContent.split('<br>');
+            lines.forEach((line, lineIdx) => {
+                const lineDiv = document.createElement('div');
+                lineDiv.style.display = 'inline-block';
+                lineDiv.style.verticalAlign = 'top';
+                if (lineIdx > 0) lineDiv.style.marginRight = '1.8rem';
+                [...line].forEach(char => {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    lineDiv.appendChild(span);
+                });
+                haikuNode.appendChild(lineDiv);
+            });
+            const spans = document.querySelectorAll('.haiku span');
+            let currentCycle = 'dark', charIndex = 0;
+            const colorStepDelay = 160, cycleHoldDelay = 3200;
+            function updateHaikuColors() {
+                if (charIndex < spans.length) {
+                    const targetSpan = spans[charIndex];
+                    if (currentCycle === 'dark') {
+                        targetSpan.style.color = '#4A2C22';
+                        targetSpan.style.textShadow = '0 0 16px rgba(74, 44, 34, 0.5)';
+                        targetSpan.style.transform = 'scale(1.08) translateY(-3px)';
+                    } else {
+                        targetSpan.style.color = '#C15B4A';
+                        targetSpan.style.textShadow = '0 0 22px rgba(193, 91, 74, 0.8)';
+                        targetSpan.style.transform = 'scale(1.04) translateY(-2px)';
+                    }
+                    charIndex++;
+                    setTimeout(updateHaikuColors, colorStepDelay);
+                } else {
+                    setTimeout(() => {
+                        spans.forEach(span => span.style.transform = 'scale(1.0) translateY(0)');
+                        if (currentCycle === 'dark') {
+                            brandContainer.style.opacity = "0.85";
+                            brandBrief.style.color = "#C15B4A";
+                            brandBrief.style.textShadow = "0 0 14px rgba(193, 91, 74, 0.5)";
+                        } else {
+                            brandContainer.style.opacity = "0.5";
+                            brandBrief.style.color = "#4A2C22";
+                            brandBrief.style.textShadow = "none";
+                        }
+                        currentCycle = currentCycle === 'dark' ? 'fire' : 'dark';
+                        charIndex = 0;
+                        updateHaikuColors();
+                    }, cycleHoldDelay);
+                }
+            }
+            setTimeout(updateHaikuColors, 1200);
+        })();
+
+        // ============================================================
+        // INICIALIZACIÓN DE AUDIO (Web Audio API)
+        // Se activa con el primer clic para cumplir políticas del navegador.
+        // ============================================================
+        function initAudioContext() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 64;
+            analyser.smoothingTimeConstant = 0.8;
+            const source = audioCtx.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination);
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }
+
+        window.addEventListener('click', async () => {
+            if (!audioCtx) initAudioContext();
+            if (audioCtx && audioCtx.state === 'suspended') await audioCtx.resume();
+            if (audio.paused) {
+                audio.play().then(() => { isPlaying = true; }).catch(err => console.warn(err));
+            } else {
+                audio.pause();
+                isPlaying = false;
+            }
+        }, { once: true });
+
+        // ============================================================
+        // ARRANQUE DE LA APLICACIÓN
+        // ============================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            resize();
+            updateCache();
+            initEntities();
+            requestAnimationFrame(animate);
+            window.addEventListener('resize', () => {
+                resize();
+                initEntities();
+            });
+        });
+    </script>
+</body>
+</html>

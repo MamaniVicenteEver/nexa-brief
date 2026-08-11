@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOOM BAP JAZZ // MOCKUP AUTÓNOMO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&family=JetBrains+Mono:wght@100;300;400;700&display=swap');
+
+    :root {
+      --color-teal-dark: #072b2a;
+      --color-teal-mid: #0a4a47;
+      --color-teal-light: #00f0ff;
+      --color-yellow: #e5b413;
+      --color-dark: #041413;
+      --font-display: 'Montserrat', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--color-dark);
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+
+    #scene-container {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: radial-gradient(circle at center, var(--color-teal-mid) 0%, var(--color-dark) 100%);
+    }
+
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+      background-position: center center;
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .bg-text-wrapper {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      z-index: 3;
+      pointer-events: none;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+    }
+
+    .bg-title-text {
+      font-family: var(--font-display);
+      font-size: 15vw;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.18);
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+      text-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      line-height: 1;
+    }
+
+    .character-container {
+      position: absolute;
+      bottom: -5%;
+      height: 95%;
+      width: auto;
+      aspect-ratio: 16/10;
+      z-index: 4;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+    }
+
+    .character-art-wrapper {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      will-change: transform;
+    }
+
+    .character-img {
+      height: 95%;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 15px 35px rgba(0, 240, 255, 0.4)) contrast(1.1) saturate(1.1) hue-rotate(-10deg);
+      transition: opacity 0.5s ease-in-out;
+      will-change: filter;
+    }
+
+    .hud-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hud-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .classic-visualizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 40px;
+    }
+
+    .vis-bar {
+      width: 3px;
+      background-color: #fff;
+      height: 10%;
+      transition: height 0.05s ease;
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+    }
+
+    .korean-brand-text {
+      font-family: var(--font-display);
+      font-size: 5vw;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-nexa {
+      position: absolute;
+      bottom: 6vh;
+      left: 6vw;
+      z-index: 10;
+      pointer-events: none;
+      user-select: none;
+      font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .brand-nexa .nexa-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.35em;
+      display: block;
+      line-height: 1;
+      text-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+    }
+
+    .brand-nexa .brief-sub {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: rgba(229, 180, 19, 0.75);
+      letter-spacing: 0.5em;
+      display: block;
+      margin-top: 6px;
+      text-shadow: 0 0 18px rgba(229, 180, 19, 0.3);
+    }
+
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 35%, rgba(4, 20, 19, 0.95) 100%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .crt-scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(0, 240, 255, 0) 50%, rgba(0, 0, 0, 0.12) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 6;
+      opacity: 0.7;
+    }
+
+    .dust-container {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .hud-layer {
+        padding: 24px;
+      }
+      .bg-title-text {
+        font-size: 22vw;
+      }
+      .korean-brand-text {
+        font-size: 12vw;
+      }
+      .brand-nexa {
+        bottom: 4vh;
+        left: 4vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="scene-container">
+    <div class="grid-overlay"></div>
+    <div class="vignette"></div>
+    <div class="crt-scanlines"></div>
+    <div class="dust-container" id="dust-particles"></div>
+
+    <div class="bg-text-wrapper" id="parallax-bg-text">
+      <h1 class="bg-title-text" id="beat-text">BOOM BAP</h1>
+    </div>
+
+    <div class="character-container" id="parallax-character">
+      <div class="character-art-wrapper" id="bounce-wrapper">
+        
+        <img 
+          id="anime-img" 
+          class="character-img" 
+          src="./5.png" 
+          alt="Personaje Anime"
+          crossorigin="anonymous"
+        />
+
+      </div>
+    </div>
+
+    <div class="hud-layer">
+      <div class="hud-top">
+        <div class="classic-visualizer" id="classic-vis-group">
+          <div class="vis-bar"></div>
+          <div class="vis-bar"></div>
+          <div class="vis-bar"></div>
+          <div class="vis-bar"></div>
+          <div class="vis-bar"></div>
+          <div class="vis-bar"></div>
+          <div class="vis-bar"></div>
+          <div class="vis-bar"></div>
+        </div>
+
+        <div class="korean-brand-text">째즈</div>
+      </div>
+    </div>
+
+    <div class="brand-nexa">
+      <span class="nexa-title">NEXA</span>
+      <span class="brief-sub">BRIEF</span>
+    </div>
+  </div>
+
+  <script>
+    const animeImg = document.getElementById('anime-img');
+    const parallaxCharacter = document.getElementById('parallax-character');
+    const parallaxBgText = document.getElementById('parallax-bg-text');
+    const bounceWrapper = document.getElementById('bounce-wrapper');
+    const beatTextElement = document.getElementById('beat-text');
+
+    const bars = document.querySelectorAll('.vis-bar');
+
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+
+    const dustContainer = document.getElementById('dust-particles');
+    for (let i = 0; i < 35; i++) {
+      const dot = document.createElement('div');
+      dot.style.position = 'absolute';
+      dot.style.width = `${Math.random() * 3 + 1}px`;
+      dot.style.height = dot.style.width;
+      dot.style.background = Math.random() > 0.5 ? 'var(--color-teal-light)' : 'var(--color-yellow)';
+      dot.style.borderRadius = '50%';
+      dot.style.left = `${Math.random() * 100}%`;
+      dot.style.top = `${Math.random() * 100}%`;
+      dot.style.opacity = Math.random() * 0.4;
+      dot.style.pointerEvents = 'none';
+      dustContainer.appendChild(dot);
+    }
+
+    function renderFrame() {
+      requestAnimationFrame(renderFrame);
+
+      const time = Date.now();
+
+      targetX = Math.sin(time * 0.0008) * 35;
+      targetY = Math.cos(time * 0.0012) * 20;
+
+      currentX += (targetX - currentX) * 0.05;
+      currentY += (targetY - currentY) * 0.05;
+
+      parallaxCharacter.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+      parallaxBgText.style.transform = `translate3d(${-currentX * 0.6}px, ${-currentY * 0.6}px, 0)`;
+
+      const bass = (Math.sin(time * 0.002) * 0.08) + 0.08;
+      const mid = (Math.cos(time * 0.003) * 0.08) + 0.08;
+      const high = (Math.sin(time * 0.004) * 0.05) + 0.05;
+
+      bars.forEach((bar, index) => {
+        const val = Math.sin((time * 0.002) + index * 0.4) * 15 + 25;
+        bar.style.height = `${val}%`;
+        bar.style.backgroundColor = 'rgba(0, 240, 255, 0.4)';
+      });
+
+      const kickPulse = 1 + (bass * 0.04);
+      const glowAmt = 20 + (bass * 35);
+      const dynamicContrast = 1.05 + (bass * 0.2);
+      const dynamicSaturate = 1.1 + (mid * 0.3);
+
+      bounceWrapper.style.transform = `scale(${kickPulse})`;
+
+      const filterStyle = `
+        drop-shadow(0px 10px ${glowAmt}px rgba(0, 240, 255, ${0.45 + bass * 0.5}))
+        contrast(${dynamicContrast})
+        saturate(${dynamicSaturate})
+        brightness(${0.95 + (mid * 0.15)})
+        hue-rotate(${-5 + (high * 10)}deg)
+      `;
+      animeImg.style.filter = filterStyle;
+
+      beatTextElement.style.textShadow = `
+        0 10px 40px rgba(0, 0, 0, 0.35),
+        0 0 ${bass * 35}px rgba(0, 240, 255, ${mid * 0.7})
+      `;
+      beatTextElement.style.transform = `scale(${1 + (mid * 0.015)})`;
+
+      const dustDots = dustContainer.children;
+      for (let i = 0; i < dustDots.length; i++) {
+        const dot = dustDots[i];
+        let speed = (i % 2 === 0) ? (bass * 2.5) : (high * 1.5);
+        let top = parseFloat(dot.style.top);
+        top += 0.06 + speed * 0.12;
+        if (top > 100) {
+          top = -5;
+          dot.style.left = `${Math.random() * 100}%`;
+        }
+        dot.style.top = `${top}%`;
+      }
+    }
+
+    renderFrame();
+  </script>
+</body>
+</html>

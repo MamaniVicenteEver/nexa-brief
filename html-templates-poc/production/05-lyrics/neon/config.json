@@ -1,0 +1,79 @@
+{
+  "activeId": "hola-remix",
+  "configs": [
+    {
+      "id": "hola-remix",
+      "description": "Urbano/reggaetón — letreros de neón naranja-rojo que se encienden con parpadeo de tubo, grada de columnas y cámara impredecible sobre fondo nocturno. Caso actual: Dalex — Hola Remix. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "remix-hola.mp3" },
+      "lyricsUrl": "lyrics.json",
+      "bg": {
+        "src": "bg8.jpg",
+        "filter": "grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Monoton&family=Archivo+Black&display=swap",
+        "tube": "\"Monoton\", cursive",
+        "block": "\"Archivo Black\", sans-serif"
+      },
+      "neon": { "core": "#FFE9CF", "glow": "#FF5A1F", "deep": "#E01400" },
+      "intro": { "artist": "Dalex", "title": "Hola", "sub": "Remix", "feats": "Chencho Corleone · Juhn · Lenny Tavárez" },
+      "outro": {
+        "leadSec": 8,
+        "songTitle": "Hola Remix",
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "debug": { "enabled": true },
+      "layout": {
+        "stairVw": 3.4,
+        "colGapVw": 52,
+        "colGapVh": 88,
+        "rowsMin": 2,
+        "rowsMax": 4,
+        "verticalChance": 0.13,
+        "soloChance": 0.14,
+        "tubeChance": 0.5,
+        "dirWeights": { "left": 0.55, "down": 0.25, "up": 0.2 }
+      },
+      "seed": 5
+    },
+    {
+      "id": "hola-remix-cian",
+      "description": "Mismo audio (Dalex — Hola Remix) con tema alternativo: neón cian-azul eléctrico tipo vitrina de Tokio, fondo virado a frío. Demuestra cómo un segundo objeto del config cambia la paleta completa del neón sin tocar la plantilla. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "remix-hola.mp3" },
+      "lyricsUrl": "lyrics.json",
+      "bg": {
+        "src": "bg8.jpg",
+        "filter": "grayscale(0.3) sepia(0.4) hue-rotate(160deg) saturate(1.4) brightness(0.30) contrast(1.18)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Monoton&family=Archivo+Black&display=swap",
+        "tube": "\"Monoton\", cursive",
+        "block": "\"Archivo Black\", sans-serif"
+      },
+      "neon": { "core": "#E8FBFF", "glow": "#27C7FF", "deep": "#0048E0" },
+      "intro": { "artist": "Dalex", "title": "Hola", "sub": "Remix", "feats": "Chencho Corleone · Juhn · Lenny Tavárez" },
+      "outro": {
+        "leadSec": 8,
+        "songTitle": "Hola Remix",
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "debug": { "enabled": true },
+      "layout": {
+        "stairVw": 3.4,
+        "colGapVw": 52,
+        "colGapVh": 88,
+        "rowsMin": 2,
+        "rowsMax": 4,
+        "verticalChance": 0.13,
+        "soloChance": 0.14,
+        "tubeChance": 0.5,
+        "dirWeights": { "left": 0.55, "down": 0.25, "up": 0.2 }
+      },
+      "seed": 9
+    }
+  ]
+}

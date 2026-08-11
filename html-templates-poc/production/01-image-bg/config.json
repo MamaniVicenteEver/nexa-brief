@@ -1,0 +1,94 @@
+{
+  "img": {
+    "w": 1080,
+    "h": 1920,
+    "src": "img/bg5.png"
+  },
+  "colors": {
+    "bg": "#050505",
+    "ink": "#FFFFFF"
+  },
+  "bgMode": "regions",
+  "bgRegions": [
+    {
+      "color": "#050505",
+      "ink": "#FFFFFF",
+      "rect": [
+        0,
+        0,
+        540,
+        1920
+      ]
+    },
+    {
+      "color": "#F9F9F9",
+      "ink": "#000000",
+      "rect": [
+        540,
+        0,
+        1080,
+        1920
+      ]
+    }
+  ],
+  "zones": [
+    [
+      145,
+      480,
+      320,
+      760
+    ],
+    [
+      481,
+      1050,
+      280,
+      800
+    ],
+    [
+      1051,
+      1920,
+      190,
+      985
+    ]
+  ],
+  "subject": {
+    "top": 145,
+    "bottom": 1920,
+    "left": 190,
+    "right": 985
+  },
+  "keepOut": [
+    [
+      190,
+      260,
+      290,
+      430
+    ],
+    [
+      20,
+      460,
+      1060,
+      940
+    ],
+    [
+      740,
+      1080,
+      980,
+      1170
+    ],
+    [
+      740,
+      1160,
+      980,
+      1360
+    ]
+  ],
+  "texts": {
+    "left": "WORLD'S GREATEST",
+    "right": "SWORDSMAN"
+  },
+  "eqPosition": "bottom",
+  "edgeFade": 0.07,
+  "typography": "serif-display",
+  "anchorPreference": "bottom"
+}

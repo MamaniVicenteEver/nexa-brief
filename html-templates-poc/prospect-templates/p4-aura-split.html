@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA — P4</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: none; }
+  body { opacity: 0; transition: opacity 1.2s ease; }
+  body.ready { opacity: 1; }
+  #bgfill { position: fixed; inset: 0; z-index: 1; }
+  #scene { position: fixed; inset: 0; z-index: 2; }
+  #giant {
+    position: fixed; z-index: 3; width: 100vw; text-align: center;
+    font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
+    font-weight: 900; text-transform: uppercase; letter-spacing: 0.02em;
+    line-height: 0.82; user-select: none; pointer-events: none;
+    will-change: transform;
+  }
+  #subjectWrap { position: fixed; z-index: 4; will-change: transform; }
+  #subject { width: 100%; height: 100%; object-fit: contain; display: block; }
+  #glow {
+    position: fixed; z-index: 3; filter: blur(38px); border-radius: 50%;
+    mix-blend-mode: screen; pointer-events: none; will-change: transform, opacity;
+  }
+  #sidewords {
+    position: fixed; z-index: 5; display: none; flex-direction: column;
+    gap: 1.1vh; user-select: none; pointer-events: none;
+    font-family: "Arial Black", sans-serif; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.12em;
+  }
+  #sidewords span {
+    opacity: 0; transform: translateY(-14px);
+    transition: color 1.1s ease, opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  #sidewords span.in { opacity: 1; transform: translateY(0); }
+  #accentLine {
+    position: fixed; z-index: 5; font-family: Georgia, "Times New Roman", serif;
+    font-style: italic; letter-spacing: 0.28em; text-transform: uppercase;
+    font-size: 0.85rem; user-select: none; display: none;
+  }
+  #vignette {
+    position: fixed; inset: 0; z-index: 6; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0,0,0,0.5) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 7; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.06; mix-blend-mode: overlay;
+  }
+  #brand {
+    position: fixed; right: 3vw; bottom: 4vh; z-index: 8;
+    font-family: "Arial Black", sans-serif; font-weight: 900; font-size: 0.7rem;
+    letter-spacing: 0.5em; text-transform: uppercase; user-select: none;
+  }
+</style>
+</head>
+<body>
+<div id="bgfill"></div>
+<canvas id="scene"></canvas>
+<div id="giant"></div>
+<div id="glow"></div>
+<div id="subjectWrap"><img id="subject" alt=""></div>
+<div id="sidewords"></div>
+<div id="accentLine"></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="brand">NEXA BRIEF</div>
+<audio id="audio" src="song.mp3" loop preload="auto"></audio>
+<script type="module">
+/* ============ CONFIG — the ONLY block the AI fills from the vision JSON ============ */
+const CONFIG = {
+  /* subject: transparent PNG (no background). zones in image px: [y0, y1, x0, x1] */
+  subject: {
+    src: "../prototypes/6.png", w: 1024, h: 1024, label: "one-armed fighter", knownName: "",
+    zones: { head: [40, 320, 350, 680], mid: [320, 760, 30, 950], low: [760, 1024, 220, 830] }
+  },
+  /* background DECIDED BY THE AI: strong colors that suit the subject (red/black/white...) */
+  bg: { colors: ["#8E0E14", "#3B0508", "#0B0202"], style: "radial" },  /* radial | vertical */
+  /* layout: "center-back" (subject centered levitating, giant word BEHIND)
+            | "side-split" (subject on one side, words on the other + falling words) */
+  layout: "side-split",
+  subjectSide: "right",             /* side-split only: which side the subject anchors */
+  blend: "luminosity",              /* "luminosity" (bg tints the subject) | "none" */
+  giantWord: "THE GOAL",                /* THE GOAL / AURA / known character name */
+  giantColor: "rgba(240,230,226,0.16)",
+  giantStroke: "rgba(240,230,226,0.35)",
+  sideWords: ["STRENGTH", "SILENCE", "RAGE", "FOCUS", "AURA"],
+  sideCycle: ["#EDE4E0", "#C8252C"],   /* falling words alternate between these */
+  accentLine: "the goal is the goal", /* small italic line, side-split only */
+  particles: { type: "embers", color: "#C8252C", count: 26, dark: "#17070a" },
+  glow: { color: "#C8252C", intensity: 0.5 },
+  ink: "#EDE4E0",
+  audio: { src: "song.mp3", simulatedBpm: 96 },
+  seed: 11
+};
+/* ==================================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, cv = $("scene"), ctx = cv.getContext("2d");
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+/* ---- background from AI-decided strong colors ---- */
+function paintBg() {
+  const [a, b, c] = C.bg.colors;
+  $("bgfill").style.background = C.bg.style === "vertical"
+    ? `linear-gradient(180deg, ${a} 0%, ${b} 55%, ${c} 100%)`
+    : `radial-gradient(ellipse at 50% 42%, ${a} 0%, ${b} 52%, ${c} 100%)`;
+  $("brand").style.color = C.ink;
+}
+
+/* ---- layout engine ---- */
+let vw = 0, vh = 0, subRect = null;
+function layout() {
+  vw = innerWidth; vh = innerHeight;
+  cv.width = vw * devicePixelRatio; cv.height = vh * devicePixelRatio;
+  cv.style.width = vw + "px"; cv.style.height = vh + "px";
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+
+  const s = C.subject, wrap = $("subjectWrap"), giant = $("giant"),
+        side = $("sidewords"), acc = $("accentLine"), glow = $("glow");
+  $("subject").style.filter = C.blend === "luminosity" ? "grayscale(1) contrast(1.05)" : "";
+  $("subject").style.mixBlendMode = C.blend === "luminosity" ? "luminosity" : "normal";
+
+  if (C.layout === "center-back") {
+    /* subject centered, big; giant word behind, vertically over head/mid zones */
+    const h = vh * 0.86, w = h * s.w / s.h;
+    subRect = { x: (vw - w) / 2, y: vh - h, w, h };
+    giant.style.width = "100vw"; giant.style.left = "0"; giant.style.textAlign = "center";
+    giant.style.fontSize = Math.min(vw / (C.giantWord.length * 0.62), vh * 0.42) + "px";
+    const headMid = subRect.y + (s.zones.head[0] + s.zones.head[1]) / 2 * (h / s.h);
+    giant.style.top = Math.max(10, headMid - vh * 0.10) + "px";
+    side.style.display = "none"; acc.style.display = "none";
+  } else {
+    /* side-split: subject anchored to one side, words stacked on the other */
+    const h = vh * 0.92, w = h * s.w / s.h;
+    const right = C.subjectSide === "right";
+    subRect = { x: right ? vw - w * 0.92 : -w * 0.08, y: vh - h, w, h };
+    const zoneX = right ? { x: vw * 0.05, w: vw - w * 0.86 - vw * 0.07 } : { x: w * 0.9 + vw * 0.02, w: vw - w * 0.9 - vw * 0.07 };
+    giant.style.width = zoneX.w + "px"; giant.style.left = zoneX.x + "px";
+    giant.style.textAlign = "left";
+    giant.style.fontSize = Math.min(zoneX.w / (C.giantWord.length * 0.60), vh * 0.30) + "px";
+    giant.style.top = vh * 0.12 + "px";
+    side.style.display = "flex";
+    side.style.left = zoneX.x + 4 + "px";
+    side.style.top = vh * 0.50 + "px";
+    side.style.fontSize = Math.max(15, vh * 0.028) + "px";
+    acc.style.display = "block";
+    acc.style.left = zoneX.x + 6 + "px";
+    acc.style.top = vh * 0.44 + "px";
+    acc.style.color = C.sideCycle[1];
+    acc.textContent = "— " + C.accentLine;
+  }
+  wrap.style.cssText += `left:${subRect.x}px;top:${subRect.y}px;width:${subRect.w}px;height:${subRect.h}px;`;
+
+  /* base glow sized to the LOW zone of the subject */
+  const k = subRect.h / s.h;
+  const lowW = (s.zones.low[3] - s.zones.low[2]) * k * 1.4;
+  glow.style.width = lowW + "px";
+  glow.style.height = lowW * 0.32 + "px";
+  glow.style.left = subRect.x + ((s.zones.low[2] + s.zones.low[3]) / 2) * k - lowW / 2 + "px";
+  glow.style.top = vh - lowW * 0.18 + "px";
+  glow.style.background = C.glow.color;
+
+  giant.textContent = C.giantWord;
+  giant.style.color = C.giantColor;
+  giant.style.webkitTextStroke = `2px ${C.giantStroke}`;
+}
+
+/* ---- falling side words with color cycle (side-split) ---- */
+let wordSpans = [], wPtr = 0, wCycle = 0, wNext = 0;
+function buildSideWords() {
+  const side = $("sidewords");
+  side.innerHTML = "";
+  wordSpans = C.sideWords.map(w => {
+    const sp = doc.createElement("span");
+    sp.textContent = w;
+    sp.style.color = C.sideCycle[0];
+    side.appendChild(sp);
+    return sp;
+  });
+}
+function wordsTick(now) {
+  if (C.layout !== "side-split" || now < wNext) return;
+  if (wPtr < wordSpans.length) {
+    const sp = wordSpans[wPtr];
+    sp.classList.add("in");
+    sp.style.color = C.sideCycle[(wCycle + 1) % 2];
+    wPtr++; wNext = now + 600;
+    if (wPtr === wordSpans.length) { wCycle++; wNext = now + 2800; }
+  } else wPtr = 0;
+}
+
+/* ---- rising particles (embers / stones) ---- */
+class Part {
+  constructor(init) { this.reset(init); }
+  reset(init) {
+    this.x = rng() * vw;
+    this.y = init ? rng() * vh : vh + 20 + rng() * 40;
+    this.v = 0.5 + rng() * 1.3;
+    this.s = C.particles.type === "stones" ? 3 + rng() * 8 : 1.5 + rng() * 3.2;
+    this.ph = rng() * Math.PI * 2;
+    this.rot = rng() * Math.PI * 2;
+    this.rv = (rng() - 0.5) * 0.05;
+    this.hot = rng() < 0.55;
+  }
+  step(bass) {
+    this.y -= this.v * (1 + bass * 1.2);
+    this.x += Math.sin(this.y * 0.012 + this.ph) * 0.5;
+    this.rot += this.rv;
+    if (this.y < -30) this.reset(false);
+  }
+  draw() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    if (C.particles.type === "stones") {
+      ctx.rotate(this.rot);
+      ctx.fillStyle = C.particles.dark;
+      ctx.beginPath();
+      ctx.moveTo(-this.s, 0); ctx.lineTo(-this.s * 0.3, -this.s * 0.9);
+      ctx.lineTo(this.s * 0.8, -this.s * 0.4); ctx.lineTo(this.s * 0.6, this.s * 0.7);
+      ctx.lineTo(-this.s * 0.4, this.s * 0.8); ctx.closePath(); ctx.fill();
+    } else {
+      ctx.globalAlpha = 0.75;
+      ctx.fillStyle = this.hot ? C.particles.color : C.particles.dark;
+      ctx.beginPath(); ctx.arc(0, 0, this.s, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+let parts = [];
+function seedParts() { parts = Array.from({ length: C.particles.count }, () => new Part(true)); }
+
+/* ---- audio: analyser + simulated fallback ---- */
+const audio = $("audio");
+audio.src = C.audio.src;
+let analyser = null, freq = null, smoothed = 0;
+async function initAudio() {
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const src = ac.createMediaElementSource(audio);
+    analyser = ac.createAnalyser();
+    analyser.fftSize = 64; analyser.smoothingTimeConstant = 0.8;
+    src.connect(analyser); analyser.connect(ac.destination);
+    freq = new Uint8Array(analyser.frequencyBinCount);
+    if (ac.state === "suspended") await ac.resume();
+    await audio.play();
+  } catch (e) { /* simulated pulse takes over */ }
+}
+addEventListener("DOMContentLoaded", initAudio);
+addEventListener("pointerdown", () => initAudio(), { once: true });
+function bassNow(t) {
+  let b = 0;
+  if (analyser && freq) {
+    analyser.getByteFrequencyData(freq);
+    for (let i = 0; i < 6; i++) b += freq[i];
+    b = b / 6 / 255;
+  }
+  if (b < 0.02) {
+    const period = 60 / C.audio.simulatedBpm;
+    b = Math.pow(Math.max(0, Math.sin((t / 1000) * Math.PI * 2 / period)), 3) * 0.5;
+  }
+  smoothed += (b - smoothed) * 0.14;
+  return smoothed;
+}
+
+/* ---- main loop: levitation + glow pulse + giant word breathing ---- */
+function frame(t) {
+  const bass = bassNow(t);
+  const lev = Math.sin(t * 0.0011) * (vh * 0.014) + bass * 6;
+  $("subjectWrap").style.transform = `translate3d(0, ${-lev}px, 0)`;
+  $("glow").style.opacity = (C.glow.intensity + bass * 0.45).toFixed(3);
+  $("glow").style.transform = `scale(${1 + bass * 0.25})`;
+  $("giant").style.transform = `scale(${1 + bass * 0.012}) translateZ(0)`;
+
+  ctx.clearRect(0, 0, vw, vh);
+  for (const p of parts) { p.step(bass); p.draw(); }
+
+  wordsTick(t);
+  requestAnimationFrame(frame);
+}
+
+/* ---- boot ---- */
+let rq = false;
+function queueLayout() { if (!rq) { rq = true; requestAnimationFrame(() => { rq = false; layout(); seedParts(); }); } }
+addEventListener("resize", queueLayout);
+const img = $("subject");
+img.src = C.subject.src;
+function start() {
+  paintBg(); layout(); buildSideWords(); seedParts();
+  doc.body.classList.add("ready");
+  requestAnimationFrame(frame);
+}
+if (img.complete) start(); else img.onload = start;
+</script>
+</body>
+</html>

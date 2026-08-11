@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Decadence Phonk Mockup Extreme</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;background:#000;font-family:monospace}
+
+.scene {
+position:fixed;inset:0;
+background:url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?q=80&w=1920&auto=format&fit=crop') center/cover;
+animation:breathe 8s ease-in-out infinite,shake .2s infinite;
+filter:contrast(1.4) brightness(.7) grayscale(.2);
+will-change: filter, transform;
+}
+.scene:before {
+content:'';position:absolute;inset:0;
+background:inherit;
+mix-blend-mode:screen;
+animation:rgb 4s infinite;
+}
+.scene:after {
+content:'';position:absolute;inset:0;
+background:radial-gradient(circle,transparent 30%,rgba(0,0,0,.85));
+}
+
+.crt {
+position:fixed;inset:0;pointer-events:none;
+z-index: 90;
+background:repeating-linear-gradient(
+0deg,
+rgba(255,255,255,.03) 0px,
+rgba(255,255,255,.03) 1px,
+transparent 1px,
+transparent 4px);
+}
+.noise {
+position:fixed;inset:0;
+z-index: 85;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)'/%3E%3C/svg%3E");
+opacity:.12;
+mix-blend-mode:overlay;
+animation:flicker .1s infinite;
+}
+.flash {
+position:fixed;inset:0;
+pointer-events:none;
+z-index: 80;
+animation:club 10s infinite;
+}
+
+.hud {
+position:fixed;
+left:50px;
+top:50px;
+color:white;
+z-index:100;
+text-shadow:0 0 15px rgba(0,0,0,0.5);
+pointer-events: none;
+}
+.nexa-brand {
+font-size:38px;
+font-weight:900;
+letter-spacing:10px;
+line-height:1;
+color:#fff;
+text-shadow:0 0 10px rgba(255,255,255,0.25);
+}
+.brief-brand {
+font-size:18px;
+font-weight:700;
+letter-spacing:6px;
+color:rgba(255,255,255,0.75);
+margin-top:6px;
+padding-top:6px;
+border-top:1px solid rgba(255,255,255,0.2);
+text-transform:uppercase;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+/*
+.voltage-center {
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-family:'Montserrat', sans-serif;
+font-size:clamp(4rem,15vw,16rem);
+font-weight:900;
+color:transparent;
+-webkit-text-stroke:2px rgba(255,255,255,0.45);
+letter-spacing:0.25em;
+z-index:10;
+mix-blend-mode:difference;
+pointer-events:none;
+text-align:center;
+text-transform:uppercase;
+transition:transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+will-change:transform;
+}
+*/
+
+@keyframes breathe {
+0%,100%{transform:scale(1)}
+50%{transform:scale(1.08)}
+}
+@keyframes shake {
+0%{translate:0 0}
+25%{translate:1px -1px}
+50%{translate:-1px 1px}
+75%{translate:1px 1px}
+100%{translate:0 0}
+}
+@keyframes rgb {
+0%,94%,100%{opacity:0}
+95%{opacity:.5;transform:translateX(20px);filter:hue-rotate(90deg)}
+96%{opacity:.6;transform:translateX(-20px);filter:hue-rotate(180deg)}
+97%{opacity:.7;transform:skewX(15deg)}
+}
+@keyframes flicker {
+50%{opacity:.18}
+}
+@keyframes club {
+0%,85%,100%{opacity:0}
+86%{background:red;opacity:.15}
+88%{background:blue;opacity:.2}
+90%{background:cyan;opacity:.2}
+92%{background:white;opacity:.15}
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="scene"></div>
+<div class="crt"></div>
+<div class="noise"></div>
+<div class="flash"></div>
+
+<div class="hud">
+<div class="nexa-brand">NEXA</div>
+<div class="brief-brand">BRIEF</div>
+</div>
+
+<!-- <div class="voltage-center" id="voltage-text">VOLTAJE</div> -->
+
+<script>
+let activeHue = 0;
+
+setInterval(()=>{
+activeHue = Math.floor(Math.random()*360);
+const contrastVal = 1.2 + Math.random()*2.2;
+const brightnessVal = 0.35 + Math.random()*1.15;
+
+document.querySelector('.scene').style.filter=
+`contrast(${contrastVal})
+brightness(${brightnessVal})
+hue-rotate(${activeHue}deg)`;
+
+/*
+const voltageText = document.getElementById('voltage-text');
+if(voltageText && Math.random() > 0.45) {
+const skewVal = Math.random()*16 - 8;
+const scaleVal = 1 + Math.random()*0.12;
+const transX = Math.random()*24 - 12;
+const transY = Math.random()*24 - 12;
+
+voltageText.style.transform = `translate(calc(-50% + ${transX}px), calc(-50% + ${transY}px)) skewX(${skewVal}deg) scale(${scaleVal})`;
+voltageText.style.webkitTextStroke = `2px hsla(${activeHue}, 100%, 50%, 0.85)`;
+
+setTimeout(()=>{
+voltageText.style.transform = `translate(-50%, -50%) skewX(0deg) scale(1)`;
+voltageText.style.webkitTextStroke = `2px rgba(255, 255, 255, 0.45)`;
+}, 110);
+}
+*/
+},250);
+
+setInterval(()=>{
+document.querySelector('.scene').style.transform=
+`translate(${(Math.random()-.5)*30}px,${(Math.random()-.5)*30}px) scale(${1+Math.random()*.1})`;
+},4500);
+</script>
+</body>
+</html>

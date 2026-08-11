@@ -1,0 +1,25 @@
+{
+  "id": "test2",
+  "description": "Loop vertical (9:16) de una silueta que se alza entre niebla monocroma. Mood épico/melancólico, ideal para frases de resiliencia y perseverancia. Gris frío, alto contraste. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+  "video":  { "w": 720, "h": 1280, "rotation": 0, "content": [0, 0, 720, 1280], "src": "example/test2.mp4" },
+  "colors": { "bg": "#3E444B", "ink": "#F2F4F6" },
+  "bgMode": "blur",
+  "bgRegions": [],
+  "zones": [
+    [340, 520, 240, 500],
+    [520, 850, 180, 560],
+    [850, 1180, 220, 520]
+  ],
+  "subject": { "top": 340, "bottom": 1180, "left": 180, "right": 560 },
+  "keepOut": [
+    [140, 1210, 580, 1280]
+  ],
+  "texts":  { "left": "RISE", "right": "SILENT" },
+  "eqPosition": "bottom",
+  "edgeFade": 0.07,
+  "typography": "default",
+  "anchorPreference": "bottom",
+  "audio": { "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+  "intro": { "artist": "SHIBUYA BASS", "title": "SILENT RISE", "sub": "Dark", "feats": "Dragon Ball" },
+  "outro": { "leadSec": 7, "songTitle": "SILENT RISE", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete" }
+}

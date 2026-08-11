@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Empire Phonk Premium Mockup</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+overflow:hidden;
+background:#020813;
+font-family:Arial,sans-serif;
+height:100vh;
+}
+.bg{
+position:fixed;
+inset:0;
+background:url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=1600&auto=format&fit=crop') center/cover;
+filter:blur(35px) brightness(.25) saturate(1.8);
+transform:scale(1.15);
+transition:transform .08s linear;
+}
+.vignette{
+position:fixed;inset:0;
+background:radial-gradient(circle,transparent 20%,rgba(0,0,0,.85));
+}
+.particles{
+position:fixed;
+inset:0;
+pointer-events:none;
+}
+.player{
+position:absolute;
+top:50%;left:50%;
+transform:translate(-50%,-50%);
+width:min(1100px,92vw);
+height:min(620px,75vh);
+display:flex;
+border-radius:18px;
+overflow:hidden;
+backdrop-filter:blur(25px);
+box-shadow:0 40px 100px rgba(0,0,0,.7);
+}
+.left{
+width:45%;
+padding:50px;
+background:rgba(0,15,35,.45);
+position:relative;
+}
+.watermark{
+position:absolute;
+font-size:9rem;
+font-weight:900;
+opacity:.05;
+top:20px;
+left:20px;
+}
+.brand{color:#0a84ff;font-weight:bold;letter-spacing:3px}
+.title{
+font-size:3rem;
+font-weight:900;
+color:white;
+margin-top:20px;
+margin-bottom:40px;
+}
+.time{
+display:flex;
+justify-content:space-between;
+color:#ccc;
+margin-bottom:8px;
+}
+.bar{
+height:8px;
+background:rgba(255,255,255,.1);
+border-radius:20px;
+overflow:hidden;
+}
+.fill{
+height:100%;
+width:25%;
+background:#0a84ff;
+box-shadow:0 0 15px #0a84ff;
+}
+.right{
+width:55%;
+position:relative;
+overflow:hidden;
+background:#000;
+}
+.cover{
+width:100%;
+height:100%;
+object-fit:cover;
+animation:float 8s ease-in-out infinite;
+}
+.glow{
+position:absolute;
+inset:-50px;
+background:radial-gradient(circle,rgba(0,119,255,.45),transparent 60%);
+filter:blur(50px);
+pointer-events:none;
+}
+#wave{
+position:absolute;
+left:0;
+bottom:0;
+width:100%;
+height:120px;
+}
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-12px)}
+100%{transform:translateY(0)}
+}
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+<canvas class="particles" id="particles"></canvas>
+<div class="vignette"></div>
+
+<div class="player">
+<div class="left">
+<div class="watermark">AURA</div>
+<div class="brand">EMPIRE PHONK</div>
+<div class="title">AURA BOOSTER</div>
+
+<div class="time">
+<span id="current">00:00</span>
+<span>01:08:11</span>
+</div>
+
+<div class="bar">
+<div class="fill" id="fill"></div>
+</div>
+</div>
+
+<div class="right">
+<div class="glow"></div>
+<img class="cover" src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=1600&auto=format&fit=crop">
+<canvas id="wave"></canvas>
+</div>
+</div>
+
+<script>
+const canvas=document.getElementById('wave');
+const ctx=canvas.getContext('2d');
+
+function resize(){
+canvas.width=canvas.offsetWidth;
+canvas.height=canvas.offsetHeight;
+}
+resize();
+window.addEventListener('resize',resize);
+
+const fill=document.getElementById('fill');
+const current=document.getElementById('current');
+const bg=document.getElementById('bg');
+
+let start=Date.now();
+
+function wave(){
+requestAnimationFrame(wave);
+
+const elapsed=(Date.now()-start)/1000;
+
+const m=Math.floor(elapsed/60).toString().padStart(2,'0');
+const s=Math.floor(elapsed%60).toString().padStart(2,'0');
+current.textContent=`${m}:${s}`;
+
+fill.style.width=((elapsed%240)/240*100)+'%';
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+let bass=0;
+
+for(let i=0;i<80;i++){
+
+const h=20+Math.sin((Date.now()/120)+i)*25+Math.random()*40;
+
+bass+=h;
+
+ctx.fillStyle='#0a84ff';
+
+ctx.fillRect(
+i*(canvas.width/80),
+canvas.height-h,
+6,
+h
+);
+}
+
+bass/=80;
+
+const scale=1.15+bass/3000;
+bg.style.transform=`scale(${scale})`;
+}
+wave();
+
+const p=document.getElementById('particles');
+const pctx=p.getContext('2d');
+
+function presize(){
+p.width=innerWidth;
+p.height=innerHeight;
+}
+presize();
+window.addEventListener('resize',presize);
+
+const particles=[];
+
+for(let i=0;i<120;i++){
+particles.push({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+s:Math.random()*3+1,
+v:Math.random()*0.6+0.1
+});
+}
+
+function renderParticles(){
+requestAnimationFrame(renderParticles);
+pctx.clearRect(0,0,p.width,p.height);
+
+for(const a of particles){
+a.y-=a.v;
+if(a.y<0){
+a.y=innerHeight;
+a.x=Math.random()*innerWidth;
+}
+pctx.beginPath();
+pctx.arc(a.x,a.y,a.s,0,Math.PI*2);
+pctx.fillStyle='rgba(0,150,255,.7)';
+pctx.fill();
+}
+}
+renderParticles();
+</script>
+</body>
+</html>

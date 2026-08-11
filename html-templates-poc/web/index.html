@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa Brief — Panel (Prototipo)</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="mark">NB</div>
+      <div class="name">Nexa Brief</div>
+      <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="Colapsar / expandir menú">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+      </button>
+    </div>
+
+    <ul class="nav">
+      <li>
+        <button class="nav-item active" data-section="dashboard" data-title="Dashboard" data-subtitle="Resumen general del pipeline" title="Dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>
+          <span class="nav-label-text">Dashboard</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" data-section="crear" data-title="Crear video" data-subtitle="Configura un nuevo lote de generación" title="Crear video">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="nav-label-text">Crear video</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" data-section="plantillas" data-title="Plantillas" data-subtitle="Estilos visuales disponibles para generar video" title="Plantillas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+          <span class="nav-label-text">Plantillas</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" data-section="canales" data-title="Canales" data-subtitle="Cuentas conectadas por plataforma" title="Canales">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span class="nav-label-text">Canales</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" data-section="programacion" data-title="Programación" data-subtitle="Horarios de publicación por canal" title="Programación">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+          <span class="nav-label-text">Programación</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" data-section="biblioteca" data-title="Biblioteca de videos" data-subtitle="Listos, en cola, publicados y fallidos" title="Biblioteca">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
+          <span class="nav-label-text">Biblioteca</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" data-section="historial" data-title="Historial / Logs" data-subtitle="Auditoría de etapas del pipeline" title="Historial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg>
+          <span class="nav-label-text">Historial</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" data-section="notificaciones" data-title="Notificaciones" data-subtitle="Alertas del sistema" title="Notificaciones">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="nav-label-text">Notificaciones</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button class="nav-item theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Cambiar tema">
+        <span class="theme-icon"></span>
+        <span class="nav-label-text">Tema oscuro</span>
+      </button>
+      <div class="sidebar-footer">Nexa Brief · Prototipo v0.2<br>Solo visual — datos de ejemplo en data.json</div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Resumen general del pipeline</p>
+      </div>
+      <button class="btn btn-primary" onclick="goTo('crear')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Crear video
+      </button>
+    </div>
+
+    <div class="content">
+
+      <!-- ───────── DASHBOARD ───────── -->
+      <section id="sec-dashboard" class="section active">
+        <div class="section-block">
+          <div class="grid grid-4" id="statsGrid"></div>
+        </div>
+        <div class="section-block">
+          <div class="section-block-header">
+            <h2 id="activityHeader">Actividad reciente</h2>
+            <div style="display:flex; align-items:center; gap:16px;">
+              <button class="btn btn-ghost btn-sm" onclick="resetDashboardActivity()" title="Volver a la actividad reciente (quita el filtro)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10M1 14l5.36 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Actualizar
+              </button>
+              <span class="see-all" style="cursor:pointer" onclick="goTo('historial')">Ver historial →</span>
+            </div>
+          </div>
+          <div class="activity-list" id="activityList"></div>
+          <div id="drilldownWrap" style="display:none">
+            <div class="activity-list drill-list" id="drilldownRows"></div>
+            <div class="pagination" id="drilldownPagination"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── CREAR VIDEO ───────── -->
+      <section id="sec-crear" class="section">
+        <div class="crear-layout">
+        <form class="form" onsubmit="return false">
+
+          <div class="field">
+            <label for="nicho">Nicho / categoría musical <span class="optional-tag">Opcional</span></label>
+            <div style="display:flex; gap:8px;">
+              <select class="input" id="nicho" style="flex:1"></select>
+              <button type="button" class="btn btn-secondary btn-sm" style="white-space:nowrap" onclick="toggleAddNicho()">+ Agregar categoría</button>
+            </div>
+            <div class="inline-add-row" id="addNichoRow">
+              <input class="input" id="newNichoInput" placeholder="Nombre de la nueva categoría" maxlength="40">
+              <button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNicho()">Agregar</button>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNicho()">Cancelar</button>
+            </div>
+            <div class="hint">Si no eliges ninguna, el sistema decide la categoría automáticamente.</div>
+          </div>
+
+          <div class="field">
+            <label for="plantilla">Plantilla visual</label>
+            <select class="input" id="plantilla"></select>
+            <div class="hint">Puedes ver ejemplos de cada una en <span style="cursor:pointer;text-decoration:underline" onclick="goTo('plantillas')">Plantillas</span>.</div>
+          </div>
+
+          <div class="field">
+            <label>Publicar en</label>
+            <div class="channel-target-list" id="channelTargets"></div>
+            <div class="hint">Selecciona canal(es) y, dentro de cada uno, en qué cuenta(s) se publicará.</div>
+          </div>
+
+          <div class="field">
+            <label>Recursos (opcional)</label>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+
+              <div class="upload-field" id="uploadBg">
+                <span class="icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+                </span>
+                <div class="info">
+                  <div class="label">Fondo (imagen o video)</div>
+                  <div class="filename" id="fileBgName">El sistema elegirá una imagen automáticamente</div>
+                </div>
+                <div class="preview" id="previewBg"></div>
+                <div class="actions">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('fileBg').click()">Elegir archivo</button>
+                  <input type="file" id="fileBg" accept="image/*,video/*">
+                </div>
+              </div>
+
+              <div class="upload-field" id="uploadSong">
+                <span class="icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
+                </span>
+                <div class="info">
+                  <div class="label">Canción</div>
+                  <div class="filename" id="fileSongName">El sistema elegirá una canción de la biblioteca</div>
+                </div>
+                <div class="actions">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('fileSong').click()">Elegir archivo</button>
+                  <input type="file" id="fileSong" accept="audio/*">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="descripcion">Descripción (opcional)</label>
+            <textarea class="input" id="descripcion" rows="3" placeholder="Si la dejas vacía, la IA genera título, descripción y hashtags automáticamente."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Duración</label>
+            <div class="segmented" id="durationMode">
+              <button type="button" class="active" data-mode="auto" onclick="setDurationMode('auto')">Según la canción</button>
+              <button type="button" data-mode="manual" onclick="setDurationMode('manual')">Duración manual</button>
+            </div>
+
+            <div class="duration-panel active" id="panelAuto">
+              <div class="duration-row">
+                <span class="label">Duración de la canción</span>
+                <span class="value" id="songDuration">Sin canción — se estima 3:30</span>
+              </div>
+              <div class="duration-row">
+                <span class="label">Repeticiones</span>
+                <div class="stepper">
+                  <input class="input" type="number" id="repeatCount" min="1" value="1">
+                </div>
+              </div>
+              <div class="duration-total">
+                <span>Duración total estimada</span>
+                <span id="totalDurationAuto">3:30</span>
+              </div>
+            </div>
+
+            <div class="duration-panel" id="panelManual">
+              <div class="duration-row">
+                <span class="label">Duración exacta</span>
+                <div class="stepper">
+                  <input class="input" type="number" id="manualHours" min="0.25" step="0.25" value="2" style="width:70px">
+                  <span class="value">horas</span>
+                </div>
+              </div>
+              <div class="hint" style="margin-top:8px">Se ignora la duración de la canción; el sistema hace loop/edición para ajustar al tiempo exacto.</div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary">Generar lote</button>
+            <button type="button" class="btn btn-secondary">Guardar como borrador</button>
+          </div>
+        </form>
+
+        <aside class="summary-card">
+          <div class="summary-head">Resumen del lote</div>
+          <div class="summary-row"><span class="label">Nicho</span><span class="value" id="sumNicho">Sin preferencia</span></div>
+          <div class="summary-row"><span class="label">Plantilla</span><span class="value" id="sumPlantilla">—</span></div>
+          <div class="summary-row block"><span class="label">Canales</span><div class="value" id="sumCanales">Ninguno seleccionado aún</div></div>
+          <div class="summary-row"><span class="label">Fondo</span><span class="value" id="sumFondo">Automático</span></div>
+          <div class="summary-row"><span class="label">Canción</span><span class="value" id="sumCancion">Automática</span></div>
+          <div class="summary-row"><span class="label">Duración</span><span class="value" id="sumDuracion">3:30</span></div>
+        </aside>
+        </div>
+      </section>
+
+      <!-- ───────── PLANTILLAS ───────── -->
+      <section id="sec-plantillas" class="section">
+        <div class="grid grid-2" id="templatesGrid"></div>
+      </section>
+
+      <!-- ───────── CANALES ───────── -->
+      <section id="sec-canales" class="section">
+        <div class="grid grid-3" id="canalesGrid"></div>
+      </section>
+
+      <!-- ───────── PROGRAMACIÓN ───────── -->
+      <section id="sec-programacion" class="section">
+        <div class="section-block-header">
+          <h2 style="font-size:0.95rem;">Horarios configurados</h2>
+          <button class="btn btn-primary btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Agregar horario
+          </button>
+        </div>
+
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Canal</th>
+              <th>Cuenta</th>
+              <th>Días</th>
+              <th>Horarios</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody"></tbody>
+        </table>
+      </section>
+
+      <!-- ───────── BIBLIOTECA ───────── -->
+      <section id="sec-biblioteca" class="section">
+
+        <div class="biblioteca-filters">
+          <div class="filter-field">
+            <label for="filterPlantilla">Plantilla</label>
+            <select class="input" id="filterPlantilla" onchange="applyBibliotecaFilters()"></select>
+          </div>
+          <div class="filter-field">
+            <label for="filterCanal">Canal</label>
+            <select class="input" id="filterCanal" onchange="applyBibliotecaFilters()"></select>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="clearBibliotecaFilters()">Limpiar filtros</button>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="listos" onclick="showTab('listos', this)">Listos <span id="countListos" style="color:var(--text-tertiary)"></span></button>
+          <button class="tab" data-tab="cola" onclick="showTab('cola', this)">En cola <span id="countCola" style="color:var(--text-tertiary)"></span></button>
+          <button class="tab" data-tab="publicados" onclick="showTab('publicados', this)">Publicados <span id="countPublicados" style="color:var(--text-tertiary)"></span></button>
+          <button class="tab" data-tab="fallidos" onclick="showTab('fallidos', this)">Fallidos <span id="countFallidos" style="color:var(--text-tertiary)"></span></button>
+        </div>
+
+        <div class="tab-panel active" id="tab-listos"><div class="grid grid-3" id="listosGrid"></div></div>
+        <div class="tab-panel" id="tab-cola"><div class="activity-list" id="colaList"></div></div>
+        <div class="tab-panel" id="tab-publicados"><div class="grid grid-3" id="publicadosGrid"></div></div>
+        <div class="tab-panel" id="tab-fallidos"><div class="activity-list" id="fallidosList"></div></div>
+
+      </section>
+
+      <!-- ───────── HISTORIAL / LOGS ───────── -->
+      <section id="sec-historial" class="section">
+
+        <div class="log-picker field">
+          <label for="logVideo">Video</label>
+          <select class="input" id="logVideo"></select>
+        </div>
+
+        <div class="timeline" id="timelineBody"></div>
+      </section>
+
+      <!-- ───────── NOTIFICACIONES ───────── -->
+      <section id="sec-notificaciones" class="section">
+        <div class="empty-state" style="padding:70px 20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;margin-bottom:14px;opacity:0.5"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:6px;">Notificaciones — próximamente</div>
+          <div style="max-width:420px; margin:0 auto;">Esta sección está planeada para alertas en tiempo real: tokens expirados, publicaciones fallidas, videos listos para publicar. Todavía no está desarrollada.</div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL REPRODUCTOR ═══ -->
+<div class="modal-overlay" id="videoModal" onclick="if(event.target===this) closePlayer()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Reproduciendo video</h3>
+      <button class="modal-close" onclick="closePlayer()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+      </button>
+    </div>
+    <video id="modalVideo" controls src="../seamless/video-split.mp4"></video>
+    <div class="modal-foot">Vista previa de muestra — en el sistema real se reproduce el archivo generado del video.</div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<script type="module">
+    let canvas, ctx, animationFrameId;
+    const timerDisplay = document.getElementById('timer-display');
+    const trackTitle = document.getElementById('track-title');
+
+    let startTime = performance.now();
+
+    const tracks = [
+      { time: 0, name: "LOS VOLTAJE - Sayfalse" },
+      { time: 99, name: "MONTAGEM BAILÃO - Repsaj" },
+      { time: 203, name: "PASSO BEM SOLTO (Slowed)" },
+      { time: 319, name: "KILL - CURSEDEVIL" }
+    ];
+
+    function initEngine() {
+      canvas = document.getElementById('dagger-canvas');
+      ctx = canvas.getContext('2d');
+      
+      canvas.width = 450;
+      canvas.height = 180;
+
+      // El motor arranca el render loop directamente sin depender de Web Audio API
+      renderLoop();
+    }
+
+    function renderLoop(timestamp) {
+      animationFrameId = requestAnimationFrame(renderLoop);
+
+      const now = timestamp || performance.now();
+      const elapsed = (now - startTime) / 1000;
+
+      // Cronómetro operativo en tiempo real
+      const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+      const secs = Math.floor(elapsed % 60).toString().padStart(2, '0');
+      const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+      timerDisplay.textContent = `${mins}:${secs}:${ms}`;
+
+      // Cambio de tracklist simulado según metadatos del timeline
+      const currentTrack = [...tracks].reverse().find(t => elapsed >= t.time);
+      if (currentTrack && trackTitle.textContent !== currentTrack.name) {
+        trackTitle.textContent = currentTrack.name;
+      }
+
+      // --- MOTOR DE FRECUENCIA MATEMÁTICO (EFECTO FIRMA ORGÁNICA) ---
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#000000";
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      // Aplicar un sutil difuminado de brillo (Glow) para estilizar la firma
+      ctx.shadowBlur = 4;
+      ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
+
+      ctx.beginPath();
+
+      const points = 180; // Puntos de resolución a lo largo del eje X
+      const amplitudeBase = 45; // Altura máxima de la onda de la firma
+      const centerY = canvas.height / 2;
+
+      for (let i = 0; i <= points; i++) {
+        const x = (i / points) * canvas.width;
+        
+        // Normalización para desvanecer los extremos (para que la firma empiece y termine en 0 de forma limpia)
+        const edgeFade = Math.sin((i / points) * Math.PI);
+
+        // Combinación de múltiples ondas armónicas desfasadas en el tiempo (elapsed) para crear interferencia orgánica
+        const wave1 = Math.sin(i * 0.05 - elapsed * 4.5) * 1.0;
+        const wave2 = Math.cos(i * 0.12 + elapsed * 6.0) * 0.4;
+        const wave3 = Math.sin(i * 0.02 - elapsed * 2.0) * 0.5;
+        
+        // Suma armónica multifrecuencia multiplicada por el desvanecimiento de borde
+        const dynamicFrequency = (wave1 + wave2 + wave3) * amplitudeBase * edgeFade;
+        
+        const y = centerY + dynamicFrequency;
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+
+      ctx.stroke();
+      ctx.shadowBlur = 0; // Resetear sombra para optimizar hardware
+    }
+
+    // Inicialización inmediata al cargar el DOM sin bloqueos
+    window.addEventListener('DOMContentLoaded', () => {
+      initEngine();
+    });
+  </script>

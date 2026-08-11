@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEADPOOL // RAGE SYSTEM PRO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Share+Tech+Mono&display=swap');
+
+    :root {
+      --color-dark-core: #030206;
+      --color-crimson: #80001c;
+      --color-bright-red: #ff002b;
+      --font-display: 'Cinzel', serif;
+      --font-tech: 'Share Tech Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--color-dark-core);
+    }
+
+    /* CAPA 1: Escena con Textura Industrial Texturizada */
+    #scene-container {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #06050a;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 0, 43, 0.12) 0%, transparent 60%),
+        url('https://images.unsplash.com/photo-1604147706283-d7119b5b822c?q=80&w=1000&auto=format&fit=crop'); /* Textura de metal/pared oscura */
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: overlay;
+      overflow: hidden;
+    }
+
+    /* Viñeta Cinematográfica Agresiva para dar profundidad */
+    .cinematic-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 10%, rgba(0, 0, 0, 0.95) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* CAPA 2: Tipografía de Lujo Oscuro (Detrás del Personaje) */
+    .background-title-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    #title-text {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 14vw, 16rem);
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.03);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-left: 2px solid rgba(255, 0, 43, 0.2);
+      border-right: 2px solid rgba(255, 0, 43, 0.2);
+      padding: 0 40px;
+      text-shadow: 0 0 40px rgba(255, 0, 43, 0.1);
+      will-change: transform;
+    }
+
+    /* CAPA 3: Contenedor del Personaje */
+    #character-wrapper {
+      position: absolute;
+      bottom: -2%;
+      height: 88vh;
+      width: auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 4;
+      will-change: transform;
+      transform-origin: bottom center;
+    }
+
+    /* Aura volumétrica trasera de Deadpool */
+    .back-glow-aura {
+      position: absolute;
+      bottom: 20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255, 0, 43, 0.35) 0%, transparent 70%);
+      filter: blur(50px);
+      z-index: -1;
+      animation: auraPulse 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes auraPulse {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Imagen de Deadpool en PNG Real Funcionando de Alta Calidad */
+    .character-img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.8)) contrast(1.15) brightness(0.85);
+      will-change: filter;
+    }
+
+    /* Rayos sutiles sobre el personaje */
+    .lightning-spark {
+      position: absolute;
+      background: #ffffff;
+      width: 2px;
+      height: 60px;
+      filter: drop-shadow(0 0 10px var(--color-bright-red)) blur(0.5px);
+      opacity: 0;
+      z-index: 5;
+    }
+    .spark-1 { left: 45%; top: 30%; animation: strike 4s infinite linear; }
+    .spark-2 { right: 40%; top: 15%; animation: strike 3.2s infinite linear; animation-delay: 1.5s; }
+
+    @keyframes strike {
+      0%, 95%, 100% { opacity: 0; transform: scaleY(0); }
+      96% { opacity: 1; transform: scaleY(1); }
+      97% { opacity: 0; transform: scaleY(0.3); }
+    }
+
+    /* CAPA 4: Subtítulos e Interfaz Estilo HUD Militar Cyberpunk */
+    #lyrics-container {
+      position: absolute;
+      bottom: 24%;
+      font-family: var(--font-tech);
+      font-size: clamp(0.9rem, 1.8vw, 1.5rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4em;
+      color: #ffffff;
+      opacity: 0.6;
+      z-index: 6;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    /* CAPA 5: ECOALIZADOR DE FRECUENCIAS DE DISEÑO (Líneas minimalistas de alta gama) */
+    #bottom-visualizer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 22%;
+      z-index: 7;
+      pointer-events: none;
+    }
+
+    /* Canvas de partículas de ceniza flotantes */
+    #particles-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="scene-container">
+    
+    <div class="cinematic-vignette"></div>
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="background-title-wrap">
+      <h1 id="title-text">DEADPOOL</h1>
+    </div>
+
+    <div id="character-wrapper">
+      <div class="back-glow-aura"></div>
+      <div class="lightning-spark spark-1"></div>
+      <div class="lightning-spark spark-2"></div>
+      
+      <img 
+        id="char-img" 
+        class="character-img" 
+        src="./index.png" 
+        alt="Deadpool Cinematic"
+      />
+    </div>
+
+    <div id="lyrics-container">STATUS: RAGE_ENGAGED</div>
+
+    <canvas id="bottom-visualizer"></canvas>
+
+  </div>
+
+  <script type="module">
+    let audioCtx = null;
+    let audioAnalyser = null;
+    let audioBufferArray = null;
+    let isPlaying = false;
+    let synthTimerId = null;
+
+    const charWrapper = document.getElementById('character-wrapper');
+    const charImg = document.getElementById('char-img');
+    const titleText = document.getElementById('title-text');
+    const lyricsContainer = document.getElementById('lyrics-container');
+    
+    const visCanvas = document.getElementById('bottom-visualizer');
+    const visCtx = visCanvas.getContext('2d');
+    const partCanvas = document.getElementById('particles-canvas');
+    const partCtx = partCanvas.getContext('2d');
+
+    const phrases = ["MAXIMUM EFFORT", "SYSTEM CORRUPTED", "CHIMICHANGA", "BREAKING THE WALL", "X-FORCE"];
+    let phraseIndex = 0;
+    let tickCounter = 0;
+
+    // --- MOTOR DE CENIZAS INDUSTRIALES ---
+    let particles = [];
+    function initParticles() {
+      partCanvas.width = window.innerWidth;
+      partCanvas.height = window.innerHeight;
+      particles = [];
+      for(let i = 0; i < 45; i++) {
+        particles.push({
+          x: Math.random() * partCanvas.width,
+          y: Math.random() * partCanvas.height,
+          radius: Math.random() * 1.8 + 0.4,
+          speedY: Math.random() * 1.2 + 0.4,
+          speedX: (Math.random() - 0.5) * 0.6,
+          color: Math.random() > 0.4 ? '#ff002b' : '#3d3a45',
+          opacity: Math.random() * 0.5 + 0.1
+        });
+      }
+    }
+    
+    function drawParticles(bassBump) {
+      partCtx.clearRect(0, 0, partCanvas.width, partCanvas.height);
+      particles.forEach(p => {
+        p.y -= p.speedY * (1 + bassBump * 5);
+        p.x += p.speedX;
+        
+        if (p.y < -10) {
+          p.y = partCanvas.height + 10;
+          p.x = Math.random() * partCanvas.width;
+        }
+
+        partCtx.beginPath();
+        partCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        partCtx.fillStyle = p.color;
+        partCtx.globalAlpha = p.opacity;
+        partCtx.fill();
+      });
+      partCtx.globalAlpha = 1.0;
+    }
+
+    // --- VISUALIZADOR DE BARRAS FINAS (Premium Equalizer) ---
+    function resizeVisualizer() {
+      visCanvas.width = window.innerWidth;
+      visCanvas.height = window.innerHeight * 0.22;
+    }
+
+    function drawVisualizer() {
+      visCtx.clearRect(0, 0, visCanvas.width, visCanvas.height);
+      
+      const barCount = 70; 
+      const gap = 3; 
+      const barWidth = (visCanvas.width / 2 / barCount) - gap;
+      const centerY = visCanvas.height;
+
+      if (audioAnalyser && isPlaying) {
+        audioAnalyser.getByteFrequencyData(audioBufferArray);
+      } else {
+        if(!audioBufferArray) audioBufferArray = new Uint8Array(barCount);
+      }
+
+      for (let i = 0; i < barCount; i++) {
+        let value = audioBufferArray[i] || 0;
+        
+        // Simulación ultrasuave matemática por defecto desde el segundo cero
+        if (!isPlaying) {
+          value = (Math.sin(Date.now() * 0.004 + i * 0.15) * 0.4 + 0.6) * 45;
+          // Añadir picos aleatorios simulando golpes de beat sutiles
+          if (i < 5 && Date.now() % 800 < 100) value *= 1.8;
+        }
+
+        const percent = value / 255;
+        const barHeight = percent * visCanvas.height * 1.1;
+        
+        // Render simétrico desde el centro hacia los extremos
+        const xLeft = (visCanvas.width / 2) - (i * (barWidth + gap)) - barWidth;
+        const xRight = (visCanvas.width / 2) + (i * (barWidth + gap));
+        const y = centerY - barHeight;
+        
+        // Degradado de color sólido e industrial
+        visCtx.fillStyle = `rgba(255, 0, 43, ${0.15 + percent * 0.85})`;
+        
+        visCtx.fillRect(xLeft, y, barWidth, barHeight);
+        visCtx.fillRect(xRight, y, barWidth, barHeight);
+      }
+    }
+
+    // --- SECUENCIADOR SINTETIZADOR AUTÓNOMO ---
+    function initAudioEngine() {
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      audioAnalyser = audioCtx.createAnalyser();
+      audioAnalyser.fftSize = 256;
+      audioBufferArray = new Uint8Array(audioAnalyser.frequencyBinCount);
+      
+      isPlaying = true;
+      const masterVol = audioCtx.createGain();
+      masterVol.gain.setValueAtTime(0.6, audioCtx.currentTime);
+      masterVol.connect(audioAnalyser);
+      audioAnalyser.connect(audioCtx.destination);
+
+      const BPM = 90;
+      const stepTime = 60 / BPM / 2;
+      let step = 0;
+
+      function triggerOsc(freq, type, duration, vol) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(vol, audioCtx.currentTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(masterVol);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      }
+
+      function playSequence() {
+        if (!isPlaying) return;
+
+        // Kick de Phonk pesado
+        if (step % 16 === 0 || step % 16 === 6 || step % 16 === 10) {
+          triggerOsc(42, 'sine', 0.35, 1.0);
+          triggerOsc(110, 'triangle', 0.08, 0.4);
+          
+          if (step % 16 === 0) {
+            tickCounter++;
+            if (tickCounter % 2 === 0) {
+              phraseIndex = (phraseIndex + 1) % phrases.length;
+              lyricsContainer.textContent = phrases[phraseIndex];
+            }
+          }
+        }
+        // Snare Industrial
+        if (step % 16 === 8) {
+          triggerOsc(180, 'triangle', 0.2, 0.6);
+          triggerOsc(900, 'sawtooth', 0.12, 0.15);
+        }
+
+        step = (step + 1) % 32;
+        synthTimerId = setTimeout(playSequence, stepTime * 1000);
+      }
+      playSequence();
+    }
+
+    // Inicialización inmediata de gráficos de interfaz
+    initParticles();
+    resizeVisualizer();
+
+    function renderSystem() {
+      requestAnimationFrame(renderSystem);
+
+      let bass = 0;
+      const now = Date.now();
+
+      if (audioAnalyser && isPlaying) {
+        audioAnalyser.getByteFrequencyData(audioBufferArray);
+        bass = (audioBufferArray[0] + audioBufferArray[1] + audioBufferArray[2]) / 3 / 255;
+      } else {
+        // Simulación visual orgánica desde el segundo 0 sin trabas
+        const pulse = (now % 666) / 666;
+        bass = pulse < 0.2 ? 1 - (pulse / 0.2) : 0;
+        bass *= 0.35;
+      }
+
+      // Físicas de impacto premium en Deadpool (Compresión sutil)
+      const scaleY = 1 - (bass * 0.04);
+      const scaleX = 1 + (bass * 0.02);
+      charWrapper.style.transform = `scale(${scaleX}, ${scaleY}) translateY(${bass * -12}px)`;
+      
+      // Iluminación parpadeante sobre el personaje
+      charImg.style.filter = `drop-shadow(0 ${10 + bass * 30}px ${20 + bass * 40}px rgba(255, 0, 43, ${0.2 + bass * 0.7})) contrast(1.15) brightness(${0.85 + bass * 0.2})`;
+
+      // Vibración de escala sutil en el marco del texto de fondo
+      titleText.style.transform = `scale(${1 + bass * 0.03})`;
+
+      drawVisualizer();
+      drawParticles(bass);
+    }
+
+    // Arranca el bucle visual de inmediato
+    renderSystem();
+
+    // Activa el motor sonoro discretamente al hacer clic en cualquier lado de la pantalla
+    document.addEventListener('click', () => {
+      initAudioEngine();
+      if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    });
+
+    window.addEventListener('resize', () => {
+      initParticles();
+      resizeVisualizer();
+    });
+  </script>
+</body>
+</html>

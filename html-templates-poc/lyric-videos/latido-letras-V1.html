@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LATIDO LETRAS V1 — Dueles Tan Bien</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100vw; height: 100vh; overflow: hidden; cursor: pointer;
+    background: radial-gradient(ellipse at 50% 40%, #12040A 0%, #080205 55%, #030102 100%);
+  }
+
+  /* papel de electrocardiograma en la oscuridad — cuadrícula apenas visible */
+  #grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.35;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,43,74,0.055) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(90deg, rgba(255,43,74,0.055) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(0deg, rgba(255,43,74,0.10) 0 1px, transparent 1px 130px),
+      repeating-linear-gradient(90deg, rgba(255,43,74,0.10) 0 1px, transparent 1px 130px);
+  }
+  /* niebla de sangre que deriva lenta detrás de todo */
+  .mist { position: fixed; z-index: 1; pointer-events: none; mix-blend-mode: screen; }
+  #mistA {
+    inset: -20% 20% 10% -25%;
+    background: radial-gradient(ellipse at 45% 50%, rgba(140,14,34,0.30), transparent 65%);
+    animation: mistDrift 60s ease-in-out infinite alternate;
+  }
+  #mistB {
+    inset: 30% -25% -25% 30%;
+    background: radial-gradient(ellipse at 55% 55%, rgba(255,43,74,0.14), transparent 62%);
+    animation: mistDrift 84s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes mistDrift { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(5%, -4%) scale(1.14); } }
+
+  #viewport { position: fixed; inset: 0; z-index: 2; overflow: hidden; }
+  #world { position: absolute; left: 0; top: 0; will-change: transform; }
+  /* el trazo del electro: brilla como un monitor de verdad */
+  #ekg {
+    position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible;
+    filter: drop-shadow(0 0 5px rgba(255,43,74,0.9)) drop-shadow(0 0 18px rgba(140,14,34,0.7));
+  }
+  #ekg path {
+    fill: none; stroke: #FF2B4A; stroke-width: 2.6;
+    stroke-linejoin: miter; stroke-linecap: round;
+  }
+  #ekg path.old { stroke: #8E1B2C; transition: stroke 1.4s ease; }
+
+  .w {
+    position: absolute; white-space: nowrap; line-height: 1;
+    transform: var(--tr); will-change: transform, opacity; opacity: 0;
+    transition: opacity 1.2s ease, filter 1.2s ease;
+  }
+  .w.on { opacity: 1; animation: sysBeat 0.24s cubic-bezier(0.1, 0.9, 0.2, 1.3); }
+  @keyframes sysBeat {
+    0%  { opacity: 0; transform: var(--tr) scale(1.7); filter: blur(4px) brightness(2.4); }
+    60% { opacity: 1; }
+  }
+  .w.cold { opacity: 0.5; filter: brightness(0.62) saturate(0.65); }
+  /* verso: serif romántica en rosa pálido, herida que brilla */
+  .w.verso {
+    font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 700;
+    color: #FFD9DE;
+    text-shadow: 0 0 6px rgba(255,120,140,0.75), 0 0 22px rgba(255,43,74,0.65), 0 0 60px rgba(140,14,34,0.8);
+  }
+  /* grito: palabras clave estampadas en rojo arterial */
+  .w.grito {
+    font-family: "Bebas Neue", sans-serif; letter-spacing: 0.05em; text-transform: uppercase;
+    color: #FF2B4A;
+    text-shadow: 0 0 8px rgba(255,43,74,0.8), 0 0 30px rgba(255,43,74,0.55), 0 0 80px rgba(140,14,34,0.9);
+  }
+
+  /* flash carmesí que late con cada palabra (opacidad la maneja JS) */
+  #pulseFlash {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none; opacity: 0;
+    background: radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(255,20,55,0.30) 100%);
+  }
+  /* monitor de BPM real: se calcula con el ritmo de la letra cantada */
+  #bpmBox {
+    position: fixed; top: 4vh; right: 4vw; z-index: 7; display: none;
+    font-family: "Bebas Neue", sans-serif; color: #FF2B4A; text-align: right;
+    text-shadow: 0 0 10px rgba(255,43,74,0.7); letter-spacing: 0.08em;
+  }
+  #bpmBox .heart { display: inline-block; font-size: 3.4vh; will-change: transform; }
+  #bpmBox .num { font-size: 5vh; }
+  #bpmBox .lbl { font-size: 1.7vh; letter-spacing: 0.4em; opacity: 0.75; }
+  #vignette {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, transparent 36%, rgba(3,1,2,0.88) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 6; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.06; mix-blend-mode: overlay; animation: gsh 1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+  /* #intro y #outro: marco de monitor clínico con esquinas */
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex;
+    align-items: center; justify-content: center; text-align: center;
+    transition: opacity 1.3s ease;
+  }
+  .frame {
+    position: relative; display: flex; flex-direction: column; align-items: center;
+    gap: 2.2vh; padding: 7vh 8vw;
+    border: 1px solid rgba(255,43,74,0.45);
+    box-shadow: 0 0 30px rgba(255,43,74,0.15), inset 0 0 40px rgba(140,14,34,0.12);
+  }
+  .frame::before, .frame::after {
+    content: ""; position: absolute; width: 3.4vh; height: 3.4vh; border: 2px solid #FF2B4A;
+  }
+  .frame::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+  .frame::after  { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+  .cardScreen .artist {
+    font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 600;
+    font-size: 4.4vh; color: #FFD9DE; text-shadow: 0 0 18px rgba(255,43,74,0.6);
+  }
+  .cardScreen .title {
+    font-family: "Bebas Neue", sans-serif; font-size: 17vh; line-height: 0.95;
+    color: #FF2B4A; letter-spacing: 0.04em;
+    text-shadow: 0 0 12px rgba(255,43,74,0.8), 0 0 50px rgba(255,43,74,0.45), 0 0 110px rgba(140,14,34,0.9);
+    animation: titleBeat 1.05s ease-in-out infinite;
+  }
+  @keyframes titleBeat { 0%, 100% { transform: scale(1); } 8% { transform: scale(1.035); } 16% { transform: scale(1); } 24% { transform: scale(1.02); } 32% { transform: scale(1); } }
+  .cardScreen .sub {
+    font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 700;
+    font-size: 5.6vh; color: #FFD9DE; letter-spacing: 0.28em; padding-left: 0.28em;
+    text-shadow: 0 0 18px rgba(255,43,74,0.55);
+  }
+  .cardScreen .feats {
+    font-family: "Bebas Neue", sans-serif; font-size: 1.9vh; letter-spacing: 0.42em;
+    color: #FF8A9B; opacity: 0.85; margin-top: 2.4vh;
+  }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  /* al cerrar, el electro se apaga detrás (la línea plana queda un instante a la vista) */
+  body.outroActive #viewport, body.outroActive .mist, body.outroActive #grid {
+    opacity: 0.10; transition: opacity 2.2s ease;
+  }
+  body.outroActive #bpmBox { opacity: 0.15; transition: opacity 2.2s ease; }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: "Bebas Neue", sans-serif; font-size: 1.9vh; letter-spacing: 0.5em;
+    opacity: 0.55; animation: hintPulse 2s ease infinite; pointer-events: none; color: #FFD9DE;
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+  /* ============ DEBUG HUD — BORRAR ESTE BLOQUE (CSS) PARA PRODUCCIÓN ============ */
+  #debugHud {
+    position: fixed; left: 0; bottom: 0; width: 100vw; z-index: 20;
+    font-family: "Courier New", monospace; font-size: 12px; letter-spacing: 0.03em;
+    color: #ff9aab; background: rgba(10,0,4,0.4); padding: 4px 10px;
+    opacity: 0.55; pointer-events: none; white-space: pre;
+  }
+  /* ================================================================================ */
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    #bpmBox .num { font-size: min(5vh, 8vw); }
+    #bpmBox .heart { font-size: min(3.4vh, 5.5vw); }
+    .cardScreen .artist { font-size: min(4.4vh, 7vw); }
+    .cardScreen .title  { font-size: min(17vh, 21vw); }
+    .cardScreen .sub    { font-size: min(5.6vh, 8vw); letter-spacing: 0.2em; padding-left: 0.2em; }
+    .cardScreen .feats  { font-size: min(1.9vh, 3.4vw); letter-spacing: 0.28em; }
+  }
+</style>
+</head>
+<body>
+<div id="grid"></div>
+<div class="mist" id="mistA"></div>
+<div class="mist" id="mistB"></div>
+<div id="viewport"><div id="world">
+  <svg id="ekg" width="1" height="1"></svg>
+</div></div>
+<div id="pulseFlash"></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="bpmBox"><span class="heart">♥</span> <span class="num">--</span><div class="lbl">BPM · LETRA</div></div>
+<div id="intro" class="cardScreen"><div class="frame">
+  <div class="artist"></div>
+  <div class="title"></div>
+  <div class="sub"></div>
+  <div class="feats"></div>
+</div></div>
+<div id="outro" class="cardScreen"><div class="frame">
+  <div class="artist"></div>
+  <div class="title"></div>
+  <div class="sub"></div>
+  <div class="feats"></div>
+</div></div>
+<div id="hint">CLICK PARA REANIMAR</div>
+<!-- ============ DEBUG HUD — BORRAR ESTA LÍNEA (HTML) PARA PRODUCCIÓN ============ -->
+<div id="debugHud"></div>
+<!-- ================================================================================ -->
+<audio id="audio" preload="auto"></audio>
+<script type="module">
+/* ================================ CONFIG ================================
+   LATIDO: la letra es un electrocardiograma vivo. Un trazo carmesí serpentea
+   por la oscuridad en direcciones impredecibles y cada palabra cantada es un
+   latido: el trazo dibuja su complejo QRS, la palabra nace en la punta del
+   pico, la pantalla entera late (zoom + flash carmesí) y un monitor de BPM
+   REAL — calculado con los tiempos de la letra — se acelera y se frena con
+   la intensidad de la canción. Al llegar el final del audio, el trazo hace
+   línea plana y entra el cierre.
+   La letra se consume 100% de lyricsUrl (formato Whisper:
+   { metadata, segments: [ { words: [ { word, start, end }, ... ] } ] } ).
+   Si el fetch falla (p.ej. abierto por file:// sin servidor), la pieza
+   arranca igual con solo la intro — revisa la consola para el aviso. */
+const CONFIG = {
+  audio: { src: "Bruses Dueles Tan Bien Audio.mp3" },
+  lyricsUrl: "lyrics-bruses-dueles-tan-bien.json",
+  intro: { artist: "Bruses", title: "Dueles", sub: "Tan Bien", feats: "♥ Sincronizado al latido · NEXA BRIEF" },
+  /* pantalla de cierre: aparece sola cuando falta poco para el final REAL
+     del audio (no cuando se acaba la letra — ver leadSec) */
+  outro: {
+    leadSec: 8,
+    songTitle: "Dueles Tan Bien",
+    title: "Gracias",
+    sub: "Por sentir",
+    feats: "Suscríbete · NEXA BRIEF"
+  },
+  /* DEBUG HUD: poner en false (o borrar los bloques marcados) para producción */
+  debug: { enabled: true },
+  ekg: {
+    stepVwMin: 0.14, stepVwMax: 0.24,  /* avance del trazo por palabra (fracción de vw) */
+    wanderRad: 0.55,                   /* deriva de rumbo por palabra */
+    sharpTurnChance: 0.13,             /* giro brusco: el electro cambia de dirección */
+    spikeVh: [0.10, 0.22],             /* amplitud del pico normal (fracción de vh) */
+    spikeSoloVh: [0.26, 0.36],         /* amplitud del pico en palabra-grito */
+    gritoChance: 0.5,                  /* palabras >= 6 letras → grito Bebas */
+    soloChance: 0.12,                  /* palabras cortas que igual gritan */
+    zoomWide: [0.86, 0.96], zoomClose: [1.08, 1.2],
+    dutchMax: 2.2
+  },
+  seed: 13
+};
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, world = $("world"), ekg = $("ekg"), audio = $("audio");
+let vw = innerWidth, vh = innerHeight;
+addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; });
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+/* ---- intro / outro ---- */
+function buildCard(id, cfg) {
+  const i = $(id);
+  i.querySelector(".artist").textContent = cfg.artist ?? cfg.songTitle ?? "";
+  i.querySelector(".title").textContent = cfg.title;
+  i.querySelector(".sub").textContent = cfg.sub;
+  i.querySelector(".feats").textContent = cfg.feats;
+}
+buildCard("intro", C.intro);
+buildCard("outro", C.outro);
+
+/* ---- lyrics: 100% desde lyricsUrl (JSON de Whisper) ---- */
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const out = [];
+    for (const seg of j.segments) for (const w of seg.words)
+      out.push({ t: w.start, text: w.word.trim() });
+    if (!out.length) throw new Error("lyrics.json sin palabras");
+    return out;
+  } catch (e) {
+    console.warn("[latido-letras-V1] No se pudo cargar", C.lyricsUrl,
+                 "— sirve el HTML por HTTP (Live Server), no por file://.", e);
+    return [];
+  }
+}
+
+/* ---- el trazo del electro: serpentea y dibuja un QRS por palabra ---- */
+let hx = 0, hy = 0, heading = 0, side = 1, segCount = 0;
+const segs = [];
+function addSeg(d) {
+  const p = doc.createElementNS("http://www.w3.org/2000/svg", "path");
+  p.setAttribute("d", d);
+  ekg.appendChild(p);
+  const L = p.getTotalLength();
+  p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+  p.style.transition = "stroke-dashoffset 0.26s linear";
+  requestAnimationFrame(() => requestAnimationFrame(() => { p.style.strokeDashoffset = 0; }));
+  segs.push(p);
+  for (let i = 0; i < segs.length - 1; i++) segs[i].classList.add("old");
+  if (segs.length > 110) segs.shift().remove();
+  return p;
+}
+/* dibuja el tramo A→B con complejo QRS en el medio; devuelve la punta del pico */
+function drawBeat(solo) {
+  const E = C.ekg;
+  if (rng() < E.sharpTurnChance) heading += (rng() > 0.5 ? 1 : -1) * (0.9 + rng() * 0.8);
+  else heading += (rng() - 0.5) * E.wanderRad;
+  const step = vw * (E.stepVwMin + rng() * (E.stepVwMax - E.stepVwMin)) * (solo ? 1.35 : 1);
+  const dx = Math.cos(heading), dy = Math.sin(heading);
+  const px = -dy, py = dx;                       /* perpendicular */
+  if (rng() < 0.78) side = -side;                /* el pico alterna de lado (casi siempre) */
+  const [a0, a1] = solo ? E.spikeSoloVh : E.spikeVh;
+  const amp = vh * (a0 + rng() * (a1 - a0)) * side;
+  const bx = hx + dx * step, by = hy + dy * step;
+  const m1x = hx + dx * step * 0.38, m1y = hy + dy * step * 0.38;
+  const tx = hx + dx * step * 0.5 + px * amp, ty = hy + dy * step * 0.5 + py * amp;
+  const ox = hx + dx * step * 0.58 - px * amp * 0.16, oy = hy + dy * step * 0.58 - py * amp * 0.16;
+  const m2x = hx + dx * step * 0.66, m2y = hy + dy * step * 0.66;
+  addSeg(`M ${hx.toFixed(1)} ${hy.toFixed(1)} L ${m1x.toFixed(1)} ${m1y.toFixed(1)} L ${tx.toFixed(1)} ${ty.toFixed(1)} ` +
+         `L ${ox.toFixed(1)} ${oy.toFixed(1)} L ${m2x.toFixed(1)} ${m2y.toFixed(1)} L ${bx.toFixed(1)} ${by.toFixed(1)}`);
+  hx = bx; hy = by;
+  return { tx, ty, px: px * side, py: py * side, amp: Math.abs(amp) };
+}
+
+function fontSizeFor(text, solo) {
+  const len = Math.max(2, text.length);
+  const wShare = vw < vh ? 0.55 : 0.30;
+  let fs = Math.min(vw * wShare / (len * 0.5), solo ? vh * 0.22 : vh * 0.11);
+  fs *= 0.85 + rng() * 0.3;
+  if (solo) fs *= 1.3;
+  return Math.max(vh * 0.045, Math.min(fs, solo ? vh * 0.28 : vh * 0.13));
+}
+
+/* ---- BPM real: media móvil de los últimos intervalos de la letra ---- */
+const beatTimes = [];
+function updateBpm(t, punch) {
+  beatTimes.push(t);
+  if (beatTimes.length > 7) beatTimes.shift();
+  const box = $("bpmBox");
+  box.style.display = "block";
+  if (beatTimes.length >= 3) {
+    const iv = (beatTimes[beatTimes.length - 1] - beatTimes[0]) / (beatTimes.length - 1);
+    const bpm = Math.max(28, Math.min(220, Math.round(60 / Math.max(0.18, iv))));
+    box.querySelector(".num").textContent = String(bpm).padStart(3, "0");
+  }
+  box.querySelector(".heart").style.transform = `scale(${1 + punch * 0.4})`;
+  setTimeout(() => { box.querySelector(".heart").style.transform = "scale(1)"; }, 130);
+}
+
+/* ---- colocar palabras en la punta de cada latido ---- */
+let placed = [];
+let camX = 0, camY = 0, camXT = 0, camYT = 0, camS = 0.9, camST = 0.9, camRot = 0, camRotT = 0;
+let pulse = 0;
+
+function placeWord(w, tNow) {
+  const E = C.ekg;
+  const clean = w.text.replace(/[.,;!?¡¿"']/g, "");
+  if (!clean) return false;
+  const solo = clean.length >= 6 ? rng() < E.gritoChance : rng() < E.soloChance;
+  const beat = drawBeat(solo);
+
+  const el = doc.createElement("div");
+  el.className = "w " + (solo ? "grito" : "verso");
+  el.textContent = clean;
+  const fs = fontSizeFor(clean, solo);
+  el.style.fontSize = fs + "px";
+  const rot = heading * 12 / Math.PI;            /* leve inclinación según el rumbo */
+  el.style.setProperty("--tr", `translate(-50%, -50%) rotate(${Math.max(-11, Math.min(11, rot + (rng() - 0.5) * 8)).toFixed(1)}deg)`);
+  /* la palabra vive un poco más allá de la punta del pico, despejada del trazo */
+  const wx = beat.tx + beat.px * (fs * 0.85), wy = beat.ty + beat.py * (fs * 0.85);
+  el.style.left = wx + "px";
+  el.style.top = wy + "px";
+  world.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("on"));
+
+  placed.push(el);
+  for (let i = 0; i < placed.length - 1; i++) placed[i].classList.add("cold");
+  if (placed.length > 30) placed.shift().remove();
+
+  /* el latido: pulso de zoom + flash carmesí + corazón del monitor */
+  pulse = solo ? 1.7 : 1.0;
+  updateBpm(tNow, pulse);
+
+  /* encuadre */
+  camXT = wx + (vw < vh ? 0 : (rng() - 0.5) * vw * 0.05);
+  camYT = wy - vh * 0.02;
+  const zr = solo ? E.zoomClose : E.zoomWide;
+  camST = (zr[0] + rng() * (zr[1] - zr[0])) * (vw < vh ? 1.08 : 1);
+  camRotT = (rng() - 0.5) * 2 * E.dutchMax;
+  return true;
+}
+
+/* ---- reloj: audio si suena; si no, rAF ---- */
+let rafT0 = null, rafNow = 0, started = false;
+const clock = () => (!audio.paused && audio.currentTime > 0.05)
+  ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+
+async function begin() {
+  if (started) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+/* ---- outro: el final REAL del audio hace línea plana ---- */
+let outroShown = false;
+function maybeOutro() {
+  if (outroShown) return;
+  const dur = audio.duration;
+  if (!isFinite(dur) || dur <= 0) return;
+  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
+    outroShown = true;
+    /* línea plana: el trazo sigue recto, sin más picos */
+    const p = addSeg(`M ${hx.toFixed(1)} ${hy.toFixed(1)} L ${(hx + Math.cos(heading) * vw * 3).toFixed(1)} ${(hy + Math.sin(heading) * vw * 3).toFixed(1)}`);
+    p.style.transition = "stroke-dashoffset 1.6s ease-out";
+    doc.body.classList.add("outroActive");
+    $("intro").classList.add("gone");
+    $("outro").classList.add("show");
+    for (const el of placed) el.classList.add("cold");
+  }
+}
+audio.addEventListener("ended", maybeOutro);
+
+/* ============ DEBUG HUD — BORRAR ESTE BLOQUE (JS) PARA PRODUCCIÓN ============
+   Muestra abajo: tiempo actual / duración total, estado del audio, cuántas
+   palabras van colocadas y en cuánto llega la próxima. */
+function updateDebug() {
+  if (!C.debug.enabled) return;
+  const dur = isFinite(audio.duration) ? audio.duration.toFixed(1) : "?";
+  const cur = audio.currentTime.toFixed(1);
+  const state = audio.ended ? "ended" : audio.paused ? "paused" : "playing";
+  const next = words[ptr];
+  const nextIn = outroShown ? "outro activo (sin más palabras)"
+               : next ? (next.t - clock()).toFixed(1) + "s" : "—(sin más letra)";
+  $("debugHud").textContent =
+    `t=${cur}s / ${dur}s  ·  audio:${state}  ·  palabra ${ptr}/${words.length}  ·  próxima en ${nextIn}`;
+}
+/* =============================================================================== */
+
+/* ---- main ---- */
+let words = [], ptr = 0, introGone = false;
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  const t = clock();
+  maybeOutro();
+  if (!outroShown) {
+    while (ptr < words.length && t >= words[ptr].t) {
+      if (!introGone) { $("intro").classList.add("gone"); introGone = true; }
+      placeWord(words[ptr], t);
+      ptr++;
+    }
+  }
+  camX += (camXT - camX) * 0.075;
+  camY += (camYT - camY) * 0.075;
+  camS += (camST - camS) * 0.06;
+  camRot += (camRotT - camRot) * 0.05;
+  pulse *= 0.90;
+  const beatScale = camS * (1 + pulse * 0.02);
+  world.style.transform =
+    `translate(${vw / 2}px, ${vh / 2}px) rotate(${camRot}deg) ` +
+    `scale(${beatScale}) translate(${-camX}px, ${-camY}px)`;
+  $("pulseFlash").style.opacity = Math.min(0.30, pulse * 0.24);
+  updateDebug();                        /* DEBUG HUD: borrar esta línea también */
+  requestAnimationFrame(frame);
+}
+
+audio.src = encodeURI(C.audio.src);
+loadLyrics().then(w => { words = w; });
+begin();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

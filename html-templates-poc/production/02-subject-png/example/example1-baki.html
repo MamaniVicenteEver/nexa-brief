@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA // CRIMSON BAKI PLAYER</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #080101;
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .background-stage {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #e60000 0%, #660000 45%, #1a0000 80%, #000000 100%);
+      z-index: 1;
+    }
+
+    .backdrop-text-container {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .aura-title {
+      font-size: clamp(10rem, 32vw, 38rem);
+      font-weight: 900;
+      color: rgba(0, 0, 0, 0.25);
+      letter-spacing: -0.04em;
+    }
+
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .character-master-box {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .character-wrapper {
+      position: relative;
+      height: 70vh;
+      width: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: charLevitate 4.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes charLevitate {
+      0% { transform: translateY(-15px); }
+      100% { transform: translateY(20px); }
+    }
+
+    .main-character {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      filter: grayscale(1) contrast(1.5) brightness(0.9) drop-shadow(0 25px 40px rgba(0,0,0,0.9));
+      mix-blend-mode: luminosity;
+    }
+
+    .base-glow {
+      position: absolute;
+      bottom: 5%;
+      width: 250px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(26, 0, 0, 0.8) 40%, transparent 70%);
+      filter: blur(35px);
+      z-index: -1;
+      mix-blend-mode: color-dodge;
+      animation: pulseEnergy 0.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseEnergy {
+      0% { transform: scale(0.95); opacity: 0.6; }
+      100% { transform: scale(1.1); opacity: 0.9; }
+    }
+
+    .energy-arc {
+      position: absolute;
+      width: 3px;
+      height: 100px;
+      background: linear-gradient(to top, transparent, #ff3333, transparent);
+      filter: blur(1px) drop-shadow(0 0 8px #ff0000);
+      opacity: 0.7;
+      animation: energyRise 2s linear infinite;
+    }
+    .arc-left { left: 30%; top: 25%; animation-delay: 0s; }
+    .arc-right { right: 30%; top: 25%; animation-delay: 0.6s; }
+
+    @keyframes energyRise {
+      0% { transform: translateY(50px) scaleY(0.3); opacity: 0; }
+      50% { opacity: 0.9; }
+      100% { transform: translateY(-80px) scaleY(1.3); opacity: 0; }
+    }
+
+    .brand-header {
+      position: fixed;
+      top: 50px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      z-index: 5;
+      color: #ffffff;
+    }
+
+    .riox-logo {
+      text-align: right;
+      font-weight: 900;
+      font-size: 1.4rem;
+      letter-spacing: 0.1em;
+      line-height: 1;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .riox-logo span {
+      font-size: 0.55rem;
+      letter-spacing: 0.35em;
+      font-weight: 400;
+      display: block;
+      margin-top: 2px;
+      color: #ff3333;
+    }
+
+    .player-footer {
+      position: fixed;
+      bottom: 40px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 5;
+      color: #ffffff;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .track-info-panel {
+      line-height: 1.8;
+    }
+    .track-title {
+      font-weight: 900;
+      font-size: 1rem;
+      color: #ff3333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-stage"></div>
+  
+  <div class="backdrop-text-container">
+    <h1 class="aura-title">BAKI</h1>
+  </div>
+
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="character-master-box">
+    <div class="character-wrapper">
+      <div class="base-glow"></div>
+      <div class="energy-arc arc-left"></div>
+      <div class="energy-arc arc-right"></div>
+      <img class="main-character" src="https://static.wikia.nocookie.net/personajes-de-ficcion-database/images/6/61/New_Grappler_Baki.png/revision/latest?cb=20201130130259&path-prefix=es" alt="Baki Hanma Back Style">
+    </div>
+  </div>
+
+  <div class="brand-header">
+    <div class="riox-logo">
+      RIOX
+      <span>RECORDS</span>
+    </div>
+  </div>
+
+  <div class="player-footer">
+    <div class="track-info-panel">
+      <span id="current-track-name" class="track-title">GOAT</span>
+    </div>
+  </div>
+
+  <script>
+    const trackNameEl = document.getElementById('current-track-name');
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let startTime = performance.now();
+
+    const tracklist = [
+      { time: 0, name: "GOAT" },
+      { time: 149, name: "GOAT 2.0" },
+      { time: 315, name: "LACRIMOSA MOZART FUNK" },
+      { time: 465, name: "PLANKTON FUNK" },
+      { time: 635, name: "FLAMES (SLOWED)" },
+      { time: 808, name: "MOONLIGHT" }
+    ];
+
+    let stones = [];
+    function initStones() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stones = [];
+      for (let i = 0; i < 25; i++) {
+        stones.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 7 + 3,
+          speedY: -(Math.random() * 0.5 + 0.1),
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.02,
+          pulseOffset: Math.random() * 100
+        });
+      }
+    }
+
+    function drawStones(elapsed) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(15, 2, 2, 0.9)";
+
+      stones.forEach(stone => {
+        stone.y += stone.speedY;
+        stone.rotation += stone.rotSpeed;
+
+        if (stone.y < -20) {
+          stone.y = canvas.height + 20;
+          stone.x = Math.random() * canvas.width;
+        }
+
+        ctx.save();
+        const driftX = Math.sin((elapsed + stone.pulseOffset) * 0.5) * 0.3;
+        ctx.translate(stone.x + driftX, stone.y);
+        ctx.rotate(stone.rotation);
+        
+        ctx.beginPath();
+        ctx.moveTo(-stone.size, -stone.size * 0.6);
+        ctx.lineTo(stone.size * 0.8, -stone.size);
+        ctx.lineTo(stone.size, stone.size * 0.4);
+        ctx.lineTo(-stone.size * 0.4, stone.size);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+
+    function loop(timestamp) {
+      requestAnimationFrame(loop);
+      const elapsed = (timestamp - startTime) / 1000;
+
+      const currentTrack = [...tracklist].reverse().find(t => elapsed >= t.time);
+      if (currentTrack && trackNameEl.textContent !== currentTrack.name) {
+        trackNameEl.textContent = currentTrack.name;
+      }
+
+      drawStones(elapsed);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initStones();
+      requestAnimationFrame(loop);
+    });
+    window.addEventListener('resize', initStones);
+  </script>
+</body>
+</html>

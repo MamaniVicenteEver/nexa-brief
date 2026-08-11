@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexa Synth Engine - Electronic Music Architecture</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Space Grotesk (Tech moderno) & Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome para iconografía quirúrgica -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            tech: ['"Space Grotesk"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000000;
+      overflow: hidden;
+    }
+
+    /* Desenfoque de iluminación cinematográfica detrás de la modelo */
+    .studio-glow-overlay {
+      position: absolute;
+      bottom: 10%;
+      left: 65%;
+      transform: translate(-50%, 0);
+      width: 45vw;
+      height: 45vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(212, 175, 55, 0.03) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 4;
+      filter: blur(60px);
+      animation: atmosphericPulse 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes atmosphericPulse {
+      0% { transform: translate(-50%, 0) scale(0.9); opacity: 0.7; }
+      100% { transform: translate(-50%, 0) scale(1.15); opacity: 1; }
+    }
+
+    /* Animación de flotación de estudio */
+    @keyframes characterFloat {
+      0%, 100% {
+        transform: translateY(0px) scale(1);
+        filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9)) brightness(0.4) saturate(0) contrast(1.1);
+      }
+      50% {
+        transform: translateY(-12px) scale(1.01);
+        filter: drop-shadow(0 35px 60px rgba(0,0,0,0.95)) brightness(0.45) saturate(0) contrast(1.15);
+      }
+    }
+
+    .character-animated {
+      animation: characterFloat 7s ease-in-out infinite;
+      transition: filter 0.8s ease;
+    }
+
+    /* Líneas de escaneo muy sutiles solo para la atmósfera de concierto oscuro */
+    .dark-atmosphere::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+      background-size: 100% 4px;
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0.15;
+    }
+
+    /* Efecto de beat pulsante sutil en bordes específicos */
+    .pulse-beat-border {
+      animation: pulseBorder 1s infinite alternate;
+    }
+
+    @keyframes pulseBorder {
+      0% { border-color: rgba(0,0,0,0.1); }
+      100% { border-color: rgba(0,0,0,0.25); }
+    }
+  </style>
+</head>
+<body class="h-full font-sans antialiased text-stone-300 dark-atmosphere select-none">
+
+  <!-- CONTENEDOR MAESTRO DE DOS SECCIONES -->
+  <div class="relative z-10 w-full h-full flex flex-col lg:flex-row">
+
+    <!-- SECCIÓN IZQUIERDA: NEXA SYNTH CONTROLLER (Blanco Premium / Aluminio Cepillado) -->
+    <aside class="w-full lg:w-[460px] h-full bg-[#fcfcfc] border-r border-stone-200 flex flex-col justify-between p-8 shadow-[10px_0_40px_rgba(0,0,0,0.04)] relative z-20 text-stone-900">
+      
+      <!-- Logo corporativo y estado del Patch -->
+      <div>
+        <div class="flex items-center justify-between border-b border-stone-200/80 pb-5 mb-6">
+          <div class="flex items-center gap-3">
+            <!-- Pulsador de tempo BPM físico -->
+            <div id="bpm-indicator" class="w-2.5 h-2.5 rounded-full bg-stone-900 transition-transform duration-100"></div>
+            <div>
+              <p class="font-tech text-[10px] font-bold uppercase tracking-widest text-stone-400">Nexa Audio Laboratory &copy;</p>
+              <h2 class="text-xs font-bold tracking-wider text-stone-900 font-tech">ANALOGUE ENGINE DECK</h2>
+            </div>
+          </div>
+          <span class="font-tech text-[9px] font-bold px-2 py-0.5 bg-stone-100 border border-stone-200 text-stone-600 rounded uppercase tracking-wider">PATCH_ST-02</span>
+        </div>
+
+        <!-- Encabezado de la Consola -->
+        <div class="mb-6">
+          <h1 class="font-tech text-3xl font-bold tracking-tight text-stone-900 mb-1.5">NEXA BRIEF</h1>
+          <p class="text-xs text-stone-500 leading-relaxed font-sans">
+            Sintetizador de resonancia molecular de baja frecuencia. Monitoreo constante del espacio acústico del <strong class="text-stone-800 font-medium">Sujeto AP-02</strong>.
+          </p>
+        </div>
+
+        <!-- Módulo de Pista y BPM (Estilo DJ Deck de lujo) -->
+        <div class="bg-stone-50 border border-stone-200 rounded-xl p-4 mb-6">
+          <div class="flex justify-between items-center mb-3">
+            <span class="font-tech text-[10px] font-bold tracking-wider text-stone-400">MONITOREO DE AUDIO ACTIVO</span>
+            <span id="bpm-counter" class="font-tech text-xs font-bold px-2 py-1 bg-stone-900 text-white rounded">124.0 BPM</span>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-stone-900 flex items-center justify-center text-white relative overflow-hidden">
+              <i class="fa-solid fa-compact-disc text-lg animate-spin" style="animation-duration: 4s;"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-tech text-[10px] text-stone-400 tracking-wider">ELECTRONIC PATTERN</p>
+              <h3 id="track-name" class="font-tech text-sm font-bold text-stone-900 truncate">CHROMA VOID (MELODIC TECHNO)</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pantalla de Análisis de Onda Integrada en el Blanco -->
+        <div class="mb-6">
+          <span class="font-tech text-[10px] font-bold tracking-wider text-stone-400 block mb-2">LIVE WAVE GENERATOR</span>
+          <div class="h-28 bg-stone-950 rounded-xl border border-stone-800 p-2 relative overflow-hidden flex items-center justify-center">
+            <!-- Canvas secundario para el Osciloscopio Médico/Música -->
+            <canvas id="oscilloscope-canvas" class="w-full h-full opacity-90"></canvas>
+            <div class="absolute top-2 left-2 font-tech text-[8px] text-stone-500 tracking-widest">SINE SYNTH ENGINE</div>
+            <div class="absolute bottom-2 right-2 font-tech text-[8px] text-stone-500 tracking-widest" id="sample-rate">44.1 KHZ</div>
+          </div>
+        </div>
+
+        <!-- Controles Sintetizadores (Perillas simuladas de aluminio) -->
+        <div>
+          <span class="font-tech text-[10px] font-bold tracking-wider text-stone-400 block mb-3">SYNTHESIS PARAMETERS</span>
+          <div class="grid grid-cols-4 gap-2">
+            <!-- Perilla 1 -->
+            <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-3 flex flex-col items-center">
+              <span class="font-tech text-[8px] font-bold text-stone-400 tracking-widest mb-2">OSC</span>
+              <div class="w-10 h-10 rounded-full border-2 border-stone-300 relative flex items-center justify-center transition-transform duration-500 ease-out" id="knob-1">
+                <div class="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-2 bg-stone-900 rounded-full"></div>
+              </div>
+              <span class="font-tech text-[9px] font-bold text-stone-800 mt-2" id="val-1">45%</span>
+            </div>
+            <!-- Perilla 2 -->
+            <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-3 flex flex-col items-center">
+              <span class="font-tech text-[8px] font-bold text-stone-400 tracking-widest mb-2">RES</span>
+              <div class="w-10 h-10 rounded-full border-2 border-stone-300 relative flex items-center justify-center transition-transform duration-500 ease-out" id="knob-2">
+                <div class="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-2 bg-stone-900 rounded-full"></div>
+              </div>
+              <span class="font-tech text-[9px] font-bold text-stone-800 mt-2" id="val-2">72%</span>
+            </div>
+            <!-- Perilla 3 -->
+            <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-3 flex flex-col items-center">
+              <span class="font-tech text-[8px] font-bold text-stone-400 tracking-widest mb-2">FREQ</span>
+              <div class="w-10 h-10 rounded-full border-2 border-stone-300 relative flex items-center justify-center transition-transform duration-500 ease-out" id="knob-3">
+                <div class="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-2 bg-stone-900 rounded-full"></div>
+              </div>
+              <span class="font-tech text-[9px] font-bold text-stone-800 mt-2" id="val-3">30Hz</span>
+            </div>
+            <!-- Perilla 4 -->
+            <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-3 flex flex-col items-center">
+              <span class="font-tech text-[8px] font-bold text-stone-400 tracking-widest mb-2">AMP</span>
+              <div class="w-10 h-10 rounded-full border-2 border-stone-300 relative flex items-center justify-center transition-transform duration-500 ease-out" id="knob-4">
+                <div class="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-2 bg-stone-900 rounded-full"></div>
+              </div>
+              <span class="font-tech text-[9px] font-bold text-stone-800 mt-2" id="val-4">1.2x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consola de Logs Operacionales Inferior -->
+      <div class="mt-6 pt-5 border-t border-stone-200">
+        <span class="font-tech text-[9px] font-bold tracking-widest text-stone-400 block mb-1.5">AUDIO SYNTH LOGS</span>
+        <div class="font-mono text-[9px] text-stone-500 space-y-1 h-14 overflow-hidden" id="log-console">
+          <div>&gt; NEXA SYNTH DECK RUNNING SUCCESSFULLY</div>
+          <div>&gt; BPM ENTRAINMENT LOCKED ON SINE-WAVE</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- SECCIÓN DERECHA: VACÍO OBSIDIANA E INTEGRACIÓN DEL PERSONAJE -->
+    <main class="flex-1 h-full relative flex items-center justify-center overflow-hidden bg-black">
+      
+      <!-- Capa de Viñeta Ultra-Sutil para atenuar la luz ambiental -->
+      <div class="absolute inset-0 bg-radial-gradient(circle at center, transparent 20%, #000000 90%) pointer-events-none z-10"></div>
+
+      <!-- Halo de iluminación trasera dinámico -->
+      <div class="studio-glow-overlay"></div>
+
+      <!-- Texto monumental del fondo (Atenuado al máximo) -->
+      <div class="absolute inset-0 flex justify-center items-center pointer-events-none select-none z-0 gap-24">
+        <span class="font-tech text-[22vw] font-bold text-stone-900 opacity-[0.03] tracking-tighter">B</span>
+        <span class="font-tech text-[22vw] font-light text-stone-900 opacity-[0.01] tracking-tighter">P</span>
+        <span class="font-tech text-[22vw] font-bold text-stone-900 opacity-[0.03] tracking-tighter">M</span>
+      </div>
+
+      <!-- Visualizador Fino de Frecuencias (Estilo ondas flotantes traslúcidas) -->
+      <div class="absolute inset-x-0 top-[28%] bottom-[32%] z-10 flex items-center justify-center pointer-events-none">
+        <canvas id="visualizer-canvas" class="w-[85%] h-full opacity-80 filter blur-[0.5px] mix-blend-screen"></canvas>
+      </div>
+
+      <!-- El Personaje Central (Gélido, Minimalista) -->
+      <div class="character-container absolute bottom-0 left-[62%] -translate-x-1/2 h-[82vh] flex items-end">
+        <img class="character-animated h-full w-auto object-contain" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/Japan/girl.png" alt="Sujeto de Prueba AP-02">
+      </div>
+
+      <!-- Texto central atmosférico (Flotando con la música) -->
+      <div class="absolute bottom-16 right-16 text-right z-20 font-tech">
+        <h4 class="text-sm tracking-[0.4em] text-stone-400 font-light">OBSESSED WITH</h4>
+        <h1 class="text-xs tracking-[0.25em] text-stone-600 mt-1">NEXA_ENGINE.02</h1>
+      </div>
+
+      <!-- Reloj de Telemetría (Cronómetro) -->
+      <div class="absolute top-10 right-10 text-right z-20 font-mono text-[10px] tracking-widest text-stone-500">
+        <span class="text-stone-700">TIME RUNNING // </span>
+        <span id="telemetry-timer" class="text-stone-400">00:00:00</span>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- SISTEMA DE AUDIO Y SIMULACIÓN COMPLETA -->
+  <script type="module">
+    // Referencias DOM
+    const canvasMain = document.getElementById('visualizer-canvas');
+    const ctxMain = canvasMain.getContext('2d');
+    const canvasOsc = document.getElementById('oscilloscope-canvas');
+    const ctxOsc = canvasOsc.getContext('2d');
+    const bpmIndicator = document.getElementById('bpm-indicator');
+    const bpmCounter = document.getElementById('bpm-counter');
+    const timerEl = document.getElementById('telemetry-timer');
+    const trackNameEl = document.getElementById('track-name');
+    const logConsole = document.getElementById('log-console');
+
+    // Estado del Motor de Audio Sintetizado Autónomo
+    let animationFrameId;
+    let simulationTime = 0;
+    let currentBPM = 124.0;
+    let trackIndex = 0;
+    
+    // Lista de temas electrónicos ficticios que simula la IA
+    const playlist = [
+      { name: "CHROMA VOID (MELODIC TECHNO)", bpm: 124, scale: 1.2, osc: 50, res: 75, freq: 130 },
+      { name: "SINE WAVE RESISTOR (MINIMAL DEEP)", bpm: 120, scale: 0.95, osc: 38, res: 60, freq: 88 },
+      { name: "ANALOG DRIFT (GLITCH ACID)", bpm: 128, scale: 1.4, osc: 62, res: 88, freq: 210 },
+      { name: "DEEP SPACE TRANSDUCER (AMBIENT HOUSE)", bpm: 118, scale: 0.8, osc: 25, res: 50, freq: 45 }
+    ];
+
+    // Ajustar resolución de Canvas
+    function resizeCanvases() {
+      const pMain = canvasMain.parentElement;
+      canvasMain.width = pMain.clientWidth * 2;
+      canvasMain.height = pMain.clientHeight * 2;
+
+      canvasOsc.width = canvasOsc.clientWidth;
+      canvasOsc.height = canvasOsc.clientHeight;
+    }
+
+    // Cronómetro de telemetría de alta resolución
+    let startTime = performance.now();
+    function updateClock() {
+      const elapsed = (performance.now() - startTime) / 1000;
+      const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+      const secs = Math.floor(elapsed % 60).toString().padStart(2, '0');
+      const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+      timerEl.textContent = `${mins}:${secs}:${ms}`;
+    }
+
+    // Simular el bombeo rítmico (BPM) en el hardware blanco
+    let lastBeatTime = 0;
+    function processBeatEngine(timestamp) {
+      const beatInterval = 60000 / currentBPM; // Milisegundos por beat
+      if (timestamp - lastBeatTime >= beatInterval) {
+        lastBeatTime = timestamp;
+        
+        // Efecto físico de latido de diodo óptico en el BPM controller
+        bpmIndicator.style.transform = 'scale(1.5)';
+        setTimeout(() => {
+          bpmIndicator.style.transform = 'scale(1.0)';
+        }, 100);
+
+        // Añadir una línea de logs aleatorios simulando decodificación de audio
+        if (Math.random() > 0.45) {
+          pushSystemLog();
+        }
+      }
+    }
+
+    // Logs del sistema de síntesis
+    const logsPool = [
+      "DECODE: SINE SYNTH COUPLER ENGAGED",
+      "RESONANCE: HIGH FREQUENCY FILTER OPTIMAL",
+      "CORE: ENVELOPE MODULATOR RECALCULATING",
+      "FREQ: LOW KICK SUB-RESONANCE NORMALIZED",
+      "CLOCK: SYNCED TO STAGE_02 HARDWARE",
+      "SYSTEM: SPECTRUM READOUT STABLE"
+    ];
+
+    function pushSystemLog() {
+      const randomLog = logsPool[Math.floor(Math.random() * logsPool.length)];
+      const div = document.createElement('div');
+      div.innerHTML = `&gt; ${randomLog}`;
+      logConsole.appendChild(div);
+      if (logConsole.children.length > 5) {
+        logConsole.removeChild(logConsole.firstChild);
+      }
+    }
+
+    // Cambiar la canción automáticamente cada 15 segundos para mostrar dinamismo
+    let lastTrackChange = 0;
+    function processPlaylistRotation(timestamp) {
+      if (timestamp - lastTrackChange > 15000) {
+        lastTrackChange = timestamp;
+        trackIndex = (trackIndex + 1) % playlist.length;
+        const currentTrack = playlist[trackIndex];
+
+        currentBPM = currentTrack.bpm;
+        bpmCounter.textContent = `${currentBPM.toFixed(1)} BPM`;
+        trackNameEl.textContent = currentTrack.name;
+
+        // Actualizar perillas visuales simulando calibración de DJ analógica
+        updateHardwareKnobs(currentTrack);
+
+        pushSystemLog();
+        addConsoleSpecificLog(`TRANSITION: LOADED TRACT "${currentTrack.name}"`);
+      }
+    }
+
+    function addConsoleSpecificLog(msg) {
+      const div = document.createElement('div');
+      div.className = 'text-stone-900 font-bold';
+      div.innerHTML = `&gt; ${msg}`;
+      logConsole.appendChild(div);
+      if (logConsole.children.length > 5) {
+        logConsole.removeChild(logConsole.firstChild);
+      }
+    }
+
+    // Rotar perillas de la consola físicamente
+    function updateHardwareKnobs(track) {
+      const rot1 = (track.osc / 100) * 270 - 135; // grados
+      const rot2 = (track.res / 100) * 270 - 135;
+      const rot3 = (track.freq / 250) * 270 - 135;
+      const rot4 = (track.scale / 2) * 270 - 135;
+
+      document.getElementById('knob-1').style.transform = `rotate(${rot1}deg)`;
+      document.getElementById('knob-2').style.transform = `rotate(${rot2}deg)`;
+      document.getElementById('knob-3').style.transform = `rotate(${rot3}deg)`;
+      document.getElementById('knob-4').style.transform = `rotate(${rot4}deg)`;
+
+      document.getElementById('val-1').textContent = `${track.osc}%`;
+      document.getElementById('val-2').textContent = `${track.res}%`;
+      document.getElementById('val-3').textContent = `${track.freq}Hz`;
+      document.getElementById('val-4').textContent = `${track.scale.toFixed(1)}x`;
+    }
+
+    // Dibujo del osciloscopio minimalista (Blanco sobre fondo negro interno)
+    function drawOscilloscope() {
+      ctxOsc.clearRect(0, 0, canvasOsc.width, canvasOsc.height);
+      ctxOsc.strokeStyle = '#00ffaa'; // Verde quirúrgico de pantalla analógica
+      ctxOsc.lineWidth = 1.5;
+      ctxOsc.beginPath();
+
+      const width = canvasOsc.width;
+      const height = canvasOsc.height;
+      const sliceWidth = width / 100;
+      let x = 0;
+
+      for (let i = 0; i < 100; i++) {
+        // Combinación de senos para simular ondas acústicas complejas
+        const y = (height / 2) + 
+                  Math.sin(i * 0.15 + simulationTime * 5) * 15 * Math.sin(simulationTime) +
+                  Math.cos(i * 0.05 - simulationTime * 3) * 8;
+
+        if (i === 0) {
+          ctxOsc.moveTo(x, y);
+        } else {
+          ctxOsc.lineTo(x, y);
+        }
+        x += sliceWidth;
+      }
+      ctxOsc.stroke();
+    }
+
+    // Dibujo del visualizador central (Oro mate, platino y blanco en perfecta integración)
+    function drawMainVisualizer() {
+      ctxMain.clearRect(0, 0, canvasMain.width, canvasMain.height);
+
+      const centerX = canvasMain.width / 2;
+      const centerY = canvasMain.height / 2;
+      
+      const barCount = 14; // Pocas barras, anchas y ultra sofisticadas
+      const barWidth = 3;
+      const gap = 16;
+      
+      const totalWidth = (barCount * barWidth) + ((barCount - 1) * gap);
+      let x = centerX - (totalWidth / 2);
+
+      // Dibujar espectros simétricos a ambos lados (Estilo ecualizador estéreo industrial)
+      for (let i = 0; i < barCount; i++) {
+        // La escala del espectrómetro cambia según el track activo de la playlist
+        const modifier = playlist[trackIndex].scale;
+        
+        // Simulación de respuesta de frecuencia del bajo, voces y agudos
+        let freqFactor = Math.sin(i * 0.4 + simulationTime * 3) * 18 * modifier;
+        if (i % 2 === 0) freqFactor += Math.cos(i * 0.1 - simulationTime * 4) * 12;
+        
+        // Bombo principal rítmico simulado en el centro del espectro
+        const timeSinceBeat = (performance.now() - lastBeatTime) / 1000;
+        const kickPulse = Math.max(0, 1 - timeSinceBeat * 4) * 45 * modifier;
+        
+        let barHeight = Math.max(4, 30 + freqFactor + (i > 4 && i < 10 ? kickPulse : 0));
+        const y = centerY - (barHeight / 2);
+
+        // Degradado de alta gama: Oro satinado que transiciona a platino transparente
+        const gradient = ctxMain.createLinearGradient(0, y, 0, y + barHeight);
+        gradient.addColorStop(0, 'rgba(212, 175, 55, 0.55)');   // Oro mate
+        gradient.addColorStop(0.5, '#ffffff');                   // Blanco puro de alta tensión
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0.02)');  // Disolución en el vacío
+
+        ctxMain.fillStyle = gradient;
+
+        // Dibujar barra con esquinas redondeadas elegantes (finesse quirúrgica)
+        ctxMain.beginPath();
+        ctxMain.roundRect(x, y, barWidth, barHeight, 2);
+        ctxMain.fill();
+
+        x += barWidth + gap;
+      }
+    }
+
+    // Ciclo maestro de animación unificado de alto rendimiento
+    function mainLoop(timestamp) {
+      animationFrameId = requestAnimationFrame(mainLoop);
+      
+      simulationTime += 0.015; // Tiempo incremental del oscilador
+
+      updateClock();
+      processBeatEngine(timestamp);
+      processPlaylistRotation(timestamp);
+
+      drawOscilloscope();
+      drawMainVisualizer();
+    }
+
+    // Eventos y configuración inicial
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeCanvases();
+      window.addEventListener('resize', resizeCanvases);
+
+      // Calibración inicial del hardware analógico con la primera canción
+      updateHardwareKnobs(playlist[0]);
+      lastTrackChange = performance.now();
+
+      // Lanzamiento del ciclo maestro
+      mainLoop(performance.now());
+    });
+
+    window.addEventListener('beforeunload', () => {
+      cancelAnimationFrame(animationFrameId);
+    });
+  </script>
+</body>
+</html>

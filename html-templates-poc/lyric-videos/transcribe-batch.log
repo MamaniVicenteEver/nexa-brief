@@ -1,0 +1,40 @@
+=== Bruses - Dueles Tan Bien ===
+Archivo:     Bruses Dueles Tan Bien Audio.mp3
+Salida:      lyrics-bruses-dueles-tan-bien.json
+Modelo:      large-v3 (cpu, float32)
+Cargando modelo...
+Transcribiendo (float32 + sin VAD es más lento, pero cubre toda la pista)...
+  0%|          | 0/174.02 [00:00<?, ?seconds/s] 17%|█▋        | 30.0/174.02 [00:58<04:39,  1.94s/seconds] 34%|███▎      | 58.64/174.02 [02:17<04:38,  2.42s/seconds] 50%|█████     | 87.08/174.02 [03:20<03:22,  2.33s/seconds] 65%|██████▌   | 113.42/174.02 [04:35<02:32,  2.52s/seconds] 81%|████████  | 140.7/174.02 [05:33<01:19,  2.38s/seconds]  95%|█████████▌| 165.72/174.02 [06:34<00:19,  2.40s/seconds]100%|██████████| 174.02/174.02 [07:18<00:00,  2.78s/seconds]100%|██████████| 174.02/174.02 [07:18<00:00,  2.52s/seconds]
+
+===================================
+JSON generado correctamente
+/home/university/Documentos/Proyectos/nexa-brief/output/whisper-test/lyrics-bruses-dueles-tan-bien.json
+===================================
+Duración del audio:         174.0s
+Último segmento termina en: 173.0s
+Hueco sin transcribir:      1.1s
+Total de segmentos:         41
+Total de palabras:          199
+Cobertura completa (hueco final < 5s).
+===================================
+
+=== Kevin Kaarl - Colapso ===
+Archivo:     𝙆𝙚𝙫𝙞𝙣 𝙆𝙖𝙖𝙧𝙡 𝘾𝙤𝙡𝙖𝙥𝙨𝙤 𝙇𝙚𝙩𝙧𝙖.mp3
+Salida:      lyrics-kevin-kaarl-colapso.json
+Modelo:      large-v3 (cpu, float32)
+Cargando modelo...
+Transcribiendo (float32 + sin VAD es más lento, pero cubre toda la pista)...
+  0%|          | 0/235.78 [00:00<?, ?seconds/s] 10%|█         | 24.48/235.78 [00:46<06:37,  1.88s/seconds] 21%|██▏       | 50.68/235.78 [01:44<06:26,  2.09s/seconds] 32%|███▏      | 75.92/235.78 [02:41<05:46,  2.17s/seconds] 43%|████▎     | 101.8/235.78 [03:31<04:37,  2.07s/seconds] 54%|█████▍    | 126.88/235.78 [04:25<03:49,  2.10s/seconds] 65%|██████▍   | 152.44/235.78 [05:13<02:48,  2.02s/seconds] 76%|███████▌  | 178.02/235.78 [08:24<03:39,  3.81s/seconds] 88%|████████▊ | 208.02/235.78 [09:00<01:20,  2.88s/seconds]100%|██████████| 235.78/235.78 [09:37<00:00,  2.39s/seconds]100%|██████████| 235.78/235.78 [09:37<00:00,  2.45s/seconds]
+
+===================================
+JSON generado correctamente
+/home/university/Documentos/Proyectos/nexa-brief/output/whisper-test/lyrics-kevin-kaarl-colapso.json
+===================================
+Duración del audio:         235.8s
+Último segmento termina en: 235.4s
+Hueco sin transcribir:      0.4s
+Total de segmentos:         25
+Total de palabras:          161
+Cobertura completa (hueco final < 5s).
+===================================
+EXIT:0
