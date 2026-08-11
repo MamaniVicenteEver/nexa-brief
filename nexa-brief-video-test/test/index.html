@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON LETRAS V3 — Hola Remix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Monoton&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema (fuentes/color base) — defaults idénticos al caso actual; config.json puede pisarlos */
+  :root { --fontTube: "Monoton", cursive; --fontBlock: "Archivo Black", sans-serif; --neonCore: #FFE9CF; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #060302; cursor: pointer; }
+
+  /* fondo 16:9 a pantalla completa, filtrado hacia la paleta del neón */
+  #bg {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0;
+    filter: grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18);
+    animation: bgBreath 46s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  @keyframes bgBreath {
+    0%   { transform: scale(1.02) translate(0, 0); }
+    100% { transform: scale(1.09) translate(-1.2%, 1%); }
+  }
+  #bgTint {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 60%, rgba(255,60,10,0.10) 0%, rgba(30,4,0,0.55) 78%, rgba(8,2,0,0.8) 100%);
+    mix-blend-mode: multiply;
+  }
+
+  #viewport { position: fixed; inset: 0; perspective: 1000px; overflow: hidden; z-index: 2; }
+  #worldTilt { position: absolute; inset: 0; transform-style: preserve-3d; }
+  #world { position: absolute; left: 0; top: 0; transform-style: preserve-3d; will-change: transform; }
+
+  .w {
+    position: absolute; white-space: nowrap; text-transform: uppercase;
+    will-change: transform, opacity; line-height: 0.95;
+    transition: opacity 1.6s ease, filter 1.6s ease;
+  }
+  .w.tube { font-family: var(--fontTube); font-weight: 400; }
+  .w.line {
+    font-family: var(--fontBlock); font-weight: 900;
+    color: transparent !important; letter-spacing: 0.02em;
+  }
+  .w.vert { writing-mode: vertical-rl; text-orientation: mixed; }
+  .w.cold { opacity: 0.42; filter: brightness(0.75); }
+  @keyframes ignite {
+    0%   { opacity: 0; }
+    6%   { opacity: 1; }
+    10%  { opacity: 0.25; }
+    16%  { opacity: 1; }
+    21%  { opacity: 0.35; }
+    27%  { opacity: 1; }
+    34%  { opacity: 0.85; }
+    40%  { opacity: 1; }
+    100% { opacity: 1; }
+  }
+  .w.on { animation: ignite 0.55s steps(1, end) forwards; }
+
+  #street {
+    position: fixed; left: 0; right: 0; top: 82vh; height: 3px; z-index: 3;
+    background: repeating-linear-gradient(90deg, rgba(255,30,0,0.85) 0 90px, transparent 90px 150px);
+    box-shadow: 0 0 18px rgba(255,40,0,0.55), 0 0 60px rgba(255,30,0,0.25);
+    opacity: 0.45; pointer-events: none;
+  }
+  #vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 42%, transparent 42%, rgba(0,0,0,0.78) 100%);
+  }
+  #crt {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0.13;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.55) 0 2px, transparent 2px 5px);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 6; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.06; mix-blend-mode: overlay; animation: gsh 1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+  /* #intro y #outro comparten la misma tipografía neón vía .cardScreen */
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2.4vh; text-align: center;
+    transition: opacity 1.3s ease; text-transform: uppercase;
+  }
+  .cardScreen .artist { font-family: var(--fontTube); font-size: 5.2vh; }
+  .cardScreen .title  { font-family: var(--fontBlock); font-size: 17vh; color: transparent; letter-spacing: 0.04em; line-height: 1; }
+  .cardScreen .sub    { font-family: var(--fontTube); font-size: 5.4vh; letter-spacing: 0.55em; padding-left: 0.55em; }
+  .cardScreen .feats  { font-family: var(--fontBlock); font-size: 1.7vh; letter-spacing: 0.35em; opacity: 0.85; margin-top: 3vh; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  /* cuando aparece el outro, el mundo de letras se apaga suavemente detrás */
+  body.outroActive #viewport, body.outroActive #bg, body.outroActive #bgTint {
+    opacity: 0.12; transition: opacity 1.8s ease;
+  }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--fontBlock); font-size: 1.5vh; letter-spacing: 0.5em;
+    opacity: 0.55; animation: hintPulse 2s ease infinite; pointer-events: none; color: var(--neonCore);
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+  /* ============ DEBUG HUD — BORRAR ESTE BLOQUE (CSS) PARA PRODUCCIÓN ============ */
+  #debugHud {
+    position: fixed; left: 0; bottom: 0; width: 100vw; z-index: 20;
+    font-family: "Courier New", monospace; font-size: 12px; letter-spacing: 0.03em;
+    color: #ffcfae; background: rgba(0,0,0,0.35); padding: 4px 10px;
+    opacity: 0.55; pointer-events: none; white-space: pre;
+  }
+  /* ================================================================================ */
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    .cardScreen .artist { font-size: min(5.2vh, 8vw); }
+    .cardScreen .title  { font-size: min(17vh, 20vw); }
+    .cardScreen .sub    { font-size: min(5.4vh, 7.5vw); letter-spacing: 0.4em; padding-left: 0.4em; }
+    .cardScreen .feats  { font-size: min(1.7vh, 3.3vw); letter-spacing: 0.24em; }
+  }
+</style>
+</head>
+<body>
+<img id="bg" alt="">
+<div id="bgTint"></div>
+<div id="viewport"><div id="worldTilt"><div id="world"></div></div></div>
+<div id="street"></div>
+<div id="vignette"></div>
+<div id="crt"></div>
+<div id="grain"></div>
+<div id="intro" class="cardScreen">
+  <div class="artist neonA"></div>
+  <div class="title neonB"></div>
+  <div class="sub neonA"></div>
+  <div class="feats neonC"></div>
+</div>
+<div id="outro" class="cardScreen">
+  <div class="artist neonA"></div>
+  <div class="title neonB"></div>
+  <div class="sub neonA"></div>
+  <div class="feats neonC"></div>
+</div>
+<div id="hint">CLICK PARA EMPEZAR</div>
+<!-- ============ DEBUG HUD — BORRAR ESTA LÍNEA (HTML) PARA PRODUCCIÓN ============ -->
+<div id="debugHud"></div>
+<!-- ================================================================================ -->
+<audio id="audio" preload="auto"></audio>
+<script type="module">
+/* ================================ CONFIG ================================ */
+/* La letra YA NO vive aquí: se consume 100% de lyricsUrl (formato Whisper:
+   { metadata, segments: [ { words: [ { word, start, end }, ... ] }, ... ] } ).
+   El CONFIG tampoco: vive en config.json como colección de casos con "id"
+   (mismo patrón que 04-video-motion). Cada objeto trae audio, lyricsUrl, bg,
+   fonts, neon (paleta), intro/outro, layout y seed. Para otra canción,
+   agregá otro objeto al array "configs" — acá no se toca nada.
+   Servir por HTTP (python3 -m http.server): por file:// el fetch se bloquea. */
+const ACTIVE_ID = null;   /* <-- forzar un id ("hola-remix" | "hola-remix-cian" | ...) · null = usa "activeId" del JSON */
+
+const DB = await fetch("config.json").then(r => r.json());
+const CONFIG = DB.configs.find(c => c.id === ACTIVE_ID)
+            || DB.configs.find(c => c.id === DB.activeId)
+            || DB.configs[0];
+
+/* tema desde el JSON → variables CSS (los defaults del CSS son idénticos al
+   caso actual, así que sin config el diseño no cambia en nada) */
+(function applyTheme(C) {
+  const root = document.documentElement;
+  if (C.fonts?.googleUrl) {
+    const link = document.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+    if (link && link.href !== C.fonts.googleUrl) link.href = C.fonts.googleUrl;
+  }
+  if (C.fonts?.tube)  root.style.setProperty("--fontTube", C.fonts.tube);
+  if (C.fonts?.block) root.style.setProperty("--fontBlock", C.fonts.block);
+  if (C.neon?.core)   root.style.setProperty("--neonCore", C.neon.core);
+})(CONFIG);
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, world = $("world"), audio = $("audio");
+let vw = innerWidth, vh = innerHeight;
+addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; });
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+/* ---- neon ---- */
+const N = C.neon;
+const tubeGlow = s => `0 0 ${s*0.15}px ${N.core}, 0 0 ${s*0.35}px ${N.glow}, 0 0 ${s*0.9}px ${N.glow}, 0 0 ${s*1.8}px ${N.deep}, 0 0 ${s*3}px ${N.deep}`;
+function styleNeon(el, fs, outline) {
+  if (outline) {
+    el.style.webkitTextStroke = Math.max(1.5, fs * 0.045) + "px " + N.core;
+    el.style.filter = `drop-shadow(0 0 ${Math.max(2, fs*0.05)}px ${N.core}) ` +
+                      `drop-shadow(0 0 ${fs*0.16}px ${N.glow}) ` +
+                      `drop-shadow(0 0 ${fs*0.4}px ${N.deep})`;
+  } else {
+    el.style.color = N.core;
+    el.style.textShadow = tubeGlow(Math.max(12, fs * 0.2));
+  }
+}
+
+/* ---- intro / outro: mismo maquetado (.cardScreen), textos distintos ---- */
+function buildCard(id, cfg) {
+  const i = $(id);
+  const a = i.querySelector(".artist"), t = i.querySelector(".title"),
+        s = i.querySelector(".sub"), f = i.querySelector(".feats");
+  a.textContent = cfg.artist ?? cfg.songTitle ?? "";
+  t.textContent = cfg.title; s.textContent = cfg.sub; f.textContent = cfg.feats;
+  styleNeon(a, vh * 0.052, false);
+  styleNeon(t, vh * 0.17, true);
+  styleNeon(s, vh * 0.054, false);
+  f.style.color = N.core; f.style.textShadow = tubeGlow(8);
+}
+buildCard("intro", C.intro);
+buildCard("outro", C.outro);
+
+/* ---- lyrics: 100% desde lyricsUrl (JSON de Whisper) ---- */
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const out = [];
+    for (const seg of j.segments) for (const w of seg.words)
+      out.push({ t: w.start, text: w.word.trim() });
+    if (!out.length) throw new Error("lyrics.json sin palabras");
+    return out;
+  } catch (e) {
+    console.warn("[neon-letras-V3] No se pudo cargar", C.lyricsUrl,
+                 "— sirve el HTML por HTTP (Live Server), no por file://.", e);
+    return [];
+  }
+}
+
+/* ---- mundo: columnas que nacen en direcciones impredecibles ---- */
+let baseX = 0, baseY = 0, rowY = 0, rowIdx = 0, rowsThisCol = 0, placed = [];
+const nextRowsPerCol = () => C.layout.rowsMin + Math.floor(rng() * (C.layout.rowsMax - C.layout.rowsMin + 1));
+rowsThisCol = nextRowsPerCol();
+
+function pickDir() {
+  const w = C.layout.dirWeights, r = rng() * (w.left + w.down + w.up);
+  if (r < w.left) return "left";
+  if (r < w.left + w.down) return "down";
+  return "up";
+}
+function newColumn() {
+  const dir = pickDir(), L = C.layout;
+  if (dir === "left") {
+    baseX -= vw * (L.colGapVw / 100) * (0.85 + rng() * 0.4);
+    baseY += (rng() - 0.5) * vh * 0.22;
+  } else if (dir === "down") {          /* la cámara baja → las viejas salen ARRIBA */
+    baseY += vh * (L.colGapVh / 100) * (0.9 + rng() * 0.35);
+    baseX += (rng() - 0.5) * vw * 0.30;
+  } else {                              /* la cámara sube → las viejas salen ABAJO */
+    baseY -= vh * (L.colGapVh / 100) * (0.9 + rng() * 0.35);
+    baseX += (rng() - 0.5) * vw * 0.30;
+  }
+  rowY = baseY;
+  rowIdx = 0;
+  rowsThisCol = nextRowsPerCol();
+}
+
+function fontSizeFor(text, solo) {
+  const len = Math.max(2, text.length);
+  /* móvil vertical: la palabra ocupa más ancho de pantalla (desktop no cambia) */
+  const wShare = vw < vh ? 0.48 : 0.30;
+  let fs = Math.min(vw * wShare / (len * 0.52), solo ? vh * 0.26 : vh * 0.125);
+  fs *= 0.88 + rng() * 0.28;
+  if (solo) fs *= 1.35;
+  return Math.max(vh * 0.05, Math.min(fs, solo ? vh * 0.30 : vh * 0.14));
+}
+
+function placeWord(w) {
+  const L = C.layout;
+  const clean = w.text.replace(/[.,;!?¡¿"']/g, "");
+  if (!clean) return null;
+  const solo = clean.length >= 6 ? rng() < 0.55 : rng() < L.soloChance;
+  const vertical = !solo && rng() < L.verticalChance && clean.length <= 6;
+  if (solo && rowIdx > 0) newColumn();
+
+  const el = doc.createElement("div");
+  const outline = rng() > L.tubeChance;
+  el.className = "w " + (outline ? "line" : "tube") + (vertical ? " vert" : "");
+  el.textContent = clean;
+  const fs = fontSizeFor(clean, solo);
+  el.style.fontSize = fs + "px";
+  styleNeon(el, fs, outline);
+
+  const stair = rowIdx * vw * (L.stairVw / 100) + (rng() - 0.5) * vw * 0.015;
+  const x = baseX + stair;
+  const y = rowY;
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+  world.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("on"));
+
+  const width = vertical ? fs * 1.1 : clean.length * fs * (outline ? 0.62 : 0.72);
+  const height = vertical ? clean.length * fs * 0.8 : fs;
+  rowY += height * 1.12 + vh * 0.02;    /* la grada avanza según la altura real */
+
+  placed.push(el);
+  for (let i = 0; i < placed.length - 1; i++) placed[i].classList.add("cold");
+  if (placed.length > 26) { const old = placed.shift(); old.remove(); }
+
+  rowIdx++;
+  if (solo || rowIdx >= rowsThisCol) newColumn();
+  return { x, y, w: width, h: height };
+}
+
+/* ---- cámara ---- */
+let camX = 0, camY = 0, camTX = 0, camTY = 0;
+function aimCamera(r) {
+  if (!r) return;
+  /* móvil vertical: centrar al medio sin jitter para que nada se corte a los lados */
+  const cx = vw < vh ? 0.5 : (0.42 + rng() * 0.1);
+  camTX = r.x + r.w / 2 - vw * cx;
+  camTY = r.y + r.h / 2 - vh * (0.40 + rng() * 0.12);
+}
+
+/* ---- reloj: audio si suena; si no, rAF ---- */
+let rafT0 = null, rafNow = 0, started = false;
+const clock = () => (!audio.paused && audio.currentTime > 0.05)
+  ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+
+async function begin() {
+  if (started) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+/* ---- outro: se dispara por el FINAL REAL del audio, no por la letra ----
+   la letra puede acabarse antes que la canción (transcripción incompleta,
+   outro instrumental, etc.) — eso NO dispara el cierre, solo lo hace estar
+   cerca de audio.duration. Así el "hueco" sin letra queda cubierto por el
+   propio outro en vez de sentirse trabado. */
+let outroShown = false;
+function maybeOutro() {
+  if (outroShown) return;
+  const dur = audio.duration;
+  if (!isFinite(dur) || dur <= 0) return;
+  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
+    outroShown = true;
+    doc.body.classList.add("outroActive");
+    $("intro").classList.add("gone");   /* por si acaso, nunca solapar con la intro */
+    $("outro").classList.add("show");
+    /* apaga TODAS las palabras ya puestas, incluida la más reciente — sin esto,
+       la última palabra se queda a brillo completo para siempre (nunca llega
+       una palabra "siguiente" que la marque .cold) y queda flotando encima
+       del cartel de cierre mientras este se desvanece a la vista. */
+    for (const el of placed) el.classList.add("cold");
+  }
+}
+audio.addEventListener("ended", maybeOutro);
+
+/* ============ DEBUG HUD — BORRAR ESTE BLOQUE (JS) PARA PRODUCCIÓN ============
+   Muestra abajo: tiempo actual / duración total, estado del audio, cuántas
+   palabras van colocadas y en cuánto llega la próxima. Sirve para ver EN VIVO
+   si algo "se traba" porque se acabó la canción, porque se acabó la letra
+   (lyrics.json no cubre toda la duración) o por otra causa. */
+function updateDebug() {
+  if (!C.debug.enabled) return;
+  const dur = isFinite(audio.duration) ? audio.duration.toFixed(1) : "?";
+  const cur = audio.currentTime.toFixed(1);
+  const state = audio.ended ? "ended" : audio.paused ? "paused" : "playing";
+  const next = words[ptr];
+  const nextIn = outroShown ? "outro activo (sin más palabras)"
+               : next ? (next.t - clock()).toFixed(1) + "s" : "—(sin más letra)";
+  $("debugHud").textContent =
+    `t=${cur}s / ${dur}s  ·  audio:${state}  ·  palabra ${ptr}/${words.length}  ·  próxima en ${nextIn}`;
+}
+/* =============================================================================== */
+
+/* ---- main ---- */
+let words = [], ptr = 0, introGone = false;
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  const t = clock();
+  maybeOutro();                          /* chequear ANTES de poner más palabras */
+  if (!outroShown) {                     /* una vez que cierra, no entran palabras nuevas */
+    while (ptr < words.length && t >= words[ptr].t) {
+      if (!introGone) { $("intro").classList.add("gone"); introGone = true; }
+      aimCamera(placeWord(words[ptr]));
+      ptr++;
+    }
+  }
+  camX += (camTX - camX) * 0.055;
+  camY += (camTY - camY) * 0.055;
+  const sway = Math.sin(now * 0.00035) * 1.2;
+  $("worldTilt").style.transform = `rotateY(${sway}deg)`;
+  world.style.transform = `translate3d(${-camX}px, ${-camY}px, 0)`;
+  updateDebug();                        /* DEBUG HUD: borrar esta línea también */
+  requestAnimationFrame(frame);
+}
+
+$("bg").src = C.bg.src;
+if (C.bg.filter) $("bg").style.filter = C.bg.filter;   /* si no viene, queda el filtro default del CSS */
+audio.src = encodeURI(C.audio.src);
+loadLyrics().then(w => { words = w; });
+begin();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
