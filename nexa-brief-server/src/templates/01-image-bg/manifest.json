@@ -1,0 +1,12 @@
+{
+  "id": "01-image-bg",
+  "display_name": "Imagen con fondo (solid/regions/blur)",
+  "prompt_versions": { "vision_extractor": "v7.6", "config_mapper": "v8.2" },
+  "index_html": "index.html",
+  "prompts": {
+    "vision_extractor": "prompts/vision_extractor.md",
+    "config_mapper": "prompts/config_mapper.md"
+  },
+  "required_output_assets": ["bg.jpg", "song.mp3", "config.json", "index.html"],
+  "native_orientation": "9:16"
+}

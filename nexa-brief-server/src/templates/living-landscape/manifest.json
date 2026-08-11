@@ -1,0 +1,13 @@
+{
+  "id": "living-landscape",
+  "display_name": "Escena de Paisaje Viva",
+  "prompt_versions": { "vision_extractor": "P2", "config_mapper": "P2" },
+  "index_html": "index.html",
+  "prompts": {
+    "vision_extractor": "prompts/vision_extractor.md",
+    "config_mapper": "prompts/config_mapper.md"
+  },
+  "required_output_assets": ["bg.jpg", "song.mp3", "config.json", "index.html"],
+  "native_orientation": "any",
+  "notes": "index.html forkeado del prototipo con 2 parches manuales: (1) ahora hace fetch('config.json') real en vez de usar el fallbackConfig embebido (el prototipo original no lo hacía); (2) el audio arranca solo en DOMContentLoaded en vez de esperar un click real (necesario para grabación headless con Playwright)."
+}

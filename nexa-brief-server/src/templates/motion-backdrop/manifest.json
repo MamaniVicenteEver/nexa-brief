@@ -1,0 +1,13 @@
+{
+  "id": "motion-backdrop",
+  "display_name": "Fondo en Movimiento (Video)",
+  "prompt_versions": { "vision_extractor": "v10", "config_mapper": "v11" },
+  "index_html": "index.html",
+  "prompts": {
+    "vision_extractor": "prompts/vision_extractor.md",
+    "config_mapper": "prompts/config_mapper.md"
+  },
+  "required_output_assets": ["bg.mp4", "song.mp3", "config.json", "index.html"],
+  "native_orientation": "any",
+  "notes": "config.json es una COLECCIÓN {activeId, configs:[...]} — el pipeline siempre escribe un único caso con id/activeId='active', y el index.html forkeado tiene ACTIVE_ID='active' fijo (el prototipo original usaba un id hardcodeado distinto por caso de prueba)."
+}

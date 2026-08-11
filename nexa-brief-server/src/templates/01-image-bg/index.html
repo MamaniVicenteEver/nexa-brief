@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spatial Composition</title>
+<style>
+  :root { --bg: #FFFFFF; --ink: #111111; --font-stack: "Arial Black", "Helvetica Neue", Impact, sans-serif; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--bg); cursor: none; }
+  #stage { position: fixed; inset: 0; }
+  #bgblur {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover;
+    z-index: 0; filter: blur(50px) saturate(1.15); transform: scale(1.15);
+    display: none;
+  }
+  #bgfill { position: fixed; inset: 0; z-index: 0; }
+  #bgfill div { position: absolute; }
+  #bg {
+    position: fixed; object-fit: contain; z-index: 1;
+    --fx: 0px; --fy: 0px;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0, #000 var(--fx), #000 calc(100% - var(--fx)), transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 var(--fy), #000 calc(100% - var(--fy)), transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 var(--fx), #000 calc(100% - var(--fx)), transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 var(--fy), #000 calc(100% - var(--fy)), transparent 100%);
+    mask-composite: intersect;
+  }
+  .txt {
+    position: fixed; z-index: 3;
+    font-family: var(--font-stack);
+    font-weight: 900; text-transform: uppercase;
+    letter-spacing: -0.02em; line-height: 0.85;
+    color: var(--ink); white-space: pre-line;
+    user-select: none; pointer-events: none;
+  }
+  #eq { position: fixed; left: 0; bottom: 0; width: 100vw; z-index: 4; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="bgblur" src="" alt="" aria-hidden="true">
+  <div id="bgfill"></div>
+  <img id="bg" src="bg.jpg" alt="">
+  <div class="txt" id="txtL"></div>
+  <div class="txt" id="txtR"></div>
+  <canvas id="eq"></canvas>
+  <audio id="audio" src="song.mp3" loop preload="auto"></audio>
+</div>
+<script type="module">
+/* ============ CONFIG — loaded at runtime from config.json, never hardcoded ============ */
+const CONFIG = await fetch("config.json").then(r => r.json());
+/* ==================================================================================== */
+
+const GUT = 20, GAP = 14, doc = document;
+const $ = id => doc.getElementById(id);
+const bgEl = $("bg"), tL = $("txtL"), tR = $("txtR"), eq = $("eq");
+doc.documentElement.style.setProperty("--bg", CONFIG.colors.bg);
+doc.documentElement.style.setProperty("--ink", CONFIG.colors.ink);
+bgEl.src = CONFIG.img.src;
+
+/* ---- typography stack: same string drives both the CSS paint and the canvas
+   measurement below — they must never diverge, or fitH/fitW/fitV compute sizes
+   for a font that isn't the one actually rendered ---- */
+const FONT_STACKS = {
+  "default":        `"Arial Black","Helvetica Neue",Impact,sans-serif`,
+  "condensed":      `"Liberation Sans Narrow","Nimbus Sans Narrow","Ubuntu Condensed",sans-serif`,
+  "serif-display":  `"Liberation Serif","DejaVu Serif","FreeSerif",serif`,
+  "black-rounded":  `"Lato Black",Lato,sans-serif`
+};
+const fontStack = FONT_STACKS[CONFIG.typography] || FONT_STACKS["default"];
+doc.documentElement.style.setProperty("--font-stack", fontStack);
+
+/* ---- text measurement (linear scaling: measure once at 100px) ---- */
+const mctx = doc.createElement("canvas").getContext("2d");
+const FONT = s => `900 ${s}px ${fontStack}`;
+function measure(str) { mctx.font = FONT(100); return mctx.measureText(str).width; }
+
+/* ---- fit helpers: each returns {fs, w, h, content} or null ---- */
+function fitH(text, rw, rh) {                     /* horizontal, 1 line */
+  const w100 = measure(text);
+  const fs = Math.min(100 * rw / w100, rh / 0.85);
+  return fs > 4 ? { fs, w: w100 * fs / 100, h: fs * 0.85, content: text } : null;
+}
+function fitW(text, rw, rh) {                     /* horizontal, wrap by words */
+  const words = text.trim().split(/\s+/);
+  if (words.length < 2) return null;
+  const maxW100 = Math.max(...words.map(measure));
+  const fs = Math.min(100 * rw / maxW100, rh / (words.length * 0.85));
+  return fs > 4 ? { fs, w: maxW100 * fs / 100, h: words.length * fs * 0.85, content: words.join("\n") } : null;
+}
+function fitV(text, rw, rh) {                     /* vertical letter stack */
+  const chars = text.replace(/\s+/g, "").split("");
+  const maxC100 = Math.max(...chars.map(measure));
+  const fs = Math.min(100 * rw / maxC100, rh / (chars.length * 0.85));
+  return fs > 4 ? { fs, w: maxC100 * fs / 100, h: chars.length * fs * 0.85, content: chars.join("\n") } : null;
+}
+
+/* ---- pick best fit for a set of candidate rects, horizontal preferred ---- */
+function bestFit(text, rects, minFS) {
+  let bH = null, bV = null, rH = null, rV = null;
+  for (const r of rects) {
+    if (r.w < 30 || r.h < 30) continue;
+    for (const f of [fitH(text, r.w, r.h), fitW(text, r.w, r.h)])
+      if (f && (!bH || f.fs > bH.fs)) { bH = f; rH = r; }
+    const v = fitV(text, r.w, r.h);
+    if (v && (!bV || v.fs > bV.fs)) { bV = v; rV = r; }
+  }
+  if (bH && bH.fs >= minFS) return { ...bH, rect: rH };          /* 1: horizontal fits well */
+  if (bV && bV.fs >= minFS) return { ...bV, rect: rV };          /* 2: vertical fits well  */
+  const s = (bH && bV) ? (bH.fs >= bV.fs ? { f: bH, r: rH } : { f: bV, r: rV })
+          : bH ? { f: bH, r: rH } : bV ? { f: bV, r: rV } : null; /* 3: shrink, keep larger */
+  return s ? { ...s.f, rect: s.r } : null;
+}
+
+/* ---- apply a fit to a DOM node, clamped fully inside the viewport ---- */
+function place(el, fit, align) {
+  if (!fit) { el.textContent = ""; return null; }
+  const vw = innerWidth, vh = innerHeight, r = fit.rect;
+  el.style.fontSize = fit.fs + "px";
+  el.textContent = fit.content;
+  let x = align === "right" ? r.x + r.w - fit.w
+        : align === "band"  ? r.x + (r.w - fit.w) / 2
+        : r.x;
+  let y = r.y + (r.h - fit.h) / 2;
+  x = Math.max(GUT, Math.min(x, vw - fit.w - GUT));
+  y = Math.max(GUT, Math.min(y, vh - fit.h - GUT));
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+  el.style.textAlign = align === "band" ? "center" : align;
+  return { x, y, w: fit.w, h: fit.h };
+}
+
+/* ---- per-frame ink lookup for the equalizer, rebuilt by layout() ---- */
+let eqInk = null;
+
+/* ---- layout engine: runs on load + resize only ---- */
+function layout() {
+  tL.style.textShadow = ""; tR.style.textShadow = "";
+  const vw = innerWidth, vh = innerHeight;
+  const C = CONFIG, iw = C.img.w, ih = C.img.h;
+  const dw = Math.min(vw, vh * iw / ih), dh = Math.min(vh, vw * ih / iw);
+  const ix = (vw - dw) / 2, iy = (vh - dh) / 2, k = dw / iw;
+  bgEl.style.cssText += `left:${ix}px;top:${iy}px;width:${dw}px;height:${dh}px;`;
+  const X = px => ix + px * k, Y = px => iy + px * k;
+
+  /* edge fade: only on axes where the image doesn't reach the viewport edge;
+     blur mode blends into the blurred underlay, so it takes a wider fade */
+  const fadeK = (C.edgeFade || 0) * (C.bgMode === "blur" ? 2 : 1);
+  const fade = Math.max(24, Math.min(C.bgMode === "blur" ? 160 : 90, Math.min(dw, dh) * fadeK));
+  bgEl.style.setProperty("--fx", (C.edgeFade && dw < vw - 1 ? fade : 0) + "px");
+  bgEl.style.setProperty("--fy", (C.edgeFade && dh < vh - 1 ? fade : 0) + "px");
+
+  const eqH = Math.min(90, Math.max(44, vh * 0.06));
+  eq.style.height = eqH + "px";
+  const minFS = Math.max(26, vh * 0.05);
+
+  /* ---- page fill behind the image: solid, regions, or blurred underlay ---- */
+  const blurEl = $("bgblur"), fillEl = $("bgfill");
+  const regions = C.bgMode === "regions" ? (C.bgRegions || []) : [];
+  blurEl.style.display = C.bgMode === "blur" ? "block" : "none";
+  if (C.bgMode === "blur" && !blurEl.getAttribute("src")) blurEl.src = C.img.src;
+  /* project a region rect to viewport px; sides on the image border extend to the viewport border */
+  const proj = rg => {
+    const [x0, y0, x1, y1] = rg.rect;
+    return { x0: x0 <= 0 ? 0 : X(x0), x1: x1 >= iw ? vw : X(x1),
+             y0: y0 <= 0 ? 0 : Y(y0), y1: y1 >= ih ? vh : Y(y1) };
+  };
+  fillEl.innerHTML = "";
+  for (const rg of regions) {
+    const p = proj(rg), d = doc.createElement("div");
+    d.style.cssText = `left:${p.x0}px;top:${p.y0}px;width:${p.x1 - p.x0}px;height:${p.y1 - p.y0}px;background:${rg.color};`;
+    fillEl.appendChild(d);
+  }
+  /* ink of the region under a viewport point (default ink when none matches) */
+  const inkAt = (px, py) => {
+    for (const rg of regions) {
+      const p = proj(rg);
+      if (px >= p.x0 && px < p.x1 && py >= p.y0 && py < p.y1) return rg.ink || C.colors.ink;
+    }
+    return C.colors.ink;
+  };
+  eqInk = regions.length ? (x => inkAt(x, vh - eqH / 2)) : null;
+  const tint = (el, p) => { if (p) el.style.color = inkAt(p.x + p.w / 2, p.y + p.h / 2); };
+  /* cut candidate rects by region boundaries so text never straddles two colors */
+  const cut = rects => {
+    if (!regions.length) return rects;
+    const out = [];
+    for (const r of rects) for (const rg of regions) {
+      const p = proj(rg);
+      const x0 = Math.max(r.x, p.x0), y0 = Math.max(r.y, p.y0);
+      const x1 = Math.min(r.x + r.w, p.x1), y1 = Math.min(r.y + r.h, p.y1);
+      if (x1 - x0 >= 30 && y1 - y0 >= 30) out.push({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 });
+    }
+    return out.length ? out : rects;
+  };
+  /* carve baked-in text areas (keepOut) out of the candidates — guillotine split */
+  const carve = rects => {
+    let list = rects;
+    for (const ko of (C.keepOut || [])) {
+      const kx0 = X(ko[0]), ky0 = Y(ko[1]), kx1 = X(ko[2]), ky1 = Y(ko[3]);
+      const next = [];
+      for (const r of list) {
+        const ox0 = Math.max(r.x, kx0), oy0 = Math.max(r.y, ky0);
+        const ox1 = Math.min(r.x + r.w, kx1), oy1 = Math.min(r.y + r.h, ky1);
+        if (ox0 >= ox1 || oy0 >= oy1) { next.push(r); continue; }   /* no overlap */
+        if (ox0 - r.x >= 30)         next.push({ x: r.x, y: r.y, w: ox0 - r.x, h: r.h });
+        if (r.x + r.w - ox1 >= 30)   next.push({ x: ox1, y: r.y, w: r.x + r.w - ox1, h: r.h });
+        if (oy0 - r.y >= 30)         next.push({ x: r.x, y: r.y, w: r.w, h: oy0 - r.y });
+        if (r.y + r.h - oy1 >= 30)   next.push({ x: r.x, y: oy1, w: r.w, h: r.y + r.h - oy1 });
+      }
+      list = next;
+    }
+    return list;
+  };
+  const usable = rects => carve(cut(rects));
+
+  /* side rects: one candidate per contour zone, per side */
+  const rectsL = [], rectsR = [];
+  for (const [y0, y1, xl, xr] of C.zones) {
+    const ry = Math.max(GUT, Y(y0)), ry1 = Math.min(vh - GUT, Y(y1));
+    rectsL.push({ x: GUT, y: ry, w: X(xl) - GAP - GUT, h: ry1 - ry });
+    rectsR.push({ x: X(xr) + GAP, y: ry, w: vw - GUT - X(xr) - GAP, h: ry1 - ry });
+  }
+  /* try flanking first; if EITHER side can't reach a readable size → band mode.
+     zones are [top, middle, bottom] (index 0,1,2). CONFIG.anchorPreference — set
+     by the vision prompt from the whole composition (embedded text location AND
+     which third looks visually busiest) — says which zone to try FIRST; the
+     other two are tried next in a bottom→middle→top fallback order, then only if
+     NO single zone can fit both words on its own do we fall back to the legacy
+     "best zone overall" search (mixing zones between L/R). With no
+     anchorPreference and no keepOut (older/simple configs) this whole
+     zone-priority search is skipped and behavior is exactly as before. */
+  let fL = null, fR = null;
+  if (C.anchorPreference || (C.keepOut || []).length) {
+    const zoneIndex = { top: 0, middle: 1, bottom: 2 }[C.anchorPreference];
+    const fallback = [2, 1, 0].filter(i => i !== zoneIndex && i < rectsL.length);
+    const order = (zoneIndex !== undefined && zoneIndex < rectsL.length) ? [zoneIndex, ...fallback] : fallback;
+    for (const i of order) {
+      const tryL = bestFit(C.texts.left, usable([rectsL[i]]), minFS);
+      const tryR = bestFit(C.texts.right, usable([rectsR[i]]), minFS);
+      if (tryL && tryR && tryL.fs >= minFS && tryR.fs >= minFS) { fL = tryL; fR = tryR; break; }
+    }
+  }
+  if (!fL || !fR) {
+    fL = bestFit(C.texts.left, usable(rectsL), minFS);
+    fR = bestFit(C.texts.right, usable(rectsR), minFS);
+  }
+  const flankOK = fL && fR && fL.fs >= minFS && fR.fs >= minFS;
+
+  if (flankOK) {                                   /* DESKTOP: flank the subject */
+    tint(tL, place(tL, fL, "right"));
+    tint(tR, place(tR, fR, "left"));
+  } else {                                         /* MOBILE: top & bottom bands */
+    const bandW = vw - 2 * GUT;
+    const topEnd = Math.max(iy, Y(C.subject.top)) - GAP;
+    const botStart = Math.max(Y(C.subject.bottom), iy + dh) + GAP;
+    const botEnd = vh - eqH - GAP;
+    const topOK = topEnd - GUT >= 46, botOK = botEnd - botStart >= 46;
+    let txtT = C.texts.left, txtB = C.texts.right, bT, bB;
+    if (topOK && botOK) {
+      bT = { x: GUT, y: GUT, w: bandW, h: topEnd - GUT };
+      bB = { x: GUT, y: botStart, w: bandW, h: botEnd - botStart };
+    } else if (topOK) {            /* no room below → stack both words on top */
+      txtT = C.texts.left + " " + C.texts.right; txtB = "";
+      bT = { x: GUT, y: GUT, w: bandW, h: topEnd - GUT };
+    } else if (botOK) {            /* no room above → stack both words below */
+      txtB = C.texts.left + " " + C.texts.right; txtT = "";
+      bB = { x: GUT, y: botStart, w: bandW, h: botEnd - botStart };
+    } else {                       /* image fills viewport → overlay top strip */
+      txtT = C.texts.left + " " + C.texts.right; txtB = "";
+      bT = { x: GUT, y: GUT, w: bandW, h: vh * 0.16 };
+      tL.style.textShadow = "0 0 10px var(--bg), 0 0 22px var(--bg), 0 0 34px var(--bg)";
+    }
+    tint(tL, place(tL, txtT && bT ? bestFit(txtT, usable([bT]), 18) : null, "band"));
+    tint(tR, place(tR, txtB && bB ? bestFit(txtB, usable([bB]), 18) : null, "band"));
+  }
+
+  /* canvas backing store, DPR-sharp */
+  const dpr = devicePixelRatio || 1;
+  eq.width = vw * dpr; eq.height = eqH * dpr;
+  const c = eq.getContext("2d");
+  c.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+let rq = false;
+function queueLayout() { if (!rq) { rq = true; requestAnimationFrame(() => { rq = false; layout(); }); } }
+addEventListener("resize", queueLayout);
+addEventListener("load", queueLayout);
+if (bgEl.complete) layout(); else bgEl.onload = layout;
+layout();
+
+/* ---- audio + equalizer (never blocks rendering if song.mp3 is missing) ---- */
+const audio = $("audio");
+let analyser = null, freq = null;
+async function initAudio() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = ctx.createMediaElementSource(audio);
+    analyser = ctx.createAnalyser();
+    analyser.fftSize = 256; analyser.smoothingTimeConstant = 0.82;
+    src.connect(analyser); analyser.connect(ctx.destination);
+    freq = new Uint8Array(analyser.frequencyBinCount);
+    if (ctx.state === "suspended") await ctx.resume();
+    await audio.play();
+  } catch (e) { /* headless autoplay ok; browser needs a gesture */ }
+}
+addEventListener("DOMContentLoaded", initAudio);
+addEventListener("pointerdown", () => { initAudio(); }, { once: true });
+
+const ec = eq.getContext("2d");
+const BARS = 64;
+function draw() {
+  const w = eq.width / (devicePixelRatio || 1), h = eq.height / (devicePixelRatio || 1);
+  ec.clearRect(0, 0, w, h);
+  const bw = w / BARS, mid = h / 2;
+  if (analyser && freq) analyser.getByteFrequencyData(freq);
+  for (let i = 0; i < BARS; i++) {
+    const v = freq ? freq[Math.floor(i * freq.length / BARS)] / 255 : 0;
+    const bh = Math.max(2, v * (h - 6));
+    ec.fillStyle = eqInk ? eqInk(i * bw + bw / 2) : CONFIG.colors.ink;
+    ec.fillRect(i * bw + bw * 0.18, mid - bh / 2, bw * 0.64, bh);
+  }
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
