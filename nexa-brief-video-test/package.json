@@ -6,8 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "remotion studio index.js",
-    "dev:image": "VITE_TEMPLATE=image-bg vite",
-    "dev:neon": "VITE_TEMPLATE=neon-lyrics vite",
     "render": "node scripts/render-node.mjs",
     "render:lambda": "node scripts/render-lambda.mjs"
   },
@@ -25,9 +23,5 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "remotion": "^4.0.498"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^6.0.4",
-    "vite": "^8.1.5"
   }
 }

@@ -1,8 +1,8 @@
 const {registerRoot} = require('remotion');
 const {Composition, useCurrentFrame} = require('remotion');
 const React = require('react');
-const {NeonLetras, FPS: NEON_FPS, WIDTH: NEON_WIDTH, HEIGHT: NEON_HEIGHT} = require('./test/NeonLetras');
-const {NeonLetrasVideo} = require('./test/NeonLetrasVideo');
+const {NeonLetras, FPS: NEON_FPS, WIDTH: NEON_WIDTH, HEIGHT: NEON_HEIGHT} = require('./src/components/NeonLetras');
+const {NeonLetrasVideo} = require('./src/components/NeonLetrasVideo');
 
 // Datos de ejemplo para `npm run dev` (Remotion Studio) — un job real de
 // Python manda su propio config/lyrics/assets vía --props, reemplazando

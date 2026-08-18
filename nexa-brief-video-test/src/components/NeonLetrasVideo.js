@@ -1,5 +1,18 @@
+// Copia de NeonLetras.js para probar 2 cosas sin tocar la versión que ya
+// funciona (src/components/NeonLetras.js, no modificar esa):
+//   1. Fondo de VIDEO (bg-video.mp4, 152.4s) en loop en vez de bg.jpg fijo.
+//   2. Optimizaciones de pintado que no cambian ni un píxel del resultado:
+//      - Promoción a capa GPU (`transform: translateZ(0)` + `willChange`) en
+//        cada palabra y en los contenedores de cámara/tilt: le dice a Chrome
+//        "esto se puede cachear como bitmap y solo recolocar/reopacar", en
+//        vez de repintar el drop-shadow encadenado en cada frame.
+//      - Las strings de textShadow/drop-shadow de cada palabra son estáticas
+//        (no dependen del frame, solo de fontSize/color) — se precalculan
+//        UNA vez al cargar el módulo en vez de reconstruirse en cada uno de
+//        los ~7547 frames para cada una de las hasta 26 palabras visibles.
 const React = require('react');
 const {useCurrentFrame, AbsoluteFill, Audio, interpolate, Easing} = require('remotion');
+const {Video} = require('@remotion/media');
 const {loadFont: loadMonoton} = require('@remotion/google-fonts/Monoton');
 const {loadFont: loadArchivoBlack} = require('@remotion/google-fonts/ArchivoBlack');
 const {
@@ -15,14 +28,17 @@ const {
   neonDropShadow,
   GRAIN_STEPS,
   COLD_EASE,
-} = require('./neon-timeline');
+} = require('../core/neon-timeline');
 
-// config.json referencia "Monoton"/"Archivo Black" por nombre — sin esto,
-// Chrome headless no tiene esas fuentes instaladas y cae a una serif default.
 loadMonoton();
 loadArchivoBlack();
 
-function WordEl({pw, next, outroFrame, frame, C, N, fps}) {
+// capa GPU propia: Chrome cachea el bitmap ya pintado (glow incluido) y en
+// los frames siguientes solo recompone opacidad/posición, sin re-rasterizar
+// el drop-shadow — cero diferencia visual, solo una pista de rendimiento.
+const GPU_LAYER_HINT = {transform: 'translateZ(0)', willChange: 'opacity'};
+
+function WordEl({pw, next, outroFrame, frame, C, N, fps, staticShadow}) {
   const coldStart = Math.min(next ? next.frame : Infinity, outroFrame);
   const dt = (frame - pw.frame) / fps;
 
@@ -48,6 +64,7 @@ function WordEl({pw, next, outroFrame, frame, C, N, fps}) {
     opacity,
     writingMode: pw.vertical ? 'vertical-rl' : undefined,
     textOrientation: pw.vertical ? 'mixed' : undefined,
+    ...GPU_LAYER_HINT,
   };
 
   if (pw.outline) {
@@ -57,14 +74,14 @@ function WordEl({pw, next, outroFrame, frame, C, N, fps}) {
       letterSpacing: '0.02em',
       color: 'transparent',
       WebkitTextStroke: `${Math.max(1.5, pw.fontSize * 0.045)}px ${N.core}`,
-      filter: `brightness(${brightness}) ${neonDropShadow(N, pw.fontSize)}`,
+      filter: `brightness(${brightness}) ${staticShadow.dropShadow}`,
     });
   } else {
     Object.assign(baseStyle, {
       fontFamily: C.fonts.tube,
       fontWeight: 400,
       color: N.core,
-      textShadow: tubeGlow(N, Math.max(12, pw.fontSize * 0.2)),
+      textShadow: staticShadow.textShadow,
       filter: `brightness(${brightness})`,
     });
   }
@@ -148,7 +165,7 @@ function NeonCard({cfg, C, N, opacity}) {
   );
 }
 
-function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
+function NeonLetrasVideo({configData, lyricsData, audioSrc, bgSrc}) {
   const frame = useCurrentFrame();
   const {CONFIG: C, TOTAL_FRAMES, OUTRO_FRAME, WORDS, CAM_XS, CAM_YS} = React.useMemo(
     () => computeTimeline(configData, lyricsData),
@@ -156,6 +173,18 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
   );
   const N = C.neon;
   const fps = FPS;
+
+  // precómputo: lo que NO cambia frame a frame, memoizado una sola vez por
+  // render (antes se calculaba al cargar el módulo, cuando WORDS era fijo).
+  const wordStatic = React.useMemo(
+    () =>
+      WORDS.map((pw) =>
+        pw.outline
+          ? {dropShadow: neonDropShadow(N, pw.fontSize)}
+          : {textShadow: tubeGlow(N, Math.max(12, pw.fontSize * 0.2))}
+      ),
+    [WORDS, N]
+  );
 
   const camX = CAM_XS[Math.min(frame, TOTAL_FRAMES)];
   const camY = CAM_YS[Math.min(frame, TOTAL_FRAMES)];
@@ -200,14 +229,16 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
     AbsoluteFill,
     {style: {background: '#060302', overflow: 'hidden'}},
     React.createElement(Audio, {src: resolveMediaSrc(audioSrc)}),
-    React.createElement('img', {
+    React.createElement(Video, {
       src: resolveMediaSrc(bgSrc),
+      loop: true,
+      muted: true,
+      objectFit: 'cover',
       style: {
         position: 'absolute',
         inset: 0,
         width: '100%',
         height: '100%',
-        objectFit: 'cover',
         filter: C.bg.filter,
         transform: `scale(${bgScale}) translate(${bgTX}%, ${bgTY}%)`,
         opacity: worldDim,
@@ -228,7 +259,15 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
       {style: {position: 'absolute', inset: 0, perspective: 1000, overflow: 'hidden', opacity: worldDim}},
       React.createElement(
         'div',
-        {style: {position: 'absolute', inset: 0, transformStyle: 'preserve-3d', transform: `rotateY(${sway}deg)`}},
+        {
+          style: {
+            position: 'absolute',
+            inset: 0,
+            transformStyle: 'preserve-3d',
+            transform: `rotateY(${sway}deg)`,
+            willChange: 'transform',
+          },
+        },
         React.createElement(
           'div',
           {
@@ -238,6 +277,7 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
               top: 0,
               transformStyle: 'preserve-3d',
               transform: `translate3d(${-camX}px, ${-camY}px, 0)`,
+              willChange: 'transform',
             },
           },
           visible.map((i) =>
@@ -250,6 +290,7 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
               C,
               N,
               fps,
+              staticShadow: wordStatic[i],
             })
           )
         )
@@ -300,4 +341,4 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
   );
 }
 
-module.exports = {NeonLetras, FPS, WIDTH, HEIGHT};
+module.exports = {NeonLetrasVideo, FPS, WIDTH, HEIGHT};
