@@ -45,3 +45,31 @@ nexa-brief-video-test/out/
 *.webm
 *.mkv
 *.wav
+
+
+.playwright-mcp
+
+# Herramientas de asistentes: estado local, caché y worktrees efímeros.
+# Se conserva .claude/settings.json para configuraciones compartidas del proyecto.
+.claude/settings.local.json
+.claude/worktrees/
+.codex/
+.cache/
+
+# Archivos locales o generados por herramientas de desarrollo
+.env.*
+!.env.example
+*.tsbuildinfo
+*.log
+.DS_Store
+.idea/
+.vscode/
+.next/
+coverage/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+
+html-templates-poc/
+nexa-hyperframes/

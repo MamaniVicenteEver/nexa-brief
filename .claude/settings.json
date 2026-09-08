@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose *)",
+      "Bash(docker --version)",
+      "Bash(getent ahostsv4 *)",
+      "Bash(ip -6 route show default)",
+      "Bash(docker network *)",
+      "Bash(docker run *)",
+      "Bash(time curl -s -o /dev/null -w \"speed: %{speed_download} bytes/s, time: %{time_total}s\\\\n\" https://registry.npmjs.org/react/-/react-18.3.1.tgz)",
+      "Bash(time curl -s -o /dev/null -w \"speed: %{speed_download} bytes/s\\\\n\" https://speed.cloudflare.com/__down?bytes=10000000)",
+      "Bash(ps -o etimes= -p 1156200)",
+      "mcp__playwright__browser_click"
+    ]
+  }
+}
