@@ -1,0 +1,37 @@
+/* ------- EngineBadge.css ------- */
+
+.nr-engine-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-nr-pill);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.nr-engine-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.nr-engine-badge__phase {
+  opacity: 0.7;
+  font-weight: 600;
+}
+
+.nr-engine-badge--playwright {
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+}
+.nr-engine-badge--remotion {
+  background: var(--nr-violet);
+  color: var(--nr-solid-ink);
+}
+.nr-engine-badge--hyperframes {
+  background: var(--nr-hyperframes);
+  color: var(--nr-solid-ink);
+}

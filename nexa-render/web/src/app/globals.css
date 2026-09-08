@@ -1,0 +1,189 @@
+/*
+ * Tokens portados de html-templates-poc/prototipos-nexa-render/style.css —
+ * ese prototipo ya está terminado y verificado, esto NO es un rediseño,
+ * es la fuente de verdad de colores/tipografía/sombras. Prefijo `--nr-`
+ * en los custom properties (evita colisión con los tokens `--color-*` de
+ * shadcn/Tailwind si algún día conviven); las clases BEM (`.nr-hero`, etc.)
+ * no llevan prefijo porque ya lo traían del prototipo.
+ *
+ * Mecanismo de tema oscuro: SOLO reasignación de estas mismas variables
+ * bajo `:root[data-theme="dark"]` — igual que el prototipo, por eso
+ * next-themes se configura con `attribute="data-theme"` (ver
+ * shared/providers/ThemeProvider.tsx) y no la clase `.dark` por defecto.
+ *
+ * Las reglas .nr-* de cada componente YA NO viven acá — cada componente
+ * tiene su propio Componente.css al lado del .tsx, importado directo
+ * desde ahí (ej. Nav.tsx → import "./Nav.css"). Acá solo queda
+ * shared/styles/base.css: las pocas reglas que de verdad son de todos
+ * (spacing entre secciones, .nr-page, .nr-dot, etc.), sin dueño único.
+ */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../shared/styles/base.css";
+
+@custom-variant dark (&:is([data-theme="dark"] *));
+
+@theme inline {
+  --color-nr-bg: var(--nr-bg);
+  --color-nr-ink: var(--nr-ink);
+  --color-nr-mute: var(--nr-mute);
+  --color-nr-line: var(--nr-line);
+  --color-nr-nav-bg: var(--nr-nav-bg);
+  --color-nr-nav-ink: var(--nr-nav-ink);
+  --color-nr-nav-border: var(--nr-nav-border);
+  --color-nr-accent: var(--nr-accent);
+  --color-nr-accent-ink: var(--nr-accent-ink);
+  --color-nr-violet: var(--nr-violet);
+  --color-nr-card-dark: var(--nr-card-dark);
+  --color-nr-mock-border: var(--nr-mock-border);
+  --color-nr-mark-bg: var(--nr-mark-bg);
+  --color-nr-code-bg: var(--nr-code-bg);
+  --color-nr-note: var(--nr-note-color);
+  --color-nr-solid-bg: var(--nr-solid-bg);
+  --color-nr-solid-ink: var(--nr-solid-ink);
+  --color-nr-tab-active-bg: var(--nr-tab-active-bg);
+  --color-nr-tab-active-ink: var(--nr-tab-active-ink);
+  --color-nr-card-shadow: var(--nr-card-shadow);
+  --color-nr-mockup-shadow: var(--nr-mockup-shadow);
+
+  /* Tokens nuevos, no existían en el prototipo — resuelven necesidades
+     reales de web/ que el prototipo (una sola landing) nunca tuvo: un
+     3er color de motor para el badge de HyperFrames (reusa el hex que
+     YA existía en el globals.css viejo de este proyecto), un color de
+     error para el estado "failed" de un job, y los 3 colores de borde
+     de los paneles de código HTML/CSS/JS. */
+  --color-nr-hyperframes: var(--nr-hyperframes);
+  --color-nr-danger: var(--nr-danger);
+  --color-nr-lang-html: var(--nr-lang-html);
+  --color-nr-lang-css: var(--nr-lang-css);
+  --color-nr-lang-js: var(--nr-lang-js);
+
+  /* ===== ESTÁNDAR DE BORDES CURVADOS — única escala para todo el sitio =====
+     No inventar un valor de border-radius suelto en ningún componente
+     nuevo; usar SIEMPRE una de estas 6 variables (directo, o como token
+     Tailwind: rounded-[var(--radius-nr-md)], etc.). Guía de cuándo usar
+     cada una (según cómo ya se usan en los .css de cada componente):
+       xs   (8px)   — elementos chicos: CTA de mockups, botones diminutos.
+       sm   (14px)  — tarjetas chicas: nr-wheel__card, nr-play-reel__video-card,
+                       nr-engine-orbit__pipeline, botones del editor (nr-btn).
+       md   (16px)  — paneles medianos: nr-panel-mock, editor de código,
+                       preview en vivo.
+       lg   (20px)  — tarjetas grandes: nr-job-card, nr-platform__video.
+       xl   (22px)  — tarjetas destacadas: nr-fan-slider__card (abanico).
+       pill (999px) — cualquier cosa completamente redondeada: botones de
+                       nav, badges, tabs, la píldora del nav en sí. */
+  --radius-nr-xs: 8px;
+  --radius-nr-sm: 14px;
+  --radius-nr-md: 16px;
+  --radius-nr-lg: 20px;
+  --radius-nr-xl: 22px;
+  --radius-nr-pill: 999px;
+
+  --font-nr-sans: var(--font-nr-archivo);
+  --font-nr-mono: var(--font-nr-jetbrains);
+  --font-nr-script: var(--font-nr-caveat);
+}
+
+:root {
+  --nr-bg: #f4f4f4;
+  --nr-ink: #141414;
+  --nr-mute: #6b6b6b;
+  --nr-line: #e2e2e2;
+  --nr-nav-bg: #141414;
+  --nr-nav-ink: #fff;
+  --nr-nav-border: transparent;
+  --nr-accent: #c8f53c;
+  --nr-accent-ink: #10130a;
+  --nr-violet: #7a5bff;
+  --nr-card-dark: #1c1c1c;
+  --nr-mock-border: transparent;
+  --nr-mark-bg: #ebebeb;
+  --nr-code-bg: #ebebeb;
+  --nr-note-color: var(--nr-violet);
+  --nr-solid-bg: var(--nr-nav-bg);
+  --nr-solid-ink: #fff;
+  --nr-tab-active-bg: var(--nr-nav-bg);
+  --nr-tab-active-ink: #fff;
+  --nr-card-shadow: rgba(0, 0, 0, 0.16);
+  --nr-mockup-shadow: rgba(0, 0, 0, 0.22);
+  --nr-menu-width: 26em;
+
+  --nr-hyperframes: #16c766;
+  --nr-danger: #e5484d;
+  --nr-lang-html: #e58ca6;
+  --nr-lang-css: #6fc4a5;
+  --nr-lang-js: #a99be8;
+
+  /* Ritmo de espaciado estándar para secciones NUEVAS (sin padding propio
+     ya afinado como el resto del prototipo) — grid de plantillas, página
+     de editor, página de trabajo. 80px desktop / 40px mobile. */
+  --section-gap: 80px;
+
+  /* Alto real del header fijo (marquee + barra de nav con su margen) —
+     nr-nav__container es "flotante" (position:fixed), así que el resto del
+     contenido NO se corre solo, hay que dejarle este colchón a mano en el
+     padding-top de cada página nueva para que no quede tapado debajo. */
+  --nr-nav-clearance: 108px;
+}
+
+:root[data-theme="dark"] {
+  --nr-bg: #0d0d0f;
+  --nr-ink: #f3f2f0;
+  --nr-mute: #8f8d95;
+  --nr-line: #232227;
+  --nr-nav-bg: #19191d;
+  --nr-nav-border: rgba(255, 255, 255, 0.08);
+  --nr-violet: #8a6bff;
+  --nr-card-dark: #201f24;
+  --nr-mock-border: rgba(255, 255, 255, 0.08);
+  --nr-mark-bg: #201f24;
+  --nr-code-bg: #201f24;
+  --nr-note-color: var(--nr-accent);
+  --nr-tab-active-bg: var(--nr-accent);
+  --nr-tab-active-ink: var(--nr-accent-ink);
+  --nr-card-shadow: rgba(0, 0, 0, 0.55);
+  --nr-mockup-shadow: rgba(0, 0, 0, 0.6);
+
+  --nr-danger: #ff6369;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --nr-menu-width: 88vw;
+    --section-gap: 40px;
+    --nr-nav-clearance: 96px;
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--nr-bg);
+    color: var(--nr-ink);
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-nr-sans), Arial, sans-serif;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease;
+  }
+
+  a,
+  button {
+    cursor: pointer;
+    color: inherit;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  mark {
+    background: none;
+    color: inherit;
+  }
+}

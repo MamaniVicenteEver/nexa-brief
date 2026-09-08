@@ -1,0 +1,24 @@
+.git
+.gitignore
+# Ninguna configuración local ni ejemplo de entorno forma parte de runtime.
+# Las variables se inyectan exclusivamente desde Compose/entorno al iniciar.
+**/.env
+**/.env.*
+**/node_modules
+**/.next
+**/dist
+**/coverage
+**/*.log
+**/*.tsbuildinfo
+**/.DS_Store
+.turbo
+.pnpm-store
+server/work
+server/out
+server/results
+server/data
+web/.env.local
+docs
+advertising
+README.md
+**/README.md

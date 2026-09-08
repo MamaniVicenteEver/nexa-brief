@@ -1,0 +1,381 @@
+/* ------- Nav.css -------
+   Barra flotante + acordeón + menú slide-out + overlay. El toggle de tema
+   (los 2 círculos ".nr-nav__theme*") vive en ThemeToggle.css, al lado de
+   ThemeToggle.tsx, aunque el prefijo de clase sea "nr-nav__" — el archivo
+   se organiza por COMPONENTE dueño, no por prefijo de clase. */
+
+.nr-nav__header {
+  /* 101, no 100 — .nr-nav__overlay también usa z-index:100 y viene DESPUÉS
+     en el DOM, así que con el mismo valor le gana el hit-test al botón de
+     abrir/cerrar el menú (el overlay tapa el toggle mientras el menú está
+     abierto, y no se puede volver a cerrar clickeándolo). Bug real, no
+     introducido por este port — se corrige acá. */
+  z-index: 101;
+  color: var(--nr-nav-ink);
+  position: fixed;
+  inset: 0% 0% auto;
+  width: 100%;
+}
+
+/* .nr-nav__bar centra la píldora, tamaño fijo, nunca se anima — la
+   píldora visible (.nr-nav__pill) sí cambia de ANCHO al comprimirse (el
+   acordeón es real), pero su ALTO queda fijo siempre (`height`, no
+   `min-height`) para que nada la haga "saltar" verticalmente durante la
+   transición — ni el contenido comprimiéndose ni un texto que en algún
+   punto intermedio de la animación llegue a envolver en dos líneas. */
+.nr-nav__bar {
+  display: flex;
+  justify-content: flex-start;
+  max-width: 1024px;
+  margin: 20px auto 0;
+}
+
+.nr-nav__pill {
+  /* .nr-nav__pill es un flex item de .nr-nav__bar — sin `flex`/`width`
+     acá, un flex item por default se achica a su propio contenido (no
+     ocupa el ancho disponible), que es justo el bug reportado: se quedaba
+     fijo en 810px de contenido en vez de seguir el ancho real de pantalla.
+     `flex:1` + `min-width:0` lo hace ocupar todo el espacio del slot
+     (responsive de verdad); `max-width` sigue poniendo el techo de 810px
+     expandido / fit-content comprimido. */
+  flex: 1;
+  min-width: 0;
+  height: 3.5em;
+  background: var(--nr-nav-bg);
+  border: 1px solid var(--nr-nav-border);
+  border-radius: var(--radius-nr-pill);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  max-width: 1024px;
+  /* 0.9s, no 0.35s — pedido explícito de que abrir/cerrar el acordeón se
+     sienta bastante más lento y suave, no un golpe rápido. */
+  transition: max-width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nr-nav__pill.is-collapsed {
+  max-width: fit-content;
+}
+
+@media screen and (min-width: 1241px) {
+  .nr-nav__bar,
+  .nr-nav__pill {
+    max-width: 84rem;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1439px) {
+  .nr-nav__bar {
+    margin: 20px 20px 0;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .nr-nav__bar {
+    margin: 20px auto 0;
+    padding: 0 24px;
+  }
+}
+
+.nr-nav__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 24px;
+  gap: 1em;
+}
+
+.nr-nav__pill.is-collapsed .nr-nav__container {
+  padding-right: 0.6em;
+}
+
+.nr-nav__icons {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  flex: none;
+}
+
+/* `position:absolute` + `left:50%` — centra el logo respecto al ancho
+   TOTAL de .nr-nav__container de verdad, sin importar que .nr-nav__icons
+   y .nr-nav__actions midan distinto (con columnas de grid `1fr auto 1fr`
+   eso NO centraba de verdad: la columna "auto" del medio queda offset
+   hacia el lado que tenga el vecino más angosto, no al centro real). */
+.nr-nav__logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  color: var(--nr-nav-ink);
+  /* Sin ícono, sin mayúsculas ni tracking — mismo wordmark "nexa-render"
+     que ya usa .nr-footer__logo (Footer.css), solo un poco más grande acá
+     porque es el mark principal arriba de todo. Pedido explícito: el
+     ícono/triángulo y el tratamiento en mayúsculas+900+letter-spacing de
+     antes no gustaban. */
+  font-weight: 800;
+  font-size: 1.1em;
+  transition: opacity 0.25s ease;
+}
+
+.nr-nav__pill.is-collapsed .nr-nav__logo {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nr-nav__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  background: none;
+  border: none;
+  color: var(--nr-nav-ink);
+  padding: 0.4em;
+  margin: -0.4em;
+}
+.nr-nav__toggle-icon {
+  display: flex;
+  flex-flow: column;
+  gap: 0.3em;
+  width: 1.3em;
+}
+.nr-nav__toggle-bar {
+  background-color: currentColor;
+  width: 100%;
+  height: 0.1em;
+  flex: none;
+}
+.nr-nav__toggle-text {
+  height: 1.2em;
+  overflow: hidden;
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+}
+.nr-nav__toggle-label {
+  font-size: 1em;
+  font-weight: 600;
+}
+
+/* white-space:nowrap en los botones de acá adentro (via .nr-nav__btn más
+   abajo) evita que en algún punto intermedio de la animación el texto
+   ("API Docs"/"Plantillas") llegue a envolver en 2 líneas — eso es lo que
+   hacía que el ALTO de la píldora cambiara durante la transición. */
+.nr-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex: none;
+  max-width: 600px;
+  overflow: hidden;
+  /* misma duración que .nr-nav__pill de arriba — deben ir sincronizados,
+     si no la píldora termina de moverse antes de que el contenido
+     adentro termine de desvanecerse (o al revés). */
+  transition:
+    max-width 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s ease,
+    margin-left 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== ACORDEÓN DE LA BARRA — botón nuevo, comprime la píldora a 2 íconos ===== */
+
+.nr-nav__collapse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3em;
+  height: 2.3em;
+  border-radius: 50%;
+  border: none;
+  background: #2b2b2b;
+  color: var(--nr-nav-ink);
+  flex: none;
+}
+
+.nr-nav__pill.is-collapsed .nr-nav__actions {
+  max-width: 0;
+  opacity: 0;
+  margin-left: -1em;
+  pointer-events: none;
+}
+
+.nr-nav__btn {
+  padding: 0.65em 1.3em;
+  border-radius: var(--radius-nr-pill);
+  font-size: 0.92em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.nr-nav__btn--ghost {
+  background: #2b2b2b;
+  color: #d8d8d8;
+}
+.nr-nav__btn--accent {
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+}
+
+/* ===== MENU (slide-out) ===== */
+
+.nr-nav__menu {
+  z-index: 1;
+  width: var(--nr-menu-width);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: var(--nr-nav-bg);
+  color: var(--nr-nav-ink);
+}
+.nr-nav__overlay {
+  z-index: 100;
+  pointer-events: none;
+  cursor: pointer;
+  visibility: hidden;
+  position: fixed;
+  inset: 0% -1px 0% 0%;
+  overflow: clip;
+}
+.nr-nav__inner {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 7.5em 2em 2em;
+  gap: 2em;
+  overflow: auto;
+}
+.nr-nav__list {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nr-nav__list.is-small {
+  gap: 0.6em;
+}
+.nr-nav__link-large {
+  display: block;
+  width: 100%;
+  padding: 0.5em 0.6em;
+  border-radius: 0.3em;
+}
+.nr-nav__link-large.is-current {
+  background: var(--nr-violet);
+  color: #fff;
+}
+.nr-nav__link-large span {
+  font-size: 2.6em;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+.nr-nav__bottom {
+  display: flex;
+  gap: 2em;
+  padding-top: 1.4em;
+  position: relative;
+}
+.nr-nav__bottom-col {
+  display: flex;
+  flex-flow: column;
+  gap: 0.7em;
+  flex: 1;
+}
+.nr-nav__link-small {
+  font-size: 0.95em;
+  opacity: 0.85;
+}
+.nr-nav__link-small.is-faded {
+  opacity: 0.5;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.nr-nav__bottom-border {
+  opacity: 0.15;
+  transform-origin: 0%;
+  background: currentColor;
+  width: 100%;
+  height: 1px;
+  position: absolute;
+  inset: 0% 0% auto;
+}
+.nr-nav__dark {
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  inset: 0%;
+}
+
+.nr-nav__corner {
+  transform-origin: 100% 0;
+  color: var(--nr-bg);
+  background-image: radial-gradient(circle farthest-side at 0 100%, transparent 99%, var(--nr-bg));
+  width: 2em;
+  height: 2em;
+}
+.nr-nav__corner.is-bottom {
+  transform-origin: 100% 100%;
+  background-image: radial-gradient(circle farthest-side at 0 0, transparent 99%, var(--nr-bg));
+}
+.nr-nav__borders {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  position: absolute;
+  inset: 0;
+}
+.nr-nav__border {
+  background-color: var(--nr-bg);
+  width: 100%;
+  height: 1em;
+}
+.nr-nav__border-row {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
+}
+
+@media screen and (max-width: 767px) {
+  .nr-nav__bar {
+    margin: 12px 12px 0;
+  }
+  .nr-nav__link-large span {
+    font-size: 2em;
+  }
+
+  /* La píldora completa (íconos + logo centrado + acciones) mide más de
+     300px de contenido y no entra en un teléfono sin que se pisen entre
+     sí — el logo es `position:absolute` centrado en el ancho TOTAL del
+     contenedor, así que compite por el mismo espacio con lo que haya a
+     los costados sin importar cuánto midan (ver comentario en
+     .nr-nav__logo más arriba). Acá se saca todo lo que ya está duplicado
+     en el menú slide-out (.nr-nav__menu ya tiene "API Docs" y "Plantillas"
+     como links grandes) y el acordeón de compresión (`.nr-nav__collapse`,
+     una comodidad de escritorio que no aplica a este layout mobile ya
+     compacto) — queda: hamburger a la izquierda, logo centrado,
+     theme+locale toggle a la derecha. */
+  .nr-nav__collapse {
+    display: none;
+  }
+  .nr-nav__btn {
+    display: none;
+  }
+}
+
+/* Con solo hamburger + logo + theme/locale, a 767px sobra margen — pero
+   en un teléfono chico (320-360px, ej. iPhone SE) el label "Menu"/"Cerrar"
+   ya vuelve a rozar el logo centrado. Se oculta el texto del toggle acá,
+   queda solo el ícono (sigue teniendo aria-label para lectores de
+   pantalla, ver Nav.tsx). */
+@media screen and (max-width: 380px) {
+  .nr-nav__toggle-text {
+    display: none;
+  }
+}

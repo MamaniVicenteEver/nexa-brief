@@ -1,0 +1,191 @@
+/* ------- GalleryCard.css -------
+   Prefijo de clase: nr-gallery-card__* — igual al nombre del componente
+   (GalleryCard), mismo convenio que FanSlider.css/PlayReel.css. */
+
+.nr-gallery-card {
+  width: 100%;
+  border-radius: var(--radius-nr-md);
+  border: 1px solid var(--nr-line);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--nr-bg);
+  box-shadow: 0 20px 45px var(--nr-card-shadow);
+}
+
+.nr-gallery-card__video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: var(--nr-code-bg);
+  display: block;
+}
+
+.nr-gallery-card__body {
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nr-gallery-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nr-gallery-card__info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nr-gallery-card__labels {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.nr-gallery-card__labels .nr-engine-badge {
+  padding: 3px 8px;
+  font-size: 10px;
+}
+
+.nr-gallery-card__fps {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--nr-mute);
+}
+
+.nr-gallery-card__controls {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: none;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.nr-gallery-card__controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 1px solid var(--nr-line);
+  border-radius: var(--radius-nr-pill);
+  background: transparent;
+  color: var(--nr-ink);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.nr-gallery-card__controls .nr-gallery-card__control--play.is-playing {
+  border-color: var(--nr-ink);
+  background: var(--nr-ink);
+  color: var(--nr-bg);
+}
+
+.nr-gallery-card__controls .nr-preview-modal__open {
+  width: 1.5rem;
+  height: 1.5rem;
+  min-height: 1.5rem;
+  justify-content: center;
+  padding: 0;
+}
+
+.nr-gallery-card__controls .nr-preview-modal__open span {
+  display: none;
+}
+
+.nr-gallery-card__controls button:hover,
+.nr-gallery-card__controls button:focus-visible {
+  border-color: var(--nr-accent);
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+}
+
+.nr-gallery-card__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+  font-size: 1.05em;
+  font-weight: 700;
+}
+
+.nr-gallery-card__engine-tag {
+  display: inline-flex;
+  border: 1px solid var(--nr-line);
+  border-radius: var(--radius-nr-pill);
+  background: var(--nr-mark-bg);
+  color: var(--nr-mute);
+  padding: 5px 9px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.nr-gallery-card__modal-details {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--nr-mute);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.nr-gallery-card__modal-details .nr-engine-badge {
+  font-size: 11px;
+}
+
+.nr-gallery-card__description {
+  margin: 0;
+  font-size: 0.88em;
+  line-height: 1.5;
+  color: var(--nr-mute);
+}
+
+.nr-gallery-card__study-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: flex-start;
+  margin-top: 0.2rem;
+  padding: 0.38rem 0.62rem;
+  border: 1px solid var(--nr-line);
+  border-radius: var(--radius-nr-pill);
+  color: var(--nr-ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.nr-gallery-card__study-link:hover,
+.nr-gallery-card__study-link:focus-visible {
+  border-color: var(--nr-accent);
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+}
+
+/* Fila 9:16 (mobile) — más angosta que la de 16:9, y el video cambia de
+   aspect-ratio para no verse recortado. */
+.nr-gallery-card--mobile {
+  max-width: 300px;
+}
+.nr-gallery-card--mobile .nr-gallery-card__video {
+  aspect-ratio: 9 / 16;
+}

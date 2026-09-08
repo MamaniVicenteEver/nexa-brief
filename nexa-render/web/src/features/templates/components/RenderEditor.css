@@ -1,0 +1,157 @@
+/* ------- RenderEditor.css -------
+   El preview en vivo (con los botones Play/Stop) es LivePreview.tsx/
+   LivePreview.css, un componente aparte — acá solo el layout del editor
+   (paneles de código + aside de configuración). */
+
+.nr-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.nr-editor__main {
+  min-width: 0;
+  width: 100%;
+  order: 2;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nr-editor__aside {
+  order: 1;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(132px, 0.7fr);
+  align-items: center;
+  gap: 10px;
+  position: sticky;
+  top: 24px;
+  border-radius: var(--radius-nr-md);
+  border: 1px solid var(--nr-line);
+  background: var(--nr-bg);
+  color: var(--nr-ink);
+}
+
+.nr-editor__section-label {
+  margin-bottom: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--nr-mute);
+}
+
+.nr-editor__worker-picker,
+.nr-editor__fps-picker,
+.nr-editor__duration-picker,
+.nr-editor__format-picker {
+  min-width: 0;
+}
+
+.nr-editor__duration-picker .nr-editor__section-label {
+  display: block;
+}
+
+.nr-editor__duration-input {
+  width: 100%;
+  min-height: 32px;
+  border: 1px solid var(--nr-line);
+  border-radius: var(--radius-nr-xs);
+  background: transparent;
+  color: var(--nr-ink);
+  font: inherit;
+  font-weight: 700;
+  padding: 0 10px;
+}
+
+.nr-editor__aside > .nr-btn--accent-solid {
+  align-self: center;
+  justify-self: end;
+  width: min(100%, 150px);
+  min-height: 34px;
+}
+
+.nr-editor__seg-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Página "Abrir en estudio": la fuente queda a la izquierda; controles y
+   preview a la derecha. display: contents permite reutilizar exactamente los
+   mismos componentes sin duplicar su lógica. */
+@media (min-width: 900px) {
+  .nr-editor--studio {
+    display: grid;
+    grid-template-columns: minmax(300px, 30%) minmax(0, 1fr);
+    grid-template-rows: 150px minmax(560px, 1fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .nr-editor--studio .nr-editor__main {
+    display: contents;
+  }
+
+  .nr-editor--studio .nr-code-panels {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: start;
+    max-height: min(520px, calc(100vh - 180px));
+    overflow-y: auto;
+  }
+
+  .nr-editor--studio .nr-code-panels__toolbar > :not(.nr-code-panels__copy):not(.nr-code-panels__mode-toggle) {
+    display: none;
+  }
+
+  .nr-editor--studio .nr-editor__aside {
+    grid-column: 2;
+    grid-row: 1;
+    position: static;
+    height: 150px;
+  }
+
+  .nr-editor--studio .nr-live-preview,
+  .nr-editor--studio .nr-remotion-preview {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 0;
+    height: 100%;
+  }
+}
+.nr-editor__notice {
+  grid-column: 1 / -1;
+  font-size: 12.5px;
+  color: var(--nr-mute);
+  margin: 0;
+}
+.nr-editor__error {
+  grid-column: 1 / -1;
+  font-size: 12.5px;
+  color: var(--nr-danger);
+  margin: 0;
+}
+
+@media screen and (max-width: 900px) {
+  .nr-editor__aside {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media screen and (max-width: 600px) {
+  .nr-editor__aside {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nr-editor__aside > .nr-btn--accent-solid {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    width: 100%;
+  }
+}

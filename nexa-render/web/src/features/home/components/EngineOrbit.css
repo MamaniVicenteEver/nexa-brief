@@ -1,0 +1,262 @@
+/* ------- EngineOrbit.css -------
+   Fusión de las 2 secciones que antes eran EngineSlider.css + OrbitStatus.css
+   (pedido explícito: "estas 2 secciones estén en una sola sección").
+   Prefijo nr-engine-orbit__* para todo.
+
+   .nr-dot/.nr-stat-row (los puntitos de estado) YA NO se usan acá — el
+   pipeline de abajo usa su propio .nr-engine-orbit__pipeline-dot, con
+   animación en cascada en vez de "vivo/en cola" fijo. */
+
+.nr-engine-orbit {
+  /* max-width mucho más grande que el resto de las secciones (1100px es
+     el estándar del sitio) — pedido explícito: esta sección necesita
+     bastante más aire porque adentro viven 3 tarjetas en abanico; con
+     1100px quedaba todo apretado. */
+  padding: 2em 1.5em 8em;
+  max-width: 1720px;
+  margin: 0 auto;
+}
+.nr-engine-orbit__head {
+  text-align: center;
+  margin-bottom: 1.6em;
+}
+.nr-engine-orbit__title {
+  font-size: clamp(2.2rem, 4vw + 1rem, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* ===== Stage: tarjetas del abanico de motores. Ya no tiene anillo ni
+   labels Local/AWS adentro (ambos eliminados/mudados — pedido explícito):
+   el anillo se mudó a .nr-engine-orbit__pipeline-wrap, para bordear la
+   tarjeta del pipeline en vez de las tarjetas de motores. ===== */
+.nr-engine-orbit__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 520px;
+}
+
+/* ===== Pipeline-wrap: contenedor único (pedido explícito) para el
+   anillo, el TechMarquee de fondo y la tarjeta del pipeline — los 3 juntos,
+   bien separados del abanico de motores de arriba. ===== */
+.nr-engine-orbit__pipeline-wrap {
+  /* 100px — pedido explícito, no el --section-gap estándar del sitio. */
+  position: relative;
+  z-index: 1;
+  margin-top: 30px;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Anclado al centro de ESTE wrap (no de toda la sección) — 640px de
+   diámetro bordeando la tarjeta del pipeline (340px de ancho), mismo
+   espíritu que el .nr-orbit__mockup original: un anillo grande detrás de
+   una tarjeta angosta, no un círculo ajustado al tamaño de la tarjeta. */
+.nr-engine-orbit__rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 610px;
+  height: 610px;
+  border-radius: 50%;
+  border: 1px dashed var(--nr-line);
+  background: repeating-conic-gradient(var(--nr-line) 0deg 1.2deg, transparent 1.2deg 9deg);
+  -webkit-mask: radial-gradient(circle, transparent 41%, #000 42%, #000 100%);
+  mask: radial-gradient(circle, transparent 41%, #000 42%, #000 100%);
+  z-index: 0;
+}
+
+/* TechMarquee acá adentro (no ya a nivel de toda la sección) — a todo el
+   ancho de viewport (mismo truco de .nr-wheel en RadialWheel.css:
+   left:50% + width:100vw + translateX(-50%)) pero anclado SOLO al alto de
+   .nr-engine-orbit__pipeline-wrap, para pasar por detrás — literal, "por
+   medio de" — la tarjeta del pipeline, sin extenderse al resto de la
+   sección. Selector compuesto (no solo .nr-engine-orbit__tech-marquee) a
+   propósito: misma especificidad de una sola clase que la regla base
+   `.nr-tech-marquee` de TechMarquee.css — sin el compuesto, cuál de las
+   dos gana dependería del orden de import en el bundle. */
+.nr-tech-marquee.nr-engine-orbit__tech-marquee {
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+.nr-tech-marquee.nr-engine-orbit__tech-marquee .nr-tech-marquee__track {
+  /* Otro 10% de intensidad sobre el ajuste anterior (0.44 × 1.10). */
+  opacity: 0.484;
+}
+
+/* ===== Pipeline: flujo de ejecución de un render, en cascada. ===== */
+.nr-engine-orbit__pipeline {
+  position: relative;
+  z-index: 2;
+  width: 340px;
+  background: var(--nr-card-dark);
+  border: 1px solid var(--nr-mock-border);
+  border-radius: var(--radius-nr-sm);
+  overflow: hidden;
+  box-shadow: 0 30px 60px var(--nr-mockup-shadow);
+}
+.nr-engine-orbit__pipeline-bar {
+  display: flex;
+  gap: 6px;
+  padding: 12px 14px;
+  background: #101012;
+  /* Al completarse los seis puntos, la barra confirma el trabajo terminado
+     durante 2 segundos (25% de este ciclo de 8s). */
+  animation: nr-pipeline-bar-complete 8s ease-in-out infinite;
+}
+.nr-engine-orbit__pipeline-bar span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3a3a40;
+  /* Indicadores activos durante la ejecución 1→6; al completarse el
+     pipeline pasan a negro para contrastar con la barra verde. */
+  animation: nr-pipeline-bar-indicator 8s ease-in-out infinite;
+}
+.nr-engine-orbit__pipeline-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nr-engine-orbit__pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--nr-mute);
+}
+.nr-engine-orbit__pipeline-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3a3a40;
+}
+
+/* Cascada acumulativa: los textos siempre quedan neutros; únicamente los
+   puntos se encienden. La secuencia es 1 → 1+2 → ... → 1+2+3+4+5+6 y, al
+   terminar, todos se apagan antes de reiniciar. */
+.nr-engine-orbit__pipeline-step:nth-child(1) .nr-engine-orbit__pipeline-dot {
+  animation: nr-pipeline-dot-cascade-1 8s ease-in-out infinite;
+}
+.nr-engine-orbit__pipeline-step:nth-child(2) .nr-engine-orbit__pipeline-dot {
+  animation: nr-pipeline-dot-cascade-2 8s ease-in-out infinite;
+}
+.nr-engine-orbit__pipeline-step:nth-child(3) .nr-engine-orbit__pipeline-dot {
+  animation: nr-pipeline-dot-cascade-3 8s ease-in-out infinite;
+}
+.nr-engine-orbit__pipeline-step:nth-child(4) .nr-engine-orbit__pipeline-dot {
+  animation: nr-pipeline-dot-cascade-4 8s ease-in-out infinite;
+}
+.nr-engine-orbit__pipeline-step:nth-child(5) .nr-engine-orbit__pipeline-dot {
+  animation: nr-pipeline-dot-cascade-5 8s ease-in-out infinite;
+}
+.nr-engine-orbit__pipeline-step:nth-child(6) .nr-engine-orbit__pipeline-dot {
+  animation: nr-pipeline-dot-cascade-6 8s ease-in-out infinite;
+}
+
+@keyframes nr-pipeline-dot-cascade-1 {
+  0%, 3%, 78%, 100% { background: #3a3a40; box-shadow: none; }
+  4%, 77% { background: var(--nr-accent); box-shadow: 0 0 8px var(--nr-accent); }
+}
+@keyframes nr-pipeline-dot-cascade-2 {
+  0%, 11%, 78%, 100% { background: #3a3a40; box-shadow: none; }
+  12%, 77% { background: var(--nr-accent); box-shadow: 0 0 8px var(--nr-accent); }
+}
+@keyframes nr-pipeline-dot-cascade-3 {
+  0%, 19%, 78%, 100% { background: #3a3a40; box-shadow: none; }
+  20%, 77% { background: var(--nr-accent); box-shadow: 0 0 8px var(--nr-accent); }
+}
+@keyframes nr-pipeline-dot-cascade-4 {
+  0%, 27%, 78%, 100% { background: #3a3a40; box-shadow: none; }
+  28%, 77% { background: var(--nr-accent); box-shadow: 0 0 8px var(--nr-accent); }
+}
+@keyframes nr-pipeline-dot-cascade-5 {
+  0%, 35%, 78%, 100% { background: #3a3a40; box-shadow: none; }
+  36%, 77% { background: var(--nr-accent); box-shadow: 0 0 8px var(--nr-accent); }
+}
+@keyframes nr-pipeline-dot-cascade-6 {
+  0%, 43%, 78%, 100% { background: #3a3a40; box-shadow: none; }
+  44%, 77% { background: var(--nr-accent); box-shadow: 0 0 8px var(--nr-accent); }
+}
+
+@keyframes nr-pipeline-bar-complete {
+  0%, 51%, 77.5%, 100% { background: #101012; box-shadow: none; }
+  52%, 77% { background: var(--nr-accent); box-shadow: 0 0 24px var(--nr-accent); }
+}
+
+@keyframes nr-pipeline-bar-indicator {
+  0%, 51%, 77.5%, 100% { background: var(--nr-accent); box-shadow: 0 0 6px var(--nr-accent); }
+  52%, 77% { background: #000; box-shadow: none; }
+}
+
+.nr-engine-orbit__note {
+  /* Desktop: mucho más arriba (pedido explícito) — .nr-engine-orbit__pipeline-wrap
+     centra la tarjeta dentro de sus 560px de min-height, así que hay bastante
+     aire vacío entre el borde real de la tarjeta y el final del wrap; con
+     margin-top:1em el note quedaba lejos de la tarjeta. Negativo para
+     acercarlo — override propio para mobile más abajo (ahí SÍ estaba bien
+     con 1em original, no tocar). */
+  position: relative;
+  z-index: 2;
+  display: block;
+  text-align: center;
+  margin-top: -140px;
+  font-family: "Caveat", cursive;
+  font-size: 1.6rem;
+  color: var(--nr-note-color);
+}
+/* Flecha como ::after (no texto plano en la traducción) — separada del
+   texto para poder rotarla sin depender de que el glyph unicode "curve"
+   para el lado correcto. Apunta hacia arriba en desktop Y mobile (pedido
+   explícito: en desktop también se ve mal apuntando para abajo). */
+.nr-engine-orbit__note::after {
+  content: "↴";
+  display: inline-block;
+  margin-left: 0.3em;
+  transform: scaleY(-1);
+}
+
+@media screen and (max-width: 767px) {
+  .nr-engine-orbit__stage {
+    min-height: 460px;
+  }
+  .nr-engine-orbit__pipeline-wrap {
+    /* margin-top se queda en 100px, igual que desktop — pedido explícito
+       sin excepción de mobile. */
+    min-height: 350px;
+    align-items: flex-end;
+  }
+  .nr-engine-orbit__rings {
+    display: none;
+  }
+  .nr-engine-orbit__pipeline {
+    width: 90%;
+    max-width: 340px;
+  }
+  .nr-tech-marquee.nr-engine-orbit__tech-marquee {
+    bottom: 310px;
+  }
+  .nr-engine-orbit{
+    padding: 2em 1.5em 2em;
+  }
+  .nr-engine-orbit__note {
+    /* Valor que ya se probó y se ve perfecto en mobile — se queda solo
+       acá, no en la regla base (esa es la de desktop). */
+    margin-top: 0.2em;
+  }
+}

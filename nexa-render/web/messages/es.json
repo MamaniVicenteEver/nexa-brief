@@ -1,0 +1,310 @@
+{
+  "meta": {
+    "title": "nexa-render — HTML/React a video",
+    "description": "Plataforma para convertir HTML y React en video real, con Playwright, Remotion y HyperFrames."
+  },
+  "nav": {
+    "menuLabel": "Menu",
+    "closeLabel": "Cerrar",
+    "apiDocs": "API Docs",
+    "templates": "Plantillas",
+    "openMenuAria": "abrir menú",
+    "closeMenuAria": "cerrar menú",
+    "collapseNavAria": "comprimir barra de navegación",
+    "expandNavAria": "expandir barra de navegación",
+    "openThemeAria": "cambiar a tema oscuro",
+    "closeThemeAria": "cambiar a tema claro",
+    "changeLanguageAria": "cambiar idioma",
+    "home": "Home",
+    "engines": "Motores",
+    "project": "Proyecto",
+    "engineStatus": {
+      "playwright": "Playwright — activo",
+      "remotion": "Remotion — fase 2",
+      "hyperframes": "HyperFrames — fase 2"
+    },
+    "github": "GitHub ↗",
+    "swagger": "Swagger ↗"
+  },
+  "marquee": {
+    "items": ["PLAYWRIGHT · REMOTION · HYPERFRAMES", "GRABÁ TU PRIMER VIDEO", "LOCAL O EN AWS"]
+  },
+  "hero": {
+    "titlePrefix": "Motor de Render",
+    "titleMark": "✱",
+    "titleSuffix": "Hecho para Grabar",
+    "description": "Plataforma para convertir <mark1>HTML</mark1> y <mark2>React</mark2> en video real, con <mark3>Playwright</mark3>, <mark4>Remotion</mark4> y <mark5>HyperFrames</mark5>, corriendo <mark6>local</mark6> o en <mark7>AWS</mark7>."
+  },
+  "wheel": {
+    "items": [
+      "Plantilla Playwright",
+      "Plantilla Remotion",
+      "Plantilla HyperFrames",
+      "Editor en vivo",
+      "MCP nativo",
+      "REST + Swagger",
+      "Worker Local",
+      "Worker AWS"
+    ]
+  },
+  "playReel": {
+    "statement": "nexa-render es una plataforma en crecimiento con motores de render y recursos listos para usar. Accedé al código y las plantillas detrás de cada grabación.",
+    "playLabel": "Play",
+    "reelLabel": "Reel",
+    "videoCaption": "nexa-render en uso",
+    "videoDuration": "00:48",
+    "scribbleNote": "Mirá qué se puede hacer"
+  },
+  "slider": {
+    "eyebrow": "Un motor, tres formas de grabar",
+    "title": "Elegí con cuál probar.",
+    "viewTemplate": "Ver plantilla →",
+    "cards": {
+      "playwright": {
+        "tag": "Motor activo",
+        "title": "Playwright",
+        "description": "Graba cualquier HTML/CSS/JS tal cual — el motor genérico, listo desde el día uno."
+      },
+      "remotion": {
+        "tag": "Fase 2",
+        "title": "Remotion",
+        "description": "Composiciones React — para cuando la plantilla necesita lógica de componente, no solo HTML plano."
+      },
+      "hyperframes": {
+        "tag": "Fase 2",
+        "title": "HyperFrames",
+        "description": "Timelines GSAP — portado del POC real, benchmarked en ~12-17s por clip de 15s."
+      }
+    }
+  },
+  "orbit": {
+    "title": "Tecnologías y flujo de render",
+    "note": "Así se ve un job en vivo",
+    "techStack": [
+      "Next.js",
+      "Node.js",
+      "TypeScript",
+      "React",
+      "Playwright",
+      "Remotion",
+      "HyperFrames",
+      "AWS Lambda",
+      "Gemini",
+      "DeepSeek",
+      "Tailwind CSS",
+      "GSAP",
+      "i18n",
+      "Arquitectura Hexagonal",
+      "FastAPI",
+      "pnpm",
+      "Biome",
+      "Worker Local",
+      "Worker AWS",
+      "REST + Swagger",
+      "MCP nativo",
+      "CI/CD",
+      "Docker"
+    ],
+    "pipeline": {
+      "eyebrow": "Cómo se procesa un render",
+      "steps": [
+        "Subís tu HTML, CSS o React",
+        "Playwright abre el navegador y graba",
+        "El motor procesa cada frame",
+        "El job se encola",
+        "El worker lo dispara — local o en AWS",
+        "Video listo para descargar"
+      ]
+    }
+  },
+  "statement": {
+    "eyebrow": "El motor",
+    "title": "Un panel. Tres motores. Un solo resultado: tu video.",
+    "panel": {
+      "engine": "Motor",
+      "engineValue": "Automático",
+      "worker": "Worker",
+      "workerValue": "Local",
+      "fps": "FPS",
+      "duration": "Duración (seg.)",
+      "durationHint": "Solo respaldo: el video/audio o el código mandan.",
+      "fpsValue": "60",
+      "format": "Formato",
+      "formatValue": "Desktop",
+      "cta": "Grabar →"
+    }
+  },
+  "tabs": {
+    "eyebrow": "Por qué nexa-render",
+    "items": {
+      "engines": {
+        "label": "Motores",
+        "title": "3 motores intercambiables",
+        "description": "Playwright graba cualquier HTML/CSS/JS tal cual. Remotion y HyperFrames llegan en la Fase 2, uno para composiciones React, el otro para timelines GSAP."
+      },
+      "workers": {
+        "label": "Workers",
+        "title": "Local o en AWS",
+        "description": "Arrancá local sin costo de nube. Cuando necesites velocidad, el mismo job corre en AWS sin cambiar nada del lado del cliente."
+      },
+      "mcp": {
+        "label": "MCP",
+        "title": "MCP nativo",
+        "description": "Un agente de IA puede llamar <code>render()</code> y <code>getStatus()</code> directo — mismo motor de jobs que la API REST, sin dos implementaciones."
+      },
+      "api": {
+        "label": "API REST",
+        "title": "REST + Swagger",
+        "description": "Cada endpoint documentado en <code>/docs</code>, generado desde los mismos schemas que validan cada request — nunca queda desactualizado."
+      }
+    }
+  },
+  "trio": {
+    "docs": {
+      "tag": "Documentación",
+      "title": "Swagger",
+      "description": "Cada request y respuesta, probable en vivo.",
+      "cta": "Abrir /docs"
+    },
+    "templates": {
+      "tag": "Plantillas",
+      "title": "Explorá las 3 plantillas",
+      "description": "Una por motor, lista para editar y grabar.",
+      "cta": "Ver plantillas →"
+    },
+    "mcp": {
+      "tag": "Para agentes",
+      "title": "MCP",
+      "description": "<code>render()</code> · <code>getStatus()</code> · <code>configureWorker()</code>",
+      "cta": "Ver herramientas"
+    }
+  },
+  "platform": {
+    "title": "La plataforma",
+    "scribbleNote": "( nexa-render )",
+    "description": "Construido por el mismo equipo que ya automatizó la generación de video en Nexa Brief. Accedé al motor, la API y las plantillas detrás de cada grabación — armá, ajustá, y hacelas tuyas.",
+    "videoUrl": "https://test-videos.co.uk/vids/jellyfish/mp4/h264/720/Jellyfish_720_10s_5MB.mp4",
+    "bottomDescription": "Construimos nexa-render para que grabar HTML o React como video sea tan simple como escribir el HTML.",
+    "cta": "Sobre nexa-render"
+  },
+  "reasons": {
+    "title": "Tres razones para usarlo",
+    "heading": "Subí de nivel tu forma de grabar video y sumate a un flujo pensado para shippear rápido, sin perder calidad.",
+    "items": [
+      {
+        "title": "Un panel para tres motores",
+        "description": "No hace falta aprender la API de Playwright, Remotion y HyperFrames por separado — un solo contrato de entrada, el sistema elige el motor si no le decís cuál."
+      },
+      {
+        "title": "Local o en la nube, vos elegís",
+        "description": "Probá gratis en tu máquina. Cuando el volumen lo pida, el mismo job corre en AWS sin tocar el cliente."
+      },
+      {
+        "title": "Pensado para agentes de IA",
+        "description": "MCP nativo desde el día uno — no es una API REST con un wrapper después, es el mismo motor de jobs de las dos puntas."
+      }
+    ],
+    "builtWith": {
+      "tagPrimary": "Construido con",
+      "tagSecondary": "Stack real"
+    }
+  },
+  "footer": {
+    "logo": "nexa-render",
+    "copy": "© 2026 — HTML/React a video.",
+    "developedBy": "Desarrollado por {name}",
+    "rights": "Todos los derechos reservados.",
+    "contact": {
+      "website": "Sitio web",
+      "email": "Correo",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "whatsapp": "WhatsApp"
+    }
+  },
+  "templates": {
+    "eyebrow": "Plantillas · una por motor",
+    "phase2Badge": "Fase 2",
+    "emptyState": "No se pudo conectar con el servidor. Confirmá que \"pnpm --filter nexa-render-server dev\" esté corriendo.",
+    "errorTitle": "No se pudo cargar esta página",
+    "errorDescription": "Ocurrió un problema temporal al cargar las plantillas. Intentá nuevamente.",
+    "retry": "Reintentar"
+  },
+  "templateDetail": {
+    "notImplementedNotice": "Este motor todavía no está implementado (Fase 2) — elegí otro o dejá \"Automático\".",
+    "livePreview": "Preview en vivo",
+    "remotionPreviewTitle": "Preview de Remotion · cuadro real",
+    "remotionPreviewRefresh": "Actualizar",
+    "remotionPreviewRendering": "Renderizando…",
+    "remotionPreviewWaiting": "Preparando preview…",
+    "remotionPreviewInvalidProps": "props.json no contiene JSON válido.",
+    "remotionPreviewError": "No se pudo generar el preview de Remotion.",
+    "remotionPreviewImageAlt": "Cuadro generado por Remotion",
+    "playPreview": "reproducir preview",
+    "stopPreview": "detener preview",
+    "expandPreview": "Ampliar",
+    "closePreview": "Cerrar preview",
+    "previewStopped": "Detenido",
+    "config": {
+      "engine": "Motor",
+      "auto": "Automático",
+      "worker": "Worker",
+      "workerLocal": "Local",
+      "workerAws": "AWS · Fase 3",
+      "fps": "FPS",
+      "duration": "Duración (seg.)",
+      "format": "Formato",
+      "formatDesktop": "Desktop",
+      "formatMobile": "Mobile"
+    },
+    "recordCta": "● Grabar",
+    "recordingCta": "Encolando…",
+    "submitError": "Error al enviar el job.",
+    "singleFile": "Un solo archivo",
+    "splitCode": "Separar código",
+    "singleFileLabel": "HTML + CSS + JS",
+    "uploadComponent": "Subir componente"
+  },
+  "gallery": {
+    "eyebrow": "Muestras · resultados ya renderizados",
+    "title": "Así se ve un resultado final.",
+    "rowDesktop": "16:9 — Desktop",
+    "rowMobile": "9:16 — Mobile",
+    "fps": "{fps} FPS",
+    "emptyState": "Todavía no hay videos renderizados para este filtro.",
+    "loading": "Cargando videos reales…",
+    "errorState": "No se pudo cargar la galería de resultados.",
+    "filtersLabel": "Filtrar videos por motor",
+    "allEngines": "Todos",
+    "renderedWith": "Renderizado con {engine}",
+    "videoTitle": "{format} · {id}",
+    "videoDetails": "{resolution} · {duration}s · {codec}",
+    "videoControls": "Controles del video",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "stop": "Detener",
+    "mute": "Silenciar",
+    "unmute": "Activar volumen",
+    "fullscreen": "Pantalla completa",
+    "openPreview": "Ampliar video",
+    "openStudio": "Abrir en estudio",
+    "closePreview": "Cerrar video",
+    "paginationLabel": "Paginación de videos",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {page} de {total}"
+  },
+  "jobStatus": {
+    "title": "Estado del render",
+    "statusLabels": {
+      "queued": "En cola",
+      "running": "Grabando…",
+      "completed": "Completado",
+      "failed": "Falló"
+    },
+    "updatingHint": "Actualiza solo — no hace falta refrescar la página.",
+    "backToTemplates": "← Volver a plantillas",
+    "fetchError": "No se pudo consultar el job",
+    "loading": "Cargando…"
+  }
+}

@@ -1,0 +1,31 @@
+/* ------- plantillas/page.css -------
+   Bloque de la ruta /plantillas. Sus hijos directos siguen BEM con el
+   prefijo nr-templates-page__; los componentes internos conservan sus
+   propios bloques (nr-templates-workspace, nr-editor y nr-gallery-grid). */
+
+.nr-templates-page {
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.nr-templates-page__workspace,
+.nr-templates-page__gallery {
+  width: 100%;
+}
+
+.nr-templates-page__empty {
+  margin: 0;
+  color: var(--nr-mute);
+}
+
+/* En pantallas amplias el editor y la galería aprovechan el lienzo completo.
+   Hasta 1240px se conserva el ancho actual para no cambiar el comportamiento
+   que funciona bien en tablets y laptops. */
+@media screen and (min-width: 1241px) {
+  .nr-templates-page {
+    max-width: 84rem;
+  }
+}

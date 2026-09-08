@@ -1,0 +1,90 @@
+/* ------- TechMarquee.css -------
+   Prefijo nr-tech-marquee__* — a propósito distinto de nr-marquee__* (esa
+   es la barra sólida del nav, ver Marquee.css). Mismo mecanismo de scroll
+   infinito (track duplicado + @keyframes translateX), pero transparente,
+   de fondo, y con tamaño/tipografía variable por palabra. */
+
+.nr-tech-marquee {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nr-tech-marquee__track {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2.2em;
+  white-space: nowrap;
+  animation: nr-tech-marquee-scroll 46s linear infinite;
+  opacity: 0.4;
+}
+
+.nr-tech-marquee__item {
+  color: var(--nr-mute);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nr-tech-marquee__item.is-xs {
+  font-size: 0.85rem;
+}
+.nr-tech-marquee__item.is-sm {
+  font-size: 1.3rem;
+}
+.nr-tech-marquee__item.is-md {
+  font-size: 1.9rem;
+}
+.nr-tech-marquee__item.is-lg {
+  font-size: 2.6rem;
+}
+.nr-tech-marquee__item.is-xl {
+  font-size: 3.4rem;
+}
+
+.nr-tech-marquee__item.is-mono {
+  font-family: "JetBrains Mono", monospace;
+}
+.nr-tech-marquee__item.is-script {
+  font-family: "Caveat", cursive;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+/* -50% (no -100%) porque el track ya está duplicado en TechMarquee.tsx —
+   a mitad de la animación la 2da copia queda exactamente donde arrancó la
+   1ra, el loop no se nota. Dirección derecha→izquierda: pedido explícito. */
+@keyframes nr-tech-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .nr-tech-marquee__track {
+    gap: 1.4em;
+  }
+  .nr-tech-marquee__item.is-xs {
+    font-size: 0.7rem;
+  }
+  .nr-tech-marquee__item.is-sm {
+    font-size: 1rem;
+  }
+  .nr-tech-marquee__item.is-md {
+    font-size: 1.3rem;
+  }
+  .nr-tech-marquee__item.is-lg {
+    font-size: 1.7rem;
+  }
+  .nr-tech-marquee__item.is-xl {
+    font-size: 2.1rem;
+  }
+}

@@ -1,0 +1,37 @@
+/* ------- base.css -------
+   Lo único que NO tiene un componente dueño — reglas realmente
+   compartidas por 2+ componentes o por el documento en general. Todo lo
+   demás vive en un .css al lado de su .tsx (mismo nombre). Se importa
+   UNA sola vez, en app/globals.css. */
+
+/* .label — eyebrow tipográfico usado por varias secciones del home
+   (EngineOrbit, EngineStatement, WhyTabs, TrabajoPage) — no es de un
+   componente en particular, es una utilidad de texto compartida. */
+.label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nr-mute);
+}
+
+/* Fondo opaco a propósito: .nr-nav__menu (Nav.css) está siempre montado
+   detrás (fixed, right:0, z-index:1) — sin este fondo se ve como una
+   franja negra permanente hasta que main se desplaza para revelarlo. */
+main {
+  position: relative;
+  z-index: 2;
+  overflow: clip;
+  background: var(--nr-bg);
+  min-height: 100vh;
+}
+
+/* Wrapper compartido por toda página interna (/plantillas, /plantillas/[slug],
+   /trabajos/[jobId]) — le da el padding-top real para no quedar tapada
+   detrás de nr-nav__header (que es fixed, no empuja el resto del documento
+   solo). Ver --nr-nav-clearance en app/globals.css. */
+.nr-page {
+  padding-top: 10rem;
+  padding-bottom: var(--section-gap);
+}

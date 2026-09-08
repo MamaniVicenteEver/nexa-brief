@@ -1,0 +1,171 @@
+/* ------- Reasons.css -------
+   Prefijo nr-reasons__* — port del patrón "info" de osmo.supply (ver
+   comentario en Reasons.tsx). El garabato reusa el mismo path de flecha y
+   color (--nr-note-color) que .nr-platform__scribble/.nr-play-reel__scribble-note;
+   el marquee del final reusa el mismo mecanismo de scroll infinito
+   (track duplicado + @keyframes translateX) que TechMarquee.css, pero con
+   sus propias clases porque acá el marquee vive EN FLUJO NORMAL (una tira
+   angosta al pie), no de fondo/absoluto como TechMarquee. */
+
+.nr-reasons {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2em 1.5em 2em;
+}
+
+.nr-reasons__wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+.nr-reasons__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4em;
+}
+
+.nr-reasons__heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2em;
+}
+
+.nr-reasons__scribble {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4em;
+  color: var(--nr-note-color);
+  padding-top: 0.25em;
+}
+.nr-reasons__scribble p {
+  margin: 0;
+  font-family: "Caveat", cursive;
+  font-size: 1.4rem;
+  transform: rotate(-3deg);
+  white-space: nowrap;
+}
+
+.nr-reasons__scribble svg {
+  transform: translateY(22px) rotate(200deg) scaleY(-1);
+}
+
+.nr-reasons__heading {
+  flex: 1 1 auto;
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(1.8rem, 3vw + 1rem, 2.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.nr-reasons__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nr-reasons__item {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 2em;
+  padding: 1.6em 0;
+  border-top: 1px solid var(--nr-line);
+}
+.nr-reasons__item:last-child {
+  border-bottom: 1px solid var(--nr-line);
+}
+.nr-reasons__item h4 {
+  margin: 0;
+  font-size: 1.1em;
+}
+.nr-reasons__item p {
+  margin: 0;
+  color: var(--nr-mute);
+  line-height: 1.6;
+}
+
+.nr-reasons__built-with {
+  /* Oculto por ahora (pedido explícito) — se retoma más adelante, no se
+     borra para no perder el markup/estilos ya hechos. */
+  display: none;
+  margin-top: 0.8em;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.nr-reasons__tag-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+.nr-reasons__tag-line {
+  flex: 1;
+  height: 1px;
+  background: var(--nr-line);
+}
+.nr-reasons__tag {
+  padding: 0.4em 0.9em;
+  border-radius: var(--radius-nr-pill);
+  border: 1px solid var(--nr-line);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nr-mute);
+  white-space: nowrap;
+}
+
+.nr-reasons__marquee {
+  overflow: hidden;
+}
+.nr-reasons__marquee-track {
+  display: inline-flex;
+  gap: 2.4em;
+  white-space: nowrap;
+  animation: nr-reasons-marquee-scroll 30s linear infinite;
+}
+.nr-reasons__marquee-item {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--nr-mute);
+}
+
+@keyframes nr-reasons-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .nr-reasons__wrap {
+    gap: 2em;
+  }
+  .nr-reasons__item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6em;
+  }
+  .nr-reasons__heading-row {
+    flex-direction: column;
+    gap: 0.8em;
+  }
+  .nr-reasons__scribble {
+    order: -1;
+    align-self: flex-end;
+    margin-bottom: 0.5em;
+  }
+  .nr-reasons__scribble p {
+    font-size: 1.1rem;
+    white-space: normal;
+    text-align: right;
+  }
+  .nr-reasons__scribble svg {
+    transform: translateY(22px) rotate(90deg) scaleY(1);
+  }
+}

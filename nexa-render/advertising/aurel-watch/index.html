@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurel Watch Promo</title>
+    <!-- GSAP desde CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            width: 1920px; 
+            height: 1080px; 
+            overflow: hidden; 
+            background: #101718; 
+        }
+        * { 
+            box-sizing: border-box; 
+        }
+        #aurel-ad { 
+            position: relative; 
+            width: 1920px; 
+            height: 1080px; 
+            overflow: hidden; 
+            color: #f3f0e8; 
+            background: #101718; 
+            font-family: Manrope, Arial, sans-serif; 
+        }
+        .aurel-ad__ambient { 
+            position: absolute; 
+            inset: -4%; 
+            width: 108%; 
+            height: 108%; 
+            object-fit: cover; 
+            opacity: .28; 
+            filter: saturate(.5) contrast(1.15); 
+        }
+        .aurel-ad__veil { 
+            position: absolute; 
+            inset: 0; 
+            background: radial-gradient(circle at 70% 45%, transparent 0, rgba(16,23,24,.32) 35%, #101718 88%), linear-gradient(90deg, #101718 5%, transparent 60%, #101718 100%); 
+        }
+        .aurel-ad__grain { 
+            position: absolute; 
+            inset: 0; 
+            opacity: .12; 
+            pointer-events: none; 
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E"); 
+        }
+        .aurel-ad__header { 
+            position: absolute; 
+            z-index: 10; 
+            top: 58px; 
+            left: 76px; 
+            right: 76px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-family: 'DM Mono', monospace; 
+        }
+        .aurel-ad__brand { 
+            font-size: 28px; 
+            font-weight: 800; 
+            letter-spacing: .14em; 
+        }
+        .aurel-ad__brand span { 
+            color: #d8ff47; 
+        }
+        .aurel-ad__edition, .aurel-ad__scroll, .aurel-ad__product-index, .aurel-ad__detail-copy > span, .aurel-ad__specs-grid span, .aurel-ad__footer-line { 
+            color: rgba(243,240,232,.55); 
+            font-size: 14px; 
+            letter-spacing: .16em; 
+        }
+        .aurel-ad__progress { 
+            position: absolute; 
+            z-index: 10; 
+            left: 76px; 
+            bottom: 58px; 
+            width: 1768px; 
+            height: 2px; 
+            background: rgba(243,240,232,.16); 
+        }
+        .aurel-ad__progress span { 
+            display: block; 
+            width: 0; 
+            height: 100%; 
+            background: #d8ff47; 
+        }
+        .aurel-ad__scene { 
+            position: absolute; 
+            z-index: 2; 
+            inset: 0; 
+            padding: 180px 76px; 
+            opacity: 0; 
+            visibility: hidden; 
+        }
+        .aurel-ad__scene--hero { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+        .aurel-ad__hero-copy { 
+            width: 49%; 
+            padding-left: 80px; 
+        }
+        .aurel-ad__kicker { 
+            margin: 0 0 24px; 
+            color: #d8ff47; 
+            font-family: 'DM Mono', monospace; 
+            font-size: 15px; 
+            letter-spacing: .18em; 
+            text-transform: uppercase; 
+        }
+        .aurel-ad h1, .aurel-ad h2 { 
+            margin: 0; 
+            font-size: 112px; 
+            line-height: .91; 
+            letter-spacing: -.075em; 
+            font-weight: 700; 
+        }
+        .aurel-ad h1 em, .aurel-ad h2 em { 
+            color: #d8ff47; 
+            font-style: normal; 
+        }
+        .aurel-ad__intro { 
+            max-width: 410px; 
+            margin: 40px 0; 
+            color: rgba(243,240,232,.7); 
+            font-size: 19px; 
+            line-height: 1.55; 
+        }
+        .aurel-ad__scroll { 
+            display: inline-flex; 
+            gap: 20px; 
+            align-items: center; 
+        }
+        .aurel-ad__scroll i { 
+            color: #d8ff47; 
+            font-size: 24px; 
+            font-style: normal; 
+        }
+        .aurel-ad__hero-product { 
+            position: relative; 
+            width: 47%; 
+            height: 720px; 
+            display: grid; 
+            place-items: center; 
+        }
+        .aurel-ad__hero-product img { 
+            position: relative; 
+            z-index: 2; 
+            width: 790px; 
+            height: 790px; 
+            object-fit: cover; 
+            border-radius: 50%; 
+            filter: grayscale(.3) contrast(1.1); 
+            mix-blend-mode: screen; 
+        }
+        .aurel-ad__halo { 
+            position: absolute; 
+            width: 650px; 
+            height: 650px; 
+            border: 1px solid rgba(216,255,71,.45); 
+            border-radius: 50%; 
+            box-shadow: 0 0 120px rgba(216,255,71,.12); 
+        }
+        .aurel-ad__product-index { 
+            position: absolute; 
+            z-index: 3; 
+            right: 0; 
+            bottom: 58px; 
+            line-height: 1.8; 
+        }
+        .aurel-ad__product-index b { 
+            color: #f3f0e8; 
+            font-weight: 500; 
+        }
+        .aurel-ad__scene--detail { 
+            display: flex; 
+            align-items: center; 
+            gap: 150px; 
+            padding-left: 180px; 
+        }
+        .aurel-ad__detail-image { 
+            width: 780px; 
+            height: 620px; 
+            overflow: hidden; 
+        }
+        .aurel-ad__detail-image img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            filter: grayscale(.25) contrast(1.1); 
+        }
+        .aurel-ad__detail-copy { 
+            width: 560px; 
+        }
+        .aurel-ad__detail-copy h2 { 
+            margin-bottom: 36px; 
+            font-size: 82px; 
+        }
+        .aurel-ad__detail-copy > p:not(.aurel-ad__kicker) { 
+            color: rgba(243,240,232,.65); 
+            font-size: 20px; 
+            line-height: 1.6; 
+        }
+        .aurel-ad__rule { 
+            width: 100%; 
+            height: 1px; 
+            margin: 55px 0 20px; 
+            background: rgba(243,240,232,.25); 
+        }
+        .aurel-ad__scene--specs { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 230px 180px; 
+        }
+        .aurel-ad__specs-copy h2 { 
+            font-size: 86px; 
+        }
+        .aurel-ad__specs-grid { 
+            width: 740px; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            border-top: 1px solid rgba(243,240,232,.25); 
+        }
+        .aurel-ad__specs-grid div { 
+            padding: 34px 20px 34px 0; 
+            border-bottom: 1px solid rgba(243,240,232,.25); 
+        }
+        .aurel-ad__specs-grid div:nth-child(even) { 
+            padding-left: 30px; 
+            border-left: 1px solid rgba(243,240,232,.25); 
+        }
+        .aurel-ad__specs-grid strong { 
+            display: block; 
+            margin-bottom: 12px; 
+            font-size: 55px; 
+            font-weight: 500; 
+            letter-spacing: -.06em; 
+        }
+        .aurel-ad__specs-grid span { 
+            font-size: 12px; 
+        }
+        .aurel-ad__scene--cta { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+        }
+        .aurel-ad__scene--cta h2 { 
+            font-size: 128px; 
+        }
+        .aurel-ad__scene--cta button { 
+            margin-top: 52px; 
+            padding: 19px 28px; 
+            border: 1px solid #d8ff47; 
+            border-radius: 999px; 
+            background: #d8ff47; 
+            color: #101718; 
+            font-family: 'DM Mono', monospace; 
+            font-size: 14px; 
+            font-weight: 500; 
+            letter-spacing: .08em; 
+        }
+        .aurel-ad__scene--cta button span { 
+            margin-left: 28px; 
+            font-size: 20px; 
+        }
+        .aurel-ad__footer-line { 
+            position: absolute; 
+            bottom: 85px; 
+        }
+    </style>
+</head>
+<body>
+    <div id="aurel-ad" data-composition-id="aurel-watch" data-start="0" data-duration="14" data-width="1920" data-height="1080" data-fps="30">
+        <video class="aurel-ad__ambient" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1920&q=85">
+            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        </video>
+        <div class="aurel-ad__veil"></div>
+        <div class="aurel-ad__grain"></div>
+
+        <div class="aurel-ad__progress"><span></span></div>
+        <header class="aurel-ad__header">
+            <span class="aurel-ad__brand">AUREL<span>°</span></span>
+            <span class="aurel-ad__edition">ATELIER 01 / 2026</span>
+        </header>
+
+        <section id="aurel-scene-hero" class="aurel-ad__scene aurel-ad__scene--hero clip" data-start="0" data-duration="4.2" data-track-index="0">
+            <div class="aurel-ad__hero-copy">
+                <p class="aurel-ad__kicker">Precision, worn daily</p>
+                <h1>Time<br><em>made</em> personal.</h1>
+                <p class="aurel-ad__intro">Aurel No. 01 — an automatic timepiece shaped by light, steel and the quiet confidence of less.</p>
+                <span class="aurel-ad__scroll">SCROLL TO DISCOVER <i>↓</i></span>
+            </div>
+            <div class="aurel-ad__hero-product">
+                <div class="aurel-ad__halo"></div>
+                <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1100&q=90" alt="Aurel No. 01 automatic watch">
+                <span class="aurel-ad__product-index">NO. 01<br><b>SWISS AUTOMATIC</b></span>
+            </div>
+        </section>
+
+        <section id="aurel-scene-detail" class="aurel-ad__scene aurel-ad__scene--detail clip" data-start="4" data-duration="3.8" data-track-index="1">
+            <div class="aurel-ad__detail-image"><img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&w=1200&q=90" alt="Aurel watch detail"></div>
+            <div class="aurel-ad__detail-copy"><p class="aurel-ad__kicker">Built for a lifetime</p><h2>Every angle<br>has a reason.</h2><p>Brushed 316L steel. Sapphire crystal. A dial designed to stay legible when everything else gets loud.</p><div class="aurel-ad__rule"></div><span>01 / 03 — MATERIAL</span></div>
+        </section>
+
+        <section id="aurel-scene-specs" class="aurel-ad__scene aurel-ad__scene--specs clip" data-start="7.6" data-duration="3.2" data-track-index="2">
+            <div class="aurel-ad__specs-copy"><p class="aurel-ad__kicker">The quiet engine</p><h2>Inside,<br><em>always moving.</em></h2></div>
+            <div class="aurel-ad__specs-grid"><div><strong>40h</strong><span>POWER RESERVE</span></div><div><strong>100m</strong><span>WATER RESISTANCE</span></div><div><strong>316L</strong><span>SURGICAL STEEL</span></div><div><strong>28,800</strong><span>VIBRATIONS / HOUR</span></div></div>
+        </section>
+
+        <section id="aurel-scene-cta" class="aurel-ad__scene aurel-ad__scene--cta clip" data-start="10.8" data-duration="3.2" data-track-index="3">
+            <p class="aurel-ad__kicker">Aurel No. 01</p><h2>Make time<br><em>your own.</em></h2><button type="button">DISCOVER THE COLLECTION <span>↗</span></button><p class="aurel-ad__footer-line">AUREL / ATELIER 01 / EST. 2026</p>
+        </section>
+    </div>
+
+    <script>
+        (function () {
+            // HyperFrames controla el tiempo de una única timeline pausada.
+            var tl = gsap.timeline({ paused: true });
+
+            var scenes = ['#aurel-scene-hero', '#aurel-scene-detail', '#aurel-scene-specs', '#aurel-scene-cta'];
+
+            // Estado inicial de todas las escenas y elementos
+            gsap.set(scenes, { autoAlpha: 0 });
+            gsap.set('#aurel-scene-hero .aurel-ad__hero-copy', { x: -70 });
+            gsap.set('#aurel-scene-hero .aurel-ad__hero-product', { x: 80, scale: .92 });
+            gsap.set('#aurel-scene-detail .aurel-ad__detail-image', { x: -80 });
+            gsap.set('#aurel-scene-detail .aurel-ad__detail-copy', { x: 70 });
+            gsap.set('#aurel-scene-specs .aurel-ad__specs-copy', { y: 55 });
+            gsap.set('#aurel-scene-specs .aurel-ad__specs-grid', { y: 55 });
+            gsap.set('#aurel-scene-cta > *', { y: 45, autoAlpha: 0 });
+            gsap.set('.aurel-ad__progress span', { scaleX: 0, transformOrigin: 'left center' });
+
+            // Secuencia de animación (14 segundos por ciclo)
+            tl.to('.aurel-ad__progress span', { scaleX: 1, duration: 14, ease: 'none' }, 0);
+            tl.to('#aurel-scene-hero', { autoAlpha: 1, duration: .35 }, 0);
+            tl.to('#aurel-scene-hero .aurel-ad__hero-copy', { x: 0, duration: 1.1, ease: 'power3.out' }, .15);
+            tl.to('#aurel-scene-hero .aurel-ad__hero-product', { x: 0, scale: 1, duration: 1.3, ease: 'power3.out' }, .35);
+            tl.to('#aurel-scene-hero .aurel-ad__hero-product img', { rotation: 5, duration: 3.4, ease: 'sine.inOut' }, .35);
+            tl.to('#aurel-scene-hero', { autoAlpha: 0, duration: .55 }, 3.6);
+
+            tl.to('#aurel-scene-detail', { autoAlpha: 1, duration: .35 }, 3.9);
+            tl.to('#aurel-scene-detail .aurel-ad__detail-image', { x: 0, duration: 1, ease: 'power3.out' }, 4);
+            tl.to('#aurel-scene-detail .aurel-ad__detail-copy', { x: 0, duration: 1, ease: 'power3.out' }, 4.2);
+            tl.to('#aurel-scene-detail', { autoAlpha: 0, duration: .5 }, 7.1);
+
+            tl.to('#aurel-scene-specs', { autoAlpha: 1, duration: .35 }, 7.45);
+            tl.to('#aurel-scene-specs .aurel-ad__specs-copy', { y: 0, duration: .9, ease: 'power3.out' }, 7.6);
+            tl.to('#aurel-scene-specs .aurel-ad__specs-grid', { y: 0, duration: .9, ease: 'power3.out' }, 7.85);
+            tl.to('#aurel-scene-specs', { autoAlpha: 0, duration: .5 }, 10.35);
+
+            tl.to('#aurel-scene-cta', { autoAlpha: 1, duration: .35 }, 10.7);
+            tl.to('#aurel-scene-cta > *', { y: 0, autoAlpha: 1, duration: .8, stagger: .12, ease: 'power3.out' }, 10.8);
+            tl.to('.aurel-ad__brand', { color: '#d8ff47', duration: .35 }, 11.3);
+
+            window.__timelines = window.__timelines || {};
+            window.__timelines["aurel-watch"] = tl;
+        })();
+    </script>
+</body>
+</html>

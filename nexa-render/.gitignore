@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.next/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+.turbo/
+.pnpm-store/
+.cache/
+coverage/
+*.log
+.DS_Store
+.idea/
+.vscode/
+.vercel/
+.playwright/
+
+# Job workdirs and rendered output (local dev only — real deploys use object storage)
+server/data/
+server/work/
+server/results/
+server/out/

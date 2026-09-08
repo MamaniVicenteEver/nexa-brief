@@ -1,0 +1,206 @@
+/* ------- PlayReel.css -------
+   Sección "Play/Reel": el statement y la fila Play/Reel se suben con
+   margin-top negativo para que queden DENTRO de los 760px de .nr-wheel
+   (RadialWheel.css — está en position:absolute, por eso no empuja el
+   resto del contenido hacia abajo) — el efecto es que la rueda gira
+   alrededor de ellos, no arriba y separada.
+
+   Nombres de clase: prefijo nr-play-reel__* (antes nr-play__*, poco
+   reconocible — ni "h2" ni "ring" decían de qué elemento se trataba).
+   Cada nombre ahora coincide con lo que arma PlayReel.tsx: __statement /
+   __statement-heading = el texto grande; __media-row = la fila completa
+   Play/Reel; __media-label = los números "Play"/"Reel"; __decorative-ring
+   = el anillo punteado detrás del video; __video-card/__video-thumbnail/
+   __video-meta = el mockup de video; __scribble-note = la nota a mano. */
+
+.nr-play-reel {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3em 1.5em 6em;
+  overflow: visible;
+}
+
+.nr-play-reel__background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+.nr-play-reel__background-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--nr-line);
+}
+
+.nr-play-reel__statement {
+  /* Separación statement -> fila de video: en desktop se veían pegados
+     (el último renglón del statement chocaba con el anillo punteado) —
+     se sube el margen inferior solo acá, la versión mobile ya estaba
+     bien y se preserva con su propio override más abajo. */
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 760px;
+  margin: 230px auto 5.5em;
+}
+.nr-play-reel__statement-heading {
+  font-size: clamp(1.4rem, 2vw + 1rem, 2.1rem);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--nr-ink);
+}
+
+.nr-play-reel__media-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5em;
+}
+
+.nr-play-reel__media-label {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--nr-line);
+  user-select: none;
+  flex: none;
+}
+
+.nr-play-reel__media-center {
+  /* +40% pedido explícito, van 2 veces ya sobre la base original (260):
+     260→364→510, con el resto de los hijos —ring/video-card/thumbnail—
+     escalados en la misma proporción cada vez. */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 510px;
+}
+
+.nr-play-reel__decorative-ring {
+  /* Centrado explícito (no depender de la "static position" que un
+     elemento absolute recibe dentro de un flex container) — en mobile,
+     .nr-play-reel__scribble-note pasa a estar en flujo normal (ver media
+     query) y eso corría el centro fantasma del ring; con top/left/transform
+     el anillo queda centrado siempre, sin importar qué más haya en el flow. */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 650px;
+  height: 650px;
+  border-radius: 50%;
+  border: 1px dashed var(--nr-line);
+  background: repeating-conic-gradient(var(--nr-line) 0deg 1.2deg, transparent 1.2deg 9deg);
+  -webkit-mask: radial-gradient(circle, transparent 62%, #000 63%, #000 100%);
+  mask: radial-gradient(circle, transparent 62%, #000 63%, #000 100%);
+  z-index: 0;
+}
+
+.nr-play-reel__video-card {
+  position: relative;
+  z-index: 1;
+  width: 420px;
+  border-radius: var(--radius-nr-sm);
+  overflow: hidden;
+  background: var(--nr-card-dark);
+  border: 1px solid var(--nr-mock-border);
+  box-shadow: 0 30px 60px var(--nr-mockup-shadow);
+}
+
+.nr-play-reel__video-thumbnail {
+  height: 252px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.08), transparent);
+}
+
+.nr-play-reel__video-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7em 0.9em;
+  font-size: 0.78em;
+  font-weight: 600;
+  color: #cfcfd2;
+}
+
+.nr-play-reel__scribble-note {
+  position: absolute;
+  right: -12%;
+  bottom: 60px;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4em;
+  color: var(--nr-note-color);
+  z-index: 1;
+}
+
+.nr-play-reel__scribble-note p {
+  margin: 0;
+  font-family: "Caveat", cursive;
+  font-size: 1.4rem;
+  transform: rotate(-3deg);
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 767px) {
+  .nr-play-reel__statement {
+    margin-top: 180px;
+    margin-bottom: 1rem;
+  }
+  .nr-play-reel__media-row {
+    flex-direction: column;
+  }
+  .nr-play-reel__media-label {
+    font-size: 2.4rem;
+    text-align: center;
+  }
+  .nr-play-reel__scribble-note {
+    /* Antes quedaba en flujo normal DENTRO de una fila (media-center
+       seguía en flex-direction:row), compitiendo por espacio horizontal
+       con el video-card — el texto se salía por el borde derecho de la
+       pantalla. Con media-center en columna (abajo) esta nota pasa a ser
+       el 2do renglón, centrada, ya no compite de lado a lado. */
+    position: static;
+    margin-top: 1em;
+    justify-content: center;
+    text-align: center;
+    max-width: 100%;
+  }
+  .nr-play-reel__decorative-ring {
+    width: 446px;
+    height: 446px;
+  }
+  .nr-play-reel__media-center {
+    flex-direction: column;
+    min-height: 448px;
+  }
+  .nr-play-reel__video-card {
+    /* Responsivo — antes 364px fijo se salía de pantallas angostas (menos
+       de ~404px de ancho). calc(100vw - 40px) deja 20px de aire a cada
+       lado del viewport siempre; max-width mantiene el tamaño pedido
+       (364px, el +40% de la sección) como techo en pantallas más anchas
+       dentro de este mismo breakpoint mobile. */
+    width: calc(100vw - 40px);
+    max-width: 364px;
+  }
+  .nr-play-reel__video-thumbnail {
+    height: 214px;
+  }
+  .nr-play-reel {
+  padding: 2em 1.5em 2em;
+  }
+}

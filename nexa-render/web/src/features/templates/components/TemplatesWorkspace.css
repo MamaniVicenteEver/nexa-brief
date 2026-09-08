@@ -1,0 +1,49 @@
+/* ------- TemplatesWorkspace.css -------
+   Prefijo de clase: nr-templates-workspace__* — igual al nombre del
+   componente (TemplatesWorkspace), a propósito, para que el nombre de la
+   clase en devtools diga directo qué archivo abrir (mismo convenio que
+   FanSlider.css/PlayReel.css). El editor de cada motor sigue viviendo en
+   RenderEditor.css bajo su propio prefijo `nr-editor__*` — este archivo
+   solo estiliza el switcher de arriba, no repite esas reglas. */
+
+.nr-templates-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.nr-templates-workspace__panel {
+  width: 100%;
+}
+
+.nr-templates-workspace__panel .nr-editor {
+  gap: 0;
+}
+
+.nr-templates-workspace__nav {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 720px;
+  min-height: 58px;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--nr-line);
+  border-bottom: 0;
+  border-radius: var(--radius-nr-md) var(--radius-nr-md) 0 0;
+  background: var(--nr-bg);
+}
+
+.nr-templates-workspace__nav .nr-btn {
+  min-height: 44px;
+  border-radius: var(--radius-nr-pill);
+}
+
+.nr-templates-workspace__nav .nr-btn--pick {
+  justify-content: center;
+  padding: 8px 14px;
+}
+
+.nr-templates-workspace__nav .nr-btn--pick.is-active {
+  border-color: var(--nr-ink);
+  background: var(--nr-mark-bg);
+}

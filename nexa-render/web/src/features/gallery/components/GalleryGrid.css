@@ -1,0 +1,96 @@
+/* ------- GalleryGrid.css -------
+   Prefijo de clase: nr-gallery-grid__* — igual al nombre del componente
+   (GalleryGrid), mismo convenio que FanSlider.css/PlayReel.css. Dos filas
+   fijas (16:9 arriba, 9:16 abajo) en vez de una grilla mixta, para que el
+   cambio de aspect-ratio entre formatos no rompa el layout de una grilla
+   común. */
+
+.nr-gallery-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.nr-gallery-grid__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nr-gallery-grid__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 4vw + 1rem, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.nr-gallery-grid__filters {
+  display: flex;
+  gap: 0.6rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 0.25rem;
+  border: 0;
+  overflow-x: auto;
+}
+
+.nr-gallery-grid__filter,
+.nr-gallery-grid__pagination button {
+  border: 1px solid var(--nr-line);
+  border-radius: var(--radius-nr-pill);
+  background: transparent;
+  color: var(--nr-ink);
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.nr-gallery-grid__filter[data-active="true"] {
+  border-color: var(--nr-ink);
+  background: var(--nr-ink);
+  color: var(--nr-bg);
+}
+
+.nr-gallery-grid__filter span {
+  color: inherit;
+  opacity: 0.65;
+  margin-left: 4px;
+}
+
+.nr-gallery-grid__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 16px;
+}
+
+@media screen and (min-width: 1241px) {
+  .nr-gallery-grid__cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.nr-gallery-grid__empty {
+  margin: 0;
+  color: var(--nr-mute);
+  font-size: 0.9em;
+}
+
+.nr-gallery-grid__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.nr-gallery-grid__pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}

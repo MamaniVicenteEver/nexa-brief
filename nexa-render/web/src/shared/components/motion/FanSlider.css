@@ -1,0 +1,199 @@
+/* ------- FanSlider.css -------
+   Prefijo de clase: nr-fan-slider__* — igual al nombre del componente
+   (FanSlider), a propósito, para que el nombre de la clase en devtools
+   diga directo qué archivo abrir (ver nota completa en FanSlider.tsx).
+
+   Curva: mismo truco geométrico que RadialWheel.css (circunferencia real,
+   no una aproximación) — como las 3 tarjetas arrancan todas en el mismo
+   punto (left:50%, margin-left:-mitad del ancho), un `transform-origin`
+   con un valor Y grande (más allá de su propia altura) apunta al MISMO
+   pixel compartido para las 3 — rotar alrededor de eso las arquea sobre
+   un círculo real. Radio grande (1000px) + ángulo bajo (16deg) — pedido
+   explícito de más separación horizontal entre cards pero MENOS curva
+   (el radio grande aplana el arco; subir solo el radio sin bajar el
+   ángulo también curva más, por eso los dos valores se movieron juntos). */
+
+.nr-fan-slider__nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+.nr-fan-slider__tab {
+  padding: 0.7em 1.4em;
+  border-radius: var(--radius-nr-pill);
+  border: 1.5px solid var(--nr-line);
+  background: transparent;
+  color: var(--nr-ink);
+  font-weight: 700;
+  font-size: 0.9em;
+}
+.nr-fan-slider__tab.is-active {
+  background: var(--nr-nav-bg);
+  color: #fff;
+  border-color: var(--nr-nav-bg);
+}
+
+.nr-fan-slider__stage {
+  position: relative;
+  height: 460px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.nr-fan-slider__card {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 280px;
+  height: 380px;
+  margin-left: -140px;
+  border-radius: var(--radius-nr-xl);
+  padding: 30px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  /* 380 (alto de la tarjeta) + 1000 (radio) = pivote 1000px por debajo del
+     borde inferior de la tarjeta, compartido por las 3. */
+  transform-origin: 50% 1380px;
+  transition:
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.4s ease;
+  box-shadow: 0 30px 60px var(--nr-mockup-shadow);
+}
+
+.nr-fan-slider__card--dark {
+  background: var(--nr-card-dark);
+}
+.nr-fan-slider__card--violet {
+  background: var(--nr-violet);
+}
+.nr-fan-slider__card--accent {
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+}
+
+.nr-fan-slider__card[data-slot="front"] {
+  transform: rotate(0deg);
+  z-index: 3;
+  opacity: 1;
+  cursor: default;
+}
+.nr-fan-slider__card[data-slot="left"] {
+  transform: rotate(-16deg);
+  z-index: 2;
+  opacity: 0.82;
+}
+.nr-fan-slider__card[data-slot="right"] {
+  transform: rotate(16deg);
+  z-index: 2;
+  opacity: 0.82;
+}
+
+.nr-fan-slider__tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+.nr-fan-slider__card h3 {
+  margin: 0;
+  font-size: 1.5em;
+}
+.nr-fan-slider__card p {
+  margin: 0;
+  font-size: 0.92em;
+  line-height: 1.55;
+  opacity: 0.85;
+}
+.nr-fan-slider__card--accent p {
+  opacity: 0.75;
+}
+
+.nr-fan-slider__link {
+  margin-top: auto;
+  font-size: 0.85em;
+  font-weight: 700;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+
+/* En mobile el abanico (posicionamiento absoluto + pivote compartido) no
+   funciona bien para tocar/arrastrar — acá cambia el modelo de interacción
+   entero a scroll horizontal nativo (`overflow-x:auto` + scroll-snap, se
+   desliza con el dedo). Las 3 tarjetas quedan rectas (sin tilt) — pedido
+   explícito: el tilt del abanico solo tenía sentido con el pivote
+   compartido de desktop, en mobile solo la del frente quedaba derecha y
+   las otras 2 se veían "caídas". La scrollbar nativa se oculta (queda el
+   scroll, no la barra visible). */
+@media screen and (max-width: 767px) {
+  .nr-fan-slider__stage {
+    /* Sangrado completo a los DOS lados — pedido explícito: nada de
+       padding lateral que "tape" la tarjeta activa cuando queda centrada
+       (con padding lateral, centrar una tarjeta contra ese padding la
+       corría del centro real del viewport). Un margin negativo por sí
+       solo solo DESPLAZA la caja, no la agranda — por eso el width le
+       suma de vuelta los 48px (24 por lado) que cancelan los dos
+       margin negativos; si no, el borde de ese lado queda corto del
+       borde real de la pantalla (ver historial de este archivo). */
+    width: calc(100% + 48px);
+    align-self: stretch;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding: 10px 0 20px;
+    margin: 0 -24px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .nr-fan-slider__stage::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nr-fan-slider__card {
+    position: static;
+    left: auto;
+    bottom: auto;
+    margin-left: 0;
+    flex: none;
+    width: 78vw;
+    max-width: 300px;
+    height: auto;
+    min-height: 340px;
+    /* "center", no "start" — pedido explícito: la tarjeta activa queda
+       centrada en el viewport con un "peek" parejo de la anterior y la
+       siguiente a los lados (carrusel centrado clásico), en vez de
+       pegada contra un padding izquierdo. El único costo es el runway
+       extra que el navegador reserva al final del scroll para poder
+       centrar la última tarjeta — comportamiento esperado de este patrón,
+       no un bug. */
+    scroll-snap-align: center;
+    transform-origin: 50% 50%;
+    /* Blur de 60px sobre fondo claro se leía como un halo/fondo gris
+       alrededor de la tarjeta — pedido explícito de quitarlo en mobile
+       (en desktop las tarjetas están superpuestas y no se nota). */
+    box-shadow: none;
+  }
+
+  .nr-fan-slider__card[data-slot="front"],
+  .nr-fan-slider__card[data-slot="left"],
+  .nr-fan-slider__card[data-slot="right"] {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+
+  .nr-fan-slider__nav {
+    margin-bottom: 1.5em;
+  }
+}

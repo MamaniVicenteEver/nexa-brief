@@ -1,0 +1,118 @@
+/* ------- PlatformShowcase.css -------
+   Port del patrón "The Vault" de osmo.supply — título + garabato +
+   descripción arriba, video grande de por medio, descripción + CTA abajo.
+   La URL del video vive en messages/{es,en}.json ("platform.videoUrl"),
+   no acá — ver PlatformShowcase.tsx. */
+
+.nr-platform {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2em 1.5em 0;
+}
+
+.nr-platform__top-row {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2em;
+  margin-bottom: 2.5em;
+}
+
+.nr-platform__title-group {
+  position: relative;
+  flex: 1 1 320px;
+}
+
+.nr-platform__title {
+  font-size: clamp(2.2rem, 4vw + 1rem, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.nr-platform__scribble {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.4em;
+  margin-top: 0.6em;
+  color: var(--nr-note-color);
+}
+
+.nr-platform__scribble p {
+  margin: 0;
+  font-family: "Caveat", cursive;
+  font-size: 1.4rem;
+  transform: rotate(-3deg);
+  white-space: nowrap;
+}
+
+.nr-platform__scribble svg {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  transform: translateY(18px) rotate(90deg) scaleY(-1)
+}
+
+.nr-platform__description {
+  flex: 1 1 320px;
+  max-width: 40ch;
+  color: var(--nr-mute);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.nr-platform__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-nr-lg);
+  overflow: hidden;
+  background: var(--nr-card-dark);
+  box-shadow: 0 30px 60px var(--nr-mockup-shadow);
+}
+
+.nr-platform__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nr-platform__bottom-row {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5em;
+  padding: 1.6em 0 2.5em;
+}
+
+.nr-platform__bottom-description {
+  color: var(--nr-mute);
+  font-size: 1.05rem;
+  max-width: 46ch;
+  margin: 0;
+}
+
+.nr-platform__cta {
+  display: inline-block;
+  padding: 0.8em 1.6em;
+  border-radius: var(--radius-nr-pill);
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+  font-weight: 700;
+  font-size: 0.95em;
+  flex: none;
+}
+
+@media screen and (max-width: 767px) {
+  .nr-platform__top-row {
+    align-items: flex-start;
+  }
+  .nr-platform__bottom-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
