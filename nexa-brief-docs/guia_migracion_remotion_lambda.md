@@ -79,13 +79,13 @@ esté.
 ### 1. Instalar el paquete
 
 ```bash
-cd nexa-brief-video-test
+cd nexa-brief-remotion
 npx remotion add @remotion/lambda
 ```
 
 ### 2. Configurar el archivo `.env`
 
-Ya existe la plantilla en `nexa-brief-video-test/.env.example`. Copiarla:
+Ya existe la plantilla en `nexa-brief-remotion/.env.example`. Copiarla:
 
 ```bash
 cp .env.example .env
