@@ -1,0 +1,26 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Balada de despecho donde la letra es un electrocardiograma vivo — un trazo carmesí serpentea en la oscuridad y cada palabra cantada es un latido que enciende la pantalla con un flash rojo y un monitor de BPM real. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "intro": { "artist": "", "title": "Latido en\nVivo", "sub": "", "feats": "" },
+      "outro": { "leadSec": 8, "songTitle": "", "title": "Gracias", "sub": "Por sentir", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": false },
+      "ekg": {
+        "stepVwMin": 0.14, "stepVwMax": 0.24,
+        "wanderRad": 0.55,
+        "sharpTurnChance": 0.13,
+        "spikeVh": [0.10, 0.22],
+        "spikeSoloVh": [0.26, 0.36],
+        "gritoChance": 0.5,
+        "soloChance": 0.12,
+        "zoomWide": [0.86, 0.96], "zoomClose": [1.08, 1.2],
+        "dutchMax": 2.2
+      },
+      "seed": 13
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Neón urbano nocturno — letras tubo que se encienden letra por letra, columnas escalonadas que retroceden en direcciones impredecibles sobre una foto de vida nocturna con CRT/grain/vignette. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "bg": {
+        "src": "assets/bg.png",
+        "filter": "grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Monoton&family=Archivo+Black&display=swap",
+        "tube": "\"Monoton\", cursive",
+        "block": "\"Archivo Black\", sans-serif"
+      },
+      "neon": { "core": "#FFE9CF", "glow": "#FF5A1F", "deep": "#E01400" },
+      "intro": { "artist": "", "title": "", "sub": "", "feats": "" },
+      "outro": {
+        "leadSec": 8,
+        "songTitle": "",
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "debug": { "enabled": false },
+      "layout": {
+        "stairVw": 3.4,
+        "colGapVw": 52,
+        "colGapVh": 88,
+        "rowsMin": 2,
+        "rowsMax": 4,
+        "verticalChance": 0.13,
+        "soloChance": 0.14,
+        "tubeChance": 0.5,
+        "dirWeights": { "left": 0.55, "down": 0.25, "up": 0.2 }
+      },
+      "seed": 11
+    }
+  ]
+}

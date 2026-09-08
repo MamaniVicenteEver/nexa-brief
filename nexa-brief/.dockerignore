@@ -1,0 +1,40 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Dependency/build caches
+**/node_modules
+**/.next
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.cache
+**/out
+
+# Generated and user-owned artifacts
+**/output
+**/data
+**/uploads
+**/renders
+**/*.mp4
+**/*.webm
+**/*.mov
+**/*.mp3
+**/*.wav
+
+# VCS, editor and local-only files
+.git
+.gitignore
+.vscode
+.idea
+.playwright-mcp
+*.log
+*.pem
+*.key
+accounts.json

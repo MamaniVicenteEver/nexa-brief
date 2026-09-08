@@ -1,0 +1,98 @@
+name: nexa-brief
+
+services:
+  volume-init:
+    image: busybox:1.37.0
+    command: >-
+      sh -c 'mkdir -p /data /output /accounts && chown -R 10001:10001 /data /output /accounts'
+    volumes:
+      - nexa_data:/data
+      - nexa_output:/output
+      - nexa_accounts:/accounts
+    networks:
+      - nexa_private
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: nexa-brief-server/Dockerfile
+    env_file:
+      - path: ./nexa-brief-server/.env
+        required: false
+    environment:
+      OUTPUT_DIR: /app/output
+      DATA_DIR: /app/data
+      ACCOUNTS_JSON_PATH: /app/accounts/accounts.json
+      REMOTION_PROJECT_DIR: /opt/remotion
+      PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/chromium
+      # Incluye WEB_PORT (el puerto "oficial" del contenedor web) más el rango
+      # 3000-3003 que usa `pnpm dev` corrido a mano en el host — Next.js cae
+      # automáticamente al siguiente puerto libre, así que no alcanza con uno solo.
+      CORS_ALLOW_ORIGINS: '["http://localhost:${WEB_PORT:-3000}","http://127.0.0.1:${WEB_PORT:-3000}","http://localhost:3000","http://127.0.0.1:3000","http://localhost:3001","http://127.0.0.1:3001","http://localhost:3002","http://127.0.0.1:3002","http://localhost:3003","http://127.0.0.1:3003"]'
+      API_TIMEOUT_SECONDS: "5"
+      AI_MAX_RETRIES: "3"
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - nexa_data:/app/data
+      - nexa_output:/app/output
+      - nexa_accounts:/app/accounts
+    depends_on:
+      volume-init:
+        condition: service_completed_successfully
+    networks:
+      - nexa_private
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    shm_size: 1gb
+    restart: on-failure:3
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5).status == 200 else 1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  web:
+    build:
+      context: ./nexa-brief-web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    env_file:
+      - path: ./nexa-brief-web/.env.local
+        required: false
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      AUTH_URL: ${AUTH_URL:-http://localhost:${WEB_PORT:-3000}}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:${WEB_PORT:-3000}}
+      AUTH_TRUST_HOST: "true"
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - nexa_private
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    restart: on-failure:3
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health', {signal: AbortSignal.timeout(5000)}).then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+networks:
+  nexa_private:
+    driver: bridge
+
+volumes:
+  nexa_data:
+    name: nexa-brief-data
+  nexa_output:
+    name: nexa-brief-output
+  nexa_accounts:
+    name: nexa-brief-accounts

@@ -1,0 +1,17 @@
+{
+  "name": "nexa-hyperframes-test",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:movil": "cd src/movil && hyperframes preview",
+    "check:movil": "cd src/movil && hyperframes check",
+    "render:movil": "cd src/movil && hyperframes render",
+    "dev:desktop": "cd src/desktop && hyperframes preview",
+    "check:desktop": "cd src/desktop && hyperframes check",
+    "render:desktop": "cd src/desktop && hyperframes render"
+  },
+  "devDependencies": {
+    "@hyperframes/aws-lambda": "^0.8.2",
+    "hyperframes": "^0.8.2"
+  }
+}

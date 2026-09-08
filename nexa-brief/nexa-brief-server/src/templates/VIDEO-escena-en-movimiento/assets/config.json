@@ -1,0 +1,28 @@
+{
+  "activeId": "active",
+  "configs": [
+    {
+      "id": "active",
+      "description": "Escena en movimiento — default de fallback para pruebas locales (file:// o servidor sin pipeline).",
+      "video": { "w": 1920, "h": 1080, "rotation": 0, "content": [0, 0, 1920, 1080], "src": "assets/bg.png" },
+      "colors": { "bg": "#FFFFFF", "ink": "#111111" },
+      "bgMode": "solid",
+      "bgRegions": [],
+      "zones": [
+        [0, 360, 0, 1920],
+        [360, 720, 0, 1920],
+        [720, 1080, 0, 1920]
+      ],
+      "subject": { "top": 200, "bottom": 900, "left": 660, "right": 1260 },
+      "keepOut": [],
+      "texts": { "left": "Escena en", "right": "Movimiento" },
+      "eqPosition": "bottom",
+      "edgeFade": 0.07,
+      "typography": "default",
+      "anchorPreference": "bottom",
+      "audio": { "src": "assets/song.mp3" },
+      "intro": { "artist": "", "title": "Escena en\nMovimiento", "sub": "", "feats": "" },
+      "outro": { "leadSec": 7, "songTitle": "", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete" }
+    }
+  ]
+}

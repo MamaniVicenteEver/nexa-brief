@@ -1,0 +1,34 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Balada suave — paleta cálida tenue, letras que caen en una sola columna vertical con calma, alternando blanco de impacto (Anton) con rojo tipo marcador (Permanent Marker), polvo ambiental flotando. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "bg": {
+        "type": "image",
+        "src": "assets/bg.jpg",
+        "filter": "grayscale(0.55) brightness(0.30) contrast(1.1) sepia(0.14) hue-rotate(-32deg)"
+      },
+      "intro": { "artist": "", "title": "Letras\nSuaves", "sub": "", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": false },
+      "layout": {
+        "groupGapSec": 0.30,
+        "maxRowChars": 14,
+        "rowGapVh": 3.2,
+        "anchorVhFrac": 0.56,
+        "impactChanceSolo": 0.55,
+        "impactChanceMulti": 0.15,
+        "oldAfter": 3,
+        "sideAlignChance": 0.34,
+        "airyChance": 0.30,
+        "maxTiltDeg": 2.2,
+        "camDriftVw": 3
+      },
+      "dust": { "count": 26, "color": "rgba(210,210,215,0.35)" },
+      "seed": 9
+    }
+  ]
+}

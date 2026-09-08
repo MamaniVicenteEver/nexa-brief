@@ -1,0 +1,149 @@
+→ sam deploy (stack=hyperframes-poc region=us-east-1)
+/usr/lib/python3/dist-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/usr/lib/python3/dist-packages/paramiko/transport.py:261: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "class": algorithms.TripleDES,
+
+	Managed S3 bucket: aws-sam-cli-managed-default-samclisourcebucket-zyag6uwav9uu
+	Auto resolution of buckets can be turned off by setting resolve_s3=False
+	To use a specific S3 bucket, set --s3-bucket=<bucket_name>
+	Above settings can be stored in samconfig.toml
+
+	File with same data already exists at 298bff4e252898fe4066d086b0828e67, skipping upload
+
+	Deploying with following values
+	===============================
+	Stack name                   : hyperframes-poc
+	Region                       : us-east-1
+	Confirm changeset            : False
+	Disable rollback             : False
+	Deployment s3 bucket         : aws-sam-cli-managed-default-samclisourcebucket-zyag6uwav9uu
+	Capabilities                 : ["CAPABILITY_IAM"]
+	Parameter overrides          : {"ChromeSource": "sparticuz", "ReservedConcurrency": "8", "LambdaMemoryMb": "2048"}
+	Signing Profiles             : {}
+
+Initiating deployment
+=====================
+
+
+	File with same data already exists at 8b39762493fd7690b8ab5085282b61b0.template, skipping upload
+
+
+Waiting for changeset to be created..
+
+CloudFormation stack changeset
+-------------------------------------------------------------------------------------------------
+Operation                LogicalResourceId        ResourceType             Replacement            
+-------------------------------------------------------------------------------------------------
++ Add                    RenderBucket             AWS::S3::Bucket          N/A                    
++ Add                    RenderChunkInvocationA   AWS::CloudWatch::Alarm   N/A                    
+                         larm                                                                     
++ Add                    RenderFunctionErrorsAl   AWS::CloudWatch::Alarm   N/A                    
+                         arm                                                                      
++ Add                    RenderFunctionRole       AWS::IAM::Role           N/A                    
++ Add                    RenderFunction           AWS::Lambda::Function    N/A                    
++ Add                    RenderStateMachineFail   AWS::CloudWatch::Alarm   N/A                    
+                         edAlarm                                                                  
++ Add                    RenderStateMachineLogG   AWS::Logs::LogGroup      N/A                    
+                         roup                                                                     
++ Add                    RenderStateMachineRole   AWS::IAM::Role           N/A                    
++ Add                    RenderStateMachine       AWS::StepFunctions::St   N/A                    
+                                                  ateMachine                                      
+-------------------------------------------------------------------------------------------------
+
+
+Changeset created successfully. arn:aws:cloudformation:us-east-1:069640985600:changeSet/samcli-deploy1787120149/cb98ab5a-e470-4bb2-92b6-587ccf5be4d6
+
+
+2026-08-19 02:16:02 - Waiting for stack create/update to complete
+
+CloudFormation events from stack operations (refresh every 5.0 seconds)
+-------------------------------------------------------------------------------------------------
+ResourceStatus           ResourceType             LogicalResourceId        ResourceStatusReason   
+-------------------------------------------------------------------------------------------------
+CREATE_IN_PROGRESS       AWS::CloudFormation::S   hyperframes-poc          User Initiated         
+                         tack                                                                     
+CREATE_IN_PROGRESS       AWS::Logs::LogGroup      RenderStateMachineLogG   -                      
+                                                  roup                                            
+CREATE_IN_PROGRESS       AWS::S3::Bucket          RenderBucket             -                      
+CREATE_IN_PROGRESS       AWS::Logs::LogGroup      RenderStateMachineLogG   Resource creation      
+                                                  roup                     Initiated              
+CREATE_IN_PROGRESS       AWS::S3::Bucket          RenderBucket             Resource creation      
+                                                                           Initiated              
+CREATE_IN_PROGRESS -     AWS::Logs::LogGroup      RenderStateMachineLogG   Eventual consistency   
+CONFIGURATION_COMPLETE                            roup                     check initiated        
+CREATE_COMPLETE          AWS::Logs::LogGroup      RenderStateMachineLogG   -                      
+                                                  roup                                            
+CREATE_COMPLETE          AWS::S3::Bucket          RenderBucket             -                      
+CREATE_IN_PROGRESS       AWS::IAM::Role           RenderFunctionRole       -                      
+CREATE_IN_PROGRESS       AWS::IAM::Role           RenderFunctionRole       Resource creation      
+                                                                           Initiated              
+CREATE_COMPLETE          AWS::IAM::Role           RenderFunctionRole       -                      
+CREATE_IN_PROGRESS       AWS::Lambda::Function    RenderFunction           -                      
+CREATE_IN_PROGRESS       AWS::Lambda::Function    RenderFunction           Resource creation      
+                                                                           Initiated              
+CREATE_IN_PROGRESS -     AWS::Lambda::Function    RenderFunction           Eventual consistency   
+CONFIGURATION_COMPLETE                                                     check initiated        
+CREATE_IN_PROGRESS       AWS::CloudWatch::Alarm   RenderChunkInvocationA   -                      
+                                                  larm                                            
+CREATE_IN_PROGRESS       AWS::CloudWatch::Alarm   RenderFunctionErrorsAl   -                      
+                                                  arm                                             
+CREATE_IN_PROGRESS       AWS::CloudWatch::Alarm   RenderChunkInvocationA   Resource creation      
+                                                  larm                     Initiated              
+CREATE_IN_PROGRESS       AWS::CloudWatch::Alarm   RenderFunctionErrorsAl   Resource creation      
+                                                  arm                      Initiated              
+CREATE_COMPLETE          AWS::CloudWatch::Alarm   RenderChunkInvocationA   -                      
+                                                  larm                                            
+CREATE_COMPLETE          AWS::CloudWatch::Alarm   RenderFunctionErrorsAl   -                      
+                                                  arm                                             
+CREATE_COMPLETE          AWS::Lambda::Function    RenderFunction           -                      
+CREATE_IN_PROGRESS       AWS::IAM::Role           RenderStateMachineRole   -                      
+CREATE_IN_PROGRESS       AWS::IAM::Role           RenderStateMachineRole   Resource creation      
+                                                                           Initiated              
+CREATE_COMPLETE          AWS::IAM::Role           RenderStateMachineRole   -                      
+CREATE_IN_PROGRESS       AWS::StepFunctions::St   RenderStateMachine       -                      
+                         ateMachine                                                               
+CREATE_IN_PROGRESS       AWS::StepFunctions::St   RenderStateMachine       Resource creation      
+                         ateMachine                                        Initiated              
+CREATE_COMPLETE          AWS::StepFunctions::St   RenderStateMachine       -                      
+                         ateMachine                                                               
+CREATE_IN_PROGRESS       AWS::CloudWatch::Alarm   RenderStateMachineFail   -                      
+                                                  edAlarm                                         
+CREATE_IN_PROGRESS       AWS::CloudWatch::Alarm   RenderStateMachineFail   Resource creation      
+                                                  edAlarm                  Initiated              
+CREATE_COMPLETE          AWS::CloudWatch::Alarm   RenderStateMachineFail   -                      
+                                                  edAlarm                                         
+CREATE_COMPLETE          AWS::CloudFormation::S   hyperframes-poc          -                      
+                         tack                                                                     
+-------------------------------------------------------------------------------------------------
+
+CloudFormation outputs from deployed stack
+-------------------------------------------------------------------------------------------------
+Outputs                                                                                         
+-------------------------------------------------------------------------------------------------
+Key                 RenderStateMachineArn                                                       
+Description         ARN of the Step Functions state machine. Pass to `aws stepfunctions start-  
+execution`.                                                                                     
+Value               arn:aws:states:us-east-1:069640985600:stateMachine:hyperframes-render       
+
+Key                 RenderBucketName                                                            
+Description         S3 bucket for plan tarballs, chunk outputs, and final renders.              
+Value               hyperframes-poc-renderbucket-tackfmwgdbu1                                   
+
+Key                 RenderFunctionArn                                                           
+Description         ARN of the Lambda function. Pass to `aws lambda invoke` for local testing.  
+Value               arn:aws:lambda:us-east-1:069640985600:function:hyperframes-render           
+-------------------------------------------------------------------------------------------------
+
+
+Successfully created/updated stack - hyperframes-poc in us-east-1
+
+→ Reading stack outputs
+
+Stack deployed.
+  Bucket:         hyperframes-poc-renderbucket-tackfmwgdbu1
+  State machine:  arn:aws:states:us-east-1:069640985600:stateMachine:hyperframes-render
+  Function:       hyperframes-render
+  State file:     /home/university/Documentos/Proyectos/nexa-brief/hyperframes-poc/.hyperframes/lambda-stack-hyperframes-poc.json
+
+Render with: hyperframes lambda render <project-dir>
