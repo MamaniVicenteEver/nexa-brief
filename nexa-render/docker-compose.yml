@@ -1,0 +1,132 @@
+name: nexa-render
+
+x-healthcheck-defaults: &healthcheck-defaults
+  interval: 5s
+  timeout: 5s
+  retries: 3
+  start_period: 15s
+
+services:
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec", "--save", "60", "1"]
+    restart: on-failure:3
+    # Permite que `pnpm --filter nexa-render-server dev` en el host use el
+    # mismo Redis, sin exponerlo a la red local ni a Internet.
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - nexa-render-network
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+
+  volume-init:
+    image: nexa-render-server:local
+    user: "0:0"
+    init: true
+    restart: "no"
+    command:
+      - sh
+      - -ec
+      - mkdir -p /data/work /data/out && chown -R node:node /data
+    volumes:
+      - render-data:/data
+    networks:
+      - nexa-render-network
+    security_opt:
+      - no-new-privileges:true
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    image: nexa-render-server:local
+    init: true
+    restart: on-failure:3
+    depends_on:
+      redis:
+        condition: service_healthy
+        restart: true
+      volume-init:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      HOST: 0.0.0.0
+      REDIS_URL: redis://redis:6379
+      REDIS_CONNECT_TIMEOUT_MS: "5000"
+      REDIS_CONNECT_RETRIES: "3"
+      WORK_DIR: /data/work
+      OUT_DIR: /data/out
+      # In development these are optional standard AWS variables. In an AWS
+      # deployment prefer an IAM task role; do not place keys in this file.
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
+      REMOTION_AWS_FUNCTION_NAME: ${REMOTION_AWS_FUNCTION_NAME:-}
+      REMOTION_AWS_SITE_PREFIX: ${REMOTION_AWS_SITE_PREFIX:-nexa-render}
+      REMOTION_AWS_FRAMES_PER_LAMBDA: ${REMOTION_AWS_FRAMES_PER_LAMBDA:-120}
+      HYPERFRAMES_AWS_STACK_NAME: ${HYPERFRAMES_AWS_STACK_NAME:-}
+      HYPERFRAMES_AWS_BUCKET: ${HYPERFRAMES_AWS_BUCKET:-}
+      HYPERFRAMES_AWS_STATE_MACHINE_ARN: ${HYPERFRAMES_AWS_STATE_MACHINE_ARN:-}
+      HYPERFRAMES_AWS_CHUNK_SIZE: ${HYPERFRAMES_AWS_CHUNK_SIZE:-240}
+      HYPERFRAMES_AWS_MAX_PARALLEL_CHUNKS: ${HYPERFRAMES_AWS_MAX_PARALLEL_CHUNKS:-2}
+      # Incluye los puertos por defecto y alternativos documentados para que
+      # una web Docker en 3001 pueda consumir una API Docker en 4001.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001}
+    ports:
+      - "${SERVER_PORT:-4000}:4000"
+    volumes:
+      - render-data:/data
+    networks:
+      - nexa-render-network
+    shm_size: 1gb
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4000/api/v1/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4000}
+    image: nexa-render-web:local
+    init: true
+    restart: on-failure:3
+    depends_on:
+      server:
+        condition: service_healthy
+        restart: true
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      # Solo para SSR de Next dentro de Docker; el navegador usa la URL
+      # pública incorporada durante el build (NEXT_PUBLIC_API_URL).
+      API_INTERNAL_URL: http://server:4000
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    networks:
+      - nexa-render-network
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/es').then((response) => process.exit(response.status < 500 ? 0 : 1)).catch(() => process.exit(1))"]
+
+networks:
+  nexa-render-network:
+    name: nexa-render-network
+    driver: bridge
+
+volumes:
+  redis-data:
+    name: nexa-render-redis-data
+  render-data:
+    name: nexa-render-data

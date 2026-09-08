@@ -1,0 +1,58 @@
+/* ------- ReactComponentPanel.css -------
+   Mismo patrón visual que CodePanels.css (columnas con head+dot+label),
+   solo que acá son 2 columnas (componentSource + props) en vez de 3. */
+
+.nr-react-component-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  overflow: hidden;
+  border-radius: var(--radius-nr-md);
+  border: 1px solid var(--nr-line);
+  background: var(--nr-bg);
+}
+
+.nr-react-component-panel > .nr-code-panels__toolbar {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.nr-react-component-panel__col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.nr-react-component-panel__col + .nr-react-component-panel__col {
+  border-left: 1px solid var(--nr-line);
+}
+
+.nr-react-component-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--nr-line);
+  background: var(--nr-mark-bg);
+  border-top: 3px solid var(--nr-lang-js);
+}
+
+.nr-react-component-panel__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--nr-lang-js);
+}
+
+.nr-react-component-panel__label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.nr-react-component-panel__note {
+  padding: 12px 14px;
+  font-size: 12.5px;
+  color: var(--nr-mute);
+  border-top: 1px solid var(--nr-line);
+}

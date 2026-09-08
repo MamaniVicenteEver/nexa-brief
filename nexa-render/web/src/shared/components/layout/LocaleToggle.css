@@ -1,0 +1,22 @@
+/* ------- LocaleToggle.css -------
+   Mismo tratamiento visual que ThemeToggle.css (círculo 2.3em, fondo
+   #2b2b2b, al lado suyo en .nr-nav__actions) — acá solo cambia el
+   contenido (texto "es"/"en" en vez de un ícono Sun/Moon). */
+
+.nr-nav__locale {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3em;
+  height: 2.3em;
+  border-radius: 50%;
+  border: none;
+  background: #2b2b2b;
+  color: var(--nr-nav-ink);
+  font-family: inherit;
+  font-size: 0.72em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex: none;
+}

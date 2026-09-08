@@ -1,0 +1,161 @@
+/* ------- RadialWheel.css -------
+   RUEDA RADIAL — carrusel giratorio de verdad. Técnica de "manecilla de
+   reloj": cada tarjeta es un hijo absoluto de .nr-wheel__spin, con
+   transform: rotate(ángulo) translateY(-R) y transform-origin: 50% 0 (ver
+   .nr-wheel__item — el origen tiene que ser el borde SUPERIOR de la
+   tarjeta, no el default 50% 50%/centro, para que el círculo sea perfecto
+   sin importar la altura de cada una). Ese borde superior rota alrededor
+   de .nr-wheel__spin — un punto de tamaño 0 ubicado bien abajo del
+   contenedor visible (top: radio + colchón). Resultado: todas las
+   tarjetas quedan sobre un círculo real de radio R, cada una en su
+   ángulo fijo. Para que TODO el conjunto gire sin parar, .nr-wheel__spin
+   tiene una animación @keyframes que le suma rotate(360deg) — como ya
+   rota la tarjeta individualmente vía su propio transform, las dos
+   rotaciones se combinan: el conjunto entero da la vuelta completa sin
+   fin. Ver RadialWheel.tsx para angleForIndex()/repeatItems(). */
+
+.nr-wheel {
+  /* --nr-radius/--nr-lift/--nr-item-w son las 3 variables que definen todo
+     el carrusel — cambiarlas acá (o en el media query de abajo) reacomoda
+     radio, tamaño de tarjeta y ventana visible sin tocar el HTML: cada
+     tarjeta solo trae su ángulo (--a) inline, el resto sale de acá. Así el
+     ancho es "dinámico" de verdad — se resuelve distinto según pantalla,
+     no es un solo valor fijo con overflow escondido. */
+  /* --nr-radius calculado para que NO se toquen ni en el borde inferior de
+     la tarjeta (donde está el texto — .nr-wheel__card-p): como cada
+     tarjeta gira rígida (rotate + translateY(-R)), su borde de ABAJO
+     queda a un radio efectivo MENOR (radio - alto de la tarjeta, ~168px),
+     así que ahí el arco disponible entre tarjetas vecinas es más chico
+     que arriba — con 1120px el hueco en la parte de arriba se veía bien
+     (~34px) pero abajo dos tarjetas llegaban a superponerse ~10px. Subir
+     el radio a 1250px no mueve la posición vertical de la tarjeta de
+     arriba (--nr-lift la ancla), solo aplana un poco la curva y deja
+     ~20px de aire real en el punto más ajustado (abajo).
+
+     +30% pedido explícito sobre esos valores (1250→1625, 260→338, mismo
+     factor en --nr-lift/height/card-visual más abajo) — escalar TODO
+     junto y proporcional (no solo el ancho de tarjeta) es lo que
+     mantiene intacto el cálculo de separación de arriba; si solo hubiera
+     crecido --nr-item-w sin el radio, las tarjetas hubieran vuelto a
+     tocarse. */
+  --nr-radius: 1625px;
+  --nr-lift: 195px; /* colchón arriba para que overflow:hidden no corte las tarjetas cercanas a 0° */
+  --nr-item-w: 338px;
+
+  /* position:absolute + width:100vw en vez de max-width contenido — se sale
+     a propósito del max-width:1100px de .nr-play (que sigue limitando el
+     título y la fila Play/Reel) para arrancar en un borde de la pantalla y
+     terminar en el otro. */
+  position: absolute;
+  top: calc(var(--nr-lift) * -1);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 988px;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.nr-wheel__spin {
+  position: absolute;
+  left: 50%;
+  /* radio + el colchón de arriba — mantiene el pivote en el mismo punto
+     relativo pase lo que pase con --nr-radius/--nr-lift. */
+  top: calc(var(--nr-radius) + var(--nr-lift));
+  width: 0;
+  height: 0;
+  /* 95s — bajado dos veces sobre el original (55s→78s→95s), pedido
+     explícito de girar cada vez más lento. */
+  animation: nr-wheel-spin 95s linear infinite;
+}
+
+@keyframes nr-wheel-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.nr-wheel__item {
+  position: absolute;
+  left: calc(var(--nr-item-w) / -2); /* centra la tarjeta en el pivote */
+  top: 0;
+  width: var(--nr-item-w);
+  /* transform-origin explícito en el borde SUPERIOR (50% 0), no el default
+     (50% 50%, el centro de la propia tarjeta) — esto es lo que garantiza
+     un círculo perfecto. Sin esto, cada tarjeta rota alrededor de SU
+     PROPIO centro, y como la altura real varía según cuántas líneas ocupa
+     el texto (.nr-wheel__card-p — "Editor en vivo" en 1 línea vs
+     "Plantilla HyperFrames" en 2), el punto de rotación de cada tarjeta
+     quedaba a una distancia distinta del pivote real — el círculo no era
+     perfecto, y eso es lo que se veía como que el carrusel "subía y
+     bajaba" al girar, con tarjetas vecinas de distinta altura llegando a
+     rozarse. Con el origen fijo en el borde superior, ese borde queda
+     SIEMPRE a exactamente --nr-radius del pivote sin importar la altura
+     de cada tarjeta — círculo real, sin bamboleo. */
+  transform-origin: 50% 0;
+  /* --a (el ángulo) viene inline por tarjeta; el radio sale de la variable
+     compartida — separarlos es lo que permite escalar todo el carrusel
+     desde un solo lugar (acá) en vez de tocar las 24 tarjetas. */
+  transform: rotate(var(--a)) translateY(calc(var(--nr-radius) * -1));
+}
+
+.nr-wheel__card {
+  border-radius: var(--radius-nr-sm);
+  border: 2px solid var(--nr-card-dark);
+  background: var(--nr-card-dark);
+  overflow: hidden;
+  box-shadow: 0 16px 32px var(--nr-card-shadow);
+}
+
+.nr-wheel__card-visual {
+  position: relative;
+  height: 169px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.6);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.06), transparent);
+}
+
+/* Video real de muestra, mudo y en loop — deja ver cómo se vería un
+   resultado final reproduciéndose en la tarjeta, en vez de solo un ícono. */
+.nr-wheel__card-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nr-wheel__card-p {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--nr-mute);
+  background: var(--nr-card-dark);
+  text-align: left;
+}
+
+@media screen and (max-width: 767px) {
+  .nr-wheel {
+    /* Radio ajustado a mano para que la separación ENTRE tarjetas (el arco
+       real entre centros menos el ancho de tarjeta) no sea menor que en
+       desktop — pedido explícito de "que no tenga menos". En un carrusel
+       circular el radio es lo que controla la separación real, no un
+       "gap" — por eso escala junto con --nr-item-w, no aparte. Primero
+       +30% igual que desktop (860→1118, 175→228), después +20% ADICIONAL
+       solo acá en mobile (pedido explícito, desktop se queda como estaba):
+       1118→1342, 228→274, y el resto (--nr-lift/height/card-visual) con
+       el mismo factor para no romper la separación ya calculada. */
+    --nr-radius: 1342px;
+    --nr-lift: 215px;
+    --nr-item-w: 274px;
+    height: 905px;
+  }
+  .nr-wheel__card-visual {
+    height: 140px;
+  }
+}

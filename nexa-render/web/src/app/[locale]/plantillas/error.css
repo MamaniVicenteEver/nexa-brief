@@ -1,0 +1,24 @@
+.nr-templates-error {
+  display: grid;
+  min-height: 50vh;
+  place-items: center;
+  padding: 8rem 1.5rem 4rem;
+  text-align: center;
+}
+
+.nr-templates-error__content {
+  display: flex;
+  max-width: 34rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nr-templates-error__content h1,
+.nr-templates-error__content p {
+  margin: 0;
+}
+
+.nr-templates-error__content p {
+  color: var(--nr-mute);
+}

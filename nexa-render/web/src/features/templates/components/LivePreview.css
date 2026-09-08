@@ -1,0 +1,83 @@
+/* ------- LivePreview.css -------
+   Prefijo de clase: nr-live-preview__* — igual al nombre del componente
+   (LivePreview), a propósito, para que el nombre de la clase en devtools
+   diga directo qué archivo abrir (antes usaba el prefijo nr-editor__ de
+   su padre, RenderEditor.tsx, lo que ocultaba que este panel es su propio
+   componente/archivo — mismo motivo que el rename de PlayReel.css).
+
+   Panel "Preview en vivo" con controles Play/Stop — ver LivePreview.tsx.
+   "Detener" desmonta el iframe (no queda nada corriendo, ni JS ni
+   animaciones CSS); "Reproducir" lo remonta con una key nueva. */
+
+.nr-live-preview {
+  border-radius: var(--radius-nr-md);
+  border: 1px solid var(--nr-mock-border);
+  background: var(--nr-bg);
+  overflow: hidden;
+}
+
+.nr-live-preview__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--nr-mute);
+  border-bottom: 1px solid var(--nr-line);
+}
+
+.nr-live-preview__controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nr-live-preview__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--nr-line);
+  background: transparent;
+  color: var(--nr-mute);
+}
+
+.nr-live-preview__btn.is-active {
+  border-color: var(--nr-accent);
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+}
+
+.nr-live-preview__frame {
+  width: 100%;
+  height: 100%;
+}
+
+.nr-live-preview__screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--nr-solid-ink);
+}
+
+/* Estado "detenido" — reemplaza el iframe (no queda nada corriendo, ni JS
+   ni animaciones CSS: la forma más simple y confiable de "parar" contenido
+   arbitrario es no tenerlo montado). */
+.nr-live-preview__frame--stopped {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nr-mute);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--nr-mark-bg);
+}

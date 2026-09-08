@@ -1,0 +1,31 @@
+/* ------- ThemeToggle.css -------
+   Prefijo de clase "nr-nav__theme*" (vive dentro de la píldora del nav),
+   pero el componente dueño es ThemeToggle — por eso el archivo va acá y
+   no en Nav.css. Ver ThemeToggle.tsx: ambos íconos se renderizan siempre,
+   la visibilidad la resuelve `:root[data-theme="dark"]` acá abajo. */
+
+.nr-nav__theme {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3em;
+  height: 2.3em;
+  border-radius: 50%;
+  border: none;
+  background: #2b2b2b;
+  color: var(--nr-nav-ink);
+  flex: none;
+}
+
+.nr-nav__theme-icon {
+  display: none;
+}
+.nr-nav__theme-icon--sun {
+  display: block;
+}
+:root[data-theme="dark"] .nr-nav__theme-icon--sun {
+  display: none;
+}
+:root[data-theme="dark"] .nr-nav__theme-icon--moon {
+  display: block;
+}

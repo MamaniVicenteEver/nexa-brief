@@ -1,0 +1,18 @@
+packages:
+  - "server"
+  - "web"
+
+# Dependencias nativas aprobadas para builds reproducibles en CI/Docker.
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - "@swc/core"
+  - "sharp"
+
+# El SDK de Remotion Lambda carga `remotion/no-react` en ejecución, pero la
+# versión publicada declara Remotion como devDependency. pnpm lo aísla por
+# defecto; esta extensión expresa la dependencia runtime que npm hoisted
+# oculta y evita que Lambda falle al importar el SDK.
+packageExtensions:
+  "@remotion/serverless-client@4.0.498":
+    dependencies:
+      remotion: "4.0.498"

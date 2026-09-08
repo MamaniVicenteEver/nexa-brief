@@ -1,0 +1,298 @@
+{
+  "meta": {
+    "title": "nexa-render — HTML/React to video",
+    "description": "A platform to turn HTML and React into real video, with Playwright, Remotion and HyperFrames."
+  },
+  "nav": {
+    "menuLabel": "Menu",
+    "closeLabel": "Close",
+    "apiDocs": "API Docs",
+    "templates": "Templates",
+    "openMenuAria": "open menu",
+    "closeMenuAria": "close menu",
+    "collapseNavAria": "collapse navigation bar",
+    "expandNavAria": "expand navigation bar",
+    "openThemeAria": "switch to dark theme",
+    "closeThemeAria": "switch to light theme",
+    "changeLanguageAria": "change language",
+    "home": "Home",
+    "engines": "Engines",
+    "project": "Project",
+    "engineStatus": {
+      "playwright": "Playwright — active",
+      "remotion": "Remotion — phase 2",
+      "hyperframes": "HyperFrames — phase 2"
+    },
+    "github": "GitHub ↗",
+    "swagger": "Swagger ↗"
+  },
+  "marquee": {
+    "items": ["PLAYWRIGHT · REMOTION · HYPERFRAMES", "RECORD YOUR FIRST VIDEO", "LOCAL OR ON AWS"]
+  },
+  "hero": {
+    "titlePrefix": "Render Engine",
+    "titleMark": "✱",
+    "titleSuffix": "Built to Record",
+    "description": "A platform to turn <mark1>HTML</mark1> and <mark2>React</mark2> into real video, with <mark3>Playwright</mark3>, <mark4>Remotion</mark4> and <mark5>HyperFrames</mark5>, running <mark6>locally</mark6> or on <mark7>AWS</mark7>."
+  },
+  "wheel": {
+    "items": [
+      "Playwright template",
+      "Remotion template",
+      "HyperFrames template",
+      "Live editor",
+      "Native MCP",
+      "REST + Swagger",
+      "Local worker",
+      "AWS worker"
+    ]
+  },
+  "playReel": {
+    "statement": "nexa-render is an ever-growing platform with render engines and resources ready to use. Get access to the code and templates behind every recording.",
+    "playLabel": "Play",
+    "reelLabel": "Reel",
+    "videoCaption": "nexa-render in use",
+    "videoDuration": "00:48",
+    "scribbleNote": "See what it can do"
+  },
+  "slider": {
+    "eyebrow": "One engine, three ways to record",
+    "title": "Pick one to try.",
+    "viewTemplate": "View template →",
+    "cards": {
+      "playwright": {
+        "tag": "Active engine",
+        "title": "Playwright",
+        "description": "Records any HTML/CSS/JS as-is — the generic engine, ready from day one."
+      },
+      "remotion": {
+        "tag": "Phase 2",
+        "title": "Remotion",
+        "description": "React compositions — for when a template needs component logic, not just plain HTML."
+      },
+      "hyperframes": {
+        "tag": "Phase 2",
+        "title": "HyperFrames",
+        "description": "GSAP timelines — ported from the real POC, benchmarked at ~12-17s per 15s clip."
+      }
+    }
+  },
+  "orbit": {
+    "title": "Technologies and render flow",
+    "note": "This is what a live job looks like",
+    "techStack": [
+      "Next.js",
+      "Node.js",
+      "TypeScript",
+      "React",
+      "Playwright",
+      "Remotion",
+      "HyperFrames",
+      "AWS Lambda",
+      "Gemini",
+      "DeepSeek",
+      "Tailwind CSS",
+      "GSAP",
+      "i18n",
+      "Hexagonal Architecture",
+      "FastAPI",
+      "pnpm",
+      "Biome",
+      "Local Worker",
+      "AWS Worker",
+      "REST + Swagger",
+      "Native MCP",
+      "CI/CD",
+      "Docker"
+    ],
+    "pipeline": {
+      "eyebrow": "How a render is processed",
+      "steps": [
+        "You upload your HTML, CSS or React",
+        "Playwright opens the browser and records",
+        "The engine processes each frame",
+        "The job gets queued",
+        "The worker dispatches it — local or on AWS",
+        "Video ready to download"
+      ]
+    }
+  },
+  "statement": {
+    "eyebrow": "The engine",
+    "title": "One panel. Three engines. One result: your video.",
+    "panel": {
+      "engine": "Engine",
+      "engineValue": "Automatic",
+      "worker": "Worker",
+      "workerValue": "Local",
+      "fps": "FPS",
+      "duration": "Duration (sec.)",
+      "durationHint": "Fallback only: media or code takes precedence.",
+      "fpsValue": "60",
+      "format": "Format",
+      "formatValue": "Desktop",
+      "cta": "Record →"
+    }
+  },
+  "tabs": {
+    "eyebrow": "Why nexa-render",
+    "items": {
+      "engines": {
+        "label": "Engines",
+        "title": "3 interchangeable engines",
+        "description": "Playwright records any HTML/CSS/JS as-is. Remotion and HyperFrames arrive in Phase 2, one for React compositions, the other for GSAP timelines."
+      },
+      "workers": {
+        "label": "Workers",
+        "title": "Local or on AWS",
+        "description": "Start locally at no cloud cost. When you need speed, the same job runs on AWS without changing anything on the client side."
+      },
+      "mcp": {
+        "label": "MCP",
+        "title": "Native MCP",
+        "description": "An AI agent can call <code>render()</code> and <code>getStatus()</code> directly — the same job engine as the REST API, no second implementation."
+      },
+      "api": {
+        "label": "REST API",
+        "title": "REST + Swagger",
+        "description": "Every endpoint documented at <code>/docs</code>, generated from the same schemas that validate each request — never out of date."
+      }
+    }
+  },
+  "trio": {
+    "docs": {
+      "tag": "Documentation",
+      "title": "Swagger",
+      "description": "Every request and response, testable live.",
+      "cta": "Open /docs"
+    },
+    "templates": {
+      "tag": "Templates",
+      "title": "Explore the 3 templates",
+      "description": "One per engine, ready to edit and record.",
+      "cta": "View templates →"
+    },
+    "mcp": {
+      "tag": "For agents",
+      "title": "MCP",
+      "description": "<code>render()</code> · <code>getStatus()</code> · <code>configureWorker()</code>",
+      "cta": "View tools"
+    }
+  },
+  "platform": {
+    "title": "The platform",
+    "scribbleNote": "( nexa-render )",
+    "description": "Built by the same team that already automated video generation at Nexa Brief. Get access to the engine, the API, and the templates behind every recording — build, tweak, and make them your own.",
+    "videoUrl": "https://test-videos.co.uk/vids/jellyfish/mp4/h264/720/Jellyfish_720_10s_5MB.mp4",
+    "bottomDescription": "We built nexa-render so recording HTML or React as video is as simple as writing the HTML.",
+    "cta": "About nexa-render"
+  },
+  "reasons": {
+    "title": "Three reasons to use it",
+    "heading": "Level up your video pipeline and join a workflow built to ship fast without losing quality.",
+    "items": [
+      {
+        "title": "One panel for three engines",
+        "description": "No need to learn Playwright's, Remotion's and HyperFrames' APIs separately — one entry contract, the system picks the engine if you don't."
+      },
+      {
+        "title": "Local or in the cloud, your choice",
+        "description": "Try it free on your machine. When volume demands it, the same job runs on AWS without touching the client."
+      },
+      {
+        "title": "Built for AI agents",
+        "description": "Native MCP from day one — not a REST API with a wrapper bolted on later, it's the same job engine on both ends."
+      }
+    ],
+    "builtWith": {
+      "tagPrimary": "Built with",
+      "tagSecondary": "Real stack"
+    }
+  },
+  "footer": {
+    "logo": "nexa-render",
+    "copy": "© 2026 — HTML/React to video.",
+    "developedBy": "Developed by {name}",
+    "rights": "All rights reserved.",
+    "contact": {
+      "website": "Website",
+      "email": "Email",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "whatsapp": "WhatsApp"
+    }
+  },
+  "templates": {
+    "eyebrow": "Templates · one per engine",
+    "phase2Badge": "Phase 2",
+    "emptyState": "Couldn't connect to the server. Make sure \"pnpm --filter nexa-render-server dev\" is running.",
+    "errorTitle": "This page could not be loaded",
+    "errorDescription": "A temporary problem occurred while loading the templates. Please try again.",
+    "retry": "Try again"
+  },
+  "templateDetail": {
+    "notImplementedNotice": "This engine isn't implemented yet (Phase 2) — pick another one or leave it on \"Automatic\".",
+    "livePreview": "Live preview",
+    "playPreview": "play preview",
+    "stopPreview": "stop preview",
+    "previewStopped": "Stopped",
+    "config": {
+      "engine": "Engine",
+      "auto": "Automatic",
+      "worker": "Worker",
+      "workerLocal": "Local",
+      "workerAws": "AWS · Phase 3",
+      "fps": "FPS",
+      "duration": "Duration (sec.)",
+      "format": "Format",
+      "formatDesktop": "Desktop",
+      "formatMobile": "Mobile"
+    },
+    "recordCta": "● Record",
+    "recordingCta": "Queuing…",
+    "submitError": "Failed to submit the job.",
+    "singleFile": "Single file",
+    "splitCode": "Split code",
+    "singleFileLabel": "HTML + CSS + JS",
+    "uploadComponent": "Upload component"
+  },
+  "gallery": {
+    "eyebrow": "Samples · already rendered results",
+    "title": "This is what a finished result looks like.",
+    "rowDesktop": "16:9 — Desktop",
+    "rowMobile": "9:16 — Mobile",
+    "fps": "{fps} FPS",
+    "emptyState": "There are no rendered videos for this filter yet.",
+    "loading": "Loading real videos…",
+    "errorState": "The results gallery could not be loaded.",
+    "filtersLabel": "Filter videos by engine",
+    "allEngines": "All",
+    "renderedWith": "Rendered with {engine}",
+    "videoTitle": "{format} · {id}",
+    "videoDetails": "{resolution} · {duration}s · {codec}",
+    "videoControls": "Video controls",
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Turn volume on",
+    "fullscreen": "Fullscreen",
+    "openStudio": "Open in studio",
+    "paginationLabel": "Video pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {page} of {total}"
+  },
+  "jobStatus": {
+    "title": "Render status",
+    "statusLabels": {
+      "queued": "Queued",
+      "running": "Recording…",
+      "completed": "Completed",
+      "failed": "Failed"
+    },
+    "updatingHint": "Updates on its own — no need to refresh the page.",
+    "backToTemplates": "← Back to templates",
+    "fetchError": "Couldn't fetch job",
+    "loading": "Loading…"
+  }
+}

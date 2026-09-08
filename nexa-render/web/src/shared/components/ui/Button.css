@@ -1,0 +1,66 @@
+/* ------- Button.css -------
+   Extrae PickButton/SegButton (antes definidos ad-hoc dentro de
+   render-editor.tsx) a un único componente compartido. Estado vía
+   `.is-active`, mismo convenio que `.nr-tab.is-active`/
+   `.nr-fan-slider__tab.is-active` en el resto de la app. */
+
+.nr-btn {
+  border-radius: var(--radius-nr-sm);
+  border: 1.5px solid var(--nr-line);
+  background: transparent;
+  color: var(--nr-ink);
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.nr-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.nr-btn--pick {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.nr-btn--pick.is-active {
+  border: 2px solid var(--nr-ink);
+  background: var(--nr-mark-bg);
+}
+
+.nr-btn--seg {
+  flex: 1;
+  padding: 9px 0;
+  font-weight: 600;
+  font-size: 13.5px;
+  text-align: center;
+}
+
+.nr-btn--seg.is-active {
+  border: 2px solid var(--nr-ink);
+  background: var(--nr-mark-bg);
+}
+
+.nr-btn--accent-solid {
+  width: 100%;
+  justify-content: center;
+  padding: 0.8em;
+  border: none;
+  border-radius: var(--radius-nr-xs);
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+  font-weight: 700;
+  text-align: center;
+}
+
+.nr-btn--accent-solid:disabled {
+  opacity: 0.5;
+}

@@ -1,0 +1,40 @@
+/* ------- JobStatusView.css ------- */
+
+.nr-job-card {
+  padding: 32px;
+  border-radius: var(--radius-nr-lg);
+  border: 1px solid var(--nr-mock-border);
+  background: var(--nr-card-dark);
+  color: #fff;
+}
+
+/* .nr-dot/.nr-stat-row (los puntitos de estado, is-live/is-danger) — antes
+   vivían en shared/styles/base.css porque los usaba también OrbitStatus;
+   esa sección se fusionó en EngineOrbit y ya no los usa (su pipeline tiene
+   su propio .nr-engine-orbit__pipeline-dot, en cascada) — único dueño
+   ahora es este componente, se mueven acá. */
+.nr-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #cfcfd2;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.nr-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4a4a4f;
+  flex: none;
+}
+.nr-dot.is-live {
+  background: var(--nr-accent);
+  box-shadow: 0 0 6px var(--nr-accent);
+}
+/* Estado "failed" — el prototipo (todo copy positivo) nunca necesitó un
+   color de error para .nr-dot; se agrega acá, no se toca el resto. */
+.nr-dot.is-danger {
+  background: var(--nr-danger);
+  box-shadow: 0 0 6px var(--nr-danger);
+}

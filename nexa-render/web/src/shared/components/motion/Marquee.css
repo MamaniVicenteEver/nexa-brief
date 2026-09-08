@@ -1,0 +1,44 @@
+/* ------- Marquee.css -------
+   Ticker horizontal infinito — ver Marquee.tsx para la lógica de
+   duplicación del array (equivalente declarativo del innerHTML += del
+   script original). */
+
+.nr-marquee {
+  background: var(--nr-accent);
+  color: var(--nr-accent-ink);
+  border-bottom: 2px solid var(--nr-nav-bg);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.nr-marquee__track {
+  display: inline-flex;
+  gap: 2em;
+  padding: 0.5em 0;
+  animation: nr-marquee 18s linear infinite;
+}
+.nr-marquee__item {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@keyframes nr-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .nr-marquee__track {
+    gap: 1.2em;
+    padding: 0.4em 0;
+  }
+  .nr-marquee__item {
+    font-size: 0.68em;
+  }
+}
