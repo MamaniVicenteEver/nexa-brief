@@ -1,0 +1,159 @@
+{
+  "//": "Manifest único de las plantillas config-driven — fuente de verdad de nombre público, descripción y TODAS las rutas de archivo (index.html, prompts, config de ejemplo). `folder` es el nombre físico en disco, desacoplado del template_id (el template_id NO cambia — sigue siendo el identificador lógico usado por remotion_adapter.py, el frontend, y data/template_configs/). niches.json ya no tiene rutas hardcodeadas: todo se resuelve acá vía src/config/template_manifest.py. `remotion_component` es SOLO informativo (no lo lee ningún código, es para ubicar rápido el port Remotion de cada template) — ruta relativa a la raíz del monorepo, dentro de nexa-brief-remotion/ (antes nexa-brief-video-test/, renombrado porque ya es funcional, no un test); null = todavía no portado a Remotion.",
+  "templates": {
+    "01-image-bg": {
+      "folder": "IMG-retrato-impacto",
+      "display_name": "Retrato Impacto",
+      "description": "Un sujeto o personaje central con fondo tratado (sólido, dividido en colores o difuminado) y 2 palabras de texto posicionadas automáticamente según el análisis de visión de la imagen real.",
+      "native_orientation": "9:16",
+      "index_html": "IMG-retrato-impacto/index.html",
+      "config_json": "IMG-retrato-impacto/assets/config.json",
+      "vision_prompt": "IMG-retrato-impacto/prompts/vision_extractor.md",
+      "config_prompt": "IMG-retrato-impacto/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/ImageBg.js"
+    },
+    "subject-spotlight": {
+      "folder": "IMG-reflector-epico",
+      "display_name": "Reflector Épico",
+      "description": "Recorte PNG de un sujeto bajo un reflector dramático, con partículas y rayos de energía alrededor y una palabra gigante de fondo.",
+      "native_orientation": "any",
+      "index_html": "IMG-reflector-epico/index.html",
+      "config_json": "IMG-reflector-epico/assets/config.json",
+      "vision_prompt": "IMG-reflector-epico/prompts/vision_extractor.md",
+      "config_prompt": "IMG-reflector-epico/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/ReflectorEpico.js"
+    },
+    "living-landscape": {
+      "folder": "IMG-paisaje-vivo",
+      "display_name": "Paisaje Vivo",
+      "description": "Una escena de paisaje que respira: pétalos, aves y luciérnagas en movimiento sutil, con texto tipo haiku y cámara con drift suave.",
+      "native_orientation": "any",
+      "index_html": "IMG-paisaje-vivo/index.html",
+      "config_json": "IMG-paisaje-vivo/assets/config.json",
+      "vision_prompt": "IMG-paisaje-vivo/prompts/vision_extractor.md",
+      "config_prompt": "IMG-paisaje-vivo/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/PaisajeVivo.js"
+    },
+    "motion-backdrop": {
+      "folder": "VIDEO-escena-en-movimiento",
+      "display_name": "Escena en Movimiento",
+      "description": "Un video en loop ocupa la pantalla completa con recorte y rotación adaptable, dos palabras flanqueando el sujeto, y un ecualizador reactivo al audio real.",
+      "native_orientation": "any",
+      "index_html": "VIDEO-escena-en-movimiento/index.html",
+      "config_json": "VIDEO-escena-en-movimiento/assets/config.json",
+      "vision_prompt": "VIDEO-escena-en-movimiento/prompts/vision_extractor.md",
+      "config_prompt": "VIDEO-escena-en-movimiento/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/MotionBackdrop.js"
+    },
+    "lyrics-neon": {
+      "folder": "LYRICS-letras-de-neon",
+      "display_name": "Letras de Neón",
+      "description": "Letreros de tubo neón que se encienden letra por letra sobre una foto nocturna urbana, con cámara impredecible y sincronización real con la canción.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-letras-de-neon/index.html",
+      "config_json": "LYRICS-letras-de-neon/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "LYRICS-letras-de-neon/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/NeonLetras.js (o NeonLetrasVideo.js, variante con fondo de video)"
+    },
+    "lyrics-impact": {
+      "folder": "LYRICS-letras-de-impacto",
+      "display_name": "Letras de Impacto",
+      "description": "Reveal tipo estampado, frase por frase, con una palabra gigante por cluster, cámara con golpe/shake y estética de corrido tumbado / trap.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-letras-de-impacto/index.html",
+      "config_json": "LYRICS-letras-de-impacto/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "LYRICS-letras-de-impacto/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LyricsImpact.js"
+    },
+    "lyrics-romantic": {
+      "folder": "LYRICS-carta-de-amor",
+      "display_name": "Carta de Amor",
+      "description": "Una carta escrita a mano: líneas que aparecen carácter por carácter, partículas bokeh cálidas y un pulso suave tipo latido en los versos de énfasis.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-carta-de-amor/index.html",
+      "config_json": "LYRICS-carta-de-amor/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "LYRICS-carta-de-amor/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LyricsRomantic.js"
+    },
+    "lyrics-calado": {
+      "folder": "LYRICS-letras-caladas",
+      "display_name": "Letras Caladas",
+      "description": "Texto que es una ventana transparente a un video de fondo real — 3 composiciones (calado, sólido, mixto) elegidas al azar por frase, con filtro cinematográfico y grano de película.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-letras-caladas/index.html",
+      "config_json": "LYRICS-letras-caladas/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "LYRICS-letras-caladas/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LetrasCaladas.js"
+    },
+    "lyrics-expediente": {
+      "folder": "LYRICS-hilo-rojo",
+      "display_name": "Hilo Rojo",
+      "description": "Pizarra de investigación estilo true-crime: cada frase se clava al muro como evidencia (recorte, titular, marcador, sello), conectada por un hilo rojo, con cámara que patrulla la escena en zoom y ángulos impredecibles.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-hilo-rojo/index.html",
+      "config_json": "LYRICS-hilo-rojo/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "LYRICS-hilo-rojo/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/HiloRojo.js"
+    },
+    "lyrics-latido": {
+      "folder": "LYRICS-latido-en-vivo",
+      "display_name": "Latido en Vivo",
+      "description": "Un electrocardiograma real dibuja un latido por cada palabra cantada, con monitor de BPM en vivo y flash carmesí — para baladas oscuras o de desamor.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-latido-en-vivo/index.html",
+      "config_json": "LYRICS-latido-en-vivo/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "LYRICS-latido-en-vivo/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LatidoEnVivo.js"
+    },
+    "lyrics-suave": {
+      "folder": "LYRICS-letras-suaves",
+      "display_name": "Letras Suaves",
+      "description": "El mismo motor urbano de impacto, en su versión calma: columna vertical de texto, cámara con deriva sutil y polvo ambiental — para trap o urbano de ritmo bajo.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-letras-suaves/index.html",
+      "config_json": "LYRICS-letras-suaves/assets/config.json",
+      "vision_prompt": "LYRICS-letras-suaves/prompts/vision_extractor.md",
+      "config_prompt": "LYRICS-letras-suaves/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LetrasSuaves.js"
+    },
+    "lyrics-triste": {
+      "folder": "LYRICS-bajo-la-lluvia",
+      "display_name": "Bajo la Lluvia",
+      "description": "Lluvia real cae sobre el texto, que se hunde y se difumina con el tiempo — paleta fría, tipografía de máquina de escribir, para baladas tristes o de pérdida.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-bajo-la-lluvia/index.html",
+      "config_json": "LYRICS-bajo-la-lluvia/assets/config.json",
+      "vision_prompt": "LYRICS-bajo-la-lluvia/prompts/vision_extractor.md",
+      "config_prompt": "LYRICS-bajo-la-lluvia/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/BajoLaLluvia.js"
+    },
+    "lyrics-manifiesto": {
+      "folder": "LYRICS-manifiesto",
+      "display_name": "Manifiesto",
+      "description": "Editorial tipográfico blanco y negro con cortes en seco entre 5 composiciones de texto — para spoken word, hip-hop consciente o contenido reflexivo/político.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-manifiesto/index.html",
+      "config_json": "LYRICS-manifiesto/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "LYRICS-manifiesto/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/Manifiesto.js"
+    },
+    "lyrics-resaltado": {
+      "folder": "LYRICS-pagina-subrayada",
+      "display_name": "Página Subrayada",
+      "description": "La letra aparece resaltada con marcador dentro de un párrafo de libro, con cambio de página deslizante — para baladas reflexivas o pop introspectivo.",
+      "native_orientation": "any",
+      "index_html": "LYRICS-pagina-subrayada/index.html",
+      "config_json": "LYRICS-pagina-subrayada/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "LYRICS-pagina-subrayada/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/PaginaSubrayada.js"
+    }
+  }
+}

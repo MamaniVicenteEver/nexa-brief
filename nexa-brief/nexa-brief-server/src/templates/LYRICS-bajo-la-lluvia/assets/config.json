@@ -1,0 +1,33 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Balada triste bajo la lluvia — paleta fría azul-acero, líneas que caen con gravedad y se hunden al envejecer, alternando condensada dura con máquina de escribir que parpadea como lámpara moribunda. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "bg": {
+        "type": "image",
+        "src": "assets/bg.jpg",
+        "filter": "grayscale(0.75) brightness(0.26) contrast(1.12) hue-rotate(178deg) saturate(1.35)"
+      },
+      "intro": { "artist": "", "title": "Bajo la\nLluvia", "sub": "", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "por ver", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": false },
+      "layout": {
+        "groupGapSec": 0.32,
+        "maxRowChars": 16,
+        "rowGapVh": 3.4,
+        "anchorVhFrac": 0.52,
+        "typeChanceSolo": 0.6,
+        "typeChanceMulti": 0.2,
+        "dyingChance": 0.3,
+        "sideAlignChance": 0.3,
+        "maxTiltDeg": 1.8,
+        "oldAfter": 3
+      },
+      "rain": { "streaks": 70, "tint": "150,180,210" },
+      "seed": 11
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Página subrayada — la letra aparece como un libro ya leído y marcado con resaltador amarillo, sobre relleno atmosférico de texto genérico, con cambio de página al ritmo de cada frase cantada. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "intro": { "artist": "", "title": "Página\nSubrayada", "sub": "", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Fin del capítulo", "sub": "Gracias por leer", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": false },
+      "phrase": { "gapSec": 0.5, "maxWords": 5, "maxChars": 24 },
+      "book": {
+        "markerColors": ["#FFE066", "#FFE066", "#FFE066", "#FFD24A", "#FFB4A8", "#8ED6C0", "#9FC9FF"],
+        "fillerBeforeRange": [6, 9],
+        "fillerAfterRange": [6, 9],
+        "hlScaleBase": 1.14,
+        "hlScaleRange": 0.5,
+        "hlScalePow": 2.2,
+        "hlTiltMaxDeg": 1.6,
+        "turnMs": 520,
+        "turnMsJitter": 0.18
+      },
+      "seed": 29
+    }
+  ]
+}

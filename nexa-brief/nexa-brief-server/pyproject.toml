@@ -1,0 +1,43 @@
+[project]
+name = "nexa-brief"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10.12"
+dependencies = [
+    "aiofiles>=25.1.0",
+    "apscheduler>=3.10.4",
+    "cryptography>=44.0.0",
+    "faster-whisper>=1.0.0",
+    "fastapi>=0.115.0",
+    "google-auth-oauthlib>=1.4.0",
+    "google-genai>=2.8.0",
+    "httpx>=0.28.1",
+    "onnxruntime<1.20",
+    "openai>=2.41.1",
+    "orjson>=3.11.9",
+    "pillow>=11.0.0",
+    "playwright>=1.60.0",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.1",
+    "python-dotenv>=1.2.2",
+    "python-multipart>=0.0.32",
+    "rembg>=2.0.69",
+    "rich>=15.0.0",
+    "structlog>=26.1.0",
+    "uvicorn>=0.34.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
+    "pytest>=9.1.0",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.17",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]

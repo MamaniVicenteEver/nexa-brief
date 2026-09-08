@@ -1,0 +1,39 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Carta de amor escrita a mano — paleta cálida marfil y rosa viejo, líneas que se escriben carácter a carácter alternando serif itálica y caligrafía script, bokeh cálido flotando detrás. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "bg": {
+        "type": "image",
+        "src": "assets/bg.png",
+        "filter": "grayscale(0.35) brightness(0.30) contrast(1.05) sepia(0.35) hue-rotate(-24deg) saturate(1.25)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Great+Vibes&display=swap",
+        "serif": "\"Playfair Display\", serif",
+        "script": "\"Great Vibes\", cursive"
+      },
+      "colors": { "serif": "#F2E7DA", "script": "#D89A9E", "muted": "#cbb8ad" },
+      "intro": { "artist": "", "title": "Carta de\nAmor", "sub": "", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "por escuchar", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": false },
+      "layout": {
+        "groupGapSec": 0.42,
+        "maxRowChars": 22,
+        "rowGapVh": 3.6,
+        "anchorVhFrac": 0.55,
+        "scriptChanceSolo": 0.75,
+        "scriptChanceMulti": 0.22,
+        "sideAlignChance": 0.3,
+        "maxTiltDeg": 1.6,
+        "charStepMs": 55,
+        "oldAfter": 3
+      },
+      "bokeh": { "count": 16, "tint": "216,140,140" },
+      "seed": 11
+    }
+  ]
+}

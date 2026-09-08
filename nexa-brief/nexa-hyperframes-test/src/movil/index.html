@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <!-- ===== Escena A: 0s - 15s (fondo + titular + dato) ===== -->
+      <div id="bg-a" class="bg bg-a clip" data-start="0" data-duration="16.4" data-track-index="0"></div>
+
+      <!-- ===== Escena B: 13s - 30s (fondo alterno + bullet + cierre) ===== -->
+      <div id="bg-b" class="bg bg-b clip" data-start="13" data-duration="17" data-track-index="1"></div>
+
+      <!-- Header de marca, persistente durante todo el clip -->
+      <div id="brand" class="brand clip" data-start="0" data-duration="30" data-track-index="2">
+        <div class="brand-dot"></div>
+        <div class="brand-text">Nexa Brief</div>
+      </div>
+
+      <!-- Barra de progreso del reel completo -->
+      <div id="progress-track" class="progress-track clip" data-start="0" data-duration="30" data-track-index="3">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+
+      <!-- Icono "en vivo" pulsante, escena A -->
+      <div id="icon-live" class="icon-wrap clip" data-start="1.2" data-duration="13.6" data-track-index="4">
+        <div class="icon-ring"></div>
+        <div class="icon-circle"></div>
+      </div>
+
+      <!-- Icono check, escena B (mismo track que icon-live: no se solapan en el tiempo) -->
+      <div id="icon-check" class="icon-wrap clip" data-start="15.2" data-duration="13.8" data-track-index="4">
+        <div class="icon-ring"></div>
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0f0c29" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Titular (headline), escena A -->
+      <div id="headline" class="text-block headline clip" data-start="2" data-duration="12" data-track-index="5">
+        El streaming ya es el 65% del consumo audiovisual global
+      </div>
+
+      <!-- Bullet / dato clave, escena B (mismo track que headline: no se solapan) -->
+      <div id="bullet" class="text-block bullet clip" data-start="15.6" data-duration="13.4" data-track-index="5">
+        Nexa Brief automatiza <span class="accent">guion, voz y video</span> de cada noticia en minutos.
+      </div>
+
+      <!-- Subtítulo / dato de apoyo, escena A -->
+      <div id="subtitle" class="text-block subtitle clip" data-start="5" data-duration="9" data-track-index="6">
+        Los formatos verticales cortos crecen +38% interanual en reproducciones.
+      </div>
+
+      <!-- Cierre / CTA, escena B (mismo track que subtitle: no se solapan) -->
+      <div id="cta" class="text-block cta clip" data-start="22" data-duration="8" data-track-index="6">
+        SÍGUENOS PARA MÁS BRIEFS
+      </div>
+
+      <!-- Wipe de transición entre escena A y B -->
+      <div id="sweep" class="outro-overlay clip" style="background: linear-gradient(135deg, #ff4d5e, #ffb84d);" data-start="12.8" data-duration="2.4" data-track-index="7"></div>
+
+      <!-- Fade a negro final -->
+      <div id="outro" class="outro-overlay clip" data-start="28.4" data-duration="1.6" data-track-index="8"></div>
+    </div>
+
+    <!-- Configuración + plantillas + orquestador. Este bloque solo registra el
+         resultado en window.__timelines, como exige el runtime de HyperFrames. -->
+    <script src="core/config.js"></script>
+
+    <script src="components/brand-header.js"></script>
+    <script src="components/progress-bar.js"></script>
+    <script src="components/pulsing-icon.js"></script>
+    <script src="components/text-block.js"></script>
+    <script src="components/scene-background.js"></script>
+    <script src="components/transition-wipe.js"></script>
+    <script src="components/fade-overlay.js"></script>
+
+    <script src="index.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = window.NexaBrief.buildTimeline(gsap);
+    </script>
+  </body>
+</html>

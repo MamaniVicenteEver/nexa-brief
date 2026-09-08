@@ -1,0 +1,33 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Lyric-video calado con paleta cálida cinematográfica y video de fondo de acción — las palabras se ven como ventanas transparentes sobre el video, alternando con láminas de color sólido en composiciones diagonales. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "video": {
+        "src": "assets/bg.mp4",
+        "filter": "sepia(0.30) saturate(1.55) contrast(1.14) hue-rotate(-8deg)",
+        "dimSolido": 0.42,
+        "ghostCalado": 0.05
+      },
+      "colors": {
+        "ink": "#F4EFE6",
+        "palette": ["#FF7A1A", "#4FC3FF", "#E0362C", "#FFD23F"],
+        "outline": "rgba(244,239,230,0.10)"
+      },
+      "intro": { "artist": "", "title": "", "sub": "", "feats": "NEXA BRIEF" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+      "debug": { "enabled": false },
+      "phrase": { "gapSec": 0.5, "maxWords": 4, "maxChars": 20 },
+      "laminas": {
+        "deck": ["calado", "solido", "calado", "mixto", "calado", "solido", "calado", "mixto", "solido"],
+        "bleedChance": 0.45,
+        "scriptChance": 0.30,
+        "punch": 0.05
+      },
+      "seed": 29
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "subject": {
+    "src": "assets/bg.png",
+    "w": 595,
+    "h": 700,
+    "label": "Heroic figure with celestial white and cold-gray aura",
+    "knownName": "AURA",
+    "cropState": "full_body",
+    "alignment": "center",
+    "scale": 0.70,
+    "grayscale": 1.0,
+    "zones": {
+      "head": [0, 200, 100, 400],
+      "mid": [200, 500, 50, 550],
+      "low": [500, 700, 150, 450]
+    }
+  },
+  "bg": {
+    "colors": ["#5189c4", "#112339", "#030712"],
+    "style": "radial"
+  },
+  "blend": "luminosity",
+  "giantWord": "AURA",
+  "giantColor": "#ffffff",
+  "giantOpacity": 0.30,
+  "particles": {
+    "type": "stones",
+    "color": "#b2b8c2",
+    "dark": "rgba(33, 38, 46, 0.85)",
+    "count": 28,
+    "minSize": 3,
+    "maxSize": 10
+  },
+  "glow": {
+    "color": "#ffffff",
+    "intensity": 0.9
+  },
+  "effect": "sparks",
+  "ink": "#FFFFFF",
+  "brand": {
+    "name": "NEXA",
+    "sub": "BRIEF"
+  },
+  "track": "GOAT",
+  "audio": {
+    "src": "assets/song.mp3",
+    "simulatedBpm": 96
+  },
+  "intro": {
+    "artist": "",
+    "title": "AURA",
+    "sub": "",
+    "feats": ""
+  },
+  "outro": {
+    "leadSec": 6,
+    "songTitle": "GOAT",
+    "title": "Gracias",
+    "sub": "por ver",
+    "feats": "Suscríbete · NEXA BRIEF"
+  },
+  "seed": 11
+}

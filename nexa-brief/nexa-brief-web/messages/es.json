@@ -1,0 +1,459 @@
+{
+  "common": {
+    "solicitarAcceso": "Solicitar acceso"
+  },
+  "nav": {
+    "logo": "Nexa Brief",
+    "plantillas": "Plantillas",
+    "canales": "Canales",
+    "nosotros": "Nosotros",
+    "recursos": "Recursos"
+  },
+  "hero": {
+    "word1": "Videos",
+    "word2": "Que",
+    "word3": "Se",
+    "word4": "Publican",
+    "word5": "Solos,",
+    "word6": "Siempre",
+    "ideaPillLine1": "Detrás de",
+    "ideaPillLine2": "cada canal"
+  },
+  "belowHero": {
+    "motorTitle": "Motor creativo con IA",
+    "motorDesc": "Gemini y DeepSeek analizan el género, diseñan el video y lo entregan listo para publicar — sin que nadie edite un solo frame.",
+    "verPipeline": "Ver el pipeline →",
+    "miniCardLabel": "Plantilla · Letras de la canción",
+    "tryPill": "Ver una publicación real",
+    "connectText": "Conecta tus propios canales",
+    "statSuffix": "Videos publicados en automático durante los últimos 30 días."
+  },
+  "techTrust": {
+    "eyebrow": "Stack tecnológico en uso"
+  },
+  "templatesRow": {
+    "heading": "Una plantilla, un género distinto.",
+    "imageBg": "Imagen con fondo",
+    "subjectPng": "Imagen sin fondo",
+    "landscapeScene": "Paisaje completo",
+    "videoMotion": "Video en loop",
+    "lyrics": "Letras de la canción",
+    "seeAllLine1": "Ver todas las",
+    "seeAllLine2": "plantillas →"
+  },
+  "purpose": {
+    "eyebrow": "Por ahora, un proyecto personal",
+    "headingLine1": "Mis canales,",
+    "headingLine2": "en piloto automático.",
+    "body": "No es un producto a la venta — todavía. Es la forma en la que automatizo mis propios canales de YouTube, TikTok y Facebook: video generado con IA a partir de la música que ya tengo, y para lo que no tiene los derechos completos, lo convierto en piezas de <em>arte de letras</em> — visual, no el audio original. Todo esto sigue en etapa de prueba.",
+    "chip1": "Sin editor",
+    "chip2": "Sin depender del audio original",
+    "chip3": "3 plataformas, un solo pipeline"
+  },
+  "cta": {
+    "headingLine1": "Pon tu catálogo",
+    "headingEm": "en automático.",
+    "body": "Acceso por invitación. Cada canal se calibra a medida antes de activarse — sin plantillas genéricas.",
+    "button": "Solicitar acceso"
+  },
+  "footer": {
+    "badge": "Etapa de prueba",
+    "brandName": "Nexa Brief",
+    "tagline": "© 2026 — Automatiza el flujo",
+    "copyright": "© 2026 Nexa Brief. Todos los derechos reservados.",
+    "authorName": "Ever Mamani Vicente",
+    "developedBy": "Desarrollado por",
+    "personalRights": "© 2026 Ever Mamani Vicente — Todos los derechos reservados.",
+    "contactLink": "Contacto ↗",
+    "demoLink": "Solicitar demo →"
+  },
+  "adminNav": {
+    "brand": "Nexa Brief",
+    "dashboard": "Dashboard",
+    "crearVideo": "Crear video",
+    "plantillas": "Plantillas",
+    "canales": "Canales",
+    "gestion": "Gestión",
+    "programacion": "Programación",
+    "biblioteca": "Biblioteca",
+    "historial": "Historial",
+    "notificaciones": "Notificaciones",
+    "salir": "Salir"
+  },
+  "dashboard": {
+    "heading": "Dashboard",
+    "activeCategories": "Categorías activas",
+    "activeCategoriesMeta": "Disponibles para Crear video",
+    "totalCategories": "Categorías totales",
+    "totalCategoriesMeta": "Activas + en preparación",
+    "currentSession": "Sesión actual",
+    "currentSessionMeta": "Usuario con acceso",
+    "recentActivity": "Actividad reciente",
+    "recentActivityBodyBefore": "Todavía no hay tracking de lotes generados en este panel — el backend no expone historial de trabajos por ahora. Cuando generes un video en",
+    "recentActivityBodyAfter": ", vas a ver el resultado ahí mismo al terminar.",
+    "crearVideoLink": "Crear video",
+    "ctaHeadingLine1": "Un vistazo,",
+    "ctaHeadingEm": "cero fricción.",
+    "ctaBody": "El mismo dashboard que usamos internamente — con tu propio catálogo en vez del nuestro."
+  },
+  "channels": {
+    "title": "Canales",
+    "updating": "Actualizando…",
+    "connectionError": "Sin conexión con el servidor — no se pudo cargar el estado de los canales. Reintentando automáticamente…",
+    "reauthBanner": "{count, plural, one {# canal necesita} other {# canales necesitan}} reconexión — el token expiró.",
+    "loading": "Cargando canales…",
+    "accountCount": "{count, plural, one {# cuenta} other {# cuentas}}",
+    "emptyState": "Sin canales conectados todavía.",
+    "addAccountButton": "+ Agregar cuenta",
+    "publishedCount": "{count, plural, one {# video publicado} other {# videos publicados}}",
+    "reconnect": "Reconectar",
+    "viewDetails": "Ver detalles",
+    "disconnect": "Desconectar",
+    "disconnectConfirmTitle": "¿Desconectar {name}?",
+    "disconnectConfirmBody": "Vas a dejar de poder publicar automáticamente en {platform} con esta cuenta ({alias}) hasta que la reconectes.",
+    "disconnectError": "No se pudo desconectar. Reintentá.",
+    "cancel": "Cancelar",
+    "disconnecting": "Desconectando…",
+    "confirmDisconnect": "Sí, desconectar",
+    "statusActive": "Activo",
+    "statusExpired": "Token expirado",
+    "dialog": {
+      "loadingVideos": "Cargando videos…",
+      "noVideos": "Todavía no se publicó ningún video en este canal desde acá.",
+      "platform": "Plataforma",
+      "alias": "Alias",
+      "name": "Nombre",
+      "platformId": "ID en la plataforma",
+      "status": "Estado",
+      "tokenExpiry": "Vencimiento del token",
+      "autoRenewal": "Renovación automática",
+      "publishedVideos": "Videos publicados",
+      "recentVideos": "Últimos videos",
+      "yes": "Sí",
+      "no": "No",
+      "neverExpires": "No expira",
+      "expired": "Expirado (se renueva solo al publicar)",
+      "expiresInMinutes": "Expira en {minutes} min",
+      "expiresInHours": "Expira en {hours} h",
+      "expiresInDays": "Expira en {days} días"
+    }
+  },
+  "library": {
+    "title": "Biblioteca",
+    "emptyState": "Ningún video coincide con los filtros aplicados.",
+    "filters": {
+      "categoryLabel": "Categoría",
+      "allCategories": "Todas las categorías",
+      "clearFilters": "Limpiar filtros"
+    },
+    "tabs": {
+      "listos": "Listos",
+      "cola": "En cola",
+      "publicados": "Publicados",
+      "fallidos": "Fallidos"
+    },
+    "retryButton": "Reintentar",
+    "comingSoon": "Próximamente",
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "pageOf": "Página {page} de {total}"
+    },
+    "detail": {
+      "back": "Volver a Biblioteca",
+      "description": "Descripción",
+      "tags": "Tags",
+      "tiktokCaption": "Caption de TikTok",
+      "publishedTo": "Dónde se publicó",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado",
+      "noPublishes": "Todavía no se publicó en ninguna plataforma.",
+      "generating": "El video todavía se está generando.",
+      "notFound": "No se encontró este video."
+    },
+    "stages": {
+      "pending": "En cola",
+      "inputAnalyzed": "Analizando entrada...",
+      "designComplete": "Diseñando estilo visual...",
+      "resourcesFetched": "Buscando recursos (imagen/música)...",
+      "promptBuilt": "Armando prompt...",
+      "htmlGenerated": "Generando plantilla...",
+      "videoRecorded": "Grabando video...",
+      "summaryGenerated": "Generando título y descripción...",
+      "packaged": "Listo",
+      "publishing": "Publicando...",
+      "published": "Publicado",
+      "failed": "Falló"
+    },
+    "videoCard": {
+      "publishedBadge": "Publicado",
+      "unknownDuration": "Duración desconocida",
+      "publishNow": "Publicar ahora",
+      "playButton": "Reproducir"
+    },
+    "assetPicker": {
+      "title": {
+        "images": "Elegir imagen de la biblioteca",
+        "music": "Elegir canción de la biblioteca",
+        "videos": "Elegir video de la biblioteca"
+      },
+      "loading": "Cargando...",
+      "empty": "Todavía no hay nada archivado.",
+      "chooseButton": "Elegir"
+    }
+  },
+  "templates": {
+    "grid": {
+      "heading": "Plantillas",
+      "loading": "Cargando plantillas...",
+      "empty": "No hay plantillas configuradas."
+    },
+    "card": {
+      "tagImage": "Imagen",
+      "tagVideo": "Video",
+      "tagLyrics": "Letras",
+      "orientationVertical": "Vertical 9:16",
+      "orientationHorizontal": "Horizontal 16:9",
+      "orientationAny": "Cualquier formato"
+    },
+    "detail": {
+      "loading": "Cargando plantilla...",
+      "notFound": "Plantilla no encontrada.",
+      "imageLabel": "Imagen",
+      "videoLabel": "Video de fondo",
+      "musicLabel": "Música",
+      "generatePreview": "Generar vista previa",
+      "generatingPreview": "Generando vista previa..."
+    },
+    "livePreview": {
+      "placeholder": "Elegí (o subí) una imagen o música y generá una vista previa.",
+      "failedTitle": "No se pudo generar la vista previa.",
+      "generating": "Generando vista previa...",
+      "iframeTitle": "Vista previa de la plantilla",
+      "clickToPlay": "Click para reproducir con sonido"
+    },
+    "recordButton": {
+      "record": "Grabar",
+      "sending": "Enviando...",
+      "tooltip": "Generá una vista previa primero"
+    },
+    "resourcePicker": {
+      "library": "Biblioteca: {assetId}",
+      "auto": "El sistema elegirá automáticamente",
+      "uploadNew": "Subir nuevo",
+      "chooseFromLibrary": "Elegir de biblioteca",
+      "remove": "Quitar"
+    }
+  },
+  "createVideo": {
+    "heading": "Crear video",
+    "resourcesLabel": "Recursos (opcional)",
+    "descriptionLabel": "Descripción (opcional)",
+    "descriptionPlaceholder": "Si la dejas vacía, la IA genera título, descripción y hashtags automáticamente.",
+    "submit": "Generar lote",
+    "submitPending": "Generando lote...",
+    "saveDraft": "Guardar como borrador",
+    "saveDraftTooltip": "Próximamente",
+    "channelsSection": {
+      "title": "Publicar en",
+      "loadError": "No se pudo cargar el estado de los canales — podés generar el video igual, pero por ahora hay que publicarlo a mano.",
+      "loading": "Cargando…",
+      "tokenExpired": "Token expirado — reconectar en Canales",
+      "noAccounts": "Sin cuentas conectadas.",
+      "autoPublishHint": "El video se publica automáticamente en {count, plural, one {# cuenta} other {# cuentas}} apenas termina de generarse.",
+      "manualPublishHint": "Si no marcás ninguna cuenta, el video se genera igual, pero hay que publicarlo a mano."
+    },
+    "durationSection": {
+      "title": "Duración",
+      "modeAuto": "Según la canción",
+      "modeManual": "Duración manual",
+      "songDurationLabel": "Duración de la canción",
+      "songDurationDetected": "{duration} detectados",
+      "songDurationMissing": "Sin canción — se resuelve automáticamente",
+      "repeatsLabel": "Repeticiones",
+      "totalEstimated": "Duración total estimada",
+      "exactDurationLabel": "Duración exacta",
+      "secondsUnit": "segundos",
+      "manualRangeHint": "Se ignora la duración de la canción; el rango permitido es 5–300 segundos."
+    },
+    "nichoField": {
+      "label": "Nicho / categoría musical",
+      "badge": "Elegí una",
+      "selectPlaceholder": "Selecciona una categoría",
+      "addCategoryButton": "+ Agregar categoría",
+      "newCategoryPlaceholder": "Nombre de la nueva categoría",
+      "confirmAdd": "Agregar",
+      "cancel": "Cancelar",
+      "templatesHintBefore": "Puedes ver ejemplos de cada plantilla en",
+      "templatesLink": "Plantillas"
+    },
+    "recorderEngineSection": {
+      "title": "Motor de grabación",
+      "engineRemotion": "Remotion",
+      "enginePlaywright": "Playwright",
+      "hintRemotion": "Mejor calidad, render más lento.",
+      "hintPlaywright": "Grabación en vivo, más rápido — calidad algo menor."
+    },
+    "renderTargetSection": {
+      "title": "Motor de render",
+      "targetLocal": "Local",
+      "targetAws": "Nube (AWS)",
+      "hintLocal": "Renderiza en el servidor local.",
+      "hintAws": "Renderiza en AWS Lambda — genera costo real en la cuenta de AWS."
+    },
+    "resourceFields": {
+      "backgroundLabel": "Fondo (imagen o video)",
+      "backgroundAutoHint": "El sistema elegirá una imagen automáticamente",
+      "chooseFile": "Elegir archivo",
+      "songLabel": "Canción",
+      "songDetected": "{fileName} · {duration} detectados",
+      "songAutoHint": "El sistema elegirá una canción de la biblioteca"
+    },
+    "summaryCard": {
+      "title": "Resumen del lote",
+      "automatic": "Automático",
+      "automaticFeminine": "Automática",
+      "manualSeconds": "{seconds}s (manual)",
+      "rowNicho": "Nicho",
+      "noPreference": "Sin preferencia",
+      "rowFondo": "Fondo",
+      "rowCancion": "Canción",
+      "rowDuracion": "Duración",
+      "rowRenderTarget": "Motor de render",
+      "renderTargetAws": "Nube (AWS)",
+      "renderTargetLocal": "Local",
+      "rowPublish": "Publicar en",
+      "publishAccountsCount": "{count, plural, one {# cuenta} other {# cuentas}}",
+      "publishManual": "Manual"
+    },
+    "jobProgress": {
+      "category": "Categoría",
+      "duration": "Duración",
+      "viewDetails": "Ver detalles"
+    },
+    "stages": {
+      "pending": "En cola",
+      "inputAnalyzed": "Analizando entrada...",
+      "designComplete": "Diseñando estilo visual...",
+      "resourcesFetched": "Buscando recursos (imagen/música)...",
+      "promptBuilt": "Armando prompt...",
+      "htmlGenerated": "Generando plantilla...",
+      "videoRecorded": "Grabando video...",
+      "summaryGenerated": "Generando título y descripción...",
+      "packaged": "Listo",
+      "publishing": "Publicando...",
+      "published": "Publicado",
+      "failed": "Falló"
+    }
+  },
+  "schedule": {
+    "title": "Programación",
+    "tabs": { "slots": "Horarios", "queue": "Cola" },
+    "common": {
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "confirm": "Confirmar",
+      "updating": "Actualizando…",
+      "close": "Cerrar"
+    },
+    "platforms": { "youtube": "YouTube", "tiktok": "TikTok", "facebook": "Facebook" },
+    "weekdays": { "mon": "Lun", "tue": "Mar", "wed": "Mié", "thu": "Jue", "fri": "Vie", "sat": "Sáb", "sun": "Dom" },
+    "slots": {
+      "description": "Horarios recurrentes por cuenta — asigná un video a mano o dejá que el sistema elija.",
+      "newSlot": "+ Nuevo horario",
+      "loadError": "No se pudieron cargar los horarios.",
+      "loading": "Cargando horarios…",
+      "empty": "Todavía no hay horarios configurados.",
+      "enabled": "Activo",
+      "disabled": "Pausado",
+      "nicheFilterLabel": "nicho: {niche}",
+      "assignVideo": "Asignar video",
+      "edit": "Editar",
+      "pause": "Pausar",
+      "activate": "Activar",
+      "delete": "Eliminar",
+      "deleteConfirmTitle": "¿Eliminar este horario?",
+      "deleteConfirmDescription": "{platform} · {account} — {days} · {times}. Esta acción no se puede deshacer.",
+      "deleteError": "No se pudo eliminar. Reintentá.",
+      "deleting": "Eliminando…",
+      "confirmDelete": "Sí, eliminar"
+    },
+    "slotForm": {
+      "createTitle": "Nuevo horario",
+      "editTitle": "Editar horario",
+      "description": "Configurá cuándo y en qué cuenta se publica automáticamente.",
+      "platformLabel": "Plataforma",
+      "accountLabel": "Cuenta",
+      "chooseAccount": "Elegir cuenta…",
+      "daysLabel": "Días",
+      "presetAllDays": "Todos los días",
+      "presetWeekdays": "Lun-Vie",
+      "presetWeekends": "Fines de semana",
+      "timesLabel": "Horarios (UTC)",
+      "removeTime": "Quitar",
+      "addTime": "+ Agregar horario",
+      "nicheLabel": "Filtro de nicho (opcional)",
+      "anyNiche": "Cualquier nicho",
+      "saveError": "No se pudo guardar el horario. Reintentá."
+    },
+    "assignVideo": {
+      "title": "Asignar video",
+      "description": "Elegí una ocurrencia de este horario y qué video publicar. \"Automático\" deja que el sistema elija el video listo más antiguo cuando llegue el momento.",
+      "occurrenceLabel": "Ocurrencia",
+      "noOccurrences": "Este horario no tiene ocurrencias próximas — revisá días y horarios.",
+      "videoLabel": "Video",
+      "auto": "Automático (que la IA decida)",
+      "saveError": "No se pudo asignar el video. Reintentá."
+    },
+    "queue": {
+      "description": "Se actualiza sola cada 15s a medida que las entradas pasan de en cola a publicadas.",
+      "loadError": "No se pudo cargar la cola de publicación.",
+      "loading": "Cargando cola…",
+      "empty": "Todavía no hay nada en la cola de publicación.",
+      "viewPost": "Ver publicación",
+      "cancelEntry": "Cancelar",
+      "sourceLabels": { "manual": "Manual", "auto": "Automático", "immediate": "Publicar ahora" },
+      "statusLabels": { "queued": "En cola", "publishing": "Publicando…", "published": "Publicado", "failed": "Falló", "cancelled": "Cancelado" }
+    },
+    "publishNow": {
+      "title": "Publicar ahora",
+      "description": "Publicá \"{jobTitle}\" de inmediato, sin pasar por el horario programado.",
+      "platformLabel": "Plataforma",
+      "accountLabel": "Cuenta",
+      "chooseAccount": "Elegir cuenta…",
+      "noAccounts": "No hay cuentas activas conectadas en {platform}.",
+      "publishError": "No se pudo publicar. Reintentá.",
+      "success": "Publicado correctamente.",
+      "genericFailure": "La publicación falló.",
+      "publishing": "Publicando…"
+    }
+  },
+  "access": {
+    "requestTitle": "Solicitar acceso",
+    "requestSubtitle": "Contame quién sos y para qué te gustaría ver Nexa Brief funcionando — te respondo yo directamente, no un formulario automático.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@correo.com",
+    "messageLabel": "Contame un poco",
+    "messageOptional": "(opcional)",
+    "requestButton": "Solicitar acceso para ver el funcionamiento",
+    "requestSuccess": "Listo — te voy a escribir a ese correo pronto.",
+    "requestError": "No se pudo enviar la solicitud. Intentá de nuevo.",
+    "toggleToLoginQuestion": "¿Ya tenés acceso?",
+    "toggleToLogin": "Iniciar sesión",
+    "loginTitle": "Iniciar sesión",
+    "loginSubtitle": "Reservado para demos guiadas — si ya te pasé un usuario y contraseña, es acá.",
+    "passwordLabel": "Contraseña",
+    "loginButton": "Entrar al panel",
+    "loginError": "Email o contraseña incorrectos.",
+    "toggleToRequestQuestion": "¿No tenés acceso todavía?",
+    "toggleToRequest": "Solicitar acceso",
+    "contactLabel": "Escribime directo",
+    "contactName": "Ever Mamani Vicente",
+    "backHome": "← Volver al inicio",
+    "visualBadge": "¿Cómo funciona?",
+    "visualHeadingLine1": "Así se arma",
+    "visualHeadingEm": "cada video.",
+    "visualBody": "Cinco plantillas, un pipeline con IA, cero edición manual — pedí acceso y te muestro el resto."
+  }
+}
