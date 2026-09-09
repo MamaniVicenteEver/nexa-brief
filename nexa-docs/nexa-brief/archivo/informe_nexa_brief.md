@@ -1,3 +1,5 @@
+> **Archivado (2026-09-08):** este informe (2026-06-27) documenta bloqueadores (token de YouTube expirado, scope OAuth insuficiente, Facebook nunca autorizado) que ya estaban resueltos para el 2026-07-01, según [`estudio_tecnico_completo.md`](../estudio_tecnico_completo.md), que es la referencia técnica vigente. Se conserva como snapshot histórico, no como estado actual.
+
 # INFORME TÉCNICO COMPLETO — NEXA BRIEF
 **Sistema de Generación Automatizada de Videos Musicales con Publicación Social**  
 **Análisis por:** Claude Sonnet 4.6 | **Fecha de actualización:** 2026-06-27  

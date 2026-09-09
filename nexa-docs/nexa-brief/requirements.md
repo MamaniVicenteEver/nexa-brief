@@ -3,7 +3,7 @@
 ## Requisitos funcionales
 
 - **RF01 – Gestion de categorias**: el sistema debe permitir crear, listar, editar y eliminar categorias musicales. Cada categoria incluye nombre, descripcion, genero musical, paleta de colores, etiquetas de estado de animo y una consulta para imagen.
-- **RF02 – Generacion de videos por lote**: el usuario puede solicitar la generacion de 1 a N videos mediante una peticion que incluye categoria, cantidad (por defecto 1) y duracion en minutos (de 60 a 300, por defecto 60).
+- **RF02 – Generacion de videos por lote**: el usuario puede solicitar la generacion de 1 a N videos mediante una peticion que incluye categoria, cantidad (por defecto 1) y duracion en **segundos** (de 60 a 300, por defecto 60) — corregido 2026-09-08, el original decía "minutos" por error, contradicho por el resto de la documentación técnica.
 - **RF03 – Analisis inteligente de la entrada**: una IA (Gemini Flash-Lite) analiza la entrada del usuario y completa automaticamente los campos faltantes, devolviendo un JSON estructurado.
 - **RF04 – Diseno visual adaptativo**: el sistema selecciona un skill de diseno segun el genero musical y, mediante IA, genera un plano de diseno visual con colores (maximo 4), tipografia, estilo de animacion y tipo de fondo.
 - **RF05 – Obtencion de imagen de fondo**: debe descargar una imagen de alta resolucion desde Unsplash, Pexels o Pixabay, utilizando la consulta generada en el diseno. Si todas las fuentes fallan, debe emplear un fondo CSS.

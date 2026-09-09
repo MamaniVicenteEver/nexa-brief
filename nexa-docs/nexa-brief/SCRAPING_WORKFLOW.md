@@ -83,15 +83,7 @@ descargas/
 Uso interno. Las imágenes descargadas están sujetas a los derechos de autor de sus creadores.
 ```
 
----
-
-## 🐍 Script mejorado: `scrape_anime.py`
-
-Guarda esta nueva versión (reemplaza la anterior) y añade **logging detallado**, **validación de calidad** y **descarga de reemplazo** si una imagen no cumple los requisitos.
-
-```python
-
-```
+> **Nota (2026-09-08):** esta sección referenciaba una "versión mejorada" de `scrape_anime.py` cuyo contenido nunca se llegó a pegar aquí. El script real vive en `nexa-brief/nexa-brief-server/scripts/scrape_anime.py`; consultarlo directamente en vez de este documento para el código actual.
 
 ---
 
@@ -117,9 +109,3 @@ Verás en la consola logs como:
 ```
 
 Ahora solo se guardarán imágenes que cumplan con el tamaño mínimo configurado, y tendrás trazabilidad completa de las descartadas.
-
----
-
-## 📂 Ubicación de la documentación
-
-He creado el archivo `docs/SCRAPING_WORKFLOW.md` con el contenido anterior. Puedes visualizarlo o editarlo según necesites.

@@ -2,6 +2,8 @@
 **Análisis basado en código** · 2026-07-01
 **Cubre:** YAML vs JSON, flujo de validación de imágenes, 9:16 real para Reels, objeto de configuración por nicho
 
+> **Nota de vigencia (2026-09-08):** la propuesta de mover cada nicho a un archivo YAML propio (`niches/{id}.yaml`) **no se adoptó** — el sistema implementado usa un único `niches.json` (16 nichos, 14 activos). El resto del análisis (validación de imágenes, bug del 9:16 falso) sí se implementó. Ver `nexa-brief/nexa-brief-server/niches.json` y `nexa-brief/nexa-brief-server/docs/niches-reference.md` para el esquema real vigente.
+
 ---
 
 ## 1. YAML vs JSON — Decisión

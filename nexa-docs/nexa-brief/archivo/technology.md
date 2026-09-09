@@ -1,3 +1,5 @@
+> **Archivado (2026-09-08):** snapshot previo al sistema de publicación social — omite el stack de OAuth/cifrado (`cryptography`/Fernet, `APScheduler`, `google-auth-oauthlib`) que hoy es parte central del sistema. Ver la sección de stack en [`estudio_tecnico_completo.md`](../estudio_tecnico_completo.md) para el listado completo vigente.
+
 # Stack Tecnologico de Nexa-Brief
 
 ## Lenguaje y gestor de paquetes
