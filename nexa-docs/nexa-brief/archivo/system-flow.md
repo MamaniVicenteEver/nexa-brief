@@ -1,3 +1,5 @@
+> **Archivado (2026-09-08):** describe una versión anterior del pipeline (7 etapas, sin validación de imágenes ni publicación social). El pipeline vigente tiene 9 etapas — ver [`estudio_tecnico_completo.md`](../estudio_tecnico_completo.md).
+
 # Flujo del Sistema Nexa-Brief
 
 El flujo completo de generacion de un video se divide en siete etapas secuenciales, orquestadas por un microkernel central que itera sobre cada trabajo del lote.
