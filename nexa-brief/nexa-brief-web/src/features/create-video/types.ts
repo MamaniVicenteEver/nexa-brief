@@ -5,6 +5,10 @@ export interface Niche {
   pipelineType: string;
   active: boolean;
   recorderEngine: string;
+  /** Motores que se pueden ofrecer como override sin que el submit falle con
+   * 400 — "playwright" siempre está, "remotion"/"hyperframes" solo si el
+   * niche tiene una composición portada (ver supports_niche() en el backend). */
+  supportedEngines: string[];
 }
 
 export type JobStage =

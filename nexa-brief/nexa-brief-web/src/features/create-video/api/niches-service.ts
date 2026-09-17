@@ -8,6 +8,7 @@ interface NicheDto {
   pipeline_type: string;
   active: boolean;
   recorder_engine: string;
+  supported_engines: string[];
 }
 
 function mapNiche(dto: NicheDto): Niche {
@@ -18,6 +19,7 @@ function mapNiche(dto: NicheDto): Niche {
     pipelineType: dto.pipeline_type,
     active: dto.active,
     recorderEngine: dto.recorder_engine,
+    supportedEngines: dto.supported_engines,
   };
 }
 

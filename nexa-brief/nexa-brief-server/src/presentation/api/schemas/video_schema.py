@@ -68,17 +68,18 @@ class VideoGenerationRequest(BaseModel):
     render_target: Literal["local", "aws"] | None = Field(
         default=None,
         description=(
-            "Override del motor de render de Remotion para este batch. Solo válido si "
-            "el motor efectivo (recorder_engine_override o el del nicho) es 'remotion' — "
-            "se rechaza con 400 en cualquier otro caso. None usa el default global del servidor."
+            "Override del motor de render (Remotion o HyperFrames) para este batch. Solo válido "
+            "si el motor efectivo (recorder_engine_override o el del nicho) es 'remotion' o "
+            "'hyperframes' — se rechaza con 400 en cualquier otro caso. None usa el default "
+            "global del servidor."
         ),
     )
-    recorder_engine_override: Literal["remotion", "playwright"] | None = Field(
+    recorder_engine_override: Literal["remotion", "hyperframes", "playwright"] | None = Field(
         default=None,
         description=(
             "Override del motor de grabación para este batch, en vez del recorder_engine "
-            "default del nicho. 'remotion' se rechaza con 400 si el nicho todavía no tiene "
-            "una composición Remotion portada. None usa el default del nicho."
+            "default del nicho. 'remotion'/'hyperframes' se rechazan con 400 si el nicho todavía "
+            "no tiene una composición portada para ese motor. None usa el default del nicho."
         ),
     )
 

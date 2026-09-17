@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 import type { CreateVideoFormValues } from "../schema";
 import type { Niche } from "../types";
 
-/** Solo aparece cuando el motor EFECTIVO es "remotion" — el del nicho, salvo
- * que el usuario lo haya forzado a "playwright" en RecorderEngineSection, en
- * cuyo caso render_target ya no aplica (el backend lo rechazaría). */
+/** Solo aparece cuando el motor EFECTIVO es "remotion" o "hyperframes" — el
+ * del nicho, salvo que el usuario lo haya forzado a "playwright" en
+ * RecorderEngineSection, en cuyo caso render_target ya no aplica (el backend
+ * lo rechazaría). */
 export function RenderTargetSection({
   form,
   niches,
@@ -23,7 +24,7 @@ export function RenderTargetSection({
 
   const niche = niches?.find((n) => n.id === categoryName);
   const effectiveEngine = engineOverride ?? niche?.recorderEngine;
-  if (effectiveEngine !== "remotion") return null;
+  if (effectiveEngine !== "remotion" && effectiveEngine !== "hyperframes") return null;
 
   return (
     <div className="flex flex-col gap-2">

@@ -21,6 +21,7 @@ export function SummaryCard({
   songSeconds: number | null;
 }) {
   const t = useTranslations("createVideo.summaryCard");
+  const tEngine = useTranslations("createVideo.recorderEngineSection");
   const values = useWatch({ control: form.control });
   const {
     categoryName,
@@ -30,6 +31,7 @@ export function SummaryCard({
     durationMode,
     manualSeconds,
     renderTarget,
+    recorderEngineOverride,
   } = values;
   const repeatCount = values.repeatCount || 1;
   const publishingAccounts = values.publishingAccounts ?? [];
@@ -49,6 +51,20 @@ export function SummaryCard({
     { label: t("rowFondo"), value: fondo },
     { label: t("rowCancion"), value: cancion },
     { label: t("rowDuracion"), value: duracion },
+    ...(recorderEngineOverride
+      ? [
+          {
+            label: t("rowEngine"),
+            value: tEngine(
+              recorderEngineOverride === "remotion"
+                ? "engineRemotion"
+                : recorderEngineOverride === "hyperframes"
+                  ? "engineHyperframes"
+                  : "enginePlaywright",
+            ),
+          },
+        ]
+      : []),
     ...(renderTarget
       ? [
           {

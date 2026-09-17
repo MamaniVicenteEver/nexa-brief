@@ -149,6 +149,55 @@ class Settings(BaseSettings):
         default=None, alias="REMOTION_DEBUG_MAX_DURATION_SECONDS"
     )
 
+    # ── HyperFrames (motor de grabación alternativo, seleccionable por niche vía
+    # NicheConfig.recorder_engine — ver src/adapters/recorder/factory.py). Hoy
+    # ningún niche tiene una composición HyperFrames con contenido dinámico
+    # portada (ver docs/investigaciones/cola-aws-y-hyperframes-para-nexa-brief.md,
+    # sección 3.3) — el wiring existe, pero HyperframesAdapter.supports_niche()
+    # devuelve False para todos hasta que se porte al menos una composición. ──
+    # Ruta al proyecto Node (nexa-brief-hyperframes). Ajustar si se mueve/renombra.
+    hyperframes_project_dir: Path = Field(
+        default=BASE_DIR.parent / "nexa-brief-hyperframes", alias="HYPERFRAMES_PROJECT_DIR"
+    )
+    # El CLI `hyperframes render` local mide segundos-bajos minutos en los demos
+    # del POC (ver README de nexa-brief-hyperframes) — muy por debajo del
+    # timeout de Remotion, pero sin benchmark todavía con contenido de
+    # producción real. Default conservador, no medido contra un caso real.
+    hyperframes_render_timeout_seconds: int = 1800
+    # Workers de renderizado en paralelo dentro de UN render local (flag -w/--workers
+    # del CLI) — no confundir con hyperframes_max_concurrent_renders (cuántos
+    # renders simultáneos acepta el servidor).
+    hyperframes_workers: int = 2
+    hyperframes_quality: str = "high"
+    # Límite de renders HyperFrames simultáneos en todo el servidor — mismo
+    # motivo que remotion_max_concurrent_renders (separado del semáforo de
+    # Playwright).
+    hyperframes_max_concurrent_renders: int = 1
+
+    # Dónde corre el motor HyperFrames: "local" (`hyperframes render`, subproceso
+    # en esta misma máquina) | "aws" (`hyperframes lambda render`, contra el
+    # stack ya desplegado — ver nexa-brief-hyperframes/aws/README.md). Un solo
+    # switch global, mismo patrón que remotion_render_target.
+    hyperframes_render_target: str = Field(default="local", alias="HYPERFRAMES_RENDER_TARGET")
+    # Los siguientes solo aplican si hyperframes_render_target == "aws". El CLI
+    # resuelve bucket/state-machine-arn del archivo local
+    # .hyperframes/lambda-stack-<stack_name>.json que dejó `hyperframes lambda
+    # deploy` — no hace falta repetirlos acá (a diferencia de Remotion, que sí
+    # necesita function_name/serve_url explícitos). Stack ya desplegado y
+    # probado (ver aws/lambda-deploy.log.txt): stack_name="hyperframes-poc".
+    hyperframes_aws_region: str = Field(default="us-east-1", alias="HYPERFRAMES_AWS_REGION")
+    hyperframes_aws_stack_name: str = Field(default="", alias="HYPERFRAMES_AWS_STACK_NAME")
+    # Nombre del bucket S3 del stack (Outputs de `hyperframes lambda deploy`) —
+    # a diferencia de stack_name/region, el CLI no lo necesita (lo resuelve del
+    # state file), pero HyperframesAdapter sí, para descargar el resultado con
+    # `aws s3 cp` después del render (ver _download_from_s3 en hyperframes_adapter.py).
+    hyperframes_aws_bucket: str = Field(default="", alias="HYPERFRAMES_AWS_BUCKET")
+    # Igual que remotion_aws_frames_per_lambda, pero en unidad de HyperFrames
+    # (tamaño de chunk de frames por invocación) — 240 es el default documentado
+    # en el README del proyecto, no un valor medido en este repo.
+    hyperframes_aws_chunk_size: int = Field(default=240, alias="HYPERFRAMES_AWS_CHUNK_SIZE")
+    hyperframes_aws_max_parallel_chunks: int = Field(default=2, alias="HYPERFRAMES_AWS_MAX_PARALLEL_CHUNKS")
+
     # ── Paths ─────────────────────────────────────────────────────────────────
     output_dir: Path = BASE_DIR / "output"
     data_dir: Path = BASE_DIR / "data"

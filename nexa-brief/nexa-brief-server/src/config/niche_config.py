@@ -209,11 +209,12 @@ class NicheConfig(BaseModel):
     # "config_driven_template" (plantilla estática + config.json, ver `template`)
     pipeline_type: str = "freeform_html"
     # "remotion" (default, render frame-por-frame vía Node/React — mejor calidad)
-    # | "playwright" (grabación en vivo + ffmpeg — más rápido, para niches sin
-    # composición Remotion portada; ver src/adapters/recorder/factory.py e
-    # infrastructure/remotion_adapter.py). Todo niche declara este valor
-    # explícitamente en niches.json — este default solo aplica a un niche
-    # nuevo que todavía no lo declare.
+    # | "hyperframes" (vía el CLI de nexa-brief-hyperframes — ver
+    # infrastructure/hyperframes_adapter.py; hoy sin niches portados) |
+    # "playwright" (grabación en vivo + ffmpeg — más rápido, para niches sin
+    # composición portada en el motor elegido; ver src/adapters/recorder/factory.py).
+    # Todo niche declara este valor explícitamente en niches.json — este
+    # default solo aplica a un niche nuevo que todavía no lo declare.
     recorder_engine: str = "remotion"
     template: ConfigDrivenTemplateConfig = Field(default_factory=ConfigDrivenTemplateConfig)
     metadata: NicheMetadata = Field(default_factory=NicheMetadata)

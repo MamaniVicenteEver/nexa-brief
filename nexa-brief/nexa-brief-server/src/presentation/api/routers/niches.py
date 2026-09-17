@@ -10,12 +10,26 @@ from __future__ import annotations
 import structlog
 from fastapi import APIRouter, HTTPException
 
+from src.adapters.recorder.infrastructure import hyperframes_adapter, remotion_adapter
 from src.config.niche_config import get_niche_config, list_all_niches
 from src.config.template_manifest import get_template_display_name
 from src.presentation.api.schemas.niche_schema import NicheResponse
 
 router = APIRouter(tags=["niches"])
 logger = structlog.get_logger(__name__)
+
+
+def _supported_engines(n) -> list[str]:
+    # Mismo cálculo que _validate_recorder_engine_override en videos.py, pero
+    # expuesto por API en vez de descubrirse recién al fallar un submit con
+    # 400 — "playwright" es el motor universal (nunca falla, no requiere
+    # composición portada), por eso siempre está.
+    engines = ["playwright"]
+    if remotion_adapter.supports_niche(n):
+        engines.append("remotion")
+    if hyperframes_adapter.supports_niche(n):
+        engines.append("hyperframes")
+    return engines
 
 
 def _to_response(n) -> NicheResponse:
@@ -30,6 +44,7 @@ def _to_response(n) -> NicheResponse:
         pipeline_type=n.pipeline_type,
         active=n.active,
         recorder_engine=n.recorder_engine,
+        supported_engines=_supported_engines(n),
     )
 
 
