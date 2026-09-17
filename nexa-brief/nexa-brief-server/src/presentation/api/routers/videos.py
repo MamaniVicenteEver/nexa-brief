@@ -11,7 +11,7 @@ import structlog
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from starlette.responses import Response
 
-from src.adapters.recorder.infrastructure import remotion_adapter
+from src.adapters.recorder.infrastructure import hyperframes_adapter, remotion_adapter
 from src.config.exceptions import AssetNotFoundError
 from src.config.niche_config import NicheConfig, get_niche_config
 from src.config.settings import settings
@@ -199,11 +199,17 @@ def _validate_recorder_engine_override(
             detail=f"recorder_engine_override='remotion' no está disponible para "
                     f"'{category_name}' — todavía no tiene una composición Remotion portada.",
         )
-    effective_engine = recorder_engine_override or niche_cfg.recorder_engine
-    if render_target is not None and effective_engine != "remotion":
+    if recorder_engine_override == "hyperframes" and not hyperframes_adapter.supports_niche(niche_cfg):
         raise HTTPException(
             status_code=400,
-            detail=f"render_target solo aplica cuando el motor efectivo es 'remotion' "
+            detail=f"recorder_engine_override='hyperframes' no está disponible para "
+                    f"'{category_name}' — todavía no tiene una composición HyperFrames portada.",
+        )
+    effective_engine = recorder_engine_override or niche_cfg.recorder_engine
+    if render_target is not None and effective_engine not in ("remotion", "hyperframes"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"render_target solo aplica cuando el motor efectivo es 'remotion' o 'hyperframes' "
                     f"(category_name='{category_name}' usa '{effective_engine}').",
         )
 
@@ -322,9 +328,9 @@ async def generate_videos_with_upload(
     recorder_engine_override: str | None = Form(
         default=None,
         description=(
-            "'remotion'/'playwright' — override del motor de grabación para este batch, en vez "
-            "del recorder_engine default del nicho. 'remotion' se rechaza con 400 si el nicho "
-            "todavía no tiene una composición Remotion portada."
+            "'remotion'/'hyperframes'/'playwright' — override del motor de grabación para este "
+            "batch, en vez del recorder_engine default del nicho. 'remotion'/'hyperframes' se "
+            "rechazan con 400 si el nicho todavía no tiene una composición portada para ese motor."
         ),
     ),
     publishing_accounts: list[str] = Form(

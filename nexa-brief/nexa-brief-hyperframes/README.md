@@ -1,4 +1,4 @@
-# nexa-hyperframes-test
+# nexa-brief-hyperframes
 
 Copia de trabajo de `nexa-hyperframes/` que valida una forma más simple de compartir dependencias: **un solo
 `package.json` y un solo `node_modules` en la raíz**, en vez de uno por composición. Confirmado con pruebas
@@ -9,7 +9,7 @@ espacio en disco (1.4GB vs 2.7GB). Evalúa [HyperFrames](https://github.com/heyg
 ## Estructura
 
 ```
-nexa-hyperframes-test/
+nexa-brief-hyperframes/
 ├── README.md                  # este documento
 ├── package.json                 # ÚNICO package.json — deps + scripts de ambas composiciones
 ├── package-lock.json
@@ -55,7 +55,7 @@ infraestructura de AWS.
 
 ### Local
 
-Desde la raíz de `nexa-hyperframes-test/`, con `npm run` (ya resuelven el binario compartido solos, sin
+Desde la raíz de `nexa-brief-hyperframes/`, con `npm run` (ya resuelven el binario compartido solos, sin
 exportar `PATH` a mano):
 
 ```bash

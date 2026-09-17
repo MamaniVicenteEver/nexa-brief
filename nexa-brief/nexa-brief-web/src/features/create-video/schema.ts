@@ -24,14 +24,16 @@ export const createVideoSchema = z
     imageAssetId: z.string().optional(),
     musicAssetId: z.string().optional(),
     videoAssetId: z.string().optional(),
-    // Solo relevante para nichos con recorderEngine="remotion" (ver Niche en
-    // types.ts) — el backend rechaza este campo en cualquier otro nicho.
+    // Solo relevante si el motor efectivo (recorderEngineOverride o el
+    // default del niche) es "remotion" u "hyperframes" (ver Niche.supportedEngines
+    // en types.ts) — el backend rechaza este campo en cualquier otro caso.
     // undefined = usa el default global del servidor (hoy "local").
     renderTarget: z.enum(["local", "aws"]).optional(),
     // Override del motor de grabación (ver RecorderEngineSection.tsx) — solo
-    // se manda cuando el usuario elige explícitamente "playwright" en un
-    // nicho cuyo default ya es "remotion". undefined = usa el default del nicho.
-    recorderEngineOverride: z.enum(["remotion", "playwright"]).optional(),
+    // se manda cuando el usuario elige explícitamente una opción distinta al
+    // default del niche, filtrada por Niche.supportedEngines. undefined =
+    // usa el default del nicho.
+    recorderEngineOverride: z.enum(["remotion", "hyperframes", "playwright"]).optional(),
     // "platform:alias" por cada canal elegido en ChannelsSection (ej.
     // "youtube:canal_1"). Vacío = no publicar automáticamente en ningún lado.
     // Sin .default() a propósito: con default() zod hace el output no-opcional

@@ -9,7 +9,7 @@ Se revisaron cuatro proyectos:
 | `nexa-brief-web` | Panel Next.js | Servicio `web` (3000) |
 | `nexa-brief-server` | API FastAPI/orquestador | Servicio `api` (8000) |
 | `nexa-brief-remotion` | Motor Node invocado por la API | Incluido en `api` |
-| `nexa-hyperframes-test` | Composiciones CLI experimentales | No es servicio persistente |
+| `nexa-brief-hyperframes` | Composiciones CLI experimentales | No es servicio persistente |
 
 El código actual no usa Redis, una base de datos ni un worker externo: los jobs se ejecutan en FastAPI y los artefactos quedan en disco. Por ello no se inventan esos servicios. `nexa_private` es una red bridge dedicada; la API conserva salida a Internet para IA, proveedores de medios y OAuth.
 
