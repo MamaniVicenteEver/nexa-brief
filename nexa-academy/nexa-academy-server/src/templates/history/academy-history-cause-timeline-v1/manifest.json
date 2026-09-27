@@ -1,0 +1,12 @@
+{
+  "schema_version": "academy-template-v1",
+  "id": "academy-history-cause-timeline-v1",
+  "category_id": "history",
+  "name": "Mapa de causas y cambios",
+  "engine": "hyperframes",
+  "entrypoint": "index.html",
+  "files": {"html": "index.html", "css": "styles.css", "js": "script.js", "manifest": "manifest.json"},
+  "duration_seconds": 60,
+  "scene_recipe": ["Condición", "Decisión", "Respuesta", "Legado"],
+  "variables": ["lessonTitle", "lessonDescription", "event1", "event2", "event3", "event4", "caption"]
+}

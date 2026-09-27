@@ -11,6 +11,10 @@ export interface Template {
   requiresVideo: boolean;
   requiresLyrics: boolean;
   active: boolean;
+  previewImageUrl: string | null;
+  previewVideoUrl: string | null;
+  previewAudioUrl: string | null;
+  showcaseUrl: string | null;
 }
 
 /** Respuesta inmediata de POST /templates/{id}/preview — fire-and-forget. */

@@ -1,7 +1,22 @@
 import logging
+import re
 import sys
 
 import structlog
+
+# Tokens que las APIs reciben por query string (Graph API de Facebook, etc.):
+# httpx loguea la URL completa de cada request, así que sin esto el token de
+# la página quedaba en texto plano en consola y archivos de log.
+_SECRET_QUERY_PARAMS = re.compile(
+    r"((?:access_token|refresh_token|client_secret|code|key)=)[^&\s\"']+", re.IGNORECASE
+)
+
+
+def _redact_secrets(_logger, _method, event_dict: dict) -> dict:
+    for key, value in event_dict.items():
+        if isinstance(value, str) and "=" in value:
+            event_dict[key] = _SECRET_QUERY_PARAMS.sub(r"\1[REDACTED]", value)
+    return event_dict
 
 
 def setup_logging(level: str = "INFO") -> None:
@@ -14,6 +29,7 @@ def setup_logging(level: str = "INFO") -> None:
         structlog.stdlib.add_logger_name,
         structlog.processors.TimeStamper(fmt="%H:%M:%S"),
         structlog.processors.StackInfoRenderer(),
+        _redact_secrets,
     ]
 
     structlog.configure(

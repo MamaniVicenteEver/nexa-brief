@@ -10,6 +10,7 @@ interface JobListItemDto {
   created_at: string;
   updated_at: string;
   duration_seconds: number | null;
+  generation_seconds: number | null;
 }
 
 interface JobListResponseDto {
@@ -29,6 +30,7 @@ function mapJobListItem(dto: JobListItemDto): JobListItem {
     createdAt: dto.created_at,
     updatedAt: dto.updated_at,
     durationSeconds: dto.duration_seconds,
+    generationSeconds: dto.generation_seconds,
   };
 }
 

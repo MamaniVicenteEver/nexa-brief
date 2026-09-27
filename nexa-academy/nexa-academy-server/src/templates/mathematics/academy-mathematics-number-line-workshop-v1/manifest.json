@@ -1,0 +1,12 @@
+{
+  "schema_version": "academy-template-v1",
+  "id": "academy-mathematics-number-line-workshop-v1",
+  "category_id": "mathematics",
+  "name": "Taller de línea numérica",
+  "engine": "hyperframes",
+  "entrypoint": "index.html",
+  "files": {"html": "index.html", "css": "styles.css", "js": "script.js", "manifest": "manifest.json"},
+  "duration_seconds": 60,
+  "scene_recipe": ["Cantidad", "Grupos", "Saltos", "Relación"],
+  "variables": ["subject", "lessonTitle", "lessonDescription", "operation_tex", "reasoning", "caption"]
+}

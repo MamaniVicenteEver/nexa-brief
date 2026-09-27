@@ -86,6 +86,7 @@ class YouTubeAdapter(BasePlatformAdapter):
             tags:         YouTube tags (max 500 total chars combined).
             account_alias: Key in accounts.json (e.g. 'canal_1').
             privacy:      'public' | 'private' | 'unlisted'.
+            kwargs:       language — "es" | "en", sets defaultLanguage/defaultAudioLanguage.
 
         Returns:
             PublishVideoResult with YouTube video_id and watch URL.
@@ -117,6 +118,7 @@ class YouTubeAdapter(BasePlatformAdapter):
             tags=tags,
             privacy=yt_privacy,
             file_size=file_size,
+            language=kwargs.get("language"),
         )
 
         # ── Step 2: Upload chunks ─────────────────────────────────────────────
@@ -155,18 +157,24 @@ class YouTubeAdapter(BasePlatformAdapter):
         tags: list[str],
         privacy: str,
         file_size: int,
+        language: str | None = None,
     ) -> str:
         """Initialize a YouTube resumable upload session.
 
         Returns the session_uri from the Location response header.
         """
+        snippet: dict = {
+            "title": title,
+            "description": description,
+            "tags": tags,
+            "categoryId": "10",  # 10 = Music
+        }
+        if language:
+            # Language of the title/description and of the sung audio — helps YouTube search/suggestions.
+            snippet["defaultLanguage"] = language
+            snippet["defaultAudioLanguage"] = language
         metadata = {
-            "snippet": {
-                "title": title,
-                "description": description,
-                "tags": tags,
-                "categoryId": "10",  # 10 = Music
-            },
+            "snippet": snippet,
             "status": {
                 "privacyStatus": privacy,
                 "selfDeclaredMadeForKids": False,

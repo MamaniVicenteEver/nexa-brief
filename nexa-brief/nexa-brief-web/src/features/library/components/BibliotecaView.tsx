@@ -1,256 +1,335 @@
 "use client";
 
+import { Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import type { JobListItem, JobStage } from "@/features/create-video/types";
 import { type QueueEntry, useQueueEntries } from "@/features/schedule";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useCategoryLabels } from "../hooks/useCategoryLabels";
 import { useJobs } from "../hooks/useJobs";
+import { deriveStatus, type LibraryStatus, type LibraryVideo } from "../library-status";
 import { VideoCard } from "./VideoCard";
 
-type Tab = "listos" | "cola" | "publicados" | "fallidos";
+type Tab = "todos" | "pendientes" | "publicados" | "proceso" | "fallidos";
+type Sort = "newest" | "oldest" | "longest" | "title";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 24;
 
-const STAGE_LABEL_KEY: Record<JobStage, string> = {
-  pending: "pending",
-  input_analyzed: "inputAnalyzed",
-  design_complete: "designComplete",
-  resources_fetched: "resourcesFetched",
-  prompt_built: "promptBuilt",
-  html_generated: "htmlGenerated",
-  video_recorded: "videoRecorded",
-  summary_generated: "summaryGenerated",
-  packaged: "packaged",
-  publishing: "publishing",
-  published: "published",
-  failed: "failed",
+const TAB_STATUSES: Record<Tab, LibraryStatus[] | null> = {
+  todos: null,
+  pendientes: ["ready", "scheduled"],
+  publicados: ["published"],
+  proceso: ["processing"],
+  fallidos: ["failed"],
 };
 
-function ClockIcon() {
-  return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon, sibling text conveys meaning
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      className="size-4"
-      aria-hidden
-    >
-      <circle cx="12" cy="12" r="9" />
-      <polyline points="12 7 12 12 16 14" />
-    </svg>
-  );
-}
+const TAB_ORDER: Tab[] = ["todos", "pendientes", "publicados", "proceso", "fallidos"];
+const SORTS: Sort[] = ["newest", "oldest", "longest", "title"];
 
-function CrossIcon() {
-  return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon, sibling text conveys meaning
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      className="size-4"
-      aria-hidden
-    >
-      <line x1="6" y1="6" x2="18" y2="18" />
-      <line x1="6" y1="18" x2="18" y2="6" />
-    </svg>
-  );
+function groupByJob(entries: QueueEntry[] | undefined, statuses: QueueEntry["status"][]) {
+  const map = new Map<string, QueueEntry[]>();
+  for (const entry of entries ?? []) {
+    if (!statuses.includes(entry.status)) continue;
+    const list = map.get(entry.jobId) ?? [];
+    list.push(entry);
+    map.set(entry.jobId, list);
+  }
+  return map;
 }
 
 export function BibliotecaView() {
   const t = useTranslations("library");
-  const { data: jobs } = useJobs();
-  const { data: queueEntries } = useQueueEntries({ status: "published" });
-  const [activeTab, setActiveTab] = useState<Tab>("listos");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const { data: jobs, isLoading, isError } = useJobs();
+  const { data: queueEntries } = useQueueEntries({ limit: 200 });
+  const categoryLabel = useCategoryLabels();
+
+  // `?tab=pendientes` (ej. desde el dashboard) abre directo esa pestaña.
+  const tabParam = useSearchParams().get("tab");
+  const [activeTab, setActiveTab] = useState<Tab>(
+    TAB_ORDER.includes(tabParam as Tab) ? (tabParam as Tab) : "todos",
+  );
+  const [category, setCategory] = useState("");
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<Sort>("newest");
   const [page, setPage] = useState(1);
 
-  const categories = useMemo(
-    () => Array.from(new Set((jobs ?? []).map((j) => j.category))).sort(),
-    [jobs],
-  );
+  const videos = useMemo<LibraryVideo[]>(() => {
+    const published = groupByJob(queueEntries, ["published"]);
+    const scheduled = groupByJob(queueEntries, ["queued", "publishing"]);
+    return (jobs ?? []).map((job) => {
+      const jobPublished = published.get(job.jobId) ?? [];
+      const jobScheduled = scheduled.get(job.jobId) ?? [];
+      return {
+        job,
+        published: jobPublished,
+        scheduled: jobScheduled,
+        status: deriveStatus(job, jobPublished, jobScheduled),
+        categoryLabel: categoryLabel(job.category),
+      };
+    });
+  }, [jobs, queueEntries, categoryLabel]);
 
-  const publishResultsByJobId = useMemo(() => {
-    const map = new Map<string, QueueEntry[]>();
-    for (const entry of queueEntries ?? []) {
-      const current = map.get(entry.jobId) ?? [];
-      current.push(entry);
-      map.set(entry.jobId, current);
+  // Búsqueda + categoría se aplican antes de las pestañas, así los contadores
+  // de cada pestaña reflejan lo que el usuario está filtrando.
+  const searched = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return videos.filter((v) => {
+      if (category && v.job.category !== category) return false;
+      if (!q) return true;
+      return [v.job.title, v.categoryLabel, v.job.category, v.job.jobId].some((field) =>
+        field.toLowerCase().includes(q),
+      );
+    });
+  }, [videos, category, query]);
+
+  const categories = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const v of videos) counts.set(v.job.category, (counts.get(v.job.category) ?? 0) + 1);
+    return Array.from(counts, ([id, count]) => ({ id, count, label: categoryLabel(id) })).sort(
+      (a, b) => a.label.localeCompare(b.label),
+    );
+  }, [videos, categoryLabel]);
+
+  const tabCounts = useMemo(() => {
+    const counts = {} as Record<Tab, number>;
+    for (const tab of TAB_ORDER) {
+      const statuses = TAB_STATUSES[tab];
+      counts[tab] = statuses
+        ? searched.filter((v) => statuses.includes(v.status)).length
+        : searched.length;
     }
-    return map;
-  }, [queueEntries]);
+    return counts;
+  }, [searched]);
 
-  const filtered = useMemo(() => {
-    const all = jobs ?? [];
-    return categoryFilter ? all.filter((j) => j.category === categoryFilter) : all;
-  }, [jobs, categoryFilter]);
+  const activeList = useMemo(() => {
+    const statuses = TAB_STATUSES[activeTab];
+    const list = statuses ? searched.filter((v) => statuses.includes(v.status)) : [...searched];
+    const byDate = (v: LibraryVideo) => new Date(v.job.updatedAt).getTime();
+    const compare: Record<Sort, (a: LibraryVideo, b: LibraryVideo) => number> = {
+      newest: (a, b) => byDate(b) - byDate(a),
+      oldest: (a, b) => byDate(a) - byDate(b),
+      longest: (a, b) => (b.job.durationSeconds ?? -1) - (a.job.durationSeconds ?? -1),
+      title: (a, b) => a.job.title.localeCompare(b.job.title),
+    };
+    return list.sort(compare[sort]);
+  }, [searched, activeTab, sort]);
 
-  const listos = filtered.filter((j) => j.stage === "packaged");
-  const cola = filtered.filter((j) => !j.isTerminal);
-  const publicados = filtered.filter((j) => j.stage === "published");
-  const fallidos = filtered.filter((j) => j.stage === "failed");
-
-  const tabs: { id: Tab; label: string; count: number }[] = [
-    { id: "listos", label: t("tabs.listos"), count: listos.length },
-    { id: "cola", label: t("tabs.cola"), count: cola.length },
-    { id: "publicados", label: t("tabs.publicados"), count: publicados.length },
-    { id: "fallidos", label: t("tabs.fallidos"), count: fallidos.length },
-  ];
-
-  const activeList = { listos, cola, publicados, fallidos }[activeTab];
   const totalPages = Math.max(1, Math.ceil(activeList.length / PAGE_SIZE));
-  const pageStart = (page - 1) * PAGE_SIZE;
-  const showPagination = activeList.length > PAGE_SIZE;
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = activeList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const filtersActive = category !== "" || query.trim() !== "";
 
-  function selectTab(tab: Tab) {
-    setActiveTab(tab);
-    setPage(1);
-  }
+  const resetPage =
+    <T,>(setter: (value: T) => void) =>
+    (value: T) => {
+      setter(value);
+      setPage(1);
+    };
+  const selectTab = resetPage(setActiveTab);
+  const selectCategory = resetPage(setCategory);
+  const changeQuery = resetPage(setQuery);
 
-  function selectCategory(value: string) {
-    setCategoryFilter(value);
+  function clearFilters() {
+    setCategory("");
+    setQuery("");
     setPage(1);
   }
 
   return (
-    <>
-      <div className="mx-auto max-w-[1280px] px-10 pt-23 pb-4.5">
-        <h1 className="font-nb-sans text-[clamp(20px,2.4vw,26px)] font-extrabold tracking-[-0.02em] whitespace-nowrap text-nb-ink">
-          {t("title")}
-        </h1>
-      </div>
+    <div className="mx-auto max-w-[1280px] px-4 pt-22 pb-25 sm:px-10">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-nb-sans text-[clamp(22px,2.6vw,30px)] font-extrabold tracking-[-0.02em] text-nb-ink">
+            {t("title")}
+          </h1>
+          <p className="mt-1 max-w-[560px] text-[13.5px] text-nb-mute">{t("subtitle")}</p>
+        </div>
+        <Link
+          href="/crear-video"
+          className="nb-btn-pill inline-flex items-center gap-1.5 px-4.5 py-2.5 text-[13px] font-semibold"
+        >
+          <Plus className="size-4" />
+          {t("createVideo")}
+        </Link>
+      </header>
 
-      <div className="relative z-5 mx-auto flex max-w-[1100px] flex-wrap items-end gap-4.5 px-10">
-        <div className="flex min-w-[190px] flex-col gap-1.5">
-          <label
-            htmlFor="filterCategoria"
-            className="text-[11px] font-semibold tracking-[0.05em] text-nb-mute uppercase"
-          >
-            {t("filters.categoryLabel")}
-          </label>
+      {/* Toolbar: búsqueda + orden */}
+      <div className="mt-7 flex flex-wrap items-center gap-3">
+        <div className="relative min-w-[240px] flex-1">
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-nb-mute" />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => changeQuery(e.target.value)}
+            placeholder={t("filters.searchPlaceholder")}
+            aria-label={t("filters.searchPlaceholder")}
+            className="w-full rounded-full border border-nb-line bg-nb-surface py-2.5 pr-10 pl-10 text-[13.5px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark focus:ring-3 focus:ring-nb-green/30"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => changeQuery("")}
+              aria-label={t("filters.clearFilters")}
+              className="absolute top-1/2 right-3 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-nb-mute hover:bg-nb-bg-2 hover:text-nb-ink"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
+        </div>
+        <label className="flex items-center gap-2 rounded-full border border-nb-line bg-nb-surface py-1 pr-1.5 pl-3.5 text-[12.5px] font-semibold text-nb-mute">
+          <SlidersHorizontal className="size-3.5" />
+          <span className="sr-only sm:not-sr-only">{t("filters.sortLabel")}</span>
           <select
-            id="filterCategoria"
-            value={categoryFilter}
-            onChange={(e) => selectCategory(e.target.value)}
-            className="rounded-xl border border-nb-line bg-nb-surface px-3.5 py-2.5 text-[13.5px] text-nb-ink outline-none focus:border-nb-green focus:ring-3 focus:ring-nb-green/25"
+            value={sort}
+            onChange={(e) => setSort(e.target.value as Sort)}
+            className="cursor-pointer rounded-full bg-transparent py-1.5 pr-1 text-[13px] text-nb-ink outline-none"
           >
-            <option value="">{t("filters.allCategories")}</option>
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {SORTS.map((s) => (
+              <option key={s} value={s}>
+                {t(`filters.sort.${s}`)}
               </option>
             ))}
           </select>
+        </label>
+      </div>
+
+      {/* Categorías */}
+      {categories.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="mr-1 text-[11px] font-semibold tracking-[0.05em] text-nb-mute uppercase">
+            {t("filters.categoryLabel")}
+          </span>
+          <CategoryChip
+            label={t("filters.allCategories")}
+            count={videos.length}
+            active={category === ""}
+            onClick={() => selectCategory("")}
+          />
+          {categories.map((c) => (
+            <CategoryChip
+              key={c.id}
+              label={c.label}
+              count={c.count}
+              active={category === c.id}
+              onClick={() => selectCategory(category === c.id ? "" : c.id)}
+            />
+          ))}
         </div>
-        <button
-          type="button"
-          onClick={() => selectCategory("")}
-          className="rounded-full border border-nb-line px-4 py-2.5 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink"
+      )}
+
+      {/* Pestañas de estado */}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-nb-line">
+        <div
+          role="tablist"
+          className="-mb-px flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {t("filters.clearFilters")}
-        </button>
-      </div>
-
-      <div className="relative z-5 mx-auto mt-6 flex max-w-[1100px] flex-wrap gap-2 px-10">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => selectTab(tab.id)}
-            className={cn(
-              "rounded-full border border-nb-line bg-nb-surface px-4.5 py-2.5 text-[13.5px] font-semibold text-nb-mute transition-colors",
-              activeTab === tab.id && "border-nb-ink bg-nb-ink text-[#fafaf7]",
-            )}
-          >
-            {tab.label} <span className="ml-0.5 opacity-75">· {tab.count}</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="relative z-5 mx-auto mt-6.5 max-w-[1100px] px-10 pb-25">
-        {activeTab === "listos" &&
-          (listos.length ? (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-              {listos.slice(pageStart, pageStart + PAGE_SIZE).map((job) => (
-                <VideoCard key={job.jobId} job={job} mode="ready" />
-              ))}
-            </div>
-          ) : (
-            <EmptyState />
+          {TAB_ORDER.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab}
+              onClick={() => selectTab(tab)}
+              className={cn(
+                "flex shrink-0 items-center gap-2 border-b-2 border-transparent px-3.5 py-2.5 text-[13.5px] font-semibold whitespace-nowrap text-nb-mute transition-colors hover:text-nb-ink",
+                activeTab === tab && "border-nb-ink text-nb-ink",
+              )}
+            >
+              {t(`tabs.${tab}`)}
+              <span
+                className={cn(
+                  "min-w-6 rounded-full px-1.5 py-0.5 text-center text-[11px] tabular-nums",
+                  activeTab === tab ? "bg-nb-ink text-[#fafaf7]" : "bg-nb-bg-2 text-nb-ink-soft",
+                  tab === "pendientes" &&
+                    tabCounts[tab] > 0 &&
+                    activeTab !== tab &&
+                    "bg-nb-accent-gold text-nb-ink",
+                )}
+              >
+                {isLoading ? "–" : tabCounts[tab]}
+              </span>
+            </button>
           ))}
-
-        {activeTab === "publicados" &&
-          (publicados.length ? (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-              {publicados.slice(pageStart, pageStart + PAGE_SIZE).map((job) => (
-                <VideoCard
-                  key={job.jobId}
-                  job={job}
-                  mode="published"
-                  publishResults={publishResultsByJobId.get(job.jobId) ?? []}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState />
-          ))}
-
-        {activeTab === "cola" &&
-          (cola.length ? (
-            <div className="flex flex-col gap-2.5">
-              {cola.slice(pageStart, pageStart + PAGE_SIZE).map((job) => (
-                <SimpleRow
-                  key={job.jobId}
-                  icon={<ClockIcon />}
-                  job={job}
-                  meta={t(`stages.${STAGE_LABEL_KEY[job.stage]}`)}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState />
-          ))}
-
-        {activeTab === "fallidos" &&
-          (fallidos.length ? (
-            <div className="flex flex-col gap-2.5">
-              {fallidos.slice(pageStart, pageStart + PAGE_SIZE).map((job) => (
-                <SimpleRow
-                  key={job.jobId}
-                  icon={<CrossIcon />}
-                  job={job}
-                  meta={job.category}
-                  retry
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState />
-          ))}
-
-        {showPagination && (
-          <div className="mt-6 flex items-center justify-center gap-4">
+        </div>
+        <div className="flex items-center gap-3 pb-2 text-[12.5px] text-nb-mute">
+          {!isLoading && <span>{t("resultsCount", { count: activeList.length })}</span>}
+          {filtersActive && (
             <button
               type="button"
-              disabled={page === 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={clearFilters}
+              className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold text-nb-ink-soft hover:bg-nb-bg-2 hover:text-nb-ink"
+            >
+              <X className="size-3.5" />
+              {t("filters.clearFilters")}
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-6">
+        {isLoading ? (
+          <CardGrid>
+            {Array.from({ length: 8 }, (_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: skeletons estáticos sin identidad
+              <SkeletonCard key={i} />
+            ))}
+          </CardGrid>
+        ) : isError ? (
+          <EmptyState message={t("loadError")} />
+        ) : videos.length === 0 ? (
+          <EmptyState
+            message={t("emptyLibrary")}
+            action={
+              <Link
+                href="/crear-video"
+                className="nb-btn-pill px-4.5 py-2.5 text-[13px] font-semibold"
+              >
+                {t("createVideo")}
+              </Link>
+            }
+          />
+        ) : pageItems.length === 0 ? (
+          <EmptyState
+            message={t("emptyState")}
+            action={
+              filtersActive && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="nb-btn-secondary rounded-full px-4.5 py-2.5 text-[13px] font-semibold"
+                >
+                  {t("filters.clearFilters")}
+                </button>
+              )
+            }
+          />
+        ) : (
+          <CardGrid>
+            {pageItems.map((video) => (
+              <VideoCard key={video.job.jobId} video={video} />
+            ))}
+          </CardGrid>
+        )}
+
+        {totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <button
+              type="button"
+              disabled={currentPage === 1}
+              onClick={() => setPage(currentPage - 1)}
               className="rounded-full border border-nb-line px-4 py-2 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink disabled:pointer-events-none disabled:opacity-40"
             >
               {t("pagination.previous")}
             </button>
             <span className="text-[12.5px] text-nb-mute">
-              {t("pagination.pageOf", { page, total: totalPages })}
+              {t("pagination.pageOf", { page: currentPage, total: totalPages })}
             </span>
             <button
               type="button"
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              onClick={() => setPage(currentPage + 1)}
               className="rounded-full border border-nb-line px-4 py-2 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink disabled:pointer-events-none disabled:opacity-40"
             >
               {t("pagination.next")}
@@ -258,50 +337,67 @@ export function BibliotecaView() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
-function EmptyState() {
-  const t = useTranslations("library");
-  return <div className="py-7.5 text-center text-[13.5px] text-nb-mute">{t("emptyState")}</div>;
+function CardGrid({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,272px),1fr))] gap-5">
+      {children}
+    </div>
+  );
 }
 
-function SimpleRow({
-  icon,
-  job,
-  meta,
-  retry,
+function CategoryChip({
+  label,
+  count,
+  active,
+  onClick,
 }: {
-  icon: React.ReactNode;
-  job: JobListItem;
-  meta: string;
-  retry?: boolean;
+  label: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
 }) {
-  const t = useTranslations("library");
   return (
-    <div className="flex items-center gap-3.5 rounded-2xl bg-nb-surface px-4 py-3.5 shadow-[0_10px_22px_-14px_rgba(40,30,10,0.2)]">
-      <div className="flex size-8.5 shrink-0 items-center justify-center rounded-[10px] bg-nb-bg-2 text-nb-ink-soft">
-        {icon}
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="text-sm font-semibold text-nb-ink">{job.title}</div>
-        <div className="mt-0.5 text-xs text-nb-mute">{meta}</div>
-      </div>
-      {retry ? (
-        <button
-          type="button"
-          disabled
-          title={t("comingSoon")}
-          className="nb-btn-secondary ml-auto cursor-not-allowed rounded-full px-3.5 py-2 text-xs font-semibold opacity-50"
-        >
-          {t("retryButton")}
-        </button>
-      ) : (
-        <span className="ml-auto shrink-0 text-xs whitespace-nowrap text-nb-mute">
-          {new Date(job.updatedAt).toLocaleTimeString()}
-        </span>
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      title={label}
+      className={cn(
+        "inline-flex max-w-[260px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold transition-colors",
+        active
+          ? "border-nb-ink bg-nb-ink text-[#fafaf7]"
+          : "border-nb-line bg-nb-surface text-nb-ink-soft hover:border-nb-ink/40 hover:text-nb-ink",
       )}
+    >
+      <span className="truncate">{label}</span>
+      <span className={cn("tabular-nums", active ? "opacity-70" : "text-nb-mute")}>{count}</span>
+    </button>
+  );
+}
+
+function SkeletonCard() {
+  return (
+    <div className="overflow-hidden rounded-[20px] bg-nb-surface">
+      <div className="aspect-video w-full animate-pulse bg-nb-bg-2" />
+      <div className="space-y-2.5 px-4.5 py-4">
+        <div className="h-2.5 w-1/3 animate-pulse rounded-full bg-nb-bg-2" />
+        <div className="h-3.5 w-4/5 animate-pulse rounded-full bg-nb-bg-2" />
+        <div className="h-8 w-full animate-pulse rounded-full bg-nb-bg-2" />
+      </div>
+    </div>
+  );
+}
+
+function EmptyState({ message, action }: { message: string; action?: React.ReactNode }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-4 rounded-[20px] border border-dashed border-nb-line px-6 py-16 text-center">
+      <Search className="size-6 text-nb-mute" />
+      <p className="text-[13.5px] text-nb-mute">{message}</p>
+      {action}
     </div>
   );
 }

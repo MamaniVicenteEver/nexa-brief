@@ -3,26 +3,38 @@ import {
   BelowHero,
   CtaSection,
   Hero,
-  PurposeSection,
+  HowItWorksSection,
+  LiveNumbersSection,
   TechMarquee,
-  TemplatesRow,
+  TemplatesCarousel,
 } from "@/features/home";
+import { getPublicStats } from "@/features/stats";
+import { redirect } from "@/i18n/navigation";
+import { auth } from "../../../../auth";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  // La landing es para quien todavía no tiene acceso: con sesión, directo al panel.
+  const session = await auth();
+  if (session) redirect({ href: "/dashboard", locale });
+
+  // Una sola lectura (cacheada 60 s) que alimenta todas las secciones.
+  const stats = await getPublicStats();
+
   return (
     <>
       <div className="nb-hero-gradient-bg">
         <Hero />
-        <BelowHero />
+        <BelowHero stats={stats} />
         <TechMarquee />
       </div>
+      <HowItWorksSection stats={stats} />
+      <TemplatesCarousel />
       <div className="nb-footer-gradient-bg">
-        <TemplatesRow />
-        <PurposeSection />
-        <CtaSection />
+        <LiveNumbersSection stats={stats} />
+        <CtaSection stats={stats} />
       </div>
     </>
   );

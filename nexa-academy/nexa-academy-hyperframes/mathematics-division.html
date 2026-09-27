@@ -1,0 +1,229 @@
+<!doctype html>
+<html
+  lang="es"
+  data-resolution="landscape"
+  data-composition-variables='[
+    {"id":"name","type":"string","label":"Nombre de salida","default":"mathematics-division-60s"},
+    {"id":"subject","type":"string","label":"Materia","default":"Matemática"},
+    {"id":"lessonTitle","type":"string","label":"Título","default":"División paso a paso"},
+    {"id":"lessonDescription","type":"string","label":"Descripción","default":"Comprender una división, resolver un ejemplo y comprobar el resultado."},
+    {"id":"caption1","type":"string","label":"Subtítulo 1","default":"Hoy aprenderemos a dividir paso a paso."},
+    {"id":"caption2","type":"string","label":"Subtítulo 2","default":"Dividir significa repartir una cantidad en grupos iguales."},
+    {"id":"caption3","type":"string","label":"Subtítulo 3","default":"En una división tenemos el dividendo, que es la cantidad total,"},
+    {"id":"caption4","type":"string","label":"Subtítulo 4","default":"el divisor, que indica en cuántos grupos repartimos,"},
+    {"id":"caption5","type":"string","label":"Subtítulo 5","default":"y el cociente, que es el resultado."},
+    {"id":"caption6","type":"string","label":"Subtítulo 6","default":"Observa este ejemplo, 48 dividido entre 6."},
+    {"id":"caption7","type":"string","label":"Subtítulo 7","default":"Preguntamos cuántas veces cabe 6 en 48."},
+    {"id":"caption8","type":"string","label":"Subtítulo 8","default":"48. Como 6 por 8 es 48, el cociente es 8 y no queda residuo."},
+    {"id":"caption9","type":"string","label":"Subtítulo 9","default":"Podemos comprobarlo multiplicando divisor por cociente. 6 por 8 es 48."},
+    {"id":"caption10","type":"string","label":"Subtítulo 10","default":"Ahora resuelve 35 dividido entre 5."},
+    {"id":"caption11","type":"string","label":"Subtítulo 11","default":"5 cabe 7 veces en 35. Por eso el resultado es 7."},
+    {"id":"caption12","type":"string","label":"Subtítulo 12","default":"Recuerda, divide, multiplica y comprueba tu respuesta."},
+    {"id":"readTitle1","type":"string","label":"Concepto","default":"DIVISIÓN"},
+    {"id":"readTranslation1","type":"string","label":"Concepto breve","default":"Repartir en grupos iguales"},
+    {"id":"readNote1","type":"string","label":"Nota del concepto","default":"Comprende el dividendo, el divisor y el cociente."},
+    {"id":"readTitle2","type":"string","label":"Ejemplo","default":"48 ÷ 6"},
+    {"id":"readTranslation2","type":"string","label":"Nota del ejemplo","default":"Observa cómo encontramos el cociente."},
+    {"id":"readNote2","type":"string","label":"Pregunta del ejemplo","default":"¿Cuántas veces cabe 6 en 48?"},
+    {"id":"readTitle3","type":"string","label":"Resolución","default":"48 ÷ 6 = 8"},
+    {"id":"readTranslation3","type":"string","label":"Comprobación","default":"6 × 8 = 48"},
+    {"id":"readNote3","type":"string","label":"Nota de resolución","default":"No queda residuo: la división es exacta."},
+    {"id":"readTitle4","type":"string","label":"Práctica","default":"35 ÷ 5 = 7"},
+    {"id":"readTranslation4","type":"string","label":"Instrucción","default":"Ahora prueba tú"},
+    {"id":"readNote4","type":"string","label":"Nota de práctica","default":"Divide, multiplica y comprueba tu respuesta."},
+    {"id":"audioSrc","type":"string","label":"Audio","default":"assets/mathematics-division-60s.mp3"},
+    {"id":"accent","type":"color","label":"Acento","default":"#57c7ad"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Nexa Academy Mathematics</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ink: #14232c;
+        --paper: #f2f6f4;
+        --muted: #53656c;
+        --line: rgba(20, 35, 44, 0.15);
+        --accent: #57c7ad;
+        --warm: #f3a85b;
+        --font: Inter, "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--paper); }
+      body { color: var(--ink); font-family: var(--font); }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--paper); }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .base { position: absolute; inset: 0; background: var(--paper); }
+      .glow { position: absolute; border-radius: 999px; filter: blur(2px); opacity: 0.55; }
+      .glow-one { width: 720px; height: 720px; right: -210px; top: -250px; background: var(--accent); }
+      .glow-two { width: 440px; height: 440px; left: -170px; bottom: -210px; background: var(--warm); opacity: 0.28; }
+      .grid { position: absolute; inset: 0; opacity: 0.28; background-image: linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px); background-size: 96px 96px; }
+      .topbar { position: absolute; left: 100px; right: 100px; top: 72px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--line); padding-bottom: 22px; }
+      .brand { display: flex; align-items: center; gap: 18px; font-size: 25px; font-weight: 800; letter-spacing: 0.02em; }
+      .brand-mark { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); border: 3px solid var(--ink); }
+      .meta { color: var(--muted); font-size: 20px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+      .content { position: absolute; left: 100px; top: 190px; width: 1080px; }
+      .eyebrow { margin: 0 0 24px; color: var(--muted); font-size: 23px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+      .title { margin: 0; max-width: 1050px; font-size: 104px; line-height: 0.98; letter-spacing: -0.055em; font-weight: 850; }
+      .description { margin: 38px 0 0; max-width: 800px; font-size: 34px; line-height: 1.24; color: #344b52; }
+      .lesson-card { position: absolute; right: 100px; top: 220px; width: 470px; min-height: 470px; padding: 42px; border: 4px solid var(--ink); background: rgba(255, 255, 255, 0.62); box-shadow: 20px 20px 0 var(--ink); }
+      .card-kicker { margin: 0 0 120px; font-size: 21px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; }
+      .card-number { margin: 0; font-size: 154px; line-height: 0.8; font-weight: 850; letter-spacing: -0.08em; }
+      .card-caption { margin: 34px 0 0; font-size: 27px; line-height: 1.1; font-weight: 750; }
+      .reading-card { position: absolute; left: 220px; right: 220px; top: 230px; min-height: 490px; padding: 62px 84px 54px; border: 4px solid var(--ink); background: rgba(255, 255, 255, 0.9); box-shadow: 18px 18px 0 var(--ink); text-align: center; }
+      .reading-label { margin: 0 0 32px; color: var(--muted); font-size: 21px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+      .reading-title { margin: 0; font-size: 112px; line-height: 0.96; letter-spacing: -0.055em; font-weight: 850; }
+      .reading-translation { margin: 28px 0 0; color: #217b6d; font-size: 46px; line-height: 1.05; font-weight: 800; }
+      .reading-note { margin: 28px auto 0; max-width: 900px; color: #344b52; font-size: 29px; line-height: 1.2; }
+      .caption-band { position: absolute; left: 100px; right: 100px; bottom: 110px; min-height: 126px; padding: 27px 38px 24px; border-left: 14px solid var(--accent); background: rgba(20, 35, 44, 0.95); color: #f5f7f2; box-shadow: 14px 14px 0 rgba(20, 35, 44, 0.16); }
+      .caption-label { display: block; margin-bottom: 8px; color: var(--accent); font-size: 18px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+      .caption-text { display: block; max-width: 1560px; font-size: 32px; line-height: 1.14; font-weight: 680; }
+      .read-line { position: absolute; left: 0; bottom: 0; height: 8px; width: 0; background: var(--warm); }
+      .close-panel { position: absolute; left: 100px; right: 100px; top: 265px; display: flex; align-items: end; justify-content: space-between; }
+      .close-title { width: 940px; margin: 0; font-size: 116px; line-height: 0.9; letter-spacing: -0.06em; }
+      .close-note { width: 430px; margin: 0 0 12px; color: #344b52; font-size: 34px; line-height: 1.18; }
+      .rule { position: absolute; left: 100px; right: 100px; top: 210px; height: 6px; background: var(--ink); transform-origin: left center; }
+      .footer { position: absolute; left: 100px; right: 100px; bottom: 46px; display: flex; justify-content: space-between; color: var(--muted); font-size: 18px; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
+      .audio-marker { width: 160px; height: 14px; display: flex; gap: 7px; align-items: end; }
+      .audio-marker span { display: block; width: 8px; background: var(--ink); border-radius: 6px; }
+      .audio-marker span:nth-child(1) { height: 22px; }
+      .audio-marker span:nth-child(2) { height: 42px; }
+      .audio-marker span:nth-child(3) { height: 30px; }
+      .audio-marker span:nth-child(4) { height: 52px; }
+      .audio-marker span:nth-child(5) { height: 24px; }
+      .caption { opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="academy-mathematics-division" data-start="0" data-duration="60" data-width="1920" data-height="1080" data-fps="30">
+      <div id="base" class="base clip" data-start="0" data-duration="60" data-track-index="0">
+        <div class="glow glow-one" data-layout-ignore="true"></div>
+        <div class="glow glow-two" data-layout-ignore="true"></div>
+        <div class="grid"></div>
+      </div>
+
+      <div id="intro" class="scene clip" data-start="0" data-duration="1.56" data-track-index="1">
+        <div class="topbar">
+          <div class="brand"><span class="brand-mark"></span><span>Nexa Academy</span></div>
+          <div id="subject" class="meta" data-var-text="subject">Matemática</div>
+        </div>
+        <div class="content">
+          <p class="eyebrow">Lección de operaciones</p>
+          <h1 id="title" class="title" data-var-text="lessonTitle">División paso a paso</h1>
+          <p id="description" class="description" data-var-text="lessonDescription">Comprender una división, resolver un ejemplo y comprobar el resultado.</p>
+        </div>
+        <div class="lesson-card">
+          <p class="card-kicker">Ruta de aprendizaje</p>
+          <p class="card-number">02</p>
+          <p class="card-caption">Una operación. Un método claro.</p>
+        </div>
+      </div>
+
+      <div id="middle" class="scene clip" data-start="1.56" data-duration="52.304" data-track-index="2">
+        <div class="topbar">
+          <div class="brand"><span class="brand-mark"></span><span>Nexa Academy</span></div>
+          <div class="meta">Resolución guiada</div>
+        </div>
+      </div>
+
+      <div id="reading-1" class="reading-card clip" data-start="1.56" data-duration="17.94" data-track-index="8">
+        <p class="reading-label">Concepto que se está explicando</p>
+        <p class="reading-title" data-var-text="readTitle1">DIVISIÓN</p>
+        <p class="reading-translation" data-var-text="readTranslation1">Repartir en grupos iguales</p>
+        <p class="reading-note" data-var-text="readNote1">Comprende el dividendo, el divisor y el cociente.</p>
+      </div>
+      <div id="reading-2" class="reading-card clip" data-start="19.5" data-duration="11.48" data-track-index="8">
+        <p class="reading-label">Ejemplo guiado</p>
+        <p class="reading-title" data-var-text="readTitle2">48 ÷ 6</p>
+        <p class="reading-translation" data-var-text="readTranslation2">Observa cómo encontramos el cociente.</p>
+        <p class="reading-note" data-var-text="readNote2">¿Cuántas veces cabe 6 en 48?</p>
+      </div>
+      <div id="reading-3" class="reading-card clip" data-start="30.98" data-duration="9.14" data-track-index="8">
+        <p class="reading-label">Resolución y comprobación</p>
+        <p class="reading-title" data-var-text="readTitle3">48 ÷ 6 = 8</p>
+        <p class="reading-translation" data-var-text="readTranslation3">6 × 8 = 48</p>
+        <p class="reading-note" data-var-text="readNote3">No queda residuo: la división es exacta.</p>
+      </div>
+      <div id="reading-4" class="reading-card clip" data-start="40.12" data-duration="13.744" data-track-index="8">
+        <p class="reading-label">Práctica</p>
+        <p class="reading-title" data-var-text="readTitle4">35 ÷ 5 = 7</p>
+        <p class="reading-translation" data-var-text="readTranslation4">Ahora prueba tú</p>
+        <p class="reading-note" data-var-text="readNote4">Divide, multiplica y comprueba tu respuesta.</p>
+      </div>
+
+      <div id="caption-1" class="caption caption-band clip" data-start="0" data-duration="3.1" data-track-index="3"><span class="caption-label">Ahora</span><span class="caption-text" data-var-text="caption1">Hoy aprenderemos a dividir paso a paso.</span><span id="read-line-1" class="read-line"></span></div>
+      <div id="caption-2" class="caption caption-band clip" data-start="3.58" data-duration="4.36" data-track-index="3"><span class="caption-label">Concepto</span><span class="caption-text" data-var-text="caption2">Dividir significa repartir una cantidad en grupos iguales.</span><span id="read-line-2" class="read-line"></span></div>
+      <div id="caption-3" class="caption caption-band clip" data-start="7.96" data-duration="4.14" data-track-index="3"><span class="caption-label">Partes</span><span class="caption-text" data-var-text="caption3">En una división tenemos el dividendo, que es la cantidad total,</span><span id="read-line-3" class="read-line"></span></div>
+      <div id="caption-4" class="caption caption-band clip" data-start="12.66" data-duration="3.62" data-track-index="3"><span class="caption-label">Partes</span><span class="caption-text" data-var-text="caption4">el divisor, que indica en cuántos grupos repartimos,</span><span id="read-line-4" class="read-line"></span></div>
+      <div id="caption-5" class="caption caption-band clip" data-start="16.48" data-duration="2.42" data-track-index="3"><span class="caption-label">Partes</span><span class="caption-text" data-var-text="caption5">y el cociente, que es el resultado.</span><span id="read-line-5" class="read-line"></span></div>
+      <div id="caption-6" class="caption caption-band clip" data-start="19.5" data-duration="4.02" data-track-index="3"><span class="caption-label">Ejemplo</span><span class="caption-text" data-var-text="caption6">Observa este ejemplo, 48 dividido entre 6.</span><span id="read-line-6" class="read-line"></span></div>
+      <div id="caption-7" class="caption caption-band clip" data-start="24.28" data-duration="2.98" data-track-index="3"><span class="caption-label">Pregunta</span><span class="caption-text" data-var-text="caption7">Preguntamos cuántas veces cabe 6 en 48.</span><span id="read-line-7" class="read-line"></span></div>
+      <div id="caption-8" class="caption caption-band clip" data-start="27.26" data-duration="6.36" data-track-index="3"><span class="caption-label">Resolución</span><span class="caption-text" data-var-text="caption8">48. Como 6 por 8 es 48, el cociente es 8 y no queda residuo.</span><span id="read-line-8" class="read-line"></span></div>
+      <div id="caption-9" class="caption caption-band clip" data-start="33.96" data-duration="5.66" data-track-index="3"><span class="caption-label">Comprobación</span><span class="caption-text" data-var-text="caption9">Podemos comprobarlo multiplicando divisor por cociente. 6 por 8 es 48.</span><span id="read-line-9" class="read-line"></span></div>
+      <div id="caption-10" class="caption caption-band clip" data-start="40.12" data-duration="3.46" data-track-index="3"><span class="caption-label">Práctica</span><span class="caption-text" data-var-text="caption10">Ahora resuelve 35 dividido entre 5.</span><span id="read-line-10" class="read-line"></span></div>
+      <div id="caption-11" class="caption caption-band clip" data-start="43.94" data-duration="5.02" data-track-index="3"><span class="caption-label">Resultado</span><span class="caption-text" data-var-text="caption11">5 cabe 7 veces en 35. Por eso el resultado es 7.</span><span id="read-line-11" class="read-line"></span></div>
+      <div id="caption-12" class="caption caption-band clip" data-start="49.7" data-duration="3.58" data-track-index="3"><span class="caption-label">Cierre</span><span class="caption-text" data-var-text="caption12">Recuerda, divide, multiplica y comprueba tu respuesta.</span><span id="read-line-12" class="read-line"></span></div>
+
+      <div id="outro" class="scene clip" data-start="53.864" data-duration="6.136" data-track-index="4">
+        <div class="rule"></div>
+        <div class="close-panel">
+          <h2 class="close-title">Piensa.<br />Resuelve.</h2>
+          <p class="close-note">Continúa con otra división y comprueba cada paso.</p>
+        </div>
+      </div>
+
+      <div id="footer" class="footer clip" data-start="0" data-duration="60" data-track-index="5">
+        <span>Matemática explicada con claridad</span>
+        <span class="audio-marker" aria-label="Narración activa"><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+
+      <audio id="narration" class="clip" src="assets/mathematics-division-60s.mp3" data-var-src="audioSrc" data-start="0" data-track-index="6" data-has-audio="true" data-volume="1" preload="auto"></audio>
+    </div>
+    <script>
+      const vars = window.__hyperframes.getVariables();
+      document.documentElement.style.setProperty("--accent", vars.accent);
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#intro .topbar", { y: -24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 0.05);
+      tl.fromTo("#intro .content", { x: -58, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 0.12);
+      tl.fromTo("#intro .lesson-card", { x: 70, rotation: 2, opacity: 0 }, { x: 0, rotation: 0, opacity: 1, duration: 0.55, ease: "back.out(1.2)" }, 0.2);
+      tl.to("#base .glow-one", { scale: 1.08, rotation: 8, duration: 60, ease: "sine.inOut" }, 0.2);
+      tl.fromTo("#middle .topbar", { y: -24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 1.7);
+      tl.fromTo("#reading-1", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.56);
+      tl.fromTo("#reading-2", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power3.out" }, 19.5);
+      tl.fromTo("#reading-3", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power3.out" }, 30.98);
+      tl.fromTo("#reading-4", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power3.out" }, 40.12);
+      tl.fromTo("#caption-1", { x: -35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power4.out" }, 0);
+      tl.fromTo("#caption-2", { x: 35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 3.58);
+      tl.fromTo("#caption-3", { x: -35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 7.96);
+      tl.fromTo("#caption-4", { x: 35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 12.66);
+      tl.fromTo("#caption-5", { x: -35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 16.48);
+      tl.fromTo("#caption-6", { x: 35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 19.5);
+      tl.fromTo("#caption-7", { x: -35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 24.28);
+      tl.fromTo("#caption-8", { x: 35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 27.26);
+      tl.fromTo("#caption-9", { x: -35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 33.96);
+      tl.fromTo("#caption-10", { x: 35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 40.12);
+      tl.fromTo("#caption-11", { x: -35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 43.94);
+      tl.fromTo("#caption-12", { x: 35, opacity: 0 }, { x: 0, opacity: 1, duration: 0.22, ease: "power3.out" }, 49.7);
+      tl.to("#read-line-1", { width: "100%", duration: 3.1, ease: "none" }, 0);
+      tl.to("#read-line-2", { width: "100%", duration: 4.36, ease: "none" }, 3.58);
+      tl.to("#read-line-3", { width: "100%", duration: 4.14, ease: "none" }, 7.96);
+      tl.to("#read-line-4", { width: "100%", duration: 3.62, ease: "none" }, 12.66);
+      tl.to("#read-line-5", { width: "100%", duration: 2.42, ease: "none" }, 16.48);
+      tl.to("#read-line-6", { width: "100%", duration: 4.02, ease: "none" }, 19.5);
+      tl.to("#read-line-7", { width: "100%", duration: 2.98, ease: "none" }, 24.28);
+      tl.to("#read-line-8", { width: "100%", duration: 6.36, ease: "none" }, 27.26);
+      tl.to("#read-line-9", { width: "100%", duration: 5.66, ease: "none" }, 33.96);
+      tl.to("#read-line-10", { width: "100%", duration: 3.46, ease: "none" }, 40.12);
+      tl.to("#read-line-11", { width: "100%", duration: 5.02, ease: "none" }, 43.94);
+      tl.to("#read-line-12", { width: "100%", duration: 3.58, ease: "none" }, 49.7);
+      tl.to("#middle .topbar", { opacity: 0, y: -24, duration: 0.3, ease: "power2.in" }, 53.4);
+      tl.fromTo("#outro .rule", { scaleX: 0 }, { scaleX: 1, duration: 0.58, ease: "expo.out" }, 54.02);
+      tl.fromTo("#outro .close-panel", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 54.22);
+      tl.fromTo("#footer", { opacity: 0 }, { opacity: 1, duration: 0.42, ease: "sine.out" }, 0.2);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["academy-mathematics-division"] = tl;
+    </script>
+  </body>
+</html>

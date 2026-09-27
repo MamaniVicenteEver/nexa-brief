@@ -1,0 +1,28 @@
+:root { --primary: #315a87; --secondary: #f2b84b; --tertiary: #e66b5b; --surface: #f5f1e8; --ink: #17263a; --muted: #5d6976; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--surface); }
+body { color: var(--ink); font-family: Arial, sans-serif; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.academy-background { position: absolute; inset: 0; background: linear-gradient(135deg, #f5f1e8, #e2e9f0); }
+.academy-background::after { position: absolute; inset: 0; opacity: 0.35; background-image: linear-gradient(rgba(23, 38, 58, 0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 38, 58, 0.14) 1px, transparent 1px); background-size: 78px 78px; content: ""; }
+.academy-header, .academy-footer { position: absolute; z-index: 4; right: 6%; left: 6%; display: flex; justify-content: space-between; letter-spacing: 0.14em; text-transform: uppercase; }
+.academy-header { top: 6%; padding-bottom: 18px; border-bottom: 1px solid rgba(23, 38, 58, 0.2); font-size: 17px; font-weight: 800; }
+.academy-meta, .academy-footer { color: var(--muted); font-size: 13px; font-weight: 700; }
+.academy-main { position: absolute; inset: 0; }
+.academy-intro { position: absolute; top: 18%; right: 9%; left: 9%; }
+.academy-eyebrow, .panel-label, .academy-caption span { color: var(--primary); font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+.academy-intro h1 { max-width: 1150px; margin: 22px 0 20px; font-size: clamp(70px, 8vw, 144px); line-height: 0.9; letter-spacing: -0.07em; }
+.academy-intro p { max-width: 900px; margin: 0; color: var(--muted); font-size: 31px; line-height: 1.2; }
+.lesson-panel { position: absolute; top: 18%; right: 8%; bottom: 17%; left: 8%; padding: 52px 58px; border: 2px solid rgba(23, 38, 58, 0.16); border-radius: 18px; background: rgba(255, 255, 255, 0.62); box-shadow: 0 24px 70px rgba(23, 38, 58, 0.14); }
+.word-row { display: flex; align-items: center; justify-content: center; gap: 17px; margin-top: 125px; }
+.word { display: grid; min-width: 128px; height: 95px; place-items: center; border-radius: 10px; color: white; font-size: 35px; font-weight: 800; box-shadow: 0 10px 0 rgba(23, 38, 58, 0.12); }
+.who { background: var(--primary); }.verb { background: #2e8071; }.idea { background: var(--tertiary); }.bridge { background: #8b6ab0; }
+.connector { color: var(--muted); font-size: 28px; font-weight: 800; }
+.sentence { margin-top: 55px; color: var(--primary); font-size: 64px; font-weight: 900; text-align: center; }
+.role-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 17px; margin: 28px 7% 0; color: var(--muted); font-size: 16px; text-align: center; }
+.academy-caption { position: absolute; right: 9%; bottom: 7%; left: 9%; padding: 17px 22px; border-left: 6px solid var(--secondary); background: rgba(255, 255, 255, 0.82); }
+.academy-caption strong { display: block; margin-top: 8px; font-size: 22px; }
+.academy-footer { bottom: 3.5%; }
+.academy-footer span:last-child { color: var(--tertiary); }
+[data-enter] { animation: academy-enter 0.8s cubic-bezier(0.2, 0, 0, 1) both; }
+@keyframes academy-enter { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }

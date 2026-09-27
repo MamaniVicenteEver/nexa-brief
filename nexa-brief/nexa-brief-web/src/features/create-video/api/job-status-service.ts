@@ -1,5 +1,12 @@
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
-import type { JobDetail, JobFile, JobStage, JobSummary } from "../types";
+import type {
+  JobDetail,
+  JobFile,
+  JobProgress,
+  JobProgressStatus,
+  JobStage,
+  JobSummary,
+} from "../types";
 
 interface JobFileDto {
   format: JobFile["format"];
@@ -15,6 +22,18 @@ interface JobSummaryDto {
   tiktok_hashtags: string[];
 }
 
+export interface JobProgressDto {
+  job_id: string;
+  status: JobProgressStatus;
+  step: string | null;
+  step_index: number;
+  step_count: number;
+  percent: number;
+  step_percent: number | null;
+  queue_position: number | null;
+  eta_seconds: number | null;
+}
+
 export interface JobDetailDto {
   job_id: string;
   category: string;
@@ -26,8 +45,23 @@ export interface JobDetailDto {
   created_at: string;
   updated_at: string;
   duration_seconds: number | null;
+  generation_seconds: number | null;
   files: JobFileDto[];
   summary: JobSummaryDto | null;
+  progress?: JobProgressDto | null;
+}
+
+export function mapJobProgress(dto: JobProgressDto): JobProgress {
+  return {
+    status: dto.status,
+    step: dto.step,
+    stepIndex: dto.step_index,
+    stepCount: dto.step_count,
+    percent: dto.percent,
+    stepPercent: dto.step_percent,
+    queuePosition: dto.queue_position,
+    etaSeconds: dto.eta_seconds,
+  };
 }
 
 function mapJobSummary(dto: JobSummaryDto): JobSummary {
@@ -52,8 +86,10 @@ export function mapJobDetail(dto: JobDetailDto): JobDetail {
     createdAt: dto.created_at,
     updatedAt: dto.updated_at,
     durationSeconds: dto.duration_seconds,
+    generationSeconds: dto.generation_seconds ?? null,
     files: dto.files.map((f) => ({ ...f, url: f.url ? resolveApiUrl(f.url) : null })),
     summary: dto.summary ? mapJobSummary(dto.summary) : null,
+    progress: dto.progress ? mapJobProgress(dto.progress) : null,
   };
 }
 

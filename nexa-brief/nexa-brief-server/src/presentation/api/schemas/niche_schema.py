@@ -18,3 +18,7 @@ class NicheResponse(BaseModel):
     # <engine>_adapter.supports_niche() da True (ver niches.py::_to_response()
     # y videos.py::_validate_recorder_engine_override, mismo cálculo).
     supported_engines: list[str]
+    # True en nichos de letras: el pipeline fuerza la duración real de la
+    # canción e ignora duration_mode=manual (ver pipeline.py) — el formulario
+    # lo usa para no ofrecer "Duración manual" donde no se va a respetar.
+    duration_locked_to_music: bool = False

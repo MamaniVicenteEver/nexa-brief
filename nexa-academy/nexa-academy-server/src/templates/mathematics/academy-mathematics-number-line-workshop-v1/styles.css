@@ -1,0 +1,29 @@
+:root { --primary: #295c8a; --secondary: #f5b84e; --tertiary: #e9505e; --surface: #f3eee3; --ink: #17263a; --muted: #56677a; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--surface); }
+body { color: var(--ink); font-family: Arial, sans-serif; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.academy-background { position: absolute; inset: 0; background: linear-gradient(135deg, #f3eee3, #dce7eb); }
+.academy-background::after { position: absolute; inset: 0; opacity: 0.35; background-image: linear-gradient(rgba(23, 38, 58, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 38, 58, 0.12) 1px, transparent 1px); background-size: 64px 64px; content: ""; }
+.academy-header, .academy-footer { position: absolute; z-index: 4; right: 6%; left: 6%; display: flex; justify-content: space-between; letter-spacing: 0.14em; text-transform: uppercase; }
+.academy-header { top: 6%; padding-bottom: 18px; border-bottom: 1px solid rgba(23, 38, 58, 0.22); font-size: 17px; font-weight: 800; }
+.academy-meta, .academy-footer { color: var(--muted); font-size: 13px; font-weight: 700; }
+.academy-main { position: absolute; inset: 0; }
+.academy-intro { position: absolute; top: 18%; right: 9%; left: 9%; }
+.academy-eyebrow, .panel-label, .academy-caption span { color: var(--primary); font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+.academy-intro h1 { max-width: 1150px; margin: 22px 0 20px; font-size: clamp(70px, 8vw, 144px); line-height: 0.9; letter-spacing: -0.07em; }
+.academy-intro p { max-width: 900px; margin: 0; color: var(--muted); font-size: 31px; line-height: 1.2; }
+.lesson-panel { position: absolute; top: 17%; right: 8%; bottom: 18%; left: 8%; padding: 54px 66px; border: 2px solid rgba(23, 38, 58, 0.16); border-radius: 18px; background: rgba(255, 255, 255, 0.58); box-shadow: 0 24px 70px rgba(23, 38, 58, 0.14); }
+.number-line { display: grid; grid-template-columns: repeat(7, 1fr); align-items: center; margin-top: 105px; padding: 0 30px; border-top: 8px solid var(--primary); }
+.number-line span { position: relative; padding-top: 24px; text-align: center; font-size: 29px; font-weight: 800; }
+.number-line span::before { position: absolute; top: -20px; left: 50%; width: 28px; height: 28px; border-radius: 50%; background: var(--secondary); content: ""; transform: translateX(-50%); }
+.jumps { display: flex; justify-content: center; gap: 160px; margin-top: 62px; }
+.jumps i { display: grid; width: 98px; height: 98px; place-items: center; border: 4px solid var(--tertiary); border-radius: 50%; color: var(--tertiary); font-size: 25px; font-style: normal; font-weight: 800; }
+.result { margin-top: 52px; color: var(--primary); font-size: 70px; font-weight: 900; text-align: center; }
+.reasoning { color: var(--muted); font-size: 23px; text-align: center; }
+.academy-caption { position: absolute; right: 9%; bottom: 8%; left: 9%; padding: 17px 22px; border-left: 6px solid var(--tertiary); background: rgba(255, 255, 255, 0.8); }
+.academy-caption strong { display: block; margin-top: 8px; font-size: 22px; }
+.academy-footer { bottom: 4%; }
+.academy-footer span:last-child { color: var(--tertiary); }
+[data-enter] { animation: academy-enter 0.8s cubic-bezier(0.2, 0, 0, 1) both; }
+@keyframes academy-enter { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }

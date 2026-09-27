@@ -1,0 +1,58 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Collage urbano de recortes de papel — cada palabra estalla en el muro como un flyer callejero (titular a tijera, sello stencil, etiqueta a mano o letra hueca transparente), con figuras recortadas en blanco y negro y cortes de plano al ritmo de la canción. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "bg": {},
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Stardos+Stencil:wght@400;700&family=Permanent+Marker&family=Courier+Prime:wght@400;700&display=swap",
+        "poster": "\"Anton\", sans-serif",
+        "condensed": "\"Bebas Neue\", sans-serif",
+        "stencil": "\"Stardos Stencil\", cursive",
+        "marker": "\"Permanent Marker\", cursive",
+        "caption": "\"Courier Prime\", monospace"
+      },
+      "palette": { "ink": "#17130F", "paper": "#E7DFC7", "paperWhite": "#F5EFDD", "red": "#B81F19" },
+      "figures": {
+        "items": [
+          "assets/figures/figure-01.png",
+          "assets/figures/figure-02.png",
+          "assets/figures/figure-03.png",
+          "assets/figures/figure-04.png",
+          "assets/figures/figure-05.png",
+          "assets/figures/figure-06.png",
+          "assets/figures/figure-07.png",
+          "assets/figures/figure-08.png"
+        ]
+      },
+      "intro": { "artist": "", "title": "", "sub": "", "feats": "" },
+      "outro": {
+        "leadSec": 8,
+        "songTitle": "",
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "debug": { "enabled": false },
+      "layout": {
+        "sceneWordsMin": 2,
+        "sceneWordsMax": 4,
+        "typeWeights": { "poster": 0.32, "stencil": 0.20, "marker": 0.16, "hollow": 0.32 },
+        "colorWeights": { "ink": 0.45, "red": 0.25, "paper": 0.30 },
+        "sideWeights": { "left": 0.5, "right": 0.5 },
+        "figureChance": 0.5,
+        "figurePositionWeights": { "left": 0.38, "right": 0.38, "center": 0.24 },
+        "figureScenesMin": 2,
+        "figureScenesMax": 3,
+        "captionChance": 0.45,
+        "rotMax": 7,
+        "clusterSpreadVw": 16,
+        "clusterSpreadVh": 9
+      },
+      "seed": 11
+    }
+  ]
+}

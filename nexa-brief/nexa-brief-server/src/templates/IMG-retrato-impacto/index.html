@@ -37,6 +37,78 @@
     user-select: none; pointer-events: none;
   }
   #eq { position: fixed; left: 0; bottom: 0; width: 100vw; z-index: 4; }
+
+  /* ── Recording UI ─────────────────────────────────────────────────────── */
+  #rec-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(10,10,10,0.85); border: 2px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s, border-color .15s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  #rec-btn:hover { transform: scale(1.1); border-color: rgba(255,60,60,0.7); }
+  #rec-btn svg { width: 18px; height: 18px; }
+  #rec-btn.recording { border-color: #ff3c3c; animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,60,60,.5)} 50%{box-shadow:0 0 0 8px rgba(255,60,60,0)} }
+
+  #rec-panel {
+    position: fixed; bottom: 84px; right: 24px; z-index: 9999;
+    width: 280px; background: rgba(10,10,12,0.96);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+    padding: 18px; backdrop-filter: blur(20px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    display: none; flex-direction: column; gap: 10px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  #rec-panel.open { display: flex; }
+  #rec-panel h3 {
+    color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    margin: 0 0 4px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .rec-engine {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 10px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+    transition: background .12s, border-color .12s;
+  }
+  .rec-engine:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+  .rec-engine.active { border-color: rgba(255,60,60,0.5); background: rgba(255,40,40,0.08); }
+  .rec-engine-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .rec-engine-info { flex: 1; min-width: 0; }
+  .rec-engine-name { color: #fff; font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .rec-engine-desc { color: rgba(255,255,255,0.45); font-size: 10px; line-height: 1.3; margin: 0; }
+  .rec-engine-badge {
+    font-size: 9px; padding: 2px 6px; border-radius: 4px;
+    font-weight: 700; letter-spacing: .05em; white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-fast { background: rgba(60,200,120,0.2); color: #3cc878; }
+  .badge-quality { background: rgba(255,160,60,0.2); color: #ffa03c; }
+  .badge-dev { background: rgba(100,140,255,0.2); color: #6488ff; }
+
+  #rec-go {
+    margin-top: 4px; padding: 11px; border-radius: 10px; border: none; cursor: pointer;
+    background: #e03030; color: #fff; font-size: 13px; font-weight: 700;
+    letter-spacing: .04em; transition: background .12s, opacity .12s;
+    font-family: inherit;
+  }
+  #rec-go:hover { background: #c52020; }
+  #rec-go:disabled { opacity: .35; cursor: not-allowed; }
+  #rec-status {
+    font-size: 10px; color: rgba(255,255,255,0.4); text-align: center;
+    min-height: 14px; font-family: inherit;
+  }
+  /* hide rec UI when url param ?headless=1 */
+  body.headless #rec-btn, body.headless #rec-panel { display: none !important; }
 </style>
 </head>
 <body>
@@ -49,6 +121,50 @@
   <canvas id="eq"></canvas>
   <audio id="audio" src="song.mp3" loop preload="auto"></audio>
 </div>
+<!-- ── Recording panel ────────────────────────────────────────────────── -->
+<button id="rec-btn" title="Motor de grabación (R)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" style="color:#fff">
+    <circle cx="12" cy="12" r="7" fill="rgba(255,60,60,0.85)" stroke="none"/>
+    <circle cx="12" cy="12" r="11" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none"/>
+  </svg>
+</button>
+
+<div id="rec-panel">
+  <h3>Motor de grabación</h3>
+
+  <div class="rec-engine" data-engine="remotion">
+    <div class="rec-engine-icon" style="background:rgba(100,60,255,0.15)">🎬</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Remotion</p>
+      <p class="rec-engine-desc">Mejor calidad, render más lento.</p>
+    </div>
+    <span class="rec-engine-badge badge-quality">CALIDAD</span>
+  </div>
+
+  <div class="rec-engine" data-engine="hyperframes">
+    <div class="rec-engine-icon" style="background:rgba(255,160,30,0.15)">⚡</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">HyperFrames</p>
+      <p class="rec-engine-desc">Rápido, nativo del pipeline Nexa.</p>
+    </div>
+    <span class="rec-engine-badge badge-fast">RÁPIDO</span>
+  </div>
+
+  <div class="rec-engine" data-engine="playwright">
+    <div class="rec-engine-icon" style="background:rgba(60,180,255,0.15)">🎭</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Playwright</p>
+      <p class="rec-engine-desc">Captura real del navegador.</p>
+    </div>
+    <span class="rec-engine-badge badge-dev">BROWSER</span>
+  </div>
+
+  <button id="rec-go" disabled>● Grabar</button>
+  <p id="rec-status"></p>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+
 <script type="module">
 /* ============ CONFIG — loaded at runtime from config.json, never hardcoded ============
    3 niveles de fallback (no afecta al pipeline, que siempre sirve un config.json
@@ -80,17 +196,32 @@ const DEFAULT_CONFIG = {
   "anchorPreference": "bottom"
 };
 
+let configAssetBase = "";
+
 async function loadConfig() {
   try {
     const r = await fetch("config.json");
-    if (r.ok) return await r.json();
+    if (r.ok) {
+      configAssetBase = "";
+      return await r.json();
+    }
   } catch (e) { /* file:// u otro bloqueo — probamos el siguiente nivel */ }
   try {
     const r = await fetch("assets/config.json");
-    if (r.ok) return await r.json();
+    if (r.ok) {
+      configAssetBase = "assets/";
+      return await r.json();
+    }
   } catch (e) { /* seguimos al fallback embebido */ }
   console.warn("[retrato-impacto] No se pudo cargar config.json ni assets/config.json (¿abierto por file://?) — usando DEFAULT_CONFIG embebido.");
   return DEFAULT_CONFIG;
+}
+
+function resolveConfigAsset(src) {
+  if (!src || /^(?:[a-z][a-z\d+.-]*:|\/)/i.test(src)) return src;
+  const normalized = src.replace(/^\.\//, "");
+  if (normalized.startsWith("assets/")) return normalized;
+  return `${configAssetBase}${normalized}`;
 }
 
 const CONFIG = await loadConfig();
@@ -101,7 +232,7 @@ const $ = id => doc.getElementById(id);
 const bgEl = $("bg"), tL = $("txtL"), tR = $("txtR"), eq = $("eq");
 doc.documentElement.style.setProperty("--bg", CONFIG.colors.bg);
 doc.documentElement.style.setProperty("--ink", CONFIG.colors.ink);
-bgEl.src = CONFIG.img.src;
+bgEl.src = resolveConfigAsset(CONFIG.img.src);
 
 /* ---- typography stack: same string drives both the CSS paint and the canvas
    measurement below — they must never diverge, or fitH/fitW/fitV compute sizes
@@ -203,7 +334,7 @@ function layout() {
   const blurEl = $("bgblur"), fillEl = $("bgfill");
   const regions = C.bgMode === "regions" ? (C.bgRegions || []) : [];
   blurEl.style.display = C.bgMode === "blur" ? "block" : "none";
-  if (C.bgMode === "blur" && !blurEl.getAttribute("src")) blurEl.src = C.img.src;
+  if (C.bgMode === "blur" && !blurEl.getAttribute("src")) blurEl.src = resolveConfigAsset(C.img.src);
   /* project a region rect to viewport px; sides on the image border extend to the viewport border */
   const proj = rg => {
     const [x0, y0, x1, y1] = rg.rect;
@@ -368,6 +499,89 @@ function draw() {
   requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);
+
+/* ── Recording UI logic ──────────────────────────────────────────────────── */
+(function initRecUI() {
+  if (new URLSearchParams(location.search).get("headless") === "1") {
+    document.body.classList.add("headless");
+    return;
+  }
+
+  const btn    = document.getElementById("rec-btn");
+  const panel  = document.getElementById("rec-panel");
+  const goBtn  = document.getElementById("rec-go");
+  const status = document.getElementById("rec-status");
+  let selectedEngine = null;
+  let recording = false;
+
+  /* toggle panel */
+  function togglePanel() { panel.classList.toggle("open"); }
+  btn.addEventListener("click", e => { e.stopPropagation(); togglePanel(); });
+  document.addEventListener("keydown", e => { if (e.key === "r" || e.key === "R") togglePanel(); });
+  document.addEventListener("click", e => {
+    if (!panel.contains(e.target) && e.target !== btn) panel.classList.remove("open");
+  });
+
+  /* engine selection */
+  document.querySelectorAll(".rec-engine").forEach(el => {
+    el.addEventListener("click", () => {
+      document.querySelectorAll(".rec-engine").forEach(e => e.classList.remove("active"));
+      el.classList.add("active");
+      selectedEngine = el.dataset.engine;
+      goBtn.disabled = false;
+      status.textContent = "";
+    });
+  });
+
+  /* trigger recording */
+  goBtn.addEventListener("click", async () => {
+    if (!selectedEngine || recording) return;
+    recording = true;
+    btn.classList.add("recording");
+    goBtn.disabled = true;
+    panel.classList.remove("open");
+    status.textContent = `Iniciando ${selectedEngine}…`;
+
+    const payload = {
+      engine:   selectedEngine,
+      template: "IMG-retrato-impacto",
+      config:   CONFIG,
+      timestamp: Date.now()
+    };
+
+    /* 1) broadcast to parent frame / recording orchestrator */
+    window.postMessage({ type: "nexa:record", ...payload }, "*");
+
+    /* 2) dispatch DOM event for same-page listeners */
+    document.dispatchEvent(new CustomEvent("nexa:record", { detail: payload }));
+
+    /* 3) try to hit a local API (nexa-brief-server may expose this) */
+    try {
+      const res = await fetch("/api/v1/record", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        status.textContent = data.message || `Grabando con ${selectedEngine}…`;
+      } else {
+        status.textContent = `API ${res.status} — escuchando via postMessage`;
+      }
+    } catch {
+      status.textContent = `Sin servidor — evento emitido (${selectedEngine})`;
+    }
+
+    /* reset after 8s (the actual stop comes from the orchestrator) */
+    setTimeout(() => {
+      recording = false;
+      btn.classList.remove("recording");
+      goBtn.disabled = false;
+      status.textContent = "";
+    }, 8000);
+  });
+})();
+/* ──────────────────────────────────────────────────────────────────────────── */
 </script>
 </body>
 </html>

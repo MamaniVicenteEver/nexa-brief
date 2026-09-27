@@ -1,0 +1,377 @@
+{
+  "niches": {
+    "image_bg_portrait": {
+      "id": "image_bg_portrait",
+      "display_name": "Imagen con Fondo (Retrato)",
+      "active": true,
+      "description": "Plantilla config-driven (01-image-bg): un sujeto/personaje central con fondo tratado (sólido, dividido en colores o difuminado) y 2 palabras de texto posicionadas automáticamente según el análisis de visión de la imagen real — en vez de HTML generado libremente por IA.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "remotion",
+      "metadata": {
+        "genre": "instrumental / dark ambient",
+        "mood_tags": [
+          "moody",
+          "cinematic",
+          "atmospheric"
+        ],
+        "tag_hints": [
+          "background music",
+          "instrumental",
+          "aesthetic",
+          "mood",
+          "ambient",
+          "no copyright music"
+        ]
+      },
+      "template": {
+        "enabled": true,
+        "template_id": "01-image-bg",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom"
+      },
+      "search_instructions": {
+        "image": "Un sujeto o personaje central claro y bien definido (retrato, figura completa o busto), con un fondo simple que lo deje como protagonista absoluto: un solo color, dividido en 2 colores, o difuminado — nunca una escena compleja con múltiples elementos. Iluminación clara y composición ordenada, alto contraste entre sujeto y fondo.",
+        "music": "Música instrumental que acompañe la imagen sin competir con ella — puede tener letra mínima o ninguna. Ritmo y energía moderados, apto para acompañar contenido visual estático con movimiento sutil."
+      },
+      "image": {
+        "results_count": 3,
+        "orientation": "portrait",
+        "library_category": "portrait_subjects",
+        "validation": {
+          "enabled": true,
+          "min_score": 0.65,
+          "max_retries": 2,
+          "criteria": [
+            "Muestra un sujeto o personaje central claro, sin texto ni watermark grande superpuesto",
+            "El fondo es simple: un solo color, dos colores divididos, o difuminado — no una escena compleja con múltiples elementos",
+            "La composición es clara y el sujeto se distingue con buen contraste del fondo"
+          ],
+          "fallback_query": "portrait subject clean simple background high contrast"
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [
+          "pixabay",
+          "jamendo"
+        ],
+        "library_category": "instrumental_generic"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 2338,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "loop",
+            "loop_seconds": 25,
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "loop",
+            "loop_seconds": 25
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "subject_spotlight": {
+      "id": "subject_spotlight",
+      "display_name": "Subject Spotlight — Recorte PNG",
+      "active": true,
+      "description": "Plantilla config-driven (02-subject-png): un sujeto recortado con canal alfa real (persona, criatura, personaje) centrado sobre un fondo de color diseñado por IA, con una palabra gigante detrás, levitación suave y partículas — requiere un PNG con transparencia real, no una foto de stock.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "remotion",
+      "template": {
+        "enabled": true,
+        "template_id": "subject-spotlight",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [
+          "subject",
+          "bg",
+          "blend",
+          "giantWord",
+          "giantColor",
+          "giantOpacity",
+          "ink",
+          "particles",
+          "glow",
+          "effect",
+          "brand",
+          "track",
+          "audio",
+          "intro",
+          "outro",
+          "seed"
+        ],
+        "media_dimension_key": "subject",
+        "media_src_filename": "subject.png"
+      },
+      "search_instructions": {
+        "image": "Requiere un PNG con canal alfa real (fondo transparente) — un sujeto recortado: persona, criatura o personaje de cuerpo completo o hasta el pecho/cintura. NO es una foto de stock normal, así que la búsqueda automática no aplica para este nicho — el usuario debe proveer el recorte por URL, subida de archivo o librería local.",
+        "music": "Música instrumental o con letra que acompañe una estética de poster/portada — ritmo y energía moderados a altos."
+      },
+      "image": {
+        "results_count": 1,
+        "orientation": "portrait",
+        "library_category": "subject_cutouts",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [
+          "pixabay",
+          "jamendo"
+        ],
+        "library_category": "instrumental_generic"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "loop",
+            "loop_seconds": 25,
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "loop",
+            "loop_seconds": 25
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "landscape_scene_ambient": {
+      "id": "landscape_scene_ambient",
+      "display_name": "Escena de Paisaje Viva",
+      "active": true,
+      "description": "Plantilla config-driven (03-landscape-scene): una pintura de paisaje completa (acuarela, tinta, gouache — castillos, templos, montañas, escenas orientales, melancolía/misterio) ocupa toda la pantalla, con pétalos/hojas cayendo en 3 capas de profundidad, niebla, nubes, aves cruzando, luciérnagas opcionales, estrellas fugaces reactivas al audio, y un haiku/texto poético corto en la zona calma de la imagen.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "remotion",
+      "template": {
+        "enabled": true,
+        "template_id": "living-landscape",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [
+          "img",
+          "palette",
+          "text",
+          "brand",
+          "birds",
+          "physics",
+          "audio",
+          "intro",
+          "outro"
+        ],
+        "media_dimension_key": "img",
+        "media_src_filename": "bg.jpg"
+      },
+      "search_instructions": {
+        "image": "Una pintura de paisaje completa en estilo acuarela, tinta china, gouache o digital painting — castillos, templos, montañas, ríos, escenas orientales o de fantasía melancólica. La imagen ENTERA es la pieza (no hay sujeto recortado ni fondo simple): debe tener una zona relativamente despejada (cielo, niebla, agua) donde pueda ir texto sin tapar los elementos importantes de la composición.",
+        "music": "Música instrumental ambiental o melancólica, ritmo lento a moderado, que acompañe una escena de paisaje pintado sin competir con ella."
+      },
+      "image": {
+        "results_count": 2,
+        "orientation": "landscape",
+        "library_category": "painted_landscapes",
+        "validation": {
+          "enabled": true,
+          "min_score": 0.6,
+          "max_retries": 2,
+          "criteria": [
+            "Es una pintura o ilustración de paisaje completo (acuarela, tinta, gouache o digital painting), no una foto real",
+            "Tiene una composición con elementos reconocibles (montañas, templos, agua, cielo) y al menos una zona relativamente despejada",
+            "Transmite una atmósfera melancólica, serena o misteriosa"
+          ],
+          "fallback_query": "painted landscape watercolor ink wash mountains temple misty atmospheric"
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "ambient",
+        "adapter_order": [
+          "pixabay",
+          "jamendo"
+        ],
+        "library_category": "instrumental_generic"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "loop",
+            "loop_seconds": 25,
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "loop",
+            "loop_seconds": 25
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "motion_backdrop_showcase": {
+      "id": "motion_backdrop_showcase",
+      "display_name": "Fondo en Movimiento (Video)",
+      "active": true,
+      "description": "Plantilla config-driven (04-video-motion): un video en loop (persona/criatura en movimiento sutil, o un fondo animado) ocupa la pantalla completa con recorte/rotación adaptable, dos palabras flanqueando el sujeto (o apiladas arriba/abajo en móvil), y un ecualizador reactivo al audio. Requiere un video real (no hay búsqueda automática de video de stock) — subirlo o darlo por URL/librería.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "remotion",
+      "template": {
+        "enabled": true,
+        "template_id": "motion-backdrop",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [
+          "id",
+          "description",
+          "video",
+          "colors",
+          "bgMode",
+          "bgRegions",
+          "zones",
+          "subject",
+          "keepOut",
+          "texts",
+          "eqPosition",
+          "edgeFade",
+          "typography",
+          "anchorPreference",
+          "audio",
+          "intro",
+          "outro"
+        ],
+        "media_dimension_key": "video",
+        "media_src_filename": "bg.mp4",
+        "requires_image": false,
+        "requires_video": true,
+        "wrap_as_case_collection": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "Música instrumental con energía moderada a alta, apta para alimentar un ecualizador reactivo — el video de fondo ya aporta el movimiento principal."
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [
+          "pixabay",
+          "jamendo"
+        ],
+        "library_category": "instrumental_generic"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "loop",
+            "loop_seconds": 25,
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "loop",
+            "loop_seconds": 25
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    }
+  }
+}

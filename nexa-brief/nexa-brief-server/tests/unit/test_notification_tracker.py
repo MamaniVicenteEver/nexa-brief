@@ -2,18 +2,11 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 
 import pytest
 
-from src.config.settings import settings
 from src.core import notification_tracker
 from src.core.notification import Notification
-
-
-@pytest.fixture(autouse=True)
-def _isolated_notificaciones_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(settings, "notificaciones_dir", tmp_path / "notificaciones")
 
 
 def _make(**overrides) -> Notification:

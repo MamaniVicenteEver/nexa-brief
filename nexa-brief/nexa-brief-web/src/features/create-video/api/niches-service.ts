@@ -9,6 +9,7 @@ interface NicheDto {
   active: boolean;
   recorder_engine: string;
   supported_engines: string[];
+  duration_locked_to_music?: boolean;
 }
 
 function mapNiche(dto: NicheDto): Niche {
@@ -20,6 +21,7 @@ function mapNiche(dto: NicheDto): Niche {
     active: dto.active,
     recorderEngine: dto.recorder_engine,
     supportedEngines: dto.supported_engines,
+    durationLockedToMusic: dto.duration_locked_to_music ?? false,
   };
 }
 

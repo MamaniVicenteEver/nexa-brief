@@ -12,11 +12,13 @@ pistas largas; escalera de temperature para reintentar tramos difíciles).
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
 import structlog
 from faster_whisper import WhisperModel
+from faster_whisper.audio import decode_audio
 
 from src.config.settings import settings
 from src.core.ports.lyrics_port import LyricsTranscriptionPort
@@ -105,6 +107,43 @@ def _transcribe_sync(audio_path: Path, language: str | None) -> dict[str, Any]:
     return result
 
 
+_detection_model: WhisperModel | None = None
+
+
+def _get_detection_model() -> WhisperModel:
+    """Reuse the transcription model if it's already in memory; otherwise load a
+    small one — detecting es/en doesn't need large-v3 (and its ~6 GB of RAM)."""
+    global _detection_model
+    if _model is not None:
+        return _model
+    if _detection_model is None:
+        logger.info("faster_whisper_loading_detection_model", model=settings.whisper_language_detection_model)
+        _detection_model = WhisperModel(
+            settings.whisper_language_detection_model,
+            device=settings.whisper_device,
+            compute_type="int8",
+        )
+    return _detection_model
+
+
+_SAMPLE_RATE = 16_000
+_DETECT_WINDOWS = 3        # Whisper analyzes 30 s per window
+_DETECT_SKIP_RATIO = 0.2   # skip the intro, usually instrumental
+
+
+def _detect_language_sync(audio_path: Path, candidates: Sequence[str]) -> dict[str, float]:
+    audio = decode_audio(str(audio_path), sampling_rate=_SAMPLE_RATE)
+    start = int(len(audio) * _DETECT_SKIP_RATIO)
+    window = audio[start : start + _DETECT_WINDOWS * 30 * _SAMPLE_RATE]
+    if len(window) < 5 * _SAMPLE_RATE:
+        window = audio
+    _, _, all_probs = _get_detection_model().detect_language(
+        audio=window, language_detection_segments=_DETECT_WINDOWS
+    )
+    probs = dict(all_probs)
+    return {code: float(probs.get(code, 0.0)) for code in candidates}
+
+
 class FasterWhisperAdapter(LyricsTranscriptionPort):
     async def transcribe(self, audio_path: Path, language: str | None = None) -> dict[str, Any]:
         logger.info("faster_whisper_transcribe_start", audio=str(audio_path), language=language)
@@ -119,3 +158,8 @@ class FasterWhisperAdapter(LyricsTranscriptionPort):
             segments=len(result["segments"]),
         )
         return result
+
+    async def detect_language(self, audio_path: Path, candidates: Sequence[str]) -> dict[str, float]:
+        probabilities = await asyncio.to_thread(_detect_language_sync, audio_path, candidates)
+        logger.info("faster_whisper_detect_language", audio=str(audio_path), probabilities=probabilities)
+        return probabilities

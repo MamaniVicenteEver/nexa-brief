@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape" data-template-id="academy-mathematics-chalkboard-solve-v1">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Pizarra de resolución | Nexa Academy</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="academy-mathematics-chalkboard-solve-v1" data-start="0" data-duration="90" data-width="1920" data-height="1080" data-fps="30">
+      <div class="academy-background"></div>
+      <header class="academy-header clip" data-start="0" data-duration="90" data-track-index="0">
+        <span class="academy-brand">Nexa Academy</span>
+        <span class="academy-meta" data-var-text="subject">Matemática / División</span>
+      </header>
+      <main class="academy-main">
+        <section class="academy-intro clip" data-start="0" data-duration="5" data-track-index="1" data-enter>
+          <span class="academy-eyebrow">Demostración guiada</span>
+          <h1 data-var-text="lessonTitle">Cómo resolver una división</h1>
+          <p data-var-text="lessonDescription">Una pizarra construye el problema, el reparto y la comprobación.</p>
+        </section>
+        <section class="board lesson-panel clip" data-start="5" data-duration="80" data-track-index="2" data-enter>
+          <div class="panel-label">Pizarra de trabajo</div>
+          <div class="board-equation" data-var-text="operation_tex">24 ÷ 6 = 4</div>
+          <div class="board-columns">
+            <div class="board-steps">
+              <span class="step is-active">01 · Identifica la cantidad total</span>
+              <span class="step">02 · Forma grupos iguales</span>
+              <span class="step">03 · Comprueba con multiplicación</span>
+            </div>
+            <div class="board-proof">
+              <span class="proof-label">Comprobación</span>
+              <strong data-var-text="inverse_check">6 × 4 = 24</strong>
+              <small>El resultado conserva las 24 unidades.</small>
+            </div>
+          </div>
+          <div class="group-row" aria-label="Seis grupos de cuatro unidades">
+            <i>4</i><i>4</i><i>4</i><i>4</i><i>4</i><i>4</i>
+          </div>
+        </section>
+        <section class="academy-caption clip" data-start="5" data-duration="80" data-track-index="3">
+          <span>Explicación en construcción</span>
+          <strong data-var-text="caption">Dividir es repartir una cantidad en grupos iguales.</strong>
+        </section>
+      </main>
+      <footer class="academy-footer clip" data-start="0" data-duration="90" data-track-index="4">
+        <span>Teoría · Ejemplo · Comprobación · Práctica</span>
+        <span data-var-text="lessonNumber">01 / 07</span>
+      </footer>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

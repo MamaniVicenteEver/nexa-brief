@@ -14,7 +14,8 @@ function StatusBadge({ status }: { status: QueueStatus }) {
         status === "published" && "bg-nb-green/15 text-nb-green-dark",
         status === "failed" && "bg-red-500/10 text-red-600",
         status === "publishing" && "bg-amber-500/15 text-amber-700",
-        (status === "queued" || status === "cancelled") && "bg-nb-bg-2 text-nb-mute",
+        (status === "queued" || status === "cancelled" || status === "removed") &&
+          "bg-nb-bg-2 text-nb-mute",
       )}
     >
       <span
@@ -23,7 +24,7 @@ function StatusBadge({ status }: { status: QueueStatus }) {
           status === "published" && "bg-nb-green-dark",
           status === "failed" && "bg-red-600",
           status === "publishing" && "bg-amber-600",
-          (status === "queued" || status === "cancelled") && "bg-nb-mute",
+          (status === "queued" || status === "cancelled" || status === "removed") && "bg-nb-mute",
         )}
       />
       {t(`queue.statusLabels.${status}`)}

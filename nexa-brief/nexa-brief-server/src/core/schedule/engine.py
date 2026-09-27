@@ -29,10 +29,11 @@ from typing import Any, Protocol
 import structlog
 
 from src.config.settings import settings
-from src.core import job_tracker
+from src.core import job_tracker, publish_log
 from src.core.job import JobStage
 from src.core.schedule import queue_repository, slot_repository
 from src.core.schedule.models import QueueEntry, QueueSource, ScheduleSlot
+from src.core.metadata import copy_for_platform
 
 logger = structlog.get_logger(__name__)
 
@@ -115,18 +116,15 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         return failed or updated
 
     file_paths: dict[str, str] = job_record.get("file_paths", {}) or {}
+    # youtube y facebook comparten el mismo archivo horizontal (ver social_publisher.py).
+    # TikTok usa su clip propio si el nicho lo genera (generate_tiktok_clip); si
+    # no (ej. nichos de letras), el video vertical completo (reels, 9:16).
     if entry.platform == "tiktok":
-        video_path_str = file_paths.get("tiktok")
-        title = summary.get("tiktok_caption", "") or ""
-        description = summary.get("tiktok_caption", "") or ""
-        tags = summary.get("tiktok_hashtags", []) or []
+        video_path_str = file_paths.get("tiktok") or file_paths.get("reels")
     else:
-        # youtube y facebook comparten el mismo archivo horizontal — ver
-        # src/modules/social_publisher.py línea ~47.
         video_path_str = file_paths.get("youtube")
-        title = summary.get("youtube_title", "") or ""
-        description = summary.get("youtube_description", "") or ""
-        tags = summary.get("youtube_tags", []) or []
+    copy = copy_for_platform(summary, entry.platform)
+    extra_kwargs = {"language": copy.language} if entry.platform == "youtube" and copy.language else {}
 
     if not video_path_str:
         failed = await queue_repository.mark_failed(
@@ -146,10 +144,11 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
     try:
         result = await facade.publish_video(
             video_path=video_path,
-            title=title,
-            description=description,
-            tags=tags,
+            title=copy.title,
+            description=copy.description,
+            tags=copy.tags,
             account_selector=account_selector,
+            **extra_kwargs,
         )
     except Exception as exc:
         logger.error(
@@ -164,6 +163,16 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
 
     published = await queue_repository.mark_published(
         entry.entry_id, post_id=result.post_id, url=result.url
+    )
+    # Sin esto, lo publicado por la cola ("Publicar ahora" / horarios) no
+    # aparecía en Canales, que lee solo el log de publicaciones.
+    await publish_log.record_published_video(
+        platform=entry.platform,
+        alias=entry.account_alias,
+        post_id=result.post_id,
+        url=result.url,
+        title=copy.title,
+        job_id=entry.job_id,
     )
     return published or updated
 

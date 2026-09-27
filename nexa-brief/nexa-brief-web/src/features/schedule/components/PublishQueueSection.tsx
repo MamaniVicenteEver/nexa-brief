@@ -37,7 +37,11 @@ export function PublishQueueSection() {
       ) : (entries ?? []).length > 0 ? (
         <div className="flex flex-col gap-2.5">
           {(entries ?? []).map((entry) => (
-            <QueueEntryRow key={entry.entryId} entry={entry} jobTitle={titleByJobId.get(entry.jobId)} />
+            <QueueEntryRow
+              key={entry.entryId}
+              entry={entry}
+              jobTitle={titleByJobId.get(entry.jobId)}
+            />
           ))}
         </div>
       ) : (

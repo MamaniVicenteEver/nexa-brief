@@ -9,7 +9,10 @@ import type { Niche } from "../types";
 const ENGINE_ORDER = ["remotion", "hyperframes", "playwright"] as const;
 type Engine = (typeof ENGINE_ORDER)[number];
 
-const ENGINE_LABEL_KEY: Record<Engine, "engineRemotion" | "engineHyperframes" | "enginePlaywright"> = {
+const ENGINE_LABEL_KEY: Record<
+  Engine,
+  "engineRemotion" | "engineHyperframes" | "enginePlaywright"
+> = {
   remotion: "engineRemotion",
   hyperframes: "engineHyperframes",
   playwright: "enginePlaywright",
@@ -34,7 +37,10 @@ export function RecorderEngineSection({
 }) {
   const t = useTranslations("createVideo.recorderEngineSection");
   const categoryName = useWatch({ control: form.control, name: "categoryName" });
-  const recorderEngineOverride = useWatch({ control: form.control, name: "recorderEngineOverride" });
+  const recorderEngineOverride = useWatch({
+    control: form.control,
+    name: "recorderEngineOverride",
+  });
 
   const niche = niches?.find((n) => n.id === categoryName);
   const supported = niche?.supportedEngines ?? [];
@@ -66,7 +72,9 @@ export function RecorderEngineSection({
         ))}
       </div>
 
-      <p className="text-[12.5px] leading-[1.5] text-nb-mute">{t(ENGINE_HINT_KEY[engineOverride as Engine])}</p>
+      <p className="text-[12.5px] leading-[1.5] text-nb-mute">
+        {t(ENGINE_HINT_KEY[engineOverride as Engine])}
+      </p>
     </div>
   );
 }

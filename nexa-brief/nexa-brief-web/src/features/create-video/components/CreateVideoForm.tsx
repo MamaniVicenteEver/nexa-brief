@@ -70,18 +70,12 @@ export function CreateVideoForm() {
 
   return (
     <>
-      <div className="mx-auto max-w-[1280px] px-10 pt-[92px] pb-4.5">
-        <h1 className="font-nb-sans text-[clamp(20px,2.4vw,26px)] font-extrabold tracking-[-0.02em] whitespace-nowrap text-nb-ink">
-          {t("heading")}
-        </h1>
-      </div>
-
       <Form {...form}>
         {/* 5% de margen a cada lado + form 70% / resumen 20% del ancho total en
             desktop (grid-cols-[7fr_2fr] de un 90% interior == 70/20 del total,
             sin gap para no restarle ancho a esa proporción exacta) — una sola
             columna en mobile. */}
-        <div className="relative z-5 grid grid-cols-1 gap-7 px-[5%] pt-7.5 pb-27.5 lg:grid-cols-[7fr_2fr] lg:gap-0">
+        <div className="relative z-5 grid grid-cols-1 gap-7 px-[5%] pt-22 pb-27.5 lg:grid-cols-[7fr_2fr] lg:gap-0">
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="nb-glass-panel flex flex-col gap-5.5 px-8 py-8.5"
@@ -116,7 +110,7 @@ export function CreateVideoForm() {
               {/* Columna derecha — lo operativo */}
               <div className="flex flex-col gap-5.5">
                 <ChannelsSection form={form} />
-                <DurationSection form={form} songSeconds={songSeconds} />
+                <DurationSection form={form} songSeconds={songSeconds} niches={niches} />
                 <RecorderEngineSection form={form} niches={niches} />
                 <RenderTargetSection form={form} niches={niches} />
               </div>

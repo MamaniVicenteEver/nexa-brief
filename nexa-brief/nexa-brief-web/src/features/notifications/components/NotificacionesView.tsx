@@ -22,7 +22,7 @@ export function NotificacionesView() {
   const unreadCount = data?.unreadCount ?? 0;
 
   return (
-    <div className="mx-auto max-w-[900px] px-10 pt-[92px] pb-16">
+    <div className="mx-auto max-w-[900px] px-10 pt-22 pb-16">
       <div className="flex items-center justify-between gap-4 pb-4.5">
         <div className="flex items-center gap-2.5">
           <h1 className="font-nb-sans text-[clamp(20px,2.4vw,26px)] font-extrabold tracking-[-0.02em] text-nb-ink">

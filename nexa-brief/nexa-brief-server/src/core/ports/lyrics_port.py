@@ -9,6 +9,7 @@ lyrics_transcriber.py ni el resto del pipeline — solo la factory cambia.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -31,4 +32,12 @@ class LyricsTranscriptionPort(ABC):
             }
 
         *language*: código ISO ("es", "en", ...) si se conoce; None = auto-detectar.
+        """
+
+    @abstractmethod
+    async def detect_language(self, audio_path: Path, candidates: Sequence[str]) -> dict[str, float]:
+        """Probabilidad (0-1) de que se cante en cada idioma de *candidates* ("es", "en"…).
+
+        Mucho más barato que transcribir: solo analiza unos segundos de audio.
+        Una pista instrumental devuelve probabilidades bajas para todos.
         """

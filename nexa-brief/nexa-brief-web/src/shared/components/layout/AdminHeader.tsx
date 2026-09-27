@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronDownIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { ChevronDownIcon, LogOutIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { NotificationBell } from "@/features/notifications";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -28,20 +28,20 @@ export function AdminHeader() {
   const isManagementActive = MANAGEMENT_LINKS.some((link) => pathname === link.href);
 
   return (
-    <nav className="nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between px-10 py-[22px]">
+    <nav className="nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between px-10 py-2.5">
       <Link
         href="/dashboard"
-        className="font-nb-sans text-[22px] font-bold tracking-[-0.03em] text-nb-ink no-underline"
+        className="font-nb-sans text-[20px] font-bold tracking-[-0.03em] text-nb-ink no-underline"
       >
         {t("brand")}
       </Link>
 
-      <ul className="absolute left-1/2 flex -translate-x-1/2 gap-4 text-[12.5px]">
+      <ul className="absolute left-1/2 flex -translate-x-1/2 gap-3 text-[12px]">
         <li>
           <Link
             href="/dashboard"
             className={cn(
-              "relative inline-flex items-center gap-1 px-0.5 py-1 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
+              "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
               pathname === "/dashboard" &&
                 "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
             )}
@@ -53,7 +53,7 @@ export function AdminHeader() {
           <Link
             href="/crear-video"
             className={cn(
-              "relative inline-flex items-center gap-1 px-0.5 py-1 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
+              "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
               pathname === "/crear-video" &&
                 "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
             )}
@@ -65,7 +65,7 @@ export function AdminHeader() {
           <Link
             href="/plantillas"
             className={cn(
-              "relative inline-flex items-center gap-1 px-0.5 py-1 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
+              "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
               (pathname === "/plantillas" || pathname.startsWith("/plantillas/")) &&
                 "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
             )}
@@ -77,7 +77,7 @@ export function AdminHeader() {
           <Link
             href="/canales"
             className={cn(
-              "relative inline-flex items-center gap-1 px-0.5 py-1 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
+              "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
               pathname === "/canales" &&
                 "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
             )}
@@ -91,7 +91,7 @@ export function AdminHeader() {
               <button
                 type="button"
                 className={cn(
-                  "relative inline-flex items-center gap-1 px-0.5 py-1 font-medium text-nb-ink-soft transition-colors hover:text-nb-ink",
+                  "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft transition-colors hover:text-nb-ink",
                   isManagementActive &&
                     "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
                 )}
@@ -112,15 +112,18 @@ export function AdminHeader() {
         </li>
       </ul>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <LocaleSwitcher />
         <NotificationBell />
         <button
           type="button"
+          aria-label={t("salir")}
+          title={t("salir")}
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="nb-btn-pill px-7 py-[13px] font-nb-sans text-sm font-medium"
+          className="nb-btn-pill inline-flex size-9 items-center justify-center p-0"
         >
-          {t("salir")}
+          <LogOutIcon className="size-4" aria-hidden="true" />
+          <span className="sr-only">{t("salir")}</span>
         </button>
       </div>
     </nav>

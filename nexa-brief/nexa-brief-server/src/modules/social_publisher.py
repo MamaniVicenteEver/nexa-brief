@@ -69,8 +69,9 @@ import structlog
 from src.config.exceptions import PublisherError
 from src.config.settings import settings
 from src.core.job import Job, JobStage, PublishResult
-from src.adapters.publishing.publish_log import record_published_video
+from src.core.publish_log import record_published_video
 from src.adapters.publishing.publisher_facade import PublisherFacade
+from src.core.metadata import copy_for_platform
 
 logger = structlog.get_logger(__name__)
 
@@ -154,17 +155,13 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
         )
 
         # ── 2. Extract SEO metadata from Stage 7 summary ──────────────────────────
-        if platform == "tiktok":
-            title = summary.tiktok_caption
-            description = summary.tiktok_caption
-            tags = summary.tiktok_hashtags
-        else:
-            title = summary.youtube_title
-            description = summary.youtube_description
-            tags = summary.youtube_tags
+        copy = copy_for_platform(summary, platform)
+        title, description, tags = copy.title, copy.description, copy.tags
 
         # Determine dynamic options
-        extra_kwargs = {}
+        extra_kwargs: dict = {}
+        if platform == "youtube" and copy.language:
+            extra_kwargs["language"] = copy.language
         privacy = "public"
 
         if job.input.publishing and job.input.publishing.enabled:
@@ -210,12 +207,13 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
                 publish_duration_seconds=elapsed_plat,
             )
             publish_results[account_selector] = publish_result
-            record_published_video(
+            await record_published_video(
                 platform=result.platform,
                 alias=result.account_alias,
                 post_id=result.post_id,
                 url=result.url,
                 title=title,
+                job_id=job.job_id,
             )
 
             # Check if YouTube playlist needs to be linked

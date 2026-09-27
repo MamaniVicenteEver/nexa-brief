@@ -307,6 +307,7 @@ async def _resolve_video(job: Job, niche_cfg: NicheConfig, output_dir: Path) -> 
         entry = await asset_library.register_video(
             dest_path, category=category, source="url", provider="user_url",
             original_url=src.url, job_id=job.job_id,
+            filename=asset_library.filename_from_url(src.url),
         )
         return dest_path, entry.asset_id, {"provider": "user_url"}
 
@@ -358,6 +359,7 @@ async def _resolve_image(
             original_url=src.url,
             job_id=job.job_id,
             orientation=niche_cfg.image.orientation,
+            filename=asset_library.filename_from_url(src.url),
         )
         return img_result, entry.asset_id, []
 
@@ -539,6 +541,7 @@ async def _resolve_music(
             track_name=track_name,
             artist=artist,
             content_hash=content_hash,
+            filename=asset_library.filename_from_url(src.url),
         )
         return music_result, entry.asset_id, []
 

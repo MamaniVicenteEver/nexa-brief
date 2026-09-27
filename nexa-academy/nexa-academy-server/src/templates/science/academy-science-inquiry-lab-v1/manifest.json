@@ -1,0 +1,12 @@
+{
+  "schema_version": "academy-template-v1",
+  "id": "academy-science-inquiry-lab-v1",
+  "category_id": "science",
+  "name": "Laboratorio de hipótesis",
+  "engine": "hyperframes",
+  "entrypoint": "index.html",
+  "files": {"html": "index.html", "css": "styles.css", "js": "script.js", "manifest": "manifest.json"},
+  "duration_seconds": 60,
+  "scene_recipe": ["Pregunta", "Predicción", "Prueba", "Evidencia"],
+  "variables": ["lessonTitle", "lessonDescription", "question", "prediction", "test", "evidence", "caption"]
+}

@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRISTAL ROTO — paleta noche cálida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Unbounded:wght@700;900&family=Caveat+Brush&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema — defaults idénticos a config.json; applyTheme() los pisa */
+  :root { --night: #0A0708; --glass: #EDE6DE; --mono: "JetBrains Mono", monospace; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--night); cursor: pointer; }
+
+  /* cámara: el "rig" lleva el mundo y la lámina de vidrio juntos (mismo
+     encuadre → la foto congelada de los fragmentos coincide al píxel). Mide
+     un 16% más que la pantalla para que el ángulo holandés/tilt nunca deje
+     ver los bordes. */
+  #viewport { position: fixed; inset: 0; overflow: hidden; perspective: 1400px; perspective-origin: 50% 50%; }
+  #rig { position: absolute; will-change: transform; transform-origin: 50% 50%; }
+  #rig canvas { position: absolute; left: 0; top: 0; }
+  #worldCv { transition: opacity 3s ease, filter 3s ease; }
+  body.outroActive #worldCv { opacity: 0.5; filter: saturate(0.75); }
+
+  #vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 48%, transparent 46%, rgba(0,0,0,0.6) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 5; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.06; mix-blend-mode: overlay; animation: gsh 1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+  /* destello blanco del golpe final antes de que la lámina estalle */
+  #flash { position: fixed; inset: 0; z-index: 6; background: #FFFFFF; opacity: 0; pointer-events: none; }
+
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--mono); font-weight: 500; font-size: 1.6vh; letter-spacing: 0.5em; padding-left: 0.5em;
+    color: var(--glass); animation: hintPulse 2s ease infinite; pointer-events: none;
+  }
+  #hint.gone { display: none; }
+  @keyframes hintPulse { 0%,100% { opacity: 0.25; } 50% { opacity: 0.8; } }
+  #debug {
+    position: fixed; left: 10px; top: 10px; z-index: 9; display: none; white-space: pre;
+    font: 12px/1.45 monospace; color: #9FF; background: rgba(0,0,0,0.55); padding: 6px 9px; pointer-events: none;
+  }
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    #hint { font-size: min(1.6vh, 3vw); letter-spacing: 0.3em; padding-left: 0.3em; }
+  }
+</style>
+</head>
+<body>
+<div id="viewport"><div id="rig">
+  <canvas id="worldCv"></canvas>
+  <canvas id="glassCv"></canvas>
+</div></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="flash"></div>
+<div id="hint">CLICK PARA EMPEZAR</div>
+<div id="debug"></div>
+<audio id="audio" preload="auto"></audio>
+<script type="module">
+/* ================================ CONFIG ================================
+   CRISTAL ROTO: la letra vive sobre una lámina de vidrio parada delante de
+   un "mundo" nocturno en movimiento (bokeh de ciudad, humo de color, rayos
+   de discoteca, aurora, video o foto, opcionalmente con una figura
+   recortada a contraluz). Cada frase de la letra es una composición
+   tipográfica que llena la lámina, en una de tres voces:
+     - impacto: bloques condensados que caen con golpe (escala + separación
+       RGB) y AGRIETAN el vidrio con una telaraña real que crece desde el
+       punto de impacto, con sacudida de cámara.
+     - grabado: letras de vidrio esmerilado (se ve el mundo desenfocado y
+       lechoso adentro de cada letra, con bisel de luz) y barrido de brillo.
+     - vaho: la lámina se empaña y la frase se escribe con el dedo — las
+       letras son vidrio limpio en medio de la niebla, y chorrean gotas.
+   Las grietas se ACUMULAN entre frases (daño). Cuando el daño llega al
+   límite, o cada 1-3 frases, la lámina ESTALLA: se congela una foto exacta
+   de mundo+vidrio, se parte en fragmentos radiales desde el último golpe y
+   los fragmentos vuelan (estallido hacia cámara, derrumbe por gravedad o
+   ráfaga lateral) refractando la foto congelada — y detrás aparece un mundo
+   NUEVO. Todo el tiempo sale de audio.currentTime (o de un reloj manual
+   con ?manual=1, para capturas cuadro a cuadro), y todo lo aleatorio sale
+   de un PRNG con semilla: la misma canción + config da el mismo video.
+   `index.html` es un motor PROBADO y ESTÁTICO. NUNCA se regenera. El CONFIG
+   vive en config.json como colección de casos con "id" (mismo patrón que el
+   resto de plantillas de letras); cualquier clave que falte cae al
+   DEFAULT_CONFIG embebido (merge profundo). La letra se consume 100% de
+   lyricsUrl (formato Whisper: { metadata, segments: [ { text, words: [ {
+   word, start, end } ] } ] } ). Sirve por HTTP (python3 -m http.server): por
+   file:// el fetch queda bloqueado.
+   Parámetros de URL para desarrollo: ?seek=SEG (arranca en ese segundo),
+   ?manual=1 (sin audio; window.__cristal.setTime(t) dibuja el instante t),
+   ?debug=1 (overlay con frase/modo/daño/fps). */
+const DEFAULT_CONFIG = { "activeId": "default", "configs": [{
+  "id": "default",
+  "description": "Cristal roto — la letra se pinta sobre una lámina de vidrio frente a un mundo nocturno en movimiento (bokeh de ciudad, humo de color, rayos de discoteca y figuras a contraluz). Cada golpe de la canción agrieta el vidrio con una telaraña real, algunas frases se graban esmeriladas o se escriben con el dedo en el vaho, y cuando el daño se acumula la lámina estalla en fragmentos que vuelan hacia la cámara revelando un mundo nuevo detrás. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+  "audio": { "src": "assets/song.mp3" },
+  "lyricsUrl": "assets/lyrics.json",
+  "bg": {},
+  "fonts": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Unbounded:wght@700;900&family=Caveat+Brush&family=JetBrains+Mono:wght@500;700&display=swap",
+    "golpe": "\"Big Shoulders Display\", Impact, sans-serif",
+    "grabado": "\"Unbounded\", \"Arial Black\", sans-serif",
+    "vaho": "\"Caveat Brush\", cursive",
+    "mono": "\"JetBrains Mono\", monospace"
+  },
+  "palette": { "night": "#0A0708", "glass": "#EDE6DE", "text": "#F4EDE4", "hot": "#E9A86A", "cool": "#C98B7B", "frost": "#F3EAE0", "fog": "#E7DED4" },
+  "worlds": [
+    { "type": "bokeh", "colors": ["#E3A063", "#C46F55", "#EFD2A6", "#7E5470"], "bg": ["#0A0605", "#1D130F"],
+      "text": "#F6EEE4", "accent": "#F0B36E", "accent2": "#D3856F",
+      "figure": { "src": "assets/figures/figura-01.png", "side": "right", "height": 0.9, "glow": "#C46F55" } },
+    { "type": "video", "src": "assets/humo.mp4", "rate": 0.85, "tint": "#A8684C", "tintAlpha": 0.62, "darken": 0.18, "lights": true,
+      "lightColors": ["#E3A063", "#EFD2A6", "#C46F55"], "accent": "#F2C08C", "accent2": "#D9967A" },
+    { "type": "rayos", "colors": ["#8DAFC4", "#C7D5DE", "#D8B38C"], "bg": ["#05070A", "#0F1822"],
+      "text": "#EEF1F2", "accent": "#E6C49A", "accent2": "#9FBCCD",
+      "figure": { "src": "assets/figures/figura-02.png", "side": "left", "height": 0.86, "glow": "#6F93AA" } },
+    { "type": "aurora", "colors": ["#8F4A56", "#C9825A", "#553A66", "#BE9C76"], "bg": ["#080506", "#170C11"],
+      "accent": "#EAA88E", "accent2": "#C98B9A" },
+    { "type": "video", "src": "assets/humo.mp4", "rate": 1.15, "tint": "#8C3F33", "tintAlpha": 0.62, "darken": 0.2, "lights": true, "mirror": true,
+      "lightColors": ["#E0A36A", "#C46F55", "#F1D3A8"], "accent": "#F0BE85", "accent2": "#CF8468",
+      "figure": { "src": "assets/figures/figura-03.png", "side": "center", "height": 0.84, "glow": "#D89A62" } }
+  ],
+  "intro": { "artist": "Dalex", "title": "Hola", "sub": "", "feats": "" },
+  "outro": { "leadSec": 8, "songTitle": "Hola · Dalex", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+  "debug": { "enabled": false },
+  "layout": {
+    "maxWordsPerPhrase": 8, "rowCharsPortrait": 9, "rowCharsLandscape": 15,
+    "modeWeights": { "impacto": 0.42, "grabado": 0.3, "vaho": 0.28 },
+    "fillWeights": { "fill": 0.65, "ragged": 0.35 },
+    "alignWeights": { "center": 0.5, "left": 0.25, "right": 0.25 },
+    "accentWeights": { "hot": 0.45, "cool": 0.25, "none": 0.3 },
+    "heroSoloChance": 0.6, "crackChance": 0.8, "rowRotMax": 2.5,
+    "dutchMax": 2.2, "tiltMax": 3.5, "zoom": [1.0, 1.07], "shakePx": 16, "glassTint": 0.14
+  },
+  "shatter": {
+    "chance": 0.22, "everyMin": 2, "everyMax": 4, "damageMax": 10,
+    "modeWeights": { "estallido": 0.4, "derrumbe": 0.3, "rafaga": 0.3 },
+    "rays": [12, 18], "rings": 6, "flash": 0.32
+  },
+  "seed": 11
+}] };
+
+async function loadDB() {
+  for (const url of ["config1.json", "assets/config1.json", "config.json", "assets/config.json"]) {
+    try {
+      const r = await fetch(url);
+      if (r.ok) return await r.json();
+    } catch (e) { /* file:// u otro bloqueo — probamos el siguiente nivel */ }
+  }
+  console.warn("[cristal-roto] No se pudo cargar config.json ni assets/config.json (¿abierto por file://?) — usando DEFAULT_CONFIG embebido.");
+  return DEFAULT_CONFIG;
+}
+
+/* merge profundo: objetos se mezclan clave a clave, arrays y valores se
+   reemplazan enteros — un config generado por IA al que le falte una clave
+   no rompe el motor, cae al default */
+const isObj = v => v && typeof v === "object" && !Array.isArray(v);
+function deepMerge(a, b) {
+  if (b === undefined) return a;
+  if (!isObj(a) || !isObj(b)) return b;
+  const o = { ...a };
+  for (const k of Object.keys(b)) o[k] = deepMerge(a[k], b[k]);
+  return o;
+}
+
+const DB = await loadDB();
+const RAW = (DB.configs || []).find(c => c.id === DB.activeId) || (DB.configs || [])[0] || {};
+const C = deepMerge(DEFAULT_CONFIG.configs[0], RAW);
+const L = C.layout, S = C.shatter, P = C.palette;
+
+/* tema desde el JSON → fuentes y variables CSS */
+(function applyTheme() {
+  if (C.fonts?.googleUrl) {
+    const link = document.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+    if (link && link.href !== C.fonts.googleUrl) link.href = C.fonts.googleUrl;
+  }
+  const root = document.documentElement;
+  root.style.setProperty("--night", P.night);
+  root.style.setProperty("--glass", P.glass);
+  root.style.setProperty("--mono", C.fonts.mono);
+})();
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const audio = $("audio"), rig = $("rig"), worldCv = $("worldCv"), glassCv = $("glassCv");
+const Q = new URLSearchParams(location.search);
+const MANUAL = Q.has("manual");
+const SEEK = Math.max(0, parseFloat(Q.get("seek")) || 0);
+const DEBUG = C.debug?.enabled || Q.has("debug");
+const TAU = Math.PI * 2;
+
+/* ---- utilidades puras ---- */
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+/* un PRNG independiente por "cosa" (frase, transición, grieta...) — así el
+   orden en que se consumen los números nunca desalinea el resto del video */
+const rngFor = k => mulberry32((Math.imul(C.seed | 0, 7919) + Math.imul(k | 0, 104729)) | 0);
+function pickWeighted(r, weights) {
+  const keys = Object.keys(weights), total = keys.reduce((s, k) => s + Math.max(0, weights[k]), 0);
+  let x = r() * total;
+  for (const k of keys) { if ((x -= Math.max(0, weights[k])) < 0) return k; }
+  return keys[keys.length - 1];
+}
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = x => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); };
+const easeOutCubic = x => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+const easeInOut = x => { x = clamp(x, 0, 1); return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; };
+function hexA(hex, a) {
+  let h = String(hex || "#FFFFFF").replace("#", "");
+  if (h.length === 3) h = h.split("").map(c => c + c).join("");
+  const n = parseInt(h.slice(0, 6), 16) || 0;
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`;
+}
+const upper = s => s.toLocaleUpperCase("es");
+const newCanvas = (w, h) => { const c = doc.createElement("canvas"); c.width = Math.max(1, Math.ceil(w)); c.height = Math.max(1, Math.ceil(h)); return c; };
+
+/* ---- tamaños: todo se dibuja en "espacio lámina" (px CSS del rig) ---- */
+const OVER = 1.12;
+/* el mundo se renderiza a menor resolución: está DETRÁS del vidrio (bokeh,
+   humo, figura a contraluz) y la suavidad se lee como profundidad de campo —
+   ahorra ~2/3 del raster más caro del cuadro */
+const WQ = 0.6, FQ = 0.5;
+let vw, vh, vmin, U, GW, GH, OX, OY, DPR, hasCracks = false;
+const crackCv = newCanvas(1, 1), maskCv = newCanvas(1, 1), fogCv = newCanvas(1, 1), snapCv = newCanvas(1, 1), frostCv = newCanvas(1, 1);
+const wctx = worldCv.getContext("2d"), gctx = glassCv.getContext("2d");
+const cctx = crackCv.getContext("2d"), mkctx = maskCv.getContext("2d"), fgctx = fogCv.getContext("2d");
+const snctx = snapCv.getContext("2d"), frctx = frostCv.getContext("2d");
+const measureCtx = newCanvas(8, 8).getContext("2d");
+
+function sizeAll() {
+  vw = innerWidth; vh = innerHeight; vmin = Math.min(vw, vh); U = vmin / 1000;
+  DPR = Math.min(devicePixelRatio || 1, 1.5);
+  GW = Math.ceil(vw * OVER); GH = Math.ceil(vh * OVER); OX = (GW - vw) / 2; OY = (GH - vh) / 2;
+  for (const cv of [worldCv, glassCv]) {
+    const q = cv === worldCv ? WQ : 1;
+    cv.width = Math.ceil(GW * DPR * q); cv.height = Math.ceil(GH * DPR * q);
+    cv.style.width = GW + "px"; cv.style.height = GH + "px";
+  }
+  for (const cv of [crackCv, maskCv, snapCv]) { cv.width = Math.ceil(GW * DPR); cv.height = Math.ceil(GH * DPR); }
+  fogCv.width = Math.ceil(GW * DPR * FQ); fogCv.height = Math.ceil(GH * DPR * FQ);
+  hasCracks = false;
+  frostCv.width = Math.ceil(GW / 8); frostCv.height = Math.ceil(GH / 8);
+  rig.style.width = GW + "px"; rig.style.height = GH + "px";
+  rig.style.left = -OX + "px"; rig.style.top = -OY + "px";
+}
+sizeAll();
+
+/* ---- voces tipográficas ---- */
+const F = C.fonts;
+const VOICE = {
+  golpe:   { font: fs => `900 ${fs}px ${F.golpe}`,   gap: 0.08, space: 0.22 },
+  grabado: { font: fs => `900 ${fs}px ${F.grabado}`, gap: 0.22, space: 0.30 },
+  vaho:    { font: fs => `400 ${fs}px ${F.vaho}`,    gap: 0.10, space: 0.26 },
+  mono:    { font: fs => `700 ${fs}px ${F.mono}`,    gap: 0.9,  space: 0.6, spacing: 0.3 },
+};
+function measure(text, voice, fs) {
+  const V = VOICE[voice];
+  measureCtx.font = V.font(fs);
+  measureCtx.letterSpacing = (V.spacing ? V.spacing * fs : 0) + "px";
+  const m = measureCtx.measureText(text);
+  return { w: m.width, asc: m.actualBoundingBoxAscent, desc: Math.max(0, m.actualBoundingBoxDescent) };
+}
+async function fontsReady() {
+  const specs = [VOICE.golpe.font(80), VOICE.grabado.font(80), VOICE.vaho.font(80), VOICE.mono.font(40)];
+  try {
+    await Promise.race([
+      Promise.all(specs.map(s => doc.fonts.load(s, "AÁÑÉ aá"))),
+      new Promise(r => setTimeout(r, 4500)),
+    ]);
+  } catch (e) { /* sin fuentes web: fallback del sistema */ }
+}
+
+/* sprite de texto pre-renderizado (el glow con shadowBlur es caro: se paga
+   UNA vez por palabra, no por cuadro) */
+function textSprite(text, voice, fs, fill, glow, blur) {
+  const V = VOICE[voice], m = measure(text, voice, fs);
+  const pad = Math.ceil(glow ? fs * 0.3 : fs * 0.06 + (blur || 0) * 2) + 2;
+  const w = Math.ceil(m.w + pad * 2), h = Math.ceil(m.asc + m.desc + pad * 2);
+  const cv = newCanvas(w * DPR, h * DPR), x = cv.getContext("2d");
+  x.scale(DPR, DPR);
+  x.font = V.font(fs); x.letterSpacing = (V.spacing ? V.spacing * fs : 0) + "px";
+  x.textBaseline = "alphabetic"; x.fillStyle = fill;
+  if (blur) x.filter = `blur(${blur}px)`;
+  const bx = pad, by = pad + m.asc;
+  if (glow) {
+    x.shadowColor = "rgba(0,0,0,0.6)"; x.shadowBlur = fs * 0.16 * DPR; x.shadowOffsetY = fs * 0.03 * DPR;
+    x.fillText(text, bx, by);
+    x.shadowColor = hexA(glow, 0.38); x.shadowBlur = fs * 0.12 * DPR; x.shadowOffsetY = 0;
+    x.fillText(text, bx, by);
+    x.shadowColor = "transparent"; x.shadowBlur = 0;
+  }
+  x.fillText(text, bx, by);
+  return { cv, w, h, pad, asc: m.asc, desc: m.desc, mw: m.w };
+}
+/* bisel del vidrio esmerilado: filo de luz arriba-izquierda, sombra abajo-derecha */
+function rimSprite(text, voice, fs) {
+  const off = Math.max(1, fs * 0.014);
+  const light = textSprite(text, voice, fs, hexA(P.glass, 0.95));
+  const lx = light.cv.getContext("2d");
+  lx.globalCompositeOperation = "destination-out"; lx.fillStyle = "#000";
+  lx.fillText(text, light.pad + off, light.pad + light.asc + off);
+  const dark = textSprite(text, voice, fs, "rgba(0,0,0,0.55)");
+  const dx = dark.cv.getContext("2d");
+  dx.globalCompositeOperation = "destination-out"; dx.fillStyle = "#000";
+  dx.fillText(text, dark.pad - off, dark.pad + dark.asc - off);
+  lx.globalCompositeOperation = "source-over"; lx.setTransform(1, 0, 0, 1, 0, 0);
+  lx.drawImage(dark.cv, 0, 0);
+  return light;
+}
+
+/* ---- texturas estáticas: disco de bokeh, estela, ruido, reflejos, vaho ---- */
+const spriteCache = {};
+function discSprite(color, kind) {
+  const key = color + kind;
+  if (spriteCache[key]) return spriteCache[key];
+  const s = kind === "bokeh" ? 256 : 128, cv = newCanvas(s, s), x = cv.getContext("2d");
+  const g = x.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  if (kind === "bokeh") {   /* disco plano con el borde más brillante, como un bokeh real */
+    g.addColorStop(0, hexA(color, 0.42)); g.addColorStop(0.7, hexA(color, 0.5));
+    g.addColorStop(0.86, hexA(color, 0.85)); g.addColorStop(0.95, hexA(color, 0.22)); g.addColorStop(1, hexA(color, 0));
+  } else {
+    g.addColorStop(0, hexA(color, 1)); g.addColorStop(0.35, hexA(color, 0.5)); g.addColorStop(1, hexA(color, 0));
+  }
+  x.fillStyle = g; x.fillRect(0, 0, s, s);
+  return spriteCache[key] = cv;
+}
+function streakSprite(color) {
+  const key = color + "streak";
+  if (spriteCache[key]) return spriteCache[key];
+  const cv = newCanvas(512, 32), x = cv.getContext("2d");
+  x.scale(1, 32 / 512);
+  const g = x.createRadialGradient(256, 256, 0, 256, 256, 256);
+  g.addColorStop(0, "rgba(255,255,255,0.95)"); g.addColorStop(0.12, hexA(color, 0.8)); g.addColorStop(1, hexA(color, 0));
+  x.fillStyle = g; x.fillRect(0, 0, 512, 512);
+  return spriteCache[key] = cv;
+}
+const noiseCv = (() => {
+  const cv = newCanvas(192, 192), x = cv.getContext("2d"), img = x.createImageData(192, 192), r = rngFor(424242);
+  for (let i = 0; i < img.data.length; i += 4) { const v = 150 + r() * 105; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = r() * 70; }
+  x.putImageData(img, 0, 0);
+  return cv;
+})();
+const noisePatMask = mkctx.createPattern(noiseCv, "repeat");
+let reflCv = null, fogTexCv = null;
+function buildStatics() {
+  /* reflejos del vidrio: bandas diagonales + brillo de esquina + manchas de dedos */
+  const r = rngFor(31337);
+  const RW = Math.ceil(GW * 1.2 / 2), RH = Math.ceil(GH * 1.2 / 2);
+  reflCv = newCanvas(RW, RH);
+  let x = reflCv.getContext("2d");
+  x.fillStyle = hexA(P.night, L.glassTint); x.fillRect(0, 0, RW, RH);   /* tinte del vidrio, horneado */
+  const ang = 1.08, nx = Math.cos(ang), ny = Math.sin(ang), diag = RW * nx + RH * ny;
+  const bands = [[0.22, 0.10, 0.06], [0.30, 0.018, 0.10], [0.63, 0.14, 0.04], [0.70, 0.02, 0.07]];
+  for (const [c, wdt, a] of bands) {
+    const c0 = diag * (c - wdt), c1 = diag * (c + wdt);
+    const g = x.createLinearGradient(nx * c0, ny * c0, nx * c1, ny * c1);
+    g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.5, `rgba(255,255,255,${a})`); g.addColorStop(1, "rgba(255,255,255,0)");
+    x.fillStyle = g; x.fillRect(0, 0, RW, RH);
+  }
+  let g = x.createRadialGradient(RW * 0.08, RH * 0.05, 0, RW * 0.08, RH * 0.05, RW * 0.5);
+  g.addColorStop(0, "rgba(255,255,255,0.07)"); g.addColorStop(1, "rgba(255,255,255,0)");
+  x.fillStyle = g; x.fillRect(0, 0, RW, RH);
+  for (let i = 0; i < 26; i++) {
+    const cx = r() * RW, cy = r() * RH, rr = (0.02 + r() * 0.07) * RW;
+    g = x.createRadialGradient(cx, cy, 0, cx, cy, rr);
+    g.addColorStop(0, `rgba(255,255,255,${0.012 + r() * 0.025})`); g.addColorStop(1, "rgba(255,255,255,0)");
+    x.fillStyle = g; x.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
+  }
+  /* vaho: capa lechosa desigual + gotitas de condensación + más espesa abajo */
+  const FW = Math.ceil(GW / 2), FH = Math.ceil(GH / 2);
+  fogTexCv = newCanvas(FW, FH);
+  x = fogTexCv.getContext("2d");
+  x.fillStyle = hexA(P.fog, 0.36); x.fillRect(0, 0, FW, FH);
+  for (let i = 0; i < 16; i++) {
+    const cx = r() * FW, cy = r() * FH, rr = (0.1 + r() * 0.25) * Math.max(FW, FH);
+    g = x.createRadialGradient(cx, cy, 0, cx, cy, rr);
+    g.addColorStop(0, hexA(P.fog, 0.14)); g.addColorStop(1, hexA(P.fog, 0));
+    x.fillStyle = g; x.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
+  }
+  g = x.createLinearGradient(0, FH * 0.55, 0, FH);
+  g.addColorStop(0, hexA(P.fog, 0)); g.addColorStop(1, hexA(P.fog, 0.24));
+  x.fillStyle = g; x.fillRect(0, 0, FW, FH);
+  for (let i = 0; i < 2400; i++) {
+    const cx = r() * FW, cy = r() * FH, rr = 0.4 + r() * r() * 1.8;
+    x.fillStyle = `rgba(255,255,255,${0.18 + r() * 0.35})`;
+    x.beginPath(); x.arc(cx, cy, rr, 0, TAU); x.fill();
+    x.fillStyle = "rgba(0,0,0,0.12)";
+    x.beginPath(); x.arc(cx + rr * 0.4, cy + rr * 0.5, rr * 0.7, 0, TAU); x.fill();
+  }
+  x.globalAlpha = 0.5; x.fillStyle = x.createPattern(noiseCv, "repeat"); x.fillRect(0, 0, FW, FH); x.globalAlpha = 1;
+}
+buildStatics();
+
+/* ================================ MUNDOS ================================
+   Lo que se ve A TRAVÉS del vidrio. Cambia en cada estallido. Tipos:
+   bokeh / aurora / rayos (100% generativos) · video / image (media real) —
+   cualquiera acepta "figure" (PNG recortado a contraluz) y los de media
+   aceptan "lights" (bokeh encima). */
+let camPar = { x: 0, y: 0 };   /* deriva de cámara → parallax interno del mundo */
+
+function drawBg(x, bg) {
+  const g = x.createLinearGradient(0, 0, 0, GH);
+  g.addColorStop(0, bg[1] || bg[0]); g.addColorStop(1, bg[0]);
+  x.fillStyle = g; x.fillRect(0, 0, GW, GH);
+}
+function drawCover(x, media, mw, mh, zoom, ox, oy, mirror) {
+  const s = Math.max(GW / mw, GH / mh) * zoom, w = mw * s, h = mh * s;
+  const dx = (GW - w) / 2 + ox, dy = (GH - h) / 2 + oy;
+  if (mirror) { x.save(); x.translate(GW, 0); x.scale(-1, 1); x.drawImage(media, dx, dy, w, h); x.restore(); }
+  else x.drawImage(media, dx, dy, w, h);
+}
+
+function makeBokeh(def, r) {
+  const cols = def.colors?.length ? def.colors : ["#E3A063", "#C46F55", "#EFD2A6", "#7E5470"];
+  const bg = def.bg || [P.night, "#1D130F"];
+  const sprites = cols.map(c => discSprite(c, "bokeh"));
+  const lights = Array.from({ length: Math.round(46 * (def.density ?? 1)) }, () => ({
+    x: r(), y: r(), z: Math.pow(r(), 0.8), c: Math.floor(r() * cols.length),
+    vx: (r() - 0.5) * 0.012, vy: (r() - 0.5) * 0.005, ph: r() * TAU, fl: 0.4 + r() * 1.6,
+  }));
+  const streaks = def.overlay ? [] : Array.from({ length: def.streaks ?? 5 }, () => ({
+    y: 0.3 + r() * 0.55, sp: (0.03 + r() * 0.07) * (r() < 0.5 ? -1 : 1), x0: r(), len: 0.2 + r() * 0.35,
+    c: r() < 0.5 ? "#E8B07A" : (r() < 0.5 ? "#C4604C" : "#F4EDE4"), a: 0.14 + r() * 0.14,
+  }));
+  return { draw(x, t, e) {
+    if (!def.overlay) drawBg(x, bg);
+    x.globalCompositeOperation = "lighter";
+    const kA = def.overlay ? 0.55 : 1;
+    for (const l of lights) {
+      const px = ((((l.x + l.vx * t) % 1) + 1) % 1) * GW * 1.2 - GW * 0.1 - camPar.x * (0.2 + 0.6 * l.z);
+      const py = ((((l.y + l.vy * t) % 1) + 1) % 1) * GH * 1.1 - GH * 0.05 - camPar.y * (0.2 + 0.6 * l.z);
+      const rad = vmin * (0.02 + 0.13 * l.z * l.z) * (1 + e * 0.22 * l.z);
+      x.globalAlpha = clamp((0.16 + 0.5 * l.z) * (0.72 + 0.28 * Math.sin(t * l.fl + l.ph)) * (0.75 + e * 0.5) * kA, 0, 1);
+      x.drawImage(sprites[l.c], px - rad, py - rad, rad * 2, rad * 2);
+    }
+    for (const s of streaks) {   /* estelas de faros cruzando la calle */
+      const px = ((((s.x0 + s.sp * t) % 1) + 1) % 1) * GW * 1.6 - GW * 0.3, len = s.len * GW;
+      x.globalAlpha = clamp(s.a * (0.8 + 0.4 * e), 0, 1);
+      x.drawImage(streakSprite(s.c), px - len / 2, s.y * GH - vmin * 0.012, len, vmin * 0.024);
+    }
+    x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
+  } };
+}
+
+function makeAurora(def, r) {
+  const cols = def.colors?.length ? def.colors : ["#8F4A56", "#C9825A", "#553A66", "#BE9C76"];
+  const bg = def.bg || [P.night, "#170C11"];
+  const blobs = Array.from({ length: def.blobs ?? 7 }, (_, i) => ({
+    c: cols[i % cols.length], ax: 0.18 + r() * 0.3, ay: 0.16 + r() * 0.28,
+    sx: 0.05 + r() * 0.1, sy: 0.04 + r() * 0.09, px: r() * TAU, py: r() * TAU, s: 0.45 + r() * 0.45,
+  }));
+  const motes = Array.from({ length: 80 }, () => ({ x: r(), y: r(), s: 0.6 + r() * 1.8, v: 0.006 + r() * 0.02, ph: r() * TAU }));
+  return { draw(x, t, e) {
+    drawBg(x, bg);
+    x.globalCompositeOperation = "lighter";
+    for (const b of blobs) {
+      const cx = GW * (0.5 + b.ax * Math.sin(t * b.sx * 2 + b.px)) - camPar.x * 0.25;
+      const cy = GH * (0.5 + b.ay * Math.cos(t * b.sy * 2 + b.py)) - camPar.y * 0.25;
+      const rad = Math.max(GW, GH) * b.s * 0.5 * (1 + e * 0.08);
+      x.globalAlpha = clamp(0.3 * (0.8 + e * 0.45), 0, 1);
+      x.drawImage(discSprite(b.c, "soft"), cx - rad, cy - rad, rad * 2, rad * 2);
+    }
+    x.fillStyle = "#FFFFFF";
+    for (const m of motes) {   /* polvo luminoso subiendo — le da textura a la refracción */
+      const px = m.x * GW - camPar.x * 0.5, py = ((((m.y - m.v * t) % 1) + 1) % 1) * GH - camPar.y * 0.5;
+      x.globalAlpha = 0.25 + 0.35 * Math.sin(t * 2 + m.ph) ** 2;
+      x.fillRect(px, py, m.s, m.s);
+    }
+    x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
+  } };
+}
+
+function makeRayos(def, r) {
+  const cols = def.colors?.length ? def.colors : ["#8DAFC4", "#C7D5DE", "#D8B38C"];
+  const bg = def.bg || ["#05070A", "#0F1822"];
+  const n = def.beams ?? 7;
+  const beams = Array.from({ length: n }, (_, i) => ({
+    fx: 0.06 + (i / Math.max(1, n - 1)) * 0.88 + (r() - 0.5) * 0.04, c: cols[i % cols.length],
+    sw: 0.3 + r() * 0.4, sp: 0.3 + r() * 0.5, ph: r() * TAU, wid: 0.05 + r() * 0.07, base: (r() - 0.5) * 0.6,
+  }));
+  return { draw(x, t, e) {
+    drawBg(x, bg);
+    x.globalCompositeOperation = "lighter";
+    let g = x.createRadialGradient(GW / 2, GH * 0.95, 0, GW / 2, GH * 0.95, GW * 0.6);
+    g.addColorStop(0, hexA(cols[0], 0.16 + e * 0.1)); g.addColorStop(1, hexA(cols[0], 0));
+    x.fillStyle = g; x.fillRect(0, 0, GW, GH);
+    const len = GH * 1.45;
+    for (const b of beams) {
+      const ang = Math.PI / 2 + b.base + Math.sin(t * b.sp + b.ph) * b.sw;
+      const sx = b.fx * GW - camPar.x * 0.3, sy = -GH * 0.04 - camPar.y * 0.3;
+      const ex = sx + Math.cos(ang) * len, ey = sy + Math.sin(ang) * len;
+      const k = 0.55 + 0.6 * e;
+      for (const [wm, am] of [[1, 0.35], [0.35, 0.6]]) {   /* haz ancho y suave + núcleo */
+        const half = b.wid * GW * 0.5 * wm * (1 + e * 0.25);
+        const nx = -Math.sin(ang) * half, ny = Math.cos(ang) * half;
+        g = x.createLinearGradient(sx, sy, ex, ey);
+        g.addColorStop(0, hexA(b.c, clamp(am * k, 0, 1))); g.addColorStop(0.55, hexA(b.c, am * k * 0.25)); g.addColorStop(1, hexA(b.c, 0));
+        x.fillStyle = g;
+        x.beginPath(); x.moveTo(sx, sy); x.lineTo(ex + nx, ey + ny); x.lineTo(ex - nx, ey - ny); x.closePath(); x.fill();
+      }
+      const gr = vmin * 0.06 * (1 + e * 0.6);
+      x.globalAlpha = 0.8; x.drawImage(discSprite("#FFFFFF", "soft"), sx - gr, sy - gr, gr * 2, gr * 2); x.globalAlpha = 1;
+    }
+    x.globalCompositeOperation = "source-over";
+  } };
+}
+
+function makeMedia(def, r) {
+  const isVideo = def.type === "video";
+  let el, failed = false;
+  if (isVideo) {
+    el = doc.createElement("video");
+    el.muted = true; el.loop = true; el.playsInline = true; el.preload = "auto";
+    el.addEventListener("loadedmetadata", () => { el.playbackRate = def.rate ?? 1; });
+  } else el = new Image();
+  el.addEventListener("error", () => { failed = true; console.warn("[cristal-roto] no cargó el mundo", def.src, "— cae a bokeh"); });
+  el.src = def.src;
+  const lights = def.lights ? makeBokeh({ colors: def.lightColors || ["#E3A063", "#EFD2A6", "#C46F55"], density: 0.4, overlay: true }, r) : null;
+  const w = {
+    enterT: 0, mirror: !!def.mirror,
+    get ok() { return !failed; },
+    enter(t) { w.enterT = t; if (isVideo && !MANUAL) el.play().catch(() => {}); },
+    leave() { if (isVideo) el.pause(); },
+    draw(x, t, e) {
+      x.fillStyle = P.night; x.fillRect(0, 0, GW, GH);
+      const ready = isVideo ? el.readyState >= 2 : (el.complete && el.naturalWidth > 0);
+      if (isVideo && MANUAL && el.duration) {   /* modo manual: el video sigue al reloj */
+        const want = (t * (def.rate ?? 1)) % el.duration;
+        if (Math.abs(el.currentTime - want) > 0.25) el.currentTime = want;
+      }
+      if (ready) {
+        const mw = isVideo ? el.videoWidth : el.naturalWidth, mh = isVideo ? el.videoHeight : el.naturalHeight;
+        /* foto: Ken Burns lento desde que entra; video: zoom fijo */
+        const kb = isVideo ? 0 : smooth((t - w.enterT) / 16) * 0.07;
+        x.filter = def.filter || "none";
+        drawCover(x, el, mw, mh, (def.zoom ?? 1.08) + kb + e * 0.015, -camPar.x * 0.3, -camPar.y * 0.3, w.mirror);
+        x.filter = "none";
+      }
+      if (def.tint) {   /* colorea la toma conservando su luz */
+        x.globalCompositeOperation = "color"; x.globalAlpha = def.tintAlpha ?? 0.6;
+        x.fillStyle = def.tint; x.fillRect(0, 0, GW, GH);
+        x.globalCompositeOperation = "lighter"; x.globalAlpha = 0.04 + e * 0.1; x.fillRect(0, 0, GW, GH);
+      }
+      x.globalCompositeOperation = "source-over"; x.globalAlpha = def.darken ?? 0.15;
+      x.fillStyle = "#000"; x.fillRect(0, 0, GW, GH); x.globalAlpha = 1;
+      if (lights) lights.draw(x, t, e);
+    },
+  };
+  return w;
+}
+
+/* figura recortada a contraluz, parada detrás del vidrio */
+function makeFigure(def, r) {
+  const img = new Image();
+  let ok = false, cache = null, cacheKey = "";
+  const ph = r() * TAU;
+  img.onload = () => { ok = true; cache = null; };
+  img.onerror = () => console.warn("[cristal-roto] no cargó la figura", def.src);
+  img.src = def.src;
+  function build() {
+    const portrait = vw < vh;
+    const h = vh * (def.height ?? 0.86) * (portrait ? 0.72 : 1), w = h * img.naturalWidth / img.naturalHeight;
+    const cv = newCanvas(w * DPR, h * DPR), c = cv.getContext("2d");
+    c.filter = def.filter || "brightness(0.6) contrast(1.08) saturate(0.7) sepia(0.22)";
+    c.drawImage(img, 0, 0, cv.width, cv.height);
+    cache = { cv, w, h }; cacheKey = vw + "x" + vh;
+  }
+  return {
+    get ok() { return ok; }, side: def.side || "right",
+    draw(x, t, e) {
+      if (!ok) return;
+      if (!cache || cacheKey !== vw + "x" + vh) build();
+      const { cv, w, h } = cache, side = def.side || "right", portrait = vw < vh;
+      let cx = side === "left" ? OX + vw * 0.05 + w / 2 : side === "right" ? OX + vw * 0.95 - w / 2 : OX + vw / 2;
+      if (portrait) cx = OX + vw / 2 + (side === "left" ? -1 : side === "right" ? 1 : 0) * vw * 0.14;
+      cx -= camPar.x * 0.12;
+      const yb = OY + vh * 1.02 - camPar.y * 0.1;
+      const gr = h * 0.62;
+      x.globalCompositeOperation = "lighter"; x.globalAlpha = clamp(0.5 * (0.7 + e * 0.5), 0, 1);
+      x.drawImage(discSprite(def.glow || "#C46F55", "soft"), cx - gr, yb - h * 0.55 - gr, gr * 2, gr * 2);
+      x.globalCompositeOperation = "source-over"; x.globalAlpha = 1;
+      x.save(); x.translate(cx, yb); x.rotate(Math.sin(t * 0.8 + ph) * 0.012);
+      const s = 1 + e * 0.012; x.scale(s, s);
+      x.drawImage(cv, -w / 2, -h, w, h);
+      x.restore();
+    },
+  };
+}
+
+function resolveWorldDefs() {
+  let list = (Array.isArray(C.worlds) ? C.worlds : []).filter(w => w && w.type);
+  /* media que inyecta el pipeline (bg.jpg / bg.mp4): se intercala con los
+     mundos generativos, así cada estallido alterna foto real ↔ generativo */
+  if (C.bg && C.bg.src) {
+    const isVid = C.bg.type === "video" || /\.(mp4|webm|mov|m4v)$/i.test(C.bg.src);
+    const base = { type: isVid ? "video" : "image", src: C.bg.src, filter: C.bg.filter, tint: C.bg.tint,
+                   tintAlpha: C.bg.tintAlpha ?? 0.35, darken: C.bg.darken ?? 0.25, lights: true };
+    const gen = list.filter(w => !["video", "image"].includes(w.type));
+    const src = gen.length ? gen : [{ type: "bokeh" }, { type: "rayos" }, { type: "aurora" }];
+    list = [];
+    src.forEach((w, i) => { list.push({ ...base, mirror: i % 2 === 1 }); list.push(w); });
+  }
+  if (!list.length) list = [{ type: "bokeh" }, { type: "rayos" }, { type: "aurora" }];
+  return list;
+}
+const WORLDS = resolveWorldDefs().map((def, i) => {
+  const r = rngFor(600 + i);
+  const make = { bokeh: makeBokeh, aurora: makeAurora, rayos: makeRayos, video: makeMedia, image: makeMedia }[def.type] || makeBokeh;
+  const w = make(def, r);
+  w.def = def;
+  if (def.figure?.src) w.fig = makeFigure(def.figure, r);
+  return w;
+});
+const FALLBACK_WORLD = makeBokeh({}, rngFor(999));
+let worldIdx = 0;
+WORLDS[0].enter?.(0);
+/* paleta de letras del mundo activo: texto, acento principal y secundario
+   (si el mundo no los define, cae a la paleta global) */
+function worldPal() {
+  const d = WORLDS[worldIdx]?.def || {};
+  return { text: d.text || P.text, hot: d.accent || P.hot, cool: d.accent2 || P.cool };
+}
+function currentFigSide() { const w = WORLDS[worldIdx]; return w.fig && w.fig.ok ? w.fig.side : null; }
+function switchWorld(t) {
+  WORLDS[worldIdx].leave?.();
+  worldIdx = (worldIdx + 1) % WORLDS.length;
+  WORLDS[worldIdx].enter?.(t);
+}
+function drawWorld(t, e) {
+  const w = WORLDS[worldIdx], x = wctx;
+  x.setTransform(DPR * WQ, 0, 0, DPR * WQ, 0, 0);
+  x.globalCompositeOperation = "source-over"; x.globalAlpha = 1; x.filter = "none";
+  ((w.ok === false) ? FALLBACK_WORLD : w).draw(x, t, e);
+  if (w.fig) w.fig.draw(x, t, e);
+}
+function updateFrost() {
+  /* versión chica, desenfocada y aclarada del mundo — es lo que se ve a
+     través del vidrio esmerilado y del vaho */
+  const f = frctx;
+  f.setTransform(1, 0, 0, 1, 0, 0); f.globalCompositeOperation = "source-over"; f.globalAlpha = 1;
+  f.filter = "blur(2px) brightness(1.3) saturate(1.25)";
+  f.clearRect(0, 0, frostCv.width, frostCv.height);
+  f.drawImage(worldCv, 0, 0, frostCv.width, frostCv.height);
+  f.filter = "none";
+}
+
+/* ================================ LETRA ================================ */
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const out = [];
+    (j.segments || []).forEach((seg, si) => {
+      for (const w of seg.words || []) {
+        const text = String(w.word || "").trim()
+          .replace(/^[^\p{L}\p{N}]+/u, "").replace(/[^\p{L}\p{N}']+$/u, "");
+        if (!text) continue;
+        out.push({ text, t: +w.start || 0, end: Math.max(+w.end || 0, (+w.start || 0) + 0.12), seg: si });
+      }
+    });
+    if (!out.length) throw new Error("lyrics.json sin palabras");
+    out.sort((a, b) => a.t - b.t);
+    return out;
+  } catch (e) {
+    console.warn("[cristal-roto] No se pudo cargar", C.lyricsUrl, "— sirve el HTML por HTTP (Live Server), no por file://.", e);
+    return [];
+  }
+}
+
+/* segmentos de Whisper → frases de ≤ maxWordsPerPhrase palabras, cortando
+   en el hueco más grande cerca del medio */
+function buildPhrases(words) {
+  const segs = [];
+  let cur = null;
+  for (const w of words) {
+    if (!cur || cur.seg !== w.seg) { cur = { seg: w.seg, words: [] }; segs.push(cur); }
+    cur.words.push(w);
+  }
+  const out = [];
+  const split = ws => {
+    if (ws.length <= L.maxWordsPerPhrase) { out.push(ws); return; }
+    let best = 2, bestScore = -Infinity;
+    for (let i = 2; i <= ws.length - 2; i++) {
+      const score = (ws[i].t - ws[i - 1].end) - Math.abs(i - ws.length / 2) * 0.03;
+      if (score > bestScore) { bestScore = score; best = i; }
+    }
+    split(ws.slice(0, best)); split(ws.slice(best));
+  };
+  for (const s of segs) split(s.words);
+  return out.map((ws, i) => ({
+    i, words: ws, start: ws[0].t, end: Math.max(...ws.map(w => w.end)),
+    lastT: Math.max(...ws.map(w => w.t)), shown: {},
+  }));
+}
+
+function voiceOf(ph, k) {
+  if (ph.mode === "impacto") return "golpe";
+  if (ph.mode === "vaho") return "vaho";
+  return (k === ph.hero && ph.heroGolpe) ? "golpe" : "grabado";
+}
+
+/* todas las decisiones por frase se sortean ACÁ, una vez, con su propio PRNG
+   — independientes del tamaño de pantalla (un resize re-maqueta igual) */
+function planPhrases(phrases) {
+  const prev = [];
+  for (const ph of phrases) {
+    const r = rngFor(100 + ph.i);
+    const n = ph.words.length, chars = ph.words.reduce((s, w) => s + w.text.length, 0);
+    const dpw = (ph.end - ph.start) / n;
+    ph.solo = n <= 2 && chars <= 12;
+    if (ph.solo) ph.mode = "impacto";
+    else {
+      const w = { ...L.modeWeights };
+      if (dpw > 0.55) w.vaho = (w.vaho || 0) * 2.4;
+      if (dpw < 0.3) { w.impacto = (w.impacto || 0) * 1.6; w.vaho = (w.vaho || 0) * 0.35; }
+      if (prev.length >= 2 && prev[0] === prev[1]) w[prev[0]] = 0;   /* nunca 3 iguales seguidas */
+      ph.mode = pickWeighted(r, w);
+    }
+    let hi = 0;
+    ph.words.forEach((w, k) => { if (w.text.length > ph.words[hi].text.length) hi = k; });
+    ph.hero = ph.words[hi].text.length >= 4 || ph.solo ? hi : -1;
+    ph.heroSolo = r() < L.heroSoloChance;
+    ph.heroGolpe = r() < 0.55;
+    ph.accent = pickWeighted(r, L.accentWeights);
+    ph.fill = pickWeighted(r, L.fillWeights);
+    ph.align = pickWeighted(r, L.alignWeights);
+    ph.crack = ph.words.map(() => r() < L.crackChance);
+    ph.layoutSeed = Math.floor(r() * 1e9);
+    prev.unshift(ph.mode); prev.length = Math.min(prev.length, 2);
+  }
+}
+
+/* transiciones entre frases: estallido (con cambio de mundo) o fundido
+   (las grietas quedan — el daño se acumula hasta que la lámina cede) */
+function planTransitions(phrases, hasIntro) {
+  const out = [];
+  let since = 0, damage = 0, prevT = -1;
+  phrases.forEach((ph, i) => {
+    const r = rngFor(5000 + i);
+    const prev = phrases[i - 1];
+    let mode = pickWeighted(r, S.modeWeights);
+    const roll = r(), dir = r() < 0.5 ? 1 : -1;
+    let kind, t;
+    if (!prev) {
+      kind = hasIntro ? "shatter" : "fade"; mode = "estallido";
+      t = Math.max(0.35, ph.start - 0.3);
+    } else {
+      const room = ph.start - prev.lastT;
+      const want = since >= S.everyMin && (since >= S.everyMax || damage >= S.damageMax || ph.solo || roll < S.chance);
+      kind = want ? "shatter" : "fade";
+      if (kind === "shatter" && room < 0.8) mode = "estallido";
+      const lead = kind === "fade" ? 0.18 : mode === "derrumbe" ? 0.62 : mode === "rafaga" ? 0.45 : 0.26;
+      t = (ph.start - prev.end) > 3 ? prev.end + 2.2 : ph.start - lead;
+      t = Math.max(t, prev.lastT + 0.4, prevT + 0.3);
+    }
+    out.push({ t, to: i, kind, mode, dir });
+    prevT = t;
+    if (kind === "shatter") { since = 0; damage = 0; }
+    since++;
+    ph.words.forEach((w, k) => { if (voiceOf(ph, k) === "golpe" && ph.crack[k]) damage++; });
+  });
+  return out;
+}
+
+function buildEvents(trans) {
+  const out = [];
+  for (const tr of trans) {
+    if (tr.kind === "shatter") out.push({ t: tr.t - 0.07, type: "blow", tr });
+    out.push({ t: tr.t, type: "trans", tr });
+    phrases[tr.to].words.forEach((w, k) => out.push({ t: Math.max(w.t, tr.t + 0.03), type: "word", ph: phrases[tr.to], k }));
+  }
+  const pri = { blow: 0, trans: 1, word: 2 };
+  out.sort((a, b) => a.t - b.t || pri[a.type] - pri[b.type]);
+  return out;
+}
+
+/* ============================== MAQUETACIÓN ==============================
+   Cada frase llena la lámina como un afiche: filas que se estiran al ancho
+   de la caja (fill) o todas al mismo cuerpo (ragged), con la palabra más
+   larga como "héroe" en su propia fila. Si el mundo trae una figura a un
+   costado, el bloque de texto se corre al otro lado. */
+function buildRows(ph) {
+  const portrait = vw < vh;
+  const base = ph.mode === "impacto" ? "golpe" : ph.mode;
+  const budget = (portrait ? L.rowCharsPortrait : L.rowCharsLandscape) * (ph.mode === "vaho" ? 1.3 : ph.mode === "grabado" ? 0.8 : 1);
+  const rows = [];
+  let cur = null;
+  const flush = () => { if (cur) rows.push(cur); cur = null; };
+  ph.words.forEach((w, k) => {
+    const voice = voiceOf(ph, k);
+    const text = voice === "vaho" ? w.text.toLocaleLowerCase("es") : upper(w.text);
+    const isHero = k === ph.hero;
+    const accent = isHero && voice === "golpe" && ph.accent !== "none" ? ph.accent : null;
+    const wd = { k, text, w, accent };
+    if (isHero && ph.words.length > 1 && (ph.heroSolo || voice !== base)) {
+      flush(); rows.push({ voice, words: [wd], hero: true, chars: text.length }); return;
+    }
+    if (cur && (cur.voice !== voice || cur.chars + 1 + text.length > budget)) flush();
+    if (!cur) cur = { voice, words: [], chars: -1, hero: false };
+    cur.words.push(wd); cur.chars += text.length + 1;
+  });
+  flush();
+  /* una palabrita suelta (≤3 letras) al final se sube a la fila anterior */
+  if (rows.length >= 2) {
+    const a = rows[rows.length - 2], b = rows[rows.length - 1];
+    if (!a.hero && !b.hero && a.voice === b.voice && b.words.length === 1 && b.words[0].text.length <= 3
+        && a.chars + 1 + b.words[0].text.length <= budget * 1.35) {
+      a.words.push(b.words[0]); a.chars += b.words[0].text.length + 1; rows.pop();
+    }
+  }
+  if (ph.solo && rows.length === 1) rows[0].hero = true;
+  return rows;
+}
+
+function layoutRows(rows, o) {
+  const portrait = vw < vh, r = o.r;
+  let boxW = vw * (portrait ? 0.86 : o.card ? 0.6 : 0.66), boxH = vh * (portrait ? 0.54 : 0.64);
+  let cx = OX + vw / 2, cy = OY + vh * 0.49;
+  const fig = currentFigSide();
+  if (!portrait && fig && fig !== "center") { boxW *= 0.8; cx += (fig === "left" ? 1 : -1) * vw * 0.12; }
+  if (portrait && fig) { cy -= vh * 0.07; boxH *= 0.86; }
+  if (!o.card) { cx += (r() - 0.5) * vw * (portrait ? 0.02 : 0.05); cy += (r() - 0.5) * vh * 0.06; }
+
+  for (const row of rows) {
+    const V = VOICE[row.voice];
+    let w100 = 0;
+    row.words.forEach((wd, j) => { w100 += measure(wd.text, row.voice, 100).w + (j ? V.space * 100 : 0); });
+    const fit = boxW / Math.max(1, w100) * 100;
+    if (row.fixedFs) row.fs = Math.min(row.fixedFs, fit);
+    else {
+      const cap = boxH * (o.solo ? 0.66 : row.hero ? 0.42 : 0.3) * (row.voice === "vaho" ? 0.85 : 1);
+      row.fs = Math.min(fit, cap);
+    }
+  }
+  if (o.fill === "ragged") {
+    const free = rows.filter(rw => !rw.fixedFs);
+    if (free.length > 1) {
+      const mn = Math.min(...free.map(rw => rw.fs));
+      free.forEach(rw => { rw.fs = rw.hero ? Math.min(rw.fs, mn * 1.6) : mn; });
+    }
+  }
+  const metrics = () => {
+    let tot = 0;
+    rows.forEach((row, j) => {
+      const V = VOICE[row.voice];
+      let asc = 0, desc = 0, w = 0;
+      row.words.forEach((wd, i) => {
+        const m = measure(wd.text, row.voice, row.fs);
+        wd.mw = m.w; asc = Math.max(asc, m.asc); desc = Math.max(desc, m.desc); w += m.w + (i ? V.space * row.fs : 0);
+      });
+      row.asc = asc; row.desc = desc; row.w = w;
+      row.gapBefore = j ? Math.max(rows[j - 1].fs * VOICE[rows[j - 1].voice].gap, row.fs * V.gap) : 0;
+      tot += row.gapBefore + asc + desc;
+    });
+    return tot;
+  };
+  let total = metrics();
+  if (total > boxH) { const k = boxH / total; rows.forEach(rw => { rw.fs *= k; }); total = metrics(); }
+
+  const align = (portrait || o.card) ? "center" : (o.align || "center");
+  const items = [];
+  let y = cy - total / 2;
+  for (const row of rows) {
+    y += row.gapBefore;
+    const baseline = y + row.asc;
+    const x0 = align === "left" ? cx - boxW / 2 : align === "right" ? cx + boxW / 2 - row.w : cx - row.w / 2;
+    const rot = o.rotMax ? (r() - 0.5) * 2 * o.rotMax * Math.PI / 180 : 0;
+    const rcx = x0 + row.w / 2, rcy = baseline - (row.asc - row.desc) / 2;
+    let x = x0;
+    for (const wd of row.words) {
+      const dx = x + wd.mw / 2 - rcx;
+      items.push(makeItem({
+        k: wd.k, text: wd.text, word: wd.w, voice: row.voice, fs: row.fs, rot,
+        cx: rcx + dx * Math.cos(rot), cy: rcy + dx * Math.sin(rot), by: (row.asc - row.desc) / 2,
+        mw: wd.mw, accent: wd.accent || row.accent || null, solo: !!o.solo, r,
+      }));
+      x += wd.mw + VOICE[row.voice].space * row.fs;
+    }
+    y += row.asc + row.desc;
+  }
+  return items;
+}
+
+function makeItem(o) {
+  const it = { ...o, tIn: Infinity, tOut: null };
+  const { text, voice, fs } = o;
+  if (voice === "golpe") {
+    const WP = worldPal(), col = o.accent ? WP[o.accent] : WP.text;
+    it.sp = textSprite(text, voice, fs, col, o.accent ? col : WP.hot);
+    it.gh = textSprite(text, voice, fs, WP.hot);
+    it.gc = textSprite(text, voice, fs, WP.cool);
+  } else if (voice === "grabado") {
+    it.mask = textSprite(text, voice, fs, "#FFFFFF");
+    it.rim = rimSprite(text, voice, fs);
+  } else if (voice === "vaho") {
+    it.mask = textSprite(text, voice, fs, "#FFFFFF", null, Math.max(0.8, fs * 0.012));
+    it.reveal = clamp(o.word ? o.word.end - o.word.t : 0.4, 0.22, 0.7);
+    it.drips = [];
+    const nd = o.r() < 0.55 ? 1 : 2;
+    for (let i = 0; i < nd; i++) it.drips.push({
+      fx: 0.08 + o.r() * 0.84, len: vmin * (0.04 + o.r() * 0.1), wid: Math.max(1.6, fs * 0.045),
+      delay: it.reveal + 0.15 + o.r() * 0.9, dur: 1.6 + o.r() * 2,
+    });
+  } else {
+    it.sp = textSprite(text, voice, fs, hexA(worldPal().text, 0.92));
+  }
+  return it;
+}
+
+function layoutPhrase(ph) {
+  const r = mulberry32(ph.layoutSeed);
+  const items = layoutRows(buildRows(ph), {
+    r, fill: ph.fill, align: ph.align, solo: ph.solo,
+    rotMax: ph.mode === "grabado" ? 0 : L.rowRotMax * (ph.mode === "vaho" ? 1.2 : 1),
+  });
+  for (const it of items) { const s = ph.shown[it.k]; if (s != null) it.tIn = s; }
+  return items;
+}
+
+/* intro / outro: la misma lámina, con título esmerilado gigante */
+function cardRows(which) {
+  const cfg = which === "intro" ? C.intro : C.outro;
+  const rows = [];
+  const top = which === "intro" ? cfg.artist : (cfg.songTitle || cfg.artist);
+  const title = cfg.title || (which === "intro" ? "" : "");
+  if (top && title) rows.push({ voice: "mono", words: [{ k: 0, text: upper(top) }], fixedFs: vmin * 0.032 });
+  if (title || top) rows.push({ voice: "grabado", words: [{ k: 1, text: upper(title || top) }], hero: true });
+  if (cfg.sub) rows.push({ voice: "golpe", words: [{ k: 2, text: upper(cfg.sub), accent: "hot" }], fixedFs: vmin * 0.085 });
+  if (cfg.feats) rows.push({ voice: "mono", words: [{ k: 3, text: upper(cfg.feats) }], fixedFs: vmin * 0.021 });
+  return rows;
+}
+function activateCard(which, t) {
+  const rows = cardRows(which);
+  if (!rows.length) { pane = null; return; }
+  const items = layoutRows(rows, { card: true, r: rngFor(which === "intro" ? 1 : 2) });
+  items.forEach((it, j) => { it.tIn = which === "intro" ? -1 : t + 0.4 + j * 0.16; });
+  pane = { kind: "card", which, mode: "grabado", items };
+}
+
+/* ================================ GRIETAS ================================
+   Telaraña: rayos quebrados que salen del impacto (con ramas) + anillos
+   concéntricos arqueados hacia el centro + astillado fino en el centro.
+   Cada segmento guarda su distancia de recorrido → la grieta CRECE. */
+function genWeb(x, y, R, r, o = {}) {
+  const segs = [], rays = [];
+  const nr = o.rays ?? (7 + Math.floor(r() * 5));
+  const a0 = r() * TAU;
+  for (let i = 0; i < nr; i++) {
+    let a = a0 + (i + (r() - 0.5) * 0.55) * TAU / nr;
+    const len = R * (0.55 + r() * 0.6), steps = 5 + Math.floor(r() * 4), st = len / steps;
+    let px = x, py = y, d = 0;
+    const pts = [[x, y]];
+    for (let s = 0; s < steps; s++) {
+      a += (r() - 0.5) * 0.35;
+      const l = st * (0.7 + r() * 0.6), nx = px + Math.cos(a) * l, ny = py + Math.sin(a) * l;
+      d += l; segs.push([px, py, nx, ny, d]); pts.push([nx, ny]);
+      if (s > 0 && r() < 0.22) {
+        let ba = a + (r() < 0.5 ? -1 : 1) * (0.4 + r() * 0.5), bx = nx, by = ny, bd = d;
+        const nb = 2 + Math.floor(r() * 2);
+        for (let b = 0; b < nb; b++) {
+          const bl = st * (0.4 + r() * 0.5), qx = bx + Math.cos(ba) * bl, qy = by + Math.sin(ba) * bl;
+          bd += bl; segs.push([bx, by, qx, qy, bd]); bx = qx; by = qy; ba += (r() - 0.5) * 0.4;
+        }
+      }
+      px = nx; py = ny;
+    }
+    rays.push(pts);
+  }
+  const pointAt = (pts, rr) => { for (const p of pts) if (Math.hypot(p[0] - x, p[1] - y) >= rr) return p; return null; };
+  const rings = o.rings ?? (2 + Math.floor(r() * 2));
+  for (let k = 1; k <= rings; k++) {
+    const rr = R * Math.pow(k / (rings + 0.6), 1.15);
+    for (let i = 0; i < nr; i++) {
+      if (r() > 0.85 - k * 0.1) continue;
+      const A = pointAt(rays[i], rr * (0.9 + r() * 0.2)), B = pointAt(rays[(i + 1) % nr], rr * (0.9 + r() * 0.2));
+      if (!A || !B) continue;
+      const bow = 0.12 + r() * 0.1, mx = (A[0] + B[0]) / 2, my = (A[1] + B[1]) / 2;
+      const qx = mx + (x - mx) * bow, qy = my + (y - my) * bow;
+      segs.push([A[0], A[1], qx, qy, rr], [qx, qy, B[0], B[1], rr]);
+    }
+  }
+  for (let i = 0; i < 14; i++) {
+    const a = r() * TAU, l = R * 0.07 * (0.3 + r()), o2 = R * 0.025 * r();
+    const sx = x + Math.cos(a) * o2, sy = y + Math.sin(a) * o2;
+    segs.push([sx, sy, sx + Math.cos(a) * l, sy + Math.sin(a) * l, l * 0.5]);
+  }
+  let maxD = 1;
+  for (const s of segs) maxD = Math.max(maxD, s[4]);
+  return { x, y, R, segs, maxD, w: o.w ?? Math.max(0.9, R / 240) };
+}
+function strokeWeb(ctx, web, prog) {
+  const lim = web.maxD * prog, buckets = [[], [], []];
+  for (const s of web.segs) {
+    if (s[4] > lim) continue;
+    const q = s[4] / web.maxD;
+    buckets[q < 0.35 ? 0 : q < 0.7 ? 1 : 2].push(s);
+  }
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.strokeStyle = "rgba(0,0,0,0.38)"; ctx.lineWidth = web.w * 2.6;
+  ctx.beginPath();
+  for (const b of buckets) for (const s of b) { ctx.moveTo(s[0] + 0.9, s[1] + 1.1); ctx.lineTo(s[2] + 0.9, s[3] + 1.1); }
+  ctx.stroke();
+  const al = [0.95, 0.72, 0.45], lw = [1.3, 1, 0.8];
+  buckets.forEach((b, i) => {
+    if (!b.length) return;
+    ctx.strokeStyle = hexA(P.glass, al[i]); ctx.lineWidth = web.w * lw[i];
+    ctx.beginPath();
+    for (const s of b) { ctx.moveTo(s[0], s[1]); ctx.lineTo(s[2], s[3]); }
+    ctx.stroke();
+  });
+  if (prog > 0.15) {   /* el vidrio astillado en el centro del impacto queda blanco */
+    const rr = web.R * 0.1;
+    ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = 0.75;
+    ctx.drawImage(discSprite(P.glass, "soft"), web.x - rr, web.y - rr, rr * 2, rr * 2);
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
+  }
+}
+function bakeWeb(web) { cctx.setTransform(DPR, 0, 0, DPR, 0, 0); strokeWeb(cctx, web, 1); hasCracks = true; }
+function clearCracks() { cctx.setTransform(1, 0, 0, 1, 0, 0); cctx.clearRect(0, 0, crackCv.width, crackCv.height); hasCracks = false; }
+
+/* ============================== ESTALLIDO ===============================
+   La lámina se parte en celdas radiales desde el punto del golpe (rayos ×
+   anillos que se agrandan hacia afuera, con los bordes compartidos → sin
+   huecos) y cada celda es un fragmento que lleva su pedazo de la foto
+   congelada. Posición/rotación/escala son funciones cerradas del tiempo
+   (no integración) → determinista a cualquier frame rate. */
+function buildShards(px, py, mode, r, dir) {
+  const maxD = Math.max(Math.hypot(px, py), Math.hypot(GW - px, py), Math.hypot(px, GH - py), Math.hypot(GW - px, GH - py));
+  const nR = S.rays[0] + Math.floor(r() * (S.rays[1] - S.rays[0] + 1));
+  const m = Math.max(3, S.rings | 0);
+  const a0 = r() * TAU;
+  const angs = [], RAD = [];
+  for (let i = 0; i < nR; i++) angs.push(a0 + (i + (r() - 0.5) * 0.5) * TAU / nR);
+  for (let i = 0; i < nR; i++) {
+    const row = [0];
+    for (let k = 1; k <= m; k++) {
+      let v = k === m ? maxD * 1.3 : maxD * Math.pow(k / m, 1.6) * (0.86 + r() * 0.28);
+      v = Math.max(v, row[k - 1] * 1.08 + 2);
+      row.push(v);
+    }
+    RAD.push(row);
+  }
+  const pt = (i, k) => { const ii = i % nR; if (k === 0) return [px, py]; return [px + Math.cos(angs[ii] + (i >= nR ? TAU : 0)) * RAD[ii][k], py + Math.sin(angs[ii] + (i >= nR ? TAU : 0)) * RAD[ii][k]]; };
+  const mids = {};
+  const mid = (i, k) => {
+    const key = (i % nR) + ":" + k;
+    if (!mids[key]) {
+      const A = pt(i, k), B = pt(i + 1, k), f = 0.35 + r() * 0.3;
+      const x = A[0] + (B[0] - A[0]) * f, y = A[1] + (B[1] - A[1]) * f, pull = (r() - 0.35) * 0.08;
+      mids[key] = [x + (px - x) * pull, y + (py - y) * pull];
+    }
+    return mids[key];
+  };
+  const polys = [];
+  for (let k = 1; k <= m; k++) for (let i = 0; i < nR; i++) {
+    if (k === 1) { polys.push([pt(i, 0), pt(i, 1), mid(i, 1), pt(i + 1, 1)]); continue; }
+    if (r() < (k >= m - 1 ? 0.6 : 0.25)) {   /* celdas grandes se parten en dos triángulos */
+      polys.push([pt(i, k - 1), mid(i, k - 1), pt(i + 1, k - 1), pt(i + 1, k)]);
+      polys.push([pt(i + 1, k), mid(i, k), pt(i, k), pt(i, k - 1)]);
+    } else polys.push([pt(i, k - 1), mid(i, k - 1), pt(i + 1, k - 1), pt(i + 1, k), mid(i, k), pt(i, k)]);
+  }
+  const shards = [];
+  for (const poly of polys) {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, cx = 0, cy = 0;
+    for (const p of poly) { x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); cx += p[0]; cy += p[1]; }
+    if (x1 < -10 || x0 > GW + 10 || y1 < -10 || y0 > GH + 10) continue;
+    cx /= poly.length; cy /= poly.length;
+    const dx = cx - px, dy = cy - py, dist = Math.hypot(dx, dy) || 1, ux = dx / dist, uy = dy / dist, q = Math.min(1, dist / maxD);
+    const sh = { rel: poly.map(p => [p[0] - cx, p[1] - cy]), cx, cy,
+                 rdx: (r() - 0.5) * vmin * 0.014, rdy: (r() - 0.5) * vmin * 0.014, gl: r() * 6 };
+    if (mode === "derrumbe") {
+      sh.delay = 0.02 + q * 0.42 + r() * 0.1;
+      sh.vx = ux * (40 + r() * 120) * U; sh.vy = (-40 + r() * 140) * U; sh.g = 3000 * U;
+      sh.vz = -(0.05 + r() * 0.2); sh.vr = (r() - 0.5) * 3.2; sh.vf = 1 + r() * 3.5; sh.life = 1.0 + r() * 0.5;
+    } else if (mode === "rafaga") {
+      const order = dir > 0 ? cx / GW : 1 - cx / GW;
+      sh.delay = clamp(order, 0, 1) * 0.28 + r() * 0.04;
+      sh.vx = dir * (1500 + r() * 1500) * U; sh.vy = ((r() - 0.5) * 500 - 150) * U; sh.g = 800 * U;
+      sh.vz = r() * 0.5; sh.vr = dir * (1.5 + r() * 6); sh.vf = 3 + r() * 9; sh.life = 0.8 + r() * 0.4;
+    } else {
+      sh.delay = q * 0.05;
+      const sp = (1700 - 1300 * q) * (0.65 + r() * 0.7) * U;
+      sh.vx = ux * sp + (r() - 0.5) * 120 * U; sh.vy = uy * sp - r() * 260 * U; sh.g = 1900 * U;
+      sh.vz = (2.6 - 1.9 * q) * (0.6 + r() * 0.8); sh.vr = (r() - 0.5) * 9; sh.vf = 3 + r() * 11; sh.life = 0.75 + r() * 0.55;
+    }
+    shards.push(sh);
+  }
+  return shards;
+}
+function buildGlitter(px, py, mode, r, dir) {
+  return Array.from({ length: 130 }, () => {
+    const a = r() * TAU, sp = (250 + r() * 1500) * U;
+    let vx = Math.cos(a) * sp, vy = Math.sin(a) * sp - r() * 300 * U;
+    if (mode === "rafaga") { vx = dir * (900 + r() * 1800) * U; vy = (r() - 0.6) * 500 * U; }
+    if (mode === "derrumbe") { vx *= 0.35; vy = -r() * 200 * U; }
+    return { x: px + (r() - 0.5) * vmin * 0.12, y: py + (r() - 0.5) * vmin * 0.12, vx, vy, g: 1500 * U,
+             s: (2.4 + r() * 8) * U, rot: r() * TAU, vr: (r() - 0.5) * 24, life: 0.45 + r() * 0.9, tw: r() * TAU, delay: r() * 0.06 };
+  });
+}
+function drawShards(g, t) {
+  if (!shatter) return;
+  const τ0 = t - shatter.t;
+  if (τ0 > 3.2) { shatter = null; return; }
+  const VCx = OX + vw / 2, VCy = OY + vh / 2, margin = vmin * 0.7;
+  for (const sh of shatter.shards) {
+    const τ = τ0 - sh.delay;
+    let x = sh.cx, y = sh.cy, z = 1, rot = 0, fx = 1, a = 1, move = 0, glint = 0;
+    if (τ > 0) {
+      x = sh.cx + sh.vx * τ; y = sh.cy + sh.vy * τ + 0.5 * sh.g * τ * τ;
+      z = Math.max(0.2, 1 + sh.vz * τ);
+      x = VCx + (x - VCx) * z; y = VCy + (y - VCy) * z;   /* perspectiva: hacia cámara se abre desde el centro */
+      rot = sh.vr * τ; fx = Math.cos(sh.vf * τ);
+      a = 1 - smooth((τ - sh.life * 0.5) / (sh.life * 0.5));
+      move = Math.min(1, τ / 0.12);
+      glint = Math.pow(Math.max(0, Math.sin(sh.vf * τ * 0.5 + sh.gl)), 24);
+      if (a <= 0.003) continue;
+      if (y > GH + margin * z || y < -margin * z || x < -margin * z || x > GW + margin * z) continue;
+    }
+    const sx = z * (Math.abs(fx) < 0.04 ? 0.04 * (fx < 0 ? -1 : 1) : fx);
+    g.save();
+    g.translate(x, y); g.rotate(rot); g.scale(sx, z);
+    g.beginPath();
+    sh.rel.forEach((p, j) => j ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]));
+    g.closePath();
+    g.save(); g.clip();
+    g.globalAlpha = a;
+    g.drawImage(snapCv, -sh.cx + sh.rdx * move, -sh.cy + sh.rdy * move, GW, GH);
+    if (move > 0) {   /* cara del vidrio: un velo del color del cristal + destello al girar */
+      g.globalCompositeOperation = "lighter";
+      g.fillStyle = hexA(P.glass, 0.035 * move + glint * 0.55); g.fill();
+      g.globalCompositeOperation = "source-over";
+    }
+    g.restore();
+    g.globalAlpha = a * (τ > 0 ? 0.5 + glint * 0.5 : 0.35);
+    g.strokeStyle = hexA(P.glass, 1); g.lineWidth = 1.3 / Math.max(0.3, Math.abs(z));
+    g.stroke();
+    g.restore();
+  }
+  g.globalAlpha = 1;
+  g.fillStyle = hexA(P.glass, 1);
+  for (const p of shatter.glitter) {
+    const τ = τ0 - p.delay;
+    if (τ < 0 || τ > p.life) continue;
+    const x = p.x + p.vx * τ, y = p.y + p.vy * τ + 0.5 * p.g * τ * τ;
+    g.globalAlpha = (1 - τ / p.life) * (0.45 + 0.55 * Math.sin(p.tw + τ * 28) ** 2);
+    g.save(); g.translate(x, y); g.rotate(p.rot + p.vr * τ);
+    g.beginPath(); g.moveTo(-p.s / 2, p.s * 0.3); g.lineTo(p.s / 2, p.s * 0.2); g.lineTo(0, -p.s * 0.45); g.closePath(); g.fill();
+    g.restore();
+  }
+  g.globalAlpha = 1;
+}
+
+/* ================================ ESTADO ================================ */
+let phrases = [], events = [], ev = 0, timelineReady = false;
+let pane = null, fading = [], webs = [], shatter = null;
+let fogA = 0, sweepT = null, flashT = -10, kickT = -10, lastOnset = -10, outroShown = false;
+let impulses = [];
+let lastT = 0;
+
+function shatterPoint(tr, t) {
+  const r = rngFor(8000 + (typeof tr.to === "number" ? tr.to : 998));
+  if (pane && pane.items.length) {
+    const shown = pane.items.filter(it => it.tIn <= t).sort((a, b) => a.tIn - b.tIn);
+    const golpes = shown.filter(it => it.voice === "golpe");
+    const pick = golpes.length ? golpes[golpes.length - 1] : shown.length ? shown[Math.floor(r() * shown.length)] : null;
+    if (pick) return { x: pick.cx + (r() - 0.5) * pick.mw * 0.4, y: pick.cy + (r() - 0.5) * pick.fs * 0.3 };
+  }
+  return { x: OX + vw * (0.35 + r() * 0.3), y: OY + vh * (0.35 + r() * 0.3) };
+}
+
+/* golpe final: una telaraña enorme + destello + sacudida, 70ms antes de estallar */
+function doBlow(tr, t, silent) {
+  const p = shatterPoint(tr, t);
+  tr.px = p.x; tr.py = p.y;
+  if (silent) return;
+  webs.push({ ...genWeb(p.x, p.y, vmin * 0.5, rngFor(9000 + (typeof tr.to === "number" ? tr.to : 997)), { rays: 13, rings: 4, w: Math.max(1.1, vmin / 650) }), born: t, dur: 0.07 });
+  impulses.push({ t0: t, amp: L.shakePx * U * 2.2, ph: 1.7 });
+  flashT = t;
+}
+function doShatter(tr, t, silent) {
+  if (tr.px == null) { const p = shatterPoint(tr, t); tr.px = p.x; tr.py = p.y; }
+  if (!silent) {
+    /* foto congelada EXACTA de lo que se estaba viendo (mundo + vidrio) */
+    snctx.setTransform(1, 0, 0, 1, 0, 0); snctx.globalCompositeOperation = "source-over"; snctx.globalAlpha = 1;
+    snctx.clearRect(0, 0, snapCv.width, snapCv.height);
+    snctx.drawImage(worldCv, 0, 0, snapCv.width, snapCv.height); snctx.drawImage(glassCv, 0, 0);
+    const r = rngFor(7000 + (typeof tr.to === "number" ? tr.to : 996));
+    shatter = { t, shards: buildShards(tr.px, tr.py, tr.mode, r, tr.dir), glitter: buildGlitter(tr.px, tr.py, tr.mode, r, tr.dir) };
+    kickT = t;
+  } else shatter = null;
+  webs = []; clearCracks(); fading = []; fogA = 0; pane = null; sweepT = null;
+  switchWorld(t);
+}
+function doFade(t, silent) {
+  if (pane && !silent) for (const it of pane.items) if (it.tIn <= t) { it.tOut = t; fading.push(it); }
+  pane = null;
+  if (!silent) sweepT = t;
+}
+function activatePhrase(ph, t) {
+  pane = { kind: "phrase", ph, mode: ph.mode, items: layoutPhrase(ph) };
+  aimCamera(rngFor(3000 + ph.i));
+}
+function doTrans(tr, t, silent) {
+  if (tr.kind === "shatter") doShatter(tr, t, silent); else doFade(t, silent);
+  if (tr.to === "outro") { activateCard("outro", t); aimCamera(rngFor(2999)); }
+  else activatePhrase(phrases[tr.to], t);
+}
+function doWord(ph, k, t, silent) {
+  if (!pane || pane.ph !== ph) return;
+  ph.shown[k] = t;
+  const it = pane.items.find(x => x.k === k);
+  if (!it) return;
+  it.tIn = t;
+  lastOnset = t;
+  if (it.voice !== "golpe") return;
+  const land = t + 0.12;
+  if (ph.crack[k]) {
+    const r = rngFor(20000 + ph.i * 50 + k);
+    const R = clamp(Math.max(it.mw, it.fs) * (ph.solo ? 0.75 : 0.55), vmin * 0.1, vmin * (ph.solo ? 0.42 : 0.3));
+    const ang = r() * TAU, off = r() * 0.35;
+    const web = { ...genWeb(it.cx + Math.cos(ang) * it.mw * off * 0.5, it.cy + Math.sin(ang) * it.fs * off * 0.4, R, r), born: land, dur: 0.16 };
+    if (silent) bakeWeb(web); else webs.push(web);
+  }
+  if (!silent) impulses.push({ t0: land, amp: L.shakePx * U * (ph.solo ? 1.6 : 1), ph: k * 1.3 });
+}
+function handle(e, silent) {
+  if (e.type === "blow") doBlow(e.tr, e.t, silent);
+  else if (e.type === "trans") doTrans(e.tr, e.t, silent);
+  else doWord(e.ph, e.k, e.t, silent);
+}
+/* salto sin efectos (?seek=, o una pestaña que estuvo congelada) */
+function fastForward(T) { while (ev < events.length && events[ev].t <= T) handle(events[ev++], true); }
+
+/* ---- outro: se dispara por el FINAL REAL del audio, no por la letra ---- */
+function maybeOutro(t) {
+  if (outroShown || !timelineReady) return;
+  const dur = audio.duration;
+  if (!isFinite(dur) || dur <= 0) return;
+  if (audio.ended || (dur - t) <= C.outro.leadSec) {
+    outroShown = true;
+    doc.body.classList.add("outroActive");
+    events.length = ev;   /* no entran más palabras */
+    const tr = { t: t + 0.08, to: "outro", kind: "shatter", mode: "estallido", dir: 1 };
+    events.push({ t, type: "blow", tr }, { t: t + 0.08, type: "trans", tr });
+  }
+}
+
+/* ================================ CÁMARA ================================ */
+const cam = { x: 0, y: 0, rz: 0, rx: 0, ry: 0, s: 1, tx: 0, ty: 0, trz: 0, trx: 0, try: 0, ts: 1 };
+function aimCamera(r) {
+  cam.trz = (r() - 0.5) * 2 * L.dutchMax;
+  cam.ts = lerp(L.zoom[0], L.zoom[1], r());
+  cam.trx = (r() - 0.5) * 2 * L.tiltMax * 0.6;
+  cam.try = (r() - 0.5) * 2 * L.tiltMax;
+  cam.tx = (r() - 0.5) * vw * 0.025; cam.ty = (r() - 0.5) * vh * 0.02;
+}
+function updateCamera(t, dt) {
+  const k = 1 - Math.exp(-dt * 2.4);
+  cam.x += (cam.tx - cam.x) * k; cam.y += (cam.ty - cam.y) * k;
+  cam.rz += (cam.trz - cam.rz) * k; cam.rx += (cam.trx - cam.rx) * k; cam.ry += (cam.try - cam.ry) * k;
+  cam.s += (cam.ts - cam.s) * k;
+  let sx = 0, sy = 0, srz = 0;
+  for (const im of impulses) {
+    const τ = t - im.t0;
+    if (τ < 0) continue;
+    const e = im.amp * Math.exp(-τ * 14);
+    sx += e * Math.sin(τ * 83 + im.ph); sy += e * Math.cos(τ * 71 + im.ph * 1.3); srz += e * 0.02 * Math.sin(τ * 60 + im.ph);
+  }
+  impulses = impulses.filter(im => t - im.t0 < 0.6);
+  const kick = t >= kickT ? 0.06 * Math.exp(-(t - kickT) * 4.5) : 0;   /* golpe de zoom al estallar */
+  const dX = Math.sin(t * 0.23) * vw * 0.006, dY = Math.cos(t * 0.17) * vh * 0.006, dRy = Math.sin(t * 0.11) * 1.2;
+  camPar = { x: cam.x + dX, y: cam.y + dY };
+  rig.style.transform = `translate3d(${(cam.x + sx + dX).toFixed(2)}px, ${(cam.y + sy + dY).toFixed(2)}px, 0) ` +
+    `rotateX(${cam.rx.toFixed(3)}deg) rotateY(${(cam.ry + dRy).toFixed(3)}deg) rotateZ(${(cam.rz + srz).toFixed(3)}deg) scale(${(cam.s + kick).toFixed(4)})`;
+}
+
+/* ================================ ENERGÍA ================================
+   Graves reales (AnalyserNode) si el AudioContext corre; si no, un pulso por
+   cada palabra cantada. El mundo respira con esto. */
+let analyser = null, fbuf = null, bassPeak = 0.25, E = 0;
+async function setupAnalyser() {
+  if (analyser || MANUAL) return;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ac = new AC();
+    await Promise.race([ac.resume(), new Promise(r => setTimeout(r, 400))]);
+    if (ac.state !== "running") { ac.close(); return; }   /* conectar un contexto suspendido silenciaría el audio */
+    const src = ac.createMediaElementSource(audio);
+    const an = ac.createAnalyser();
+    an.fftSize = 1024; an.smoothingTimeConstant = 0.6;
+    src.connect(an); an.connect(ac.destination);
+    fbuf = new Uint8Array(an.frequencyBinCount); analyser = an;
+  } catch (e) { analyser = null; }
+}
+function updateEnergy(t, dt) {
+  let a = 0;
+  if (analyser && !audio.paused) {
+    analyser.getByteFrequencyData(fbuf);
+    let s = 0;
+    for (let i = 1; i <= 6; i++) s += fbuf[i];
+    const b = s / (6 * 255);
+    bassPeak = Math.max(b, bassPeak * 0.996, 0.25);
+    a = clamp((b / bassPeak - 0.6) / 0.4, 0, 1);
+  }
+  const on = Math.exp(-Math.max(0, t - lastOnset) * 7);
+  const target = Math.max(a, on * 0.75);
+  E += (target - E) * (1 - Math.exp(-dt * 18));
+}
+
+/* ================================ VIDRIO ================================ */
+function spriteAt(ctx, it, sp, s = 1, ox = 0, oy = 0) {
+  ctx.save();
+  ctx.translate(it.cx, it.cy);
+  if (it.rot) ctx.rotate(it.rot);
+  if (s !== 1) ctx.scale(s, s);
+  ctx.drawImage(sp.cv, -sp.mw / 2 - sp.pad + ox, it.by - sp.asc - sp.pad + oy, sp.w, sp.h);
+  ctx.restore();
+}
+const outK = (it, t, d = 0.24) => it.tOut == null ? 0 : clamp((t - it.tOut) / d, 0, 1);
+
+function drawFog(g, t, dt) {
+  const target = pane && pane.mode === "vaho" ? 1 : 0;
+  fogA += (target - fogA) * (1 - Math.exp(-dt * (target > fogA ? 2.4 : 3.5)));
+  if (fogA < 0.01) return;
+  const f = fgctx;
+  f.setTransform(1, 0, 0, 1, 0, 0); f.globalCompositeOperation = "source-over"; f.globalAlpha = 1;
+  f.clearRect(0, 0, fogCv.width, fogCv.height);
+  f.drawImage(frostCv, 0, 0, fogCv.width, fogCv.height);
+  f.drawImage(fogTexCv, 0, 0, fogCv.width, fogCv.height);
+  f.setTransform(DPR * FQ, 0, 0, DPR * FQ, 0, 0);
+  f.globalCompositeOperation = "destination-out";
+  const list = (pane ? pane.items : []).concat(fading).filter(it => it.voice === "vaho");
+  for (const it of list) {
+    const τ = t - it.tIn;
+    if (τ < 0) continue;
+    const a = 1 - outK(it, t, 0.6);
+    if (a <= 0) continue;
+    const sp = it.mask, p = easeInOut(τ / it.reveal);
+    const x0 = -sp.mw / 2 - sp.pad, y0 = it.by - sp.asc - sp.pad;
+    f.globalAlpha = a;
+    f.save(); f.translate(it.cx, it.cy); if (it.rot) f.rotate(it.rot);
+    f.save(); f.beginPath(); f.rect(x0, y0, sp.w * p, sp.h); f.clip();   /* el dedo escribe de izquierda a derecha */
+    f.drawImage(sp.cv, x0, y0, sp.w, sp.h);
+    f.restore();
+    f.lineCap = "round"; f.strokeStyle = "#000"; f.fillStyle = "#000";
+    for (const d of it.drips) {   /* gotas que chorrean desde la letra */
+      const q = (τ - d.delay) / d.dur;
+      if (q <= 0) continue;
+      const len = d.len * easeOutCubic(Math.min(1, q)), dx = -sp.mw / 2 + d.fx * sp.mw, dy0 = it.by - it.fs * 0.04;
+      f.lineWidth = d.wid;
+      f.beginPath(); f.moveTo(dx, dy0); f.quadraticCurveTo(dx + d.wid * 0.6, dy0 + len * 0.5, dx, dy0 + len); f.stroke();
+      f.beginPath(); f.arc(dx, dy0 + len, d.wid * 0.85, 0, TAU); f.fill();
+    }
+    f.restore();
+  }
+  f.globalCompositeOperation = "source-over"; f.globalAlpha = 1;
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = fogA;
+  g.drawImage(fogCv, 0, 0, glassCv.width, glassCv.height);
+  g.restore();
+}
+
+function drawGrabado(g, t) {
+  const list = (pane ? pane.items : []).concat(fading).filter(it => it.voice === "grabado" && t >= it.tIn);
+  if (!list.length) return;
+  const m = mkctx;
+  m.setTransform(1, 0, 0, 1, 0, 0); m.globalCompositeOperation = "source-over"; m.globalAlpha = 1;
+  m.clearRect(0, 0, maskCv.width, maskCv.height);
+  m.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const alphas = list.map(it => smooth((t - it.tIn) / 0.3) * (1 - outK(it, t)));
+  list.forEach((it, i) => { if (alphas[i] > 0) { m.globalAlpha = alphas[i]; spriteAt(m, it, it.mask); } });
+  m.globalAlpha = 1;
+  m.setTransform(1, 0, 0, 1, 0, 0);
+  m.globalCompositeOperation = "source-in";
+  m.drawImage(frostCv, 0, 0, maskCv.width, maskCv.height);   /* adentro de la letra: el mundo esmerilado */
+  m.globalCompositeOperation = "source-atop";
+  m.fillStyle = hexA(P.frost, 0.4); m.fillRect(0, 0, maskCv.width, maskCv.height);
+  m.fillStyle = noisePatMask; m.fillRect(0, 0, maskCv.width, maskCv.height);
+  m.setTransform(DPR, 0, 0, DPR, 0, 0);
+  for (const it of list) {   /* barrido de luz sobre la letra recién grabada */
+    const τ = t - it.tIn;
+    if (τ > 0.75) continue;
+    const sp = it.mask, x0 = -sp.mw / 2 - sp.pad, bx = x0 + lerp(-0.3, 1.3, τ / 0.75) * sp.w, bw = it.fs * 0.9;
+    m.save(); m.translate(it.cx, it.cy); if (it.rot) m.rotate(it.rot);
+    const gr = m.createLinearGradient(bx - bw, 0, bx + bw, 0);
+    gr.addColorStop(0, "rgba(255,255,255,0)"); gr.addColorStop(0.5, "rgba(255,255,255,0.8)"); gr.addColorStop(1, "rgba(255,255,255,0)");
+    m.fillStyle = gr; m.fillRect(x0, it.by - sp.asc - sp.pad, sp.w, sp.h);
+    m.restore();
+  }
+  m.globalCompositeOperation = "source-over";
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(maskCv, 0, 0); g.restore();
+  list.forEach((it, i) => { if (alphas[i] > 0) { g.globalAlpha = alphas[i]; spriteAt(g, it, it.rim); } });
+  g.globalAlpha = 1;
+}
+
+function drawSolid(g, t) {
+  const list = (pane ? pane.items : []).concat(fading);
+  for (const it of list) {
+    if (it.voice !== "golpe" && it.voice !== "mono") continue;
+    const τ = t - it.tIn;
+    if (τ < 0) continue;
+    const o = outK(it, t);
+    if (it.voice === "mono") {
+      g.globalAlpha = smooth(τ / 0.4) * (1 - o);
+      if (g.globalAlpha > 0) spriteAt(g, it, it.sp);
+      continue;
+    }
+    /* golpe: cae desde 1.9x con separación RGB que se cierra al aterrizar */
+    const a = clamp(τ / 0.04, 0, 1) * (1 - o);
+    if (a <= 0) continue;
+    const s = (1 + 0.9 * (1 - easeOutCubic(τ / 0.14))) * (1 + 0.12 * o);
+    if (τ < 0.45) {
+      const kk = 1 - τ / 0.45, off = it.fs * 0.075 * kk;
+      g.globalCompositeOperation = "lighter"; g.globalAlpha = a * 0.42 * kk;
+      spriteAt(g, it, it.gh, s, -off, 0); spriteAt(g, it, it.gc, s, off, 0);
+      g.globalCompositeOperation = "source-over";
+    }
+    g.globalAlpha = a;
+    spriteAt(g, it, it.sp, s);
+  }
+  g.globalAlpha = 1;
+}
+
+function drawGlass(t, dt) {
+  const g = gctx;
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.globalCompositeOperation = "source-over"; g.globalAlpha = 1;
+  g.clearRect(0, 0, glassCv.width, glassCv.height);
+  g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  /* el vidrio en sí: un tinte oscuro + reflejos que se mueven al revés de la cámara */
+  g.drawImage(reflCv, -GW * 0.1 - camPar.x * 0.5, -GH * 0.1 - camPar.y * 0.5, GW * 1.2, GH * 1.2);
+
+  fading = fading.filter(it => t - it.tOut < 0.7);
+  drawFog(g, t, dt);
+  drawGrabado(g, t);
+  drawSolid(g, t);
+
+  /* grietas: las ya asentadas (horneadas) + las que están creciendo */
+  if (hasCracks) { g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(crackCv, 0, 0); g.restore(); }
+  for (const w of webs) { const p = (t - w.born) / w.dur; if (p > 0) strokeWeb(g, w, easeOutCubic(p)); }
+  const done = webs.filter(w => t - w.born >= w.dur);
+  if (done.length) { done.forEach(bakeWeb); webs = webs.filter(w => t - w.born < w.dur); }
+
+  drawShards(g, t);
+
+  if (sweepT != null) {   /* reflejo que barre el vidrio en cada fundido */
+    const p = (t - sweepT) / 0.8;
+    if (p >= 0 && p <= 1) {
+      const ux = Math.cos(0.5), uy = Math.sin(0.5), diag = GW * ux + GH * uy, c = lerp(-0.15, 1.15, p) * diag, hw = diag * 0.07;
+      const gr = g.createLinearGradient(ux * (c - hw), uy * (c - hw), ux * (c + hw), uy * (c + hw));
+      gr.addColorStop(0, "rgba(255,255,255,0)"); gr.addColorStop(0.5, hexA(P.glass, 0.12)); gr.addColorStop(1, "rgba(255,255,255,0)");
+      g.globalCompositeOperation = "lighter"; g.fillStyle = gr; g.fillRect(0, 0, GW, GH); g.globalCompositeOperation = "source-over";
+    } else if (p > 1) sweepT = null;
+  }
+}
+
+/* ================================ RELOJ ================================ */
+const hint = $("hint"), flashEl = $("flash"), dbgEl = $("debug");
+let playing = false, audioFailed = false, wallT0 = null, manualT = SEEK;
+const pageT0 = performance.now();
+function startWall() {
+  if (audioFailed) return;
+  audioFailed = true; wallT0 = performance.now(); playing = true; hint.classList.add("gone");
+}
+async function begin() {
+  if (playing || MANUAL) return;
+  try { await audio.play(); playing = true; hint.classList.add("gone"); setupAnalyser(); }
+  catch (e) { if (audio.error) startWall(); /* autoplay bloqueado → espera el click */ }
+}
+audio.addEventListener("error", startWall);
+audio.addEventListener("playing", () => { playing = true; hint.classList.add("gone"); });
+addEventListener("pointerdown", begin);
+const clock = now => MANUAL ? manualT
+  : audioFailed ? SEEK + (now - wallT0) / 1000
+  : audio.currentTime;
+
+/* ================================ MAIN ================================ */
+let fpsN = 0, fpsT0 = performance.now(), fps = 0;
+function frame(now) {
+  const t = clock(now);
+  const dt = clamp(t - lastT, 0, 0.1);
+  lastT = t;
+  maybeOutro(t);
+  if (timelineReady) {
+    while (ev < events.length && t >= events[ev].t) { const e = events[ev++]; handle(e, (t - e.t) > 1.0); }
+  }
+  updateEnergy(t, dt);
+  updateCamera(t, dt);
+  /* antes de arrancar el audio el mundo igual se mueve (reloj de pared) */
+  const wt = (playing || MANUAL) ? t : (now - pageT0) / 1000;
+  drawWorld(wt, E);
+  const needFrost = fogA > 0.01 || (pane && pane.items.some(it => it.voice === "grabado" || it.voice === "vaho")) ||
+                    fading.some(it => it.voice === "grabado" || it.voice === "vaho");
+  if (needFrost) updateFrost();
+  drawGlass(t, dt);
+  flashEl.style.opacity = (S.flash * Math.exp(-Math.max(0, t - flashT) * 8)).toFixed(3);
+  if (DEBUG) {
+    fpsN++;
+    if (now - fpsT0 > 500) { fps = Math.round(fpsN * 1000 / (now - fpsT0)); fpsN = 0; fpsT0 = now; }
+    const ph = pane?.ph;
+    dbgEl.style.display = "block";
+    dbgEl.textContent = `t ${t.toFixed(2)}s · fps ${fps}\nfrase ${ph ? ph.i + 1 : "-"}/${phrases.length} · ${pane ? pane.mode : "—"}\nmundo ${worldIdx + 1}/${WORLDS.length} · energía ${E.toFixed(2)}\neventos ${ev}/${events.length}`;
+  }
+  if (!MANUAL) requestAnimationFrame(frame);
+}
+
+addEventListener("resize", () => {
+  sizeAll(); buildStatics(); webs = []; shatter = null; fading = [];
+  if (pane) {
+    if (pane.kind === "phrase") pane.items = layoutPhrase(pane.ph);
+    else { const keep = pane.items.map(it => it.tIn); activateCard(pane.which, 0); pane.items.forEach((it, j) => { it.tIn = keep[j] ?? it.tIn; }); }
+  }
+});
+
+window.__cristal = {
+  setTime(t) { manualT = t; frame(performance.now()); },
+  get ready() { return timelineReady; },
+  info: () => ({ phrases: phrases.length, events: events.length, ev, world: worldIdx, mode: pane?.mode ?? null }),
+  timeline: () => events.filter(e => e.type === "trans").map(e => ({
+    t: +e.t.toFixed(2), kind: e.tr.kind, mode: e.tr.kind === "shatter" ? e.tr.mode : null,
+    to: e.tr.to, phrase: typeof e.tr.to === "number" ? phrases[e.tr.to].words.map(w => w.text).join(" ") : e.tr.to,
+    voice: typeof e.tr.to === "number" ? phrases[e.tr.to].mode : null,
+  })),
+};
+
+if (SEEK && !MANUAL) audio.addEventListener("loadedmetadata", () => { audio.currentTime = SEEK; }, { once: true });
+audio.src = encodeURI(C.audio.src);
+if (MANUAL) hint.classList.add("gone");
+else begin();
+requestAnimationFrame(frame);
+
+(async function init() {
+  const [words] = await Promise.all([loadLyrics(), fontsReady()]);
+  phrases = buildPhrases(words);
+  planPhrases(phrases);
+  activateCard("intro", 0);
+  events = buildEvents(planTransitions(phrases, !!pane));
+  timelineReady = true;
+  if (SEEK > 0) fastForward(SEEK);
+  if (MANUAL) frame(performance.now());
+})();
+</script>
+</body>
+</html>

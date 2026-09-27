@@ -5,9 +5,9 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from src.config.settings import settings
-
-
 from src.core.job import DurationConfig, ImageSource, JobPublishingConfig, MusicSource, SongInfo, VideoSource
+from src.core import job_tracker
+from src.core.progress import JobProgress, get_progress
 
 
 class VideoGenerationRequest(BaseModel):
@@ -125,6 +125,7 @@ class JobSummaryInfo(BaseModel):
     youtube_tags: list[str] = []
     tiktok_caption: str = ""
     tiktok_hashtags: list[str] = []
+    language: str | None = None     # "es" | "en"; None en jobs anteriores a este campo
 
     @classmethod
     def from_raw(cls, raw: dict) -> "JobSummaryInfo":
@@ -133,6 +134,7 @@ class JobSummaryInfo(BaseModel):
             youtube_description=raw["youtube_description"],
             youtube_tags=raw.get("youtube_tags", []),
             tiktok_caption=raw.get("tiktok_caption", ""),
+            language=raw.get("language"),
             tiktok_hashtags=raw.get("tiktok_hashtags", []),
         )
 
@@ -148,8 +150,13 @@ class JobDetailResponse(BaseModel):
     created_at: str
     updated_at: str
     duration_seconds: float | None = None
+    # Segundos que tardó en generarse (aceptado → listo/falló); None si sigue en curso.
+    generation_seconds: float | None = None
     files: list[JobFileInfo] = []
     summary: JobSummaryInfo | None = None
+    # Live progress (queue position, % and ETA) — only for jobs this server
+    # process is running or ran recently; also pushed as `job_progress` events.
+    progress: JobProgress | None = None
 
     @classmethod
     def from_record(cls, record: dict, summary: dict | None = None) -> "JobDetailResponse":
@@ -175,8 +182,10 @@ class JobDetailResponse(BaseModel):
             created_at=record["created_at"],
             updated_at=record["updated_at"],
             duration_seconds=record.get("duration_seconds"),
+            generation_seconds=job_tracker.generation_seconds(record),
             files=files,
             summary=JobSummaryInfo.from_raw(summary) if summary else None,
+            progress=get_progress(job_id),
         )
 
 
@@ -189,6 +198,7 @@ class JobListItem(BaseModel):
     created_at: str
     updated_at: str
     duration_seconds: float | None = None
+    generation_seconds: float | None = None
 
     @classmethod
     def from_record(cls, record: dict) -> "JobListItem":
@@ -202,6 +212,7 @@ class JobListItem(BaseModel):
             created_at=record["created_at"],
             updated_at=record["updated_at"],
             duration_seconds=record.get("duration_seconds"),
+            generation_seconds=job_tracker.generation_seconds(record),
         )
 
 

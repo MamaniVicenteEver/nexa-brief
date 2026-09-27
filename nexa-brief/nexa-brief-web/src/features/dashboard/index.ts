@@ -1,1 +1,1 @@
-export {};
+export { DashboardView } from "./components/DashboardView";

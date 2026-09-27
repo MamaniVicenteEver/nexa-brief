@@ -1,8 +1,8 @@
-"""Queue Repository — CRUD de la cola de publicación → data/programacion/queue.json.
+"""Queue Repository — CRUD de la cola de publicación (colección "queue_entries").
 
-Mismo patrón que `src/core/job_tracker.py`: índice JSON plano con un
-`asyncio.Lock` por archivo, lectura tolerante a archivo corrupto/vacío (nunca
-lanza, loggea y devuelve `[]`), escritura atómica (`.tmp` → `Path.replace`).
+La persistencia la resuelve el DataStore (`src/core/data.py`); este módulo solo
+aplica las reglas de la cola (transiciones de status, dedup por ocurrencia de
+slot, recuperación ante crash) y avisa por WebSocket de cada cambio.
 
 Esta es la única fuente de verdad de "¿se publicó este job, a qué cuenta,
 cuándo, con qué resultado?" — `job_tracker` nunca se toca desde acá (solo se
@@ -11,17 +11,14 @@ lee, ver `engine.py`).
 
 from __future__ import annotations
 
-import asyncio
 import json
 import uuid
-from collections import defaultdict
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
 
 import structlog
 
-from src.config.settings import settings
+from src.core.data import collection
 from src.core.realtime.event_bus import get_event_bus
 from src.core.realtime.events import RealtimeEvent
 from src.core.schedule import slot_repository
@@ -29,11 +26,13 @@ from src.core.schedule.models import QueueEntry, QueueSource, QueueStatus
 
 logger = structlog.get_logger(__name__)
 
-_locks: dict[Path, asyncio.Lock] = defaultdict(asyncio.Lock)
+
+def _entries():
+    return collection("queue_entries")
 
 
-def _lock_for(path: Path) -> asyncio.Lock:
-    return _locks[path]
+def _dump(entry: QueueEntry) -> dict[str, Any]:
+    return entry.model_dump(mode="json")
 
 
 async def _publish_event(entry: QueueEntry) -> None:
@@ -47,30 +46,6 @@ async def _publish_event(entry: QueueEntry) -> None:
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
-
-
-def _queue_path() -> Path:
-    return settings.programacion_dir / "queue.json"
-
-
-def _read(path: Path) -> list[dict[str, Any]]:
-    if not path.exists():
-        return []
-    raw = path.read_text(encoding="utf-8").strip()
-    if not raw:
-        return []
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        logger.error("queue_repository_index_corrupt", path=str(path))
-        return []
-
-
-def _write(path: Path, data: list[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(path)
 
 
 # ── Create ───────────────────────────────────────────────────────────────────
@@ -101,11 +76,7 @@ async def create(
         created_at=now,
         updated_at=now,
     )
-    path = _queue_path()
-    async with _lock_for(path):
-        data = _read(path)
-        data.append(entry.model_dump())
-        _write(path, data)
+    await _entries().insert(_dump(entry))
     await _publish_event(entry)
     return entry
 
@@ -127,42 +98,34 @@ async def upsert_for_slot_occurrence(
     if slot is None:
         raise ValueError(f"ScheduleSlot '{slot_id}' not found.")
 
-    path = _queue_path()
-    async with _lock_for(path):
-        data = _read(path)
-        index = next(
-            (
-                i for i, r in enumerate(data)
-                if r.get("slot_id") == slot_id and r.get("scheduled_at") == scheduled_at
-            ),
-            None,
+    now = _now_iso()
+    existing = _entries().first({"slot_id": slot_id, "scheduled_at": scheduled_at})
+    if existing is not None:
+        updated = await _entries().update(
+            existing["entry_id"],
+            {"job_id": job_id, "source": source.value, "updated_at": now},
+            only_if={"status": QueueStatus.QUEUED.value},
         )
-        now = _now_iso()
-        if index is not None:
-            existing = data[index]
-            if existing.get("status") != QueueStatus.QUEUED.value:
-                raise ValueError(
-                    f"Cannot reassign occurrence slot_id={slot_id} scheduled_at={scheduled_at}: "
-                    f"entry '{existing.get('entry_id')}' already has status={existing.get('status')}."
-                )
-            existing = {**existing, "job_id": job_id, "source": source.value, "updated_at": now}
-            entry = QueueEntry(**existing)
-            data[index] = entry.model_dump()
-        else:
-            entry = QueueEntry(
-                entry_id=uuid.uuid4().hex[:8],
-                job_id=job_id,
-                platform=slot.platform,
-                account_alias=slot.account_alias,
-                slot_id=slot_id,
-                scheduled_at=scheduled_at,
-                source=source,
-                status=QueueStatus.QUEUED,
-                created_at=now,
-                updated_at=now,
+        if updated is None:
+            raise ValueError(
+                f"Cannot reassign occurrence slot_id={slot_id} scheduled_at={scheduled_at}: "
+                f"entry '{existing.get('entry_id')}' already has status={existing.get('status')}."
             )
-            data.append(entry.model_dump())
-        _write(path, data)
+        entry = QueueEntry(**updated)
+    else:
+        entry = QueueEntry(
+            entry_id=uuid.uuid4().hex[:8],
+            job_id=job_id,
+            platform=slot.platform,
+            account_alias=slot.account_alias,
+            slot_id=slot_id,
+            scheduled_at=scheduled_at,
+            source=source,
+            status=QueueStatus.QUEUED,
+            created_at=now,
+            updated_at=now,
+        )
+        await _entries().insert(_dump(entry))
     await _publish_event(entry)
     return entry
 
@@ -170,16 +133,12 @@ async def upsert_for_slot_occurrence(
 # ── Status transitions ──────────────────────────────────────────────────────
 
 async def _update_status(entry_id: str, status: QueueStatus, **extra: Any) -> QueueEntry | None:
-    path = _queue_path()
-    async with _lock_for(path):
-        data = _read(path)
-        index = next((i for i, r in enumerate(data) if r.get("entry_id") == entry_id), None)
-        if index is None:
-            return None
-        record = {**data[index], **extra, "status": status.value, "updated_at": _now_iso()}
-        entry = QueueEntry(**record)
-        data[index] = entry.model_dump()
-        _write(path, data)
+    record = await _entries().update(
+        entry_id, {**extra, "status": status.value, "updated_at": _now_iso()}
+    )
+    if record is None:
+        return None
+    entry = QueueEntry(**record)
     await _publish_event(entry)
     return entry
 
@@ -205,66 +164,78 @@ async def cancel(entry_id: str) -> QueueEntry:
         LookupError: no existe una entry con ese id (el router mapea → 404).
         ValueError: la entry existe pero no está en status 'queued' (→ 409).
     """
-    path = _queue_path()
-    async with _lock_for(path):
-        data = _read(path)
-        index = next((i for i, r in enumerate(data) if r.get("entry_id") == entry_id), None)
-        if index is None:
-            raise LookupError(f"QueueEntry '{entry_id}' not found.")
-        record = data[index]
-        if record.get("status") != QueueStatus.QUEUED.value:
-            raise ValueError(
-                f"QueueEntry '{entry_id}' cannot be cancelled (status={record.get('status')})."
-            )
-        now = _now_iso()
-        record = {**record, "status": QueueStatus.CANCELLED.value, "updated_at": now, "processed_at": now}
-        entry = QueueEntry(**record)
-        data[index] = entry.model_dump()
-        _write(path, data)
+    current = _entries().get(entry_id)
+    if current is None:
+        raise LookupError(f"QueueEntry '{entry_id}' not found.")
+    now = _now_iso()
+    record = await _entries().update(
+        entry_id,
+        {"status": QueueStatus.CANCELLED.value, "updated_at": now, "processed_at": now},
+        only_if={"status": QueueStatus.QUEUED.value},
+    )
+    if record is None:
+        raise ValueError(
+            f"QueueEntry '{entry_id}' cannot be cancelled (status={current.get('status')})."
+        )
+    entry = QueueEntry(**record)
     await _publish_event(entry)
     return entry
+
+
+async def mark_removed_by_post(platform: str, account_alias: str, post_id: str) -> int:
+    """Marca `removed` las entries publicadas de ese post (se borró de la plataforma)."""
+    changed = await _entries().update_where(
+        {
+            "platform": platform,
+            "account_alias": account_alias,
+            "post_id": post_id,
+            "status": QueueStatus.PUBLISHED.value,
+        },
+        {"status": QueueStatus.REMOVED.value, "updated_at": _now_iso()},
+    )
+    for record in changed:
+        await _publish_event(QueueEntry(**record))
+    return len(changed)
+
+
+async def delete_for_job(job_id: str) -> int:
+    """Borra todas las entries de un job (al eliminar el video de Biblioteca)."""
+    removed = await _entries().delete_where({"job_id": job_id})
+    for record in removed:
+        await _publish_event(QueueEntry(**record))
+    return len(removed)
 
 
 async def recover_stale_publishing(older_than_seconds: int = 600) -> int:
     """Recuperación ante crash: entries atascadas en `publishing` (el proceso
     murió a mitad de un upload) se marcan `failed` para no bloquear la cola
     para siempre. Devuelve cuántas entries se recuperaron."""
-    path = _queue_path()
-    recovered_entries: list[QueueEntry] = []
-    async with _lock_for(path):
-        data = _read(path)
-        now_dt = datetime.now(timezone.utc)
-        for record in data:
-            if record.get("status") != QueueStatus.PUBLISHING.value:
-                continue
-            updated_at = record.get("updated_at")
-            try:
-                updated_dt = datetime.fromisoformat(updated_at) if updated_at else None
-            except ValueError:
-                updated_dt = None
-            stale = updated_dt is None or (now_dt - updated_dt).total_seconds() >= older_than_seconds
-            if not stale:
-                continue
-            now_iso = now_dt.isoformat()
-            record["status"] = QueueStatus.FAILED.value
-            record["error"] = "Recovered from crash: stuck in 'publishing' state."
-            record["updated_at"] = now_iso
-            record["processed_at"] = now_iso
-            recovered_entries.append(QueueEntry(**record))
-        if recovered_entries:
-            _write(path, data)
-    for entry in recovered_entries:
-        await _publish_event(entry)
-    return len(recovered_entries)
+    now_dt = datetime.now(timezone.utc)
+    recovered = 0
+    for record in _entries().list({"status": QueueStatus.PUBLISHING.value}):
+        updated_at = record.get("updated_at")
+        try:
+            updated_dt = datetime.fromisoformat(updated_at) if updated_at else None
+        except ValueError:
+            updated_dt = None
+        if updated_dt is not None and (now_dt - updated_dt).total_seconds() < older_than_seconds:
+            continue
+        now_iso = now_dt.isoformat()
+        entry = await _update_status(
+            record["entry_id"],
+            QueueStatus.FAILED,
+            error="Recovered from crash: stuck in 'publishing' state.",
+            processed_at=now_iso,
+        )
+        recovered += entry is not None
+    return recovered
 
 
 # ── Reads ────────────────────────────────────────────────────────────────────
 
 def get(entry_id: str) -> QueueEntry | None:
-    for record in _read(_queue_path()):
-        if record.get("entry_id") == entry_id:
-            return QueueEntry(**record)
-    return None
+    record = _entries().get(entry_id)
+    return QueueEntry(**record) if record else None
 
 
 def list_entries(
@@ -276,15 +247,9 @@ def list_entries(
     offset: int = 0,
 ) -> tuple[list[QueueEntry], int]:
     """Lista entries de cola, más recientes primero. Devuelve (página, total)."""
-    entries = [QueueEntry(**r) for r in _read(_queue_path())]
-    if status is not None:
-        entries = [e for e in entries if e.status.value == status]
-    if platform is not None:
-        entries = [e for e in entries if e.platform == platform]
-    if account_alias is not None:
-        entries = [e for e in entries if e.account_alias == account_alias]
-    if job_id is not None:
-        entries = [e for e in entries if e.job_id == job_id]
+    filters = {"status": status, "platform": platform, "account_alias": account_alias, "job_id": job_id}
+    where = {k: v for k, v in filters.items() if v is not None}
+    entries = [QueueEntry(**r) for r in _entries().list(where)]
     entries.sort(key=lambda e: e.created_at, reverse=True)
     total = len(entries)
     return entries[offset : offset + limit], total
@@ -294,19 +259,15 @@ def find_pending_for_slot_occurrence(slot_id: str, scheduled_at: str) -> QueueEn
     """Devuelve la entry (de cualquier status) ya decidida para esta ocurrencia
     concreta de un slot, o None si la ocurrencia todavía no tiene ninguna
     entry asociada."""
-    for record in _read(_queue_path()):
-        if record.get("slot_id") == slot_id and record.get("scheduled_at") == scheduled_at:
-            return QueueEntry(**record)
-    return None
+    record = _entries().first({"slot_id": slot_id, "scheduled_at": scheduled_at})
+    return QueueEntry(**record) if record else None
 
 
 def find_due(now_iso: str) -> list[QueueEntry]:
     """Entries `queued` con `scheduled_at` ya vencido (<= now), listas para publicar."""
     now_dt = datetime.fromisoformat(now_iso)
     due: list[QueueEntry] = []
-    for record in _read(_queue_path()):
-        if record.get("status") != QueueStatus.QUEUED.value:
-            continue
+    for record in _entries().list({"status": QueueStatus.QUEUED.value}):
         scheduled_at = record.get("scheduled_at")
         if not scheduled_at:
             continue
@@ -323,11 +284,5 @@ def has_any_entry_for_target(job_id: str, platform: str, account_alias: str) -> 
     """True si ya existe CUALQUIER entry (en cualquier status) para este job en
     esta plataforma+cuenta — evita que el auto-fill reintente infinitamente un
     job que ya falló para esa cuenta; un fallo requiere re-encolar a mano."""
-    for record in _read(_queue_path()):
-        if (
-            record.get("job_id") == job_id
-            and record.get("platform") == platform
-            and record.get("account_alias") == account_alias
-        ):
-            return True
-    return False
+    where = {"job_id": job_id, "platform": platform, "account_alias": account_alias}
+    return _entries().first(where) is not None

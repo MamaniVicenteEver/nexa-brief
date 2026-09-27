@@ -19,12 +19,118 @@
     .scene-c .one{top:22%;text-align:center}.scene-c .two{top:60%;text-align:center}
     .scene-d .one{top:10%;text-align:left}.scene-d .two{top:43%;text-align:right}.scene-d .three{top:72%;text-align:center}
     @media(max-aspect-ratio:3/4){#type-stage{padding:11vh 5vw 14vh}#lyric{height:68vh}.row{padding:0 1vw}}
-  </style>
+  
+  /* ── Recording UI ─────────────────────────────────────────────────────── */
+  #rec-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(10,10,10,0.85); border: 2px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s, border-color .15s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  #rec-btn:hover { transform: scale(1.1); border-color: rgba(255,60,60,0.7); }
+  #rec-btn svg { width: 18px; height: 18px; }
+  #rec-btn.recording { border-color: #ff3c3c; animation: rec-pulse 1.2s ease-in-out infinite; }
+  @keyframes rec-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,60,60,.5)} 50%{box-shadow:0 0 0 8px rgba(255,60,60,0)} }
+  #rec-panel {
+    position: fixed; bottom: 84px; right: 24px; z-index: 9999;
+    width: 280px; background: rgba(10,10,12,0.96);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+    padding: 18px; backdrop-filter: blur(20px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    display: none; flex-direction: column; gap: 10px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  #rec-panel.open { display: flex; }
+  #rec-panel h3 {
+    color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    margin: 0 0 4px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .rec-engine {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 10px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+    transition: background .12s, border-color .12s;
+  }
+  .rec-engine:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+  .rec-engine.active { border-color: rgba(255,60,60,0.5); background: rgba(255,40,40,0.08); }
+  .rec-engine-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .rec-engine-info { flex: 1; min-width: 0; }
+  .rec-engine-name { color: #fff; font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .rec-engine-desc { color: rgba(255,255,255,0.45); font-size: 10px; line-height: 1.3; margin: 0; }
+  .rec-engine-badge {
+    font-size: 9px; padding: 2px 6px; border-radius: 4px;
+    font-weight: 700; letter-spacing: .05em; white-space: nowrap; flex-shrink: 0;
+  }
+  .badge-fast    { background: rgba(60,200,120,0.2); color: #3cc878; }
+  .badge-quality { background: rgba(255,160,60,0.2); color: #ffa03c; }
+  .badge-dev     { background: rgba(100,140,255,0.2); color: #6488ff; }
+  #rec-go {
+    margin-top: 4px; padding: 11px; border-radius: 10px; border: none; cursor: pointer;
+    background: #e03030; color: #fff; font-size: 13px; font-weight: 700;
+    letter-spacing: .04em; transition: background .12s, opacity .12s; font-family: inherit;
+  }
+  #rec-go:hover { background: #c52020; }
+  #rec-go:disabled { opacity: .35; cursor: not-allowed; }
+  #rec-status {
+    font-size: 10px; color: rgba(255,255,255,0.4); text-align: center;
+    min-height: 14px; font-family: inherit;
+  }
+  body.headless #rec-btn, body.headless #rec-panel { display: none !important; }
+</style>
 </head>
 <body>
   <div id="canvas"></div><div id="type-stage"><div id="lyric"></div></div><div id="doodles"></div><div id="subline"></div><div id="mark">NEXA / letras impredecibles</div><div id="progress"></div><div id="grain"></div>
   <div id="screen"><div><div class="eyebrow">letras que cambian de personalidad</div><div id="intro-title">Amor<br><span>impredecible</span></div><div id="tap">toca para escuchar</div></div></div>
-  <script>
+  <!-- ── Recording panel ────────────────────────────────────────────────── -->
+<button id="rec-btn" title="Motor de grabación (R)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" style="color:#fff">
+    <circle cx="12" cy="12" r="7" fill="rgba(255,60,60,0.85)" stroke="none"/>
+    <circle cx="12" cy="12" r="11" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none"/>
+  </svg>
+</button>
+<div id="rec-panel">
+  <h3>Motor de grabación</h3>
+  <div class="rec-engine" data-engine="hyperframes">
+    <div class="rec-engine-icon" style="background:rgba(255,160,30,0.15)">⚡</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">HyperFrames</p>
+      <p class="rec-engine-desc">Rápido, nativo del pipeline Nexa.</p>
+    </div>
+    <span class="rec-engine-badge badge-fast">RÁPIDO</span>
+  </div>
+  <div class="rec-engine" data-engine="remotion">
+    <div class="rec-engine-icon" style="background:rgba(100,60,255,0.15)">🎬</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Remotion</p>
+      <p class="rec-engine-desc">Mejor calidad, render más lento.</p>
+    </div>
+    <span class="rec-engine-badge badge-quality">CALIDAD</span>
+  </div>
+  <div class="rec-engine" data-engine="playwright">
+    <div class="rec-engine-icon" style="background:rgba(60,180,255,0.15)">🎭</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Playwright</p>
+      <p class="rec-engine-desc">Captura real del navegador.</p>
+    </div>
+    <span class="rec-engine-badge badge-dev">BROWSER</span>
+  </div>
+  <button id="rec-go" disabled>● Grabar</button>
+  <p id="rec-status"></p>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+
+<script>
     const $=s=>document.querySelector(s),lyric=$('#lyric'),doodles=$('#doodles'),subline=$('#subline');let cfg,lyrics=[],audio,started=false,last=-1,old=null;const styles=['script','type','hand','dramatic','whisper'],phrases=['como una flecha que vuelve','no sé cómo explicarlo','me dejaste pensando','sin avisar','y el mundo se detuvo'];
     const svg={heart:'<svg viewBox="0 0 80 70"><path d="M39 59C22 47 7 35 7 19 7 6 23 2 31 13l8 10 9-10C56 2 73 6 73 19c0 16-17 29-34 40Z"/></svg>',hearts:'<svg viewBox="0 0 130 85"><path d="M32 55C18 45 5 33 5 19 5 8 19 4 27 14l5 7 6-7c8-10 22-6 22 5 0 14-14 26-28 36Z"/><path d="M83 69C71 59 60 49 60 37c0-9 12-12 18-4l5 6 5-6c7-8 19-5 19 4 0 12-12 22-24 32Z"/><circle cx="71" cy="17" r="2.5"/><circle cx="97" cy="10" r="2"/></svg>',arrow:'<svg viewBox="0 0 180 110"><path d="M9 28c37-30 70 3 66 31-4 30-47 30-43 4 2-19 31-19 41 4 13 29 59 23 75-7"/><path d="M137 50l12 10-15 6"/></svg>',loop:'<svg viewBox="0 0 175 130"><path d="M22 48c6-39 62-34 64 2 3 50-70 50-65 5 5-40 71-13 82 23 12 37 48 30 47-5"/><path d="M146 73l5-17 10 13"/></svg>',spark:'<svg viewBox="0 0 76 76"><line x1="38" y1="5" x2="38" y2="71"/><line x1="5" y1="38" x2="71" y2="38"/><line x1="15" y1="15" x2="61" y2="61"/><line x1="61" y1="15" x2="15" y2="61"/></svg>'};
     function escapeHTML(t){const e=document.createElement('i');e.textContent=t;return e.innerHTML;}function icon(kind,x,y,size,red,fill){const e=document.createElement('div');e.className='doodle '+(red?'red ':'')+(fill?'fill':'');e.innerHTML=svg[kind];e.style.cssText='left:'+x+'%;top:'+y+'%;width:'+size+'px;--bob:'+(3+(size%4))+'s';doodles.append(e);setTimeout(()=>e.remove(),5200);}
@@ -36,5 +142,57 @@
     function clock(){if(!audio)return;const i=lyrics.findIndex(s=>audio.currentTime>=s.start&&audio.currentTime<s.end);if(i>=0&&i!==last){last=i;render(lyrics[i],i);}$('#progress').style.transform='scaleX('+(audio.duration?audio.currentTime/audio.duration:0)+')';requestAnimationFrame(clock);}
     async function boot(){const db=await fetch('assets/config.json').then(r=>r.json());cfg=db.configs.find(x=>x.id===db.activeId)||db.configs[0];const json=await fetch(cfg.lyricsUrl).then(r=>r.json());lyrics=json.segments||[];audio=new Audio(cfg.audio.src);audio.preload='auto';}
     $('#screen').addEventListener('click',async()=>{if(started)return;started=true;$('#screen').classList.add('gone');try{await audio.play();}catch(e){console.warn('Audio bloqueado por navegador',e);}render(lyrics[0]||{text:'Todo cambia'},0);clock();});boot().catch(e=>{console.warn(e);lyric.innerHTML='<span class="script piece" style="opacity:1;filter:none;transform:none">Todo cambia</span>';});
-  </script>
+  
+/* ── Recording UI ──────────────────────────────────────────────────────── */
+(function initRecUI() {
+  if (new URLSearchParams(location.search).get('headless') === '1') {
+    document.body.classList.add('headless'); return;
+  }
+  const btn    = document.getElementById('rec-btn');
+  const panel  = document.getElementById('rec-panel');
+  const goBtn  = document.getElementById('rec-go');
+  const status = document.getElementById('rec-status');
+  if (!btn) return;
+  let selectedEngine = null, recording = false;
+
+  function togglePanel() { panel.classList.toggle('open'); }
+  btn.addEventListener('click', e => { e.stopPropagation(); togglePanel(); });
+  document.addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') togglePanel(); });
+  document.addEventListener('click', e => {
+    if (!panel.contains(e.target) && e.target !== btn) panel.classList.remove('open');
+  });
+  document.querySelectorAll('.rec-engine').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.rec-engine').forEach(e => e.classList.remove('active'));
+      el.classList.add('active');
+      selectedEngine = el.dataset.engine;
+      goBtn.disabled = false;
+      status.textContent = '';
+    });
+  });
+  goBtn.addEventListener('click', async () => {
+    if (!selectedEngine || recording) return;
+    recording = true;
+    btn.classList.add('recording');
+    goBtn.disabled = true;
+    panel.classList.remove('open');
+    status.textContent = 'Iniciando ' + selectedEngine + '…';
+    const templateName = location.pathname.split('/').filter(Boolean).slice(-2, -1)[0]
+                         || document.title || 'unknown';
+    const payload = { engine: selectedEngine, template: templateName, timestamp: Date.now() };
+    window.postMessage({ type: 'nexa:record', ...payload }, '*');
+    document.dispatchEvent(new CustomEvent('nexa:record', { detail: payload }));
+    try {
+      const res = await fetch('/api/v1/record', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      status.textContent = res.ok ? (await res.json()).message || ('Grabando con ' + selectedEngine + '…')
+                                  : 'API ' + res.status + ' — evento emitido';
+    } catch { status.textContent = 'Sin servidor — evento emitido (' + selectedEngine + ')'; }
+    setTimeout(() => { recording = false; btn.classList.remove('recording'); goBtn.disabled = false; status.textContent = ''; }, 8000);
+  });
+})();
+/* ─────────────────────────────────────────────────────────────────────────── */
+</script>
 </body></html>

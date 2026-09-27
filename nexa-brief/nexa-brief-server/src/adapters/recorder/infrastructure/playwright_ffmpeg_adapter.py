@@ -57,6 +57,7 @@ from playwright.async_api import async_playwright
 from src.config.exceptions import RecordingError
 from src.config.settings import settings
 from src.core.ports.recorder_port import RecorderPort, RecordingResult
+from src.core.progress import report_step_progress
 
 if TYPE_CHECKING:
     from src.config.niche_config import NicheConfig, VideoFormat
@@ -64,6 +65,17 @@ if TYPE_CHECKING:
 logger = structlog.get_logger(__name__)
 
 _WARMUP_SECONDS = 3
+# Share of the recorder step taken by the live capture; the FFmpeg encode after it covers the rest.
+_CAPTURE_PROGRESS_SHARE = 0.85
+
+
+async def _wait_reporting_progress(seconds: float) -> None:
+    """Sleep through the live capture while reporting how much of it has elapsed."""
+    started = time.monotonic()
+    while (elapsed := time.monotonic() - started) < seconds:
+        report_step_progress(_CAPTURE_PROGRESS_SHARE * elapsed / seconds)
+        await asyncio.sleep(min(1.0, seconds - elapsed))
+    report_step_progress(_CAPTURE_PROGRESS_SHARE)
 
 # Semáforo GLOBAL (todo el servidor, no por-Job) — independiente del
 # Semaphore de max_parallel_jobs del Orchestrator. La captura en vivo de
@@ -352,6 +364,7 @@ class PlaywrightFFmpegAdapter(RecorderPort):
             # corriendo en paralelo según max_parallel_jobs.
             if recording_semaphore._value == 0:
                 logger.info("recording_waiting_for_slot", url=page_url)
+            report_step_progress(0.0)  # waiting for the recorder slot is not progress
             async with recording_semaphore:
                 async with async_playwright() as pw:
                     launch_options: dict = {
@@ -380,8 +393,7 @@ class PlaywrightFFmpegAdapter(RecorderPort):
                     await page.goto(page_url)
                     await page.wait_for_load_state("domcontentloaded")
                     logger.info("recording_warmup", warmup_seconds=_WARMUP_SECONDS)
-                    await asyncio.sleep(_WARMUP_SECONDS)
-                    await asyncio.sleep(duration_seconds)
+                    await _wait_reporting_progress(_WARMUP_SECONDS + duration_seconds)
                     await context.close()
                     await browser.close()
         except Exception as exc:

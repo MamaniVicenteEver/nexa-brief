@@ -1,0 +1,462 @@
+{
+  "common": {
+    "solicitarAcceso": "Request access"
+  },
+  "nav": {
+    "logo": "Nexa Brief",
+    "plantillas": "Templates",
+    "canales": "Channels",
+    "nosotros": "About",
+    "recursos": "Resources"
+  },
+  "hero": {
+    "word1": "Videos",
+    "word2": "That",
+    "word3": "Publish",
+    "word4": "Themselves",
+    "word5": "On Their Own,",
+    "word6": "Always.",
+    "ideaPillLine1": "Behind",
+    "ideaPillLine2": "every channel"
+  },
+  "belowHero": {
+    "motorTitle": "Creative engine powered by AI",
+    "motorDesc": "Gemini and DeepSeek analyze the genre, design the video, and deliver it ready to publish — without anyone editing a single frame.",
+    "verPipeline": "See the pipeline →",
+    "miniCardLabel": "Template · Song Lyrics",
+    "tryPill": "See a real upload",
+    "connectText": "Connect your own channels",
+    "statSuffix": "Videos published automatically over the last 30 days."
+  },
+  "techTrust": {
+    "eyebrow": "Technology stack in use"
+  },
+  "templatesRow": {
+    "heading": "One template, one genre each time.",
+    "imageBg": "Image with background",
+    "subjectPng": "Cutout image",
+    "landscapeScene": "Full landscape",
+    "videoMotion": "Looping video",
+    "lyrics": "Song lyrics",
+    "seeAllLine1": "See all",
+    "seeAllLine2": "templates →"
+  },
+  "purpose": {
+    "eyebrow": "For now, a personal project",
+    "headingLine1": "My channels,",
+    "headingLine2": "on autopilot.",
+    "body": "It's not a product for sale — not yet. It's how I automate my own YouTube, TikTok, and Facebook channels: AI-generated video from music I already own, and for anything without full rights, I turn it into <em>lyric art</em> pieces — visual, not the original audio. All of this is still in testing.",
+    "chip1": "No editor",
+    "chip2": "No dependence on the original audio",
+    "chip3": "3 platforms, one pipeline"
+  },
+  "cta": {
+    "headingLine1": "Put your catalog",
+    "headingEm": "on autopilot.",
+    "body": "Access by invitation. Each channel is calibrated by hand before going live — no generic templates.",
+    "button": "Request access"
+  },
+  "footer": {
+    "badge": "Testing stage",
+    "brandName": "Nexa Brief",
+    "tagline": "© 2026 — Automate the pipeline",
+    "copyright": "© 2026 Nexa Brief. All rights reserved.",
+    "authorName": "Ever Mamani Vicente",
+    "developedBy": "Developed by",
+    "personalRights": "© 2026 Ever Mamani Vicente — All rights reserved.",
+    "contactLink": "Contact ↗",
+    "demoLink": "Request a demo →"
+  },
+  "adminNav": {
+    "brand": "Nexa Brief",
+    "dashboard": "Dashboard",
+    "crearVideo": "Create video",
+    "plantillas": "Templates",
+    "canales": "Channels",
+    "gestion": "Management",
+    "programacion": "Scheduling",
+    "biblioteca": "Library",
+    "historial": "History",
+    "notificaciones": "Notifications",
+    "salir": "Log out"
+  },
+  "dashboard": {
+    "heading": "Dashboard",
+    "activeCategories": "Active categories",
+    "activeCategoriesMeta": "Available in Create video",
+    "totalCategories": "Total categories",
+    "totalCategoriesMeta": "Active + in preparation",
+    "currentSession": "Current session",
+    "currentSessionMeta": "User with access",
+    "recentActivity": "Recent activity",
+    "recentActivityBodyBefore": "There's no batch-generation tracking in this panel yet — the backend doesn't expose job history for now. Once you generate a video in",
+    "recentActivityBodyAfter": ", you'll see the result right there when it's done.",
+    "crearVideoLink": "Create video",
+    "ctaHeadingLine1": "One glance,",
+    "ctaHeadingEm": "zero friction.",
+    "ctaBody": "The same dashboard we use internally — with your own catalog instead of ours."
+  },
+  "channels": {
+    "title": "Channels",
+    "updating": "Updating…",
+    "connectionError": "Can't reach the server — couldn't load channel status. Retrying automatically…",
+    "reauthBanner": "{count, plural, one {# channel needs} other {# channels need}} reconnecting — the token expired.",
+    "loading": "Loading channels…",
+    "accountCount": "{count, plural, one {# account} other {# accounts}}",
+    "emptyState": "No channels connected yet.",
+    "addAccountButton": "+ Add account",
+    "publishedCount": "{count, plural, one {# video published} other {# videos published}}",
+    "reconnect": "Reconnect",
+    "viewDetails": "View details",
+    "disconnect": "Disconnect",
+    "disconnectConfirmTitle": "Disconnect {name}?",
+    "disconnectConfirmBody": "You'll stop being able to auto-publish to {platform} with this account ({alias}) until you reconnect it.",
+    "disconnectError": "Couldn't disconnect. Try again.",
+    "cancel": "Cancel",
+    "disconnecting": "Disconnecting…",
+    "confirmDisconnect": "Yes, disconnect",
+    "statusActive": "Active",
+    "statusExpired": "Token expired",
+    "dialog": {
+      "loadingVideos": "Loading videos…",
+      "noVideos": "No videos have been published to this channel from here yet.",
+      "platform": "Platform",
+      "alias": "Alias",
+      "name": "Name",
+      "platformId": "Platform ID",
+      "status": "Status",
+      "tokenExpiry": "Token expiry",
+      "autoRenewal": "Auto-renewal",
+      "publishedVideos": "Videos published",
+      "recentVideos": "Recent videos",
+      "yes": "Yes",
+      "no": "No",
+      "neverExpires": "Never expires",
+      "expired": "Expired (renews automatically on publish)",
+      "expiresInMinutes": "Expires in {minutes} min",
+      "expiresInHours": "Expires in {hours} h",
+      "expiresInDays": "Expires in {days} days"
+    }
+  },
+  "library": {
+    "title": "Library",
+    "emptyState": "No videos match the applied filters.",
+    "filters": {
+      "categoryLabel": "Category",
+      "allCategories": "All categories",
+      "clearFilters": "Clear filters"
+    },
+    "tabs": {
+      "listos": "Ready",
+      "cola": "In queue",
+      "publicados": "Published",
+      "fallidos": "Failed"
+    },
+    "retryButton": "Retry",
+    "comingSoon": "Coming soon",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page} of {total}"
+    },
+    "detail": {
+      "back": "Back to Library",
+      "description": "Description",
+      "tags": "Tags",
+      "tiktokCaption": "TikTok caption",
+      "publishedTo": "Published to",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "noPublishes": "Not published to any platform yet.",
+      "generating": "The video is still being generated.",
+      "notFound": "This video could not be found."
+    },
+    "stages": {
+      "pending": "In queue",
+      "inputAnalyzed": "Analyzing input...",
+      "designComplete": "Designing visual style...",
+      "resourcesFetched": "Fetching resources (image/music)...",
+      "promptBuilt": "Building prompt...",
+      "htmlGenerated": "Generating template...",
+      "videoRecorded": "Recording video...",
+      "summaryGenerated": "Generating title and description...",
+      "packaged": "Ready",
+      "publishing": "Publishing...",
+      "published": "Published",
+      "failed": "Failed"
+    },
+    "videoCard": {
+      "publishedBadge": "Published",
+      "unknownDuration": "Unknown duration",
+      "publishNow": "Publish now",
+      "playButton": "Play"
+    },
+    "assetPicker": {
+      "title": {
+        "images": "Choose image from library",
+        "music": "Choose song from library",
+        "videos": "Choose video from library"
+      },
+      "loading": "Loading...",
+      "empty": "Nothing archived yet.",
+      "chooseButton": "Choose"
+    }
+  },
+  "templates": {
+    "grid": {
+      "heading": "Templates",
+      "loading": "Loading templates...",
+      "empty": "No templates configured."
+    },
+    "card": {
+      "tagImage": "Image",
+      "tagVideo": "Video",
+      "tagLyrics": "Lyrics",
+      "orientationVertical": "Vertical 9:16",
+      "orientationHorizontal": "Horizontal 16:9",
+      "orientationAny": "Any format"
+    },
+    "detail": {
+      "loading": "Loading template...",
+      "notFound": "Template not found.",
+      "imageLabel": "Image",
+      "videoLabel": "Background video",
+      "musicLabel": "Music",
+      "generatePreview": "Generate preview",
+      "generatingPreview": "Generating preview..."
+    },
+    "livePreview": {
+      "placeholder": "Pick (or upload) an image or song and generate a preview.",
+      "failedTitle": "Couldn't generate the preview.",
+      "generating": "Generating preview...",
+      "iframeTitle": "Template preview",
+      "clickToPlay": "Click to play with sound"
+    },
+    "recordButton": {
+      "record": "Record",
+      "sending": "Sending...",
+      "tooltip": "Generate a preview first"
+    },
+    "resourcePicker": {
+      "library": "Library: {assetId}",
+      "auto": "The system will pick automatically",
+      "uploadNew": "Upload new",
+      "chooseFromLibrary": "Choose from library",
+      "remove": "Remove"
+    }
+  },
+  "createVideo": {
+    "heading": "Create video",
+    "resourcesLabel": "Resources (optional)",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Leave it blank and the AI generates the title, description, and hashtags automatically.",
+    "submit": "Generate batch",
+    "submitPending": "Generating batch...",
+    "saveDraft": "Save as draft",
+    "saveDraftTooltip": "Coming soon",
+    "channelsSection": {
+      "title": "Publish to",
+      "loadError": "Couldn't load channel status — you can still generate the video, but you'll need to publish it manually for now.",
+      "loading": "Loading…",
+      "tokenExpired": "Token expired — reconnect in Channels",
+      "noAccounts": "No accounts connected.",
+      "autoPublishHint": "The video publishes automatically to {count, plural, one {# account} other {# accounts}} as soon as it's done generating.",
+      "manualPublishHint": "If you don't select any account, the video still generates — you'll just need to publish it manually."
+    },
+    "durationSection": {
+      "title": "Duration",
+      "modeAuto": "Match the song",
+      "modeManual": "Manual duration",
+      "songDurationLabel": "Song duration",
+      "songDurationDetected": "{duration} detected",
+      "songDurationMissing": "No song yet — resolved automatically",
+      "repeatsLabel": "Repeats",
+      "totalEstimated": "Estimated total duration",
+      "exactDurationLabel": "Exact duration",
+      "secondsUnit": "seconds",
+      "manualRangeHint": "The song's duration is ignored; the allowed range is 5–300 seconds."
+    },
+    "nichoField": {
+      "label": "Niche / music category",
+      "badge": "Pick one",
+      "selectPlaceholder": "Select a category",
+      "addCategoryButton": "+ Add category",
+      "newCategoryPlaceholder": "New category name",
+      "confirmAdd": "Add",
+      "cancel": "Cancel",
+      "templatesHintBefore": "You can see examples of each template in",
+      "templatesLink": "Templates"
+    },
+    "recorderEngineSection": {
+      "title": "Recording engine",
+      "engineRemotion": "Remotion",
+      "engineHyperframes": "HyperFrames",
+      "enginePlaywright": "Playwright",
+      "hintRemotion": "Better quality, slower render.",
+      "hintHyperframes": "Animated HTML composition, fast render.",
+      "hintPlaywright": "Live recording, faster — slightly lower quality."
+    },
+    "renderTargetSection": {
+      "title": "Render engine",
+      "targetLocal": "Local",
+      "targetAws": "Cloud (AWS)",
+      "hintLocal": "Renders on the local server.",
+      "hintAws": "Renders on AWS Lambda — incurs real cost on the AWS account."
+    },
+    "resourceFields": {
+      "backgroundLabel": "Background (image or video)",
+      "backgroundAutoHint": "The system will pick an image automatically",
+      "chooseFile": "Choose file",
+      "songLabel": "Song",
+      "songDetected": "{fileName} · {duration} detected",
+      "songAutoHint": "The system will pick a song from the library"
+    },
+    "summaryCard": {
+      "title": "Batch summary",
+      "automatic": "Automatic",
+      "automaticFeminine": "Automatic",
+      "manualSeconds": "{seconds}s (manual)",
+      "rowNicho": "Niche",
+      "noPreference": "No preference",
+      "rowFondo": "Background",
+      "rowCancion": "Song",
+      "rowDuracion": "Duration",
+      "rowEngine": "Recording engine",
+      "rowRenderTarget": "Render engine",
+      "renderTargetAws": "Cloud (AWS)",
+      "renderTargetLocal": "Local",
+      "rowPublish": "Publish to",
+      "publishAccountsCount": "{count, plural, one {# account} other {# accounts}}",
+      "publishManual": "Manual"
+    },
+    "jobProgress": {
+      "category": "Category",
+      "duration": "Duration",
+      "viewDetails": "View details"
+    },
+    "stages": {
+      "pending": "Queued",
+      "inputAnalyzed": "Analyzing input...",
+      "designComplete": "Designing visual style...",
+      "resourcesFetched": "Fetching resources (image/music)...",
+      "promptBuilt": "Building prompt...",
+      "htmlGenerated": "Generating template...",
+      "videoRecorded": "Recording video...",
+      "summaryGenerated": "Generating title and description...",
+      "packaged": "Ready",
+      "publishing": "Publishing...",
+      "published": "Published",
+      "failed": "Failed"
+    }
+  },
+  "schedule": {
+    "title": "Scheduling",
+    "tabs": { "slots": "Schedules", "queue": "Queue" },
+    "common": {
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving…",
+      "confirm": "Confirm",
+      "updating": "Updating…",
+      "close": "Close"
+    },
+    "platforms": { "youtube": "YouTube", "tiktok": "TikTok", "facebook": "Facebook" },
+    "weekdays": { "mon": "Mon", "tue": "Tue", "wed": "Wed", "thu": "Thu", "fri": "Fri", "sat": "Sat", "sun": "Sun" },
+    "slots": {
+      "description": "Recurring schedules per account — assign a video by hand or let the system pick one.",
+      "newSlot": "+ New schedule",
+      "loadError": "Couldn't load the schedules.",
+      "loading": "Loading schedules…",
+      "empty": "No schedules set up yet.",
+      "enabled": "Active",
+      "disabled": "Paused",
+      "nicheFilterLabel": "niche: {niche}",
+      "assignVideo": "Assign video",
+      "edit": "Edit",
+      "pause": "Pause",
+      "activate": "Activate",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete this schedule?",
+      "deleteConfirmDescription": "{platform} · {account} — {days} · {times}. This can't be undone.",
+      "deleteError": "Couldn't delete it. Try again.",
+      "deleting": "Deleting…",
+      "confirmDelete": "Yes, delete"
+    },
+    "slotForm": {
+      "createTitle": "New schedule",
+      "editTitle": "Edit schedule",
+      "description": "Set when and on which account this publishes automatically.",
+      "platformLabel": "Platform",
+      "accountLabel": "Account",
+      "chooseAccount": "Choose an account…",
+      "daysLabel": "Days",
+      "presetAllDays": "Every day",
+      "presetWeekdays": "Mon-Fri",
+      "presetWeekends": "Weekends",
+      "timesLabel": "Times (UTC)",
+      "removeTime": "Remove",
+      "addTime": "+ Add time",
+      "nicheLabel": "Niche filter (optional)",
+      "anyNiche": "Any niche",
+      "saveError": "Couldn't save the schedule. Try again."
+    },
+    "assignVideo": {
+      "title": "Assign video",
+      "description": "Pick an occurrence of this schedule and which video to publish. \"Automatic\" lets the system pick the oldest ready video when the time comes.",
+      "occurrenceLabel": "Occurrence",
+      "noOccurrences": "This schedule has no upcoming occurrences — check its days and times.",
+      "videoLabel": "Video",
+      "auto": "Automatic (let the AI decide)",
+      "saveError": "Couldn't assign the video. Try again."
+    },
+    "queue": {
+      "description": "Refreshes on its own every 15s as entries move from queued to published.",
+      "loadError": "Couldn't load the publish queue.",
+      "loading": "Loading queue…",
+      "empty": "Nothing in the publish queue yet.",
+      "viewPost": "View post",
+      "cancelEntry": "Cancel",
+      "sourceLabels": { "manual": "Manual", "auto": "Automatic", "immediate": "Publish now" },
+      "statusLabels": { "queued": "Queued", "publishing": "Publishing…", "published": "Published", "failed": "Failed", "cancelled": "Cancelled" }
+    },
+    "publishNow": {
+      "title": "Publish now",
+      "description": "Publish \"{jobTitle}\" right away, skipping the scheduled time.",
+      "platformLabel": "Platform",
+      "accountLabel": "Account",
+      "chooseAccount": "Choose an account…",
+      "noAccounts": "No active accounts connected on {platform}.",
+      "publishError": "Couldn't publish. Try again.",
+      "success": "Published successfully.",
+      "genericFailure": "The publish failed.",
+      "publishing": "Publishing…"
+    }
+  },
+  "access": {
+    "requestTitle": "Request access",
+    "requestSubtitle": "Tell me who you are and why you'd like to see Nexa Brief in action — I reply myself, not an automated form.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@email.com",
+    "messageLabel": "Tell me a bit",
+    "messageOptional": "(optional)",
+    "requestButton": "Request access to see it in action",
+    "requestSuccess": "Done — I'll email you soon.",
+    "requestError": "Couldn't send the request. Please try again.",
+    "toggleToLoginQuestion": "Already have access?",
+    "toggleToLogin": "Log in",
+    "loginTitle": "Log in",
+    "loginSubtitle": "Reserved for guided demos — if I already gave you a username and password, this is the place.",
+    "passwordLabel": "Password",
+    "loginButton": "Enter the panel",
+    "loginError": "Incorrect email or password.",
+    "toggleToRequestQuestion": "Don't have access yet?",
+    "toggleToRequest": "Request access",
+    "contactLabel": "Write to me directly",
+    "contactName": "Ever Mamani Vicente",
+    "backHome": "← Back to home",
+    "visualBadge": "How does it work?",
+    "visualHeadingLine1": "This is how",
+    "visualHeadingEm": "every video comes together.",
+    "visualBody": "Five templates, one AI pipeline, zero manual editing — request access and I'll show you the rest."
+  }
+}

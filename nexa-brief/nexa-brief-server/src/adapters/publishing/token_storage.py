@@ -158,8 +158,24 @@ class TokenStorage:
                     "expires_in_seconds": expires_in,
                     "has_refresh_token": bool(entry.get("encrypted_refresh_token")),
                     "avatar": entry.get("avatar"),
+                    "label": entry.get("label", ""),
+                    "notes": entry.get("notes", ""),
+                    "connected_at": entry.get("connected_at"),
                 })
         return result
+
+    def update_metadata(self, platform: str, alias: str, *, label: str | None = None, notes: str | None = None) -> bool:
+        """Update user-editable, non-secret fields of an account. Returns False if it doesn't exist."""
+        self._data = self._load()
+        entry = self._data.get(platform, {}).get(alias)
+        if entry is None:
+            return False
+        if label is not None:
+            entry["label"] = label.strip()
+        if notes is not None:
+            entry["notes"] = notes.strip()
+        self._save()
+        return True
 
     def save_tokens(
         self,
@@ -180,6 +196,7 @@ class TokenStorage:
         entry = self._data[platform][alias]
         entry["encrypted_access_token"] = self.encrypt(access_token)
         entry["status"] = "ok"
+        entry.setdefault("connected_at", time.time())
 
         if expires_in is not None:
             entry["expires_at"] = time.time() + expires_in

@@ -8,9 +8,7 @@ export function ScheduleSlotsTable({ slots }: { slots: ScheduleSlot[] }) {
   const t = useTranslations("schedule");
 
   if (slots.length === 0) {
-    return (
-      <div className="py-7.5 text-center text-[13.5px] text-nb-mute">{t("slots.empty")}</div>
-    );
+    return <div className="py-7.5 text-center text-[13.5px] text-nb-mute">{t("slots.empty")}</div>;
   }
 
   return (

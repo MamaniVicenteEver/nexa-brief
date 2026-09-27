@@ -1,0 +1,198 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Cristal roto en paleta noche cálida — la letra se pinta en marfil sobre una lámina de vidrio frente a un mundo nocturno en ámbar, cobre, vino y un contrapunto azul acero (bokeh de ciudad, humo cálido, rayos, figuras a contraluz con grade cálido). Cada golpe agrieta el vidrio, algunas frases se graban esmeriladas o se escriben en el vaho, y al acumularse el daño la lámina estalla revelando un mundo nuevo; el acento de las letras toma el color del mundo activo. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "bg": {},
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Unbounded:wght@700;900&family=Caveat+Brush&family=JetBrains+Mono:wght@500;700&display=swap",
+        "golpe": "\"Big Shoulders Display\", Impact, sans-serif",
+        "grabado": "\"Unbounded\", \"Arial Black\", sans-serif",
+        "vaho": "\"Caveat Brush\", cursive",
+        "mono": "\"JetBrains Mono\", monospace"
+      },
+      "palette": {
+        "night": "#0A0708",
+        "glass": "#EDE6DE",
+        "text": "#F4EDE4",
+        "hot": "#E9A86A",
+        "cool": "#C98B7B",
+        "frost": "#F3EAE0",
+        "fog": "#E7DED4"
+      },
+      "worlds": [
+        {
+          "type": "bokeh",
+          "colors": [
+            "#E3A063",
+            "#C46F55",
+            "#EFD2A6",
+            "#7E5470"
+          ],
+          "bg": [
+            "#0A0605",
+            "#1D130F"
+          ],
+          "text": "#F6EEE4",
+          "accent": "#F0B36E",
+          "accent2": "#D3856F",
+          "figure": {
+            "src": "assets/figures/figura-01.png",
+            "side": "right",
+            "height": 0.9,
+            "glow": "#C46F55"
+          }
+        },
+        {
+          "type": "video",
+          "src": "assets/humo.mp4",
+          "rate": 0.85,
+          "tint": "#A8684C",
+          "tintAlpha": 0.62,
+          "darken": 0.18,
+          "lights": true,
+          "lightColors": [
+            "#E3A063",
+            "#EFD2A6",
+            "#C46F55"
+          ],
+          "accent": "#F2C08C",
+          "accent2": "#D9967A"
+        },
+        {
+          "type": "rayos",
+          "colors": [
+            "#8DAFC4",
+            "#C7D5DE",
+            "#D8B38C"
+          ],
+          "bg": [
+            "#05070A",
+            "#0F1822"
+          ],
+          "text": "#EEF1F2",
+          "accent": "#E6C49A",
+          "accent2": "#9FBCCD",
+          "figure": {
+            "src": "assets/figures/figura-02.png",
+            "side": "left",
+            "height": 0.86,
+            "glow": "#6F93AA"
+          }
+        },
+        {
+          "type": "aurora",
+          "colors": [
+            "#8F4A56",
+            "#C9825A",
+            "#553A66",
+            "#BE9C76"
+          ],
+          "bg": [
+            "#080506",
+            "#170C11"
+          ],
+          "accent": "#EAA88E",
+          "accent2": "#C98B9A"
+        },
+        {
+          "type": "video",
+          "src": "assets/humo.mp4",
+          "rate": 1.15,
+          "tint": "#8C3F33",
+          "tintAlpha": 0.62,
+          "darken": 0.2,
+          "lights": true,
+          "mirror": true,
+          "lightColors": [
+            "#E0A36A",
+            "#C46F55",
+            "#F1D3A8"
+          ],
+          "accent": "#F0BE85",
+          "accent2": "#CF8468",
+          "figure": {
+            "src": "assets/figures/figura-03.png",
+            "side": "center",
+            "height": 0.84,
+            "glow": "#D89A62"
+          }
+        }
+      ],
+      "intro": {
+        "artist": "Dalex",
+        "title": "Hola",
+        "sub": "",
+        "feats": ""
+      },
+      "outro": {
+        "leadSec": 8,
+        "songTitle": "Hola · Dalex",
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "debug": {
+        "enabled": false
+      },
+      "layout": {
+        "maxWordsPerPhrase": 8,
+        "rowCharsPortrait": 9,
+        "rowCharsLandscape": 15,
+        "modeWeights": {
+          "impacto": 0.42,
+          "grabado": 0.3,
+          "vaho": 0.28
+        },
+        "fillWeights": {
+          "fill": 0.65,
+          "ragged": 0.35
+        },
+        "alignWeights": {
+          "center": 0.5,
+          "left": 0.25,
+          "right": 0.25
+        },
+        "accentWeights": {
+          "hot": 0.45,
+          "cool": 0.25,
+          "none": 0.3
+        },
+        "heroSoloChance": 0.6,
+        "crackChance": 0.8,
+        "rowRotMax": 2.5,
+        "dutchMax": 2.2,
+        "tiltMax": 3.5,
+        "zoom": [
+          1.0,
+          1.07
+        ],
+        "shakePx": 16,
+        "glassTint": 0.14
+      },
+      "shatter": {
+        "chance": 0.22,
+        "everyMin": 2,
+        "everyMax": 4,
+        "damageMax": 10,
+        "modeWeights": {
+          "estallido": 0.4,
+          "derrumbe": 0.3,
+          "rafaga": 0.3
+        },
+        "rays": [
+          12,
+          18
+        ],
+        "rings": 6,
+        "flash": 0.32
+      },
+      "seed": 11
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../vendor/gsap.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="root"
+      data-start="0"
+      data-duration="{{DURATION}}"
+      data-width="1920"
+      data-height="1080"
+      data-fps="30"
+    >
+      <video id="presenter" class="clip presenter" src="{{VIDEO_SRC}}" muted playsinline preload="auto" data-start="0" data-duration="{{DURATION}}" data-track-index="0"></video>
+      <audio id="presenter-audio" class="clip" src="{{AUDIO_SRC}}" preload="auto" data-start="0" data-duration="{{DURATION}}" data-track-index="1" data-has-audio="true" data-volume="1"></audio>
+      <div id="stage-shade" class="clip stage-shade" data-start="0" data-duration="{{DURATION}}" data-track-index="2"></div>
+      <div id="focus-zone" class="clip focus-zone" data-start="0" data-duration="{{DURATION}}" data-track-index="3"></div>
+      <div id="topline" class="clip topline" data-start="0" data-duration="{{DURATION}}" data-track-index="4">
+        <span class="topline-brand">NEXA EXPLAINER</span>
+        <span class="topline-context"><i class="signal-dot"></i>CENTRAL FRAME / 16:9</span>
+      </div>
+
+      <div id="scene-a" class="scene clip" data-start="0" data-duration="15" data-track-index="5">
+        <div class="rail rail-left">
+          <div class="rail-index">01 / CONTEXTO</div><div class="rail-rule"></div>
+          <h1 class="rail-title">Una historia cambia cuando alguien decide escuchar.</h1>
+          <p class="rail-body">El presentador permanece en el centro; el contexto aparece en el espacio lateral.</p>
+        </div>
+        <div class="rail rail-right">
+          <div class="rail-index">EJEMPLO / 01</div><div class="rail-rule"></div>
+          <p class="rail-body">Una llamada puede convertirse en una acción colectiva.</p>
+          <div class="rail-visual"><div class="visual-label">SEÑAL EDITORIAL</div><div class="bar-chart"><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <p class="subtitle">Después de Stonewall, una llamada abrió una nueva conversación.</p>
+      </div>
+
+      <div id="scene-b" class="scene clip" data-start="15" data-duration="15" data-track-index="5">
+        <div class="rail rail-left">
+          <div class="rail-index">02 / ACCIÓN</div><div class="rail-rule"></div>
+          <h1 class="rail-title">La respuesta fue estar presente.</h1>
+          <p class="rail-body">Un gesto concreto convierte una historia personal en una causa visible.</p>
+        </div>
+        <div class="rail rail-right">
+          <div class="rail-index">EJEMPLO / 02</div><div class="rail-rule"></div>
+          <p class="rail-body">Acompañar. Preguntar. Defender. Tres verbos para avanzar.</p>
+          <div class="rail-visual"><div class="visual-label">SECUENCIA</div><div class="bar-chart"><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <p class="subtitle">Una madre respondió a la llamada y caminó junto a su hijo.</p>
+      </div>
+
+      <div id="scene-c" class="scene clip" data-start="30" data-duration="15" data-track-index="5">
+        <div class="rail rail-left">
+          <div class="rail-index">03 / ESCALA</div><div class="rail-rule"></div>
+          <h1 class="rail-title">La organización hizo visible el apoyo.</h1>
+          <p class="rail-body">El gráfico lateral traduce una idea compleja en una señal rápida de recordar.</p>
+        </div>
+        <div class="rail rail-right">
+          <div class="rail-index">EJEMPLO / 03</div><div class="rail-rule"></div>
+          <p class="rail-body">De una reunión pequeña a una comunidad que acompaña a miles.</p>
+          <div class="rail-visual"><div class="visual-label">CRECIMIENTO</div><div class="bar-chart"><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <p class="subtitle">La esperanza creció cuando el apoyo dejó de ser silencioso.</p>
+      </div>
+
+      <div id="scene-d" class="scene clip" data-start="45" data-duration="15" data-track-index="5">
+        <div class="rail rail-left">
+          <div class="rail-index">04 / IDEA CLAVE</div><div class="rail-rule"></div>
+          <h1 class="rail-title">La esperanza puede ser más fuerte que el odio.</h1>
+          <p class="rail-body">Cierre con una frase memorable y un movimiento visual que acompaña la voz.</p>
+        </div>
+        <div class="rail rail-right">
+          <div class="rail-index">CIERRE / 04</div><div class="rail-rule"></div>
+          <p class="rail-body">Un ejemplo, un dato y una conclusión: la estructura queda clara.</p>
+          <div class="rail-visual"><div class="visual-label">MENSAJE</div><div class="bar-chart"><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <p class="subtitle">Cuando la gente se une, una historia puede cambiar una nación.</p>
+      </div>
+
+      <div id="footer" class="clip footer" data-start="0" data-duration="{{DURATION}}" data-track-index="6">
+        <span>SUBTÍTULOS / ES</span><div class="progress-track"><span id="progress" class="progress"></span></div><span>01:00</span>
+      </div>
+    </div>
+
+    <script src="js/timeline.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = window.NexaExplainer.buildTimeline(gsap);
+    </script>
+  </body>
+</html>

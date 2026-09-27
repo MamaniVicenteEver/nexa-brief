@@ -232,6 +232,12 @@ class PublisherFacade:
         logger.info("publisher_list_accounts", total=len(accounts))
         return accounts
 
+    def update_account_metadata(
+        self, platform: str, alias: str, *, label: str | None = None, notes: str | None = None
+    ) -> bool:
+        """Update an account's user-editable label/notes. Returns False if it doesn't exist."""
+        return self._token_manager._storage.update_metadata(platform, alias, label=label, notes=notes)
+
     def remove_account(self, platform: str, alias: str) -> bool:
         """Delete a connected account's stored tokens. Returns True if it existed."""
         storage = self._token_manager._storage

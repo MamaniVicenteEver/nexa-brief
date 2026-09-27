@@ -1,9 +1,10 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { MediaPlayerModal } from "@/shared/components/media/MediaPlayerModal";
 import type { Template } from "../types";
 
 const ORIENTATION_LABEL_KEY: Record<Template["nativeOrientation"], string> = {
@@ -13,9 +14,9 @@ const ORIENTATION_LABEL_KEY: Record<Template["nativeOrientation"], string> = {
 };
 
 // Mismas imágenes que usa la fila de plantillas de la home
-// (TemplatesRow.tsx) — los 3 templates de letras comparten una sola
+// (histórico) — los 3 templates de letras comparten una sola
 // imagen genérica porque todavía no hay una miniatura por variante.
-const PREVIEW_IMAGE: Record<string, string> = {
+const FALLBACK_PREVIEW_IMAGE: Record<string, string> = {
   "01-image-bg": "/images/templates/image-bg.png",
   "subject-spotlight": "/images/templates/subject-png.png",
   "living-landscape": "/images/templates/landscape-scene.png",
@@ -25,53 +26,163 @@ const PREVIEW_IMAGE: Record<string, string> = {
   "lyrics-romantic": "/images/templates/lyrics.png",
 };
 
-export function TemplateCard({ template }: { template: Template }) {
+const PREVIEW_VIDEO: Record<string, string> = {
+  "motion-backdrop": "/videos/sample-publication.mp4",
+};
+
+const DEFAULT_PREVIEW_VOLUME = 0.05;
+
+export function TemplateCard({
+  template,
+  hideRecorder = false,
+  className,
+}: {
+  template: Template;
+  /** Oculta el motor de grabación que trae cada plantilla (#rec-btn). En
+   * /plantillas se usa; en vistas de solo lectura como la landing, no. */
+  hideRecorder?: boolean;
+  className?: string;
+}) {
   const t = useTranslations("templates");
-  const previewSrc = PREVIEW_IMAGE[template.id];
+  const previewSrc =
+    template.previewImageUrl ??
+    FALLBACK_PREVIEW_IMAGE[template.id] ??
+    "/images/templates/lyrics.png";
+  const previewVideo = template.previewVideoUrl ?? PREVIEW_VIDEO[template.id];
+  const [showcaseOpen, setShowcaseOpen] = useState(false);
+  const [showcaseActive, setShowcaseActive] = useState(false);
+  const showcaseFrameRef = useRef<HTMLIFrameElement>(null);
+  const fallbackVideoRef = useRef<HTMLVideoElement>(null);
+  const recorderParam = hideRecorder ? "&norec=1" : "";
+  const showcasePreviewUrl = template.showcaseUrl
+    ? `${template.showcaseUrl}?muted=1&preview=card${recorderParam}`
+    : null;
+  const modalPreviewUrl = template.showcaseUrl
+    ? `${template.showcaseUrl}?controls=1&volume=${DEFAULT_PREVIEW_VOLUME}${recorderParam}`
+    : null;
+
+  const setShowcasePlayback = (playing: boolean) => {
+    setShowcaseActive(playing);
+    showcaseFrameRef.current?.contentWindow?.postMessage(
+      { type: "nexa-template-preview", playing },
+      "*",
+    );
+  };
+
+  useEffect(() => {
+    showcaseFrameRef.current?.contentWindow?.postMessage(
+      { type: "nexa-template-preview", playing: showcaseActive },
+      "*",
+    );
+
+    const fallbackVideo = fallbackVideoRef.current;
+    if (!fallbackVideo) return;
+    if (showcaseActive) {
+      void fallbackVideo.play().catch(() => {});
+    } else {
+      fallbackVideo.pause();
+    }
+  }, [showcaseActive]);
+
+  const handleShowcaseOpenChange = (open: boolean) => {
+    setShowcaseOpen(open);
+    setShowcasePlayback(false);
+  };
 
   return (
-    <Link
-      href={`/plantillas/${template.id}`}
-      className={cn(
-        "flex flex-col gap-3 rounded-[20px] bg-nb-surface p-5.5 no-underline transition-transform hover:-translate-y-0.5",
-        "shadow-[0_18px_34px_-16px_rgba(40,30,10,0.16),0_6px_14px_-4px_rgba(40,30,10,0.07),inset_0_1px_0_rgba(255,255,255,0.7)]",
-      )}
-    >
-      <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-nb-bg-2 to-nb-line text-nb-ink-soft">
-        {previewSrc ? (
-          <Image
-            src={previewSrc}
-            alt={template.displayName}
-            fill
-            sizes="(max-width: 700px) 100vw, 360px"
-            className="object-cover"
-          />
-        ) : (
-          <span className="text-[13px] font-semibold">
-            {t(ORIENTATION_LABEL_KEY[template.nativeOrientation])}
-          </span>
-        )}
-      </div>
-      <h4 className="text-[15px] font-bold tracking-[-0.015em] text-nb-ink">
-        {template.displayName}
-      </h4>
-      <div className="flex flex-wrap gap-1.5">
-        {template.requiresImage && (
-          <span className="rounded-full bg-nb-bg-2 px-2.5 py-1 text-[11px] font-semibold text-nb-ink-soft">
-            {t("card.tagImage")}
-          </span>
-        )}
-        {template.requiresVideo && (
-          <span className="rounded-full bg-nb-bg-2 px-2.5 py-1 text-[11px] font-semibold text-nb-ink-soft">
-            {t("card.tagVideo")}
-          </span>
-        )}
-        {template.requiresLyrics && (
-          <span className="rounded-full bg-nb-bg-2 px-2.5 py-1 text-[11px] font-semibold text-nb-ink-soft">
-            {t("card.tagLyrics")}
-          </span>
-        )}
-      </div>
-    </Link>
+    <MediaPlayerModal
+      open={showcaseOpen}
+      onOpenChange={handleShowcaseOpenChange}
+      title={template.displayName}
+      description={t("card.previewHint")}
+      source={modalPreviewUrl ? { kind: "iframe", url: modalPreviewUrl } : null}
+      defaultVolume={DEFAULT_PREVIEW_VOLUME}
+      trigger={
+        <button
+          type="button"
+          aria-label={`${t("card.openPreview")}: ${template.displayName}`}
+          className={cn(
+            "group flex cursor-pointer flex-col overflow-hidden rounded-[10px] border border-black/5 bg-nb-surface text-left transition-transform hover:-translate-y-0.5",
+            "shadow-[0_8px_20px_-16px_rgba(40,30,10,0.16),0_2px_8px_-5px_rgba(40,30,10,0.05),inset_0_1px_0_rgba(255,255,255,0.45)]",
+            className,
+          )}
+          onMouseOver={() => setShowcasePlayback(true)}
+          onMouseOut={(event) => {
+            const relatedTarget = event.relatedTarget;
+            if (!relatedTarget || !event.currentTarget.contains(relatedTarget as Node)) {
+              setShowcasePlayback(false);
+            }
+          }}
+          onFocus={() => setShowcasePlayback(true)}
+          onBlur={() => setShowcasePlayback(false)}
+        >
+          <div className="relative flex aspect-[1.65] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-nb-bg-2 to-nb-line text-nb-ink-soft">
+            {showcasePreviewUrl ? (
+              <iframe
+                src={showcasePreviewUrl}
+                title={`${template.displayName} preview`}
+                aria-hidden="true"
+                tabIndex={-1}
+                loading="eager"
+                onLoad={(event) => {
+                  event.currentTarget.contentWindow?.postMessage(
+                    { type: "nexa-template-preview", playing: showcaseActive },
+                    "*",
+                  );
+                }}
+                className="pointer-events-none size-full border-0 bg-black"
+              />
+            ) : previewVideo ? (
+              <video
+                ref={fallbackVideoRef}
+                src={previewVideo}
+                poster={previewSrc}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label={template.displayName}
+                className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+            ) : previewSrc ? (
+              <Image
+                src={previewSrc}
+                alt={template.displayName}
+                fill
+                sizes="(max-width: 700px) 100vw, 360px"
+                unoptimized={Boolean(template.previewImageUrl)}
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+            ) : (
+              <span className="text-[13px] font-semibold">
+                {t(ORIENTATION_LABEL_KEY[template.nativeOrientation])}
+              </span>
+            )}
+          </div>
+          <div className="flex min-h-9 items-center justify-between gap-2 px-3 py-2">
+            <h4 className="min-w-0 truncate text-[12px] font-bold tracking-[-0.015em] text-nb-ink">
+              {template.displayName}
+            </h4>
+            <div className="flex shrink-0 flex-wrap justify-end gap-1">
+              {template.requiresImage && (
+                <span className="rounded-full bg-nb-bg-2 px-1.5 py-0.5 text-[9px] font-semibold text-nb-ink-soft">
+                  {t("card.tagImage")}
+                </span>
+              )}
+              {template.requiresVideo && (
+                <span className="rounded-full bg-nb-bg-2 px-1.5 py-0.5 text-[9px] font-semibold text-nb-ink-soft">
+                  {t("card.tagVideo")}
+                </span>
+              )}
+              {template.requiresLyrics && (
+                <span className="rounded-full bg-nb-bg-2 px-1.5 py-0.5 text-[9px] font-semibold text-nb-ink-soft">
+                  {t("card.tagLyrics")}
+                </span>
+              )}
+            </div>
+          </div>
+        </button>
+      }
+    />
   );
 }

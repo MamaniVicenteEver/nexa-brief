@@ -1,0 +1,25 @@
+:root { --primary: #6b3f35; --secondary: #dfaa54; --tertiary: #b74c45; --surface: #f3eadb; --ink: #2d2522; --muted: #76685f; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--surface); }
+body { color: var(--ink); font-family: Arial, sans-serif; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.academy-background { position: absolute; inset: 0; background: linear-gradient(135deg, #f3eadb, #e5d5c0); }
+.academy-background::after { position: absolute; inset: 0; opacity: 0.3; background-image: linear-gradient(rgba(45, 37, 34, 0.13) 1px, transparent 1px), linear-gradient(90deg, rgba(45, 37, 34, 0.13) 1px, transparent 1px); background-size: 70px 70px; content: ""; }
+.academy-header, .academy-footer { position: absolute; z-index: 4; right: 6%; left: 6%; display: flex; justify-content: space-between; letter-spacing: 0.14em; text-transform: uppercase; }
+.academy-header { top: 6%; padding-bottom: 18px; border-bottom: 1px solid rgba(45, 37, 34, 0.22); font-size: 17px; font-weight: 800; }
+.academy-meta, .academy-footer { color: var(--muted); font-size: 13px; font-weight: 700; }
+.academy-main { position: absolute; inset: 0; }
+.academy-intro { position: absolute; top: 18%; right: 9%; left: 9%; }
+.academy-eyebrow, .panel-label, .academy-caption span { color: var(--primary); font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+.academy-intro h1 { max-width: 1120px; margin: 22px 0 20px; font-size: clamp(70px, 8vw, 144px); line-height: 0.9; letter-spacing: -0.07em; }
+.academy-intro p { max-width: 900px; margin: 0; color: var(--muted); font-size: 31px; line-height: 1.2; }
+.lesson-panel { position: absolute; top: 17%; right: 8%; bottom: 17%; left: 8%; padding: 48px 58px; border: 2px solid rgba(45, 37, 34, 0.16); border-radius: 18px; background: rgba(255, 250, 239, 0.7); box-shadow: 0 24px 70px rgba(45, 37, 34, 0.14); }
+.source-card { display: flex; align-items: center; gap: 22px; margin-top: 50px; padding: 20px 24px; border-left: 8px solid var(--tertiary); background: rgba(255, 255, 255, 0.58); }
+.source-mark { display: grid; width: 84px; height: 84px; place-items: center; border: 3px solid var(--primary); color: var(--primary); font-size: 21px; font-weight: 900; }
+.source-card strong, .source-card small { display: block; }.source-card strong { font-size: 32px; }.source-card small { margin-top: 8px; color: var(--muted); font-size: 18px; }
+.inquiry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 17px; margin-top: 38px; }
+.inquiry-grid > div { display: grid; align-content: start; gap: 10px; min-height: 170px; padding: 19px; border: 1px solid rgba(45, 37, 34, 0.18); border-radius: 10px; background: rgba(255, 255, 255, 0.42); }
+.inquiry-grid b { color: var(--tertiary); font-size: 20px; }.inquiry-grid span { font-size: 24px; font-weight: 800; }.inquiry-grid small { color: var(--muted); font-size: 16px; line-height: 1.25; }
+.academy-caption { position: absolute; right: 9%; bottom: 7%; left: 9%; padding: 17px 22px; border-left: 6px solid var(--secondary); background: rgba(255, 250, 239, 0.84); }.academy-caption strong { display: block; margin-top: 8px; font-size: 22px; }.academy-footer { bottom: 3.5%; }.academy-footer span:last-child { color: var(--tertiary); }
+[data-enter] { animation: academy-enter 0.8s cubic-bezier(0.2, 0, 0, 1) both; }
+@keyframes academy-enter { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }

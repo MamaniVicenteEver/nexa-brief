@@ -13,7 +13,7 @@
   html, body { width: 100vw; height: 100vh; overflow: hidden; background: #060302; cursor: pointer; }
 
   /* fondo 16:9 a pantalla completa, filtrado hacia la paleta del neón */
-  #bg {
+  #bg, #bgVideo {
     position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0;
     filter: grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18);
     animation: bgBreath 46s ease-in-out infinite alternate;
@@ -58,12 +58,6 @@
   }
   .w.on { animation: ignite 0.55s steps(1, end) forwards; }
 
-  #street {
-    position: fixed; left: 0; right: 0; top: 82vh; height: 3px; z-index: 3;
-    background: repeating-linear-gradient(90deg, rgba(255,30,0,0.85) 0 90px, transparent 90px 150px);
-    box-shadow: 0 0 18px rgba(255,40,0,0.55), 0 0 60px rgba(255,30,0,0.25);
-    opacity: 0.45; pointer-events: none;
-  }
   #vignette {
     position: fixed; inset: 0; z-index: 4; pointer-events: none;
     background: radial-gradient(ellipse at 50% 42%, transparent 42%, rgba(0,0,0,0.78) 100%);
@@ -93,7 +87,7 @@
   #outro { opacity: 0; pointer-events: none; }
   #outro.show { opacity: 1; pointer-events: auto; }
   /* cuando aparece el outro, el mundo de letras se apaga suavemente detrás */
-  body.outroActive #viewport, body.outroActive #bg, body.outroActive #bgTint {
+  body.outroActive #viewport, body.outroActive #bg, body.outroActive #bgVideo, body.outroActive #bgTint {
     opacity: 0.12; transition: opacity 1.8s ease;
   }
   #hint {
@@ -111,13 +105,80 @@
     .cardScreen .sub    { font-size: min(5.4vh, 7.5vw); letter-spacing: 0.4em; padding-left: 0.4em; }
     .cardScreen .feats  { font-size: min(1.7vh, 3.3vw); letter-spacing: 0.24em; }
   }
+
+  /* ── Recording UI ─────────────────────────────────────────────────────── */
+  #rec-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(10,10,10,0.85); border: 2px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s, border-color .15s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  #rec-btn:hover { transform: scale(1.1); border-color: rgba(255,60,60,0.7); }
+  #rec-btn svg { width: 18px; height: 18px; }
+  #rec-btn.recording { border-color: #ff3c3c; animation: rec-pulse 1.2s ease-in-out infinite; }
+  @keyframes rec-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,60,60,.5)} 50%{box-shadow:0 0 0 8px rgba(255,60,60,0)} }
+  #rec-panel {
+    position: fixed; bottom: 84px; right: 24px; z-index: 9999;
+    width: 280px; background: rgba(10,10,12,0.96);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+    padding: 18px; backdrop-filter: blur(20px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    display: none; flex-direction: column; gap: 10px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  #rec-panel.open { display: flex; }
+  #rec-panel h3 {
+    color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    margin: 0 0 4px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .rec-engine {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 10px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+    transition: background .12s, border-color .12s;
+  }
+  .rec-engine:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+  .rec-engine.active { border-color: rgba(255,60,60,0.5); background: rgba(255,40,40,0.08); }
+  .rec-engine-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .rec-engine-info { flex: 1; min-width: 0; }
+  .rec-engine-name { color: #fff; font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .rec-engine-desc { color: rgba(255,255,255,0.45); font-size: 10px; line-height: 1.3; margin: 0; }
+  .rec-engine-badge {
+    font-size: 9px; padding: 2px 6px; border-radius: 4px;
+    font-weight: 700; letter-spacing: .05em; white-space: nowrap; flex-shrink: 0;
+  }
+  .badge-fast    { background: rgba(60,200,120,0.2); color: #3cc878; }
+  .badge-quality { background: rgba(255,160,60,0.2); color: #ffa03c; }
+  .badge-dev     { background: rgba(100,140,255,0.2); color: #6488ff; }
+  #rec-go {
+    margin-top: 4px; padding: 11px; border-radius: 10px; border: none; cursor: pointer;
+    background: #e03030; color: #fff; font-size: 13px; font-weight: 700;
+    letter-spacing: .04em; transition: background .12s, opacity .12s; font-family: inherit;
+  }
+  #rec-go:hover { background: #c52020; }
+  #rec-go:disabled { opacity: .35; cursor: not-allowed; }
+  #rec-status {
+    font-size: 10px; color: rgba(255,255,255,0.4); text-align: center;
+    min-height: 14px; font-family: inherit;
+  }
+  body.headless #rec-btn, body.headless #rec-panel { display: none !important; }
 </style>
 </head>
 <body>
 <img id="bg" alt="">
+<video id="bgVideo" muted loop playsinline preload="auto" hidden></video>
 <div id="bgTint"></div>
 <div id="viewport"><div id="worldTilt"><div id="world"></div></div></div>
-<div id="street"></div>
 <div id="vignette"></div>
 <div id="crt"></div>
 <div id="grain"></div>
@@ -135,6 +196,45 @@
 </div>
 <div id="hint">CLICK PARA EMPEZAR</div>
 <audio id="audio" preload="auto"></audio>
+<!-- ── Recording panel ────────────────────────────────────────────────── -->
+<button id="rec-btn" title="Motor de grabación (R)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" style="color:#fff">
+    <circle cx="12" cy="12" r="7" fill="rgba(255,60,60,0.85)" stroke="none"/>
+    <circle cx="12" cy="12" r="11" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none"/>
+  </svg>
+</button>
+<div id="rec-panel">
+  <h3>Motor de grabación</h3>
+  <div class="rec-engine" data-engine="hyperframes">
+    <div class="rec-engine-icon" style="background:rgba(255,160,30,0.15)">⚡</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">HyperFrames</p>
+      <p class="rec-engine-desc">Rápido, nativo del pipeline Nexa.</p>
+    </div>
+    <span class="rec-engine-badge badge-fast">RÁPIDO</span>
+  </div>
+  <div class="rec-engine" data-engine="remotion">
+    <div class="rec-engine-icon" style="background:rgba(100,60,255,0.15)">🎬</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Remotion</p>
+      <p class="rec-engine-desc">Mejor calidad, render más lento.</p>
+    </div>
+    <span class="rec-engine-badge badge-quality">CALIDAD</span>
+  </div>
+  <div class="rec-engine" data-engine="playwright">
+    <div class="rec-engine-icon" style="background:rgba(60,180,255,0.15)">🎭</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Playwright</p>
+      <p class="rec-engine-desc">Captura real del navegador.</p>
+    </div>
+    <span class="rec-engine-badge badge-dev">BROWSER</span>
+  </div>
+  <button id="rec-go" disabled>● Grabar</button>
+  <p id="rec-status"></p>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+
 <script type="module">
 /* ================================ CONFIG ================================ */
 /* La letra YA NO vive aquí: se consume 100% de lyricsUrl (formato Whisper:
@@ -181,7 +281,7 @@ const CONFIG = DB.configs.find(c => c.id === ACTIVE_ID)
 /* ======================================================================== */
 
 const doc = document, $ = id => doc.getElementById(id);
-const C = CONFIG, world = $("world"), audio = $("audio");
+const C = CONFIG, world = $("world"), audio = $("audio"), bgImage = $("bg"), bgVideo = $("bgVideo");
 let vw = innerWidth, vh = innerHeight;
 addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; });
 
@@ -386,12 +486,84 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 
-$("bg").src = C.bg.src;
-if (C.bg.filter) $("bg").style.filter = C.bg.filter;   /* si no viene, queda el filtro default del CSS */
+const backgroundSrc = C.bg?.src || "";
+const backgroundIsVideo = C.bg?.type === "video"
+  || /\.(mp4|webm|mov|m4v|ogg)(?:[?#].*)?$/i.test(backgroundSrc);
+
+if (backgroundIsVideo) {
+  bgImage.hidden = true;
+  bgVideo.hidden = false;
+  bgVideo.src = encodeURI(backgroundSrc);
+  bgVideo.load();
+  bgVideo.play().catch(() => {});
+} else {
+  bgVideo.pause();
+  bgVideo.removeAttribute("src");
+  bgVideo.load();
+  bgVideo.hidden = true;
+  bgImage.hidden = false;
+  bgImage.src = encodeURI(backgroundSrc);
+}
+if (C.bg?.filter) {
+  bgImage.style.filter = C.bg.filter;
+  bgVideo.style.filter = C.bg.filter;
+}
 audio.src = encodeURI(C.audio.src);
 loadLyrics().then(w => { words = w; });
 begin();
 requestAnimationFrame(frame);
+
+/* ── Recording UI ──────────────────────────────────────────────────────── */
+(function initRecUI() {
+  if (new URLSearchParams(location.search).get('headless') === '1') {
+    document.body.classList.add('headless'); return;
+  }
+  const btn    = document.getElementById('rec-btn');
+  const panel  = document.getElementById('rec-panel');
+  const goBtn  = document.getElementById('rec-go');
+  const status = document.getElementById('rec-status');
+  if (!btn) return;
+  let selectedEngine = null, recording = false;
+
+  function togglePanel() { panel.classList.toggle('open'); }
+  btn.addEventListener('click', e => { e.stopPropagation(); togglePanel(); });
+  document.addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') togglePanel(); });
+  document.addEventListener('click', e => {
+    if (!panel.contains(e.target) && e.target !== btn) panel.classList.remove('open');
+  });
+  document.querySelectorAll('.rec-engine').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.rec-engine').forEach(e => e.classList.remove('active'));
+      el.classList.add('active');
+      selectedEngine = el.dataset.engine;
+      goBtn.disabled = false;
+      status.textContent = '';
+    });
+  });
+  goBtn.addEventListener('click', async () => {
+    if (!selectedEngine || recording) return;
+    recording = true;
+    btn.classList.add('recording');
+    goBtn.disabled = true;
+    panel.classList.remove('open');
+    status.textContent = 'Iniciando ' + selectedEngine + '…';
+    const templateName = location.pathname.split('/').filter(Boolean).slice(-2, -1)[0]
+                         || document.title || 'unknown';
+    const payload = { engine: selectedEngine, template: templateName, timestamp: Date.now() };
+    window.postMessage({ type: 'nexa:record', ...payload }, '*');
+    document.dispatchEvent(new CustomEvent('nexa:record', { detail: payload }));
+    try {
+      const res = await fetch('/api/v1/record', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      status.textContent = res.ok ? (await res.json()).message || ('Grabando con ' + selectedEngine + '…')
+                                  : 'API ' + res.status + ' — evento emitido';
+    } catch { status.textContent = 'Sin servidor — evento emitido (' + selectedEngine + ')'; }
+    setTimeout(() => { recording = false; btn.classList.remove('recording'); goBtn.disabled = false; status.textContent = ''; }, 8000);
+  });
+})();
+/* ─────────────────────────────────────────────────────────────────────────── */
 </script>
 </body>
 </html>

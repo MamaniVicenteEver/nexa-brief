@@ -35,9 +35,7 @@ export function LocaleSwitcher({ className }: { className?: string }) {
           aria-current={locale === code}
           className={cn(
             "locale-switcher__option rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors",
-            locale === code
-              ? "bg-nb-ink text-white"
-              : "text-nb-ink-soft hover:text-nb-ink",
+            locale === code ? "bg-nb-ink text-white" : "text-nb-ink-soft hover:text-nb-ink",
           )}
         >
           {LOCALE_LABEL[code]}

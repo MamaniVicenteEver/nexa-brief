@@ -225,12 +225,24 @@ class VisualDesign(BaseModel):
     background_style: str
 
 
+class PlatformCopyText(BaseModel):
+    """Texto final listo para publicar en una plataforma (ver core/metadata/copy_renderer.py)."""
+    title: str
+    description: str
+    tags: list[str] = Field(default_factory=list)
+    strategy: str = ""              # id de la estrategia usada, ej. "yt_theme_question_v1"
+
+
 class VideoSummary(BaseModel):
+    # Campos legacy: los lee la web y los jobs anteriores a platform_copies.
     youtube_title: str
     youtube_description: str
     youtube_tags: list[str]
     tiktok_caption: str
     tiktok_hashtags: list[str]
+    language: str | None = None     # "es" | "en" — idioma en que se escribió el copy
+    # Fuente de verdad para publicar: un texto por plataforma, cada uno con su estrategia.
+    platform_copies: dict[str, PlatformCopyText] = Field(default_factory=dict)
 
 
 # ── Stage 9 — Publish Result ─────────────────────────────────────────────────

@@ -9,8 +9,8 @@ from typing import Awaitable, Callable
 
 import structlog
 
-from src.config.settings import settings
 from src.core import pipeline
+from src.core.job_queue import JobQueue, get_job_queue
 from src.core.job import (
     DurationConfig,
     ImageSource,
@@ -43,10 +43,14 @@ class BatchResult:
 
 
 class Orchestrator:
-    """Controls parallel execution of video jobs using an asyncio.Semaphore."""
+    """Runs batches of video jobs through the server-wide job queue.
+
+    `max_parallel` gives this instance a private queue (tests, one-off scripts);
+    by default every Orchestrator shares the global one, so the parallelism
+    limit holds across all requests, not per request."""
 
     def __init__(self, max_parallel: int | None = None) -> None:
-        self._sem = asyncio.Semaphore(max_parallel or settings.max_parallel_jobs)
+        self._queue = JobQueue(max_parallel) if max_parallel else get_job_queue()
 
     def build_jobs(
         self,
@@ -90,7 +94,7 @@ class Orchestrator:
     async def _run_one(
         self, job: Job, on_stage: Callable[[Job], Awaitable[None]] | None = None
     ) -> Job:
-        async with self._sem:
+        async with self._queue.slot(job.job_id):
             logger.info("orchestrator_job_start", job_id=job.job_id, category=job.input.category_name)
             result = await pipeline.run(job, on_stage=on_stage)
             status = "success" if result.stage == JobStage.PACKAGED else "failed"
@@ -116,7 +120,7 @@ class Orchestrator:
             "orchestrator_batch_start",
             category=category_name,
             quantity=quantity,
-            max_parallel=self._sem._value,
+            queued_before=self._queue.waiting_count,
         )
 
         t_start = time.monotonic()

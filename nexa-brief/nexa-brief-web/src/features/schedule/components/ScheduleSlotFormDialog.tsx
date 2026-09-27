@@ -78,7 +78,9 @@ export function ScheduleSlotFormDialog({
   };
 
   const updateTime = (id: string, value: string) => {
-    setTimeEntries((current) => current.map((entry) => (entry.id === id ? { ...entry, value } : entry)));
+    setTimeEntries((current) =>
+      current.map((entry) => (entry.id === id ? { ...entry, value } : entry)),
+    );
   };
 
   const removeTime = (id: string) => {
@@ -129,13 +131,18 @@ export function ScheduleSlotFormDialog({
           <DialogTitle className="text-nb-ink">
             {mode === "create" ? t("slotForm.createTitle") : t("slotForm.editTitle")}
           </DialogTitle>
-          <DialogDescription className="text-nb-mute">{t("slotForm.description")}</DialogDescription>
+          <DialogDescription className="text-nb-mute">
+            {t("slotForm.description")}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-3.5">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="slotPlatform" className="text-[11px] font-semibold text-nb-mute uppercase">
+              <label
+                htmlFor="slotPlatform"
+                className="text-[11px] font-semibold text-nb-mute uppercase"
+              >
                 {t("slotForm.platformLabel")}
               </label>
               <select
@@ -155,7 +162,10 @@ export function ScheduleSlotFormDialog({
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="slotAccount" className="text-[11px] font-semibold text-nb-mute uppercase">
+              <label
+                htmlFor="slotAccount"
+                className="text-[11px] font-semibold text-nb-mute uppercase"
+              >
                 {t("slotForm.accountLabel")}
               </label>
               <select

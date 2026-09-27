@@ -35,7 +35,14 @@ export interface AssignVideoInput {
   jobId: string | null; // null => limpia la asignación manual (vuelve a auto-fill)
 }
 
-export type QueueStatus = "queued" | "publishing" | "published" | "failed" | "cancelled";
+export type QueueStatus =
+  | "queued"
+  | "publishing"
+  | "published"
+  | "failed"
+  | "cancelled"
+  /** El post se eliminó de la plataforma desde Nexa Brief. */
+  | "removed";
 
 export type QueueSource = "manual" | "auto" | "immediate";
 

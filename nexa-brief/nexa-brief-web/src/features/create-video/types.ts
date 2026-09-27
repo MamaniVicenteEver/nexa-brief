@@ -9,6 +9,8 @@ export interface Niche {
    * 400 — "playwright" siempre está, "remotion"/"hyperframes" solo si el
    * niche tiene una composición portada (ver supports_niche() en el backend). */
   supportedEngines: string[];
+  /** Nichos de letras: la duración es siempre la de la canción (manual se ignora). */
+  durationLockedToMusic: boolean;
 }
 
 export type JobStage =
@@ -60,8 +62,29 @@ export interface JobDetail {
   createdAt: string;
   updatedAt: string;
   durationSeconds: number | null;
+  /** Segundos que tardó en generarse (null mientras sigue en curso). */
+  generationSeconds: number | null;
   files: JobFile[];
   summary: JobSummary | null;
+  /** Solo para jobs que el servidor está corriendo o corrió hace poco. */
+  progress: JobProgress | null;
+}
+
+export type JobProgressStatus = "queued" | "running" | "done" | "failed";
+
+/** Evento realtime `job_progress` (y campo `progress` de GET /videos/jobs/{id}). */
+export interface JobProgress {
+  status: JobProgressStatus;
+  /** Paso que está CORRIENDO ahora (ej. "video_recorder") — `stage` es el último que terminó. */
+  step: string | null;
+  stepIndex: number;
+  stepCount: number;
+  /** Todo el job, 0-100. */
+  percent: number;
+  /** Paso actual, cuando el paso lo reporta (renders). */
+  stepPercent: number | null;
+  queuePosition: number | null;
+  etaSeconds: number | null;
 }
 
 /** GET /videos/jobs — item de listado, para Biblioteca. */
@@ -74,4 +97,6 @@ export interface JobListItem {
   createdAt: string;
   updatedAt: string;
   durationSeconds: number | null;
+  /** Segundos que tardó en generarse (null mientras sigue en curso). */
+  generationSeconds: number | null;
 }

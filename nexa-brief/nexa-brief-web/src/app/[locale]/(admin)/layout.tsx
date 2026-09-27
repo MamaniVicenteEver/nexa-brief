@@ -1,6 +1,7 @@
 import { JobsTray } from "@/features/create-video/components/JobsTray";
 import { redirect } from "@/i18n/navigation";
 import { AdminHeader } from "@/shared/components/layout/AdminHeader";
+import { AdminRouteContent } from "@/shared/components/layout/AdminRouteContent";
 import { auth } from "../../../../auth";
 
 export default async function AdminLayout({
@@ -21,7 +22,7 @@ export default async function AdminLayout({
     <>
       <div className="nb-grain" />
       <AdminHeader />
-      <main className="flex-1">{children}</main>
+      <AdminRouteContent>{children}</AdminRouteContent>
       <JobsTray />
     </>
   );

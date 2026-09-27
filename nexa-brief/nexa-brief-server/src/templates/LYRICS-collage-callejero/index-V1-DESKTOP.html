@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COLLAGE CALLEJERO — Recortes urbanos (desktop)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Stardos+Stencil:wght@400;700&family=Permanent+Marker&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema (fuentes/paleta) — defaults idénticos al caso actual; config.json puede pisarlos */
+  :root {
+    --fontPoster: "Anton", sans-serif;
+    --fontCondensed: "Bebas Neue", sans-serif;
+    --fontStencil: "Stardos Stencil", cursive;
+    --fontMarker: "Permanent Marker", cursive;
+    --fontCaption: "Courier Prime", monospace;
+    --ink: #17130F; --paper: #E7DFC7; --paperWhite: #F5EFDD; --red: #B81F19;
+  }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--ink); cursor: pointer; }
+
+  /* cuaderno cuadriculado envejecido — 100% generativo, sin imagen */
+  #paper {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(23,19,15,0.05) 0 1px, transparent 1px 34px),
+      repeating-linear-gradient(90deg, rgba(23,19,15,0.05) 0 1px, transparent 1px 34px),
+      radial-gradient(ellipse 60vw 45vh at 20% 15%, rgba(255,250,235,0.35), transparent 65%),
+      radial-gradient(ellipse 55vw 60vh at 85% 80%, rgba(0,0,0,0.10), transparent 70%),
+      linear-gradient(158deg, #EFE8D2 0%, var(--paper) 55%, #DCD2B4 100%);
+  }
+  /* franjas de luz diagonal cruzando la escena, como persianas — vida lenta */
+  #rays {
+    position: fixed; inset: -20%; z-index: 1; pointer-events: none; opacity: 0.5;
+    background: repeating-linear-gradient(72deg, rgba(255,255,255,0.16) 0 3vw, transparent 3vw 11vw);
+    animation: raysDrift 60s linear infinite;
+  }
+  @keyframes raysDrift { 0% { transform: translate(0,0); } 100% { transform: translate(-8%, 6%); } }
+  /* foto opcional casi imperceptible bajo el papel (CONFIG.bg) — apagada por defecto */
+  #bg {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0;
+    filter: grayscale(1) contrast(1.2) brightness(0.5); opacity: 0; display: none;
+  }
+  /* recortes decorativos fijos: papel rasgado negro/rojo en las esquinas, estáticos */
+  .deco { position: fixed; z-index: 1; pointer-events: none; opacity: 0.9; }
+  #decoTL { top: -6vh; left: -4vw; width: 30vw; height: 26vh; background: var(--ink);
+    clip-path: polygon(0 0, 78% 0, 100% 38%, 62% 100%, 0 82%); opacity: 0.92; }
+  #decoBR { bottom: -8vh; right: -5vw; width: 26vw; height: 30vh; background: var(--red);
+    clip-path: polygon(30% 0, 100% 10%, 100% 100%, 0 100%, 8% 42%); opacity: 0.85; }
+  #decoStar { bottom: 4vh; left: 3vw; width: 7vw; height: 7vw; background: var(--ink);
+    clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); opacity: 0.8; }
+
+  #viewport { position: fixed; inset: 0; z-index: 2; overflow: hidden; }
+  #stage { position: absolute; inset: 0; will-change: transform; }
+
+  /* recorte con bordes rasgados (clip-path irregular vía JS) */
+  .clip {
+    position: absolute; white-space: nowrap; line-height: 0.92; text-transform: uppercase;
+    will-change: transform, opacity; opacity: 0; transform-origin: 50% 50%;
+    transition: opacity 0.6s ease;
+  }
+  .clip.enterL { animation: slamL 0.5s cubic-bezier(0.18, 0.85, 0.24, 1.15) forwards; }
+  .clip.enterR { animation: slamR 0.5s cubic-bezier(0.18, 0.85, 0.24, 1.15) forwards; }
+  @keyframes slamL {
+    0%   { opacity: 0; transform: translateX(-70vw) rotate(calc(var(--rot) - 14deg)) scale(1.1); }
+    62%  { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0) rotate(var(--rot)) scale(1); }
+  }
+  @keyframes slamR {
+    0%   { opacity: 0; transform: translateX(70vw) rotate(calc(var(--rot) + 14deg)) scale(1.1); }
+    62%  { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0) rotate(var(--rot)) scale(1); }
+  }
+  .clip.leaveL { transition: transform 0.55s cubic-bezier(0.4,0,1,1), opacity 0.5s ease;
+    transform: translateX(-90vw) rotate(calc(var(--rot) - 22deg)) scale(0.9) !important; opacity: 0 !important; }
+  .clip.leaveR { transition: transform 0.55s cubic-bezier(0.4,0,1,1), opacity 0.5s ease;
+    transform: translateX(90vw) rotate(calc(var(--rot) + 22deg)) scale(0.9) !important; opacity: 0 !important; }
+
+  /* voz 1 — poster: titular recortado a tijera, fondo sólido claro u oscuro */
+  .clip.poster {
+    font-family: var(--fontPoster); font-weight: 400; letter-spacing: 0.01em;
+    padding: 0.12em 0.34em 0.06em; box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  }
+  /* voz 2 — stencil: sello militar estampado, con tinta rugosa */
+  .clip.stencil {
+    font-family: var(--fontStencil); font-weight: 700; letter-spacing: 0.06em;
+    padding: 0.3em 0.4em 0.22em; border: 0.11em solid currentColor; filter: url(#rough);
+  }
+  /* voz 3 — marker: etiqueta escrita a mano, siempre sobre un post-it de papel */
+  .clip.marker {
+    font-family: var(--fontMarker); font-weight: 400; letter-spacing: 0.01em;
+    padding: 0.2em 0.5em; background: var(--paperWhite); color: var(--ink);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+  }
+  /* voz 4 — hollow: letra transparente, se ve el trazo y por dentro la capa de abajo */
+  .clip.hollow {
+    font-family: var(--fontCondensed); font-weight: 400; letter-spacing: 0.015em;
+    color: transparent !important; -webkit-text-stroke: 0.05em currentColor;
+    paint-order: stroke fill;
+  }
+  /* recorte viejo: se apaga pero queda en escena hasta el corte de plano */
+  .clip.cold { opacity: 0.55; filter: brightness(0.8) saturate(0.85); }
+
+  /* voz 5 — caption: línea completa de la letra, a máquina de escribir, discreta */
+  #caption {
+    position: absolute; max-width: 46vw; font-family: var(--fontCaption); font-weight: 400;
+    font-size: 1.8vh; line-height: 1.5; letter-spacing: 0.02em; color: var(--ink);
+    background: rgba(245,239,221,0.88); padding: 0.6em 0.9em; opacity: 0;
+    transition: opacity 1.1s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  #caption.on { opacity: 0.92; }
+
+  /* figura recortada (persona sin fondo) — tratada en blanco y negro alto contraste.
+     Versión desktop: más grande que la base (58vh → 64vh) porque sobra espacio
+     horizontal en una pantalla ancha. */
+  .figure {
+    position: absolute; height: 64vh; width: auto; z-index: 1;
+    filter: grayscale(1) contrast(1.35) brightness(0.92) saturate(0);
+    opacity: 0; will-change: transform, opacity; transform-origin: 50% 100%;
+  }
+  .figure.enterL { animation: figL 0.7s cubic-bezier(0.2,0.8,0.24,1.05) forwards; }
+  .figure.enterR { animation: figR 0.7s cubic-bezier(0.2,0.8,0.24,1.05) forwards; }
+  @keyframes figL { 0% { opacity: 0; transform: translateX(-55vw) rotate(-6deg); } 100% { opacity: 0.94; transform: translateX(0) rotate(var(--rot)); } }
+  @keyframes figR { 0% { opacity: 0; transform: translateX(55vw) rotate(6deg); }  100% { opacity: 0.94; transform: translateX(0) rotate(var(--rot)); } }
+  .figure.leaving { transition: transform 0.6s cubic-bezier(0.4,0,1,1), opacity 0.5s ease; opacity: 0 !important; }
+  .figure.leaveL { transform: translateX(-70vw) rotate(-16deg) !important; }
+  .figure.leaveR { transform: translateX(70vw) rotate(16deg) !important; }
+
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 6; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.07; mix-blend-mode: overlay; animation: gsh 1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+  #vignette {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, transparent 46%, rgba(10,7,3,0.5) 100%);
+  }
+
+  /* #intro y #outro: portada de flyer/mixtape rasgada, misma estética que las cards.
+     Versión desktop: título un poco más grande (13vh → 15vh), sobra espacio. */
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center;
+    text-align: center; transition: opacity 1.3s ease;
+  }
+  .flyer {
+    position: relative; display: flex; flex-direction: column; align-items: center; gap: 2vh;
+    padding: 6vh 7vw 5vh; transform: rotate(-1.4deg); background: var(--paperWhite);
+    clip-path: polygon(1.5% 3%, 40% 0, 60% 1.5%, 98.5% 4%, 100% 40%, 98% 97%, 55% 100%, 20% 98.5%, 0 62%);
+    box-shadow: 0 26px 60px rgba(0,0,0,0.6);
+  }
+  .flyer .tape { position: absolute; width: 10vw; height: 3vh; top: -1.6vh; left: 50%;
+    transform: translateX(-50%) rotate(-2deg); background: rgba(199,60,45,0.55); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  .cardScreen .artist { font-family: var(--fontMarker); font-size: 3.2vh; color: var(--red); }
+  .cardScreen .title  {
+    font-family: var(--fontPoster); font-size: 15vh; line-height: 0.95; color: var(--ink);
+    text-transform: uppercase; letter-spacing: 0.01em;
+  }
+  .cardScreen .sub    { font-family: var(--fontCondensed); font-size: 4.4vh; letter-spacing: 0.35em;
+    padding-left: 0.35em; color: var(--red); text-transform: uppercase; }
+  .cardScreen .feats  { font-family: var(--fontCaption); font-size: 1.8vh; letter-spacing: 0.14em;
+    color: var(--ink); margin-top: 1vh; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  body.outroActive #viewport, body.outroActive #paper, body.outroActive #rays, body.outroActive #bg {
+    opacity: 0.12; transition: opacity 1.8s ease;
+  }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--fontCaption); font-size: 1.6vh; letter-spacing: 0.5em;
+    opacity: 0.6; animation: hintPulse 2s ease infinite; pointer-events: none; color: var(--ink);
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.25; } 50% { opacity: 0.75; } }
+
+  /* responsive móvil de emergencia (por si este archivo se abre angosto) —
+     el diseño "de verdad" de este archivo es el desktop de arriba. */
+  @media (orientation: portrait) {
+    .flyer { padding: 5vh 6vw 4vh; }
+    .cardScreen .artist { font-size: min(3vh, 4.6vw); }
+    .cardScreen .title  { font-size: min(13vh, 15vw); }
+    .cardScreen .sub    { font-size: min(4vh, 5.8vw); letter-spacing: 0.26em; padding-left: 0.26em; }
+    .cardScreen .feats  { font-size: min(1.7vh, 3.2vw); }
+    #caption { max-width: 84vw; font-size: min(1.6vh, 2.8vw); }
+    .figure { height: 48vh; }
+  }
+</style>
+</head>
+<body>
+<!-- filtro de tinta rugosa para los sellos stencil -->
+<svg width="0" height="0" style="position:fixed">
+  <filter id="rough">
+    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="4" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="4"/>
+  </filter>
+</svg>
+<div id="paper"></div>
+<img id="bg" alt="">
+<div id="rays"></div>
+<div id="decoTL" class="deco"></div>
+<div id="decoBR" class="deco"></div>
+<div id="decoStar" class="deco"></div>
+<div id="viewport"><div id="stage"><div id="caption"></div></div></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="intro" class="cardScreen"><div class="flyer"><div class="tape"></div>
+  <div class="artist"></div>
+  <div class="title"></div>
+  <div class="sub"></div>
+  <div class="feats"></div>
+</div></div>
+<div id="outro" class="cardScreen"><div class="flyer"><div class="tape"></div>
+  <div class="artist"></div>
+  <div class="title"></div>
+  <div class="sub"></div>
+  <div class="feats"></div>
+</div></div>
+<div id="hint">CLICK PARA EMPEZAR</div>
+<audio id="audio" preload="auto"></audio>
+<script type="module">
+/* ================================ CONFIG ================================
+   COLLAGE CALLEJERO — VARIANTE DESKTOP: mismo motor que index.html (misma
+   letra, mismo audio, mismo config.json), con ajustes pensados para
+   pantalla ancha y de escritorio:
+     1. Composición más centrada: el punto ancla de cada escena (anchorX/
+        anchorY) se sortea en un rango más angosto alrededor del centro
+        (en vez de poder caer cerca de los bordes como en la base), para
+        que el collage no se sienta pegado a una esquina en 16:9.
+     2. Figuras y letras un poco más grandes (ver .figure y fontSizeFor)
+        porque una pantalla grande tiene espacio de sobra.
+     3. Mismo chequeo de contraste texto-sobre-imagen que la variante
+        móvil: si una palabra sin fondo propio (stencil/hollow) cae encima
+        de la figura activa y el color sorteado era negro, se fuerza a
+        blanco o rojo para que siga siendo legible.
+   `index-V1-DESKTOP.html` es un motor PROBADO y ESTÁTICO. NUNCA se
+   regenera. El CONFIG vive en config.json como colección de casos con
+   "id" (mismo patrón que el resto de plantillas de letras). La letra se
+   consume 100% de lyricsUrl (formato Whisper: { metadata, segments: [ {
+   words: [ { word, start, end } ] } ] } ). Sirve por HTTP (python3 -m
+   http.server): por file:// el fetch queda bloqueado. */
+const DEFAULT_CONFIG = { "activeId": "default", "configs": [{
+  "id": "default",
+  "description": "Collage urbano de recortes de papel (variante desktop) — composición centrada para pantalla ancha, con figuras y letras un poco más grandes, cada palabra estalla en el muro como un flyer callejero y cortes de plano al ritmo de la canción. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+  "audio": { "src": "assets/song.mp3" },
+  "lyricsUrl": "assets/lyrics.json",
+  "bg": {},
+  "fonts": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Stardos+Stencil:wght@400;700&family=Permanent+Marker&family=Courier+Prime:wght@400;700&display=swap",
+    "poster": "\"Anton\", sans-serif", "condensed": "\"Bebas Neue\", sans-serif",
+    "stencil": "\"Stardos Stencil\", cursive", "marker": "\"Permanent Marker\", cursive",
+    "caption": "\"Courier Prime\", monospace"
+  },
+  "palette": { "ink": "#17130F", "paper": "#E7DFC7", "paperWhite": "#F5EFDD", "red": "#B81F19" },
+  "figures": {
+    "items": [
+      "assets/figures/figure-01.png", "assets/figures/figure-02.png", "assets/figures/figure-03.png",
+      "assets/figures/figure-04.png", "assets/figures/figure-05.png", "assets/figures/figure-06.png",
+      "assets/figures/figure-07.png", "assets/figures/figure-08.png"
+    ]
+  },
+  "intro": { "artist": "", "title": "", "sub": "", "feats": "" },
+  "outro": { "leadSec": 8, "songTitle": "", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+  "debug": { "enabled": false },
+  "layout": {
+    "sceneWordsMin": 2, "sceneWordsMax": 4,
+    "typeWeights": { "poster": 0.32, "stencil": 0.20, "marker": 0.16, "hollow": 0.32 },
+    "colorWeights": { "ink": 0.45, "red": 0.25, "paper": 0.30 },
+    "sideWeights": { "left": 0.5, "right": 0.5 },
+    "figureChance": 0.5,
+    "captionChance": 0.45,
+    "rotMax": 7,
+    "clusterSpreadVw": 14, "clusterSpreadVh": 9
+  },
+  "seed": 11
+}] };
+
+async function loadDB() {
+  for (const url of ["config.json", "assets/config.json"]) {
+    try {
+      const r = await fetch(url);
+      if (r.ok) return await r.json();
+    } catch (e) { /* file:// u otro bloqueo — probamos el siguiente nivel */ }
+  }
+  console.warn("[collage-callejero-desktop] No se pudo cargar config.json ni assets/config.json (¿abierto por file://?) — usando DEFAULT_CONFIG embebido.");
+  return DEFAULT_CONFIG;
+}
+
+const DB = await loadDB();
+const CONFIG = DB.configs.find(c => c.id === DB.activeId) || DB.configs[0];
+
+/* tema desde el JSON → variables CSS (los defaults del CSS son idénticos al
+   caso actual, así que sin config el diseño no cambia en nada) */
+(function applyTheme(C) {
+  const root = document.documentElement;
+  if (C.fonts?.googleUrl) {
+    const link = document.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+    if (link && link.href !== C.fonts.googleUrl) link.href = C.fonts.googleUrl;
+  }
+  if (C.fonts?.poster)    root.style.setProperty("--fontPoster", C.fonts.poster);
+  if (C.fonts?.condensed) root.style.setProperty("--fontCondensed", C.fonts.condensed);
+  if (C.fonts?.stencil)   root.style.setProperty("--fontStencil", C.fonts.stencil);
+  if (C.fonts?.marker)    root.style.setProperty("--fontMarker", C.fonts.marker);
+  if (C.fonts?.caption)   root.style.setProperty("--fontCaption", C.fonts.caption);
+  const P = C.palette;
+  if (P?.ink)        root.style.setProperty("--ink", P.ink);
+  if (P?.paper)       root.style.setProperty("--paper", P.paper);
+  if (P?.paperWhite)  root.style.setProperty("--paperWhite", P.paperWhite);
+  if (P?.red)          root.style.setProperty("--red", P.red);
+})(CONFIG);
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, stage = $("stage"), audio = $("audio");
+let vw = innerWidth, vh = innerHeight;
+addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; });
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+function pickWeighted(rngFn, weights) {
+  const keys = Object.keys(weights), total = keys.reduce((s, k) => s + weights[k], 0);
+  let r = rngFn() * total;
+  for (const k of keys) { if ((r -= weights[k]) < 0) return k; }
+  return keys[keys.length - 1];
+}
+
+/* ---- intro / outro: mismo flyer (.flyer), textos distintos ---- */
+function buildCard(id, cfg) {
+  const i = $(id);
+  i.querySelector(".artist").textContent = cfg.artist ?? cfg.songTitle ?? "";
+  i.querySelector(".title").textContent = cfg.title;
+  i.querySelector(".sub").textContent = cfg.sub;
+  i.querySelector(".feats").textContent = cfg.feats;
+}
+buildCard("intro", C.intro);
+buildCard("outro", C.outro);
+
+/* ---- lyrics: 100% desde lyricsUrl (JSON de Whisper) ---- */
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const out = [];
+    for (const seg of j.segments) {
+      const segText = seg.text.trim();
+      for (const w of seg.words) out.push({ t: w.start, text: w.word.trim(), line: segText });
+    }
+    if (!out.length) throw new Error("lyrics.json sin palabras");
+    return out;
+  } catch (e) {
+    console.warn("[collage-callejero-desktop] No se pudo cargar", C.lyricsUrl,
+                 "— sirve el HTML por HTTP (Live Server), no por file://.", e);
+    return [];
+  }
+}
+
+/* ---- recortes de papel: bordes rasgados irregulares ---- */
+function tornPoly() {
+  const pts = [], seg = 5;
+  for (let i = 0; i <= seg; i++) pts.push(`${(i / seg * 100).toFixed(1)}% ${(rng() * 8).toFixed(1)}%`);
+  for (let i = seg; i >= 0; i--) pts.push(`${(i / seg * 100).toFixed(1)}% ${(100 - rng() * 8).toFixed(1)}%`);
+  return `polygon(${pts.join(",")})`;
+}
+
+/* ---- figuras: primero en orden 1..N, luego aleatorio sin repetir la última ---- */
+const FIGS = (C.figures?.items || []).filter(Boolean);
+let figSeqPtr = 0, lastFigIdx = -1;
+function nextFigureIndex() {
+  if (!FIGS.length) return -1;
+  if (figSeqPtr < FIGS.length) { const i = figSeqPtr; figSeqPtr++; lastFigIdx = i; return i; }
+  let i = Math.floor(rng() * FIGS.length);
+  if (FIGS.length > 1) while (i === lastFigIdx) i = Math.floor(rng() * FIGS.length);
+  lastFigIdx = i;
+  return i;
+}
+
+/* ---- escena: cluster de 2-4 palabras alrededor de un ancla nueva ----
+   Rango de ancla más angosto que la base (34%-66% en vez de 28%-72% en X,
+   32%-58% en vez de 30%-60% en Y) para que la composición se sienta
+   centrada en una pantalla ancha en vez de irse hacia los bordes. */
+const L = C.layout;
+let anchorX = vw * 0.5, anchorY = vh * 0.42, wordsThisScene = 0, sceneTarget = 0, sceneSide = "left";
+let current = [];   /* { el, side, kind: "clip"|"figure", rect? } — todo lo vivo en la escena actual */
+
+function nextSceneTarget() { return L.sceneWordsMin + Math.floor(rng() * (L.sceneWordsMax - L.sceneWordsMin + 1)); }
+
+function clearScene() {
+  for (const item of current) {
+    const side = item.side;
+    if (item.kind === "figure") { item.el.classList.add("leaving", side === "left" ? "leaveL" : "leaveR"); }
+    else { item.el.classList.add(side === "left" ? "leaveL" : "leaveR"); }
+    const el = item.el;
+    setTimeout(() => el.remove(), 650);
+  }
+  current = [];
+}
+
+function newScene() {
+  anchorX = vw * (0.34 + rng() * 0.32);
+  anchorY = vh * (0.32 + rng() * 0.26);
+  wordsThisScene = 0;
+  sceneTarget = nextSceneTarget();
+  sceneSide = rng() < L.sideWeights.left ? "left" : "right";
+
+  if (rng() < L.figureChance && FIGS.length) {
+    const idx = nextFigureIndex();
+    if (idx >= 0) {
+      const side = rng() < 0.5 ? "left" : "right";
+      const img = doc.createElement("img");
+      img.className = "figure";
+      img.style.setProperty("--rot", ((rng() - 0.5) * 6).toFixed(2) + "deg");
+      img.style.bottom = "0px";
+      img.onerror = () => img.remove();
+      const figItem = { el: img, side, kind: "figure", rect: null };
+      img.onload = () => {
+        /* el ancho real solo se conoce tras cargar (alto fijo, ancho por
+           aspect-ratio) — recién ahí se puede anclar sin salirse del cuadro,
+           y se guarda la caja real para el chequeo de contraste texto/figura. */
+        const marginX = vw * 0.02;
+        const w = img.offsetWidth, h = img.offsetHeight;
+        const left = side === "left" ? marginX : Math.max(marginX, vw - w - marginX);
+        img.style.left = left + "px";
+        img.classList.add(side === "left" ? "enterL" : "enterR");
+        figItem.rect = { left, top: vh - h, width: w, height: h };
+      };
+      img.src = FIGS[idx];
+      stage.appendChild(img);
+      current.push(figItem);
+    }
+  }
+}
+newScene();
+
+/* ---- caption: la línea completa de la letra, discreta, a máquina de escribir ---- */
+const captionEl = $("caption");
+let lastLine = null;
+function maybeCaption(line) {
+  if (!line || line === lastLine) return;
+  lastLine = line;
+  if (rng() > L.captionChance) { captionEl.classList.remove("on"); return; }
+  captionEl.textContent = line;
+  captionEl.style.left = (vw * (0.30 + rng() * 0.10)) + "px";
+  captionEl.style.top = (vh * 0.82) + "px";
+  captionEl.classList.add("on");
+}
+
+/* un poco más grandes que la base (0.30→0.34 de ancho compartido, techos
+   de tamaño 0.13/0.16/0.24/0.30 subidos ~15%) — sobra espacio en desktop */
+function fontSizeFor(text, kind) {
+  const len = Math.max(2, text.length);
+  const wShare = vw < vh ? 0.5 : 0.34;
+  let fs = Math.min(vw * wShare / (len * 0.55), kind === "hollow" ? vh * 0.27 : vh * 0.15);
+  fs *= 0.86 + rng() * 0.3;
+  if (kind === "hollow") fs *= 1.25;
+  return Math.max(vh * 0.055, Math.min(fs, kind === "hollow" ? vh * 0.33 : vh * 0.18));
+}
+
+function placeWord(w) {
+  const clean = w.text.replace(/[.,;!?¡¿"']/g, "");
+  if (!clean) return;
+  if (wordsThisScene >= sceneTarget) { clearScene(); newScene(); }
+
+  const kind = pickWeighted(rng, L.typeWeights);
+  let colorKey = pickWeighted(rng, L.colorWeights);
+  const P = C.palette;
+  const colorMap = { ink: P.ink, red: P.red, paper: P.paperWhite };
+  const onLight = rng() < 0.5;
+
+  const el = doc.createElement("div");
+  el.className = "clip " + kind;
+  el.textContent = clean;
+  const fs = fontSizeFor(clean, kind);
+  el.style.fontSize = fs + "px";
+  el.style.setProperty("--rot", ((rng() - 0.5) * 2 * L.rotMax).toFixed(2) + "deg");
+
+  const jitterX = (wordsThisScene === 0 ? 0 : (rng() - 0.5) * vw * (L.clusterSpreadVw / 100)) + (wordsThisScene * vw * 0.03);
+  const jitterY = wordsThisScene * vh * (L.clusterSpreadVh / 100) + (rng() - 0.5) * vh * 0.03;
+  el.style.left = (anchorX + jitterX) + "px";
+  el.style.top = (anchorY + jitterY) + "px";
+
+  /* se mide fuera de pantalla (opacity 0 por CSS) antes de animar y antes de
+     pintar colores — ni el fondo ni el clip-path cambian el tamaño de caja,
+     así que medir primero deja calcular la posición final Y saber si esta
+     palabra cae encima de la figura activa antes de decidir el color. */
+  stage.appendChild(el);
+  const marginX = vw * 0.03, marginY = vh * 0.03;
+  const ew = el.offsetWidth, eh = el.offsetHeight;
+  const clampedLeft = Math.min(Math.max(anchorX + jitterX, marginX), Math.max(marginX, vw - ew - marginX));
+  const clampedTop = Math.min(Math.max(anchorY + jitterY, marginY), Math.max(marginY, vh - eh - marginY));
+  el.style.left = clampedLeft + "px";
+  el.style.top = clampedTop + "px";
+
+  /* contraste texto-sobre-imagen: poster y marker siempre traen su propio
+     fondo (una tarjeta), quedan legibles caiga donde caiga. Stencil y
+     hollow no tienen fondo propio — si su caja se superpone con la figura
+     de esta escena y el color sorteado era "ink" (negro), se fuerza a un
+     color más visible (blanco o rojo), porque negro sobre una silueta B&N
+     no se vería. */
+  const needsBacking = kind === "stencil" || kind === "hollow";
+  if (needsBacking && colorKey === "ink") {
+    const figItem = current.find(it => it.kind === "figure" && it.rect);
+    if (figItem) {
+      const r = figItem.rect;
+      const overlaps = clampedLeft < r.left + r.width && clampedLeft + ew > r.left &&
+                        clampedTop < r.top + r.height && clampedTop + eh > r.top;
+      if (overlaps) colorKey = rng() < 0.5 ? "paper" : "red";
+    }
+  }
+
+  if (kind === "poster") {
+    el.style.background = onLight ? P.paperWhite : P.ink;
+    /* si el color sorteado coincide con el del fondo (paper-sobre-claro o
+       ink-sobre-oscuro), se fuerza el opuesto — si no, el texto queda
+       invisible por falta de contraste */
+    el.style.color = onLight
+      ? (colorKey === "paper" ? P.ink : colorMap[colorKey])
+      : (colorKey === "ink" ? P.paperWhite : colorMap[colorKey]);
+    el.style.clipPath = tornPoly();
+  } else if (kind === "stencil") {
+    /* sin fondo propio, estampado directo sobre el papel claro — "paper"
+       sería casi invisible, así que cae a ink */
+    el.style.color = colorKey === "paper" ? P.ink : colorMap[colorKey];
+  } else if (kind === "marker") {
+    el.style.color = colorKey === "paper" ? P.ink : colorMap[colorKey];
+  } else { /* hollow: mismo motivo — el trazo necesita contraste contra lo que haya detrás */
+    el.style.color = colorKey === "paper" ? P.ink : colorMap[colorKey];
+  }
+
+  const side = rng() < 0.65 ? sceneSide : (sceneSide === "left" ? "right" : "left");
+  requestAnimationFrame(() => el.classList.add(side === "left" ? "enterL" : "enterR"));
+
+  current.push({ el, side, kind: "clip" });
+  for (const item of current) if (item.el !== el && item.kind === "clip") item.el.classList.add("cold");
+
+  wordsThisScene++;
+  maybeCaption(w.line);
+}
+
+/* ---- reloj: audio si suena; si no, rAF ---- */
+let rafT0 = null, rafNow = 0, started = false;
+const clock = () => (!audio.paused && audio.currentTime > 0.05)
+  ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+
+async function begin() {
+  if (started) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+/* ---- outro: se dispara por el FINAL REAL del audio, no por la letra ---- */
+let outroShown = false;
+function maybeOutro() {
+  if (outroShown) return;
+  const dur = audio.duration;
+  if (!isFinite(dur) || dur <= 0) return;
+  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
+    outroShown = true;
+    doc.body.classList.add("outroActive");
+    $("intro").classList.add("gone");
+    $("outro").classList.add("show");
+    for (const item of current) item.el.classList.add("cold");
+    captionEl.classList.remove("on");
+  }
+}
+audio.addEventListener("ended", maybeOutro);
+
+/* ---- main ---- */
+let words = [], ptr = 0, introGone = false;
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  const t = clock();
+  maybeOutro();
+  if (!outroShown) {
+    while (ptr < words.length && t >= words[ptr].t) {
+      if (!introGone) { $("intro").classList.add("gone"); introGone = true; }
+      placeWord(words[ptr]);
+      ptr++;
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+if (C.bg.src) { const b = $("bg"); b.src = C.bg.src; b.style.display = "block"; b.style.opacity = 0.14; }
+audio.src = encodeURI(C.audio.src);
+loadLyrics().then(w => { words = w; });
+begin();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

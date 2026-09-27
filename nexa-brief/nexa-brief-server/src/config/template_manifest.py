@@ -17,6 +17,9 @@ from pathlib import Path
 
 from src.config.settings import settings
 
+_IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
+_VIDEO_SUFFIXES = {".mp4", ".webm", ".mov"}
+
 
 @lru_cache(maxsize=1)
 def _load_manifest() -> dict:
@@ -49,4 +52,45 @@ def get_template_paths(template_id: str) -> dict[str, Path | None]:
     return {
         key: (settings.templates_dir / entry[key]) if entry.get(key) else None
         for key in ("index_html", "config_json", "vision_prompt", "config_prompt")
+    }
+
+
+def get_template_asset_dir(template_id: str) -> Path | None:
+    """Devuelve el directorio de assets de una plantilla registrada."""
+    config_path = get_template_paths(template_id)["config_json"]
+    if config_path is None:
+        return None
+    return config_path.parent
+
+
+def get_template_preview_assets(template_id: str) -> dict[str, Path | None]:
+    """Selecciona los recursos locales que puede reproducir una tarjeta.
+
+    Se prioriza el fondo declarado por la plantilla y se dejan fallbacks para
+    plantillas generativas que no tienen un fondo fijo en su configuración.
+    """
+    asset_dir = get_template_asset_dir(template_id)
+    if asset_dir is None or not asset_dir.exists():
+        return {"image": None, "video": None, "audio": None}
+
+    files = {
+        path.relative_to(asset_dir).as_posix(): path
+        for path in asset_dir.rglob("*")
+        if path.is_file()
+    }
+
+    def first_existing(names: tuple[str, ...], suffixes: set[str]) -> Path | None:
+        for name in names:
+            candidate = files.get(name)
+            if candidate is not None and candidate.suffix.lower() in suffixes:
+                return candidate
+        return next(
+            (path for path in files.values() if path.suffix.lower() in suffixes),
+            None,
+        )
+
+    return {
+        "image": first_existing(("bg.png", "bg.jpg", "cover.jpg", "angel.jpg"), _IMAGE_SUFFIXES),
+        "video": first_existing(("bg.mp4", "path.mp4", "humo.mp4", "niebla.mp4"), _VIDEO_SUFFIXES),
+        "audio": files.get("song.mp3"),
     }

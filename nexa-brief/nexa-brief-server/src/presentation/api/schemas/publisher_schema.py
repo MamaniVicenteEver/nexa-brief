@@ -108,6 +108,17 @@ class AccountStatusResponse(BaseModel):
     has_refresh_token: bool
     avatar: str | None = None
     published_count: int = 0        # Videos published to this channel (see data/canales/published_videos.json)
+    label: str = ""                 # User-defined purpose, e.g. "Letras románticas"
+    notes: str = ""
+    connected_at: float | None = None
+    last_published_at: float | None = None
+
+
+class UpdateAccountRequest(BaseModel):
+    """Body of PATCH /api/v1/publish/accounts/{platform}/{alias} — omitted fields stay unchanged."""
+
+    label: str | None = Field(default=None, max_length=60)
+    notes: str | None = Field(default=None, max_length=500)
 
 
 class PublishedVideoResponse(BaseModel):
@@ -119,6 +130,7 @@ class PublishedVideoResponse(BaseModel):
     url: str
     title: str
     published_at: float
+    job_id: str | None = None
 
 
 class DeleteResponse(BaseModel):
