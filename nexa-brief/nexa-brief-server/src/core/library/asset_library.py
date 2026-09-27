@@ -1,39 +1,29 @@
-"""Asset Library — local, JSON-indexed store of reusable images/music/configs.
+"""Asset Library — imágenes, música, videos y configs reutilizables entre jobs.
 
-Not a database engine: just folders + flat JSON index files (same style as
-`data/canales/channels.json`), organized by category. Populated both by resources the
-pipeline finds automatically (Stage 3, `resource_fetcher.py`) and by resources
-the user explicitly provides via `ImageSource`/`MusicSource` (URL or an
-existing library reference) — so every asset ever used becomes reusable.
+Se alimenta con lo que el pipeline encuentra solo (Stage 3,
+`resource_fetcher.py`) y con lo que el usuario sube o referencia
+(`ImageSource`/`MusicSource`/`VideoSource`), así cada asset usado una vez
+queda disponible para los siguientes videos.
 
-Structure on disk:
-    data/image_library/{category}/{asset_id}.{ext}
-    data/image_library/_index.json
-    data/image_library/_vision_cache/{asset_id}.json      # cached Prompt-1 output
-    data/music_library/{category}/{asset_id}.{ext}
-    data/music_library/_index.json
-    data/template_configs/{template_id}/{job_id}.json      # archived config.json
-    data/template_configs/_index.json
+Persistencia 100% vía DataStore (`src/core/data.py`) — este módulo no sabe si
+detrás hay JSON en `data/` o una base de datos:
+    colecciones   image_assets / music_assets / video_assets / template_configs
+    documentos    image_vision / video_vision / lyrics / template_config_files
+    archivos      images / music / videos   (clave = "{categoría}/{nombre original}")
 
-Concurrency: `max_parallel_jobs` runs `resource_fetcher` for several jobs at
-once, and each may write to the same index file. Every read-modify-write on
-an index goes through a per-file `asyncio.Lock` (module-level, one lock per
-index path) to avoid lost updates — the same "read all / modify / write all"
-pattern already used for `data/canales/channels.json`, but that file is only touched
-by rare manual OAuth flows, never once-per-job, so it never needed a lock.
+Los archivos conservan el nombre con el que se subieron (ver
+`adapters/data/local_file_storage.py`); `asset_id` sigue siendo el
+identificador estable que usa el resto del sistema.
 """
 
 from __future__ import annotations
 
-import asyncio
 import hashlib
-import json
-import shutil
 import uuid
-from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote, urlparse
 
 import httpx
 import structlog
@@ -41,15 +31,9 @@ from pydantic import BaseModel, Field
 
 from src.config.exceptions import AssetDownloadError, AssetNotFoundError
 from src.config.settings import settings
+from src.core.data import collection, documents, files
 
 logger = structlog.get_logger(__name__)
-
-# ── Per-index-file locks (module-level, keyed by resolved path) ──────────────
-_locks: dict[Path, asyncio.Lock] = defaultdict(asyncio.Lock)
-
-
-def _lock_for(path: Path) -> asyncio.Lock:
-    return _locks[path]
 
 
 def _now_iso() -> str:
@@ -61,7 +45,8 @@ def _now_iso() -> str:
 class ImageLibraryEntry(BaseModel):
     asset_id: str
     category: str
-    relative_path: str                # relative to settings.image_library_dir
+    relative_path: str                # clave en FileStorage "images" ({categoría}/{archivo})
+    original_filename: str = ""      # nombre con el que se subió/descargó
     source: str                       # "auto" | "url"
     provider: str = ""                # "unsplash" | "pexels" | "pixabay" | "css_fallback" | "user_url"
     original_url: str | None = None
@@ -89,7 +74,8 @@ class ImageLibraryEntry(BaseModel):
 class MusicLibraryEntry(BaseModel):
     asset_id: str
     category: str
-    relative_path: str                # relative to settings.music_library_dir
+    relative_path: str                # clave en FileStorage "music" ({categoría}/{archivo})
+    original_filename: str = ""
     source: str                       # "auto" | "url"
     provider: str = ""                # "pixabay" | "jamendo" | "ytdlp" | "user_url"
     original_url: str | None = None
@@ -114,7 +100,8 @@ class VideoLibraryEntry(BaseModel):
     proveedor de stock de video integrado (a diferencia de imagen/música)."""
     asset_id: str
     category: str
-    relative_path: str                # relative to settings.video_library_dir
+    relative_path: str                # clave en FileStorage "videos" ({categoría}/{archivo})
+    original_filename: str = ""
     source: str                       # "url" | "upload"
     provider: str = ""                # "user_url" | "user_upload"
     original_url: str | None = None
@@ -134,7 +121,7 @@ class TemplateConfigEntry(BaseModel):
     job_id: str
     template_id: str
     niche_id: str
-    config_path: str                  # relative to settings.template_configs_dir
+    config_path: str                  # clave en DocumentStore "template_config_files"
     image_asset_id: str | None = None
     music_asset_id: str | None = None
     video_asset_id: str | None = None
@@ -142,61 +129,23 @@ class TemplateConfigEntry(BaseModel):
     texts: dict[str, str] = Field(default_factory=dict)
 
 
-# ── Index path helpers ────────────────────────────────────────────────────────
+# ── Nombres lógicos en el DataStore ──────────────────────────────────────────
 
-def _image_index_path() -> Path:
-    return settings.image_library_dir / "_index.json"
-
-
-def _music_index_path() -> Path:
-    return settings.music_library_dir / "_index.json"
-
-
-def _video_index_path() -> Path:
-    return settings.video_library_dir / "_index.json"
+_KINDS: dict[str, tuple[str, str]] = {
+    # kind → (colección de metadata, FileStorage de archivos)
+    "image": ("image_assets", "images"),
+    "music": ("music_assets", "music"),
+    "video": ("video_assets", "videos"),
+}
 
 
-def _template_configs_index_path() -> Path:
-    return settings.template_configs_dir / "_index.json"
+def _records(kind: str):
+    return collection(_KINDS[kind][0])
 
 
-# ── Low-level index I/O (atomic write, same pattern as TokenStorage) ─────────
+def _storage(kind: str):
+    return files(_KINDS[kind][1])
 
-def _read_index(path: Path) -> list[dict[str, Any]]:
-    if not path.exists():
-        return []
-    raw = path.read_text(encoding="utf-8").strip()
-    if not raw:
-        return []
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        logger.error("asset_library_index_corrupt", path=str(path))
-        return []
-
-
-def _write_index(path: Path, data: list[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(path)
-
-
-async def _append_entry(path: Path, entry: dict[str, Any]) -> None:
-    async with _lock_for(path):
-        data = _read_index(path)
-        data.append(entry)
-        _write_index(path, data)
-
-
-def _find_raw(path: Path, asset_id: str) -> dict[str, Any] | None:
-    for item in _read_index(path):
-        if item.get("asset_id") == asset_id:
-            return item
-    return None
-
-
-# ── Physical copy helper ──────────────────────────────────────────────────────
 
 def hash_file(path: Path) -> str:
     """Sha256 del contenido de *path*, en streaming (no carga todo a memoria).
@@ -211,15 +160,30 @@ def hash_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def _copy_into_library(src_path: Path, library_dir: Path, category: str) -> tuple[str, Path]:
-    """Copy *src_path* into library_dir/category/{new_asset_id}{ext}. Returns (asset_id, dest_path)."""
+def filename_from_url(url: str) -> str | None:
+    """Último segmento del path de una URL, si parece un archivo ("foto.jpg")."""
+    name = unquote(Path(urlparse(url).path).name)
+    return name if Path(name).suffix else None
+
+
+def _store_file(kind: str, path: Path, category: str, filename: str | None, fallback_stem: str) -> tuple[str, str, str]:
+    """Guarda el archivo con su nombre original. Devuelve (asset_id, clave, nombre original)."""
     asset_id = uuid.uuid4().hex[:8]
-    ext = src_path.suffix or ""
-    dest_dir = library_dir / category
-    dest_dir.mkdir(parents=True, exist_ok=True)
-    dest_path = dest_dir / f"{asset_id}{ext}"
-    shutil.copy2(src_path, dest_path)
-    return asset_id, dest_path
+    if filename:
+        original = Path(filename).name
+        if not Path(original).suffix:
+            original += path.suffix
+    else:
+        original = f"{fallback_stem or asset_id}{path.suffix}"
+    key = _storage(kind).save(path, folder=category, filename=original)
+    return asset_id, key, original
+
+
+def _find(kind: str, asset_id: str) -> dict[str, Any]:
+    raw = _records(kind).get(asset_id)
+    if raw is None:
+        raise AssetNotFoundError(f"{kind.capitalize()} asset_id '{asset_id}' not found in the local library.")
+    return raw
 
 
 # ── Images ────────────────────────────────────────────────────────────────────
@@ -232,18 +196,22 @@ async def register_image(
     provider: str = "",
     original_url: str | None = None,
     job_id: str = "",
+    filename: str | None = None,
     **meta: Any,
 ) -> ImageLibraryEntry:
     """Archive an image (already downloaded/provided at *path*) into the library.
 
     *path* is copied, not moved — the caller keeps using its own copy
-    (e.g. the job's output_dir/bg.jpg) untouched.
+    (e.g. the job's output_dir/bg.jpg) untouched. *filename* es el nombre
+    original (subida o URL); se conserva en el archivo guardado.
     """
-    asset_id, dest_path = _copy_into_library(path, settings.image_library_dir, category)
+    fallback = meta.get("label") or (f"{provider}-{meta['image_id']}" if meta.get("image_id") else "")
+    asset_id, key, original = _store_file("image", path, category, filename, fallback)
     entry = ImageLibraryEntry(
         asset_id=asset_id,
         category=category,
-        relative_path=str(dest_path.relative_to(settings.image_library_dir)),
+        relative_path=key,
+        original_filename=original,
         source=source,
         provider=provider,
         original_url=original_url,
@@ -262,28 +230,21 @@ async def register_image(
         tags=meta.get("tags", "") or "",
         has_vision_cache=False,
     )
-    await _append_entry(_image_index_path(), entry.model_dump())
+    await _records("image").insert(entry.model_dump())
     logger.info("asset_library_image_registered", asset_id=asset_id, category=category, source=source)
     return entry
 
 
 def get_image_entry(asset_id: str) -> ImageLibraryEntry:
-    raw = _find_raw(_image_index_path(), asset_id)
-    if raw is None:
-        raise AssetNotFoundError(f"Image asset_id '{asset_id}' not found in the local library.")
-    return ImageLibraryEntry(**raw)
+    return ImageLibraryEntry(**_find("image", asset_id))
 
 
 def list_images(category: str | None = None) -> list[ImageLibraryEntry]:
-    entries = [ImageLibraryEntry(**d) for d in _read_index(_image_index_path())]
-    if category:
-        entries = [e for e in entries if e.category == category]
-    return entries
+    return [ImageLibraryEntry(**d) for d in _records("image").list({"category": category} if category else None)]
 
 
 def resolve_image_path(asset_id: str) -> Path:
-    entry = get_image_entry(asset_id)
-    return settings.image_library_dir / entry.relative_path
+    return _storage("image").local_path(get_image_entry(asset_id).relative_path)
 
 
 # ── Music ─────────────────────────────────────────────────────────────────────
@@ -297,13 +258,17 @@ async def register_music(
     original_url: str | None = None,
     job_id: str = "",
     content_hash: str | None = None,
+    filename: str | None = None,
     **meta: Any,
 ) -> MusicLibraryEntry:
-    asset_id, dest_path = _copy_into_library(path, settings.music_library_dir, category)
+    track, artist = meta.get("track_name", ""), meta.get("artist", "")
+    fallback = f"{track} - {artist}" if track and artist else track
+    asset_id, key, original = _store_file("music", path, category, filename, fallback)
     entry = MusicLibraryEntry(
         asset_id=asset_id,
         category=category,
-        relative_path=str(dest_path.relative_to(settings.music_library_dir)),
+        relative_path=key,
+        original_filename=original,
         source=source,
         provider=provider,
         original_url=original_url,
@@ -320,28 +285,21 @@ async def register_music(
         usage_count=1,
         last_used_at=_now_iso(),
     )
-    await _append_entry(_music_index_path(), entry.model_dump())
+    await _records("music").insert(entry.model_dump())
     logger.info("asset_library_music_registered", asset_id=asset_id, category=category, source=source)
     return entry
 
 
 def get_music_entry(asset_id: str) -> MusicLibraryEntry:
-    raw = _find_raw(_music_index_path(), asset_id)
-    if raw is None:
-        raise AssetNotFoundError(f"Music asset_id '{asset_id}' not found in the local library.")
-    return MusicLibraryEntry(**raw)
+    return MusicLibraryEntry(**_find("music", asset_id))
 
 
 def list_music(category: str | None = None) -> list[MusicLibraryEntry]:
-    entries = [MusicLibraryEntry(**d) for d in _read_index(_music_index_path())]
-    if category:
-        entries = [e for e in entries if e.category == category]
-    return entries
+    return [MusicLibraryEntry(**d) for d in _records("music").list({"category": category} if category else None)]
 
 
 def resolve_music_path(asset_id: str) -> Path:
-    entry = get_music_entry(asset_id)
-    return settings.music_library_dir / entry.relative_path
+    return _storage("music").local_path(get_music_entry(asset_id).relative_path)
 
 
 def _normalize_track_name(text: str) -> str:
@@ -381,10 +339,8 @@ def find_music_by_hash(content_hash: str) -> MusicLibraryEntry | None:
     en producción si conviene mantener ambos mecanismos o quedarse solo con este."""
     if not content_hash:
         return None
-    for entry in list_music():
-        if entry.content_hash == content_hash:
-            return entry
-    return None
+    raw = _records("music").first({"content_hash": content_hash})
+    return MusicLibraryEntry(**raw) if raw else None
 
 
 # ── Video ─────────────────────────────────────────────────────────────────────
@@ -397,13 +353,15 @@ async def register_video(
     provider: str = "",
     original_url: str | None = None,
     job_id: str = "",
+    filename: str | None = None,
     **meta: Any,
 ) -> VideoLibraryEntry:
-    asset_id, dest_path = _copy_into_library(path, settings.video_library_dir, category)
+    asset_id, key, original = _store_file("video", path, category, filename, meta.get("label", ""))
     entry = VideoLibraryEntry(
         asset_id=asset_id,
         category=category,
-        relative_path=str(dest_path.relative_to(settings.video_library_dir)),
+        relative_path=key,
+        original_filename=original,
         source=source,
         provider=provider,
         original_url=original_url,
@@ -418,84 +376,73 @@ async def register_video(
         last_used_at=_now_iso(),
         has_vision_cache=False,
     )
-    await _append_entry(_video_index_path(), entry.model_dump())
+    await _records("video").insert(entry.model_dump())
     logger.info("asset_library_video_registered", asset_id=asset_id, category=category, source=source)
     return entry
 
 
 def get_video_entry(asset_id: str) -> VideoLibraryEntry:
-    raw = _find_raw(_video_index_path(), asset_id)
-    if raw is None:
-        raise AssetNotFoundError(f"Video asset_id '{asset_id}' not found in the local library.")
-    return VideoLibraryEntry(**raw)
+    return VideoLibraryEntry(**_find("video", asset_id))
 
 
 def list_videos(category: str | None = None) -> list[VideoLibraryEntry]:
-    entries = [VideoLibraryEntry(**d) for d in _read_index(_video_index_path())]
-    if category:
-        entries = [e for e in entries if e.category == category]
-    return entries
+    return [VideoLibraryEntry(**d) for d in _records("video").list({"category": category} if category else None)]
 
 
 def resolve_video_path(asset_id: str) -> Path:
-    entry = get_video_entry(asset_id)
-    return settings.video_library_dir / entry.relative_path
+    return _storage("video").local_path(get_video_entry(asset_id).relative_path)
 
 
 # ── Usage tracking (shared by images, music and video) ────────────────────────
-
-_KIND_INDEX_PATHS = {
-    "image": _image_index_path,
-    "music": _music_index_path,
-    "video": _video_index_path,
-}
-
 
 async def touch_usage(asset_id: str, kind: str) -> None:
     """Increment usage_count / bump last_used_at for a library asset.
 
     kind: "image" | "music" | "video"
     """
-    path = _KIND_INDEX_PATHS[kind]()
-    async with _lock_for(path):
-        data = _read_index(path)
-        for item in data:
-            if item.get("asset_id") == asset_id:
-                item["usage_count"] = int(item.get("usage_count", 0)) + 1
-                item["last_used_at"] = _now_iso()
-                _write_index(path, data)
-                return
+    updated = await _records(kind).increment(
+        asset_id, "usage_count", patch={"last_used_at": _now_iso()}
+    )
+    if updated is None:
         raise AssetNotFoundError(f"{kind} asset_id '{asset_id}' not found — cannot record usage.")
 
 
-# ── Vision cache (Prompt-1 output, keyed by image asset_id) ──────────────────
+# ── Cachés por asset (visión de imagen/video, transcripción de letras) ────────
+# Evitan repetir llamadas caras (Vision Extractor, Whisper: varios minutos por
+# canción) para un asset que ya se usó en un video anterior.
+
+def _get_cache(store: str, asset_id: str) -> dict[str, Any] | None:
+    return documents(store).get(asset_id)
+
+
+async def _save_cache(store: str, kind: str, flag: str, asset_id: str, body: dict[str, Any]) -> None:
+    documents(store).put(asset_id, body)
+    await _records(kind).update(asset_id, {flag: True})
+    logger.info("asset_library_cache_saved", store=store, asset_id=asset_id)
+
 
 def get_vision_cache(asset_id: str) -> dict[str, Any] | None:
-    path = settings.image_library_dir / "_vision_cache" / f"{asset_id}.json"
-    if not path.exists():
-        return None
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        logger.warning("asset_library_vision_cache_corrupt", asset_id=asset_id)
-        return None
+    return _get_cache("image_vision", asset_id)
 
 
 async def save_vision_cache(asset_id: str, vision_json: dict[str, Any]) -> None:
-    cache_dir = settings.image_library_dir / "_vision_cache"
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    (cache_dir / f"{asset_id}.json").write_text(
-        json.dumps(vision_json, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
-    index_path = _image_index_path()
-    async with _lock_for(index_path):
-        data = _read_index(index_path)
-        for item in data:
-            if item.get("asset_id") == asset_id:
-                item["has_vision_cache"] = True
-                _write_index(index_path, data)
-                break
-    logger.info("asset_library_vision_cache_saved", asset_id=asset_id)
+    await _save_cache("image_vision", "image", "has_vision_cache", asset_id, vision_json)
+
+
+def get_video_vision_cache(asset_id: str) -> dict[str, Any] | None:
+    return _get_cache("video_vision", asset_id)
+
+
+async def save_video_vision_cache(asset_id: str, vision_json: dict[str, Any]) -> None:
+    await _save_cache("video_vision", "video", "has_vision_cache", asset_id, vision_json)
+
+
+def get_lyrics_cache(asset_id: str) -> dict[str, Any] | None:
+    return _get_cache("lyrics", asset_id)
+
+
+async def save_lyrics_cache(asset_id: str, lyrics_json: dict[str, Any]) -> None:
+    await _save_cache("lyrics", "music", "has_lyrics_cache", asset_id, lyrics_json)
 
 
 async def update_image_label(asset_id: str, label: str) -> None:
@@ -508,78 +455,8 @@ async def update_image_label(asset_id: str, label: str) -> None:
     """
     if not label:
         return
-    index_path = _image_index_path()
-    async with _lock_for(index_path):
-        data = _read_index(index_path)
-        for item in data:
-            if item.get("asset_id") == asset_id:
-                item["label"] = label
-                _write_index(index_path, data)
-                break
+    await _records("image").update(asset_id, {"label": label})
     logger.info("asset_library_image_label_updated", asset_id=asset_id)
-
-
-# ── Video vision cache (analysis of an extracted frame, keyed by video asset_id) ─
-
-def get_video_vision_cache(asset_id: str) -> dict[str, Any] | None:
-    path = settings.video_library_dir / "_vision_cache" / f"{asset_id}.json"
-    if not path.exists():
-        return None
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        logger.warning("asset_library_video_vision_cache_corrupt", asset_id=asset_id)
-        return None
-
-
-async def save_video_vision_cache(asset_id: str, vision_json: dict[str, Any]) -> None:
-    cache_dir = settings.video_library_dir / "_vision_cache"
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    (cache_dir / f"{asset_id}.json").write_text(
-        json.dumps(vision_json, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
-    index_path = _video_index_path()
-    async with _lock_for(index_path):
-        data = _read_index(index_path)
-        for item in data:
-            if item.get("asset_id") == asset_id:
-                item["has_vision_cache"] = True
-                _write_index(index_path, data)
-                break
-    logger.info("asset_library_video_vision_cache_saved", asset_id=asset_id)
-
-
-# ── Lyrics cache (transcripción word-level, keyed by music asset_id) ─────────
-# Mismo patrón que get_vision_cache/save_vision_cache — evita retranscribir
-# (caro: varios minutos por canción, ver settings.whisper_*) una canción que
-# ya se usó en un video anterior.
-
-def get_lyrics_cache(asset_id: str) -> dict[str, Any] | None:
-    path = settings.music_library_dir / "_lyrics_cache" / f"{asset_id}.json"
-    if not path.exists():
-        return None
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        logger.warning("asset_library_lyrics_cache_corrupt", asset_id=asset_id)
-        return None
-
-
-async def save_lyrics_cache(asset_id: str, lyrics_json: dict[str, Any]) -> None:
-    cache_dir = settings.music_library_dir / "_lyrics_cache"
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    (cache_dir / f"{asset_id}.json").write_text(
-        json.dumps(lyrics_json, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
-    index_path = _music_index_path()
-    async with _lock_for(index_path):
-        data = _read_index(index_path)
-        for item in data:
-            if item.get("asset_id") == asset_id:
-                item["has_lyrics_cache"] = True
-                _write_index(index_path, data)
-                break
-    logger.info("asset_library_lyrics_cache_saved", asset_id=asset_id)
 
 
 # ── Archived template configs ─────────────────────────────────────────────────
@@ -593,41 +470,36 @@ async def register_template_config(
     music_asset_id: str | None = None,
     video_asset_id: str | None = None,
 ) -> TemplateConfigEntry:
-    dest_dir = settings.template_configs_dir / template_id
-    dest_dir.mkdir(parents=True, exist_ok=True)
-    config_path = dest_dir / f"{job_id}.json"
-    config_path.write_text(json.dumps(config_json, indent=2, ensure_ascii=False), encoding="utf-8")
+    documents("template_config_files").put(job_id, config_json)
 
     texts = config_json.get("texts")
     entry = TemplateConfigEntry(
         job_id=job_id,
         template_id=template_id,
         niche_id=niche_id,
-        config_path=str(config_path.relative_to(settings.template_configs_dir)),
+        config_path=job_id,
         image_asset_id=image_asset_id,
         music_asset_id=music_asset_id,
         video_asset_id=video_asset_id,
         created_at=_now_iso(),
         texts=texts if isinstance(texts, dict) else {},
     )
-    await _append_entry(_template_configs_index_path(), entry.model_dump())
+    await collection("template_configs").upsert(entry.model_dump(), match=("job_id",))
     logger.info("asset_library_template_config_registered", job_id=job_id, template_id=template_id)
     return entry
 
 
 def list_template_configs(template_id: str | None = None) -> list[TemplateConfigEntry]:
-    entries = [TemplateConfigEntry(**d) for d in _read_index(_template_configs_index_path())]
-    if template_id:
-        entries = [e for e in entries if e.template_id == template_id]
-    return entries
+    where = {"template_id": template_id} if template_id else None
+    return [TemplateConfigEntry(**d) for d in collection("template_configs").list(where)]
 
 
 def get_template_config(job_id: str) -> dict[str, Any]:
     """Return the full archived config.json content for *job_id*."""
-    for entry_raw in _read_index(_template_configs_index_path()):
-        if entry_raw.get("job_id") == job_id:
-            path = settings.template_configs_dir / entry_raw["config_path"]
-            return json.loads(path.read_text(encoding="utf-8"))
+    entry_raw = collection("template_configs").get(job_id)
+    config = documents("template_config_files").get(entry_raw["config_path"]) if entry_raw else None
+    if config is not None:
+        return config
     raise AssetNotFoundError(f"No archived template config found for job_id '{job_id}'.")
 
 

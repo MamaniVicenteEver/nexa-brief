@@ -1,23 +1,15 @@
 from __future__ import annotations
 
-from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
-from src.config.settings import settings
 from src.core import history_tracker, job_tracker
 from src.core.history import HistoryEvent
 from src.core.job import Job, JobInput, JobStage
 from src.presentation.main import app
 
 client = TestClient(app)
-
-
-@pytest.fixture(autouse=True)
-def _isolated_dirs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(settings, "historial_dir", tmp_path / "historial")
-    monkeypatch.setattr(settings, "jobs_library_dir", tmp_path / "jobs_library")
 
 
 def test_get_job_history_unknown_job_404():

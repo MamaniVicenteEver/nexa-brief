@@ -12,6 +12,10 @@ interface TemplateDto {
   requires_video: boolean;
   requires_lyrics: boolean;
   active: boolean;
+  preview_image_url?: string | null;
+  preview_video_url?: string | null;
+  preview_audio_url?: string | null;
+  showcase_url?: string | null;
 }
 
 function mapTemplate(dto: TemplateDto): Template {
@@ -24,6 +28,10 @@ function mapTemplate(dto: TemplateDto): Template {
     requiresVideo: dto.requires_video,
     requiresLyrics: dto.requires_lyrics,
     active: dto.active,
+    previewImageUrl: dto.preview_image_url ? resolveApiUrl(dto.preview_image_url) : null,
+    previewVideoUrl: dto.preview_video_url ? resolveApiUrl(dto.preview_video_url) : null,
+    previewAudioUrl: dto.preview_audio_url ? resolveApiUrl(dto.preview_audio_url) : null,
+    showcaseUrl: dto.showcase_url ? resolveApiUrl(dto.showcase_url) : null,
   };
 }
 

@@ -25,6 +25,7 @@ Error handling:
 """
 from __future__ import annotations
 
+import time
 import urllib.parse
 from pathlib import Path
 
@@ -34,6 +35,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from src.config.settings import settings
+from src.presentation.api.oauth_pages import render_oauth_error, render_oauth_success
 from src.adapters.publishing.token_storage import TokenStorage
 
 from src.config.exceptions import (
@@ -45,9 +47,11 @@ from src.config.exceptions import (
     VideoNotFoundError,
 )
 from src.adapters.publishing.factory import get_publisher_facade
-from src.adapters.publishing.publish_log import list_published_videos, record_published_video
+from src.core.publish_log import list_published_videos, record_published_video
 from src.core.realtime.event_bus import get_event_bus
+from src.core.data import collection
 from src.core.realtime.events import RealtimeEvent
+from src.modules import video_deletion
 from src.presentation.api.schemas.publisher_schema import (
     AccountDeleteResponse,
     AccountStatusResponse,
@@ -55,6 +59,7 @@ from src.presentation.api.schemas.publisher_schema import (
     ManualPublishRequest,
     PublishedVideoResponse,
     PublishResponse,
+    UpdateAccountRequest,
     UpdateVideoRequest,
     VideoMetadataResponse,
 )
@@ -170,7 +175,7 @@ async def manual_publish(request: ManualPublishRequest) -> PublishResponse:
         account=result.account_alias,
     )
 
-    record_published_video(
+    await record_published_video(
         platform=result.platform,
         alias=result.account_alias,
         post_id=result.post_id,
@@ -205,13 +210,38 @@ async def list_accounts() -> list[AccountStatusResponse]:
         raise _map_publisher_error(exc) from exc
 
     logger.info("api_list_accounts", total=len(accounts))
-    return [
-        AccountStatusResponse(
-            **a,
-            published_count=len(list_published_videos(a["platform"], a["alias"])),
-        )
-        for a in accounts
-    ]
+    return [_account_response(a) for a in accounts]
+
+
+def _account_response(account: dict) -> AccountStatusResponse:
+    videos = list_published_videos(account["platform"], account["alias"])
+    return AccountStatusResponse(
+        **account,
+        published_count=len(videos),
+        last_published_at=max((v.get("published_at") or 0 for v in videos), default=None) or None,
+    )
+
+
+# ── PATCH /publish/accounts/{platform}/{alias} — Edit label/notes ────────────
+
+@router.patch("/accounts/{platform}/{alias}", response_model=AccountStatusResponse)
+async def update_account(platform: str, alias: str, body: UpdateAccountRequest) -> AccountStatusResponse:
+    """Update the user-facing label and notes of a connected account (no tokens touched)."""
+    facade = _get_facade()
+    if not facade.update_account_metadata(platform, alias, label=body.label, notes=body.notes):
+        raise HTTPException(status_code=404, detail=f"No account found for '{platform}:{alias}'.")
+
+    account = next(
+        (a for a in facade.list_accounts() if a["platform"] == platform and a["alias"] == alias),
+        None,
+    )
+    if account is None:
+        raise HTTPException(status_code=404, detail=f"No account found for '{platform}:{alias}'.")
+
+    await get_event_bus().publish(
+        RealtimeEvent(type="channel_status_changed", data={"platform": platform, "alias": alias, "status": "updated"})
+    )
+    return _account_response(account)
 
 
 # ── DELETE /publish/accounts/{platform}/{alias} — Disconnect a channel ───────
@@ -239,7 +269,7 @@ async def disconnect_account(platform: str, alias: str) -> AccountDeleteResponse
             detail=f"No account found for '{platform}:{alias}'.",
         )
 
-    _remove_from_channels_json(platform, alias)
+    await _remove_from_channels_json(platform, alias)
 
     await get_event_bus().publish(
         RealtimeEvent(type="channel_status_changed", data={"platform": platform, "alias": alias, "status": "disconnected"})
@@ -262,56 +292,32 @@ async def list_channel_videos(platform: str, alias: str) -> list[PublishedVideoR
     return [PublishedVideoResponse(**v) for v in videos]
 
 
-# ── CHANNELS DATABASE HELPER ──────────────────────────────────────────────────
-# Flat JSON index of connected channels (no tokens) for the frontend to
-# display without needing PUBLISHER_ENCRYPTION_KEY. accounts.json (encrypted
-# tokens) remains the source of truth for auth; this file is a public mirror.
-
-_CHANNELS_JSON_PATH = Path("data/canales/channels.json")
+# ── CHANNELS DIRECTORY ────────────────────────────────────────────────────────
+# Espejo público de las cuentas conectadas (sin tokens), colección "channels":
+# el frontend puede mostrar nombre/avatar sin PUBLISHER_ENCRYPTION_KEY.
+# accounts.json (tokens cifrados) sigue siendo la fuente de verdad de auth.
 
 
 async def _update_channels_json(platform: str, alias: str, name: str, target_id: str, avatar: str = "", status: str = "ok"):
-    import json
-    import time
-    _CHANNELS_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-    data = []
-    if _CHANNELS_JSON_PATH.exists():
-        try:
-            data = json.loads(_CHANNELS_JSON_PATH.read_text(encoding="utf-8"))
-        except Exception:
-            data = []
-
-    # Remove any existing channel with same platform + alias
-    data = [item for item in data if not (item.get("platform") == platform and item.get("alias") == alias)]
-
-    data.append({
-        "platform": platform,
-        "alias": alias,
-        "name": name,
-        "target_id": target_id,
-        "avatar": avatar,
-        "status": status,
-        "last_checked": time.time()
-    })
-
-    _CHANNELS_JSON_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-
+    await collection("channels").upsert(
+        {
+            "platform": platform,
+            "alias": alias,
+            "name": name,
+            "target_id": target_id,
+            "avatar": avatar,
+            "status": status,
+            "last_checked": time.time(),
+        },
+        match=("platform", "alias"),
+    )
     await get_event_bus().publish(
         RealtimeEvent(type="channel_status_changed", data={"platform": platform, "alias": alias, "status": status})
     )
 
 
-def _remove_from_channels_json(platform: str, alias: str) -> None:
-    import json
-    if not _CHANNELS_JSON_PATH.exists():
-        return
-    try:
-        data = json.loads(_CHANNELS_JSON_PATH.read_text(encoding="utf-8"))
-    except Exception:
-        return
-    data = [item for item in data if not (item.get("platform") == platform and item.get("alias") == alias)]
-    _CHANNELS_JSON_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+async def _remove_from_channels_json(platform: str, alias: str) -> None:
+    await collection("channels").delete_where({"platform": platform, "alias": alias})
 
 
 # ── TIKTOK OAUTH ENDPOINTS ───────────────────────────────────────────────────
@@ -360,17 +366,17 @@ async def tiktok_oauth_callback(
     """Receive the authorization code from TikTok and exchange it for tokens."""
     if error:
         logger.error("tiktok_oauth_denied", error=error, description=error_description)
-        return HTMLResponse(_html_error("Autorización Denegada", f"TikTok devolvió error: <strong>{error}</strong><br>{error_description or ''}"), status_code=400)
+        return HTMLResponse(_html_error("Autorización cancelada", "TikTok no otorgó el permiso. Si fue un error, vuelve a intentarlo desde Canales.", detail=f"{error}: {error_description or ''}", platform="tiktok"), status_code=400)
         
     if not code:
-        return HTMLResponse(_html_error("Código Faltante", "No se recibió código de autorización de TikTok."), status_code=400)
+        return HTMLResponse(_html_error("Falta el código de autorización", "TikTok no devolvió el código necesario para completar la conexión.", platform="tiktok"), status_code=400)
         
     alias = state or "cuenta_1"
     client_key = settings.tiktok_client_id
     client_secret = settings.tiktok_client_secret
     
     if not client_key or not client_secret:
-        return HTMLResponse(_html_error("Falta Configuración", "TIKTOK_CLIENT_ID o TIKTOK_CLIENT_SECRET no están configurados en el .env"), status_code=500)
+        return HTMLResponse(_html_error("Configuración incompleta", "Faltan las credenciales de la app de TikTok en el servidor.", detail="TIKTOK_CLIENT_ID / TIKTOK_CLIENT_SECRET no configurados en .env", platform="tiktok"), status_code=500)
         
     # Reconstruct the exact redirect_uri sent during oauth start
     cb_url = f"{request.base_url}api/v1/publish/auth/tiktok/callback"
@@ -392,17 +398,17 @@ async def tiktok_oauth_callback(
             )
     except Exception as exc:
         logger.error("tiktok_oauth_network_error", error=str(exc))
-        return HTMLResponse(_html_error("Error de Red", f"No se pudo conectar a TikTok: {exc}"), status_code=502)
+        return HTMLResponse(_html_error("Sin conexión con TikTok", "No pudimos comunicarnos con TikTok. Revisa tu conexión e inténtalo de nuevo.", detail=str(exc), platform="tiktok"), status_code=502)
         
     if resp.status_code != 200:
         logger.error("tiktok_oauth_exchange_failed", status=resp.status_code, body=resp.text)
-        return HTMLResponse(_html_error(f"Error HTTP {resp.status_code}", f"TikTok rechazó el intercambio de código:<br><code>{resp.text[:400]}</code>"), status_code=502)
+        return HTMLResponse(_html_error("TikTok rechazó la conexión", "El intercambio del código de autorización falló.", detail=f"HTTP {resp.status_code}\n{resp.text[:400]}", platform="tiktok"), status_code=502)
         
     data = resp.json()
     error_code = data.get("error") or data.get("data", {}).get("error_code")
     if error_code:
         logger.error("tiktok_oauth_error_response", response=data)
-        return HTMLResponse(_html_error("Error de TikTok", f"Respuesta de error: <code>{data}</code>"), status_code=400)
+        return HTMLResponse(_html_error("TikTok devolvió un error", "La respuesta de TikTok no permitió completar la conexión.", detail=str(data), platform="tiktok"), status_code=400)
         
     token_info = data.get("data", {})
     if not token_info:
@@ -415,7 +421,7 @@ async def tiktok_oauth_callback(
     open_id = token_info.get("open_id")
     
     if not access_token:
-        return HTMLResponse(_html_error("Token Faltante", "TikTok no devolvió access_token."), status_code=502)
+        return HTMLResponse(_html_error("Token no recibido", "TikTok no devolvió un token de acceso.", platform="tiktok"), status_code=502)
         
     try:
         encryption_key = settings.publisher_encryption_key
@@ -444,9 +450,9 @@ async def tiktok_oauth_callback(
         await _update_channels_json("tiktok", alias, alias, open_id or alias, avatar="")
     except Exception as exc:
         logger.error("tiktok_oauth_save_failed", error=str(exc))
-        return HTMLResponse(_html_error("Error de Almacenamiento", f"No se pudieron guardar los tokens en accounts.json: {exc}"), status_code=500)
+        return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)
         
-    return HTMLResponse(_html_success("tiktok", alias, expires_in))
+    return HTMLResponse(_html_success("tiktok", alias, expires_in=expires_in, has_refresh_token=bool(refresh_token)))
 
 
 # ── YOUTUBE OAUTH ENDPOINTS ──────────────────────────────────────────────────
@@ -500,10 +506,10 @@ async def youtube_oauth_callback(
     """Receive authorization code from Google and exchange it for YouTube tokens."""
     if error:
         logger.error("youtube_oauth_denied", error=error)
-        return HTMLResponse(_html_error("Autorización Denegada", f"Google devolvió error: <strong>{error}</strong>"), status_code=400)
+        return HTMLResponse(_html_error("Autorización cancelada", "Google no otorgó el permiso. Si fue un error, vuelve a intentarlo desde Canales.", detail=error, platform="youtube"), status_code=400)
         
     if not code:
-        return HTMLResponse(_html_error("Código Faltante", "No se recibió código de autorización de Google."), status_code=400)
+        return HTMLResponse(_html_error("Falta el código de autorización", "Google no devolvió el código necesario para completar la conexión.", platform="youtube"), status_code=400)
         
     alias = state or "canal_1"
     client_id, client_secret = _load_google_credentials()
@@ -526,11 +532,11 @@ async def youtube_oauth_callback(
             )
     except Exception as exc:
         logger.error("youtube_oauth_network_error", error=str(exc))
-        return HTMLResponse(_html_error("Error de Red", f"No se pudo conectar a Google: {exc}"), status_code=502)
+        return HTMLResponse(_html_error("Sin conexión con Google", "No pudimos comunicarnos con Google. Revisa tu conexión e inténtalo de nuevo.", detail=str(exc), platform="youtube"), status_code=502)
         
     if resp.status_code != 200:
         logger.error("youtube_oauth_exchange_failed", status=resp.status_code, body=resp.text)
-        return HTMLResponse(_html_error(f"Error HTTP {resp.status_code}", f"Google rechazó el intercambio de código:<br><code>{resp.text[:400]}</code>"), status_code=502)
+        return HTMLResponse(_html_error("Google rechazó la conexión", "El intercambio del código de autorización falló.", detail=f"HTTP {resp.status_code}\n{resp.text[:400]}", platform="youtube"), status_code=502)
         
     token_info = resp.json()
     access_token = token_info.get("access_token")
@@ -538,7 +544,7 @@ async def youtube_oauth_callback(
     expires_in = token_info.get("expires_in", 3600)
     
     if not access_token:
-        return HTMLResponse(_html_error("Token Faltante", "Google no devolvió access_token."), status_code=502)
+        return HTMLResponse(_html_error("Token no recibido", "Google no devolvió un token de acceso.", platform="youtube"), status_code=502)
         
     # Fetch YouTube channel info (name, channel_id, avatar)
     channel_name = alias
@@ -587,9 +593,9 @@ async def youtube_oauth_callback(
         await _update_channels_json("youtube", alias, channel_name, channel_id, avatar=avatar_url)
     except Exception as exc:
         logger.error("youtube_oauth_save_failed", error=str(exc))
-        return HTMLResponse(_html_error("Error de Almacenamiento", f"No se pudieron guardar los tokens en accounts.json: {exc}"), status_code=500)
+        return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)
         
-    return HTMLResponse(_html_success("youtube", alias, expires_in))
+    return HTMLResponse(_html_success("youtube", alias, name=channel_name, avatar=avatar_url, expires_in=expires_in, has_refresh_token=bool(refresh_token)))
 
 
 # ── FACEBOOK OAUTH ENDPOINTS ─────────────────────────────────────────────────
@@ -631,10 +637,10 @@ async def facebook_oauth_callback(
     """Receive authorization code from Meta and obtain/save Facebook Page tokens."""
     if error:
         logger.error("facebook_oauth_denied", error=error, description=error_description)
-        return HTMLResponse(_html_error("Autorización Denegada", f"Facebook devolvió error: <strong>{error}</strong><br>{error_description or ''}"), status_code=400)
+        return HTMLResponse(_html_error("Autorización cancelada", "Facebook no otorgó el permiso. Si fue un error, vuelve a intentarlo desde Canales.", detail=f"{error}: {error_description or ''}", platform="facebook"), status_code=400)
         
     if not code:
-        return HTMLResponse(_html_error("Código Faltante", "No se recibió código de autorización de Facebook."), status_code=400)
+        return HTMLResponse(_html_error("Falta el código de autorización", "Facebook no devolvió el código necesario para completar la conexión.", platform="facebook"), status_code=400)
         
     alias = state or "pagina_1"
     app_id = settings.facebook_client_id
@@ -650,7 +656,7 @@ async def facebook_oauth_callback(
             pass
             
     if not app_id or not fb_secret:
-        return HTMLResponse(_html_error("Falta Configuración", "FACEBOOK_CLIENT_ID o FACEBOOK_CLIENT_SECRET no están configurados en el .env"), status_code=500)
+        return HTMLResponse(_html_error("Configuración incompleta", "Faltan las credenciales de la app de Facebook en el servidor.", detail="FACEBOOK_CLIENT_ID / FACEBOOK_CLIENT_SECRET no configurados en .env", platform="facebook"), status_code=500)
         
     cb_url = f"{request.base_url}api/v1/publish/auth/facebook/callback"
     
@@ -670,7 +676,7 @@ async def facebook_oauth_callback(
             )
             if resp.status_code != 200:
                 logger.error("facebook_oauth_user_token_failed", status=resp.status_code, body=resp.text)
-                return HTMLResponse(_html_error("Intercambio Fallido", f"Facebook rechazó el código de usuario: {resp.text}"), status_code=502)
+                return HTMLResponse(_html_error("Facebook rechazó la conexión", "El intercambio del código de autorización falló.", detail=resp.text[:400], platform="facebook"), status_code=502)
                 
             user_token = resp.json().get("access_token")
             
@@ -686,7 +692,7 @@ async def facebook_oauth_callback(
             )
             if resp.status_code != 200:
                 logger.error("facebook_oauth_long_lived_user_failed", status=resp.status_code, body=resp.text)
-                return HTMLResponse(_html_error("Intercambio de Larga Duración Fallido", f"Facebook rechazó long-lived token: {resp.text}"), status_code=502)
+                return HTMLResponse(_html_error("No se obtuvo un token duradero", "Facebook rechazó el intercambio por un token de larga duración.", detail=resp.text[:400], platform="facebook"), status_code=502)
                 
             long_lived_user_token = resp.json().get("access_token")
             
@@ -697,15 +703,15 @@ async def facebook_oauth_callback(
             )
             if resp.status_code != 200:
                 logger.error("facebook_oauth_pages_failed", status=resp.status_code, body=resp.text)
-                return HTMLResponse(_html_error("Error al Obtener Páginas", f"No se pudo consultar me/accounts: {resp.text}"), status_code=502)
+                return HTMLResponse(_html_error("No pudimos leer tus páginas", "Facebook no devolvió la lista de páginas que administras.", detail=resp.text[:400], platform="facebook"), status_code=502)
                 
             pages = resp.json().get("data", [])
             if not pages:
-                return HTMLResponse(_html_error("Sin Páginas", "No se encontraron páginas de Facebook administradas por este usuario."), status_code=400)
+                return HTMLResponse(_html_error("No hay páginas para conectar", "Esta cuenta de Facebook no administra ninguna página. Crea una o pide acceso de administrador.", platform="facebook"), status_code=400)
                 
     except Exception as exc:
         logger.error("facebook_oauth_network_error", error=str(exc))
-        return HTMLResponse(_html_error("Error de Red", f"Fallo al conectar con Facebook: {exc}"), status_code=502)
+        return HTMLResponse(_html_error("Sin conexión con Facebook", "No pudimos comunicarnos con Facebook. Revisa tu conexión e inténtalo de nuevo.", detail=str(exc), platform="facebook"), status_code=502)
         
     try:
         encryption_key = settings.publisher_encryption_key
@@ -741,9 +747,9 @@ async def facebook_oauth_callback(
             
     except Exception as exc:
         logger.error("facebook_oauth_save_failed", error=str(exc))
-        return HTMLResponse(_html_error("Error de Almacenamiento", f"No se pudieron guardar los tokens en accounts.json: {exc}"), status_code=500)
+        return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)
         
-    return HTMLResponse(_html_success("facebook", alias, 0))
+    return HTMLResponse(_html_success("facebook", alias, name=pages[0].get("name"), avatar=f"https://graph.facebook.com/{pages[0].get('id')}/picture?type=large", extra_accounts=len(pages) - 1))
 
 
 # ── YOUTUBE PLAYLISTS ENDPOINT ────────────────────────────────────────────────
@@ -854,69 +860,34 @@ async def delete_video(platform: str, alias: str, video_id: str) -> DeleteRespon
     """Permanently delete a published video from the platform.
 
     ⚠️  This action cannot be undone.  The video will be removed from the platform.
-    The local output files (youtube_video.mp4, tiktok_video.mp4) are NOT deleted.
+    Also drops it from published_videos.json and marks its queue entries
+    `removed`, so Canales/Biblioteca stop showing it as published. A 404 from
+    the platform (already deleted) counts as success for that cleanup.
+    The local output files are NOT deleted (see DELETE /videos/jobs/{job_id}).
     """
-    facade = _get_facade()
-    account_selector = f"{platform}:{alias}"
+    logger.info("api_delete_video_request", platform=platform, alias=alias, video_id=video_id)
 
-    logger.info(
-        "api_delete_video_request",
-        platform=platform,
-        alias=alias,
-        video_id=video_id,
-    )
+    result = await video_deletion.delete_publication(platform, alias, video_id)
+    if result.status == "unsupported":
+        raise HTTPException(status_code=422, detail=result.error)
+    if result.status == "failed":
+        raise HTTPException(status_code=502, detail=result.error)
 
-    try:
-        deleted = await facade.delete_video(video_id=video_id, account_selector=account_selector)
-    except PublisherError as exc:
-        raise _map_publisher_error(exc) from exc
-
-    logger.info("api_delete_video_success", platform=platform, alias=alias, video_id=video_id)
-
+    logger.info("api_delete_video_success", platform=platform, alias=alias, video_id=video_id, status=result.status)
     return DeleteResponse(
         video_id=video_id,
         platform=platform,
         account_alias=alias,
-        deleted=deleted,
+        deleted=True,
+        message=(
+            "Video deleted successfully."
+            if result.status == "deleted"
+            else "Video no longer existed on the platform; local records cleaned up."
+        ),
     )
 
 
 # ── HTML HELPERS ─────────────────────────────────────────────────────────────
-
-def _html_success(platform: str, alias: str, expires_in: int) -> str:
-    expires_str = f"expira en {expires_in // 3600}h" if expires_in > 0 else "permanente (NUNCA EXPIRA)"
-    refresh_str = "guardado (se renovará automáticamente)" if expires_in > 0 else "no requerido (token permanente)"
-    return f"""<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-<title>✅ {platform.capitalize()} Configurado — Nexa Brief</title>
-<style>body{{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3;
-display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}}
-.box{{background:#161b22;border:1px solid #30363d;border-radius:12px;
-padding:2rem 2.5rem;max-width:500px;text-align:center}}
-h1{{color:#3fb950;font-size:1.8rem;margin-bottom:0.5rem}}
-code{{background:#21262d;padding:0.2em 0.5em;border-radius:4px;font-size:0.9rem}}
-a{{color:#58a6ff}}</style></head><body><div class="box">
-<h1>🎉 ¡{platform.capitalize()} Configurado!</h1>
-<p>Los tokens de <code>{platform}:{alias}</code> fueron guardados y cifrados en <code>accounts.json</code>.</p>
-<p>✅ <strong>access_token</strong>: obtenido ({expires_str})<br>
-✅ <strong>refresh_token</strong>: {refresh_str}</p>
-<hr style="border-color:#30363d;margin:1.5rem 0">
-<p>El pipeline ya puede publicar en {platform.capitalize()}.<br>
-Activa en <code>.env</code>:<br>
-<code>ACTIVE_ACCOUNT={platform}:{alias}</code></p>
-<p><a href="{settings.frontend_url}/canales">← Volver a Canales</a></p>
-</div></body></html>"""
-
-
-def _html_error(title: str, message: str) -> str:
-    return f"""<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-<title>❌ {title} — Nexa Brief</title>
-<style>body{{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3;
-display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}}
-.box{{background:#161b22;border:1px solid #30363d;border-radius:12px;
-padding:2rem 2.5rem;max-width:540px;text-align:center}}
-h1{{color:#f85149;font-size:1.6rem}} code{{background:#21262d;padding:0.2em 0.5em;border-radius:4px}}
-a{{color:#58a6ff}}</style></head><body><div class="box">
-<h1>❌ {title}</h1><p>{message}</p>
-<p>Por favor verifica tu configuración de red o credenciales en <code>.env</code> e intenta de nuevo.</p>
-<p><a href="{settings.frontend_url}/canales">← Volver a Canales</a></p>
-</div></body></html>"""
+# Aliases kept short for the many call sites above; markup lives in oauth_pages.py.
+_html_success = render_oauth_success
+_html_error = render_oauth_error

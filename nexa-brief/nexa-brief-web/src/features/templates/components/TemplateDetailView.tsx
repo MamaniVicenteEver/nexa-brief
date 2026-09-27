@@ -20,10 +20,10 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
   const [video, setVideo] = useState<ResourceSelection | undefined>(undefined);
 
   if (isLoading) {
-    return <p className="px-10 pt-23 text-sm text-nb-mute">{t("detail.loading")}</p>;
+    return <p className="px-10 pt-22 text-sm text-nb-mute">{t("detail.loading")}</p>;
   }
   if (!template) {
-    return <p className="px-10 pt-23 text-sm text-nb-mute">{t("detail.notFound")}</p>;
+    return <p className="px-10 pt-22 text-sm text-nb-mute">{t("detail.notFound")}</p>;
   }
 
   const selections: TemplatePreviewSelections = { image, music, video };
@@ -34,7 +34,7 @@ export function TemplateDetailView({ templateId }: { templateId: string }) {
 
   return (
     <>
-      <div className="mx-auto max-w-[1280px] px-10 pt-23 pb-4.5">
+      <div className="mx-auto max-w-[1280px] px-10 pt-22 pb-4.5">
         <h1 className="font-nb-sans text-[clamp(20px,2.4vw,26px)] font-extrabold tracking-[-0.02em] text-nb-ink">
           {template.displayName}
         </h1>

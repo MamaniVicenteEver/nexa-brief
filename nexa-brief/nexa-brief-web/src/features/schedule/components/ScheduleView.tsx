@@ -22,7 +22,7 @@ export function ScheduleView() {
   ];
 
   return (
-    <div className="mx-auto max-w-[1100px] px-10 pt-23 pb-25">
+    <div className="mx-auto max-w-[1100px] px-10 pt-22 pb-25">
       <h1 className="font-nb-sans text-[clamp(20px,2.4vw,26px)] font-extrabold tracking-[-0.02em] whitespace-nowrap text-nb-ink">
         {t("title")}
       </h1>

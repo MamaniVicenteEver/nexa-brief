@@ -1243,6 +1243,126 @@
         "youtube_as_short": true
       }
     },
+    "lyrics_video_cristal": {
+      "id": "lyrics_video_cristal",
+      "display_name": "Video de Letras — Cristal Roto",
+      "active": true,
+      "description": "Plantilla config-driven de letras sobre vidrio roto, con grietas, vaho y fragmentos animados sincronizados con la canción real.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "remotion",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-cristal",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [
+          "id", "description", "audio", "lyricsUrl", "bg", "fonts", "palette",
+          "worlds", "layout", "intro", "outro", "debug", "shatter", "seed"
+        ],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "requires_image": false,
+        "requires_video": false,
+        "wrap_as_case_collection": true
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "urbano",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          { "id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": "reels_video.mp4", "crf": 20, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true },
+          { "id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": "youtube_video.mp4", "crf": 18, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "publishing": { "accounts": [], "youtube_playlist_id": null, "youtube_as_short": true }
+    },
+    "lyrics_video_mirada": {
+      "id": "lyrics_video_mirada",
+      "display_name": "Video de Letras — Mirada Celeste",
+      "active": true,
+      "description": "Plantilla config-driven de letras ilustrada en sepia, con escenas nocturnas, ojos, ángeles, luna y niebla sincronizadas con la canción real.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "remotion",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-mirada",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [
+          "id", "description", "audio", "lyricsUrl", "bg", "fonts", "palette",
+          "scenes", "media", "layout", "intro", "outro", "debug", "seed"
+        ],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "requires_image": false,
+        "requires_video": false,
+        "wrap_as_case_collection": true
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "balada",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          { "id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": "reels_video.mp4", "crf": 20, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true },
+          { "id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": "youtube_video.mp4", "crf": 18, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "publishing": { "accounts": [], "youtube_playlist_id": null, "youtube_as_short": true }
+    },
+    "lyrics_video_night_journey": {
+      "id": "lyrics_video_night_journey",
+      "display_name": "Video de Letras — Viaje Nocturno",
+      "active": true,
+      "description": "Plantilla config-driven de letras cinematográficas en escenas nocturnas, con karaoke, camino, luna, túnel y cierre sobre papel amarillo.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "remotion",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-night-journey",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [
+          "id", "description", "audio", "lyricsUrl", "song", "fonts", "scenes",
+          "layout", "outro", "debug", "seed"
+        ],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "requires_image": false,
+        "requires_video": false,
+        "wrap_as_case_collection": true
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "pop_nocturno",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          { "id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": "reels_video.mp4", "crf": 20, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true },
+          { "id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": "youtube_video.mp4", "crf": 18, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "publishing": { "accounts": [], "youtube_playlist_id": null, "youtube_as_short": true }
+    },
     "economy_finance": {
       "id": "economy_finance",
       "display_name": "Economy Chronicles (Futuro)",

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -35,6 +36,18 @@ class Settings(BaseSettings):
     whisper_model: str = "large-v3"
     whisper_device: str = "cpu"          # "cpu" | "cuda"
     whisper_compute_type: str = "float32"  # "float32" (preciso) | "int8" (rápido)
+    # Solo para detectar si se canta en español o inglés (ver content_language.py):
+    # un modelo chico basta y evita cargar large-v3 en nichos que no transcriben.
+    whisper_language_detection_model: str = "small"
+
+    # ── Published metadata (título/descripción/tags) ──────────────────────────
+    # Idioma del copy: el de la canción si es español o inglés; si no se puede
+    # saber (instrumental, otro idioma, baja confianza) se usa este default.
+    metadata_default_language: str = "en"   # "es" | "en"
+    # Nichos sin letras: detectar el idioma escuchando la canción con Whisper
+    # (usa el mismo modelo de arriba). False = solo usar lo que dio el usuario.
+    metadata_detect_audio_language: bool = True
+    metadata_language_min_confidence: float = 0.6
 
     # ── AI Generation ─────────────────────────────────────────────────────────
     ai_max_retries: int = 3
@@ -200,14 +213,11 @@ class Settings(BaseSettings):
 
     # ── Paths ─────────────────────────────────────────────────────────────────
     output_dir: Path = BASE_DIR / "output"
-    data_dir: Path = BASE_DIR / "data"
-    music_library_dir: Path = BASE_DIR / "data" / "music_library"
-    image_library_dir: Path = BASE_DIR / "data" / "image_library"
-    video_library_dir: Path = BASE_DIR / "data" / "video_library"
-    template_configs_dir: Path = BASE_DIR / "data" / "template_configs"
-    jobs_library_dir: Path = BASE_DIR / "data" / "jobs_library"
-    historial_dir: Path = BASE_DIR / "data" / "historial"
-    notificaciones_dir: Path = BASE_DIR / "data" / "notificaciones"
+    # Toda la persistencia pasa por el DataStore (src/core/data.py). Con
+    # DATA_BACKEND=json vive en data_dir; la estructura interna la define
+    # src/adapters/data/layout.py — ningún otro módulo arma rutas de data/.
+    data_dir: Path = Field(default=BASE_DIR / "data", alias="DATA_DIR")
+    data_backend: Literal["json"] = Field(default="json", alias="DATA_BACKEND")
     skills_dir: Path = BASE_DIR / "src" / "skills"
     templates_dir: Path = BASE_DIR / "src" / "templates"
 
@@ -263,6 +273,11 @@ class Settings(BaseSettings):
 
     # ── Social Publisher — TikTok OAuth 2.0 ──────────────────────────────────
     tiktok_client_id: str = Field(default="", alias="TIKTOK_CLIENT_ID")
+    # Mientras TikTok no audite la app (Content Posting API), solo permite
+    # publicar en cuentas PRIVADAS y con privacy_level=SELF_ONLY — cualquier
+    # otro valor responde 403 unaudited_client_can_only_post_to_private_accounts.
+    # Poner en true recién cuando TikTok apruebe la app.
+    tiktok_app_audited: bool = Field(default=False, alias="TIKTOK_APP_AUDITED")
     tiktok_client_secret: str = Field(default="", alias="TIKTOK_CLIENT_SECRET")
     # Account name labels (display only; aliases are defined in accounts.json)
     tiktok_account_1_name: str = Field(default="cuenta_1", alias="TIKTOK_ACCOUNT_1_NAME")
@@ -292,11 +307,8 @@ class Settings(BaseSettings):
     youtube_quota_cost_per_upload: int = Field(default=1600, alias="YOUTUBE_QUOTA_COST_PER_UPLOAD")
 
     # ── Scheduling (Programación) — src/core/schedule/ ───────────────────────
-    # Horarios recurrentes (slots.json) + cola de publicación (queue.json).
-    # Mismo patrón "JSON como repositorio" que accounts_json_path/jobs_library_dir.
-    programacion_dir: Path = Field(
-        default=BASE_DIR / "data" / "programacion", alias="PROGRAMACION_DIR"
-    )
+    # Horarios recurrentes + cola de publicación: colecciones "schedule_slots"
+    # y "queue_entries" del DataStore.
     # Cada cuántos segundos corre el tick del scheduler (process_tick): recupera
     # entries atascadas en 'publishing', rellena huecos de auto-fill y publica
     # todo lo que ya venció. 60s es suficiente granularidad para horarios en

@@ -137,7 +137,7 @@ class FacebookAdapter(BasePlatformAdapter):
             )
 
             # ── Phase 1: Start upload session ─────────────────────────────────────
-            upload_session_id, start_offset, end_offset = await self._phase_start(
+            upload_session_id, start_offset, end_offset, start_video_id = await self._phase_start(
                 token=token, page_id=page_id, file_size=file_size, account_alias=account_alias
             )
 
@@ -160,6 +160,7 @@ class FacebookAdapter(BasePlatformAdapter):
                 title=title,
                 description=full_description,
                 account_alias=account_alias,
+                fallback_video_id=start_video_id,
             )
 
             elapsed = round(time.monotonic() - t_start, 2)
@@ -256,8 +257,12 @@ class FacebookAdapter(BasePlatformAdapter):
 
     async def _phase_start(
         self, token: str, page_id: str, file_size: int, account_alias: str
-    ) -> tuple[str, int, int]:
-        """Phase 1: Initialize the upload session."""
+    ) -> tuple[str, int, int, str | None]:
+        """Phase 1: Initialize the upload session.
+
+        Graph API ya devuelve acá el `video_id` definitivo junto al
+        upload_session_id — se guarda porque `finish` a veces responde solo
+        `{"success": true}` (procesamiento asíncrono) sin repetir el id."""
         url = f"{_GRAPH_BASE}/{page_id}/videos"
         params = {
             "upload_phase": "start",
@@ -279,6 +284,7 @@ class FacebookAdapter(BasePlatformAdapter):
         session_id = data.get("upload_session_id")
         start_offset = int(data.get("start_offset", 0))
         end_offset = int(data.get("end_offset", _FB_CHUNK_SIZE))
+        video_id = str(data["video_id"]) if data.get("video_id") else None
 
         logger.info(
             "fb_session_id_obtained",
@@ -287,7 +293,7 @@ class FacebookAdapter(BasePlatformAdapter):
             start_offset=start_offset,
             end_offset=end_offset,
         )
-        return session_id, start_offset, end_offset
+        return session_id, start_offset, end_offset, video_id
 
     async def _phase_transfer(
         self,
@@ -358,6 +364,7 @@ class FacebookAdapter(BasePlatformAdapter):
         title: str,
         description: str,
         account_alias: str,
+        fallback_video_id: str | None = None,
     ) -> str:
         """Phase 3: Finalize the upload and publish the video."""
         logger.info(
@@ -390,7 +397,16 @@ class FacebookAdapter(BasePlatformAdapter):
         video_id = data.get("video_id") or str(data.get("id", ""))
 
         if not video_id:
-            if data.get("success") is True:
+            if data.get("success") is True and fallback_video_id:
+                # Procesamiento asíncrono: el id real es el que dio phase=start.
+                logger.info(
+                    "fb_finish_async_success",
+                    account=account_alias,
+                    page_id=page_id,
+                    video_id=fallback_video_id,
+                )
+                video_id = fallback_video_id
+            elif data.get("success") is True:
                 # Meta API can return {"success": true} under async processing instead of video_id.
                 logger.info(
                     "fb_finish_async_success",

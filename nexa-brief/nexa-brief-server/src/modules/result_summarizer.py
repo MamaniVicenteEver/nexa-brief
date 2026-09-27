@@ -1,174 +1,83 @@
-"""Module 7a — Result Summarizer: generates YouTube/TikTok metadata via Gemini."""
+"""Module 7a — Result Summarizer: the pipeline stage that writes the publishable copy.
+
+Thin stage: resolves the song's language (content_language.py), asks
+copy_writer.py for every platform's text using the strategies selected in
+src/skills/output/copy/active.json, and stores the result. How the copy is
+written lives in those strategy files, not here.
+"""
 
 from __future__ import annotations
 
 import time
+from dataclasses import asdict
 
 import orjson
 import structlog
 
 from src.config.exceptions import AIValidationError
 from src.config.niche_config import NicheConfig
-from src.config.settings import settings
-from src.core.job import Job, JobStage, VideoSummary
+from src.core.job import Job, JobStage, PlatformCopyText, VideoSummary
+from src.core.metadata import CopyRenderError, StrategyError
 from src.core.ports.ai_port import AIPort
+from src.modules.content_language import resolve_content_language
+from src.modules.copy_writer import CopyResult, build_facts, write_copy
 
 logger = structlog.get_logger(__name__)
 
 
-def _load_output_skill() -> str:
-    skill_path = settings.skills_dir / "output" / "youtube_tiktok_copy.md"
-    if skill_path.exists():
-        return skill_path.read_text(encoding="utf-8")
-    return "Soy un experto en copywriting para plataformas de video digital."
-
-
-_SYSTEM_TEMPLATE = """\
-{skill}
-
-Eres un especialista en metadata y copywriting para YouTube y TikTok.
-Responde ÚNICAMENTE con JSON válido, sin texto adicional ni bloques de código.
-"""
-
-_USER_TEMPLATE = """\
-Genera los metadatos para este video musical:
-
-Género: {genre}
-Estilo visual: {style}
-Descripción: {description}
-Mood: {mood}
-Duración: {duration} segundos
-
-Devuelve un JSON con estos campos exactos:
-- youtube_title: título atractivo para YouTube (máximo 70 caracteres)
-- youtube_description: descripción detallada para YouTube (200-400 caracteres)
-- youtube_tags: lista de 10-15 tags relevantes en inglés
-- tiktok_caption: caption corto y atractivo para TikTok (máximo 150 caracteres)
-- tiktok_hashtags: lista de 5-8 hashtags para TikTok (sin el #)
-"""
-
-# pipeline_type "config_driven_template": analyzed_input.genre/mood_tags/description
-# pueden ser pura invención de Stage 1 cuando no hay song_info (category_name es un
-# id genérico de plantilla, no un género real) — acá se usa lo que SÍ es confiable:
-# el análisis real de la imagen (Vision Extractor) + song_info si el usuario lo dio.
-_USER_TEMPLATE_VISION = """\
-Genera los metadatos para este video:
-
-Sujeto de la imagen: {subject_label}
-Descripción de la escena: {scene_description}
-Estilo visual: {style}
-{song_info_block}{niche_metadata_block}
-Duración: {duration} segundos
-
-Devuelve un JSON con estos campos exactos:
-- youtube_title: título atractivo para YouTube (máximo 70 caracteres)
-- youtube_description: descripción detallada para YouTube (200-400 caracteres)
-- youtube_tags: lista de 10-15 tags relevantes en inglés
-- tiktok_caption: caption corto y atractivo para TikTok (máximo 150 caracteres)
-- tiktok_hashtags: lista de 5-8 hashtags para TikTok (sin el #)
-"""
-
-_SONG_INFO_BLOCK = """\
-Información de la canción (dada por el usuario — usarla tal cual, es la fuente más confiable):
-{lines}
-"""
-
-_NO_SONG_INFO_BLOCK = "No se proveyó información de la canción — basarse solo en la imagen.\n"
-
-_NICHE_METADATA_BLOCK = """\
-Guía del nicho (curada, usarla para orientar tags/hashtags reales):
-{lines}
-"""
-
-
-def _niche_metadata_block(niche_cfg: NicheConfig) -> str:
-    meta = niche_cfg.metadata
-    if not meta.genre and not meta.mood_tags and not meta.tag_hints:
-        return ""
-    lines = []
-    if meta.genre:
-        lines.append(f"- Género: {meta.genre}")
-    if meta.mood_tags:
-        lines.append(f"- Mood: {', '.join(meta.mood_tags)}")
-    if meta.tag_hints:
-        lines.append(f"- Tags/temas sugeridos: {', '.join(meta.tag_hints)}")
-    return _NICHE_METADATA_BLOCK.format(lines="\n".join(lines))
+def _to_summary(result: CopyResult, language: str) -> VideoSummary:
+    copies = {
+        platform: PlatformCopyText(title=c.title, description=c.description, tags=c.tags, strategy=c.strategy_id)
+        for platform, c in result.copies.items()
+    }
+    youtube = copies.get("youtube")
+    tiktok = copies.get("tiktok")
+    return VideoSummary(
+        youtube_title=youtube.title if youtube else "",
+        youtube_description=youtube.description if youtube else "",
+        youtube_tags=youtube.tags if youtube else [],
+        tiktok_caption=tiktok.title if tiktok else "",
+        tiktok_hashtags=tiktok.tags if tiktok else [],
+        language=language,
+        platform_copies=copies,
+    )
 
 
 async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     t_start = time.monotonic()
-    analyzed = job.artifacts.analyzed_input
-    design = job.artifacts.visual_design
-    vision = job.artifacts.vision_analysis
     logger.info("result_summarizer_start", job_id=job.job_id)
 
-    skill = _load_output_skill()
-    system = _SYSTEM_TEMPLATE.format(skill=skill)
-
-    if vision is not None:
-        # pipeline_type="config_driven_template": usar el análisis REAL de la imagen
-        # (siempre confiable) + song_info (si lo hay) en vez de analyzed_input, que
-        # puede ser una invención de Stage 1 sin relación con la imagen/canción real
-        # cuando category_name es un id genérico de plantilla sin song_info.
-        style = (vision.get("scene_overview") or {}).get("style") or "cinematic"
-        subject_label = (vision.get("main_subject") or {}).get("label") or "el sujeto de la imagen"
-        scene_description = (vision.get("scene_overview") or {}).get("short_description") or ""
-
-        song_info = job.input.song_info
-        if song_info and any([song_info.song_name, song_info.artist, song_info.topic, song_info.description]):
-            lines = []
-            if song_info.song_name:
-                lines.append(f"- Nombre: {song_info.song_name}")
-            if song_info.artist:
-                lines.append(f"- Artista: {song_info.artist}")
-            if song_info.topic:
-                lines.append(f"- De qué trata: {song_info.topic}")
-            if song_info.description:
-                lines.append(f"- Descripción: {song_info.description}")
-            song_info_block = _SONG_INFO_BLOCK.format(lines="\n".join(lines))
-        else:
-            song_info_block = _NO_SONG_INFO_BLOCK
-
-        prompt = _USER_TEMPLATE_VISION.format(
-            subject_label=subject_label,
-            scene_description=scene_description,
-            style=style,
-            song_info_block=song_info_block,
-            niche_metadata_block=_niche_metadata_block(niche_cfg),
-            duration=analyzed.duration_seconds,
-        )
-    else:
-        design_style = design.style if design else "cinematic"
-        prompt = _USER_TEMPLATE.format(
-            genre=analyzed.genre,
-            style=design_style,
-            description=analyzed.description,
-            mood=", ".join(analyzed.mood_tags),
-            duration=analyzed.duration_seconds,
-        )
-
-    raw = await ai.complete_json(system, prompt)
-
+    language = await resolve_content_language(job)
     try:
-        summary = VideoSummary(**raw)
-    except Exception as exc:
-        raise AIValidationError(f"VideoSummary validation failed: {exc}\nRaw: {raw}") from exc
+        result = await write_copy(ai, build_facts(job, niche_cfg), language.code, seed=job.job_id)
+    except (StrategyError, CopyRenderError) as exc:
+        raise AIValidationError(f"Copy generation failed: {exc}") from exc
+    summary = _to_summary(result, language.code)
 
     logs_dir = job.artifacts.output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
-
-    # Build the enriched final summary combining AI-generated copy + resource metadata
+    (logs_dir / "08_prompt_metadata.txt").write_text(
+        f"=== SYSTEM ===\n{result.system_prompt}\n\n=== USER ===\n{result.user_prompt}", encoding="utf-8"
+    )
     final_summary = {
         **summary.model_dump(),
+        "language_source": language.source,
+        "language_confidence": language.confidence,
+        "copy_pieces": asdict(result.pieces),
+        "copy_unresolved_errors": result.unresolved_errors,
         "music": job.artifacts.music_meta,
         "image": job.artifacts.image_meta,
     }
-    (logs_dir / "08_resumen_final.json").write_bytes(
-        orjson.dumps(final_summary, option=orjson.OPT_INDENT_2)
-    )
+    (logs_dir / "08_resumen_final.json").write_bytes(orjson.dumps(final_summary, option=orjson.OPT_INDENT_2))
 
-    elapsed = round(time.monotonic() - t_start, 2)
-    logger.info("result_summarizer_done", job_id=job.job_id, title=summary.youtube_title, elapsed=elapsed)
+    logger.info(
+        "result_summarizer_done",
+        job_id=job.job_id,
+        title=summary.youtube_title,
+        language=language.code,
+        strategies={p: c.strategy for p, c in summary.platform_copies.items()},
+        elapsed=round(time.monotonic() - t_start, 2),
+    )
 
     artifacts = job.artifacts.model_copy(update={"summary": summary})
     return job.model_copy(update={"artifacts": artifacts}).advance(JobStage.SUMMARY_GENERATED)

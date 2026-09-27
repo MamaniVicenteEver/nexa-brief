@@ -13,6 +13,8 @@ armar esos datos a mano.
 
 from __future__ import annotations
 
+import asyncio
+
 import structlog
 from fastapi import APIRouter, HTTPException
 
@@ -201,13 +203,29 @@ async def cancel_queue_entry(entry_id: str) -> dict[str, bool]:
 
 # ── Publish now ───────────────────────────────────────────────────────────────
 
-@router.post("/publish-now", response_model=QueueEntryResponse)
+# Referencias fuertes a las publicaciones en curso: asyncio solo guarda
+# referencias débiles a las tasks, y una task sin referencia puede ser
+# recolectada a mitad del upload.
+_publish_tasks: set[asyncio.Task] = set()
+
+
+def _on_publish_done(task: asyncio.Task) -> None:
+    _publish_tasks.discard(task)
+    if not task.cancelled() and task.exception() is not None:
+        logger.error("schedule_publish_now_task_failed", error=str(task.exception()))
+
+
+@router.post("/publish-now", response_model=QueueEntryResponse, status_code=202)
 async def publish_now(body: PublishNowRequest) -> QueueEntryResponse:
     """Publica un job inmediatamente, sin pasar por Programación.
 
-    Crea una entry `source=immediate` y llama a `engine.publish_entry()` en
-    línea (mismo camino que usa el scheduler para las entries programadas),
-    respondiendo con el resultado final (`published`/`failed`).
+    Crea una entry `source=immediate` y responde AL INSTANTE (status `queued`);
+    el upload corre en segundo plano con `engine.publish_entry()` — el mismo
+    camino que usa el scheduler. Subir un video de varios minutos tarda más de
+    lo que aguanta una request HTTP: antes el navegador cortaba a los 30 s,
+    mostraba error aunque el upload siguiera, y el usuario reintentaba
+    duplicando la publicación. El resultado llega por el evento
+    `queue_entry_changed` (y GET /schedule/queue).
     """
     facade = _get_facade()
     entry = await queue_repository.create(
@@ -217,5 +235,7 @@ async def publish_now(body: PublishNowRequest) -> QueueEntryResponse:
         scheduled_at=None,
         source=QueueSource.IMMEDIATE,
     )
-    result = await engine.publish_entry(facade, entry)
-    return _queue_response(result)
+    task = asyncio.create_task(engine.publish_entry(facade, entry))
+    _publish_tasks.add(task)
+    task.add_done_callback(_on_publish_done)
+    return _queue_response(entry)

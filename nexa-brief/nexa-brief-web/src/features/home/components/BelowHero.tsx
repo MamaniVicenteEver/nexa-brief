@@ -1,6 +1,11 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { PlatformIcon } from "@/features/channels/components/PlatformIcon";
+import { PLATFORM_META } from "@/features/channels/constants/platforms";
+import { type PublicStats, relativeTime } from "@/features/stats";
 import { Link } from "@/i18n/navigation";
+import { resolveApiUrl } from "@/infrastructure/api/http-client";
+import { ChannelAvatarStack } from "./ChannelAvatarStack";
 import { StatCounter } from "./StatCounter";
 import { VideoModalProvider, VideoModalTrigger } from "./VideoModal";
 
@@ -14,12 +19,19 @@ const ORB_POSITIONS = [
   { color: "nb-orb-cream", style: { width: "13%", bottom: "18%", right: "33%" } },
 ] as const;
 
-export async function BelowHero() {
+const SAMPLE_VIDEO = "/videos/sample-publication.mp4";
+
+export async function BelowHero({ stats }: { stats: PublicStats | null }) {
   const t = await getTranslations("belowHero");
+  const locale = await getLocale();
+  const showcase = stats?.showcase ?? null;
+  const videoSrc = showcase?.videoUrl ? resolveApiUrl(showcase.videoUrl) : SAMPLE_VIDEO;
+  const publications = stats?.publications.total ?? 0;
+  const channels = stats?.channelList ?? [];
 
   return (
     <section className="nexa-home-below-hero relative z-[5] mx-auto grid max-w-[1400px] gap-8 px-6 pt-8 md:grid-cols-[1fr_1.6fr_1fr] md:px-10">
-      <VideoModalProvider videoSrc="/videos/sample-publication.mp4">
+      <VideoModalProvider videoSrc={videoSrc}>
         {/* LEFT */}
         <div className="nexa-home-below-hero__column nexa-home-below-hero__column--left flex flex-col gap-9 md:pt-20">
           <div className="nexa-home-below-hero__motor-copy">
@@ -48,7 +60,9 @@ export async function BelowHero() {
               />
             </div>
             <div className="nexa-home-below-hero__mini-card-label text-sm font-semibold tracking-[-0.01em] text-nb-ink">
-              {t("miniCardLabel")}
+              {stats?.catalog.templates
+                ? t("miniCardCount", { count: stats.catalog.templates })
+                : t("miniCardLabel")}
             </div>
           </div>
         </div>
@@ -88,43 +102,66 @@ export async function BelowHero() {
         </div>
       </VideoModalProvider>
 
-      {/* RIGHT */}
+      {/* RIGHT — datos reales de /stats/public */}
       <div className="nexa-home-below-hero__column nexa-home-below-hero__column--right flex flex-col gap-9 md:pt-20">
         <div className="nexa-home-below-hero__channel-summary flex items-center gap-3.5">
-          <div className="nexa-home-below-hero__channel-icons flex">
-            <span className="nexa-home-below-hero__channel-icon nexa-home-below-hero__channel-icon--youtube nb-chan-icon nb-chan-icon-yt">
-              YT
-            </span>
-            <span className="nexa-home-below-hero__channel-icon nexa-home-below-hero__channel-icon--tiktok nb-chan-icon nb-chan-icon-tt">
-              TT
-            </span>
-            <span className="nexa-home-below-hero__channel-icon nexa-home-below-hero__channel-icon--facebook nb-chan-icon nb-chan-icon-fb">
-              FB
-            </span>
-          </div>
-          <div className="nexa-home-below-hero__channel-label text-[13px] font-medium text-nb-ink">
-            {t("connectText")}
+          {channels.length > 0 ? (
+            <ChannelAvatarStack channels={channels} />
+          ) : (
+            <div className="flex">
+              <span className="nb-chan-icon nb-chan-icon-yt">YT</span>
+              <span className="nb-chan-icon nb-chan-icon-tt">TT</span>
+              <span className="nb-chan-icon nb-chan-icon-fb">FB</span>
+            </div>
+          )}
+          <div className="nexa-home-below-hero__channel-label text-[13px] leading-[1.35] font-medium text-nb-ink">
+            {channels.length > 0
+              ? t("channelsConnected", {
+                  count: channels.length,
+                  platforms: stats?.channels.platforms.length ?? 0,
+                })
+              : t("connectText")}
           </div>
         </div>
 
-        <div className="nexa-home-below-hero__stat flex flex-col gap-1.5 text-left">
-          <div className="nexa-home-below-hero__stat-value flex items-baseline gap-1 font-nb-sans text-[36px] font-extrabold tracking-[-0.04em] text-nb-ink">
-            <StatCounter target={128} />
-            <small className="nexa-home-below-hero__stat-suffix text-[0.55em] font-bold text-nb-ink-soft">
-              +
-            </small>
+        {publications > 0 && (
+          <div className="nexa-home-below-hero__stat flex flex-col gap-1.5 text-left">
+            <div className="nexa-home-below-hero__stat-value font-nb-sans text-[36px] leading-none font-extrabold tracking-[-0.04em] text-nb-ink">
+              <StatCounter target={publications} />
+            </div>
+            <p className="nexa-home-below-hero__stat-description max-w-[210px] text-[13px] leading-[1.45] text-nb-ink-soft">
+              {t("statPublications", { count: publications })}
+              {stats && stats.publications.last30Days > 0 && (
+                <span className="mt-1 block text-[12px] font-semibold text-nb-green-dark">
+                  {t("statLast30", { count: stats.publications.last30Days })}
+                </span>
+              )}
+            </p>
           </div>
-          <p className="nexa-home-below-hero__stat-description max-w-[200px] text-[13px] leading-[1.45] text-nb-ink-soft">
-            {t("statSuffix")}
-          </p>
-        </div>
+        )}
 
-        <div className="nexa-home-below-hero__accent-card self-start rounded-[20px] bg-nb-bg-2 p-3.5 shadow-[0_14px_24px_-10px_rgba(40,30,10,0.18),0_5px_10px_-3px_rgba(40,30,10,0.08),inset_0_1px_0_rgba(255,255,255,0.6)]">
-          <div
-            className="nexa-home-below-hero__accent-orb nb-orb-purple h-[130px] w-[100px] rounded-[60px]"
-            aria-hidden
-          />
-        </div>
+        {showcase && (
+          <a
+            href={showcase.url ?? undefined}
+            target="_blank"
+            rel="noreferrer"
+            className="nexa-home-below-hero__accent-card group block max-w-[240px] self-start rounded-[20px] bg-nb-bg-2 p-3.5 no-underline shadow-[0_14px_24px_-10px_rgba(40,30,10,0.18),0_5px_10px_-3px_rgba(40,30,10,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] transition-transform hover:-translate-y-0.5"
+          >
+            <span className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.06em] text-nb-mute uppercase">
+              <PlatformIcon platform={showcase.platform} className="size-5" />
+              {t("latestPublication")}
+            </span>
+            <span className="mt-2 line-clamp-2 block text-[13.5px] leading-[1.35] font-bold text-nb-ink">
+              {showcase.title}
+            </span>
+            <span className="mt-1.5 flex items-center justify-between text-[11.5px] text-nb-mute">
+              {showcase.publishedAt ? relativeTime(showcase.publishedAt, locale) : ""}
+              <span className="font-semibold text-nb-ink-soft group-hover:text-nb-ink">
+                {t("openOn", { platform: PLATFORM_META[showcase.platform].label })} ↗
+              </span>
+            </span>
+          </a>
+        )}
       </div>
     </section>
   );

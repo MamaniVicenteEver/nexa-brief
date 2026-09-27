@@ -45,6 +45,7 @@ def _to_response(n) -> NicheResponse:
         active=n.active,
         recorder_engine=n.recorder_engine,
         supported_engines=_supported_engines(n),
+        duration_locked_to_music=n.video.duration_locked_to_music,
     )
 
 

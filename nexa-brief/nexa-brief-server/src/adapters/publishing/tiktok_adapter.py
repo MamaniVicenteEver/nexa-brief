@@ -40,6 +40,7 @@ import structlog
 
 from src.config.exceptions import PlatformAPIError, UnsupportedOperationError, VideoNotFoundError
 from src.core.ports.publisher_port import PublishVideoResult, VideoMetadata
+from src.config.settings import settings
 from src.adapters.publishing.base_platform import BasePlatformAdapter, with_retry, CHUNK_SIZE_BYTES
 
 logger = structlog.get_logger(__name__)
@@ -48,6 +49,33 @@ _BASE_URL = "https://open.tiktokapis.com/v2"
 _POLL_INTERVAL = 5.0   # seconds between status checks
 _POLL_MAX_WAIT = 120.0 # seconds before giving up on TikTok processing
 
+
+
+# Reglas de chunking de la Content Posting API de TikTok:
+#   - chunk_size entre 5 MB y 64 MB (videos < 5 MB van en un único chunk);
+#   - total_chunk_count = floor(video_size / chunk_size): el sobrante NO es un
+#     chunk aparte, se suma al último (que puede llegar a 128 MB).
+# Con ceil() (como el resto de adapters) un video de 29.5 MB en chunks de 8 MB
+# declaraba 4 chunks en vez de 3 → 400 "The total chunk count is invalid".
+_TIKTOK_MIN_CHUNK = 5 * 1024 * 1024
+
+
+def _chunk_plan(file_size: int) -> tuple[int, int]:
+    """(chunk_size, total_chunk_count) válidos para TikTok."""
+    if file_size < _TIKTOK_MIN_CHUNK:
+        return file_size, 1
+    chunk_size = min(CHUNK_SIZE_BYTES, file_size)
+    return chunk_size, max(1, file_size // chunk_size)
+
+
+def _read_tiktok_chunks(path: Path, file_size: int):
+    """Como BasePlatformAdapter._read_chunks, pero el último chunk absorbe el sobrante."""
+    chunk_size, count = _chunk_plan(file_size)
+    with open(path, "rb") as fh:
+        for index in range(count):
+            offset = index * chunk_size
+            size = chunk_size if index < count - 1 else file_size - offset
+            yield fh.read(size), offset, file_size
 
 class TikTokAdapter(BasePlatformAdapter):
     """TikTok Content Posting API v2 — full CRUD implementation."""
@@ -95,6 +123,9 @@ class TikTokAdapter(BasePlatformAdapter):
             "friends_only": "MUTUAL_FOLLOW_FRIENDS",
         }
         tiktok_privacy = privacy_map.get(privacy, "PUBLIC_TO_EVERYONE")
+        if not settings.tiktok_app_audited:
+            # App sin auditar: TikTok solo acepta SELF_ONLY (ver settings.tiktok_app_audited).
+            tiktok_privacy = "SELF_ONLY"
 
         headers = {
             "Authorization": f"Bearer {token}",
@@ -122,8 +153,8 @@ class TikTokAdapter(BasePlatformAdapter):
             "source_info": {
                 "source": "FILE_UPLOAD",
                 "video_size": file_size,
-                "chunk_size": min(file_size, CHUNK_SIZE_BYTES),
-                "total_chunk_count": max(1, (file_size + CHUNK_SIZE_BYTES - 1) // CHUNK_SIZE_BYTES),
+                "chunk_size": _chunk_plan(file_size)[0],
+                "total_chunk_count": _chunk_plan(file_size)[1],
             },
         }
 
@@ -161,7 +192,10 @@ class TikTokAdapter(BasePlatformAdapter):
         await self._upload_chunks(video_path, upload_url, file_size, account_alias, publish_id)
 
         # ── Step 3: Poll for processing status ────────────────────────────────
-        final_status = await self._poll_status(token, publish_id, account_alias)
+        final_data = await self._poll_status(token, publish_id, account_alias)
+        final_status = final_data.get("status", "PUBLISH_COMPLETE")
+        public_ids = final_data.get("publicaly_available_post_id") or []
+        video_id = str(public_ids[0]) if public_ids else None
 
         elapsed = round(time.monotonic() - t_start, 2)
         logger.info(
@@ -172,12 +206,20 @@ class TikTokAdapter(BasePlatformAdapter):
             elapsed_seconds=elapsed,
         )
 
+        # target_id es el open_id (no el @usuario), así que no sirve para armar
+        # la URL pública: /video/{id} redirige al post. Sin id público (posts
+        # privados/"Solo yo", app sin auditar) el único lugar donde verlo es
+        # TikTok Studio del dueño de la cuenta.
         return PublishVideoResult(
-            post_id=publish_id,
-            url=f"https://www.tiktok.com/@{state.target_id}/video/{publish_id}",
+            post_id=video_id or publish_id,
+            url=(
+                f"https://www.tiktok.com/@/video/{video_id}"
+                if video_id
+                else "https://www.tiktok.com/tiktokstudio/content"
+            ),
             platform=self.PLATFORM,
             account_alias=account_alias,
-            raw_response={"publish_id": publish_id, "status": final_status},
+            raw_response={"publish_id": publish_id, "video_id": video_id, "status": final_status},
         )
 
     async def _upload_chunks(
@@ -189,11 +231,12 @@ class TikTokAdapter(BasePlatformAdapter):
             account=account_alias,
             publish_id=publish_id,
             file_size_bytes=file_size,
-            chunk_size_bytes=CHUNK_SIZE_BYTES,
+            chunk_size_bytes=_chunk_plan(file_size)[0],
+            total_chunk_count=_chunk_plan(file_size)[1],
         )
 
         async with self._make_client(upload=True) as client:
-            for chunk, offset, total in self._read_chunks(video_path):
+            for chunk, offset, total in _read_tiktok_chunks(video_path, file_size):
                 end = offset + len(chunk) - 1
                 headers = {
                     "Content-Type": "video/mp4",
@@ -221,8 +264,12 @@ class TikTokAdapter(BasePlatformAdapter):
             total_bytes=file_size,
         )
 
-    async def _poll_status(self, token: str, publish_id: str, account_alias: str) -> str:
-        """Poll TikTok's status endpoint until the video is live or fails."""
+    async def _poll_status(self, token: str, publish_id: str, account_alias: str) -> dict:
+        """Poll TikTok's status endpoint until the video is live or fails.
+
+        Devuelve el `data` completo del último status: trae
+        `publicaly_available_post_id` (sic, así lo escribe la API) cuando el
+        post es público — el id real del video, distinto del publish_id."""
         logger.info("tiktok_poll_start", account=account_alias, publish_id=publish_id)
 
         headers = {
@@ -256,7 +303,7 @@ class TikTokAdapter(BasePlatformAdapter):
                 )
 
                 if status == "PUBLISH_COMPLETE":
-                    return status
+                    return data
                 if status in ("FAILED", "SPAM", "AUDITING_FAILED"):
                     fail_code = data.get("fail_reason", "unknown")
                     logger.error(

@@ -26,35 +26,34 @@
     "miniCardLabel": "Plantilla · Letras de la canción",
     "tryPill": "Ver una publicación real",
     "connectText": "Conecta tus propios canales",
-    "statSuffix": "Videos publicados en automático durante los últimos 30 días."
+    "miniCardCount": "{count} plantillas listas · letras e imagen",
+    "channelsConnected": "{count, plural, one {# canal conectado} other {# canales conectados}} en {platforms, plural, one {# plataforma} other {# plataformas}}",
+    "statPublications": "{count, plural, one {publicación hecha en automático} other {publicaciones hechas en automático}}, sin abrir un editor.",
+    "statLast30": "{count} en los últimos 30 días",
+    "latestPublication": "Última publicación",
+    "openOn": "Ver en {platform}"
   },
   "techTrust": {
     "eyebrow": "Stack tecnológico en uso"
   },
   "templatesRow": {
+    "eyebrow": "Catálogo de plantillas",
     "heading": "Una plantilla, un género distinto.",
-    "imageBg": "Imagen con fondo",
-    "subjectPng": "Imagen sin fondo",
-    "landscapeScene": "Paisaje completo",
-    "videoMotion": "Video en loop",
-    "lyrics": "Letras de la canción",
-    "seeAllLine1": "Ver todas las",
-    "seeAllLine2": "plantillas →"
-  },
-  "purpose": {
-    "eyebrow": "Por ahora, un proyecto personal",
-    "headingLine1": "Mis canales,",
-    "headingLine2": "en piloto automático.",
-    "body": "No es un producto a la venta — todavía. Es la forma en la que automatizo mis propios canales de YouTube, TikTok y Facebook: video generado con IA a partir de la música que ya tengo, y para lo que no tiene los derechos completos, lo convierto en piezas de <em>arte de letras</em> — visual, no el audio original. Todo esto sigue en etapa de prueba.",
-    "chip1": "Sin editor",
-    "chip2": "Sin depender del audio original",
-    "chip3": "3 plataformas, un solo pipeline"
+    "subheading": "Pasá el mouse para verlas en movimiento. Tocá una para abrirla completa, con sonido.",
+    "seeAll": "Ver todas las plantillas",
+    "seeAllCount": "Ver las {count} plantillas",
+    "previous": "Anteriores",
+    "next": "Siguientes"
   },
   "cta": {
-    "headingLine1": "Pon tu catálogo",
-    "headingEm": "en automático.",
-    "body": "Acceso por invitación. Cada canal se calibra a medida antes de activarse — sin plantillas genéricas.",
-    "button": "Solicitar acceso"
+    "eyebrow": "Acceso por invitación",
+    "headingLine1": "Tu catálogo,",
+    "headingEm": "publicado solo.",
+    "body": "Cada canal se calibra a medida antes de activarse: nicho, plantillas y horarios. Sin plantillas genéricas ni publicaciones a ciegas.",
+    "button": "Solicitar acceso",
+    "secondary": "Ver plantillas",
+    "panelTitle": "Publicaciones por plataforma",
+    "panelNote": "Datos reales de este sistema, actualizados cada minuto."
   },
   "footer": {
     "badge": "Etapa de prueba",
@@ -81,61 +80,198 @@
     "salir": "Salir"
   },
   "dashboard": {
+    "eyebrow": "Panel de control",
     "heading": "Dashboard",
-    "activeCategories": "Categorías activas",
-    "activeCategoriesMeta": "Disponibles para Crear video",
-    "totalCategories": "Categorías totales",
-    "totalCategoriesMeta": "Activas + en preparación",
-    "currentSession": "Sesión actual",
-    "currentSessionMeta": "Usuario con acceso",
-    "recentActivity": "Actividad reciente",
-    "recentActivityBodyBefore": "Todavía no hay tracking de lotes generados en este panel — el backend no expone historial de trabajos por ahora. Cuando generes un video en",
-    "recentActivityBodyAfter": ", vas a ver el resultado ahí mismo al terminar.",
-    "crearVideoLink": "Crear video",
-    "ctaHeadingLine1": "Un vistazo,",
-    "ctaHeadingEm": "cero fricción.",
-    "ctaBody": "El mismo dashboard que usamos internamente — con tu propio catálogo en vez del nuestro."
+    "greeting": "Hola, {name}",
+    "subtitle": "Todo tu flujo en una pantalla: videos, publicaciones, canales y lo que necesita atención.",
+    "loadError": "No se pudo cargar el resumen. Revisá que el servidor esté corriendo.",
+    "actions": {
+      "create": "Crear video",
+      "library": "Por publicar",
+      "schedule": "Programación",
+      "channels": "Canales"
+    },
+    "kpis": {
+      "total": "Videos",
+      "ready": "Por publicar",
+      "published": "Publicados",
+      "processing": "En proceso",
+      "failed": "Fallidos"
+    },
+    "alerts": {
+      "title": "{count, plural, one {# cosa necesita tu atención} other {# cosas necesitan tu atención}}",
+      "resolve": "Resolver",
+      "kinds": {
+        "reauth": "{platform} · {account}: hay que reconectar la cuenta",
+        "token_expiring": "{platform} · {account}: el token vence pronto y no se renueva solo",
+        "publish_failed": "No se pudo publicar «{title}» en {platform} · {account}",
+        "job_failed": "Falló la generación de «{title}»",
+        "job_stuck": "«{title}» lleva más de 30 min sin avanzar"
+      }
+    },
+    "channels": {
+      "title": "{count, plural, one {# canal conectado} other {# canales conectados}}",
+      "manage": "Gestionar",
+      "empty": "Todavía no conectaste ninguna cuenta.",
+      "openChannel": "Abrir el canal",
+      "videos": "videos",
+      "lastPost": "última publicación",
+      "token": "conexión",
+      "active": "Activa",
+      "reauth": "Reconectar",
+      "expiresIn": "Vence en {time}"
+    },
+    "publications": {
+      "title": "Publicaciones",
+      "last30": "{count} en los últimos 30 días",
+      "thisWeek": "esta semana"
+    },
+    "upcoming": {
+      "title": "Próximas publicaciones",
+      "schedule": "Programación",
+      "empty": "No hay nada programado. Asigná horarios en Programación."
+    },
+    "activity": {
+      "title": "Actividad reciente",
+      "history": "Historial",
+      "empty": "Todavía no hay actividad.",
+      "kinds": {
+        "video_ready": "Video listo",
+        "video_failed": "Falló la generación",
+        "published": "Publicado en {platform}"
+      }
+    },
+    "performance": {
+      "title": "Tiempo de generación",
+      "average": "promedio de {count, plural, one {# video} other {# videos}}",
+      "empty": "Aparece cuando termine el primer video."
+    },
+    "catalog": {
+      "templates": "plantillas · {lyric} de letras",
+      "niches": "nichos activos",
+      "produced": "de video producido"
+    }
   },
   "channels": {
     "title": "Canales",
+    "subtitle": "Administra las cuentas donde Nexa Brief publica tus videos. Asigna a cada una un uso para saber cuál elegir en cada caso.",
     "updating": "Actualizando…",
-    "connectionError": "Sin conexión con el servidor — no se pudo cargar el estado de los canales. Reintentando automáticamente…",
-    "reauthBanner": "{count, plural, one {# canal necesita} other {# canales necesitan}} reconexión — el token expiró.",
-    "loading": "Cargando canales…",
-    "accountCount": "{count, plural, one {# cuenta} other {# cuentas}}",
-    "emptyState": "Sin canales conectados todavía.",
-    "addAccountButton": "+ Agregar cuenta",
-    "publishedCount": "{count, plural, one {# video publicado} other {# videos publicados}}",
-    "reconnect": "Reconectar",
-    "viewDetails": "Ver detalles",
-    "disconnect": "Desconectar",
-    "disconnectConfirmTitle": "¿Desconectar {name}?",
-    "disconnectConfirmBody": "Vas a dejar de poder publicar automáticamente en {platform} con esta cuenta ({alias}) hasta que la reconectes.",
-    "disconnectError": "No se pudo desconectar. Reintentá.",
-    "cancel": "Cancelar",
-    "disconnecting": "Desconectando…",
-    "confirmDisconnect": "Sí, desconectar",
-    "statusActive": "Activo",
-    "statusExpired": "Token expirado",
-    "dialog": {
-      "loadingVideos": "Cargando videos…",
-      "noVideos": "Todavía no se publicó ningún video en este canal desde acá.",
-      "platform": "Plataforma",
-      "alias": "Alias",
-      "name": "Nombre",
-      "platformId": "ID en la plataforma",
-      "status": "Estado",
-      "tokenExpiry": "Vencimiento del token",
-      "autoRenewal": "Renovación automática",
+    "connectAccount": "Conectar cuenta",
+    "connectedToast": "{platform} conectado: {alias}",
+    "connectionError": "Sin conexión con el servidor. No se pudo cargar el estado de los canales; reintentando automáticamente…",
+    "reauthBanner": "{count, plural, one {# cuenta necesita} other {# cuentas necesitan}} reconexión: el token expiró y no se puede publicar hasta volver a autorizar.",
+    "status": {
+      "active": "Activa",
+      "reauth": "Requiere reconexión"
+    },
+    "expiry": {
+      "never": "No expira",
+      "expired": "Expirado",
+      "minutes": "{value} min",
+      "hours": "{value} h",
+      "days": "{value} días",
+      "renews": "Se renueva solo"
+    },
+    "summary": {
+      "accounts": "Cuentas conectadas",
+      "active": "Activas",
+      "attention": "Requieren atención",
+      "videos": "Videos publicados"
+    },
+    "toolbar": {
+      "filterLabel": "Filtrar por plataforma",
+      "all": "Todas",
+      "searchLabel": "Buscar cuentas",
+      "searchPlaceholder": "Buscar por nombre, alias o uso…",
+      "clear": "Limpiar búsqueda"
+    },
+    "section": {
+      "accountCount": "{count, plural, =0 {Sin cuentas} one {# cuenta} other {# cuentas}}",
+      "reauthCount": "{count, plural, one {# requiere reconexión} other {# requieren reconexión}}",
+      "addAccount": "Agregar cuenta",
+      "connectFirst": "Conecta tu primera cuenta de {platform}",
+      "connectAnother": "Conectar otra cuenta",
+      "connectHint": "Usa varias cuentas para separar nichos, clientes o idiomas.",
+      "noMatches": "Ninguna cuenta coincide con la búsqueda."
+    },
+    "card": {
+      "actions": "Acciones de la cuenta",
+      "viewDetails": "Ver detalles",
+      "editUsage": "Editar uso y notas",
+      "reconnect": "Reconectar",
+      "disconnect": "Desconectar",
+      "addUsage": "Asignar uso",
+      "videos": "Videos",
+      "lastPublished": "Última",
+      "token": "Token"
+    },
+    "details": {
+      "reconnect": "Reconectar cuenta",
+      "usage": "Uso",
+      "edit": "Editar",
+      "noLabel": "Sin uso asignado",
+      "noNotes": "Agrega notas para recordar para qué sirve esta cuenta.",
+      "activity": "Actividad",
       "publishedVideos": "Videos publicados",
-      "recentVideos": "Últimos videos",
+      "lastPublished": "Última publicación",
+      "connection": "Conexión",
+      "platform": "Plataforma",
+      "selector": "Selector",
+      "platformId": "ID en la plataforma",
+      "connectedSince": "Conectada desde",
+      "tokenExpiry": "Vigencia del token",
+      "autoRenewal": "Renovación automática",
       "yes": "Sí",
       "no": "No",
-      "neverExpires": "No expira",
-      "expired": "Expirado (se renueva solo al publicar)",
-      "expiresInMinutes": "Expira en {minutes} min",
-      "expiresInHours": "Expira en {hours} h",
-      "expiresInDays": "Expira en {days} días"
+      "recentVideos": "Últimos videos",
+      "noVideos": "Todavía no se publicó ningún video en esta cuenta desde Nexa Brief.",
+      "disconnect": "Desconectar cuenta"
+    },
+    "connect": {
+      "title": "Conectar una cuenta",
+      "description": "Autoriza a Nexa Brief para publicar en tu nombre. Puedes conectar varias cuentas por plataforma.",
+      "platformLabel": "Plataforma",
+      "aliasLabel": "Alias interno",
+      "aliasHint": "Identificador para elegir esta cuenta al publicar. Solo minúsculas, números, guion y guion bajo.",
+      "aliasInvalid": "Usa entre 1 y 32 caracteres: minúsculas, números, - o _.",
+      "aliasExists": "Ya existe «{alias}»: se reconectará y reemplazará su autorización.",
+      "securityNote": "Te llevaremos a {platform} para que apruebes el acceso. Los tokens se guardan cifrados y puedes desconectar la cuenta cuando quieras.",
+      "cancel": "Cancelar",
+      "continue": "Continuar a {platform}",
+      "redirecting": "Redirigiendo…"
+    },
+    "edit": {
+      "title": "Uso y notas",
+      "description": "Describe para qué usas {name} para identificarla rápido al publicar.",
+      "labelLabel": "Uso",
+      "labelPlaceholder": "Ej.: Letras románticas, Cliente Acme, Inglés…",
+      "notesLabel": "Notas",
+      "notesPlaceholder": "Horarios, tipo de contenido, responsable, playlists…",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "saved": "Cambios guardados",
+      "error": "No se pudieron guardar los cambios. Inténtalo de nuevo."
+    },
+    "disconnect": {
+      "title": "¿Desconectar {name}?",
+      "body": "Nexa Brief dejará de publicar en {platform} con esta cuenta ({alias}) hasta que la vuelvas a conectar. Los videos ya publicados no se borran.",
+      "cancel": "Cancelar",
+      "confirm": "Sí, desconectar",
+      "pending": "Desconectando…",
+      "done": "{name} fue desconectada",
+      "error": "No se pudo desconectar. Inténtalo de nuevo."
+    },
+    "deleteVideo": {
+      "trigger": "Eliminar de la plataforma",
+      "title": "¿Eliminar este video de {platform}?",
+      "body": "«{title}» se eliminará permanentemente de {platform} · {alias}. No se puede deshacer.",
+      "unsupported": "{platform} no permite eliminar videos por API. Eliminalo desde la app.",
+      "cancel": "Cancelar",
+      "confirm": "Sí, eliminar",
+      "pending": "Eliminando…",
+      "done": "Video eliminado de {platform}",
+      "error": "No se pudo eliminar el video."
     }
   },
   "library": {
@@ -143,17 +279,17 @@
     "emptyState": "Ningún video coincide con los filtros aplicados.",
     "filters": {
       "categoryLabel": "Categoría",
-      "allCategories": "Todas las categorías",
-      "clearFilters": "Limpiar filtros"
+      "allCategories": "Todas",
+      "clearFilters": "Limpiar filtros",
+      "searchPlaceholder": "Buscar por título, categoría o ID…",
+      "sortLabel": "Ordenar",
+      "sort": {
+        "newest": "Más recientes",
+        "oldest": "Más antiguos",
+        "longest": "Más largos",
+        "title": "Título A–Z"
+      }
     },
-    "tabs": {
-      "listos": "Listos",
-      "cola": "En cola",
-      "publicados": "Publicados",
-      "fallidos": "Fallidos"
-    },
-    "retryButton": "Reintentar",
-    "comingSoon": "Próximamente",
     "pagination": {
       "previous": "Anterior",
       "next": "Siguiente",
@@ -169,7 +305,10 @@
       "updatedAt": "Actualizado",
       "noPublishes": "Todavía no se publicó en ninguna plataforma.",
       "generating": "El video todavía se está generando.",
-      "notFound": "No se encontró este video."
+      "notFound": "No se encontró este video.",
+      "generationTitle": "Tiempo de generación",
+      "generationTotal": "Total",
+      "generationQueue": "En cola / arranque"
     },
     "stages": {
       "pending": "En cola",
@@ -187,9 +326,18 @@
     },
     "videoCard": {
       "publishedBadge": "Publicado",
-      "unknownDuration": "Duración desconocida",
-      "publishNow": "Publicar ahora",
-      "playButton": "Reproducir"
+      "unknownDuration": "—",
+      "publishNow": "Publicar",
+      "playButton": "Reproducir",
+      "publishAgain": "Publicar en otra cuenta",
+      "details": "Ver detalles",
+      "openPost": "Abrir publicación",
+      "scheduledFor": "Programado {date}",
+      "failedHint": "La generación falló. Revisá el detalle para ver el error.",
+      "pendingPublish": "Aún no publicado",
+      "publishingNow": "Publicando…",
+      "generatedIn": "Generado en {time}",
+      "generatedInHint": "Tiempo desde que se creó el video hasta que quedó listo"
     },
     "assetPicker": {
       "title": {
@@ -200,6 +348,56 @@
       "loading": "Cargando...",
       "empty": "Todavía no hay nada archivado.",
       "chooseButton": "Elegir"
+    },
+    "subtitle": "Todos tus videos en un solo lugar: revisalos, filtralos y publicá los que faltan.",
+    "emptyLibrary": "Todavía no generaste ningún video.",
+    "createVideo": "Crear video",
+    "loadError": "No se pudo cargar la biblioteca.",
+    "resultsCount": "{count, plural, one {# video} other {# videos}}",
+    "tabs": {
+      "todos": "Todos",
+      "pendientes": "Por publicar",
+      "publicados": "Publicados",
+      "proceso": "En proceso",
+      "fallidos": "Fallidos"
+    },
+    "status": {
+      "ready": "Listo",
+      "scheduled": "Programado",
+      "published": "Publicado",
+      "processing": "En proceso",
+      "failed": "Falló"
+    },
+    "deleteDialog": {
+      "trigger": "Eliminar video",
+      "titleLocal": "¿Eliminar este video?",
+      "bodyLocal": "Se borran de Nexa Brief el archivo del video, su historial y sus notificaciones. No se puede deshacer.",
+      "titlePublished": "Este video está publicado",
+      "bodyPublished": "Elegí qué querés eliminar.",
+      "optionLocal": "Solo de Nexa Brief",
+      "optionLocalHint": "Se borra de la Biblioteca, pero sigue publicado en las plataformas.",
+      "optionRemote": "De Nexa Brief y de las plataformas",
+      "optionRemoteHint": "También se elimina de cada cuenta donde se publicó. No se puede deshacer.",
+      "manualOnly": "Eliminar desde la app",
+      "publishedNoRecord": "Figura como publicado, pero no hay registro de en qué cuenta. Se borrará solo de Nexa Brief; para quitarlo de la plataforma, usá Canales.",
+      "loading": "Buscando dónde se publicó…",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar",
+      "confirmRemote": "Eliminar de todo",
+      "pending": "Eliminando…",
+      "done": "Video eliminado de Nexa Brief",
+      "doneRemote": "Video eliminado de Nexa Brief y de {count, plural, one {# plataforma} other {# plataformas}}",
+      "partialTitle": "No se pudo eliminar de todas las plataformas",
+      "partialBody": "No se borró nada de Nexa Brief, así podés reintentar. Esto pasó en cada cuenta:",
+      "retry": "Reintentar",
+      "deleteLocalOnly": "Eliminar solo de Nexa Brief",
+      "error": "No se pudo eliminar el video.",
+      "result": {
+        "deleted": "Eliminado",
+        "already_gone": "Ya no existía",
+        "unsupported": "Hacelo desde la app",
+        "failed": "Falló"
+      }
     }
   },
   "templates": {
@@ -212,6 +410,8 @@
       "tagImage": "Imagen",
       "tagVideo": "Video",
       "tagLyrics": "Letras",
+      "openPreview": "Abrir vista previa",
+      "previewHint": "Elige el formato y ajusta el volumen de la vista previa.",
       "orientationVertical": "Vertical 9:16",
       "orientationHorizontal": "Horizontal 16:9",
       "orientationAny": "Cualquier formato"
@@ -274,7 +474,8 @@
       "totalEstimated": "Duración total estimada",
       "exactDurationLabel": "Duración exacta",
       "secondsUnit": "segundos",
-      "manualRangeHint": "Se ignora la duración de la canción; el rango permitido es 5–300 segundos."
+      "manualRangeHint": "Se ignora la duración de la canción; el rango permitido es 5–300 segundos.",
+      "lockedHint": "En los videos de letras la duración es siempre la de la canción completa, para que la letra coincida con el audio."
     },
     "nichoField": {
       "label": "Nicho / categoría musical",
@@ -332,26 +533,65 @@
     "jobProgress": {
       "category": "Categoría",
       "duration": "Duración",
-      "viewDetails": "Ver detalles"
+      "viewDetails": "Ver detalles",
+      "queued": "En cola",
+      "queuePosition": "En cola · #{position}",
+      "queuedHint": "Empieza cuando termine un video en curso.",
+      "working": "Procesando",
+      "ready": "Listo",
+      "failed": "Falló",
+      "stepOf": "paso {index} de {count}",
+      "waitingRecorder": "Esperando turno para grabar",
+      "calculating": "Calculando tiempo restante…",
+      "eta": {
+        "seconds": "≈ {value} s restantes",
+        "minutes": "≈ {value} min restantes",
+        "hours": "≈ {value} h {minutes} min restantes"
+      },
+      "barLabel": "Progreso de {name}"
     },
     "stages": {
       "pending": "En cola",
-      "inputAnalyzed": "Analizando entrada...",
-      "designComplete": "Diseñando estilo visual...",
-      "resourcesFetched": "Buscando recursos (imagen/música)...",
-      "promptBuilt": "Armando prompt...",
-      "htmlGenerated": "Generando plantilla...",
-      "videoRecorded": "Grabando video...",
-      "summaryGenerated": "Generando título y descripción...",
+      "inputAnalyzed": "Entrada analizada",
+      "designComplete": "Diseño listo",
+      "resourcesFetched": "Imagen y música listas",
+      "promptBuilt": "Instrucciones listas",
+      "htmlGenerated": "Plantilla lista · grabando video",
+      "videoRecorded": "Video grabado · escribiendo título",
+      "summaryGenerated": "Título listo · empaquetando",
       "packaged": "Listo",
-      "publishing": "Publicando...",
+      "publishing": "Publicando…",
       "published": "Publicado",
       "failed": "Falló"
+    },
+    "steps": {
+      "input_analyzer": "Analizando la entrada",
+      "resource_fetcher": "Preparando imagen y música",
+      "lyrics_transcriber": "Transcribiendo la letra",
+      "visual_designer": "Analizando la imagen",
+      "prompt_architect": "Preparando instrucciones",
+      "html_generator": "Generando la plantilla",
+      "video_recorder": "Grabando el video",
+      "result_summarizer": "Escribiendo título y descripción",
+      "packager": "Empaquetando archivos",
+      "social_publisher": "Publicando en redes"
+    },
+    "tray": {
+      "title": "Videos en proceso",
+      "dismiss": "Quitar de la lista",
+      "clearFinished": "Limpiar terminados",
+      "running": "{count, plural, one {# en curso} other {# en curso}}",
+      "queued": "{count, plural, one {# en cola} other {# en cola}}",
+      "done": "{count, plural, one {# listo} other {# listos}}",
+      "failed": "{count, plural, one {# falló} other {# fallaron}}"
     }
   },
   "schedule": {
     "title": "Programación",
-    "tabs": { "slots": "Horarios", "queue": "Cola" },
+    "tabs": {
+      "slots": "Horarios",
+      "queue": "Cola"
+    },
     "common": {
       "cancel": "Cancelar",
       "save": "Guardar",
@@ -360,8 +600,20 @@
       "updating": "Actualizando…",
       "close": "Cerrar"
     },
-    "platforms": { "youtube": "YouTube", "tiktok": "TikTok", "facebook": "Facebook" },
-    "weekdays": { "mon": "Lun", "tue": "Mar", "wed": "Mié", "thu": "Jue", "fri": "Vie", "sat": "Sáb", "sun": "Dom" },
+    "platforms": {
+      "youtube": "YouTube",
+      "tiktok": "TikTok",
+      "facebook": "Facebook"
+    },
+    "weekdays": {
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb",
+      "sun": "Dom"
+    },
     "slots": {
       "description": "Horarios recurrentes por cuenta — asigná un video a mano o dejá que el sistema elija.",
       "newSlot": "+ Nuevo horario",
@@ -416,20 +668,56 @@
       "empty": "Todavía no hay nada en la cola de publicación.",
       "viewPost": "Ver publicación",
       "cancelEntry": "Cancelar",
-      "sourceLabels": { "manual": "Manual", "auto": "Automático", "immediate": "Publicar ahora" },
-      "statusLabels": { "queued": "En cola", "publishing": "Publicando…", "published": "Publicado", "failed": "Falló", "cancelled": "Cancelado" }
+      "sourceLabels": {
+        "manual": "Manual",
+        "auto": "Automático",
+        "immediate": "Publicar ahora"
+      },
+      "statusLabels": {
+        "queued": "En cola",
+        "publishing": "Publicando…",
+        "published": "Publicado",
+        "failed": "Falló",
+        "cancelled": "Cancelado",
+        "removed": "Eliminado"
+      }
     },
     "publishNow": {
       "title": "Publicar ahora",
-      "description": "Publicá \"{jobTitle}\" de inmediato, sin pasar por el horario programado.",
-      "platformLabel": "Plataforma",
-      "accountLabel": "Cuenta",
-      "chooseAccount": "Elegir cuenta…",
-      "noAccounts": "No hay cuentas activas conectadas en {platform}.",
-      "publishError": "No se pudo publicar. Reintentá.",
-      "success": "Publicado correctamente.",
-      "genericFailure": "La publicación falló.",
-      "publishing": "Publicando…"
+      "description": "Elegí en qué cuentas publicar \"{jobTitle}\". Se sube en segundo plano, sin pasar por el horario programado.",
+      "loadingAccounts": "Cargando cuentas…",
+      "noAccountsShort": "Sin cuentas conectadas",
+      "selectedOf": "{selected} de {total} seleccionadas",
+      "selectAll": "Todas",
+      "selectNone": "Ninguna",
+      "reconnect": "Reconectar en Canales",
+      "alreadyPublished": "Ya publicado",
+      "pickHint": "Marcá una o más cuentas",
+      "selectedCount": "{count, plural, one {# cuenta} other {# cuentas}}",
+      "publishOne": "Publicar",
+      "publishMany": "Publicar en {count}",
+      "cancel": "Cancelar",
+      "progressTitle": "Publicando…",
+      "progressHint": "Podés cerrar esta ventana: la subida sigue en segundo plano y la Biblioteca se actualiza sola.",
+      "doneTitle": "Listo",
+      "doneHint": "Así quedó \"{jobTitle}\" en cada cuenta.",
+      "statusQueued": "En espera…",
+      "statusUploading": "Subiendo…",
+      "statusPublished": "Publicado",
+      "openPost": "Ver",
+      "showDetail": "Ver detalle técnico",
+      "retryFailed": "Reintentar {count, plural, one {la fallida} other {las # fallidas}}",
+      "closeKeepsGoing": "Cerrar",
+      "close": "Cerrar",
+      "errors": {
+        "tokenExpired": "La sesión de esta cuenta venció. Reconectala en Canales y volvé a intentar.",
+        "quota": "{platform} alcanzó su límite de subidas por ahora. Probá más tarde.",
+        "network": "Se cortó la conexión con {platform}. Volvé a intentar en un momento.",
+        "missingFile": "Este video no tiene el formato que necesita {platform}.",
+        "rejectedFile": "{platform} no aceptó el archivo. Volvé a intentar; si se repite, revisá el detalle.",
+        "generic": "No se pudo publicar en {platform}. Podés reintentar.",
+        "tiktokUnaudited": "TikTok todavía no aprobó tu app: mientras tanto solo permite publicar en cuentas privadas. Poné la cuenta en privado en la app de TikTok y reintentá (el video queda como \"Solo yo\")."
+      }
     }
   },
   "access": {
@@ -458,5 +746,66 @@
     "visualHeadingLine1": "Así se arma",
     "visualHeadingEm": "cada video.",
     "visualBody": "Cinco plantillas, un pipeline con IA, cero edición manual — pedí acceso y te muestro el resto."
+  },
+  "mediaPlayer": {
+    "viewMobile": "Móvil",
+    "viewDesktop": "Desktop",
+    "volume": "Volumen",
+    "mute": "Silenciar",
+    "unmute": "Activar sonido",
+    "pause": "Pausar",
+    "play": "Reproducir",
+    "replay": "Repetir",
+    "progress": "Progreso",
+    "skipBack": "Retroceder 5 segundos",
+    "skipForward": "Avanzar 5 segundos",
+    "fullscreen": "Pantalla completa",
+    "unavailable": "Vista previa no disponible.",
+    "loadError": "No se pudo cargar este formato del video.",
+    "shortcutsHint": "Espacio · ← → · M · F"
+  },
+  "howItWorks": {
+    "eyebrow": "Así funciona",
+    "headingLine1": "De una canción a tus canales,",
+    "headingEm": "sin tocar un editor.",
+    "body": "Nexa Brief controla el flujo completo: entiende la música, diseña el video, lo renderiza y lo publica en cada cuenta, al instante o en tus horarios.",
+    "techLibrary": "Biblioteca",
+    "metricTemplates": "{count} plantillas · {lyric} de letras",
+    "metricAi": "Título, descripción y hashtags automáticos",
+    "metricRender": "≈ {time} por video, de punta a punta",
+    "metricPublish": "{count, plural, one {# publicación} other {# publicaciones}} en {channels, plural, one {# canal} other {# canales}}",
+    "steps": {
+      "input": {
+        "title": "Elegís la canción y el estilo",
+        "body": "Subís el audio o lo traés de tu biblioteca, y elegís la plantilla. Si no, la IA propone una."
+      },
+      "ai": {
+        "title": "La IA entiende y diseña",
+        "body": "Transcribe la letra palabra por palabra, lee el género y el tono, y arma el diseño y el texto de la publicación."
+      },
+      "render": {
+        "title": "Se renderiza en 1080p",
+        "body": "Un motor de video profesional anima cada escena sincronizada con el audio, en horizontal y vertical."
+      },
+      "publish": {
+        "title": "Se publica solo",
+        "body": "Sale en YouTube, TikTok y Facebook, en una o varias cuentas a la vez. Vos solo revisás el resultado."
+      }
+    },
+    "note": "Hoy es un proyecto personal en etapa de prueba: así automatizo mis propios canales. Para lo que no tiene todos los derechos, genera arte de letras — visual, no el audio original."
+  },
+  "liveNumbers": {
+    "eyebrow": "En vivo",
+    "heading": "Ya está funcionando.",
+    "body": "Estas cifras salen directo del sistema y se actualizan solas. Nada de números de ejemplo.",
+    "labels": {
+      "videos": "Videos generados",
+      "publications": "Publicaciones",
+      "channels": "Canales conectados",
+      "templates": "Plantillas",
+      "minutes": "Minutos de video"
+    },
+    "channelsTitle": "Canales en piloto automático",
+    "channelVideos": "{count, plural, one {# video} other {# videos}}"
   }
 }

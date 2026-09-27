@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stylish Kinetic — Lyrics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Sniglet:wght@800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema — defaults idénticos al caso actual; config.json puede pisarlos */
+  :root { --fCaps: "Lilita One", sans-serif; --fLow: "Sniglet", sans-serif; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #E31D40; cursor: pointer; }
+
+  #stage { position: fixed; inset: 0; overflow: hidden; }
+  .scene { position: absolute; left: 0; top: 0; overflow: hidden; }
+  .comp { position: absolute; width: 0; height: 0; }
+  .grp { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; }
+  .blk { position: absolute; }
+  .panel { position: absolute; inset: 0; }
+
+  /* línea de texto: .ch lleva el bamboleo fijo de cada letra, .cu es lo que se anima */
+  .ln { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 0.92; }
+  .ln .ch { display: inline-block; white-space: pre; }
+  .ln .cu { display: inline-block; white-space: pre; transform-origin: 50% 85%; }
+  .caps { font-family: var(--fCaps); font-weight: 400; }
+  .low  { font-family: var(--fLow); font-weight: 800; }
+  .brush { position: absolute; overflow: visible; pointer-events: none; }
+  .brush path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  #measure { position: absolute; left: -99999px; top: 0; visibility: hidden; }
+  #hud {
+    position: fixed; left: 8px; top: 8px; z-index: 50; display: none; padding: 6px 8px;
+    font: 11px/1.4 ui-monospace, monospace; color: #0f0; background: rgba(0,0,0,0.7); pointer-events: none;
+  }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--fCaps); font-size: 2vh; letter-spacing: 0.3em; color: #fff;
+    opacity: 0.55; animation: hintPulse 2s ease infinite; pointer-events: none;
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+  /* ── Recording UI ─────────────────────────────────────────────────────── */
+  #rec-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(10,10,10,0.85); border: 2px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s, border-color .15s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  #rec-btn:hover { transform: scale(1.1); border-color: rgba(255,60,60,0.7); }
+  #rec-btn svg { width: 18px; height: 18px; }
+  #rec-btn.recording { border-color: #ff3c3c; animation: rec-pulse 1.2s ease-in-out infinite; }
+  @keyframes rec-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,60,60,.5)} 50%{box-shadow:0 0 0 8px rgba(255,60,60,0)} }
+  #rec-panel {
+    position: fixed; bottom: 84px; right: 24px; z-index: 9999;
+    width: 280px; background: rgba(10,10,12,0.96);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+    padding: 18px; backdrop-filter: blur(20px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    display: none; flex-direction: column; gap: 10px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  #rec-panel.open { display: flex; }
+  #rec-panel h3 {
+    color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    margin: 0 0 4px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .rec-engine {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 10px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+    transition: background .12s, border-color .12s;
+  }
+  .rec-engine:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+  .rec-engine.active { border-color: rgba(255,60,60,0.5); background: rgba(255,40,40,0.08); }
+  .rec-engine-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .rec-engine-info { flex: 1; min-width: 0; }
+  .rec-engine-name { color: #fff; font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .rec-engine-desc { color: rgba(255,255,255,0.45); font-size: 10px; line-height: 1.3; margin: 0; }
+  .rec-engine-badge {
+    font-size: 9px; padding: 2px 6px; border-radius: 4px;
+    font-weight: 700; letter-spacing: .05em; white-space: nowrap; flex-shrink: 0;
+  }
+  .badge-fast    { background: rgba(60,200,120,0.2); color: #3cc878; }
+  .badge-quality { background: rgba(255,160,60,0.2); color: #ffa03c; }
+  .badge-dev     { background: rgba(100,140,255,0.2); color: #6488ff; }
+  #rec-go {
+    margin-top: 4px; padding: 11px; border-radius: 10px; border: none; cursor: pointer;
+    background: #e03030; color: #fff; font-size: 13px; font-weight: 700;
+    letter-spacing: .04em; transition: background .12s, opacity .12s; font-family: inherit;
+  }
+  #rec-go:hover { background: #c52020; }
+  #rec-go:disabled { opacity: .35; cursor: not-allowed; }
+  #rec-status {
+    font-size: 10px; color: rgba(255,255,255,0.4); text-align: center;
+    min-height: 14px; font-family: inherit;
+  }
+  body.headless #rec-btn, body.headless #rec-panel, body.headless #hint { display: none !important; }
+</style>
+</head>
+<body>
+<!-- desenfoque de movimiento direccional (x / y) en 3 intensidades -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="mbx1" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="6 0"/></filter>
+  <filter id="mbx2" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="16 0"/></filter>
+  <filter id="mbx3" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="34 0"/></filter>
+  <filter id="mby1" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 6"/></filter>
+  <filter id="mby2" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 16"/></filter>
+  <filter id="mby3" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 34"/></filter>
+</svg>
+<div id="stage"></div>
+<div id="hud"></div>
+<div id="measure"></div>
+<div id="hint">CLICK PARA EMPEZAR</div>
+<audio id="audio" preload="auto"></audio>
+<!-- ── Recording panel ────────────────────────────────────────────────── -->
+<button id="rec-btn" title="Motor de grabación (R)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" style="color:#fff">
+    <circle cx="12" cy="12" r="7" fill="rgba(255,60,60,0.85)" stroke="none"/>
+    <circle cx="12" cy="12" r="11" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none"/>
+  </svg>
+</button>
+<div id="rec-panel">
+  <h3>Motor de grabación</h3>
+  <div class="rec-engine" data-engine="hyperframes">
+    <div class="rec-engine-icon" style="background:rgba(255,160,30,0.15)">⚡</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">HyperFrames</p>
+      <p class="rec-engine-desc">Rápido, nativo del pipeline Nexa.</p>
+    </div>
+    <span class="rec-engine-badge badge-fast">RÁPIDO</span>
+  </div>
+  <div class="rec-engine" data-engine="remotion">
+    <div class="rec-engine-icon" style="background:rgba(100,60,255,0.15)">🎬</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Remotion</p>
+      <p class="rec-engine-desc">Mejor calidad, render más lento.</p>
+    </div>
+    <span class="rec-engine-badge badge-quality">CALIDAD</span>
+  </div>
+  <div class="rec-engine" data-engine="playwright">
+    <div class="rec-engine-icon" style="background:rgba(60,180,255,0.15)">🎭</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Playwright</p>
+      <p class="rec-engine-desc">Captura real del navegador.</p>
+    </div>
+    <span class="rec-engine-badge badge-dev">BROWSER</span>
+  </div>
+  <button id="rec-go" disabled>● Grabar</button>
+  <p id="rec-status"></p>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+
+
+<script type="module">
+/* ================================ CONFIG ================================ */
+/* Mismo contrato que LYRICS-letras-de-neon / LYRICS-caution: la letra se
+   consume 100% de lyricsUrl (Whisper: { metadata, segments: [ { words: [ {
+   word, start, end } ] } ] }) y el CONFIG vive en config.json como colección
+   { activeId, configs: [ CASO, ... ] }.
+   Servir por HTTP (python3 -m http.server): por file:// el fetch se bloquea.
+
+   Motor: kinetic typography "stylish" — una ESCENA por frase (segmento de
+   Whisper, partido/fusionado a 3–10 palabras), cada una con su color plano y
+   una RECETA de movimiento: el bloque entra (arco / deslizando con desenfoque /
+   tecleo que se despliega), gira 90° para quedar en columna y deja entrar el
+   resto de la frase, y sale con desenfoque. Las 5 primeras escenas siguen la
+   "firma" del video de referencia (scenes.signature); después el mazo mezcla
+   recetas y transiciones extra para que un tema de 3+ minutos no se repita.
+   Todo son Web Animations en pausa posicionadas con el reloj del audio:
+   ?t=12.3 congela ese cuadro (debug / capturas). */
+const ACTIVE_ID = null;   /* <-- forzar un id · null = usa "activeId" del JSON */
+
+const DEFAULT_CONFIG = {"activeId":"default","configs":[{"id":"default","description":"Kinetic typography stylish de colores planos. — metadata para marketing/SEO, la plantilla no la usa todavía.","audio":{"src":"assets/From-Klickpin2.mp3"},"lyricsUrl":"assets/lyrics.json","fonts":{"googleUrl":"https://fonts.googleapis.com/css2?family=Lilita+One&family=Sniglet:wght@800&display=swap","caps":"\"Lilita One\", sans-serif","low":"\"Sniglet\", sans-serif","lowerI":true,"wobbleDeg":4,"jitterEm":0.035},"palette":{"schemes":{"red":{"bg":"#E31D40","ink":"#FFFFFF","accent":"#F3C10A"},"yellow":{"bg":"#F3C10A","ink":"#FFFFFF","accent":"#084E62"},"mint":{"bg":"#85E5D3","ink":"#FFFFFF","accent":"#E31D40"},"teal":{"bg":"#084E62","ink":"#FFFFFF","accent":"#F3C10A"}},"order":["red","yellow","mint","red","yellow"],"cycle":["red","yellow","mint","teal"]},"brush":{"color":"#FFFFFF","chance":0.8},"intro":{"artist":"","title":""},"outro":{"enabled":true,"title":"Gracias","sub":"Por ver","feats":"Suscríbete · NEXA BRIEF"},"timing":{"leadSec":0.1,"longWordSec":0.5,"longWordLead":0.35,"exitSec":0.38,"holdSec":1.0,"interludeSec":3.0},"scenes":{"minWords":3,"maxWords":10,"minSec":1.4,"maxSec":5.5,"signature":["arc","slide","type","tilt","slide"],"cooldown":2,"stopwords":[]},"layouts":{},"transitions":{"signature":"cut","weights":{"cut":3,"circle":1.5,"wipe":1.2,"push":1}},"debug":{"enabled":false},"seed":5}]};
+
+/* palabras funcionales (en + es): nunca son la palabra fuerte de un bloque */
+const BASE_STOP = ("a an the and or but so of to in on at by for from with up out off as is are am be was were " +
+  "i im i'm me my you your he she it its we they them his her our their this that these those " +
+  "do don't can can't will just like if then than too very let get got gotta wanna gonna yeah oh " +
+  "el la los las un una unos unas y o pero de del al a en con por para sin que se me te le lo les nos " +
+  "mi tu su mis tus sus yo es soy eres son fue ya no si sí muy más como cuando donde").split(/\s+/);
+
+/* recetas del mazo (después de la firma): weight 0 = desactivada */
+const BASE_LAYOUTS = {
+  arc:      { weight: 1.2 },   /* línea entra en arco → gira a columna → se apilan palabras → giro final */
+  slide:    { weight: 1.6 },   /* 2 líneas entran deslizando opuestas → columna → 2 líneas más a la derecha */
+  type:     { weight: 1.2 },   /* línea larga letra a letra + remate en color acento */
+  tilt:     { weight: 1.0 },   /* minúsculas en plano inclinado, crece hacia arriba */
+  pop:      { weight: 1.0 },   /* una palabra gigante a la vez que rebota y sale volando */
+  pinwheel: { weight: 1.0 },   /* cada trozo nuevo hace girar todo el bloque 90° (molinete) */
+  bounce:   { weight: 0.9 },   /* las palabras caen desde arriba y rebotan */
+  split:    { weight: 0.8 }    /* un panel diagonal de otro color divide la frase en dos */
+};
+
+async function loadDB() {
+  try {
+    const r = await fetch("config.json");
+    if (r.ok) return await r.json();
+  } catch (e) {}
+  try {
+    const r = await fetch("assets/config.json");
+    if (r.ok) return await r.json();
+  } catch (e) {}
+  console.warn("config.json no disponible (fetch bloqueado o ausente) — usando DEFAULT_CONFIG embebido");
+  return DEFAULT_CONFIG;
+}
+
+const DB = await loadDB();
+const RAW = DB.configs.find(c => c.id === ACTIVE_ID)
+         || DB.configs.find(c => c.id === DB.activeId)
+         || DB.configs[0];
+/* merge por bloque contra los defaults: un config parcial nunca rompe el motor */
+const D = DEFAULT_CONFIG.configs[0];
+const C = { ...D, ...RAW };
+for (const k of ["fonts", "palette", "brush", "intro", "outro", "timing", "scenes", "transitions", "debug"])
+  C[k] = { ...D[k], ...(RAW[k] || {}) };
+C.palette.schemes = { ...D.palette.schemes, ...(RAW.palette?.schemes || {}) };
+C.transitions.weights = { ...D.transitions.weights, ...(RAW.transitions?.weights || {}) };
+C.layouts = {};
+for (const [k, v] of Object.entries(BASE_LAYOUTS)) C.layouts[k] = { ...v, ...((RAW.layouts || {})[k] || {}) };
+const STOP = new Set([...BASE_STOP, ...(C.scenes.stopwords || [])].map(s => s.toLowerCase()));
+
+(function applyTheme(C) {
+  const root = document.documentElement;
+  if (C.fonts?.googleUrl) {
+    const link = document.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+    if (link && link.href !== C.fonts.googleUrl) link.href = C.fonts.googleUrl;
+  }
+  if (C.fonts?.caps) root.style.setProperty("--fCaps", C.fonts.caps);
+  if (C.fonts?.low)  root.style.setProperty("--fLow", C.fonts.low);
+})(C);
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const stage = $("stage"), audio = $("audio"), meas = $("measure"), hud = $("hud");
+const QS = new URLSearchParams(location.search);
+const FROZEN = QS.has("t") ? parseFloat(QS.get("t")) : null;   /* ?t=SEG → cuadro congelado */
+const DEBUG = C.debug.enabled || QS.get("debug") === "1";
+let vw = innerWidth, vh = innerHeight;
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const EASE_OUT = "cubic-bezier(.16,.84,.24,1)", EASE_IN = "cubic-bezier(.6,0,.9,.4)", EASE_IO = "cubic-bezier(.65,0,.3,1)";
+const isContent = w => !STOP.has(w.text.toLowerCase().replace(/’/g, "'"));
+const SCH = C.palette.schemes;
+
+/* ---- texto: mayúsculas con la "i" minúscula de la firma / minúsculas ---- */
+const capsText = s => { const u = s.toUpperCase(); return C.fonts.lowerI ? u.replace(/I/g, "i") : u; };
+const lowText = (s, first) => {
+  const l = s.toLowerCase();
+  return first ? l.charAt(0).toUpperCase() + l.slice(1) : l;
+};
+const join = ws => ws.map(w => w.text).join(" ");
+const disp = (ws, font) => font === "low" ? ws.map((w, i) => lowText(w.text, w.first && i === 0)).join(" ") : capsText(join(ws));
+
+/* ============================ MEDICIÓN ================================== */
+/* se mide con la MISMA estructura de spans que las líneas reales */
+const measCache = new Map();
+function fillChars(el, text) {
+  for (const c of text) {
+    const ch = doc.createElement("span"); ch.className = "ch";
+    const cu = doc.createElement("span"); cu.className = "cu"; cu.textContent = c;
+    ch.appendChild(cu); el.appendChild(ch);
+  }
+}
+function measure(text, font) {
+  const key = font + "|" + text;
+  let m = measCache.get(key);
+  if (!m) {
+    meas.innerHTML = "";
+    const el = doc.createElement("div"); el.className = "ln " + font; el.style.fontSize = "100px"; el.style.position = "static";
+    fillChars(el, text); meas.appendChild(el);
+    const r = el.getBoundingClientRect();
+    m = { w: Math.max(1, r.width), h: Math.max(1, r.height) };
+    measCache.set(key, m);
+  }
+  return m;
+}
+const fit = (text, font, maxW, maxH) => { const m = measure(text, font); return 100 * Math.min(maxW / m.w, maxH / m.h); };
+const dims = (text, font, fs) => { const m = measure(text, font); return { w: m.w * fs / 100, h: m.h * fs / 100 }; };
+
+/* ============================ TIMELINE ================================== */
+/* Motor propio (sin Web Animations): cada Track guarda valores clave de UNA
+   propiedad de un elemento a lo largo de la escena; seek(t) interpola y
+   escribe el style SOLO si el valor cambió. Así nada se promueve a capa de
+   composición (con WAAPI, cientos de letras/trazos animados hundían los fps
+   en headless) y el render sigue siendo determinista y buscable por tiempo.
+   Interpolación: los dos valores comparten plantilla (mismas funciones, misma
+   cantidad de números) y se interpolan los números; si no, cambio seco. */
+const NUM = /-?\d*\.?\d+(?:e-?\d+)?/g;
+function lerpStr(a, b, p) {
+  if (p <= 0 || a === b) return a;
+  if (p >= 1) return b;
+  const na = a.match(NUM), nb = b.match(NUM);
+  if (!na || !nb || na.length !== nb.length) return p < 0.5 ? a : b;
+  let i = 0;
+  return b.replace(NUM, () => { const v = +na[i] + (+nb[i] - +na[i]) * p; i++; return String(Math.round(v * 1000) / 1000); });
+}
+const easeCache = new Map();
+function easeFn(spec) {
+  let f = easeCache.get(spec);
+  if (f) return f;
+  const m = /cubic-bezier\(([^)]+)\)/.exec(spec);
+  if (!m) f = spec.startsWith("steps") ? () => 0 : p => p;
+  else {
+    const [x1, y1, x2, y2] = m[1].split(",").map(Number);
+    const bz = (t, a, b) => 3 * a * t * (1 - t) * (1 - t) + 3 * b * t * t * (1 - t) + t * t * t;
+    const dbz = (t, a, b) => 3 * a * (1 - t) * (1 - t) + 6 * (b - a) * t * (1 - t) + 3 * (1 - b) * t * t;
+    f = x => {
+      let t = x;
+      for (let i = 0; i < 6; i++) { const d = dbz(t, x1, x2); if (Math.abs(d) < 1e-6) break; t -= (bz(t, x1, x2) - x) / d; t = clamp(t, 0, 1); }
+      return bz(t, y1, y2);
+    };
+  }
+  easeCache.set(spec, f);
+  return f;
+}
+class Track {
+  constructor(el, prop, init, discrete = false) { this.el = el; this.prop = prop; this.discrete = discrete; this.keys = [[0, init, "linear"]]; }
+  get last() { return this.keys[this.keys.length - 1][1]; }
+  set(t, v) { this.keys.push([t, v, "linear"]); return this; }
+  to(t0, d, v, ease = "linear") { this.keys.push([t0, this.last, ease]); this.keys.push([t0 + Math.max(0.001, d), v, "linear"]); return this; }
+  compile() {
+    this.ks = this.keys.slice().sort((a, b) => a[0] - b[0]).map(([t, v, e]) => [t, v, easeFn(this.discrete ? "steps" : e)]);
+    this.a = Infinity; this.b = -Infinity;
+    for (let i = 1; i < this.ks.length; i++)
+      if (this.ks[i][1] !== this.ks[i - 1][1]) { this.a = Math.min(this.a, this.ks[i - 1][0]); this.b = Math.max(this.b, this.ks[i][0]); }
+    this.side = null; this.cur = undefined;
+  }
+  value(t) {
+    const ks = this.ks;
+    if (t <= ks[0][0]) return ks[0][1];
+    for (let i = ks.length - 1; i >= 0; i--) {
+      if (t < ks[i][0]) continue;
+      const nx = ks[i + 1];
+      if (!nx) return ks[i][1];
+      const span = nx[0] - ks[i][0];
+      return span <= 0 ? nx[1] : lerpStr(ks[i][1], nx[1], ks[i][2]((t - ks[i][0]) / span));
+    }
+    return ks[0][1];
+  }
+  seek(t) {
+    const side = t < this.a ? -1 : t > this.b ? 1 : 0;
+    if (side !== 0 && side === this.side) return;
+    this.side = side;
+    const v = this.value(t);
+    if (v !== this.cur) { this.el.style[this.prop] = v; this.cur = v; }
+  }
+}
+
+/* ============================ PRIMITIVAS ================================ */
+function div(parent, cls, css) {
+  const d = doc.createElement("div");
+  if (cls) d.className = cls;
+  if (css) Object.assign(d.style, css);
+  parent.appendChild(d);
+  return d;
+}
+/* línea de texto en (x, y) = esquina sup-izq, con bamboleo por letra */
+function mkLine(X, parent, text, font, fs, color, x, y) {
+  const el = div(parent, "ln " + font);
+  el.style.fontSize = fs + "px"; el.style.color = color;
+  el.style.left = x + "px"; el.style.top = y + "px";
+  fillChars(el, text);
+  const chars = [];
+  let wi = 0;
+  el.querySelectorAll(".ch").forEach(ch => {
+    const cu = ch.firstChild;
+    if (cu.textContent === " ") { wi++; return; }
+    ch.style.transform = `rotate(${(X.r() - 0.5) * 2 * C.fonts.wobbleDeg}deg) translateY(${(X.r() - 0.5) * 2 * C.fonts.jitterEm}em)`;
+    cu.wi = wi; chars.push(cu);
+  });
+  const { w, h } = dims(text, font, fs);
+  return { el, chars, w, h, x, y, fs, text };
+}
+/* desenfoque direccional: fuerte → nada en `d` segundos (se agrega a un Track de filter) */
+function blurPass(tr, t0, d, axis = "x", fadeIn = false) {
+  const f = n => `url(#mb${axis}${n})`;
+  if (fadeIn) tr.set(t0, "none").set(t0 + d * 0.35, f(1)).set(t0 + d * 0.65, f(2)).set(t0 + d, f(3));
+  else tr.set(t0, f(3)).set(t0 + d * 0.4, f(2)).set(t0 + d * 0.75, f(1)).set(t0 + d, "none");
+}
+const visibleFrom = (X, el, t) => { if (t > 0.001) X.T(el, "visibility", "hidden", true).set(t, "visible"); };
+/* letras que se despliegan hacia arriba desde la base (tecleo de la firma) */
+function flipUp(X, chars, t0, stagger = 0.032, wordRt = null) {
+  chars.forEach((cu, i) => {
+    const t = Math.max(t0 + i * stagger, wordRt ? (wordRt[cu.wi] ?? 0) + (i % 6) * 0.012 : 0);
+    X.T(cu, "transform", "translateY(35%) scaleY(0)").to(t, 0.13, "translateY(0%) scaleY(1.15)", EASE_OUT).to(t + 0.13, 0.08, "translateY(0%) scaleY(1)");
+  });
+}
+/* letras que entran barriendo en arco desde abajo (entrada de "i DRIVE A CAR") */
+function arcIn(X, chars, t0, stagger = 0.028) {
+  chars.forEach((cu, i) => {
+    const t = t0 + i * stagger;
+    X.T(cu, "transform", "translate(40%, 160%) rotate(40deg)").to(t, 0.3, "translate(0%, 0%) rotate(0deg)", EASE_OUT);
+    visibleFrom(X, cu, t);
+  });
+}
+/* entra deslizando desde dx (px) con desenfoque x */
+function slideIn(X, el, t, dx, d = 0.34) {
+  X.T(el, "transform", `translateX(${dx}px)`).to(t, d, "translateX(0px)", EASE_OUT);
+  blurPass(X.T(el, "filter", "none", true), t, d * 0.85, "x");
+  visibleFrom(X, el, t);
+}
+function popIn(X, chars, t0, stagger = 0.03) {
+  chars.forEach((cu, i) => {
+    const t = t0 + i * stagger;
+    X.T(cu, "transform", "scale(0)").to(t, 0.15, "scale(1.25)", EASE_OUT).to(t + 0.15, 0.1, "scale(1)");
+  });
+}
+
+/* trazo de pincel: rulo (loop) o subrayado (swoosh) que se dibuja y se borra */
+const SVGNS = "http://www.w3.org/2000/svg";
+function brush(X, parent, o) {
+  if (X.r() > C.brush.chance && !o.force) return;
+  const r = o.r, R = r * 1.6;
+  const svg = doc.createElementNS(SVGNS, "svg");
+  svg.setAttribute("class", "brush");
+  svg.setAttribute("width", 2 * R); svg.setAttribute("height", 2 * R);
+  svg.setAttribute("viewBox", `0 0 ${2 * R} ${2 * R}`);
+  svg.style.left = (o.cx - R) + "px"; svg.style.top = (o.cy - R) + "px";
+  const g = doc.createElementNS(SVGNS, "g");
+  g.style.transformOrigin = `${R}px ${R}px`;
+  svg.appendChild(g); parent.appendChild(svg);
+  const a0 = o.a0 ?? X.r() * Math.PI * 2, ph = X.r() * 6;
+  const line = (off) => {
+    const pts = [], N = 90;
+    for (let i = 0; i <= N; i++) {
+      const k = i / N;
+      if (o.kind === "swoosh") {
+        const len = o.len;
+        pts.push([R - len / 2 + k * len, R + off - Math.sin(Math.PI * k) * r * 0.25 + k * r * 0.1]);
+      } else {
+        const th = a0 + k * (o.sweep ?? 1.8) * Math.PI;
+        const rr = (r + off) * (1 + 0.08 * Math.sin(3 * th + ph)) * (1 - 0.14 * k);
+        pts.push([R + rr * Math.cos(th), R + rr * Math.sin(th) * (o.squash ?? 0.92)]);
+      }
+    }
+    let L = 0;
+    for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+    return { d: "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L"), L };
+  };
+  const layers = [[0, 0.075, 0], [r * 0.07, 0.035, 0.03], [-r * 0.06, 0.022, 0.06]];
+  for (const [off, wf, delay] of layers) {
+    const { d, L } = line(off);
+    const p = doc.createElementNS(SVGNS, "path");
+    p.setAttribute("d", d);
+    p.style.stroke = C.brush.color; p.style.strokeWidth = Math.max(1.5, r * wf) + "px";
+    /* periodo 3L: el trazo arranca y termina FUERA del path (sin tapón redondo visible) */
+    p.style.strokeDasharray = `${L}px ${2 * L}px`;
+    g.appendChild(p);
+    const t = o.t0 + delay * o.dur;
+    X.T(p, "strokeDashoffset", `${1.2 * L}px`).to(t, o.dur * 0.5, "0px", EASE_OUT).to(t + o.dur * 0.55, o.dur * 0.42, `${-1.05 * L}px`, EASE_IN);
+  }
+  X.T(g, "transform", "rotate(0deg)").to(o.t0, o.dur, `rotate(${o.spin ?? (o.kind === "swoosh" ? 0 : 70)}deg)`);
+}
+
+/* ============================ RECETAS =================================== */
+/* firma: (sc, X) — sc.words: [{ text, rt, first }], X: { root, comp, G, W, H,
+   u, T (crea Track), r, pal, pal2, exitT, dur }. Origen de G = centro de pantalla. */
+const sw = (X, f) => X.W * (X.W < X.H ? Math.min(0.92, f * 1.75) : f);   /* ancho útil (más en vertical) */
+function splitTwo(ws) {
+  if (ws.length < 2) return [ws, []];
+  let best = 1, bd = 1e9;
+  for (let k = 1; k < ws.length; k++) {
+    const a = join(ws.slice(0, k)).length, b = join(ws.slice(k)).length;
+    const d = Math.abs(a - b) + (b < a ? 0.5 : 0);
+    if (d < bd) { bd = d; best = k; }
+  }
+  return [ws.slice(0, best), ws.slice(best)];
+}
+function chunk(ws, maxChars, maxLines) {
+  const out = [[]];
+  for (const w of ws) {
+    const cur = out[out.length - 1];
+    if (cur.length && join(cur).length + 1 + w.text.length > maxChars && out.length < maxLines) out.push([w]);
+    else cur.push(w);
+  }
+  return out.filter(l => l.length);
+}
+
+const FITS = {
+  arc:      sc => sc.words.length >= 3,
+  slide:    sc => sc.words.length >= 2,
+  type:     sc => sc.words.length >= 2,
+  tilt:     sc => sc.words.length >= 3 && sc.words.length <= 9,
+  pop:      () => true,
+  pinwheel: sc => sc.words.length >= 4,
+  bounce:   sc => sc.words.length >= 2 && sc.words.length <= 9,
+  split:    sc => sc.words.length >= 2
+};
+const R = {};
+
+R.arc = (sc, X) => {
+  const { W, H, G, pal } = X, ws = sc.words;
+  let k = 1;
+  while (k < ws.length - 1 && k < 4 && join(ws.slice(0, k + 1)).length <= 16) k++;
+  k = Math.max(2, Math.min(k, ws.length - 1));
+  const L1w = ws.slice(0, k), Rw = ws.slice(k);
+  const rl = Rw.length > 4 ? chunk(Rw, 10, 4) : Rw.map(w => [w]);
+  const t1 = L1w[0].rt;
+  const txt1 = disp(L1w, "caps");
+  let fs1 = fit(txt1, "caps", sw(X, 0.5), 0.15 * H);
+  const rInfo = rl.map(l => {
+    const t = disp(l, "caps"), strong = l.some(isContent);
+    let fs = Math.min(fit(t, "caps", sw(X, 0.3), 0.19 * H), fs1 * 1.4);
+    if (!strong) fs = Math.min(fs * 0.62, fs1 * 0.8);
+    return { l, t, fs, strong };
+  });
+  const gap = fs1 * 0.08;
+  const lay = s => {
+    const d1 = dims(txt1, "caps", fs1 * s);
+    const rs = rInfo.map(q => ({ ...q, ...dims(q.t, "caps", q.fs * s), fsS: q.fs * s }));
+    const Ws = d1.h + gap * s + Math.max(...rs.map(q => q.w)), Hs = Math.max(d1.w, rs.reduce((a, q) => a + q.h * 0.92, 0));
+    return { d1, rs, Ws, Hs };
+  };
+  let L = lay(1);
+  const s = Math.min(1, 0.88 * W / L.Ws, 0.84 * H / L.Hs);
+  L = lay(s); fs1 *= s;
+  const { d1, rs, Ws, Hs } = L;
+  const x1 = -d1.w / 2, y1 = -d1.h / 2;
+  const L1 = mkLine(X, G, txt1, "caps", fs1, pal.ink, x1, y1);
+  L1.el.style.transformOrigin = "0 0";
+  arcIn(X, L1.chars, t1);
+  const tr = X.T(L1.el, "transform", "translate(0px, 0px) rotate(8deg)").to(t1, 0.5, "translate(0px, 0px) rotate(0deg)", EASE_OUT);
+  const fl = X.T(L1.el, "filter", "none", true);
+  blurPass(fl, t1, 0.3, "x");
+  const cx0 = -Ws / 2, yb = Hs / 2;
+  const tp = Math.max(t1 + 0.55, Rw[0].rt - 0.3);
+  tr.to(tp, 0.32, `translate(${cx0 - x1}px, ${yb - y1}px) rotate(-90deg)`, EASE_IO);
+  blurPass(fl, tp + 0.02, 0.28, "y");
+  let y = yb, lastT = tp + 0.3;
+  const rx = cx0 + d1.h + gap * s;
+  rs.forEach(q => {
+    y -= q.h * 0.92;
+    const ln = mkLine(X, G, q.t, "caps", q.fsS, q.strong ? pal.accent : pal.ink, rx, y);
+    lastT = Math.max(lastT + 0.12, q.l[0].rt, tp + 0.3);
+    flipUp(X, ln.chars, lastT, 0.035);
+  });
+  const t3 = lastT + 0.5;
+  if (X.exitT - t3 > 0.55) {
+    const s3 = clamp(Math.min(0.88 * W / Hs, 0.84 * H / Ws), 0.6, 1.3);
+    X.T(G, "transform", "rotate(0deg) scale(1)").to(t3, 0.42, `rotate(90deg) scale(${s3})`, EASE_IO);
+  }
+  const maxRw = Math.max(...rs.map(q => q.w));
+  brush(X, G, { cx: rx + maxRw * 0.85, cy: yb - Hs * 0.35, r: Math.min(W, H) * 0.12, t0: lastT + 0.15, dur: 1.5 });
+};
+
+R.slide = (sc, X) => {
+  const { W, H, G, pal } = X, ws = sc.words, n = ws.length;
+  const P1 = n <= 3 ? ws : ws.slice(0, Math.min(4, Math.ceil(n / 2))), P2 = ws.slice(P1.length);
+  const [a, b] = splitTwo(P1), [c, d] = splitTwo(P2);
+  const ta = disp(a, "caps"), tb = b.length ? disp(b, "caps") : "";
+  let fs = Math.min(fit(ta, "caps", sw(X, 0.5), 0.17 * H), tb ? fit(tb, "caps", sw(X, 0.5), 0.17 * H) : 1e9);
+  const tc = c.length ? disp(c, "caps") : "", td = d.length ? disp(d, "caps") : "";
+  let fs2 = Math.min(tc ? fit(tc, "caps", sw(X, 0.44), 0.16 * H) : 1e9, td ? fit(td, "caps", sw(X, 0.44), 0.16 * H) : 1e9, fs * 1.1);
+  const gap = fs * 0.1;
+  const lay = s => {
+    const A = dims(ta, "caps", fs * s), B = tb ? dims(tb, "caps", fs * s) : { w: 0, h: 0 };
+    const Cc = tc ? dims(tc, "caps", fs2 * s) : { w: 0, h: 0 }, Dd = td ? dims(td, "caps", fs2 * s) : { w: 0, h: 0 };
+    const bw = Math.max(A.w, B.w), bh = A.h * 0.92 + B.h * 0.92;
+    const Ws = P2.length ? bh + gap * s + Math.max(Cc.w, Dd.w) : bw, Hs = P2.length ? Math.max(bw, Cc.h + Dd.h) : bh;
+    return { A, B, Cc, Dd, bw, bh, Ws, Hs };
+  };
+  let L = lay(1);
+  const s = Math.min(1, 0.88 * W / L.Ws, 0.84 * H / L.Hs, P2.length ? 1 : 0.84 * H / L.bh);
+  L = lay(s); fs *= s; fs2 *= s;
+  const { A, B, Cc, Dd, bw, bh, Ws, Hs } = L;
+  const bx = -bw / 2, by = -bh / 2;
+  const blk = div(G, "blk", { left: bx + "px", top: by + "px", width: bw + "px", height: bh + "px", transformOrigin: "0 0" });
+  const t0 = a[0].rt;
+  const la = mkLine(X, blk, ta, "caps", fs, pal.accent, (bw - A.w) / 2, 0);
+  slideIn(X, la.el, t0, 0.75 * W);
+  if (tb) {
+    const lb = mkLine(X, blk, tb, "caps", fs, pal.ink, (bw - B.w) / 2, A.h * 0.92);
+    slideIn(X, lb.el, Math.max(t0 + 0.05, b[0].rt - 0.25), -0.75 * W);
+  }
+  if (!P2.length) {
+    X.T(G, "transform", "scale(1)").to(t0 + 0.4, Math.max(0.5, X.exitT - t0 - 0.4), "scale(1.08)");
+    brush(X, G, { cx: bw * 0.35, cy: 0, r: Math.max(bw, bh) * 0.5, t0: t0 + 0.5, dur: 1.4 });
+    return;
+  }
+  const cx0 = -Ws / 2, colTop = -Hs / 2 + (Hs - bw) / 2;
+  const tp = Math.max(t0 + 0.6, c[0].rt - 0.3);
+  const btr = X.T(blk, "transform", "translate(0px, 0px) rotate(0deg)");
+  btr.to(tp, 0.32, `translate(${cx0 - bx}px, ${colTop + bw - by}px) rotate(-90deg)`, EASE_IO);
+  blurPass(X.T(blk, "filter", "none", true), tp + 0.02, 0.28, "y");
+  const rx = cx0 + bh + gap, rTop = -Hs / 2 + (Hs - Cc.h - Dd.h) / 2;
+  const tc0 = Math.max(tp + 0.26, c[0].rt);
+  slideIn(X, mkLine(X, G, tc, "caps", fs2, pal.ink, rx, rTop).el, tc0, 0.6 * W);
+  if (td) {
+    const td0 = Math.max(tc0 + 0.15, d[0].rt);
+    slideIn(X, mkLine(X, G, td, "caps", fs2, pal.accent, rx, rTop + Cc.h * 0.95).el, td0, 0.45 * W, 0.28);
+    brush(X, G, { kind: "swoosh", cx: rx + Dd.w * 0.5, cy: rTop + Cc.h * 0.95 + Dd.h * 1.02, r: Dd.h * 0.5, len: Dd.w * 1.15, t0: td0 + 0.12, dur: 0.75, force: true });
+    brush(X, G, { cx: rx + Math.max(Cc.w, Dd.w) * 0.55, cy: rTop + (Cc.h + Dd.h) / 2, r: Math.max(Cc.w, Dd.h * 2) * 0.62, t0: td0 + 0.8, dur: 1.4 });
+  }
+};
+
+R.type = (sc, X) => {
+  const { W, H, G, pal } = X, ws = sc.words, n = ws.length;
+  let k2 = n >= 3 && !isContent(ws[n - 2]) ? 2 : 1;
+  if (n === 2) k2 = 1;
+  const L2w = ws.slice(n - k2), L1w = ws.slice(0, n - k2);
+  const L1lines = join(L1w).length > 24 ? splitTwo(L1w) : [L1w];
+  let fs1 = Math.min(...L1lines.map(l => fit(disp(l, "caps"), "caps", sw(X, 0.86), 0.13 * H)));
+  const t2 = disp(L2w, "caps");
+  let fs2 = Math.min(fs1 * 1.25, fit(t2, "caps", sw(X, 0.62), 0.17 * H));
+  const d2 = dims(t2, "caps", fs2);
+  const hs = L1lines.map(l => dims(disp(l, "caps"), "caps", fs1));
+  const total = hs.reduce((a, d) => a + d.h * 0.95, 0) + d2.h * 0.9;
+  let y = -total / 2;
+  const rts = ws.map(w => w.rt);
+  let wOff = 0, endX = 0, endY = 0;
+  L1lines.forEach((l, i) => {
+    const ln = mkLine(X, G, disp(l, "caps"), "caps", fs1, pal.ink, -hs[i].w / 2, y);
+    flipUp(X, ln.chars, l[0].rt, 0.03, rts.slice(wOff));
+    wOff += l.length; endX = hs[i].w / 2; endY = y + hs[i].h / 2;
+    y += hs[i].h * 0.95;
+  });
+  const l2 = mkLine(X, G, t2, "caps", fs2, pal.accent, -d2.w / 2, y - fs2 * 0.06);
+  popIn(X, l2.chars, L2w[0].rt, 0.035);
+  brush(X, G, { cx: endX * 0.7, cy: endY, r: fs1 * 1.1, t0: L1w[0].rt + 0.2, dur: clamp(L2w[0].rt - L1w[0].rt + 0.3, 0.9, 2) });
+  X.T(G, "transform", "scale(1)").to(L1w[0].rt, Math.max(0.5, X.exitT - L1w[0].rt), "scale(1.05)");
+};
+
+R.tilt = (sc, X) => {
+  const { W, H, G, pal } = X, ws = sc.words;
+  const lines = [];
+  for (let i = 0; i < ws.length; i++) {
+    const w = ws[i], nx = ws[i + 1];
+    /* "i got", "to this": dos funcionales juntas; la primera palabra va sola y grande */
+    if (i > 0 && !isContent(w) && nx && !isContent(nx) && w.text.length + 1 + nx.text.length <= 8) { lines.push([w, nx]); i++; }
+    else lines.push([w]);
+  }
+  const Wc = sw(X, 0.42);
+  const info = lines.map((l, i) => {
+    const t = disp(l, "low");
+    let fs = fit(t, "low", Wc, 0.21 * H);
+    /* la base del bloque ("But") va grande aunque sea funcional */
+    if (i > 0 && !l.some(isContent)) fs *= t.length <= 3 ? 0.5 : 0.78;
+    return { l, t, fs, ...dims(t, "low", fs) };
+  });
+  G.style.transform = `rotate(${-12 + (X.r() - 0.5) * 4}deg) skewX(-12deg)`;
+  const cam = div(G, "grp");
+  const camTr = X.T(cam, "transform", "translateY(0px)");
+  let S = 0, tPrev = -1;
+  info.forEach((q, i) => {
+    S += q.h * 0.8;
+    const ln = mkLine(X, cam, q.t, "low", q.fs, pal.ink, -q.w / 2 + (X.r() - 0.5) * q.fs * 0.3, -S);
+    ln.el.style.transformOrigin = "50% 100%";
+    const t = Math.max(q.l[0].rt, tPrev + 0.12);
+    X.T(ln.el, "transform", "scaleY(0)").to(t, 0.16, "scaleY(1.15)", EASE_OUT).to(t + 0.16, 0.08, "scaleY(1)");
+    const ty = S > 0.66 * H ? S - 0.36 * H : S / 2;
+    camTr.to(Math.max(0, t - 0.05), 0.35, `translateY(${ty}px)`, EASE_IO);
+    tPrev = t;
+  });
+  X.exitDir = "right";
+};
+
+R.pop = (sc, X) => {
+  const { W, H, G, pal } = X, ws = sc.words;
+  const units = [];
+  for (let i = 0; i < ws.length; i++) {
+    const w = ws[i], nx = ws[i + 1];
+    if (!isContent(w) && nx && w.text.length + 1 + nx.text.length <= 9) { units.push([w, nx]); i++; }
+    else units.push([w]);
+  }
+  units.forEach((u, i) => {
+    const t = disp(u, "caps"), fs = fit(t, "caps", sw(X, 0.72), 0.42 * H), d = dims(t, "caps", fs);
+    const box = div(G, "blk", { left: -d.w / 2 + "px", top: -d.h / 2 + "px", width: d.w + "px", height: d.h + "px" });
+    mkLine(X, box, t, "caps", fs, u.some(isContent) && i % 2 === 0 ? pal.accent : pal.ink, 0, 0);
+    const rot = (X.r() - 0.5) * 14, t0 = u[0].rt, nxt = units[i + 1];
+    const tr = X.T(box, "transform", "translateY(0px) scale(0) rotate(-14deg)").to(t0, 0.18, `translateY(0px) scale(1.12) rotate(${rot}deg)`, EASE_OUT).to(t0 + 0.18, 0.1, `translateY(0px) scale(1) rotate(${rot}deg)`);
+    if (nxt) {
+      const te = Math.max(t0 + 0.3, nxt[0].rt - 0.13);
+      tr.to(te, 0.14, `translateY(${-0.95 * H}px) scale(0.55) rotate(${rot}deg)`, EASE_IN);
+      blurPass(X.T(box, "filter", "none", true), te, 0.14, "y", true);
+    }
+    if (i % 3 === 1) brush(X, G, { cx: 0, cy: 0, r: Math.max(d.w, d.h) * 0.62, t0: t0 + 0.05, dur: 1.1 });
+  });
+};
+
+R.pinwheel = (sc, X) => {
+  const { W, H, G, pal } = X;
+  let chunks = chunk(sc.words, 10, 99).flatMap(l => l.length > 2 ? [l.slice(0, 2), l.slice(2)] : [l]);
+  /* una funcional suelta ("i", "the") se pega al trozo siguiente */
+  for (let i = chunks.length - 2; i >= 0; i--)
+    if (chunks[i].length === 1 && !isContent(chunks[i][0])) chunks.splice(i, 2, [...chunks[i], ...chunks[i + 1]]);
+  while (chunks.length > 4) {   /* fundir los trozos más cortos */
+    let bi = 0, bl = 1e9;
+    for (let i = 0; i < chunks.length - 1; i++) { const l = join(chunks[i]).length + join(chunks[i + 1]).length; if (l < bl) { bl = l; bi = i; } }
+    chunks.splice(bi, 2, [...chunks[bi], ...chunks[bi + 1]]);
+  }
+  const fs = Math.min(...chunks.map(c => fit(disp(c, "caps"), "caps", sw(X, 0.6), 0.2 * H)));
+  const cam = div(G, "grp");
+  const camTr = X.T(cam, "transform", "translate(0px, 0px) scale(1)");
+  const items = [];
+  /* cada trozo = rotate(Θ) translate(x0, y0): girar Θ es un giro RÍGIDO del
+     bloque entero alrededor del origen (nada se encima a mitad de giro) */
+  const corners = it => {
+    const a = it.A * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+    return [[0, 0], [it.w, 0], [it.w, it.h], [0, it.h]].map(([x, y]) => [(it.tx + x) * c - (it.ty + y) * s, (it.tx + x) * s + (it.ty + y) * c]);
+  };
+  const bbox = () => {
+    const ps = items.flatMap(corners);
+    const xs = ps.map(p => p[0]), ys = ps.map(p => p[1]);
+    return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
+  };
+  const fitCam = t => {
+    const b = bbox(), bw = b.x1 - b.x0, bh = b.y1 - b.y0;
+    const s = Math.min(1.35, 0.84 * W / bw, 0.8 * H / bh), cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2;
+    camTr.to(t, 0.36, `translate(${-cx * s}px, ${-cy * s}px) scale(${s})`, EASE_IO);
+  };
+  let tPrev = 0;
+  chunks.forEach((c, k) => {
+    const txt = disp(c, "caps"), strong = c.some(isContent);
+    const f = strong ? fs : fs * 0.75, d = dims(txt, "caps", f);
+    let tr0 = c[0].rt;
+    if (k > 0) {
+      const tp = Math.max(tPrev + 0.35, c[0].rt - 0.3);
+      /* giros alternados −90 / +90: los ángulos quedan en {−90, 0, 90} y nada
+         queda nunca al revés */
+      const ccw = k % 2 === 1;
+      for (const it of items) {
+        it.A += ccw ? -90 : 90;
+        it.tr.to(tp, 0.32, `rotate(${it.A}deg) translate(${it.tx}px, ${it.ty}px)`, EASE_IO);
+      }
+      tr0 = Math.max(c[0].rt, tp + 0.3);
+    }
+    let tx = -d.w / 2, ty = -d.h / 2;
+    if (items.length) { const b = bbox(); tx = b.x1 + fs * 0.08; ty = b.y1 - d.h * 0.92; }
+    const ln = mkLine(X, cam, txt, "caps", f, k % 2 ? pal.accent : pal.ink, 0, 0);
+    ln.el.style.transformOrigin = "0 0";
+    const it = { tx, ty, A: 0, w: d.w, h: d.h * 0.92 };
+    it.tr = X.T(ln.el, "transform", `rotate(0deg) translate(${tx}px, ${ty}px)`);
+    items.push(it);
+    flipUp(X, ln.chars, tr0, 0.03);
+    fitCam(Math.max(0, k ? tr0 - 0.32 : 0));
+    tPrev = tr0;
+  });
+  brush(X, G, { cx: W * 0.18, cy: H * 0.12, r: Math.min(W, H) * 0.14, t0: tPrev + 0.2, dur: 1.3 });
+};
+
+R.bounce = (sc, X) => {
+  const { W, H, G, pal } = X;
+  const lines = chunk(sc.words, 14, 3);
+  const fs = Math.min(...lines.map(l => fit(disp(l, "caps"), "caps", sw(X, 0.8), 0.7 * H / lines.length)));
+  const sp = dims("A A", "caps", fs).w - 2 * dims("A", "caps", fs).w;
+  const lh = dims("A", "caps", fs).h;
+  let y = -lines.length * lh / 2, ci = 0;
+  for (const l of lines) {
+    const ww = l.map(w => dims(disp([w], "caps"), "caps", fs).w);
+    let x = -(ww.reduce((a, b) => a + b, 0) + sp * (l.length - 1)) / 2;
+    l.forEach((w, i) => {
+      const box = div(G, "blk", { left: x + "px", top: y + "px", width: ww[i] + "px", height: lh + "px", transformOrigin: "50% 100%" });
+      mkLine(X, box, disp([w], "caps"), "caps", fs, isContent(w) && ci++ % 2 === 0 ? pal.accent : pal.ink, 0, 0);
+      const t = w.rt;
+      X.T(box, "transform", `translateY(${-1.1 * H}px) scale(1, 1)`)
+        .to(t, 0.22, "translateY(0px) scale(1.12, 0.8)", "cubic-bezier(.5,0,1,.6)")
+        .to(t + 0.22, 0.1, `translateY(${-lh * 0.12}px) scale(0.96, 1.06)`, EASE_OUT)
+        .to(t + 0.32, 0.1, "translateY(0px) scale(1, 1)", EASE_IN);
+      blurPass(X.T(box, "filter", "none", true), t, 0.2, "y");
+      x += ww[i] + sp;
+    });
+    y += lh;
+  }
+  brush(X, G, { kind: "swoosh", cx: 0, cy: y + lh * 0.05, r: lh * 0.5, len: sw(X, 0.5), t0: sc.words[sc.words.length - 1].rt + 0.3, dur: 0.9 });
+};
+
+R.split = (sc, X) => {
+  const { W, H, G, pal, pal2, root } = X;
+  const [a, b] = splitTwo(sc.words);
+  const panel = div(root, "panel", { background: pal2.bg });
+  root.insertBefore(panel, X.comp);
+  const tb = b[0].rt;
+  X.T(panel, "clipPath", "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)")
+    .to(Math.max(0.05, tb - 0.25), 0.34, "polygon(56% 0%, 100% 0%, 100% 100%, 40% 100%)", EASE_OUT);
+  const ta = disp(a, "caps"), tbt = disp(b, "caps");
+  const fa = fit(ta, "caps", sw(X, 0.46), 0.2 * H), fb = fit(tbt, "caps", sw(X, 0.44), 0.2 * H);
+  const da = dims(ta, "caps", fa), db = dims(tbt, "caps", fb);
+  const la = mkLine(X, G, ta, "caps", fa, pal.ink, -0.45 * W, -0.32 * H);
+  slideIn(X, la.el, a[0].rt, -0.6 * W);
+  const lb = mkLine(X, G, tbt, "caps", fb, pal2.accent, 0.45 * W - db.w, 0.3 * H - db.h);
+  slideIn(X, lb.el, tb, 0.6 * W);
+  brush(X, G, { kind: "swoosh", cx: 0.45 * W - db.w / 2, cy: 0.3 * H + db.h * 0.1, r: db.h * 0.5, len: db.w * 1.1, t0: tb + 0.2, dur: 0.8 });
+  brush(X, G, { cx: -0.45 * W + da.w * 0.9, cy: -0.32 * H + da.h * 0.5, r: da.h * 1.1, t0: a[0].rt + 0.3, dur: 1.2 });
+};
+
+/* tarjeta de intro / cierre: 1ª línea grande (acento), 2ª mediana, 3ª chica */
+R.card = (sc, X) => {
+  const { W, H, G, pal } = X, ws = sc.words;
+  const specs = [[0.62, 0.3, pal.accent], [0.5, 0.15, pal.ink], [0.56, 0.065, pal.ink]];
+  const items = ws.slice(0, 3).map((w, i) => {
+    const t = capsText(w.text), [fw, fh, col] = specs[i];
+    const fs = fit(t, "caps", sw(X, fw), fh * H);
+    return { word: w, t, fs, col, ...dims(t, "caps", fs) };
+  });
+  const total = items.reduce((a, q) => a + q.h * 0.95, 0);
+  let y = -total / 2;
+  items.forEach((q, i) => {
+    const ln = mkLine(X, G, q.t, "caps", q.fs, q.col, -q.w / 2, y);
+    if (i === 0) popIn(X, ln.chars, q.word.rt, 0.04);
+    else slideIn(X, ln.el, q.word.rt, (i % 2 ? -0.7 : 0.7) * W);
+    if (i === 0) brush(X, G, { cx: 0, cy: y + q.h / 2, r: Math.max(q.w, q.h * 2) * 0.62, t0: q.word.rt + 0.3, dur: 1.6, force: true });
+    y += q.h * 0.95;
+  });
+  X.T(G, "transform", "scale(1)").to(0.3, Math.max(0.5, X.exitT - 0.3), "scale(1.06)");
+};
+
+/* ============================ ESCENAS =================================== */
+function buildScene(sc, W, H) {
+  const r = mulberry32((C.seed * 7919 + sc.idx * 104729) >>> 0);
+  const pal = SCH[sc.scheme] || SCH.red, pal2 = SCH[sc.scheme2] || SCH.yellow;
+  const root = doc.createElement("div");
+  root.className = "scene";
+  root.style.width = W + "px"; root.style.height = H + "px"; root.style.background = pal.bg;
+  const comp = div(root, "comp", { left: W / 2 + "px", top: H / 2 + "px" });
+  const G = div(comp, "grp");
+  const tracks = [];
+  const X = {
+    root, comp, G, W, H, r, pal, pal2, dur: sc.dur, exitT: sc.dur - C.timing.exitSec,
+    T: (el, prop, init, discrete) => { const t = new Track(el, prop, init, discrete); tracks.push(t); return t; }
+  };
+  try { R[sc.layout](sc, X); }
+  catch (e) { console.warn("[stylish] receta falló", sc.layout, e); }
+  /* salida: el bloque entero se va con desenfoque */
+  const dir = X.exitDir || sc.exit || "down", ex = X.exitT, ed = C.timing.exitSec;
+  const outT = { down: `translate(0px, ${1.25 * H}px)`, up: `translate(0px, ${-1.25 * H}px)`, left: `translate(${-1.3 * W}px, 0px)`, right: `translate(${1.3 * W}px, 0px)` }[dir];
+  X.T(comp, "transform", "translate(0px, 0px) scale(1)").to(0, Math.max(0.01, ex), "translate(0px, 0px) scale(1.03)")
+    .to(ex, ed, `${outT} scale(1.03)`, EASE_IN);
+  blurPass(X.T(comp, "filter", "none", true), ex, ed, dir === "down" || dir === "up" ? "y" : "x", true);
+  /* entrada del fondo */
+  const tt = C.timing.transSec ?? 0.42;
+  if (sc.trans === "circle") {
+    const px = 30 + r() * 40, py = 30 + r() * 40;
+    X.T(root, "clipPath", `circle(0% at ${px}% ${py}%)`).to(0, tt, `circle(150% at ${px}% ${py}%)`, EASE_IO);
+    brush(X, root, { cx: W * px / 100, cy: H * py / 100, r: Math.min(W, H) * 0.2, t0: 0, dur: 0.9, force: true });
+  } else if (sc.trans === "wipe") {
+    X.T(root, "clipPath", "polygon(0% 0%, 0% 0%, -30% 100%, -30% 100%)").to(0, tt, "polygon(0% 0%, 130% 0%, 100% 100%, -30% 100%)", EASE_IO);
+  } else if (sc.trans === "push") {
+    X.T(root, "transform", `translateX(${W}px)`).to(0, tt, "translateX(0px)", EASE_OUT);
+  } else if (sc.idx > 0 && r() < 0.7) {
+    /* corte seco con un trazo de pincel que cruza el corte (firma) */
+    brush(X, root, { cx: W * (0.3 + r() * 0.4), cy: H * (0.3 + r() * 0.4), r: Math.min(W, H) * 0.14, t0: 0, dur: 0.8, force: true });
+  }
+  for (const t of tracks) { t.compile(); t.seek(0); }
+  return { root, seek: t => { for (const tr of tracks) tr.seek(t); }, dispose: () => {} };
+}
+
+/* ---- letra → palabras ---- */
+const cleanWord = s => s.trim().replace(/[.,;:!?¡¿"“”()\[\]]/g, "").replace(/[`´]/g, "'");
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const segs = [];
+    for (const seg of j.segments) {
+      const ws = [];
+      for (const w of seg.words) {
+        const text = cleanWord(w.word);
+        if (!text) continue;
+        const end = w.end ?? w.start + 0.3;
+        /* Whisper estira la 1ª palabra tras un silencio: si dura de más, la
+           palabra "empieza" poco antes de su final (como la canta el video) */
+        const t = end - w.start > C.timing.longWordSec ? end - C.timing.longWordLead : w.start;
+        ws.push({ text, t, end });
+      }
+      if (ws.length) segs.push(ws);
+    }
+    if (!segs.length) throw new Error("lyrics.json sin palabras");
+    return { segs, meta: j.metadata || {} };
+  } catch (e) {
+    console.warn("[stylish] No se pudo cargar", C.lyricsUrl, "— sirve el HTML por HTTP, no por file://.", e);
+    return { segs: [], meta: {} };
+  }
+}
+
+/* segmentos de Whisper → frases de 3–10 palabras y ≤ maxSec */
+function phrases(segs) {
+  const P = C.scenes, out = [];
+  const dur = ws => ws[ws.length - 1].end - ws[0].t;
+  const queue = segs.map(s => s.slice());
+  while (queue.length) {
+    const ws = queue.shift();
+    if (ws.length > P.maxWords || (dur(ws) > P.maxSec && ws.length >= 4)) {
+      let bi = Math.floor(ws.length / 2), bg = -1;
+      for (let i = Math.ceil(ws.length * 0.3); i <= Math.floor(ws.length * 0.7); i++) {
+        const g = ws[i].t - ws[i - 1].end;
+        if (g > bg) { bg = g; bi = i; }
+      }
+      queue.unshift(ws.slice(0, bi), ws.slice(bi));
+      continue;
+    }
+    out.push(ws);
+  }
+  for (let i = 0; i < out.length - 1; i++) {
+    const a = out[i], b = out[i + 1];
+    if ((a.length < P.minWords || dur(a) < P.minSec) && a.length + b.length <= P.maxWords &&
+        b[b.length - 1].end - a[0].t <= P.maxSec * 1.2 && b[0].t - a[a.length - 1].end < 1.2) {
+      out.splice(i, 2, [...a, ...b]); i--;
+    }
+  }
+  return out;
+}
+
+function buildTimeline(segs, dur) {
+  const r = mulberry32(C.seed * 977 + 3), Tm = C.timing, P = C.scenes;
+  const ph = phrases(segs);
+  const list = [];
+  const mk = (kind, t0, t1, ws, extra = {}) => ({
+    kind, t0, t1, words: ws.map((w, i) => ({ text: w.text, rt: Math.max(0, (w.t ?? w.rt) - t0 - (w.t != null ? Tm.leadSec : 0)), first: i === 0 })), ...extra
+  });
+  const syn = (texts, t0) => texts.filter(Boolean).map((s, i) => ({ text: s, t: t0 + 0.2 + i * 0.55 + Tm.leadSec }));
+
+  /* intro: artista / título si sobra aire antes de la primera palabra */
+  const first = Math.max(0, ph[0][0].t - Tm.leadSec);
+  let startAt = 0;
+  if (first >= 1.4) {
+    const texts = [C.intro.artist, C.intro.title].filter(Boolean);
+    if (texts.length) { list.push(mk("intro", 0, first, syn([C.intro.title || C.intro.artist, C.intro.title ? C.intro.artist : ""], 0), { layout: "card" })); startAt = first; }
+  }
+  ph.forEach((ws, i) => {
+    let t0 = i === 0 && !list.length ? 0 : Math.max(0, ws[0].t - Tm.leadSec);
+    const nx = ph[i + 1];
+    let t1 = nx ? Math.max(t0 + 0.5, nx[0].t - Tm.leadSec) : dur;
+    const lastEnd = ws[ws.length - 1].end;
+    let gapAfter = null;
+    if (nx && t1 - lastEnd > Tm.interludeSec) { gapAfter = [lastEnd + Tm.holdSec, t1]; t1 = lastEnd + Tm.holdSec; }
+    let outro = null;
+    if (!nx && C.outro.enabled && dur - (lastEnd + Tm.holdSec) >= 1.8) { outro = [lastEnd + Tm.holdSec, dur]; t1 = outro[0]; }
+    list.push(mk("lyric", t0, t1, ws));
+    if (gapAfter) {
+      /* interludio instrumental: tramos de ~2.2 s con ecos (título / palabras
+         fuertes de la frase), alternando pop y slide para no quedar quieto */
+      const heroes = ws.filter(isContent).sort((a, b) => b.text.length - a.text.length).map(w => w.text);
+      const pool = [C.intro.title, ...heroes, C.intro.artist].filter(Boolean);
+      if (!pool.length) pool.push(ws[ws.length - 1].text);
+      const [g0, g1] = gapAfter, k = Math.max(1, Math.round((g1 - g0) / 2.2));
+      for (let j = 0; j < k; j++) {
+        const a = g0 + (g1 - g0) * j / k, b = g0 + (g1 - g0) * (j + 1) / k;
+        const texts = j % 2 && pool.length > 1 ? [pool[j % pool.length], pool[(j + 1) % pool.length]] : [pool[j % pool.length]];
+        list.push(mk("interlude", a, b, syn(texts, a), { layout: texts.length > 1 ? "slide" : "pop" }));
+      }
+    }
+    if (outro) list.push(mk("outro", outro[0], outro[1], syn([C.outro.title, C.outro.sub, C.outro.feats], outro[0]), { layout: "card" }));
+  });
+
+  /* recetas, colores, transiciones y salidas */
+  const recent = [];
+  const sig = P.signature || [], order = C.palette.order || [], cyc = (C.palette.cycle || Object.keys(SCH)).filter(k => SCH[k]);
+  let li = 0, prevScheme = "";
+  list.forEach((sc, i) => {
+    sc.idx = i; sc.dur = sc.t1 - sc.t0; sc.last = i === list.length - 1;
+    const replica = li < sig.length;
+    if (sc.kind === "lyric") {
+      let lay = replica ? sig[li] : null;
+      if (!lay || !FITS[lay] || !FITS[lay](sc) || !(C.layouts[lay]?.weight > 0 || replica)) {
+        const cands = Object.entries(C.layouts).filter(([k, v]) => v.weight > 0 && FITS[k] && FITS[k](sc) && !recent.includes(k));
+        const pool = cands.length ? cands : [["pop", { weight: 1 }]];
+        let x = r() * pool.reduce((a, [, v]) => a + v.weight, 0);
+        lay = pool[0][0];
+        for (const [k, v] of pool) { x -= v.weight; if (x <= 0) { lay = k; break; } }
+      }
+      sc.layout = lay; li++;
+      recent.push(lay); if (recent.length > P.cooldown) recent.shift();
+    }
+    if (i < order.length && SCH[order[i]]) sc.scheme = order[i];
+    else { const opts = cyc.filter(k => k !== prevScheme); sc.scheme = opts[Math.floor(r() * opts.length)] || "red"; }
+    const o2 = cyc.filter(k => k !== sc.scheme);
+    sc.scheme2 = o2[Math.floor(r() * o2.length)] || "yellow";
+    prevScheme = sc.scheme;
+    if (i === 0 || i < sig.length) sc.trans = C.transitions.signature;
+    else {
+      const w = Object.entries(C.transitions.weights).filter(([, v]) => v > 0);
+      let x = r() * w.reduce((a, [, v]) => a + v, 0);
+      sc.trans = w[0][0];
+      for (const [k, v] of w) { x -= v; if (x <= 0) { sc.trans = k; break; } }
+    }
+    sc.exit = i < sig.length ? "down" : ["down", "down", "left", "right", "up"][Math.floor(r() * 5)];
+  });
+  return list;
+}
+
+/* ============================ RELOJ + LOOP ============================== */
+let rafT0 = null, rafNow = 0, started = false, forced = FROZEN;
+const clock = () => forced != null ? forced
+  : (!audio.paused && audio.currentTime > 0.05) ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+
+async function begin() {
+  if (started || FROZEN != null) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+let scenes = [], curIdx = -1, cur = null, nextBuilt = null;
+function sceneAt(t) {
+  let lo = 0, hi = scenes.length - 1, ans = -1;
+  while (lo <= hi) { const m = (lo + hi) >> 1; if (scenes[m].t0 <= t) { ans = m; lo = m + 1; } else hi = m - 1; }
+  return ans;
+}
+function mount(i) {
+  if (cur) { cur.dispose(); cur.root.remove(); }
+  cur = (nextBuilt && nextBuilt.i === i) ? nextBuilt.b : buildScene(scenes[i], vw, vh);
+  nextBuilt = null;
+  /* bajo la escena nueva queda el color de la anterior (transiciones círculo/barrido/empuje) */
+  stage.style.background = i > 0 ? (SCH[scenes[i - 1].scheme] || SCH.red).bg : "transparent";
+  stage.appendChild(cur.root);
+  curIdx = i;
+  if (i + 1 < scenes.length) {
+    const j = i + 1;
+    setTimeout(() => { if (curIdx === i && !nextBuilt) nextBuilt = { i: j, b: buildScene(scenes[j], vw, vh) }; }, 0);
+  }
+}
+function render(t) {
+  const i = sceneAt(t);
+  if (i >= 0 && scenes[i].t1 > t) {
+    if (i !== curIdx) mount(i);
+    cur.seek(t - scenes[i].t0);
+  } else if (cur && (i < 0 || t >= scenes[i].t1)) {
+    cur.seek(scenes[curIdx].dur);
+  }
+  if (DEBUG && i >= 0) {
+    const s = scenes[i];
+    hud.textContent = `t ${t.toFixed(2)} · #${i} ${s.kind} · ${s.layout} · ${s.scheme} · ${s.trans} · "${s.words.map(w => w.text).join(" ")}"`;
+  }
+}
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  render(clock());
+  if (FROZEN == null) requestAnimationFrame(frame);
+}
+
+/* ---- arranque ---- */
+if (DEBUG) hud.style.display = "block";
+if (QS.get("headless") === "1") doc.body.classList.add("headless");
+audio.src = encodeURI(C.audio.src);
+const fontsReady = Promise.race([
+  Promise.all([doc.fonts.load("100px 'Lilita One'"), doc.fonts.load("800 100px Sniglet")]).then(() => doc.fonts.ready),
+  new Promise(res => setTimeout(res, 3000))
+]);
+const durReady = new Promise(res => {
+  if (isFinite(audio.duration) && audio.duration > 0) return res(audio.duration);
+  audio.addEventListener("loadedmetadata", () => res(audio.duration), { once: true });
+  setTimeout(() => res(NaN), 2500);
+});
+if (FROZEN == null) begin();
+const [{ segs, meta }, audioDur] = await Promise.all([loadLyrics(), durReady, fontsReady]);
+if (segs.length) {
+  const last = segs[segs.length - 1];
+  const dur = isFinite(audioDur) && audioDur > 0 ? audioDur : (meta.audio_duration_sec || last[last.length - 1].end + 3);
+  measCache.clear();
+  scenes = buildTimeline(segs, dur);
+}
+addEventListener("resize", () => {
+  vw = innerWidth; vh = innerHeight; measCache.clear();
+  nextBuilt = null; if (cur) { cur.dispose(); cur.root.remove(); cur = null; curIdx = -1; }
+});
+window.__stylish = {
+  scenes: () => scenes,
+  seek(t) { forced = t; render(t); },
+  release() { forced = null; }
+};
+requestAnimationFrame(frame);
+
+/* ── Recording UI ──────────────────────────────────────────────────────── */
+(function initRecUI() {
+  if (new URLSearchParams(location.search).get('headless') === '1') {
+    document.body.classList.add('headless'); return;
+  }
+  const btn    = document.getElementById('rec-btn');
+  const panel  = document.getElementById('rec-panel');
+  const goBtn  = document.getElementById('rec-go');
+  const status = document.getElementById('rec-status');
+  if (!btn) return;
+  let selectedEngine = null, recording = false;
+
+  function togglePanel() { panel.classList.toggle('open'); }
+  btn.addEventListener('click', e => { e.stopPropagation(); togglePanel(); });
+  document.addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') togglePanel(); });
+  document.addEventListener('click', e => {
+    if (!panel.contains(e.target) && e.target !== btn) panel.classList.remove('open');
+  });
+  document.querySelectorAll('.rec-engine').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.rec-engine').forEach(e => e.classList.remove('active'));
+      el.classList.add('active');
+      selectedEngine = el.dataset.engine;
+      goBtn.disabled = false;
+      status.textContent = '';
+    });
+  });
+  goBtn.addEventListener('click', async () => {
+    if (!selectedEngine || recording) return;
+    recording = true;
+    btn.classList.add('recording');
+    goBtn.disabled = true;
+    panel.classList.remove('open');
+    status.textContent = 'Iniciando ' + selectedEngine + '…';
+    const templateName = location.pathname.split('/').filter(Boolean).slice(-2, -1)[0]
+                         || document.title || 'unknown';
+    const payload = { engine: selectedEngine, template: templateName, timestamp: Date.now() };
+    window.postMessage({ type: 'nexa:record', ...payload }, '*');
+    document.dispatchEvent(new CustomEvent('nexa:record', { detail: payload }));
+    try {
+      const res = await fetch('/api/v1/record', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      status.textContent = res.ok ? (await res.json()).message || ('Grabando con ' + selectedEngine + '…')
+                                  : 'API ' + res.status + ' — evento emitido';
+    } catch { status.textContent = 'Sin servidor — evento emitido (' + selectedEngine + ')'; }
+    setTimeout(() => { recording = false; btn.classList.remove('recording'); goBtn.disabled = false; status.textContent = ''; }, 8000);
+  });
+})();
+/* ─────────────────────────────────────────────────────────────────────────── */
+</script>
+</body>
+</html>

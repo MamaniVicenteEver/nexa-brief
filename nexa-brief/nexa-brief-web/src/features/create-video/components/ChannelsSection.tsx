@@ -60,9 +60,7 @@ export function ChannelsSection({ form }: { form: UseFormReturn<CreateVideoFormV
 
   return (
     <div className="flex flex-col gap-2.5">
-      <span className="text-[13.5px] font-bold tracking-[-0.01em] text-nb-ink">
-        {t("title")}
-      </span>
+      <span className="text-[13.5px] font-bold tracking-[-0.01em] text-nb-ink">{t("title")}</span>
 
       {isError ? (
         <p className="text-[12.5px] leading-[1.5] text-nb-mute">{t("loadError")}</p>
@@ -117,9 +115,7 @@ export function ChannelsSection({ form }: { form: UseFormReturn<CreateVideoFormV
                         );
                       })
                     ) : (
-                      <div className="px-2 py-2 text-[12.5px] text-nb-mute">
-                        {t("noAccounts")}
-                      </div>
+                      <div className="px-2 py-2 text-[12.5px] text-nb-mute">{t("noAccounts")}</div>
                     )}
                   </div>
                 )}

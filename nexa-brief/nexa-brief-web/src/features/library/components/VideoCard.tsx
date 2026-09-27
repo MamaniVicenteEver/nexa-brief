@@ -1,12 +1,37 @@
 "use client";
 
+import {
+  AlertTriangle,
+  ArrowUpRight,
+  CalendarClock,
+  CheckCircle2,
+  Clock3,
+  Film,
+  Info,
+  Loader2,
+  Play,
+  Send,
+  Timer,
+  Trash2,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import type { JobListItem } from "@/features/create-video/types";
+import { useEffect, useRef, useState } from "react";
+import { STAGE_LABEL_KEY } from "@/features/create-video/stage";
 import { PublishNowDialog, type QueueEntry } from "@/features/schedule";
 import { Link } from "@/i18n/navigation";
-import { resolveApiUrl } from "@/infrastructure/api/http-client";
-import { VideoPlayerDialog } from "@/shared/components/media/VideoPlayerDialog";
+import { cn } from "@/lib/utils";
+import { MediaPlayerModal } from "@/shared/components/media/MediaPlayerModal";
+import { DeleteVideoDialog } from "./DeleteVideoDialog";
+import {
+  canDelete,
+  formatDuration,
+  formatElapsed,
+  hasRenderedVideo,
+  jobFileUrl,
+  type LibraryStatus,
+  type LibraryVideo,
+  stageProgress,
+} from "../library-status";
 
 const PLATFORM_LABEL: Record<QueueEntry["platform"], string> = {
   youtube: "YouTube",
@@ -14,91 +39,355 @@ const PLATFORM_LABEL: Record<QueueEntry["platform"], string> = {
   facebook: "Facebook",
 };
 
-function formatDuration(totalSeconds: number): string {
-  const m = Math.floor(totalSeconds / 60);
-  const s = Math.floor(totalSeconds % 60);
-  return `${m}:${String(s).padStart(2, "0")}`;
-}
+const STATUS_STYLE: Record<LibraryStatus, { className: string; Icon: typeof Clock3 }> = {
+  ready: { className: "bg-white/90 text-nb-ink", Icon: CheckCircle2 },
+  scheduled: { className: "bg-nb-accent-gold text-nb-ink", Icon: CalendarClock },
+  published: { className: "bg-nb-green text-nb-ink", Icon: CheckCircle2 },
+  processing: { className: "bg-nb-accent-amber text-nb-ink", Icon: Loader2 },
+  failed: { className: "bg-nb-accent-coral text-white", Icon: AlertTriangle },
+};
 
-export function VideoCard({
-  job,
-  mode = "ready",
-  publishResults = [],
-}: {
-  job: JobListItem;
-  mode?: "ready" | "published";
-  publishResults?: QueueEntry[];
-}) {
+export function VideoCard({ video }: { video: LibraryVideo }) {
   const t = useTranslations("library");
-  const [playing, setPlaying] = useState(false);
-  const videoUrl = resolveApiUrl(`/api/v1/videos/jobs/${job.jobId}/file/youtube`);
+  const { job, status, categoryLabel } = video;
+  const [playerOpen, setPlayerOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const rendered = hasRenderedVideo(status);
+  const canPublish = status === "ready" || status === "scheduled" || status === "published";
+  const detailHref = `/biblioteca/${job.jobId}`;
+
+  const publishButton = (variant: "primary" | "secondary", className?: string) => (
+    <PublishNowDialog jobId={job.jobId} jobTitle={job.title}>
+      <button
+        type="button"
+        className={cn(
+          "inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap",
+          variant === "primary" ? "nb-btn-pill" : "nb-btn-secondary",
+          className,
+        )}
+      >
+        <Send className="size-3.5" />
+        {status === "published" ? t("videoCard.publishAgain") : t("videoCard.publishNow")}
+      </button>
+    </PublishNowDialog>
+  );
 
   return (
-    <>
-      <div className="rounded-[20px] bg-nb-surface px-5.5 py-5 shadow-[0_18px_34px_-16px_rgba(40,30,10,0.16),0_6px_14px_-4px_rgba(40,30,10,0.07),inset_0_1px_0_rgba(255,255,255,0.7)]">
-        <Link href={`/biblioteca/${job.jobId}`} className="block cursor-pointer">
-          <div className="flex items-start justify-between gap-2">
-            <h4 className="text-[15px] font-bold tracking-[-0.015em] text-nb-ink">{job.title}</h4>
-            {mode === "published" && (
-              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-nb-green/15 px-2 py-0.5 text-[11px] font-semibold text-nb-green-dark">
-                <span className="size-1.5 shrink-0 rounded-full bg-nb-green-dark" />
-                {t("videoCard.publishedBadge")}
-              </span>
-            )}
-          </div>
-          <div className="mt-1.5 text-[12.5px] leading-[1.5] text-nb-mute">
-            {job.durationSeconds !== null
-              ? formatDuration(job.durationSeconds)
-              : t("videoCard.unknownDuration")}
-          </div>
-          <div className="mt-2.5 flex flex-wrap gap-2">
-            <span className="rounded-full bg-nb-bg-2 px-3.5 py-1.5 text-xs font-semibold text-nb-ink-soft">
-              {job.category}
-            </span>
-          </div>
+    <article className="group/card flex flex-col overflow-hidden rounded-[20px] bg-nb-surface shadow-[0_18px_34px_-18px_rgba(40,30,10,0.22),0_6px_14px_-6px_rgba(40,30,10,0.08),inset_0_1px_0_rgba(255,255,255,0.7)] transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_40px_-18px_rgba(40,30,10,0.3),0_8px_16px_-6px_rgba(40,30,10,0.1)]">
+      <div className="relative aspect-video w-full overflow-hidden bg-nb-ink">
+        {rendered ? (
+          <MediaPlayerModal
+            open={playerOpen}
+            onOpenChange={setPlayerOpen}
+            title={job.title}
+            source={{
+              kind: "video",
+              desktopUrl: jobFileUrl(job.jobId, "youtube"),
+              mobileUrl: jobFileUrl(job.jobId, "reels"),
+            }}
+            actions={
+              <>
+                {canPublish && publishButton("secondary", "px-3 py-1.5")}
+                <Link
+                  href={detailHref}
+                  className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/85 transition-colors hover:bg-white/20 hover:text-white"
+                >
+                  {t("videoCard.details")}
+                  <ArrowUpRight className="size-3.5" />
+                </Link>
+              </>
+            }
+            trigger={
+              <button
+                type="button"
+                aria-label={`${t("videoCard.playButton")}: ${job.title}`}
+                className="absolute inset-0 cursor-pointer"
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                onFocus={() => setHovered(true)}
+                onBlur={() => setHovered(false)}
+              >
+                <HoverPreview
+                  src={jobFileUrl(job.jobId, "youtube")}
+                  active={hovered && !playerOpen}
+                />
+                <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover/card:bg-black/25">
+                  <span className="flex size-12 scale-90 items-center justify-center rounded-full bg-white/90 text-nb-ink opacity-0 shadow-lg transition-all duration-300 group-hover/card:scale-100 group-hover/card:opacity-100">
+                    <Play className="ml-0.5 size-5 fill-current" />
+                  </span>
+                </span>
+              </button>
+            }
+          />
+        ) : (
+          <PlaceholderThumb
+            status={status}
+            stageLabel={t(`stages.${STAGE_LABEL_KEY[job.stage]}`)}
+            progress={stageProgress(job.stage)}
+          />
+        )}
 
-          {mode === "published" && publishResults.length > 0 && (
-            <div className="mt-2.5 flex flex-col gap-1">
-              {publishResults.map((entry) => (
-                <div key={entry.entryId} className="text-[11.5px] text-nb-mute">
-                  {PLATFORM_LABEL[entry.platform]} · {entry.accountAlias}
-                  {entry.processedAt && ` · ${new Date(entry.processedAt).toLocaleDateString()}`}
-                </div>
-              ))}
-            </div>
-          )}
+        <StatusBadge status={status} label={t(`status.${status}`)} />
+        {job.durationSeconds !== null && (
+          <span className="pointer-events-none absolute right-2.5 bottom-2.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold text-white tabular-nums">
+            {formatDuration(job.durationSeconds)}
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col gap-2.5 px-4.5 pt-3.5 pb-4">
+        <div className="flex items-center justify-between gap-2 text-[11px] font-semibold text-nb-mute">
+          <span className="min-w-0 truncate tracking-[0.04em] uppercase" title={categoryLabel}>
+            {categoryLabel}
+          </span>
+          <time dateTime={job.updatedAt} className="shrink-0">
+            {new Date(job.updatedAt).toLocaleDateString(undefined, {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+          </time>
+        </div>
+
+        <Link
+          href={detailHref}
+          className="line-clamp-2 min-h-[2.6em] text-[15px] leading-[1.3] font-bold tracking-[-0.015em] text-nb-ink hover:underline"
+        >
+          {job.title}
         </Link>
 
-        <div className="mt-3.5 flex items-center justify-between border-t border-nb-line pt-3">
-          <span className="text-[12.5px] text-nb-mute">
-            {new Date(job.updatedAt).toLocaleDateString()}
+        {job.generationSeconds !== null && (
+          <span
+            className="-mt-1 inline-flex items-center gap-1 text-[11.5px] text-nb-mute"
+            title={t("videoCard.generatedInHint")}
+          >
+            <Timer className="size-3.5" />
+            {t("videoCard.generatedIn", { time: formatElapsed(job.generationSeconds) })}
           </span>
-          <div className="flex items-center gap-2">
-            {mode === "ready" && (
-              <PublishNowDialog jobId={job.jobId} jobTitle={job.title}>
-                <button
-                  type="button"
-                  className="nb-btn-pill rounded-full px-4 py-2 text-xs font-semibold"
-                >
-                  {t("videoCard.publishNow")}
-                </button>
-              </PublishNowDialog>
-            )}
+        )}
+
+        <CardMeta video={video} />
+
+        <div className="mt-auto flex items-center gap-2 border-t border-nb-line pt-3">
+          {canPublish ? (
+            publishButton(status === "published" ? "secondary" : "primary", "flex-1")
+          ) : (
+            <span className="flex-1 truncate text-[12px] text-nb-mute">
+              {status === "failed" ? t("status.failed") : t(`stages.${STAGE_LABEL_KEY[job.stage]}`)}
+            </span>
+          )}
+          <Link
+            href={detailHref}
+            aria-label={t("videoCard.details")}
+            title={t("videoCard.details")}
+            className="nb-btn-secondary flex size-8.5 shrink-0 items-center justify-center rounded-full"
+          >
+            <Info className="size-4" />
+          </Link>
+          {canDelete(video) && (
             <button
               type="button"
-              onClick={() => setPlaying(true)}
-              className="nb-btn-secondary rounded-full px-4 py-2 text-xs font-semibold"
+              onClick={() => setDeleteOpen(true)}
+              aria-label={t("deleteDialog.trigger")}
+              title={t("deleteDialog.trigger")}
+              className="nb-btn-secondary flex size-8.5 shrink-0 items-center justify-center rounded-full text-nb-mute transition-colors hover:text-red-600"
             >
-              {t("videoCard.playButton")}
+              <Trash2 className="size-4" />
             </button>
-          </div>
+          )}
         </div>
       </div>
-      <VideoPlayerDialog
-        videoUrl={playing ? videoUrl : null}
-        open={playing}
-        onOpenChange={setPlaying}
+      <DeleteVideoDialog
+        jobId={job.jobId}
+        jobTitle={job.title}
+        isPublished={status === "published"}
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
       />
-    </>
+    </article>
+  );
+}
+
+function CardMeta({ video }: { video: LibraryVideo }) {
+  const t = useTranslations("library");
+  const { status, published, scheduled } = video;
+
+  if (status === "failed") {
+    return (
+      <p className="text-[12px] leading-[1.45] text-nb-accent-coral">{t("videoCard.failedHint")}</p>
+    );
+  }
+
+  if (published.length > 0) {
+    return (
+      <div className="flex flex-wrap gap-1.5">
+        {published.map((entry) => {
+          const label = `${PLATFORM_LABEL[entry.platform]} · ${entry.accountAlias}`;
+          const className =
+            "inline-flex max-w-full items-center gap-1 rounded-full bg-nb-green/25 px-2.5 py-1 text-[11px] font-semibold text-nb-green-dark";
+          return entry.url ? (
+            <a
+              key={entry.entryId}
+              href={entry.url}
+              target="_blank"
+              rel="noreferrer"
+              title={t("videoCard.openPost")}
+              className={cn(className, "hover:bg-nb-green/40")}
+            >
+              <span className="truncate">{label}</span>
+              <ArrowUpRight className="size-3 shrink-0" />
+            </a>
+          ) : (
+            <span key={entry.entryId} className={className}>
+              <span className="truncate">{label}</span>
+            </span>
+          );
+        })}
+      </div>
+    );
+  }
+
+  const uploading = scheduled.filter((e) => e.status === "publishing" || e.source === "immediate");
+  if (uploading.length > 0) {
+    return (
+      <div className="flex flex-wrap gap-1.5">
+        {uploading.map((entry) => (
+          <span
+            key={entry.entryId}
+            className="inline-flex items-center gap-1 rounded-full bg-nb-accent-amber/25 px-2.5 py-1 text-[11px] font-semibold text-nb-ink-soft"
+          >
+            <Loader2 className="size-3 animate-spin" />
+            {PLATFORM_LABEL[entry.platform]} · {t("videoCard.publishingNow")}
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  if (scheduled.length > 0) {
+    const next = scheduled
+      .map((e) => e.scheduledAt)
+      .filter((d): d is string => d !== null)
+      .sort()[0];
+    return (
+      <div className="flex flex-wrap gap-1.5">
+        <span className="inline-flex items-center gap-1 rounded-full bg-nb-accent-gold/30 px-2.5 py-1 text-[11px] font-semibold text-nb-ink-soft">
+          <CalendarClock className="size-3" />
+          {next
+            ? t("videoCard.scheduledFor", {
+                date: new Date(next).toLocaleString(undefined, {
+                  day: "numeric",
+                  month: "short",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }),
+              })
+            : t("status.scheduled")}
+        </span>
+      </div>
+    );
+  }
+
+  if (status === "ready") {
+    return (
+      <div className="flex">
+        <span className="inline-flex items-center gap-1 rounded-full bg-nb-bg-2 px-2.5 py-1 text-[11px] font-semibold text-nb-ink-soft">
+          <Clock3 className="size-3" />
+          {t("videoCard.pendingPublish")}
+        </span>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+function StatusBadge({ status, label }: { status: LibraryStatus; label: string }) {
+  const { className, Icon } = STATUS_STYLE[status];
+  return (
+    <span
+      className={cn(
+        "pointer-events-none absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold shadow-sm",
+        className,
+      )}
+    >
+      <Icon className={cn("size-3", status === "processing" && "animate-spin")} />
+      {label}
+    </span>
+  );
+}
+
+/** Primer frame como miniatura (el backend no genera thumbnail todavía) y
+ * reproducción muda al pasar el mouse, igual que las cards de Plantillas. */
+function HoverPreview({ src, active }: { src: string; active: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (active) {
+      void video.play().catch(() => {});
+      return;
+    }
+    video.pause();
+    if (video.readyState > 0) video.currentTime = 1;
+  }, [active]);
+
+  if (failed) return <FilmFallback />;
+
+  return (
+    <video
+      ref={videoRef}
+      src={`${src}#t=1`}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-hidden
+      tabIndex={-1}
+      onError={() => setFailed(true)}
+      className="size-full object-cover transition-transform duration-700 group-hover/card:scale-[1.04]"
+    />
+  );
+}
+
+function FilmFallback() {
+  return (
+    <div className="flex size-full items-center justify-center bg-gradient-to-br from-nb-ink to-nb-ink-soft text-white/40">
+      <Film className="size-8" />
+    </div>
+  );
+}
+
+function PlaceholderThumb({
+  status,
+  stageLabel,
+  progress,
+}: {
+  status: LibraryStatus;
+  stageLabel: string;
+  progress: number;
+}) {
+  if (status === "failed") {
+    return (
+      <div className="flex size-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#3a1d17] to-nb-ink text-nb-accent-coral">
+        <AlertTriangle className="size-8" />
+      </div>
+    );
+  }
+  return (
+    <div className="relative flex size-full flex-col items-center justify-center gap-3 overflow-hidden bg-gradient-to-br from-nb-ink via-nb-ink-soft to-nb-ink px-8 text-white/80">
+      <div className="absolute inset-0 animate-pulse bg-[radial-gradient(circle_at_30%_40%,rgba(255,170,75,0.18),transparent_60%)]" />
+      <Loader2 className="relative size-7 animate-spin text-nb-accent-amber" />
+      <span className="relative text-center text-[12px] font-semibold">{stageLabel}</span>
+      <div className="relative h-1 w-full max-w-[180px] overflow-hidden rounded-full bg-white/15">
+        <div
+          className="h-full rounded-full bg-nb-accent-amber transition-[width] duration-700"
+          style={{ width: `${Math.round(progress * 100)}%` }}
+        />
+      </div>
+    </div>
   );
 }

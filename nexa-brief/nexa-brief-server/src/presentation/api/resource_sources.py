@@ -39,6 +39,7 @@ async def resolve_image_source(
             entry = await asset_library.register_image(
                 tmp_path, category=category, source="upload", provider="user_upload",
                 label=clean_filename_label(image_file.filename),
+                filename=image_file.filename,
             )
         finally:
             shutil.rmtree(tmp_path.parent, ignore_errors=True)
@@ -88,6 +89,7 @@ async def resolve_music_source(
                     track_name=resolved_track_name,
                     artist=artist or "",
                     content_hash=content_hash,
+                    filename=music_file.filename,
                 )
         finally:
             shutil.rmtree(tmp_path.parent, ignore_errors=True)
@@ -114,6 +116,7 @@ async def resolve_video_source(
             entry = await asset_library.register_video(
                 tmp_path, category=category_name, source="upload", provider="user_upload",
                 label=clean_filename_label(video_file.filename),
+                filename=video_file.filename,
             )
         finally:
             shutil.rmtree(tmp_path.parent, ignore_errors=True)

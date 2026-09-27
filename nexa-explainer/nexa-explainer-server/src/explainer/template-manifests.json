@@ -1,0 +1,260 @@
+{
+  "schema_version": "1.0",
+  "render_contract": {
+    "canvas": "1920x1080",
+    "aspect_ratio": "16:9",
+    "fps": 30,
+    "principle": "El presentador es la capa principal; texto, iconos y gráficos sólo aparecen para aclarar una frase concreta.",
+    "accessibility": "Contraste AA, subtítulos de una o dos líneas y zonas seguras para lectura móvil."
+  },
+  "universal_side_overlay_policy": {
+    "layout": {
+      "presenter": "lado izquierdo, recorte seguro y rostro despejado",
+      "visual_zone": "lado derecho vacío; un único visual sólo cuando la voz lo justifica",
+      "caption_zone": "desactivado por defecto; la transcripción se conserva como archivo separado",
+      "reading_order": "presentador → visual semántico puntual → silencio visual"
+    },
+    "components": [
+      "persona a la izquierda",
+      "palabra o título puntual",
+      "SVG contextual único",
+      "zona derecha silenciosa"
+    ],
+    "visual_treatments": ["none", "title", "action", "money", "change", "process", "quote", "data"],
+    "captions": {
+      "max_lines": 0,
+      "max_chars": 0,
+      "style": "desactivados por defecto; se generan como archivo de transcripción, no como overlay",
+      "highlight": "no aplica"
+    },
+    "motion": {
+      "beat": "idea dicha → entrada breve del visual → reposo sin decoración",
+      "transitions": ["entrada corta", "énfasis de escala", "retirada suave"]
+    },
+    "forbidden": [
+      "tarjetas persistentes",
+      "numeración de escenas",
+      "marcas del producto dentro del video",
+      "subtítulos incrustados",
+      "decoración sin relación con la voz"
+    ],
+    "ai_rule": "Una palabra, icono o diagrama aparece sólo al ser mencionado; el resto del tiempo el lado derecho permanece vacío."
+  },
+  "templates": [
+    {
+      "id": "editorial-split",
+      "name": "Editorial Split",
+      "description": "Contraste navy y marfil para ideas, entrevistas y liderazgo de opinión.",
+      "tone": "editorial, confiable, sofisticado",
+      "typography": "Space Grotesk para titulares; Inter para lectura",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [
+          {"role": "primario", "name": "Navy editorial", "value": "#101828"},
+          {"role": "secundario", "name": "Marfil", "value": "#F4F0E9"},
+          {"role": "terciario", "name": "Oro sobrio", "value": "#E5B75D"},
+          {"role": "texto", "name": "Grafito", "value": "#101828"}
+        ],
+        "typography_system": {"headline": "Space Grotesk 600, 64–92 px", "body": "Inter 400, 24–32 px", "meta": "Inter 700, 14–18 px, tracking 0.14em", "order": "titular → contexto → cita o conclusión"},
+        "layout": {"presenter": "mitad izquierda, intacto", "visual_zone": "mitad derecha", "caption_zone": "inferior izquierda, fuera del rostro", "reading_order": "voz → titular → contexto"},
+        "components": ["titular en dos niveles", "cita corta", "bloque marfil de contexto", "subtítulo", "indicador editorial"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "entrada lateral → respiración → resolución", "transitions": ["desplazamiento horizontal de 24 px", "subrayado de palabra clave", "fundido de cita"], "forbidden": ["rebotes", "bucles decorativos", "texto que invada al presentador"]},
+        "captions": {"max_lines": 2, "max_chars": 84, "style": "franja navy translúcida, alineación izquierda", "highlight": "sólo si existen timestamps por palabra"},
+        "evidence_policy": {"show_graph_when": "nunca como decoración; sólo ante una afirmación numérica trazable", "alternatives": ["cita", "definición", "contraste antes/después"], "source_label": "obligatorio para cifras"},
+        "icons": {"library": "Lucide", "allowed": ["Quote", "ArrowUpRight", "Layers"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "quote", "step", "cta", "stat con evidencia"], "max_simultaneous_overlays": 2, "must_preserve": ["rostro", "manos relevantes", "subtítulos"], "rule": "Una idea editorial por escena; no simular datos."},
+        "preview": {"headline": "La claridad también tiene una dirección.", "supporting_text": "Una voz experta y un contraste editorial que guía la mirada.", "visual_forms": ["cita", "marco contextual", "acento tipográfico"], "scenes": [{"id": "editorial-idea", "start": 0, "end": 10, "label": "IDEA PRINCIPAL", "title": "La claridad también tiene una dirección.", "description": "La tesis entra sin desplazar el protagonismo de la persona.", "subtitle": "Primero entendemos la tensión. Después, la oportunidad.", "metric_label": "TESIS", "metric": "01", "visual": "quote"}, {"id": "editorial-quote", "start": 10, "end": 20, "label": "VOZ EXPERTA", "title": "Una frase ordena el argumento.", "description": "La cita se vuelve el ancla del plano, no una diapositiva.", "subtitle": "El contexto convierte un dato en una decisión.", "metric_label": "CITA", "metric": "02", "visual": "quote"}, {"id": "editorial-close", "start": 20, "end": 30, "label": "CIERRE", "title": "Una conclusión que permanece.", "description": "El cierre recupera la voz y una llamada visual discreta.", "subtitle": "La idea queda lista para ser recordada.", "metric_label": "TAKEAWAY", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "data-brief",
+      "name": "Data Brief",
+      "description": "Panel claro con cifras, barras y jerarquía para contenido educativo o de negocio.",
+      "tone": "analítico, preciso, ejecutivo",
+      "typography": "Space Grotesk para cifras; Inter para etiquetas",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [{"role": "primario", "name": "Azul ejecutivo", "value": "#2364AA"}, {"role": "secundario", "name": "Blanco técnico", "value": "#FBFDFF"}, {"role": "terciario", "name": "Azul pálido", "value": "#D9E9FB"}, {"role": "texto", "name": "Tinta", "value": "#152536"}],
+        "typography_system": {"headline": "Space Grotesk 600, 58–84 px", "body": "Inter 400, 23–30 px", "meta": "Inter 700, 13–17 px, tabular nums", "order": "pregunta → evidencia → decisión"},
+        "layout": {"presenter": "izquierda compacta, sin tapar", "visual_zone": "derecha, con aire", "caption_zone": "inferior derecha", "reading_order": "pregunta → cifra verificada → implicación"},
+        "components": ["pregunta", "cifra con fuente", "comparación de hasta cinco puntos", "etiqueta de fuente", "subtítulo"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "pregunta → evidencia → acción", "transitions": ["conteo ascendente", "revelado de barras por prioridad", "subrayado de fuente"], "forbidden": ["barras sin datos", "porcentajes inventados", "más de una visualización a la vez"]},
+        "captions": {"max_lines": 2, "max_chars": 84, "style": "texto oscuro sin placa opaca", "highlight": "número o término citado, con timestamps"},
+        "evidence_policy": {"show_graph_when": "la transcripción contiene una comparación o número verificable y se conserva su cita", "alternatives": ["lista ordinal", "definición", "cita"], "source_label": "obligatorio con rango de transcript o fuente externa"},
+        "icons": {"library": "Lucide", "allowed": ["BarChart3", "TrendingUp", "Database"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "stat con evidencia", "step", "cta"], "max_simultaneous_overlays": 2, "must_preserve": ["rostro", "etiqueta de fuente", "subtítulos"], "rule": "Sin número verificable, usar contexto textual en lugar de gráfica."},
+        "preview": {"headline": "El dato que cambia la conversación.", "supporting_text": "La evidencia sólo aparece cuando la voz puede sostenerla.", "visual_forms": ["cifra", "comparación", "fuente"], "scenes": [{"id": "data-question", "start": 0, "end": 10, "label": "PREGUNTA", "title": "¿Qué está cambiando realmente?", "description": "La pregunta prepara una medida concreta, no una gráfica decorativa.", "subtitle": "El punto de partida define qué debemos medir.", "metric_label": "BASE", "metric": "01", "visual": "line"}, {"id": "data-signal", "start": 10, "end": 20, "label": "EVIDENCIA", "title": "La comparación se vuelve visible.", "description": "Sólo aquí entra una barra porque el ejemplo contiene una cifra trazable.", "subtitle": "La diferencia se vuelve visible en segundos.", "metric_label": "IMPACTO", "metric": "+42%", "visual": "chart"}, {"id": "data-source", "start": 20, "end": 30, "label": "DECISIÓN", "title": "La tendencia apunta a una acción.", "description": "El cierre transforma la evidencia en una conclusión práctica.", "subtitle": "Una métrica útil siempre termina en un siguiente paso.", "metric_label": "ACCIÓN", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "signal-minimal",
+      "name": "Signal Minimal",
+      "description": "Negro, blanco y azul eléctrico para mensajes directos de alta retención.",
+      "tone": "directo, moderno, enfocado",
+      "typography": "Space Grotesk para mensajes; Inter para metadatos",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [{"role": "primario", "name": "Negro señal", "value": "#090B0F"}, {"role": "secundario", "name": "Blanco", "value": "#F7F9FC"}, {"role": "terciario", "name": "Azul eléctrico", "value": "#6C8CFF"}, {"role": "texto", "name": "Gris frío", "value": "#8B96A8"}],
+        "typography_system": {"headline": "Space Grotesk 600, 70–100 px", "body": "Inter 400, 22–28 px", "meta": "Inter 700, 13–16 px", "order": "señal → prueba → siguiente acción"},
+        "layout": {"presenter": "derecha, recorte ambiental", "visual_zone": "izquierda", "caption_zone": "centro inferior", "reading_order": "mensaje → palabra resaltada → voz"},
+        "components": ["titular corto", "línea de señal", "subtítulo por frase", "progreso discreto"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "impacto → pausa → instrucción", "transitions": ["corte limpio", "trazo de línea", "revelado de una palabra"], "forbidden": ["glitches continuos", "neón excesivo", "tarjetas centradas"]},
+        "captions": {"max_lines": 2, "max_chars": 72, "style": "blanco sobre sombra suave, centrado", "highlight": "una palabra de acción por frase"},
+        "evidence_policy": {"show_graph_when": "sólo si la señal es un dato verificable", "alternatives": ["indicador de paso", "frase resaltada", "mini diagrama"], "source_label": "visible cuando sea estadística"},
+        "icons": {"library": "Lucide", "allowed": ["Target", "Activity", "ArrowRight"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "stat con evidencia", "cta"], "max_simultaneous_overlays": 1, "must_preserve": ["rostro", "silencio visual", "subtítulos"], "rule": "Cada escena responde a una sola decisión."},
+        "preview": {"headline": "Una señal. Una decisión.", "supporting_text": "Alto contraste para una idea que no necesita decoración.", "visual_forms": ["línea", "palabra clave", "progreso"], "scenes": [{"id": "signal-hook", "start": 0, "end": 10, "label": "SIGNAL / 01", "title": "Una señal. Una decisión.", "description": "Un primer golpe visual que mantiene la mirada en la persona.", "subtitle": "No todo merece la misma atención.", "metric_label": "FOCUS", "metric": "01", "visual": "line"}, {"id": "signal-proof", "start": 10, "end": 20, "label": "SIGNAL / 02", "title": "El momento exige foco.", "description": "La línea enlaza la afirmación con una prueba disponible.", "subtitle": "La evidencia aparece cuando el mensaje la necesita.", "metric_label": "PRUEBA", "metric": "02", "visual": "line"}, {"id": "signal-action", "start": 20, "end": 30, "label": "SIGNAL / 03", "title": "Actúa sobre lo importante.", "description": "El ruido desaparece y queda una instrucción clara.", "subtitle": "Una idea clara mueve la siguiente acción.", "metric_label": "NEXT", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "immersive-overlay",
+      "name": "Immersive Overlay",
+      "description": "El plano completo queda visible; titulares y gráficos flotan sobre el video.",
+      "tone": "contemporáneo, cinematográfico, humano",
+      "typography": "Space Grotesk para titulares; Inter para datos",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [{"role": "primario", "name": "Noche", "value": "#07101A"}, {"role": "secundario", "name": "Blanco humo", "value": "#F6F7FA"}, {"role": "terciario", "name": "Oro humano", "value": "#E2B65F"}, {"role": "texto", "name": "Niebla", "value": "#DCE5EA"}],
+        "typography_system": {"headline": "Space Grotesk 600, 68–96 px", "body": "Inter 400, 24–31 px", "meta": "Inter 700, 13–17 px", "order": "rostro → titular flotante → subtítulo"},
+        "layout": {"presenter": "plano completo", "visual_zone": "zona libre detectada", "caption_zone": "inferior centrada", "reading_order": "persona → idea → apoyo"},
+        "components": ["titular flotante", "anclaje contextual", "subtítulo", "referencia visual opcional"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "anclaje suave → lectura → salida", "transitions": ["fundido profundo", "desplazamiento de 12 px", "conexión por línea"], "forbidden": ["panel opaco grande", "cubrir ojos o boca", "gráficos persistentes"]},
+        "captions": {"max_lines": 2, "max_chars": 80, "style": "blanco con sombra y placa mínima", "highlight": "por palabra si hay timestamps"},
+        "evidence_policy": {"show_graph_when": "la zona libre lo permite y hay evidencia semántica", "alternatives": ["cita", "etiqueta de ejemplo", "conector"], "source_label": "necesario para datos"},
+        "icons": {"library": "Lucide", "allowed": ["ScanLine", "MapPin", "Sparkles"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "quote", "stat con evidencia", "cta"], "max_simultaneous_overlays": 2, "must_preserve": ["rostro", "gesto", "fondo relevante"], "rule": "El overlay acompaña al plano; nunca lo sustituye."},
+        "preview": {"headline": "La persona sigue siendo el centro.", "supporting_text": "Las capas aparecen sólo cuando aclaran lo que se está diciendo.", "visual_forms": ["anclaje", "cita", "conector"], "scenes": [{"id": "immersive-context", "start": 0, "end": 10, "label": "PLANO COMPLETO", "title": "La persona sigue siendo el centro.", "description": "Un titular contextual aparece sin convertir el plano en presentación.", "subtitle": "La presencia humana abre la explicación.", "metric_label": "PLANO", "metric": "01", "visual": "line"}, {"id": "immersive-anchor", "start": 10, "end": 20, "label": "ANCLAJE", "title": "El contexto acompaña, no compite.", "description": "Una referencia se amarra a la frase y luego desaparece.", "subtitle": "Cada elemento aparece junto a la frase que explica.", "metric_label": "ANCLAJE", "metric": "02", "visual": "quote"}, {"id": "immersive-close", "start": 20, "end": 30, "label": "TAKEAWAY", "title": "El plano permanece en la memoria.", "description": "La última palabra vuelve a la persona.", "subtitle": "El cierre deja respirar el encuadre.", "metric_label": "MEMORIA", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "centered-rails",
+      "name": "Centered Rails",
+      "description": "Presentador centrado con subtítulos y contexto visual dinámico a ambos lados.",
+      "tone": "dinámico, editorial, explicativo",
+      "typography": "Space Grotesk para ideas; Inter para subtítulos y datos",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [{"role": "primario", "name": "Azul petróleo", "value": "#081016"}, {"role": "secundario", "name": "Blanco suave", "value": "#F4F7F8"}, {"role": "terciario", "name": "Oro rail", "value": "#DDB55B"}, {"role": "texto", "name": "Niebla", "value": "#EBF2F4"}],
+        "typography_system": {"headline": "Space Grotesk 600, 44–68 px", "body": "Inter 400, 18–24 px", "meta": "Inter 700, 12–15 px", "order": "presentador → rail izquierdo → rail derecho → subtítulo"},
+        "layout": {"presenter": "eje central, 46–54% del ancho", "visual_zone": "rails laterales", "caption_zone": "inferior centrada", "reading_order": "idea a la izquierda → contexto a la derecha"},
+        "components": ["presentador centrado", "rail de idea", "rail de contexto", "subtítulo", "visual condicional"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "rail izquierdo → rail derecho → subtítulo", "transitions": ["entrada escalonada", "regla que se dibuja", "cambio de contexto"], "forbidden": ["dos gráficos simultáneos", "ocultar manos", "cajas gigantes"]},
+        "captions": {"max_lines": 2, "max_chars": 76, "style": "blanco con sombra, centrado", "highlight": "frase completa, no karaoke salvo timestamps"},
+        "evidence_policy": {"show_graph_when": "sólo en el rail libre y con una cifra real", "alternatives": ["nodo", "cita", "paso numerado"], "source_label": "en el rail de evidencia"},
+        "icons": {"library": "Lucide", "allowed": ["PanelRight", "MessageSquareText", "Network"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "quote", "step", "stat con evidencia", "cta"], "max_simultaneous_overlays": 3, "must_preserve": ["columna central", "rostro", "subtítulos"], "rule": "Los rails explican; el presentador nunca se vuelve fondo."},
+        "preview": {"headline": "Una voz al centro. El contexto a los lados.", "supporting_text": "Los laterales rotan ideas, citas y ejemplos; las gráficas son excepciones.", "visual_forms": ["rail", "cita", "paso"], "scenes": [{"id": "rails-intro", "start": 0, "end": 10, "label": "CONTEXTO / 01", "title": "Una voz al centro.", "description": "Los laterales preparan la idea sin desplazar a la persona.", "subtitle": "La explicación comienza en una sola frase.", "metric_label": "CAPÍTULO", "metric": "01", "visual": "line"}, {"id": "rails-evidence", "start": 10, "end": 20, "label": "CONTEXTO / 02", "title": "Una evidencia cuando hace falta.", "description": "El rail puede revelar un dato, una fuente o un ejemplo puntual.", "subtitle": "A cada afirmación le damos soporte visible.", "metric_label": "EVIDENCIA", "metric": "+42%", "visual": "chart"}, {"id": "rails-close", "start": 20, "end": 30, "label": "CONTEXTO / 03", "title": "La idea vuelve al centro.", "description": "El mensaje final se sostiene con subtítulo y silencio visual.", "subtitle": "Así se entiende, se recuerda y se comparte.", "metric_label": "CIERRE", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "kinetic-voice",
+      "name": "Kinetic Voice",
+      "description": "Tipografía cinética y subtítulos de alta precisión para ideas con ritmo y voz fuerte.",
+      "tone": "enérgico, nítido, contemporáneo",
+      "typography": "Space Grotesk para énfasis; Inter para subtítulos",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [{"role": "primario", "name": "Tinta", "value": "#13151A"}, {"role": "secundario", "name": "Hueso", "value": "#F5F0E6"}, {"role": "terciario", "name": "Coral de acción", "value": "#F05A47"}, {"role": "texto", "name": "Humo", "value": "#E5E7EB"}],
+        "typography_system": {"headline": "Space Grotesk 700, 76–112 px", "body": "Inter 400, 22–28 px", "meta": "Inter 700, 12–15 px", "order": "palabra clave → voz → subtítulo"},
+        "layout": {"presenter": "lado derecho o zona menos ocupada", "visual_zone": "lado contrario con escala tipográfica", "caption_zone": "inferior centrada", "reading_order": "palabra clave → presentador → frase"},
+        "components": ["palabra cinética", "subtítulo preciso", "contador de capítulo", "acento de trazo"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "golpe verbal → énfasis → reposo", "transitions": ["recorte tipográfico", "trazo de subrayado", "fundido de sílaba"], "forbidden": ["animar cada palabra", "shake", "rotaciones dramáticas"]},
+        "captions": {"max_lines": 2, "max_chars": 70, "style": "frase centrada, palabra activa coral sólo con timestamps", "highlight": "máximo una palabra activa"},
+        "evidence_policy": {"show_graph_when": "sólo si una cifra es el golpe verbal", "alternatives": ["palabra clave", "paso", "contraste verbal"], "source_label": "visible junto al dato"},
+        "icons": {"library": "Lucide", "allowed": ["Mic2", "ScanLine", "ArrowRight"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "quote", "step", "stat con evidencia", "cta"], "max_simultaneous_overlays": 2, "must_preserve": ["respiración visual", "rostro", "subtítulos"], "rule": "El movimiento nace de una palabra dicha, no de decoración."},
+        "preview": {"headline": "La voz marca el ritmo.", "supporting_text": "Una plantilla para mensajes con tensión, precisión y cadencia.", "visual_forms": ["palabra clave", "trazo", "capítulo"], "scenes": [{"id": "kinetic-hook", "start": 0, "end": 10, "label": "PULSO / 01", "title": "La voz marca el ritmo.", "description": "Una palabra fuerte entra con el golpe exacto de la frase.", "subtitle": "No necesitas más velocidad. Necesitas intención.", "metric_label": "PULSO", "metric": "01", "visual": "word"}, {"id": "kinetic-build", "start": 10, "end": 20, "label": "PULSO / 02", "title": "Cada énfasis tiene un motivo.", "description": "La tipografía se mueve una vez y luego deja respirar la voz.", "subtitle": "El énfasis aparece cuando cambia el sentido.", "metric_label": "ÉNFASIS", "metric": "02", "visual": "word"}, {"id": "kinetic-close", "start": 20, "end": 30, "label": "PULSO / 03", "title": "El cierre baja el ruido.", "description": "La última frase recupera escala humana y una acción clara.", "subtitle": "Ahora la idea puede permanecer.", "metric_label": "CIERRE", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "field-notes",
+      "name": "Field Notes",
+      "description": "Anotaciones documentales, referencias y observaciones para explicar desde casos reales.",
+      "tone": "observacional, humano, riguroso",
+      "typography": "Space Grotesk para tesis; Inter para notas y fuentes",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [{"role": "primario", "name": "Pizarra", "value": "#26352D"}, {"role": "secundario", "name": "Papel", "value": "#F3F0E7"}, {"role": "terciario", "name": "Terracota", "value": "#C96C4A"}, {"role": "texto", "name": "Tinta verde", "value": "#1E2923"}],
+        "typography_system": {"headline": "Space Grotesk 600, 56–82 px", "body": "Inter 400, 21–28 px", "meta": "Inter 700, 12–15 px, versales", "order": "observación → evidencia → interpretación"},
+        "layout": {"presenter": "plano completo o tercio izquierdo", "visual_zone": "nota anclada a espacio libre", "caption_zone": "inferior", "reading_order": "presentador → nota → referencia"},
+        "components": ["nota documental", "cita con procedencia", "etiqueta de caso", "línea de conexión", "subtítulo"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "observación → anotación → retirada", "transitions": ["nota que se fija", "línea dibujada", "resaltado de referencia"], "forbidden": ["papel flotando", "stickers", "sobrecargar el plano"]},
+        "captions": {"max_lines": 2, "max_chars": 82, "style": "blanco sobre sombra, alineado con la nota", "highlight": "sólo término técnico o fuente"},
+        "evidence_policy": {"show_graph_when": "casi nunca; sólo si el caso contiene una serie temporal real", "alternatives": ["anotación", "foto autorizada", "cita de fuente"], "source_label": "siempre en notas factuales"},
+        "icons": {"library": "Lucide", "allowed": ["NotebookTabs", "Paperclip", "MapPin"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "quote", "step", "stat con evidencia", "cta"], "max_simultaneous_overlays": 2, "must_preserve": ["contexto del fondo", "rostro", "referencias"], "rule": "Toda nota factual debe indicar de dónde viene."},
+        "preview": {"headline": "Una observación puede abrir el caso.", "supporting_text": "Notas y referencias que acompañan una historia sin hacerla parecer presentación.", "visual_forms": ["nota", "conector", "referencia"], "scenes": [{"id": "notes-observe", "start": 0, "end": 10, "label": "OBSERVACIÓN", "title": "Una observación abre el caso.", "description": "Una nota breve se fija al plano y deja visible al orador.", "subtitle": "El detalle inicial cambia cómo entendemos el problema.", "metric_label": "NOTA", "metric": "01", "visual": "note"}, {"id": "notes-source", "start": 10, "end": 20, "label": "REFERENCIA", "title": "La fuente sostiene la lectura.", "description": "La referencia aparece como una pieza del relato, no como una tabla.", "subtitle": "La evidencia se puede rastrear.", "metric_label": "FUENTE", "metric": "02", "visual": "quote"}, {"id": "notes-close", "start": 20, "end": 30, "label": "LECTURA", "title": "El caso deja una pregunta.", "description": "La nota final abre una interpretación útil y queda en silencio.", "subtitle": "La respuesta empieza en lo que observamos.", "metric_label": "LECTURA", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "product-signal",
+      "name": "Product Signal",
+      "description": "Demostraciones de producto con foco en una interfaz, beneficio y prueba concreta.",
+      "tone": "claro, tecnológico, orientado a producto",
+      "typography": "Space Grotesk para beneficios; Inter para microcopy",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [{"role": "primario", "name": "Indigo producto", "value": "#242C5C"}, {"role": "secundario", "name": "Niebla", "value": "#EEF1FA"}, {"role": "terciario", "name": "Lima señal", "value": "#A6E45C"}, {"role": "texto", "name": "Azul noche", "value": "#171B35"}],
+        "typography_system": {"headline": "Space Grotesk 600, 60–88 px", "body": "Inter 400, 21–28 px", "meta": "Inter 600, 12–15 px", "order": "beneficio → prueba visual → resultado"},
+        "layout": {"presenter": "un lado del encuadre", "visual_zone": "lado libre para UI o captura autorizada", "caption_zone": "inferior, fuera de UI", "reading_order": "presentador → beneficio → detalle de producto"},
+        "components": ["beneficio", "marco de interfaz autorizado", "cursor o hotspot", "microcopy", "subtítulo"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "beneficio → foco de interfaz → resultado", "transitions": ["marco de UI", "hotspot", "trazo de recorrido"], "forbidden": ["mockups inventados", "pantallas sin permiso", "cursores erráticos"]},
+        "captions": {"max_lines": 2, "max_chars": 76, "style": "blanco sobre placa índigo ligera", "highlight": "nombre de función o resultado"},
+        "evidence_policy": {"show_graph_when": "sólo con métrica real de producto y fuente", "alternatives": ["captura autorizada", "hotspot", "paso de flujo"], "source_label": "necesario en métricas de rendimiento"},
+        "icons": {"library": "Lucide", "allowed": ["MousePointer2", "AppWindow", "CircleCheck"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "step", "stat con evidencia", "cta"], "max_simultaneous_overlays": 2, "must_preserve": ["rostro", "UI autorizada", "legibilidad de interfaz"], "rule": "No crear pantallas o métricas ficticias; si no hay captura, usar una descripción textual."},
+        "preview": {"headline": "El beneficio se ve en contexto.", "supporting_text": "Una dirección para explicar un producto mientras la persona conserva credibilidad.", "visual_forms": ["hotspot", "marco de UI", "paso"], "scenes": [{"id": "product-benefit", "start": 0, "end": 10, "label": "BENEFICIO", "title": "El beneficio se ve en contexto.", "description": "El mensaje abre antes de introducir cualquier interfaz.", "subtitle": "Primero el problema; después la función.", "metric_label": "FLUJO", "metric": "01", "visual": "device"}, {"id": "product-proof", "start": 10, "end": 20, "label": "DEMOSTRACIÓN", "title": "Un hotspot aclara el paso.", "description": "La interfaz se muestra sólo si existe una captura autorizada.", "subtitle": "La acción ocurre en un punto visible.", "metric_label": "PASO", "metric": "02", "visual": "device"}, {"id": "product-result", "start": 20, "end": 30, "label": "RESULTADO", "title": "La función termina en valor.", "description": "El resultado vuelve a la voz y una llamada concreta.", "subtitle": "La experiencia debe resolver una fricción real.", "metric_label": "VALOR", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "systems-map",
+      "name": "Systems Map",
+      "description": "Mapas de relaciones, procesos y decisiones para explicar sistemas complejos de forma humana.",
+      "tone": "estratégico, estructurado, sereno",
+      "typography": "Space Grotesk para nodos; Inter para explicación",
+      "icon_system": "Lucide React en la interfaz; SVG lineal interno en el render",
+      "system": {
+        "palette": [{"role": "primario", "name": "Grafito", "value": "#151B23"}, {"role": "secundario", "name": "Papel frío", "value": "#EDF2F4"}, {"role": "terciario", "name": "Turquesa sistema", "value": "#49C6B5"}, {"role": "texto", "name": "Azul gris", "value": "#B7C5CD"}],
+        "typography_system": {"headline": "Space Grotesk 600, 54–78 px", "body": "Inter 400, 21–28 px", "meta": "Inter 700, 12–15 px", "order": "sistema → relación → decisión"},
+        "layout": {"presenter": "centro o lado menos ocupado", "visual_zone": "espacio libre para hasta cuatro nodos", "caption_zone": "inferior centrada", "reading_order": "voz → nodo activo → conexión → conclusión"},
+        "components": ["nodo activo", "conexiones", "etiqueta de relación", "paso numerado", "subtítulo"],
+        "motion": {"runtime": "GSAP dentro de HyperFrames para render; CSS/WAAPI para la previsualización", "beat": "nodo → conexión → consecuencia", "transitions": ["línea dibujada", "activación de nodo", "desvanecer relación pasada"], "forbidden": ["red completa desde el inicio", "más de cuatro nodos", "diagramas sin relación verbal" ]},
+        "captions": {"max_lines": 2, "max_chars": 80, "style": "blanco, centrado, sombra suave", "highlight": "nombre de relación"},
+        "evidence_policy": {"show_graph_when": "sólo si se expresa una serie cuantitativa; por defecto usar nodos", "alternatives": ["mapa de relaciones", "secuencia", "causa-efecto"], "source_label": "obligatorio en números"},
+        "icons": {"library": "Lucide", "allowed": ["Network", "GitBranch", "Workflow"], "render": "SVG inline, nunca emoji"},
+        "tools": ["HyperFrames", "GSAP Timeline", "Lucide", "Faster-Whisper"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "step", "stat con evidencia", "cta"], "max_simultaneous_overlays": 2, "must_preserve": ["rostro", "relación expresada", "subtítulos"], "rule": "Cada conexión representa una relación mencionada por la voz."},
+        "preview": {"headline": "Una relación hace visible el sistema.", "supporting_text": "Nodos que aparecen sólo cuando la narración explica una causa, un flujo o una decisión.", "visual_forms": ["nodo", "conexión", "secuencia"], "scenes": [{"id": "systems-node", "start": 0, "end": 10, "label": "SISTEMA / 01", "title": "Una relación hace visible el sistema.", "description": "El primer nodo aparece junto a la idea que representa.", "subtitle": "Para entender el resultado, empezamos por la relación.", "metric_label": "NODO", "metric": "01", "visual": "node"}, {"id": "systems-link", "start": 10, "end": 20, "label": "SISTEMA / 02", "title": "La conexión explica la consecuencia.", "description": "Una línea se dibuja únicamente cuando la voz explica el vínculo.", "subtitle": "Una decisión cambia lo que ocurre después.", "metric_label": "VÍNCULO", "metric": "02", "visual": "node"}, {"id": "systems-close", "start": 20, "end": 30, "label": "SISTEMA / 03", "title": "El mapa termina en una decisión.", "description": "Los nodos se retiran y queda la conclusión humana.", "subtitle": "El sistema importa porque permite decidir mejor.", "metric_label": "ACCIÓN", "metric": "03", "visual": "line"}]}
+      }
+    },
+    {
+      "id": "spatial-orbit",
+      "name": "Spatial Orbit",
+      "description": "Presentador humano y un sistema 3D semántico que activa nodos sólo cuando la voz explica una relación.",
+      "tone": "cinematográfico, sistémico, tecnológico",
+      "typography": "Space Grotesk para conceptos; Inter para metadatos y fuentes",
+      "icon_system": "Lucide React para interfaz; Three.js/WebGL para visuales espaciales",
+      "system": {
+        "palette": [{"role": "primario", "name": "Grafito espacial", "value": "#071019"}, {"role": "secundario", "name": "Blanco hielo", "value": "#EAF4F5"}, {"role": "terciario", "name": "Cian orbital", "value": "#45D6D0"}, {"role": "acento", "name": "Lima señal", "value": "#B5F36A"}, {"role": "texto", "name": "Niebla", "value": "#9EB5BC"}],
+        "typography_system": {"headline": "Space Grotesk 600, 48–86 px", "body": "Inter 400, 18–24 px", "meta": "Inter 700, 11–14 px, versales", "order": "voz → nodo activo → relación → conclusión"},
+        "layout": {"presenter": "tercio izquierdo, rostro despejado", "visual_zone": "campo orbital 3D en los dos tercios derechos", "caption_zone": "inferior segura, sólo si el contrato de subtítulos lo permite", "reading_order": "persona → objeto verbal → conexión → consecuencia"},
+        "components": ["video del presentador", "escena Three.js", "nodos orbitales semánticos", "conectores de relación", "métrica puntual", "etiqueta de fuente", "subtítulo opcional"],
+        "motion": {"runtime": "Three.js 0.181.2 + GSAP dentro de HyperFrames; WebGL determinista en preview", "beat": "cámara entra → nodo se activa → conexión se dibuja → sistema respira", "transitions": ["entrada orbital", "activación de nodo", "vuelo de cámara suave", "pulso de relación", "settle con profundidad"], "forbidden": ["reloj libre o animación no seekable", "red completa desde el inicio", "más de cuatro nodos activos", "rotación decorativa sin evidencia verbal", "texto flotante que tapa el rostro"]},
+        "captions": {"max_lines": 2, "max_chars": 76, "style": "blanco hielo con sombra, inferior segura", "highlight": "una palabra o relación activa, no karaoke continuo"},
+        "evidence_policy": {"show_graph_when": "la voz menciona una cifra, relación, proceso o cambio verificable", "alternatives": ["nodo semántico", "conector causa-efecto", "métrica puntual", "icono Lucide contextual"], "source_label": "obligatorio junto a cifras y datos externos"},
+        "icons": {"library": "Lucide", "allowed": ["Orbit", "Network", "GitBranch", "Activity", "Database", "ArrowUpRight"], "render": "SVG inline, nunca emoji; Three.js sólo para geometría y profundidad"},
+        "tools": ["HyperFrames", "Three.js 0.181.2", "GSAP Timeline", "Lucide", "Faster-Whisper", "WebGL"],
+        "ai_contract": {"allowed_scene_kinds": ["hook", "concept", "quote", "step", "stat con evidencia", "cta"], "max_simultaneous_overlays": 2, "must_preserve": ["rostro", "composición 16:9", "relación expresada", "legibilidad", "seek determinista"], "rule": "La IA elige como máximo un nodo o relación activa por beat; cada forma debe tener una evidencia textual y desaparece al terminar la frase."},
+        "preview": {"headline": "Las ideas también tienen profundidad.", "supporting_text": "Una escena orbital convierte relaciones, cambios y cifras en objetos visuales con cámara, luz y movimiento controlado.", "visual_forms": ["orbita", "nodo activo", "conexión", "métrica", "pulso"], "scenes": [{"id": "orbit-hook", "start": 0, "end": 10, "label": "ORBITA / 01", "title": "La idea entra en el campo.", "description": "La cámara abre espacio y activa un único nodo semántico.", "subtitle": "Una relación clara antes que una decoración constante.", "metric_label": "NODO", "metric": "01", "visual": "process"}, {"id": "orbit-link", "start": 10, "end": 20, "label": "ORBITA / 02", "title": "La relación se vuelve visible.", "description": "El conector se dibuja cuando la voz expresa causa, flujo o consecuencia.", "subtitle": "El sistema aparece porque la frase lo necesita.", "metric_label": "VÍNCULO", "metric": "02", "visual": "node"}, {"id": "orbit-proof", "start": 20, "end": 30, "label": "ORBITA / 03", "title": "El dato toma profundidad.", "description": "Una métrica breve ocupa el foco y luego devuelve el aire al sistema.", "subtitle": "Profundidad para explicar, no para distraer.", "metric_label": "PRUEBA", "metric": "+42%", "visual": "data"}]}
+      }
+    }
+  ]
+}

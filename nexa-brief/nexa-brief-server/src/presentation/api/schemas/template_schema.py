@@ -31,6 +31,10 @@ class TemplateResponse(BaseModel):
     requires_video: bool
     requires_lyrics: bool
     active: bool
+    preview_image_url: str | None = None
+    preview_video_url: str | None = None
+    preview_audio_url: str | None = None
+    showcase_url: str | None = None
 
 
 class TemplatePreviewAcceptedResponse(BaseModel):

@@ -1,5 +1,10 @@
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
-import type { ChannelAccount, ChannelPlatform, PublishedVideo } from "../types";
+import type {
+  ChannelAccount,
+  ChannelAccountUpdate,
+  ChannelPlatform,
+  PublishedVideo,
+} from "../types";
 
 interface AccountStatusResponseDto {
   platform: string;
@@ -11,6 +16,10 @@ interface AccountStatusResponseDto {
   has_refresh_token: boolean;
   avatar: string | null;
   published_count: number;
+  label?: string;
+  notes?: string;
+  connected_at?: number | null;
+  last_published_at?: number | null;
 }
 
 interface PublishedVideoResponseDto {
@@ -33,6 +42,10 @@ function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
     hasRefreshToken: dto.has_refresh_token,
     avatar: dto.avatar,
     publishedCount: dto.published_count,
+    label: dto.label ?? "",
+    notes: dto.notes ?? "",
+    connectedAt: dto.connected_at ?? null,
+    lastPublishedAt: dto.last_published_at ?? null,
   };
 }
 
@@ -60,16 +73,34 @@ export async function getChannelVideos(
   signal?: AbortSignal,
 ): Promise<PublishedVideo[]> {
   const dtos = await httpClient<PublishedVideoResponseDto[]>(
-    `/api/v1/publish/accounts/${platform}/${encodeURIComponent(alias)}/videos`,
+    `${accountPath(platform, alias)}/videos`,
     { signal },
   );
-  return dtos.map(mapPublishedVideo);
+  // The publish log can hold the same post twice (e.g. a retried publish) — keep the first (newest).
+  const unique = new Map<string, PublishedVideo>();
+  for (const dto of dtos)
+    if (!unique.has(dto.post_id)) unique.set(dto.post_id, mapPublishedVideo(dto));
+  return [...unique.values()];
+}
+
+function accountPath(platform: ChannelPlatform, alias: string): string {
+  return `/api/v1/publish/accounts/${platform}/${encodeURIComponent(alias)}`;
+}
+
+export async function updateChannel(
+  platform: ChannelPlatform,
+  alias: string,
+  update: ChannelAccountUpdate,
+): Promise<ChannelAccount> {
+  const dto = await httpClient<AccountStatusResponseDto>(accountPath(platform, alias), {
+    method: "PATCH",
+    body: update,
+  });
+  return mapChannelAccount(dto);
 }
 
 export async function disconnectChannel(platform: ChannelPlatform, alias: string): Promise<void> {
-  await httpClient<void>(`/api/v1/publish/accounts/${platform}/${encodeURIComponent(alias)}`, {
-    method: "DELETE",
-  });
+  await httpClient<void>(accountPath(platform, alias), { method: "DELETE" });
 }
 
 /** Full-page redirect target — not a fetch call, the browser must navigate
@@ -77,4 +108,17 @@ export async function disconnectChannel(platform: ChannelPlatform, alias: string
 export function buildConnectChannelUrl(platform: ChannelPlatform, alias: string): string {
   const params = new URLSearchParams({ alias });
   return resolveApiUrl(`/api/v1/publish/auth/${platform}/start?${params.toString()}`);
+}
+
+/** Borra el post de la plataforma (irreversible). El backend también lo saca
+ * del log de publicaciones y marca `removed` sus entries de cola. */
+export async function deletePublishedVideo(
+  platform: ChannelPlatform,
+  alias: string,
+  postId: string,
+): Promise<void> {
+  await httpClient(
+    `/api/v1/publish/${platform}/${encodeURIComponent(alias)}/${encodeURIComponent(postId)}`,
+    { method: "DELETE", timeoutMs: 60_000 },
+  );
 }

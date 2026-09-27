@@ -106,7 +106,8 @@ def test_tiktok_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tmp_
     
     response = client.get("/api/v1/publish/auth/tiktok/callback?code=mock_code&state=cuenta_custom")
     assert response.status_code == 200
-    assert "Tiktok Configurado" in response.text
+    assert "Cuenta conectada" in response.text
+    assert "TikTok" in response.text
     
     mock_storage.save_tokens.assert_called_once_with(
         platform="tiktok",
@@ -161,7 +162,8 @@ def test_youtube_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, moc
     
     response = client.get("/api/v1/publish/auth/youtube/callback?code=mock_code&state=canal_custom")
     assert response.status_code == 200
-    assert "Youtube Configurado" in response.text
+    assert "Cuenta conectada" in response.text
+    assert "YouTube" in response.text
     
     mock_storage.save_tokens.assert_called_once_with(
         platform="youtube",
@@ -212,7 +214,8 @@ def test_facebook_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tm
     
     response = client.get("/api/v1/publish/auth/facebook/callback?code=mock_code&state=pagina_custom")
     assert response.status_code == 200
-    assert "Facebook Configurado" in response.text
+    assert "Cuenta conectada" in response.text
+    assert "Facebook" in response.text
     
     mock_storage.save_tokens.assert_called_once_with(
         platform="facebook",

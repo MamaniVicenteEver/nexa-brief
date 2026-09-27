@@ -1,25 +1,12 @@
 "use client";
 
+import { ChevronDown, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import { useJobsTrayStore } from "@/shared/store";
+import { useTrackedJobsSummary } from "../hooks/useTrackedJobsSummary";
 import { JobProgressCard } from "./JobProgressCard";
-
-function CloseIcon() {
-  return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon, parent button has aria-label
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      className="size-3"
-      aria-hidden
-    >
-      <path d="M18 6 6 18M6 6l12 12" />
-    </svg>
-  );
-}
 
 /** Fixed bottom-right stack of in-flight/recent job cards — mounted once in
  * `(admin)/layout.tsx`, so it stays visible across every admin page instead
@@ -27,9 +14,12 @@ function CloseIcon() {
  * the batch. Both submission entry points (CreateVideoForm and
  * TemplateRecordButton) push into the same `useJobsTrayStore`. */
 export function JobsTray() {
+  const t = useTranslations("createVideo.tray");
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const jobs = useJobsTrayStore((state) => state.jobs);
-  const removeJob = useJobsTrayStore((state) => state.removeJob);
+  const removeJobs = useJobsTrayStore((state) => state.removeJobs);
+  const summary = useTrackedJobsSummary(jobs.map((j) => j.jobId));
 
   useEffect(() => {
     useJobsTrayStore.persist.rehydrate();
@@ -38,21 +28,73 @@ export function JobsTray() {
 
   if (!hasHydrated || jobs.length === 0) return null;
 
+  const finished = [...summary.done, ...summary.failed];
+  const parts = [
+    summary.running.length && t("running", { count: summary.running.length }),
+    summary.queued.length && t("queued", { count: summary.queued.length }),
+    summary.done.length && t("done", { count: summary.done.length }),
+    summary.failed.length && t("failed", { count: summary.failed.length }),
+  ].filter(Boolean);
+
   return (
-    <div className="fixed right-4 bottom-4 z-40 flex max-h-[75vh] w-[320px] flex-col-reverse gap-2 overflow-x-hidden overflow-y-auto">
-      {jobs.map((job) => (
-        <div key={job.jobId} className="relative shrink-0">
+    <section
+      aria-label={t("title")}
+      className="fixed right-4 bottom-4 z-40 flex max-h-[75vh] w-[340px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[20px] border border-nb-line bg-nb-bg/95 shadow-[0_24px_48px_-18px_rgba(40,30,10,0.4)] backdrop-blur"
+    >
+      <header className="flex items-center gap-2 border-b border-nb-line px-4 py-3">
+        <button
+          type="button"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-expanded={!collapsed}
+          className="flex min-w-0 flex-1 items-center gap-2 text-left"
+        >
+          {summary.running.length > 0 && (
+            <span className="size-2 shrink-0 animate-pulse rounded-full bg-nb-green-dark" />
+          )}
+          <span className="min-w-0">
+            <span className="block text-[13px] font-bold text-nb-ink">{t("title")}</span>
+            <span className="block text-[11.5px] leading-snug text-nb-mute">
+              {parts.join(" · ")}
+            </span>
+          </span>
+          <ChevronDown
+            className={cn(
+              "ml-auto size-4 shrink-0 text-nb-mute transition-transform",
+              collapsed && "rotate-180",
+            )}
+          />
+        </button>
+        {finished.length > 0 && (
           <button
             type="button"
-            onClick={() => removeJob(job.jobId)}
-            aria-label="Cerrar"
-            className="absolute top-2 right-2 z-10 flex size-5 items-center justify-center rounded-full bg-nb-ink/70 text-white hover:bg-nb-ink"
+            onClick={() => removeJobs(finished)}
+            className="shrink-0 rounded-full px-2 py-1 text-[11.5px] font-semibold text-nb-ink-soft hover:bg-nb-ink/[0.06]"
           >
-            <CloseIcon />
+            {t("clearFinished")}
           </button>
-          <JobProgressCard job={{ jobId: job.jobId, category: job.category, stage: "pending" }} />
+        )}
+      </header>
+
+      {!collapsed && (
+        <div className="flex flex-col gap-2 overflow-y-auto p-3">
+          {[...jobs].reverse().map((job) => (
+            <JobProgressCard
+              key={job.jobId}
+              job={{ jobId: job.jobId, category: job.category, stage: "pending" }}
+              actions={
+                <button
+                  type="button"
+                  onClick={() => removeJobs([job.jobId])}
+                  aria-label={t("dismiss")}
+                  className="grid size-6 place-items-center rounded-full text-nb-mute hover:bg-nb-ink/[0.08] hover:text-nb-ink"
+                >
+                  <X className="size-3.5" />
+                </button>
+              }
+            />
+          ))}
         </div>
-      ))}
-    </div>
+      )}
+    </section>
   );
 }

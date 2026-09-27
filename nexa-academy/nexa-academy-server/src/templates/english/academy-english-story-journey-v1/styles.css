@@ -1,0 +1,31 @@
+:root { --primary: #2e6b67; --secondary: #f5c76a; --tertiary: #e97961; --surface: #fff8ec; --ink: #203a3a; --muted: #607170; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--surface); }
+body { color: var(--ink); font-family: Arial, sans-serif; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.academy-background { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(245, 199, 106, 0.55), transparent 28%), linear-gradient(135deg, var(--surface), #e3f0e7); }
+.academy-background::after { position: absolute; inset: 0; opacity: 0.3; background-image: radial-gradient(rgba(46, 107, 103, 0.28) 1px, transparent 1px); background-size: 34px 34px; content: ""; }
+.academy-header, .academy-footer { position: absolute; z-index: 4; right: 6%; left: 6%; display: flex; justify-content: space-between; letter-spacing: 0.14em; text-transform: uppercase; }
+.academy-header { top: 6%; padding-bottom: 18px; border-bottom: 1px solid rgba(32, 58, 58, 0.2); font-size: 17px; font-weight: 800; }
+.academy-meta, .academy-footer { color: var(--muted); font-size: 13px; font-weight: 700; }
+.academy-main { position: absolute; inset: 0; }
+.academy-intro { position: absolute; top: 18%; right: 9%; left: 9%; }
+.academy-eyebrow, .panel-label, .academy-caption span { color: var(--primary); font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+.academy-intro h1 { max-width: 1120px; margin: 22px 0 20px; font-size: clamp(70px, 8vw, 144px); line-height: 0.9; letter-spacing: -0.07em; }
+.academy-intro p { max-width: 850px; margin: 0; color: var(--muted); font-size: 31px; line-height: 1.2; }
+.lesson-panel { position: absolute; top: 16%; right: 8%; bottom: 17%; left: 8%; padding: 45px 62px; border: 2px solid rgba(32, 58, 58, 0.15); border-radius: 22px; background: rgba(255, 255, 255, 0.68); box-shadow: 0 24px 70px rgba(32, 58, 58, 0.13); }
+.dialogue { display: grid; align-content: center; gap: 17px; }
+.dialogue-row { display: grid; grid-template-columns: 72px 1fr; gap: 20px; align-items: center; max-width: 980px; padding: 18px 24px; border-radius: 14px; }
+.speaker-a { margin-left: 2%; background: rgba(245, 199, 106, 0.25); }
+.speaker-b { margin-left: 12%; background: rgba(46, 107, 103, 0.12); }
+.speaker { display: grid; width: 58px; height: 58px; place-items: center; border-radius: 50%; background: var(--primary); color: white; font-size: 26px; font-weight: 800; }
+.speaker-b .speaker { background: var(--tertiary); }
+.dialogue-row strong { display: block; font-size: 34px; }
+.dialogue-row small { display: block; margin-top: 6px; color: var(--muted); font-size: 17px; }
+.dialogue-focus { justify-self: end; margin-top: 18px; padding: 18px 26px; border: 3px solid var(--tertiary); border-radius: 10px; color: var(--tertiary); font-size: 39px; font-weight: 800; }
+.academy-caption { position: absolute; right: 9%; bottom: 7%; left: 9%; padding: 17px 22px; border-left: 6px solid var(--secondary); background: rgba(255, 255, 255, 0.82); }
+.academy-caption strong { display: block; margin-top: 8px; font-size: 22px; }
+.academy-footer { bottom: 3.5%; }
+.academy-footer span:last-child { color: var(--tertiary); }
+[data-enter] { animation: academy-enter 0.8s cubic-bezier(0.2, 0, 0, 1) both; }
+@keyframes academy-enter { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }

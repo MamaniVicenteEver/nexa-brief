@@ -37,7 +37,9 @@ import structlog
 
 from src.config.exceptions import RecordingError
 from src.config.settings import settings
+from src.adapters.recorder.infrastructure.subprocess_progress import parse_remotion_event, run_with_progress
 from src.core.ports.recorder_port import RecorderPort, RecordingResult
+from src.core.progress import report_step_progress
 
 if TYPE_CHECKING:
     from src.config.niche_config import NicheConfig
@@ -83,11 +85,11 @@ def _get_render_semaphore() -> asyncio.Semaphore:
     return _semaphore
 
 
-def _last_json_line(raw: bytes) -> dict | None:
+def _last_json_line(raw: str) -> dict | None:
     """Última línea de progreso emitida por render-node.mjs, para loguear
     contexto útil (cuántos frames se llegaron a renderizar) si el proceso
     termina con exit code != 0."""
-    lines = [line for line in raw.decode(errors="replace").splitlines() if line.strip()]
+    lines = [line for line in raw.splitlines() if line.strip()]
     if not lines:
         return None
     try:
@@ -251,20 +253,16 @@ class RemotionAdapter(RecorderPort):
         )
 
         try:
+            report_step_progress(0.0)  # waiting for the render slot is not progress
             async with _get_render_semaphore():
-                proc = await asyncio.create_subprocess_exec(
-                    *cmd,
-                    cwd=str(settings.remotion_project_dir),
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
-                )
                 try:
-                    stdout, stderr = await asyncio.wait_for(
-                        proc.communicate(),
+                    result = await run_with_progress(
+                        cmd,
+                        cwd=settings.remotion_project_dir,
                         timeout=settings.remotion_render_timeout_seconds,
+                        parse_progress=parse_remotion_event,
                     )
                 except asyncio.TimeoutError:
-                    proc.kill()
                     raise RecordingError(
                         f"Remotion render timed out after {settings.remotion_render_timeout_seconds}s "
                         f"(composition={composition_id})"
@@ -272,15 +270,15 @@ class RemotionAdapter(RecorderPort):
         finally:
             props_path.unlink(missing_ok=True)
 
-        if proc.returncode != 0:
-            err = stderr.decode(errors="replace")[-500:] if stderr else "no stderr"
+        if result.returncode != 0:
+            err = result.stderr_tail[-500:] or "no stderr"
             logger.error(
                 "remotion_render_failed",
-                returncode=proc.returncode,
-                last_progress=_last_json_line(stdout),
+                returncode=result.returncode,
+                last_progress=_last_json_line(result.stdout_tail),
                 stderr_tail=err,
             )
-            raise RecordingError(f"Remotion render failed (exit {proc.returncode}): {err}")
+            raise RecordingError(f"Remotion render failed (exit {result.returncode}): {err}")
 
         if not youtube_path.exists():
             raise RecordingError(f"Remotion render exited 0 pero {youtube_path} no fue creado")

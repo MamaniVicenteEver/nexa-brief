@@ -1,0 +1,118 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Viaje nocturno en cinco escenas — tarjeta de letras 3D en ámbar que se ilumina palabra por palabra mientras la cámara se acerca, un camino de parque de noche con palabras serif condensadas que aparecen y se desenfocan en profundidad, una ola que borra todo hacia un cielo estrellado con la luna, un túnel amarillo de letras con desenfoque de movimiento y un cierre sobre papel amarillo. Movimiento suave y continuo. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "song": {
+        "title": "Hola",
+        "artist": "Dalex",
+        "cover": "assets/cover.jpg"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;800;900&family=Noto+Serif+Display:wdth,wght@62.5..100,300..800&family=Alegreya+Sans:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400..500&display=swap",
+        "ui": "\"Figtree\", system-ui, sans-serif",
+        "display": "\"Noto Serif Display\", \"Times New Roman\", serif",
+        "humanist": "\"Alegreya Sans\", \"Gill Sans\", sans-serif",
+        "book": "\"Newsreader\", Georgia, serif"
+      },
+      "scenes": [
+        {
+          "type": "card",
+          "weight": 0.3,
+          "palette": {
+            "bg": "#070302",
+            "warm": "#5A2209",
+            "ember": "#D8672E",
+            "lit": "#FFF5EA",
+            "glow": "#FF7B2C"
+          }
+        },
+        {
+          "type": "path",
+          "weight": 0.28,
+          "video": {
+            "src": "assets/path.mp4",
+            "playbackRate": 0.72,
+            "filter": "saturate(1.9) contrast(1.25) brightness(0.74) hue-rotate(-8deg)"
+          },
+          "palette": {
+            "night": "#0B2B4F",
+            "sky": "#1E8BFF",
+            "textTop": "#FFF3DC",
+            "textBottom": "#F0955A",
+            "glow": "#FFB070",
+            "butterfly": "#F2861B"
+          }
+        },
+        {
+          "type": "moon",
+          "weight": 0.14,
+          "moon": "assets/moon.png",
+          "palette": {
+            "bg": "#020203",
+            "ink": "#FFD93B",
+            "fringeA": "#FF3A2E",
+            "fringeB": "#27D3FF"
+          }
+        },
+        {
+          "type": "tunnel",
+          "weight": 0.14,
+          "palette": {
+            "bg": "#060500",
+            "ink": "#EAD51F",
+            "dim": "#7C6F0C"
+          }
+        },
+        {
+          "type": "paper",
+          "weight": 0.14,
+          "palette": {
+            "bg": "#F7E83C",
+            "ink": "#28260E",
+            "shade": "#8F8623"
+          }
+        }
+      ],
+      "intro": {
+        "artist": "",
+        "title": "",
+        "sub": "Ahora suena",
+        "feats": ""
+      },
+      "outro": {
+        "leadSec": 8,
+        "songTitle": "",
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "debug": {
+        "enabled": false
+      },
+      "layout": {
+        "splitLineWords": 9,
+        "splitLineSec": 7,
+        "pathChunkWeights": {
+          "1": 0.12,
+          "2": 0.38,
+          "3": 0.5
+        },
+        "pathLayoutWeights": {
+          "stack": 0.6,
+          "pair": 0.4
+        },
+        "tunnelRowWords": 4,
+        "paperRowChars": 10,
+        "transitionSec": 1.2,
+        "cardHeight": 0.8
+      },
+      "seed": 7
+    }
+  ]
+}

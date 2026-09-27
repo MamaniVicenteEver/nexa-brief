@@ -31,7 +31,10 @@ export async function PublicFooter() {
           <span className="nexa-public-footer__tagline">{t("tagline")}</span>
         </div>
 
-        <div className="nexa-public-footer__divider hidden h-9 w-px shrink-0 bg-nb-mute/20 lg:block" aria-hidden />
+        <div
+          className="nexa-public-footer__divider hidden h-9 w-px shrink-0 bg-nb-mute/20 lg:block"
+          aria-hidden
+        />
 
         <div className="nexa-public-footer__dev flex flex-col items-center gap-2.5 lg:items-end">
           <div className="nexa-public-footer__dev-row-name">

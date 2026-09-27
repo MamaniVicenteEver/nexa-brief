@@ -13,6 +13,8 @@ const TECH_ITEMS = [
   { name: "Playwright", className: "font-nb-code text-[15px] font-semibold" },
   { name: "FFmpeg", className: "font-nb-code text-[13px] font-bold uppercase tracking-[0.03em]" },
   { name: "Remotion", className: "font-nb-editorial text-[24px] italic font-semibold" },
+  { name: "HyperFrames", className: "font-nb-tech text-[18px] font-bold tracking-[0.02em]" },
+  { name: "Whisper", className: "font-nb-code text-[15px] font-semibold" },
   { name: "FastAPI", className: "font-nb-tech text-[19px] font-semibold" },
   {
     name: "AWS Lambda",

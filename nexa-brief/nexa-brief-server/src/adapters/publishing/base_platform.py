@@ -164,8 +164,11 @@ class BasePlatformAdapter(PublisherPort):
                 f"[{platform}] {context}: Rate limit / quota exceeded (429). Body: {body}"
             )
         if status in (401, 403):
+            # 401 = token inválido; 403 = token válido pero sin permiso para esta
+            # acción (ej. app de TikTok sin auditar) — no confundirlos.
+            hint = "token may be invalid" if status == 401 else "not allowed for this app/account"
             raise PlatformAPIError(
-                f"[{platform}] {context}: Auth error ({status}) — token may be invalid. Body: {body}",
+                f"[{platform}] {context}: Auth error ({status}) — {hint}. Body: {body}",
                 platform=platform,
                 status_code=status,
                 body=body,

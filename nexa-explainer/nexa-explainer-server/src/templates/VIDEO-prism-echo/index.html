@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prism Echo · NEXA Explainer</title>
+  <style>
+    :root{--ink:#fff7ed;--muted:#ead9c6;--accent:#f2bd77;--bg:#130b08}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}
+    .stage{position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--bg)}video,.wash,.vignette,.grain{position:absolute;inset:0;width:100%;height:100%}video{object-fit:cover;filter:brightness(.72) contrast(1.16) saturate(1.12);transform:scale(1.025)}.wash{background:radial-gradient(circle at 18% 20%,#f2bd7730,transparent 32%),linear-gradient(90deg,#130b08b8,transparent 58%,#130b0870);mix-blend-mode:screen}.vignette{background:radial-gradient(circle,transparent 36%,#000c 100%)}.grain{opacity:.07;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:4px 4px;mix-blend-mode:screen}
+    .copy{position:absolute;left:6vw;bottom:16vh;max-width:44vw;z-index:2}.brand{font-size:12px;letter-spacing:.3em;font-weight:700}.rule{width:5rem;height:2px;background:var(--accent);margin:2.6vh 0}.title{font:800 clamp(52px,7vw,132px)/.84 'Space Grotesk',Inter,sans-serif;letter-spacing:-.1em;margin:0;text-shadow:0 5px 26px #000}.support{color:var(--muted);font-size:clamp(13px,1.1vw,22px);line-height:1.4;max-width:28em;margin-top:2.5vh}.mark{position:absolute;right:7vw;top:10vh;width:clamp(62px,8vw,150px);aspect-ratio:1;border:1px solid var(--accent);transform:rotate(45deg);animation:echo 2s ease-out both}@keyframes echo{from{opacity:0;transform:rotate(-120deg) scale(.2)}to{opacity:1;transform:rotate(45deg) scale(1)}}.mark:before,.mark:after{content:'';position:absolute;background:var(--accent)}.mark:before{width:140%;height:1px;left:-20%;top:50%}.mark:after{height:140%;width:1px;left:50%;top:-20%}
+  </style>
+</head>
+<body><main class="stage" data-template="prism-echo"><video src="__VIDEO_SRC__" playsinline muted preload="auto"></video><div class="wash"></div><div class="vignette"></div><div class="grain"></div><div class="mark" aria-hidden="true"></div><section class="copy"><div class="brand">NEXA / PRISM ECHO</div><div class="rule"></div><h1 class="title">UNA PROMESA<br>AHORA</h1><p class="support">Entrada lateral, respiración y una última imagen que permanece.</p></section></main></body>
+</html>

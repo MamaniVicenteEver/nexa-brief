@@ -109,7 +109,10 @@ export function AssignVideoDialog({
 
         <div className="flex flex-col gap-3.5">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="occurrence" className="text-[11px] font-semibold text-nb-mute uppercase">
+            <label
+              htmlFor="occurrence"
+              className="text-[11px] font-semibold text-nb-mute uppercase"
+            >
               {t("assignVideo.occurrenceLabel")}
             </label>
             {occurrences.length > 0 ? (

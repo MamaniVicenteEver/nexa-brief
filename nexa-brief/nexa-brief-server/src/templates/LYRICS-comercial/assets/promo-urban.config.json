@@ -1,0 +1,389 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Opener deportivo 'Urban' sobre negro: metraje de atletas en duotono rojo y blanco y negro dentro de paneles, texto blanco condensado en escalera que se escribe letra a letra, bloques naranjas que tapan y destapan la pantalla entre escenas, rayados, flechas, corredor y año gigante en contorno. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/promo-urban.mp3"
+      },
+      "lyricsUrl": "assets/promo-urban.lyrics.json",
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;800&display=swap"
+      },
+      "palette": {
+        "black": "#050505",
+        "white": "#F4F4F2",
+        "orange": "#F2681A",
+        "red": "#E4261C",
+        "redDark": "#140102"
+      },
+      "grades": {
+        "duoRed": {
+          "type": "duo",
+          "dark": "#140102",
+          "light": "#E4261C",
+          "contrast": 1.3
+        },
+        "bwCold": {
+          "type": "duo",
+          "dark": "#060606",
+          "light": "#E9E9E6",
+          "contrast": 1.35
+        }
+      },
+      "brand": {
+        "tagTop": "NEXA BRIEF\nSPORT GROUP",
+        "tagRight": "STREET SERIES",
+        "year": "2026",
+        "blurb": "ENTRENAMOS CADA DÍA EN LA CALLE, EN LA CANCHA\nY EN LA PISTA. DEPORTE URBANO SIN FILTROS,\nHECHO POR ATLETAS PARA ATLETAS."
+      },
+      "texture": {
+        "grain": 0.09
+      },
+      "scenes": [
+        {
+          "type": "title",
+          "media": [
+            "skate",
+            "basket"
+          ],
+          "trans": "cut"
+        },
+        {
+          "type": "stair",
+          "media": [
+            "sprint",
+            "boxing"
+          ]
+        },
+        {
+          "type": "full",
+          "media": [
+            "ropes"
+          ]
+        },
+        {
+          "type": "bottom",
+          "media": [
+            "soccer"
+          ]
+        },
+        {
+          "type": "black3"
+        },
+        {
+          "type": "twoTone",
+          "media": [
+            "basket"
+          ]
+        },
+        {
+          "type": "stair",
+          "media": [
+            "sprint"
+          ],
+          "full": true,
+          "ring": true
+        },
+        {
+          "type": "ghost",
+          "media": [
+            "boxing"
+          ]
+        },
+        {
+          "type": "bigSmall",
+          "media": [
+            "skate"
+          ]
+        },
+        {
+          "type": "big2",
+          "media": [
+            "ropes",
+            "soccer"
+          ]
+        },
+        {
+          "type": "black3"
+        },
+        {
+          "type": "panel2",
+          "media": [
+            "basket",
+            "sprint"
+          ]
+        },
+        {
+          "type": "stair",
+          "media": [
+            "soccer"
+          ],
+          "full": true
+        },
+        {
+          "type": "logo"
+        }
+      ],
+      "debug": {
+        "enabled": false
+      },
+      "seed": 23,
+      "media": [
+        {
+          "id": "basket",
+          "type": "video",
+          "src": "assets/media/basketball.mp4",
+          "poster": "assets/media/basketball-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/basketball.duoRed.mp4",
+              "poster": "assets/media/graded/basketball-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/basketball.bwCold.mp4",
+              "poster": "assets/media/graded/basketball-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "sprint",
+          "type": "video",
+          "src": "assets/media/sprinter.mp4",
+          "poster": "assets/media/sprinter-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/sprinter.duoRed.mp4",
+              "poster": "assets/media/graded/sprinter-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/sprinter.bwCold.mp4",
+              "poster": "assets/media/graded/sprinter-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "boxing",
+          "type": "video",
+          "src": "assets/media/boxing.mp4",
+          "poster": "assets/media/boxing-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/boxing.duoRed.mp4",
+              "poster": "assets/media/graded/boxing-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/boxing.bwCold.mp4",
+              "poster": "assets/media/graded/boxing-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "skate",
+          "type": "video",
+          "src": "assets/media/skate.mp4",
+          "poster": "assets/media/skate-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/skate.duoRed.mp4",
+              "poster": "assets/media/graded/skate-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/skate.bwCold.mp4",
+              "poster": "assets/media/graded/skate-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "video",
+          "src": "assets/media/battle-ropes.mp4",
+          "poster": "assets/media/battle-ropes-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/battle-ropes.duoRed.mp4",
+              "poster": "assets/media/graded/battle-ropes-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/battle-ropes.bwCold.mp4",
+              "poster": "assets/media/graded/battle-ropes-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "soccer",
+          "type": "video",
+          "src": "assets/media/soccer.mp4",
+          "poster": "assets/media/soccer-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/soccer.duoRed.mp4",
+              "poster": "assets/media/graded/soccer-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/soccer.bwCold.mp4",
+              "poster": "assets/media/graded/soccer-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "basket-1",
+          "type": "image",
+          "src": "assets/media/basketball-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/basketball-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/basketball-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "basket-2",
+          "type": "image",
+          "src": "assets/media/basketball-2.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/basketball-2.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/basketball-2.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "sprint-1",
+          "type": "image",
+          "src": "assets/media/sprinter-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/sprinter-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/sprinter-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "sprint-2",
+          "type": "image",
+          "src": "assets/media/sprinter-2.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/sprinter-2.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/sprinter-2.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "boxing-1",
+          "type": "image",
+          "src": "assets/media/boxing-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/boxing-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/boxing-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "boxing-2",
+          "type": "image",
+          "src": "assets/media/boxing-2.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/boxing-2.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/boxing-2.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "skate-1",
+          "type": "image",
+          "src": "assets/media/skate-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/skate-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/skate-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "skate-2",
+          "type": "image",
+          "src": "assets/media/skate-2.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/skate-2.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/skate-2.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "ropes-1",
+          "type": "image",
+          "src": "assets/media/battle-ropes-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/battle-ropes-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/battle-ropes-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "ropes-2",
+          "type": "image",
+          "src": "assets/media/battle-ropes-2.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/battle-ropes-2.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/battle-ropes-2.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "soccer-1",
+          "type": "image",
+          "src": "assets/media/soccer-1.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/soccer-1.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/soccer-1.bwCold.jpg"
+            }
+          }
+        },
+        {
+          "id": "soccer-2",
+          "type": "image",
+          "src": "assets/media/soccer-2.jpg",
+          "graded": {
+            "duoRed": {
+              "src": "assets/media/graded/soccer-2.duoRed.jpg"
+            },
+            "bwCold": {
+              "src": "assets/media/graded/soccer-2.bwCold.jpg"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

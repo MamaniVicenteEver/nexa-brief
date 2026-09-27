@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -44,7 +45,10 @@ import structlog
 from src.adapters.recorder.infrastructure.hyperframes_audio import compute_equalizer_magnitudes
 from src.config.exceptions import RecordingError
 from src.config.settings import settings
+from src.adapters.recorder.infrastructure.subprocess_progress import parse_percent, run_with_progress
+from src.config.template_manifest import get_template_paths
 from src.core.ports.recorder_port import RecorderPort, RecordingResult
+from src.core.progress import report_step_progress
 
 if TYPE_CHECKING:
     from src.config.niche_config import NicheConfig
@@ -86,10 +90,28 @@ def _resolve_composition_dir(niche_cfg: "NicheConfig") -> Path | None:
     return settings.hyperframes_project_dir / rel
 
 
+def _resolve_template_dir(niche_cfg: "NicheConfig") -> Path | None:
+    """Directorio de la plantilla HTML cruda (src/templates/<folder>/).
+    Fallback genérico cuando no hay composición portada en _COMPOSITION_BY_TEMPLATE_ID."""
+    paths = get_template_paths(niche_cfg.template.template_id)
+    index_html = paths.get("index_html")
+    return index_html.parent if index_html and index_html.exists() else None
+
+
 def supports_niche(niche_cfg: "NicheConfig") -> bool:
-    """Usado por el router para validar un override a recorder_engine='hyperframes'
-    antes de aceptar el job (ver videos.py) — sin duplicar el mapeo de arriba."""
-    return _resolve_composition_dir(niche_cfg) is not None
+    """Niches con composición portada (_COMPOSITION_BY_TEMPLATE_ID) → path optimizado.
+
+    El path genérico (index.html de la plantilla directo) solo se ofrece para
+    plantillas SIN letra sincronizada: las de letras animan con su propio
+    reloj (audio.currentTime / requestAnimationFrame), que la captura cuadro a
+    cuadro de HyperFrames no controla — probado 2026-09-25 con lyrics-romantic:
+    la letra salía varios segundos atrasada respecto del audio. Para ofrecer
+    HyperFrames en un nicho de letras hay que portar su composición."""
+    if _resolve_composition_dir(niche_cfg) is not None:
+        return True
+    if niche_cfg.template.requires_lyrics:
+        return False
+    return _resolve_template_dir(niche_cfg) is not None
 
 
 def _hyperframes_bin() -> Path:
@@ -115,12 +137,7 @@ class HyperframesAdapter(RecorderPort):
             raise RecordingError("HyperframesAdapter requiere niche_cfg (necesita template.template_id).")
 
         composition_dir = _resolve_composition_dir(niche_cfg)
-        if composition_dir is None:
-            raise RecordingError(
-                f"HyperframesAdapter: no hay composición HyperFrames mapeada para "
-                f"template_id={niche_cfg.template.template_id!r} — todavía no fue portada (ver "
-                "_COMPOSITION_BY_TEMPLATE_ID en hyperframes_adapter.py)."
-            )
+        use_generic = composition_dir is None
 
         bin_path = _hyperframes_bin()
         if not bin_path.exists():
@@ -136,61 +153,110 @@ class HyperframesAdapter(RecorderPort):
         job_id = output_dir.name
 
         config_path = output_dir / "config.json"
-        if not config_path.exists():
-            raise RecordingError(
-                f"HyperframesAdapter: falta config.json en {output_dir} "
-                "(¿corrió html_generator antes de este stage?)."
-            )
         bg_source = output_dir / niche_cfg.template.media_src_filename
         if not bg_source.exists():
             raise RecordingError(f"HyperframesAdapter: falta la imagen de fondo {bg_source}.")
 
-        # Directorio efímero por job: `hyperframes render` resuelve rutas
-        # relativas (bgSrc/audioSrc, data-composition-src) contra su DIR/cwd,
-        # y `data-duration` se lee del HTML estático al compilar, no de una
-        # mutación en runtime (confirmado con spike, ver docstring del
-        # módulo) — así que la composición reusable se copia una vez por job
-        # y se le sustituye el placeholder de duración, igual que
-        # nexa-render materializa un `site/` efímero por job para su motor
-        # HyperFrames (server/src/engines/hyperframes/hyperframes-engine.ts).
+        bg_filename = bg_source.name
+        audio_filename = audio_path.name
+
         site_dir = output_dir / "_hyperframes_site"
         if site_dir.exists():
             shutil.rmtree(site_dir)
-        shutil.copytree(composition_dir, site_dir)
 
-        bg_filename = bg_source.name
-        shutil.copy(bg_source, site_dir / bg_filename)
-        audio_filename = audio_path.name
-        shutil.copy(audio_path, site_dir / audio_filename)
+        if use_generic:
+            # ── Path genérico: usa el index.html de src/templates/ directo ──────
+            # Funciona para TODAS las plantillas sin necesidad de portarlas a una
+            # composición HyperFrames dedicada. data-duration y data-fps se
+            # inyectan en el <html> como texto; los src de media se ajustan al
+            # nombre real del archivo copiado. El EQ usa WebAudio en tiempo real
+            # (headless = barras silenciosas); para EQ precalculado hay que portar
+            # la composición y añadirla a _COMPOSITION_BY_TEMPLATE_ID.
+            template_dir = _resolve_template_dir(niche_cfg)
+            if template_dir is None:
+                raise RecordingError(
+                    f"HyperframesAdapter: no hay index.html para "
+                    f"template_id={niche_cfg.template.template_id!r}."
+                )
+            shutil.copytree(template_dir, site_dir)
 
-        # data-duration y los src de <img>/<audio> se sustituyen como texto
-        # plano en el HTML estático, NO vía variables en runtime — confirmado
-        # con spikes (ver docstring del módulo): el "compile" del CLI (fonts,
-        # descubrimiento de assets de media) lee el HTML tal cual está en
-        # disco, antes de que corra ningún script. `getVariables()` en
-        # runtime sí funciona para CONTENIDO (texto/colores/arrays — no
-        # requieren pre-extracción), pero no para qué archivo es cada media.
-        index_path = site_dir / "index.html"
-        index_path.write_text(
-            index_path.read_text(encoding="utf-8")
-            .replace("{{DURATION}}", str(duration_seconds))
-            .replace("{{BG_SRC}}", bg_filename)
-            .replace("{{AUDIO_SRC}}", audio_filename),
-            encoding="utf-8",
-        )
+            shutil.copy(bg_source, site_dir / bg_filename)
+            shutil.copy(audio_path, site_dir / audio_filename)
+            if config_path.exists():
+                shutil.copy(config_path, site_dir / "config.json")
+            # Datos del job que la plantilla pide por fetch() relativo — sin
+            # lyrics.json, loadLyrics() devuelve [] y el video sale sin letra.
+            for data_file in ("lyrics.json", "manifest.json"):
+                if (output_dir / data_file).exists():
+                    shutil.copy(output_dir / data_file, site_dir / data_file)
 
-        # Ecualizador: magnitudes precalculadas por frame en vez de
-        # AnalyserNode en vivo (ver hyperframes_audio.py) — mismo problema
-        # que ya resolvió la versión Remotion de este template con
-        # @remotion/media-utils, sin equivalente JS instalado acá.
-        eq_magnitudes = compute_equalizer_magnitudes(audio_path, duration_seconds, fps=_FPS)
+            index_path = site_dir / "index.html"
+            html = index_path.read_text(encoding="utf-8")
+            # HyperFrames toma tamaño/duración del elemento raíz con
+            # data-composition-id + data-width/height (ver htmlBundler de
+            # @hyperframes/core); sin eso renderiza en su default vertical.
+            # Se usa <body> como raíz: la plantilla ocupa toda la ventana.
+            width = video_format.width if video_format else 1920
+            height = video_format.height if video_format else 1080
+            html = re.sub(
+                r"(<body\b[^>]*?)>",
+                f'\\1 data-composition-id="root" data-start="0" data-width="{width}" '
+                f'data-height="{height}" data-duration="{duration_seconds}" data-fps="{_FPS}">',
+                html,
+                count=1,
+            )
+            # Ajustar src de audio (la plantilla declara song.mp3)
+            html = html.replace('src="song.mp3"', f'src="{audio_filename}"')
+            # Pasar ?headless=1 al audio para suprimir el botón de grabación
+            # (el botón ya se oculta vía CSS cuando body tiene clase headless,
+            #  que initRecUI() añade al detectar el parámetro en la URL)
+            index_path.write_text(html, encoding="utf-8")
 
-        variables: dict = {
-            "config": json.loads(config_path.read_text(encoding="utf-8")),
-            "eqMagnitudes": eq_magnitudes,
-        }
-        variables_path = site_dir / "_hyperframes_variables.json"
-        variables_path.write_text(json.dumps(variables), encoding="utf-8")
+            variables: dict = {}
+            variables_path = site_dir / "_hyperframes_variables.json"
+            variables_path.write_text(json.dumps(variables), encoding="utf-8")
+
+        else:
+            # ── Path portado: composición HyperFrames dedicada ───────────────────
+            # data-duration y los src de <img>/<audio> se sustituyen como texto
+            # plano en el HTML estático, NO vía variables en runtime — confirmado
+            # con spikes (ver docstring del módulo): el "compile" del CLI (fonts,
+            # descubrimiento de assets de media) lee el HTML tal cual está en
+            # disco, antes de que corra ningún script. `getVariables()` en
+            # runtime sí funciona para CONTENIDO (texto/colores/arrays — no
+            # requieren pre-extracción), pero no para qué archivo es cada media.
+            shutil.copytree(composition_dir, site_dir)
+
+            shutil.copy(bg_source, site_dir / bg_filename)
+            shutil.copy(audio_path, site_dir / audio_filename)
+
+            if not config_path.exists():
+                raise RecordingError(
+                    f"HyperframesAdapter: falta config.json en {output_dir} "
+                    "(¿corrió html_generator antes de este stage?)."
+                )
+
+            index_path = site_dir / "index.html"
+            index_path.write_text(
+                index_path.read_text(encoding="utf-8")
+                .replace("{{DURATION}}", str(duration_seconds))
+                .replace("{{BG_SRC}}", bg_filename)
+                .replace("{{AUDIO_SRC}}", audio_filename),
+                encoding="utf-8",
+            )
+
+            # Ecualizador: magnitudes precalculadas por frame en vez de
+            # AnalyserNode en vivo (ver hyperframes_audio.py) — mismo problema
+            # que ya resolvió la versión Remotion de este template con
+            # @remotion/media-utils, sin equivalente JS instalado acá.
+            eq_magnitudes = compute_equalizer_magnitudes(audio_path, duration_seconds, fps=_FPS)
+
+            variables = {
+                "config": json.loads(config_path.read_text(encoding="utf-8")),
+                "eqMagnitudes": eq_magnitudes,
+            }
+            variables_path = site_dir / "_hyperframes_variables.json"
+            variables_path.write_text(json.dumps(variables), encoding="utf-8")
 
         if effective_render_target == "aws":
             if not settings.hyperframes_aws_stack_name:
@@ -243,20 +309,16 @@ class HyperframesAdapter(RecorderPort):
         )
 
         try:
+            report_step_progress(0.0)  # waiting for the render slot is not progress
             async with _get_render_semaphore():
-                proc = await asyncio.create_subprocess_exec(
-                    *cmd,
-                    cwd=str(site_dir),
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
-                )
                 try:
-                    stdout, stderr = await asyncio.wait_for(
-                        proc.communicate(),
+                    result = await run_with_progress(
+                        cmd,
+                        cwd=site_dir,
                         timeout=settings.hyperframes_render_timeout_seconds,
+                        parse_progress=parse_percent,
                     )
                 except asyncio.TimeoutError:
-                    proc.kill()
                     raise RecordingError(
                         f"HyperFrames render timed out after {settings.hyperframes_render_timeout_seconds}s "
                         f"(site_dir={site_dir})"
@@ -264,10 +326,10 @@ class HyperframesAdapter(RecorderPort):
         finally:
             shutil.rmtree(site_dir, ignore_errors=True)
 
-        if proc.returncode != 0:
-            err = stderr.decode(errors="replace")[-500:] if stderr else "no stderr"
-            logger.error("hyperframes_render_failed", returncode=proc.returncode, stderr_tail=err)
-            raise RecordingError(f"HyperFrames render failed (exit {proc.returncode}): {err}")
+        if result.returncode != 0:
+            err = (result.stderr_tail or result.stdout_tail)[-500:] or "no output"
+            logger.error("hyperframes_render_failed", returncode=result.returncode, stderr_tail=err)
+            raise RecordingError(f"HyperFrames render failed (exit {result.returncode}): {err}")
 
         if effective_render_target == "aws":
             assert output_key is not None  # set unconditionally in the aws branch above

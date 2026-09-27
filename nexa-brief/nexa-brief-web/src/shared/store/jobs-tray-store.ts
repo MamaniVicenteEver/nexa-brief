@@ -10,12 +10,12 @@ export interface TrackedJob {
   category: string;
 }
 
-const MAX_TRACKED_JOBS = 10;
+const MAX_TRACKED_JOBS = 20;
 
 interface JobsTrayState {
   jobs: TrackedJob[];
   addJobs: (jobs: TrackedJob[]) => void;
-  removeJob: (jobId: string) => void;
+  removeJobs: (jobIds: string[]) => void;
 }
 
 /** Survives navigating between admin pages (sessionStorage — same tab only,
@@ -37,7 +37,8 @@ export const useJobsTrayStore = create<JobsTrayState>()(
           // (and the number of live useJobStatus subscriptions) bounded.
           return { jobs: combined.slice(-MAX_TRACKED_JOBS) };
         }),
-      removeJob: (jobId) => set((state) => ({ jobs: state.jobs.filter((j) => j.jobId !== jobId) })),
+      removeJobs: (jobIds) =>
+        set((state) => ({ jobs: state.jobs.filter((j) => !jobIds.includes(j.jobId)) })),
     }),
     {
       name: "nexa-jobs-tray",

@@ -32,13 +32,13 @@ export function NotificationBell() {
         <button
           type="button"
           aria-label="Notificaciones"
-          className="relative inline-flex size-8 items-center justify-center rounded-full text-nb-ink-soft transition-colors hover:text-nb-ink"
+          className="relative inline-flex size-7 items-center justify-center rounded-full text-nb-ink-soft transition-colors hover:text-nb-ink"
         >
-          <BellIcon className="size-[18px]" />
+          <BellIcon className="size-4" />
           {unreadCount > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -top-0.5 -right-0.5 h-4 min-w-4 rounded-full px-1 text-[10px]"
+              className="absolute -top-0.5 -right-0.5 h-3.5 min-w-3.5 rounded-full px-0.5 text-[9px]"
             >
               {unreadCount > 9 ? "9+" : unreadCount}
             </Badge>

@@ -1,0 +1,12 @@
+{
+  "schema_version": "academy-template-v1",
+  "id": "academy-history-source-inquiry-v1",
+  "category_id": "history",
+  "name": "Detectives de fuentes",
+  "engine": "hyperframes",
+  "entrypoint": "index.html",
+  "files": {"html": "index.html", "css": "styles.css", "js": "script.js", "manifest": "manifest.json"},
+  "duration_seconds": 60,
+  "scene_recipe": ["Observar", "Preguntar", "Contextualizar", "Interpretar"],
+  "variables": ["lessonTitle", "lessonDescription", "sourceTitle", "sourceType", "observation", "question", "context", "interpretation", "caption"]
+}

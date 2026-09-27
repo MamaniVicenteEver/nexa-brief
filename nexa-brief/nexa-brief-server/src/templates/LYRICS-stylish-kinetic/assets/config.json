@@ -1,0 +1,134 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Kinetic typography 'stylish' de colores planos (rojo, mostaza, menta, petróleo): cada frase entra en arco, deslizando con desenfoque o letra a letra, gira 90° hasta quedar en columna mientras entra el resto, con trazos de pincel blancos y cortes secos de color. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/From-Klickpin2.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Lilita+One&family=Sniglet:wght@800&display=swap",
+        "caps": "\"Lilita One\", sans-serif",
+        "low": "\"Sniglet\", sans-serif",
+        "lowerI": true,
+        "wobbleDeg": 4,
+        "jitterEm": 0.035
+      },
+      "palette": {
+        "schemes": {
+          "red": {
+            "bg": "#E31D40",
+            "ink": "#FFFFFF",
+            "accent": "#F3C10A"
+          },
+          "yellow": {
+            "bg": "#F3C10A",
+            "ink": "#FFFFFF",
+            "accent": "#084E62"
+          },
+          "mint": {
+            "bg": "#85E5D3",
+            "ink": "#FFFFFF",
+            "accent": "#E31D40"
+          },
+          "teal": {
+            "bg": "#084E62",
+            "ink": "#FFFFFF",
+            "accent": "#F3C10A"
+          }
+        },
+        "order": [
+          "red",
+          "yellow",
+          "mint",
+          "red",
+          "yellow"
+        ],
+        "cycle": [
+          "red",
+          "yellow",
+          "mint",
+          "teal"
+        ]
+      },
+      "brush": {
+        "color": "#FFFFFF",
+        "chance": 0.8
+      },
+      "intro": {
+        "artist": "",
+        "title": ""
+      },
+      "outro": {
+        "enabled": true,
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "timing": {
+        "leadSec": 0.1,
+        "longWordSec": 0.5,
+        "longWordLead": 0.35,
+        "exitSec": 0.38,
+        "holdSec": 1.0,
+        "interludeSec": 3.0
+      },
+      "scenes": {
+        "minWords": 3,
+        "maxWords": 10,
+        "minSec": 1.4,
+        "maxSec": 5.5,
+        "signature": [
+          "arc",
+          "slide",
+          "type",
+          "tilt",
+          "slide"
+        ],
+        "cooldown": 2,
+        "stopwords": []
+      },
+      "layouts": {
+        "arc": {
+          "weight": 1.2
+        },
+        "slide": {
+          "weight": 1.6
+        },
+        "type": {
+          "weight": 1.2
+        },
+        "tilt": {
+          "weight": 1.0
+        },
+        "pop": {
+          "weight": 1.0
+        },
+        "pinwheel": {
+          "weight": 1.0
+        },
+        "bounce": {
+          "weight": 0.9
+        },
+        "split": {
+          "weight": 0.8
+        }
+      },
+      "transitions": {
+        "signature": "cut",
+        "weights": {
+          "cut": 3,
+          "circle": 1.5,
+          "wipe": 1.2,
+          "push": 1
+        }
+      },
+      "debug": {
+        "enabled": false
+      },
+      "seed": 5
+    }
+  ]
+}

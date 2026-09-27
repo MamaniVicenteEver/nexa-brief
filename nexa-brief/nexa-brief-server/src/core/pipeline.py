@@ -8,10 +8,17 @@ from typing import Awaitable, Callable
 import structlog
 
 from src.adapters.ai.factory import get_analysis_ai, get_codegen_ai
-from src.config.exceptions import NexaBriefError, PipelineError
+from src.config.exceptions import NexaBriefError
 from src.config.niche_config import get_niche_config
 from src.config.settings import settings
-from src.core.job import DurationConfig, DurationMode, Job, JobArtifacts, JobStage, VisualDesign
+from src.core.job import DurationConfig, DurationMode, Job, JobStage, VisualDesign
+from src.core.progress import (
+    ProgressTracker,
+    bind_tracker,
+    get_or_create_tracker,
+    recorder_key,
+    release_tracker,
+)
 from src.modules import (
     html_generator,
     input_analyzer,
@@ -177,28 +184,38 @@ async def run(
     else:
         logger.info("pipeline_publishing_disabled", job_id=job.job_id)
 
-    for stage_name, stage_fn in stages:
-        try:
-            logger.info("stage_start", stage=stage_name, job_id=job.job_id)
-            job = await stage_fn(job)
-            logger.info("stage_done", stage=stage_name, job_id=job.job_id, stage_state=job.stage)
-            if on_stage is not None:
-                await on_stage(job)
-            if stop_after is not None and job.stage == stop_after:
-                logger.info("pipeline_stopped_early", job_id=job.job_id, stop_after=stop_after.value)
-                return job
-        except NexaBriefError as exc:
-            logger.error("stage_failed", stage=stage_name, job_id=job.job_id, error=str(exc))
-            failed_job = job.fail(f"[{stage_name}] {exc}")
-            if on_stage is not None:
-                await on_stage(failed_job)
-            return failed_job
-        except Exception as exc:
-            logger.exception("stage_unexpected_error", stage=stage_name, job_id=job.job_id)
-            failed_job = job.fail(f"[{stage_name}] Unexpected: {exc}")
-            if on_stage is not None:
-                await on_stage(failed_job)
-            return failed_job
+    tracker = get_or_create_tracker(job.job_id)
+    engine = job.input.recorder_engine_override or niche_cfg.recorder_engine
+    tracker.set_plan(
+        [(name, recorder_key(engine) if name == "video_recorder" else name) for name, _ in stages],
+        video_seconds=job.input.duration_seconds,
+    )
+
+    try:
+        for stage_name, stage_fn in stages:
+            try:
+                logger.info("stage_start", stage=stage_name, job_id=job.job_id)
+                await tracker.start_step(stage_name)
+                with bind_tracker(tracker):
+                    job = await stage_fn(job)
+                logger.info("stage_done", stage=stage_name, job_id=job.job_id, stage_state=job.stage)
+                if job.artifacts.analyzed_input is not None:
+                    tracker.update_video_seconds(job.artifacts.analyzed_input.duration_seconds)
+                if on_stage is not None:
+                    await on_stage(job)
+                if stop_after is not None and job.stage == stop_after:
+                    logger.info("pipeline_stopped_early", job_id=job.job_id, stop_after=stop_after.value)
+                    await tracker.finish(success=True)
+                    return job
+            except NexaBriefError as exc:
+                logger.error("stage_failed", stage=stage_name, job_id=job.job_id, error=str(exc))
+                return await _fail(job, tracker, on_stage, f"[{stage_name}] {exc}")
+            except Exception as exc:
+                logger.exception("stage_unexpected_error", stage=stage_name, job_id=job.job_id)
+                return await _fail(job, tracker, on_stage, f"[{stage_name}] Unexpected: {exc}")
+        await tracker.finish(success=True)
+    finally:
+        release_tracker(job.job_id)
 
     elapsed = round(time.monotonic() - t_start, 2)
     logger.info(
@@ -208,3 +225,11 @@ async def run(
         output=str(job.artifacts.output_dir),
     )
     return job
+
+
+async def _fail(job: Job, tracker: ProgressTracker, on_stage: Callable[[Job], Awaitable[None]] | None, error: str) -> Job:
+    failed_job = job.fail(error)
+    await tracker.finish(success=False)
+    if on_stage is not None:
+        await on_stage(failed_job)
+    return failed_job

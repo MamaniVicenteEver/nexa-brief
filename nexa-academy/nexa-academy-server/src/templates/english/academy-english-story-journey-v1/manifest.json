@@ -1,0 +1,12 @@
+{
+  "schema_version": "academy-template-v1",
+  "id": "academy-english-story-journey-v1",
+  "category_id": "english",
+  "name": "Historia para hablar",
+  "engine": "hyperframes",
+  "entrypoint": "index.html",
+  "files": {"html": "index.html", "css": "styles.css", "js": "script.js", "manifest": "manifest.json"},
+  "duration_seconds": 90,
+  "scene_recipe": ["Contexto", "Diálogo A", "Diálogo B", "Frase útil", "Práctica"],
+  "variables": ["level", "lessonTitle", "lessonDescription", "lineA1", "lineB1", "lineA2", "targetPhrase", "caption", "lessonNumber"]
+}

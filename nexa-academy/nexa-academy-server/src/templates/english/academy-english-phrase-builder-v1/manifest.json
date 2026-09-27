@@ -1,0 +1,12 @@
+{
+  "schema_version": "academy-template-v1",
+  "id": "academy-english-phrase-builder-v1",
+  "category_id": "english",
+  "name": "Mesa de frases",
+  "engine": "hyperframes",
+  "entrypoint": "index.html",
+  "files": {"html": "index.html", "css": "styles.css", "js": "script.js", "manifest": "manifest.json"},
+  "duration_seconds": 60,
+  "scene_recipe": ["Intención", "Palabras", "Orden", "Lectura", "Práctica"],
+  "variables": ["lessonTitle", "lessonDescription", "word1", "word2", "word3", "word4", "word5", "sentence", "caption"]
+}

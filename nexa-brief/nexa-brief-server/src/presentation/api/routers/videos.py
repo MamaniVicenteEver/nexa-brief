@@ -27,6 +27,7 @@ from src.core.job import (
     SongInfo,
 )
 from src.core.library import asset_library
+from src.modules import video_deletion
 from src.core.notification import Notification
 from src.core.orchestrator import Orchestrator
 from src.core.realtime.event_bus import get_event_bus
@@ -419,6 +420,29 @@ async def list_jobs(stage: str | None = None, limit: int = 20, offset: int = 0) 
         total=total, limit=limit, offset=offset,
         jobs=[JobListItem.from_record(r) for r in records],
     )
+
+
+@router.get("/videos/jobs/{job_id}/publications", response_model=list[video_deletion.Publication])
+async def list_job_publications(job_id: str) -> list[video_deletion.Publication]:
+    """Dónde está publicado este video — lo usa el modal de eliminar de Biblioteca."""
+    if job_tracker.get(job_id) is None:
+        raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found")
+    return video_deletion.list_job_publications(job_id)
+
+
+@router.delete("/videos/jobs/{job_id}", response_model=video_deletion.JobDeletion)
+async def delete_job(job_id: str, remote: bool = False) -> video_deletion.JobDeletion:
+    """Elimina el video de Biblioteca (archivos + registros locales).
+
+    Con `remote=true` también lo borra de cada plataforma donde se publicó;
+    si alguna falla, no se borra nada local (`deleted_local=false`) y la
+    respuesta dice qué publicación falló y por qué."""
+    try:
+        return await video_deletion.delete_job(job_id, remote=remote)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 @router.get("/videos/jobs/{job_id}/file/{format}")

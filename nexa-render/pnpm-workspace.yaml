@@ -2,11 +2,21 @@ packages:
   - "server"
   - "web"
 
-# Dependencias nativas aprobadas para builds reproducibles en CI/Docker.
-onlyBuiltDependencies:
-  - "@parcel/watcher"
-  - "@swc/core"
-  - "sharp"
+# pnpm 11: `allowBuilds` reemplaza a onlyBuiltDependencies/ignoredBuiltDependencies.
+# true = el paquete necesita su script (binario nativo o descarga); false = no-op o
+# solo descarga extras opcionales (onnxruntime ya trae el binario CPU; su script
+# solo baja CUDA).
+allowBuilds:
+  '@google/genai': false
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  ffmpeg-static: true
+  msgpackr-extract: true
+  onnxruntime-node: false
+  protobufjs: false
+  puppeteer: true
+  sharp: true
 
 # El SDK de Remotion Lambda carga `remotion/no-react` en ejecución, pero la
 # versión publicada declara Remotion como devDependency. pnpm lo aísla por

@@ -1,7 +1,14 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRealtimeEvent, useRealtimeStatus } from "@/features/realtime";
-import { getJobStatus, type JobDetailDto, mapJobDetail } from "../api/job-status-service";
+import {
+  getJobStatus,
+  type JobDetailDto,
+  type JobProgressDto,
+  mapJobDetail,
+  mapJobProgress,
+} from "../api/job-status-service";
 import { isTerminalStage } from "../stage";
+import type { JobDetail } from "../types";
 
 /** Push replaces polling while the realtime socket is connected: each stage
  * change arrives as a `job_stage_changed` event carrying the full job detail
@@ -25,6 +32,14 @@ export function useJobStatus(jobId: string) {
   useRealtimeEvent<JobDetailDto>("job_stage_changed", (data) => {
     if (data.job_id !== jobId) return;
     queryClient.setQueryData(["job-status", jobId], mapJobDetail(data));
+  });
+
+  // Frequent, lightweight updates (queue position, %, ETA) between stage changes.
+  useRealtimeEvent<JobProgressDto>("job_progress", (data) => {
+    if (data.job_id !== jobId) return;
+    queryClient.setQueryData<JobDetail>(["job-status", jobId], (prev) =>
+      prev ? { ...prev, progress: mapJobProgress(data) } : prev,
+    );
   });
 
   return query;

@@ -1,11 +1,15 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { useJobStatus } from "@/features/create-video/hooks/useJobStatus";
 import { STAGE_LABEL_KEY } from "@/features/create-video/stage";
 import { PublishNowDialog, type QueueEntry, useQueueEntries } from "@/features/schedule";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { DeleteVideoDialog } from "./DeleteVideoDialog";
+import { GenerationTimeCard } from "./GenerationTimeCard";
 
 const PLATFORM_LABEL: Record<QueueEntry["platform"], string> = {
   youtube: "YouTube",
@@ -32,20 +36,24 @@ function BackLink({ label }: { label: string }) {
 
 export function VideoDetailView({ jobId }: { jobId: string }) {
   const t = useTranslations("library");
+  const tQueue = useTranslations("schedule.queue");
   const { data: job, isLoading, isError } = useJobStatus(jobId);
   const { data: queueEntries } = useQueueEntries({ jobId });
+  const router = useRouter();
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-[900px] px-10 pt-[92px] pb-16">
-        <p className="text-[13px] text-nb-mute">{t("emptyState")}</p>
+      <div className="mx-auto max-w-[900px] px-10 pt-22 pb-16">
+        <div className="h-7 w-2/3 animate-pulse rounded-full bg-nb-bg-2" />
+        <div className="mt-5 aspect-video w-full animate-pulse rounded-2xl bg-nb-bg-2" />
       </div>
     );
   }
 
   if (isError || !job) {
     return (
-      <div className="mx-auto max-w-[900px] px-10 pt-[92px] pb-16">
+      <div className="mx-auto max-w-[900px] px-10 pt-22 pb-16">
         <BackLink label={t("detail.back")} />
         <p className="text-[13px] text-nb-mute">{t("detail.notFound")}</p>
       </div>
@@ -61,7 +69,7 @@ export function VideoDetailView({ jobId }: { jobId: string }) {
   );
 
   return (
-    <div className="mx-auto max-w-[900px] px-10 pt-[92px] pb-16">
+    <div className="mx-auto max-w-[900px] px-10 pt-22 pb-16">
       <BackLink label={t("detail.back")} />
 
       <h1 className="font-nb-sans text-[clamp(20px,2.4vw,26px)] font-extrabold tracking-[-0.02em] text-nb-ink">
@@ -119,7 +127,39 @@ export function VideoDetailView({ jobId }: { jobId: string }) {
               </button>
             </PublishNowDialog>
           )}
+
+          {job.isTerminal && (
+            <>
+              <button
+                type="button"
+                onClick={() => setDeleteOpen(true)}
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-red-600/30 px-4 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-600/5"
+              >
+                <Trash2 className="size-4" />
+                {t("deleteDialog.trigger")}
+              </button>
+              <DeleteVideoDialog
+                jobId={job.jobId}
+                jobTitle={job.title}
+                isPublished={
+                  job.stage === "published" ||
+                  (queueEntries ?? []).some((e) => e.status === "published")
+                }
+                open={deleteOpen}
+                onOpenChange={setDeleteOpen}
+                onDeleted={() => router.push("/biblioteca")}
+              />
+            </>
+          )}
         </div>
+      </div>
+
+      <div className="mt-6">
+        <GenerationTimeCard
+          jobId={job.jobId}
+          createdAt={job.createdAt}
+          generationSeconds={job.generationSeconds}
+        />
       </div>
 
       {job.summary && (
@@ -174,8 +214,13 @@ export function VideoDetailView({ jobId }: { jobId: string }) {
                 <span className="font-semibold text-nb-ink">
                   {PLATFORM_LABEL[entry.platform]} · {entry.accountAlias}
                 </span>
-                <span className="text-nb-mute">
-                  {entry.status}
+                <span
+                  className={cn(
+                    "text-nb-mute",
+                    entry.status === "published" && "text-nb-green-dark",
+                  )}
+                >
+                  {tQueue(`statusLabels.${entry.status}`)}
                   {entry.processedAt && ` · ${new Date(entry.processedAt).toLocaleString()}`}
                 </span>
               </div>

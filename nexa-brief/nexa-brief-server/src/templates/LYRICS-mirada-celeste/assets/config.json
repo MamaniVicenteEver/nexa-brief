@@ -1,0 +1,67 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Video de letras ilustrado en sepia — ojos en la penumbra, una mano que se estira, palabras-columna gigantes, un ángel dentro de las letras, cielo nocturno con luna, palomas y plumas, y un ojo gigante con mira; siete escenarios con movimientos suaves sincronizados con la canción real. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "bg": {
+        "src": "assets/niebla.mp4",
+        "opacity": 1,
+        "filter": "brightness(1.35) contrast(1.05)"
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=League+Gothic&family=Alfa+Slab+One&display=swap",
+        "round": "\"Fredoka\", sans-serif",
+        "column": "\"League Gothic\", sans-serif",
+        "slab": "\"Alfa Slab One\", serif"
+      },
+      "palette": {
+        "night": "#0A0807",
+        "tan": "#B39A7C",
+        "tanLight": "#D3BC9D",
+        "tanDeep": "#88705A",
+        "umber": "#5B4737",
+        "cream": "#EDE2CF",
+        "teal": "#1F6D69",
+        "crimson": "#8E1C16"
+      },
+      "scenes": [
+        { "id": "mirada", "weight": 22 },
+        { "id": "columnas", "weight": 19 },
+        { "id": "angel", "weight": 11 },
+        { "id": "noche", "weight": 13 },
+        { "id": "palomas", "weight": 13 },
+        { "id": "ojo", "weight": 11 },
+        { "id": "recorte", "weight": 11 }
+      ],
+      "intro": { "artist": "", "title": "", "sub": "", "feats": "" },
+      "outro": {
+        "leadSec": 8,
+        "songTitle": "",
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "debug": { "enabled": false },
+      "layout": {
+        "motion": 1,
+        "invertChance": 0.5,
+        "starChance": 0.42,
+        "featherCount": 12,
+        "doveCount": 3,
+        "starCount": 80
+      },
+      "media": {
+        "eyes": "assets/media/ojos.mp4",
+        "hand": "assets/media/mano.mp4",
+        "iris": "assets/media/iris.mp4",
+        "doves": "assets/media/palomas.webm",
+        "moon": "assets/media/luna.mp4",
+        "angel": "assets/media/angel.jpg"
+      },
+      "seed": 23
+    }
+  ]
+}

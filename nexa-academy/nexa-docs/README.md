@@ -1,0 +1,1 @@
+INVESTIGACIONES, PRUEBAS DE CONCEPTO Y ESTUDIOS PROPIOS DE `nexa-academy` — separado de `nexa-academy-server/docs/` (que documenta el servidor en sí) porque esto es research/planificación, no documentación de API.

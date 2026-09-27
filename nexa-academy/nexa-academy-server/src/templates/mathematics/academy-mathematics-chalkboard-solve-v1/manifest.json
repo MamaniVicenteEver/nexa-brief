@@ -1,0 +1,12 @@
+{
+  "schema_version": "academy-template-v1",
+  "id": "academy-mathematics-chalkboard-solve-v1",
+  "category_id": "mathematics",
+  "name": "Pizarra de resolución",
+  "engine": "hyperframes",
+  "entrypoint": "index.html",
+  "files": {"html": "index.html", "css": "styles.css", "js": "script.js", "manifest": "manifest.json"},
+  "duration_seconds": 90,
+  "scene_recipe": ["Intro", "Teoría", "Ejemplo", "Reparto", "Comprobación", "Práctica", "Cierre"],
+  "variables": ["subject", "lessonTitle", "lessonDescription", "operation_tex", "inverse_check", "caption", "lessonNumber"]
+}

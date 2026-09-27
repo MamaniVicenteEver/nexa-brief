@@ -21,6 +21,8 @@ interface HttpClientOptions {
   body?: unknown;
   timeoutMs?: number;
   signal?: AbortSignal;
+  /** Solo en Server Components: caché de datos de Next (ej. `{ revalidate: 60 }`). */
+  next?: { revalidate?: number | false; tags?: string[] };
 }
 
 /**
@@ -30,7 +32,7 @@ interface HttpClientOptions {
  * — como la generación de video — pueden tardar varios minutos).
  */
 export async function httpClient<T>(path: string, options: HttpClientOptions = {}): Promise<T> {
-  const { method = "GET", body, timeoutMs = DEFAULT_TIMEOUT_MS, signal } = options;
+  const { method = "GET", body, timeoutMs = DEFAULT_TIMEOUT_MS, signal, next } = options;
   const isFormData = body instanceof FormData;
   const headers: HeadersInit = isFormData ? {} : { "Content-Type": "application/json" };
 
@@ -56,6 +58,7 @@ export async function httpClient<T>(path: string, options: HttpClientOptions = {
         headers,
         body: isFormData ? body : body !== undefined ? JSON.stringify(body) : undefined,
         signal: controller.signal,
+        ...(next ? { next } : {}),
       });
       break;
     } catch (error) {

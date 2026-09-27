@@ -20,6 +20,7 @@ from src.presentation.api.routers import (
     templates,
     videos,
     youtube_oauth,
+    stats,
 )
 
 
@@ -147,6 +148,7 @@ app.include_router(history.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")
 app.include_router(schedule.router, prefix="/api/v1")
 app.include_router(realtime.router, prefix="/api/v1")
+app.include_router(stats.router, prefix="/api/v1")
 # YouTube OAuth 2.0 server-side flow
 app.include_router(youtube_oauth.router)
 

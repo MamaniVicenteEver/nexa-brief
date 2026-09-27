@@ -1,0 +1,82 @@
+{
+  "//": "Manifest de las plantillas físicas de Nexa Explainer — fuente de verdad de nombre público, descripción y ruta de cada index.html. Las plantillas heredadas de imagen, letras y música viven fuera de esta carpeta en src/legacy-templates/templates.json para no mezclar productos.",
+  "templates": {
+    "prism-echo": {
+      "folder": "VIDEO-prism-echo",
+      "display_name": "Prism Echo",
+      "description": "Dirección cálida y cinematográfica con intro de marca, eco prismático, titulares de memoria y cierre en suspensión.",
+      "native_orientation": "16:9",
+      "index_html": "VIDEO-prism-echo/index.html",
+      "motion_system": "eco prismático, entrada lateral y respiración de cierre",
+      "palette": "marfil, carbón, cobre y sombra cálida",
+      "typography": "Space Grotesk para titulares; Inter para información",
+      "assets": ["inline SVG logo", "video source", "narration audio"]
+    },
+    "noir-editorial": {
+      "folder": "VIDEO-noir-manifesto",
+      "display_name": "Noir Manifesto",
+      "description": "Blanco y negro de alto contraste para una declaración directa, con pausas negras y tipografía condensada.",
+      "native_orientation": "16:9",
+      "index_html": "VIDEO-noir-manifesto/index.html",
+      "motion_system": "cortes duros, scanlines y bloque tipográfico de manifiesto",
+      "palette": "negro, blanco y gris mineral",
+      "typography": "Inter Black para impacto; IBM Plex Mono para señales",
+      "assets": ["inline SVG logo", "video source", "narration audio"]
+    },
+    "archive-signal": {
+      "folder": "VIDEO-archive-signal",
+      "display_name": "Archive Signal",
+      "description": "Composición de archivo con ventana de video lateral, papel editorial y acentos rojos para contexto y memoria.",
+      "native_orientation": "16:9",
+      "index_html": "VIDEO-archive-signal/index.html",
+      "motion_system": "recorte diagonal, entrada de ficha y línea de archivo",
+      "palette": "papel, tinta, arcilla y rojo de señal",
+      "typography": "Playfair Display para narrativa; Inter para metadatos",
+      "assets": ["inline SVG logo", "video source", "narration audio"]
+    },
+    "emerald-covenant": {
+      "folder": "VIDEO-emerald-covenant",
+      "display_name": "Emerald Covenant",
+      "description": "Dirección verde oscuro con retícula viva, nodos y pausas de responsabilidad para ideas que exigen atención.",
+      "native_orientation": "16:9",
+      "index_html": "VIDEO-emerald-covenant/index.html",
+      "motion_system": "retícula, red de nodos y transición de señal",
+      "palette": "bosque, esmeralda, negro y verde fósforo",
+      "typography": "Space Grotesk para titulares; Inter para etiquetas",
+      "assets": ["inline SVG logo", "motion canvas", "video source", "narration audio"]
+    },
+    "kinetic-scramble": {
+      "folder": "VIDEO-kinetic-scramble",
+      "display_name": "Kinetic Scramble",
+      "description": "Sistema de tipografía cinética que usa barras, tensión y resolución para convertir una frase en un golpe visual.",
+      "native_orientation": "16:9",
+      "index_html": "VIDEO-kinetic-scramble/index.html",
+      "motion_system": "barras cinéticas, scramble por capas y golpe de resolución",
+      "palette": "marfil, lima ácida, naranja y carbón",
+      "typography": "Inter Black para titulares y datos; IBM Plex Mono para frames",
+      "assets": ["inline SVG logo", "motion canvas", "video source", "narration audio"]
+    },
+    "crimson-walk": {
+      "folder": "VIDEO-crimson-walk",
+      "display_name": "Crimson Walk",
+      "description": "Recorrido carmesí emocional con una línea de pasos, pausas de dolor y una salida que llama a seguir de pie.",
+      "native_orientation": "16:9",
+      "index_html": "VIDEO-crimson-walk/index.html",
+      "motion_system": "línea de recorrido, pulsos y cortes de respiración",
+      "palette": "carmesí, vino, marfil y negro",
+      "typography": "Playfair Display italic para emoción; Inter para señalización",
+      "assets": ["inline SVG logo", "motion canvas", "video source", "narration audio"]
+    },
+    "orbital-stack": {
+      "folder": "VIDEO-orbital-stack",
+      "display_name": "Orbital Stack",
+      "description": "Sistema de capas y relaciones con anillos 3D para conectar pregunta, evidencia, cambio y futuro.",
+      "native_orientation": "16:9",
+      "index_html": "VIDEO-orbital-stack/index.html",
+      "motion_system": "Three.js WebGL, anillos orbitales y respaldo 2D seek-safe",
+      "palette": "navy nocturno, azul eléctrico, violeta y blanco frío",
+      "typography": "Space Grotesk para conceptos; Inter para metadatos",
+      "assets": ["inline SVG logo", "Three.js module", "motion canvas", "video source", "narration audio"]
+    }
+  }
+}

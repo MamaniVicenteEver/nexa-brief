@@ -26,6 +26,8 @@ class QueueStatus(str, Enum):
     PUBLISHED = "published"
     FAILED = "failed"
     CANCELLED = "cancelled"
+    # El post se eliminó de la plataforma desde Nexa Brief (ver core/video_deletion.py).
+    REMOVED = "removed"
 
 
 class QueueSource(str, Enum):

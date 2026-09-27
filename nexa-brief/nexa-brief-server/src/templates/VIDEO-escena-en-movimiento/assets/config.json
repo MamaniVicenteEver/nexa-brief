@@ -1,28 +1,102 @@
 {
-  "activeId": "active",
+  "activeId": "test2",
   "configs": [
     {
-      "id": "active",
-      "description": "Escena en movimiento — default de fallback para pruebas locales (file:// o servidor sin pipeline).",
-      "video": { "w": 1920, "h": 1080, "rotation": 0, "content": [0, 0, 1920, 1080], "src": "assets/bg.png" },
-      "colors": { "bg": "#FFFFFF", "ink": "#111111" },
-      "bgMode": "solid",
+      "id": "test1",
+      "description": "Loop vertical (9:16) de un guerrero en god-form envuelto en un aura luminosa que inunda el cuadro. Para shorts de anime sobre despertar de poder, superación y transformación. Paleta cálida sobre negro, alto impacto. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "video":  { "w": 720, "h": 1290, "rotation": 0, "content": [0, 0, 720, 1290], "src": "assets/test1.mp4" },
+      "colors": { "bg": "#15161C", "ink": "#F2F1EE" },
+      "bgMode": "blur",
       "bgRegions": [],
       "zones": [
-        [0, 360, 0, 1920],
-        [360, 720, 0, 1920],
-        [720, 1080, 0, 1920]
+        [20, 320, 150, 580],
+        [320, 760, 60, 660],
+        [760, 1290, 0, 720]
       ],
-      "subject": { "top": 200, "bottom": 900, "left": 660, "right": 1260 },
+      "subject": { "top": 20, "bottom": 1290, "left": 30, "right": 690 },
       "keepOut": [],
-      "texts": { "left": "Escena en", "right": "Movimiento" },
+      "texts":  { "left": "AWAKEN", "right": "UNBOUND" },
+      "eqPosition": "bottom",
+      "edgeFade": 0.07,
+      "typography": "default",
+      "anchorPreference": "middle",
+      "audio": { "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      "intro": { "artist": "NEXA BEATS", "title": "GEAR OF GODS", "sub": "Anime Drill", "feats": "One Piece" },
+      "outro": { "leadSec": 7, "songTitle": "GEAR OF GODS", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete" }
+    },
+    {
+      "id": "test2",
+      "description": "Loop vertical (9:16) de una silueta que se alza entre niebla monocroma. Mood épico/melancólico, ideal para frases de resiliencia y perseverancia. Gris frío, alto contraste. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "video":  { "w": 720, "h": 1280, "rotation": 0, "content": [0, 0, 720, 1280], "src": "assets/test2.mp4" },
+      "colors": { "bg": "#3E444B", "ink": "#F2F4F6" },
+      "bgMode": "blur",
+      "bgRegions": [],
+      "zones": [
+        [340, 520, 240, 500],
+        [520, 850, 180, 560],
+        [850, 1180, 220, 520]
+      ],
+      "subject": { "top": 340, "bottom": 1180, "left": 180, "right": 560 },
+      "keepOut": [
+        [140, 1210, 580, 1280]
+      ],
+      "texts":  { "left": "RISE", "right": "SILENT" },
       "eqPosition": "bottom",
       "edgeFade": 0.07,
       "typography": "default",
       "anchorPreference": "bottom",
-      "audio": { "src": "assets/song.mp3" },
-      "intro": { "artist": "", "title": "Escena en\nMovimiento", "sub": "", "feats": "" },
-      "outro": { "leadSec": 7, "songTitle": "", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete" }
+      "audio": { "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      "intro": { "artist": "SHIBUYA BASS", "title": "SILENT RISE", "sub": "Dark", "feats": "Dragon Ball" },
+      "outro": { "leadSec": 7, "songTitle": "SILENT RISE", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete" }
+    },
+    {
+      "id": "test3",
+      "description": "Composición horizontal (16:9) de ojos anime neón sobre negro puro, con un desgarro de luz en diagonal. Para hooks intensos de suspenso/villano y estética dark. Rosa/magenta sobre negro. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "video":  { "w": 720, "h": 1280, "rotation": 0, "content": [0, 280, 720, 880], "src": "assets/test3.mp4" },
+      "colors": { "bg": "#030303", "ink": "#E8E4EC" },
+      "bgMode": "solid",
+      "bgRegions": [],
+      "zones": [
+        [280, 480, 380, 720],
+        [480, 730, 0, 720],
+        [730, 880, 0, 420]
+      ],
+      "subject": { "top": 280, "bottom": 880, "left": 0, "right": 720 },
+      "keepOut": [],
+      "texts":  { "left": "GAZE", "right": "STORM" },
+      "eqPosition": "bottom",
+      "edgeFade": 0.07,
+      "typography": "default",
+      "anchorPreference": "bottom",
+      "audio": { "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+      "intro": { "artist": "NEON EDGE", "title": "STORMGAZE", "sub": "Phonk", "feats": "AMV" },
+      "outro": { "leadSec": 7, "songTitle": "STORMGAZE", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete" }
+    },
+    {
+      "id": "video1",
+      "description": "Loop apaisado (16:9) en tinta sumi-e de una espadachina en pleno corte, con inscripción kanji. Para shorts de disciplina, honor y estética japonesa. Blanco y negro dramático. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "video":  { "w": 748, "h": 418, "rotation": 0, "content": [0, 0, 748, 418], "src": "assets/video1.mp4" },
+      "colors": { "bg": "#020203", "ink": "#EDECEA" },
+      "bgMode": "solid",
+      "bgRegions": [],
+      "zones": [
+        [18, 140, 400, 680],
+        [140, 265, 0, 748],
+        [265, 418, 355, 748]
+      ],
+      "subject": { "top": 18, "bottom": 418, "left": 0, "right": 748 },
+      "keepOut": [
+        [136, 176, 222, 213],
+        [706, 394, 748, 418]
+      ],
+      "texts":  { "left": "SWIFT", "right": "BLADE" },
+      "eqPosition": "bottom",
+      "edgeFade": 0.07,
+      "typography": "serif-display",
+      "anchorPreference": "bottom",
+      "audio": { "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+      "intro": { "artist": "RONIN LO-FI", "title": "SWIFT BLADE", "sub": "Lo-fi", "feats": "Samurai" },
+      "outro": { "leadSec": 7, "songTitle": "SWIFT BLADE", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete" }
     }
   ]
 }
