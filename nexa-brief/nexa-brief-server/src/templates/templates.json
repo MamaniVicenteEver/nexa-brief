@@ -1,269 +1,1547 @@
 {
   "//": "Manifest único de las plantillas config-driven — fuente de verdad de nombre público, descripción y TODAS las rutas de archivo (index.html, prompts, config de ejemplo). `folder` es el nombre físico en disco, desacoplado del template_id (el template_id NO cambia — sigue siendo el identificador lógico usado por remotion_adapter.py, el frontend, y data/template_configs/). niches.json ya no tiene rutas hardcodeadas: todo se resuelve acá vía src/config/template_manifest.py. `remotion_component` es SOLO informativo (no lo lee ningún código, es para ubicar rápido el port Remotion de cada template) — ruta relativa a la raíz del monorepo, dentro de nexa-brief-remotion/ (antes nexa-brief-video-test/, renombrado porque ya es funcional, no un test); null = todavía no portado a Remotion.",
+  "categories": {
+    "in_progress": {
+      "display_name": "En desarrollo",
+      "description": "Plantillas de letras que todavía se están puliendo: ya se pueden usar, pero su diseño puede cambiar.",
+      "order": 90
+    },
+    "lyrics": {
+      "display_name": "Videos de letras",
+      "description": "Plantillas sincronizadas con la letra y el ritmo de una canción.",
+      "order": 10
+    },
+    "commercial": {
+      "display_name": "Comerciales y promociones",
+      "description": "Piezas promocionales para marcas, productos, eventos y deporte.",
+      "order": 20
+    },
+    "image": {
+      "display_name": "Imagen y retrato",
+      "description": "Composiciones basadas en una imagen principal.",
+      "order": 30
+    },
+    "video": {
+      "display_name": "Video y movimiento",
+      "description": "Plantillas que usan video como fondo o sujeto visual.",
+      "order": 40
+    }
+  },
   "templates": {
     "01-image-bg": {
-      "folder": "IMG-retrato-impacto",
+      "folder": "image/01-image-bg",
       "display_name": "Retrato Impacto",
       "description": "Un sujeto o personaje central con fondo tratado (sólido, dividido en colores o difuminado) y 2 palabras de texto posicionadas automáticamente según el análisis de visión de la imagen real.",
       "native_orientation": "9:16",
-      "index_html": "IMG-retrato-impacto/index.html",
-      "config_json": "IMG-retrato-impacto/assets/config.json",
-      "vision_prompt": "IMG-retrato-impacto/prompts/vision_extractor.md",
-      "config_prompt": "IMG-retrato-impacto/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/ImageBg.js"
+      "index_html": "image/01-image-bg/index.html",
+      "config_json": "image/01-image-bg/assets/config.json",
+      "vision_prompt": "image/01-image-bg/prompts/vision_extractor.md",
+      "config_prompt": "image/01-image-bg/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/ImageBg.js",
+      "runtime_assets": [],
+      "category_id": "image",
+      "sort_order": 10,
+      "status": "ready",
+      "tags": [
+        "image",
+        "visualizer"
+      ],
+      "requires_image": true,
+      "requires_video": false,
+      "requires_lyrics": false,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "none"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "image",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Imagen",
+            "hint": "personaje o sujeto principal con espacio libre a los costados"
+          }
+        ],
+        "texts": [
+          {
+            "key": "texts.left",
+            "label": "Texto izquierdo",
+            "max": 30,
+            "default": "WORLD'S GREATEST"
+          },
+          {
+            "key": "texts.right",
+            "label": "Texto derecho",
+            "max": 30,
+            "default": "SWORDSMAN"
+          }
+        ],
+        "brief": true
+      }
     },
     "subject-spotlight": {
-      "folder": "IMG-reflector-epico",
+      "folder": "image/subject-spotlight",
       "display_name": "Reflector Épico",
       "description": "Recorte PNG de un sujeto bajo un reflector dramático, con partículas y rayos de energía alrededor y una palabra gigante de fondo.",
       "native_orientation": "any",
-      "index_html": "IMG-reflector-epico/index.html",
-      "config_json": "IMG-reflector-epico/assets/config.json",
-      "vision_prompt": "IMG-reflector-epico/prompts/vision_extractor.md",
-      "config_prompt": "IMG-reflector-epico/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/ReflectorEpico.js"
+      "index_html": "image/subject-spotlight/index.html",
+      "config_json": "image/subject-spotlight/assets/config.json",
+      "vision_prompt": "image/subject-spotlight/prompts/vision_extractor.md",
+      "config_prompt": "image/subject-spotlight/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/ReflectorEpico.js",
+      "runtime_assets": [
+        "assets/bg.png"
+      ],
+      "category_id": "image",
+      "sort_order": 11,
+      "status": "ready",
+      "tags": [
+        "image",
+        "visualizer"
+      ],
+      "requires_image": true,
+      "requires_video": false,
+      "requires_lyrics": false,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "none"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "image",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Imagen",
+            "hint": "retrato de un sujeto bien recortable sobre fondo simple"
+          }
+        ],
+        "texts": [
+          {
+            "key": "giantWord",
+            "label": "Palabra gigante",
+            "max": 12,
+            "default": "AURA"
+          },
+          {
+            "key": "brand.name",
+            "label": "Marca",
+            "max": 16,
+            "default": "NEXA"
+          },
+          {
+            "key": "brand.sub",
+            "label": "Submarca",
+            "max": 16,
+            "default": "BRIEF"
+          }
+        ],
+        "brief": true
+      }
     },
     "living-landscape": {
-      "folder": "IMG-paisaje-vivo",
+      "folder": "image/living-landscape",
       "display_name": "Paisaje Vivo",
       "description": "Una escena de paisaje que respira: pétalos, aves y luciérnagas en movimiento sutil, con texto tipo haiku y cámara con drift suave.",
       "native_orientation": "any",
-      "index_html": "IMG-paisaje-vivo/index.html",
-      "config_json": "IMG-paisaje-vivo/assets/config.json",
-      "vision_prompt": "IMG-paisaje-vivo/prompts/vision_extractor.md",
-      "config_prompt": "IMG-paisaje-vivo/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/PaisajeVivo.js"
+      "index_html": "image/living-landscape/index.html",
+      "config_json": "image/living-landscape/assets/config.json",
+      "vision_prompt": "image/living-landscape/prompts/vision_extractor.md",
+      "config_prompt": "image/living-landscape/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/PaisajeVivo.js",
+      "runtime_assets": [
+        "assets/bg.png"
+      ],
+      "category_id": "image",
+      "sort_order": 12,
+      "status": "ready",
+      "tags": [
+        "image",
+        "visualizer"
+      ],
+      "requires_image": true,
+      "requires_video": false,
+      "requires_lyrics": false,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "none"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "image",
+            "count": 1,
+            "orientation": "landscape",
+            "target": "source",
+            "label": "Paisaje",
+            "hint": "paisaje amplio con cielo despejado"
+          }
+        ],
+        "texts": [
+          {
+            "key": "brand.nexa",
+            "label": "Marca",
+            "max": 16,
+            "default": "NEXA"
+          },
+          {
+            "key": "brand.brief",
+            "label": "Submarca",
+            "max": 16,
+            "default": "BRIEF"
+          }
+        ],
+        "brief": true
+      }
     },
     "motion-backdrop": {
-      "folder": "VIDEO-escena-en-movimiento",
+      "folder": "video/motion-backdrop",
       "display_name": "Escena en Movimiento",
       "description": "Un video en loop ocupa la pantalla completa con recorte y rotación adaptable, dos palabras flanqueando el sujeto, y un ecualizador reactivo al audio real.",
       "native_orientation": "any",
-      "index_html": "VIDEO-escena-en-movimiento/index.html",
-      "config_json": "VIDEO-escena-en-movimiento/assets/config.json",
-      "vision_prompt": "VIDEO-escena-en-movimiento/prompts/vision_extractor.md",
-      "config_prompt": "VIDEO-escena-en-movimiento/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/MotionBackdrop.js"
+      "index_html": "video/motion-backdrop/index.html",
+      "config_json": "video/motion-backdrop/assets/config.json",
+      "vision_prompt": "video/motion-backdrop/prompts/vision_extractor.md",
+      "config_prompt": "video/motion-backdrop/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/MotionBackdrop.js",
+      "runtime_assets": [
+        "assets/test2.mp4",
+        "assets/video1.mp4"
+      ],
+      "category_id": "video",
+      "sort_order": 13,
+      "status": "ready",
+      "tags": [
+        "video",
+        "motion"
+      ],
+      "requires_image": false,
+      "requires_video": true,
+      "requires_lyrics": false,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "none"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "video",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Video",
+            "hint": "sujeto en movimiento con espacio libre a los costados"
+          }
+        ],
+        "texts": [
+          {
+            "key": "texts.left",
+            "label": "Texto izquierdo",
+            "max": 30,
+            "default": "AWAKEN"
+          },
+          {
+            "key": "texts.right",
+            "label": "Texto derecho",
+            "max": 30,
+            "default": "UNBOUND"
+          }
+        ],
+        "brief": true
+      }
     },
     "lyrics-neon": {
-      "folder": "LYRICS-letras-de-neon",
+      "folder": "lyrics/lyrics-neon",
       "display_name": "Letras de Neón",
       "description": "Letreros de tubo neón que se encienden letra por letra sobre una foto nocturna urbana, con cámara impredecible y sincronización real con la canción.",
       "native_orientation": "any",
-      "index_html": "LYRICS-letras-de-neon/index.html",
-      "config_json": "LYRICS-letras-de-neon/assets/config.json",
+      "index_html": "lyrics/lyrics-neon/index.html",
+      "config_json": "lyrics/lyrics-neon/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-letras-de-neon/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/NeonLetras.js (o NeonLetrasVideo.js, variante con fondo de video)"
+      "config_prompt": "lyrics/lyrics-neon/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/NeonLetras.js (o NeonLetrasVideo.js, variante con fondo de video)",
+      "runtime_assets": [
+        "assets/remix.mp4"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 14,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "urbano"
+      ],
+      "requires_image": true,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "image",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Fondo",
+            "hint": "escena nocturna urbana con luces de neón"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     },
     "lyrics-impact": {
-      "folder": "LYRICS-letras-de-impacto",
+      "folder": "lyrics/lyrics-impact",
       "display_name": "Letras de Impacto",
       "description": "Reveal tipo estampado, frase por frase, con una palabra gigante por cluster, cámara con golpe/shake y estética de corrido tumbado / trap.",
       "native_orientation": "any",
-      "index_html": "LYRICS-letras-de-impacto/index.html",
-      "config_json": "LYRICS-letras-de-impacto/assets/config.json",
+      "index_html": "lyrics/lyrics-impact/index.html",
+      "config_json": "lyrics/lyrics-impact/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-letras-de-impacto/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/LyricsImpact.js"
+      "config_prompt": "lyrics/lyrics-impact/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LyricsImpact.js",
+      "runtime_assets": [
+        "assets/women-dancing.mp4"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 15,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "kinetic"
+      ],
+      "requires_image": true,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "image",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Fondo",
+            "hint": "personas bailando, energía, movimiento"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     },
     "lyrics-romantic": {
-      "folder": "LYRICS-carta-de-amor",
+      "folder": "lyrics/lyrics-romantic",
       "display_name": "Carta de Amor",
       "description": "Una carta escrita a mano: líneas que aparecen carácter por carácter, partículas bokeh cálidas y un pulso suave tipo latido en los versos de énfasis.",
       "native_orientation": "any",
-      "index_html": "LYRICS-carta-de-amor/index.html",
-      "config_json": "LYRICS-carta-de-amor/assets/config.json",
+      "index_html": "lyrics/lyrics-romantic/index.html",
+      "config_json": "lyrics/lyrics-romantic/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-carta-de-amor/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/LyricsRomantic.js"
+      "config_prompt": "lyrics/lyrics-romantic/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LyricsRomantic.js",
+      "runtime_assets": [
+        "assets/Bruses Dueles Tan Bien Audio.mp3",
+        "assets/bruses_desktop.jpg",
+        "assets/lyrics-bruses-dueles-tan-bien.json"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 16,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "emocional"
+      ],
+      "requires_image": true,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "image",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Fondo",
+            "hint": "pareja, atardecer cálido, ambiente romántico"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     },
     "lyrics-calado": {
-      "folder": "LYRICS-letras-caladas",
+      "folder": "lyrics/lyrics-calado",
       "display_name": "Letras Caladas",
       "description": "Texto que es una ventana transparente a un video de fondo real — 3 composiciones (calado, sólido, mixto) elegidas al azar por frase, con filtro cinematográfico y grano de película.",
       "native_orientation": "any",
-      "index_html": "LYRICS-letras-caladas/index.html",
-      "config_json": "LYRICS-letras-caladas/assets/config.json",
+      "index_html": "lyrics/lyrics-calado/index.html",
+      "config_json": "lyrics/lyrics-calado/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-letras-caladas/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/LetrasCaladas.js"
+      "config_prompt": "lyrics/lyrics-calado/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LetrasCaladas.js",
+      "runtime_assets": [
+        "assets/bg.mp4"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 17,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video"
+      ],
+      "requires_image": false,
+      "requires_video": true,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "video",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Fondo",
+            "hint": "textura en movimiento lento, ambiente oscuro"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     },
     "lyrics-expediente": {
-      "folder": "LYRICS-hilo-rojo",
+      "folder": "lyrics/lyrics-expediente",
       "display_name": "Hilo Rojo",
       "description": "Pizarra de investigación estilo true-crime: cada frase se clava al muro como evidencia (recorte, titular, marcador, sello), conectada por un hilo rojo, con cámara que patrulla la escena en zoom y ángulos impredecibles.",
       "native_orientation": "any",
-      "index_html": "LYRICS-hilo-rojo/index.html",
-      "config_json": "LYRICS-hilo-rojo/assets/config.json",
+      "index_html": "lyrics/lyrics-expediente/index.html",
+      "config_json": "lyrics/lyrics-expediente/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-hilo-rojo/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/HiloRojo.js"
+      "config_prompt": "lyrics/lyrics-expediente/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/HiloRojo.js",
+      "runtime_assets": [],
+      "category_id": "lyrics",
+      "sort_order": 18,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
     },
     "lyrics-latido": {
-      "folder": "LYRICS-latido-en-vivo",
+      "folder": "lyrics/lyrics-latido",
       "display_name": "Latido en Vivo",
       "description": "Un electrocardiograma real dibuja un latido por cada palabra cantada, con monitor de BPM en vivo y flash carmesí — para baladas oscuras o de desamor.",
       "native_orientation": "any",
-      "index_html": "LYRICS-latido-en-vivo/index.html",
-      "config_json": "LYRICS-latido-en-vivo/assets/config.json",
+      "index_html": "lyrics/lyrics-latido/index.html",
+      "config_json": "lyrics/lyrics-latido/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-latido-en-vivo/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/LatidoEnVivo.js"
+      "config_prompt": "lyrics/lyrics-latido/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LatidoEnVivo.js",
+      "runtime_assets": [],
+      "category_id": "lyrics",
+      "sort_order": 19,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
     },
     "lyrics-suave": {
-      "folder": "LYRICS-letras-suaves",
+      "folder": "lyrics/lyrics-suave",
       "display_name": "Letras Suaves",
       "description": "El mismo motor urbano de impacto, en su versión calma: columna vertical de texto, cámara con deriva sutil y polvo ambiental — para trap o urbano de ritmo bajo.",
       "native_orientation": "any",
-      "index_html": "LYRICS-letras-suaves/index.html",
-      "config_json": "LYRICS-letras-suaves/assets/config.json",
-      "vision_prompt": "LYRICS-letras-suaves/prompts/vision_extractor.md",
-      "config_prompt": "LYRICS-letras-suaves/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/LetrasSuaves.js"
+      "index_html": "lyrics/lyrics-suave/index.html",
+      "config_json": "lyrics/lyrics-suave/assets/config.json",
+      "vision_prompt": "lyrics/lyrics-suave/prompts/vision_extractor.md",
+      "config_prompt": "lyrics/lyrics-suave/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/LetrasSuaves.js",
+      "runtime_assets": [
+        "assets/bg.jpg"
+      ],
+      "category_id": "in_progress",
+      "sort_order": 20,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video"
+      ],
+      "requires_image": true,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "image",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Fondo",
+            "hint": "paisaje sereno con luz suave"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     },
     "lyrics-triste": {
-      "folder": "LYRICS-bajo-la-lluvia",
+      "folder": "lyrics/lyrics-triste",
       "display_name": "Bajo la Lluvia",
       "description": "Lluvia real cae sobre el texto, que se hunde y se difumina con el tiempo — paleta fría, tipografía de máquina de escribir, para baladas tristes o de pérdida.",
       "native_orientation": "any",
-      "index_html": "LYRICS-bajo-la-lluvia/index.html",
-      "config_json": "LYRICS-bajo-la-lluvia/assets/config.json",
-      "vision_prompt": "LYRICS-bajo-la-lluvia/prompts/vision_extractor.md",
-      "config_prompt": "LYRICS-bajo-la-lluvia/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/BajoLaLluvia.js"
+      "index_html": "lyrics/lyrics-triste/index.html",
+      "config_json": "lyrics/lyrics-triste/assets/config.json",
+      "vision_prompt": "lyrics/lyrics-triste/prompts/vision_extractor.md",
+      "config_prompt": "lyrics/lyrics-triste/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/BajoLaLluvia.js",
+      "runtime_assets": [
+        "assets/bg.jpg"
+      ],
+      "category_id": "in_progress",
+      "sort_order": 21,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "emocional"
+      ],
+      "requires_image": true,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "background",
+            "kind": "image",
+            "count": 1,
+            "orientation": "portrait",
+            "target": "source",
+            "label": "Fondo",
+            "hint": "lluvia, ventana, ambiente melancólico"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     },
     "lyrics-manifiesto": {
-      "folder": "LYRICS-manifiesto",
+      "folder": "lyrics/lyrics-manifiesto",
       "display_name": "Manifiesto",
       "description": "Editorial tipográfico blanco y negro con cortes en seco entre 5 composiciones de texto — para spoken word, hip-hop consciente o contenido reflexivo/político.",
       "native_orientation": "any",
-      "index_html": "LYRICS-manifiesto/index.html",
-      "config_json": "LYRICS-manifiesto/assets/config.json",
+      "index_html": "lyrics/lyrics-manifiesto/index.html",
+      "config_json": "lyrics/lyrics-manifiesto/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-manifiesto/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/Manifiesto.js"
+      "config_prompt": "lyrics/lyrics-manifiesto/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/Manifiesto.js",
+      "runtime_assets": [],
+      "category_id": "lyrics",
+      "sort_order": 22,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
     },
     "lyrics-resaltado": {
-      "folder": "LYRICS-pagina-subrayada",
+      "folder": "lyrics/lyrics-resaltado",
       "display_name": "Página Subrayada",
       "description": "La letra aparece resaltada con marcador dentro de un párrafo de libro, con cambio de página deslizante — para baladas reflexivas o pop introspectivo.",
       "native_orientation": "any",
-      "index_html": "LYRICS-pagina-subrayada/index.html",
-      "config_json": "LYRICS-pagina-subrayada/assets/config.json",
+      "index_html": "lyrics/lyrics-resaltado/index.html",
+      "config_json": "lyrics/lyrics-resaltado/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-pagina-subrayada/prompts/config_mapper.md",
-      "remotion_component": "nexa-brief-remotion/src/components/PaginaSubrayada.js"
+      "config_prompt": "lyrics/lyrics-resaltado/prompts/config_mapper.md",
+      "remotion_component": "nexa-brief-remotion/src/components/PaginaSubrayada.js",
+      "runtime_assets": [],
+      "category_id": "lyrics",
+      "sort_order": 23,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "kinetic"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
     },
     "lyrics-collage": {
-      "folder": "LYRICS-collage-callejero",
+      "folder": "lyrics/lyrics-collage",
       "display_name": "Collage Callejero",
       "description": "Mural de recortes de papel urbano: cada palabra estalla como un flyer callejero (titular a tijera, sello stencil, etiqueta a mano o letra hueca transparente), con figuras recortadas en blanco y negro y cortes de plano al ritmo de la canción — para hip-hop, trap y contenido urbano de calle.",
       "native_orientation": "any",
-      "index_html": "LYRICS-collage-callejero/index.html",
-      "config_json": "LYRICS-collage-callejero/assets/config.json",
+      "index_html": "lyrics/lyrics-collage/index.html",
+      "config_json": "lyrics/lyrics-collage/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-collage-callejero/prompts/config_mapper.md",
-      "remotion_component": null
+      "config_prompt": "lyrics/lyrics-collage/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/figures"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 24,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "urbano"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
+    },
+    "lyrics-mixtas": {
+      "folder": "lyrics/lyrics-mixtas",
+      "display_name": "Escenas Mixtas",
+      "description": "Lyric pack de estilos mezclados: cada frase cae en una escena distinta — metraje cinematográfico, rojo plano, papel blanco o negro grunge — con tipografía extendida, condensada y liviana, ecos apilados, palabras gigantes con etiqueta, tickers y un solo acento lima, rojo o naranja. Para pop, R&B y baladas urbanas.",
+      "native_orientation": "any",
+      "index_html": "lyrics/lyrics-mixtas/index.html",
+      "config_json": "lyrics/lyrics-mixtas/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "lyrics/lyrics-mixtas/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 25,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "urbano"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "target": "media",
+            "label": "Videos",
+            "hint": "naturaleza y cielo: océano, playa, noche, nebulosa"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
+    },
+    "lyrics-grunge": {
+      "folder": "lyrics/lyrics-grunge",
+      "display_name": "Grunge Rojo",
+      "description": "Lyric video grunge de rap: metraje urbano en blanco y negro duro con niebla y papel rasgado, letra condensada gastada en blanco y rojo con fantasmas de movimiento, grillas de frases repetidas y garabatos de tiza que se dibujan solos. Para rap, trap y drill.",
+      "native_orientation": "any",
+      "index_html": "lyrics/lyrics-grunge/index.html",
+      "config_json": "lyrics/lyrics-grunge/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "lyrics/lyrics-grunge/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 26,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "urbano"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "target": "media",
+            "label": "Videos",
+            "hint": "cultura urbana: baile callejero, túnel, multitud, noche"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
+    },
+    "promo-editorial": {
+      "folder": "commercial/promo-editorial",
+      "display_name": "Promo Editorial",
+      "description": "Promo editorial de una final deportiva: blanco y negro puro sobre papel arrugado, grotesca extendida pesada, bloques negros que barren, nombres gigantes en contorno, recortes de jugadores con placa, versus y cierre de fecha. Equipos, fecha, textos y fotos por JSON.",
+      "native_orientation": "16:9",
+      "index_html": "commercial/promo-editorial/index.html",
+      "config_json": "commercial/promo-editorial/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "commercial",
+      "sort_order": 27,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Videos",
+            "hint": "fútbol: estadio, partido, festejo del equipo"
+          },
+          {
+            "slot": "photos",
+            "kind": "image",
+            "min": 1,
+            "max": 3,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Fotos",
+            "hint": "jugadores y entrenador, primer plano"
+          }
+        ],
+        "texts": [
+          {
+            "key": "brand.name",
+            "label": "Liga o marca",
+            "max": 30,
+            "default": "Liga Nexa"
+          },
+          {
+            "key": "brand.round",
+            "label": "Instancia",
+            "max": 30,
+            "default": "Gran Final"
+          },
+          {
+            "key": "brand.left",
+            "label": "Equipo local",
+            "max": 20,
+            "default": "Leones"
+          },
+          {
+            "key": "brand.right",
+            "label": "Equipo visitante",
+            "max": 20,
+            "default": "Halcones"
+          }
+        ],
+        "brief": true
+      }
+    },
+    "promo-kinetic": {
+      "folder": "commercial/promo-kinetic",
+      "display_name": "Promo Kinetic",
+      "description": "Pack de tipografía cinética: una palabra o frase por escena repetida en filas, con más de 20 animaciones distintas (desde el centro, ola, cascada, rotación, marcador, perspectiva, cortes, ondas) sobre carbón con grano. Solo texto: ideal para intros y anuncios.",
+      "native_orientation": "16:9",
+      "index_html": "commercial/promo-kinetic/index.html",
+      "config_json": "commercial/promo-kinetic/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "commercial",
+      "sort_order": 28,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [],
+        "texts": [
+          {
+            "key": "brand.tag",
+            "label": "Marca",
+            "max": 20,
+            "default": "NEXA"
+          }
+        ],
+        "brief": true
+      }
     },
     "promo-trendy": {
-      "folder": "LYRICS-comercial",
+      "folder": "commercial/promo-trendy",
       "display_name": "Promo Trendy",
       "description": "Promo de cortes con golpes de zoom: metraje de atletas en blanco y negro cálido con duotono verde lima, itálica pesada, pantallas partidas, mosaico de tomas, tarjeta azul noche con círculo y cierre 'Gracias por ver'. Imágenes, videos y textos por JSON; música = audio del promo.",
       "native_orientation": "16:9",
-      "index_html": "LYRICS-comercial/promo-trendy.html",
-      "config_json": "LYRICS-comercial/assets/promo-trendy.config.json",
+      "index_html": "commercial/promo-trendy/index.html",
+      "config_json": "commercial/promo-trendy/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
-      "remotion_component": null
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "commercial",
+      "sort_order": 29,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video",
+        "sports"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Videos",
+            "hint": "acción deportiva en movimiento, atletas entrenando"
+          },
+          {
+            "slot": "photos",
+            "kind": "image",
+            "min": 1,
+            "max": 12,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Fotos",
+            "hint": "atletas en primer plano, retrato deportivo"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     },
     "promo-dynamic": {
-      "folder": "LYRICS-comercial",
+      "folder": "commercial/promo-dynamic",
       "display_name": "Promo Dynamic",
       "description": "Opener sobre verde neón: letra negra extendida, palabras gigantes en contorno, letras enormes que barren la pantalla, fotos de atletas recortadas con borde pixelado y estela de copias, HUD técnico y logo con foto en la letra.",
       "native_orientation": "16:9",
-      "index_html": "LYRICS-comercial/promo-dynamic.html",
-      "config_json": "LYRICS-comercial/assets/promo-dynamic.config.json",
+      "index_html": "commercial/promo-dynamic/index.html",
+      "config_json": "commercial/promo-dynamic/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
-      "remotion_component": null
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "commercial",
+      "sort_order": 30,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video",
+        "sports"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Videos",
+            "hint": "acción deportiva en movimiento, atletas entrenando"
+          },
+          {
+            "slot": "photos",
+            "kind": "image",
+            "min": 1,
+            "max": 12,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Fotos",
+            "hint": "atletas en primer plano, retrato deportivo"
+          }
+        ],
+        "texts": [
+          {
+            "key": "brand.tag",
+            "label": "Marca",
+            "max": 40,
+            "default": "NEXA BRIEF\nSPORT SERIES"
+          },
+          {
+            "key": "brand.url",
+            "label": "Llamado a la acción",
+            "max": 40,
+            "default": "@NEXABRIEF · SUSCRÍBETE"
+          },
+          {
+            "key": "brand.vertical",
+            "label": "Texto vertical",
+            "max": 24,
+            "default": "NEXA BRIEF"
+          }
+        ],
+        "brief": true
+      }
     },
     "promo-urban": {
-      "folder": "LYRICS-comercial",
+      "folder": "commercial/promo-urban",
       "display_name": "Promo Urban",
       "description": "Opener urbano sobre negro: duotono rojo y blanco y negro en paneles, texto blanco condensado en escalera que se teclea, bloques naranjas entre escenas, rayados, flechas y año gigante en contorno.",
       "native_orientation": "16:9",
-      "index_html": "LYRICS-comercial/promo-urban.html",
-      "config_json": "LYRICS-comercial/assets/promo-urban.config.json",
+      "index_html": "commercial/promo-urban/index.html",
+      "config_json": "commercial/promo-urban/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
-      "remotion_component": null
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "commercial",
+      "sort_order": 31,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video",
+        "sports"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Videos",
+            "hint": "acción deportiva en movimiento, atletas entrenando"
+          },
+          {
+            "slot": "photos",
+            "kind": "image",
+            "min": 1,
+            "max": 12,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Fotos",
+            "hint": "atletas en primer plano, retrato deportivo"
+          }
+        ],
+        "texts": [
+          {
+            "key": "brand.tagTop",
+            "label": "Marca",
+            "max": 40,
+            "default": "NEXA BRIEF\nSPORT GROUP"
+          },
+          {
+            "key": "brand.tagRight",
+            "label": "Serie",
+            "max": 30,
+            "default": "STREET SERIES"
+          },
+          {
+            "key": "brand.year",
+            "label": "Año",
+            "max": 8,
+            "default": "2026"
+          },
+          {
+            "key": "brand.blurb",
+            "label": "Texto de presentación",
+            "max": 160,
+            "default": "ENTRENAMOS CADA DÍA EN LA CALLE, EN LA CANCHA\nY EN LA PISTA. DEPORTE URBANO SIN FILTROS,\nHECHO POR ATLETAS PARA ATLETAS."
+          }
+        ],
+        "brief": true
+      }
     },
     "promo-sports": {
-      "folder": "LYRICS-comercial",
+      "folder": "commercial/promo-sports",
       "display_name": "Promo Sports",
       "description": "Promo deportivo cinematográfico: metraje oscuro verde azulado, itálica pesada espaciada, marcos y acentos amarillos, palabras gigantes en contorno, paneles que destellan y letras que se barajan.",
       "native_orientation": "16:9",
-      "index_html": "LYRICS-comercial/promo-sports.html",
-      "config_json": "LYRICS-comercial/assets/promo-sports.config.json",
+      "index_html": "commercial/promo-sports/index.html",
+      "config_json": "commercial/promo-sports/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
-      "remotion_component": null
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "commercial",
+      "sort_order": 32,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video",
+        "sports"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Videos",
+            "hint": "acción deportiva en movimiento, atletas entrenando"
+          },
+          {
+            "slot": "photos",
+            "kind": "image",
+            "min": 1,
+            "max": 12,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Fotos",
+            "hint": "atletas en primer plano, retrato deportivo"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     },
     "lyrics-stylish-kinetic": {
-      "folder": "LYRICS-stylish-kinetic",
+      "folder": "lyrics/lyrics-stylish-kinetic",
       "display_name": "Stylish Kinetic",
       "description": "Tipografía cinética juguetona sobre colores planos (rojo, mostaza, menta, petróleo): cada frase entra en arco o deslizando con desenfoque, gira 90° hasta quedar en columna mientras el resto se apila al lado, las letras se despliegan como tecleadas y trazos de pincel blancos cruzan los cortes — con 9 recetas y 4 transiciones que se mezclan para temas largos. Para pop, indie, urbano ligero y contenido divertido.",
       "native_orientation": "any",
-      "index_html": "LYRICS-stylish-kinetic/index.html",
-      "config_json": "LYRICS-stylish-kinetic/assets/config.json",
+      "index_html": "lyrics/lyrics-stylish-kinetic/index.html",
+      "config_json": "lyrics/lyrics-stylish-kinetic/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-stylish-kinetic/prompts/config_mapper.md",
-      "remotion_component": null
+      "config_prompt": "lyrics/lyrics-stylish-kinetic/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [],
+      "category_id": "lyrics",
+      "sort_order": 33,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "kinetic"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
     },
     "lyrics-caution": {
-      "folder": "LYRICS-caution",
+      "folder": "lyrics/lyrics-caution",
       "display_name": "Caution",
       "description": "Kinetic typography de cortes duros: cada palabra acentuada de la canción es un cartón nuevo sobre rojo plano, papel blanco fotocopiado o negro grunge, con letra condensada gigante, etiquetas, barras rojas, tickers y pilas en contorno, más un mosaico final de escenas en el último silencio — para trap, rap, drill y pop urbano con mucha energía.",
       "native_orientation": "any",
-      "index_html": "LYRICS-caution/index.html",
-      "config_json": "LYRICS-caution/assets/config.json",
+      "index_html": "lyrics/lyrics-caution/index.html",
+      "config_json": "lyrics/lyrics-caution/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-caution/prompts/config_mapper.md",
-      "remotion_component": null
+      "config_prompt": "lyrics/lyrics-caution/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [],
+      "category_id": "lyrics",
+      "sort_order": 34,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "kinetic"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
     },
     "lyrics-cristal": {
-      "folder": "LYRICS-cristal-roto",
+      "folder": "lyrics/lyrics-cristal",
       "display_name": "Cristal Roto",
       "description": "La letra se pinta sobre una lámina de vidrio frente a un mundo nocturno en movimiento (bokeh, rayos de discoteca, aurora o la foto/video del nicho): cada golpe agrieta el vidrio con una telaraña real, algunas frases se graban esmeriladas o se escriben con el dedo en el vaho, y cuando el daño se acumula la lámina estalla en fragmentos que vuelan hacia la cámara revelando un mundo nuevo — para reggaetón, trap, pop urbano y EDM.",
       "native_orientation": "any",
-      "index_html": "LYRICS-cristal-roto/index.html",
-      "config_json": "LYRICS-cristal-roto/assets/config.json",
+      "index_html": "lyrics/lyrics-cristal/index.html",
+      "config_json": "lyrics/lyrics-cristal/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-cristal-roto/prompts/config_mapper.md",
-      "remotion_component": null
+      "config_prompt": "lyrics/lyrics-cristal/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/figures",
+        "assets/humo.mp4"
+      ],
+      "category_id": "in_progress",
+      "sort_order": 35,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
     },
     "lyrics-mirada": {
-      "folder": "LYRICS-mirada-celeste",
+      "folder": "lyrics/lyrics-mirada",
       "display_name": "Mirada Celeste",
       "description": "Video de letras ilustrado en sepia en siete escenarios que se reparten la canción: ojos en la penumbra con una mano que se estira, palabras-columna gigantes, un ángel dentro de las letras, cielo nocturno con luna y niebla, palomas y plumas, un ojo gigante con mira y palabras de cartón recortado — todo con movimientos suaves y sincronizado con la canción real.",
       "native_orientation": "any",
-      "index_html": "LYRICS-mirada-celeste/index.html",
-      "config_json": "LYRICS-mirada-celeste/assets/config.json",
+      "index_html": "lyrics/lyrics-mirada/index.html",
+      "config_json": "lyrics/lyrics-mirada/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-mirada-celeste/prompts/config_mapper.md",
-      "remotion_component": null
+      "config_prompt": "lyrics/lyrics-mirada/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media",
+        "assets/niebla.mp4"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 36,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
     },
     "lyrics-night-journey": {
-      "folder": "LYRICS-viaje-nocturno",
+      "folder": "lyrics/lyrics-night-journey",
       "display_name": "Viaje Nocturno",
       "description": "Video de letras cinematográfico en cinco escenas encadenadas: tarjeta de reproductor 3D en ámbar con karaoke palabra por palabra, camino de parque de noche con palabras serif condensadas que se desenfocan en profundidad, una ola que borra todo hacia un cielo con la luna, un túnel amarillo con desenfoque de movimiento y un cierre sobre papel amarillo — movimiento suave y continuo, ideal para pop, R&B y reggaetón melódico.",
       "native_orientation": "9:16",
-      "index_html": "LYRICS-viaje-nocturno/index.html",
-      "config_json": "LYRICS-viaje-nocturno/assets/config.json",
+      "index_html": "lyrics/lyrics-night-journey/index.html",
+      "config_json": "lyrics/lyrics-night-journey/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "LYRICS-viaje-nocturno/prompts/config_mapper.md",
-      "remotion_component": null
+      "config_prompt": "lyrics/lyrics-night-journey/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/cover.jpg",
+        "assets/moon.png",
+        "assets/path.mp4"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 37,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
+    },
+    "lyrics-amor-impredecible": {
+      "folder": "lyrics/lyrics-amor-impredecible",
+      "display_name": "Amor Impredecible",
+      "description": "Visualizador romántico con letra manuscrita, corazones, flechas y destellos que reaccionan al ritmo de la canción.",
+      "native_orientation": "any",
+      "index_html": "lyrics/lyrics-amor-impredecible/index.html",
+      "config_json": "lyrics/lyrics-amor-impredecible/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [],
+      "category_id": "in_progress",
+      "sort_order": 38,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "emocional"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [],
+        "brief": false
+      }
+    },
+    "lyrics-lluvia-gris": {
+      "folder": "lyrics/lyrics-lluvia-gris",
+      "display_name": "Lluvia Gris",
+      "description": "Balada triste bajo la lluvia: metraje frío y desaturado de vidrios mojados y calles nocturnas, serif itálica fina con sans espaciada, lluvia real sobre la letra, palabras que gotean y se derriten, reflejos en el asfalto y texto que limpia el vaho del vidrio. Transiciones de cortina de lluvia y disolvencia desenfocada.",
+      "native_orientation": "any",
+      "index_html": "lyrics/lyrics-lluvia-gris/index.html",
+      "config_json": "lyrics/lyrics-lluvia-gris/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "lyrics/lyrics-lluvia-gris/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 39,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "emocional",
+        "triste"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "target": "media",
+            "label": "Videos",
+            "hint": "lluvia: vidrios mojados, calle nocturna, paraguas, ventana"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
+    },
+    "lyrics-memoria": {
+      "folder": "lyrics/lyrics-memoria",
+      "display_name": "Memoria Velada",
+      "description": "Recuerdos que se desvanecen: películas caseras de 8 mm y VHS en sepia lavado, polaroids que caen, proyector que titila, fecha VHS, máquina de escribir que escribe y borra la letra, letra manuscrita que se esfuma, destellos de luz cálida y fotogramas que se queman. Para canciones de nostalgia y pérdida.",
+      "native_orientation": "any",
+      "index_html": "lyrics/lyrics-memoria/index.html",
+      "config_json": "lyrics/lyrics-memoria/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "lyrics/lyrics-memoria/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 40,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "emocional",
+        "triste"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "target": "media",
+            "label": "Videos",
+            "hint": "recuerdos: video casero antiguo, familia, niños, manos"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
+    },
+    "lyrics-ceniza": {
+      "folder": "lyrics/lyrics-ceniza",
+      "display_name": "Ceniza",
+      "description": "Desamor que se quema: carbón, ceniza y hueso con brasas moribundas, serif dramática, palabras que aparecen al rojo y estallan en ceniza, humo que se lleva la letra, velas que se apagan, un diario que arde y una palabra que se agrieta en dos. Transiciones de quemado con borde incandescente.",
+      "native_orientation": "any",
+      "index_html": "lyrics/lyrics-ceniza/index.html",
+      "config_json": "lyrics/lyrics-ceniza/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "lyrics/lyrics-ceniza/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 41,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "emocional",
+        "triste"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "target": "media",
+            "label": "Videos",
+            "hint": "fuego y humo: velas, llamas, papel ardiendo, chispas, humo"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
+    },
+    "lyrics-vacio": {
+      "folder": "lyrics/lyrics-vacio",
+      "display_name": "Vacío",
+      "description": "Soledad y vacío: blanco y negro frío con niebla, rutas perdidas, cuartos vacíos y una figura frente al mar; condensada finísima o muy pesada, letras que se separan hasta perderse, palabras que se desmoronan, estelas de eco, reflejos en la bruma, la imagen que se rasga y una palabra que respira en el negro.",
+      "native_orientation": "any",
+      "index_html": "lyrics/lyrics-vacio/index.html",
+      "config_json": "lyrics/lyrics-vacio/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": "lyrics/lyrics-vacio/prompts/config_mapper.md",
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 42,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "emocional",
+        "triste"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "target": "media",
+            "label": "Videos",
+            "hint": "soledad: niebla, ruta vacía, cuarto vacío, mar, nieve, ventana"
+          }
+        ],
+        "texts": [],
+        "brief": true
+      }
     }
-  }
+  },
+  "//inputs": "`inputs` declara qué pide cada plantilla (ver docs/investigaciones/estudio-creacion-interactiva-2026-09.md §3.1). media[].target: 'source' = entra por la imagen/video de fondo del job; 'media' = reemplaza, en orden y por tipo, las entradas de config.media (ver src/modules/template_inputs_applier.py). count = exacto; min/max = rango."
 }

@@ -1,0 +1,157 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Promo de tipografía cinética: una palabra o frase por escena repetida en filas, con una animación distinta cada vez (desde el centro, ola, cascada, rotación, marcador, perspectiva, cortes, ondas, parpadeo), en blanco, rojo, verde, naranja o degradado sobre carbón con grano, rayas de película y contador de escena. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=JetBrains+Mono:wght@500&display=swap"
+      },
+      "palette": {
+        "bg": "#1C1C1D",
+        "white": "#BDBDB8",
+        "red": "#9B1F1F",
+        "green": "#1E8A2E",
+        "teal": "#2E9C74",
+        "orange": "#A23A12",
+        "yellow": "#D9C21A"
+      },
+      "media": [],
+      "brand": {
+        "tag": "NEXA"
+      },
+      "duration": 54.23,
+      "scenes": [
+        {
+          "type": "fromCenter",
+          "color": "white"
+        },
+        {
+          "type": "stretchChars",
+          "color": "red"
+        },
+        {
+          "type": "ripple",
+          "color": "white"
+        },
+        {
+          "type": "cascade",
+          "color": "white"
+        },
+        {
+          "type": "marker",
+          "color": "red"
+        },
+        {
+          "type": "ripple",
+          "color": "white"
+        },
+        {
+          "type": "gradient",
+          "color": "yellow"
+        },
+        {
+          "type": "rotating",
+          "color": "white"
+        },
+        {
+          "type": "sliced",
+          "color": "green"
+        },
+        {
+          "type": "cascade",
+          "color": "white"
+        },
+        {
+          "type": "dynamicScale",
+          "color": "white"
+        },
+        {
+          "type": "marker",
+          "color": "orange"
+        },
+        {
+          "type": "bigBlock",
+          "color": "white",
+          "block": "red"
+        },
+        {
+          "type": "growing",
+          "color": "teal"
+        },
+        {
+          "type": "breakDown",
+          "color": "red"
+        },
+        {
+          "type": "pushUp",
+          "color": "white"
+        },
+        {
+          "type": "gradient",
+          "color": "grad"
+        },
+        {
+          "type": "squeeze",
+          "color": "green"
+        },
+        {
+          "type": "perspective",
+          "color": "red"
+        },
+        {
+          "type": "bigBlock",
+          "color": "white",
+          "block": "orange"
+        },
+        {
+          "type": "constructor_",
+          "color": "white"
+        },
+        {
+          "type": "starway",
+          "color": "teal"
+        },
+        {
+          "type": "sliced",
+          "color": "white"
+        },
+        {
+          "type": "waving",
+          "color": "white"
+        },
+        {
+          "type": "squeeze",
+          "color": "white"
+        },
+        {
+          "type": "blink",
+          "color": "red"
+        },
+        {
+          "type": "typing",
+          "color": "white"
+        },
+        {
+          "type": "verticalWord",
+          "color": "red"
+        },
+        {
+          "type": "typing",
+          "color": "white"
+        }
+      ],
+      "texture": {
+        "grain": 0.08
+      },
+      "debug": {
+        "enabled": false
+      },
+      "seed": 29
+    }
+  ]
+}

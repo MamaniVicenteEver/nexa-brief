@@ -1,0 +1,116 @@
+{
+  "id": "enmienda",
+  "family": "enmienda",
+  "name": "EXPEDIENTE",
+  "tagline": "Historia, poder y justicia contados como un documental de archivo: tinta, cinta y papel",
+  "topics": [
+    "historia política",
+    "derechos civiles",
+    "justicia",
+    "leyes",
+    "guerras frías",
+    "protestas",
+    "crímenes de Estado",
+    "momentos decisivos"
+  ],
+  "channel": {
+    "name": "EXPEDIENTE",
+    "handle": "@expediente",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Anton&family=Barlow+Condensed:wght@500;600;700&family=Stardos+Stencil:wght@700&family=Archivo:wdth,wght@125,700;125,800&family=Playfair+Display:wght@700;900&family=Old+Standard+TT:wght@400;700&family=Architects+Daughter&family=Herr+Von+Muellerhoff&display=swap",
+  "scripts": [
+    "designs/enmienda/assets/geo.js",
+    "designs/enmienda/components/_enmienda.js",
+    "designs/enmienda/components/type.js",
+    "designs/enmienda/components/scenes.js",
+    "designs/common/outro-v1.js",
+    "designs/enmienda/components/fx.js",
+    "designs/common/hook.js",
+    "designs/enmienda/components/intro.js",
+    "designs/enmienda/components/outro.js"
+  ],
+  "defaults": {
+    "family": "enmienda",
+    "palette": {
+      "bg": "#000000",
+      "bg2": "#0b0a0a",
+      "ink": "#d6d0c5",
+      "paper": "#c9c5be",
+      "muted": "#8b8685",
+      "accent": "#efeeea",
+      "accentInk": "#141210",
+      "tape": "#151515"
+    },
+    "fonts": {
+      "main": "Oswald",
+      "load": [
+        "700 40px Oswald",
+        "600 40px Oswald",
+        "400 40px Anton",
+        "700 40px 'Barlow Condensed'",
+        "600 40px 'Barlow Condensed'",
+        "700 40px 'Stardos Stencil'",
+        "800 expanded 40px Archivo",
+        "900 40px 'Playfair Display'",
+        "400 40px 'Old Standard TT'",
+        "400 40px 'Architects Daughter'",
+        "400 40px 'Herr Von Muellerhoff'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "enmienda": {
+      "grain": 1,
+      "dust": 1,
+      "flicker": 1
+    },
+    "transition": {
+      "overlap": 0.6
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 5,
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODETECH",
+      "cta": "SUSCRÍBETE",
+      "support": "APOYA EL CANAL · COMPARTE EL EXPEDIENTE",
+      "handle": "youtube.com/@nodetech",
+      "use": "enmienda.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 125 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos de archivo reales (personas, multitudes, documentos, lugares); se muestran en B/N contrastado a pantalla completa, en marco de película o recortadas como figuras",
+    "portrait_tip": "enmienda.archive recorta 'cover': usar focus=[x,y] para apuntar el encuadre en 9:16",
+    "per_video": [
+      4,
+      10
+    ],
+    "reuse": "las fotos pueden repetirse con distinto foco/zoom (archive, cutout, collage)"
+  }
+}

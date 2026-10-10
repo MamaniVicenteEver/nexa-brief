@@ -9,7 +9,7 @@ Two completely different behaviors depending on niche_cfg.pipeline_type:
 - "config_driven_template": el index.html de la plantilla es ESTÁTICO y se
   copia tal cual (nunca se regenera). DeepSeek solo ejecuta el Prompt 2
   (Config Mapper) y devuelve el JSON que se escribe como config.json —
-  ver src/templates/01-image-bg/prompts/config_mapper.md.
+  ver la ruta declarada en src/templates/templates.json.
 """
 
 from __future__ import annotations
@@ -25,10 +25,11 @@ from PIL import Image
 
 from src.config.exceptions import AIGenerationError
 from src.config.niche_config import NicheConfig
-from src.config.template_manifest import get_template_paths
+from src.config.template_manifest import copy_template_runtime_assets, get_template_paths
 from src.core.job import Job, JobStage
 from src.core.library import asset_library
 from src.core.ports.ai_port import AIPort
+from src.modules.template_inputs_applier import apply_template_inputs
 
 logger = structlog.get_logger(__name__)
 
@@ -95,8 +96,30 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
     )
 
     template_paths = get_template_paths(niche_cfg.template.template_id)
-    system_prompt = template_paths["config_prompt"].read_text(encoding="utf-8")
-    config_dict = await ai.complete_json(system_prompt, job.artifacts.prompt_text)
+    if niche_cfg.template.static_config:
+        config_path = template_paths["config_json"]
+        if config_path is None or not config_path.exists():
+            raise AIGenerationError(
+                f"Plantilla estática sin config.json: {niche_cfg.template.template_id}"
+            )
+        raw_config = json.loads(config_path.read_text(encoding="utf-8"))
+        if isinstance(raw_config, dict) and isinstance(raw_config.get("configs"), list):
+            configs = raw_config["configs"]
+            active_id = raw_config.get("activeId")
+            config_dict = next(
+                (candidate for candidate in configs if candidate.get("id") == active_id),
+                configs[0] if configs else None,
+            )
+        else:
+            config_dict = raw_config
+    else:
+        system_prompt_path = template_paths["config_prompt"]
+        if system_prompt_path is None or not system_prompt_path.exists():
+            raise AIGenerationError(
+                f"Plantilla config-driven sin config_mapper: {niche_cfg.template.template_id}"
+            )
+        system_prompt = system_prompt_path.read_text(encoding="utf-8")
+        config_dict = await ai.complete_json(system_prompt, job.artifacts.prompt_text)
 
     if not isinstance(config_dict, dict):
         raise AIGenerationError(f"Config Mapper no devolvió un objeto JSON: {type(config_dict).__name__}")
@@ -143,12 +166,16 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
         # Las plantillas de letras usan "bg" (no "img", y sin forzado de w/h —
         # media_dimension_key=None para ellas, ver niche_config.py) para su
         # imagen de fondo opcional. Mismo criterio de no confiar en la IA.
-        if "bg" in config_dict and isinstance(config_dict["bg"], dict) and "src" in config_dict["bg"]:
+        if (
+            (niche_cfg.template.requires_image or niche_cfg.template.requires_video)
+            and "bg" in config_dict
+            and isinstance(config_dict["bg"], dict)
+            and "src" in config_dict["bg"]
+        ):
             config_dict["bg"]["src"] = niche_cfg.template.media_src_filename
 
-    # motion-backdrop: el motor espera una COLECCIÓN de casos, no un objeto
-    # top-level — index.html está forkeado con ACTIVE_ID="active" fijo (ver
-    # src/templates/motion-backdrop/index.html), así que "id" se fuerza igual.
+    # Algunas plantillas esperan una COLECCIÓN de casos, no un objeto top-level
+    # — esa decisión la declara el niche y no depende de la carpeta física.
     if niche_cfg.template.wrap_as_case_collection:
         config_dict["id"] = "active"
 
@@ -157,8 +184,25 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
 
     # index.html es estático — se copia tal cual, nunca se regenera.
     index_html_src = template_paths["index_html"]
+    if index_html_src is None or not index_html_src.exists():
+        raise AIGenerationError(
+            f"Plantilla config-driven sin index.html: {niche_cfg.template.template_id}"
+        )
     html_path = output_dir / "index.html"
     shutil.copy2(index_html_src, html_path)
+    copied_assets = copy_template_runtime_assets(
+        niche_cfg.template.template_id,
+        output_dir,
+    )
+
+    # Textos y medios que eligió el usuario (Estudio / Crear video) — después de
+    # copiar los runtime_assets para que sus archivos queden al lado del HTML.
+    config_dict = await apply_template_inputs(
+        config_dict,
+        job.input.template_inputs,
+        niche_cfg.template.template_id,
+        output_dir,
+    )
 
     written_config = (
         {"activeId": "active", "configs": [config_dict]}
@@ -188,6 +232,7 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
         "html_generator_config_driven_done",
         job_id=job.job_id,
         config_path=str(config_path),
+        runtime_assets=[str(path) for path in copied_assets],
         elapsed=elapsed,
     )
 

@@ -1,0 +1,719 @@
+{
+ "version": 1,
+ "family": "carta",
+ "title": "La noche que cayó el Muro",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "carta.introv1",
+   "params": {
+    "text": "LA NOCHE QUE\nCAYÓ EL ^MURO^",
+    "kicker": "Berlín · 9 de noviembre de 1989",
+    "sub": "y nadie lo vio venir",
+    "seal": "BERLÍN|1989|ARCHIVO",
+    "sealAt": "@Casi las 7"
+   },
+   "until": "Un funcionario lee",
+   "_alt": {
+    "use": "carta.introv2",
+    "params": {
+     "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+     "kicker": "Berlín · 9 de noviembre de 1989",
+     "stamp": "NADIE DIO LA ORDEN",
+     "stampAt": "@Casi las 7"
+    }
+   }
+  },
+  {
+   "at": "Un funcionario lee",
+   "use": "carta.retrato",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "label": "UN PAPEL",
+    "stamp": "ARCHIVO|1989|BERLÍN",
+    "years": "9 - 11 - 1989",
+    "title": "LEÍDO",
+    "sub": "EN VOZ ALTA",
+    "focus": [
+     0.5,
+     0.35
+    ],
+    "enter": "left"
+   }
+  },
+  {
+   "at": "derribar el muro",
+   "use": "carta.postal",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "label": "EL MURO MÁS FAMOSO",
+    "years": "1961 - 1989",
+    "body": "Un funcionario lee un papel que casi no conoce. Y sin saberlo, está a punto de derribar el muro más famoso del mundo.",
+    "title": "BERLÍN",
+    "sub": "ALEMANIA",
+    "enter": "ink"
+   }
+  },
+  {
+   "at": "Durante 28 años",
+   "use": "carta.dato",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "title": "DURANTE",
+    "figure": "28 AÑOS",
+    "body": "Berlín estuvo partida en dos. Una ciudad, dos países, una frontera de hormigón.",
+    "years": "1961 - 1989",
+    "focus": [
+     0.5,
+     0.3
+    ],
+    "enter": "up"
+   }
+  },
+  {
+   "at": "En agosto de 1961",
+   "use": "carta.nota",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "label": "AGOSTO DE 1961",
+    "body": "El gobierno de Alemania del Este levantó el muro de un día para otro, en medio de la ciudad.",
+    "title": "SE LEVANTA",
+    "years": "13 - 08 - 1961",
+    "focus": [
+     0.35,
+     0.5
+    ],
+    "zoom": 1.3,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "un muro de hormigón",
+   "use": "carta.ciudad",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "title": "HORMIGÓN",
+    "sub": "Y ALAMBRE",
+    "years": "1961",
+    "enter": "upleft",
+    "focus": [
+     0.5,
+     0.68
+    ]
+   }
+  },
+  {
+   "at": "Familias separadas",
+   "use": "carta.familia",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "label": "FAMILIAS SEPARADAS",
+    "sign": "Elsa",
+    "body": "Separadas por una calle. Vecinos que dejaron de verse para siempre.",
+    "years": "1961 - 1989",
+    "title": "VECINOS",
+    "sub": "SEPARADOS",
+    "focus": [
+     0.5,
+     0.55
+    ],
+    "enter": "fly"
+   }
+  },
+  {
+   "at": "Al menos 140",
+   "use": "carta.memoria",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "label": "AL MENOS 140",
+    "years": "1961 - 1989",
+    "title": "NO OLVIDAR",
+    "sub": "MURIERON EN EL MURO",
+    "sign": "Berlín",
+    "focus": [
+     0.4,
+     0.45
+    ],
+    "enter": "left"
+   }
+  },
+  {
+   "at": "Pero en el otoño",
+   "use": "carta.recuerdo",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "label": "OTOÑO",
+    "label2": "DE 1989",
+    "years": "1989",
+    "title": "ALGO SE ROMPE",
+    "enter": "downleft"
+   }
+  },
+  {
+   "at": "Miles de alemanes",
+   "use": "carta.frente",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "title": "ESCAPAN",
+    "sub": "DEL ESTE",
+    "years": "VERANO 1989",
+    "body": "Miles de alemanes del Este escapaban por Hungría y Checoslovaquia.",
+    "title2": "POR HUNGRÍA",
+    "focus": [
+     0.6,
+     0.5
+    ],
+    "zoom": 1.2,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "y cada lunes",
+   "use": "carta.album",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "years": "1989",
+    "body": "Cada lunes, cientos de miles marchaban en las calles pidiendo libertad para viajar.",
+    "title": "LEIPZIG",
+    "sub": "LOS LUNES",
+    "enter": "up"
+   }
+  },
+  {
+   "at": "El gobierno decidió",
+   "use": "carta.proyecto",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "title": "NUEVA REGLA",
+    "sub": "SOLTAR LA CUERDA",
+    "body": "El gobierno decidió soltar un poco la cuerda. Redactó una nueva regla.",
+    "years": "NOV 1989",
+    "focus": [
+     0.5,
+     0.3
+    ],
+    "enter": "fly"
+   }
+  },
+  {
+   "at": "Los ciudadanos podrían",
+   "use": "carta.nota",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "label": "PERMISO PARA VIAJAR",
+    "body": "Los ciudadanos podrían pedir permiso para viajar al Oeste.",
+    "title": "VIAJAR",
+    "years": "AL OESTE",
+    "focus": [
+     0.5,
+     0.6
+    ],
+    "zoom": 1.4,
+    "enter": "up"
+   }
+  },
+  {
+   "at": "Iba a anunciarse",
+   "use": "carta.postal",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "mirror": true,
+    "label": "AL DÍA SIGUIENTE",
+    "years": "10 - 11 - 1989",
+    "body": "Iba a anunciarse con calma, con trámites y con orden.",
+    "title": "MAÑANA",
+    "sub": "CON ORDEN",
+    "focus": [
+     0.6,
+     0.5
+    ],
+    "zoom": 1.15,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "El encargado de contarlo",
+   "use": "carta.perfil",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "title": "GÜNTER SCHABOWSKI",
+    "sub": "EL VOCERO",
+    "years": "1989",
+    "body": "El encargado de contarlo a la prensa era el vocero del partido.",
+    "title2": "EL PARTIDO",
+    "focus": [
+     0.45,
+     0.35
+    ],
+    "zoom": 1.3,
+    "enter": "up"
+   }
+  },
+  {
+   "at": "le entregaron la nota",
+   "use": "carta.sello",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "label": "LA NOTA",
+    "stamp": "ARCHIVO|1989|BERLÍN",
+    "title": "NADIE AVISÓ",
+    "years": "9 - 11 - 1989",
+    "sub": "ESPERAR A LA MAÑANA",
+    "focus": [
+     0.5,
+     0.4
+    ],
+    "enter": "left"
+   }
+  },
+  {
+   "at": "La conferencia fue larga",
+   "use": "carta.ficha",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "title": "CONFERENCIA",
+    "sub": "DE PRENSA",
+    "years": "18:00 - 19:00",
+    "body": "Larga y aburrida. Casi una hora de anuncios.",
+    "focus": [
+     0.3,
+     0.4
+    ],
+    "enter": "ink"
+   }
+  },
+  {
+   "at": "Al final Schabowski",
+   "use": "carta.retrato",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "mirror": true,
+    "label": "SACÓ EL PAPEL",
+    "years": "18:53",
+    "title": "TAL CUAL",
+    "sub": "LO LEYÓ",
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "zoom": 1.2,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "Los periodistas se miraron",
+   "use": "carta.memoria",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "mirror": true,
+    "label": "¿VIAJAR?",
+    "years": "19:00",
+    "title": "¿SIN REQUISITOS?",
+    "sub": "LOS PERIODISTAS SE MIRARON",
+    "focus": [
+     0.75,
+     0.4
+    ],
+    "zoom": 1.2,
+    "enter": "up"
+   }
+  },
+  {
+   "at": "Entonces llegó la pregunta",
+   "use": "carta.proyecto",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "title": "LA PREGUNTA",
+    "sub": "¿CUÁNDO ENTRA EN VIGOR?",
+    "body": "Entonces llegó la pregunta que nadie esperaba.",
+    "years": "18:57",
+    "focus": [
+     0.55,
+     0.35
+    ],
+    "zoom": 1.5,
+    "enter": "fly"
+   },
+   "until": "Schabowski revolvió"
+  },
+  {
+   "at": "Schabowski revolvió",
+   "use": "carta.nota",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "mirror": true,
+    "label": "BUSCA LA RESPUESTA",
+    "body": "Schabowski revolvió sus papeles. Buscó la respuesta. No la encontró.",
+    "title": "NADA",
+    "years": "18:58",
+    "focus": [
+     0.5,
+     0.25
+    ],
+    "zoom": 1.3,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "De inmediato",
+   "use": "carta.title",
+   "params": {
+    "title": "DE INMEDIATO",
+    "sub": "SIN DEMORA",
+    "kicker": "LO QUE CREÍA · 18:58",
+    "enter": "fly"
+   },
+   "until": "Dos palabras"
+  },
+  {
+   "at": "Dos palabras que",
+   "use": "carta.dato",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "title": "DOS PALABRAS",
+    "figure": "SOFORT",
+    "body": "Dos palabras que nadie había autorizado.",
+    "years": "9 - 11 - 1989",
+    "focus": [
+     0.5,
+     0.7
+    ],
+    "zoom": 1.3,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "La televisión del Oeste",
+   "use": "carta.frente",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "mirror": true,
+    "title": "LA TELEVISIÓN",
+    "sub": "DEL OESTE",
+    "years": "ESA NOCHE",
+    "body": "Que también se veía en el Este, lo repitió esa misma noche.",
+    "title2": "LO REPITIÓ",
+    "focus": [
+     0.5,
+     0.25
+    ],
+    "enter": "up"
+   }
+  },
+  {
+   "at": "Las fronteras están abiertas",
+   "use": "carta.ciudad",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "title": "ABIERTAS",
+    "sub": "LAS FRONTERAS",
+    "years": "9 - 11 - 1989",
+    "enter": "fly"
+   }
+  },
+  {
+   "at": "Miles de personas salieron",
+   "use": "carta.album",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "years": "22:00",
+    "body": "Miles de personas salieron de sus casas y fueron directo a los puestos fronterizos.",
+    "title": "MILES",
+    "sub": "A LA FRONTERA",
+    "focus": [
+     0.5,
+     0.6
+    ],
+    "enter": "left"
+   }
+  },
+  {
+   "at": "En el cruce de",
+   "use": "carta.postal",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "label": "EL CRUCE DE",
+    "years": "BERLÍN",
+    "body": "Paso fronterizo entre el Este y el Oeste de la ciudad.",
+    "title": "BORNHOLMER",
+    "sub": "STRASSE",
+    "enter": "up",
+    "focus": [
+     0.5,
+     0.68
+    ]
+   }
+  },
+  {
+   "at": "el oficial Harald",
+   "use": "carta.ficha",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "title": "HARALD JÄGER",
+    "sub": "OFICIAL",
+    "years": "9 - 11 - 1989",
+    "body": "Tenía una multitud frente a él y ninguna orden.",
+    "focus": [
+     0.7,
+     0.5
+    ],
+    "zoom": 1.6,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "Llamó a sus superiores",
+   "use": "carta.recuerdo",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "label": "LLAMÓ",
+    "label2": "A SUS JEFES",
+    "years": "22:30",
+    "title": "SIN RESPUESTA",
+    "focus": [
+     0.5,
+     0.35
+    ],
+    "zoom": 1.2,
+    "enter": "upleft"
+   }
+  },
+  {
+   "at": "La gente gritaba",
+   "use": "carta.memoria",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "label": "LA GENTE GRITABA",
+    "years": "23:00",
+    "title": "¡ABRAN!",
+    "sub": "LA PUERTA",
+    "focus": [
+     0.5,
+     0.4
+    ],
+    "enter": "left"
+   },
+   "until": "A las once"
+  },
+  {
+   "at": "A las once",
+   "use": "carta.frente",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "title": "LA DECISIÓN",
+    "sub": "JÄGER",
+    "years": "23:30",
+    "body": "Tomó la decisión que nadie más quiso tomar. Abrió la barrera.",
+    "title2": "Y CRUZARON",
+    "focus": [
+     0.4,
+     0.5
+    ],
+    "enter": "ink"
+   }
+  },
+  {
+   "at": "la barrera",
+   "use": "carta.postal",
+   "params": {
+    "enter": "up",
+    "src": "assets/media/mauerspecht.jpg",
+    "label": "ABRIÓ LA BARRERA",
+    "years": "23:30",
+    "body": "Y la gente cruzó. Primero unos pocos, después miles.",
+    "title": "CRUZARON",
+    "sub": "AL OESTE",
+    "mirror": true,
+    "focus": [
+     0.5,
+     0.4
+    ]
+   }
+  },
+  {
+   "at": "Esa noche los berlineses",
+   "use": "carta.retrato",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "label": "ESA NOCHE",
+    "stamp": "BERLÍN|1989|NOVIEMBRE",
+    "years": "10 - 11 - 1989",
+    "title": "EL MURO",
+    "sub": "LOS BERLINESES",
+    "focus": [
+     0.5,
+     0.3
+    ],
+    "enter": "up"
+   }
+  },
+  {
+   "at": "con martillos",
+   "use": "carta.ciudad",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "title": "MARTILLOS",
+    "sub": "Y CINCELES",
+    "years": "NOV 1989",
+    "enter": "left"
+   }
+  },
+  {
+   "at": "Desconocidos se abrazaban",
+   "use": "carta.familia",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "mirror": true,
+    "label": "ESA NOCHE",
+    "sign": "Elsa",
+    "body": "Desconocidos se abrazaban en la calle.",
+    "years": "1989",
+    "title": "DESCONOCIDOS",
+    "sub": "ABRAZADOS",
+    "enter": "fly"
+   }
+  },
+  {
+   "at": "Personas que llevaban",
+   "use": "carta.perfil",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "title": "28 AÑOS SIN CRUZAR",
+    "sub": "EL OTRO LADO",
+    "years": "1961 - 1989",
+    "body": "Caminaban, simplemente, por su propia ciudad.",
+    "title2": "SU CIUDAD",
+    "focus": [
+     0.35,
+     0.4
+    ],
+    "zoom": 1.3,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "Menos de un año",
+   "use": "carta.dato",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "title": "MENOS DE UN AÑO",
+    "figure": "3 OCT 1990",
+    "body": "Alemania volvió a ser un solo país.",
+    "years": "1990",
+    "enter": "fly"
+   }
+  },
+  {
+   "at": "La historia suele contar",
+   "use": "carta.sello",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "mirror": true,
+    "label": "LA HISTORIA",
+    "stamp": "ARCHIVO|1990|BERLÍN",
+    "title": "BATALLAS",
+    "years": "Y LÍDERES",
+    "sub": "GRANDES",
+    "focus": [
+     0.6,
+     0.5
+    ],
+    "zoom": 1.25,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "pero este muro",
+   "use": "carta.nota",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "label": "PERO ESTE MURO",
+    "body": "Cayó por un papel leído antes de tiempo, y por un oficial que eligió abrir en lugar de disparar.",
+    "title": "UN PAPEL",
+    "years": "Y UN OFICIAL",
+    "enter": "up"
+   }
+  },
+  {
+   "at": "por un oficial que",
+   "use": "carta.ficha",
+   "params": {
+    "enter": "left",
+    "src": "assets/media/bornholmer.jpg",
+    "title": "UN OFICIAL",
+    "sub": "QUE ELIGIÓ ABRIR",
+    "years": "EN LUGAR DE DISPARAR",
+    "body": "Harald Jäger, puesto de Bornholmer Strasse, 9 de noviembre de 1989.",
+    "mirror": true,
+    "focus": [
+     0.65,
+     0.5
+    ],
+    "zoom": 1.4
+   }
+  },
+  {
+   "at": "Porque a veces",
+   "use": "carta.recuerdo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "mirror": true,
+    "label": "NO LA MUEVE",
+    "label2": "UN EJÉRCITO",
+    "years": "A VECES",
+    "title": "LA HISTORIA",
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "zoom": 1.1,
+    "enter": "left"
+   }
+  },
+  {
+   "at": "la mueven dos palabras",
+   "use": "carta.retrato",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "label": "DOS PALABRAS",
+    "stamp": "ARCHIVO|1989|BERLÍN",
+    "years": "9 - 11 - 1989",
+    "title": "EL MOMENTO",
+    "sub": "JUSTO",
+    "focus": [
+     0.45,
+     0.35
+    ],
+    "zoom": 1.2,
+    "enter": "ink"
+   },
+   "until": "de inmediato sin demora"
+  },
+  {
+   "at": "de inmediato sin demora",
+   "use": "carta.title",
+   "dur": 5.28,
+   "params": {
+    "title": "DE INMEDIATO",
+    "sub": "SIN DEMORA",
+    "kicker": "BERLÍN · 9 NOV 1989",
+    "enter": "fly"
+   }
+  },
+  {
+   "t": 206.837551,
+   "offset": 0,
+   "dur": 13.68,
+   "use": "carta.outro",
+   "params": {
+    "likeAt": 5.16,
+    "subscribeAt": 5.54,
+    "bellAt": 7.84,
+    "supportAt": 8.94
+   }
+  }
+ ]
+}

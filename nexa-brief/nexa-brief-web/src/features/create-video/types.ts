@@ -2,6 +2,11 @@ export interface Niche {
   id: string;
   displayName: string;
   description: string;
+  categoryId: string;
+  categoryName: string;
+  categoryOrder: number;
+  tags: string[];
+  sortOrder: number;
   pipelineType: string;
   active: boolean;
   recorderEngine: string;

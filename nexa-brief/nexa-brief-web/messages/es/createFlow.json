@@ -1,0 +1,64 @@
+{
+  "createFlow": {
+    "submit": "Generar",
+    "submitPending": "Generando…",
+    "oneStepHint": "Un solo paso: se arma la vista previa, se graba sola y se generan títulos y descripciones. Lo vas viendo en la bandeja de videos en proceso.",
+    "started": "{count, plural, one {Listo: el video arrancó. Seguilo en la bandeja.} other {Listo: arrancaron # videos. Seguilos en la bandeja.}}",
+    "classicFallback": "Con una duración distinta de «Automática × 1» se genera con el flujo clásico.",
+    "classicLosesContent": "Con una duración distinta de «Automática × 1» se genera con el flujo clásico: solo se usan la canción y el fondo, no los medios propios ni los textos de la plantilla. Dejá la duración en «Automática × 1» para usarlos.",
+    "content": {
+      "title": "Contenido",
+      "loading": "Cargando lo que pide la plantilla…",
+      "requirementsFailed": "No pudimos cargar lo que pide la plantilla: se usan los campos de siempre."
+    },
+    "needs": {
+      "title": "Qué necesita esta plantilla",
+      "titleCommercial": "Qué necesita este comercial",
+      "songRequired": "Canción (obligatoria)",
+      "songOptional": "Canción (opcional)",
+      "lyricsAuto": "la letra se transcribe sola",
+      "kind": {
+        "image": "{range} {count, plural, one {imagen} other {imágenes}}",
+        "video": "{range} {count, plural, one {video} other {videos}}",
+        "any": "{range} {count, plural, one {imagen o video} other {imágenes o videos}}"
+      },
+      "orientation": {
+        "landscape": "horizontal",
+        "portrait": "vertical",
+        "square": "cuadrado"
+      },
+      "chosen": "{count, plural, =0 {sin elegir} one {# elegido} other {# elegidos}}",
+      "texts": "{count, plural, one {# texto editable} other {# textos editables}} (si no los tocás, quedan los de la plantilla)",
+      "allFilled": "Está todo elegido. Podés generar.",
+      "aiWillFill": "Al generar, la IA busca e importa lo que falta en: {slots}.",
+      "aiHint": "¿No tenés el fondo? Escribí una descripción en «Que lo elija la IA» y dejalo vacío: al generar lo busca sola. Sin descripción se elige uno automático.",
+      "aiHintCommercial": "¿No tenés los videos o las fotos? Escribí una descripción en «Que lo elija la IA» y dejá los lugares vacíos: al generar la IA los busca e importa sola. Sin medios ni descripción se usan los de ejemplo de la plantilla."
+    },
+    "progress": {
+      "aiPlanning": "La IA está buscando medios… {done}/{total}",
+      "aiImporting": "Importando los medios a tu librería…",
+      "creating": "Creando {done}/{total}…"
+    },
+    "errors": {
+      "generic": "No pudimos generar el video. Probá de nuevo.",
+      "ai": "La IA no pudo elegir los medios. Elegilos a mano o probá con otra descripción.",
+      "partial": "Arrancaron {created} de {total}. El resto no se pudo crear: {reason}"
+    },
+    "summary": {
+      "rowMedia": "Medios",
+      "mediaChosen": "{count, plural, one {# elegido} other {# elegidos}}",
+      "mediaByAi": "Los elige la IA",
+      "noMedia": "No usa",
+      "songChosen": "Elegida"
+    },
+    "tray": {
+      "preparing": "Preparando",
+      "preparingCount": "{count, plural, one {# preparándose} other {# preparándose}}",
+      "starting": "Arrancando…",
+      "previewHint": "después se graba solo",
+      "failed": "Falló",
+      "failedHint": "No se pudo preparar el video.",
+      "barLabel": "Preparación de {name}"
+    }
+  }
+}

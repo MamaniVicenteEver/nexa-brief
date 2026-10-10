@@ -1,0 +1,766 @@
+{
+ "version": 1,
+ "family": "acuarela",
+ "title": "La noche que cayó el Muro",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "acuarela.introv1",
+   "params": {
+    "text": "LA NOCHE QUE\nCAYÓ EL ^MURO^",
+    "kicker": "Berlín · 9 nov 1989",
+    "sub": "nadie dio la orden",
+    "dropAt": 2.3
+   },
+   "until": "Un funcionario lee",
+   "_alt": {
+    "use": "acuarela.introv2",
+    "params": {
+     "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+     "kicker": "Berlín · 1989",
+     "stamp": "NADIE DIO LA ORDEN",
+     "stampAt": 2.4
+    }
+   }
+  },
+  {
+   "at": "Un funcionario lee",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "date": "9 de noviembre de 1989",
+    "text": "Casi las siete de la tarde. Un funcionario lee en voz alta un papel que casi no conoce.",
+    "layout": "top",
+    "bg": "assets/media/leipzig.jpg",
+    "bgFocus": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "derribar el muro",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "date": "El muro",
+    "text": "Sin saberlo, está a punto de derribar el muro más famoso del mundo.",
+    "layout": "right",
+    "bg": "assets/media/muro-gente.jpg",
+    "frame": "deckle",
+    "focus": [
+     0.45,
+     0.55
+    ]
+   }
+  },
+  {
+   "at": "Durante 28 años",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/mauerbau.jpg",
+    "b": "assets/media/muro-gente.jpg",
+    "date": "1961 – 1989",
+    "text": "Durante 28 años, Berlín estuvo partida en dos: una ciudad, dos países.",
+    "layout": "above",
+    "bg": "assets/media/leipzig.jpg",
+    "focusB": [
+     0.5,
+     0.22
+    ]
+   }
+  },
+  {
+   "at": "En agosto de 1961",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "date": "Agosto de 1961",
+    "text": "El gobierno de Alemania del Este levanta, de un día para otro, un muro en medio de la ciudad.",
+    "layout": "left",
+    "bg": "assets/media/bornholmer.jpg"
+   }
+  },
+  {
+   "at": "un muro de hormigón",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/mauerbau.jpg",
+    "b": "assets/media/mauerspecht.jpg",
+    "date": "Hormigón y alambre",
+    "text": "Bloques, torres de vigilancia y alambre de púas cortan calles, plazas y vías.",
+    "layout": "right",
+    "bg": "assets/media/muro-gente.jpg",
+    "focusA": [
+     0.85,
+     0.5
+    ],
+    "focusB": [
+     0.42,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "Familias separadas",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/muro-gente.jpg",
+    "b": "assets/media/bornholmer.jpg",
+    "date": "Este",
+    "text": "Familias separadas por una calle.",
+    "layout": "dual",
+    "bg": "assets/media/mauerbau.jpg",
+    "date2": "Oeste",
+    "text2": "Vecinos que dejaron de verse para siempre.",
+    "focusA": [
+     0.5,
+     0.2
+    ],
+    "frameB": "stamp"
+   }
+  },
+  {
+   "at": "Al menos 140",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "date": "Al menos 140",
+    "text": "personas murieron intentando cruzar el muro de Berlín.",
+    "layout": "left",
+    "bg": "assets/media/bornholmer.jpg",
+    "frame": "deckle",
+    "focus": [
+     0.5,
+     0.42
+    ]
+   }
+  },
+  {
+   "at": "Pero en el otoño",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/leipzig.jpg",
+    "b": "assets/media/bornholmer.jpg",
+    "date": "Otoño de 1989",
+    "text": "Algo se estaba rompiendo en la Alemania del Este.",
+    "layout": "center",
+    "bg": "assets/media/muro-gente.jpg",
+    "frameB": "stamp"
+   }
+  },
+  {
+   "at": "Miles de alemanes",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "date": "Verano de 1989",
+    "text": "Miles de alemanes del Este escapan por Hungría y Checoslovaquia.",
+    "layout": "right",
+    "bg": "assets/media/leipzig.jpg",
+    "focus": [
+     0.5,
+     0.75
+    ]
+   }
+  },
+  {
+   "at": "y cada lunes",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/leipzig.jpg",
+    "b": "assets/media/muro-gente.jpg",
+    "date": "Leipzig, 1989",
+    "text": "Cada lunes, cientos de miles marchan por las calles pidiendo libertad para viajar.",
+    "layout": "above",
+    "bg": "assets/media/bornholmer.jpg",
+    "focusA": [
+     0.6,
+     0.5
+    ],
+    "focusB": [
+     0.5,
+     0.75
+    ]
+   }
+  },
+  {
+   "at": "El gobierno decidió",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "date": "Una nueva regla",
+    "text": "El gobierno decide soltar un poco la cuerda.",
+    "layout": "top",
+    "bg": "assets/media/schabowski.jpg",
+    "focus": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "Los ciudadanos podrían",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/bornholmer.jpg",
+    "b": "assets/media/leipzig.jpg",
+    "date": "Permiso para viajar",
+    "text": "Los ciudadanos podrían pedir permiso para viajar al Oeste.",
+    "layout": "below",
+    "bg": "assets/media/mauerbau.jpg",
+    "focusA": [
+     0.3,
+     0.6
+    ]
+   }
+  },
+  {
+   "at": "Iba a anunciarse",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "date": "10 de noviembre",
+    "text": "Se anunciaría al día siguiente: con calma, con trámites y con orden.",
+    "layout": "right",
+    "bg": "assets/media/schabowski.jpg",
+    "frame": "deckle",
+    "focus": [
+     0.5,
+     0.62
+    ]
+   }
+  },
+  {
+   "at": "El encargado de contarlo",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "date": "Günter Schabowski",
+    "text": "El vocero del partido, encargado de contarlo a la prensa.",
+    "layout": "left",
+    "bg": "assets/media/mauerbau.jpg",
+    "focus": [
+     0.75,
+     0.4
+    ]
+   }
+  },
+  {
+   "at": "le entregaron la nota",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/schabowski.jpg",
+    "b": "assets/media/nota.jpg",
+    "date": "La nota",
+    "text": "Nadie le advirtió que debía esperar hasta la mañana.",
+    "layout": "right",
+    "bg": "assets/media/muro-gente.jpg",
+    "focusA": [
+     0.4,
+     0.5
+    ],
+    "focusB": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "La conferencia fue larga",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "date": "Conferencia de prensa",
+    "text": "Larga y aburrida: casi una hora de anuncios.",
+    "layout": "top",
+    "bg": "assets/media/leipzig.jpg",
+    "focus": [
+     0.5,
+     0.6
+    ]
+   }
+  },
+  {
+   "at": "Al final Schabowski",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/nota.jpg",
+    "b": "assets/media/schabowski.jpg",
+    "date": "18:53",
+    "text": "Al final, Schabowski saca el papel…",
+    "layout": "dual",
+    "bg": "assets/media/bornholmer.jpg",
+    "date2": "Tal cual",
+    "text2": "…y lo lee sin saber qué decía.",
+    "focusA": [
+     0.5,
+     0.45
+    ],
+    "focusB": [
+     0.85,
+     0.4
+    ],
+    "frameB": "stamp"
+   }
+  },
+  {
+   "at": "Los periodistas se miraron",
+   "use": "acuarela.quote",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "quote": "¿Viajar? ¿Sin requisitos? Los periodistas se miran sin entender lo que acaban de oír.",
+    "name": "La sala de prensa",
+    "bg": "assets/media/leipzig.jpg",
+    "focus": [
+     0.25,
+     0.6
+    ]
+   }
+  },
+  {
+   "at": "Entonces llegó la pregunta",
+   "use": "acuarela.quote",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "quote": "¿Cuándo entra en vigor?",
+    "name": "Pregunta de un periodista",
+    "bg": "assets/media/muro-gente.jpg",
+    "focus": [
+     0.65,
+     0.55
+    ]
+   },
+   "until": "Schabowski revolvió"
+  },
+  {
+   "at": "Schabowski revolvió",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "date": "Sin respuesta",
+    "text": "Revolvió sus papeles. Buscó la respuesta. No la encontró.",
+    "layout": "right",
+    "bg": "assets/media/schabowski.jpg",
+    "focus": [
+     0.5,
+     0.15
+    ]
+   }
+  },
+  {
+   "at": "De inmediato",
+   "use": "acuarela.quote",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "quote": "«Eso entra en vigor, según mi conocimiento… de inmediato. Sin demora.»",
+    "name": "Günter Schabowski",
+    "bg": "assets/media/bornholmer.jpg",
+    "focus": [
+     0.88,
+     0.35
+    ]
+   },
+   "until": "Dos palabras"
+  },
+  {
+   "at": "Dos palabras que",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/nota.jpg",
+    "b": "assets/media/schabowski.jpg",
+    "date": "Dos palabras",
+    "text": "que nadie había autorizado.",
+    "layout": "center",
+    "bg": "assets/media/muro-gente.jpg",
+    "focusA": [
+     0.5,
+     0.85
+    ],
+    "focusB": [
+     0.85,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "La televisión del Oeste",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "date": "Esa misma noche",
+    "text": "La televisión del Oeste, que también se veía en el Este, lo repite una y otra vez.",
+    "layout": "left",
+    "bg": "assets/media/leipzig.jpg",
+    "focus": [
+     0.15,
+     0.65
+    ]
+   }
+  },
+  {
+   "at": "Las fronteras están abiertas",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "date": "Fronteras abiertas",
+    "text": "El mensaje llega a todas las casas de Berlín Este.",
+    "layout": "top",
+    "bg": "assets/media/muro-gente.jpg",
+    "focus": [
+     0.5,
+     0.55
+    ]
+   }
+  },
+  {
+   "at": "Miles de personas salieron",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/leipzig.jpg",
+    "b": "assets/media/muro-gente.jpg",
+    "date": "Miles de personas",
+    "text": "salen de sus casas y van directo a los puestos fronterizos.",
+    "layout": "above",
+    "bg": "assets/media/bornholmer.jpg",
+    "focusA": [
+     0.3,
+     0.5
+    ],
+    "focusB": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "En el cruce de",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "date": "Bornholmer Strasse",
+    "text": "Paso fronterizo, Berlín.",
+    "layout": "right",
+    "bg": "assets/media/leipzig.jpg",
+    "frame": "deckle",
+    "focus": [
+     0.5,
+     0.4
+    ]
+   }
+  },
+  {
+   "at": "el oficial Harald",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "date": "Harald Jäger",
+    "text": "El oficial a cargo: una multitud frente a él y ninguna orden.",
+    "layout": "left",
+    "bg": "assets/media/mauerbau.jpg",
+    "focus": [
+     0.2,
+     0.85
+    ]
+   }
+  },
+  {
+   "at": "Llamó a sus superiores",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/bornholmer.jpg",
+    "b": "assets/media/schabowski.jpg",
+    "date": "Sin respuesta",
+    "text": "Llamó a sus superiores. Nadie le dio una respuesta clara.",
+    "layout": "below",
+    "bg": "assets/media/leipzig.jpg",
+    "focusA": [
+     0.7,
+     0.3
+    ],
+    "focusB": [
+     0.9,
+     0.2
+    ]
+   }
+  },
+  {
+   "at": "La gente gritaba",
+   "use": "acuarela.quote",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "quote": "«¡Abran la puerta!»",
+    "name": "La multitud en Bornholmer Strasse",
+    "bg": "assets/media/bornholmer.jpg",
+    "focus": [
+     0.5,
+     0.55
+    ]
+   },
+   "until": "A las once"
+  },
+  {
+   "at": "A las once",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "date": "23:30",
+    "text": "Jäger toma la decisión que nadie más quiso tomar.",
+    "layout": "top",
+    "bg": "assets/media/leipzig.jpg",
+    "focus": [
+     0.5,
+     0.6
+    ]
+   }
+  },
+  {
+   "at": "Abrió la barrera",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/bornholmer.jpg",
+    "b": "assets/media/muro-gente.jpg",
+    "date": "Abrió la barrera",
+    "text": "Y la gente cruzó.",
+    "layout": "right",
+    "bg": "assets/media/mauerspecht.jpg",
+    "focusA": [
+     0.35,
+     0.7
+    ],
+    "focusB": [
+     0.5,
+     0.85
+    ]
+   }
+  },
+  {
+   "at": "Esa noche los berlineses",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/muro-gente.jpg",
+    "b": "assets/media/muro-gente.jpg",
+    "date": "Puerta de Brandeburgo",
+    "text": "Esa noche, los berlineses se suben al muro.",
+    "layout": "above",
+    "bg": "assets/media/mauerbau.jpg",
+    "focusA": [
+     0.5,
+     0.18
+    ],
+    "focusB": [
+     0.5,
+     0.85
+    ]
+   }
+  },
+  {
+   "at": "con martillos",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "date": "Martillos y cinceles",
+    "text": "Noviembre de 1989.",
+    "layout": "left",
+    "bg": "assets/media/muro-gente.jpg",
+    "focus": [
+     0.45,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "Desconocidos se abrazaban",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "date": "Abrazos",
+    "text": "Desconocidos se abrazaban.",
+    "layout": "right",
+    "bg": "assets/media/leipzig.jpg",
+    "frame": "deckle",
+    "focus": [
+     0.5,
+     0.35
+    ]
+   }
+  },
+  {
+   "at": "Personas que llevaban",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/mauerspecht.jpg",
+    "b": "assets/media/leipzig.jpg",
+    "date": "28 años",
+    "text": "Personas que llevaban 28 años sin pisar el otro lado…",
+    "layout": "below",
+    "bg": "assets/media/bornholmer.jpg",
+    "focusA": [
+     0.5,
+     0.45
+    ],
+    "focusB": [
+     0.4,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "caminaban",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "date": "Por su propia ciudad",
+    "text": "…caminaban, simplemente, por su propia ciudad.",
+    "layout": "top",
+    "bg": "assets/media/leipzig.jpg",
+    "focus": [
+     0.5,
+     0.72
+    ]
+   }
+  },
+  {
+   "at": "Menos de un año",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "date": "3 de octubre de 1990",
+    "text": "Menos de un año después…",
+    "layout": "right",
+    "bg": "assets/media/mauerbau.jpg",
+    "focus": [
+     0.5,
+     0.4
+    ]
+   }
+  },
+  {
+   "at": "Alemania volvió",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/mauerbau.jpg",
+    "b": "assets/media/muro-gente.jpg",
+    "date": "Un solo país",
+    "text": "Alemania vuelve a ser un solo país.",
+    "layout": "center",
+    "bg": "assets/media/bornholmer.jpg",
+    "focusA": [
+     0.4,
+     0.5
+    ],
+    "focusB": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "La historia suele contar",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "date": "La historia",
+    "text": "suele contar grandes batallas y grandes líderes.",
+    "layout": "top",
+    "bg": "assets/media/mauerbau.jpg",
+    "focus": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "pero este muro",
+   "use": "acuarela.pair",
+   "params": {
+    "a": "assets/media/nota.jpg",
+    "b": "assets/media/mauerbau.jpg",
+    "date": "Un papel",
+    "text": "Pero este muro de hormigón cayó por un papel leído antes de tiempo…",
+    "layout": "below",
+    "bg": "assets/media/mauerspecht.jpg",
+    "focusA": [
+     0.5,
+     0.25
+    ]
+   }
+  },
+  {
+   "at": "y por un oficial",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "date": "Un oficial",
+    "text": "…y por un oficial que eligió abrir en lugar de disparar.",
+    "layout": "right",
+    "bg": "assets/media/muro-gente.jpg",
+    "frame": "deckle",
+    "focus": [
+     0.25,
+     0.8
+    ]
+   }
+  },
+  {
+   "at": "Porque a veces",
+   "use": "acuarela.photo",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "date": "No un ejército",
+    "text": "A veces la historia no la mueve un ejército.",
+    "layout": "left",
+    "bg": "assets/media/mauerspecht.jpg",
+    "focus": [
+     0.6,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "la mueven dos palabras",
+   "use": "acuarela.quote",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "quote": "La mueven dos palabras dichas en el momento justo.",
+    "name": "Berlín, 9 de noviembre de 1989",
+    "bg": "assets/media/muro-gente.jpg",
+    "focus": [
+     0.88,
+     0.35
+    ]
+   },
+   "until": "de inmediato sin demora"
+  },
+  {
+   "at": "de inmediato sin demora",
+   "use": "acuarela.title",
+   "dur": 4.28,
+   "params": {
+    "title": "De inmediato. Sin demora.",
+    "titlePortrait": "De inmediato.\nSin demora.",
+    "sub": "Berlín · 9 de noviembre de 1989",
+    "bg": "assets/media/bornholmer.jpg",
+    "focus": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": 204.199184,
+   "offset": 0,
+   "dur": 13.68,
+   "use": "acuarela.outro",
+   "params": {
+    "likeAt": 5.16,
+    "subscribeAt": 5.54,
+    "bellAt": 7.84,
+    "supportAt": 8.94
+   }
+  }
+ ]
+}

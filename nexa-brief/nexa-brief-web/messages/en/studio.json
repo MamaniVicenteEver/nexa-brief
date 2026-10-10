@@ -1,0 +1,117 @@
+{
+  "studio": {
+    "toggleSidebar": "Open or close the Studio",
+    "loading": "Loading what the template needs…",
+    "loadError": "We couldn't load the template requirements. Try again.",
+    "cannotGenerate": "This template can't be generated yet.",
+    "missingSong": "Pick a song to preview.",
+    "missingMedia": "Fill in the highlighted media to preview.",
+    "tabs": {
+      "song": "Song",
+      "media": "Media",
+      "texts": "Texts",
+      "render": "Record"
+    },
+    "actions": {
+      "preview": "Preview",
+      "previewAgain": "Preview again",
+      "render": "Record",
+      "working": "Working…"
+    },
+    "version": {
+      "default": "Default",
+      "mine": "My version"
+    },
+    "progress": {
+      "previewing": "Previewing",
+      "rendering": "Recording",
+      "ready": "Your version is ready. If you like it, record it.",
+      "changed": "You changed something: preview again before recording.",
+      "failed": "It couldn't be generated. Check your choices and preview again.",
+      "failedRecoverable": "Recording failed. You can retry without previewing again.",
+      "rendered": "Video recorded!",
+      "openLibrary": "View in Library",
+      "stages": {
+        "pending": "queued",
+        "input_analyzed": "analyzing the song",
+        "design_complete": "design ready",
+        "resources_fetched": "preparing media",
+        "prompt_built": "building the template",
+        "html_generated": "template ready",
+        "video_recorded": "video recorded",
+        "summary_generated": "titles and descriptions",
+        "packaged": "packaging",
+        "publishing": "publishing",
+        "published": "published",
+        "failed": "failed"
+      }
+    },
+    "song": {
+      "title": "Song",
+      "hint": "Pick one from your library or upload a new one.",
+      "hintLyrics": "Pick one from your library or upload a new one: lyrics are transcribed automatically.",
+      "required": "Required",
+      "optional": "Optional",
+      "lyrics": "Lyrics"
+    },
+    "media": {
+      "count": "{n} · {min} to {max}",
+      "remove": "Remove",
+      "library": "Library",
+      "stock": "Stock",
+      "kindImage": "Image",
+      "kindVideo": "Video",
+      "none": "This template doesn't use your own media.",
+      "noSong": "This template doesn't use a song."
+    },
+    "texts": {
+      "title": "Texts",
+      "hint": "They start with the template's text. Change whatever you want.",
+      "none": "This template has no editable texts."
+    },
+    "stock": {
+      "placeholder": "Search in English: {what}",
+      "placeholderShort": "Search stock",
+      "search": "Search",
+      "searching": "Searching Pexels, Pixabay and Unsplash…",
+      "searchError": "We couldn't search. Try again in a while.",
+      "providerErrors": "No results from: {providers}",
+      "noResults": "Nothing found. Try other words.",
+      "import": "Import",
+      "use": "Use",
+      "importError": "Import failed. If it was from Pixabay, search again."
+    },
+    "ai": {
+      "title": "Let AI choose",
+      "briefLabel": "Description for the AI",
+      "briefPlaceholder": "Tell it what the video is about (e.g. “urban sneakers, night, neon city”). If left empty, the template description is used.",
+      "start": "Find media with AI",
+      "planning": "Searching… {done}/{total}",
+      "failed": "The AI couldn't build the plan. Try again.",
+      "startError": "We couldn't start the search.",
+      "noCandidates": "No candidates for this slot.",
+      "choose": "Choose",
+      "selected": "Chosen",
+      "accept": "Use this media",
+      "accepting": "Importing to your library…",
+      "acceptError": "Import failed. Try again."
+    },
+    "render": {
+      "engine": "Recording engine",
+      "engines": {
+        "remotion": "Remotion",
+        "hyperframes": "HyperFrames",
+        "playwright": "Browser"
+      },
+      "engineHint": {
+        "remotion": "Fast, frame by frame.",
+        "hyperframes": "Native HyperFrames composition.",
+        "playwright": "Records the template as-is in the browser."
+      },
+      "publish": "Publish when done",
+      "publishHint": "Optional: pick connected accounts. If you pick none, the video stays in the Library.",
+      "loadingAccounts": "Loading accounts…",
+      "noAccounts": "No connected accounts."
+    }
+  }
+}

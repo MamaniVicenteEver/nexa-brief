@@ -1,9 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/shared/components/ui/dialog";
 import type { LibraryAssetKind } from "../api/library-assets-service";
-import { useLibraryAssets } from "../hooks/useLibraryAssets";
+import { useDebouncedValue, useLibraryAssets } from "../hooks/useLibraryAssets";
 
 interface LibraryAssetPickerDialogProps {
   kind: LibraryAssetKind;
@@ -25,7 +26,11 @@ export function LibraryAssetPickerDialog({
   onSelect,
 }: LibraryAssetPickerDialogProps) {
   const t = useTranslations("library");
-  const { data: assets, isLoading } = useLibraryAssets(kind, open);
+  const tPicker = useTranslations("resources.picker");
+  // Búsqueda del lado del backend (sin acentos ni mayúsculas, ver /library?q=).
+  const [query, setQuery] = useState("");
+  const debouncedQuery = useDebouncedValue(query);
+  const { data: assets, isLoading } = useLibraryAssets(kind, open, { q: debouncedQuery });
 
   function choose(assetId: string) {
     onSelect(assetId);
@@ -36,6 +41,14 @@ export function LibraryAssetPickerDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogTitle>{t(`assetPicker.title.${KIND_LABEL_KEY[kind]}`)}</DialogTitle>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={tPicker("search")}
+          aria-label={tPicker("search")}
+          className="w-full rounded-full border border-nb-line bg-nb-surface px-4 py-2 text-[13px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark"
+        />
         {isLoading && (
           <p className="py-6 text-center text-sm text-nb-mute">{t("assetPicker.loading")}</p>
         )}

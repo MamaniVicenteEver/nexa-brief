@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584">
+/* Generado por src/templates/_tools/hyperframes/optimize.py — NO editar acá:
+   la fuente es _tools/hyperframes/runtime/nb-hf-clock.js (regenerar con optimize.py). */
+/* nb-hf-clock — reloj determinístico para grabar plantillas con HyperFrames.
+
+   Por qué existe: las plantillas de letras miden el tiempo con audio.currentTime,
+   requestAnimationFrame, timers y animaciones CSS/WAAPI corriendo en tiempo
+   real. HyperFrames captura cuadro a cuadro (screenshot por seek) y eso rompe
+   todos esos relojes: el runtime pausa el <audio> (lo trata como media propia),
+   su shim de tiempo virtual dispara UN solo rAF por seek (30 Hz en vez de 60:
+   las cámaras con easing por cuadro se mueven a la mitad de velocidad), los
+   setTimeout siguen en reloj de pared y cada worker arranca su tramo en t>0
+   sin el historial de la plantilla. Resultado: la letra sale desfasada.
+
+   Qué hace (SOLO dentro del render de HyperFrames — en navegador, vista previa
+   y Playwright es inerte, ver ACTIVE):
+   - Reproduce el mundo de la plantilla a 60 Hz fijos desde t=0 hasta el tiempo
+     de cada seek (también los workers que empiezan a mitad de canción), así el
+     estado acumulado (cámaras, palabras ya puestas, partículas) es idéntico en
+     todos los workers y al de un navegador real.
+   - Virtualiza performance.now/Date.now, setTimeout/setInterval (la plantilla
+     llama a __nbSetTimeout & cía., reescritos por optimize.py), el reloj de
+     <audio>/<video> (currentTime/paused/ended/play/pause), las animaciones
+     CSS/WAAPI (currentTime por animación según su nacimiento virtual) y el
+     AnalyserNode de WebAudio (espectro calculado del audio decodificado).
+   - Antes del primer cuadro espera fuentes, fetch, imágenes y metadatos de
+     media; antes de cada captura espera decodificación de imágenes nuevas y el
+     cuadro exacto de cada <video>.
+   - Deja el audio de la mezcla al framework: la pista que mezcla HyperFrames es
+     el <audio data-nb-hf-mix> que agrega HyperframesAdapter; la media propia de
+     la plantilla pierde sus data-start (inyectados por el compilador) para que
+     el runtime no la pause ni la mezcle dos veces.
+
+   Fuente única: src/templates/_tools/hyperframes/runtime/nb-hf-clock.js.
+   optimize.py la inserta (inline) como primer <script> de cada plantilla. */
+(function () {
+  "use strict";
+  var W = window;
+  var D = document;
+  if (W.__nbHf) return;
+
+  var VT = W.__HF_VIRTUAL_TIME__;
+  var ACTIVE = !!(VT && typeof VT.seekToTime === "function" && W.__HF_RENDER_CAPTURE_MODE === true);
+
+  /* Timers reescritos: fuera del render son exactamente los nativos, resueltos
+     en cada llamada (la vista previa de la app también los envuelve). */
+  if (!ACTIVE) {
+    W.__nbSetTimeout = function () { return W.setTimeout.apply(W, arguments); };
+    W.__nbSetInterval = function () { return W.setInterval.apply(W, arguments); };
+    W.__nbClearTimeout = function () { return W.clearTimeout.apply(W, arguments); };
+    W.__nbClearInterval = function () { return W.clearInterval.apply(W, arguments); };
+    W.__nbHf = { active: false };
+    return;
+  }
+
+  var STEP_MS = 1000 / 60;          /* cadencia interna = rAF de un monitor de 60 Hz */
+  var origSeekToTime = VT.seekToTime;
+  var realSetTimeout = VT.originalSetTimeout || W.setTimeout.bind(W);
+  var realPerfNow = Performance.prototype.now;
+  function wallMs() { return realPerfNow.call(W.performance); }
+  var realClearTimeout = VT.originalClearTimeout || W.clearTimeout.bind(W);
+  var clockMs = 0;                   /* reloj virtual que ve la plantilla */
+  var stepIdx = -1;                  /* último tick ejecutado (tick k = k·STEP_MS) */
+  var targetStep = -1;
+  var ticking = false;
+  var processing = null;
+  var stats = { ticks: 0, seeks: 0, backward: 0, firstSeekMs: null, readyMs: 0, waits: 0,
+                tickMs: 0, videoMs: 0, settleMs: 0 };
+  var logs = [];
+  function log(msg) { if (logs.length < 200) logs.push(msg); }
+  function slice(a, from) { return Array.prototype.slice.call(a, from); }
+  function sleep(ms) { return new Promise(function (r) { realSetTimeout(r, ms); }); }
+  function withTimeout(p, ms) {
+    return new Promise(function (resolve) {
+      var done = false;
+      var id = realSetTimeout(function () { if (!done) { done = true; resolve("timeout"); } }, ms);
+      Promise.resolve(p).then(function (v) { if (!done) { done = true; realClearTimeout(id); resolve(v); } },
+        function () { if (!done) { done = true; realClearTimeout(id); resolve("error"); } });
+    });
+  }
+
+  /* ───────────────────────────── reloj ───────────────────────────── */
+  try {
+    Object.defineProperty(W.performance, "now", { configurable: true, value: function () { return clockMs; } });
+  } catch (e) { log("performance.now no redefinible"); }
+  try { W.Date.now = function () { return clockMs; }; } catch (e) { log("Date.now no redefinible"); }
+
+  /* Math.random sembrado: mismo historial en todos los workers (sin costura). */
+  (function () {
+    var s = 0x6e622d68 | 0;
+    Math.random = function () {
+      s = (s + 0x6D2B79F5) | 0;
+      var t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  })();
+
+  /* rAF: el de HyperFrames ya es virtual (cola que vacía seekToTime); acá solo
+     se cuenta cuántas veces se pidió, para saber cuándo arrancó el loop. */
+  var RAF = "requestAnimationFrame";
+  var hfRaf = W[RAF];
+  var rafRequests = 0;
+  W[RAF] = function (cb) { rafRequests++; return hfRaf.call(W, cb); };
+
+  /* ───────────────────────────── timers ─────────────────────────────
+     Disparados por el tick cuando su vencimiento virtual llega, en orden. */
+  var timers = new Map();
+  var timerSeq = 1;
+  function addTimer(fn, delay, args, repeat) {
+    if (typeof fn !== "function") { var code = String(fn); fn = function () { (0, eval)(code); }; }
+    var d = Math.max(0, Number(delay) || 0);
+    var id = timerSeq++;
+    timers.set(id, { id: id, due: clockMs + d, fn: fn, args: args, every: repeat ? Math.max(1, d) : 0, seq: id });
+    return id;
+  }
+  W.__nbSetTimeout = function (fn, delay) { return addTimer(fn, delay, slice(arguments, 2), false); };
+  W.__nbSetInterval = function (fn, delay) { return addTimer(fn, delay, slice(arguments, 2), true); };
+  W.__nbClearTimeout = function (id) { timers.delete(id); };
+  W.__nbClearInterval = function (id) { timers.delete(id); };
+  function runTimers(upTo) {
+    for (var guard = 0; guard < 20000; guard++) {
+      var next = null;
+      timers.forEach(function (t) {
+        if (t.due <= upTo + 1e-6 && (!next || t.due < next.due || (t.due === next.due && t.seq < next.seq))) next = t;
+      });
+      if (!next) return;
+      if (next.every) { next.due += next.every; next.seq = timerSeq++; } else timers.delete(next.id);
+      clockMs = Math.max(clockMs, next.due);
+      try { next.fn.apply(W, next.args); } catch (e) { log("timer: " + e); }
+    }
+  }
+
+  /* ───────────────────────────── media ─────────────────────────────
+     La media de la plantilla nunca se reproduce de verdad durante el render:
+     su reloj es virtual y los <video> se posicionan con seek real antes de
+     cada captura. El <audio data-nb-hf-mix> del adapter queda intacto. */
+  var MP = HTMLMediaElement.prototype;
+  var desc = function (proto, name) {
+    for (var p = proto; p; p = Object.getPrototypeOf(p)) {
+      var d = Object.getOwnPropertyDescriptor(p, name);
+      if (d) return d;
+    }
+    return null;
+  };
+  var dCurrent = desc(MP, "currentTime");
+  var dPaused = desc(MP, "paused");
+  var dEnded = desc(MP, "ended");
+  var dRate = desc(MP, "playbackRate");
+  var dAutoplay = desc(MP, "autoplay");
+  var realPlay = MP.play;
+  var realPause = MP.pause;
+  var realLoad = MP.load;
+  var mediaState = new WeakMap();
+  var videos = new Set();
+  var mediaEls = new Set();
+  var isMix = function (el) { return el.hasAttribute && el.hasAttribute("data-nb-hf-mix"); };
+  var TIMING_ATTRS = ["data-start", "data-end", "data-hf-auto-start", "data-has-audio"];
+
+  function adopt(el) {
+    if (!(el instanceof HTMLMediaElement) || isMix(el)) return null;
+    var st = mediaState.get(el);
+    if (!st) {
+      st = { playing: false, base: 0, v0: 0, ended: false, autoplay: false, userPaused: false, started: false };
+      mediaState.set(el, st);
+      mediaEls.add(el);
+      if (el instanceof HTMLVideoElement) videos.add(el);
+    }
+    for (var i = 0; i < TIMING_ATTRS.length; i++) if (el.hasAttribute(TIMING_ATTRS[i])) el.removeAttribute(TIMING_ATTRS[i]);
+    if (el.hasAttribute("autoplay")) { st.autoplay = true; el.removeAttribute("autoplay"); }
+    return st;
+  }
+  /* El runtime de HyperFrames sincroniza por su cuenta la media que cree suya
+     (en renderSeek fija currentTime = t de composición y la pausa): con un
+     <video loop> de la plantilla eso lo congela en su último cuadro al pasar
+     su duración. Todo lo que el runtime haga desde window.__player (renderSeek,
+     seek, play, pause) se ignora sobre la media de la plantilla; su reloj es
+     el virtual y su cuadro lo pone syncVideos(). */
+  var runtimeDepth = 0;
+  function guardPlayer(p) {
+    if (!p || typeof p !== "object") return;
+    ["renderSeek", "seek", "play", "pause"].forEach(function (name) {
+      var f = p[name];
+      if (typeof f !== "function" || f.__nbHfGuard) return;
+      var g = function () { runtimeDepth++; try { return f.apply(this, arguments); } finally { runtimeDepth--; } };
+      g.__nbHfGuard = true;
+      p[name] = g;
+    });
+  }
+  var playerVal = W.__player;
+  try {
+    Object.defineProperty(W, "__player", {
+      configurable: true,
+      get: function () { return playerVal; },
+      set: function (v) { playerVal = v; guardPlayer(v); },
+    });
+    guardPlayer(playerVal);
+  } catch (e) { log("__player no envolvible"); }
+  function fromRuntime(el) { return runtimeDepth > 0 && mediaState.has(el); }
+
+  function realDuration(el) { var d = el.duration; return isFinite(d) && d > 0 ? d : NaN; }
+  function rateOf(el) { var r = dRate.get.call(el); return isFinite(r) && r > 0 ? r : 1; }
+  function mediaTimeAt(el, st, ms) {
+    var t = st.base + (st.playing ? (ms - st.v0) / 1000 * rateOf(el) : 0);
+    var dur = realDuration(el);
+    if (dur === dur) {
+      if (el.loop) { if (t >= dur) t = t % dur; } else if (t > dur) t = dur;
+    }
+    return Math.max(0, t);
+  }
+  function fire(el, type) { queueMicrotask(function () { try { el.dispatchEvent(new Event(type)); } catch (e) {} }); }
+  function startPlaying(el, st) {
+    if (st.playing) return;
+    var dur = realDuration(el);
+    if (st.ended || (dur === dur && !el.loop && st.base >= dur)) { st.base = 0; st.ended = false; }
+    st.playing = true; st.started = true; st.v0 = clockMs;
+    fire(el, "play"); fire(el, "playing");
+  }
+
+  MP.play = function () {
+    if (fromRuntime(this)) return Promise.resolve();
+    var st = adopt(this);
+    if (!st) return realPlay.apply(this, arguments);
+    st.userPaused = false;
+    startPlaying(this, st);
+    return Promise.resolve();
+  };
+  MP.pause = function () {
+    if (fromRuntime(this)) return;
+    var st = adopt(this);
+    if (!st) return realPause.apply(this, arguments);
+    st.userPaused = true;
+    if (st.playing) { st.base = mediaTimeAt(this, st, clockMs); st.playing = false; fire(this, "pause"); }
+  };
+  MP.load = function () {
+    if (fromRuntime(this)) return;
+    var st = adopt(this);
+    if (st) { st.playing = false; st.base = 0; st.ended = false; }
+    return realLoad.apply(this, arguments);
+  };
+  Object.defineProperty(MP, "currentTime", {
+    configurable: true, enumerable: dCurrent.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? mediaTimeAt(this, st, clockMs) : dCurrent.get.call(this); },
+    set: function (v) {
+      if (fromRuntime(this)) return;
+      var st = adopt(this);
+      if (!st) return dCurrent.set.call(this, v);
+      st.base = Math.max(0, Number(v) || 0); st.v0 = clockMs; st.ended = false;
+    },
+  });
+  Object.defineProperty(MP, "paused", {
+    configurable: true, enumerable: dPaused.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? !st.playing : dPaused.get.call(this); },
+  });
+  Object.defineProperty(MP, "ended", {
+    configurable: true, enumerable: dEnded.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? st.ended : dEnded.get.call(this); },
+  });
+  Object.defineProperty(MP, "playbackRate", {
+    configurable: true, enumerable: dRate.enumerable,
+    get: function () { return dRate.get.call(this); },
+    set: function (v) {
+      if (fromRuntime(this)) return;
+      var st = adopt(this);
+      if (st && st.playing) { st.base = mediaTimeAt(this, st, clockMs); st.v0 = clockMs; }
+      dRate.set.call(this, v);
+    },
+  });
+  if (dAutoplay) {
+    Object.defineProperty(MP, "autoplay", {
+      configurable: true, enumerable: dAutoplay.enumerable,
+      get: function () { var st = mediaState.get(this); return st ? st.autoplay : dAutoplay.get.call(this); },
+      set: function (v) { var st = adopt(this); if (st) st.autoplay = !!v; else dAutoplay.set.call(this, v); },
+    });
+  }
+  /* <audio>/<video> del HTML estático: el compilador de HyperFrames les inyecta
+     data-start="0" — se los quitamos apenas aparecen, antes del init del runtime. */
+  function scanMedia(root) {
+    if (!root || !root.querySelectorAll) return;
+    if (root instanceof HTMLMediaElement) adopt(root);
+    var list = root.querySelectorAll("audio,video");
+    for (var i = 0; i < list.length; i++) adopt(list[i]);
+  }
+  new MutationObserver(function (records) {
+    for (var i = 0; i < records.length; i++) {
+      var r = records[i];
+      if (r.type === "attributes") { if (r.target instanceof HTMLMediaElement && !isMix(r.target)) adopt(r.target); continue; }
+      for (var j = 0; j < r.addedNodes.length; j++) if (r.addedNodes[j].nodeType === 1) scanMedia(r.addedNodes[j]);
+    }
+  }).observe(D.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: TIMING_ATTRS.concat(["autoplay"]) });
+  D.addEventListener("DOMContentLoaded", function () { scanMedia(D); }, { once: true });
+
+  function mediaTick(ms) {
+    mediaEls.forEach(function (el) {
+      var st = mediaState.get(el);
+      if (!st) return;
+      if (st.autoplay && !st.started && !st.userPaused && (el.currentSrc || el.getAttribute("src"))) startPlaying(el, st);
+      if (!st.playing || el.loop) return;
+      var dur = realDuration(el);
+      if (dur === dur && st.base + (ms - st.v0) / 1000 * rateOf(el) >= dur) {
+        st.base = dur; st.playing = false; st.ended = true;
+        fire(el, "timeupdate"); fire(el, "pause"); fire(el, "ended");
+      }
+    });
+  }
+  /* <video> usados como fuente de canvas (2D o WebGL): se sincronizan siempre,
+     aunque estén fuera del documento u ocultos — lo visible es el canvas. */
+  var drawnVideos = new WeakSet();
+  function tagVideoSource(proto, name, argIndex) {
+    if (!proto || typeof proto[name] !== "function") return;
+    var real = proto[name];
+    proto[name] = function () {
+      var src = arguments[argIndex];
+      if (src instanceof HTMLVideoElement) drawnVideos.add(src);
+      return real.apply(this, arguments);
+    };
+  }
+  tagVideoSource(W.CanvasRenderingContext2D && W.CanvasRenderingContext2D.prototype, "drawImage", 0);
+  tagVideoSource(W.OffscreenCanvasRenderingContext2D && W.OffscreenCanvasRenderingContext2D.prototype, "drawImage", 0);
+  ["WebGLRenderingContext", "WebGL2RenderingContext"].forEach(function (k) {
+    var p = W[k] && W[k].prototype;
+    if (!p) return;
+    /* texImage2D(target, level, internalformat, format, type, source) → fuente en 5;
+       texSubImage2D(target, level, x, y, format, type, source) → fuente en 6 */
+    tagVideoSource(p, "texImage2D", 5);
+    tagVideoSource(p, "texSubImage2D", 6);
+  });
+  /* Cuadro exacto de cada <video>: seek real al tiempo virtual y esperar "seeked". */
+  function syncVideos() {
+    var waits = [];
+    videos.forEach(function (v) {
+      var st = mediaState.get(v);
+      if (!st || !(v.currentSrc || v.getAttribute("src")) || v.error) return;
+      /* Solo los que se ven en ESTE cuadro: un <video> fuera del documento (escena
+         pre-armada o ya descartada) o sin caja (display:none) no aparece en la
+         captura. Sin este filtro, las plantillas con muchos clips (grunge, sad,
+         promos) esperaban el "seeked" de 6-8 videos invisibles por cuadro y
+         Chrome terminaba sin memoria. Cuando el video aparece, se posiciona en
+         ese mismo cuadro antes de capturar: el resultado es idéntico. */
+      if (!drawnVideos.has(v)) {
+        if (!v.isConnected) {
+          if (!v.currentSrc) { videos.delete(v); return; }
+          /* con padre = parte de una escena armada fuera del documento; sin
+             padre puede ser fuente de canvas todavía no dibujada: se sincroniza */
+          if (v.parentNode) return;
+        } else if (!v.getClientRects().length) return;
+      }
+      var want = mediaTimeAt(v, st, clockMs);
+      var have = dCurrent.get.call(v);
+      if (Math.abs(have - want) < 0.0005 && v.readyState >= 2 && !v.seeking) return;
+      waits.push(withTimeout(new Promise(function (resolve) {
+        var done = function () { v.removeEventListener("seeked", done); v.removeEventListener("error", done); resolve(); };
+        v.addEventListener("seeked", done);
+        v.addEventListener("error", done);
+        try { dCurrent.set.call(v, want); } catch (e) { done(); }
+      }), 4000));
+    });
+    return waits.length ? Promise.all(waits) : null;
+  }
+
+  /* ───────────────────────────── animaciones ─────────────────────────────
+     Cada animación (CSS animation/transition o el.animate) tiene un modelo
+     virtual: nace en el tick en que aparece y su currentTime se fija en cada
+     tick. Las que la plantilla maneja a mano (pause + currentTime, como el motor
+     WAAPI de Caution) conservan exactamente lo que la plantilla pidió. */
+  var AP = Animation.prototype;
+  var dAnimCurrent = desc(AP, "currentTime");
+  var dAnimRate = desc(AP, "playbackRate");
+  var dPlayState = desc(AP, "playState");
+  var realAnimPlay = AP.play;
+  var realAnimPause = AP.pause;
+  var realDocGetAnimations = Document.prototype.getAnimations;
+  var models = new Map();
+  function animRate(a) { var r = dAnimRate.get.call(a); return isFinite(r) && r !== 0 ? r : 1; }
+  function modelTime(m, a) { return m.playing ? (clockMs - m.startV) * animRate(a) : m.hold; }
+  function ensureModel(a, fresh) {
+    var m = models.get(a);
+    if (m) return m;
+    var state = dPlayState.get.call(a);
+    var ct = Number(dAnimCurrent.get.call(a)) || 0;
+    /* una animación recién nacida corriendo arranca en 0 en este tick (su
+       currentTime real son ms de reloj de pared, no deterministas) */
+    m = state === "paused" ? { playing: false, hold: ct, startV: 0 }
+      : { playing: true, hold: 0, startV: clockMs - (fresh ? 0 : ct / animRate(a)) };
+    models.set(a, m);
+    return m;
+  }
+  AP.pause = function () {
+    var m = ensureModel(this, true);
+    if (m.playing) { m.hold = modelTime(m, this); m.playing = false; }
+    return realAnimPause.apply(this, arguments);
+  };
+  AP.play = function () {
+    var m = ensureModel(this, true);
+    if (!m.playing) {
+      var end = this.effect && this.effect.getComputedTiming ? this.effect.getComputedTiming().endTime : Infinity;
+      if (animRate(this) > 0 && isFinite(end) && m.hold >= end) m.hold = 0;
+      m.startV = clockMs - m.hold / animRate(this); m.playing = true;
+    }
+    /* el real queda pausado: el tiempo lo fija applyAnimations() */
+    realAnimPause.call(this);
+    try { dAnimCurrent.set.call(this, modelTime(m, this)); } catch (e) {}
+  };
+  Object.defineProperty(AP, "currentTime", {
+    configurable: true, enumerable: dAnimCurrent.enumerable,
+    get: function () { var m = models.get(this); return m ? modelTime(m, this) : dAnimCurrent.get.call(this); },
+    set: function (v) {
+      var m = ensureModel(this, true);
+      var x = Number(v) || 0;
+      if (m.playing) m.startV = clockMs - x / animRate(this); else m.hold = x;
+      dAnimCurrent.set.call(this, v);
+    },
+  });
+  Object.defineProperty(AP, "playbackRate", {
+    configurable: true, enumerable: dAnimRate.enumerable,
+    get: function () { return dAnimRate.get.call(this); },
+    set: function (v) {
+      var m = models.get(this);
+      var t = m ? modelTime(m, this) : 0;
+      dAnimRate.set.call(this, v);
+      if (m && m.playing) m.startV = clockMs - t / animRate(this);
+    },
+  });
+  /* El runtime de HyperFrames trae adaptadores CSS/WAAPI que fijan currentTime
+     con el tiempo ABSOLUTO del seek (las animaciones que nacen a mitad de
+     canción quedan corridas). Se les esconde todo: no ven animaciones, no
+     parchean el.animate y el adaptador CSS opera sobre un handle inerte (si
+     viera una lista vacía escribiría animation-delay inline en el elemento). */
+  var INERT_HANDLE = { currentTime: 0, effect: null, pause: function () {}, play: function () {} };
+  Document.prototype.getAnimations = function () { return []; };
+  Element.prototype.getAnimations = function () { return [INERT_HANDLE]; };
+  try {
+    Object.defineProperty(Element.prototype, "__hfOriginalAnimate", { configurable: true, value: Element.prototype.animate });
+  } catch (e) {}
+
+  function applyAnimations() {
+    models.forEach(function (m, a) {
+      var state = dPlayState.get.call(a);
+      if (state === "idle") { models.delete(a); return; }
+      if (state !== "paused") realAnimPause.call(a);
+      try { dAnimCurrent.set.call(a, modelTime(m, a)); } catch (e) {}
+    });
+  }
+  function discoverAnimations() {
+    var list = realDocGetAnimations.call(D);
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i];
+      if (models.has(a)) continue;
+      var m = ensureModel(a, true);
+      if (dPlayState.get.call(a) !== "paused") realAnimPause.call(a);
+      try { dAnimCurrent.set.call(a, modelTime(m, a)); } catch (e) {}
+    }
+  }
+
+  /* ───────────────────────────── WebAudio ─────────────────────────────
+     AnalyserNode virtual sobre el audio decodificado: mismo algoritmo que el
+     navegador (ventana Blackman, FFT, suavizado, dB → byte), muestreado en el
+     tiempo virtual del <audio> que lo alimenta. */
+  var pendingAsync = 0;
+  var RealAC = W.AudioContext || W.webkitAudioContext;
+  var decodeCache = new Map();
+  function decodeFor(el, rate) {
+    var src = el.currentSrc || el.src;
+    var key = src + "@" + rate;
+    if (!decodeCache.has(key)) {
+      pendingAsync++;
+      var p = fetch(src).then(function (r) { return r.arrayBuffer(); })
+        .then(function (buf) { return new OfflineAudioContext(1, 1, rate).decodeAudioData(buf); })
+        .then(function (ab) {
+          var n = ab.length, mono = new Float32Array(n), ch = ab.numberOfChannels;
+          for (var c = 0; c < ch; c++) { var d = ab.getChannelData(c); for (var i = 0; i < n; i++) mono[i] += d[i] / ch; }
+          return mono;
+        })
+        .catch(function (e) { log("decode audio: " + e); return null; })
+        .finally(function () { pendingAsync--; });
+      decodeCache.set(key, { promise: p, data: null });
+      p.then(function (d) { decodeCache.get(key).data = d; });
+    }
+    return decodeCache.get(key);
+  }
+  function fftMag(re, im) {
+    var n = re.length, i, j, k, len;
+    for (i = 1, j = 0; i < n; i++) {
+      var bit = n >> 1;
+      for (; j & bit; bit >>= 1) j ^= bit;
+      j ^= bit;
+      if (i < j) { var tr = re[i]; re[i] = re[j]; re[j] = tr; var ti = im[i]; im[i] = im[j]; im[j] = ti; }
+    }
+    for (len = 2; len <= n; len <<= 1) {
+      var ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+      for (i = 0; i < n; i += len) {
+        var cr = 1, ci = 0;
+        for (k = 0; k < len / 2; k++) {
+          var ar = re[i + k], ai = im[i + k];
+          var br = re[i + k + len / 2] * cr - im[i + k + len / 2] * ci;
+          var bi = re[i + k + len / 2] * ci + im[i + k + len / 2] * cr;
+          re[i + k] = ar + br; im[i + k] = ai + bi;
+          re[i + k + len / 2] = ar - br; im[i + k + len / 2] = ai - bi;
+          var ncr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = ncr;
+        }
+      }
+    }
+  }
+  function FakeNode(ctx) { this.context = ctx; this._src = null; }
+  FakeNode.prototype.connect = function (node) {
+    if (node && node instanceof FakeAnalyser && this._src) node._src = this._src;
+    if (node && node instanceof FakeNode && this._src) node._src = this._src;
+    return node;
+  };
+  FakeNode.prototype.disconnect = function () {};
+  function FakeAnalyser(ctx) {
+    FakeNode.call(this, ctx);
+    this.fftSize = 2048; this.smoothingTimeConstant = 0.8; this.minDecibels = -100; this.maxDecibels = -30;
+    this._smooth = null; this._lastMs = -1; this._mags = null;
+  }
+  FakeAnalyser.prototype = Object.create(FakeNode.prototype);
+  Object.defineProperty(FakeAnalyser.prototype, "frequencyBinCount", { get: function () { return this.fftSize / 2; } });
+  FakeAnalyser.prototype._window = function () {
+    var el = this._src, n = this.fftSize, out = new Float32Array(n);
+    if (!el) return out;
+    var dec = decodeFor(el, this.context.sampleRate);
+    if (!dec.data) return out;
+    var st = mediaState.get(el);
+    var t = st ? mediaTimeAt(el, st, clockMs) : 0;
+    var end = Math.floor(t * this.context.sampleRate);
+    for (var i = 0; i < n; i++) { var idx = end - n + i; out[i] = idx >= 0 && idx < dec.data.length ? dec.data[idx] : 0; }
+    return out;
+  };
+  FakeAnalyser.prototype._update = function () {
+    if (this._lastMs === clockMs && this._mags) return;
+    this._lastMs = clockMs;
+    var n = this.fftSize, x = this._window(), re = new Float64Array(n), im = new Float64Array(n);
+    for (var i = 0; i < n; i++) {
+      var w = 0.42 - 0.5 * Math.cos(2 * Math.PI * i / n) + 0.08 * Math.cos(4 * Math.PI * i / n);
+      re[i] = x[i] * w;
+    }
+    fftMag(re, im);
+    var bins = n / 2, tau = Math.max(0, Math.min(1, this.smoothingTimeConstant));
+    if (!this._smooth || this._smooth.length !== bins) this._smooth = new Float64Array(bins);
+    for (var k = 0; k < bins; k++) {
+      var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / n;
+      this._smooth[k] = tau * this._smooth[k] + (1 - tau) * mag;
+    }
+    this._mags = this._smooth;
+  };
+  FakeAnalyser.prototype.getFloatFrequencyData = function (arr) {
+    this._update();
+    for (var k = 0; k < arr.length && k < this._mags.length; k++) arr[k] = 20 * Math.log10(this._mags[k] || 1e-20);
+  };
+  FakeAnalyser.prototype.getByteFrequencyData = function (arr) {
+    this._update();
+    var range = this.maxDecibels - this.minDecibels;
+    for (var k = 0; k < arr.length && k < this._mags.length; k++) {
+      var db = 20 * Math.log10(this._mags[k] || 1e-20);
+      arr[k] = Math.max(0, Math.min(255, Math.floor(255 / range * (db - this.minDecibels))));
+    }
+  };
+  FakeAnalyser.prototype.getFloatTimeDomainData = function (arr) {
+    var x = this._window(), off = x.length - arr.length;
+    for (var i = 0; i < arr.length; i++) arr[i] = x[Math.max(0, off) + i] || 0;
+  };
+  FakeAnalyser.prototype.getByteTimeDomainData = function (arr) {
+    var x = this._window(), off = x.length - arr.length;
+    for (var i = 0; i < arr.length; i++) arr[i] = Math.max(0, Math.min(255, Math.floor(128 * (1 + (x[Math.max(0, off) + i] || 0)))));
+  };
+  var acRate = 48000;
+  try { var probeAc = new RealAC(); acRate = probeAc.sampleRate || 48000; probeAc.close(); } catch (e) {}
+  function FakeAudioContext() {
+    this.sampleRate = acRate; this.state = "running"; this.destination = new FakeNode(this);
+  }
+  Object.defineProperty(FakeAudioContext.prototype, "currentTime", { get: function () { return clockMs / 1000; } });
+  FakeAudioContext.prototype.resume = function () { return Promise.resolve(); };
+  FakeAudioContext.prototype.suspend = function () { return Promise.resolve(); };
+  FakeAudioContext.prototype.close = function () { this.state = "closed"; return Promise.resolve(); };
+  FakeAudioContext.prototype.createAnalyser = function () { return new FakeAnalyser(this); };
+  FakeAudioContext.prototype.createGain = function () { var n = new FakeNode(this); n.gain = { value: 1, setValueAtTime: function () {} }; return n; };
+  FakeAudioContext.prototype.createMediaElementSource = function (el) {
+    var n = new FakeNode(this); n._src = el; n.mediaElement = el; adopt(el); decodeFor(el, this.sampleRate); return n;
+  };
+  if (RealAC) { W.AudioContext = FakeAudioContext; W.webkitAudioContext = FakeAudioContext; }
+
+  /* ───────────────────────────── cargas ───────────────────────────── */
+  var inflight = 0;
+  var realFetch = W.fetch;
+  W.fetch = function () {
+    inflight++;
+    return realFetch.apply(W, arguments).finally(function () { inflight--; });
+  };
+  var pendingImgs = new Set();
+  var dImgSrc = desc(HTMLImageElement.prototype, "src");
+  function trackImg(img) {
+    if (img.complete) return;
+    pendingImgs.add(img);
+    var done = function () { pendingImgs.delete(img); };
+    img.addEventListener("load", done, { once: true });
+    img.addEventListener("error", done, { once: true });
+  }
+  Object.defineProperty(HTMLImageElement.prototype, "src", {
+    configurable: true, enumerable: dImgSrc.enumerable,
+    get: function () { return dImgSrc.get.call(this); },
+    set: function (v) { dImgSrc.set.call(this, v); trackImg(this); },
+  });
+  var decodedSrc = new WeakMap();
+  function imagesPending() {
+    var list = [];
+    pendingImgs.forEach(function (img) { if (!img.complete) list.push(img); else pendingImgs.delete(img); });
+    var imgs = D.images;
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i];
+      var src = img.currentSrc || img.getAttribute("src");
+      if (!src) continue;
+      if (!img.complete || decodedSrc.get(img) !== src) list.push(img);
+    }
+    return list;
+  }
+  function settleImages(list) {
+    return Promise.all(list.map(function (img) {
+      var src = img.currentSrc || img.getAttribute("src");
+      var loaded = img.complete ? Promise.resolve() : new Promise(function (r) {
+        img.addEventListener("load", r, { once: true }); img.addEventListener("error", r, { once: true });
+      });
+      return withTimeout(loaded.then(function () { return img.naturalWidth ? img.decode() : null; }), 6000)
+        .then(function () { decodedSrc.set(img, src); });
+    }));
+  }
+  /* cada elemento se espera como mucho MEDIA_WAIT_MS acumulados: una fuente
+     rota no puede trabar el render (la plantilla ya la trata como ausente) */
+  var MEDIA_WAIT_MS = 8000;
+  var mediaWaited = new WeakMap();
+  function mediaMetaPending() {
+    var n = 0;
+    mediaEls.forEach(function (el) {
+      if (el.error || !(el.currentSrc || el.getAttribute("src"))) return;
+      if ((mediaWaited.get(el) || 0) >= MEDIA_WAIT_MS) return;
+      var need = el instanceof HTMLVideoElement ? 2 : 1;
+      if (el.readyState < need) n++;
+    });
+    return n;
+  }
+  function chargeMediaWait(ms) {
+    mediaEls.forEach(function (el) {
+      var need = el instanceof HTMLVideoElement ? 2 : 1;
+      if (!el.error && el.readyState < need) mediaWaited.set(el, (mediaWaited.get(el) || 0) + ms);
+    });
+  }
+  function domImagesLoading() {
+    var imgs = D.images;
+    for (var i = 0; i < imgs.length; i++) if (!imgs[i].complete && imgs[i].getAttribute("src")) return true;
+    return false;
+  }
+  /* Fuentes: se cargan TODAS las declaradas antes del primer cuadro (en un
+     navegador real la palabra nueva podía asomar un instante con la fuente de
+     respaldo; acá nunca). */
+  function loadAllFonts() {
+    var ps = [];
+    try { D.fonts.forEach(function (f) { if (f.status === "unloaded") ps.push(f.load().catch(function () {})); }); } catch (e) {}
+    return withTimeout(Promise.all(ps).then(function () { return D.fonts.ready; }), 15000);
+  }
+  async function settleLoads() {
+    var imgs = imagesPending();
+    if (imgs.length) { stats.waits++; await settleImages(imgs); }
+    if (D.fonts && D.fonts.status === "loading") { stats.waits++; await withTimeout(D.fonts.ready, 10000); }
+    if (mediaMetaPending()) {
+      stats.waits++;
+      while (mediaMetaPending()) { await sleep(20); chargeMediaWait(20); }
+    }
+  }
+
+  /* ───────────────────────────── arranque ───────────────────────────── */
+  function quietNow() { return inflight + pendingAsync + mediaMetaPending() + imagesPending().length === 0; }
+  async function waitQuiet(maxMs) {
+    var t0 = wallMs(), quiet = 0;
+    for (;;) {
+      if (quietNow()) { if (++quiet >= 3) return; } else quiet = 0;
+      var imgs = imagesPending();
+      if (imgs.length) await settleImages(imgs);
+      if (wallMs() - t0 > maxMs) { log("readiness: timeout"); return; }
+      await sleep(40);
+      chargeMediaWait(40);
+    }
+  }
+  var readyP = null;
+  function ready() {
+    if (readyP) return readyP;
+    readyP = (async function () {
+      var t0 = wallMs();
+      if (D.readyState === "loading") await new Promise(function (r) { D.addEventListener("DOMContentLoaded", r, { once: true }); });
+      scanMedia(D);
+      if (D.readyState !== "complete") await withTimeout(new Promise(function (r) { W.addEventListener("load", r, { once: true }); }), 20000);
+      await loadAllFonts();
+      await waitQuiet(20000);
+      /* mismo gesto que usa la vista previa de la app para las plantillas que
+         arrancan con un click (#screen) o pointerdown */
+      try {
+        var screen = D.querySelector("#screen");
+        if (screen) screen.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        (D.body || D.documentElement).dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+      } catch (e) { log("gesto: " + e); }
+      await waitQuiet(15000);
+      await loadAllFonts();
+      stats.readyMs = Math.round(wallMs() - t0);
+    })();
+    return readyP;
+  }
+  /* ───────────────────────────── ticks ───────────────────────────── */
+  function tick(k) {
+    var tms = k * STEP_MS;
+    ticking = true;
+    try {
+      runTimers(tms);
+      clockMs = tms;
+      mediaTick(tms);
+      applyAnimations();
+      origSeekToTime.call(VT, tms);   /* vacía la cola de rAF de HyperFrames con timestamp = tms */
+      discoverAnimations();
+    } finally { ticking = false; }
+    stats.ticks++;
+  }
+  async function run() {
+    await ready();
+    var t0;
+    while (stepIdx < targetStep) {
+      var last = stepIdx + 1 === targetStep;
+      if (last) {
+        /* los <video> que la plantilla dibuja en canvas tienen que estar en su
+           cuadro ANTES de los callbacks del último tick */
+        clockMs = (stepIdx + 1) * STEP_MS;
+        t0 = wallMs();
+        var pre = syncVideos();
+        if (pre) await pre;
+        stats.videoMs += wallMs() - t0;
+      }
+      t0 = wallMs();
+      tick(++stepIdx);
+      await null;                     /* microtareas de la plantilla, como entre cuadros reales */
+      stats.tickMs += wallMs() - t0;
+      if (pendingImgs.size || domImagesLoading() || mediaMetaPending() || (D.fonts && D.fonts.status === "loading")) {
+        t0 = wallMs(); await settleLoads(); stats.settleMs += wallMs() - t0;
+      }
+    }
+    t0 = wallMs();
+    var post = syncVideos();
+    if (post) await post;
+    stats.videoMs += wallMs() - t0;
+    t0 = wallMs();
+    await settleLoads();
+    stats.settleMs += wallMs() - t0;
+    /* resumen cada 300 cuadros en la salida del CLI (consola reenviada) */
+    if (stats.seeks % 300 === 0) {
+      console.log("[nb-hf-clock] seeks=" + stats.seeks + " t=" + Math.round(clockMs) + "ms ticks=" + stats.ticks +
+        " tick=" + Math.round(stats.tickMs) + "ms video=" + Math.round(stats.videoMs) + "ms settle=" +
+        Math.round(stats.settleMs) + "ms ready=" + stats.readyMs + "ms backward=" + stats.backward);
+    }
+  }
+  function requestTarget(ms) {
+    var step = Math.floor(Math.max(0, Number(ms) || 0) / STEP_MS + 1e-4);
+    stats.seeks++;
+    if (stats.firstSeekMs === null) stats.firstSeekMs = ms;
+    if (step < stepIdx) { stats.backward++; log("seek hacia atrás ignorado: " + ms + "ms (estado en " + stepIdx * STEP_MS + "ms)"); }
+    if (step > targetStep) targetStep = step;
+    if (!processing) {
+      processing = run().catch(function (e) { log("run: " + (e && e.stack || e)); })
+        .then(function () { processing = null; if (stepIdx < targetStep) requestTarget(targetStep * STEP_MS); });
+    }
+    return processing;
+  }
+  function idle() { return processing || Promise.resolve(); }
+
+  VT.seekToTime = function (ms) { requestTarget(ms); return ms; };
+  W.addEventListener("hf-seek", function (e) {
+    var d = e && e.detail;
+    if (!d || typeof d.time !== "number") return;
+    var p = requestTarget(d.time * 1000);
+    if (typeof d.waitUntil === "function") { try { d.waitUntil(p); } catch (err) {} }
+  });
+  /* El engine espera window.__hfWaitForSeekCompletion() antes de capturar:
+     se envuelve para que también espere a que el mundo llegue al cuadro. */
+  var innerWait = W.__hfWaitForSeekCompletion;
+  try {
+    Object.defineProperty(W, "__hfWaitForSeekCompletion", {
+      configurable: true,
+      get: function () { return function () { return Promise.resolve(innerWait && innerWait()).then(idle); }; },
+      set: function (fn) { innerWait = fn; },
+    });
+  } catch (e) { log("__hfWaitForSeekCompletion no envolvible"); }
+
+  W.__nbHf = {
+    active: true,
+    stats: stats,
+    logs: logs,
+    get time() { return clockMs; },
+    ready: ready,
+    idle: idle,
+  };
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grunge Rojo — Lyric Video</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: pointer; }
+  #stage { position: fixed; inset: 0; overflow: hidden; }
+  .scene { position: absolute; left: 0; top: 0; overflow: hidden; }
+  .lay { position: absolute; inset: 0; transform-origin: 50% 50%; }
+  .grp { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+  .mbox { position: absolute; overflow: hidden; }
+  .media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .patch { position: absolute; pointer-events: none; }
+  .grain { position: absolute; inset: 0; pointer-events: none; }
+  .bx { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .tx { display: inline-block; white-space: nowrap; line-height: 0.92; }
+  .ch, .wd { display: inline-block; white-space: pre; }
+  #hud { position: fixed; left: 8px; top: 8px; z-index: 50; display: none; padding: 6px 8px;
+         font: 11px/1.4 ui-monospace, monospace; color: #0f0; background: rgba(0,0,0,0.7); pointer-events: none; }
+  #hint { display: none !important; position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8; font: 700 1.6vh system-ui, sans-serif;
+          letter-spacing: 0.4em; color: #fff; opacity: 0.55; pointer-events: none; }
+  :root { --fCd: "Anton", sans-serif; --fEx: "Archivo", sans-serif; --fTh: "Oswald", sans-serif; }
+  .cd { font-family: var(--fCd); font-weight: 400; text-transform: uppercase; }
+  .ex { font-family: var(--fEx); font-weight: 900; font-stretch: 125%; text-transform: uppercase; }
+  .th { font-family: var(--fTh); font-weight: 300; text-transform: uppercase; }
+  .gr { -webkit-mask-image: var(--distress); mask-image: var(--distress); -webkit-mask-size: 220px 220px; mask-size: 220px 220px; }
+
+  body.headless #hint { display: none !important; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="hud"></div>
+<div id="hint" aria-hidden="true"></div>
+<audio id="audio" preload="auto"></audio>
+
+<script type="module">
+/* Grunge Rojo — Lyric Video — lyric video grunge de rap: B/N duro con niebla y papel rasgado, condensada gastada blanca y roja, fantasmas con desenfoque, grillas repetidas y garabatos de tiza. */
+const NAME = "lyrics-grunge";
+const ACTIVE_ID = null;   /* <-- forzar un id · null = usa "activeId" del JSON */
+const DEFAULT_CONFIG = {"activeId": "default", "configs": [{"id": "default", "description": "Lyric video grunge de rap: metraje urbano en blanco y negro duro con niebla y bordes de papel rasgado, letra condensada gastada en blanco y rojo con fantasmas de movimiento, grillas de frases repetidas y garabatos de tiza (círculos, flechas, tachones, coronas, rayos). — metadata para marketing/SEO, la plantilla no la usa todavía.", "audio": {"src": "assets/song.mp3"}, "lyricsUrl": "assets/lyrics.json", "lyricsFilter": {"minLogprob": -0.4, "drop": ["audio ?jungle", "envato", "subt[ií]tulos", "amara\\.org", "oriel"]}, "fonts": {"googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@300;500&display=swap"}, "palette": {"red": "#E8292E", "white": "#F1F1EF", "black": "#070707", "paper": "#EDEDEA", "ink": "#101010", "chalk": "#F5F5F2"}, "grades": {"bw": {"type": "duo", "dark": "#040404", "light": "#EDEDED", "contrast": 1.55}}, "media": [{"id": "tunnel", "type": "video", "src": "assets/media/tunnel-dance.mp4", "poster": "assets/media/tunnel-dance-1.jpg", "graded": {"bw": {"src": "assets/media/graded/tunnel-dance.bw.mp4", "poster": "assets/media/graded/tunnel-dance-1.bw.jpg"}}}, {"id": "street", "type": "video", "src": "assets/media/street-dance.mp4", "poster": "assets/media/street-dance-1.jpg", "graded": {"bw": {"src": "assets/media/graded/street-dance.bw.mp4", "poster": "assets/media/graded/street-dance-1.bw.jpg"}}}, {"id": "hoodie", "type": "video", "src": "assets/media/hoodie.mp4", "poster": "assets/media/hoodie-1.jpg", "graded": {"bw": {"src": "assets/media/graded/hoodie.bw.mp4", "poster": "assets/media/graded/hoodie-1.bw.jpg"}}}, {"id": "crowd", "type": "video", "src": "assets/media/crowd.mp4", "poster": "assets/media/crowd-1.jpg", "graded": {"bw": {"src": "assets/media/graded/crowd.bw.mp4", "poster": "assets/media/graded/crowd-1.bw.jpg"}}}, {"id": "breakdance", "type": "video", "src": "assets/media/breakdance.mp4", "poster": "assets/media/breakdance-1.jpg", "graded": {"bw": {"src": "assets/media/graded/breakdance.bw.mp4", "poster": "assets/media/graded/breakdance-1.bw.jpg"}}}, {"id": "night", "type": "video", "src": "assets/media/night-hoodie.mp4", "poster": "assets/media/night-hoodie-1.jpg", "graded": {"bw": {"src": "assets/media/graded/night-hoodie.bw.mp4", "poster": "assets/media/graded/night-hoodie-1.bw.jpg"}}}], "phrases": {"maxWords": 5, "maxSec": 2.4, "minWords": 2}, "timing": {"leadSec": 0.1, "holdSec": 0.7, "gapSec": 2.0, "echoSec": 0.9, "cooldown": 4}, "layouts": {"slam": {"weight": 2.0}, "twoTone": {"weight": 1.6}, "circle": {"weight": 1.2}, "spacedWide": {"weight": 1.0}, "grid": {"weight": 1.0}, "stackCols": {"weight": 0.9}, "torn": {"weight": 1.0}, "vertical": {"weight": 0.7}, "frameBox": {"weight": 1.0}, "stack3": {"weight": 1.2}, "blurGiant": {"weight": 1.2}, "strike": {"weight": 1.0}}, "intro": {"title": "", "artist": ""}, "outro": {"enabled": true, "sec": 3.2, "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF"}, "texture": {"grain": 0.1}, "debug": {"enabled": false}, "seed": 13}]};
+const FONT_LOADS = ["100px Anton", "900 100px Archivo", "300 100px Oswald"];
+
+/* ======================= NÚCLEO COMÚN (promo-*) =========================
+   Compartido por las 6 plantillas de commercial/ (promo-trendy,
+   promo-dynamic, promo-urban, promo-sports, promo-editorial y
+   promo-kinetic). Contrato:
+   · config.json  = colección { activeId, configs: [ CASO ] } (como neon /
+     caution): audio, lyricsUrl, paleta, fuentes, MEDIA (videos / imágenes)
+     y la coreografía `scenes` (tipo de escena + media por escena).
+   · lyricsUrl   = guion en formato Whisper { segments: [ { start, end, text,
+     words: [ { word, start, end } ] } ] }. UN segmento = UNA escena (corte en
+     segment.start, palabras que aparecen en word.start). Campos extra
+     opcionales por segmento: "lines" (cómo partir el texto en renglones) y
+     "sub" (texto chico de acompañamiento). Una transcripción real de Whisper
+     también sirve tal cual.
+   · Todo se anima con Tracks propios (interpolan y escriben style solo si
+     cambia; sin Web Animations → nada se promueve a capa y el headless no se
+     hunde) posicionados con el reloj del audio: ?t=SEG congela un cuadro y
+     los videos se buscan a ese instante exacto.
+   Servir por HTTP (python3 -m http.server): por file:// el fetch se bloquea. */
+const doc = document, $ = id => doc.getElementById(id);
+const QS = new URLSearchParams(location.search);
+const FROZEN = QS.has("t") ? parseFloat(QS.get("t")) : null;
+
+async function loadDB() {
+  for (const u of ["config.json", `assets/${NAME}.config.json`, "assets/config.json"]) {
+    try { const r = await fetch(u); if (r.ok) return await r.json(); } catch (e) {}
+  }
+  console.warn(`[${NAME}] config.json no disponible — usando DEFAULT_CONFIG embebido`);
+  return DEFAULT_CONFIG;
+}
+/* merge profundo de objetos; los arrays (media, scenes…) se reemplazan enteros */
+function deepMerge(a, b) {
+  if (Array.isArray(b) || typeof b !== "object" || b === null) return b === undefined ? a : b;
+  const out = { ...(typeof a === "object" && a && !Array.isArray(a) ? a : {}) };
+  for (const k of Object.keys(b)) out[k] = deepMerge(out[k], b[k]);
+  return out;
+}
+const DB = await loadDB();
+const RAW = DB.configs.find(c => c.id === ACTIVE_ID) || DB.configs.find(c => c.id === DB.activeId) || DB.configs[0];
+const C = deepMerge(DEFAULT_CONFIG.configs[0], RAW);
+const DEBUG = C.debug?.enabled || QS.get("debug") === "1";
+if (C.fonts?.googleUrl) {
+  const link = doc.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+  if (link && link.href !== C.fonts.googleUrl) link.href = C.fonts.googleUrl;
+}
+for (const [k, v] of Object.entries(C.palette || {})) doc.documentElement.style.setProperty("--" + k, v);
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const EASE_OUT = "cubic-bezier(.16,.84,.24,1)", EASE_IN = "cubic-bezier(.6,0,.9,.4)", EASE_IO = "cubic-bezier(.65,0,.3,1)";
+const EASE_BACK = "cubic-bezier(.3,1.5,.5,1)";
+
+/* ---------------- Tracks: interpolación propia, seek determinista ---------------- */
+const NUM = /-?\d*\.?\d+(?:e-?\d+)?/g;
+function lerpStr(a, b, p) {
+  if (p <= 0 || a === b) return a;
+  if (p >= 1) return b;
+  const na = a.match(NUM), nb = b.match(NUM);
+  if (!na || !nb || na.length !== nb.length) return p < 0.5 ? a : b;
+  let i = 0;
+  return b.replace(NUM, () => { const v = +na[i] + (+nb[i] - +na[i]) * p; i++; return String(Math.round(v * 1000) / 1000); });
+}
+const easeCache = new Map();
+function easeFn(spec) {
+  let f = easeCache.get(spec);
+  if (f) return f;
+  const m = /cubic-bezier\(([^)]+)\)/.exec(spec);
+  if (!m) f = spec.startsWith("steps") ? () => 0 : p => p;
+  else {
+    const [x1, y1, x2, y2] = m[1].split(",").map(Number);
+    const bz = (t, a, b) => 3 * a * t * (1 - t) * (1 - t) + 3 * b * t * t * (1 - t) + t * t * t;
+    const dbz = (t, a, b) => 3 * a * (1 - t) * (1 - t) + 6 * (b - a) * t * (1 - t) + 3 * (1 - b) * t * t;
+    f = x => {
+      let t = x;
+      for (let i = 0; i < 6; i++) { const d = dbz(t, x1, x2); if (Math.abs(d) < 1e-6) break; t -= (bz(t, x1, x2) - x) / d; t = clamp(t, 0, 1); }
+      return bz(t, y1, y2);
+    };
+  }
+  easeCache.set(spec, f);
+  return f;
+}
+class Track {
+  constructor(el, prop, init, discrete = false) { this.el = el; this.prop = prop; this.discrete = discrete; this.keys = [[0, init, "linear"]]; }
+  get last() { return this.keys[this.keys.length - 1][1]; }
+  set(t, v) { this.keys.push([t, v, "linear"]); return this; }
+  to(t0, d, v, ease = "linear") { this.keys.push([t0, this.last, ease]); this.keys.push([t0 + Math.max(0.001, d), v, "linear"]); return this; }
+  compile() {
+    this.ks = this.keys.slice().sort((a, b) => a[0] - b[0]).map(([t, v, e]) => [t, v, easeFn(this.discrete ? "steps" : e)]);
+    this.a = Infinity; this.b = -Infinity;
+    for (let i = 1; i < this.ks.length; i++)
+      if (this.ks[i][1] !== this.ks[i - 1][1]) { this.a = Math.min(this.a, this.ks[i - 1][0]); this.b = Math.max(this.b, this.ks[i][0]); }
+    this.side = null; this.cur = undefined;
+  }
+  value(t) {
+    const ks = this.ks;
+    if (t <= ks[0][0]) return ks[0][1];
+    for (let i = ks.length - 1; i >= 0; i--) {
+      if (t < ks[i][0]) continue;
+      const nx = ks[i + 1];
+      if (!nx) return ks[i][1];
+      const span = nx[0] - ks[i][0];
+      return span <= 0 ? nx[1] : lerpStr(ks[i][1], nx[1], ks[i][2]((t - ks[i][0]) / span));
+    }
+    return ks[0][1];
+  }
+  seek(t) {
+    const side = t < this.a ? -1 : t > this.b ? 1 : 0;
+    if (side !== 0 && side === this.side) return;
+    this.side = side;
+    const v = this.value(t);
+    if (v !== this.cur) {
+      if (this.prop[0] === "@") this.el[this.prop.slice(1)] = v;   /* "@textContent" → propiedad directa */
+      else this.el.style[this.prop] = v;
+      this.cur = v;
+    }
+  }
+}
+
+/* ---------------- DOM, texto, medición ---------------- */
+function div(parent, cls, css) {
+  const d = doc.createElement("div");
+  if (cls) d.className = cls;
+  if (css) Object.assign(d.style, css);
+  if (parent) parent.appendChild(d);
+  return d;
+}
+const meas = (() => { const m = doc.createElement("span"); m.style.cssText = "position:absolute;left:-99999px;top:0;visibility:hidden;white-space:pre;font-size:100px;line-height:1"; doc.body.appendChild(m); return m; })();
+const measCache = new Map();
+function measure(text, cls, ls = 0) {
+  const key = cls + "|" + ls + "|" + text;
+  let m = measCache.get(key);
+  if (!m) {
+    meas.className = "tx " + cls; meas.style.letterSpacing = ls + "em"; meas.textContent = text;
+    const r = meas.getBoundingClientRect();
+    m = { w: Math.max(1, r.width), h: Math.max(1, r.height) };
+    measCache.set(key, m);
+  }
+  return m;
+}
+const fit = (text, cls, ls, maxW, maxH) => { const m = measure(text, cls, ls); return 100 * Math.min(maxW / m.w, maxH / m.h); };
+const textW = (text, cls, ls, fs) => measure(text, cls, ls).w * fs / 100;
+/* texto decorativo enorme → <canvas> rasterizado UNA vez (mover un texto de
+   1000+ px re-rasteriza cada cuadro en headless: 27 → 7 fps). Respeta fuente,
+   peso, itálica, font-stretch, mayúsculas, espaciado, contorno y textura. */
+const STRETCH = { "50%": "ultra-condensed", "62.5%": "extra-condensed", "75%": "condensed", "87.5%": "semi-condensed", "112.5%": "semi-expanded", "125%": "expanded", "150%": "extra-expanded", "200%": "ultra-expanded" };
+function canvasText(text, o) {
+  meas.className = "tx " + (o.cls || ""); meas.style.letterSpacing = "0em";
+  const cs = getComputedStyle(meas), fs = o.fs;
+  const t = cs.textTransform === "uppercase" ? text.toUpperCase() : text;
+  const cv = doc.createElement("canvas"), cx = cv.getContext("2d");
+  const setFont = () => {
+    cx.font = `${cs.fontStyle} ${cs.fontWeight} ${fs}px ${cs.fontFamily}`;
+    cx.fontStretch = STRETCH[cs.fontStretch] || "normal";
+    cx.letterSpacing = `${(o.ls || 0) * fs}px`;
+  };
+  setFont();
+  const sw = o.stroke ? (o.swPx ?? Math.max(1, fs * (o.sw || 0.012))) : 0;
+  const padL = fs * 0.06 + sw, padR = fs * 0.22 + sw;
+  const w = Math.ceil(cx.measureText(t).width + padL + padR), h = Math.ceil(fs * 1.3);
+  cv.width = Math.min(16000, w); cv.height = h;
+  setFont();
+  cx.textBaseline = "middle";
+  const y = h / 2 + fs * 0.04;
+  if (o.stroke) { cx.lineWidth = sw; cx.strokeStyle = o.color; cx.lineJoin = "round"; cx.strokeText(t, padL, y); }
+  else { cx.fillStyle = o.color; cx.fillText(t, padL, y); }
+  if (o.texture) {            /* textura de piedra: motas oscuras solo sobre la letra */
+    cx.globalCompositeOperation = "source-atop";
+    const n = Math.floor(cv.width * cv.height / 220);
+    for (let i = 0; i < n; i++) { cx.fillStyle = `rgba(0,0,0,${0.08 + texRng() * 0.3})`; const s = 1 + texRng() * 3; cx.fillRect(texRng() * cv.width, texRng() * cv.height, s, s); }
+    cx.globalCompositeOperation = "source-over";
+  }
+  cv.className = "tx"; cv.style.width = cv.width + "px"; cv.style.height = h + "px"; cv.style.display = "block";
+  return cv;
+}
+/* texto posicionado: (x, y) = punto de ancla (ax, ay ∈ 0..1). .bx posiciona, .tx se anima */
+function tx(parent, text, o) {
+  const box = div(parent, "bx");
+  box.style.left = o.x + "px"; box.style.top = o.y + "px";
+  box.style.transform = `translate(${-(o.ax ?? 0.5) * 100}%, ${-(o.ay ?? 0.5) * 100}%)` + (o.rot ? ` rotate(${o.rot}deg)` : "");
+  if (o.canvas) { const el = canvasText(text, o); box.appendChild(el); return { box, el, chars: [], words: [] }; }
+  const el = div(box, "tx " + (o.cls || ""));
+  el.style.fontSize = o.fs + "px";
+  if (o.ls) el.style.letterSpacing = o.ls + "em";
+  if (o.stroke) { el.style.color = "transparent"; el.style.webkitTextStroke = `${Math.max(1, o.fs * (o.sw || 0.012))}px ${o.color}`; }
+  else el.style.color = o.color;
+  const chars = [], words = [];
+  if (o.split === "chars") {
+    let wi = 0;
+    for (const c of text) {
+      const s = doc.createElement("span"); s.className = "ch"; s.textContent = c; s.wi = wi;
+      if (c === " ") wi++;
+      el.appendChild(s); chars.push(s);
+    }
+  } else if (o.split === "words") {
+    text.split(" ").forEach((w, i) => {
+      if (i) el.appendChild(doc.createTextNode(" "));
+      const s = doc.createElement("span"); s.className = "wd"; s.textContent = w; el.appendChild(s); words.push(s);
+    });
+  } else el.textContent = text;
+  return { box, el, chars, words };
+}
+
+/* ---------------- filtros SVG: duotono, B/N, desenfoque direccional ---------------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+const fx = (() => {
+  const s = doc.createElementNS(SVGNS, "svg");
+  s.setAttribute("width", "0"); s.setAttribute("height", "0"); s.style.position = "absolute";
+  const d = doc.createElementNS(SVGNS, "defs"); s.appendChild(d); doc.body.appendChild(s);
+  return d;
+})();
+const hex = h => { const n = parseInt(h.replace("#", ""), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
+/* duotono: luminancia → tabla [oscuro → claro], con contraste previo */
+function duoFilter(id, dark, light, contrast = 1.25) {
+  const [dr, dg, db] = hex(dark), [lr, lg, lb] = hex(light);
+  const icpt = (1 - contrast) / 2;
+  fx.insertAdjacentHTML("beforeend", `<filter id="${id}" color-interpolation-filters="sRGB">
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncR type="linear" slope="${contrast}" intercept="${icpt}"/><feFuncG type="linear" slope="${contrast}" intercept="${icpt}"/><feFuncB type="linear" slope="${contrast}" intercept="${icpt}"/></feComponentTransfer>
+    <feComponentTransfer><feFuncR type="table" tableValues="${dr} ${lr}"/><feFuncG type="table" tableValues="${dg} ${lg}"/><feFuncB type="table" tableValues="${db} ${lb}"/></feComponentTransfer>
+  </filter>`);
+  return `url(#${id})`;
+}
+for (const [n, s] of [[1, 6], [2, 16], [3, 34]]) {
+  fx.insertAdjacentHTML("beforeend", `<filter id="mbx${n}" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="${s} 0"/></filter>`);
+  fx.insertAdjacentHTML("beforeend", `<filter id="mby${n}" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 ${s}"/></filter>`);
+}
+/* gradings del config (C.grades): key → filtro CSS/SVG. Si un media trae la
+   variante ya gradada (media.graded[key], generada por tools/grade_media.py)
+   se usa esa y NO se aplica filtro en vivo: filtrar video en tiempo real es
+   carísimo en Chrome headless (45 fps → 13 fps con un solo filtro). */
+const GRADE = {};
+for (const [k, g] of Object.entries(C.grades || {}))
+  GRADE[k] = g.type === "duo" ? duoFilter(k, g.dark, g.light, g.contrast ?? 1.25)
+           : `saturate(${g.saturate ?? 1}) contrast(${g.contrast ?? 1}) brightness(${g.brightness ?? 1})`;
+/* video → foto fija (su póster), conservando las variantes gradadas del póster */
+function asStill(s) {
+  if (!s || s.type !== "video") return s;
+  const graded = {};
+  for (const [k, g] of Object.entries(s.graded || {})) if (g.poster) graded[k] = { src: g.poster };
+  return { ...s, type: "image", src: s.poster || s.src, graded };
+}
+function blurPass(tr, t0, d, axis = "x", fadeIn = false) {
+  const f = n => `url(#mb${axis}${n})`;
+  if (fadeIn) tr.set(t0, "none").set(t0 + d * 0.35, f(1)).set(t0 + d * 0.65, f(2)).set(t0 + d, f(3));
+  else tr.set(t0, f(3)).set(t0 + d * 0.4, f(2)).set(t0 + d * 0.75, f(1)).set(t0 + d, "none");
+}
+
+/* ---------------- texturas (grano) ---------------- */
+const texRng = mulberry32((C.seed || 7) * 31 + 5);
+function noiseTile(size, alpha) {
+  const cv = doc.createElement("canvas"); cv.width = cv.height = size;
+  const cx = cv.getContext("2d"), im = cx.createImageData(size, size), d = im.data;
+  for (let i = 0; i < d.length; i += 4) { const v = texRng() < 0.5 ? 0 : 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = texRng() * alpha; }
+  cx.putImageData(im, 0, 0);
+  return `url(${cv.toDataURL()})`;
+}
+const GRAIN = noiseTile(192, 255);
+
+/* ---------------- guion (lyrics.json) → escenas ---------------- */
+async function loadScript() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    /* filtro de alucinaciones de Whisper (tramos instrumentales): config.lyricsFilter
+       = { minLogprob, drop: [regex…] } — un segmento que no pasa se descarta */
+    const F = C.lyricsFilter || {}, drop = (F.drop || []).map(x => new RegExp(x, "i"));
+    const bad = s => (F.minLogprob != null && s.avg_logprob != null && s.avg_logprob < F.minLogprob) ||
+                     drop.some(re => re.test(s.text || ""));
+    return (j.segments || []).filter(s => !bad(s)).map(s => {
+      let words = (s.words || []).map(w => ({ text: String(w.word).trim(), t: w.start, end: w.end })).filter(w => w.text);
+      if (!words.length && s.text) words = s.text.trim().split(/\s+/).map(x => ({ text: x, t: s.start, end: s.end }));
+      return { start: s.start, end: s.end, text: (s.text || "").trim(), lines: s.lines, sub: s.sub, words };
+    }).filter(s => isFinite(s.start)).sort((a, b) => a.start - b.start);
+  } catch (e) {
+    console.warn(`[${NAME}] No se pudo cargar`, C.lyricsUrl, e);
+    return [];
+  }
+}
+/* renglones de la escena: seg.lines (strings) si existe; si no, un renglón */
+function linesOf(sc) {
+  const ws = sc.words;
+  const specs = Array.isArray(sc.seg.lines) && sc.seg.lines.length ? sc.seg.lines : [ws.map(w => w.text).join(" ")];
+  let k = 0;
+  return specs.map(str => {
+    const n = String(str).trim().split(/\s+/).filter(Boolean).length;
+    const lw = ws.slice(k, k + n); k += n;
+    return { text: String(str).trim(), words: lw, rt: lw.length ? lw[0].rt : (ws[ws.length - 1]?.rt ?? 0) };
+  });
+}
+function buildTimeline(segs, dur) {
+  const slots = C.scenes && C.scenes.length ? C.scenes : [{ type: Object.keys(B)[0] }];
+  return segs.map((s, i) => {
+    const t0 = i === 0 ? 0 : s.start;
+    const t1 = i + 1 < segs.length ? segs[i + 1].start : dur;
+    const slot = slots[i % slots.length];
+    const type = B[slot.type] ? slot.type : Object.keys(B)[0];
+    return { idx: i, t0, t1, dur: Math.max(0.05, t1 - t0), seg: s, slot, type,
+             words: s.words.map(w => ({ text: w.text, rt: Math.max(0, w.t - t0) })) };
+  });
+}
+
+/* ---------------- letra de canción → frases ---------------- */
+/* segmentos de Whisper → frases de ≤ maxWords / ≤ maxSec, cortando en la pausa
+   más larga; palabras limpias de puntuación, con su tiempo real */
+const cleanWord = s => String(s).trim().replace(/[.,;:!?¡¿"“”()\[\]]/g, "").replace(/[`´’]/g, "'");
+function lyricPhrases(segs, o = {}) {
+  const maxW = o.maxWords ?? 6, maxS = o.maxSec ?? 3.2, minW = o.minWords ?? 2;
+  const out = [], q = segs.map(s => {
+    const ws = [];
+    for (const w of s.words) {
+      const x = { text: cleanWord(w.text), t: w.t, end: w.end ?? w.t + 0.3 };
+      if (!x.text) continue;
+      /* Whisper a veces parte "y'all" → "y" + "'all": se vuelve a unir */
+      if (x.text.startsWith("'") && ws.length) { ws[ws.length - 1].text += x.text; ws[ws.length - 1].end = x.end; continue; }
+      ws.push(x);
+    }
+    return ws;
+  });
+  const dur = ws => ws[ws.length - 1].end - ws[0].t;
+  while (q.length) {
+    const ws = q.shift();
+    if (!ws.length) continue;
+    if (ws.length > maxW || (dur(ws) > maxS && ws.length >= 2 * minW)) {
+      let bi = Math.ceil(ws.length / 2), bg = -1;
+      for (let i = Math.max(minW, Math.ceil(ws.length * 0.2)); i <= Math.min(ws.length - minW, Math.floor(ws.length * 0.8)); i++) {
+        const g = ws[i].t - ws[i - 1].end + (/^(and|but|i|i'm|y|pero|que)$/i.test(ws[i].text) ? 0.12 : 0);
+        if (g > bg) { bg = g; bi = i; }
+      }
+      q.unshift(ws.slice(0, bi), ws.slice(bi));
+      continue;
+    }
+    out.push(ws);
+  }
+  return out;
+}
+const isStop = w => /^(a|an|the|and|or|but|so|of|to|in|on|at|for|with|i|i'm|me|my|you|your|it|is|am|are|be|we|us|el|la|los|las|un|una|y|o|de|del|en|con|por|que|me|te|mi|tu|su|yo|es)$/i.test(w.text);
+/* fuerza de una palabra (para elegir la protagonista de la frase) */
+const heroIdx = ws => { let b = 0, bs = -1; ws.forEach((w, i) => { const s = (isStop(w) ? 0 : 10) + w.text.length; if (s > bs) { bs = s; b = i; } }); return b; };
+
+/* línea de tiempo para plantillas de LETRA: una escena por frase, con la
+   escena elegida por un mazo ponderado (config.layouts = { tipo: { weight,
+   bgs } } + FITS[tipo](frase) de la plantilla), ecos de las palabras fuertes
+   en los tramos instrumentales largos y tarjetas de intro / cierre.
+   config.timing = { leadSec, holdSec, gapSec, echoSec, cooldown } */
+function lyricTimeline(segs, dur, FITS) {
+  const Tm = { leadSec: 0.12, holdSec: 0.9, gapSec: 2.4, echoSec: 1.1, cooldown: 3, ...(C.timing || {}) };
+  const r = mulberry32((C.seed || 7) * 977 + 3);
+  const ph = lyricPhrases(segs, C.phrases || {});
+  const list = [];
+  const mk = (kind, t0, t1, ws, extra = {}) => ({ kind, t0, t1, seg: { text: ws.map(w => w.text).join(" ") },
+    words: ws.map(w => ({ text: w.text, rt: Math.max(0, (w.t ?? t0) - Tm.leadSec - t0) })), ...extra });
+  const syn = (texts, t0) => texts.filter(Boolean).map((x, i) => ({ text: x, t: t0 + 0.25 + i * 0.45 + Tm.leadSec }));
+  const I = C.intro || {}, O = C.outro || {};
+  const first = ph.length ? Math.max(0, ph[0][0].t - Tm.leadSec) : dur;
+  if (first >= 1.2 && (I.title || I.artist)) list.push(mk("intro", 0, first, syn([I.title, I.artist], 0), { type: I.type || "intro" }));
+  const heroes = [], hist = [];
+  ph.forEach((ws, i) => {
+    const t0 = i === 0 && !list.length ? 0 : Math.max(0, ws[0].t - Tm.leadSec);
+    const nx = ph[i + 1], lastEnd = ws[ws.length - 1].end;
+    let t1 = nx ? Math.max(t0 + 0.35, nx[0].t - Tm.leadSec) : dur;
+    heroes.push(ws[heroIdx(ws)].text); hist.push(ws);
+    let gap = null;
+    if (t1 - lastEnd > Tm.gapSec) { gap = [lastEnd + Tm.holdSec, t1]; t1 = gap[0]; }
+    const ly = mk("lyric", t0, t1, ws);
+    list.push(ly);
+    if (!gap && !nx && O.enabled !== false && (O.title || O.sub) && dur - lastEnd > 1.2) gap = [Math.max(t0 + 0.6, lastEnd + 0.3), dur];
+    if (!gap) return;
+    ly.t1 = gap[0];
+    /* tramo final: el cierre ocupa los últimos outro.sec segundos; antes, ecos */
+    if (!nx && O.enabled !== false && (O.title || O.sub)) {
+      const os = Math.max(gap[0], dur - (O.sec ?? 3.2));
+      list.push(mk("outro", os, dur, syn([O.title, O.sub, O.feats], os), { type: O.type || "outro" }));
+      if (os - gap[0] < 0.8) { ly.t1 = os; return; }
+      gap = [gap[0], os];
+    }
+    /* tramo instrumental largo → se repiten frases completas ya cantadas (en orden,
+       como un estribillo); corto → ecos de las palabras fuertes */
+    const len = gap[1] - gap[0], ps = Tm.echoPhraseSec ?? 1.8;
+    if (len >= 3 * ps && hist.length) {
+      const k = Math.max(1, Math.round(len / ps));
+      for (let j = 0; j < k; j++) {
+        const a = gap[0] + len * j / k, b = gap[0] + len * (j + 1) / k, src = hist[j % hist.length];
+        const step = Math.min(0.26, (b - a) * 0.55 / Math.max(1, src.length));
+        list.push(mk("echo", a, b, src.map((w, n) => ({ text: w.text, t: a + Tm.leadSec + 0.06 + n * step }))));
+      }
+    } else {
+      const k = Math.max(1, Math.round(len / Tm.echoSec));
+      for (let j = 0; j < k; j++) {
+        const a = gap[0] + len * j / k, b = gap[0] + len * (j + 1) / k;
+        const pool = [...new Set(heroes.slice(-8))];
+        const txt = pool[Math.floor(r() * pool.length)] || ws[0].text;
+        list.push(mk("echo", a, b, [{ text: txt, t: a + Tm.leadSec + 0.05 }]));
+      }
+    }
+  });
+  list.sort((a, b) => a.t0 - b.t0);
+  /* mazo: tipo de escena + fondo */
+  const L = C.layouts || {}, recent = [];
+  let prevBg = "";
+  list.forEach((sc, i) => {
+    sc.idx = i; sc.dur = Math.max(0.05, sc.t1 - sc.t0);
+    if (!sc.type) {
+      let c = Object.entries(L).filter(([k, v]) => v.weight > 0 && B[k] && (!FITS[k] || FITS[k](sc)) && !recent.includes(k));
+      if (!c.length) c = Object.entries(L).filter(([k, v]) => v.weight > 0 && B[k]);
+      let x = r() * c.reduce((a, [, v]) => a + v.weight, 0); sc.type = c[0][0];
+      for (const [k, v] of c) { x -= v.weight; if (x <= 0) { sc.type = k; break; } }
+      recent.push(sc.type); if (recent.length > Tm.cooldown) recent.shift();
+    }
+    const bgs = (L[sc.type]?.bgs || C.defaultBgs || ["media"]).filter(b => b !== prevBg || (L[sc.type]?.bgs || []).length === 1);
+    const bg = bgs[Math.floor(r() * bgs.length)] || "media";
+    /* layouts[tipo].media = [ids] → la escena prefiere esos clips; si no, cualquiera */
+    const pool = (L[sc.type]?.media || []).filter(id => (C.media || []).some(m => m.id === id));
+    const ids = pool.length ? pool : (C.media || []).map(m => m.id);
+    const pk = () => ids[Math.floor(r() * ids.length)];
+    const media = ids.length ? [pk(), pk()] : [];
+    if (media.length > 1 && media[1] === media[0] && ids.length > 1) media[1] = ids[(ids.indexOf(media[0]) + 1) % ids.length];
+    sc.slot = { type: sc.type, bg, media, trans: L[sc.type]?.trans };
+    prevBg = bg;
+  });
+  return list;
+}
+
+/* ---------------- transiciones de entrada (sobre la escena anterior) ----------------
+   enterFx(X, kind, d): anima la raíz de la escena nueva durante d segundos.
+   Con overlapSec > 0 la anterior se ve debajo → disolvencias reales.
+   kinds: fade · blur · iris · irisOut · wipeL · wipeR · wipeUp · wipeDown · bars
+   (persiana) · rain (franjas verticales irregulares) · burn (borde de quemado
+   con brillo) · ink (mancha orgánica) · flash · zoomIn · zoomOut · slice (glitch) */
+function enterFx(X, kind, d, o = {}) {
+  const { root: R, W, H, r } = X;
+  if (!kind || kind === "cut" || X.sc.idx === 0) return;
+  const E = EASE_IO;
+  const poly = pts => `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(", ")})`;
+  switch (kind) {
+    case "fade": X.T(R, "opacity", "0").to(0, d, "1", E); break;
+    case "blur":
+      X.T(R, "opacity", "0").to(0, d, "1", E);
+      X.T(R, "filter", "blur(18px) brightness(1.4)").to(0, d, "blur(0px) brightness(1)", EASE_OUT); break;
+    case "iris": { const cx = (o.cx ?? 0.5) * 100, cy = (o.cy ?? 0.5) * 100;
+      X.T(R, "clipPath", `circle(0% at ${cx}% ${cy}%)`).to(0, d, `circle(120% at ${cx}% ${cy}%)`, E); break; }
+    case "wipeL": X.T(R, "clipPath", "inset(0% 100% 0% 0%)").to(0, d, "inset(0% 0% 0% 0%)", E); break;
+    case "wipeR": X.T(R, "clipPath", "inset(0% 0% 0% 100%)").to(0, d, "inset(0% 0% 0% 0%)", E); break;
+    case "wipeUp": X.T(R, "clipPath", "inset(100% 0% 0% 0%)").to(0, d, "inset(0% 0% 0% 0%)", E); break;
+    case "wipeDown": X.T(R, "clipPath", "inset(0% 0% 100% 0%)").to(0, d, "inset(0% 0% 0% 0%)", E); break;
+    case "bars": { /* persiana horizontal: n franjas que se abren escalonadas */
+      const n = o.n ?? 8, k = 12, mk = p => { const pts = [];
+        for (let i = 0; i < n; i++) { const y0 = i * H / n, hh = (H / n) * clamp(p * 1.6 - i / n * 0.6, 0, 1);
+          pts.push([0, y0], [W, y0], [W, y0 + hh], [0, y0 + hh], [0, y0]); }
+        return poly(pts); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(j / k)); break; }
+    case "rain": { /* franjas verticales de ancho irregular que "caen" */
+      const n = o.n ?? 44, ws = Array.from({ length: n }, () => 0.3 + r()), sum = ws.reduce((a, b) => a + b, 0), dl = ws.map(() => r() * 0.5);
+      X.T(R, "opacity", "0.2").to(0, d, "1", EASE_OUT);
+      const k = 12, mk = p => { const pts = []; let x = 0;
+        ws.forEach((w, i) => { const ww = w / sum * W, hh = H * clamp((p - dl[i]) / 0.55, 0, 1);
+          pts.push([x, 0], [x + ww + 1, 0], [x + ww + 1, hh], [x, hh], [x, 0]); x += ww; });
+        return poly(pts); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(j / k));
+      tr.set(d + 0.001, "none"); break; }
+    case "burn": { /* borde de quemado irregular que avanza + resplandor */
+      const k = 14, n = 26, jit = Array.from({ length: n + 1 }, () => r());
+      const mk = p => { const pts = [[0, 0]];
+        for (let i = 0; i <= n; i++) { const y = i / n * H; pts.push([clamp((p * 1.25 - 0.12) * W + (jit[i] - 0.5) * 0.12 * W, 0, W), y]); }
+        pts.push([0, H]); return poly(pts); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(j / k));
+      tr.set(d + 0.001, "none");
+      /* franja incandescente angosta que viaja pegada al borde quemado */
+      const gw = 0.09 * W, glow = div(X.root, "patch", { left: -gw / 2 + "px", top: 0, width: gw + "px", height: H + "px", zIndex: 40, mixBlendMode: "screen", filter: "blur(6px)",
+        background: `linear-gradient(90deg, transparent 0%, ${o.color || C.transition?.burnColor || "rgba(255,140,40,0.85)"} 42%, rgba(255,235,190,0.95) 50%, transparent 62%)` });
+      const gt = X.T(glow, "transform", "translateX(0px)");
+      for (let j = 0; j <= k; j++) gt.set(d * j / k, `translateX(${((j / k * 1.25 - 0.12) * W).toFixed(1)}px)`);
+      X.T(glow, "opacity", "1").to(d * 0.85, d * 0.15, "0"); break; }
+    case "ink": { /* mancha orgánica que crece desde un punto */
+      const cx = (o.cx ?? 0.3 + r() * 0.4) * W, cy = (o.cy ?? 0.35 + r() * 0.3) * H, n = 40, a0 = r() * 6, k = 12;
+      const amp = Array.from({ length: n }, (_, i) => 0.75 + 0.25 * Math.sin(i * 1.7 + a0) + (r() - 0.5) * 0.25);
+      const mk = p => { const R0 = p * 1.25 * Math.hypot(W, H); return poly(amp.map((a, i) => { const th = i / n * Math.PI * 2; return [cx + Math.cos(th) * R0 * a, cy + Math.sin(th) * R0 * a]; })); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(easeFn(EASE_IN)(j / k)));
+      tr.set(d + 0.001, "none"); break; }
+    case "flash": {
+      const f = div(X.root, "patch", { left: 0, top: 0, width: W + "px", height: H + "px", background: o.color || C.transition?.flashColor || "#fff", zIndex: 40 });
+      X.T(f, "opacity", "0.95").to(0, d, "0", EASE_OUT); break; }
+    case "zoomIn":
+      X.T(R, "opacity", "0").to(0, d * 0.6, "1", E);
+      X.T(R, "transform", "scale(1.35)").to(0, d, "scale(1)", EASE_OUT); break;
+    case "zoomOut":
+      X.T(R, "opacity", "0").to(0, d * 0.6, "1", E);
+      X.T(R, "transform", "scale(0.82)").to(0, d, "scale(1)", EASE_OUT); break;
+    case "slice": { /* glitch: franjas horizontales desplazadas que se alinean */
+      const n = 7, k = 8, off = Array.from({ length: n }, () => (r() - 0.5) * 0.4 * W);
+      const mk = p => { const pts = [];
+        for (let i = 0; i < n; i++) { const y0 = i * H / n, y1 = y0 + H / n, dx = off[i] * (1 - p); pts.push([dx, y0], [W + dx, y0], [W + dx, y1], [dx, y1], [dx, y0]); }
+        return poly(pts); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(j / k));
+      tr.set(d + 0.001, "none"); break; }
+  }
+}
+/* tipo de transición de la escena: slot.trans o sorteo ponderado de config.transition.weights */
+function pickTrans(X) {
+  if (X.sc.slot.trans) return X.sc.slot.trans;
+  const w = Object.entries(C.transition?.weights || { fade: 1 }).filter(([, v]) => v > 0);
+  let x = X.r() * w.reduce((a, [, v]) => a + v, 0);
+  for (const [k, v] of w) { x -= v; if (x <= 0) return k; }
+  return w[0][0];
+}
+
+/* ---------------- media (video / imagen) ---------------- */
+/* Los videos (y el audio) se bajan enteros como blob al arrancar: el servidor
+   del grabador (SimpleHTTPRequestHandler) no soporta Range, y sin eso Chrome
+   tarda en tener datos y no puede buscar (el video se queda en 0 s). Con blob
+   la búsqueda por tiempo es instantánea. config.preload=false lo desactiva. */
+const BLOBS = new Map();
+async function preloadMedia(timeoutMs = 8000) {
+  if (C.preload === false) return;
+  const srcs = new Set([C.audio?.src].filter(Boolean));
+  for (const m of C.media || []) if (m.type === "video") {
+    srcs.add(m.src);
+    for (const g of Object.values(m.graded || {})) if (g.src) srcs.add(g.src);
+  }
+  const jobs = [...srcs].map(async s => {
+    try { const r = await fetch(encodeURI(s)); if (r.ok) BLOBS.set(s, URL.createObjectURL(await r.blob())); } catch (e) {}
+  });
+  await Promise.race([Promise.all(jobs), new Promise(r => __nbSetTimeout(r, timeoutMs))]);
+}
+const srcURL = s => BLOBS.get(s) || encodeURI(s);
+function mediaSpec(sc, k) {
+  const list = C.media || [];
+  if (!list.length) return null;
+  const ref = (sc.slot.media || [])[k];
+  if (typeof ref === "number") return list[ref % list.length];
+  if (typeof ref === "string") { const m = list.find(x => x.id === ref); if (m) return m; }
+  return list[(sc.idx * 2 + k) % list.length];
+}
+/* caja de media recortada; o.filter = key de C.grades (o filtro CSS), o.off = desfase del clip */
+function mbox(X, parent, k, css = {}, o = {}) {
+  let spec = typeof k === "object" ? k : mediaSpec(X.sc, k);
+  const box = div(parent, "mbox", css);
+  if (!spec) return { box, el: div(box, "media") };
+  let filter = o.filter;
+  if (filter && GRADE[filter] !== undefined) {
+    const g = spec.graded && spec.graded[filter];
+    if (g) { spec = { ...spec, src: g.src || spec.src, poster: g.poster || spec.poster }; filter = null; }
+    else filter = GRADE[filter];
+  }
+  let el;
+  if (spec.type === "video") {
+    el = doc.createElement("video");
+    el.muted = true; el.playsInline = true; el.preload = "auto"; el.loop = true;
+    el.src = srcURL(spec.src);
+    X.videos.push({ v: el, spec, off: o.off || 0 });
+  } else { el = doc.createElement("img"); el.src = spec.src; el.decoding = "sync"; }
+  el.className = "media";
+  if (filter) el.style.filter = filter;
+  if (spec.pos) el.style.objectPosition = spec.pos;
+  box.appendChild(el);
+  return { box, el, spec };
+}
+/* Ken Burns: en fotos siempre; en video solo con config.render.kbVideo (escalar
+   un <video> en cada cuadro cuesta mucho en headless: 45 → 26 fps) */
+function kenBurns(X, m, from, to) {
+  if (m.spec && m.spec.type === "video" && !C.render?.kbVideo) { m.el.style.transform = from; return; }
+  X.T(m.el, "transform", from).to(0, X.dur, to);
+}
+function syncVideos(X, t, scrub) {
+  for (const it of X.videos) {
+    const v = it.v, d = v.duration, rate = it.spec.rate || 1;
+    let e = (it.spec.start || 0) + (t + it.off) * rate;
+    if (isFinite(d) && d > 0.3) e = e % (d - 0.08);
+    if (scrub) {
+      if (!v.paused) v.pause();
+      if (Math.abs(v.currentTime - e) > 0.02) { try { v.currentTime = e; } catch (err) {} }
+    } else {
+      v.playbackRate = rate;
+      if (v.paused) v.play().catch(() => {});
+      if (Math.abs(v.currentTime - e) > 0.35) { try { v.currentTime = e; } catch (err) {} }
+    }
+  }
+}
+
+/* ---------------- escenas: construir, montar, buscar ---------------- */
+let vw = innerWidth, vh = innerHeight;
+function buildScene(sc) {
+  const W = vw, H = vh;
+  const root = div(null, "scene", { width: W + "px", height: H + "px" });
+  const tracks = [];
+  const X = {
+    sc, root, W, H, u: Math.min(W, H) / 720, dur: sc.dur, videos: [],
+    r: mulberry32(((C.seed || 7) * 7919 + sc.idx * 104729) >>> 0),
+    T: (el, prop, init, discrete) => { const t = new Track(el, prop, init, discrete); tracks.push(t); return t; }
+  };
+  X.lines = linesOf(sc);
+  X.pend = [];
+  try { B[sc.type](sc, X); }
+  catch (e) { console.warn(`[${NAME}] escena falló`, sc.type, e); }
+  /* piezas que necesitan medir el texto ya maquetado (garabatos, marcos):
+     se monta la escena oculta un instante, se mide y se desmonta */
+  if (X.pend.length) {
+    root.style.visibility = "hidden"; stage.appendChild(root);
+    for (const f of X.pend) { try { f(); } catch (e) { console.warn(`[${NAME}] medición falló`, e); } }
+    stage.removeChild(root); root.style.visibility = "";
+  }
+  if (C.texture?.grain > 0) div(root, "grain", { backgroundImage: GRAIN, opacity: C.texture.grain,
+    backgroundPosition: `${Math.floor(X.r() * 192)}px ${Math.floor(X.r() * 192)}px` });
+  for (const t of tracks) { t.compile(); t.seek(0); }
+  return {
+    root, sc,
+    seek(t, scrub) { for (const tr of tracks) tr.seek(t); syncVideos(X, t, scrub); },
+    dispose() { for (const it of X.videos) { it.v.pause(); it.v.removeAttribute("src"); it.v.load(); } root.remove(); }
+  };
+}
+
+const stage = $("stage"), audio = $("audio"), hud = $("hud");
+let rafT0 = null, rafNow = 0, started = false, forced = FROZEN;
+const clock = () => forced != null ? forced
+  : (!audio.paused && audio.currentTime > 0.05) ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+async function begin() {
+  if (started || FROZEN != null) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+let scenes = [], curIdx = -1, cur = null, nextBuilt = null, prev = null, prevIdx = -1;
+/* solapamiento entre escenas (config.transition.overlapSec, def. 0 = corte seco):
+   la escena anterior sigue viva DEBAJO de la nueva durante ese tiempo, así la
+   transición de entrada (enterFx) se ve contra la imagen real de la anterior */
+const OVERLAP = () => Math.max(0, C.transition?.overlapSec ?? 0);
+function sceneAt(t) {
+  let lo = 0, hi = scenes.length - 1, ans = -1;
+  while (lo <= hi) { const m = (lo + hi) >> 1; if (scenes[m].t0 <= t) { ans = m; lo = m + 1; } else hi = m - 1; }
+  return ans;
+}
+function mount(i) {
+  const old = cur, oldIdx = curIdx;
+  cur = (nextBuilt && nextBuilt.i === i) ? nextBuilt.b : buildScene(scenes[i]);
+  nextBuilt = null;
+  stage.appendChild(cur.root);
+  curIdx = i;
+  if (prev && prevIdx !== i - 1) { prev.dispose(); prev = null; prevIdx = -1; }
+  if (old && old !== prev) {
+    if (OVERLAP() > 0 && oldIdx === i - 1 && !prev) { prev = old; prevIdx = oldIdx; }
+    else old.dispose();
+  }
+  if (i + 1 < scenes.length) {
+    const j = i + 1;
+    __nbSetTimeout(() => { if (curIdx === i && !nextBuilt) nextBuilt = { i: j, b: buildScene(scenes[j]) }; }, 0);
+  }
+}
+function render(t) {
+  const i = sceneAt(t);
+  if (i < 0) return;
+  if (i !== curIdx) mount(i);
+  const ov = OVERLAP(), dt = t - scenes[i].t0;
+  if (ov > 0 && i > 0 && dt < ov) {
+    if (!prev) { prev = buildScene(scenes[i - 1]); prevIdx = i - 1; stage.insertBefore(prev.root, cur.root); }
+    /* la anterior sigue corriendo su "cola" (t > dur): sus pistas pueden animar la salida */
+    prev.seek(t - scenes[i - 1].t0, forced != null);
+  } else if (prev) { prev.dispose(); prev = null; prevIdx = -1; }
+  cur.seek(ov > 0 ? t - scenes[i].t0 : Math.min(t, scenes[i].t1) - scenes[i].t0, forced != null);
+  if (DEBUG) { const s = scenes[i]; hud.textContent = `t ${t.toFixed(2)} · #${i} ${s.type} · "${s.seg.text}"`; }
+}
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  render(clock());
+  if (FROZEN == null) requestAnimationFrame(frame);
+}
+
+async function boot() {
+  if (DEBUG) hud.style.display = "block";
+  if (QS.get("headless") === "1") doc.body.classList.add("headless");
+  const fontsReady = Promise.race([Promise.all(FONT_LOADS.map(f => doc.fonts.load(f))).then(() => doc.fonts.ready), new Promise(r => __nbSetTimeout(r, 3000))]);
+  /* primero media + guion + fuentes; el audio (el reloj) arranca recién con
+     todo listo, así el primer cuadro de la escena 1 coincide con t = 0 */
+  const [segs] = await Promise.all([loadScript(), fontsReady, preloadMedia()]);
+  audio.src = srcURL(C.audio.src);
+  const aDur = await new Promise(res => {
+    if (isFinite(audio.duration) && audio.duration > 0) return res(audio.duration);
+    audio.addEventListener("loadedmetadata", () => res(audio.duration), { once: true });
+    __nbSetTimeout(() => res(NaN), 2500);
+  });
+  if (segs.length) {
+    const last = segs[segs.length - 1];
+    const dur = isFinite(aDur) && aDur > 0 ? aDur : (last.end || last.start + 3);
+    measCache.clear();
+    /* una plantilla puede traer su propia línea de tiempo (las de letra de canción) */
+    scenes = (typeof makeTimeline === "function" ? makeTimeline : buildTimeline)(segs, dur);
+  }
+  addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; measCache.clear(); nextBuilt = null; if (prev) { prev.dispose(); prev = null; prevIdx = -1; } if (cur) { cur.dispose(); cur = null; curIdx = -1; } });
+  window.__promo = {
+    scenes: () => scenes,
+    seek(t) { forced = t; render(t); return new Promise(res => { const vs = cur ? [...cur.root.querySelectorAll("video")] : [];
+      Promise.all(vs.map(v => new Promise(r => { if (v.readyState >= 2 && !v.seeking) r(); else { v.addEventListener("seeked", r, { once: true }); v.addEventListener("loadeddata", r, { once: true }); __nbSetTimeout(r, 1500); } })))
+        .then(() => requestAnimationFrame(() => requestAnimationFrame(res))); }); },
+    release() { forced = null; }
+  };
+  requestAnimationFrame(frame);
+  if (FROZEN == null) begin();
+}
+/* ===================== FIN NÚCLEO COMÚN ===================== */
+
+/* ====================== ESCENAS · LYRICS-grunge-rojo ======================
+   Réplica del lyric video grunge de rap: metraje en blanco y negro duro con
+   niebla y bordes de papel rasgado, letra condensada gastada (máscara de
+   desgaste) en blanco y rojo, fantasmas con desenfoque de movimiento, filas
+   repetidas en grilla, palabras gigantes que se aplastan contra la cámara y
+   garabatos de tiza blanca (círculo, subrayado, flechas, tachón, corona,
+   rayo, cruces) que se dibujan solos. Barridos de "mancha" entre escenas.
+   La letra viene de lyrics.json (Whisper); el mazo de escenas de config.layouts. */
+const P = C.palette;
+const U = s => String(s).toUpperCase();
+const J = ws => ws.map(w => w.text).join(" ");
+const show = (X, el, t) => { if (t > 0.001) X.T(el, "visibility", "hidden", true).set(t, "visible"); };
+function rows(ws, n) {
+  if (n <= 1 || ws.length <= 1) return [ws];
+  const total = J(ws).length, out = [[]]; let acc = 0;
+  for (const w of ws) {
+    if (out[out.length - 1].length && acc >= total * out.length / n && out.length < n) out.push([]);
+    out[out.length - 1].push(w); acc += w.text.length + 1;
+  }
+  return out.filter(r => r.length);
+}
+
+/* ---- máscara de desgaste para la letra (manchas y rayas transparentes) ---- */
+const DISTRESS = (() => {
+  const cv = doc.createElement("canvas"); cv.width = cv.height = 256;
+  const cx = cv.getContext("2d");
+  cx.fillStyle = "#000"; cx.fillRect(0, 0, 256, 256);
+  cx.globalCompositeOperation = "destination-out";
+  for (let i = 0; i < 900; i++) { cx.fillStyle = `rgba(0,0,0,${0.4 + texRng() * 0.6})`; const s = 0.6 + texRng() * 2.2; cx.fillRect(texRng() * 256, texRng() * 256, s, s); }
+  for (let i = 0; i < 14; i++) { cx.strokeStyle = `rgba(0,0,0,${0.3 + texRng() * 0.5})`; cx.lineWidth = 0.6 + texRng(); cx.beginPath(); const x = texRng() * 256, y = texRng() * 256; cx.moveTo(x, y); cx.lineTo(x + (texRng() - 0.5) * 90, y + (texRng() - 0.5) * 12); cx.stroke(); }
+  return `url(${cv.toDataURL()})`;
+})();
+doc.documentElement.style.setProperty("--distress", DISTRESS);
+
+/* ---------------- fondo: metraje B/N + niebla + papel rasgado ---------------- */
+function jagged(w, h, amp, r, top) {
+  const pts = [], n = Math.ceil(w / 14);
+  for (let i = 0; i <= n; i++) pts.push([i / n * w, (top ? h : 0) + (top ? -1 : 1) * (amp * (0.3 + r() * 0.7))]);
+  return top ? `polygon(0px 0px, ${w}px 0px, ${pts.reverse().map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(", ")})`
+             : `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${(h - y).toFixed(1)}px`).join(", ")}, ${w}px ${h}px, 0px ${h}px)`;
+}
+function tornEdge(X, L, top, color, hf) {
+  const { W, H, r } = X, h = hf * H;
+  return div(L, "patch", { left: 0, top: (top ? 0 : H - h) + "px", width: W + "px", height: h + "px", background: color, clipPath: jagged(W, h, h * 0.35, r, top) });
+}
+function bgLayer(X) {
+  const { W, H, r, sc } = X;
+  const L = div(X.root, "lay", { background: P.black });
+  const m = mbox(X, L, 0, { left: 0, top: 0, width: W + "px", height: H + "px" }, { filter: "bw", off: r() * 4 });
+  kenBurns(X, m, "scale(1.04)", "scale(1.1)");
+  /* niebla: dos manchas claras que derivan */
+  for (let i = 0; i < 2; i++) {
+    const f = div(L, "lay", { background: `radial-gradient(ellipse at ${20 + r() * 60}% ${20 + r() * 60}%, rgba(235,235,235,${0.28 + r() * 0.22}) 0%, transparent 45%)` });
+    X.T(f, "transform", "translateX(0px)").to(0, X.dur, `translateX(${(r() - 0.5) * 0.2 * W}px)`);
+  }
+  div(L, "lay", { background: "radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0,0,0,0.6) 100%)" });
+  const e = r();
+  if (e < 0.35) tornEdge(X, L, true, r() < 0.5 ? P.white : P.black, 0.12 + r() * 0.08);
+  else if (e < 0.7) tornEdge(X, L, false, r() < 0.5 ? P.white : P.black, 0.12 + r() * 0.08);
+  return L;
+}
+/* barrido de "mancha" al entrar: barras estiradas con desenfoque, 0.14 s */
+function smear(X, L) {
+  if (X.sc.idx === 0 || X.r() < 0.35) return;
+  const { W, H, r } = X, g = div(L, "lay", { visibility: "hidden" });
+  for (let i = 0; i < 5; i++)
+    div(g, "patch", { left: -0.1 * W + "px", top: r() * H + "px", width: 1.2 * W + "px", height: (0.03 + r() * 0.12) * H + "px",
+      background: r() < 0.4 ? P.red : `rgba(240,240,240,${0.5 + r() * 0.4})`, filter: "url(#mbx3)" });
+  X.T(g, "visibility", "visible", true).set(0.14, "hidden");
+}
+
+/* ---------------- texto ---------------- */
+function word(X, L, s, o) {
+  const t = tx(L, U(s), { cls: o.cls || "cd", fs: o.fs, x: o.x, y: o.y, ax: o.ax ?? 0.5, ay: o.ay ?? 0.5, color: o.color || P.white, ls: o.ls, split: o.split });
+  if (o.distress !== false) t.el.classList.add("gr");
+  return t;
+}
+/* línea con palabras en su tiempo */
+function line(X, L, ws, o) {
+  const t = word(X, L, J(ws), { ...o, split: "words" });
+  t.words.forEach((s, i) => show(X, s, Math.max(0.02, ws[i]?.rt ?? 0)));
+  return t;
+}
+/* golpe: entra grande y desenfocado, se asienta; fantasma detrás en rojo/blanco */
+function slamIn(X, t, at, from = 1.35) {
+  X.T(t.el, "transform", `scale(${from})`).to(at, 0.2, "scale(1)", EASE_OUT);
+  blurPass(X.T(t.el, "filter", "none", true), at, 0.18, X.r() < 0.5 ? "x" : "y");
+  show(X, t.box, at);
+}
+function ghost(X, L, s, o, at, color) {
+  const g = word(X, L, s, { ...o, color, distress: false });
+  g.el.style.opacity = "0.55"; g.el.style.filter = "url(#mbx2)";
+  X.T(g.el, "transform", `translateX(${(X.r() < 0.5 ? -1 : 1) * 0.04 * X.W}px)`).to(at, X.dur, `translateX(${(X.r() - 0.5) * 0.02 * X.W}px)`);
+  show(X, g.box, at);
+  return g;
+}
+
+/* ---------------- garabatos de tiza (SVG que se dibuja) ---------------- */
+function doodle(X, L, kind, b, t0, d = 0.35) {
+  const { W, H, u, r } = X;
+  const s = doc.createElementNS(SVGNS, "svg");
+  s.setAttribute("width", W); s.setAttribute("height", H); s.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  s.style.cssText = "position:absolute;left:0;top:0;overflow:visible;pointer-events:none";
+  const j = a => (r() - 0.5) * a;
+  const cx = b.x + b.w / 2, cy = b.y + b.h / 2;
+  let paths = [];
+  if (kind === "circle") {
+    const pts = []; for (let i = 0; i <= 40; i++) { const a = -0.4 + i / 40 * Math.PI * 2.15; pts.push([cx + Math.cos(a) * (b.w * 0.62 + j(8 * u)), cy + Math.sin(a) * (b.h * 0.85 + j(6 * u))]); }
+    paths.push("M" + pts.map(p => p.map(v => v.toFixed(1)).join(" ")).join(" L"));
+  } else if (kind === "underline") {
+    paths.push(`M${b.x - 10 * u} ${b.y + b.h * 1.08} Q ${cx} ${b.y + b.h * 1.2 + j(10 * u)} ${b.x + b.w + 14 * u} ${b.y + b.h * 1.02}`);
+  } else if (kind === "strike") {
+    paths.push(`M${b.x - 8 * u} ${cy + j(6 * u)} L ${b.x + b.w + 8 * u} ${cy + j(8 * u)}`);
+  } else if (kind === "arrows") {
+    for (const [x, dir] of [[b.x - 0.06 * W, -1], [b.x + b.w + 0.06 * W, 1]]) {
+      const y0 = cy + dir * 0.12 * H, y1 = cy - dir * 0.12 * H;
+      paths.push(`M${x} ${y0} L ${x + j(4 * u)} ${y1}`, `M${x - 14 * u} ${y1 + dir * 16 * u} L ${x} ${y1} L ${x + 14 * u} ${y1 + dir * 16 * u}`);
+    }
+  } else if (kind === "crown") {
+    const x = b.x + b.w * 0.1, y = b.y - 0.05 * H, w = 0.06 * W, h = 0.05 * H;
+    paths.push(`M${x} ${y + h} L ${x} ${y} L ${x + w * 0.3} ${y + h * 0.6} L ${x + w * 0.5} ${y - h * 0.1} L ${x + w * 0.7} ${y + h * 0.6} L ${x + w} ${y} L ${x + w} ${y + h} Z`);
+  } else if (kind === "bolt") {
+    const x = b.x + b.w * (0.3 + r() * 0.4), y = b.y - 0.02 * H, h = b.h * 1.2;
+    paths.push(`M${x + 20 * u} ${y} L ${x - 18 * u} ${y + h * 0.55} L ${x + 10 * u} ${y + h * 0.5} L ${x - 20 * u} ${y + h}`);
+  } else if (kind === "cross") {
+    for (let i = 0; i < 4; i++) { const x = b.x + r() * b.w, y = b.y - 0.1 * H + r() * (b.h + 0.2 * H), k = (8 + r() * 10) * u; paths.push(`M${x - k} ${y - k} L ${x + k} ${y + k}`, `M${x + k} ${y - k} L ${x - k} ${y + k}`); }
+  } else if (kind === "box") {
+    const p = 14 * u;
+    paths.push(`M${b.x - p} ${b.y - p + j(6 * u)} L ${b.x + b.w + p} ${b.y - p} L ${b.x + b.w + p + j(6 * u)} ${b.y + b.h + p} L ${b.x - p} ${b.y + b.h + p + j(6 * u)} Z`);
+  }
+  s.innerHTML = paths.map(d0 => `<path d="${d0}" fill="none" stroke="${P.chalk}" stroke-width="${Math.max(2, 5 * u)}" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>`).join("");
+  L.appendChild(s);
+  s.style.filter = "url(#chalk)";
+  [...s.querySelectorAll("path")].forEach((p, i) => X.T(p, "strokeDashoffset", "1").to(t0 + i * 0.06, d, "0", EASE_OUT));
+  return s;
+}
+fx.insertAdjacentHTML("beforeend", `<filter id="chalk"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3"/></filter>`);
+const box = (X, t) => { const r = t.el.getBoundingClientRect(), R = X.root.getBoundingClientRect(); return { x: r.left - R.left, y: r.top - R.top, w: r.width, h: r.height }; };
+/* el tamaño real sale del layout: medimos en el cuadro siguiente al montaje */
+function later(X, t, fn) { X.pend.push(() => fn(box(X, t))); }
+
+const B = {};
+
+B.slam = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words, s = J(ws);
+  const red = X.r() < 0.45, fs = fit(U(s), "cd", 0.01, 0.86 * W, 0.46 * H);
+  const o = { cls: "cd", fs, x: W / 2, y: 0.5 * H, color: red ? P.red : P.white, ls: 0.01 };
+  ghost(X, L, s, o, Math.max(0.02, ws[0].rt), red ? P.white : P.red);
+  const t = line(X, L, ws, o);
+  slamIn(X, t, Math.max(0.02, ws[0].rt));
+  const k = ["underline", "strike", "cross", "none"][Math.floor(X.r() * 4)];
+  if (k !== "none") later(X, t, b => doodle(X, L, k, b, Math.max(0.2, ws[ws.length - 1].rt + 0.1)));
+  smear(X, L);
+};
+
+B.twoTone = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words;
+  const [a, b] = rows(ws, 2);
+  const fa = fit(U(J(a)), "cd", 0.01, 0.8 * W, 0.13 * H);
+  line(X, L, a, { cls: "cd", fs: fa, x: W / 2, y: 0.3 * H, color: P.red });
+  if (b) {
+    const thin = X.r() < 0.5 && J(b).length <= 12;
+    const fb = fit(U(J(b)), thin ? "th" : "cd", thin ? 0.12 : 0.01, 0.78 * W, 0.34 * H);
+    const t = line(X, L, b, { cls: thin ? "th" : "cd", fs: fb, x: W / 2, y: 0.62 * H, color: P.white, ls: thin ? 0.12 : 0.01 });
+    slamIn(X, t, Math.max(0.03, b[0].rt), 1.2);
+    later(X, t, bx => doodle(X, L, X.r() < 0.5 ? "crown" : "bolt", bx, Math.max(0.2, b[0].rt + 0.15)));
+  }
+  smear(X, L);
+};
+
+B.circle = (sc, X) => {
+  const { W, H, u } = X, L = bgLayer(X), ws = sc.words, hi = heroIdx(ws);
+  const hero = ws[hi].text, fs = fit(U(hero), "cd", 0.01, 0.46 * W, 0.26 * H);
+  const t = word(X, L, hero, { cls: "cd", fs, x: W / 2, y: 0.46 * H, color: P.red });
+  slamIn(X, t, Math.max(0.03, ws[hi].rt), 1.15);
+  const rest = ws.filter((_, i) => i !== hi);
+  if (rest.length) line(X, L, rest, { cls: "cd", fs: Math.min(0.08 * H, fit(U(J(rest)), "cd", 0.02, 0.6 * W, 1e9)), x: W / 2, y: 0.46 * H + fs * 0.62, color: P.white, ls: 0.02 });
+  later(X, t, b => doodle(X, L, "circle", b, Math.max(0.1, ws[hi].rt + 0.12), 0.4));
+  smear(X, L);
+};
+
+B.spacedWide = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words, hi = heroIdx(ws);
+  const hero = U(ws[hi].text).split("").join(" "), rest = ws.filter((_, i) => i !== hi);
+  const fs = fit(hero, "ex", 0.25, 0.8 * W, 0.16 * H);
+  const t = word(X, L, hero, { cls: "ex", fs, x: W / 2, y: 0.58 * H, color: P.white, ls: 0.25 });
+  show(X, t.box, Math.max(0.03, ws[hi].rt));
+  X.T(t.el, "letterSpacing", "0.7em").to(Math.max(0.03, ws[hi].rt), 0.35, "0.25em", EASE_OUT);
+  if (rest.length) {
+    const fr = fit(U(J(rest)), "cd", 0.02, 0.5 * W, 0.2 * H);
+    const r1 = line(X, L, rest, { cls: "cd", fs: fr, x: W / 2, y: 0.58 * H - fs * 0.5 - fr * 0.45, color: P.red, ls: 0.02 });
+  }
+  later(X, t, b => doodle(X, L, "arrows", b, Math.max(0.2, ws[hi].rt + 0.1)));
+  smear(X, L);
+};
+
+B.grid = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words, s = U(J(ws));
+  const cols = s.length <= 10 ? 3 : 2, rw = 3, cw = W / cols, rh = H / rw;
+  const fs = fit(s, "cd", 0.01, cw * 0.92, rh * 0.8);
+  let k = 0;
+  for (let r = 0; r < rw; r++) for (let c = 0; c < cols; c++, k++) {
+    const t = word(X, L, s, { cls: "cd", fs, x: (c + 0.5) * cw, y: (r + 0.5) * rh, color: (r + c) % 3 === 1 ? P.red : P.white, ls: 0.01 });
+    const at = Math.max(0.02, ws[0].rt) + k * 0.035;
+    show(X, t.box, at);
+    X.T(t.el, "transform", "scaleX(2.2)").to(at, 0.2, "scaleX(1)", EASE_OUT);
+    blurPass(X.T(t.el, "filter", "none", true), at, 0.18, "x");
+  }
+};
+
+B.stackCols = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words;
+  const a = ws.slice(0, 1), b = ws.slice(1);
+  const n = 4, lh = 0.19 * H, y0 = 0.5 * H - (n - 1) * lh / 2;
+  const fa = Math.min(lh * 0.95, fit(U(J(a)), "ex", 0, 0.24 * W, 1e9));
+  const fb = b.length ? Math.min(lh * 0.95, fit(U(J(b)), "cd", 0.01, 0.56 * W, 1e9)) : 0;
+  for (let i = 0; i < n; i++) {
+    const at = Math.max(0.02, ws[0].rt) + i * 0.06;
+    const ta = word(X, L, J(a), { cls: "ex", fs: fa, x: 0.3 * W, y: y0 + i * lh, ax: 1, color: P.white });
+    show(X, ta.box, at);
+    if (b.length) { const tb = word(X, L, J(b), { cls: "cd", fs: fb, x: 0.33 * W, y: y0 + i * lh, ax: 0, color: P.red, ls: 0.01 }); show(X, tb.box, Math.max(at, b[0].rt)); }
+  }
+};
+
+B.torn = (sc, X) => {
+  const { W, H, r } = X, L = bgLayer(X), ws = sc.words;
+  const band = div(L, "patch", { left: 0, top: 0.22 * H + "px", width: W + "px", height: 0.56 * H + "px", background: P.paper });
+  band.style.clipPath = `polygon(${Array.from({ length: 41 }, (_, i) => `${i / 40 * W}px ${(0.02 + r() * 0.05) * H}px`).join(", ")}, ${Array.from({ length: 41 }, (_, i) => `${(40 - i) / 40 * W}px ${(0.51 + r() * 0.05) * H}px`).join(", ")})`;
+  X.T(band, "transform", "scaleY(0)").to(0, 0.16, "scaleY(1)", EASE_OUT);
+  const ls = rows(ws, Math.min(3, Math.max(1, Math.ceil(ws.length / 2))));
+  const fs = Math.min(...ls.map(l => fit(U(J(l)), "ex", 0.02, 0.78 * W, 0.14 * H)));
+  const y0 = 0.5 * H - (ls.length - 1) * fs * 0.5;
+  ls.forEach((l, i) => line(X, L, l, { cls: "ex", fs, x: W / 2, y: y0 + i * fs, color: i % 2 ? P.red : P.ink, ls: 0.02 }));
+};
+
+B.vertical = (sc, X) => {
+  const { W, H, u } = X, L = bgLayer(X), ws = sc.words, hi = heroIdx(ws);
+  const chars = U(ws[hi].text).split(""), n = chars.length, fs = Math.min(0.16 * H, (0.86 * H) / n);
+  chars.forEach((c, i) => {
+    const t = word(X, L, c, { cls: "cd", fs, x: W / 2, y: 0.5 * H + (i - (n - 1) / 2) * fs * 0.95, color: P.red });
+    const at = Math.max(0.02, ws[hi].rt) + i * 0.05;
+    show(X, t.box, at); X.T(t.el, "transform", "translateY(-60%)").to(at, 0.15, "translateY(0%)", EASE_OUT);
+  });
+  const rest = ws.filter((_, i) => i !== hi);
+  if (rest.length) line(X, L, rest, { cls: "ex", fs: 0.07 * H, x: W / 2, y: 0.5 * H, color: P.white, ls: 0.4 });
+  smear(X, L);
+};
+
+B.frameBox = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words;
+  const [a, b] = rows(ws, 2);
+  const fa = fit(U(J(a)), "cd", 0.01, 0.72 * W, 0.16 * H);
+  const ta = line(X, L, a, { cls: "cd", fs: fa, x: W / 2, y: 0.36 * H, color: P.red, ls: 0.01 });
+  if (b) line(X, L, b, { cls: "cd", fs: fa * 0.6, x: W / 2 - 0.3 * W, y: 0.36 * H + fa * 0.85, ax: 0, color: P.white, ls: 0.02 });
+  later(X, ta, bx => doodle(X, L, "box", { ...bx, h: bx.h * (b ? 1.9 : 1) }, Math.max(0.1, ws[0].rt + 0.1), 0.5));
+  smear(X, L);
+};
+
+B.stack3 = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words;
+  const ls = rows(ws, Math.min(3, ws.length));
+  const fs = Math.min(...ls.map(l => fit(U(J(l)), "cd", 0.01, 0.78 * W, 0.24 * H)));
+  const y0 = 0.5 * H - (ls.length - 1) * fs * 0.48;
+  ls.forEach((l, i) => {
+    const t = line(X, L, l, { cls: "cd", fs, x: 0.1 * W, y: y0 + i * fs * 0.96, ax: 0, color: i === 1 ? P.red : P.white, ls: 0.01 });
+    X.T(t.el, "transform", "translateX(-8%)").to(Math.max(0, l[0].rt), 0.22, "translateX(0%)", EASE_OUT);
+  });
+};
+
+B.blurGiant = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words, s = J(ws);
+  const fs = fit(U(s), "cd", 0.01, 0.94 * W, 0.7 * H), o = { cls: "cd", fs, x: W / 2, y: 0.5 * H, color: P.red, ls: 0.01 };
+  for (let i = 0; i < 2; i++) ghost(X, L, s, o, Math.max(0.02, ws[0].rt), P.red);
+  const t = line(X, L, ws, o);
+  t.el.style.mixBlendMode = "screen";
+  X.T(t.el, "filter", "url(#mbx3)", true).set(Math.max(0.02, ws[0].rt) + 0.12, "url(#mbx1)").set(Math.max(0.02, ws[0].rt) + 0.26, "none");
+  X.T(t.el, "transform", "scale(1.12)").to(0, X.dur, "scale(1)");
+};
+
+B.strike = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), ws = sc.words;
+  const [a, b] = rows(ws, 2);
+  const fa = fit(U(J(a)), "cd", 0.02, 0.62 * W, 0.12 * H);
+  const ta = line(X, L, a, { cls: "cd", fs: fa, x: W / 2, y: 0.4 * H, color: P.red, ls: 0.02 });
+  later(X, ta, bx => doodle(X, L, "strike", bx, Math.max(0.15, a[a.length - 1].rt + 0.1), 0.25));
+  if (b) { const fb = fit(U(J(b)), "cd", 0.01, 0.7 * W, 0.2 * H); const tb = line(X, L, b, { cls: "cd", fs: fb, x: W / 2, y: 0.4 * H + fa * 0.6 + fb * 0.5, color: P.white, ls: 0.01 }); slamIn(X, tb, Math.max(0.05, b[0].rt), 1.15); }
+  smear(X, L);
+};
+
+B.outro = (sc, X) => {
+  const { W, H } = X, L = bgLayer(X), [a, b, c] = sc.words;
+  if (a) { const t = word(X, L, a.text, { cls: "cd", fs: 0.2 * H, x: W / 2, y: 0.42 * H, color: P.red }); slamIn(X, t, a.rt); later(X, t, bx => doodle(X, L, "crown", bx, a.rt + 0.3)); }
+  if (b) { const t = word(X, L, b.text, { cls: "cd", fs: 0.09 * H, x: W / 2, y: 0.58 * H, color: P.white, ls: 0.05 }); show(X, t.box, b.rt); }
+  if (c) { const t = word(X, L, c.text, { cls: "ex", fs: 0.035 * H, x: W / 2, y: 0.68 * H, color: P.white, ls: 0.2 }); show(X, t.box, c.rt); later(X, t, bx => doodle(X, L, "underline", bx, c.rt + 0.2)); }
+};
+B.intro = B.slam;
+
+const FITS = {
+  slam: sc => J(sc.words).length <= 18,
+  twoTone: sc => sc.words.length >= 2,
+  circle: sc => sc.words[heroIdx(sc.words)].text.length <= 9,
+  spacedWide: sc => sc.words[heroIdx(sc.words)].text.length <= 7,
+  grid: sc => J(sc.words).length <= 16,
+  stackCols: sc => sc.words.length >= 2 && sc.words[0].text.length <= 5,
+  torn: sc => sc.words.length >= 2,
+  vertical: sc => sc.words[heroIdx(sc.words)].text.length <= 6,
+  frameBox: sc => sc.words.length >= 2,
+  stack3: sc => sc.words.length >= 3,
+  blurGiant: sc => J(sc.words).length <= 12,
+  strike: sc => sc.words.length >= 2
+};
+function makeTimeline(segs, dur) { return lyricTimeline(segs, dur, FITS); }
+
+boot();
+</script>
+</body>
+</html>

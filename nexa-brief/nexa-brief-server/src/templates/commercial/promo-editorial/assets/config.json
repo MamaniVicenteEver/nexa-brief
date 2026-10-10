@@ -1,0 +1,234 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Promo editorial de una final deportiva: blanco y negro puro sobre papel arrugado, grotesca extendida pesada, bloques negros que barren la pantalla, nombres gigantes en contorno, recortes de jugadores con placa de nombre, versus de técnicos y cierre de fecha sobre negro. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap"
+      },
+      "palette": {
+        "paper": "#ECECEA",
+        "black": "#050505",
+        "white": "#FBFBFB"
+      },
+      "grades": {
+        "bw": {
+          "type": "duo",
+          "dark": "#0A0A0A",
+          "light": "#EFEFEF",
+          "contrast": 1.3
+        }
+      },
+      "brand": {
+        "left": "Leones",
+        "right": "Halcones",
+        "round": "Gran Final",
+        "name": "Liga Nexa",
+        "logo": ""
+      },
+      "media": [
+        {
+          "id": "stadium",
+          "type": "video",
+          "src": "assets/media/stadium.mp4",
+          "poster": "assets/media/stadium-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/stadium.bw.mp4",
+              "poster": "assets/media/graded/stadium-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "match",
+          "type": "video",
+          "src": "assets/media/match.mp4",
+          "poster": "assets/media/match-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/match.bw.mp4",
+              "poster": "assets/media/graded/match-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "trophy",
+          "type": "video",
+          "src": "assets/media/trophy.mp4",
+          "poster": "assets/media/trophy-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/trophy.bw.mp4",
+              "poster": "assets/media/graded/trophy-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "team-win",
+          "type": "video",
+          "src": "assets/media/team-win.mp4",
+          "poster": "assets/media/team-win-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/team-win.bw.mp4",
+              "poster": "assets/media/graded/team-win-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "coach",
+          "type": "video",
+          "src": "assets/media/coach.mp4",
+          "poster": "assets/media/coach-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/coach.bw.mp4",
+              "poster": "assets/media/graded/coach-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "soccer",
+          "type": "video",
+          "src": "assets/media/soccer.mp4",
+          "poster": "assets/media/soccer-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/soccer.bw.mp4",
+              "poster": "assets/media/graded/soccer-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "coach-2",
+          "type": "image",
+          "src": "assets/media/coach-2.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/coach-2.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "team-win-2",
+          "type": "image",
+          "src": "assets/media/team-win-2.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/team-win-2.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "soccer-2",
+          "type": "image",
+          "src": "assets/media/soccer-2.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/soccer-2.bw.jpg"
+            }
+          }
+        }
+      ],
+      "scenes": [
+        {
+          "type": "title"
+        },
+        {
+          "type": "mediaWord",
+          "media": [
+            "trophy"
+          ],
+          "cover": false
+        },
+        {
+          "type": "blocks"
+        },
+        {
+          "type": "mediaWord",
+          "media": [
+            "match"
+          ],
+          "coverFrom": "right"
+        },
+        {
+          "type": "nameCut"
+        },
+        {
+          "type": "mediaWord",
+          "media": [
+            "stadium"
+          ],
+          "cover": false
+        },
+        {
+          "type": "nameCut",
+          "bg": "black"
+        },
+        {
+          "type": "outlineName"
+        },
+        {
+          "type": "player",
+          "media": [
+            "team-win"
+          ],
+          "side": "left"
+        },
+        {
+          "type": "player",
+          "media": [
+            "soccer"
+          ],
+          "side": "right"
+        },
+        {
+          "type": "assemble"
+        },
+        {
+          "type": "versus",
+          "media": [
+            "coach",
+            "coach-2"
+          ]
+        },
+        {
+          "type": "bigNumber"
+        },
+        {
+          "type": "stack",
+          "align": "center"
+        },
+        {
+          "type": "stack",
+          "align": "left",
+          "y": 0.28
+        },
+        {
+          "type": "stack",
+          "align": "right",
+          "small": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "type": "logo"
+        }
+      ],
+      "texture": {
+        "grain": 0.05
+      },
+      "debug": {
+        "enabled": false
+      },
+      "seed": 21
+    }
+  ]
+}

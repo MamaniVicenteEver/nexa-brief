@@ -33,11 +33,45 @@ from src.modules import (
 
 logger = structlog.get_logger(__name__)
 
+# JobStage en que deja el Job cada stage al terminar bien. Es lo que permite
+# retomar (`resume=True`): el orden de los stages cambia según la rama (en
+# config_driven_template resource_fetcher va antes que visual_designer), así
+# que no alcanza con comparar el orden del enum — se busca en la lista REAL de
+# stages de esta corrida cuál produjo `job.stage` y se sigue desde el próximo.
+_STAGE_RESULT: dict[str, JobStage] = {
+    "input_analyzer": JobStage.INPUT_ANALYZED,
+    "visual_designer": JobStage.DESIGN_COMPLETE,
+    "lyrics_transcriber": JobStage.DESIGN_COMPLETE,
+    "resource_fetcher": JobStage.RESOURCES_FETCHED,
+    "prompt_architect": JobStage.PROMPT_BUILT,
+    "html_generator": JobStage.HTML_GENERATED,
+    "video_recorder": JobStage.VIDEO_RECORDED,
+    "result_summarizer": JobStage.SUMMARY_GENERATED,
+    "packager": JobStage.PACKAGED,
+    "social_publisher": JobStage.PUBLISHED,
+}
+
+Stage = tuple[str, Callable[[Job], Awaitable[Job]]]
+
+
+def _remaining_stages(stages: list[Stage], current: JobStage) -> list[Stage]:
+    """Los stages que faltan para un Job que ya llegó a `current`."""
+    if current == JobStage.PENDING:
+        return stages
+    # PUBLISHING = quedó a mitad de publicar: se reintenta social_publisher.
+    if current == JobStage.PUBLISHING:
+        current = JobStage.PACKAGED
+    for index, (name, _) in enumerate(stages):
+        if _STAGE_RESULT.get(name) == current:
+            return stages[index + 1:]
+    raise ValueError(f"No se puede retomar un Job en stage '{current.value}' con estos stages")
+
 
 async def run(
     job: Job,
     on_stage: Callable[[Job], Awaitable[None]] | None = None,
     stop_after: JobStage | None = None,
+    resume: bool = False,
 ) -> Job:
     """Ejecuta el pipeline completo de 8 stages para un video job.
 
@@ -49,9 +83,18 @@ async def run(
     stage — usado por el preview de plantillas para parar en HTML_GENERATED,
     antes de video_recorder/packager (ver `src/presentation/api/routers/templates.py`).
 
+    `resume=True` retoma un Job que ya avanzó (ej. un draft que quedó en
+    HTML_GENERATED, ver `src/core/drafts.py`): saltea los stages ya hechos —
+    sus artifacts viajan en el Job — y sigue con video_recorder → ... →
+    social_publisher. Sin `resume` el Job siempre corre desde el primer stage.
+    Un Job FAILED no se retoma (no se sabe qué quedó a medias): ValueError.
+
     Retorna el Job final (stage=PACKAGED en éxito, FAILED en error, o el
     stage indicado en `stop_after` si se cortó ahí).
     """
+    if resume and job.stage == JobStage.FAILED:
+        raise ValueError(f"Job '{job.job_id}' está FAILED: retomar desde el último stage sano")
+
     # ── Directorio de salida ──────────────────────────────────────────────────
     output_dir = settings.output_dir / job.job_id
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -96,7 +139,7 @@ async def run(
 
     # ── Construcción de la lista de stages (3 ramas) ──────────────────────────
     if niche_cfg.pipeline_type == "config_driven_template":
-        # Plantilla estática (src/templates/<id>/) + config.json (ver src/templates/01-image-bg/).
+        # Plantilla estática registrada en templates.json + config.json.
         # resource_fetcher se adelanta: visual_designer necesita la imagen REAL
         # (ya descargada/provista) para poder analizarla con el Vision Extractor —
         # a diferencia del orden por defecto, donde visual_designer corre primero
@@ -183,6 +226,15 @@ async def run(
         )
     else:
         logger.info("pipeline_publishing_disabled", job_id=job.job_id)
+
+    if resume:
+        stages = _remaining_stages(stages, job.stage)
+        logger.info(
+            "pipeline_resume",
+            job_id=job.job_id,
+            from_stage=job.stage.value,
+            remaining=[name for name, _ in stages],
+        )
 
     tracker = get_or_create_tracker(job.job_id)
     engine = job.input.recorder_engine_override or niche_cfg.recorder_engine

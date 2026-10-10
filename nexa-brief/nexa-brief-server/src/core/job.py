@@ -14,6 +14,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field, model_validator
 
+from src.core.template_inputs import TemplateInputs
+
 
 # ── Stage Enum ────────────────────────────────────────────────────────────────
 
@@ -176,6 +178,9 @@ class JobInput(BaseModel):
     music_source: MusicSource = Field(default_factory=MusicSource)
     video_source: VideoSource | None = None
     song_info: SongInfo | None = None
+    # Medios por slot, textos y brief elegidos en el Estudio / Crear video
+    # (ver src/core/template_inputs.py). None = la plantilla usa sus defaults.
+    template_inputs: TemplateInputs | None = None
     publishing: JobPublishingConfig = Field(default_factory=JobPublishingConfig)
     render_target: str | None = Field(
         default=None,
@@ -271,7 +276,7 @@ class JobArtifacts(BaseModel):
     video_path: Path | None = None                  # solo niches con template.requires_video=True
     video_meta: dict[str, Any] = Field(default_factory=dict)
     video_asset_id: str | None = None                # asset_id resuelto/archivado en data/video_library/
-    # Config-driven pipeline only (Prompt 1 / Prompt 2 — ver src/templates/01-image-bg/)
+    # Config-driven pipeline only (Prompt 1 / Prompt 2 — rutas en templates.json)
     vision_analysis: dict[str, Any] | None = None   # JSON crudo del Vision Extractor (Prompt 1)
     lyrics_json: dict[str, Any] | None = None       # niches lyrics_video_* — ver lyrics_transcriber.py
     template_config: dict[str, Any] | None = None    # == contenido de config.json (Prompt 2)

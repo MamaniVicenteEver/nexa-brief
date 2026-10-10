@@ -168,8 +168,19 @@
       "recorder_engine": "remotion",
       "metadata": {
         "genre": "instrumental / dark ambient",
-        "mood_tags": ["moody", "cinematic", "atmospheric"],
-        "tag_hints": ["background music", "instrumental", "aesthetic", "mood", "ambient", "no copyright music"]
+        "mood_tags": [
+          "moody",
+          "cinematic",
+          "atmospheric"
+        ],
+        "tag_hints": [
+          "background music",
+          "instrumental",
+          "aesthetic",
+          "mood",
+          "ambient",
+          "no copyright music"
+        ]
       },
       "template": {
         "enabled": true,
@@ -258,8 +269,22 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "subject", "bg", "blend", "giantWord", "giantColor", "giantOpacity",
-          "ink", "particles", "glow", "effect", "brand", "track", "audio", "intro", "outro", "seed"
+          "subject",
+          "bg",
+          "blend",
+          "giantWord",
+          "giantColor",
+          "giantOpacity",
+          "ink",
+          "particles",
+          "glow",
+          "effect",
+          "brand",
+          "track",
+          "audio",
+          "intro",
+          "outro",
+          "seed"
         ],
         "media_dimension_key": "subject",
         "media_src_filename": "subject.png"
@@ -337,7 +362,15 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "img", "palette", "text", "brand", "birds", "physics", "audio", "intro", "outro"
+          "img",
+          "palette",
+          "text",
+          "brand",
+          "birds",
+          "physics",
+          "audio",
+          "intro",
+          "outro"
         ],
         "media_dimension_key": "img",
         "media_src_filename": "bg.jpg"
@@ -423,9 +456,23 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "video", "colors", "bgMode", "bgRegions", "zones",
-          "subject", "keepOut", "texts", "eqPosition", "edgeFade", "typography",
-          "anchorPreference", "audio", "intro", "outro"
+          "id",
+          "description",
+          "video",
+          "colors",
+          "bgMode",
+          "bgRegions",
+          "zones",
+          "subject",
+          "keepOut",
+          "texts",
+          "eqPosition",
+          "edgeFade",
+          "typography",
+          "anchorPreference",
+          "audio",
+          "intro",
+          "outro"
         ],
         "media_dimension_key": "video",
         "media_src_filename": "bg.mp4",
@@ -498,8 +545,18 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg", "fonts", "neon",
-          "intro", "outro", "debug", "layout", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "fonts",
+          "neon",
+          "intro",
+          "outro",
+          "debug",
+          "layout",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -577,8 +634,18 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg", "fonts", "colors",
-          "intro", "outro", "debug", "cluster", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "fonts",
+          "colors",
+          "intro",
+          "outro",
+          "debug",
+          "cluster",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -656,8 +723,19 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg", "fonts", "colors",
-          "intro", "outro", "debug", "layout", "bokeh", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "fonts",
+          "colors",
+          "intro",
+          "outro",
+          "debug",
+          "layout",
+          "bokeh",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -735,7 +813,15 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "intro", "outro", "debug", "ekg", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "intro",
+          "outro",
+          "debug",
+          "ekg",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -806,7 +892,17 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg", "intro", "outro", "debug", "layout", "dust", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "intro",
+          "outro",
+          "debug",
+          "layout",
+          "dust",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -886,8 +982,18 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "video", "colors",
-          "intro", "outro", "debug", "phrase", "laminas", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "video",
+          "colors",
+          "intro",
+          "outro",
+          "debug",
+          "phrase",
+          "laminas",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -959,8 +1065,16 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg",
-          "intro", "outro", "debug", "board", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "intro",
+          "outro",
+          "debug",
+          "board",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -1031,8 +1145,17 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg",
-          "intro", "outro", "debug", "layout", "rain", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "intro",
+          "outro",
+          "debug",
+          "layout",
+          "rain",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -1112,8 +1235,19 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg", "colors", "wordmark",
-          "intro", "outro", "debug", "phrase", "laminas", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "colors",
+          "wordmark",
+          "intro",
+          "outro",
+          "debug",
+          "phrase",
+          "laminas",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -1184,8 +1318,16 @@
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl",
-          "intro", "outro", "debug", "phrase", "book", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "intro",
+          "outro",
+          "debug",
+          "phrase",
+          "book",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -1249,15 +1391,27 @@
       "active": true,
       "description": "Plantilla config-driven de letras sobre vidrio roto, con grietas, vaho y fragmentos animados sincronizados con la canción real.",
       "pipeline_type": "config_driven_template",
-      "recorder_engine": "remotion",
+      "recorder_engine": "playwright",
       "template": {
         "enabled": true,
         "template_id": "lyrics-cristal",
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg", "fonts", "palette",
-          "worlds", "layout", "intro", "outro", "debug", "shatter", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "fonts",
+          "palette",
+          "worlds",
+          "layout",
+          "intro",
+          "outro",
+          "debug",
+          "shatter",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -1276,12 +1430,36 @@
         "duration_seconds": 60,
         "duration_locked_to_music": true,
         "formats": [
-          { "id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": "reels_video.mp4", "crf": 20, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true },
-          { "id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": "youtube_video.mp4", "crf": 18, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true }
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
         ],
         "generate_tiktok_clip": false
       },
-      "publishing": { "accounts": [], "youtube_playlist_id": null, "youtube_as_short": true }
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
     },
     "lyrics_video_mirada": {
       "id": "lyrics_video_mirada",
@@ -1289,15 +1467,27 @@
       "active": true,
       "description": "Plantilla config-driven de letras ilustrada en sepia, con escenas nocturnas, ojos, ángeles, luna y niebla sincronizadas con la canción real.",
       "pipeline_type": "config_driven_template",
-      "recorder_engine": "remotion",
+      "recorder_engine": "playwright",
       "template": {
         "enabled": true,
         "template_id": "lyrics-mirada",
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "bg", "fonts", "palette",
-          "scenes", "media", "layout", "intro", "outro", "debug", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "bg",
+          "fonts",
+          "palette",
+          "scenes",
+          "media",
+          "layout",
+          "intro",
+          "outro",
+          "debug",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -1316,12 +1506,36 @@
         "duration_seconds": 60,
         "duration_locked_to_music": true,
         "formats": [
-          { "id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": "reels_video.mp4", "crf": 20, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true },
-          { "id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": "youtube_video.mp4", "crf": 18, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true }
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
         ],
         "generate_tiktok_clip": false
       },
-      "publishing": { "accounts": [], "youtube_playlist_id": null, "youtube_as_short": true }
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
     },
     "lyrics_video_night_journey": {
       "id": "lyrics_video_night_journey",
@@ -1329,15 +1543,24 @@
       "active": true,
       "description": "Plantilla config-driven de letras cinematográficas en escenas nocturnas, con karaoke, camino, luna, túnel y cierre sobre papel amarillo.",
       "pipeline_type": "config_driven_template",
-      "recorder_engine": "remotion",
+      "recorder_engine": "playwright",
       "template": {
         "enabled": true,
         "template_id": "lyrics-night-journey",
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
-          "id", "description", "audio", "lyricsUrl", "song", "fonts", "scenes",
-          "layout", "outro", "debug", "seed"
+          "id",
+          "description",
+          "audio",
+          "lyricsUrl",
+          "song",
+          "fonts",
+          "scenes",
+          "layout",
+          "outro",
+          "debug",
+          "seed"
         ],
         "requires_vision_extraction": false,
         "requires_lyrics": true,
@@ -1356,12 +1579,36 @@
         "duration_seconds": 60,
         "duration_locked_to_music": true,
         "formats": [
-          { "id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": "reels_video.mp4", "crf": 20, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true },
-          { "id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": "youtube_video.mp4", "crf": 18, "preset": "veryfast", "generation_method": "rerecord", "use_device_viewport": true }
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
         ],
         "generate_tiktok_clip": false
       },
-      "publishing": { "accounts": [], "youtube_playlist_id": null, "youtube_as_short": true }
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
     },
     "economy_finance": {
       "id": "economy_finance",
@@ -1422,6 +1669,1270 @@
         "accounts": [],
         "youtube_playlist_id": null,
         "youtube_as_short": false
+      }
+    },
+    "lyrics_video_collage": {
+      "id": "lyrics_video_collage",
+      "display_name": "Video de Letras — Collage Callejero",
+      "active": true,
+      "description": "Mural de recortes de papel urbano: cada palabra estalla como un flyer callejero (titular a tijera, sello stencil, etiqueta a mano o letra hueca transparente), con figuras recortadas en blanco y negro y cortes de plano al ritmo de la canción — para hip-hop, trap y contenido urbano de calle.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-collage",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "urban",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_mixtas": {
+      "id": "lyrics_video_mixtas",
+      "display_name": "Video de Letras — Escenas Mixtas",
+      "active": true,
+      "description": "Lyric pack de estilos mezclados: cada frase cae en una escena distinta — metraje cinematográfico, rojo plano, papel blanco o negro grunge — con tipografía extendida, condensada y liviana, ecos apilados, palabras gigantes con etiqueta, tickers y un solo acento lima, rojo o naranja. Para pop, R&B y baladas urbanas.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-mixtas",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "urban",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_grunge": {
+      "id": "lyrics_video_grunge",
+      "display_name": "Video de Letras — Grunge Rojo",
+      "active": true,
+      "description": "Lyric video grunge de rap: metraje urbano en blanco y negro duro con niebla y papel rasgado, letra condensada gastada en blanco y rojo con fantasmas de movimiento, grillas de frases repetidas y garabatos de tiza que se dibujan solos. Para rap, trap y drill.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-grunge",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "urban",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_stylish_kinetic": {
+      "id": "lyrics_video_stylish_kinetic",
+      "display_name": "Video de Letras — Stylish Kinetic",
+      "active": true,
+      "description": "Tipografía cinética juguetona sobre colores planos (rojo, mostaza, menta, petróleo): cada frase entra en arco o deslizando con desenfoque, gira 90° hasta quedar en columna mientras el resto se apila al lado, las letras se despliegan como tecleadas y trazos de pincel blancos cruzan los cortes — con 9 recetas y 4 transiciones que se mezclan para temas largos. Para pop, indie, urbano ligero y contenido divertido.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-stylish-kinetic",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "urban",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_caution": {
+      "id": "lyrics_video_caution",
+      "display_name": "Video de Letras — Caution",
+      "active": true,
+      "description": "Kinetic typography de cortes duros: cada palabra acentuada de la canción es un cartón nuevo sobre rojo plano, papel blanco fotocopiado o negro grunge, con letra condensada gigante, etiquetas, barras rojas, tickers y pilas en contorno, más un mosaico final de escenas en el último silencio — para trap, rap, drill y pop urbano con mucha energía.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-caution",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "urban",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_amor_impredecible": {
+      "id": "lyrics_video_amor_impredecible",
+      "display_name": "Video de Letras — Amor Impredecible",
+      "active": true,
+      "description": "Visualizador romántico con letra manuscrita, corazones, flechas y destellos que reaccionan al ritmo de la canción.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-amor-impredecible",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "urban",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "promo_video_editorial": {
+      "id": "promo_video_editorial",
+      "display_name": "Promo Editorial",
+      "active": true,
+      "description": "Promo editorial de una final deportiva: blanco y negro puro sobre papel arrugado, grotesca extendida pesada, bloques negros que barren, nombres gigantes en contorno, recortes de jugadores con placa, versus y cierre de fecha. Equipos, fecha, textos y fotos por JSON.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "promo-editorial",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "promo_video_kinetic": {
+      "id": "promo_video_kinetic",
+      "display_name": "Promo Kinetic",
+      "active": true,
+      "description": "Pack de tipografía cinética: una palabra o frase por escena repetida en filas, con más de 20 animaciones distintas (desde el centro, ola, cascada, rotación, marcador, perspectiva, cortes, ondas) sobre carbón con grano. Solo texto: ideal para intros y anuncios.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "promo-kinetic",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "promo_video_trendy": {
+      "id": "promo_video_trendy",
+      "display_name": "Promo Trendy",
+      "active": true,
+      "description": "Promo de cortes con golpes de zoom: metraje de atletas en blanco y negro cálido con duotono verde lima, itálica pesada, pantallas partidas, mosaico de tomas, tarjeta azul noche con círculo y cierre 'Gracias por ver'. Imágenes, videos y textos por JSON; música = audio del promo.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "promo-trendy",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "promo_video_dynamic": {
+      "id": "promo_video_dynamic",
+      "display_name": "Promo Dynamic",
+      "active": true,
+      "description": "Opener sobre verde neón: letra negra extendida, palabras gigantes en contorno, letras enormes que barren la pantalla, fotos de atletas recortadas con borde pixelado y estela de copias, HUD técnico y logo con foto en la letra.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "promo-dynamic",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "promo_video_urban": {
+      "id": "promo_video_urban",
+      "display_name": "Promo Urban",
+      "active": true,
+      "description": "Opener urbano sobre negro: duotono rojo y blanco y negro en paneles, texto blanco condensado en escalera que se teclea, bloques naranjas entre escenas, rayados, flechas y año gigante en contorno.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "promo-urban",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "promo_video_sports": {
+      "id": "promo_video_sports",
+      "display_name": "Promo Sports",
+      "active": true,
+      "description": "Promo deportivo cinematográfico: metraje oscuro verde azulado, itálica pesada espaciada, marcos y acentos amarillos, palabras gigantes en contorno, paneles que destellan y letras que se barajan.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "promo-sports",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_ceniza": {
+      "id": "lyrics_video_ceniza",
+      "display_name": "Video de Letras — Ceniza",
+      "active": true,
+      "description": "Desamor que se quema: carbón, ceniza y hueso con brasas moribundas, serif dramática, palabras que aparecen al rojo y estallan en ceniza, humo que se lleva la letra, velas que se apagan, un diario que arde y una palabra que se agrieta en dos. Transiciones de quemado con borde incandescente.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-ceniza",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "sad",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_lluvia_gris": {
+      "id": "lyrics_video_lluvia_gris",
+      "display_name": "Video de Letras — Lluvia Gris",
+      "active": true,
+      "description": "Balada triste bajo la lluvia: metraje frío y desaturado de vidrios mojados y calles nocturnas, serif itálica fina con sans espaciada, lluvia real sobre la letra, palabras que gotean y se derriten, reflejos en el asfalto y texto que limpia el vaho del vidrio. Transiciones de cortina de lluvia y disolvencia desenfocada.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-lluvia-gris",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "sad",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_memoria": {
+      "id": "lyrics_video_memoria",
+      "display_name": "Video de Letras — Memoria Velada",
+      "active": true,
+      "description": "Recuerdos que se desvanecen: películas caseras de 8 mm y VHS en sepia lavado, polaroids que caen, proyector que titila, fecha VHS, máquina de escribir que escribe y borra la letra, letra manuscrita que se esfuma, destellos de luz cálida y fotogramas que se queman. Para canciones de nostalgia y pérdida.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-memoria",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "sad",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "lyrics_video_vacio": {
+      "id": "lyrics_video_vacio",
+      "display_name": "Video de Letras — Vacío",
+      "active": true,
+      "description": "Soledad y vacío: blanco y negro frío con niebla, rutas perdidas, cuartos vacíos y una figura frente al mar; condensada finísima o muy pesada, letras que se separan hasta perderse, palabras que se desmoronan, estelas de eco, reflejos en la bruma, la imagen que se rasga y una palabra que respira en el negro.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-vacio",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "sad",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
       }
     }
   }

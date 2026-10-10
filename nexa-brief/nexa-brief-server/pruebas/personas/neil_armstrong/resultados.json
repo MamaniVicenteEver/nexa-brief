@@ -1,0 +1,730 @@
+{
+  "persona": "Neil Armstrong",
+  "tema": "Neil Armstrong",
+  "ejecucion": "2026-10-07T13:37:12.827539+00:00",
+  "objetivo": {
+    "imagenes": 6,
+    "videos": 4
+  },
+  "obtenido": {
+    "imagenes": 6,
+    "videos": 4
+  },
+  "proveedores_consultados": [
+    {
+      "status": "ok",
+      "query": "Neil Armstrong",
+      "filters": {
+        "language": "en"
+      },
+      "result_count": 25,
+      "total": 10566,
+      "muestras": [
+        {
+          "kind": "article",
+          "title": "Neil Armstrong",
+          "url": "https://en.wikipedia.org/wiki/Neil_Armstrong"
+        },
+        {
+          "kind": "article",
+          "title": "Neil Armstrong (disambiguation)",
+          "url": "https://en.wikipedia.org/wiki/Neil_Armstrong_%28disambiguation%29"
+        }
+      ],
+      "provider": "wikipedia"
+    },
+    {
+      "status": "ok",
+      "query": "Neil Armstrong",
+      "filters": {
+        "language": "en"
+      },
+      "result_count": 25,
+      "total": null,
+      "muestras": [
+        {
+          "kind": "q1615",
+          "title": "Neil Armstrong",
+          "url": "https://www.wikidata.org/wiki/Q1615"
+        },
+        {
+          "kind": "q90071689",
+          "title": "Neil Armstrong",
+          "url": "https://www.wikidata.org/wiki/Q90071689"
+        }
+      ],
+      "provider": "wikidata"
+    },
+    {
+      "status": "ok",
+      "query": "Neil Armstrong",
+      "filters": {},
+      "result_count": 25,
+      "total": null,
+      "muestras": [
+        {
+          "kind": "image",
+          "title": "Neil Armstrong.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File%3ANeil_Armstrong.jpg",
+          "creator": "NASA / Edwin E. Aldrin, Jr."
+        },
+        {
+          "kind": "media",
+          "title": "Phrase de Neil Armstrong.oga",
+          "url": "https://commons.wikimedia.org/wiki/File%3APhrase_de_Neil_Armstrong.oga",
+          "creator": "NASA"
+        }
+      ],
+      "provider": "wikimedia_commons"
+    },
+    {
+      "status": "ok",
+      "query": "Neil Armstrong",
+      "filters": {
+        "project": "enwiki"
+      },
+      "result_count": 1,
+      "total": 1,
+      "muestras": [
+        {
+          "kind": "article",
+          "title": "Neil Armstrong",
+          "url": "https://en.wikipedia.org/wiki/Neil_Armstrong"
+        }
+      ],
+      "provider": "wikimedia_enterprise"
+    },
+    {
+      "provider": "library_of_congress",
+      "status": "error",
+      "query": "Neil Armstrong",
+      "result_count": 0,
+      "error": "library_of_congress: acceso bloqueado (HTTP 403)"
+    },
+    {
+      "provider": "nasa",
+      "status": "error",
+      "query": "Neil Armstrong",
+      "result_count": 0,
+      "error": "nasa: HTTP 500: {\"code\":500,\"msg\":\"Internal Service Error\",\"service_version\":\"v1\"} "
+    },
+    {
+      "status": "ok",
+      "query": "population",
+      "filters": {
+        "catalog_limit": 1000
+      },
+      "result_count": 25,
+      "total": 177,
+      "muestras": [
+        {
+          "kind": "dataset",
+          "title": "Rural land area (sq. km)",
+          "url": "https://data.worldbank.org/indicator/AG.LND.TOTL.RU.K2"
+        },
+        {
+          "kind": "dataset",
+          "title": "Urban land area (sq. km)",
+          "url": "https://data.worldbank.org/indicator/AG.LND.TOTL.UR.K2"
+        }
+      ],
+      "provider": "world_bank"
+    },
+    {
+      "status": "ok",
+      "query": "-84.2,40.55,-84.05,40.65",
+      "filters": {
+        "bbox": "-84.2,40.55,-84.05,40.65"
+      },
+      "result_count": 25,
+      "total": 52379,
+      "muestras": [
+        {
+          "kind": "map_feature",
+          "title": "bounds",
+          "url": "https://www.openstreetmap.org/bounds/"
+        },
+        {
+          "kind": "map_feature",
+          "title": "node 27428817",
+          "url": "https://www.openstreetmap.org/node/27428817"
+        }
+      ],
+      "provider": "openstreetmap"
+    },
+    {
+      "provider": "overpass",
+      "status": "error",
+      "query": "Armstrong",
+      "result_count": 0,
+      "error": "overpass: ReadTimeout"
+    },
+    {
+      "status": "ok",
+      "query": "Neil Armstrong",
+      "filters": {},
+      "result_count": 25,
+      "total": 908,
+      "muestras": [
+        {
+          "kind": "image",
+          "title": "\"Neil Armstrong\"",
+          "url": "https://sacramento.pastperfectonline.com/photo/B9E40955-813A-4449-8E14-403334472530",
+          "creator": "Warren, Dennis"
+        },
+        {
+          "kind": "document",
+          "title": "Neil Armstrong",
+          "url": "http://n2t.net/ark:/65665/nv977e5b1f2-d302-4d64-9ee8-8ff9843080ba",
+          "creator": "Mario Cooper, Neil A. Armstrong"
+        }
+      ],
+      "provider": "dpla",
+      "consultas_adicionales": [
+        {
+          "query": "Neil Armstrong video",
+          "result_count": 18,
+          "muestras": [
+            {
+              "kind": "video",
+              "title": "[News Clip: Apollo 25th]",
+              "url": "https://texashistory.unt.edu/ark:/67531/metadc2212725/",
+              "creator": "KXAS-TV (Television station : Fort Worth, Tex.)"
+            },
+            {
+              "kind": "image",
+              "title": "Astronaut Neil Armstrong, Alaska Senator Ted Stevens, aviation pioneer Harry Combs, First Flight Society's Rex Peters, Secretary Gale Norton and National Park Service head Fran Mainella, left to right, at events marking centennial of first powered flight, Wright Brothers National Memorial, Kill Devil Hills, North Carolina. Photo was used in Interior video on Norton tenure",
+              "url": "http://catalog.archives.gov/id/5618814",
+              "creator": "Department of the Interior. National Business Center. Administrative Operations Directorate. Division of Employee and Public Services. Creative Communications Branch. Photographic Services. (2000)"
+            }
+          ]
+        },
+        {
+          "query": "Neil Armstrong lecture",
+          "result_count": 4,
+          "muestras": [
+            {
+              "kind": "document",
+              "title": "Universitas - Issue 41.2 (Summer 2015)",
+              "url": "http://cdm17321.contentdm.oclc.org/cdm/ref/collection/alumni/id/462",
+              "creator": "St. Louis University"
+            },
+            {
+              "kind": "document",
+              "title": "Universitas - Issue 36.3 (Summer 2010)",
+              "url": "http://cdm17321.contentdm.oclc.org/cdm/ref/collection/alumni/id/91",
+              "creator": "St. Louis University"
+            }
+          ]
+        },
+        {
+          "query": "Neil Armstrong documentary",
+          "result_count": 8,
+          "muestras": [
+            {
+              "kind": "document",
+              "title": "Keystonian Spring 2009",
+              "url": "https://digitalarchives.powerlibrary.org/papd/islandora/object/papd%3Aakeys-1868_2327",
+              "creator": "Keystone College"
+            },
+            {
+              "kind": "text",
+              "title": "Record, Census",
+              "url": "https://rockpilemuseum.pastperfectonline.com/archive/23790614-408C-4FCA-BAEF-591947157730"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "provider": "europeana",
+      "status": "pendiente_falta_key",
+      "query": "Neil Armstrong",
+      "result_count": 0,
+      "nota": "Completar EUROPEANA_API_KEY."
+    },
+    {
+      "provider": "openverse",
+      "status": "ok_anonymous_fallback",
+      "consultas": [
+        {
+          "status": "ok_anonymous_fallback",
+          "query": "neil armstrong armstrong",
+          "filters": {
+            "media_type": "image"
+          },
+          "result_count": 20,
+          "total": 240,
+          "muestras": [
+            {
+              "kind": "image",
+              "title": "Apollo 11 Video Restoration Press Conference / Newseum",
+              "url": "https://www.flickr.com/photos/24662369@N07/3726614525",
+              "creator": "NASA Goddard Photo and Video"
+            },
+            {
+              "kind": "image",
+              "title": "Walking on the Moon",
+              "url": "https://www.flickr.com/photos/44124348109@N01/8214990",
+              "creator": "jurvetson"
+            }
+          ],
+          "nota": "Token rechazado; se probó acceso anónimo.",
+          "media_type": "image"
+        },
+        {
+          "status": "ok_anonymous_fallback",
+          "query": "neil armstrong armstrong",
+          "filters": {
+            "media_type": "audio"
+          },
+          "result_count": 7,
+          "total": 7,
+          "muestras": [
+            {
+              "kind": "audio",
+              "title": "Beeps, Bytes, Future Sound & Sound Bites",
+              "url": "https://freesound.org/people/DudeAwesome/sounds/386069",
+              "creator": "DudeAwesome"
+            },
+            {
+              "kind": "audio",
+              "title": "Discovery Sounds & Sound Bites",
+              "url": "https://freesound.org/people/DudeAwesome/sounds/386056",
+              "creator": "DudeAwesome"
+            }
+          ],
+          "nota": "Token rechazado; se probó acceso anónimo.",
+          "media_type": "audio"
+        }
+      ],
+      "result_count": 27
+    },
+    {
+      "provider": "nasa_image_video_library",
+      "status": "ok",
+      "consultas": [
+        {
+          "status": "ok",
+          "media_type": "image",
+          "result_count": 25,
+          "total": 3519,
+          "muestras": [
+            {
+              "kind": "image",
+              "title": "Neil Armstrong Burial at Sea",
+              "url": "https://images-assets.nasa.gov/image/201209130026HQ/collection.json",
+              "creator": "NASA/Bill Ingalls"
+            },
+            {
+              "kind": "image",
+              "title": "Neil Armstrong Burial at Sea",
+              "url": "https://images-assets.nasa.gov/image/201209130023HQ/collection.json",
+              "creator": "NASA/Bill Ingalls"
+            }
+          ]
+        },
+        {
+          "status": "ok",
+          "media_type": "video",
+          "result_count": 25,
+          "total": 104,
+          "muestras": [
+            {
+              "kind": "video",
+              "title": "Dedicating the Neil A. Armstrong Test Facility for An American Hero",
+              "url": "https://images-assets.nasa.gov/video/Dedicating the Neil A. Armstrong Test Facility for An American Hero/collection.json"
+            },
+            {
+              "kind": "video",
+              "title": "Apollo_11_Plaque_Comparison_720p",
+              "url": "https://images-assets.nasa.gov/video/Apollo_11_Plaque_Comparison_720p/collection.json",
+              "creator": "NASA"
+            }
+          ]
+        }
+      ],
+      "result_count": 50
+    }
+  ],
+  "imagenes": [
+    {
+      "file": "neil_armstrong/imagenes/01_Neil_Armstrong_s_Path_to_the_Moon_Began_at_Edwards.jpg",
+      "provider": "nasa_image_video_library",
+      "type": "image",
+      "score": 215.751,
+      "title": "Neil Armstrong’s Path to the Moon Began at Edwards",
+      "description": "Famed astronaut Neil A. Armstrong – the first person to set foot on the Moon during the historic Apollo 11 mission in July 1969 – spent seven years as a research pilot at the NACA-NASA High-Speed Flight Station, now NASA’s Armstrong Flight Research Center in Edwards, California, before joining the space program. During his time there, he served as a project pilot on the F-100A, F-100C, F-101, and F-104A (pictured here).",
+      "creator": "NASA",
+      "license": "",
+      "date": "1960-02-26T00:00:00Z",
+      "source_url": "https://images-assets.nasa.gov/image/E60-5280/E60-5280~thumb.jpg",
+      "catalog_url": "https://images-assets.nasa.gov/image/E60-5280/collection.json",
+      "content_type": "image/jpeg",
+      "bytes": 37241,
+      "informacion_importante": {
+        "keywords": [
+          "Neil Armstrong",
+          "NASA Armstrong Flight Research Center",
+          "Edwards Air Force Base",
+          "F-100A",
+          "F-100C",
+          "F-101",
+          "F-104A",
+          "NACA",
+          "High-Speed Flight Station",
+          "Apollo 11"
+        ],
+        "center": "AFRC",
+        "asset_url": "https://images-assets.nasa.gov/image/E60-5280/collection.json"
+      }
+    },
+    {
+      "file": "neil_armstrong/imagenes/02_Neil_Armstrong.jpg",
+      "provider": "dpla",
+      "type": "image",
+      "score": 192.281,
+      "title": "Neil Armstrong",
+      "description": "Caption reads: \"SPACE CENTER, HOUSTON: Astronaut Neil A. Armstrong seems the picture of confidence at the moment. Armstrong, in training for the projected Apollo 11 lunar landing, is taking a break at the Space Center in Houston (4/18) during the first full dress rehearsal of activities he is to perform on the moon.\" Astronaut Neil Armstrong (1930-2012) was born in Wapakoneta, Ohio and became the first person to set foot on the Moon on July 20, 1969.",
+      "creator": "Central Press Association",
+      "license": "",
+      "date": "{'displayDate': 'April 24, 1969'}",
+      "source_url": "http://digital-collections.columbuslibrary.org/utils/getthumbnail/collection/dispatch/id/7891",
+      "catalog_url": "http://digital-collections.columbuslibrary.org/cdm/ref/collection/dispatch/id/7891",
+      "content_type": "image/jpeg",
+      "bytes": 3678,
+      "informacion_importante": {
+        "provider": {
+          "@id": "http://dp.la/api/contributor/ohio",
+          "exactMatch": [
+            "http://www.wikidata.org/entity/Q83878495"
+          ],
+          "name": "Ohio Digital Network"
+        },
+        "data_provider": {
+          "@id": "http://dp.la/api/contributor/columbus-metropolitan-library",
+          "exactMatch": [
+            "http://www.wikidata.org/entity/Q5150078"
+          ],
+          "name": "Columbus Metropolitan Library"
+        }
+      }
+    },
+    {
+      "file": "neil_armstrong/imagenes/03_Lunar_Poke_-_Neil_Armstrong_s_Helmet.jpg",
+      "provider": "openverse",
+      "type": "image",
+      "score": 178.936,
+      "title": "Lunar Poke - Neil Armstrong's Helmet",
+      "description": "",
+      "creator": "jurvetson",
+      "license": "by 2.0",
+      "date": "",
+      "source_url": "https://live.staticflickr.com/7374/27539026276_132406e30e_b.jpg",
+      "catalog_url": "https://www.flickr.com/photos/44124348109@N01/27539026276",
+      "content_type": "image/jpeg",
+      "bytes": 143038,
+      "informacion_importante": {
+        "source": "flickr",
+        "attribution": "\"Lunar Poke - Neil Armstrong's Helmet\" by jurvetson is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "tags": [
+          {
+            "name": "air",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "armstrong",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "ev",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "gold",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "hazy",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "helmet",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "museum",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "nasm",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "national",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "neil",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "smithsonian",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "space",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "tour",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "visor",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      }
+    },
+    {
+      "file": "neil_armstrong/imagenes/04_Neil_Armstrong_Burial_at_Sea.jpg",
+      "provider": "nasa_image_video_library",
+      "type": "image",
+      "score": 178.591,
+      "title": "Neil Armstrong Burial at Sea",
+      "description": "US Navy personnel salute as the cremains of Apollo 11 astronaut Neil Armstrong are transferred from a military aircraft at Naval Station Mayport the day before the Armstrong burial at sea service, Thursday, Sept. 13, 2012, Mayport, Fla. Armstrong, the first man to walk on the moon during the 1969 Apollo 11 mission, died Saturday, Aug. 25. He was 82. Photo Credit: (NASA/Bill Ingalls)",
+      "creator": "NASA/Bill Ingalls",
+      "license": "",
+      "date": "2012-09-13T00:00:00Z",
+      "source_url": "https://images-assets.nasa.gov/image/201209130025HQ/201209130025HQ~thumb.jpg",
+      "catalog_url": "https://images-assets.nasa.gov/image/201209130025HQ/collection.json",
+      "content_type": "image/jpeg",
+      "bytes": 31824,
+      "informacion_importante": {
+        "keywords": [
+          "Florida",
+          "Mayport",
+          "Navy"
+        ],
+        "center": "HQ",
+        "asset_url": "https://images-assets.nasa.gov/image/201209130025HQ/collection.json"
+      }
+    },
+    {
+      "file": "neil_armstrong/imagenes/05_Neil_Armstrong_Burial_at_Sea.jpg",
+      "provider": "nasa_image_video_library",
+      "type": "image",
+      "score": 178.584,
+      "title": "Neil Armstrong Burial at Sea",
+      "description": "US Navy personnel carry the cremains of Apollo 11 astronaut Neil Armstrong off of a military aircraft at Naval Station Mayport the day before the Armstrong burial at sea service, Thursday, Sept. 13, 2012, Mayport, Fla. Armstrong, the first man to walk on the moon during the 1969 Apollo 11 mission, died Saturday, Aug. 25. He was 82. Photo Credit: (NASA/Bill Ingalls)",
+      "creator": "NASA/Bill Ingalls",
+      "license": "",
+      "date": "2012-09-13T00:00:00Z",
+      "source_url": "https://images-assets.nasa.gov/image/201209130026HQ/201209130026HQ~thumb.jpg",
+      "catalog_url": "https://images-assets.nasa.gov/image/201209130026HQ/collection.json",
+      "content_type": "image/jpeg",
+      "bytes": 40747,
+      "informacion_importante": {
+        "keywords": [
+          "American Flag",
+          "Cremains",
+          "Flag",
+          "Florida",
+          "Mayport",
+          "Navy",
+          "Neil Armstrong"
+        ],
+        "center": "HQ",
+        "asset_url": "https://images-assets.nasa.gov/image/201209130026HQ/collection.json"
+      }
+    },
+    {
+      "file": "neil_armstrong/imagenes/06_Neil_Armstrong_Burial_at_Sea.jpg",
+      "provider": "nasa_image_video_library",
+      "type": "image",
+      "score": 178.372,
+      "title": "Neil Armstrong Burial at Sea",
+      "description": "US Navy personnel carry the cremains of Apollo 11 astronaut Neil Armstrong off of a military aircraft at Naval Station Mayport the day before the Armstrong burial at sea service, Thursday, Sept. 13, 2012, Mayport, Fla. Armstrong, the first man to walk on the moon during the 1969 Apollo 11 mission, died Saturday, Aug. 25. He was 82. Photo Credit: (NASA/Bill Ingalls)",
+      "creator": "NASA/Bill Ingalls",
+      "license": "",
+      "date": "2012-09-13T00:00:00Z",
+      "source_url": "https://images-assets.nasa.gov/image/201209130023HQ/201209130023HQ~thumb.jpg",
+      "catalog_url": "https://images-assets.nasa.gov/image/201209130023HQ/collection.json",
+      "content_type": "image/jpeg",
+      "bytes": 39567,
+      "informacion_importante": {
+        "keywords": [
+          "American Flag",
+          "Cremains",
+          "Flag",
+          "Florida",
+          "Mayport",
+          "Navy",
+          "Neil Armstrong"
+        ],
+        "center": "HQ",
+        "asset_url": "https://images-assets.nasa.gov/image/201209130023HQ/collection.json"
+      }
+    }
+  ],
+  "videos": [
+    {
+      "file": "neil_armstrong/videos/01_Apollo_11_moonwalk_montage_720p.mp4",
+      "provider": "nasa_image_video_library",
+      "type": "video",
+      "score": 87.292,
+      "title": "Apollo_11_moonwalk_montage_720p",
+      "description": "This two-minute video montage shows highlights of the Apollo 11 moonwalk.",
+      "creator": "NASA",
+      "license": "",
+      "date": "2017-08-03T00:00:00Z",
+      "source_url": "http://images-assets.nasa.gov/video/Apollo_11_moonwalk_montage_720p/Apollo_11_moonwalk_montage_720p~preview.mp4",
+      "catalog_url": "https://images-assets.nasa.gov/video/Apollo_11_moonwalk_montage_720p/collection.json",
+      "content_type": "video/mp4",
+      "bytes": 10072831,
+      "informacion_importante": {
+        "keywords": [
+          "Apollo 11",
+          "Neil Armstrong",
+          "Buzz Aldrin",
+          "moonwalk",
+          "EVA",
+          "lunar landing"
+        ],
+        "center": "HQ",
+        "asset_url": "https://images-assets.nasa.gov/video/Apollo_11_moonwalk_montage_720p/collection.json"
+      }
+    },
+    {
+      "file": "neil_armstrong/videos/02_Apollo_11_Plaque_Comparison_720p.mp4",
+      "provider": "nasa_image_video_library",
+      "type": "video",
+      "score": 86.863,
+      "title": "Apollo_11_Plaque_Comparison_720p",
+      "description": "Neil Armstrong reads a commemorative plaque affixed to the Apollo 11 lunar module. The video compares existing footage with the partially restored video. The thumbnail image shows the new footage on the left and the old on the right.",
+      "creator": "NASA",
+      "license": "",
+      "date": "2017-08-03T00:00:00Z",
+      "source_url": "http://images-assets.nasa.gov/video/Apollo_11_Plaque_Comparison_720p/Apollo_11_Plaque_Comparison_720p~preview.mp4",
+      "catalog_url": "https://images-assets.nasa.gov/video/Apollo_11_Plaque_Comparison_720p/collection.json",
+      "content_type": "video/mp4",
+      "bytes": 3393106,
+      "informacion_importante": {
+        "keywords": [
+          "Neil Armstrong",
+          "Apollo 11",
+          "Earth's Moon",
+          "Moon",
+          "Lunar landing"
+        ],
+        "center": "HQ",
+        "asset_url": "https://images-assets.nasa.gov/video/Apollo_11_Plaque_Comparison_720p/collection.json"
+      }
+    },
+    {
+      "file": "neil_armstrong/videos/03_Raising_The_American_Flag_Comparison_720p.mp4",
+      "provider": "nasa_image_video_library",
+      "type": "video",
+      "score": 68.84,
+      "title": "Raising_The_American_Flag_Comparison_720p",
+      "description": "Neil Armstrong and Buzz Aldrin raise the American flag on the moon. The video compares existing footage with the partially restored video. The thumbnail image shows the new footage on the left and the old on the right.",
+      "creator": "NASA",
+      "license": "",
+      "date": "2017-08-03T00:00:00Z",
+      "source_url": "http://images-assets.nasa.gov/video/Raising_The_American_Flag_Comparison_720p/Raising_The_American_Flag_Comparison_720p~preview.mp4",
+      "catalog_url": "https://images-assets.nasa.gov/video/Raising_The_American_Flag_Comparison_720p/collection.json",
+      "content_type": "video/mp4",
+      "bytes": 3292492,
+      "informacion_importante": {
+        "keywords": [
+          "Neil Armstrong",
+          "Buzz Aldrin",
+          "Moon",
+          "Apollo 11",
+          "lunar landing",
+          "Earth's Moon",
+          "Apollo",
+          "Apollo Program"
+        ],
+        "center": "HQ",
+        "asset_url": "https://images-assets.nasa.gov/video/Raising_The_American_Flag_Comparison_720p/collection.json"
+      }
+    },
+    {
+      "file": "neil_armstrong/videos/04_One_Small_Step_Comparison_720p.mp4",
+      "provider": "nasa_image_video_library",
+      "type": "video",
+      "score": 68.146,
+      "title": "One_Small_Step_Comparison_720p",
+      "description": "This video shows Neil Armstrong climbing down the lunar module ladder to the lunar surface. The video compares existing footage with the partially restored video. The thumbnail image shows the new footage on the left and the old on the right.",
+      "creator": "NASA",
+      "license": "",
+      "date": "2017-08-03T00:00:00Z",
+      "source_url": "http://images-assets.nasa.gov/video/One_Small_Step_Comparison_720p/One_Small_Step_Comparison_720p~preview.mp4",
+      "catalog_url": "https://images-assets.nasa.gov/video/One_Small_Step_Comparison_720p/collection.json",
+      "content_type": "video/mp4",
+      "bytes": 4312883,
+      "informacion_importante": {
+        "center": "HQ",
+        "asset_url": "https://images-assets.nasa.gov/video/One_Small_Step_Comparison_720p/collection.json"
+      }
+    }
+  ],
+  "videos_referencias": [
+    {
+      "provider": "dpla",
+      "score": 70.81,
+      "title": "[News Clip: Apollo 11 Anniversary]",
+      "description": "Video footage from the KXAS-TV/NBC station in Fort Worth, Texas, to accompany a news story.",
+      "creator": "KXAS-TV (Television station : Fort Worth, Tex.)",
+      "date": "{'displayDate': '1989-07-20'}",
+      "license": "http://rightsstatements.org/vocab/InC/1.0/",
+      "catalog_url": "https://texashistory.unt.edu/ark:/67531/metadc2235519/",
+      "preview_url": "https://texashistory.unt.edu/ark:/67531/metadc2235519/small/",
+      "nota": "Referencia de vídeo; DPLA no entregó un archivo directo descargable."
+    },
+    {
+      "provider": "dpla",
+      "score": 15.988,
+      "title": "[News Clip: Apollo 25th]",
+      "description": "Video footage from the KXAS-TV/NBC station in Fort Worth, Texas, to accompany a news story.",
+      "creator": "KXAS-TV (Television station : Fort Worth, Tex.)",
+      "date": "{'displayDate': '1994-07-20T17:00:00'}",
+      "license": "http://rightsstatements.org/vocab/InC/1.0/",
+      "catalog_url": "https://texashistory.unt.edu/ark:/67531/metadc2212725/",
+      "preview_url": "https://texashistory.unt.edu/ark:/67531/metadc2212725/small/",
+      "nota": "Referencia de vídeo; DPLA no entregó un archivo directo descargable."
+    },
+    {
+      "provider": "dpla",
+      "score": 15.234,
+      "title": "[News Clip: Apollo]",
+      "description": "Video footage from the KXAS-TV/NBC station in Fort Worth, Texas, to accompany a news story.",
+      "creator": "KXAS-TV (Television station : Fort Worth, Tex.)",
+      "date": "{'displayDate': '1994-07-20T22:00:00'}",
+      "license": "http://rightsstatements.org/vocab/InC/1.0/",
+      "catalog_url": "https://texashistory.unt.edu/ark:/67531/metadc2212872/",
+      "preview_url": "https://texashistory.unt.edu/ark:/67531/metadc2212872/small/",
+      "nota": "Referencia de vídeo; DPLA no entregó un archivo directo descargable."
+    }
+  ],
+  "faltantes": {
+    "imagenes": 0,
+    "videos": 0
+  }
+}

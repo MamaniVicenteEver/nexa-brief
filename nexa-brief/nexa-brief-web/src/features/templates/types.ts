@@ -5,6 +5,13 @@ export type TemplateOrientation = "9:16" | "16:9" | "any";
 export interface Template {
   id: string;
   nicheId: string;
+  categoryId: string;
+  categoryName: string;
+  categoryOrder: number;
+  tags: string[];
+  sortOrder: number;
+  status: string;
+  canGenerate: boolean;
   displayName: string;
   nativeOrientation: TemplateOrientation;
   requiresImage: boolean;
@@ -39,4 +46,37 @@ export interface PreviewStatus {
   isSuccess: boolean;
   errors: string[];
   files: PreviewFile[];
+}
+
+// ── Requisitos de una plantilla (GET /templates/{id}/requirements) ──────────
+
+export type RequirementMediaKind = "image" | "video" | "image|video";
+
+/** Un lugar de medios de la plantilla. `target: "source"` es el fondo del job
+ * (va como image_asset_id/video_asset_id); `"media"` reemplaza las entradas
+ * `media` del config de la plantilla (va en template_inputs.media). */
+export interface RequirementMediaSlot {
+  slot: string;
+  kind: RequirementMediaKind;
+  min: number;
+  max: number;
+  orientation: "landscape" | "portrait" | "square" | null;
+  target: "source" | "media";
+  label: string;
+  hint: string;
+}
+
+export interface RequirementText {
+  /** Path con puntos dentro del config (ej. `brand.tag`). */
+  key: string;
+  label: string;
+  max: number | null;
+  default: string | null;
+}
+
+export interface TemplateRequirements {
+  audio: { required: boolean; lyrics: "auto" | "optional" | "none" };
+  media: RequirementMediaSlot[];
+  texts: RequirementText[];
+  brief: boolean;
 }

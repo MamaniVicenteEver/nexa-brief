@@ -60,7 +60,7 @@ class AIPort(ABC):
         contract driven by a short criteria list — this method makes no
         assumption about the response schema: the caller owns both the prompt
         and the resulting JSON shape (e.g. a large vision-extraction schema
-        like src/templates/01-image-bg/prompts/vision_extractor.md).
+    like src/templates/image/01-image-bg/prompts/vision_extractor.md).
 
         Default raises NotImplementedError — only multimodal adapters override this.
         """

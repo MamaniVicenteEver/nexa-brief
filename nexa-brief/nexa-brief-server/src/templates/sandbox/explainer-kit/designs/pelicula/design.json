@@ -1,0 +1,106 @@
+{
+  "id": "pelicula",
+  "family": "pelicula",
+  "name": "ARCHIVO 35",
+  "tagline": "Historia contada en película de 35 mm: fotos de archivo, perforaciones y años gigantes",
+  "topics": [
+    "historia",
+    "guerras",
+    "siglo XX",
+    "política",
+    "biografías",
+    "efemérides",
+    "inventos antiguos",
+    "documental"
+  ],
+  "channel": {
+    "name": "ARCHIVO 35",
+    "handle": "@archivo35",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap",
+  "scripts": [
+    "designs/pelicula/components/_pelicula.js",
+    "designs/pelicula/components/scenes.js",
+    "designs/pelicula/components/fx.js",
+    "designs/common/outro-v1.js",
+    "designs/common/hook.js",
+    "designs/pelicula/components/intros.js",
+    "designs/pelicula/components/outro.js"
+  ],
+  "defaults": {
+    "family": "pelicula",
+    "palette": {
+      "bg": "#6b624d",
+      "bg2": "#3b3322",
+      "ink": "#f3eadb",
+      "muted": "#b8ac8e",
+      "accent": "#c9501f",
+      "accent2": "#c4352a",
+      "perf": "#efe4c6",
+      "shadow": "#17130c"
+    },
+    "fonts": {
+      "main": "Montserrat",
+      "load": [
+        "500 40px Montserrat",
+        "600 40px Montserrat",
+        "700 40px Montserrat",
+        "800 40px Montserrat"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "pelicula": {
+      "filmFps": 24,
+      "grain": 0.2,
+      "note": "grano/rayas/polvo/parpadeo a 24 cuadros por segundo de 'película' (función de floor(t·24))"
+    },
+    "transition": {
+      "overlap": 0.5
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 5,
+      "thanks": "gracias por ver",
+      "channel": "NODETECH",
+      "cta": "SUSCRÍBETE",
+      "support": "apoya el canal · comparte el video",
+      "handle": "youtube.com/@nodetech",
+      "use": "pelicula.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 125 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos históricas reales (personas, lugares, documentos, multitudes); se viran a sepia de archivo automáticamente y se repiten sin problema en distintos encuadres",
+    "portrait_tip": "las escenas recortan 'cover': usar focus=[x,y] para apuntar al sujeto; en pelicula.reel conviene una foto vertical o un documento",
+    "per_video": [
+      5,
+      9
+    ]
+  }
+}

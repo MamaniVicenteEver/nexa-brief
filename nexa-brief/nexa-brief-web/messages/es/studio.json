@@ -1,0 +1,117 @@
+{
+  "studio": {
+    "toggleSidebar": "Abrir o cerrar el Estudio",
+    "loading": "Cargando lo que pide la plantilla…",
+    "loadError": "No pudimos cargar los requisitos de la plantilla. Probá de nuevo.",
+    "cannotGenerate": "Esta plantilla todavía no se puede generar.",
+    "missingSong": "Elegí una canción para previsualizar.",
+    "missingMedia": "Completá los medios marcados para previsualizar.",
+    "tabs": {
+      "song": "Canción",
+      "media": "Medios",
+      "texts": "Textos",
+      "render": "Grabar"
+    },
+    "actions": {
+      "preview": "Previsualizar",
+      "previewAgain": "Previsualizar de nuevo",
+      "render": "Grabar",
+      "working": "Trabajando…"
+    },
+    "version": {
+      "default": "Por defecto",
+      "mine": "Mi versión"
+    },
+    "progress": {
+      "previewing": "Previsualizando",
+      "rendering": "Grabando",
+      "ready": "Tu versión está lista. Si te gusta, grabala.",
+      "changed": "Cambiaste algo: previsualizá de nuevo antes de grabar.",
+      "failed": "No se pudo generar. Revisá lo elegido y previsualizá de nuevo.",
+      "failedRecoverable": "La grabación falló. Podés reintentar sin volver a previsualizar.",
+      "rendered": "¡Video grabado!",
+      "openLibrary": "Ver en Biblioteca",
+      "stages": {
+        "pending": "en cola",
+        "input_analyzed": "analizando la canción",
+        "design_complete": "diseño listo",
+        "resources_fetched": "preparando medios",
+        "prompt_built": "armando la plantilla",
+        "html_generated": "plantilla lista",
+        "video_recorded": "video grabado",
+        "summary_generated": "títulos y descripciones",
+        "packaged": "empaquetando",
+        "publishing": "publicando",
+        "published": "publicado",
+        "failed": "falló"
+      }
+    },
+    "song": {
+      "title": "Canción",
+      "hint": "Elegí una de tu librería o subí una nueva.",
+      "hintLyrics": "Elegí una de tu librería o subí una nueva: la letra se transcribe sola.",
+      "required": "Obligatoria",
+      "optional": "Opcional",
+      "lyrics": "Letra"
+    },
+    "media": {
+      "count": "{n} · de {min} a {max}",
+      "remove": "Quitar",
+      "library": "Librería",
+      "stock": "Stock",
+      "kindImage": "Imagen",
+      "kindVideo": "Video",
+      "none": "Esta plantilla no usa medios propios.",
+      "noSong": "Esta plantilla no usa canción."
+    },
+    "texts": {
+      "title": "Textos",
+      "hint": "Arrancan con el texto de la plantilla. Cambiá lo que quieras.",
+      "none": "Esta plantilla no tiene textos editables."
+    },
+    "stock": {
+      "placeholder": "Buscá en inglés: {what}",
+      "placeholderShort": "Buscar en stock",
+      "search": "Buscar",
+      "searching": "Buscando en Pexels, Pixabay y Unsplash…",
+      "searchError": "No pudimos buscar. Probá de nuevo en un rato.",
+      "providerErrors": "Sin resultados de: {providers}",
+      "noResults": "No encontramos nada. Probá con otras palabras.",
+      "import": "Importar",
+      "use": "Usar",
+      "importError": "No se pudo importar. Si era de Pixabay, buscá de nuevo."
+    },
+    "ai": {
+      "title": "Que lo elija la IA",
+      "briefLabel": "Descripción para la IA",
+      "briefPlaceholder": "Contale de qué va el video (ej. «zapatillas urbanas, noche, ciudad con neón»). Si lo dejás vacío, usa la descripción de la plantilla.",
+      "start": "Buscar medios con IA",
+      "planning": "Buscando… {done}/{total}",
+      "failed": "La IA no pudo armar el plan. Probá de nuevo.",
+      "startError": "No pudimos iniciar la búsqueda.",
+      "noCandidates": "Sin candidatos para este lugar.",
+      "choose": "Elegir",
+      "selected": "Elegido",
+      "accept": "Usar estos medios",
+      "accepting": "Importando a tu librería…",
+      "acceptError": "No se pudieron importar. Probá de nuevo."
+    },
+    "render": {
+      "engine": "Motor de grabación",
+      "engines": {
+        "remotion": "Remotion",
+        "hyperframes": "HyperFrames",
+        "playwright": "Navegador"
+      },
+      "engineHint": {
+        "remotion": "Rápido y cuadro por cuadro.",
+        "hyperframes": "Composición nativa HyperFrames.",
+        "playwright": "Graba la plantilla tal cual en el navegador."
+      },
+      "publish": "Publicar al terminar",
+      "publishHint": "Opcional: elegí cuentas conectadas. Si no elegís ninguna, el video queda en la Biblioteca.",
+      "loadingAccounts": "Cargando cuentas…",
+      "noAccounts": "No hay cuentas conectadas."
+    }
+  }
+}

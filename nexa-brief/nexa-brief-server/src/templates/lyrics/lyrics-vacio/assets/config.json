@@ -1,0 +1,242 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Lyric video de soledad y vacío: blanco y negro frío con niebla, rutas perdidas, cuartos vacíos y una figura frente al mar; tipografía condensada finísima o muy pesada, letras que se separan hasta perderse, palabras que se desmoronan, estelas de eco, reflejos en la bruma, la imagen que se rasga y una sola palabra que respira en el negro. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "lyricsFilter": {
+        "minLogprob": -0.6,
+        "drop": [
+          "gracias por ver",
+          "subt[ií]tulos",
+          "amara\\.org",
+          "audio ?jungle",
+          "suscr[ií]bete"
+        ]
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@100;800&family=Inter:wght@300&display=swap"
+      },
+      "palette": {
+        "black": "#08090A",
+        "white": "#ECEDEE",
+        "fog": "#8F969A"
+      },
+      "grades": {
+        "mist": {
+          "type": "css",
+          "saturate": 0.12,
+          "contrast": 0.95,
+          "brightness": 0.8
+        },
+        "bw": {
+          "type": "duo",
+          "dark": "#050607",
+          "light": "#D6DADD",
+          "contrast": 1.25
+        }
+      },
+      "render": {
+        "kbVideo": true
+      },
+      "media": [
+        {
+          "id": "fog-road",
+          "type": "video",
+          "src": "assets/media/fog-road.mp4",
+          "poster": "assets/media/fog-road-1.jpg",
+          "graded": {
+            "mist": {
+              "src": "assets/media/graded/fog-road.mist.mp4",
+              "poster": "assets/media/graded/fog-road-1.mist.jpg"
+            },
+            "bw": {
+              "src": "assets/media/graded/fog-road.bw.mp4",
+              "poster": "assets/media/graded/fog-road-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "fog-walk",
+          "type": "video",
+          "src": "assets/media/fog-walk.mp4",
+          "poster": "assets/media/fog-walk-1.jpg",
+          "graded": {
+            "mist": {
+              "src": "assets/media/graded/fog-walk.mist.mp4",
+              "poster": "assets/media/graded/fog-walk-1.mist.jpg"
+            },
+            "bw": {
+              "src": "assets/media/graded/fog-walk.bw.mp4",
+              "poster": "assets/media/graded/fog-walk-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "empty-room",
+          "type": "video",
+          "src": "assets/media/empty-room.mp4",
+          "poster": "assets/media/empty-room-1.jpg",
+          "graded": {
+            "mist": {
+              "src": "assets/media/graded/empty-room.mist.mp4",
+              "poster": "assets/media/graded/empty-room-1.mist.jpg"
+            },
+            "bw": {
+              "src": "assets/media/graded/empty-room.bw.mp4",
+              "poster": "assets/media/graded/empty-room-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "ocean-figure",
+          "type": "video",
+          "src": "assets/media/ocean-figure.mp4",
+          "poster": "assets/media/ocean-figure-1.jpg",
+          "graded": {
+            "mist": {
+              "src": "assets/media/graded/ocean-figure.mist.mp4",
+              "poster": "assets/media/graded/ocean-figure-1.mist.jpg"
+            },
+            "bw": {
+              "src": "assets/media/graded/ocean-figure.bw.mp4",
+              "poster": "assets/media/graded/ocean-figure-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "snow-night",
+          "type": "video",
+          "src": "assets/media/snow-night.mp4",
+          "poster": "assets/media/snow-night-1.jpg",
+          "graded": {
+            "mist": {
+              "src": "assets/media/graded/snow-night.mist.mp4",
+              "poster": "assets/media/graded/snow-night-1.mist.jpg"
+            },
+            "bw": {
+              "src": "assets/media/graded/snow-night.bw.mp4",
+              "poster": "assets/media/graded/snow-night-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "window-silhouette",
+          "type": "video",
+          "src": "assets/media/window-silhouette.mp4",
+          "poster": "assets/media/window-silhouette-1.jpg",
+          "graded": {
+            "mist": {
+              "src": "assets/media/graded/window-silhouette.mist.mp4",
+              "poster": "assets/media/graded/window-silhouette-1.mist.jpg"
+            },
+            "bw": {
+              "src": "assets/media/graded/window-silhouette.bw.mp4",
+              "poster": "assets/media/graded/window-silhouette-1.bw.jpg"
+            }
+          }
+        }
+      ],
+      "phrases": {
+        "maxWords": 8,
+        "maxSec": 5.5,
+        "minWords": 3
+      },
+      "timing": {
+        "leadSec": 0.15,
+        "holdSec": 1.1,
+        "gapSec": 2.6,
+        "echoSec": 1.6,
+        "echoPhraseSec": 3.0,
+        "cooldown": 3
+      },
+      "transition": {
+        "overlapSec": 0.7,
+        "weights": {
+          "fade": 2,
+          "iris": 1.2,
+          "slice": 1.2,
+          "zoomOut": 1.2,
+          "bars": 1,
+          "blur": 1
+        }
+      },
+      "layouts": {
+        "lonely": {
+          "weight": 1.8,
+          "media": [
+            "ocean-figure",
+            "fog-walk",
+            "window-silhouette"
+          ]
+        },
+        "crumble": {
+          "weight": 1.4
+        },
+        "trail": {
+          "weight": 1.2,
+          "media": [
+            "fog-walk",
+            "fog-road",
+            "empty-room"
+          ]
+        },
+        "mirror": {
+          "weight": 1.3,
+          "media": [
+            "fog-road",
+            "fog-walk",
+            "ocean-figure"
+          ]
+        },
+        "breath": {
+          "weight": 1.0
+        },
+        "fragments": {
+          "weight": 1.0,
+          "media": [
+            "snow-night",
+            "empty-room"
+          ]
+        },
+        "tear": {
+          "weight": 1.1,
+          "media": [
+            "empty-room",
+            "fog-road",
+            "window-silhouette",
+            "ocean-figure"
+          ]
+        },
+        "snow": {
+          "weight": 1.2,
+          "media": [
+            "snow-night"
+          ]
+        }
+      },
+      "intro": {
+        "title": "Dame fuerza",
+        "artist": ""
+      },
+      "outro": {
+        "enabled": true,
+        "sec": 4.0,
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "texture": {
+        "grain": 0.08
+      },
+      "debug": {
+        "enabled": false
+      },
+      "seed": 67
+    }
+  ]
+}

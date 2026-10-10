@@ -1,0 +1,399 @@
+{
+  "ejecucion": "2026-10-07T12:08:35.260727+00:00",
+  "tema": "volcanoes",
+  "resumen": {
+    "proveedores": 13,
+    "correctos": 10,
+    "con_error": 2,
+    "pendientes": 1,
+    "archivos_descargados": 6
+  },
+  "proveedores": [
+    {
+      "status": "ok",
+      "query": "volcanoes",
+      "filters": {
+        "language": "en"
+      },
+      "muestra": [
+        {
+          "kind": "article",
+          "title": "Volcano",
+          "url": "https://en.wikipedia.org/wiki/Volcano"
+        }
+      ],
+      "result_count": 3,
+      "total": 29907,
+      "provider": "wikipedia"
+    },
+    {
+      "status": "ok",
+      "query": "volcanoes",
+      "filters": {
+        "language": "en"
+      },
+      "muestra": [
+        {
+          "kind": "q7404019",
+          "title": "Salem-Keizer Volcanoes",
+          "url": "https://www.wikidata.org/wiki/Q7404019"
+        }
+      ],
+      "result_count": 3,
+      "total": null,
+      "provider": "wikidata"
+    },
+    {
+      "status": "ok",
+      "query": "volcanoes",
+      "filters": {},
+      "muestra": [
+        {
+          "kind": "image",
+          "title": "Tavurvur volcano edit.jpg",
+          "url": "https://commons.wikimedia.org/wiki/File%3ATavurvur_volcano_edit.jpg"
+        }
+      ],
+      "result_count": 3,
+      "total": null,
+      "provider": "wikimedia_commons"
+    },
+    {
+      "status": "ok",
+      "query": "Volcano",
+      "filters": {
+        "project": "enwiki"
+      },
+      "muestra": [
+        {
+          "kind": "article",
+          "title": "Volcano",
+          "url": "https://en.wikipedia.org/wiki/Volcano"
+        }
+      ],
+      "result_count": 1,
+      "total": 1,
+      "provider": "wikimedia_enterprise"
+    },
+    {
+      "provider": "library_of_congress",
+      "status": "error",
+      "query": "volcanoes",
+      "result_count": 0,
+      "error": "library_of_congress: acceso bloqueado (HTTP 403)"
+    },
+    {
+      "provider": "europeana",
+      "status": "pendiente_falta_key",
+      "query": "volcanoes",
+      "result_count": 0,
+      "nota": "Completar EUROPEANA_API_KEY."
+    },
+    {
+      "status": "ok",
+      "query": "volcanoes",
+      "filters": {},
+      "muestra": [
+        {
+          "kind": "image",
+          "title": "NASA Science",
+          "url": "https://science.nasa.gov/wp-content/themes/nasa-child/assets/images/nasa-logo@2x.png"
+        }
+      ],
+      "result_count": 1,
+      "total": 1,
+      "provider": "nasa"
+    },
+    {
+      "status": "ok",
+      "query": "volcanoes",
+      "filters": {
+        "media_type": "video"
+      },
+      "muestra": [
+        {
+          "kind": "video",
+          "title": "How Do Active Volcanoes Change Clouds: Volcanoes Degassing",
+          "url": "https://images-assets.nasa.gov/video/GSFC_20141113_Volcanoes_m10183_Degassing/collection.json"
+        }
+      ],
+      "result_count": 3,
+      "total": 28,
+      "provider": "nasa_image_video_library"
+    },
+    {
+      "status": "ok",
+      "query": "population",
+      "filters": {
+        "catalog_limit": 1000
+      },
+      "muestra": [
+        {
+          "kind": "dataset",
+          "title": "Rural land area (sq. km)",
+          "url": "https://data.worldbank.org/indicator/AG.LND.TOTL.RU.K2"
+        }
+      ],
+      "result_count": 3,
+      "total": 177,
+      "provider": "world_bank"
+    },
+    {
+      "status": "ok",
+      "query": "-155.0,19.3,-154.9,19.4",
+      "filters": {
+        "bbox": "-155.0,19.3,-154.9,19.4"
+      },
+      "muestra": [
+        {
+          "kind": "map_feature",
+          "title": "bounds",
+          "url": "https://www.openstreetmap.org/bounds/"
+        }
+      ],
+      "result_count": 3,
+      "total": 7713,
+      "provider": "openstreetmap"
+    },
+    {
+      "provider": "overpass",
+      "status": "error",
+      "query": "Kilauea",
+      "result_count": 0,
+      "error": "overpass: ReadTimeout"
+    },
+    {
+      "status": "ok",
+      "query": "volcanoes",
+      "filters": {},
+      "muestra": [
+        {
+          "kind": "text",
+          "title": "Volcanoes",
+          "url": "http://catalog.hathitrust.org/Record/102111194"
+        }
+      ],
+      "result_count": 3,
+      "total": 6039,
+      "provider": "dpla"
+    },
+    {
+      "provider": "openverse",
+      "status": "ok_anonymous_fallback",
+      "calls": [
+        {
+          "status": "ok_anonymous_fallback",
+          "query": "volcanoes",
+          "filters": {
+            "media_type": "image"
+          },
+          "muestra": [
+            {
+              "kind": "image",
+              "title": "Chaparrastique Volcano Eruption Captured by Satellite",
+              "url": "https://www.flickr.com/photos/24662369@N07/11653609255"
+            }
+          ],
+          "result_count": 3,
+          "total": 240,
+          "nota": "El token guardado fue rechazado; se probó acceso anónimo.",
+          "media_type": "image"
+        },
+        {
+          "status": "ok_anonymous_fallback",
+          "query": "volcanoes",
+          "filters": {
+            "media_type": "audio"
+          },
+          "muestra": [
+            {
+              "kind": "audio",
+              "title": "Mud Volcanos - Salton Sea",
+              "url": "https://freesound.org/people/RTB45/sounds/415609"
+            }
+          ],
+          "result_count": 3,
+          "total": 156,
+          "nota": "El token guardado fue rechazado; se probó acceso anónimo.",
+          "media_type": "audio"
+        }
+      ],
+      "result_count": 6
+    }
+  ],
+  "multimedia_descargada": [
+    {
+      "file": "descargas/nasa_1.png",
+      "provider": "nasa",
+      "type": "image",
+      "title": "NASA Science",
+      "description": "\"Happy New Year!\" No, wait, this is not a fireworks display. This image shows Nebula Pa 30, observed with the Gemini North Telescope in Hawai'i. It is likely the remnant of an old supernova explosion: separate historical records by Chinese, Japanese and Arabic astronomers tell of a \"guest star\" that appeared in the sky for 185 days in the year 1181. It is believed that this bright new point of light came from the supernova that caused the fireworks in Pa 30. Astronomers don't know exactly what happened in this unusual explosion, classified as a Type Iax supernova, but it is thought to be caused by the merger of two white dwarfs. The mysterious central star in the image is extremely hot and produces a strong wind, possibly forming the radial filaments. Look closely at them: those pearl-like knots stringing the filaments are 4 light-days in diameter. Understanding how a supernova created …",
+      "creator": "",
+      "license": "",
+      "date": "2026-10-07",
+      "source_url": "https://science.nasa.gov/wp-content/themes/nasa-child/assets/images/nasa-logo@2x.png",
+      "catalog_url": "https://science.nasa.gov/wp-content/themes/nasa-child/assets/images/nasa-logo@2x.png",
+      "bytes": 8928,
+      "content_type": "image/png",
+      "informacion_importante": {}
+    },
+    {
+      "file": "descargas/nasa_image_video_library_1.mp4",
+      "provider": "nasa_image_video_library",
+      "type": "video",
+      "title": "How Do Active Volcanoes Change Clouds: Volcanoes Degassing",
+      "description": "NASA Goddard Space Flight Center scientist Andrew Sayer talks about how emissions from volcanoes can affect clouds.",
+      "creator": "",
+      "license": "",
+      "date": "2014-11-13T00:00:00Z",
+      "source_url": "http://images-assets.nasa.gov/video/GSFC_20141113_Volcanoes_m10183_Degassing/GSFC_20141113_Volcanoes_m10183_Degassing~orig.mp4",
+      "catalog_url": "https://images-assets.nasa.gov/video/GSFC_20141113_Volcanoes_m10183_Degassing/collection.json",
+      "bytes": 16692914,
+      "content_type": "video/mp4",
+      "informacion_importante": {
+        "keywords": [
+          "Atmospheric Science",
+          "Geology",
+          "Natural Hazards",
+          "Structural Geology",
+          "Volcano",
+          "Aerosols",
+          "Clouds",
+          "Aerosols Particle Properties",
+          "Albedo",
+          "Earth"
+        ],
+        "center": "GSFC"
+      }
+    },
+    {
+      "file": "descargas/nasa_image_video_library_3.jpg",
+      "provider": "nasa_image_video_library",
+      "type": "video",
+      "title": "How Do Active Volcanoes Change Clouds: Volcanoes Degassing",
+      "description": "NASA Goddard Space Flight Center scientist Andrew Sayer talks about how emissions from volcanoes can affect clouds.",
+      "creator": "",
+      "license": "",
+      "date": "2014-11-13T00:00:00Z",
+      "source_url": "https://images-assets.nasa.gov/video/GSFC_20141113_Volcanoes_m10183_Degassing/GSFC_20141113_Volcanoes_m10183_Degassing~thumb.jpg",
+      "catalog_url": "https://images-assets.nasa.gov/video/GSFC_20141113_Volcanoes_m10183_Degassing/collection.json",
+      "bytes": 7631,
+      "content_type": "image/jpeg",
+      "informacion_importante": {
+        "keywords": [
+          "Atmospheric Science",
+          "Geology",
+          "Natural Hazards",
+          "Structural Geology",
+          "Volcano",
+          "Aerosols",
+          "Clouds",
+          "Aerosols Particle Properties",
+          "Albedo",
+          "Earth"
+        ],
+        "center": "GSFC"
+      }
+    },
+    {
+      "file": "descargas/openverse_1.jpg",
+      "provider": "openverse",
+      "type": "image",
+      "title": "Chaparrastique Volcano Eruption Captured by Satellite",
+      "description": "",
+      "creator": "NASA Goddard Photo and Video",
+      "license": "by 2.0",
+      "date": "",
+      "source_url": "https://live.staticflickr.com/2818/11653609255_5ddd09754a_b.jpg",
+      "catalog_url": "https://www.flickr.com/photos/24662369@N07/11653609255",
+      "bytes": 218547,
+      "content_type": "image/jpeg",
+      "informacion_importante": {
+        "source": "nasa",
+        "attribution": "\"Chaparrastique Volcano Eruption Captured by Satellite\" by NASA Goddard Photo and Video is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "tags": [
+          {
+            "name": "chaparrastique",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "volcano",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      }
+    },
+    {
+      "file": "descargas/openverse_2.jpg",
+      "provider": "openverse",
+      "type": "image",
+      "title": "Eruption Continues at Nabro Volcano on June 22, 2011",
+      "description": "",
+      "creator": "NASA Goddard Photo and Video",
+      "license": "by 2.0",
+      "date": "",
+      "source_url": "https://live.staticflickr.com/2699/5864294858_b89b91d565.jpg",
+      "catalog_url": "https://www.flickr.com/photos/24662369@N07/5864294858",
+      "bytes": 48181,
+      "content_type": "image/jpeg",
+      "informacion_importante": {
+        "source": "nasa",
+        "attribution": "\"Eruption Continues at Nabro Volcano on June 22, 2011\" by NASA Goddard Photo and Video is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "tags": [
+          {
+            "name": "nasa",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "volcano",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      }
+    },
+    {
+      "file": "descargas/openverse_3.jpg",
+      "provider": "openverse",
+      "type": "image",
+      "title": "Volcano",
+      "description": "",
+      "creator": "jpotisch",
+      "license": "by-nc-sa 2.0",
+      "date": "",
+      "source_url": "https://live.staticflickr.com/3534/3942574975_e0737351ff_b.jpg",
+      "catalog_url": "https://www.flickr.com/photos/19481970@N00/3942574975",
+      "bytes": 142271,
+      "content_type": "image/jpeg",
+      "informacion_importante": {
+        "source": "flickr",
+        "attribution": "\"Volcano\" by jpotisch is licensed under CC BY-NC-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/2.0/.",
+        "tags": [
+          {
+            "name": "costume",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "halloween",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "snowglobe",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "volcano",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "resources": {
+    "navLabel": "Resources",
+    "title": "Resources",
+    "subtitle": "Your songs, images and videos to use in templates. Songs are transcribed automatically when uploaded.",
+    "tabs": { "music": "Songs", "images": "Images", "videos": "Videos" },
+    "searchPlaceholder": {
+      "music": "Search by name, artist or tag…",
+      "images": "Search by name, description or tag…",
+      "videos": "Search by name, description or tag…"
+    },
+    "clearSearch": "Clear search",
+    "categoryLabel": "Category",
+    "allCategories": "All categories",
+    "loadError": "We couldn't load your resources. Try again in a bit.",
+    "empty": {
+      "music": "You haven't uploaded any songs yet",
+      "images": "You haven't uploaded any images yet",
+      "videos": "You haven't uploaded any videos yet"
+    },
+    "emptyFiltered": "No results match those filters",
+    "emptyHint": "Drag files onto the upload area to add them.",
+    "upload": {
+      "title": { "music": "Upload songs", "images": "Upload images", "videos": "Upload videos" },
+      "hint": "Drag and drop, or click to choose",
+      "state": {
+        "queued": "Queued",
+        "done": "Uploaded",
+        "duplicate": "Already in your library",
+        "error": "Failed"
+      }
+    },
+    "card": { "edit": "Edit", "delete": "Delete", "lyrics": "View lyrics" },
+    "transcription": {
+      "pending": "Pending",
+      "running": "Transcribing",
+      "done": "Lyrics ready",
+      "failed": "Failed",
+      "retry": "Retry",
+      "transcribe": "Transcribe"
+    },
+    "lyrics": {
+      "loading": "Loading lyrics…",
+      "empty": "This song has no lyrics yet.",
+      "language": "Language: {language}"
+    },
+    "edit": {
+      "title": "Edit resource",
+      "name": "Name",
+      "trackName": "Song name",
+      "artist": "Artist",
+      "language": "Language",
+      "languagePlaceholder": "es, en… (empty = auto)",
+      "description": "Description",
+      "tags": "Tags",
+      "tagsHint": "Separate them with commas.",
+      "category": "Category",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saved": "Changes saved"
+    },
+    "delete": {
+      "title": "Delete this resource?",
+      "description": "“{name}” and its file will be removed from your library. Videos already generated are not affected.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "deleted": "Resource deleted"
+    },
+    "picker": {
+      "search": "Search your library…",
+      "loading": "Loading…",
+      "empty": "Your library is empty.",
+      "noResults": "No results."
+    }
+  }
+}

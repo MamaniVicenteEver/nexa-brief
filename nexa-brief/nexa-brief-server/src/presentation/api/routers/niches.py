@@ -12,7 +12,14 @@ from fastapi import APIRouter, HTTPException
 
 from src.adapters.recorder.infrastructure import hyperframes_adapter, remotion_adapter
 from src.config.niche_config import get_niche_config, list_all_niches
-from src.config.template_manifest import get_template_display_name
+from src.config.template_manifest import (
+    get_template_category_id,
+    get_template_category_name,
+    get_template_category_order,
+    get_template_display_name,
+    get_template_sort_order,
+    get_template_tags,
+)
 from src.presentation.api.schemas.niche_schema import NicheResponse
 
 router = APIRouter(tags=["niches"])
@@ -41,6 +48,11 @@ def _to_response(n) -> NicheResponse:
         id=n.id,
         display_name=get_template_display_name(n.template.template_id, fallback=n.display_name),
         description=n.description,
+        category_id=get_template_category_id(n.template.template_id),
+        category_name=get_template_category_name(n.template.template_id),
+        category_order=get_template_category_order(n.template.template_id),
+        tags=get_template_tags(n.template.template_id),
+        sort_order=get_template_sort_order(n.template.template_id),
         pipeline_type=n.pipeline_type,
         active=n.active,
         recorder_engine=n.recorder_engine,

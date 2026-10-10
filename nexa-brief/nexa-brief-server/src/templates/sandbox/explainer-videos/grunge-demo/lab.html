@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>grunge · laboratorio</title>
+<!-- Página de prueba del diseño grunge: storyboard mínimo (lab-storyboard.json o ?sb=archivo.json) sin audio. -->
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#stage{position:fixed;inset:0}</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="../../explainer-kit/engine/loader.js" data-design="grunge" data-noboot></script>
+<script>
+(async () => {
+  const D = await window.KitReady;
+  const qs = new URLSearchParams(location.search);
+  const sb = await (await fetch(qs.get("sb") || "lab-storyboard.json")).json();
+  const lyrics = await (await fetch("assets/lyrics.json")).json();
+  const cfg = { id: "lab", design: "grunge", lyricsUrl: "assets/lyrics.json", seed: 6659, outro: { enabled: sb.outro !== false } };
+  await Kit.boot({ design: D, config: cfg, storyboard: sb, lyrics, total: sb.total || 30 });
+})();
+</script>
+</body>
+</html>

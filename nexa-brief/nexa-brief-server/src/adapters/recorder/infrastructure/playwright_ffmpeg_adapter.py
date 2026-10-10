@@ -15,7 +15,7 @@ Cada `VideoFormat.generation_method` decide CÓMO se produce ese formato:
   - "rerecord": una pasada de Playwright COMPLETA e independiente al viewport
     propio de ese formato (format.width × format.height), grabando los
     duration_seconds completos. Necesario para plantillas config-driven (ej.
-    src/templates/01-image-bg/) cuyo motor JS decide su layout (flanking vs.
+    src/templates/image/01-image-bg/) cuyo motor JS decide su layout (flanking vs.
     bandas top/bottom) según el ancho real del viewport — grabar solo en 16:9
     y recortar después nunca dispara el layout angosto, y el crop puede
     cortar texto que el layout habría reposicionado. Escala linealmente con
@@ -30,7 +30,7 @@ IMPORTANTE — por qué se sirve output_dir por HTTP en vez de navegar a file://
 `fetch()` en Chromium RECHAZA el esquema file:// incondicionalmente ("URL
 scheme 'file' is not supported") — esto es una restricción dura del propio
 Fetch API, NO relacionada con CORS, así que `--disable-web-security` no la
-evita. Las plantillas config-driven (ej. src/templates/01-image-bg/) cargan
+evita. Las plantillas config-driven (ej. src/templates/image/01-image-bg/) cargan
 su config con `fetch("config.json")`, así que navegar por file:// las deja
 SIEMPRE en su estado sin estilos (CONFIG nunca se resuelve) — un bug real,
 confirmado reproduciendo la grabación con Playwright real y capturando el

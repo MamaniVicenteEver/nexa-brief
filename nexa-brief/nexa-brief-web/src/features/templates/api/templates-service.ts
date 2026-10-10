@@ -1,11 +1,25 @@
 import type { JobStage } from "@/features/create-video/types";
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
 import { appendResourceSourceFields, type ResourceSelection } from "@/shared/lib/resource-source";
-import type { PreviewFile, PreviewStatus, Template, TemplatePreviewHandle } from "../types";
+import type {
+  PreviewFile,
+  PreviewStatus,
+  RequirementMediaSlot,
+  Template,
+  TemplatePreviewHandle,
+  TemplateRequirements,
+} from "../types";
 
 interface TemplateDto {
   template_id: string;
   niche_id: string;
+  category_id?: string;
+  category_name?: string;
+  category_order?: number;
+  tags?: string[];
+  sort_order?: number;
+  status?: string;
+  can_generate?: boolean;
   display_name: string;
   native_orientation: Template["nativeOrientation"];
   requires_image: boolean;
@@ -22,6 +36,13 @@ function mapTemplate(dto: TemplateDto): Template {
   return {
     id: dto.template_id,
     nicheId: dto.niche_id,
+    categoryId: dto.category_id ?? "uncategorized",
+    categoryName: dto.category_name ?? "Sin categoría",
+    categoryOrder: dto.category_order ?? 999,
+    tags: dto.tags ?? [],
+    sortOrder: dto.sort_order ?? 999,
+    status: dto.status ?? "ready",
+    canGenerate: dto.can_generate ?? Boolean(dto.niche_id),
     displayName: dto.display_name,
     nativeOrientation: dto.native_orientation,
     requiresImage: dto.requires_image,
@@ -118,5 +139,49 @@ export async function getPreviewStatus(
     isSuccess: dto.is_success,
     errors: dto.errors,
     files: dto.files.map(mapPreviewFile),
+  };
+}
+
+interface TemplateRequirementsDto {
+  audio: { required: boolean; lyrics: TemplateRequirements["audio"]["lyrics"] };
+  media: {
+    slot: string;
+    kind: RequirementMediaSlot["kind"];
+    count?: number | null;
+    min: number;
+    max: number;
+    orientation: RequirementMediaSlot["orientation"];
+    target: RequirementMediaSlot["target"];
+    label: string;
+    hint: string;
+  }[];
+  texts: { key: string; label: string; max: number | null; default: string | null }[];
+  brief: boolean;
+}
+
+/** Qué pide cada plantilla (canción, lugares de medios, textos): el Estudio y
+ * Crear video arman su formulario a partir de esto. */
+export async function getTemplateRequirements(
+  templateId: string,
+  signal?: AbortSignal,
+): Promise<TemplateRequirements> {
+  const dto = await httpClient<TemplateRequirementsDto>(
+    `/api/v1/templates/${templateId}/requirements`,
+    { signal },
+  );
+  return {
+    audio: dto.audio,
+    media: dto.media.map((slot) => ({
+      slot: slot.slot,
+      kind: slot.kind,
+      min: slot.min,
+      max: slot.max,
+      orientation: slot.orientation,
+      target: slot.target,
+      label: slot.label,
+      hint: slot.hint,
+    })),
+    texts: dto.texts.map((text) => ({ ...text })),
+    brief: dto.brief,
   };
 }

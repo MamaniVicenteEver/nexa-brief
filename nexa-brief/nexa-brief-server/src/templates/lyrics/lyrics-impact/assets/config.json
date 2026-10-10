@@ -1,0 +1,35 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Lyric video estilo corrido/trap urbano — una palabra gigante por frase en tinta roja condensada e itálica, con las demás palabras chicas alrededor, barras de cine y golpe de cámara por palabra cantada. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "bg": {
+        "type": "video",
+        "src": "assets/women-dancing.mp4",
+        "filter": "grayscale(0.5) brightness(0.50) contrast(1.25) saturate(1.3) blur(4px)",
+        "darkness": {
+          "center": 0.04,
+          "edge": 0.28,
+          "outer": 0.50,
+          "vignette": 0.35
+        }
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&display=swap",
+        "display": "\"Anton\", sans-serif"
+      },
+      "colors": { "ink": "#D2222A", "feats": "#8f8f92", "hint": "#a09da0" },
+      "intro": { "title": "Hola\nRemix", "sub": "", "feats": "" },
+      "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "SUSCRIBITE | NODEMOTION", "support": "Tu apoyo hace posible que sigamos trayendo más contenido." },
+      "debug": { "enabled": false },
+      "cluster": {
+        "gapSec": 0.55, "maxWords": 5, "maxChars": 26, "bigMaxVh": 0.26,
+        "smallRatio": 0.3, "skewBase": -8, "skewJitter": 3, "rotJitter": 1.2, "shakePx": 6
+      },
+      "seed": 11
+    }
+  ]
+}

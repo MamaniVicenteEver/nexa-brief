@@ -1,0 +1,231 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Lyric video de recuerdos que se desvanecen: películas caseras de 8 mm y VHS en sepia lavado, polaroids que caen, proyector que titila, fecha VHS, máquina de escribir que escribe y borra la letra, letra manuscrita que se esfuma, destellos de luz cálida y fotogramas que se queman. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "lyricsFilter": {
+        "minLogprob": -0.6,
+        "drop": [
+          "gracias por ver",
+          "subt[ií]tulos",
+          "amara\\.org",
+          "audio ?jungle",
+          "suscr[ií]bete"
+        ]
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Special+Elite&family=VT323&display=swap"
+      },
+      "palette": {
+        "dark": "#1A1410",
+        "cream": "#EADFC8",
+        "sepia": "#A88B62",
+        "rose": "#B9877A",
+        "ink": "#3A2A1E",
+        "vhs": "#E8A84A"
+      },
+      "grades": {
+        "faded": {
+          "type": "css",
+          "saturate": 0.5,
+          "contrast": 0.88,
+          "brightness": 0.95
+        },
+        "sepia": {
+          "type": "duo",
+          "dark": "#1C130C",
+          "light": "#EBD9B6",
+          "contrast": 1.05
+        }
+      },
+      "render": {
+        "kbVideo": true
+      },
+      "media": [
+        {
+          "id": "family-kitchen",
+          "type": "video",
+          "src": "assets/media/family-kitchen.mp4",
+          "poster": "assets/media/family-kitchen-1.jpg",
+          "graded": {
+            "faded": {
+              "src": "assets/media/graded/family-kitchen.faded.mp4",
+              "poster": "assets/media/graded/family-kitchen-1.faded.jpg"
+            },
+            "sepia": {
+              "src": "assets/media/graded/family-kitchen.sepia.mp4",
+              "poster": "assets/media/graded/family-kitchen-1.sepia.jpg"
+            }
+          }
+        },
+        {
+          "id": "family-snow",
+          "type": "video",
+          "src": "assets/media/family-snow.mp4",
+          "poster": "assets/media/family-snow-1.jpg",
+          "graded": {
+            "faded": {
+              "src": "assets/media/graded/family-snow.faded.mp4",
+              "poster": "assets/media/graded/family-snow-1.faded.jpg"
+            },
+            "sepia": {
+              "src": "assets/media/graded/family-snow.sepia.mp4",
+              "poster": "assets/media/graded/family-snow-1.sepia.jpg"
+            }
+          }
+        },
+        {
+          "id": "family-nature",
+          "type": "video",
+          "src": "assets/media/family-nature.mp4",
+          "poster": "assets/media/family-nature-1.jpg",
+          "graded": {
+            "faded": {
+              "src": "assets/media/graded/family-nature.faded.mp4",
+              "poster": "assets/media/graded/family-nature-1.faded.jpg"
+            },
+            "sepia": {
+              "src": "assets/media/graded/family-nature.sepia.mp4",
+              "poster": "assets/media/graded/family-nature-1.sepia.jpg"
+            }
+          }
+        },
+        {
+          "id": "father-baby",
+          "type": "video",
+          "src": "assets/media/father-baby.mp4",
+          "poster": "assets/media/father-baby-1.jpg",
+          "graded": {
+            "faded": {
+              "src": "assets/media/graded/father-baby.faded.mp4",
+              "poster": "assets/media/graded/father-baby-1.faded.jpg"
+            },
+            "sepia": {
+              "src": "assets/media/graded/father-baby.sepia.mp4",
+              "poster": "assets/media/graded/father-baby-1.sepia.jpg"
+            }
+          }
+        },
+        {
+          "id": "child-8mm",
+          "type": "video",
+          "src": "assets/media/child-8mm.mp4",
+          "poster": "assets/media/child-8mm-1.jpg",
+          "graded": {
+            "faded": {
+              "src": "assets/media/graded/child-8mm.faded.mp4",
+              "poster": "assets/media/graded/child-8mm-1.faded.jpg"
+            },
+            "sepia": {
+              "src": "assets/media/graded/child-8mm.sepia.mp4",
+              "poster": "assets/media/graded/child-8mm-1.sepia.jpg"
+            }
+          }
+        },
+        {
+          "id": "hands",
+          "type": "video",
+          "src": "assets/media/hands.mp4",
+          "poster": "assets/media/hands-1.jpg",
+          "graded": {
+            "faded": {
+              "src": "assets/media/graded/hands.faded.mp4",
+              "poster": "assets/media/graded/hands-1.faded.jpg"
+            },
+            "sepia": {
+              "src": "assets/media/graded/hands.sepia.mp4",
+              "poster": "assets/media/graded/hands-1.sepia.jpg"
+            }
+          }
+        }
+      ],
+      "phrases": {
+        "maxWords": 8,
+        "maxSec": 5.5,
+        "minWords": 3
+      },
+      "timing": {
+        "leadSec": 0.15,
+        "holdSec": 1.1,
+        "gapSec": 2.6,
+        "echoSec": 1.6,
+        "echoPhraseSec": 3.0,
+        "cooldown": 3
+      },
+      "transition": {
+        "overlapSec": 0.8,
+        "weights": {
+          "burn": 2.5,
+          "blur": 2,
+          "fade": 2,
+          "flash": 1,
+          "slice": 0.8
+        },
+        "flashColor": "#FFE6C2",
+        "burnColor": "rgba(255,150,60,0.9)"
+      },
+      "layouts": {
+        "polaroid": {
+          "weight": 1.8,
+          "media": [
+            "family-kitchen",
+            "family-nature",
+            "father-baby",
+            "child-8mm",
+            "hands"
+          ]
+        },
+        "homevideo": {
+          "weight": 2.0
+        },
+        "album": {
+          "weight": 1.2
+        },
+        "projector": {
+          "weight": 1.3,
+          "media": [
+            "family-snow",
+            "child-8mm",
+            "family-kitchen",
+            "family-nature"
+          ]
+        },
+        "fading": {
+          "weight": 1.2
+        },
+        "filmBurn": {
+          "weight": 1.0
+        },
+        "double": {
+          "weight": 1.0
+        },
+        "dateCard": {
+          "weight": 0.8
+        }
+      },
+      "intro": {
+        "title": "Fue un sueño",
+        "artist": ""
+      },
+      "outro": {
+        "enabled": true,
+        "sec": 4.0,
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "texture": {
+        "grain": 0.1
+      },
+      "debug": {
+        "enabled": false
+      },
+      "seed": 41
+    }
+  ]
+}
