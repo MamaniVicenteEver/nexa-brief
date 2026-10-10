@@ -1,0 +1,34 @@
+{
+  "id": "codex-ariane-501",
+  "design": "rough",
+  "title": "EL NÚMERO QUE NO CABÍA",
+  "kicker": "ARIANE 501 · 4 JUN 1996",
+  "language": "es-419",
+  "audience": "tecnología e innovación, público general, vertical y horizontal",
+  "voice_direction": "Narrador masculino maduro, español latino neutro, con energía contenida de thriller tecnológico. Arranca con suspenso, explica con claridad y acelera cuando el número desborda, luego cae a un tono reflexivo y cierra con una lección firme. Nunca teatral, nunca gritado.",
+  "segments": [
+    { "id": "s01", "tone": "suspenso", "intensity": 0.8, "text": "Cuatro de junio de mil novecientos noventa y seis. Kourou, Guayana Francesa. El primer Ariane cinco despega. Treinta y siete segundos después, un número que no cabía desvía el cohete." },
+    { "id": "s02", "tone": "tensión", "intensity": 0.65, "text": "Durante treinta y seis segundos, todo fue normal. Luego fallaron casi al mismo tiempo los dos sistemas de referencia inercial: las computadoras que sabían cómo se movía el lanzador." },
+    { "id": "s03", "tone": "explicativo", "intensity": 0.55, "text": "Había dos unidades, una activa y otra de respaldo. Cada una medía orientación y movimiento. Si el cohete se inclinaba, debían avisar y la computadora debía corregirlo." },
+    { "id": "s04", "tone": "explicativo", "intensity": 0.62, "text": "Dentro del sistema seguía corriendo una función heredada de Ariane cuatro. Servía para alinear la plataforma antes del despegue. Después, ya no hacía falta." },
+    { "id": "s05", "tone": "asombro", "intensity": 0.7, "text": "Aun así, la función permaneció activa unos cuarenta segundos. Ariane cinco seguía una trayectoria distinta: construía mucha más velocidad horizontal que Ariane cuatro." },
+    { "id": "s06", "tone": "tensión creciente", "intensity": 0.72, "text": "Entonces ocurrió lo pequeño. El software tomó un número de coma flotante de sesenta y cuatro bits y trató de guardarlo como un entero con signo de dieciséis bits. Era demasiado grande para caber." },
+    { "id": "s07", "tone": "cercano", "intensity": 0.45, "text": "Es como meter una caja enorme en un casillero pequeño. El programa asumió que nunca sería tan grande y no dejó una salida segura." },
+    { "id": "s08", "tone": "revelación", "intensity": 0.65, "text": "La conversión no estaba protegida contra esa excepción. El procesador se detuvo. La unidad de respaldo tenía el mismo hardware y software, así que cayó por la misma causa. La redundancia se volvió un espejo." },
+    { "id": "s09", "tone": "aceleración", "intensity": 0.82, "text": "A los treinta y seis coma siete segundos falló primero el respaldo. Casi de inmediato falló la unidad activa. Envió información de diagnóstico, pero la computadora la leyó como datos de vuelo." },
+    { "id": "s10", "tone": "urgencia", "intensity": 0.88, "text": "La computadora creyó que el cohete se había inclinado. Ordenó mover las toberas para corregirlo y después movió también la del motor Vulcain. Pero esa desviación nunca había ocurrido." },
+    { "id": "s11", "tone": "clímax", "intensity": 1.0, "text": "Ariane cinco corrigió un giro que nunca ocurrió. En lugar de seguir la trayectoria, obedeció una ficción escrita en bits. La estructura recibió una orden imposible y empezó a girar fuera de control." },
+    { "id": "s12", "tone": "clímax", "intensity": 0.98, "text": "A los treinta y nueve segundos, las fuerzas aerodinámicas desintegraron el lanzador. La autodestrucción se activó correctamente. El software había gobernado el desastre." },
+    { "id": "s13", "tone": "peso", "intensity": 0.3, "text": "Con el vuelo se perdieron los cuatro satélites Cluster de la Agencia Espacial Europea, preparados para estudiar la relación entre la Tierra y el Sol. La investigación duraría meses." },
+    { "id": "s14", "tone": "silencio", "intensity": 0.25, "text": "La junta descartó al clima y a los motores como causa. El origen estaba en el diseño del software, en una función innecesaria y en una suposición no demostrada." },
+    { "id": "s15", "tone": "reflexivo", "intensity": 0.5, "text": "Hubo revisiones y miles de correcciones, pero las pruebas no reprodujeron la trayectoria real de Ariane cinco. Una prueba con esos datos habría expuesto el fallo antes del lanzamiento." },
+    { "id": "s16", "tone": "reparación", "intensity": 0.65, "text": "Después se eliminó la alineación durante el vuelo, se cambió la gestión de excepciones y se retiraron funciones innecesarias. La lección fue concreta: probar el código en el mundo donde va a vivir." },
+    { "id": "s17", "tone": "cierre", "intensity": 0.9, "text": "El número no era enorme para el universo. Solo era demasiado grande para el espacio que le habían reservado. Y eso bastó para desviar un cohete. Cuando el software gobierna el mundo físico, cada supuesto necesita un límite y una respuesta." },
+    {
+      "id": "s18",
+      "tone": "cierre",
+      "intensity": 0.45,
+      "text": "Gracias por llegar hasta aquí. Si te gustó este contenido, déjanos un like, suscríbete y activa la campana de notificaciones. Tu apoyo nos ayuda a seguir creando y poder traer más contenido."
+    }
+  ]
+}

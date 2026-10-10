@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Maximize2, Pause, Play, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import { Loader2, Maximize2, Menu, Pause, Play, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   forwardRef,
@@ -43,6 +43,13 @@ interface MediaPlayerModalProps {
   defaultViewport?: MediaViewport;
   /** Acciones extra en la barra superior (ej. "Publicar" en Biblioteca). */
   actions?: ReactNode;
+  /** Panel lateral opcional (el Estudio en /plantillas). Con él aparece un
+   * botón ☰ junto a la X que lo abre/cierra dentro del modal y el escenario se
+   * achica. Sin él, el modal queda igual (Biblioteca, landing). */
+  sidebar?: ReactNode;
+  /** Texto accesible del botón ☰ (lo traduce quien pasa el sidebar). */
+  sidebarToggleLabel?: string;
+  defaultSidebarOpen?: boolean;
 }
 
 interface StageHandle {
@@ -217,11 +224,22 @@ export function MediaPlayerModal({
   defaultVolume = 0.6,
   defaultViewport = "desktop",
   actions,
+  sidebar,
+  sidebarToggleLabel = "Panel",
+  defaultSidebarOpen = true,
 }: MediaPlayerModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="w-[min(94vw,1440px)] !max-w-[min(94vw,1440px)] gap-2 rounded-[24px] bg-black p-2 text-white ring-white/10">
+      <DialogContent
+        className={cn(
+          "w-[min(94vw,1440px)] !max-w-[min(94vw,1440px)] gap-2 rounded-[24px] bg-black p-2 text-white ring-white/10",
+          // Con sidebar el modal ocupa casi toda la pantalla: el panel scrollea
+          // por dentro y en móvil todo el modal scrollea.
+          sidebar !== undefined &&
+            "w-[min(98vw,1760px)] !max-w-[min(98vw,1760px)] max-h-[96vh] overflow-y-auto md:overflow-hidden",
+        )}
+      >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">{description ?? title}</DialogDescription>
         {/* Montado solo con el modal abierto: el estado se reinicia en cada apertura. */}
@@ -231,6 +249,9 @@ export function MediaPlayerModal({
           defaultVolume={defaultVolume}
           defaultViewport={defaultViewport}
           actions={actions}
+          sidebar={sidebar}
+          sidebarToggleLabel={sidebarToggleLabel}
+          defaultSidebarOpen={defaultSidebarOpen}
         />
       </DialogContent>
     </Dialog>
@@ -243,12 +264,18 @@ function PlayerBody({
   defaultVolume,
   defaultViewport,
   actions,
+  sidebar,
+  sidebarToggleLabel,
+  defaultSidebarOpen,
 }: {
   title: string;
   source: MediaSource | null;
   defaultVolume: number;
   defaultViewport: MediaViewport;
   actions?: ReactNode;
+  sidebar?: ReactNode;
+  sidebarToggleLabel: string;
+  defaultSidebarOpen: boolean;
 }) {
   const t = useTranslations("mediaPlayer");
   const stageRef = useRef<StageHandle>(null);
@@ -272,6 +299,19 @@ function PlayerBody({
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [resumeAt, setResumeAt] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(defaultSidebarOpen);
+  const hasSidebar = sidebar !== undefined;
+
+  // Otra URL de iframe (ej. el Estudio pasa de la plantilla por defecto al
+  // preview del draft): es otra reproducción, arranca de cero.
+  const iframeUrl = source?.kind === "iframe" ? source.url : null;
+  useEffect(() => {
+    if (iframeUrl === null) return;
+    setTime(0);
+    setDuration(0);
+    setEnded(false);
+    setPlaying(true);
+  }, [iframeUrl]);
 
   const effectiveVolume = muted ? 0 : volume;
   const videoUrl =
@@ -451,77 +491,110 @@ function PlayerBody({
             <Maximize2 className="size-3.5" />
           </button>
           {actions}
+          {hasSidebar && (
+            <button
+              type="button"
+              aria-label={sidebarToggleLabel}
+              aria-expanded={sidebarOpen}
+              onClick={() => setSidebarOpen((v) => !v)}
+              className={cn(
+                "flex size-7 items-center justify-center rounded-full transition-colors",
+                sidebarOpen
+                  ? "bg-white text-black"
+                  : "bg-white/10 text-white/85 hover:bg-white/20 hover:text-white",
+              )}
+            >
+              <Menu className="size-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
-      {canPlay ? (
-        <div
-          ref={stageBoxRef}
-          className={cn(
-            "mx-auto max-w-full overflow-hidden rounded-[18px] bg-black transition-[width,height] duration-200",
-            viewport === "mobile" ? "max-h-[74vh] w-[min(390px,88vw)]" : "max-h-[74vh] w-full",
-          )}
-          style={{ aspectRatio: viewport === "mobile" ? "9 / 16" : "16 / 9" }}
-        >
-          {source.kind === "iframe" ? (
-            <IframeStage ref={stageRef} url={source.url} title={title} {...stageProps} />
+      <div className={cn(hasSidebar && "flex flex-col gap-2 md:flex-row md:items-stretch")}>
+        <div className={cn(hasSidebar && "flex min-w-0 flex-1 flex-col gap-2")}>
+          {canPlay ? (
+            <div
+              ref={stageBoxRef}
+              className={cn(
+                "mx-auto max-w-full overflow-hidden rounded-[18px] bg-black transition-[width,height] duration-200",
+                viewport === "mobile" ? "max-h-[74vh] w-[min(390px,88vw)]" : "max-h-[74vh] w-full",
+              )}
+              style={{ aspectRatio: viewport === "mobile" ? "9 / 16" : "16 / 9" }}
+            >
+              {source.kind === "iframe" ? (
+                <IframeStage ref={stageRef} url={source.url} title={title} {...stageProps} />
+              ) : (
+                videoUrl && (
+                  <VideoStage
+                    key={videoUrl}
+                    ref={stageRef}
+                    url={videoUrl}
+                    startAt={resumeAt}
+                    errorLabel={t("loadError")}
+                    {...stageProps}
+                  />
+                )
+              )}
+            </div>
           ) : (
-            videoUrl && (
-              <VideoStage
-                key={videoUrl}
-                ref={stageRef}
-                url={videoUrl}
-                startAt={resumeAt}
-                errorLabel={t("loadError")}
-                {...stageProps}
-              />
-            )
+            <p className="p-10 text-center text-sm text-white/70">{t("unavailable")}</p>
+          )}
+
+          {canPlay && (
+            <div className="space-y-2 px-2 pb-1">
+              <div className="flex items-center gap-2 text-[10px] font-semibold text-white/65">
+                <span className="w-10 text-right tabular-nums">{formatTime(time)}</span>
+                <input
+                  aria-label={t("progress")}
+                  type="range"
+                  min="0"
+                  max={Math.max(duration, 0.1)}
+                  step="0.1"
+                  value={Math.min(time, duration)}
+                  onChange={(event) => seek(Number(event.target.value))}
+                  disabled={duration <= 0}
+                  className="h-1 min-w-0 flex-1 cursor-pointer accent-white"
+                />
+                <span className="w-10 tabular-nums">{formatTime(duration)}</span>
+              </div>
+              <div className="relative flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  aria-label={t("skipBack")}
+                  onClick={() => seek(time - 5)}
+                  className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                >
+                  −5s
+                </button>
+                <button
+                  type="button"
+                  aria-label={t("skipForward")}
+                  onClick={() => seek(time + 5)}
+                  className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                >
+                  +5s
+                </button>
+                <span className="absolute right-0 hidden text-[10px] text-white/40 lg:inline">
+                  {t("shortcutsHint")}
+                </span>
+              </div>
+            </div>
           )}
         </div>
-      ) : (
-        <p className="p-10 text-center text-sm text-white/70">{t("unavailable")}</p>
-      )}
-
-      {canPlay && (
-        <div className="space-y-2 px-2 pb-1">
-          <div className="flex items-center gap-2 text-[10px] font-semibold text-white/65">
-            <span className="w-10 text-right tabular-nums">{formatTime(time)}</span>
-            <input
-              aria-label={t("progress")}
-              type="range"
-              min="0"
-              max={Math.max(duration, 0.1)}
-              step="0.1"
-              value={Math.min(time, duration)}
-              onChange={(event) => seek(Number(event.target.value))}
-              disabled={duration <= 0}
-              className="h-1 min-w-0 flex-1 cursor-pointer accent-white"
-            />
-            <span className="w-10 tabular-nums">{formatTime(duration)}</span>
-          </div>
-          <div className="relative flex items-center justify-center gap-2">
-            <button
-              type="button"
-              aria-label={t("skipBack")}
-              onClick={() => seek(time - 5)}
-              className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white"
-            >
-              −5s
-            </button>
-            <button
-              type="button"
-              aria-label={t("skipForward")}
-              onClick={() => seek(time + 5)}
-              className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white"
-            >
-              +5s
-            </button>
-            <span className="absolute right-0 hidden text-[10px] text-white/40 lg:inline">
-              {t("shortcutsHint")}
-            </span>
-          </div>
-        </div>
-      )}
+        {/* Cerrado se oculta pero sigue montado: así no se pierde lo que el
+            panel tenga en curso (una búsqueda de stock, un plan de la IA). */}
+        {hasSidebar && (
+          <aside
+            hidden={!sidebarOpen}
+            className={cn(
+              "max-h-[70vh] min-h-80 w-full flex-col overflow-hidden rounded-[18px] bg-nb-surface text-nb-ink md:max-h-[calc(96vh-4.5rem)] md:w-[22%] md:min-w-75 md:shrink-0",
+              sidebarOpen ? "flex" : "hidden",
+            )}
+          >
+            {sidebar}
+          </aside>
+        )}
+      </div>
     </div>
   );
 }

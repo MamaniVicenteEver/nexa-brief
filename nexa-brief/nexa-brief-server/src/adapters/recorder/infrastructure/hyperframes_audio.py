@@ -1,7 +1,7 @@
 """Precálculo de magnitudes de audio por frame, para el ecualizador de
 composiciones HyperFrames — reemplazo determinista/seekable del
 `AnalyserNode.getByteFrequencyData()` en vivo que usa el template Playwright
-original (ver IMG-retrato-impacto/index.html). HyperFrames (como Remotion)
+original (ver image/01-image-bg/index.html). HyperFrames (como Remotion)
 captura frames fuera de orden, así que no puede depender de audio sonando en
 tiempo real; Remotion resolvió el mismo problema con `@remotion/media-utils`
 (análisis offline, ver nexa-brief-remotion/src/components/ImageBg.js:26-30) —

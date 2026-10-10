@@ -23,7 +23,7 @@ import structlog
 from src.adapters.lyrics.factory import get_lyrics_transcriber
 from src.config.niche_config import NicheConfig
 from src.core.job import Job, JobStage
-from src.core.library import asset_library
+from src.core.library import transcription
 
 logger = structlog.get_logger(__name__)
 
@@ -50,12 +50,13 @@ async def run(job: Job, niche_cfg: NicheConfig) -> Job:
 
     language = job.input.song_info.language if job.input.song_info else None
 
-    lyrics_json = asset_library.get_lyrics_cache(music_asset_id)
-    cache_hit = lyrics_json is not None
-    if lyrics_json is None:
-        transcriber = get_lyrics_transcriber()
-        lyrics_json = await transcriber.transcribe(music_path, language=language)
-        await asset_library.save_lyrics_cache(music_asset_id, lyrics_json)
+    # Caché por asset + lock + semáforo viven en core/library/transcription.py,
+    # compartidos con la transcripción en segundo plano de la librería: si la
+    # canción se subió recién y Whisper ya la está procesando, esperamos ese
+    # resultado en vez de transcribirla dos veces.
+    lyrics_json, cache_hit = await transcription.ensure_lyrics(
+        music_asset_id, music_path, get_lyrics_transcriber, language=language
+    )
 
     logger.info("lyrics_transcriber_done_analyzing", job_id=job.job_id, cache_hit=cache_hit)
 

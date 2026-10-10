@@ -1,0 +1,464 @@
+{
+ "version": 1,
+ "family": "rough",
+ "title": "Vago, pero emocionante",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "rough.title",
+   "params": {
+    "text": "VAGO, PERO\nEMOCIONANTE",
+    "textPortrait": "VAGO,\nPERO\nEMOCIONANTE",
+    "kicker": "CERN · MARZO 1989",
+    "sub": "LAS TRES PALABRAS QUE CREARON LA WEB"
+   },
+   "until": "un jefe lee"
+  },
+  {
+   "at": "un jefe lee",
+   "use": "rough.note",
+   "params": {
+    "title": "INFORMATION MANAGEMENT: A PROPOSAL",
+    "note": "vague but exciting…",
+    "noteAt": "@Toma un lápiz",
+    "caption": "CERN · MARZO DE 1989"
+   }
+  },
+  {
+   "at": "Esas tres palabras",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "vida"
+    ]
+   },
+   "until": "El laboratorio era"
+  },
+  {
+   "at": "El laboratorio era",
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/cern.jpg",
+    "caption": "el CERN, en Ginebra",
+    "sub": "LABORATORIO EUROPEO DE FÍSICA",
+    "focus": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "Miles de científicos",
+   "use": "rough.tally",
+   "params": {
+    "icon": "laptop",
+    "count": 10,
+    "interval": 0.25,
+    "label": "MILES DE COMPUTADORAS"
+   }
+  },
+  {
+   "at": "Y casi nada",
+   "use": "rough.icon",
+   "params": {
+    "icon": "lock",
+    "caption": "casi nada se compartía",
+    "accent": true
+   }
+  },
+  {
+   "at": "Encontrar un documento",
+   "use": "rough.icon",
+   "params": {
+    "icon": "question",
+    "caption": "un laberinto"
+   }
+  },
+  {
+   "at": "Las computadoras no",
+   "use": "rough.flow",
+   "params": {
+    "nodes": [
+     {
+      "icon": "laptop",
+      "label": "UNA"
+     },
+     {
+      "icon": "close",
+      "label": "NO SE ENTIENDEN"
+     },
+     {
+      "icon": "server",
+      "label": "OTRA"
+     }
+    ],
+    "active": 1,
+    "stepSec": 0.6
+   }
+  },
+  {
+   "at": "Y cuando alguien",
+   "use": "rough.icon",
+   "params": {
+    "icon": "person",
+    "caption": "y su información se iba con él"
+   }
+  },
+  {
+   "at": "Un ingeniero británico",
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/tim.jpg",
+    "caption": "Tim Berners-Lee",
+    "sub": "INGENIERO DEL CERN · 33 AÑOS EN 1989",
+    "ar": 0.85,
+    "focus": [
+     0.72,
+     0.35
+    ]
+   }
+  },
+  {
+   "at": "Y si todos",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "clic"
+    ]
+   },
+   "until": "Su idea combinaba"
+  },
+  {
+   "at": "Su idea combinaba",
+   "use": "rough.flow",
+   "params": {
+    "nodes": [
+     {
+      "icon": "link",
+      "label": "DIRECCIÓN"
+     },
+     {
+      "icon": "code",
+      "label": "IDIOMA"
+     },
+     {
+      "icon": "browser",
+      "label": "PEDIDO"
+     }
+    ],
+    "active": -1,
+    "stepSec": 1.7,
+    "title": "TRES PIEZAS"
+   }
+  },
+  {
+   "at": "Su jefe Mike",
+   "use": "rough.icon",
+   "params": {
+    "icon": "pencil",
+    "tag": "MIKE SENDALL",
+    "caption": "no la entendió del todo"
+   }
+  },
+  {
+   "at": "Por eso escribió",
+   "use": "rough.note",
+   "params": {
+    "title": "INFORMATION MANAGEMENT: A PROPOSAL",
+    "note": "vague but exciting…",
+    "noteAt": 0.4
+   }
+  },
+  {
+   "at": "No la aprobó",
+   "use": "rough.icon",
+   "params": {
+    "icon": "clock",
+    "tag": "NO LA APROBÓ",
+    "caption": "pero le dio tiempo"
+   }
+  },
+  {
+   "at": "le dejó comprar",
+   "use": "rough.icon",
+   "params": {
+    "icon": "nextcube",
+    "tag": "UNA COMPUTADORA NUEVA",
+    "accent": true
+   }
+  },
+  {
+   "at": "Con esa computadora",
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/next-cern.jpg",
+    "caption": "la NeXT",
+    "sub": "EL PRIMER SERVIDOR WEB · CERN",
+    "focus": [
+     0.45,
+     0.45
+    ]
+   }
+  },
+  {
+   "at": "el primer servidor web",
+   "use": "rough.flow",
+   "params": {
+    "nodes": [
+     {
+      "icon": "server",
+      "label": "SERVIDOR"
+     },
+     {
+      "icon": "browser",
+      "label": "NAVEGADOR"
+     },
+     {
+      "icon": "paper",
+      "label": "PÁGINA"
+     }
+    ],
+    "active": 2,
+    "stepSec": 0.9
+   }
+  },
+  {
+   "at": "El 20 de diciembre",
+   "use": "rough.browser",
+   "params": {
+    "url": "info.cern.ch",
+    "title": "World Wide Web",
+    "link": "¿qué es esto?",
+    "caption": "20 de diciembre de 1990"
+   }
+  },
+  {
+   "at": "En la máquina pegó",
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/next-servidor.jpg",
+    "caption": "«no la apaguen»",
+    "sub": "THIS MACHINE IS A SERVER · DO NOT POWER IT DOWN!!",
+    "focus": [
+     0.74,
+     0.47
+    ]
+   }
+  },
+  {
+   "at": "Durante un tiempo",
+   "use": "rough.icon",
+   "params": {
+    "icon": "nextcube",
+    "caption": "toda la web en una caja",
+    "accent": true
+   }
+  },
+  {
+   "at": "Pero faltaba la decisión",
+   "use": "rough.choice",
+   "params": {
+    "options": [
+     "LIBRE",
+     "CON DUEÑO"
+    ],
+    "question": "¿quién sería el dueño?"
+   }
+  },
+  {
+   "at": "Otro sistema de",
+   "use": "rough.icon",
+   "params": {
+    "icon": "coin",
+    "tag": "GOPHER",
+    "caption": "empezó a cobrar licencias"
+   }
+  },
+  {
+   "at": "Si la web tenía",
+   "use": "rough.icon",
+   "params": {
+    "icon": "lock",
+    "caption": "solo para unos pocos"
+   }
+  },
+  {
+   "at": "Tim y su colega",
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/cailliau.jpg",
+    "caption": "Robert Cailliau",
+    "sub": "COLEGA DE TIM EN EL CERN",
+    "ar": 0.8,
+    "focus": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "Querían que fuera",
+   "use": "rough.icon",
+   "params": {
+    "icon": "earth",
+    "caption": "que fuera de todos"
+   }
+  },
+  {
+   "at": "El CERN dudaba",
+   "use": "rough.choice",
+   "params": {
+    "options": [
+     "LABORATORIO",
+     "EMPRESA"
+    ],
+    "question": "el CERN dudaba",
+    "pick": 0,
+    "pickAt": "@laboratorio de física"
+   }
+  },
+  {
+   "at": "El 30 de abril",
+   "use": "rough.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "1989",
+      "label": "la propuesta"
+     },
+     {
+      "year": "1990",
+      "label": "el primer sitio"
+     },
+     {
+      "year": "1993",
+      "label": "la web, libre"
+     }
+    ],
+    "active": 2,
+    "drawSec": 1.6
+   }
+  },
+  {
+   "at": "La web sería libre",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "gratis"
+    ]
+   },
+   "until": "Lo que pasó"
+  },
+  {
+   "at": "La web sería libre",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "Lo que pasó",
+   "use": "rough.network",
+   "params": {
+    "center": "WEB",
+    "labels": [
+     "DOC",
+     "FOTO",
+     "MAPA",
+     "VIDEO",
+     "TIENDA",
+     "NOTICIA"
+    ],
+    "count": 46,
+    "growSec": "@millones"
+   }
+  },
+  {
+   "at": "Tim Berners-Lee nunca",
+   "use": "rough.choice",
+   "params": {
+    "options": [
+     "PATENTAR",
+     "LIBERAR"
+    ],
+    "question": "nunca la patentó",
+    "pick": 1,
+    "pickAt": "@Eligió"
+   }
+  },
+  {
+   "at": "Eligió que la web",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "todos"
+    ]
+   },
+   "until": "Hoy cerca de"
+  },
+  {
+   "at": "Hoy cerca de",
+   "use": "rough.counter",
+   "params": {
+    "from": 0,
+    "to": 6000000000,
+    "label": "PERSONAS EN INTERNET",
+    "unit": "y contando…",
+    "dur": 2.4
+   }
+  },
+  {
+   "at": "Cada página que",
+   "use": "rough.icon",
+   "params": {
+    "icon": "phone",
+    "caption": "cada página, cada video, cada enlace",
+    "accent": true
+   }
+  },
+  {
+   "at": "A veces la idea",
+   "use": "rough.icon",
+   "params": {
+    "icon": "bulb",
+    "caption": "no llega clara ni perfecta"
+   }
+  },
+  {
+   "at": "Llega vaga pero",
+   "use": "rough.title",
+   "params": {
+    "text": "VAGO, PERO\nEMOCIONANTE",
+    "textPortrait": "VAGO,\nPERO\nEMOCIONANTE",
+    "accent": true,
+    "underline": true
+   },
+   "until": "Y alguien tiene"
+  },
+  {
+   "at": "Y alguien tiene",
+   "use": "rough.note",
+   "dur": 5.33,
+   "params": {
+    "title": "INFORMATION MANAGEMENT: A PROPOSAL",
+    "note": "vague but exciting…",
+    "noteAt": 0.3,
+    "caption": "NO LA TIRES A LA BASURA"
+   }
+  },
+   {
+     "t": 186.906122,
+     "offset": 0,
+     "dur": 12.32,
+     "use": "rough.outrov1",
+     "params": {
+       "likeAt": 4.54,
+       "subscribeAt": 5.02,
+       "bellAt": 7.08,
+       "supportAt": 8.1
+     }
+   }
+ ]
+}

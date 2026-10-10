@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>explainer-kit · iconos</title>
+<!-- Hoja de control de iconos: silueta pura (izq.) y versión en glifos 0/1 (der.).
+     Abrir con ?fam=binary. La usa tools/shoot.py --page tools/icons.html -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#000;color:#ddd;font:12px 'JetBrains Mono',monospace}canvas{display:block}</style>
+</head><body><div id="stage" style="position:fixed;inset:0"></div><audio id="audio"></audio>
+<script src="../engine/kit.js"></script>
+<script src="../components/binary/_field.js"></script>
+<script src="../components/binary/icons.js"></script>
+<script src="../components/binary/shapes.js"></script>
+<script src="../components/binary/ui.js"></script>
+<script>
+(async () => {
+  await document.fonts.load("900 40px Inter"); await document.fonts.load("600 20px 'JetBrains Mono'");
+  const names = Object.keys(Kit.binary.ICONS), cols = 4, cs = 118, W = cols * cs * 2, rows = Math.ceil(names.length / cols);
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = rows * (cs + 22); document.body.innerHTML = ""; document.body.appendChild(cv);
+  const g = cv.getContext("2d");
+  names.forEach((n, i) => {
+    const x = (i % cols) * cs * 2, y = Math.floor(i / cols) * (cs + 22);
+    g.save(); g.translate(x + 8, y + 4); g.fillStyle = "#fff"; Kit.binary.drawIcon(g, n, cs - 16, cs - 16); g.restore();
+    const pts = Kit.binary.sampleShape((gg, w, h) => Kit.binary.drawIcon(gg, n, w, h), { x: x + cs, y: y + 4, w: cs - 12, h: cs - 12 }, { cell: 4.2, edge: true, jitter: 0.6 });
+    g.font = "600 9px 'JetBrains Mono'"; g.textAlign = "center"; g.textBaseline = "middle";
+    for (const q of pts) { g.globalAlpha = q.a; g.fillStyle = "#eee"; g.fillText(q.g ? "1" : "0", q.x, q.y); }
+    g.globalAlpha = 1; g.fillStyle = "#e33"; g.font = "600 12px 'JetBrains Mono'"; g.fillText(n, x + cs, y + cs + 8);
+  });
+  window.__promo = { seek: async () => {}, scenes: () => [1] };
+})();
+</script></body></html>

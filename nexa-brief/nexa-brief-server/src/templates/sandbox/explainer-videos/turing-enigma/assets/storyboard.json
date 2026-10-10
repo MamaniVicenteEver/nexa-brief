@@ -1,0 +1,543 @@
+{
+ "version": 1,
+ "family": "binary",
+ "title": "El hombre que rompió Enigma",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "binary.title",
+   "params": {
+    "text": "EL HOMBRE\nQUE ROMPIÓ\nENIGMA",
+    "textPortrait": "EL HOMBRE\nQUE\nROMPIÓ\nENIGMA",
+    "kicker": "ALAN TURING · 1940"
+   },
+   "until": "el código más seguro"
+  },
+  {
+   "at": "el código más seguro",
+   "use": "binary.icon",
+   "params": {
+    "icon": "lock",
+    "tag": "EL CÓDIGO MÁS SEGURO",
+    "caption": "cambiaba cada medianoche"
+   }
+  },
+  {
+   "at": "Y un matemático",
+   "use": "binary.portrait",
+   "params": {
+    "src": "assets/media/turing.jpg",
+    "caption": "Alan Turing",
+    "sub": "MATEMÁTICO · 28 AÑOS",
+    "counter": {
+     "from": 2026,
+     "to": 1940,
+     "dur": 2.4
+    }
+   }
+  },
+  {
+   "at": "La Alemania nazi",
+   "use": "binary.icon",
+   "params": {
+    "icon": "envelope",
+    "tag": "ÓRDENES",
+    "caption": "mensajes cifrados"
+   }
+  },
+  {
+   "at": "una máquina llamada Enigma",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/enigma.jpg",
+    "title": "Enigma",
+    "sub": "MÁQUINA DE CIFRADO"
+   }
+  },
+  {
+   "at": "cada letra pasaba",
+   "use": "binary.cipher",
+   "params": {
+    "plain": "ATAQUE AL AMANECER",
+    "label": "CADA LETRA, OTRA",
+    "stepSec": 0.11
+   }
+  },
+  {
+   "at": "Las combinaciones posibles",
+   "use": "binary.word",
+   "params": {
+    "text": "159\nTRILLONES",
+    "kicker": "COMBINACIONES POSIBLES"
+   }
+  },
+  {
+   "at": "Un número de",
+   "use": "binary.counter",
+   "params": {
+    "value": "159.000.000.000.000.000.000",
+    "label": "UN NÚMERO DE",
+    "note": "21 CIFRAS",
+    "dur": 2.0
+   }
+  },
+  {
+   "at": "Probarlas todas",
+   "use": "binary.tunnel",
+   "params": {
+    "text": "MÁS QUE LA EDAD DEL UNIVERSO"
+   }
+  },
+  {
+   "at": "Y aunque alguien",
+   "use": "binary.icon",
+   "params": {
+    "icon": "clock",
+    "tag": "00:00",
+    "caption": "y a empezar de cero",
+    "spin": 0.35
+   }
+  },
+  {
+   "at": "En el Atlántico",
+   "use": "binary.convoy",
+   "params": {
+    "mode": "attack",
+    "label": "ATLÁNTICO NORTE",
+    "tag": "HUNDIDO"
+   }
+  },
+  {
+   "at": "Gran Bretaña",
+   "use": "binary.icon",
+   "params": {
+    "icon": "hourglass",
+    "tag": "GRAN BRETAÑA",
+    "caption": "sin tiempo"
+   }
+  },
+  {
+   "at": "En una mansión",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/bletchley.jpg",
+    "title": "Bletchley Park",
+    "sub": "INGLATERRA · MANSIÓN SECRETA"
+   }
+  },
+  {
+   "at": "tuvo una idea",
+   "use": "binary.icon",
+   "params": {
+    "icon": "bulb",
+    "tag": "LA IDEA"
+   }
+  },
+  {
+   "at": "Si una persona",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "person",
+     "label": "UNA PERSONA"
+    },
+    "right": {
+     "icon": "gear",
+     "label": "UNA MÁQUINA"
+    },
+    "mid": "VS",
+    "pick": "right",
+    "pickAt": "@sí podía"
+   }
+  },
+  {
+   "at": "tres matemáticos polacos",
+   "use": "binary.grid",
+   "params": {
+    "icon": "person",
+    "count": 3,
+    "label": "MATEMÁTICOS POLACOS",
+    "revealSec": 1.2
+   }
+  },
+  {
+   "at": "diseñó la Bomba",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/bombe.jpg",
+    "title": "La Bomba",
+    "sub": "MÁQUINA DE TURING Y WELCHMAN"
+   }
+  },
+  {
+   "at": "tambores girando",
+   "use": "binary.rotors",
+   "params": {
+    "count": 108,
+    "label": "MÁS DE CIEN TAMBORES",
+    "speed": 6
+   }
+  },
+  {
+   "at": "buscando contradicciones",
+   "use": "binary.rays",
+   "params": {
+    "mode": "x",
+    "label": "CONTRADICCIÓN"
+   }
+  },
+  {
+   "at": "Su secreto era",
+   "use": "binary.icon",
+   "params": {
+    "icon": "eye",
+    "tag": "EL SECRETO"
+   }
+  },
+  {
+   "at": "Los alemanes repetían",
+   "use": "binary.cipher",
+   "params": {
+    "plain": "NADA QUE INFORMAR",
+    "mode": "crib",
+    "label": "LA FRASE QUE SE REPETÍA"
+   }
+  },
+  {
+   "at": "palabras previsibles",
+   "use": "binary.icon",
+   "params": {
+    "icon": "key",
+    "tag": "LA LLAVE",
+    "caption": "palabras previsibles"
+   }
+  },
+  {
+   "at": "la primera Bomba",
+   "use": "binary.orbit",
+   "params": {
+    "icon": "gear",
+    "labels": [
+     "PROBAR",
+     "DESCARTAR",
+     "AJUSTAR",
+     "REPETIR"
+    ],
+    "tags": [
+     "MARZO 1940"
+    ]
+   }
+  },
+  {
+   "at": "Al principio tardaba",
+   "use": "binary.chart",
+   "params": {
+    "curve": "decay",
+    "startLabel": "DÍAS",
+    "endLabel": "HORAS",
+    "axisX": "TIEMPO PARA DESCIFRAR",
+    "drawSec": "@horas"
+   }
+  },
+  {
+   "at": "Y entonces llegó",
+   "use": "common.flash",
+   "dur": 0.45,
+   "layer": "overlay"
+  },
+  {
+   "at": "Y entonces llegó",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "momento"
+    ]
+   },
+   "until": "Los mensajes navales"
+  },
+  {
+   "at": "Los mensajes navales",
+   "use": "binary.icon",
+   "params": {
+    "icon": "envelope",
+    "tag": "MENSAJES NAVALES",
+    "caption": "empezaron a abrirse"
+   }
+  },
+  {
+   "at": "Los convoyes",
+   "use": "binary.convoy",
+   "params": {
+    "mode": "reroute",
+    "label": "ATLÁNTICO NORTE",
+    "tag": "RUTA NUEVA"
+   }
+  },
+  {
+   "at": "Los submarinos que",
+   "use": "binary.convoy",
+   "params": {
+    "mode": "hunt",
+    "label": "ATLÁNTICO NORTE",
+    "tag": "CAZADOS"
+   },
+   "until": "ahora eran"
+  },
+  {
+   "at": "ahora eran",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "cazados"
+    ]
+   },
+   "until": "Muchos historiadores"
+  },
+  {
+   "at": "Muchos historiadores",
+   "use": "binary.word",
+   "params": {
+    "text": "−2\nAÑOS",
+    "kicker": "LA GUERRA, MÁS CORTA",
+    "note": "SEGÚN MUCHOS HISTORIADORES"
+   }
+  },
+  {
+   "at": "Millones de vidas",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "vidas"
+    ]
+   },
+   "until": "Pero nadie"
+  },
+  {
+   "at": "Pero nadie",
+   "use": "binary.icon",
+   "params": {
+    "icon": "lock",
+    "tag": "ALTO SECRETO",
+    "caption": "nadie podía saberlo"
+   }
+  },
+  {
+   "at": "Turing volvió",
+   "use": "binary.floor",
+   "params": {
+    "text": "SIN PODER CONTARLO"
+   }
+  },
+  {
+   "at": "Y siguió pensando",
+   "use": "binary.bubble",
+   "params": {}
+  },
+  {
+   "at": "pueden pensar",
+   "offset": -0.45,
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "pensar"
+    ]
+   },
+   "until": "Si una máquina conversa"
+  },
+  {
+   "at": "Si una máquina conversa",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "person",
+     "label": "PERSONA"
+    },
+    "right": {
+     "icon": "chip",
+     "label": "MÁQUINA"
+    },
+    "mid": "?"
+   }
+  },
+  {
+   "at": "Años antes",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "1936",
+      "label": "MÁQUINA UNIVERSAL"
+     },
+     {
+      "year": "1940",
+      "label": "LA BOMBA"
+     },
+     {
+      "year": "1950",
+      "label": "¿PUEDEN PENSAR?"
+     }
+    ],
+    "active": 0
+   }
+  },
+  {
+   "at": "Unos y ceros",
+   "use": "binary.word",
+   "params": {
+    "text": "1 0",
+    "kicker": "UNOS Y CEROS",
+    "size": 0.7
+   }
+  },
+  {
+   "at": "La idea detrás",
+   "use": "binary.icon",
+   "params": {
+    "icon": "phone",
+    "tag": "HOY",
+    "caption": "la que tienes en la mano"
+   }
+  },
+  {
+   "at": "Pero el país",
+   "use": "binary.portrait",
+   "params": {
+    "src": "assets/media/turing.jpg",
+    "size": 0.74
+   }
+  },
+  {
+   "at": "fue condenado",
+   "use": "binary.icon",
+   "params": {
+    "icon": "gavel",
+    "tag": "1952",
+    "caption": "condenado por ser homosexual"
+   }
+  },
+  {
+   "at": "Le dieron a elegir",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "lock",
+     "label": "PRISIÓN"
+    },
+    "right": {
+     "icon": "flask",
+     "label": "TRATAMIENTO"
+    },
+    "mid": "O",
+    "pick": "right",
+    "pickAt": "@Eligió"
+   }
+  },
+  {
+   "at": "Dos años después",
+   "use": "binary.word",
+   "params": {
+    "text": "7 JUN\n1954",
+    "size": 0.72
+   }
+  },
+  {
+   "at": "lo encontraron",
+   "use": "binary.icon",
+   "params": {
+    "icon": "house",
+    "caption": "tenía cuarenta y un años"
+   }
+  },
+  {
+   "at": "Junto a su cama",
+   "use": "binary.icon",
+   "params": {
+    "icon": "apple",
+    "caption": "a medio comer",
+    "size": 0.5
+   }
+  },
+  {
+   "at": "Pasaron",
+   "use": "binary.counter",
+   "params": {
+    "value": "55",
+    "mode": "count",
+    "from": 0,
+    "label": "AÑOS DESPUÉS",
+    "note": "LA DISCULPA DEL GOBIERNO",
+    "dur": 1.8
+   }
+  },
+  {
+   "at": "perdón oficial",
+   "use": "binary.icon",
+   "params": {
+    "icon": "crown",
+    "tag": "2013",
+    "caption": "perdón oficial"
+   }
+  },
+  {
+   "at": "Hoy su rostro",
+   "use": "binary.banknote",
+   "params": {
+    "src": "assets/media/turing.jpg",
+    "value": "50",
+    "currency": "£",
+    "caption": "BILLETE DE 50 LIBRAS"
+   }
+  },
+  {
+   "at": "Turing rompió",
+   "use": "binary.rotors",
+   "params": {
+    "count": 3,
+    "label": "UNA MÁQUINA DE LÓGICA"
+   }
+  },
+  {
+   "at": "Pero el código",
+   "use": "binary.icon",
+   "params": {
+    "icon": "heart",
+    "tag": "EL CÓDIGO MÁS DIFÍCIL"
+   }
+  },
+  {
+   "at": "Estaba en nosotros",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "nosotros"
+    ]
+   },
+   "until": "Y cada vez"
+  },
+  {
+   "at": "Y cada vez",
+   "use": "binary.portrait",
+   "dur": 9.29,
+   "params": {
+    "src": "assets/media/turing.jpg",
+    "caption": "Alan Turing",
+    "sub": "1912 – 1954"
+   }
+  },
+   {
+     "t": 259.160816,
+     "offset": 0,
+     "dur": 13.68,
+     "use": "binary.outrov1",
+     "params": {
+       "likeAt": 5.16,
+       "subscribeAt": 5.54,
+       "bellAt": 7.84,
+       "supportAt": 8.94
+     }
+   }
+ ]
+}

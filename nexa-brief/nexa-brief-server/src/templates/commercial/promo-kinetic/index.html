@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584">
+/* Generado por src/templates/_tools/hyperframes/optimize.py — NO editar acá:
+   la fuente es _tools/hyperframes/runtime/nb-hf-clock.js (regenerar con optimize.py). */
+/* nb-hf-clock — reloj determinístico para grabar plantillas con HyperFrames.
+
+   Por qué existe: las plantillas de letras miden el tiempo con audio.currentTime,
+   requestAnimationFrame, timers y animaciones CSS/WAAPI corriendo en tiempo
+   real. HyperFrames captura cuadro a cuadro (screenshot por seek) y eso rompe
+   todos esos relojes: el runtime pausa el <audio> (lo trata como media propia),
+   su shim de tiempo virtual dispara UN solo rAF por seek (30 Hz en vez de 60:
+   las cámaras con easing por cuadro se mueven a la mitad de velocidad), los
+   setTimeout siguen en reloj de pared y cada worker arranca su tramo en t>0
+   sin el historial de la plantilla. Resultado: la letra sale desfasada.
+
+   Qué hace (SOLO dentro del render de HyperFrames — en navegador, vista previa
+   y Playwright es inerte, ver ACTIVE):
+   - Reproduce el mundo de la plantilla a 60 Hz fijos desde t=0 hasta el tiempo
+     de cada seek (también los workers que empiezan a mitad de canción), así el
+     estado acumulado (cámaras, palabras ya puestas, partículas) es idéntico en
+     todos los workers y al de un navegador real.
+   - Virtualiza performance.now/Date.now, setTimeout/setInterval (la plantilla
+     llama a __nbSetTimeout & cía., reescritos por optimize.py), el reloj de
+     <audio>/<video> (currentTime/paused/ended/play/pause), las animaciones
+     CSS/WAAPI (currentTime por animación según su nacimiento virtual) y el
+     AnalyserNode de WebAudio (espectro calculado del audio decodificado).
+   - Antes del primer cuadro espera fuentes, fetch, imágenes y metadatos de
+     media; antes de cada captura espera decodificación de imágenes nuevas y el
+     cuadro exacto de cada <video>.
+   - Deja el audio de la mezcla al framework: la pista que mezcla HyperFrames es
+     el <audio data-nb-hf-mix> que agrega HyperframesAdapter; la media propia de
+     la plantilla pierde sus data-start (inyectados por el compilador) para que
+     el runtime no la pause ni la mezcle dos veces.
+
+   Fuente única: src/templates/_tools/hyperframes/runtime/nb-hf-clock.js.
+   optimize.py la inserta (inline) como primer <script> de cada plantilla. */
+(function () {
+  "use strict";
+  var W = window;
+  var D = document;
+  if (W.__nbHf) return;
+
+  var VT = W.__HF_VIRTUAL_TIME__;
+  var ACTIVE = !!(VT && typeof VT.seekToTime === "function" && W.__HF_RENDER_CAPTURE_MODE === true);
+
+  /* Timers reescritos: fuera del render son exactamente los nativos, resueltos
+     en cada llamada (la vista previa de la app también los envuelve). */
+  if (!ACTIVE) {
+    W.__nbSetTimeout = function () { return W.setTimeout.apply(W, arguments); };
+    W.__nbSetInterval = function () { return W.setInterval.apply(W, arguments); };
+    W.__nbClearTimeout = function () { return W.clearTimeout.apply(W, arguments); };
+    W.__nbClearInterval = function () { return W.clearInterval.apply(W, arguments); };
+    W.__nbHf = { active: false };
+    return;
+  }
+
+  var STEP_MS = 1000 / 60;          /* cadencia interna = rAF de un monitor de 60 Hz */
+  var origSeekToTime = VT.seekToTime;
+  var realSetTimeout = VT.originalSetTimeout || W.setTimeout.bind(W);
+  var realPerfNow = Performance.prototype.now;
+  function wallMs() { return realPerfNow.call(W.performance); }
+  var realClearTimeout = VT.originalClearTimeout || W.clearTimeout.bind(W);
+  var clockMs = 0;                   /* reloj virtual que ve la plantilla */
+  var stepIdx = -1;                  /* último tick ejecutado (tick k = k·STEP_MS) */
+  var targetStep = -1;
+  var ticking = false;
+  var processing = null;
+  var stats = { ticks: 0, seeks: 0, backward: 0, firstSeekMs: null, readyMs: 0, waits: 0,
+                tickMs: 0, videoMs: 0, settleMs: 0 };
+  var logs = [];
+  function log(msg) { if (logs.length < 200) logs.push(msg); }
+  function slice(a, from) { return Array.prototype.slice.call(a, from); }
+  function sleep(ms) { return new Promise(function (r) { realSetTimeout(r, ms); }); }
+  function withTimeout(p, ms) {
+    return new Promise(function (resolve) {
+      var done = false;
+      var id = realSetTimeout(function () { if (!done) { done = true; resolve("timeout"); } }, ms);
+      Promise.resolve(p).then(function (v) { if (!done) { done = true; realClearTimeout(id); resolve(v); } },
+        function () { if (!done) { done = true; realClearTimeout(id); resolve("error"); } });
+    });
+  }
+
+  /* ───────────────────────────── reloj ───────────────────────────── */
+  try {
+    Object.defineProperty(W.performance, "now", { configurable: true, value: function () { return clockMs; } });
+  } catch (e) { log("performance.now no redefinible"); }
+  try { W.Date.now = function () { return clockMs; }; } catch (e) { log("Date.now no redefinible"); }
+
+  /* Math.random sembrado: mismo historial en todos los workers (sin costura). */
+  (function () {
+    var s = 0x6e622d68 | 0;
+    Math.random = function () {
+      s = (s + 0x6D2B79F5) | 0;
+      var t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  })();
+
+  /* rAF: el de HyperFrames ya es virtual (cola que vacía seekToTime); acá solo
+     se cuenta cuántas veces se pidió, para saber cuándo arrancó el loop. */
+  var RAF = "requestAnimationFrame";
+  var hfRaf = W[RAF];
+  var rafRequests = 0;
+  W[RAF] = function (cb) { rafRequests++; return hfRaf.call(W, cb); };
+
+  /* ───────────────────────────── timers ─────────────────────────────
+     Disparados por el tick cuando su vencimiento virtual llega, en orden. */
+  var timers = new Map();
+  var timerSeq = 1;
+  function addTimer(fn, delay, args, repeat) {
+    if (typeof fn !== "function") { var code = String(fn); fn = function () { (0, eval)(code); }; }
+    var d = Math.max(0, Number(delay) || 0);
+    var id = timerSeq++;
+    timers.set(id, { id: id, due: clockMs + d, fn: fn, args: args, every: repeat ? Math.max(1, d) : 0, seq: id });
+    return id;
+  }
+  W.__nbSetTimeout = function (fn, delay) { return addTimer(fn, delay, slice(arguments, 2), false); };
+  W.__nbSetInterval = function (fn, delay) { return addTimer(fn, delay, slice(arguments, 2), true); };
+  W.__nbClearTimeout = function (id) { timers.delete(id); };
+  W.__nbClearInterval = function (id) { timers.delete(id); };
+  function runTimers(upTo) {
+    for (var guard = 0; guard < 20000; guard++) {
+      var next = null;
+      timers.forEach(function (t) {
+        if (t.due <= upTo + 1e-6 && (!next || t.due < next.due || (t.due === next.due && t.seq < next.seq))) next = t;
+      });
+      if (!next) return;
+      if (next.every) { next.due += next.every; next.seq = timerSeq++; } else timers.delete(next.id);
+      clockMs = Math.max(clockMs, next.due);
+      try { next.fn.apply(W, next.args); } catch (e) { log("timer: " + e); }
+    }
+  }
+
+  /* ───────────────────────────── media ─────────────────────────────
+     La media de la plantilla nunca se reproduce de verdad durante el render:
+     su reloj es virtual y los <video> se posicionan con seek real antes de
+     cada captura. El <audio data-nb-hf-mix> del adapter queda intacto. */
+  var MP = HTMLMediaElement.prototype;
+  var desc = function (proto, name) {
+    for (var p = proto; p; p = Object.getPrototypeOf(p)) {
+      var d = Object.getOwnPropertyDescriptor(p, name);
+      if (d) return d;
+    }
+    return null;
+  };
+  var dCurrent = desc(MP, "currentTime");
+  var dPaused = desc(MP, "paused");
+  var dEnded = desc(MP, "ended");
+  var dRate = desc(MP, "playbackRate");
+  var dAutoplay = desc(MP, "autoplay");
+  var realPlay = MP.play;
+  var realPause = MP.pause;
+  var realLoad = MP.load;
+  var mediaState = new WeakMap();
+  var videos = new Set();
+  var mediaEls = new Set();
+  var isMix = function (el) { return el.hasAttribute && el.hasAttribute("data-nb-hf-mix"); };
+  var TIMING_ATTRS = ["data-start", "data-end", "data-hf-auto-start", "data-has-audio"];
+
+  function adopt(el) {
+    if (!(el instanceof HTMLMediaElement) || isMix(el)) return null;
+    var st = mediaState.get(el);
+    if (!st) {
+      st = { playing: false, base: 0, v0: 0, ended: false, autoplay: false, userPaused: false, started: false };
+      mediaState.set(el, st);
+      mediaEls.add(el);
+      if (el instanceof HTMLVideoElement) videos.add(el);
+    }
+    for (var i = 0; i < TIMING_ATTRS.length; i++) if (el.hasAttribute(TIMING_ATTRS[i])) el.removeAttribute(TIMING_ATTRS[i]);
+    if (el.hasAttribute("autoplay")) { st.autoplay = true; el.removeAttribute("autoplay"); }
+    return st;
+  }
+  /* El runtime de HyperFrames sincroniza por su cuenta la media que cree suya
+     (en renderSeek fija currentTime = t de composición y la pausa): con un
+     <video loop> de la plantilla eso lo congela en su último cuadro al pasar
+     su duración. Todo lo que el runtime haga desde window.__player (renderSeek,
+     seek, play, pause) se ignora sobre la media de la plantilla; su reloj es
+     el virtual y su cuadro lo pone syncVideos(). */
+  var runtimeDepth = 0;
+  function guardPlayer(p) {
+    if (!p || typeof p !== "object") return;
+    ["renderSeek", "seek", "play", "pause"].forEach(function (name) {
+      var f = p[name];
+      if (typeof f !== "function" || f.__nbHfGuard) return;
+      var g = function () { runtimeDepth++; try { return f.apply(this, arguments); } finally { runtimeDepth--; } };
+      g.__nbHfGuard = true;
+      p[name] = g;
+    });
+  }
+  var playerVal = W.__player;
+  try {
+    Object.defineProperty(W, "__player", {
+      configurable: true,
+      get: function () { return playerVal; },
+      set: function (v) { playerVal = v; guardPlayer(v); },
+    });
+    guardPlayer(playerVal);
+  } catch (e) { log("__player no envolvible"); }
+  function fromRuntime(el) { return runtimeDepth > 0 && mediaState.has(el); }
+
+  function realDuration(el) { var d = el.duration; return isFinite(d) && d > 0 ? d : NaN; }
+  function rateOf(el) { var r = dRate.get.call(el); return isFinite(r) && r > 0 ? r : 1; }
+  function mediaTimeAt(el, st, ms) {
+    var t = st.base + (st.playing ? (ms - st.v0) / 1000 * rateOf(el) : 0);
+    var dur = realDuration(el);
+    if (dur === dur) {
+      if (el.loop) { if (t >= dur) t = t % dur; } else if (t > dur) t = dur;
+    }
+    return Math.max(0, t);
+  }
+  function fire(el, type) { queueMicrotask(function () { try { el.dispatchEvent(new Event(type)); } catch (e) {} }); }
+  function startPlaying(el, st) {
+    if (st.playing) return;
+    var dur = realDuration(el);
+    if (st.ended || (dur === dur && !el.loop && st.base >= dur)) { st.base = 0; st.ended = false; }
+    st.playing = true; st.started = true; st.v0 = clockMs;
+    fire(el, "play"); fire(el, "playing");
+  }
+
+  MP.play = function () {
+    if (fromRuntime(this)) return Promise.resolve();
+    var st = adopt(this);
+    if (!st) return realPlay.apply(this, arguments);
+    st.userPaused = false;
+    startPlaying(this, st);
+    return Promise.resolve();
+  };
+  MP.pause = function () {
+    if (fromRuntime(this)) return;
+    var st = adopt(this);
+    if (!st) return realPause.apply(this, arguments);
+    st.userPaused = true;
+    if (st.playing) { st.base = mediaTimeAt(this, st, clockMs); st.playing = false; fire(this, "pause"); }
+  };
+  MP.load = function () {
+    if (fromRuntime(this)) return;
+    var st = adopt(this);
+    if (st) { st.playing = false; st.base = 0; st.ended = false; }
+    return realLoad.apply(this, arguments);
+  };
+  Object.defineProperty(MP, "currentTime", {
+    configurable: true, enumerable: dCurrent.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? mediaTimeAt(this, st, clockMs) : dCurrent.get.call(this); },
+    set: function (v) {
+      if (fromRuntime(this)) return;
+      var st = adopt(this);
+      if (!st) return dCurrent.set.call(this, v);
+      st.base = Math.max(0, Number(v) || 0); st.v0 = clockMs; st.ended = false;
+    },
+  });
+  Object.defineProperty(MP, "paused", {
+    configurable: true, enumerable: dPaused.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? !st.playing : dPaused.get.call(this); },
+  });
+  Object.defineProperty(MP, "ended", {
+    configurable: true, enumerable: dEnded.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? st.ended : dEnded.get.call(this); },
+  });
+  Object.defineProperty(MP, "playbackRate", {
+    configurable: true, enumerable: dRate.enumerable,
+    get: function () { return dRate.get.call(this); },
+    set: function (v) {
+      if (fromRuntime(this)) return;
+      var st = adopt(this);
+      if (st && st.playing) { st.base = mediaTimeAt(this, st, clockMs); st.v0 = clockMs; }
+      dRate.set.call(this, v);
+    },
+  });
+  if (dAutoplay) {
+    Object.defineProperty(MP, "autoplay", {
+      configurable: true, enumerable: dAutoplay.enumerable,
+      get: function () { var st = mediaState.get(this); return st ? st.autoplay : dAutoplay.get.call(this); },
+      set: function (v) { var st = adopt(this); if (st) st.autoplay = !!v; else dAutoplay.set.call(this, v); },
+    });
+  }
+  /* <audio>/<video> del HTML estático: el compilador de HyperFrames les inyecta
+     data-start="0" — se los quitamos apenas aparecen, antes del init del runtime. */
+  function scanMedia(root) {
+    if (!root || !root.querySelectorAll) return;
+    if (root instanceof HTMLMediaElement) adopt(root);
+    var list = root.querySelectorAll("audio,video");
+    for (var i = 0; i < list.length; i++) adopt(list[i]);
+  }
+  new MutationObserver(function (records) {
+    for (var i = 0; i < records.length; i++) {
+      var r = records[i];
+      if (r.type === "attributes") { if (r.target instanceof HTMLMediaElement && !isMix(r.target)) adopt(r.target); continue; }
+      for (var j = 0; j < r.addedNodes.length; j++) if (r.addedNodes[j].nodeType === 1) scanMedia(r.addedNodes[j]);
+    }
+  }).observe(D.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: TIMING_ATTRS.concat(["autoplay"]) });
+  D.addEventListener("DOMContentLoaded", function () { scanMedia(D); }, { once: true });
+
+  function mediaTick(ms) {
+    mediaEls.forEach(function (el) {
+      var st = mediaState.get(el);
+      if (!st) return;
+      if (st.autoplay && !st.started && !st.userPaused && (el.currentSrc || el.getAttribute("src"))) startPlaying(el, st);
+      if (!st.playing || el.loop) return;
+      var dur = realDuration(el);
+      if (dur === dur && st.base + (ms - st.v0) / 1000 * rateOf(el) >= dur) {
+        st.base = dur; st.playing = false; st.ended = true;
+        fire(el, "timeupdate"); fire(el, "pause"); fire(el, "ended");
+      }
+    });
+  }
+  /* <video> usados como fuente de canvas (2D o WebGL): se sincronizan siempre,
+     aunque estén fuera del documento u ocultos — lo visible es el canvas. */
+  var drawnVideos = new WeakSet();
+  function tagVideoSource(proto, name, argIndex) {
+    if (!proto || typeof proto[name] !== "function") return;
+    var real = proto[name];
+    proto[name] = function () {
+      var src = arguments[argIndex];
+      if (src instanceof HTMLVideoElement) drawnVideos.add(src);
+      return real.apply(this, arguments);
+    };
+  }
+  tagVideoSource(W.CanvasRenderingContext2D && W.CanvasRenderingContext2D.prototype, "drawImage", 0);
+  tagVideoSource(W.OffscreenCanvasRenderingContext2D && W.OffscreenCanvasRenderingContext2D.prototype, "drawImage", 0);
+  ["WebGLRenderingContext", "WebGL2RenderingContext"].forEach(function (k) {
+    var p = W[k] && W[k].prototype;
+    if (!p) return;
+    /* texImage2D(target, level, internalformat, format, type, source) → fuente en 5;
+       texSubImage2D(target, level, x, y, format, type, source) → fuente en 6 */
+    tagVideoSource(p, "texImage2D", 5);
+    tagVideoSource(p, "texSubImage2D", 6);
+  });
+  /* Cuadro exacto de cada <video>: seek real al tiempo virtual y esperar "seeked". */
+  function syncVideos() {
+    var waits = [];
+    videos.forEach(function (v) {
+      var st = mediaState.get(v);
+      if (!st || !(v.currentSrc || v.getAttribute("src")) || v.error) return;
+      /* Solo los que se ven en ESTE cuadro: un <video> fuera del documento (escena
+         pre-armada o ya descartada) o sin caja (display:none) no aparece en la
+         captura. Sin este filtro, las plantillas con muchos clips (grunge, sad,
+         promos) esperaban el "seeked" de 6-8 videos invisibles por cuadro y
+         Chrome terminaba sin memoria. Cuando el video aparece, se posiciona en
+         ese mismo cuadro antes de capturar: el resultado es idéntico. */
+      if (!drawnVideos.has(v)) {
+        if (!v.isConnected) {
+          if (!v.currentSrc) { videos.delete(v); return; }
+          /* con padre = parte de una escena armada fuera del documento; sin
+             padre puede ser fuente de canvas todavía no dibujada: se sincroniza */
+          if (v.parentNode) return;
+        } else if (!v.getClientRects().length) return;
+      }
+      var want = mediaTimeAt(v, st, clockMs);
+      var have = dCurrent.get.call(v);
+      if (Math.abs(have - want) < 0.0005 && v.readyState >= 2 && !v.seeking) return;
+      waits.push(withTimeout(new Promise(function (resolve) {
+        var done = function () { v.removeEventListener("seeked", done); v.removeEventListener("error", done); resolve(); };
+        v.addEventListener("seeked", done);
+        v.addEventListener("error", done);
+        try { dCurrent.set.call(v, want); } catch (e) { done(); }
+      }), 4000));
+    });
+    return waits.length ? Promise.all(waits) : null;
+  }
+
+  /* ───────────────────────────── animaciones ─────────────────────────────
+     Cada animación (CSS animation/transition o el.animate) tiene un modelo
+     virtual: nace en el tick en que aparece y su currentTime se fija en cada
+     tick. Las que la plantilla maneja a mano (pause + currentTime, como el motor
+     WAAPI de Caution) conservan exactamente lo que la plantilla pidió. */
+  var AP = Animation.prototype;
+  var dAnimCurrent = desc(AP, "currentTime");
+  var dAnimRate = desc(AP, "playbackRate");
+  var dPlayState = desc(AP, "playState");
+  var realAnimPlay = AP.play;
+  var realAnimPause = AP.pause;
+  var realDocGetAnimations = Document.prototype.getAnimations;
+  var models = new Map();
+  function animRate(a) { var r = dAnimRate.get.call(a); return isFinite(r) && r !== 0 ? r : 1; }
+  function modelTime(m, a) { return m.playing ? (clockMs - m.startV) * animRate(a) : m.hold; }
+  function ensureModel(a, fresh) {
+    var m = models.get(a);
+    if (m) return m;
+    var state = dPlayState.get.call(a);
+    var ct = Number(dAnimCurrent.get.call(a)) || 0;
+    /* una animación recién nacida corriendo arranca en 0 en este tick (su
+       currentTime real son ms de reloj de pared, no deterministas) */
+    m = state === "paused" ? { playing: false, hold: ct, startV: 0 }
+      : { playing: true, hold: 0, startV: clockMs - (fresh ? 0 : ct / animRate(a)) };
+    models.set(a, m);
+    return m;
+  }
+  AP.pause = function () {
+    var m = ensureModel(this, true);
+    if (m.playing) { m.hold = modelTime(m, this); m.playing = false; }
+    return realAnimPause.apply(this, arguments);
+  };
+  AP.play = function () {
+    var m = ensureModel(this, true);
+    if (!m.playing) {
+      var end = this.effect && this.effect.getComputedTiming ? this.effect.getComputedTiming().endTime : Infinity;
+      if (animRate(this) > 0 && isFinite(end) && m.hold >= end) m.hold = 0;
+      m.startV = clockMs - m.hold / animRate(this); m.playing = true;
+    }
+    /* el real queda pausado: el tiempo lo fija applyAnimations() */
+    realAnimPause.call(this);
+    try { dAnimCurrent.set.call(this, modelTime(m, this)); } catch (e) {}
+  };
+  Object.defineProperty(AP, "currentTime", {
+    configurable: true, enumerable: dAnimCurrent.enumerable,
+    get: function () { var m = models.get(this); return m ? modelTime(m, this) : dAnimCurrent.get.call(this); },
+    set: function (v) {
+      var m = ensureModel(this, true);
+      var x = Number(v) || 0;
+      if (m.playing) m.startV = clockMs - x / animRate(this); else m.hold = x;
+      dAnimCurrent.set.call(this, v);
+    },
+  });
+  Object.defineProperty(AP, "playbackRate", {
+    configurable: true, enumerable: dAnimRate.enumerable,
+    get: function () { return dAnimRate.get.call(this); },
+    set: function (v) {
+      var m = models.get(this);
+      var t = m ? modelTime(m, this) : 0;
+      dAnimRate.set.call(this, v);
+      if (m && m.playing) m.startV = clockMs - t / animRate(this);
+    },
+  });
+  /* El runtime de HyperFrames trae adaptadores CSS/WAAPI que fijan currentTime
+     con el tiempo ABSOLUTO del seek (las animaciones que nacen a mitad de
+     canción quedan corridas). Se les esconde todo: no ven animaciones, no
+     parchean el.animate y el adaptador CSS opera sobre un handle inerte (si
+     viera una lista vacía escribiría animation-delay inline en el elemento). */
+  var INERT_HANDLE = { currentTime: 0, effect: null, pause: function () {}, play: function () {} };
+  Document.prototype.getAnimations = function () { return []; };
+  Element.prototype.getAnimations = function () { return [INERT_HANDLE]; };
+  try {
+    Object.defineProperty(Element.prototype, "__hfOriginalAnimate", { configurable: true, value: Element.prototype.animate });
+  } catch (e) {}
+
+  function applyAnimations() {
+    models.forEach(function (m, a) {
+      var state = dPlayState.get.call(a);
+      if (state === "idle") { models.delete(a); return; }
+      if (state !== "paused") realAnimPause.call(a);
+      try { dAnimCurrent.set.call(a, modelTime(m, a)); } catch (e) {}
+    });
+  }
+  function discoverAnimations() {
+    var list = realDocGetAnimations.call(D);
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i];
+      if (models.has(a)) continue;
+      var m = ensureModel(a, true);
+      if (dPlayState.get.call(a) !== "paused") realAnimPause.call(a);
+      try { dAnimCurrent.set.call(a, modelTime(m, a)); } catch (e) {}
+    }
+  }
+
+  /* ───────────────────────────── WebAudio ─────────────────────────────
+     AnalyserNode virtual sobre el audio decodificado: mismo algoritmo que el
+     navegador (ventana Blackman, FFT, suavizado, dB → byte), muestreado en el
+     tiempo virtual del <audio> que lo alimenta. */
+  var pendingAsync = 0;
+  var RealAC = W.AudioContext || W.webkitAudioContext;
+  var decodeCache = new Map();
+  function decodeFor(el, rate) {
+    var src = el.currentSrc || el.src;
+    var key = src + "@" + rate;
+    if (!decodeCache.has(key)) {
+      pendingAsync++;
+      var p = fetch(src).then(function (r) { return r.arrayBuffer(); })
+        .then(function (buf) { return new OfflineAudioContext(1, 1, rate).decodeAudioData(buf); })
+        .then(function (ab) {
+          var n = ab.length, mono = new Float32Array(n), ch = ab.numberOfChannels;
+          for (var c = 0; c < ch; c++) { var d = ab.getChannelData(c); for (var i = 0; i < n; i++) mono[i] += d[i] / ch; }
+          return mono;
+        })
+        .catch(function (e) { log("decode audio: " + e); return null; })
+        .finally(function () { pendingAsync--; });
+      decodeCache.set(key, { promise: p, data: null });
+      p.then(function (d) { decodeCache.get(key).data = d; });
+    }
+    return decodeCache.get(key);
+  }
+  function fftMag(re, im) {
+    var n = re.length, i, j, k, len;
+    for (i = 1, j = 0; i < n; i++) {
+      var bit = n >> 1;
+      for (; j & bit; bit >>= 1) j ^= bit;
+      j ^= bit;
+      if (i < j) { var tr = re[i]; re[i] = re[j]; re[j] = tr; var ti = im[i]; im[i] = im[j]; im[j] = ti; }
+    }
+    for (len = 2; len <= n; len <<= 1) {
+      var ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+      for (i = 0; i < n; i += len) {
+        var cr = 1, ci = 0;
+        for (k = 0; k < len / 2; k++) {
+          var ar = re[i + k], ai = im[i + k];
+          var br = re[i + k + len / 2] * cr - im[i + k + len / 2] * ci;
+          var bi = re[i + k + len / 2] * ci + im[i + k + len / 2] * cr;
+          re[i + k] = ar + br; im[i + k] = ai + bi;
+          re[i + k + len / 2] = ar - br; im[i + k + len / 2] = ai - bi;
+          var ncr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = ncr;
+        }
+      }
+    }
+  }
+  function FakeNode(ctx) { this.context = ctx; this._src = null; }
+  FakeNode.prototype.connect = function (node) {
+    if (node && node instanceof FakeAnalyser && this._src) node._src = this._src;
+    if (node && node instanceof FakeNode && this._src) node._src = this._src;
+    return node;
+  };
+  FakeNode.prototype.disconnect = function () {};
+  function FakeAnalyser(ctx) {
+    FakeNode.call(this, ctx);
+    this.fftSize = 2048; this.smoothingTimeConstant = 0.8; this.minDecibels = -100; this.maxDecibels = -30;
+    this._smooth = null; this._lastMs = -1; this._mags = null;
+  }
+  FakeAnalyser.prototype = Object.create(FakeNode.prototype);
+  Object.defineProperty(FakeAnalyser.prototype, "frequencyBinCount", { get: function () { return this.fftSize / 2; } });
+  FakeAnalyser.prototype._window = function () {
+    var el = this._src, n = this.fftSize, out = new Float32Array(n);
+    if (!el) return out;
+    var dec = decodeFor(el, this.context.sampleRate);
+    if (!dec.data) return out;
+    var st = mediaState.get(el);
+    var t = st ? mediaTimeAt(el, st, clockMs) : 0;
+    var end = Math.floor(t * this.context.sampleRate);
+    for (var i = 0; i < n; i++) { var idx = end - n + i; out[i] = idx >= 0 && idx < dec.data.length ? dec.data[idx] : 0; }
+    return out;
+  };
+  FakeAnalyser.prototype._update = function () {
+    if (this._lastMs === clockMs && this._mags) return;
+    this._lastMs = clockMs;
+    var n = this.fftSize, x = this._window(), re = new Float64Array(n), im = new Float64Array(n);
+    for (var i = 0; i < n; i++) {
+      var w = 0.42 - 0.5 * Math.cos(2 * Math.PI * i / n) + 0.08 * Math.cos(4 * Math.PI * i / n);
+      re[i] = x[i] * w;
+    }
+    fftMag(re, im);
+    var bins = n / 2, tau = Math.max(0, Math.min(1, this.smoothingTimeConstant));
+    if (!this._smooth || this._smooth.length !== bins) this._smooth = new Float64Array(bins);
+    for (var k = 0; k < bins; k++) {
+      var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / n;
+      this._smooth[k] = tau * this._smooth[k] + (1 - tau) * mag;
+    }
+    this._mags = this._smooth;
+  };
+  FakeAnalyser.prototype.getFloatFrequencyData = function (arr) {
+    this._update();
+    for (var k = 0; k < arr.length && k < this._mags.length; k++) arr[k] = 20 * Math.log10(this._mags[k] || 1e-20);
+  };
+  FakeAnalyser.prototype.getByteFrequencyData = function (arr) {
+    this._update();
+    var range = this.maxDecibels - this.minDecibels;
+    for (var k = 0; k < arr.length && k < this._mags.length; k++) {
+      var db = 20 * Math.log10(this._mags[k] || 1e-20);
+      arr[k] = Math.max(0, Math.min(255, Math.floor(255 / range * (db - this.minDecibels))));
+    }
+  };
+  FakeAnalyser.prototype.getFloatTimeDomainData = function (arr) {
+    var x = this._window(), off = x.length - arr.length;
+    for (var i = 0; i < arr.length; i++) arr[i] = x[Math.max(0, off) + i] || 0;
+  };
+  FakeAnalyser.prototype.getByteTimeDomainData = function (arr) {
+    var x = this._window(), off = x.length - arr.length;
+    for (var i = 0; i < arr.length; i++) arr[i] = Math.max(0, Math.min(255, Math.floor(128 * (1 + (x[Math.max(0, off) + i] || 0)))));
+  };
+  var acRate = 48000;
+  try { var probeAc = new RealAC(); acRate = probeAc.sampleRate || 48000; probeAc.close(); } catch (e) {}
+  function FakeAudioContext() {
+    this.sampleRate = acRate; this.state = "running"; this.destination = new FakeNode(this);
+  }
+  Object.defineProperty(FakeAudioContext.prototype, "currentTime", { get: function () { return clockMs / 1000; } });
+  FakeAudioContext.prototype.resume = function () { return Promise.resolve(); };
+  FakeAudioContext.prototype.suspend = function () { return Promise.resolve(); };
+  FakeAudioContext.prototype.close = function () { this.state = "closed"; return Promise.resolve(); };
+  FakeAudioContext.prototype.createAnalyser = function () { return new FakeAnalyser(this); };
+  FakeAudioContext.prototype.createGain = function () { var n = new FakeNode(this); n.gain = { value: 1, setValueAtTime: function () {} }; return n; };
+  FakeAudioContext.prototype.createMediaElementSource = function (el) {
+    var n = new FakeNode(this); n._src = el; n.mediaElement = el; adopt(el); decodeFor(el, this.sampleRate); return n;
+  };
+  if (RealAC) { W.AudioContext = FakeAudioContext; W.webkitAudioContext = FakeAudioContext; }
+
+  /* ───────────────────────────── cargas ───────────────────────────── */
+  var inflight = 0;
+  var realFetch = W.fetch;
+  W.fetch = function () {
+    inflight++;
+    return realFetch.apply(W, arguments).finally(function () { inflight--; });
+  };
+  var pendingImgs = new Set();
+  var dImgSrc = desc(HTMLImageElement.prototype, "src");
+  function trackImg(img) {
+    if (img.complete) return;
+    pendingImgs.add(img);
+    var done = function () { pendingImgs.delete(img); };
+    img.addEventListener("load", done, { once: true });
+    img.addEventListener("error", done, { once: true });
+  }
+  Object.defineProperty(HTMLImageElement.prototype, "src", {
+    configurable: true, enumerable: dImgSrc.enumerable,
+    get: function () { return dImgSrc.get.call(this); },
+    set: function (v) { dImgSrc.set.call(this, v); trackImg(this); },
+  });
+  var decodedSrc = new WeakMap();
+  function imagesPending() {
+    var list = [];
+    pendingImgs.forEach(function (img) { if (!img.complete) list.push(img); else pendingImgs.delete(img); });
+    var imgs = D.images;
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i];
+      var src = img.currentSrc || img.getAttribute("src");
+      if (!src) continue;
+      if (!img.complete || decodedSrc.get(img) !== src) list.push(img);
+    }
+    return list;
+  }
+  function settleImages(list) {
+    return Promise.all(list.map(function (img) {
+      var src = img.currentSrc || img.getAttribute("src");
+      var loaded = img.complete ? Promise.resolve() : new Promise(function (r) {
+        img.addEventListener("load", r, { once: true }); img.addEventListener("error", r, { once: true });
+      });
+      return withTimeout(loaded.then(function () { return img.naturalWidth ? img.decode() : null; }), 6000)
+        .then(function () { decodedSrc.set(img, src); });
+    }));
+  }
+  /* cada elemento se espera como mucho MEDIA_WAIT_MS acumulados: una fuente
+     rota no puede trabar el render (la plantilla ya la trata como ausente) */
+  var MEDIA_WAIT_MS = 8000;
+  var mediaWaited = new WeakMap();
+  function mediaMetaPending() {
+    var n = 0;
+    mediaEls.forEach(function (el) {
+      if (el.error || !(el.currentSrc || el.getAttribute("src"))) return;
+      if ((mediaWaited.get(el) || 0) >= MEDIA_WAIT_MS) return;
+      var need = el instanceof HTMLVideoElement ? 2 : 1;
+      if (el.readyState < need) n++;
+    });
+    return n;
+  }
+  function chargeMediaWait(ms) {
+    mediaEls.forEach(function (el) {
+      var need = el instanceof HTMLVideoElement ? 2 : 1;
+      if (!el.error && el.readyState < need) mediaWaited.set(el, (mediaWaited.get(el) || 0) + ms);
+    });
+  }
+  function domImagesLoading() {
+    var imgs = D.images;
+    for (var i = 0; i < imgs.length; i++) if (!imgs[i].complete && imgs[i].getAttribute("src")) return true;
+    return false;
+  }
+  /* Fuentes: se cargan TODAS las declaradas antes del primer cuadro (en un
+     navegador real la palabra nueva podía asomar un instante con la fuente de
+     respaldo; acá nunca). */
+  function loadAllFonts() {
+    var ps = [];
+    try { D.fonts.forEach(function (f) { if (f.status === "unloaded") ps.push(f.load().catch(function () {})); }); } catch (e) {}
+    return withTimeout(Promise.all(ps).then(function () { return D.fonts.ready; }), 15000);
+  }
+  async function settleLoads() {
+    var imgs = imagesPending();
+    if (imgs.length) { stats.waits++; await settleImages(imgs); }
+    if (D.fonts && D.fonts.status === "loading") { stats.waits++; await withTimeout(D.fonts.ready, 10000); }
+    if (mediaMetaPending()) {
+      stats.waits++;
+      while (mediaMetaPending()) { await sleep(20); chargeMediaWait(20); }
+    }
+  }
+
+  /* ───────────────────────────── arranque ───────────────────────────── */
+  function quietNow() { return inflight + pendingAsync + mediaMetaPending() + imagesPending().length === 0; }
+  async function waitQuiet(maxMs) {
+    var t0 = wallMs(), quiet = 0;
+    for (;;) {
+      if (quietNow()) { if (++quiet >= 3) return; } else quiet = 0;
+      var imgs = imagesPending();
+      if (imgs.length) await settleImages(imgs);
+      if (wallMs() - t0 > maxMs) { log("readiness: timeout"); return; }
+      await sleep(40);
+      chargeMediaWait(40);
+    }
+  }
+  var readyP = null;
+  function ready() {
+    if (readyP) return readyP;
+    readyP = (async function () {
+      var t0 = wallMs();
+      if (D.readyState === "loading") await new Promise(function (r) { D.addEventListener("DOMContentLoaded", r, { once: true }); });
+      scanMedia(D);
+      if (D.readyState !== "complete") await withTimeout(new Promise(function (r) { W.addEventListener("load", r, { once: true }); }), 20000);
+      await loadAllFonts();
+      await waitQuiet(20000);
+      /* mismo gesto que usa la vista previa de la app para las plantillas que
+         arrancan con un click (#screen) o pointerdown */
+      try {
+        var screen = D.querySelector("#screen");
+        if (screen) screen.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        (D.body || D.documentElement).dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+      } catch (e) { log("gesto: " + e); }
+      await waitQuiet(15000);
+      await loadAllFonts();
+      stats.readyMs = Math.round(wallMs() - t0);
+    })();
+    return readyP;
+  }
+  /* ───────────────────────────── ticks ───────────────────────────── */
+  function tick(k) {
+    var tms = k * STEP_MS;
+    ticking = true;
+    try {
+      runTimers(tms);
+      clockMs = tms;
+      mediaTick(tms);
+      applyAnimations();
+      origSeekToTime.call(VT, tms);   /* vacía la cola de rAF de HyperFrames con timestamp = tms */
+      discoverAnimations();
+    } finally { ticking = false; }
+    stats.ticks++;
+  }
+  async function run() {
+    await ready();
+    var t0;
+    while (stepIdx < targetStep) {
+      var last = stepIdx + 1 === targetStep;
+      if (last) {
+        /* los <video> que la plantilla dibuja en canvas tienen que estar en su
+           cuadro ANTES de los callbacks del último tick */
+        clockMs = (stepIdx + 1) * STEP_MS;
+        t0 = wallMs();
+        var pre = syncVideos();
+        if (pre) await pre;
+        stats.videoMs += wallMs() - t0;
+      }
+      t0 = wallMs();
+      tick(++stepIdx);
+      await null;                     /* microtareas de la plantilla, como entre cuadros reales */
+      stats.tickMs += wallMs() - t0;
+      if (pendingImgs.size || domImagesLoading() || mediaMetaPending() || (D.fonts && D.fonts.status === "loading")) {
+        t0 = wallMs(); await settleLoads(); stats.settleMs += wallMs() - t0;
+      }
+    }
+    t0 = wallMs();
+    var post = syncVideos();
+    if (post) await post;
+    stats.videoMs += wallMs() - t0;
+    t0 = wallMs();
+    await settleLoads();
+    stats.settleMs += wallMs() - t0;
+    /* resumen cada 300 cuadros en la salida del CLI (consola reenviada) */
+    if (stats.seeks % 300 === 0) {
+      console.log("[nb-hf-clock] seeks=" + stats.seeks + " t=" + Math.round(clockMs) + "ms ticks=" + stats.ticks +
+        " tick=" + Math.round(stats.tickMs) + "ms video=" + Math.round(stats.videoMs) + "ms settle=" +
+        Math.round(stats.settleMs) + "ms ready=" + stats.readyMs + "ms backward=" + stats.backward);
+    }
+  }
+  function requestTarget(ms) {
+    var step = Math.floor(Math.max(0, Number(ms) || 0) / STEP_MS + 1e-4);
+    stats.seeks++;
+    if (stats.firstSeekMs === null) stats.firstSeekMs = ms;
+    if (step < stepIdx) { stats.backward++; log("seek hacia atrás ignorado: " + ms + "ms (estado en " + stepIdx * STEP_MS + "ms)"); }
+    if (step > targetStep) targetStep = step;
+    if (!processing) {
+      processing = run().catch(function (e) { log("run: " + (e && e.stack || e)); })
+        .then(function () { processing = null; if (stepIdx < targetStep) requestTarget(targetStep * STEP_MS); });
+    }
+    return processing;
+  }
+  function idle() { return processing || Promise.resolve(); }
+
+  VT.seekToTime = function (ms) { requestTarget(ms); return ms; };
+  W.addEventListener("hf-seek", function (e) {
+    var d = e && e.detail;
+    if (!d || typeof d.time !== "number") return;
+    var p = requestTarget(d.time * 1000);
+    if (typeof d.waitUntil === "function") { try { d.waitUntil(p); } catch (err) {} }
+  });
+  /* El engine espera window.__hfWaitForSeekCompletion() antes de capturar:
+     se envuelve para que también espere a que el mundo llegue al cuadro. */
+  var innerWait = W.__hfWaitForSeekCompletion;
+  try {
+    Object.defineProperty(W, "__hfWaitForSeekCompletion", {
+      configurable: true,
+      get: function () { return function () { return Promise.resolve(innerWait && innerWait()).then(idle); }; },
+      set: function (fn) { innerWait = fn; },
+    });
+  } catch (e) { log("__hfWaitForSeekCompletion no envolvible"); }
+
+  W.__nbHf = {
+    active: true,
+    stats: stats,
+    logs: logs,
+    get time() { return clockMs; },
+    ready: ready,
+    idle: idle,
+  };
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promo Kinetic — Tipografía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: pointer; }
+  #stage { position: fixed; inset: 0; overflow: hidden; }
+  .scene { position: absolute; left: 0; top: 0; overflow: hidden; }
+  .lay { position: absolute; inset: 0; transform-origin: 50% 50%; }
+  .grp { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+  .mbox { position: absolute; overflow: hidden; }
+  .media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .patch { position: absolute; pointer-events: none; }
+  .grain { position: absolute; inset: 0; pointer-events: none; }
+  .bx { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .tx { display: inline-block; white-space: nowrap; line-height: 0.92; }
+  .ch, .wd { display: inline-block; white-space: pre; }
+  #hud { position: fixed; left: 8px; top: 8px; z-index: 50; display: none; padding: 6px 8px;
+         font: 11px/1.4 ui-monospace, monospace; color: #0f0; background: rgba(0,0,0,0.7); pointer-events: none; }
+  #hint { display: none !important; position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8; font: 700 1.6vh system-ui, sans-serif;
+          letter-spacing: 0.4em; color: #fff; opacity: 0.55; pointer-events: none; }
+  :root { --fK: "Montserrat", sans-serif; --fM: "JetBrains Mono", monospace; }
+  .ki { font-family: var(--fK); font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.92; }
+  .mono { font-family: var(--fM); font-weight: 500; }
+
+  body.headless #hint { display: none !important; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="hud"></div>
+<div id="hint" aria-hidden="true"></div>
+<audio id="audio" preload="auto"></audio>
+
+<script type="module">
+/* Promo Kinetic — Tipografía — pack de tipografía cinética: una palabra repetida en filas por escena con 20+ animaciones distintas (centro, ola, cascada, rotación, marcador, perspectiva, cortes…) sobre carbón con grano y rayas de película. */
+const NAME = "promo-kinetic";
+const ACTIVE_ID = null;   /* <-- forzar un id · null = usa "activeId" del JSON */
+const DEFAULT_CONFIG = {"activeId": "default", "configs": [{"id": "default", "description": "Promo de tipografía cinética: una palabra o frase por escena repetida en filas, con una animación distinta cada vez (desde el centro, ola, cascada, rotación, marcador, perspectiva, cortes, ondas, parpadeo), en blanco, rojo, verde, naranja o degradado sobre carbón con grano, rayas de película y contador de escena. — metadata para marketing/SEO, la plantilla no la usa todavía.", "audio": {"src": "assets/song.mp3"}, "lyricsUrl": "assets/lyrics.json", "fonts": {"googleUrl": "https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=JetBrains+Mono:wght@500&display=swap"}, "palette": {"bg": "#1C1C1D", "white": "#BDBDB8", "red": "#9B1F1F", "green": "#1E8A2E", "teal": "#2E9C74", "orange": "#A23A12", "yellow": "#D9C21A"}, "media": [], "brand": {"tag": "NEXA"}, "duration": 54.23, "scenes": [{"type": "fromCenter", "color": "white"}, {"type": "stretchChars", "color": "red"}, {"type": "ripple", "color": "white"}, {"type": "cascade", "color": "white"}, {"type": "marker", "color": "red"}, {"type": "ripple", "color": "white"}, {"type": "gradient", "color": "yellow"}, {"type": "rotating", "color": "white"}, {"type": "sliced", "color": "green"}, {"type": "cascade", "color": "white"}, {"type": "dynamicScale", "color": "white"}, {"type": "marker", "color": "orange"}, {"type": "bigBlock", "color": "white", "block": "red"}, {"type": "growing", "color": "teal"}, {"type": "breakDown", "color": "red"}, {"type": "pushUp", "color": "white"}, {"type": "gradient", "color": "grad"}, {"type": "squeeze", "color": "green"}, {"type": "perspective", "color": "red"}, {"type": "bigBlock", "color": "white", "block": "orange"}, {"type": "constructor_", "color": "white"}, {"type": "starway", "color": "teal"}, {"type": "sliced", "color": "white"}, {"type": "waving", "color": "white"}, {"type": "squeeze", "color": "white"}, {"type": "blink", "color": "red"}, {"type": "typing", "color": "white"}, {"type": "verticalWord", "color": "red"}, {"type": "typing", "color": "white"}], "texture": {"grain": 0.08}, "debug": {"enabled": false}, "seed": 29}]};
+const FONT_LOADS = ["900 100px Montserrat", "500 100px 'JetBrains Mono'"];
+
+/* ======================= NÚCLEO COMÚN (promo-*) =========================
+   Compartido por las 6 plantillas de commercial/ (promo-trendy,
+   promo-dynamic, promo-urban, promo-sports, promo-editorial y
+   promo-kinetic). Contrato:
+   · config.json  = colección { activeId, configs: [ CASO ] } (como neon /
+     caution): audio, lyricsUrl, paleta, fuentes, MEDIA (videos / imágenes)
+     y la coreografía `scenes` (tipo de escena + media por escena).
+   · lyricsUrl   = guion en formato Whisper { segments: [ { start, end, text,
+     words: [ { word, start, end } ] } ] }. UN segmento = UNA escena (corte en
+     segment.start, palabras que aparecen en word.start). Campos extra
+     opcionales por segmento: "lines" (cómo partir el texto en renglones) y
+     "sub" (texto chico de acompañamiento). Una transcripción real de Whisper
+     también sirve tal cual.
+   · Todo se anima con Tracks propios (interpolan y escriben style solo si
+     cambia; sin Web Animations → nada se promueve a capa y el headless no se
+     hunde) posicionados con el reloj del audio: ?t=SEG congela un cuadro y
+     los videos se buscan a ese instante exacto.
+   Servir por HTTP (python3 -m http.server): por file:// el fetch se bloquea. */
+const doc = document, $ = id => doc.getElementById(id);
+const QS = new URLSearchParams(location.search);
+const FROZEN = QS.has("t") ? parseFloat(QS.get("t")) : null;
+
+async function loadDB() {
+  for (const u of ["config.json", `assets/${NAME}.config.json`, "assets/config.json"]) {
+    try { const r = await fetch(u); if (r.ok) return await r.json(); } catch (e) {}
+  }
+  console.warn(`[${NAME}] config.json no disponible — usando DEFAULT_CONFIG embebido`);
+  return DEFAULT_CONFIG;
+}
+/* merge profundo de objetos; los arrays (media, scenes…) se reemplazan enteros */
+function deepMerge(a, b) {
+  if (Array.isArray(b) || typeof b !== "object" || b === null) return b === undefined ? a : b;
+  const out = { ...(typeof a === "object" && a && !Array.isArray(a) ? a : {}) };
+  for (const k of Object.keys(b)) out[k] = deepMerge(out[k], b[k]);
+  return out;
+}
+const DB = await loadDB();
+const RAW = DB.configs.find(c => c.id === ACTIVE_ID) || DB.configs.find(c => c.id === DB.activeId) || DB.configs[0];
+const C = deepMerge(DEFAULT_CONFIG.configs[0], RAW);
+const DEBUG = C.debug?.enabled || QS.get("debug") === "1";
+if (C.fonts?.googleUrl) {
+  const link = doc.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+  if (link && link.href !== C.fonts.googleUrl) link.href = C.fonts.googleUrl;
+}
+for (const [k, v] of Object.entries(C.palette || {})) doc.documentElement.style.setProperty("--" + k, v);
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const EASE_OUT = "cubic-bezier(.16,.84,.24,1)", EASE_IN = "cubic-bezier(.6,0,.9,.4)", EASE_IO = "cubic-bezier(.65,0,.3,1)";
+const EASE_BACK = "cubic-bezier(.3,1.5,.5,1)";
+
+/* ---------------- Tracks: interpolación propia, seek determinista ---------------- */
+const NUM = /-?\d*\.?\d+(?:e-?\d+)?/g;
+function lerpStr(a, b, p) {
+  if (p <= 0 || a === b) return a;
+  if (p >= 1) return b;
+  const na = a.match(NUM), nb = b.match(NUM);
+  if (!na || !nb || na.length !== nb.length) return p < 0.5 ? a : b;
+  let i = 0;
+  return b.replace(NUM, () => { const v = +na[i] + (+nb[i] - +na[i]) * p; i++; return String(Math.round(v * 1000) / 1000); });
+}
+const easeCache = new Map();
+function easeFn(spec) {
+  let f = easeCache.get(spec);
+  if (f) return f;
+  const m = /cubic-bezier\(([^)]+)\)/.exec(spec);
+  if (!m) f = spec.startsWith("steps") ? () => 0 : p => p;
+  else {
+    const [x1, y1, x2, y2] = m[1].split(",").map(Number);
+    const bz = (t, a, b) => 3 * a * t * (1 - t) * (1 - t) + 3 * b * t * t * (1 - t) + t * t * t;
+    const dbz = (t, a, b) => 3 * a * (1 - t) * (1 - t) + 6 * (b - a) * t * (1 - t) + 3 * (1 - b) * t * t;
+    f = x => {
+      let t = x;
+      for (let i = 0; i < 6; i++) { const d = dbz(t, x1, x2); if (Math.abs(d) < 1e-6) break; t -= (bz(t, x1, x2) - x) / d; t = clamp(t, 0, 1); }
+      return bz(t, y1, y2);
+    };
+  }
+  easeCache.set(spec, f);
+  return f;
+}
+class Track {
+  constructor(el, prop, init, discrete = false) { this.el = el; this.prop = prop; this.discrete = discrete; this.keys = [[0, init, "linear"]]; }
+  get last() { return this.keys[this.keys.length - 1][1]; }
+  set(t, v) { this.keys.push([t, v, "linear"]); return this; }
+  to(t0, d, v, ease = "linear") { this.keys.push([t0, this.last, ease]); this.keys.push([t0 + Math.max(0.001, d), v, "linear"]); return this; }
+  compile() {
+    this.ks = this.keys.slice().sort((a, b) => a[0] - b[0]).map(([t, v, e]) => [t, v, easeFn(this.discrete ? "steps" : e)]);
+    this.a = Infinity; this.b = -Infinity;
+    for (let i = 1; i < this.ks.length; i++)
+      if (this.ks[i][1] !== this.ks[i - 1][1]) { this.a = Math.min(this.a, this.ks[i - 1][0]); this.b = Math.max(this.b, this.ks[i][0]); }
+    this.side = null; this.cur = undefined;
+  }
+  value(t) {
+    const ks = this.ks;
+    if (t <= ks[0][0]) return ks[0][1];
+    for (let i = ks.length - 1; i >= 0; i--) {
+      if (t < ks[i][0]) continue;
+      const nx = ks[i + 1];
+      if (!nx) return ks[i][1];
+      const span = nx[0] - ks[i][0];
+      return span <= 0 ? nx[1] : lerpStr(ks[i][1], nx[1], ks[i][2]((t - ks[i][0]) / span));
+    }
+    return ks[0][1];
+  }
+  seek(t) {
+    const side = t < this.a ? -1 : t > this.b ? 1 : 0;
+    if (side !== 0 && side === this.side) return;
+    this.side = side;
+    const v = this.value(t);
+    if (v !== this.cur) {
+      if (this.prop[0] === "@") this.el[this.prop.slice(1)] = v;   /* "@textContent" → propiedad directa */
+      else this.el.style[this.prop] = v;
+      this.cur = v;
+    }
+  }
+}
+
+/* ---------------- DOM, texto, medición ---------------- */
+function div(parent, cls, css) {
+  const d = doc.createElement("div");
+  if (cls) d.className = cls;
+  if (css) Object.assign(d.style, css);
+  if (parent) parent.appendChild(d);
+  return d;
+}
+const meas = (() => { const m = doc.createElement("span"); m.style.cssText = "position:absolute;left:-99999px;top:0;visibility:hidden;white-space:pre;font-size:100px;line-height:1"; doc.body.appendChild(m); return m; })();
+const measCache = new Map();
+function measure(text, cls, ls = 0) {
+  const key = cls + "|" + ls + "|" + text;
+  let m = measCache.get(key);
+  if (!m) {
+    meas.className = "tx " + cls; meas.style.letterSpacing = ls + "em"; meas.textContent = text;
+    const r = meas.getBoundingClientRect();
+    m = { w: Math.max(1, r.width), h: Math.max(1, r.height) };
+    measCache.set(key, m);
+  }
+  return m;
+}
+const fit = (text, cls, ls, maxW, maxH) => { const m = measure(text, cls, ls); return 100 * Math.min(maxW / m.w, maxH / m.h); };
+const textW = (text, cls, ls, fs) => measure(text, cls, ls).w * fs / 100;
+/* texto decorativo enorme → <canvas> rasterizado UNA vez (mover un texto de
+   1000+ px re-rasteriza cada cuadro en headless: 27 → 7 fps). Respeta fuente,
+   peso, itálica, font-stretch, mayúsculas, espaciado, contorno y textura. */
+const STRETCH = { "50%": "ultra-condensed", "62.5%": "extra-condensed", "75%": "condensed", "87.5%": "semi-condensed", "112.5%": "semi-expanded", "125%": "expanded", "150%": "extra-expanded", "200%": "ultra-expanded" };
+function canvasText(text, o) {
+  meas.className = "tx " + (o.cls || ""); meas.style.letterSpacing = "0em";
+  const cs = getComputedStyle(meas), fs = o.fs;
+  const t = cs.textTransform === "uppercase" ? text.toUpperCase() : text;
+  const cv = doc.createElement("canvas"), cx = cv.getContext("2d");
+  const setFont = () => {
+    cx.font = `${cs.fontStyle} ${cs.fontWeight} ${fs}px ${cs.fontFamily}`;
+    cx.fontStretch = STRETCH[cs.fontStretch] || "normal";
+    cx.letterSpacing = `${(o.ls || 0) * fs}px`;
+  };
+  setFont();
+  const sw = o.stroke ? (o.swPx ?? Math.max(1, fs * (o.sw || 0.012))) : 0;
+  const padL = fs * 0.06 + sw, padR = fs * 0.22 + sw;
+  const w = Math.ceil(cx.measureText(t).width + padL + padR), h = Math.ceil(fs * 1.3);
+  cv.width = Math.min(16000, w); cv.height = h;
+  setFont();
+  cx.textBaseline = "middle";
+  const y = h / 2 + fs * 0.04;
+  if (o.stroke) { cx.lineWidth = sw; cx.strokeStyle = o.color; cx.lineJoin = "round"; cx.strokeText(t, padL, y); }
+  else { cx.fillStyle = o.color; cx.fillText(t, padL, y); }
+  if (o.texture) {            /* textura de piedra: motas oscuras solo sobre la letra */
+    cx.globalCompositeOperation = "source-atop";
+    const n = Math.floor(cv.width * cv.height / 220);
+    for (let i = 0; i < n; i++) { cx.fillStyle = `rgba(0,0,0,${0.08 + texRng() * 0.3})`; const s = 1 + texRng() * 3; cx.fillRect(texRng() * cv.width, texRng() * cv.height, s, s); }
+    cx.globalCompositeOperation = "source-over";
+  }
+  cv.className = "tx"; cv.style.width = cv.width + "px"; cv.style.height = h + "px"; cv.style.display = "block";
+  return cv;
+}
+/* texto posicionado: (x, y) = punto de ancla (ax, ay ∈ 0..1). .bx posiciona, .tx se anima */
+function tx(parent, text, o) {
+  const box = div(parent, "bx");
+  box.style.left = o.x + "px"; box.style.top = o.y + "px";
+  box.style.transform = `translate(${-(o.ax ?? 0.5) * 100}%, ${-(o.ay ?? 0.5) * 100}%)` + (o.rot ? ` rotate(${o.rot}deg)` : "");
+  if (o.canvas) { const el = canvasText(text, o); box.appendChild(el); return { box, el, chars: [], words: [] }; }
+  const el = div(box, "tx " + (o.cls || ""));
+  el.style.fontSize = o.fs + "px";
+  if (o.ls) el.style.letterSpacing = o.ls + "em";
+  if (o.stroke) { el.style.color = "transparent"; el.style.webkitTextStroke = `${Math.max(1, o.fs * (o.sw || 0.012))}px ${o.color}`; }
+  else el.style.color = o.color;
+  const chars = [], words = [];
+  if (o.split === "chars") {
+    let wi = 0;
+    for (const c of text) {
+      const s = doc.createElement("span"); s.className = "ch"; s.textContent = c; s.wi = wi;
+      if (c === " ") wi++;
+      el.appendChild(s); chars.push(s);
+    }
+  } else if (o.split === "words") {
+    text.split(" ").forEach((w, i) => {
+      if (i) el.appendChild(doc.createTextNode(" "));
+      const s = doc.createElement("span"); s.className = "wd"; s.textContent = w; el.appendChild(s); words.push(s);
+    });
+  } else el.textContent = text;
+  return { box, el, chars, words };
+}
+
+/* ---------------- filtros SVG: duotono, B/N, desenfoque direccional ---------------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+const fx = (() => {
+  const s = doc.createElementNS(SVGNS, "svg");
+  s.setAttribute("width", "0"); s.setAttribute("height", "0"); s.style.position = "absolute";
+  const d = doc.createElementNS(SVGNS, "defs"); s.appendChild(d); doc.body.appendChild(s);
+  return d;
+})();
+const hex = h => { const n = parseInt(h.replace("#", ""), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
+/* duotono: luminancia → tabla [oscuro → claro], con contraste previo */
+function duoFilter(id, dark, light, contrast = 1.25) {
+  const [dr, dg, db] = hex(dark), [lr, lg, lb] = hex(light);
+  const icpt = (1 - contrast) / 2;
+  fx.insertAdjacentHTML("beforeend", `<filter id="${id}" color-interpolation-filters="sRGB">
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncR type="linear" slope="${contrast}" intercept="${icpt}"/><feFuncG type="linear" slope="${contrast}" intercept="${icpt}"/><feFuncB type="linear" slope="${contrast}" intercept="${icpt}"/></feComponentTransfer>
+    <feComponentTransfer><feFuncR type="table" tableValues="${dr} ${lr}"/><feFuncG type="table" tableValues="${dg} ${lg}"/><feFuncB type="table" tableValues="${db} ${lb}"/></feComponentTransfer>
+  </filter>`);
+  return `url(#${id})`;
+}
+for (const [n, s] of [[1, 6], [2, 16], [3, 34]]) {
+  fx.insertAdjacentHTML("beforeend", `<filter id="mbx${n}" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="${s} 0"/></filter>`);
+  fx.insertAdjacentHTML("beforeend", `<filter id="mby${n}" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 ${s}"/></filter>`);
+}
+/* gradings del config (C.grades): key → filtro CSS/SVG. Si un media trae la
+   variante ya gradada (media.graded[key], generada por tools/grade_media.py)
+   se usa esa y NO se aplica filtro en vivo: filtrar video en tiempo real es
+   carísimo en Chrome headless (45 fps → 13 fps con un solo filtro). */
+const GRADE = {};
+for (const [k, g] of Object.entries(C.grades || {}))
+  GRADE[k] = g.type === "duo" ? duoFilter(k, g.dark, g.light, g.contrast ?? 1.25)
+           : `saturate(${g.saturate ?? 1}) contrast(${g.contrast ?? 1}) brightness(${g.brightness ?? 1})`;
+/* video → foto fija (su póster), conservando las variantes gradadas del póster */
+function asStill(s) {
+  if (!s || s.type !== "video") return s;
+  const graded = {};
+  for (const [k, g] of Object.entries(s.graded || {})) if (g.poster) graded[k] = { src: g.poster };
+  return { ...s, type: "image", src: s.poster || s.src, graded };
+}
+function blurPass(tr, t0, d, axis = "x", fadeIn = false) {
+  const f = n => `url(#mb${axis}${n})`;
+  if (fadeIn) tr.set(t0, "none").set(t0 + d * 0.35, f(1)).set(t0 + d * 0.65, f(2)).set(t0 + d, f(3));
+  else tr.set(t0, f(3)).set(t0 + d * 0.4, f(2)).set(t0 + d * 0.75, f(1)).set(t0 + d, "none");
+}
+
+/* ---------------- texturas (grano) ---------------- */
+const texRng = mulberry32((C.seed || 7) * 31 + 5);
+function noiseTile(size, alpha) {
+  const cv = doc.createElement("canvas"); cv.width = cv.height = size;
+  const cx = cv.getContext("2d"), im = cx.createImageData(size, size), d = im.data;
+  for (let i = 0; i < d.length; i += 4) { const v = texRng() < 0.5 ? 0 : 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = texRng() * alpha; }
+  cx.putImageData(im, 0, 0);
+  return `url(${cv.toDataURL()})`;
+}
+const GRAIN = noiseTile(192, 255);
+
+/* ---------------- guion (lyrics.json) → escenas ---------------- */
+async function loadScript() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    /* filtro de alucinaciones de Whisper (tramos instrumentales): config.lyricsFilter
+       = { minLogprob, drop: [regex…] } — un segmento que no pasa se descarta */
+    const F = C.lyricsFilter || {}, drop = (F.drop || []).map(x => new RegExp(x, "i"));
+    const bad = s => (F.minLogprob != null && s.avg_logprob != null && s.avg_logprob < F.minLogprob) ||
+                     drop.some(re => re.test(s.text || ""));
+    return (j.segments || []).filter(s => !bad(s)).map(s => {
+      let words = (s.words || []).map(w => ({ text: String(w.word).trim(), t: w.start, end: w.end })).filter(w => w.text);
+      if (!words.length && s.text) words = s.text.trim().split(/\s+/).map(x => ({ text: x, t: s.start, end: s.end }));
+      return { start: s.start, end: s.end, text: (s.text || "").trim(), lines: s.lines, sub: s.sub, words };
+    }).filter(s => isFinite(s.start)).sort((a, b) => a.start - b.start);
+  } catch (e) {
+    console.warn(`[${NAME}] No se pudo cargar`, C.lyricsUrl, e);
+    return [];
+  }
+}
+/* renglones de la escena: seg.lines (strings) si existe; si no, un renglón */
+function linesOf(sc) {
+  const ws = sc.words;
+  const specs = Array.isArray(sc.seg.lines) && sc.seg.lines.length ? sc.seg.lines : [ws.map(w => w.text).join(" ")];
+  let k = 0;
+  return specs.map(str => {
+    const n = String(str).trim().split(/\s+/).filter(Boolean).length;
+    const lw = ws.slice(k, k + n); k += n;
+    return { text: String(str).trim(), words: lw, rt: lw.length ? lw[0].rt : (ws[ws.length - 1]?.rt ?? 0) };
+  });
+}
+function buildTimeline(segs, dur) {
+  const slots = C.scenes && C.scenes.length ? C.scenes : [{ type: Object.keys(B)[0] }];
+  return segs.map((s, i) => {
+    const t0 = i === 0 ? 0 : s.start;
+    const t1 = i + 1 < segs.length ? segs[i + 1].start : dur;
+    const slot = slots[i % slots.length];
+    const type = B[slot.type] ? slot.type : Object.keys(B)[0];
+    return { idx: i, t0, t1, dur: Math.max(0.05, t1 - t0), seg: s, slot, type,
+             words: s.words.map(w => ({ text: w.text, rt: Math.max(0, w.t - t0) })) };
+  });
+}
+
+/* ---------------- letra de canción → frases ---------------- */
+/* segmentos de Whisper → frases de ≤ maxWords / ≤ maxSec, cortando en la pausa
+   más larga; palabras limpias de puntuación, con su tiempo real */
+const cleanWord = s => String(s).trim().replace(/[.,;:!?¡¿"“”()\[\]]/g, "").replace(/[`´’]/g, "'");
+function lyricPhrases(segs, o = {}) {
+  const maxW = o.maxWords ?? 6, maxS = o.maxSec ?? 3.2, minW = o.minWords ?? 2;
+  const out = [], q = segs.map(s => {
+    const ws = [];
+    for (const w of s.words) {
+      const x = { text: cleanWord(w.text), t: w.t, end: w.end ?? w.t + 0.3 };
+      if (!x.text) continue;
+      /* Whisper a veces parte "y'all" → "y" + "'all": se vuelve a unir */
+      if (x.text.startsWith("'") && ws.length) { ws[ws.length - 1].text += x.text; ws[ws.length - 1].end = x.end; continue; }
+      ws.push(x);
+    }
+    return ws;
+  });
+  const dur = ws => ws[ws.length - 1].end - ws[0].t;
+  while (q.length) {
+    const ws = q.shift();
+    if (!ws.length) continue;
+    if (ws.length > maxW || (dur(ws) > maxS && ws.length >= 2 * minW)) {
+      let bi = Math.ceil(ws.length / 2), bg = -1;
+      for (let i = Math.max(minW, Math.ceil(ws.length * 0.2)); i <= Math.min(ws.length - minW, Math.floor(ws.length * 0.8)); i++) {
+        const g = ws[i].t - ws[i - 1].end + (/^(and|but|i|i'm|y|pero|que)$/i.test(ws[i].text) ? 0.12 : 0);
+        if (g > bg) { bg = g; bi = i; }
+      }
+      q.unshift(ws.slice(0, bi), ws.slice(bi));
+      continue;
+    }
+    out.push(ws);
+  }
+  return out;
+}
+const isStop = w => /^(a|an|the|and|or|but|so|of|to|in|on|at|for|with|i|i'm|me|my|you|your|it|is|am|are|be|we|us|el|la|los|las|un|una|y|o|de|del|en|con|por|que|me|te|mi|tu|su|yo|es)$/i.test(w.text);
+/* fuerza de una palabra (para elegir la protagonista de la frase) */
+const heroIdx = ws => { let b = 0, bs = -1; ws.forEach((w, i) => { const s = (isStop(w) ? 0 : 10) + w.text.length; if (s > bs) { bs = s; b = i; } }); return b; };
+
+/* línea de tiempo para plantillas de LETRA: una escena por frase, con la
+   escena elegida por un mazo ponderado (config.layouts = { tipo: { weight,
+   bgs } } + FITS[tipo](frase) de la plantilla), ecos de las palabras fuertes
+   en los tramos instrumentales largos y tarjetas de intro / cierre.
+   config.timing = { leadSec, holdSec, gapSec, echoSec, cooldown } */
+function lyricTimeline(segs, dur, FITS) {
+  const Tm = { leadSec: 0.12, holdSec: 0.9, gapSec: 2.4, echoSec: 1.1, cooldown: 3, ...(C.timing || {}) };
+  const r = mulberry32((C.seed || 7) * 977 + 3);
+  const ph = lyricPhrases(segs, C.phrases || {});
+  const list = [];
+  const mk = (kind, t0, t1, ws, extra = {}) => ({ kind, t0, t1, seg: { text: ws.map(w => w.text).join(" ") },
+    words: ws.map(w => ({ text: w.text, rt: Math.max(0, (w.t ?? t0) - Tm.leadSec - t0) })), ...extra });
+  const syn = (texts, t0) => texts.filter(Boolean).map((x, i) => ({ text: x, t: t0 + 0.25 + i * 0.45 + Tm.leadSec }));
+  const I = C.intro || {}, O = C.outro || {};
+  const first = ph.length ? Math.max(0, ph[0][0].t - Tm.leadSec) : dur;
+  if (first >= 1.2 && (I.title || I.artist)) list.push(mk("intro", 0, first, syn([I.title, I.artist], 0), { type: I.type || "intro" }));
+  const heroes = [], hist = [];
+  ph.forEach((ws, i) => {
+    const t0 = i === 0 && !list.length ? 0 : Math.max(0, ws[0].t - Tm.leadSec);
+    const nx = ph[i + 1], lastEnd = ws[ws.length - 1].end;
+    let t1 = nx ? Math.max(t0 + 0.35, nx[0].t - Tm.leadSec) : dur;
+    heroes.push(ws[heroIdx(ws)].text); hist.push(ws);
+    let gap = null;
+    if (t1 - lastEnd > Tm.gapSec) { gap = [lastEnd + Tm.holdSec, t1]; t1 = gap[0]; }
+    const ly = mk("lyric", t0, t1, ws);
+    list.push(ly);
+    if (!gap && !nx && O.enabled !== false && (O.title || O.sub) && dur - lastEnd > 1.2) gap = [Math.max(t0 + 0.6, lastEnd + 0.3), dur];
+    if (!gap) return;
+    ly.t1 = gap[0];
+    /* tramo final: el cierre ocupa los últimos outro.sec segundos; antes, ecos */
+    if (!nx && O.enabled !== false && (O.title || O.sub)) {
+      const os = Math.max(gap[0], dur - (O.sec ?? 3.2));
+      list.push(mk("outro", os, dur, syn([O.title, O.sub, O.feats], os), { type: O.type || "outro" }));
+      if (os - gap[0] < 0.8) { ly.t1 = os; return; }
+      gap = [gap[0], os];
+    }
+    /* tramo instrumental largo → se repiten frases completas ya cantadas (en orden,
+       como un estribillo); corto → ecos de las palabras fuertes */
+    const len = gap[1] - gap[0], ps = Tm.echoPhraseSec ?? 1.8;
+    if (len >= 3 * ps && hist.length) {
+      const k = Math.max(1, Math.round(len / ps));
+      for (let j = 0; j < k; j++) {
+        const a = gap[0] + len * j / k, b = gap[0] + len * (j + 1) / k, src = hist[j % hist.length];
+        const step = Math.min(0.26, (b - a) * 0.55 / Math.max(1, src.length));
+        list.push(mk("echo", a, b, src.map((w, n) => ({ text: w.text, t: a + Tm.leadSec + 0.06 + n * step }))));
+      }
+    } else {
+      const k = Math.max(1, Math.round(len / Tm.echoSec));
+      for (let j = 0; j < k; j++) {
+        const a = gap[0] + len * j / k, b = gap[0] + len * (j + 1) / k;
+        const pool = [...new Set(heroes.slice(-8))];
+        const txt = pool[Math.floor(r() * pool.length)] || ws[0].text;
+        list.push(mk("echo", a, b, [{ text: txt, t: a + Tm.leadSec + 0.05 }]));
+      }
+    }
+  });
+  list.sort((a, b) => a.t0 - b.t0);
+  /* mazo: tipo de escena + fondo */
+  const L = C.layouts || {}, recent = [];
+  let prevBg = "";
+  list.forEach((sc, i) => {
+    sc.idx = i; sc.dur = Math.max(0.05, sc.t1 - sc.t0);
+    if (!sc.type) {
+      let c = Object.entries(L).filter(([k, v]) => v.weight > 0 && B[k] && (!FITS[k] || FITS[k](sc)) && !recent.includes(k));
+      if (!c.length) c = Object.entries(L).filter(([k, v]) => v.weight > 0 && B[k]);
+      let x = r() * c.reduce((a, [, v]) => a + v.weight, 0); sc.type = c[0][0];
+      for (const [k, v] of c) { x -= v.weight; if (x <= 0) { sc.type = k; break; } }
+      recent.push(sc.type); if (recent.length > Tm.cooldown) recent.shift();
+    }
+    const bgs = (L[sc.type]?.bgs || C.defaultBgs || ["media"]).filter(b => b !== prevBg || (L[sc.type]?.bgs || []).length === 1);
+    const bg = bgs[Math.floor(r() * bgs.length)] || "media";
+    const media = C.media?.length ? [C.media[Math.floor(r() * C.media.length)].id, C.media[Math.floor(r() * C.media.length)].id] : [];
+    sc.slot = { type: sc.type, bg, media };
+    prevBg = bg;
+  });
+  return list;
+}
+
+/* ---------------- media (video / imagen) ---------------- */
+/* Los videos (y el audio) se bajan enteros como blob al arrancar: el servidor
+   del grabador (SimpleHTTPRequestHandler) no soporta Range, y sin eso Chrome
+   tarda en tener datos y no puede buscar (el video se queda en 0 s). Con blob
+   la búsqueda por tiempo es instantánea. config.preload=false lo desactiva. */
+const BLOBS = new Map();
+async function preloadMedia(timeoutMs = 8000) {
+  if (C.preload === false) return;
+  const srcs = new Set([C.audio?.src].filter(Boolean));
+  for (const m of C.media || []) if (m.type === "video") {
+    srcs.add(m.src);
+    for (const g of Object.values(m.graded || {})) if (g.src) srcs.add(g.src);
+  }
+  const jobs = [...srcs].map(async s => {
+    try { const r = await fetch(encodeURI(s)); if (r.ok) BLOBS.set(s, URL.createObjectURL(await r.blob())); } catch (e) {}
+  });
+  await Promise.race([Promise.all(jobs), new Promise(r => __nbSetTimeout(r, timeoutMs))]);
+}
+const srcURL = s => BLOBS.get(s) || encodeURI(s);
+function mediaSpec(sc, k) {
+  const list = C.media || [];
+  if (!list.length) return null;
+  const ref = (sc.slot.media || [])[k];
+  if (typeof ref === "number") return list[ref % list.length];
+  if (typeof ref === "string") { const m = list.find(x => x.id === ref); if (m) return m; }
+  return list[(sc.idx * 2 + k) % list.length];
+}
+/* caja de media recortada; o.filter = key de C.grades (o filtro CSS), o.off = desfase del clip */
+function mbox(X, parent, k, css = {}, o = {}) {
+  let spec = typeof k === "object" ? k : mediaSpec(X.sc, k);
+  const box = div(parent, "mbox", css);
+  if (!spec) return { box, el: div(box, "media") };
+  let filter = o.filter;
+  if (filter && GRADE[filter] !== undefined) {
+    const g = spec.graded && spec.graded[filter];
+    if (g) { spec = { ...spec, src: g.src || spec.src, poster: g.poster || spec.poster }; filter = null; }
+    else filter = GRADE[filter];
+  }
+  let el;
+  if (spec.type === "video") {
+    el = doc.createElement("video");
+    el.muted = true; el.playsInline = true; el.preload = "auto"; el.loop = true;
+    el.src = srcURL(spec.src);
+    X.videos.push({ v: el, spec, off: o.off || 0 });
+  } else { el = doc.createElement("img"); el.src = spec.src; el.decoding = "sync"; }
+  el.className = "media";
+  if (filter) el.style.filter = filter;
+  if (spec.pos) el.style.objectPosition = spec.pos;
+  box.appendChild(el);
+  return { box, el, spec };
+}
+/* Ken Burns: en fotos siempre; en video solo con config.render.kbVideo (escalar
+   un <video> en cada cuadro cuesta mucho en headless: 45 → 26 fps) */
+function kenBurns(X, m, from, to) {
+  if (m.spec && m.spec.type === "video" && !C.render?.kbVideo) { m.el.style.transform = from; return; }
+  X.T(m.el, "transform", from).to(0, X.dur, to);
+}
+function syncVideos(X, t, scrub) {
+  for (const it of X.videos) {
+    const v = it.v, d = v.duration, rate = it.spec.rate || 1;
+    let e = (it.spec.start || 0) + (t + it.off) * rate;
+    if (isFinite(d) && d > 0.3) e = e % (d - 0.08);
+    if (scrub) {
+      if (!v.paused) v.pause();
+      if (Math.abs(v.currentTime - e) > 0.02) { try { v.currentTime = e; } catch (err) {} }
+    } else {
+      v.playbackRate = rate;
+      if (v.paused) v.play().catch(() => {});
+      if (Math.abs(v.currentTime - e) > 0.35) { try { v.currentTime = e; } catch (err) {} }
+    }
+  }
+}
+
+/* ---------------- escenas: construir, montar, buscar ---------------- */
+let vw = innerWidth, vh = innerHeight;
+function buildScene(sc) {
+  const W = vw, H = vh;
+  const root = div(null, "scene", { width: W + "px", height: H + "px" });
+  const tracks = [];
+  const X = {
+    sc, root, W, H, u: Math.min(W, H) / 720, dur: sc.dur, videos: [],
+    r: mulberry32(((C.seed || 7) * 7919 + sc.idx * 104729) >>> 0),
+    T: (el, prop, init, discrete) => { const t = new Track(el, prop, init, discrete); tracks.push(t); return t; }
+  };
+  X.lines = linesOf(sc);
+  X.pend = [];
+  try { B[sc.type](sc, X); }
+  catch (e) { console.warn(`[${NAME}] escena falló`, sc.type, e); }
+  /* piezas que necesitan medir el texto ya maquetado (garabatos, marcos):
+     se monta la escena oculta un instante, se mide y se desmonta */
+  if (X.pend.length) {
+    root.style.visibility = "hidden"; stage.appendChild(root);
+    for (const f of X.pend) { try { f(); } catch (e) { console.warn(`[${NAME}] medición falló`, e); } }
+    stage.removeChild(root); root.style.visibility = "";
+  }
+  if (C.texture?.grain > 0) div(root, "grain", { backgroundImage: GRAIN, opacity: C.texture.grain,
+    backgroundPosition: `${Math.floor(X.r() * 192)}px ${Math.floor(X.r() * 192)}px` });
+  for (const t of tracks) { t.compile(); t.seek(0); }
+  return {
+    root, sc,
+    seek(t, scrub) { for (const tr of tracks) tr.seek(t); syncVideos(X, t, scrub); },
+    dispose() { for (const it of X.videos) { it.v.pause(); it.v.removeAttribute("src"); it.v.load(); } root.remove(); }
+  };
+}
+
+const stage = $("stage"), audio = $("audio"), hud = $("hud");
+let rafT0 = null, rafNow = 0, started = false, forced = FROZEN;
+const clock = () => forced != null ? forced
+  : (!audio.paused && audio.currentTime > 0.05) ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+async function begin() {
+  if (started || FROZEN != null) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+let scenes = [], curIdx = -1, cur = null, nextBuilt = null;
+function sceneAt(t) {
+  let lo = 0, hi = scenes.length - 1, ans = -1;
+  while (lo <= hi) { const m = (lo + hi) >> 1; if (scenes[m].t0 <= t) { ans = m; lo = m + 1; } else hi = m - 1; }
+  return ans;
+}
+function mount(i) {
+  if (cur) cur.dispose();
+  cur = (nextBuilt && nextBuilt.i === i) ? nextBuilt.b : buildScene(scenes[i]);
+  nextBuilt = null;
+  stage.appendChild(cur.root);
+  curIdx = i;
+  if (i + 1 < scenes.length) {
+    const j = i + 1;
+    __nbSetTimeout(() => { if (curIdx === i && !nextBuilt) nextBuilt = { i: j, b: buildScene(scenes[j]) }; }, 0);
+  }
+}
+function render(t) {
+  const i = sceneAt(t);
+  if (i < 0) return;
+  if (i !== curIdx) mount(i);
+  cur.seek(Math.min(t, scenes[i].t1) - scenes[i].t0, forced != null);
+  if (DEBUG) { const s = scenes[i]; hud.textContent = `t ${t.toFixed(2)} · #${i} ${s.type} · "${s.seg.text}"`; }
+}
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  render(clock());
+  if (FROZEN == null) requestAnimationFrame(frame);
+}
+
+async function boot() {
+  if (DEBUG) hud.style.display = "block";
+  if (QS.get("headless") === "1") doc.body.classList.add("headless");
+  const fontsReady = Promise.race([Promise.all(FONT_LOADS.map(f => doc.fonts.load(f))).then(() => doc.fonts.ready), new Promise(r => __nbSetTimeout(r, 3000))]);
+  /* primero media + guion + fuentes; el audio (el reloj) arranca recién con
+     todo listo, así el primer cuadro de la escena 1 coincide con t = 0 */
+  const [segs] = await Promise.all([loadScript(), fontsReady, preloadMedia()]);
+  audio.src = srcURL(C.audio.src);
+  const aDur = await new Promise(res => {
+    if (isFinite(audio.duration) && audio.duration > 0) return res(audio.duration);
+    audio.addEventListener("loadedmetadata", () => res(audio.duration), { once: true });
+    __nbSetTimeout(() => res(NaN), 2500);
+  });
+  if (segs.length) {
+    const last = segs[segs.length - 1];
+    const dur = isFinite(aDur) && aDur > 0 ? aDur : (last.end || last.start + 3);
+    measCache.clear();
+    /* una plantilla puede traer su propia línea de tiempo (las de letra de canción) */
+    scenes = (typeof makeTimeline === "function" ? makeTimeline : buildTimeline)(segs, dur);
+  }
+  addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; measCache.clear(); nextBuilt = null; if (cur) { cur.dispose(); cur = null; curIdx = -1; } });
+  window.__promo = {
+    scenes: () => scenes,
+    seek(t) { forced = t; render(t); return new Promise(res => { const vs = cur ? [...cur.root.querySelectorAll("video")] : [];
+      Promise.all(vs.map(v => new Promise(r => { if (v.readyState >= 2 && !v.seeking) r(); else { v.addEventListener("seeked", r, { once: true }); v.addEventListener("loadeddata", r, { once: true }); __nbSetTimeout(r, 1500); } })))
+        .then(() => requestAnimationFrame(() => requestAnimationFrame(res))); }); },
+    release() { forced = null; }
+  };
+  requestAnimationFrame(frame);
+  if (FROZEN == null) begin();
+}
+/* ===================== FIN NÚCLEO COMÚN ===================== */
+
+/* ======================= ESCENAS · promo-kinetic =======================
+   Réplica del pack "kinetic typography" (30 animaciones de texto repetido):
+   gris carbón con grano, rayas y pelos de película, contador "07 / 30" y
+   código de tiempo en las esquinas; UNA palabra/frase por escena, repetida en
+   filas, con una animación distinta cada vez (desde el centro, ola, cascada,
+   rotación, ondas, escala dinámica, marcador, perspectiva, cortes, etc.).
+   Sin metraje: todo es texto → funciona igual con cualquier guion.
+   config.scenes[i] = { type, color: "white"|"red"|"green"|"orange"|"yellow"|
+   "grad", bg: "none"|"block" } · guion en lyrics.json (1 segmento = 1 escena). */
+const P = C.palette;
+const U = s => String(s).toUpperCase();
+const COL = { white: P.white, red: P.red, green: P.green, orange: P.orange, yellow: P.yellow, teal: P.teal };
+const col = X => COL[X.sc.slot.color] || P.white;
+const W0 = X => U(X.lines[0]?.text || X.sc.seg.text || "");
+const T0 = X => Math.max(0.02, X.lines[0]?.rt ?? 0.05);
+const GRAD = ["#F2C81E", "#F08A1A", "#E3401E", "#C02B8E", "#5A3FD6", "#2F5FE0", "#B8B7B0"];
+
+/* ---- fondo: carbón + grano + rayas de película + HUD de esquinas ---- */
+const HAIRS = (() => {
+  const cv = doc.createElement("canvas"); cv.width = 1280; cv.height = 720;
+  const cx = cv.getContext("2d");
+  for (let i = 0; i < 26; i++) {
+    cx.strokeStyle = `rgba(0,0,0,${0.25 + texRng() * 0.35})`; cx.lineWidth = 0.8 + texRng();
+    cx.beginPath(); let x = texRng() * 1280, y = texRng() * 720; cx.moveTo(x, y);
+    for (let k = 0; k < 4; k++) { x += (texRng() - 0.5) * 40; y += (texRng() - 0.5) * 40; cx.quadraticCurveTo(x + (texRng() - 0.5) * 30, y + (texRng() - 0.5) * 30, x, y); }
+    cx.stroke();
+  }
+  return `url(${cv.toDataURL()})`;
+})();
+function base(X) {
+  const { W, H, u, r, sc } = X;
+  const L = div(X.root, "lay", { background: P.bg });
+  div(L, "lay", { background: "radial-gradient(ellipse at 50% 45%, rgba(255,255,255,0.05), transparent 65%)" });
+  div(L, "lay", { backgroundImage: HAIRS, backgroundSize: "cover", opacity: 0.9, transform: `translate(${(r() - 0.5) * 40}px, ${(r() - 0.5) * 30}px)` });
+  for (let i = 0; i < 2; i++) div(L, "patch", { left: r() * W + "px", top: 0, width: Math.max(1, u) + "px", height: H + "px", background: `rgba(255,255,255,${0.04 + r() * 0.05})` });
+  const n = String(sc.idx + 1).padStart(2, "0"), tot = String(scenes.length).padStart(2, "0");
+  const hud = (s, x, y, ax) => { const o = tx(L, s, { cls: "mono", fs: 7 * u, x, y, ax, color: "rgba(230,230,230,0.55)" }); o.el.style.letterSpacing = "0.05em"; };
+  hud(`${n} / ${tot}`, 0.95 * W, 0.05 * H, 1);
+  hud(C.brand?.tag || "", 0.03 * W, 0.05 * H, 0);
+  const tc = Math.max(0, (C.duration || 60) - sc.t0);
+  hud(`00:${String(Math.floor(tc)).padStart(2, "0")}.${String(Math.floor((tc % 1) * 100)).padStart(2, "0")}`, 0.03 * W, 0.95 * H, 0);
+  div(L, "patch", { left: 0.955 * W + "px", top: 0.935 * H + "px", width: 7 * u + "px", height: 7 * u + "px", background: "rgba(230,230,230,0.6)" });
+  if (sc.slot.bg === "block") {
+    const b = div(L, "patch", { left: 0.22 * W + "px", top: 0.02 * H + "px", width: 0.56 * W + "px", height: 0.96 * H + "px", background: COL[sc.slot.block] || P.orange });
+    X.T(b, "transform", "scaleY(0)").to(0.05, 0.25, "scaleY(1)", EASE_OUT); b.style.transformOrigin = "50% 0%";
+  }
+  return L;
+}
+/* filas de la misma palabra: n filas, alto de fila lh, tamaño fs */
+function rowsOf(X, L, s, n, o = {}) {
+  const { W, H } = X;
+  const fs = o.fs ?? Math.min(fit(s, "ki", o.ls ?? 0, (o.w ?? 0.62) * W, 1e9), (0.9 * H / n) / (o.lh ?? 0.92));
+  const lh = fs * (o.lh ?? 0.92), y0 = H / 2 - (n - 1) * lh / 2;
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    const c = o.color ? (typeof o.color === "function" ? o.color(i) : o.color) : col(X);
+    const t = tx(L, s, { cls: "ki", fs, x: o.x ?? W / 2, y: y0 + i * lh, ax: o.ax ?? 0.5, color: c, ls: o.ls, split: o.split, stroke: o.stroke });
+    if (o.stroke) t.el.style.webkitTextStroke = `${Math.max(1, fs * 0.02)}px ${c}`;
+    out.push(t);
+  }
+  return { rows: out, fs, lh, y0 };
+}
+const show = (X, el, t) => { if (t > 0.001) X.T(el, "visibility", "hidden", true).set(t, "visible"); };
+const hideAt = (X, el, t) => X.T(el, "visibility", "visible", true).set(t, "hidden");
+const mid = n => (n - 1) / 2;
+/* salida común: todo se comprime hacia el centro o baja */
+function exit(X, L, kind = "squash") {
+  const te = X.dur - 0.26;
+  if (te < 0.3) return;
+  if (kind === "squash") X.T(L, "transform", "scaleY(1)").to(te, 0.24, "scaleY(0)", EASE_IN);
+  else if (kind === "slide") X.T(L, "transform", "translateX(0px)").to(te, 0.24, `translateX(${-X.W}px)`, EASE_IN);
+  else X.T(L, "opacity", "1").to(te, 0.22, "0");
+}
+
+const B = {};
+
+/* desde el centro: filas que nacen desde la del medio (arriba/abajo) */
+B.fromCenter = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 9, { rows: R, lh } = rowsOf(X, G, s, n, { w: 0.5 });
+  R.forEach((t, i) => { const d = i - mid(n), at = T0(X) + Math.abs(d) * 0.05; X.T(t.box, "transform", `translate(-50%, ${-d * lh - 50}%)`).to(at, 0.35, "translate(-50%, -50%)", EASE_OUT); show(X, t.box, at); });
+  const t2 = X.dur * 0.55;
+  X.T(G, "transform", "scale(1)").to(t2, 0.35, "scale(3.2)", EASE_IN);
+  R.forEach((t, i) => { if (i !== Math.round(mid(n))) hideAt(X, t.box, t2 + 0.2); });
+};
+
+/* letras estiradas: la palabra crece estirando las letras de los bordes */
+B.stretchChars = (sc, X) => {
+  const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X);
+  const fs = fit(s, "ki", 0.2, 0.6 * W, 0.16 * H);
+  const t = tx(G, s, { cls: "ki", fs, x: W / 2, y: H / 2, color: col(X), ls: 0.2, split: "chars" });
+  const n = t.chars.length;
+  t.chars.forEach((c, i) => {
+    const edge = i === 0 || i === n - 1;
+    show(X, c, T0(X) + Math.abs(i - mid(n)) * 0.03);
+    if (edge) { c.style.transformOrigin = i === 0 ? "100% 50%" : "0% 50%"; X.T(c, "transform", "scaleX(1)").to(X.dur * 0.35, 0.4, "scaleX(6)", EASE_IO); }
+  });
+  X.T(t.el, "letterSpacing", "0.2em").to(T0(X), 0.6, "0.5em", EASE_OUT);
+  exit(X, G, "fade");
+};
+
+/* ola: filas desplazadas en onda que se enderezan */
+B.wave = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 9, { rows: R } = rowsOf(X, G, s, n, { w: 0.62, split: "chars" });
+  R.forEach((t, i) => t.chars.forEach((c, k) => {
+    const ph = Math.sin(k * 0.6 + i * 0.5);
+    X.T(c, "transform", `translateY(${ph * 60}%) rotate(${ph * 25}deg)`).to(T0(X) + k * 0.02, 0.6, "translateY(0%) rotate(0deg)", EASE_OUT);
+    show(X, c, T0(X) + k * 0.015 + i * 0.02);
+  }));
+  X.T(G, "transform", "skewY(0deg)").to(X.dur * 0.6, 0.4, "skewY(-6deg)", EASE_IO);
+  exit(X, G);
+};
+
+/* cascada: filas que caen y se apilan desde arriba */
+B.cascade = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 8, { rows: R, lh } = rowsOf(X, G, s, n, { w: 0.48 });
+  R.forEach((t, i) => { const at = T0(X) + (n - 1 - i) * 0.07; X.T(t.el, "transform", `translateY(${-(i + 2) * 100}%)`).to(at, 0.3, "translateY(0%)", "cubic-bezier(.5,0,.8,.6)"); show(X, t.box, at); });
+  const te = X.dur * 0.62;
+  R.forEach((t, i) => X.T(t.box, "opacity", "1").to(te + i * 0.04, 0.2, i % 2 ? "0.25" : "1"));
+  exit(X, G);
+};
+
+/* rotación: una fila gira sola, luego se multiplica */
+B.rotating = (sc, X) => {
+  const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R, lh } = rowsOf(X, G, s, n, { w: 0.5 });
+  const c = Math.round(mid(n));
+  X.T(R[c].el, "transform", "rotate(-90deg) scale(0.6)").to(T0(X), 0.5, "rotate(0deg) scale(1)", EASE_OUT);
+  show(X, R[c].box, T0(X));
+  R.forEach((t, i) => { if (i === c) return; const at = T0(X) + 0.5 + Math.abs(i - c) * 0.06; show(X, t.box, at); X.T(t.el, "transform", `translateY(${(c - i) * 100}%)`).to(at, 0.25, "translateY(0%)", EASE_OUT); });
+  exit(X, G);
+};
+
+/* letras con ondas "((( )))" alrededor que se juntan */
+B.ripple = (sc, X) => {
+  const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X);
+  const fs = fit(s, "ki", 0.06, 0.52 * W, 0.18 * H);
+  const main = tx(G, s, { cls: "ki", fs, x: W / 2, y: H / 2, color: col(X), ls: 0.06 });
+  show(X, main.box, T0(X));
+  for (let k = 1; k <= 4; k++) for (const side of [-1, 1]) {
+    const o = tx(G, side < 0 ? "(" : ")", { cls: "ki", fs: fs * (1 - k * 0.1), x: W / 2 + side * (textW(s, "ki", 0.06, fs) / 2 + k * fs * 0.28), y: H / 2, color: col(X) });
+    X.T(o.el, "opacity", "0").to(T0(X) + k * 0.05, 0.15, String(1 - k * 0.18)).to(X.dur * 0.6, 0.25, "0");
+    X.T(o.el, "transform", `translateX(${side * k * 30}px)`).to(T0(X), 0.4, "translateX(0px)", EASE_OUT);
+  }
+  exit(X, G, "fade");
+};
+
+/* degradado de color fila por fila */
+B.gradient = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R } = rowsOf(X, G, s, n, { w: 0.46, color: i => GRAD[i % GRAD.length] });
+  R.forEach((t, i) => { const at = T0(X) + i * 0.08; show(X, t.box, at); X.T(t.el, "transform", "scaleY(0.2)").to(at, 0.25, "scaleY(1)", EASE_OUT); });
+  const th = X.dur * 0.55;
+  R.forEach((t, i) => X.T(t.el, "color", GRAD[i % GRAD.length], true).set(th, GRAD[(i + 3) % GRAD.length]).set(th + 0.2, GRAD[(i + 5) % GRAD.length]));
+  exit(X, G);
+};
+
+/* escala dinámica: filas con ancho que crece hacia el centro (rombo) */
+B.dynamicScale = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 11, { rows: R } = rowsOf(X, G, s, n, { w: 0.58 });
+  R.forEach((t, i) => { const d = Math.abs(i - mid(n)) / mid(n), sx = 1 - d * 0.7; show(X, t.box, T0(X) + d * 0.2); X.T(t.el, "transform", "scaleX(0.05)").to(T0(X) + d * 0.2, 0.4, `scaleX(${sx.toFixed(3)})`, EASE_OUT); });
+  exit(X, G);
+};
+
+/* marcador: bloques de color que barren detrás de cada fila */
+B.marker = (sc, X) => {
+  const { W } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 6, { rows: R, fs, lh } = rowsOf(X, G, s, n, { w: 0.72, color: P.white });
+  R.forEach((t, i) => {
+    const at = T0(X) + i * 0.07, w = textW(s, "ki", 0, fs) * 1.04;
+    const b = div(G, "patch", { left: W / 2 - w / 2 + "px", top: parseFloat(t.box.style.top) - lh * 0.5 + "px", width: w + "px", height: lh * 0.96 + "px", background: COL[sc.slot.color] || P.orange, transformOrigin: "0% 50%" });
+    G.insertBefore(b, G.firstChild);
+    X.T(b, "transform", "scaleX(0)").to(at, 0.25, "scaleX(1)", EASE_OUT);
+    show(X, t.box, at + 0.12);
+  });
+  X.T(G, "transform", "scale(1)").to(X.dur * 0.5, 0.4, "scale(1.9)", EASE_IO);
+  exit(X, G, "fade");
+};
+
+/* perspectiva: filas en 3D que se abren desde el horizonte */
+B.perspective = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay", { perspective: "900px" }), s = W0(X), n = 7, { rows: R } = rowsOf(X, G, s, n, { w: 0.42 });
+  R.forEach((t, i) => { const d = i - mid(n), at = T0(X) + Math.abs(d) * 0.05; X.T(t.el, "transform", `rotateX(${d * 30}deg) scale(0.4)`).to(at, 0.5, `rotateX(${d * 8}deg) scale(1)`, EASE_OUT); show(X, t.box, at); });
+  X.T(G, "transform", "rotateY(0deg)").to(X.dur * 0.5, 0.5, "rotateY(-25deg)", EASE_IO);
+  exit(X, G);
+};
+
+/* cortes: filas cortadas por la mitad que se desfasan y se juntan */
+B.sliced = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R } = rowsOf(X, G, s, n, { w: 0.44 });
+  R.forEach((t, i) => {
+    const at = T0(X) + i * 0.05, top = tx(G, s, { cls: "ki", fs: parseFloat(t.el.style.fontSize), x: X.W / 2, y: parseFloat(t.box.style.top), color: col(X) });
+    t.el.style.clipPath = "inset(50% 0% 0% 0%)"; top.el.style.clipPath = "inset(0% 0% 50% 0%)";
+    X.T(t.el, "transform", `translateX(${(i % 2 ? 1 : -1) * 20}%)`).to(at, 0.4, "translateX(0%)", EASE_OUT);
+    X.T(top.el, "transform", `translateX(${(i % 2 ? -1 : 1) * 20}%)`).to(at, 0.4, "translateX(0%)", EASE_OUT);
+    show(X, t.box, at); show(X, top.box, at);
+  });
+  exit(X, G);
+};
+
+/* empuje: filas que suben una tras otra (scroll) */
+B.pushUp = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R, lh } = rowsOf(X, G, s, n, { w: 0.46 });
+  const g2 = div(G, "lay");
+  R.forEach((t, i) => { g2.appendChild(t.box); show(X, t.box, T0(X) + i * 0.1); });
+  X.T(g2, "transform", `translateY(${n * lh * 0.5}px)`).to(T0(X), X.dur * 0.8, "translateY(0px)", EASE_OUT);
+  exit(X, G);
+};
+
+/* separación: la palabra se parte en fragmentos rotados y se recompone */
+B.breakDown = (sc, X) => {
+  const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 5, { rows: R } = rowsOf(X, G, s, n, { w: 0.62, split: "chars" });
+  R.forEach((t, i) => t.chars.forEach((c, k) => {
+    const rr = (X.r() - 0.5) * 90, dx = (X.r() - 0.5) * 160, dy = (X.r() - 0.5) * 120;
+    X.T(c, "transform", `translate(${dx}%, ${dy}%) rotate(${rr}deg)`).to(T0(X) + X.r() * 0.2, 0.45, "translate(0%, 0%) rotate(0deg)", EASE_OUT);
+    show(X, c, T0(X));
+  }));
+  exit(X, G);
+};
+
+/* crecimiento: filas que crecen de tamaño hacia abajo */
+B.growing = (sc, X) => {
+  const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7;
+  const fs0 = fit(s, "ki", 0, 0.46 * W, 1e9), lhs = []; let y = 0.06 * H;
+  for (let i = 0; i < n; i++) {
+    const f = fs0 * (0.35 + i * 0.11);
+    const t = tx(G, s, { cls: "ki", fs: Math.min(f, 0.16 * H), x: W / 2, y: y + Math.min(f, 0.16 * H) * 0.46, color: col(X) });
+    y += Math.min(f, 0.16 * H) * 0.92;
+    const at = T0(X) + i * 0.07; show(X, t.box, at);
+    X.T(t.el, "transform", "scaleY(0)").to(at, 0.25, "scaleY(1)", EASE_OUT);
+  }
+  X.T(G, "transform", "translateY(0px)").to(X.dur * 0.55, 0.45, `translateY(${-(y - H) * 0.5}px)`, EASE_IO);
+  exit(X, G);
+};
+
+/* gran palabra en bloque de color: filas gigantes cortadas por el marco */
+B.bigBlock = (sc, X) => {
+  sc.slot.bg = "block";
+  const { W, H } = X, L = base(X), G = div(X.root, "lay", { clipPath: `inset(${0.02 * H}px ${0.22 * W}px ${0.02 * H}px ${0.22 * W}px)` }), s = W0(X), n = 5;
+  const fs = 0.25 * H, lh = fs * 0.9, y0 = H / 2 - (n - 1) * lh / 2;
+  for (let i = 0; i < n; i++) {
+    const t = tx(G, s, { cls: "ki", fs, x: W / 2, y: y0 + i * lh, color: P.white });
+    const at = T0(X) + 0.1 + i * 0.05; show(X, t.box, at);
+    X.T(t.el, "transform", `translateX(${(i % 2 ? 1 : -1) * 40}%)`).to(at, 0.4, `translateX(${(i % 2 ? -1 : 1) * 4}%)`, EASE_OUT);
+  }
+  X.T(G, "clipPath", `inset(${0.02 * H}px ${0.22 * W}px ${0.02 * H}px ${0.22 * W}px)`).to(X.dur * 0.55, 0.35, "inset(0px 0px 0px 0px)", EASE_IO);
+  exit(X, G);
+};
+
+/* constructor: letras que faltan y se completan (se construye la palabra) */
+B.constructor_ = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R } = rowsOf(X, G, s, n, { w: 0.5, split: "chars" });
+  R.forEach((t, i) => t.chars.forEach((c, k) => show(X, c, T0(X) + ((k * 7 + i * 3) % 10) * 0.05)));
+  X.T(G, "transform", "scale(1)").to(X.dur * 0.55, 0.4, "scale(1.6)", EASE_IO);
+  exit(X, G);
+};
+
+/* inclinada: bloque de filas en diagonal que se endereza */
+B.starway = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 8, { rows: R } = rowsOf(X, G, s, n, { w: 0.34 });
+  R.forEach((t, i) => { const at = T0(X) + i * 0.05; show(X, t.box, at); X.T(t.el, "transform", `translateX(${(i - mid(n)) * -18}%) skewX(-35deg)`).to(at, 0.5, "translateX(0%) skewX(0deg)", EASE_OUT); });
+  exit(X, G);
+};
+
+/* ondulante: filas sobre una curva senoidal */
+B.waving = (sc, X) => {
+  const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R } = rowsOf(X, G, s, n, { w: 0.5, split: "chars" });
+  R.forEach((t, i) => t.chars.forEach((c, k) => {
+    const a = Math.sin(k * 0.45 + i * 0.6);
+    X.T(c, "transform", `translateY(${a * 45}%) rotate(${a * -12}deg)`).to(0, X.dur, `translateY(${-a * 45}%) rotate(${a * 12}deg)`);
+    show(X, c, T0(X) + i * 0.04);
+  }));
+  X.T(G, "transform", "rotate(-12deg)").to(0, X.dur, "rotate(-6deg)");
+  exit(X, G, "slide");
+};
+
+/* compresión: filas apretadas que se estiran verticalmente */
+B.squeeze = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 9, { rows: R } = rowsOf(X, G, s, n, { w: 0.5, lh: 0.6 });
+  R.forEach((t, i) => { const d = Math.abs(i - mid(n)); show(X, t.box, T0(X) + d * 0.03); X.T(t.el, "transform", `scaleY(${0.3 + d * 0.05})`).to(T0(X), 0.6, `scaleY(${1.4 - d * 0.12})`, EASE_OUT); });
+  exit(X, G);
+};
+
+/* atención: filas que parpadean desde la del medio */
+B.blink = (sc, X) => {
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R } = rowsOf(X, G, s, n, { w: 0.44 });
+  R.forEach((t, i) => { const d = Math.abs(i - mid(n)), at = T0(X) + d * 0.08; X.T(t.box, "visibility", "hidden", true).set(at, "visible").set(at + 0.06, "hidden").set(at + 0.12, "visible"); });
+  exit(X, G);
+};
+
+/* vertical: letras en columna que se multiplican hacia los lados */
+B.verticalWord = (sc, X) => {
+  const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X).replace(/ /g, "");
+  const n = s.length, fs = Math.min(0.14 * H, 0.86 * H / n);
+  for (let c = -4; c <= 4; c++) s.split("").forEach((ch, i) => {
+    const o = tx(G, ch, { cls: "ki", fs, x: W / 2 + c * fs * 0.62, y: H / 2 + (i - mid(n)) * fs * 0.9, color: col(X) });
+    const at = T0(X) + Math.abs(c) * 0.06 + i * 0.02;
+    show(X, o.box, c === 0 ? T0(X) + i * 0.04 : at + 0.4);
+    if (c) X.T(o.el, "transform", `scaleX(${1 - Math.abs(c) * 0.2})`).to(at + 0.4, 0.2, `scaleX(${1 - Math.abs(c) * 0.15})`);
+  });
+  exit(X, G);
+};
+
+/* máquina de escribir: filas que se escriben con cursor */
+B.typing = (sc, X) => {
+  const { W } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 8, { rows: R } = rowsOf(X, G, s, n, { w: 0.62, x: 0.2 * W, ax: 0, split: "chars" });
+  R.forEach((t, i) => t.chars.forEach((c, k) => show(X, c, T0(X) + i * 0.08 + k * 0.035)));
+  /* filas fantasma en contorno detrás */
+  R.forEach(t => { const g = tx(G, s, { cls: "ki", fs: parseFloat(t.el.style.fontSize), x: 0.2 * W, y: parseFloat(t.box.style.top), ax: 0, color: "transparent", stroke: true }); g.el.style.webkitTextStroke = "1px rgba(230,230,230,0.25)"; G.insertBefore(g.box, G.firstChild); });
+  exit(X, G);
+};
+
+/* aviso: texto chico de acento al centro (títulos de sección del pack) */
+B.note = (sc, X) => {
+  const { W, H, u } = X, L = base(X), G = div(X.root, "lay"), ls = X.lines;
+  const fs = Math.min(0.05 * H, ...ls.map(l => fit(U(l.text), "ki", 0.02, 0.6 * W, 1e9)));
+  ls.forEach((l, i) => { const t = tx(G, U(l.text), { cls: "ki", fs, x: W / 2, y: H / 2 + (i - mid(ls.length)) * fs * 1.2, color: P.orange, ls: 0.02, split: "chars" }); t.chars.forEach((c, k) => show(X, c, Math.max(0.02, l.rt) + k * 0.02)); });
+  exit(X, G, "fade");
+};
+
+boot();
+</script>
+</body>
+</html>

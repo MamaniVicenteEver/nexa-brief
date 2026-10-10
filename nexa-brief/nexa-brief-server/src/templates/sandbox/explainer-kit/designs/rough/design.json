@@ -1,0 +1,106 @@
+{
+  "id": "rough",
+  "family": "rough",
+  "name": "PROTOTIPO",
+  "tagline": "Tecnología, innovación y creación, dibujadas a mano",
+  "topics": [
+    "tecnología",
+    "innovación",
+    "software",
+    "ingeniería",
+    "inventos",
+    "internet",
+    "espacio",
+    "startups"
+  ],
+  "channel": {
+    "name": "PROTOTIPO",
+    "handle": "@prototipo",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@500;600;700;800&family=Caveat:wght@500;700&display=swap",
+  "scripts": [
+    "vendor/rough.js",
+    "designs/common/text.js",
+    "designs/rough/components/_rough.js",
+    "designs/rough/components/sketches.js",
+    "designs/rough/components/shapes.js",
+    "designs/rough/components/ui.js",
+    "designs/rough/components/extra.js",
+    "designs/rough/components/outrov1.js",
+    "designs/rough/components/outro.js"
+  ],
+  "defaults": {
+    "family": "rough",
+    "palette": {
+      "bg": "#0a0a0b",
+      "bg2": "#121314",
+      "ink": "#ededea",
+      "muted": "#90918d",
+      "accent": "#c8ff2e",
+      "accentInk": "#10120b"
+    },
+    "fonts": {
+      "main": "Inter",
+      "load": [
+        "900 40px Inter",
+        "800 40px Inter",
+        "600 20px 'JetBrains Mono'",
+        "700 30px Caveat"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "rough": {
+      "boil": true,
+      "boilFps": 6,
+      "stroke": 0.32
+    },
+    "transition": {
+      "overlap": 0.6
+    },
+    "outro": {
+      "enabled": true,
+      "use": "rough.outrov1",
+      "dur": 5,
+      "thanks": "gracias por ver",
+      "channel": "NODETECH",
+      "cta": "SUSCRÍBETE",
+      "support": "apoya el canal · comparte el video",
+      "handle": "youtube.com/@nodetech"
+    }
+  },
+  "voice": {
+    "voice": "Sadaltager",
+    "alternatives": [
+      "Charon",
+      "Iapetus",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental de tecnología, voz masculina clara y con energía contenida, español latinoamericano neutro (sin ceceo). Curioso, preciso, cercano. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 130 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      120,
+      138
+    ]
+  },
+  "media": {
+    "photos": "fotos reales de personas, máquinas, lugares y pantallas; se muestran B/N (o viradas a lima) dentro de un marco a mano",
+    "portrait_tip": "rough.photo recorta 'cover': elegir fotos con el sujeto centrado; usar focus=[x,y] para apuntar el zoom",
+    "per_video": [
+      4,
+      8
+    ]
+  }
+}

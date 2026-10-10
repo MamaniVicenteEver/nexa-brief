@@ -148,7 +148,7 @@ _DEFAULT_REQUIRED_CONFIG_KEYS = [
 
 
 class ConfigDrivenTemplateConfig(BaseModel):
-    """Referencia a una plantilla estática tipo src/templates/01-image-bg/.
+    """Referencia a una plantilla estática registrada en templates.json.
 
     Solo se usa cuando NicheConfig.pipeline_type == "config_driven_template".
     Las rutas de archivo (index.html, prompts) ya NO viven acá — se resuelven
@@ -193,6 +193,10 @@ class ConfigDrivenTemplateConfig(BaseModel):
     # config.json — el motor de motion-backdrop espera una COLECCIÓN de
     # casos, no un solo objeto top-level (a diferencia de 01/02/03).
     wrap_as_case_collection: bool = False
+    # Algunas plantillas — por ejemplo las promos comerciales — traen un
+    # config.json curado y estable. En ese caso se reutiliza ese config como
+    # base y no se invoca al modelo para reconstruirlo en cada job.
+    static_config: bool = False
 
 
 # ─────────────────────────────────────────────────────────────────────────────

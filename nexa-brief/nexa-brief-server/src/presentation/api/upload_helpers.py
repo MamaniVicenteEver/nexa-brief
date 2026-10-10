@@ -17,7 +17,11 @@ async def save_upload_to_temp(upload: UploadFile, default_suffix: str) -> Path:
     suffix = Path(upload.filename).suffix if upload.filename else ""
     tmp_dir = Path(tempfile.mkdtemp(prefix="nb_upload_"))
     dest = tmp_dir / f"upload{suffix or default_suffix}"
-    dest.write_bytes(await upload.read())
+    # Copia en bloques: los videos de la librería pesan cientos de MB y
+    # `await upload.read()` los cargaba enteros en RAM.
+    with open(dest, "wb") as fh:
+        while chunk := await upload.read(1024 * 1024):
+            fh.write(chunk)
     return dest
 
 

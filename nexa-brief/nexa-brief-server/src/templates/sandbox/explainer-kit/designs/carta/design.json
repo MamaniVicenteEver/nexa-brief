@@ -1,0 +1,104 @@
+{
+  "id": "carta",
+  "family": "carta",
+  "name": "CARTA",
+  "tagline": "Historia contada como un álbum de fotos antiguas sobre una carta de papel viejo",
+  "topics": [
+    "historia",
+    "biografías",
+    "siglo XX",
+    "guerras",
+    "ciudades",
+    "memoria",
+    "familias",
+    "archivo"
+  ],
+  "channel": {
+    "name": "CARTA",
+    "handle": "@carta",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Special+Elite&family=La+Belle+Aurore&family=Mrs+Saint+Delafield&display=swap",
+  "scripts": [
+    "designs/carta/components/_carta.js",
+    "designs/carta/components/panels.js",
+    "designs/common/outro-v1.js",
+    "designs/common/hook.js",
+    "designs/carta/components/intros.js",
+    "designs/carta/components/outro.js"
+  ],
+  "defaults": {
+    "family": "carta",
+    "palette": {
+      "bg": "#bcb39c",
+      "bg2": "#dcd4be",
+      "ink": "#1f180d",
+      "ink2": "#2a2116",
+      "muted": "#625741",
+      "accent": "#120903",
+      "frame": "#d4cdb9",
+      "line": "#7d786c"
+    },
+    "fonts": {
+      "main": "Special Elite",
+      "load": [
+        "400 40px 'Special Elite'",
+        "400 40px 'La Belle Aurore'",
+        "400 40px 'Mrs Saint Delafield'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "transition": {
+      "overlap": 2.1
+    },
+    "carta": {
+      "pan": 1.9,
+      "drift": 0.012,
+      "flyScale": 7.5
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 5,
+      "thanks": "gracias por ver",
+      "channel": "NODETECH",
+      "cta": "SUSCRÍBETE",
+      "support": "apoya el canal · comparte el video",
+      "handle": "youtube.com/@nodetech",
+      "use": "carta.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 125 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos históricas reales (personas, lugares, documentos); se viran a sepia y se revelan con una máscara de tinta/pincel. Se pueden repetir con otro encuadre (focus/zoom/mirror).",
+    "portrait_tip": "los paneles recortan 'cover': usar focus=[x,y] para centrar caras; en 9:16 la foto va arriba (franja ancha)",
+    "per_video": [
+      5,
+      10
+    ]
+  }
+}

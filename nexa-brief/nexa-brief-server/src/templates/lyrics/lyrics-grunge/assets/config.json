@@ -1,0 +1,184 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Lyric video grunge de rap: metraje urbano en blanco y negro duro con niebla y bordes de papel rasgado, letra condensada gastada en blanco y rojo con fantasmas de movimiento, grillas de frases repetidas y garabatos de tiza (círculos, flechas, tachones, coronas, rayos). — metadata para marketing/SEO, la plantilla no la usa todavía.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "lyricsFilter": {
+        "minLogprob": -0.4,
+        "drop": [
+          "audio ?jungle",
+          "envato",
+          "subt[ií]tulos",
+          "amara\\.org",
+          "oriel"
+        ]
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@300;500&display=swap"
+      },
+      "palette": {
+        "red": "#E8292E",
+        "white": "#F1F1EF",
+        "black": "#070707",
+        "paper": "#EDEDEA",
+        "ink": "#101010",
+        "chalk": "#F5F5F2"
+      },
+      "grades": {
+        "bw": {
+          "type": "duo",
+          "dark": "#040404",
+          "light": "#EDEDED",
+          "contrast": 1.55
+        }
+      },
+      "media": [
+        {
+          "id": "tunnel",
+          "type": "video",
+          "src": "assets/media/tunnel-dance.mp4",
+          "poster": "assets/media/tunnel-dance-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/tunnel-dance.bw.mp4",
+              "poster": "assets/media/graded/tunnel-dance-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "street",
+          "type": "video",
+          "src": "assets/media/street-dance.mp4",
+          "poster": "assets/media/street-dance-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/street-dance.bw.mp4",
+              "poster": "assets/media/graded/street-dance-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "hoodie",
+          "type": "video",
+          "src": "assets/media/hoodie.mp4",
+          "poster": "assets/media/hoodie-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/hoodie.bw.mp4",
+              "poster": "assets/media/graded/hoodie-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "crowd",
+          "type": "video",
+          "src": "assets/media/crowd.mp4",
+          "poster": "assets/media/crowd-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/crowd.bw.mp4",
+              "poster": "assets/media/graded/crowd-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "breakdance",
+          "type": "video",
+          "src": "assets/media/breakdance.mp4",
+          "poster": "assets/media/breakdance-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/breakdance.bw.mp4",
+              "poster": "assets/media/graded/breakdance-1.bw.jpg"
+            }
+          }
+        },
+        {
+          "id": "night",
+          "type": "video",
+          "src": "assets/media/night-hoodie.mp4",
+          "poster": "assets/media/night-hoodie-1.jpg",
+          "graded": {
+            "bw": {
+              "src": "assets/media/graded/night-hoodie.bw.mp4",
+              "poster": "assets/media/graded/night-hoodie-1.bw.jpg"
+            }
+          }
+        }
+      ],
+      "phrases": {
+        "maxWords": 5,
+        "maxSec": 2.4,
+        "minWords": 2
+      },
+      "timing": {
+        "leadSec": 0.1,
+        "holdSec": 0.7,
+        "gapSec": 2.0,
+        "echoSec": 0.9,
+        "cooldown": 4
+      },
+      "layouts": {
+        "slam": {
+          "weight": 2.0
+        },
+        "twoTone": {
+          "weight": 1.6
+        },
+        "circle": {
+          "weight": 1.2
+        },
+        "spacedWide": {
+          "weight": 1.0
+        },
+        "grid": {
+          "weight": 1.0
+        },
+        "stackCols": {
+          "weight": 0.9
+        },
+        "torn": {
+          "weight": 1.0
+        },
+        "vertical": {
+          "weight": 0.7
+        },
+        "frameBox": {
+          "weight": 1.0
+        },
+        "stack3": {
+          "weight": 1.2
+        },
+        "blurGiant": {
+          "weight": 1.2
+        },
+        "strike": {
+          "weight": 1.0
+        }
+      },
+      "intro": {
+        "title": "",
+        "artist": ""
+      },
+      "outro": {
+        "enabled": true,
+        "sec": 3.2,
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscríbete · NEXA BRIEF"
+      },
+      "texture": {
+        "grain": 0.1
+      },
+      "debug": {
+        "enabled": false
+      },
+      "seed": 13
+    }
+  ]
+}

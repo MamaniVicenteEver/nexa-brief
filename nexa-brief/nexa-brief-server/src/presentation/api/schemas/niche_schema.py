@@ -9,6 +9,11 @@ class NicheResponse(BaseModel):
     id: str
     display_name: str
     description: str
+    category_id: str = "uncategorized"
+    category_name: str = "Sin categoría"
+    category_order: int = 999
+    tags: list[str] = []
+    sort_order: int = 0
     pipeline_type: str
     active: bool
     recorder_engine: str

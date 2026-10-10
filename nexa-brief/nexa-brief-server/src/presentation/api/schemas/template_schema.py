@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from typing import Literal
+
 from pydantic import BaseModel
 
 from src.core import preview_tracker
@@ -22,9 +24,50 @@ PREVIEW_ALLOWED_FILENAMES = frozenset({
 })
 
 
+class TemplateAudioRequirement(BaseModel):
+    required: bool = False
+    # "auto" = se transcribe sola; "optional" = puede venir sin letra; "none" = no usa letra.
+    lyrics: Literal["auto", "optional", "none"] = "none"
+
+
+class TemplateMediaSlot(BaseModel):
+    slot: str
+    kind: Literal["image", "video", "image|video"]
+    count: int | None = None          # exacto, si la plantilla lo declara así
+    min: int = 1
+    max: int = 1
+    orientation: Literal["landscape", "portrait", "square"] | None = None
+    # "source" = va como imagen/video de fondo del job; "media" = reemplaza config.media.
+    target: Literal["source", "media"] = "source"
+    label: str
+    hint: str = ""
+
+
+class TemplateTextField(BaseModel):
+    key: str                          # notación con puntos sobre el config (ej. "brand.tag")
+    label: str
+    max: int | None = None
+    default: str | None = None
+
+
+class TemplateRequirementsResponse(BaseModel):
+    """GET /templates/{template_id}/requirements — ver template_manifest.get_template_inputs."""
+    audio: TemplateAudioRequirement
+    media: list[TemplateMediaSlot] = []
+    texts: list[TemplateTextField] = []
+    brief: bool = False
+
+
 class TemplateResponse(BaseModel):
     template_id: str
     niche_id: str
+    category_id: str
+    category_name: str
+    category_order: int = 999
+    tags: list[str] = []
+    sort_order: int = 0
+    status: str = "ready"
+    can_generate: bool = False
     display_name: str
     native_orientation: str
     requires_image: bool
@@ -35,6 +78,15 @@ class TemplateResponse(BaseModel):
     preview_video_url: str | None = None
     preview_audio_url: str | None = None
     showcase_url: str | None = None
+    # Campo nuevo y opcional: los clientes actuales lo ignoran.
+    inputs: TemplateRequirementsResponse | None = None
+
+
+class TemplateCategoryResponse(BaseModel):
+    id: str
+    display_name: str
+    description: str = ""
+    order: int = 0
 
 
 class TemplatePreviewAcceptedResponse(BaseModel):

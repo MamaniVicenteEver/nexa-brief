@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<!-- Video del explainer-kit (diseño "{{DESIGN}}"). Este archivo NO se edita: todo el video vive en
+     assets/ (config.json, script.json, song.mp3, lyrics.json, storyboard.json, media/).
+     El motor y los componentes se cargan desde ../../explainer-kit/ según el diseño. -->
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#stage{position:fixed;inset:0}</style>
+</head>
+<body>
+<audio id="audio" preload="auto"></audio>
+<div id="stage"></div>
+<script src="../../explainer-kit/engine/loader.js" data-design="{{DESIGN}}"></script>
+</body>
+</html>

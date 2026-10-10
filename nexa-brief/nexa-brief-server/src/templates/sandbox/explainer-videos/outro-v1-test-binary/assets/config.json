@@ -1,0 +1,22 @@
+{
+  "activeId": "outro-v1-test-binary",
+  "configs": [
+    {
+      "id": "outro-v1-test-binary",
+      "design": "binary",
+      "preview": { "total": 13.68, "startAt": 0 },
+      "audio": { "src": "assets/song.mp3" },
+      "lyricsUrl": "assets/lyrics.json",
+      "storyboardUrl": "assets/storyboard.json",
+      "outro": {
+        "enabled": true,
+        "use": "binary.outrov1",
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODETECH",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo hace posible que sigamos trayendo nuevas historias y miradas sobre el pasado.",
+        "handle": "youtube.com/@nodetech"
+      }
+    }
+  ]
+}

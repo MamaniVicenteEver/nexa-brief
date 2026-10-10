@@ -16,11 +16,14 @@ import { LocaleSwitcher } from "./LocaleSwitcher";
 
 export function AdminHeader() {
   const t = useTranslations("adminNav");
+  // "Recursos" vive en su propio archivo de mensajes (messages/*/resources.json).
+  const tResources = useTranslations("resources");
   const pathname = usePathname();
 
   const MANAGEMENT_LINKS = [
     { href: "/programacion", label: t("programacion") },
     { href: "/biblioteca", label: t("biblioteca") },
+    { href: "/recursos", label: tResources("navLabel") },
     { href: "/historial", label: t("historial") },
     { href: "/notificaciones", label: t("notificaciones") },
   ] as const;

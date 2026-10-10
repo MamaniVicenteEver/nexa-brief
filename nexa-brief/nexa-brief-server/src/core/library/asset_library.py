@@ -18,20 +18,25 @@ identificador estable que usa el resto del sistema.
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
+import json
+import unicodedata
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 from urllib.parse import unquote, urlparse
 
 import httpx
 import structlog
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from src.config.exceptions import AssetDownloadError, AssetNotFoundError
 from src.config.settings import settings
 from src.core.data import collection, documents, files
+from src.core.realtime.event_bus import get_event_bus
+from src.core.realtime.events import RealtimeEvent
 
 logger = structlog.get_logger(__name__)
 
@@ -69,6 +74,12 @@ class ImageLibraryEntry(BaseModel):
     last_used_at: str | None = None
     tags: str = ""
     has_vision_cache: bool = False
+    # Librería de recursos (F1): texto libre que el usuario escribe al subir o
+    # editar; entra en la búsqueda junto con label/tags.
+    description: str = ""
+
+
+TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 
 class MusicLibraryEntry(BaseModel):
@@ -93,6 +104,22 @@ class MusicLibraryEntry(BaseModel):
     # usado por find_music_by_hash para detectar la misma canción aunque llegue
     # con nombre de archivo distinto. Evaluar en producción si se mantiene.
     content_hash: str = ""
+    # Librería de recursos (F1) — todos con default para leer los registros
+    # viejos tal cual. `tags` es un string separado por comas, igual que en
+    # ImageLibraryEntry (ver normalize_tags).
+    description: str = ""
+    tags: str = ""
+    language: str = ""                # ISO ("es", "en"); vacío = auto-detectar
+    transcription_status: TranscriptionStatus = "none"
+    transcription_error: str = ""
+
+    @model_validator(mode="after")
+    def _infer_transcription_status(self) -> MusicLibraryEntry:
+        # Registros anteriores a F1 tienen la letra cacheada pero no el campo
+        # de estado: si hay caché, la transcripción está hecha.
+        if self.has_lyrics_cache and self.transcription_status == "none":
+            self.transcription_status = "done"
+        return self
 
 
 class VideoLibraryEntry(BaseModel):
@@ -115,6 +142,8 @@ class VideoLibraryEntry(BaseModel):
     usage_count: int = 0
     last_used_at: str | None = None
     has_vision_cache: bool = False
+    description: str = ""
+    tags: str = ""
 
 
 class TemplateConfigEntry(BaseModel):
@@ -227,8 +256,9 @@ async def register_image(
         added_by_job_id=job_id,
         usage_count=1,
         last_used_at=_now_iso(),
-        tags=meta.get("tags", "") or "",
+        tags=normalize_tags(meta.get("tags")),
         has_vision_cache=False,
+        description=meta.get("description", "") or "",
     )
     await _records("image").insert(entry.model_dump())
     logger.info("asset_library_image_registered", asset_id=asset_id, category=category, source=source)
@@ -284,6 +314,9 @@ async def register_music(
         added_by_job_id=job_id,
         usage_count=1,
         last_used_at=_now_iso(),
+        description=meta.get("description", "") or "",
+        tags=normalize_tags(meta.get("tags")),
+        language=meta.get("language", "") or "",
     )
     await _records("music").insert(entry.model_dump())
     logger.info("asset_library_music_registered", asset_id=asset_id, category=category, source=source)
@@ -375,6 +408,8 @@ async def register_video(
         usage_count=1,
         last_used_at=_now_iso(),
         has_vision_cache=False,
+        description=meta.get("description", "") or "",
+        tags=normalize_tags(meta.get("tags")),
     )
     await _records("video").insert(entry.model_dump())
     logger.info("asset_library_video_registered", asset_id=asset_id, category=category, source=source)
@@ -501,6 +536,226 @@ def get_template_config(job_id: str) -> dict[str, Any]:
     if config is not None:
         return config
     raise AssetNotFoundError(f"No archived template config found for job_id '{job_id}'.")
+
+
+# ── Librería de recursos (F1): búsqueda, edición, borrado ────────────────────
+# Lo que usa la pantalla "Recursos" y el buscador del Estudio
+# (docs/investigaciones/estudio-creacion-interactiva-2026-09.md §3.2). Trabaja
+# sobre las mismas colecciones que alimenta el pipeline: un asset subido a mano
+# y uno que trajo resource_fetcher son indistinguibles para el resto del sistema.
+
+# Nombre en la API (plural, como las rutas /library/images…) → kind interno.
+API_KINDS: dict[str, str] = {"images": "image", "music": "music", "videos": "video"}
+_API_NAME = {kind: api for api, kind in API_KINDS.items()}
+
+LibraryEntry = ImageLibraryEntry | MusicLibraryEntry | VideoLibraryEntry
+
+_MODELS: dict[str, type[BaseModel]] = {
+    "image": ImageLibraryEntry,
+    "music": MusicLibraryEntry,
+    "video": VideoLibraryEntry,
+}
+
+# Campos que el usuario puede editar por PATCH. El resto (relative_path, hash,
+# usos, cachés…) lo mantiene el sistema y editarlo a mano rompería referencias.
+EDITABLE_FIELDS: dict[str, frozenset[str]] = {
+    "image": frozenset({"label", "description", "tags", "category", "photographer", "license_note"}),
+    "music": frozenset({
+        "track_name", "artist", "genre", "description", "tags", "language", "category", "license_note",
+    }),
+    "video": frozenset({"label", "description", "tags", "category", "license_note"}),
+}
+
+_SEARCH_FIELDS: dict[str, tuple[str, ...]] = {
+    "image": ("label", "tags", "original_filename", "description", "photographer", "category"),
+    "music": ("track_name", "artist", "genre", "tags", "original_filename", "description", "category"),
+    "video": ("label", "tags", "original_filename", "description", "category"),
+}
+
+# Cachés por asset que hay que limpiar al borrarlo (si no, quedan huérfanos y
+# un asset nuevo nunca los reusa: el asset_id es un UUID que no se repite).
+_CACHE_STORES: dict[str, tuple[str, ...]] = {
+    "image": ("image_vision",),
+    "music": ("lyrics",),
+    "video": ("video_vision",),
+}
+
+
+def api_kind(kind: str) -> str:
+    """kind interno ("image") → nombre de la API ("images")."""
+    return _API_NAME[kind]
+
+
+def normalize_tags(value: str | list[str] | tuple[str, ...] | None) -> str:
+    """Tags como string separado por comas — el formato que ya usa
+    ImageLibraryEntry.tags (lo llenan los proveedores de stock). Acepta lista o
+    string, recorta espacios y quita repetidos sin cambiar el orden."""
+    if not value:
+        return ""
+    parts = value.split(",") if isinstance(value, str) else [str(v) for v in value]
+    seen: dict[str, str] = {}
+    for raw in parts:
+        tag = " ".join(raw.split())
+        if tag and tag.casefold() not in seen:
+            seen[tag.casefold()] = tag
+    return ", ".join(seen.values())
+
+
+def tag_list(tags: str) -> list[str]:
+    return [t for t in (part.strip() for part in tags.split(",")) if t]
+
+
+def _fold(text: str) -> str:
+    """Minúsculas y sin acentos — "Canción" y "cancion" tienen que matchear."""
+    decomposed = unicodedata.normalize("NFKD", text)
+    return "".join(c for c in decomposed if not unicodedata.combining(c)).casefold()
+
+
+def get_entry(kind: str, asset_id: str) -> LibraryEntry:
+    return _MODELS[kind](**_find(kind, asset_id))  # type: ignore[return-value]
+
+
+def resolve_asset_path(kind: str, asset_id: str) -> Path:
+    """Ruta local del archivo de un asset (genérico para los tres kinds)."""
+    return _storage(kind).local_path(get_entry(kind, asset_id).relative_path)
+
+
+def search_assets(kind: str, q: str | None = None, category: str | None = None) -> list[LibraryEntry]:
+    """Lista los assets de *kind* filtrando por categoría (igualdad exacta) y por
+    texto libre: cada palabra de *q* tiene que aparecer en alguno de los campos
+    de _SEARCH_FIELDS (case/acentos-insensible). Sin *q* devuelve todo.
+
+    El filtro corre en Python sobre la colección completa: la librería es de
+    cientos de assets, no millones, y el contrato del DataStore solo garantiza
+    filtros por igualdad (ver core/ports/data_port.py)."""
+    model = _MODELS[kind]
+    entries = [model(**d) for d in _records(kind).list({"category": category} if category else None)]
+    terms = _fold(q).split() if q else []
+    if not terms:
+        return entries  # type: ignore[return-value]
+    fields = _SEARCH_FIELDS[kind]
+
+    def matches(entry: BaseModel) -> bool:
+        haystack = " ".join(_fold(str(getattr(entry, f, "") or "")) for f in fields)
+        return all(term in haystack for term in terms)
+
+    return [e for e in entries if matches(e)]  # type: ignore[misc]
+
+
+async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any]) -> LibraryEntry:
+    """Aplica una edición del usuario. Ignora campos no editables (ver
+    EDITABLE_FIELDS) en vez de fallar, así el front puede mandar el objeto
+    entero. Cambiar la categoría mueve también el archivo a la carpeta nueva,
+    para que la clave siga siendo "{categoría}/{archivo}"."""
+    current = get_entry(kind, asset_id)
+    changes = {k: v for k, v in patch.items() if k in EDITABLE_FIELDS[kind] and v is not None}
+    if "tags" in changes:
+        changes["tags"] = normalize_tags(changes["tags"])
+    if "category" in changes:
+        new_category = str(changes["category"]).strip()
+        if not new_category:
+            changes.pop("category")
+        elif new_category != current.category:
+            storage = _storage(kind)
+            old_key = current.relative_path
+            old_path = storage.local_path(old_key)
+            if old_path.exists():
+                changes["relative_path"] = storage.save(
+                    old_path, folder=new_category, filename=old_path.name
+                )
+                storage.delete(old_key)
+            changes["category"] = new_category
+    if not changes:
+        return current
+    updated = await _records(kind).update(asset_id, changes)
+    if updated is None:
+        raise AssetNotFoundError(f"{kind.capitalize()} asset_id '{asset_id}' not found in the local library.")
+    logger.info("asset_library_metadata_updated", kind=kind, asset_id=asset_id, fields=sorted(changes))
+    return _MODELS[kind](**updated)  # type: ignore[return-value]
+
+
+async def delete_asset(kind: str, asset_id: str) -> LibraryEntry:
+    """Borra archivo + registro + cachés (visión/letra) del asset. Los jobs ya
+    grabados no se ven afectados: cada job trabaja con su propia copia en
+    output/. Los config.json archivados que lo referencian quedan apuntando a
+    un id inexistente, igual que cualquier referencia a un asset borrado."""
+    entry = get_entry(kind, asset_id)
+    _storage(kind).delete(entry.relative_path)
+    for store in _CACHE_STORES[kind]:
+        documents(store).delete(asset_id)
+    await _records(kind).delete(asset_id)
+    logger.info("asset_library_asset_deleted", kind=kind, asset_id=asset_id)
+    return entry
+
+
+async def set_transcription_status(
+    asset_id: str, status: TranscriptionStatus, error: str = "", **extra: Any
+) -> MusicLibraryEntry | None:
+    """Actualiza el estado de transcripción de una canción. None si ya no existe
+    (la borraron mientras se transcribía) — el caller lo trata como no-op."""
+    updated = await _records("music").update(
+        asset_id, {"transcription_status": status, "transcription_error": error, **extra}
+    )
+    return MusicLibraryEntry(**updated) if updated else None
+
+
+async def publish_asset_changed(
+    kind: str, asset_id: str, *, action: str, transcription_status: str | None = None
+) -> None:
+    """Evento en tiempo real para que la pantalla Recursos se refresque sin
+    polling (mismo patrón que queue_repository._publish_event). *kind* interno;
+    en el evento viaja el nombre de la API ("images" | "music" | "videos")."""
+    await get_event_bus().publish(
+        RealtimeEvent(
+            type="library_asset_changed",
+            data={
+                "kind": api_kind(kind),
+                "asset_id": asset_id,
+                "action": action,
+                "transcription_status": transcription_status,
+            },
+        )
+    )
+
+
+async def probe_media(path: Path) -> dict[str, float | int]:
+    """Duración/ancho/alto de un audio, video o imagen con ffprobe (ya es
+    dependencia del sistema, ver job_tracker._get_video_duration_seconds).
+
+    Tolerante: es metadata informativa para la librería, así que si ffprobe no
+    está o no entiende el archivo devuelve lo que pudo (o {}), nunca falla la
+    subida por esto."""
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            "ffprobe", "-v", "error",
+            "-select_streams", "v:0",
+            "-show_entries", "stream=width,height:format=duration",
+            "-of", "json",
+            str(path),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, _ = await proc.communicate()
+        if proc.returncode != 0:
+            return {}
+        info = json.loads(stdout.decode() or "{}")
+    except Exception:
+        logger.warning("asset_library_ffprobe_failed", path=str(path))
+        return {}
+
+    result: dict[str, float | int] = {}
+    streams = info.get("streams") or []
+    if streams:
+        result["width"] = int(streams[0].get("width") or 0)
+        result["height"] = int(streams[0].get("height") or 0)
+    duration = (info.get("format") or {}).get("duration")
+    try:
+        # Las imágenes fijas reportan "N/A" o nada: no es una duración.
+        if duration not in (None, "N/A"):
+            result["duration_seconds"] = round(float(duration), 2)
+    except ValueError:
+        pass
+    return result
 
 
 # ── URL download ──────────────────────────────────────────────────────────────

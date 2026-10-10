@@ -6,30 +6,39 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useJobsTrayStore } from "@/shared/store";
 import { useTrackedJobsSummary } from "../hooks/useTrackedJobsSummary";
+import { useDraftsTrayStore } from "../store/drafts-tray-store";
+import { DraftTrayCard } from "./DraftTrayCard";
 import { JobProgressCard } from "./JobProgressCard";
 
 /** Fixed bottom-right stack of in-flight/recent job cards — mounted once in
  * `(admin)/layout.tsx`, so it stays visible across every admin page instead
  * of disappearing the moment you navigate away from wherever you submitted
  * the batch. Both submission entry points (CreateVideoForm and
- * TemplateRecordButton) push into the same `useJobsTrayStore`. */
+ * TemplateRecordButton) push into the same `useJobsTrayStore`. Videos de
+ * Crear video que todavía se están previsualizando como draft (sin job_id)
+ * van arriba, desde `useDraftsTrayStore`, hasta que empiezan a grabarse. */
 export function JobsTray() {
   const t = useTranslations("createVideo.tray");
+  const tFlow = useTranslations("createFlow.tray");
   const [hasHydrated, setHasHydrated] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const jobs = useJobsTrayStore((state) => state.jobs);
   const removeJobs = useJobsTrayStore((state) => state.removeJobs);
+  const drafts = useDraftsTrayStore((state) => state.drafts);
+  const removeDraft = useDraftsTrayStore((state) => state.removeDraft);
   const summary = useTrackedJobsSummary(jobs.map((j) => j.jobId));
 
   useEffect(() => {
     useJobsTrayStore.persist.rehydrate();
+    useDraftsTrayStore.persist.rehydrate();
     setHasHydrated(true);
   }, []);
 
-  if (!hasHydrated || jobs.length === 0) return null;
+  if (!hasHydrated || (jobs.length === 0 && drafts.length === 0)) return null;
 
   const finished = [...summary.done, ...summary.failed];
   const parts = [
+    drafts.length && tFlow("preparingCount", { count: drafts.length }),
     summary.running.length && t("running", { count: summary.running.length }),
     summary.queued.length && t("queued", { count: summary.queued.length }),
     summary.done.length && t("done", { count: summary.done.length }),
@@ -48,7 +57,7 @@ export function JobsTray() {
           aria-expanded={!collapsed}
           className="flex min-w-0 flex-1 items-center gap-2 text-left"
         >
-          {summary.running.length > 0 && (
+          {(summary.running.length > 0 || drafts.length > 0) && (
             <span className="size-2 shrink-0 animate-pulse rounded-full bg-nb-green-dark" />
           )}
           <span className="min-w-0">
@@ -77,6 +86,22 @@ export function JobsTray() {
 
       {!collapsed && (
         <div className="flex flex-col gap-2 overflow-y-auto p-3">
+          {[...drafts].reverse().map((tracked) => (
+            <DraftTrayCard
+              key={tracked.draftId}
+              tracked={tracked}
+              actions={
+                <button
+                  type="button"
+                  onClick={() => removeDraft(tracked.draftId)}
+                  aria-label={t("dismiss")}
+                  className="grid size-6 place-items-center rounded-full text-nb-mute hover:bg-nb-ink/[0.08] hover:text-nb-ink"
+                >
+                  <X className="size-3.5" />
+                </button>
+              }
+            />
+          ))}
           {[...jobs].reverse().map((job) => (
             <JobProgressCard
               key={job.jobId}

@@ -1,0 +1,24 @@
+/* explainer-kit · estilos base (medidas relativas: sirve en 9:16 y 16:9) */
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+#stage { position: fixed; inset: 0; overflow: hidden; }
+
+/* subtítulos karaoke: la palabra que se está diciendo va en negrita blanca,
+   las anteriores en gris claro (como las referencias de "binarios") */
+.k-cap { display: flex; align-items: center; justify-content: center;
+  font-family: "Inter", system-ui, sans-serif; font-weight: 400; color: rgba(236,236,236,.66);
+  font-size: clamp(15px, 3.5vmin, 46px); line-height: 1.22; letter-spacing: -0.01em;
+  text-shadow: 0 2px 18px rgba(0,0,0,.85); }
+.k-w { white-space: pre; }
+.k-w-cur { color: #fff; font-weight: 800; }
+[data-family="rough"] .k-cap { font-weight: 500; color: rgba(237,237,234,.62); }
+[data-family="rough"] .k-w-cur { color: var(--accent, #c8ff2e); font-weight: 800; }
+
+/* componentes DOM comunes */
+.k-punch { position: absolute; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; font-family: "Inter", system-ui, sans-serif; font-weight: 900; letter-spacing: -0.045em; line-height: .86;
+  text-transform: uppercase; color: #fff; }
+.k-punch .ln { display: block; white-space: nowrap; }
+.k-punch .ch { display: inline-block; white-space: pre; }
+.k-punch .acc { color: var(--accent, #fff); }
+.k-tag { position: absolute; font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .14em; white-space: nowrap; }

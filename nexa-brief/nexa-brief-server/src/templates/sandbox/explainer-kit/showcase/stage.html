@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>explainer-kit · escenario</title>
+<!-- Escenario de UN componente aislado (lo usan showcase/index.html, tools/shoot.py y tools/catalog.py):
+     stage.html?d=rough&c=rough.icon&p={"icon":"rocket"}   params propios (JSON); sin p usa su `example`
+     &t=3     cuadro congelado en t=3 s      &loop   repetir en bucle (sin audio)
+     &dur=7   segundos del componente        &prev=binary.icon  forma previa (transición)
+     &words=UNA FRASE   palabras de prueba (para common.lyric)  &js=ruta.js  componente extra
+     ?list=1  catálogo JSON de TODOS los diseños (lo usa tools/catalog.py)
+     El componente entra en t=1,5 s desde una forma previa, para ver la transición. -->
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#stage{position:fixed;inset:0}</style>
+</head>
+<body>
+<div id="stage"></div>
+<audio id="audio" preload="auto"></audio>
+<script>
+(function () {
+  const QS = new URLSearchParams(location.search), c = QS.get("c") || "";
+  const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop"];
+  const prefix = c.split(".")[0];
+  const d = QS.get("d") || (ids.includes(prefix) ? prefix : "binary");
+  const s = document.createElement("script"); s.src = "../engine/loader.js"; s.dataset.design = d; s.dataset.noboot = "1";
+  document.body.appendChild(s);
+})();
+</script>
+<script>
+(async () => {
+  while (!window.KitReady) await new Promise(r => setTimeout(r, 10));
+  const D = await window.KitReady, QS = new URLSearchParams(location.search);
+  const load = src => new Promise(res => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => { console.error("no carga", src); res(); }; document.body.appendChild(s); });
+  for (const src of QS.getAll("js")) await load(src);
+  if (QS.get("list")) {                       /* catálogo de todos los diseños */
+    const all = (await (await fetch("designs.json")).json()).designs;
+    for (const other of all) if (other !== D.id) {
+      const O = await (await fetch("../designs/" + other + "/design.json")).json();
+      for (const s of O.scripts) {
+        if (!s.includes("common/")) await load("../" + s);
+        else if (s.endsWith("common/outro-v1.js") && !Kit.outroV1) await load("../" + s);
+        else if (s.endsWith("common/hook.js") && !Kit.hook) await load("../" + s);
+      }
+    }
+    window.__catalog = Kit.catalog(); document.body.textContent = JSON.stringify(window.__catalog); return;
+  }
+  const fam = D.family, name = QS.get("c") || fam + ".title", def = Kit.registry.get(name);
+  const params = QS.get("p") ? JSON.parse(QS.get("p")) : JSON.parse(JSON.stringify(def?.example || {}));
+  /* rutas de imágenes de ejemplo: relativas al kit (../showcase/samples/…) */
+  for (const [k, v] of Object.entries(params)) if (def?.params?.[k]?.type === "image" && typeof v === "string" && !v.startsWith("http") && !v.startsWith("../")) params[k] = "samples/" + v.split("/").pop();
+  const dur = +(QS.get("dur") || 7);
+  const prevByFamily = { binary: "binary.icon", rough: "rough.icon", acuarela: "acuarela.title", carta: "carta.title", collage: "collage.intro", cronica: "cronica.title", enmienda: "enmienda.title", grunge: "grunge.title", pelicula: "pelicula.title", periodico: "periodico.title", pop: "pop.title" };
+  const prevUse = QS.get("prev") || prevByFamily[fam] || "binary.icon";
+  const prevDef = Kit.registry.get(prevUse), prevParams = JSON.parse(JSON.stringify(prevDef?.example || (fam === "rough" ? { icon: "spark" } : { icon: "question" })));
+  const beats = [{ t: 0, use: prevUse, params: prevParams, dur: 1.5 }];
+  if (def && def.layer === "overlay") beats.push({ t: 0, use: prevUse, params: prevParams, dur: dur + 1.5 });
+  beats.push({ t: 1.5, use: name, params, dur });
+  let words = QS.get("words");
+  if (!words && name === "common.lyric") words = "UNA FRASE QUE LA VOZ DICE EN GRANDE";
+  await Kit.boot({
+    design: D,
+    config: { id: "stage", captions: { enabled: false }, outro: { enabled: false }, seed: 7 },
+    storyboard: { beats },
+    lyrics: { segments: words ? [{ words: words.split(" ").map((w, i) => ({ word: " " + w, start: 1.6 + i * 0.38, end: 1.9 + i * 0.38 })) }] : [] },
+    total: 1.5 + dur,
+  });
+})();
+</script>
+</body>
+</html>

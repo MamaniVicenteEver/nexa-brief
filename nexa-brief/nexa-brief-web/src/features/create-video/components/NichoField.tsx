@@ -15,12 +15,15 @@ import { Input } from "@/shared/components/ui/input";
 import {
   Select,
   SelectContent,
+  SelectGroup,
+  SelectLabel,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
 import type { CreateVideoFormValues } from "../schema";
 import type { Niche } from "../types";
+import { groupNiches } from "../lib/niche-groups";
 
 export function NichoField({
   form,
@@ -35,6 +38,7 @@ export function NichoField({
   const [showAddRow, setShowAddRow] = useState(false);
   const [customNiches, setCustomNiches] = useState<string[]>([]);
   const [newNicho, setNewNicho] = useState("");
+  const nicheGroups = groupNiches(niches ?? []);
 
   function confirmAdd() {
     const name = newNicho.trim();
@@ -65,10 +69,15 @@ export function NichoField({
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {niches?.map((niche) => (
-                  <SelectItem key={niche.id} value={niche.id}>
-                    {niche.displayName}
-                  </SelectItem>
+                {nicheGroups.map((group) => (
+                  <SelectGroup key={group.id}>
+                    <SelectLabel>{group.name}</SelectLabel>
+                    {group.niches.map((niche) => (
+                      <SelectItem key={niche.id} value={niche.id}>
+                        {niche.displayName}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 ))}
                 {customNiches.map((name) => (
                   <SelectItem key={name} value={name}>

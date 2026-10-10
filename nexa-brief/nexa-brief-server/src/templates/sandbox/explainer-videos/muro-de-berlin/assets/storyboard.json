@@ -1,0 +1,427 @@
+{
+ "version": 1,
+ "family": "binary",
+ "title": "La noche que cayó el Muro",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "binary.title",
+   "params": {
+    "text": "LA NOCHE\nQUE CAYÓ\nEL MURO",
+    "textPortrait": "LA NOCHE\nQUE\nCAYÓ\nEL MURO",
+    "kicker": "BERLÍN · 9 NOV 1989"
+   },
+   "until": "Un funcionario lee"
+  },
+  {
+   "at": "Un funcionario lee",
+   "use": "binary.icon",
+   "params": {
+    "icon": "document",
+    "tag": "UN PAPEL",
+    "caption": "leído en voz alta"
+   }
+  },
+  {
+   "at": "derribar el muro",
+   "use": "binary.wall",
+   "params": {
+    "mode": "stand",
+    "label": "EL MURO"
+   }
+  },
+  {
+   "at": "Durante 28 años",
+   "use": "binary.word",
+   "params": {
+    "text": "28\nAÑOS",
+    "kicker": "UNA CIUDAD PARTIDA EN DOS"
+   }
+  },
+  {
+   "at": "En agosto de 1961",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "title": "Agosto de 1961",
+    "sub": "SE LEVANTA EL MURO"
+   }
+  },
+  {
+   "at": "un muro de hormigón",
+   "use": "binary.wall",
+   "params": {
+    "mode": "build",
+    "label": "HORMIGÓN Y ALAMBRE",
+    "buildSec": 2.2
+   }
+  },
+  {
+   "at": "Familias separadas",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "house",
+     "label": "ESTE"
+    },
+    "right": {
+     "icon": "house",
+     "label": "OESTE"
+    },
+    "mid": "|"
+   }
+  },
+  {
+   "at": "Al menos 140",
+   "use": "binary.word",
+   "params": {
+    "text": "140",
+    "kicker": "AL MENOS",
+    "note": "MURIERON EN EL MURO",
+    "size": 0.6
+   }
+  },
+  {
+   "at": "Pero en el otoño",
+   "use": "binary.rays",
+   "params": {
+    "mode": "burst",
+    "count": 18,
+    "label": "ALGO SE ROMPE"
+   }
+  },
+  {
+   "at": "Miles de alemanes",
+   "use": "binary.grid",
+   "params": {
+    "icon": "person",
+    "count": 18,
+    "label": "ESCAPAN",
+    "revealSec": 2
+   }
+  },
+  {
+   "at": "y cada lunes",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "title": "Leipzig, 1989",
+    "sub": "LAS MARCHAS DE LOS LUNES"
+   }
+  },
+  {
+   "at": "El gobierno decidió",
+   "use": "binary.icon",
+   "params": {
+    "icon": "lock",
+    "tag": "NUEVA REGLA",
+    "caption": "soltar un poco la cuerda"
+   }
+  },
+  {
+   "at": "Los ciudadanos podrían",
+   "use": "binary.rays",
+   "params": {
+    "mode": "fan",
+    "count": 9,
+    "label": "PERMISO PARA VIAJAR",
+    "drawSec": 1.2
+   }
+  },
+  {
+   "at": "Iba a anunciarse",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "9 NOV",
+      "label": "SE REDACTA"
+     },
+     {
+      "year": "10 NOV",
+      "label": "SE ANUNCIA, CON ORDEN"
+     }
+    ],
+    "active": 1,
+    "drawSec": 1.2
+   }
+  },
+  {
+   "at": "El encargado de contarlo",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "title": "Günter Schabowski",
+    "sub": "VOCERO DEL PARTIDO"
+   }
+  },
+  {
+   "at": "le entregaron la nota",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "title": "La nota",
+    "sub": "NOTAS DE SCHABOWSKI · 9 NOV 1989",
+    "size": 0.7
+   }
+  },
+  {
+   "at": "La conferencia fue larga",
+   "use": "binary.icon",
+   "params": {
+    "icon": "microphone",
+    "tag": "CONFERENCIA DE PRENSA",
+    "caption": "casi una hora de anuncios"
+   }
+  },
+  {
+   "at": "Al final Schabowski",
+   "use": "binary.icon",
+   "params": {
+    "icon": "eye",
+    "tag": "LA LEYÓ TAL CUAL",
+    "caption": "sin saber qué decía"
+   }
+  },
+  {
+   "at": "Los periodistas se miraron",
+   "use": "binary.bubble",
+   "params": {
+    "text": "¿SIN REQUISITOS?"
+   }
+  },
+  {
+   "at": "Entonces llegó la pregunta",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "vigor"
+    ]
+   },
+   "until": "Schabowski revolvió"
+  },
+  {
+   "at": "Schabowski revolvió",
+   "use": "binary.icon",
+   "params": {
+    "icon": "document",
+    "tag": "BUSCA LA RESPUESTA",
+    "caption": "no la encontró",
+    "spin": 0.15
+   }
+  },
+  {
+   "at": "De inmediato",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "inmediato",
+     "demora"
+    ]
+   },
+   "until": "Dos palabras"
+  },
+  {
+   "at": "De inmediato",
+   "use": "common.flash",
+   "dur": 0.45,
+   "layer": "overlay"
+  },
+  {
+   "at": "Dos palabras que",
+   "use": "binary.word",
+   "params": {
+    "text": "DOS\nPALABRAS",
+    "note": "QUE NADIE HABÍA AUTORIZADO"
+   }
+  },
+  {
+   "at": "La televisión del Oeste",
+   "use": "binary.icon",
+   "params": {
+    "icon": "tv",
+    "tag": "TV DEL OESTE",
+    "caption": "las fronteras están abiertas"
+   }
+  },
+  {
+   "at": "Las fronteras están abiertas",
+   "use": "binary.word",
+   "params": {
+    "text": "FRONTERAS\nABIERTAS",
+    "kicker": "TV DEL OESTE · ESA NOCHE"
+   }
+  },
+  {
+   "at": "Miles de personas salieron",
+   "use": "binary.grid",
+   "params": {
+    "icon": "person",
+    "count": 36,
+    "label": "MILES",
+    "revealSec": 2.2
+   }
+  },
+  {
+   "at": "En el cruce de",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "title": "Bornholmer Strasse",
+    "sub": "PASO FRONTERIZO · BERLÍN"
+   }
+  },
+  {
+   "at": "el oficial Harald",
+   "use": "binary.icon",
+   "params": {
+    "icon": "person",
+    "tag": "HARALD JÄGER",
+    "caption": "una multitud y ninguna orden"
+   }
+  },
+  {
+   "at": "Llamó a sus superiores",
+   "use": "binary.icon",
+   "params": {
+    "icon": "phone",
+    "tag": "SIN RESPUESTA CLARA"
+   }
+  },
+  {
+   "at": "La gente gritaba",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "puerta"
+    ]
+   },
+   "until": "A las once"
+  },
+  {
+   "at": "A las once",
+   "use": "binary.wall",
+   "params": {
+    "mode": "break",
+    "breakAt": "@barrera",
+    "label": "23:30 · LA DECISIÓN"
+   }
+  },
+  {
+   "at": "la barrera",
+   "use": "common.flash",
+   "dur": 0.45,
+   "layer": "overlay"
+  },
+  {
+   "at": "Esa noche los berlineses",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "title": "Puerta de Brandeburgo",
+    "sub": "NOVIEMBRE DE 1989",
+    "size": 0.74
+   }
+  },
+  {
+   "at": "con martillos",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "title": "Martillos y cinceles",
+    "sub": "NOVIEMBRE DE 1989"
+   }
+  },
+  {
+   "at": "Desconocidos se abrazaban",
+   "use": "binary.icon",
+   "params": {
+    "icon": "heart",
+    "caption": "desconocidos se abrazaban"
+   }
+  },
+  {
+   "at": "Personas que llevaban",
+   "use": "binary.floor",
+   "params": {
+    "text": "POR SU PROPIA CIUDAD"
+   }
+  },
+  {
+   "at": "Menos de un año",
+   "use": "binary.word",
+   "params": {
+    "text": "3 OCT\n1990",
+    "kicker": "ALEMANIA, UN SOLO PAÍS",
+    "size": 0.72
+   }
+  },
+  {
+   "at": "La historia suele contar",
+   "use": "binary.icon",
+   "params": {
+    "icon": "book",
+    "caption": "grandes batallas, grandes líderes"
+   }
+  },
+  {
+   "at": "pero este muro",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "document",
+     "label": "UN PAPEL"
+    },
+    "right": {
+     "icon": "person",
+     "label": "UN OFICIAL"
+    },
+    "mid": "+"
+   }
+  },
+  {
+   "at": "Porque a veces",
+   "use": "binary.icon",
+   "params": {
+    "icon": "soldier",
+    "caption": "no la mueve un ejército"
+   }
+  },
+  {
+   "at": "la mueven dos palabras",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "palabras"
+    ]
+   },
+   "until": "de inmediato sin demora"
+  },
+  {
+   "at": "de inmediato sin demora",
+   "use": "binary.title",
+   "dur": 5.28,
+   "params": {
+    "text": "DE INMEDIATO\nSIN DEMORA",
+    "textPortrait": "DE\nINMEDIATO\nSIN\nDEMORA",
+    "kicker": "BERLÍN · 9 NOV 1989",
+    "morph": 1.0
+   }
+  },
+   {
+     "t": 205.348571,
+     "offset": 0,
+     "dur": 13.68,
+     "use": "binary.outrov1",
+     "params": {
+       "likeAt": 5.16,
+       "subscribeAt": 5.54,
+       "bellAt": 7.84,
+       "supportAt": 8.94
+     }
+   }
+ ]
+}

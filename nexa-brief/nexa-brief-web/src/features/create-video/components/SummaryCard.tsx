@@ -2,6 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { type UseFormReturn, useWatch } from "react-hook-form";
+import type { StudioValue } from "@/features/studio";
+import type { TemplateRequirements } from "@/features/templates/types";
 import type { CreateVideoFormValues } from "../schema";
 import type { Niche } from "../types";
 
@@ -15,12 +17,21 @@ export function SummaryCard({
   form,
   niches,
   songSeconds,
+  content = null,
+  requirements = null,
+  songName = null,
 }: {
   form: UseFormReturn<CreateVideoFormValues>;
   niches: Niche[] | undefined;
   songSeconds: number | null;
+  /** Contenido de la plantilla (sección dinámica); null = campos de archivo. */
+  content?: StudioValue | null;
+  requirements?: TemplateRequirements | null;
+  /** Nombre de la canción de la librería elegida en `content`. */
+  songName?: string | null;
 }) {
   const t = useTranslations("createVideo.summaryCard");
+  const tFlow = useTranslations("createFlow.summary");
   const tEngine = useTranslations("createVideo.recorderEngineSection");
   const values = useWatch({ control: form.control });
   const {
@@ -37,8 +48,24 @@ export function SummaryCard({
   const publishingAccounts = values.publishingAccounts ?? [];
 
   const nicho = niches?.find((n) => n.id === categoryName)?.displayName ?? categoryName;
-  const fondo = videoFile?.name ?? imageFile?.name ?? t("automatic");
-  const cancion = musicFile?.name ?? t("automaticFeminine");
+  // Con plantilla: lo elegido en cada lugar (o automático / IA).
+  const mediaCount = content
+    ? Object.values(content.media).reduce((sum, refs) => sum + refs.length, 0)
+    : 0;
+  const fondo = content
+    ? mediaCount > 0
+      ? tFlow("mediaChosen", { count: mediaCount })
+      : (requirements?.media.length ?? 0) === 0
+        ? tFlow("noMedia")
+        : content.brief.trim()
+          ? tFlow("mediaByAi")
+          : t("automatic")
+    : (videoFile?.name ?? imageFile?.name ?? t("automatic"));
+  const cancion = content
+    ? content.musicAssetId
+      ? (songName ?? tFlow("songChosen"))
+      : t("automaticFeminine")
+    : (musicFile?.name ?? t("automaticFeminine"));
   const duracion =
     durationMode === "auto"
       ? formatDuration((songSeconds ?? 210) * repeatCount)
@@ -48,7 +75,7 @@ export function SummaryCard({
 
   const rows = [
     { label: t("rowNicho"), value: nicho || t("noPreference") },
-    { label: t("rowFondo"), value: fondo },
+    { label: content ? tFlow("rowMedia") : t("rowFondo"), value: fondo },
     { label: t("rowCancion"), value: cancion },
     { label: t("rowDuracion"), value: duracion },
     ...(recorderEngineOverride

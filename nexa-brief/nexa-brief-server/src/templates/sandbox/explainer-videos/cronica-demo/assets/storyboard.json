@@ -1,0 +1,626 @@
+{
+ "version": 1,
+ "family": "cronica",
+ "title": "La noche que cayó el Muro",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "cronica.introv1",
+   "params": {
+    "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
+    "kicker": "Berlín · 9 nov 1989",
+    "sub": "la noche que nadie vio venir",
+    "wordAt": 0.3,
+    "stagger": 0.26,
+    "cutAt": 2.5
+   },
+   "until": "Casi las 7",
+   "_alt": {
+    "use": "cronica.introv2",
+    "params": {
+     "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+     "kicker": "Berlín · 9 de noviembre de 1989",
+     "stamp": "NADIE DIO LA ORDEN",
+     "stampAt": 2.4
+    }
+   }
+  },
+  {
+   "at": "Casi las 7",
+   "use": "cronica.title",
+   "params": {
+    "text": "La noche que cayó el muro",
+    "kicker": "Berlín · 9 de noviembre de 1989",
+    "src": "assets/media/muro-gente.jpg",
+    "src2": "assets/media/bornholmer.jpg"
+   },
+   "until": "Un funcionario lee"
+  },
+  {
+   "at": "Un funcionario lee",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "year": "19:00",
+    "text": "Un funcionario lee en voz alta un papel que casi no conoce.",
+    "layout": "right",
+    "focus": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "derribar el muro",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "year": "1989",
+    "text": "Sin saberlo, está a punto de derribar el muro más famoso del mundo.",
+    "layout": "left",
+    "focus": [
+     0.45,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "Durante 28 años",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "year": "28 AÑOS",
+    "text": "Durante veintiocho años, Berlín estuvo partida en dos.",
+    "layout": "top",
+    "focus": [
+     0.5,
+     0.22
+    ]
+   }
+  },
+  {
+   "at": "En agosto de 1961",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "year": "1961",
+    "text": "En agosto, el gobierno de Alemania del Este levantó un muro de un día para otro.",
+    "layout": "center",
+    "focus": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "un muro de hormigón",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "year": "AGOSTO",
+    "text": "Hormigón y alambre en medio de la ciudad.",
+    "layout": "split",
+    "focus": [
+     0.8,
+     0.6
+    ],
+    "zoom": 1.5
+   }
+  },
+  {
+   "at": "Familias separadas",
+   "use": "cronica.quote",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "side": "assets/media/muro-gente.jpg",
+    "year": "1961",
+    "text": "Familias separadas por una calle. Vecinos que dejaron de verse para siempre.",
+    "sideFocus": [
+     0.4,
+     0.75
+    ]
+   }
+  },
+  {
+   "at": "Al menos 140",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "year": "140",
+    "text": "Al menos ciento cuarenta personas murieron en ese muro.",
+    "layout": "right",
+    "focus": [
+     0.15,
+     0.5
+    ],
+    "zoom": 1.4,
+    "mirror": true
+   }
+  },
+  {
+   "at": "Pero en el otoño",
+   "use": "cronica.verse",
+   "params": {
+    "kicker": "OTOÑO DE 1989",
+    "src": "assets/media/leipzig.jpg"
+   }
+  },
+  {
+   "at": "Miles de alemanes",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "year": "1989",
+    "text": "Miles de alemanes del Este escapaban por Hungría y Checoslovaquia.",
+    "layout": "left",
+    "focus": [
+     0.5,
+     0.6
+    ]
+   }
+  },
+  {
+   "at": "y cada lunes",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "year": "LEIPZIG",
+    "text": "Cada lunes, cientos de miles marchaban en las calles pidiendo libertad para viajar.",
+    "layout": "top",
+    "focus": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "El gobierno decidió",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "year": "9 NOV",
+    "text": "El gobierno decidió soltar un poco la cuerda y redactó una nueva regla.",
+    "layout": "right",
+    "focus": [
+     0.4,
+     0.15
+    ],
+    "zoom": 1.5,
+    "align": "justify"
+   }
+  },
+  {
+   "at": "Los ciudadanos podrían",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "year": "AL OESTE",
+    "text": "Los ciudadanos podrían pedir permiso para viajar al Oeste.",
+    "layout": "center",
+    "focus": [
+     0.3,
+     0.55
+    ],
+    "zoom": 1.5,
+    "mirror": true
+   }
+  },
+  {
+   "at": "Iba a anunciarse",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "year": "10 NOV",
+    "text": "Iba a anunciarse al día siguiente, con calma, con trámites y con orden.",
+    "layout": "split",
+    "focus": [
+     0.5,
+     0.62
+    ],
+    "zoom": 1.25
+   }
+  },
+  {
+   "at": "El encargado de contarlo",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "year": "1989",
+    "text": "Günter Schabowski, el vocero del partido, debía contarlo a la prensa.",
+    "layout": "right",
+    "focus": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "at": "le entregaron la nota",
+   "use": "cronica.quote",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "side": "assets/media/schabowski.jpg",
+    "year": "LA NOTA",
+    "text": "Poco antes de la conferencia le entregaron la nota. Nadie le advirtió que debía esperar hasta la mañana.",
+    "focus": [
+     0.5,
+     0.25
+    ],
+    "sideFocus": [
+     0.8,
+     0.25
+    ]
+   }
+  },
+  {
+   "at": "La conferencia fue larga",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "year": "9 NOV",
+    "text": "La conferencia fue larga y aburrida: casi una hora de anuncios.",
+    "layout": "left",
+    "focus": [
+     0.85,
+     0.3
+    ],
+    "zoom": 1.6,
+    "mirror": true
+   }
+  },
+  {
+   "at": "Al final Schabowski",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "year": "19:00",
+    "text": "Al final sacó el papel y lo leyó tal cual.",
+    "layout": "top",
+    "focus": [
+     0.4,
+     0.42
+    ],
+    "zoom": 1.8
+   }
+  },
+  {
+   "at": "Los periodistas se miraron",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "year": "¿VIAJAR?",
+    "text": "Los periodistas se miraron. ¿Viajar? ¿Sin requisitos?",
+    "layout": "center",
+    "focus": [
+     0.15,
+     0.7
+    ],
+    "zoom": 1.35,
+    "align": "justify"
+   }
+  },
+  {
+   "at": "Entonces llegó la pregunta",
+   "use": "cronica.verse",
+   "params": {
+    "kicker": "LA PREGUNTA",
+    "accent": [
+     "vigor"
+    ]
+   },
+   "until": "Schabowski revolvió"
+  },
+  {
+   "at": "Schabowski revolvió",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "year": "9 NOV",
+    "text": "Revolvió sus papeles. Buscó la respuesta. No la encontró.",
+    "layout": "right",
+    "focus": [
+     0.6,
+     0.75
+    ],
+    "zoom": 1.3,
+    "mirror": true
+   }
+  },
+  {
+   "at": "De inmediato",
+   "use": "cronica.verse",
+   "params": {
+    "accent": [
+     "inmediato",
+     "demora"
+    ],
+    "size": 1.3
+   },
+   "until": "Dos palabras"
+  },
+  {
+   "at": "Dos palabras que",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "year": "DOS PALABRAS",
+    "text": "Dos palabras que nadie había autorizado.",
+    "layout": "split",
+    "focus": [
+     0.55,
+     0.45
+    ],
+    "zoom": 1.15
+   }
+  },
+  {
+   "at": "La televisión del Oeste",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "year": "TV DEL OESTE",
+    "text": "La televisión del Oeste, que también se veía en el Este, lo repitió esa misma noche.",
+    "layout": "left",
+    "focus": [
+     0.7,
+     0.3
+    ],
+    "zoom": 1.4,
+    "align": "justify"
+   }
+  },
+  {
+   "at": "Las fronteras están abiertas",
+   "use": "cronica.title",
+   "params": {
+    "text": "Las fronteras están abiertas",
+    "kicker": "Televisión del Oeste · esa misma noche",
+    "src": "assets/media/leipzig.jpg",
+    "src2": "assets/media/mauerspecht.jpg"
+   }
+  },
+  {
+   "at": "Miles de personas salieron",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "year": "MILES",
+    "text": "Miles de personas salieron de sus casas y fueron directo a los puestos fronterizos.",
+    "layout": "top",
+    "focus": [
+     0.5,
+     0.45
+    ]
+   }
+  },
+  {
+   "at": "En el cruce de",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "year": "BERLÍN",
+    "text": "El cruce de Bornholmer Strasse.",
+    "layout": "right",
+    "focus": [
+     0.15,
+     0.55
+    ],
+    "zoom": 1.6
+   }
+  },
+  {
+   "at": "el oficial Harald",
+   "use": "cronica.quote",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "side": "assets/media/bornholmer.jpg",
+    "year": "9 NOV",
+    "text": "El oficial Harald Jäger tenía una multitud frente a él y ninguna orden.",
+    "sideFocus": [
+     0.2,
+     0.85
+    ],
+    "mirror": true
+   }
+  },
+  {
+   "at": "Llamó a sus superiores",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "year": "SIN ÓRDENES",
+    "text": "Llamó a sus superiores. Nadie le dio una respuesta clara.",
+    "layout": "left",
+    "focus": [
+     0.3,
+     0.85
+    ],
+    "zoom": 1.9
+   }
+  },
+  {
+   "at": "La gente gritaba",
+   "use": "cronica.verse",
+   "params": {
+    "kicker": "BORNHOLMER STRASSE",
+    "accent": [
+     "puerta"
+    ],
+    "src": "assets/media/bornholmer.jpg"
+   },
+   "until": "A las once"
+  },
+  {
+   "at": "A las once",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "year": "23:30",
+    "text": "Jäger tomó la decisión que nadie más quiso tomar. Abrió la barrera. Y la gente cruzó.",
+    "layout": "center",
+    "focus": [
+     0.6,
+     0.45
+    ],
+    "reframe": "@barrera"
+   }
+  },
+  {
+   "at": "Esa noche los berlineses",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "year": "10 NOV",
+    "text": "Esa noche, los berlineses se subieron al muro.",
+    "layout": "right",
+    "focus": [
+     0.5,
+     0.18
+    ]
+   }
+  },
+  {
+   "at": "con martillos",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "year": "1989",
+    "text": "Con martillos y cinceles.",
+    "layout": "split",
+    "focus": [
+     0.4,
+     0.45
+    ],
+    "zoom": 1.1
+   }
+  },
+  {
+   "at": "Desconocidos se abrazaban",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "year": "1989",
+    "text": "Desconocidos se abrazaban.",
+    "layout": "left",
+    "focus": [
+     0.5,
+     0.85
+    ],
+    "zoom": 1.6,
+    "mirror": true
+   }
+  },
+  {
+   "at": "Personas que llevaban",
+   "use": "cronica.quote",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "side": "assets/media/muro-gente.jpg",
+    "year": "28 AÑOS",
+    "text": "Personas que llevaban veintiocho años sin pisar el otro lado caminaban, simplemente, por su propia ciudad.",
+    "focus": [
+     0.35,
+     0.5
+    ],
+    "sideFocus": [
+     0.5,
+     0.2
+    ]
+   }
+  },
+  {
+   "at": "Menos de un año",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "year": "3 OCT 1990",
+    "text": "Menos de un año después, Alemania volvió a ser un solo país.",
+    "layout": "top",
+    "focus": [
+     0.5,
+     0.12
+    ],
+    "zoom": 1.2
+   }
+  },
+  {
+   "at": "La historia suele contar",
+   "use": "cronica.verse",
+   "params": {
+    "kicker": "LA HISTORIA",
+    "src": "assets/media/mauerbau.jpg",
+    "accent": [
+     "batallas",
+     "lideres"
+    ]
+   }
+  },
+  {
+   "at": "pero este muro",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "year": "9 NOV 1989",
+    "text": "Este muro de hormigón cayó por un papel leído antes de tiempo, y por un oficial que eligió abrir en lugar de disparar.",
+    "layout": "center",
+    "focus": [
+     0.5,
+     0.4
+    ],
+    "align": "justify"
+   }
+  },
+  {
+   "at": "Porque a veces",
+   "use": "cronica.slide",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "year": "",
+    "text": "Porque a veces la historia no la mueve un ejército.",
+    "layout": "left",
+    "focus": [
+     0.6,
+     0.5
+    ],
+    "zoom": 1.2
+   }
+  },
+  {
+   "at": "la mueven dos palabras",
+   "use": "cronica.verse",
+   "params": {
+    "accent": [
+     "palabras"
+    ],
+    "size": 1.2
+   },
+   "until": "de inmediato sin demora"
+  },
+  {
+   "at": "de inmediato sin demora",
+   "use": "cronica.title",
+   "dur": 4.28,
+   "params": {
+    "text": "De inmediato, sin demora",
+    "kicker": "Berlín · 9 de noviembre de 1989",
+    "src": "assets/media/schabowski.jpg",
+    "src2": "assets/media/nota.jpg"
+   }
+  },
+  {
+   "t": 203.72898,
+   "offset": 0,
+   "dur": 13.68,
+   "use": "cronica.outro",
+   "params": {
+    "likeAt": 5.16,
+    "subscribeAt": 5.54,
+    "bellAt": 7.84,
+    "supportAt": 8.94
+   }
+  }
+ ]
+}

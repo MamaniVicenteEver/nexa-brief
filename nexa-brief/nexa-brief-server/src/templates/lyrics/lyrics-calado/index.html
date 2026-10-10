@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584">
+/* Generado por src/templates/_tools/hyperframes/optimize.py — NO editar acá:
+   la fuente es _tools/hyperframes/runtime/nb-hf-clock.js (regenerar con optimize.py). */
+/* nb-hf-clock — reloj determinístico para grabar plantillas con HyperFrames.
+
+   Por qué existe: las plantillas de letras miden el tiempo con audio.currentTime,
+   requestAnimationFrame, timers y animaciones CSS/WAAPI corriendo en tiempo
+   real. HyperFrames captura cuadro a cuadro (screenshot por seek) y eso rompe
+   todos esos relojes: el runtime pausa el <audio> (lo trata como media propia),
+   su shim de tiempo virtual dispara UN solo rAF por seek (30 Hz en vez de 60:
+   las cámaras con easing por cuadro se mueven a la mitad de velocidad), los
+   setTimeout siguen en reloj de pared y cada worker arranca su tramo en t>0
+   sin el historial de la plantilla. Resultado: la letra sale desfasada.
+
+   Qué hace (SOLO dentro del render de HyperFrames — en navegador, vista previa
+   y Playwright es inerte, ver ACTIVE):
+   - Reproduce el mundo de la plantilla a 60 Hz fijos desde t=0 hasta el tiempo
+     de cada seek (también los workers que empiezan a mitad de canción), así el
+     estado acumulado (cámaras, palabras ya puestas, partículas) es idéntico en
+     todos los workers y al de un navegador real.
+   - Virtualiza performance.now/Date.now, setTimeout/setInterval (la plantilla
+     llama a __nbSetTimeout & cía., reescritos por optimize.py), el reloj de
+     <audio>/<video> (currentTime/paused/ended/play/pause), las animaciones
+     CSS/WAAPI (currentTime por animación según su nacimiento virtual) y el
+     AnalyserNode de WebAudio (espectro calculado del audio decodificado).
+   - Antes del primer cuadro espera fuentes, fetch, imágenes y metadatos de
+     media; antes de cada captura espera decodificación de imágenes nuevas y el
+     cuadro exacto de cada <video>.
+   - Deja el audio de la mezcla al framework: la pista que mezcla HyperFrames es
+     el <audio data-nb-hf-mix> que agrega HyperframesAdapter; la media propia de
+     la plantilla pierde sus data-start (inyectados por el compilador) para que
+     el runtime no la pause ni la mezcle dos veces.
+
+   Fuente única: src/templates/_tools/hyperframes/runtime/nb-hf-clock.js.
+   optimize.py la inserta (inline) como primer <script> de cada plantilla. */
+(function () {
+  "use strict";
+  var W = window;
+  var D = document;
+  if (W.__nbHf) return;
+
+  var VT = W.__HF_VIRTUAL_TIME__;
+  var ACTIVE = !!(VT && typeof VT.seekToTime === "function" && W.__HF_RENDER_CAPTURE_MODE === true);
+
+  /* Timers reescritos: fuera del render son exactamente los nativos, resueltos
+     en cada llamada (la vista previa de la app también los envuelve). */
+  if (!ACTIVE) {
+    W.__nbSetTimeout = function () { return W.setTimeout.apply(W, arguments); };
+    W.__nbSetInterval = function () { return W.setInterval.apply(W, arguments); };
+    W.__nbClearTimeout = function () { return W.clearTimeout.apply(W, arguments); };
+    W.__nbClearInterval = function () { return W.clearInterval.apply(W, arguments); };
+    W.__nbHf = { active: false };
+    return;
+  }
+
+  var STEP_MS = 1000 / 60;          /* cadencia interna = rAF de un monitor de 60 Hz */
+  var origSeekToTime = VT.seekToTime;
+  var realSetTimeout = VT.originalSetTimeout || W.setTimeout.bind(W);
+  var realPerfNow = Performance.prototype.now;
+  function wallMs() { return realPerfNow.call(W.performance); }
+  var realClearTimeout = VT.originalClearTimeout || W.clearTimeout.bind(W);
+  var clockMs = 0;                   /* reloj virtual que ve la plantilla */
+  var stepIdx = -1;                  /* último tick ejecutado (tick k = k·STEP_MS) */
+  var targetStep = -1;
+  var ticking = false;
+  var processing = null;
+  var stats = { ticks: 0, seeks: 0, backward: 0, firstSeekMs: null, readyMs: 0, waits: 0,
+                tickMs: 0, videoMs: 0, settleMs: 0 };
+  var logs = [];
+  function log(msg) { if (logs.length < 200) logs.push(msg); }
+  function slice(a, from) { return Array.prototype.slice.call(a, from); }
+  function sleep(ms) { return new Promise(function (r) { realSetTimeout(r, ms); }); }
+  function withTimeout(p, ms) {
+    return new Promise(function (resolve) {
+      var done = false;
+      var id = realSetTimeout(function () { if (!done) { done = true; resolve("timeout"); } }, ms);
+      Promise.resolve(p).then(function (v) { if (!done) { done = true; realClearTimeout(id); resolve(v); } },
+        function () { if (!done) { done = true; realClearTimeout(id); resolve("error"); } });
+    });
+  }
+
+  /* ───────────────────────────── reloj ───────────────────────────── */
+  try {
+    Object.defineProperty(W.performance, "now", { configurable: true, value: function () { return clockMs; } });
+  } catch (e) { log("performance.now no redefinible"); }
+  try { W.Date.now = function () { return clockMs; }; } catch (e) { log("Date.now no redefinible"); }
+
+  /* Math.random sembrado: mismo historial en todos los workers (sin costura). */
+  (function () {
+    var s = 0x6e622d68 | 0;
+    Math.random = function () {
+      s = (s + 0x6D2B79F5) | 0;
+      var t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  })();
+
+  /* rAF: el de HyperFrames ya es virtual (cola que vacía seekToTime); acá solo
+     se cuenta cuántas veces se pidió, para saber cuándo arrancó el loop. */
+  var RAF = "requestAnimationFrame";
+  var hfRaf = W[RAF];
+  var rafRequests = 0;
+  W[RAF] = function (cb) { rafRequests++; return hfRaf.call(W, cb); };
+
+  /* ───────────────────────────── timers ─────────────────────────────
+     Disparados por el tick cuando su vencimiento virtual llega, en orden. */
+  var timers = new Map();
+  var timerSeq = 1;
+  function addTimer(fn, delay, args, repeat) {
+    if (typeof fn !== "function") { var code = String(fn); fn = function () { (0, eval)(code); }; }
+    var d = Math.max(0, Number(delay) || 0);
+    var id = timerSeq++;
+    timers.set(id, { id: id, due: clockMs + d, fn: fn, args: args, every: repeat ? Math.max(1, d) : 0, seq: id });
+    return id;
+  }
+  W.__nbSetTimeout = function (fn, delay) { return addTimer(fn, delay, slice(arguments, 2), false); };
+  W.__nbSetInterval = function (fn, delay) { return addTimer(fn, delay, slice(arguments, 2), true); };
+  W.__nbClearTimeout = function (id) { timers.delete(id); };
+  W.__nbClearInterval = function (id) { timers.delete(id); };
+  function runTimers(upTo) {
+    for (var guard = 0; guard < 20000; guard++) {
+      var next = null;
+      timers.forEach(function (t) {
+        if (t.due <= upTo + 1e-6 && (!next || t.due < next.due || (t.due === next.due && t.seq < next.seq))) next = t;
+      });
+      if (!next) return;
+      if (next.every) { next.due += next.every; next.seq = timerSeq++; } else timers.delete(next.id);
+      clockMs = Math.max(clockMs, next.due);
+      try { next.fn.apply(W, next.args); } catch (e) { log("timer: " + e); }
+    }
+  }
+
+  /* ───────────────────────────── media ─────────────────────────────
+     La media de la plantilla nunca se reproduce de verdad durante el render:
+     su reloj es virtual y los <video> se posicionan con seek real antes de
+     cada captura. El <audio data-nb-hf-mix> del adapter queda intacto. */
+  var MP = HTMLMediaElement.prototype;
+  var desc = function (proto, name) {
+    for (var p = proto; p; p = Object.getPrototypeOf(p)) {
+      var d = Object.getOwnPropertyDescriptor(p, name);
+      if (d) return d;
+    }
+    return null;
+  };
+  var dCurrent = desc(MP, "currentTime");
+  var dPaused = desc(MP, "paused");
+  var dEnded = desc(MP, "ended");
+  var dRate = desc(MP, "playbackRate");
+  var dAutoplay = desc(MP, "autoplay");
+  var realPlay = MP.play;
+  var realPause = MP.pause;
+  var realLoad = MP.load;
+  var mediaState = new WeakMap();
+  var videos = new Set();
+  var mediaEls = new Set();
+  var isMix = function (el) { return el.hasAttribute && el.hasAttribute("data-nb-hf-mix"); };
+  var TIMING_ATTRS = ["data-start", "data-end", "data-hf-auto-start", "data-has-audio"];
+
+  function adopt(el) {
+    if (!(el instanceof HTMLMediaElement) || isMix(el)) return null;
+    var st = mediaState.get(el);
+    if (!st) {
+      st = { playing: false, base: 0, v0: 0, ended: false, autoplay: false, userPaused: false, started: false };
+      mediaState.set(el, st);
+      mediaEls.add(el);
+      if (el instanceof HTMLVideoElement) videos.add(el);
+    }
+    for (var i = 0; i < TIMING_ATTRS.length; i++) if (el.hasAttribute(TIMING_ATTRS[i])) el.removeAttribute(TIMING_ATTRS[i]);
+    if (el.hasAttribute("autoplay")) { st.autoplay = true; el.removeAttribute("autoplay"); }
+    return st;
+  }
+  /* El runtime de HyperFrames sincroniza por su cuenta la media que cree suya
+     (en renderSeek fija currentTime = t de composición y la pausa): con un
+     <video loop> de la plantilla eso lo congela en su último cuadro al pasar
+     su duración. Todo lo que el runtime haga desde window.__player (renderSeek,
+     seek, play, pause) se ignora sobre la media de la plantilla; su reloj es
+     el virtual y su cuadro lo pone syncVideos(). */
+  var runtimeDepth = 0;
+  function guardPlayer(p) {
+    if (!p || typeof p !== "object") return;
+    ["renderSeek", "seek", "play", "pause"].forEach(function (name) {
+      var f = p[name];
+      if (typeof f !== "function" || f.__nbHfGuard) return;
+      var g = function () { runtimeDepth++; try { return f.apply(this, arguments); } finally { runtimeDepth--; } };
+      g.__nbHfGuard = true;
+      p[name] = g;
+    });
+  }
+  var playerVal = W.__player;
+  try {
+    Object.defineProperty(W, "__player", {
+      configurable: true,
+      get: function () { return playerVal; },
+      set: function (v) { playerVal = v; guardPlayer(v); },
+    });
+    guardPlayer(playerVal);
+  } catch (e) { log("__player no envolvible"); }
+  function fromRuntime(el) { return runtimeDepth > 0 && mediaState.has(el); }
+
+  function realDuration(el) { var d = el.duration; return isFinite(d) && d > 0 ? d : NaN; }
+  function rateOf(el) { var r = dRate.get.call(el); return isFinite(r) && r > 0 ? r : 1; }
+  function mediaTimeAt(el, st, ms) {
+    var t = st.base + (st.playing ? (ms - st.v0) / 1000 * rateOf(el) : 0);
+    var dur = realDuration(el);
+    if (dur === dur) {
+      if (el.loop) { if (t >= dur) t = t % dur; } else if (t > dur) t = dur;
+    }
+    return Math.max(0, t);
+  }
+  function fire(el, type) { queueMicrotask(function () { try { el.dispatchEvent(new Event(type)); } catch (e) {} }); }
+  function startPlaying(el, st) {
+    if (st.playing) return;
+    var dur = realDuration(el);
+    if (st.ended || (dur === dur && !el.loop && st.base >= dur)) { st.base = 0; st.ended = false; }
+    st.playing = true; st.started = true; st.v0 = clockMs;
+    fire(el, "play"); fire(el, "playing");
+  }
+
+  MP.play = function () {
+    if (fromRuntime(this)) return Promise.resolve();
+    var st = adopt(this);
+    if (!st) return realPlay.apply(this, arguments);
+    st.userPaused = false;
+    startPlaying(this, st);
+    return Promise.resolve();
+  };
+  MP.pause = function () {
+    if (fromRuntime(this)) return;
+    var st = adopt(this);
+    if (!st) return realPause.apply(this, arguments);
+    st.userPaused = true;
+    if (st.playing) { st.base = mediaTimeAt(this, st, clockMs); st.playing = false; fire(this, "pause"); }
+  };
+  MP.load = function () {
+    if (fromRuntime(this)) return;
+    var st = adopt(this);
+    if (st) { st.playing = false; st.base = 0; st.ended = false; }
+    return realLoad.apply(this, arguments);
+  };
+  Object.defineProperty(MP, "currentTime", {
+    configurable: true, enumerable: dCurrent.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? mediaTimeAt(this, st, clockMs) : dCurrent.get.call(this); },
+    set: function (v) {
+      if (fromRuntime(this)) return;
+      var st = adopt(this);
+      if (!st) return dCurrent.set.call(this, v);
+      st.base = Math.max(0, Number(v) || 0); st.v0 = clockMs; st.ended = false;
+    },
+  });
+  Object.defineProperty(MP, "paused", {
+    configurable: true, enumerable: dPaused.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? !st.playing : dPaused.get.call(this); },
+  });
+  Object.defineProperty(MP, "ended", {
+    configurable: true, enumerable: dEnded.enumerable,
+    get: function () { var st = mediaState.get(this); return st ? st.ended : dEnded.get.call(this); },
+  });
+  Object.defineProperty(MP, "playbackRate", {
+    configurable: true, enumerable: dRate.enumerable,
+    get: function () { return dRate.get.call(this); },
+    set: function (v) {
+      if (fromRuntime(this)) return;
+      var st = adopt(this);
+      if (st && st.playing) { st.base = mediaTimeAt(this, st, clockMs); st.v0 = clockMs; }
+      dRate.set.call(this, v);
+    },
+  });
+  if (dAutoplay) {
+    Object.defineProperty(MP, "autoplay", {
+      configurable: true, enumerable: dAutoplay.enumerable,
+      get: function () { var st = mediaState.get(this); return st ? st.autoplay : dAutoplay.get.call(this); },
+      set: function (v) { var st = adopt(this); if (st) st.autoplay = !!v; else dAutoplay.set.call(this, v); },
+    });
+  }
+  /* <audio>/<video> del HTML estático: el compilador de HyperFrames les inyecta
+     data-start="0" — se los quitamos apenas aparecen, antes del init del runtime. */
+  function scanMedia(root) {
+    if (!root || !root.querySelectorAll) return;
+    if (root instanceof HTMLMediaElement) adopt(root);
+    var list = root.querySelectorAll("audio,video");
+    for (var i = 0; i < list.length; i++) adopt(list[i]);
+  }
+  new MutationObserver(function (records) {
+    for (var i = 0; i < records.length; i++) {
+      var r = records[i];
+      if (r.type === "attributes") { if (r.target instanceof HTMLMediaElement && !isMix(r.target)) adopt(r.target); continue; }
+      for (var j = 0; j < r.addedNodes.length; j++) if (r.addedNodes[j].nodeType === 1) scanMedia(r.addedNodes[j]);
+    }
+  }).observe(D.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: TIMING_ATTRS.concat(["autoplay"]) });
+  D.addEventListener("DOMContentLoaded", function () { scanMedia(D); }, { once: true });
+
+  function mediaTick(ms) {
+    mediaEls.forEach(function (el) {
+      var st = mediaState.get(el);
+      if (!st) return;
+      if (st.autoplay && !st.started && !st.userPaused && (el.currentSrc || el.getAttribute("src"))) startPlaying(el, st);
+      if (!st.playing || el.loop) return;
+      var dur = realDuration(el);
+      if (dur === dur && st.base + (ms - st.v0) / 1000 * rateOf(el) >= dur) {
+        st.base = dur; st.playing = false; st.ended = true;
+        fire(el, "timeupdate"); fire(el, "pause"); fire(el, "ended");
+      }
+    });
+  }
+  /* <video> usados como fuente de canvas (2D o WebGL): se sincronizan siempre,
+     aunque estén fuera del documento u ocultos — lo visible es el canvas. */
+  var drawnVideos = new WeakSet();
+  function tagVideoSource(proto, name, argIndex) {
+    if (!proto || typeof proto[name] !== "function") return;
+    var real = proto[name];
+    proto[name] = function () {
+      var src = arguments[argIndex];
+      if (src instanceof HTMLVideoElement) drawnVideos.add(src);
+      return real.apply(this, arguments);
+    };
+  }
+  tagVideoSource(W.CanvasRenderingContext2D && W.CanvasRenderingContext2D.prototype, "drawImage", 0);
+  tagVideoSource(W.OffscreenCanvasRenderingContext2D && W.OffscreenCanvasRenderingContext2D.prototype, "drawImage", 0);
+  ["WebGLRenderingContext", "WebGL2RenderingContext"].forEach(function (k) {
+    var p = W[k] && W[k].prototype;
+    if (!p) return;
+    /* texImage2D(target, level, internalformat, format, type, source) → fuente en 5;
+       texSubImage2D(target, level, x, y, format, type, source) → fuente en 6 */
+    tagVideoSource(p, "texImage2D", 5);
+    tagVideoSource(p, "texSubImage2D", 6);
+  });
+  /* Cuadro exacto de cada <video>: seek real al tiempo virtual y esperar "seeked". */
+  function syncVideos() {
+    var waits = [];
+    videos.forEach(function (v) {
+      var st = mediaState.get(v);
+      if (!st || !(v.currentSrc || v.getAttribute("src")) || v.error) return;
+      /* Solo los que se ven en ESTE cuadro: un <video> fuera del documento (escena
+         pre-armada o ya descartada) o sin caja (display:none) no aparece en la
+         captura. Sin este filtro, las plantillas con muchos clips (grunge, sad,
+         promos) esperaban el "seeked" de 6-8 videos invisibles por cuadro y
+         Chrome terminaba sin memoria. Cuando el video aparece, se posiciona en
+         ese mismo cuadro antes de capturar: el resultado es idéntico. */
+      if (!drawnVideos.has(v)) {
+        if (!v.isConnected) {
+          if (!v.currentSrc) { videos.delete(v); return; }
+          /* con padre = parte de una escena armada fuera del documento; sin
+             padre puede ser fuente de canvas todavía no dibujada: se sincroniza */
+          if (v.parentNode) return;
+        } else if (!v.getClientRects().length) return;
+      }
+      var want = mediaTimeAt(v, st, clockMs);
+      var have = dCurrent.get.call(v);
+      if (Math.abs(have - want) < 0.0005 && v.readyState >= 2 && !v.seeking) return;
+      waits.push(withTimeout(new Promise(function (resolve) {
+        var done = function () { v.removeEventListener("seeked", done); v.removeEventListener("error", done); resolve(); };
+        v.addEventListener("seeked", done);
+        v.addEventListener("error", done);
+        try { dCurrent.set.call(v, want); } catch (e) { done(); }
+      }), 4000));
+    });
+    return waits.length ? Promise.all(waits) : null;
+  }
+
+  /* ───────────────────────────── animaciones ─────────────────────────────
+     Cada animación (CSS animation/transition o el.animate) tiene un modelo
+     virtual: nace en el tick en que aparece y su currentTime se fija en cada
+     tick. Las que la plantilla maneja a mano (pause + currentTime, como el motor
+     WAAPI de Caution) conservan exactamente lo que la plantilla pidió. */
+  var AP = Animation.prototype;
+  var dAnimCurrent = desc(AP, "currentTime");
+  var dAnimRate = desc(AP, "playbackRate");
+  var dPlayState = desc(AP, "playState");
+  var realAnimPlay = AP.play;
+  var realAnimPause = AP.pause;
+  var realDocGetAnimations = Document.prototype.getAnimations;
+  var models = new Map();
+  function animRate(a) { var r = dAnimRate.get.call(a); return isFinite(r) && r !== 0 ? r : 1; }
+  function modelTime(m, a) { return m.playing ? (clockMs - m.startV) * animRate(a) : m.hold; }
+  function ensureModel(a, fresh) {
+    var m = models.get(a);
+    if (m) return m;
+    var state = dPlayState.get.call(a);
+    var ct = Number(dAnimCurrent.get.call(a)) || 0;
+    /* una animación recién nacida corriendo arranca en 0 en este tick (su
+       currentTime real son ms de reloj de pared, no deterministas) */
+    m = state === "paused" ? { playing: false, hold: ct, startV: 0 }
+      : { playing: true, hold: 0, startV: clockMs - (fresh ? 0 : ct / animRate(a)) };
+    models.set(a, m);
+    return m;
+  }
+  AP.pause = function () {
+    var m = ensureModel(this, true);
+    if (m.playing) { m.hold = modelTime(m, this); m.playing = false; }
+    return realAnimPause.apply(this, arguments);
+  };
+  AP.play = function () {
+    var m = ensureModel(this, true);
+    if (!m.playing) {
+      var end = this.effect && this.effect.getComputedTiming ? this.effect.getComputedTiming().endTime : Infinity;
+      if (animRate(this) > 0 && isFinite(end) && m.hold >= end) m.hold = 0;
+      m.startV = clockMs - m.hold / animRate(this); m.playing = true;
+    }
+    /* el real queda pausado: el tiempo lo fija applyAnimations() */
+    realAnimPause.call(this);
+    try { dAnimCurrent.set.call(this, modelTime(m, this)); } catch (e) {}
+  };
+  Object.defineProperty(AP, "currentTime", {
+    configurable: true, enumerable: dAnimCurrent.enumerable,
+    get: function () { var m = models.get(this); return m ? modelTime(m, this) : dAnimCurrent.get.call(this); },
+    set: function (v) {
+      var m = ensureModel(this, true);
+      var x = Number(v) || 0;
+      if (m.playing) m.startV = clockMs - x / animRate(this); else m.hold = x;
+      dAnimCurrent.set.call(this, v);
+    },
+  });
+  Object.defineProperty(AP, "playbackRate", {
+    configurable: true, enumerable: dAnimRate.enumerable,
+    get: function () { return dAnimRate.get.call(this); },
+    set: function (v) {
+      var m = models.get(this);
+      var t = m ? modelTime(m, this) : 0;
+      dAnimRate.set.call(this, v);
+      if (m && m.playing) m.startV = clockMs - t / animRate(this);
+    },
+  });
+  /* El runtime de HyperFrames trae adaptadores CSS/WAAPI que fijan currentTime
+     con el tiempo ABSOLUTO del seek (las animaciones que nacen a mitad de
+     canción quedan corridas). Se les esconde todo: no ven animaciones, no
+     parchean el.animate y el adaptador CSS opera sobre un handle inerte (si
+     viera una lista vacía escribiría animation-delay inline en el elemento). */
+  var INERT_HANDLE = { currentTime: 0, effect: null, pause: function () {}, play: function () {} };
+  Document.prototype.getAnimations = function () { return []; };
+  Element.prototype.getAnimations = function () { return [INERT_HANDLE]; };
+  try {
+    Object.defineProperty(Element.prototype, "__hfOriginalAnimate", { configurable: true, value: Element.prototype.animate });
+  } catch (e) {}
+
+  function applyAnimations() {
+    models.forEach(function (m, a) {
+      var state = dPlayState.get.call(a);
+      if (state === "idle") { models.delete(a); return; }
+      if (state !== "paused") realAnimPause.call(a);
+      try { dAnimCurrent.set.call(a, modelTime(m, a)); } catch (e) {}
+    });
+  }
+  function discoverAnimations() {
+    var list = realDocGetAnimations.call(D);
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i];
+      if (models.has(a)) continue;
+      var m = ensureModel(a, true);
+      if (dPlayState.get.call(a) !== "paused") realAnimPause.call(a);
+      try { dAnimCurrent.set.call(a, modelTime(m, a)); } catch (e) {}
+    }
+  }
+
+  /* ───────────────────────────── WebAudio ─────────────────────────────
+     AnalyserNode virtual sobre el audio decodificado: mismo algoritmo que el
+     navegador (ventana Blackman, FFT, suavizado, dB → byte), muestreado en el
+     tiempo virtual del <audio> que lo alimenta. */
+  var pendingAsync = 0;
+  var RealAC = W.AudioContext || W.webkitAudioContext;
+  var decodeCache = new Map();
+  function decodeFor(el, rate) {
+    var src = el.currentSrc || el.src;
+    var key = src + "@" + rate;
+    if (!decodeCache.has(key)) {
+      pendingAsync++;
+      var p = fetch(src).then(function (r) { return r.arrayBuffer(); })
+        .then(function (buf) { return new OfflineAudioContext(1, 1, rate).decodeAudioData(buf); })
+        .then(function (ab) {
+          var n = ab.length, mono = new Float32Array(n), ch = ab.numberOfChannels;
+          for (var c = 0; c < ch; c++) { var d = ab.getChannelData(c); for (var i = 0; i < n; i++) mono[i] += d[i] / ch; }
+          return mono;
+        })
+        .catch(function (e) { log("decode audio: " + e); return null; })
+        .finally(function () { pendingAsync--; });
+      decodeCache.set(key, { promise: p, data: null });
+      p.then(function (d) { decodeCache.get(key).data = d; });
+    }
+    return decodeCache.get(key);
+  }
+  function fftMag(re, im) {
+    var n = re.length, i, j, k, len;
+    for (i = 1, j = 0; i < n; i++) {
+      var bit = n >> 1;
+      for (; j & bit; bit >>= 1) j ^= bit;
+      j ^= bit;
+      if (i < j) { var tr = re[i]; re[i] = re[j]; re[j] = tr; var ti = im[i]; im[i] = im[j]; im[j] = ti; }
+    }
+    for (len = 2; len <= n; len <<= 1) {
+      var ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+      for (i = 0; i < n; i += len) {
+        var cr = 1, ci = 0;
+        for (k = 0; k < len / 2; k++) {
+          var ar = re[i + k], ai = im[i + k];
+          var br = re[i + k + len / 2] * cr - im[i + k + len / 2] * ci;
+          var bi = re[i + k + len / 2] * ci + im[i + k + len / 2] * cr;
+          re[i + k] = ar + br; im[i + k] = ai + bi;
+          re[i + k + len / 2] = ar - br; im[i + k + len / 2] = ai - bi;
+          var ncr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = ncr;
+        }
+      }
+    }
+  }
+  function FakeNode(ctx) { this.context = ctx; this._src = null; }
+  FakeNode.prototype.connect = function (node) {
+    if (node && node instanceof FakeAnalyser && this._src) node._src = this._src;
+    if (node && node instanceof FakeNode && this._src) node._src = this._src;
+    return node;
+  };
+  FakeNode.prototype.disconnect = function () {};
+  function FakeAnalyser(ctx) {
+    FakeNode.call(this, ctx);
+    this.fftSize = 2048; this.smoothingTimeConstant = 0.8; this.minDecibels = -100; this.maxDecibels = -30;
+    this._smooth = null; this._lastMs = -1; this._mags = null;
+  }
+  FakeAnalyser.prototype = Object.create(FakeNode.prototype);
+  Object.defineProperty(FakeAnalyser.prototype, "frequencyBinCount", { get: function () { return this.fftSize / 2; } });
+  FakeAnalyser.prototype._window = function () {
+    var el = this._src, n = this.fftSize, out = new Float32Array(n);
+    if (!el) return out;
+    var dec = decodeFor(el, this.context.sampleRate);
+    if (!dec.data) return out;
+    var st = mediaState.get(el);
+    var t = st ? mediaTimeAt(el, st, clockMs) : 0;
+    var end = Math.floor(t * this.context.sampleRate);
+    for (var i = 0; i < n; i++) { var idx = end - n + i; out[i] = idx >= 0 && idx < dec.data.length ? dec.data[idx] : 0; }
+    return out;
+  };
+  FakeAnalyser.prototype._update = function () {
+    if (this._lastMs === clockMs && this._mags) return;
+    this._lastMs = clockMs;
+    var n = this.fftSize, x = this._window(), re = new Float64Array(n), im = new Float64Array(n);
+    for (var i = 0; i < n; i++) {
+      var w = 0.42 - 0.5 * Math.cos(2 * Math.PI * i / n) + 0.08 * Math.cos(4 * Math.PI * i / n);
+      re[i] = x[i] * w;
+    }
+    fftMag(re, im);
+    var bins = n / 2, tau = Math.max(0, Math.min(1, this.smoothingTimeConstant));
+    if (!this._smooth || this._smooth.length !== bins) this._smooth = new Float64Array(bins);
+    for (var k = 0; k < bins; k++) {
+      var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / n;
+      this._smooth[k] = tau * this._smooth[k] + (1 - tau) * mag;
+    }
+    this._mags = this._smooth;
+  };
+  FakeAnalyser.prototype.getFloatFrequencyData = function (arr) {
+    this._update();
+    for (var k = 0; k < arr.length && k < this._mags.length; k++) arr[k] = 20 * Math.log10(this._mags[k] || 1e-20);
+  };
+  FakeAnalyser.prototype.getByteFrequencyData = function (arr) {
+    this._update();
+    var range = this.maxDecibels - this.minDecibels;
+    for (var k = 0; k < arr.length && k < this._mags.length; k++) {
+      var db = 20 * Math.log10(this._mags[k] || 1e-20);
+      arr[k] = Math.max(0, Math.min(255, Math.floor(255 / range * (db - this.minDecibels))));
+    }
+  };
+  FakeAnalyser.prototype.getFloatTimeDomainData = function (arr) {
+    var x = this._window(), off = x.length - arr.length;
+    for (var i = 0; i < arr.length; i++) arr[i] = x[Math.max(0, off) + i] || 0;
+  };
+  FakeAnalyser.prototype.getByteTimeDomainData = function (arr) {
+    var x = this._window(), off = x.length - arr.length;
+    for (var i = 0; i < arr.length; i++) arr[i] = Math.max(0, Math.min(255, Math.floor(128 * (1 + (x[Math.max(0, off) + i] || 0)))));
+  };
+  var acRate = 48000;
+  try { var probeAc = new RealAC(); acRate = probeAc.sampleRate || 48000; probeAc.close(); } catch (e) {}
+  function FakeAudioContext() {
+    this.sampleRate = acRate; this.state = "running"; this.destination = new FakeNode(this);
+  }
+  Object.defineProperty(FakeAudioContext.prototype, "currentTime", { get: function () { return clockMs / 1000; } });
+  FakeAudioContext.prototype.resume = function () { return Promise.resolve(); };
+  FakeAudioContext.prototype.suspend = function () { return Promise.resolve(); };
+  FakeAudioContext.prototype.close = function () { this.state = "closed"; return Promise.resolve(); };
+  FakeAudioContext.prototype.createAnalyser = function () { return new FakeAnalyser(this); };
+  FakeAudioContext.prototype.createGain = function () { var n = new FakeNode(this); n.gain = { value: 1, setValueAtTime: function () {} }; return n; };
+  FakeAudioContext.prototype.createMediaElementSource = function (el) {
+    var n = new FakeNode(this); n._src = el; n.mediaElement = el; adopt(el); decodeFor(el, this.sampleRate); return n;
+  };
+  if (RealAC) { W.AudioContext = FakeAudioContext; W.webkitAudioContext = FakeAudioContext; }
+
+  /* ───────────────────────────── cargas ───────────────────────────── */
+  var inflight = 0;
+  var realFetch = W.fetch;
+  W.fetch = function () {
+    inflight++;
+    return realFetch.apply(W, arguments).finally(function () { inflight--; });
+  };
+  var pendingImgs = new Set();
+  var dImgSrc = desc(HTMLImageElement.prototype, "src");
+  function trackImg(img) {
+    if (img.complete) return;
+    pendingImgs.add(img);
+    var done = function () { pendingImgs.delete(img); };
+    img.addEventListener("load", done, { once: true });
+    img.addEventListener("error", done, { once: true });
+  }
+  Object.defineProperty(HTMLImageElement.prototype, "src", {
+    configurable: true, enumerable: dImgSrc.enumerable,
+    get: function () { return dImgSrc.get.call(this); },
+    set: function (v) { dImgSrc.set.call(this, v); trackImg(this); },
+  });
+  var decodedSrc = new WeakMap();
+  function imagesPending() {
+    var list = [];
+    pendingImgs.forEach(function (img) { if (!img.complete) list.push(img); else pendingImgs.delete(img); });
+    var imgs = D.images;
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i];
+      var src = img.currentSrc || img.getAttribute("src");
+      if (!src) continue;
+      if (!img.complete || decodedSrc.get(img) !== src) list.push(img);
+    }
+    return list;
+  }
+  function settleImages(list) {
+    return Promise.all(list.map(function (img) {
+      var src = img.currentSrc || img.getAttribute("src");
+      var loaded = img.complete ? Promise.resolve() : new Promise(function (r) {
+        img.addEventListener("load", r, { once: true }); img.addEventListener("error", r, { once: true });
+      });
+      return withTimeout(loaded.then(function () { return img.naturalWidth ? img.decode() : null; }), 6000)
+        .then(function () { decodedSrc.set(img, src); });
+    }));
+  }
+  /* cada elemento se espera como mucho MEDIA_WAIT_MS acumulados: una fuente
+     rota no puede trabar el render (la plantilla ya la trata como ausente) */
+  var MEDIA_WAIT_MS = 8000;
+  var mediaWaited = new WeakMap();
+  function mediaMetaPending() {
+    var n = 0;
+    mediaEls.forEach(function (el) {
+      if (el.error || !(el.currentSrc || el.getAttribute("src"))) return;
+      if ((mediaWaited.get(el) || 0) >= MEDIA_WAIT_MS) return;
+      var need = el instanceof HTMLVideoElement ? 2 : 1;
+      if (el.readyState < need) n++;
+    });
+    return n;
+  }
+  function chargeMediaWait(ms) {
+    mediaEls.forEach(function (el) {
+      var need = el instanceof HTMLVideoElement ? 2 : 1;
+      if (!el.error && el.readyState < need) mediaWaited.set(el, (mediaWaited.get(el) || 0) + ms);
+    });
+  }
+  function domImagesLoading() {
+    var imgs = D.images;
+    for (var i = 0; i < imgs.length; i++) if (!imgs[i].complete && imgs[i].getAttribute("src")) return true;
+    return false;
+  }
+  /* Fuentes: se cargan TODAS las declaradas antes del primer cuadro (en un
+     navegador real la palabra nueva podía asomar un instante con la fuente de
+     respaldo; acá nunca). */
+  function loadAllFonts() {
+    var ps = [];
+    try { D.fonts.forEach(function (f) { if (f.status === "unloaded") ps.push(f.load().catch(function () {})); }); } catch (e) {}
+    return withTimeout(Promise.all(ps).then(function () { return D.fonts.ready; }), 15000);
+  }
+  async function settleLoads() {
+    var imgs = imagesPending();
+    if (imgs.length) { stats.waits++; await settleImages(imgs); }
+    if (D.fonts && D.fonts.status === "loading") { stats.waits++; await withTimeout(D.fonts.ready, 10000); }
+    if (mediaMetaPending()) {
+      stats.waits++;
+      while (mediaMetaPending()) { await sleep(20); chargeMediaWait(20); }
+    }
+  }
+
+  /* ───────────────────────────── arranque ───────────────────────────── */
+  function quietNow() { return inflight + pendingAsync + mediaMetaPending() + imagesPending().length === 0; }
+  async function waitQuiet(maxMs) {
+    var t0 = wallMs(), quiet = 0;
+    for (;;) {
+      if (quietNow()) { if (++quiet >= 3) return; } else quiet = 0;
+      var imgs = imagesPending();
+      if (imgs.length) await settleImages(imgs);
+      if (wallMs() - t0 > maxMs) { log("readiness: timeout"); return; }
+      await sleep(40);
+      chargeMediaWait(40);
+    }
+  }
+  var readyP = null;
+  function ready() {
+    if (readyP) return readyP;
+    readyP = (async function () {
+      var t0 = wallMs();
+      if (D.readyState === "loading") await new Promise(function (r) { D.addEventListener("DOMContentLoaded", r, { once: true }); });
+      scanMedia(D);
+      if (D.readyState !== "complete") await withTimeout(new Promise(function (r) { W.addEventListener("load", r, { once: true }); }), 20000);
+      await loadAllFonts();
+      await waitQuiet(20000);
+      /* mismo gesto que usa la vista previa de la app para las plantillas que
+         arrancan con un click (#screen) o pointerdown */
+      try {
+        var screen = D.querySelector("#screen");
+        if (screen) screen.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        (D.body || D.documentElement).dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+      } catch (e) { log("gesto: " + e); }
+      await waitQuiet(15000);
+      await loadAllFonts();
+      stats.readyMs = Math.round(wallMs() - t0);
+    })();
+    return readyP;
+  }
+  /* ───────────────────────────── ticks ───────────────────────────── */
+  function tick(k) {
+    var tms = k * STEP_MS;
+    ticking = true;
+    try {
+      runTimers(tms);
+      clockMs = tms;
+      mediaTick(tms);
+      applyAnimations();
+      origSeekToTime.call(VT, tms);   /* vacía la cola de rAF de HyperFrames con timestamp = tms */
+      discoverAnimations();
+    } finally { ticking = false; }
+    stats.ticks++;
+  }
+  async function run() {
+    await ready();
+    var t0;
+    while (stepIdx < targetStep) {
+      var last = stepIdx + 1 === targetStep;
+      if (last) {
+        /* los <video> que la plantilla dibuja en canvas tienen que estar en su
+           cuadro ANTES de los callbacks del último tick */
+        clockMs = (stepIdx + 1) * STEP_MS;
+        t0 = wallMs();
+        var pre = syncVideos();
+        if (pre) await pre;
+        stats.videoMs += wallMs() - t0;
+      }
+      t0 = wallMs();
+      tick(++stepIdx);
+      await null;                     /* microtareas de la plantilla, como entre cuadros reales */
+      stats.tickMs += wallMs() - t0;
+      if (pendingImgs.size || domImagesLoading() || mediaMetaPending() || (D.fonts && D.fonts.status === "loading")) {
+        t0 = wallMs(); await settleLoads(); stats.settleMs += wallMs() - t0;
+      }
+    }
+    t0 = wallMs();
+    var post = syncVideos();
+    if (post) await post;
+    stats.videoMs += wallMs() - t0;
+    t0 = wallMs();
+    await settleLoads();
+    stats.settleMs += wallMs() - t0;
+    /* resumen cada 300 cuadros en la salida del CLI (consola reenviada) */
+    if (stats.seeks % 300 === 0) {
+      console.log("[nb-hf-clock] seeks=" + stats.seeks + " t=" + Math.round(clockMs) + "ms ticks=" + stats.ticks +
+        " tick=" + Math.round(stats.tickMs) + "ms video=" + Math.round(stats.videoMs) + "ms settle=" +
+        Math.round(stats.settleMs) + "ms ready=" + stats.readyMs + "ms backward=" + stats.backward);
+    }
+  }
+  function requestTarget(ms) {
+    var step = Math.floor(Math.max(0, Number(ms) || 0) / STEP_MS + 1e-4);
+    stats.seeks++;
+    if (stats.firstSeekMs === null) stats.firstSeekMs = ms;
+    if (step < stepIdx) { stats.backward++; log("seek hacia atrás ignorado: " + ms + "ms (estado en " + stepIdx * STEP_MS + "ms)"); }
+    if (step > targetStep) targetStep = step;
+    if (!processing) {
+      processing = run().catch(function (e) { log("run: " + (e && e.stack || e)); })
+        .then(function () { processing = null; if (stepIdx < targetStep) requestTarget(targetStep * STEP_MS); });
+    }
+    return processing;
+  }
+  function idle() { return processing || Promise.resolve(); }
+
+  VT.seekToTime = function (ms) { requestTarget(ms); return ms; };
+  W.addEventListener("hf-seek", function (e) {
+    var d = e && e.detail;
+    if (!d || typeof d.time !== "number") return;
+    var p = requestTarget(d.time * 1000);
+    if (typeof d.waitUntil === "function") { try { d.waitUntil(p); } catch (err) {} }
+  });
+  /* El engine espera window.__hfWaitForSeekCompletion() antes de capturar:
+     se envuelve para que también espere a que el mundo llegue al cuadro. */
+  var innerWait = W.__hfWaitForSeekCompletion;
+  try {
+    Object.defineProperty(W, "__hfWaitForSeekCompletion", {
+      configurable: true,
+      get: function () { return function () { return Promise.resolve(innerWait && innerWait()).then(idle); }; },
+      set: function (fn) { innerWait = fn; },
+    });
+  } catch (e) { log("__hfWaitForSeekCompletion no envolvible"); }
+
+  W.__nbHf = {
+    active: true,
+    stats: stats,
+    logs: logs,
+    get time() { return clockMs; },
+    ready: ready,
+    idle: idle,
+  };
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LETRAS CALADAS — Colapso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: pointer; }
+  body { opacity: 0; transition: opacity 0.8s ease; }
+  body.ready { opacity: 1; }
+
+  /* el video vive oculto: solo se ve A TRAVÉS del canvas (calado o expuesto) */
+  #vid { position: fixed; left: 0; top: 0; width: 10px; height: 10px; opacity: 0; pointer-events: none; }
+
+  #fx { position: fixed; inset: 0; z-index: 2; }
+
+  #vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, transparent 46%, rgba(0,0,0,0.72) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 5; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.06; mix-blend-mode: overlay; animation: gsh 0.95s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+
+</style>
+</head>
+<body>
+<video id="vid" muted loop autoplay playsinline></video>
+<canvas id="fx"></canvas>
+<div id="vignette"></div>
+<div id="grain"></div>
+<audio id="audio" preload="auto"></audio>
+
+<script type="module">
+/* ================================ CONFIG ================================
+   CALADO — el video se ve A TRAVÉS de las letras (texto knockout, estilo
+   lyric-video de TikTok/AMV). Tres láminas que se alternan con semilla:
+   · CALADO: la pantalla entera se apaga a NEGRO y las palabras gigantes
+     son ventanas transparentes por donde se ve el video con filtro cálido
+     de cine — las letras pueden sangrar por los bordes.
+   · SOLIDO: el video queda visible pero oscurecido, y las palabras entran
+     en COLORES sólidos vivos en composiciones diagonales de esquina
+     (grande abajo-izquierda + grande arriba-derecha), con alguna palabra
+     suelta en caligrafía inclinada.
+   · MIXTO: la palabra dominante va calada al centro y las demás en color
+     sólido chicas, como firma.
+   Cada palabra aparece a golpe en SU timestamp (pop + sacudida corta); la
+   frase siguiente REEMPLAZA a la anterior. Impredecible: modo, colores,
+   posiciones, tamaños y sangrado rotan con semilla. Pensado para música
+   con adrenalina; el fondo manda el video (pelea, autos, deporte).
+   La letra se consume 100% de lyricsUrl (formato Whisper:
+   { segments: [ { words: [ { word, start, end } ] } ] } ).
+   El CONFIG ya no vive aquí: vive en config.json como colección de casos con
+   "id" (mismo patrón que el resto de plantillas de letras). Cada objeto
+   trae audio, lyricsUrl, video, colors, intro/outro, phrase, laminas y seed.
+   Carga con 3 niveles de fallback (no afecta al pipeline, que siempre sirve
+   un config.json real por HTTP y gana en el nivel 1):
+     1. fetch("config.json")         — lo que el pipeline genera y sirve.
+     2. fetch("assets/config.json")  — default versionado, si serviste esta
+        carpeta con un server (python3 -m http.server) sin que el pipeline
+        haya escrito un config.json en la raíz.
+     3. DEFAULT_CONFIG embebido      — para abrir el archivo con doble clic
+        (file://), donde fetch() queda bloqueado por el navegador.
+   ========================================================================== */
+const DEFAULT_CONFIG = { "activeId": "default", "configs": [{
+  "id": "default",
+  "description": "Lyric-video calado con paleta cálida cinematográfica y video de fondo de acción — las palabras se ven como ventanas transparentes sobre el video, alternando con láminas de color sólido en composiciones diagonales. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+  "audio": { "src": "assets/song.mp3" },
+  "lyricsUrl": "assets/lyrics.json",
+  "video": { "src": "assets/bg.mp4",
+             "filter": "sepia(0.30) saturate(1.55) contrast(1.14) hue-rotate(-8deg)",
+             "dimSolido": 0.42, "ghostCalado": 0.05 },
+  "colors": { "ink": "#F4EFE6", "palette": ["#FF7A1A", "#4FC3FF", "#E0362C", "#FFD23F"],
+              "outline": "rgba(244,239,230,0.10)" },
+  "intro": { "artist": "", "title": "", "sub": "", "feats": "NEXA BRIEF" },
+  "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+  "debug": { "enabled": false },
+  "phrase": { "gapSec": 0.5, "maxWords": 4, "maxChars": 20 },
+  "laminas": { "deck": ["calado","solido","calado","mixto","calado","solido","calado","mixto","solido"],
+               "bleedChance": 0.45, "scriptChance": 0.30, "punch": 0.05 },
+  "seed": 29
+}] };
+
+async function loadDB() {
+  for (const url of ["config.json", "assets/config.json"]) {
+    try {
+      const r = await fetch(url);
+      if (r.ok) return await r.json();
+    } catch (e) { /* file:// u otro bloqueo — probamos el siguiente nivel */ }
+  }
+  console.warn("[calado] No se pudo cargar config.json ni assets/config.json (¿abierto por file://?) — usando DEFAULT_CONFIG embebido.");
+  return DEFAULT_CONFIG;
+}
+
+const DB = await loadDB();
+const CONFIG = DB.configs.find(c => c.id === DB.activeId) || DB.configs[0];
+/* ======================================================================== */
+
+const doc = document, $ = id => doc.getElementById(id);
+const C = CONFIG, audio = $("audio"), vid = $("vid"), fx = $("fx"), ctx = fx.getContext("2d");
+const M = doc.createElement("canvas"), mctx = M.getContext("2d");   /* máscara de texto */
+const V = doc.createElement("canvas"), vctx = V.getContext("2d");   /* video recortado */
+let vw = innerWidth, vh = innerHeight, dpr = Math.min(devicePixelRatio || 1, 2);
+function sizeCanvases() {
+  vw = innerWidth; vh = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
+  for (const [cv, cc] of [[fx, ctx], [M, mctx], [V, vctx]]) {
+    cv.width = vw * dpr; cv.height = vh * dpr;
+    cc.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  fx.style.width = vw + "px"; fx.style.height = vh + "px";
+}
+addEventListener("resize", sizeCanvases);
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rng = mulberry32(C.seed);
+
+const FONT = '"Anton", sans-serif';
+const FONT_SCRIPT = '700 __px "Caveat", cursive';
+
+/* ---- lyrics: agrupar en FRASES conservando el timestamp de CADA palabra ---- */
+async function loadLyrics() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const flat = [];
+    for (const seg of j.segments) for (const w of seg.words) {
+      const clean = w.word.trim().replace(/[.,;!?¡¿"']/g, "");
+      if (clean) flat.push({ t: w.start, text: clean.toUpperCase() });
+    }
+    if (!flat.length) throw new Error("sin palabras");
+    return groupPhrases(flat);
+  } catch (e) {
+    console.warn("[calado] No se pudo cargar", C.lyricsUrl,
+                 "— sirve el HTML por HTTP (Live Server), no por file://.", e);
+    return [];
+  }
+}
+function groupPhrases(flat) {
+  const out = [];
+  let cur = null;
+  for (const w of flat) {
+    const fits = cur && cur.words.length < C.phrase.maxWords &&
+                 (cur.chars + w.text.length + 1) <= C.phrase.maxChars &&
+                 (w.t - cur.lastT) < C.phrase.gapSec;
+    if (fits) {
+      cur.words.push(w); cur.chars += w.text.length + 1; cur.lastT = w.t;
+    } else {
+      if (cur) out.push(cur);
+      cur = { t: w.t, words: [w], chars: w.text.length, lastT: w.t };
+    }
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+
+/* ---- mazo de modos (sin repetir consecutivo) ---- */
+let deck = [], deckPos = 0, lastMode = "";
+function shuffledDeck() {
+  const d = [...C.laminas.deck];
+  for (let i = d.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1)); [d[i], d[j]] = [d[j], d[i]];
+  }
+  return d;
+}
+function nextMode() {
+  if (deckPos >= deck.length) { deck = shuffledDeck(); deckPos = 0; }
+  let m = deck[deckPos++];
+  if (m === lastMode) m = deck[deckPos % deck.length];
+  lastMode = m;
+  return m;
+}
+
+/* ---- video: encuadre cover + fallback si no carga ---- */
+let vidReady = false;
+vid.addEventListener("canplay", () => { vidReady = true; });
+function coverRect() {
+  const sw = vid.videoWidth || 16, sh = vid.videoHeight || 9;
+  const s = Math.max(vw / sw, vh / sh);
+  return { w: sw * s, h: sh * s, x: (vw - sw * s) / 2, y: (vh - sh * s) / 2 };
+}
+/* dibuja el video (o un fuego degradado de respaldo) en el contexto dado */
+function paintVideo(cc, filter, alpha) {
+  cc.save();
+  cc.globalAlpha = alpha;
+  if (vidReady) {
+    cc.filter = filter || "none";
+    const r = coverRect();
+    cc.drawImage(vid, r.x, r.y, r.w, r.h);
+  } else {
+    const g = cc.createRadialGradient(vw * 0.5, vh * 0.6, vh * 0.05, vw * 0.5, vh * 0.5, vh * 0.9);
+    g.addColorStop(0, "#8C2B12"); g.addColorStop(0.55, "#3D0F06"); g.addColorStop(1, "#0B0302");
+    cc.fillStyle = g;
+    cc.fillRect(0, 0, vw, vh);
+  }
+  cc.restore();
+}
+
+/* ---- helpers ---- */
+function hexA(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${Math.max(0, Math.min(1, a)).toFixed(3)})`;
+}
+function fitFs(cc, text, maxW, maxH, font) {
+  cc.font = (font || `100px ${FONT}`).replace("__", "100");
+  const w = Math.max(1, cc.measureText(text).width);
+  return Math.min(maxW / w * 100, maxH);
+}
+const pick = arr => arr[Math.floor(rng() * arr.length)];
+
+/* ---- layout por lámina (se decide al activarla, con semilla) ---- */
+function makeLamina(words) {
+  const mode = nextMode();
+  const L = { mode, items: [] };   /* items: {w, kind, font, fs, x, y, color, rot} */
+  const cx = vw / 2;
+
+  if (mode === "calado" || mode === "mixto") {
+    /* palabras apiladas GIGANTES al centro; en calado pueden sangrar */
+    const main = mode === "calado" ? words : [words.reduce((a, b) => (b.text.length > a.text.length ? b : a))];
+    const bleed = mode === "calado" && rng() < C.laminas.bleedChance;
+    const share = bleed ? 1.12 : 0.94;
+    const lineHMax = vh * 0.78 / main.length;
+    let fss = main.map(w => Math.min(fitFs(ctx, w.text, vw * share, vh * 0.34), lineHMax));
+    const totalH = fss.reduce((a, f) => a + f * 0.92, 0);
+    let y = vh * 0.5 - totalH / 2 + fss[0] * 0.78;
+    main.forEach((w, i) => {
+      L.items.push({
+        w, kind: "calado", fs: fss[i],
+        x: cx + (main.length > 1 ? (rng() - 0.5) * vw * 0.06 : 0), y,
+        rot: (rng() - 0.5) * 0.02
+      });
+      y += fss[i] * 0.92;
+    });
+    if (mode === "mixto") {
+      /* las demás palabras: firma en color sólido, chicas, esquina baja */
+      const rest = words.filter(w => !main.includes(w));
+      const color = pick(C.colors.palette);
+      let sx = vw * (0.12 + rng() * 0.1), sy = vh * (0.82 + rng() * 0.06);
+      for (const w of rest) {
+        const script = rng() < C.laminas.scriptChance;
+        const fs = vh * (script ? 0.075 : 0.055);
+        L.items.push({ w, kind: "solido", script, fs, x: sx, y: sy, color: rng() < 0.5 ? C.colors.ink : color, rot: script ? -0.06 - rng() * 0.06 : 0 });
+        sx += w.text.length * fs * (script ? 0.42 : 0.6) + fs * 0.5;
+      }
+    }
+  } else {
+    /* SOLIDO: composición diagonal de esquinas sobre el video expuesto */
+    const corners = rng() < 0.5
+      ? [{ ax: 0.06, ay: 0.86, align: "left" },  { ax: 0.94, ay: 0.20, align: "right" }]
+      : [{ ax: 0.06, ay: 0.24, align: "left" },  { ax: 0.94, ay: 0.86, align: "right" }];
+    const cA = pick(C.colors.palette);
+    let cB = pick(C.colors.palette); if (cB === cA) cB = C.colors.ink;
+    words.forEach((w, i) => {
+      const big = i < 2;
+      const corner = corners[i % 2];
+      const script = !big && rng() < C.laminas.scriptChance;
+      const fs = big
+        ? Math.min(fitFs(ctx, w.text, vw * 0.55, vh * 0.20), vh * 0.20)
+        : vh * (script ? 0.085 : 0.06);
+      const x = corner.ax * vw + (big ? 0 : (rng() - 0.5) * vw * 0.16);
+      const y = corner.ay * vh + (i >= 2 ? (i - 1) * fs * 1.05 * (corner.ay > 0.5 ? -1 : 1) : 0);
+      L.items.push({
+        w, kind: "solido", script, fs, x, y, align: corner.align,
+        color: i % 2 === 0 ? cA : cB,
+        rot: script ? -0.08 : (rng() - 0.5) * 0.03
+      });
+    });
+  }
+  return L;
+}
+
+/* ---- dibujo de una lámina según su modo ---- */
+let punch = 0;   /* pop de pantalla al caer cada palabra */
+function drawLamina(L, t) {
+  const anyCalado = L.items.some(it => it.kind === "calado");
+
+  if (L.mode === "solido") {
+    paintVideo(ctx, C.video.filter + ` brightness(${C.video.dimSolido})`, 1);
+    const g = ctx.createLinearGradient(0, 0, 0, vh);
+    g.addColorStop(0, "rgba(0,0,0,0.35)"); g.addColorStop(0.5, "rgba(0,0,0,0.08)"); g.addColorStop(1, "rgba(0,0,0,0.45)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, vw, vh);
+  } else {
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, vw, vh);
+    if (C.video.ghostCalado > 0) paintVideo(ctx, C.video.filter, C.video.ghostCalado);
+  }
+
+  /* 1) máscara con las palabras CALADAS ya cantadas */
+  if (anyCalado) {
+    mctx.clearRect(0, 0, vw, vh);
+    mctx.fillStyle = "#fff";
+    mctx.textAlign = "center";
+    mctx.textBaseline = "alphabetic";
+    let any = false;
+    for (const it of L.items) {
+      if (it.kind !== "calado") continue;
+      if (it.w.t > t) {
+        /* aún no se canta: contorno fantasma apenas visible sobre el negro */
+        ctx.save();
+        ctx.font = `${it.fs}px ${FONT}`;
+        ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+        ctx.strokeStyle = C.colors.outline;
+        ctx.lineWidth = Math.max(1, it.fs * 0.012);
+        ctx.translate(it.x, it.y); ctx.rotate(it.rot);
+        ctx.strokeText(it.w.text, 0, 0);
+        ctx.restore();
+        continue;
+      }
+      mctx.save();
+      mctx.font = `${it.fs}px ${FONT}`;
+      mctx.translate(it.x, it.y); mctx.rotate(it.rot);
+      /* pop de entrada: la ventana nace un pelo más grande y asienta */
+      const age = Math.max(0, t - it.w.t);
+      const pop = 1 + 0.22 * Math.exp(-age * 9);
+      mctx.scale(pop, pop);
+      mctx.fillText(it.w.text, 0, 0);
+      mctx.restore();
+      any = true;
+    }
+    if (any) {
+      /* 2) video con filtro cálido recortado por la máscara */
+      vctx.clearRect(0, 0, vw, vh);
+      paintVideo(vctx, C.video.filter, 1);
+      vctx.globalCompositeOperation = "destination-in";
+      vctx.drawImage(M, 0, 0, vw, vh);
+      vctx.globalCompositeOperation = "source-over";
+      ctx.drawImage(V, 0, 0, vw, vh);
+    }
+  }
+
+  /* 3) palabras SÓLIDAS de color (siempre encima) */
+  for (const it of L.items) {
+    if (it.kind !== "solido" || it.w.t > t) continue;
+    const age = Math.max(0, t - it.w.t);
+    const pop = 1 + 0.3 * Math.exp(-age * 9);
+    ctx.save();
+    ctx.translate(it.x, it.y); ctx.rotate(it.rot); ctx.scale(pop, pop);
+    ctx.font = it.script ? FONT_SCRIPT.replace("__", it.fs) : `${it.fs}px ${FONT}`;
+    ctx.textAlign = it.align || "left";
+    ctx.textBaseline = "alphabetic";
+    ctx.shadowColor = "rgba(0,0,0,0.65)";
+    ctx.shadowBlur = it.fs * 0.10;
+    ctx.shadowOffsetY = it.fs * 0.04;
+    ctx.fillStyle = it.color;
+    ctx.fillText(it.script ? it.w.text.toLowerCase() : it.w.text, 0, 0);
+    ctx.restore();
+  }
+}
+
+/* ---- reloj: audio si suena; si no, rAF ---- */
+let rafT0 = null, rafNow = 0, started = false;
+const clock = () => (!audio.paused && audio.currentTime > 0.05)
+  ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+
+async function begin() {
+  if (started) return;
+  started = true;
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+/* el click SIEMPRE reintenta audio y video (el begin() del arranque no consume el gesto) */
+addEventListener("pointerdown", () => {
+  begin();
+  if (audio.paused) audio.play().catch(() => {});
+  if (vid.paused) vid.play().catch(() => {});
+});
+
+/* ---- outro por el final REAL del audio ---- */
+let outroShown = false;
+function maybeOutro() {
+  if (outroShown) return;
+  const dur = audio.duration;
+  if (!isFinite(dur) || dur <= 0) return;
+  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) outroShown = true;
+}
+audio.addEventListener("ended", maybeOutro);
+
+/* ---- intro / outro: el título va CALADO — el video late dentro del nombre ---- */
+function drawCard(cfg, t) {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, vw, vh);
+  if (C.video.ghostCalado > 0) paintVideo(ctx, C.video.filter, C.video.ghostCalado);
+  const title = cfg.title.toUpperCase();
+  const fs = Math.min(fitFs(ctx, title, vw * 0.92, vh * 0.30), vh * 0.30);
+  mctx.clearRect(0, 0, vw, vh);
+  mctx.fillStyle = "#fff";
+  mctx.textAlign = "center"; mctx.textBaseline = "middle";
+  mctx.font = `${fs}px ${FONT}`;
+  mctx.fillText(title, vw / 2, vh * 0.47);
+  vctx.clearRect(0, 0, vw, vh);
+  paintVideo(vctx, C.video.filter, 1);
+  vctx.globalCompositeOperation = "destination-in";
+  vctx.drawImage(M, 0, 0, vw, vh);
+  vctx.globalCompositeOperation = "source-over";
+  ctx.drawImage(V, 0, 0, vw, vh);
+  /* créditos chicos en blanco cálido */
+  ctx.save();
+  ctx.fillStyle = hexA(C.colors.ink, 0.8);
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.font = `${vh * 0.022}px ${FONT}`;
+  if ("letterSpacing" in ctx) ctx.letterSpacing = vh * 0.012 + "px";
+  if (cfg.artist) ctx.fillText(cfg.artist.toUpperCase(), vw / 2, vh * 0.47 - fs * 0.75);
+  if (cfg.sub) ctx.fillText(cfg.sub.toUpperCase(), vw / 2, vh * 0.47 + fs * 0.72);
+  ctx.font = `${vh * 0.015}px ${FONT}`;
+  ctx.fillStyle = hexA(C.colors.ink, 0.5);
+  if (cfg.feats) ctx.fillText(cfg.feats.toUpperCase(), vw / 2, vh * 0.86);
+  if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
+  ctx.restore();
+}
+
+/* ---- main ---- */
+let phrases = [], ptr = 0, introGone = false, activeLam = null, lastWordT = -1;
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  const t = clock();
+  maybeOutro();
+
+  if (!outroShown) {
+    while (ptr < phrases.length && t >= phrases[ptr].t) {
+      introGone = true;
+      activeLam = makeLamina(phrases[ptr].words);
+      punch = C.laminas.punch * 1.8;
+      ptr++;
+    }
+    /* golpecito por cada palabra nueva que cae dentro de la lámina activa */
+    if (activeLam) {
+      for (const it of activeLam.items) {
+        if (it.w.t <= t && it.w.t > lastWordT) { punch = Math.max(punch, C.laminas.punch); lastWordT = it.w.t; }
+      }
+    }
+  }
+
+  /* pop de pantalla entera (decae rápido) */
+  ctx.save();
+  const s = 1 + punch;
+  punch *= 0.86;
+  ctx.translate(vw / 2, vh / 2); ctx.scale(s, s); ctx.translate(-vw / 2, -vh / 2);
+
+  if (!introGone && !outroShown) drawCard(C.intro, t);
+  else if (outroShown) drawCard(C.outro, t);
+  else if (activeLam) drawLamina(activeLam, t);
+
+  ctx.restore();
+  requestAnimationFrame(frame);
+}
+
+vid.src = encodeURI(C.video.src);
+vid.play().catch(() => {});
+audio.src = encodeURI(C.audio.src);
+loadLyrics().then(p => { phrases = p; });
+begin();
+sizeCanvases();
+doc.body.classList.add("ready");
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

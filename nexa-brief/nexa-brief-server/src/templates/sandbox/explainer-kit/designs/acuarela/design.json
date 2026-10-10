@@ -1,0 +1,111 @@
+{
+  "id": "acuarela",
+  "family": "acuarela",
+  "name": "TINTA",
+  "tagline": "Historia en papel: fotos de archivo reveladas por manchas de tinta y acuarela",
+  "topics": [
+    "historia",
+    "guerras",
+    "momentos decisivos",
+    "biografías",
+    "efemérides",
+    "líneas de tiempo"
+  ],
+  "channel": {
+    "name": "TINTA",
+    "handle": "@tinta",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Barlow+Condensed:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap",
+  "scripts": [
+    "designs/common/text.js",
+    "designs/acuarela/components/_runtime.js",
+    "designs/acuarela/components/scenes.js",
+    "designs/common/hook.js",
+    "designs/acuarela/components/intros.js",
+    "designs/common/outro-v1.js",
+    "designs/acuarela/components/outro.js"
+  ],
+  "defaults": {
+    "family": "acuarela",
+    "palette": {
+      "bg": "#dcdcd9",
+      "paper": "#dcdcd9",
+      "paperHi": "#e3e3e0",
+      "flash": "#f3f1ec",
+      "ink": "#3f3d3e",
+      "date": "#5d3c3b",
+      "accent": "#6a2f30",
+      "rule": "#565452",
+      "hand": "#3a3739",
+      "wash": "#8a8886",
+      "sepia": "#a8764f",
+      "muted": "#7d7a78",
+      "accentInk": "#f3f1ec"
+    },
+    "fonts": {
+      "main": "Oswald",
+      "load": [
+        "500 40px Oswald",
+        "600 40px Oswald",
+        "500 20px 'Barlow Condensed'",
+        "600 20px 'Barlow Condensed'",
+        "400 30px 'Mrs Saint Delafield'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 6,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "acuarela": {
+      "sepia": 0.85,
+      "grain": 0.05,
+      "veil": true,
+      "handwriting": true
+    },
+    "transition": {
+      "overlap": 0.45
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 6,
+      "thanks": "gracias por ver",
+      "channel": "NODETECH",
+      "cta": "Suscríbete",
+      "support": "Apoya el canal y comparte la historia",
+      "handle": "youtube.com/@nodetech",
+      "use": "acuarela.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 125 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos históricas reales (lugares, multitudes, retratos, documentos); se muestran en B/N con virado sepia pasajero; una segunda foto lavada hace de mancha de acuarela de fondo",
+    "portrait_tip": "las fotos se recortan 'cover' dentro de marcos de proporción fija: usar focus=[x,y] (0..1) para apuntar el encuadre; las verticales van mejor como 'b' en acuarela.pair o en acuarela.quote",
+    "per_video": [
+      5,
+      10
+    ]
+  }
+}

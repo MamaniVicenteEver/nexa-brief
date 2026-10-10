@@ -1,5 +1,18 @@
 import { z } from "zod";
 
+/** Lo elegido en la sección "Contenido" cuando el nicho tiene plantilla con
+ * requisitos (el mismo StudioValue que usa el Estudio). Va dentro del form
+ * para que useFormDraft lo persista junto con el resto. */
+const contentSchema = z.object({
+  musicAssetId: z.string().nullable(),
+  media: z.record(
+    z.string(),
+    z.array(z.object({ assetId: z.string(), kind: z.enum(["image", "video"]) })),
+  ),
+  texts: z.record(z.string(), z.string()),
+  brief: z.string(),
+});
+
 export const createVideoSchema = z
   .object({
     categoryName: z.string().min(1, "Selecciona una categoría"),
@@ -41,6 +54,13 @@ export const createVideoSchema = z
     // output) choca con lo que espera zodResolver (el input). El valor
     // inicial se pone en defaultValues del useForm, no acá.
     publishingAccounts: z.array(z.string()),
+    // Contenido de la plantilla (ver ContentSection). `contentTemplateId`
+    // dice a qué plantilla pertenece: al cambiar de nicho los lugares son
+    // otros, así que lo guardado para otra plantilla se ignora en vez de
+    // mandarse con slots que no existen. Opcionales: otros que arman estos
+    // valores a mano (TemplateRecordButton) no los conocen.
+    content: contentSchema.optional(),
+    contentTemplateId: z.string().nullable().optional(),
   })
   .refine((values) => values.durationMode !== "manual" || values.manualSeconds !== undefined, {
     message: "Indica la duración en segundos",

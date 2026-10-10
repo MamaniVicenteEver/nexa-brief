@@ -1,0 +1,752 @@
+{
+ "version": 1,
+ "family": "pelicula",
+ "title": "La noche que cayó el Muro",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "pelicula.introv1",
+   "until": "Casi las 7",
+   "params": {
+    "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
+    "kicker": "Berlín · 9 nov 1989",
+    "sub": "la noche que nadie vio venir",
+    "countdown": 0.9,
+    "wordAt": 1.0,
+    "stagger": 0.28,
+    "burnAt": 2.9
+   },
+   "_alt": {
+    "use": "pelicula.introv2",
+    "params": {
+     "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+     "kicker": "Archivo · Berlín 1989",
+     "stamp": "NADIE DIO LA ORDEN",
+     "stampAt": 2.5
+    }
+   }
+  },
+  {
+   "at": "Casi las 7",
+   "use": "pelicula.title",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "year": "1989",
+    "title": "LA NOCHE QUE\nCAYÓ EL MURO",
+    "sub": "BERLÍN · 9 DE NOVIEMBRE",
+    "kicker": "UNA HISTORIA DE ARCHIVO",
+    "focus": [
+     0.5,
+     0.35
+    ]
+   },
+   "until": "Un funcionario lee"
+  },
+  {
+   "at": "Un funcionario lee",
+   "use": "pelicula.strip",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "src2": "assets/media/nota.jpg",
+    "src3": "assets/media/bornholmer.jpg",
+    "layout": "split",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "derribar el muro",
+   "use": "pelicula.photo",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "enter": "whip",
+    "camera": "in",
+    "focus": [
+     0.5,
+     0.4
+    ]
+   }
+  },
+  {
+   "at": "Durante 28 años",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/leipzig.jpg",
+    "year": "28",
+    "title": "AÑOS",
+    "sub": "UNA CIUDAD PARTIDA EN DOS",
+    "kicker": "BERLÍN 1961 – 1989",
+    "pos": "center",
+    "camera": "rise",
+    "strips": "frame",
+    "textIn": "rise",
+    "textAt": 0.15,
+    "enter": "whipR",
+    "flush": true
+   }
+  },
+  {
+   "at": "En agosto de 1961",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "src2": "assets/media/bornholmer.jpg",
+    "year": "1961",
+    "title": "SE LEVANTA\nEL MURO",
+    "sub": "AGOSTO · DE UN DÍA PARA OTRO",
+    "pos": "right",
+    "strips": "side",
+    "textIn": "flash",
+    "textAt": 0.45,
+    "enter": "cut",
+    "leak": "burn",
+    "punch": "@levantó",
+    "punchPos": "bigLeft",
+    "punchSize": 0.95
+   }
+  },
+  {
+   "at": "un muro de hormigón",
+   "use": "pelicula.reel",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "src2": "assets/media/bornholmer.jpg",
+    "title": "HORMIGÓN\nY ALAMBRE",
+    "sub": "EN MEDIO DE LA CIUDAD",
+    "pos": "right",
+    "enter": "whipUp"
+   }
+  },
+  {
+   "at": "Familias separadas",
+   "use": "pelicula.strip",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "src2": "assets/media/bornholmer.jpg",
+    "src3": "assets/media/leipzig.jpg",
+    "layout": "band",
+    "enter": "whip",
+    "leak": "prism",
+    "flush": true
+   }
+  },
+  {
+   "at": "Al menos 140",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "year": "140",
+    "title": "PERSONAS",
+    "sub": "MURIERON EN ESE MURO",
+    "layout": "over",
+    "color": "red",
+    "pos": "center",
+    "size": 0.5,
+    "strips": "top",
+    "textIn": "glitch",
+    "textAt": 0.3,
+    "enter": "whipDown",
+    "camera": "in"
+   }
+  },
+  {
+   "at": "Al menos 140",
+   "use": "pelicula.glitch",
+   "offset": 0.15,
+   "dur": 0.5,
+   "layer": "overlay"
+  },
+  {
+   "at": "Pero en el otoño",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "year": "1989",
+    "title": "ALGO SE\nESTABA ROMPIENDO",
+    "sub": "OTOÑO",
+    "pos": "right",
+    "strips": "frame",
+    "textIn": "flash",
+    "textAt": 0.45,
+    "enter": "cut",
+    "leak": "burn",
+    "camera": "out",
+    "punch": "@rompiendo",
+    "punchPos": "topLeft",
+    "punchSize": 0.26,
+    "glitches": [
+     1.0
+    ]
+   }
+  },
+  {
+   "at": "Miles de alemanes",
+   "use": "pelicula.photo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/leipzig.jpg",
+    "title": "HUNGRÍA Y CHECOSLOVAQUIA",
+    "sub": "LA FUGA HACIA EL OESTE",
+    "enter": "whip",
+    "camera": "left"
+   }
+  },
+  {
+   "at": "y cada lunes",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "src2": "assets/media/bornholmer.jpg",
+    "year": "1989",
+    "title": "CADA LUNES",
+    "sub": "LEIPZIG · LIBERTAD PARA VIAJAR",
+    "kicker": "CIENTOS DE MILES EN LAS CALLES",
+    "layout": "over",
+    "pos": "bottomLeft",
+    "strips": "double",
+    "ghost": 0.25,
+    "textIn": "flash",
+    "textAt": 0.45,
+    "leak": "burn",
+    "enter": "cut",
+    "punch": "@libertad",
+    "punchPos": "bigRight",
+    "punchSize": 0.85,
+    "flush": true
+   }
+  },
+  {
+   "at": "El gobierno decidió",
+   "use": "pelicula.reel",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "src2": "assets/media/schabowski.jpg",
+    "year": "",
+    "title": "UNA NUEVA\nREGLA",
+    "sub": "SOLTAR UN POCO LA CUERDA",
+    "enter": "whipUp",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "Los ciudadanos podrían",
+   "use": "pelicula.quote",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "accent": [
+     "permiso",
+     "oeste"
+    ],
+    "strips": "side",
+    "leak": "burn"
+   }
+  },
+  {
+   "at": "Iba a anunciarse",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "year": "10 NOV",
+    "title": "SE ANUNCIARÍA",
+    "sub": "CON CALMA · CON TRÁMITES · CON ORDEN",
+    "pos": "topRight",
+    "strips": "frame",
+    "textIn": "drop",
+    "enter": "whip",
+    "camera": "right",
+    "glitches": [
+     1.6
+    ]
+   }
+  },
+  {
+   "at": "El encargado de contarlo",
+   "use": "pelicula.photo",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "title": "GÜNTER SCHABOWSKI",
+    "sub": "VOCERO DEL PARTIDO",
+    "enter": "whipR",
+    "camera": "in",
+    "focus": [
+     0.5,
+     0.35
+    ],
+    "leak": "flash",
+    "flush": true
+   }
+  },
+  {
+   "at": "le entregaron la nota",
+   "use": "pelicula.reel",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "src2": "assets/media/schabowski.jpg",
+    "title": "LA NOTA",
+    "sub": "NADIE LE DIJO QUE ESPERARA",
+    "pos": "right",
+    "enter": "whipUp",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "La conferencia fue larga",
+   "use": "pelicula.strip",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "src2": "assets/media/nota.jpg",
+    "src3": "assets/media/schabowski.jpg",
+    "layout": "split",
+    "enter": "zoom",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "Al final Schabowski",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "src2": "assets/media/nota.jpg",
+    "year": "18:53",
+    "title": "LO LEYÓ TAL CUAL",
+    "sub": "SIN SABER LO QUE DECÍA",
+    "pos": "left",
+    "strips": "side",
+    "textIn": "drop",
+    "enter": "whip",
+    "camera": "in",
+    "focus": [
+     0.45,
+     0.4
+    ]
+   }
+  },
+  {
+   "at": "Los periodistas se miraron",
+   "use": "pelicula.quote",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "src2": "assets/media/schabowski.jpg",
+    "accent": [
+     "requisitos"
+    ],
+    "strips": "top",
+    "leak": "burn",
+    "camera": "out"
+   }
+  },
+  {
+   "at": "Entonces llegó la pregunta",
+   "use": "pelicula.quote",
+   "until": "Schabowski revolvió",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "accent": [
+     "vigor"
+    ],
+    "ghost": "?",
+    "strips": "frame",
+    "enter": "glitch",
+    "leak": "none"
+   }
+  },
+  {
+   "at": "Schabowski revolvió",
+   "use": "pelicula.reel",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "src2": "assets/media/nota.jpg",
+    "src3": "assets/media/schabowski.jpg",
+    "title": "BUSCA LA\nRESPUESTA",
+    "sub": "NO LA ENCONTRÓ",
+    "enter": "whipUp",
+    "flush": true
+   }
+  },
+  {
+   "at": "De inmediato",
+   "use": "pelicula.quote",
+   "until": "Dos palabras",
+   "params": {
+    "src": "assets/media/schabowski.jpg",
+    "src2": "assets/media/bornholmer.jpg",
+    "accent": [
+     "inmediato",
+     "demora"
+    ],
+    "ghost": "1989",
+    "sub": "9 DE NOVIEMBRE · 18:57",
+    "strips": "side",
+    "enter": "cut",
+    "leak": "none"
+   }
+  },
+  {
+   "at": "De inmediato",
+   "use": "pelicula.leak",
+   "offset": -0.35,
+   "dur": 0.95,
+   "layer": "overlay",
+   "params": {
+    "kind": "burn"
+   }
+  },
+  {
+   "at": "Dos palabras que",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "year": "2",
+    "title": "PALABRAS",
+    "sub": "QUE NADIE HABÍA AUTORIZADO",
+    "pos": "center",
+    "size": 0.34,
+    "strips": "frame",
+    "textIn": "glitch",
+    "enter": "whip",
+    "camera": "in",
+    "punch": "@autorizado",
+    "punchPos": "bigLeft",
+    "punchSize": 0.75
+   }
+  },
+  {
+   "at": "La televisión del Oeste",
+   "use": "pelicula.strip",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "src3": "assets/media/leipzig.jpg",
+    "layout": "band",
+    "enter": "zoom",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "Las fronteras están abiertas",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/leipzig.jpg",
+    "year": "1989",
+    "title": "FRONTERAS\nABIERTAS",
+    "sub": "TV DEL OESTE · ESA NOCHE",
+    "layout": "over",
+    "color": "red",
+    "pos": "center",
+    "size": 0.55,
+    "strips": "top",
+    "textIn": "glitch",
+    "enter": "whipDown",
+    "camera": "in"
+   }
+  },
+  {
+   "at": "Las fronteras están abiertas",
+   "use": "pelicula.glitch",
+   "offset": 0.1,
+   "dur": 0.45,
+   "layer": "overlay"
+  },
+  {
+   "at": "Miles de personas salieron",
+   "use": "pelicula.photo",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "src2": "assets/media/bornholmer.jpg",
+    "enter": "whip",
+    "camera": "rise",
+    "focus": [
+     0.5,
+     0.3
+    ],
+    "leak": "flash"
+   }
+  },
+  {
+   "at": "En el cruce de",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "year": "23:00",
+    "title": "BORNHOLMER\nSTRASSE",
+    "sub": "PASO FRONTERIZO · BERLÍN",
+    "pos": "bottomRight",
+    "strips": "bottom",
+    "textIn": "rise",
+    "enter": "whipR",
+    "camera": "left",
+    "flush": true
+   }
+  },
+  {
+   "at": "el oficial Harald",
+   "use": "pelicula.reel",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "title": "HARALD JÄGER",
+    "sub": "UNA MULTITUD Y NINGUNA ORDEN",
+    "enter": "whipUp",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "Llamó a sus superiores",
+   "use": "pelicula.strip",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/schabowski.jpg",
+    "src3": "assets/media/muro-gente.jpg",
+    "layout": "split",
+    "enter": "whip"
+   }
+  },
+  {
+   "at": "La gente gritaba",
+   "use": "pelicula.quote",
+   "until": "A las once",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "src2": "assets/media/bornholmer.jpg",
+    "accent": [
+     "puerta"
+    ],
+    "strips": "double",
+    "enter": "cut",
+    "leak": "burn"
+   }
+  },
+  {
+   "at": "A las once",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "year": "23:30",
+    "title": "LA DECISIÓN",
+    "sub": "ABRIÓ LA BARRERA",
+    "pos": "right",
+    "strips": "side",
+    "textIn": "drop",
+    "enter": "whip",
+    "camera": "in",
+    "punch": "@barrera",
+    "punchPos": "bigLeft",
+    "punchSize": 0.9,
+    "glitches": [
+     1.2
+    ]
+   }
+  },
+  {
+   "at": "la barrera",
+   "use": "pelicula.leak",
+   "offset": -0.2,
+   "dur": 0.95,
+   "layer": "overlay",
+   "params": {
+    "kind": "burn"
+   }
+  },
+  {
+   "at": "Y la gente cruzó",
+   "use": "pelicula.glitch",
+   "offset": 0.0,
+   "dur": 0.3,
+   "layer": "overlay"
+  },
+  {
+   "at": "Esa noche los berlineses",
+   "use": "pelicula.photo",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "src2": "assets/media/mauerspecht.jpg",
+    "enter": "cut",
+    "camera": "in",
+    "focus": [
+     0.5,
+     0.3
+    ],
+    "title": "PUERTA DE BRANDEBURGO",
+    "sub": "NOVIEMBRE DE 1989"
+   }
+  },
+  {
+   "at": "con martillos",
+   "use": "pelicula.reel",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "title": "MARTILLOS\nY CINCELES",
+    "sub": "LOS 'PÁJAROS CARPINTEROS'",
+    "enter": "whipUp",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "Desconocidos se abrazaban",
+   "use": "pelicula.strip",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "src2": "assets/media/mauerspecht.jpg",
+    "src3": "assets/media/bornholmer.jpg",
+    "layout": "split",
+    "enter": "whip",
+    "flush": true
+   }
+  },
+  {
+   "at": "Personas que llevaban",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "year": "28",
+    "title": "AÑOS SIN CRUZAR",
+    "sub": "CAMINABAN POR SU PROPIA CIUDAD",
+    "layout": "over",
+    "pos": "bottomLeft",
+    "strips": "double",
+    "ghost": 0.2,
+    "textIn": "flash",
+    "textAt": 0.45,
+    "enter": "cut",
+    "leak": "burn",
+    "camera": "out",
+    "punch": "@caminaban",
+    "punchPos": "bigRight",
+    "punchSize": 0.8
+   }
+  },
+  {
+   "at": "Menos de un año",
+   "use": "pelicula.year",
+   "params": {
+    "src": "assets/media/leipzig.jpg",
+    "src2": "assets/media/mauerbau.jpg",
+    "year": "1990",
+    "title": "UN SOLO PAÍS",
+    "sub": "3 DE OCTUBRE",
+    "kicker": "MENOS DE UN AÑO DESPUÉS",
+    "pos": "center",
+    "size": 0.5,
+    "strips": "frame",
+    "textIn": "drop",
+    "enter": "zoom",
+    "leak": "prism",
+    "camera": "in",
+    "punch": "@Alemania",
+    "punchPos": "topLeft",
+    "punchSize": 0.28,
+    "glitches": [
+     0.9
+    ]
+   }
+  },
+  {
+   "at": "La historia suele contar",
+   "use": "pelicula.strip",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "src2": "assets/media/leipzig.jpg",
+    "src3": "assets/media/muro-gente.jpg",
+    "layout": "band",
+    "enter": "whip",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "pero este muro",
+   "use": "pelicula.reel",
+   "params": {
+    "src": "assets/media/nota.jpg",
+    "src2": "assets/media/bornholmer.jpg",
+    "title": "UN PAPEL",
+    "sub": "LEÍDO ANTES DE TIEMPO",
+    "enter": "whipUp",
+    "flush": true
+   }
+  },
+  {
+   "at": "y por un oficial",
+   "use": "pelicula.photo",
+   "params": {
+    "src": "assets/media/bornholmer.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "title": "Y UN OFICIAL",
+    "sub": "QUE ELIGIÓ ABRIR",
+    "enter": "whip",
+    "camera": "left",
+    "leak": "flash"
+   }
+  },
+  {
+   "at": "Porque a veces",
+   "use": "pelicula.photo",
+   "params": {
+    "src": "assets/media/mauerbau.jpg",
+    "src2": "assets/media/mauerspecht.jpg",
+    "enter": "zoom",
+    "camera": "out",
+    "leak": "prism"
+   }
+  },
+  {
+   "at": "la mueven dos palabras",
+   "use": "pelicula.quote",
+   "until": "de inmediato sin demora",
+   "params": {
+    "src": "assets/media/muro-gente.jpg",
+    "src2": "assets/media/nota.jpg",
+    "accent": [
+     "palabras"
+    ],
+    "strips": "side",
+    "enter": "cut",
+    "leak": "burn"
+   }
+  },
+  {
+   "at": "de inmediato sin demora",
+   "use": "pelicula.year",
+   "dur": 5.28,
+   "params": {
+    "src": "assets/media/mauerspecht.jpg",
+    "src2": "assets/media/muro-gente.jpg",
+    "year": "1989",
+    "title": "DE INMEDIATO,\nSIN DEMORA",
+    "sub": "LA NOCHE QUE CAYÓ EL MURO",
+    "pos": "center",
+    "size": 0.46,
+    "strips": "frame",
+    "textIn": "flash",
+    "textAt": 0.45,
+    "enter": "cut",
+    "leak": "burn",
+    "camera": "out",
+    "glitches": [
+     1.4
+    ]
+   }
+  },
+  {
+   "t": 205.244082,
+   "offset": 0,
+   "dur": 13.68,
+   "use": "pelicula.outro",
+   "params": {
+    "likeAt": 5.16,
+    "subscribeAt": 5.54,
+    "bellAt": 7.84,
+    "supportAt": 8.94
+   }
+  }
+ ]
+}

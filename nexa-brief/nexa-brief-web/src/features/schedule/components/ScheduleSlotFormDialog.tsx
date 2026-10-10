@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { useChannels } from "@/features/channels/hooks/useChannels";
 import { useNiches } from "@/features/create-video/hooks/useNiches";
+import { groupNiches } from "@/features/create-video/lib/niche-groups";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -55,6 +56,7 @@ export function ScheduleSlotFormDialog({
   const [open, setOpen] = useState(false);
   const { data: channels } = useChannels();
   const { data: niches } = useNiches();
+  const nicheGroups = groupNiches(niches ?? []);
   const createMutation = useCreateScheduleSlotMutation();
   const updateMutation = useUpdateScheduleSlotMutation();
 
@@ -282,10 +284,14 @@ export function ScheduleSlotFormDialog({
               className="rounded-xl border border-nb-line bg-transparent px-3 py-2 text-[13px] text-nb-ink outline-none focus:border-nb-ink"
             >
               <option value="">{t("slotForm.anyNiche")}</option>
-              {(niches ?? []).map((niche) => (
-                <option key={niche.id} value={niche.id}>
-                  {niche.displayName}
-                </option>
+              {nicheGroups.map((group) => (
+                <optgroup key={group.id} label={group.name}>
+                  {group.niches.map((niche) => (
+                    <option key={niche.id} value={niche.id}>
+                      {niche.displayName}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </div>

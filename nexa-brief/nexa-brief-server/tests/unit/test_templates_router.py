@@ -20,6 +20,34 @@ def test_list_templates():
     assert image_bg["requires_image"] is True
     assert image_bg["requires_video"] is False
 
+    expected = {
+        "lyrics-collage",
+        "lyrics-mixtas",
+        "lyrics-grunge",
+        "lyrics-stylish-kinetic",
+        "lyrics-caution",
+        "promo-editorial",
+        "promo-kinetic",
+        "promo-trendy",
+        "promo-dynamic",
+        "promo-urban",
+        "promo-sports",
+    }
+    assert expected <= ids
+    assert {template["category_id"] for template in templates} == {
+        "lyrics", "commercial", "image", "video", "in_progress",
+    }
+    assert all(template["can_generate"] for template in templates)
+
+
+def test_list_template_categories():
+    r = client.get("/api/v1/templates/categories")
+    assert r.status_code == 200
+    categories = r.json()
+    assert [category["id"] for category in categories] == [
+        "lyrics", "commercial", "image", "video", "in_progress",
+    ]
+
 
 def test_get_template_ok():
     r = client.get("/api/v1/templates/01-image-bg")
