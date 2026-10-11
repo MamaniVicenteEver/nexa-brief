@@ -29,14 +29,14 @@
   },
   "templates": {
     "01-image-bg": {
-      "folder": "image/01-image-bg",
+      "folder": "nodemotion/image/01-image-bg",
       "display_name": "Retrato Impacto",
       "description": "Un sujeto o personaje central con fondo tratado (sólido, dividido en colores o difuminado) y 2 palabras de texto posicionadas automáticamente según el análisis de visión de la imagen real.",
       "native_orientation": "9:16",
-      "index_html": "image/01-image-bg/index.html",
-      "config_json": "image/01-image-bg/assets/config.json",
-      "vision_prompt": "image/01-image-bg/prompts/vision_extractor.md",
-      "config_prompt": "image/01-image-bg/prompts/config_mapper.md",
+      "index_html": "nodemotion/image/01-image-bg/index.html",
+      "config_json": "nodemotion/image/01-image-bg/assets/config.json",
+      "vision_prompt": "nodemotion/image/01-image-bg/prompts/vision_extractor.md",
+      "config_prompt": "nodemotion/image/01-image-bg/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/ImageBg.js",
       "runtime_assets": [],
       "category_id": "image",
@@ -83,14 +83,14 @@
       }
     },
     "subject-spotlight": {
-      "folder": "image/subject-spotlight",
+      "folder": "nodemotion/image/subject-spotlight",
       "display_name": "Reflector Épico",
       "description": "Recorte PNG de un sujeto bajo un reflector dramático, con partículas y rayos de energía alrededor y una palabra gigante de fondo.",
       "native_orientation": "any",
-      "index_html": "image/subject-spotlight/index.html",
-      "config_json": "image/subject-spotlight/assets/config.json",
-      "vision_prompt": "image/subject-spotlight/prompts/vision_extractor.md",
-      "config_prompt": "image/subject-spotlight/prompts/config_mapper.md",
+      "index_html": "nodemotion/image/subject-spotlight/index.html",
+      "config_json": "nodemotion/image/subject-spotlight/assets/config.json",
+      "vision_prompt": "nodemotion/image/subject-spotlight/prompts/vision_extractor.md",
+      "config_prompt": "nodemotion/image/subject-spotlight/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/ReflectorEpico.js",
       "runtime_assets": [
         "assets/bg.png"
@@ -145,14 +145,14 @@
       }
     },
     "living-landscape": {
-      "folder": "image/living-landscape",
+      "folder": "nodemotion/image/living-landscape",
       "display_name": "Paisaje Vivo",
       "description": "Una escena de paisaje que respira: pétalos, aves y luciérnagas en movimiento sutil, con texto tipo haiku y cámara con drift suave.",
       "native_orientation": "any",
-      "index_html": "image/living-landscape/index.html",
-      "config_json": "image/living-landscape/assets/config.json",
-      "vision_prompt": "image/living-landscape/prompts/vision_extractor.md",
-      "config_prompt": "image/living-landscape/prompts/config_mapper.md",
+      "index_html": "nodemotion/image/living-landscape/index.html",
+      "config_json": "nodemotion/image/living-landscape/assets/config.json",
+      "vision_prompt": "nodemotion/image/living-landscape/prompts/vision_extractor.md",
+      "config_prompt": "nodemotion/image/living-landscape/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/PaisajeVivo.js",
       "runtime_assets": [
         "assets/bg.png"
@@ -201,14 +201,14 @@
       }
     },
     "motion-backdrop": {
-      "folder": "video/motion-backdrop",
+      "folder": "nodemotion/video/motion-backdrop",
       "display_name": "Escena en Movimiento",
       "description": "Un video en loop ocupa la pantalla completa con recorte y rotación adaptable, dos palabras flanqueando el sujeto, y un ecualizador reactivo al audio real.",
       "native_orientation": "any",
-      "index_html": "video/motion-backdrop/index.html",
-      "config_json": "video/motion-backdrop/assets/config.json",
-      "vision_prompt": "video/motion-backdrop/prompts/vision_extractor.md",
-      "config_prompt": "video/motion-backdrop/prompts/config_mapper.md",
+      "index_html": "nodemotion/video/motion-backdrop/index.html",
+      "config_json": "nodemotion/video/motion-backdrop/assets/config.json",
+      "vision_prompt": "nodemotion/video/motion-backdrop/prompts/vision_extractor.md",
+      "config_prompt": "nodemotion/video/motion-backdrop/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/MotionBackdrop.js",
       "runtime_assets": [
         "assets/test2.mp4",
@@ -258,14 +258,14 @@
       }
     },
     "lyrics-neon": {
-      "folder": "lyrics/lyrics-neon",
+      "folder": "nodemotion/lyrics/lyrics-neon",
       "display_name": "Letras de Neón",
       "description": "Letreros de tubo neón que se encienden letra por letra sobre una foto nocturna urbana, con cámara impredecible y sincronización real con la canción.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-neon/index.html",
-      "config_json": "lyrics/lyrics-neon/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-neon/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-neon/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-neon/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-neon/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/NeonLetras.js (o NeonLetrasVideo.js, variante con fondo de video)",
       "runtime_assets": [
         "assets/remix.mp4"
@@ -302,14 +302,14 @@
       }
     },
     "lyrics-impact": {
-      "folder": "lyrics/lyrics-impact",
+      "folder": "nodemotion/lyrics/lyrics-impact",
       "display_name": "Letras de Impacto",
       "description": "Reveal tipo estampado, frase por frase, con una palabra gigante por cluster, cámara con golpe/shake y estética de corrido tumbado / trap.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-impact/index.html",
-      "config_json": "lyrics/lyrics-impact/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-impact/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-impact/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-impact/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-impact/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/LyricsImpact.js",
       "runtime_assets": [
         "assets/women-dancing.mp4"
@@ -346,14 +346,14 @@
       }
     },
     "lyrics-romantic": {
-      "folder": "lyrics/lyrics-romantic",
+      "folder": "nodemotion/lyrics/lyrics-romantic",
       "display_name": "Carta de Amor",
       "description": "Una carta escrita a mano: líneas que aparecen carácter por carácter, partículas bokeh cálidas y un pulso suave tipo latido en los versos de énfasis.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-romantic/index.html",
-      "config_json": "lyrics/lyrics-romantic/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-romantic/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-romantic/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-romantic/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/LyricsRomantic.js",
       "runtime_assets": [
         "assets/Bruses Dueles Tan Bien Audio.mp3",
@@ -392,14 +392,14 @@
       }
     },
     "lyrics-calado": {
-      "folder": "lyrics/lyrics-calado",
+      "folder": "nodemotion/lyrics/lyrics-calado",
       "display_name": "Letras Caladas",
       "description": "Texto que es una ventana transparente a un video de fondo real — 3 composiciones (calado, sólido, mixto) elegidas al azar por frase, con filtro cinematográfico y grano de película.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-calado/index.html",
-      "config_json": "lyrics/lyrics-calado/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-calado/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-calado/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-calado/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-calado/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/LetrasCaladas.js",
       "runtime_assets": [
         "assets/bg.mp4"
@@ -435,14 +435,14 @@
       }
     },
     "lyrics-expediente": {
-      "folder": "lyrics/lyrics-expediente",
+      "folder": "nodemotion/lyrics/lyrics-expediente",
       "display_name": "Hilo Rojo",
       "description": "Pizarra de investigación estilo true-crime: cada frase se clava al muro como evidencia (recorte, titular, marcador, sello), conectada por un hilo rojo, con cámara que patrulla la escena en zoom y ángulos impredecibles.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-expediente/index.html",
-      "config_json": "lyrics/lyrics-expediente/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-expediente/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-expediente/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-expediente/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-expediente/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/HiloRojo.js",
       "runtime_assets": [],
       "category_id": "lyrics",
@@ -466,14 +466,14 @@
       }
     },
     "lyrics-latido": {
-      "folder": "lyrics/lyrics-latido",
+      "folder": "nodemotion/lyrics/lyrics-latido",
       "display_name": "Latido en Vivo",
       "description": "Un electrocardiograma real dibuja un latido por cada palabra cantada, con monitor de BPM en vivo y flash carmesí — para baladas oscuras o de desamor.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-latido/index.html",
-      "config_json": "lyrics/lyrics-latido/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-latido/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-latido/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-latido/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-latido/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/LatidoEnVivo.js",
       "runtime_assets": [],
       "category_id": "lyrics",
@@ -497,14 +497,14 @@
       }
     },
     "lyrics-suave": {
-      "folder": "lyrics/lyrics-suave",
+      "folder": "nodemotion/lyrics/lyrics-suave",
       "display_name": "Letras Suaves",
       "description": "El mismo motor urbano de impacto, en su versión calma: columna vertical de texto, cámara con deriva sutil y polvo ambiental — para trap o urbano de ritmo bajo.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-suave/index.html",
-      "config_json": "lyrics/lyrics-suave/assets/config.json",
-      "vision_prompt": "lyrics/lyrics-suave/prompts/vision_extractor.md",
-      "config_prompt": "lyrics/lyrics-suave/prompts/config_mapper.md",
+      "index_html": "nodemotion/lyrics/lyrics-suave/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-suave/assets/config.json",
+      "vision_prompt": "nodemotion/lyrics/lyrics-suave/prompts/vision_extractor.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-suave/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/LetrasSuaves.js",
       "runtime_assets": [
         "assets/bg.jpg"
@@ -540,14 +540,14 @@
       }
     },
     "lyrics-triste": {
-      "folder": "lyrics/lyrics-triste",
+      "folder": "nodemotion/lyrics/lyrics-triste",
       "display_name": "Bajo la Lluvia",
       "description": "Lluvia real cae sobre el texto, que se hunde y se difumina con el tiempo — paleta fría, tipografía de máquina de escribir, para baladas tristes o de pérdida.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-triste/index.html",
-      "config_json": "lyrics/lyrics-triste/assets/config.json",
-      "vision_prompt": "lyrics/lyrics-triste/prompts/vision_extractor.md",
-      "config_prompt": "lyrics/lyrics-triste/prompts/config_mapper.md",
+      "index_html": "nodemotion/lyrics/lyrics-triste/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-triste/assets/config.json",
+      "vision_prompt": "nodemotion/lyrics/lyrics-triste/prompts/vision_extractor.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-triste/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/BajoLaLluvia.js",
       "runtime_assets": [
         "assets/bg.jpg"
@@ -584,14 +584,14 @@
       }
     },
     "lyrics-manifiesto": {
-      "folder": "lyrics/lyrics-manifiesto",
+      "folder": "nodemotion/lyrics/lyrics-manifiesto",
       "display_name": "Manifiesto",
       "description": "Editorial tipográfico blanco y negro con cortes en seco entre 5 composiciones de texto — para spoken word, hip-hop consciente o contenido reflexivo/político.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-manifiesto/index.html",
-      "config_json": "lyrics/lyrics-manifiesto/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-manifiesto/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-manifiesto/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-manifiesto/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-manifiesto/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/Manifiesto.js",
       "runtime_assets": [],
       "category_id": "lyrics",
@@ -615,14 +615,14 @@
       }
     },
     "lyrics-resaltado": {
-      "folder": "lyrics/lyrics-resaltado",
+      "folder": "nodemotion/lyrics/lyrics-resaltado",
       "display_name": "Página Subrayada",
       "description": "La letra aparece resaltada con marcador dentro de un párrafo de libro, con cambio de página deslizante — para baladas reflexivas o pop introspectivo.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-resaltado/index.html",
-      "config_json": "lyrics/lyrics-resaltado/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-resaltado/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-resaltado/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-resaltado/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-resaltado/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/PaginaSubrayada.js",
       "runtime_assets": [],
       "category_id": "lyrics",
@@ -647,14 +647,14 @@
       }
     },
     "lyrics-collage": {
-      "folder": "lyrics/lyrics-collage",
+      "folder": "nodemotion/lyrics/lyrics-collage",
       "display_name": "Collage Callejero",
       "description": "Mural de recortes de papel urbano: cada palabra estalla como un flyer callejero (titular a tijera, sello stencil, etiqueta a mano o letra hueca transparente), con figuras recortadas en blanco y negro y cortes de plano al ritmo de la canción — para hip-hop, trap y contenido urbano de calle.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-collage/index.html",
-      "config_json": "lyrics/lyrics-collage/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-collage/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-collage/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-collage/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-collage/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/figures"
@@ -681,14 +681,14 @@
       }
     },
     "lyrics-mixtas": {
-      "folder": "lyrics/lyrics-mixtas",
+      "folder": "nodemotion/lyrics/lyrics-mixtas",
       "display_name": "Escenas Mixtas",
       "description": "Lyric pack de estilos mezclados: cada frase cae en una escena distinta — metraje cinematográfico, rojo plano, papel blanco o negro grunge — con tipografía extendida, condensada y liviana, ecos apilados, palabras gigantes con etiqueta, tickers y un solo acento lima, rojo o naranja. Para pop, R&B y baladas urbanas.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-mixtas/index.html",
-      "config_json": "lyrics/lyrics-mixtas/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-mixtas/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-mixtas/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-mixtas/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/media"
@@ -725,14 +725,14 @@
       }
     },
     "lyrics-grunge": {
-      "folder": "lyrics/lyrics-grunge",
+      "folder": "nodemotion/lyrics/lyrics-grunge",
       "display_name": "Grunge Rojo",
       "description": "Lyric video grunge de rap: metraje urbano en blanco y negro duro con niebla y papel rasgado, letra condensada gastada en blanco y rojo con fantasmas de movimiento, grillas de frases repetidas y garabatos de tiza que se dibujan solos. Para rap, trap y drill.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-grunge/index.html",
-      "config_json": "lyrics/lyrics-grunge/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-grunge/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-grunge/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-grunge/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-grunge/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/media"
@@ -769,12 +769,12 @@
       }
     },
     "promo-editorial": {
-      "folder": "commercial/promo-editorial",
+      "folder": "nodemotion/commercial/promo-editorial",
       "display_name": "Promo Editorial",
       "description": "Promo editorial de una final deportiva: blanco y negro puro sobre papel arrugado, grotesca extendida pesada, bloques negros que barren, nombres gigantes en contorno, recortes de jugadores con placa, versus y cierre de fecha. Equipos, fecha, textos y fotos por JSON.",
       "native_orientation": "16:9",
-      "index_html": "commercial/promo-editorial/index.html",
-      "config_json": "commercial/promo-editorial/assets/config.json",
+      "index_html": "nodemotion/commercial/promo-editorial/index.html",
+      "config_json": "nodemotion/commercial/promo-editorial/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
       "remotion_component": null,
@@ -850,12 +850,12 @@
       }
     },
     "promo-kinetic": {
-      "folder": "commercial/promo-kinetic",
+      "folder": "nodemotion/commercial/promo-kinetic",
       "display_name": "Promo Kinetic",
       "description": "Pack de tipografía cinética: una palabra o frase por escena repetida en filas, con más de 20 animaciones distintas (desde el centro, ola, cascada, rotación, marcador, perspectiva, cortes, ondas) sobre carbón con grano. Solo texto: ideal para intros y anuncios.",
       "native_orientation": "16:9",
-      "index_html": "commercial/promo-kinetic/index.html",
-      "config_json": "commercial/promo-kinetic/assets/config.json",
+      "index_html": "nodemotion/commercial/promo-kinetic/index.html",
+      "config_json": "nodemotion/commercial/promo-kinetic/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
       "remotion_component": null,
@@ -892,12 +892,12 @@
       }
     },
     "promo-trendy": {
-      "folder": "commercial/promo-trendy",
+      "folder": "nodemotion/commercial/promo-trendy",
       "display_name": "Promo Trendy",
       "description": "Promo de cortes con golpes de zoom: metraje de atletas en blanco y negro cálido con duotono verde lima, itálica pesada, pantallas partidas, mosaico de tomas, tarjeta azul noche con círculo y cierre 'Gracias por ver'. Imágenes, videos y textos por JSON; música = audio del promo.",
       "native_orientation": "16:9",
-      "index_html": "commercial/promo-trendy/index.html",
-      "config_json": "commercial/promo-trendy/assets/config.json",
+      "index_html": "nodemotion/commercial/promo-trendy/index.html",
+      "config_json": "nodemotion/commercial/promo-trendy/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
       "remotion_component": null,
@@ -949,12 +949,12 @@
       }
     },
     "promo-dynamic": {
-      "folder": "commercial/promo-dynamic",
+      "folder": "nodemotion/commercial/promo-dynamic",
       "display_name": "Promo Dynamic",
       "description": "Opener sobre verde neón: letra negra extendida, palabras gigantes en contorno, letras enormes que barren la pantalla, fotos de atletas recortadas con borde pixelado y estela de copias, HUD técnico y logo con foto en la letra.",
       "native_orientation": "16:9",
-      "index_html": "commercial/promo-dynamic/index.html",
-      "config_json": "commercial/promo-dynamic/assets/config.json",
+      "index_html": "nodemotion/commercial/promo-dynamic/index.html",
+      "config_json": "nodemotion/commercial/promo-dynamic/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
       "remotion_component": null,
@@ -1025,12 +1025,12 @@
       }
     },
     "promo-urban": {
-      "folder": "commercial/promo-urban",
+      "folder": "nodemotion/commercial/promo-urban",
       "display_name": "Promo Urban",
       "description": "Opener urbano sobre negro: duotono rojo y blanco y negro en paneles, texto blanco condensado en escalera que se teclea, bloques naranjas entre escenas, rayados, flechas y año gigante en contorno.",
       "native_orientation": "16:9",
-      "index_html": "commercial/promo-urban/index.html",
-      "config_json": "commercial/promo-urban/assets/config.json",
+      "index_html": "nodemotion/commercial/promo-urban/index.html",
+      "config_json": "nodemotion/commercial/promo-urban/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
       "remotion_component": null,
@@ -1107,12 +1107,12 @@
       }
     },
     "promo-sports": {
-      "folder": "commercial/promo-sports",
+      "folder": "nodemotion/commercial/promo-sports",
       "display_name": "Promo Sports",
       "description": "Promo deportivo cinematográfico: metraje oscuro verde azulado, itálica pesada espaciada, marcos y acentos amarillos, palabras gigantes en contorno, paneles que destellan y letras que se barajan.",
       "native_orientation": "16:9",
-      "index_html": "commercial/promo-sports/index.html",
-      "config_json": "commercial/promo-sports/assets/config.json",
+      "index_html": "nodemotion/commercial/promo-sports/index.html",
+      "config_json": "nodemotion/commercial/promo-sports/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
       "remotion_component": null,
@@ -1164,14 +1164,14 @@
       }
     },
     "lyrics-stylish-kinetic": {
-      "folder": "lyrics/lyrics-stylish-kinetic",
+      "folder": "nodemotion/lyrics/lyrics-stylish-kinetic",
       "display_name": "Stylish Kinetic",
       "description": "Tipografía cinética juguetona sobre colores planos (rojo, mostaza, menta, petróleo): cada frase entra en arco o deslizando con desenfoque, gira 90° hasta quedar en columna mientras el resto se apila al lado, las letras se despliegan como tecleadas y trazos de pincel blancos cruzan los cortes — con 9 recetas y 4 transiciones que se mezclan para temas largos. Para pop, indie, urbano ligero y contenido divertido.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-stylish-kinetic/index.html",
-      "config_json": "lyrics/lyrics-stylish-kinetic/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-stylish-kinetic/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-stylish-kinetic/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-stylish-kinetic/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [],
       "category_id": "lyrics",
@@ -1196,14 +1196,14 @@
       }
     },
     "lyrics-caution": {
-      "folder": "lyrics/lyrics-caution",
+      "folder": "nodemotion/lyrics/lyrics-caution",
       "display_name": "Caution",
       "description": "Kinetic typography de cortes duros: cada palabra acentuada de la canción es un cartón nuevo sobre rojo plano, papel blanco fotocopiado o negro grunge, con letra condensada gigante, etiquetas, barras rojas, tickers y pilas en contorno, más un mosaico final de escenas en el último silencio — para trap, rap, drill y pop urbano con mucha energía.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-caution/index.html",
-      "config_json": "lyrics/lyrics-caution/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-caution/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-caution/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-caution/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-caution/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [],
       "category_id": "lyrics",
@@ -1228,14 +1228,14 @@
       }
     },
     "lyrics-cristal": {
-      "folder": "lyrics/lyrics-cristal",
+      "folder": "nodemotion/lyrics/lyrics-cristal",
       "display_name": "Cristal Roto",
       "description": "La letra se pinta sobre una lámina de vidrio frente a un mundo nocturno en movimiento (bokeh, rayos de discoteca, aurora o la foto/video del nicho): cada golpe agrieta el vidrio con una telaraña real, algunas frases se graban esmeriladas o se escriben con el dedo en el vaho, y cuando el daño se acumula la lámina estalla en fragmentos que vuelan hacia la cámara revelando un mundo nuevo — para reggaetón, trap, pop urbano y EDM.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-cristal/index.html",
-      "config_json": "lyrics/lyrics-cristal/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-cristal/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-cristal/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-cristal/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/figures",
@@ -1262,14 +1262,14 @@
       }
     },
     "lyrics-mirada": {
-      "folder": "lyrics/lyrics-mirada",
+      "folder": "nodemotion/lyrics/lyrics-mirada",
       "display_name": "Mirada Celeste",
       "description": "Video de letras ilustrado en sepia en siete escenarios que se reparten la canción: ojos en la penumbra con una mano que se estira, palabras-columna gigantes, un ángel dentro de las letras, cielo nocturno con luna y niebla, palomas y plumas, un ojo gigante con mira y palabras de cartón recortado — todo con movimientos suaves y sincronizado con la canción real.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-mirada/index.html",
-      "config_json": "lyrics/lyrics-mirada/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-mirada/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-mirada/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-mirada/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-mirada/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/media",
@@ -1296,14 +1296,14 @@
       }
     },
     "lyrics-night-journey": {
-      "folder": "lyrics/lyrics-night-journey",
+      "folder": "nodemotion/lyrics/lyrics-night-journey",
       "display_name": "Viaje Nocturno",
       "description": "Video de letras cinematográfico en cinco escenas encadenadas: tarjeta de reproductor 3D en ámbar con karaoke palabra por palabra, camino de parque de noche con palabras serif condensadas que se desenfocan en profundidad, una ola que borra todo hacia un cielo con la luna, un túnel amarillo con desenfoque de movimiento y un cierre sobre papel amarillo — movimiento suave y continuo, ideal para pop, R&B y reggaetón melódico.",
       "native_orientation": "9:16",
-      "index_html": "lyrics/lyrics-night-journey/index.html",
-      "config_json": "lyrics/lyrics-night-journey/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-night-journey/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-night-journey/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-night-journey/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/cover.jpg",
@@ -1331,12 +1331,12 @@
       }
     },
     "lyrics-amor-impredecible": {
-      "folder": "lyrics/lyrics-amor-impredecible",
+      "folder": "nodemotion/lyrics/lyrics-amor-impredecible",
       "display_name": "Amor Impredecible",
       "description": "Visualizador romántico con letra manuscrita, corazones, flechas y destellos que reaccionan al ritmo de la canción.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-amor-impredecible/index.html",
-      "config_json": "lyrics/lyrics-amor-impredecible/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-amor-impredecible/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-amor-impredecible/assets/config.json",
       "vision_prompt": null,
       "config_prompt": null,
       "remotion_component": null,
@@ -1363,14 +1363,14 @@
       }
     },
     "lyrics-lluvia-gris": {
-      "folder": "lyrics/lyrics-lluvia-gris",
+      "folder": "nodemotion/lyrics/lyrics-lluvia-gris",
       "display_name": "Lluvia Gris",
       "description": "Balada triste bajo la lluvia: metraje frío y desaturado de vidrios mojados y calles nocturnas, serif itálica fina con sans espaciada, lluvia real sobre la letra, palabras que gotean y se derriten, reflejos en el asfalto y texto que limpia el vaho del vidrio. Transiciones de cortina de lluvia y disolvencia desenfocada.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-lluvia-gris/index.html",
-      "config_json": "lyrics/lyrics-lluvia-gris/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-lluvia-gris/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-lluvia-gris/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-lluvia-gris/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/media"
@@ -1408,14 +1408,14 @@
       }
     },
     "lyrics-memoria": {
-      "folder": "lyrics/lyrics-memoria",
+      "folder": "nodemotion/lyrics/lyrics-memoria",
       "display_name": "Memoria Velada",
       "description": "Recuerdos que se desvanecen: películas caseras de 8 mm y VHS en sepia lavado, polaroids que caen, proyector que titila, fecha VHS, máquina de escribir que escribe y borra la letra, letra manuscrita que se esfuma, destellos de luz cálida y fotogramas que se queman. Para canciones de nostalgia y pérdida.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-memoria/index.html",
-      "config_json": "lyrics/lyrics-memoria/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-memoria/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-memoria/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-memoria/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/media"
@@ -1453,14 +1453,14 @@
       }
     },
     "lyrics-ceniza": {
-      "folder": "lyrics/lyrics-ceniza",
+      "folder": "nodemotion/lyrics/lyrics-ceniza",
       "display_name": "Ceniza",
       "description": "Desamor que se quema: carbón, ceniza y hueso con brasas moribundas, serif dramática, palabras que aparecen al rojo y estallan en ceniza, humo que se lleva la letra, velas que se apagan, un diario que arde y una palabra que se agrieta en dos. Transiciones de quemado con borde incandescente.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-ceniza/index.html",
-      "config_json": "lyrics/lyrics-ceniza/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-ceniza/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-ceniza/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-ceniza/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/media"
@@ -1498,14 +1498,14 @@
       }
     },
     "lyrics-vacio": {
-      "folder": "lyrics/lyrics-vacio",
+      "folder": "nodemotion/lyrics/lyrics-vacio",
       "display_name": "Vacío",
       "description": "Soledad y vacío: blanco y negro frío con niebla, rutas perdidas, cuartos vacíos y una figura frente al mar; condensada finísima o muy pesada, letras que se separan hasta perderse, palabras que se desmoronan, estelas de eco, reflejos en la bruma, la imagen que se rasga y una palabra que respira en el negro.",
       "native_orientation": "any",
-      "index_html": "lyrics/lyrics-vacio/index.html",
-      "config_json": "lyrics/lyrics-vacio/assets/config.json",
+      "index_html": "nodemotion/lyrics/lyrics-vacio/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
       "vision_prompt": null,
-      "config_prompt": "lyrics/lyrics-vacio/prompts/config_mapper.md",
+      "config_prompt": "nodemotion/lyrics/lyrics-vacio/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
         "assets/media"

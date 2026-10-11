@@ -587,11 +587,14 @@ function PlayerBody({
           <aside
             hidden={!sidebarOpen}
             className={cn(
-              "max-h-[70vh] min-h-80 w-full flex-col overflow-hidden rounded-[18px] bg-nb-surface text-nb-ink md:max-h-[calc(96vh-4.5rem)] md:w-[22%] md:min-w-75 md:shrink-0",
+              "relative max-h-[70vh] min-h-80 w-full flex-col overflow-hidden rounded-[18px] bg-nb-surface text-nb-ink md:max-h-[calc(96vh-4.5rem)] md:w-[22%] md:min-w-75 md:shrink-0",
               sidebarOpen ? "flex" : "hidden",
             )}
           >
-            {sidebar}
+            {/* En escritorio el contenido va en una capa absoluta: el panel toma la altura
+                del reproductor y scrollea por dentro, en vez de estirar todo el modal
+                cuando el contenido es largo (textos de publicación, formularios). */}
+            <div className="flex min-h-0 flex-1 flex-col md:absolute md:inset-0">{sidebar}</div>
           </aside>
         )}
       </div>

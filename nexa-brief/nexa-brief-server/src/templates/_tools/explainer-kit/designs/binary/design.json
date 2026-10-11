@@ -1,0 +1,104 @@
+{
+  "id": "binary",
+  "family": "binary",
+  "name": "NODEHISTORY",
+  "tagline": "Historias que cambiaron el mundo, dibujadas con unos y ceros",
+  "topics": [
+    "historia",
+    "personajes",
+    "biografías",
+    "momentos decisivos",
+    "guerras",
+    "ciencia histórica"
+  ],
+  "channel": {
+    "name": "NODEHISTORY",
+    "handle": "@nodehistory",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap",
+  "scripts": [
+    "designs/common/text.js",
+    "designs/binary/components/_field.js",
+    "designs/binary/components/icons.js",
+    "designs/binary/components/shapes.js",
+    "designs/binary/components/ui.js",
+    "designs/binary/components/extra.js",
+    "designs/binary/components/outrov1.js",
+    "designs/binary/components/outro.js"
+  ],
+  "defaults": {
+    "family": "binary",
+    "palette": {
+      "bg": "#000000",
+      "bg2": "#151515",
+      "ink": "#f2f2f2",
+      "muted": "#8a8a8a",
+      "accent": "#ffffff",
+      "accentInk": "#000000"
+    },
+    "fonts": {
+      "main": "Inter",
+      "load": [
+        "900 40px Inter",
+        "800 40px Inter",
+        "600 20px 'JetBrains Mono'",
+        "italic 400 30px 'Playfair Display'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "binary": {
+      "particles": 11000,
+      "cell": 1.15,
+      "morph": 1.1,
+      "textScale": 1.45
+    },
+    "transition": {
+      "overlap": 0.6
+    },
+    "outro": {
+      "enabled": true,
+      "use": "binary.outrov1",
+      "dur": 5,
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODEHISTORY",
+      "cta": "SUSCRÍBETE",
+      "support": "APOYA ESTE CANAL · COMPARTE LA HISTORIA",
+      "handle": "youtube.com/@nodehistory"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 125 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos históricas reales (retratos, lugares, objetos, documentos); se muestran en B/N",
+    "portrait_tip": "retrato frontal con fondo liso: el componente binary.portrait convierte el brillo en dígitos (fondos lisos se vuelven negro)",
+    "per_video": [
+      5,
+      9
+    ]
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "video_id": "vago-pero-emocionante",
+  "design": "rough",
+  "design_name": "PROTOTIPO",
+  "channel": "PROTOTIPO",
+  "status": "renderizado",
+  "created": "2026-10-07",
+  "title": "VAGO, PERO EMOCIONANTE",
+  "pipeline_type": "explainer_kit",
+  "kicker": "CERN · MARZO 1989",
+  "language": "es-419",
+  "duration_seconds": 191.29,
+  "script": {
+    "segments": 16,
+    "words": 469,
+    "arc": [
+      {
+        "id": "s01",
+        "tone": "suspenso",
+        "intensity": 0.75
+      },
+      {
+        "id": "s02",
+        "tone": "explicativo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s03",
+        "tone": "tensión",
+        "intensity": 0.55
+      },
+      {
+        "id": "s04",
+        "tone": "curiosidad",
+        "intensity": 0.6
+      },
+      {
+        "id": "s05",
+        "tone": "descubrimiento",
+        "intensity": 0.7
+      },
+      {
+        "id": "s06",
+        "tone": "complicidad",
+        "intensity": 0.5
+      },
+      {
+        "id": "s07",
+        "tone": "aceleración",
+        "intensity": 0.75
+      },
+      {
+        "id": "s08",
+        "tone": "cercano",
+        "intensity": 0.55
+      },
+      {
+        "id": "s09",
+        "tone": "tensión",
+        "intensity": 0.65
+      },
+      {
+        "id": "s10",
+        "tone": "tensión creciente",
+        "intensity": 0.8
+      },
+      {
+        "id": "s11",
+        "tone": "clímax",
+        "intensity": 1.0
+      },
+      {
+        "id": "s12",
+        "tone": "asombro",
+        "intensity": 0.85
+      },
+      {
+        "id": "s13",
+        "tone": "revelación",
+        "intensity": 0.7
+      },
+      {
+        "id": "s14",
+        "tone": "reflexivo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s15",
+        "tone": "cierre",
+        "intensity": 0.9
+      },
+      {
+        "id": "s16",
+        "tone": "cierre",
+        "intensity": 0.45
+      }
+    ]
+  },
+  "voice": {
+    "voice": "Sadaltager",
+    "provenance": [
+      {
+        "part": 0,
+        "model": "gemini-3.8-flash-lite-tts",
+        "voice": "Sadaltager",
+        "dur": 69.04
+      },
+      {
+        "part": 1,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Sadaltager",
+        "dur": 61.56
+      },
+      {
+        "part": 2,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Sadaltager",
+        "dur": 52.76
+      }
+    ],
+    "wpm": 143,
+    "wer_aprox": 0.014,
+    "faltan": [
+      "sendall",
+      "apaguen",
+      "cailliau"
+    ],
+    "sobran": [
+      "sendal",
+      "paguen",
+      "callio"
+    ]
+  },
+  "transcript": {
+    "words": 457,
+    "fake": false
+  },
+  "storyboard": {
+    "beats": 39,
+    "components": {
+      "rough.title": 2,
+      "rough.note": 3,
+      "common.lyric": 4,
+      "rough.photo": 5,
+      "rough.tally": 1,
+      "rough.icon": 12,
+      "rough.flow": 3,
+      "rough.browser": 1,
+      "rough.choice": 3,
+      "rough.timeline": 1,
+      "common.flash": 1,
+      "rough.network": 1,
+      "rough.counter": 1,
+      "rough.outrov1": 1
+    },
+    "lyrics_moments": 4
+  },
+  "media": [
+    "tim.jpg — Sir Tim Berners- Lee.jpg — Amy Martin Photography — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Sir_Tim_Berners-_Lee.jpg",
+    "next-servidor.jpg — First Web Server.jpg — User:Coolcaesar at en.wikipedia — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:First_Web_Server.jpg",
+    "next-cern.jpg — CERN-first-server-p1030757.jpg — Rama — CC BY-SA 2.0 fr — https://commons.wikimedia.org/wiki/File:CERN-first-server-p1030757.jpg",
+    "cern.jpg — CERN-aerial 2.jpg — Brücke-Osteuropa — CC0 — https://commons.wikimedia.org/wiki/File:CERN-aerial_2.jpg",
+    "cailliau.jpg — Robert Cailliau - TNW Conference 2010 - Day 1 (4560062693).jpg — Julia de Boer / The Next Web — CC BY-SA 2.0 — https://commons.wikimedia.org/wiki/File:Robert_Cailliau_-_TNW_Conference_2010_-_Day_1_(4560062693).jpg"
+  ],
+  "video_formats": [
+    {
+      "id": "reels",
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "output_filename": "render/vago-pero-emocionante-9x16.mp4"
+    },
+    {
+      "id": "youtube",
+      "aspect_ratio": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "output_filename": "render/vago-pero-emocionante-16x9.mp4"
+    }
+  ],
+  "files": {
+    "PLAN.md": 5932,
+    "assets/config.json": 356,
+    "assets/lyrics.json": 52354,
+    "assets/media/CREDITS.md": 937,
+    "assets/media/cailliau.jpg": 276330,
+    "assets/media/cern.jpg": 492752,
+    "assets/media/next-cern.jpg": 296421,
+    "assets/media/next-servidor.jpg": 327141,
+    "assets/media/tim.jpg": 422822,
+    "assets/script.json": 4369,
+    "assets/song-with-outro.mp3": 4782959,
+    "assets/song.mp3": 4591743,
+    "assets/storyboard.json": 8270,
+    "index.html": 740,
+    "manifest.json": 6340,
+    "publish.json": 1564,
+    "render/outro-final-16x9.png": 239911,
+    "render/outro-final-9x16.png": 221918,
+    "render/poster.jpg": 44161,
+    "render/vago-pero-emocionante-9x16.mp4": 30971979
+  },
+  "updated": "2026-10-10T11:39:05",
+  "youtube_title": "Vago, pero emocionante: las 3 palabras que crearon la Web",
+  "youtube_description": "Marzo de 1989. En el CERN, un jefe escribió tres palabras en la portada de la propuesta de Tim Berners-Lee: \"vago, pero emocionante\". Así empezó la World Wide Web.\n\nLa NeXT que no se podía apagar, el primer sitio web de la historia y la decisión de 1993 que hizo la web libre para todos, sin patentes ni licencias.\n\n¿Qué idea \"vaga\" tienes guardada? Cuéntanos. Suscríbete a PROTOTIPO: tecnología, innovación y creación, dibujadas a mano.\n\nIMÁGENES (Wikimedia Commons)\n- Sir Tim Berners- Lee.jpg — Amy Martin Photography — CC BY-SA 4.0\n- First Web Server.jpg — User:Coolcaesar at en.wikipedia — CC BY-SA 3.0\n- CERN-first-server-p1030757.jpg — Rama — CC BY-SA 2.0 fr\n- CERN-aerial 2.jpg — Brücke-Osteuropa — CC0\n- Robert Cailliau - TNW Conference 2010 - Day 1 (4560062693).jpg — Julia de Boer / The Next Web — CC BY-SA 2.0",
+  "youtube_tags": [
+    "tim berners-lee",
+    "world wide web",
+    "historia de internet",
+    "cern",
+    "vague but exciting",
+    "primer sitio web",
+    "next computer",
+    "como nacio la web",
+    "tecnologia",
+    "innovacion",
+    "documental",
+    "historia de la tecnologia",
+    "robert cailliau",
+    "web libre"
+  ],
+  "tiktok_caption": "Su jefe escribió “vago, pero emocionante”… y así nació la Web. ¿Lo sabías?",
+  "tiktok_hashtags": [
+    "tecnologia",
+    "internet",
+    "historia",
+    "innovacion",
+    "web"
+  ],
+  "thumbnail_text": "VAGO, PERO…"
+}

@@ -60,6 +60,12 @@ RUNTIME_JS = HERE / "runtime" / "nb-hf-clock.js"
 # audio.currentTime) y sin reloj su <audio> queda sin fuente para el mezclador.
 HF_CATEGORIES = frozenset({"lyrics", "commercial"})
 
+
+def template_kind(rel: str) -> str:
+    """Tipo de plantilla por su carpeta: 'nodemotion/lyrics/x/index.html' → 'lyrics'."""
+    parts = rel.split("/")
+    return parts[1] if parts[0] == "nodemotion" and len(parts) > 1 else parts[0]
+
 # category_id de templates.json que la corrida SIN argumentos saltea: plantillas
 # "En desarrollo" que su autor sigue puliendo. Nombrándolas explícitamente sí
 # se procesan.
@@ -304,7 +310,7 @@ def resolve_targets(args: list[str]) -> list[Target]:
     # El tipo de plantilla sale de su carpeta (lyrics/<id>/…), no de category_id:
     # category_id es solo la agrupación que se ve en la app (p. ej. "in_progress").
     by_path = {
-        (TEMPLATES_DIR / e["index_html"]).resolve(): (tid, e["index_html"].split("/")[0])
+        (TEMPLATES_DIR / e["index_html"]).resolve(): (tid, template_kind(e["index_html"]))
         for tid, e in catalog.items()
         if e.get("index_html")
     }
@@ -325,9 +331,9 @@ def resolve_targets(args: list[str]) -> list[Target]:
     targets = []
     for p in paths:
         tid, cat = by_path.get(p, (None, None))
-        if cat is None:  # sin registrar: la categoría sale de la carpeta (lyrics/<id>/index.html)
+        if cat is None:  # sin registrar: la categoría sale de la carpeta (nodemotion/lyrics/<id>/index.html)
             try:
-                cat = p.relative_to(TEMPLATES_DIR).parts[0]
+                cat = template_kind(p.relative_to(TEMPLATES_DIR).as_posix())
             except ValueError:
                 cat = None
         targets.append(Target(path=p, template_id=tid or p.parent.name, category=cat, hf=cat in HF_CATEGORIES))

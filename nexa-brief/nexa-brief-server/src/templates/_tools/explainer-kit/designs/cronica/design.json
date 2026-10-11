@@ -1,0 +1,112 @@
+{
+  "id": "cronica",
+  "family": "cronica",
+  "name": "CRÓNICA",
+  "tagline": "Historia en capas: archivo en blanco y negro flotando en un espacio 3D, fechas en rótulo y cámara con foco",
+  "topics": [
+    "historia",
+    "siglo XX",
+    "guerras",
+    "ciudades",
+    "política",
+    "biografías",
+    "efemérides",
+    "archivo"
+  ],
+  "channel": {
+    "name": "CRÓNICA",
+    "handle": "youtube · cronica",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&display=swap",
+  "scripts": [
+    "designs/common/text.js",
+    "designs/cronica/components/_cronica.js",
+    "designs/cronica/components/scenes.js",
+    "designs/common/hook.js",
+    "designs/cronica/components/intros.js",
+    "designs/common/outro-v1.js",
+    "designs/cronica/components/outro.js"
+  ],
+  "defaults": {
+    "family": "cronica",
+    "palette": {
+      "bg": "#161616",
+      "bg2": "#222222",
+      "panel": "#2a2a2a",
+      "swatch": "#5c5c5c",
+      "ink": "#f1f1ef",
+      "muted": "#9a9a98",
+      "accent": "#ffffff",
+      "accentInk": "#161616"
+    },
+    "fonts": {
+      "main": "EB Garamond",
+      "load": [
+        "600 40px 'EB Garamond'",
+        "700 40px 'EB Garamond'",
+        "500 40px 'EB Garamond'",
+        "400 40px 'EB Garamond'",
+        "italic 600 40px 'EB Garamond'",
+        "italic 500 40px 'EB Garamond'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 6,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "cronica": {
+      "aperture": 7.5,
+      "maxBlur": 5.5,
+      "dust": 46,
+      "bokeh": 9,
+      "grain": 0.07,
+      "autoReframe": 6.2
+    },
+    "transition": {
+      "overlap": 0
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 6,
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODEHISTORY",
+      "cta": "SUSCRÍBETE",
+      "support": "apoya el canal · comparte el video",
+      "handle": "youtube.com/@nodehistory",
+      "use": "cronica.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 125 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos históricas de archivo (calles, multitudes, edificios, retratos, documentos); se muestran en B/N contrastado con bordes de pincel rasgados",
+    "portrait_tip": "cronica.slide recorta 'cover' dentro del pincel: usar focus=[x,y] para elegir la zona; en 9:16 la foto va arriba y el texto debajo",
+    "per_video": [
+      5,
+      9
+    ],
+    "reuse": "las fotos se pueden repetir: cada plano cambia encuadre (focus/zoom), maquetación (layout) y ángulo de cámara"
+  }
+}

@@ -5,6 +5,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useQueueEntries } from "../hooks/useQueueEntries";
 import { useScheduleSlots } from "../hooks/useScheduleSlots";
+import { CategoryAutomationSection } from "./CategoryAutomationSection";
+import { PlannerSection } from "./PlannerSection";
 import { PublishQueueSection } from "./PublishQueueSection";
 import { ScheduleSlotsSection } from "./ScheduleSlotsSection";
 
@@ -27,7 +29,12 @@ export function ScheduleView() {
         {t("title")}
       </h1>
 
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="mt-6 flex flex-col gap-10 border-b border-nb-line pb-10">
+        <CategoryAutomationSection />
+        <PlannerSection />
+      </div>
+
+      <div className="mt-10 flex flex-wrap gap-2">
         {tabs.map((tab) => (
           <button
             key={tab.id}

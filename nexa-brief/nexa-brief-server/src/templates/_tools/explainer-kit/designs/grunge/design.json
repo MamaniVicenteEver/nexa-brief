@@ -1,0 +1,112 @@
+{
+  "id": "grunge",
+  "family": "grunge",
+  "name": "CRUDO",
+  "tagline": "Historias a golpe de tinta: una palabra, un color, un corte",
+  "topics": [
+    "historia",
+    "rebeldía",
+    "música",
+    "cultura urbana",
+    "protestas",
+    "momentos decisivos",
+    "contracultura"
+  ],
+  "channel": {
+    "name": "CRUDO",
+    "handle": "@crudo",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap",
+  "scripts": [
+    "designs/grunge/components/_grunge.js",
+    "designs/grunge/components/word.js",
+    "designs/grunge/components/photo.js",
+    "designs/grunge/components/stamp.js",
+    "designs/common/hook.js",
+    "designs/grunge/components/intros.js",
+    "designs/common/outro-v1.js",
+    "designs/grunge/components/outro.js"
+  ],
+  "defaults": {
+    "family": "grunge",
+    "palette": {
+      "bg": "#1a1211",
+      "bg2": "#43201a",
+      "ink": "#f0e8d8",
+      "muted": "#8d847a",
+      "accent": "#f4a02c",
+      "accentInk": "#1a1211"
+    },
+    "fonts": {
+      "main": "Montserrat",
+      "load": [
+        "900 100px Montserrat",
+        "800 40px Montserrat",
+        "700 20px Montserrat"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "grunge": {
+      "colors": [
+        "cream",
+        "mustard",
+        "mint",
+        "coral",
+        "petrol",
+        "pink"
+      ],
+      "grain": 0.07,
+      "flicker": 0.035,
+      "boilFps": 12,
+      "weave": 1
+    },
+    "transition": {
+      "overlap": 0
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 5.5,
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODEHISTORY",
+      "cta": "SUSCRÍBETE",
+      "support": "APOYA EL CANAL · COMPARTE EL VIDEO",
+      "handle": "youtube.com/@nodehistory",
+      "use": "grunge.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 125 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos reales con mucho contraste (multitudes, muros, rostros, objetos); se muestran en duotono: negro cálido + el color plano de la escena, con textura de tinta encima",
+    "portrait_tip": "grunge.photo recorta 'cover' y su primer plano hace zoom 2,4× sobre focus=[x,y]: apuntar al rostro u objeto clave",
+    "per_video": [
+      4,
+      8
+    ]
+  }
+}

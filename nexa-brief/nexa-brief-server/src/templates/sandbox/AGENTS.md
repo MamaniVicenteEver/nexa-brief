@@ -1,176 +1,59 @@
-# AGENTS.md — Sandbox de prototipos de plantillas
+# AGENTS.md — Casa de pruebas (sandbox)
 
-> Este archivo **reemplaza**, dentro de `sandbox/`, las reglas estrictas de
-> `src/templates/AGENTS.md`. Acá se prueban ideas rápido. Un prototipo es una idea que
-> se está validando, no una plantilla terminada.
+> Acá se prueban ideas: plantillas nuevas, videos de prueba, diseños. Nada de esta carpeta sale
+> en la app ni se publica. Lo que ya funciona y está en producción vive fuera, en
+> `src/templates/` (reglas estrictas en `src/templates/AGENTS.md`).
 >
-> Para **promover** un prototipo a plantilla real, se sigue `src/templates/AGENTS.md`
-> completo (sección 5 de este archivo).
+> **Antes de empezar, leé el `AGENTS.md` de la carpeta del tema.** Ahí está todo lo que ya
+> aprendimos (qué funcionó, qué no, recetas y checklists): no hace falta investigar de nuevo.
 
----
-
-## 1. Qué podés hacer acá (libertad)
-
-- **Diseño libre:** colores, tipografías, animaciones, escenas, efectos. Probá lo que quieras.
-- **Cambiar o rehacer un prototipo** todas las veces que haga falta.
-- **Librerías desde CDN** (GSAP, Rough.js, Three.js, Lenis…) con `<script src="https://…">`.
-  Al promover se pasan a archivos locales.
-- **Fuentes de Google** por URL.
-- **Recursos de prueba** de cualquier tamaño o calidad.
-- **No hace falta:** registrar en `templates.json` o `niches.json`, correr `optimize.py`,
-  recodificar videos, hacer renders de validación ni correr tests.
-
-## 2. Qué NO podés hacer (límites)
-
-- **No tocar nada fuera de `sandbox/`:** ni `templates.json`, ni `niches.json`, ni otras
-  plantillas, ni `_tools/`, ni el backend o la web.
-- **No borrar ni pisar el prototipo de otro** sin que el usuario lo pida.
-- **No usar `data/canales/` ni publicar en redes.**
-- **No hacer `git commit` ni `git push`** salvo que el usuario lo pida.
-
----
-
-## 3. Estructura obligatoria de cada prototipo
-
-Es lo único "estricto": cada prototipo se arma como una plantilla en miniatura. Así, el día
-que se promueva, se mueve casi sin cambios.
+## Mapa
 
 ```text
-sandbox/<nombre-del-prototipo>/      ← minúsculas y guiones: neon-tiza, collage-papel
-├── index.html                       ← OBLIGATORIO. HTML/CSS/JS del prototipo.
-├── NOTAS.md                         ← recomendado: idea, qué se está probando, estado
-└── assets/
-    ├── config.json                  ← OBLIGATORIO. Todo lo configurable.
-    ├── song.mp3                     ← OBLIGATORIO si usa música.
-    ├── lyrics.json                  ← OBLIGATORIO si muestra letra (formato Whisper).
-    └── media/                       ← videos e imágenes que usa (opcional).
+src/templates/
+├── nodemotion/{lyrics,commercial,image,video}/<id>/   ← PRODUCCIÓN · música (pipeline de plantillas)
+├── nodetech/<video-id>/                              ← PRODUCCIÓN · videos explicativos
+├── nodehistory/<video-id>/                           ← PRODUCCIÓN
+├── _tools/                                           ← motores y herramientas
+│   ├── explainer-kit/        ← motor de videos explicativos (Tech, History, Politics, Economy)
+│   ├── commercial/ hyperframes/ lyrics-*/            ← generadores y herramientas de NodeMotion
+└── sandbox/                                          ← ESTA CARPETA (pruebas)
+    ├── AGENTS.md             ← este índice
+    ├── EXPLAINER.md          ← base común de Tech, History, Politics y Economy (mismo motor)
+    ├── nodemotion/           ← prototipos de plantillas de música: letras, promos, fondos
+    ├── nodetech/             ← ideas de videos de tecnología  (+ _referencias/)
+    ├── nodehistory/          ← ideas de videos de historia     (+ _referencias/)
+    ├── nodepolitics/         ← ideas de videos de política
+    └── nodeeconomy/          ← ideas de videos de economía
 ```
 
-### 3.1 `assets/config.json` (obligatorio)
+## Qué leer según lo que vas a hacer
 
-Todo lo que se pueda cambiar va acá, **no hardcodeado en el JS**: colores, tipografías,
-textos, qué medios usa, tiempos de escenas. Mínimo:
+| Querés… | Leé |
+|---|---|
+| una plantilla nueva de letras, promo o fondo (música) | `nodemotion/AGENTS.md` |
+| un video explicativo de prueba (tech, historia, política, economía) | `EXPLAINER.md` → `<tema>/AGENTS.md` → `_tools/explainer-kit/AGENTS.md` |
+| un diseño nuevo para el motor explainer | `EXPLAINER.md` (sección de diseños nuevos) |
+| pasar algo a producción | la sección "promover" del `AGENTS.md` del tema |
 
-```json
-{
-  "id": "default",
-  "description": "Una línea: qué es este prototipo.",
-  "audio": { "src": "assets/song.mp3" },
-  "lyricsUrl": "assets/lyrics.json",
-  "palette": { "bg": "#0b0b0f", "text": "#ffffff", "accent": "#ff3b3b" },
-  "fonts": { "main": "Inter" },
-  "media": [
-    { "id": "fondo", "type": "video", "src": "assets/media/fondo.mp4" }
-  ]
-}
-```
+**NodeMotion es distinto**: cada plantilla es su propio `index.html` (canción + letra + medios) y
+pasa por el pipeline de plantillas. **Tech, History, Politics y Economy usan el mismo motor**
+(`_tools/explainer-kit`): cambian el tema, la estrategia y los diseños, no la forma de construir.
 
-Las claves son libres: agregá las que la idea necesite. Lo que no debe faltar es
-`audio.src` (si hay música) y `lyricsUrl` (si hay letra).
+## Reglas de la casa (todas las carpetas)
 
-### 3.2 Música y letra
+1. **Solo escribís dentro de `sandbox/<tema>/`.** Para tocar producción, se promueve (no se edita a mano).
+2. **No se publica nada** ni se usa `data/canales/` desde acá.
+3. **No duplicar motores**: los videos de prueba del explainer usan `_tools/explainer-kit` (el mismo
+   de producción). Si el motor necesita un cambio, es un cambio de producción: avisar al usuario.
+4. **Dejá lo aprendido escrito**: al terminar, sumá a `<tema>/AGENTS.md` lo que funcionó y lo que no
+   (en la sección de lecciones), así la próxima vez no se repite la investigación.
+5. **Sin `git commit` ni `push`** salvo que el usuario lo pida.
 
-- **`assets/song.mp3`:** la canción de prueba. Ponele siempre ese nombre: es el que usa el pipeline.
-- **`assets/lyrics.json`:** la letra con tiempos, en **formato Whisper**:
-  ```json
-  { "segments": [
-      { "start": 2.98, "end": 8.22, "text": " Esa nena cuando baila",
-        "words": [ { "word": " Esa", "start": 2.98, "end": 3.20 } ] } ] }
-  ```
-  Para sacarla de una canción real, pedile al usuario que la suba en **Recursos →
-  Canciones** de la app (se transcribe sola), o copiá el `lyrics.json` de una plantilla
-  existente para probar.
-- La letra **siempre** se lee de `config.lyricsUrl`, nunca escrita dentro del HTML.
+## Cómo se promueve
 
-### 3.3 Medios
-
-- Archivos en `assets/media/`, con **nombres cortos sin espacios ni acentos**
-  (`fondo-ciudad.mp4`, no `Uma das habilidades… Elas.mp4`).
-- Referenciados desde `config.json`, no desde el JS.
-- Los binarios grandes de prueba no se suben a git.
-
----
-
-## 4. Las 6 reglas mínimas (no negociables, aunque sea prototipo)
-
-Son baratas de cumplir ahora y carísimas de corregir después. Sin ellas, el prototipo no
-se puede grabar con HyperFrames sin reescribirlo.
-
-1. **El tiempo sale de la canción: `audio.currentTime`.** Todo lo que tenga que coincidir
-   con la música se calcula desde ahí. Nada de contadores propios (`frame++`) ni de la
-   hora real para avanzar la animación.
-   - Con GSAP: armá un timeline `paused: true` y en cada `requestAnimationFrame` hacé
-     `tl.seek(audio.currentTime)`. No uses `tl.play()` libre.
-2. **Timers directos:** `setTimeout(…)` / `setInterval(…)` llamados así, sin guardarlos
-   en otra variable (`const t = setTimeout` ❌). Así la herramienta de optimización los
-   encuentra al promover.
-3. **Config primero:** el prototipo carga `assets/config.json` al arrancar (sección 4.1)
-   y saca de ahí colores, textos y medios.
-4. **Rutas relativas** (`assets/song.mp3`, `assets/media/x.mp4`). Nada de rutas absolutas
-   ni de bajar datos de APIs externas (las librerías por CDN sí están permitidas).
-5. **Videos mudos** (`muted`) y **no más de 2–3 visibles a la vez**: el audio sale solo
-   de la canción, y cada video visible encarece mucho la grabación.
-6. **Medidas relativas** (`vw`, `vh`, `vmin`, `%`, `clamp()`): el mismo HTML tiene que
-   verse bien en 16:9 (1920×1080) y en 9:16 (1080×1920).
-
-Además: **arranca solo**, sin esperar un clic, y **sin botón de grabar propio** (la
-grabación la hace la app).
-
-### 4.1 Esqueleto mínimo recomendado
-
-```html
-<audio id="audio" preload="auto"></audio>
-<script>
-async function loadJSON(...urls) {
-  for (const u of urls) { try { const r = await fetch(u); if (r.ok) return r.json(); } catch (e) {} }
-  return null;
-}
-(async () => {
-  // config.json → en un job de la app; assets/config.json → acá en el sandbox
-  const raw = await loadJSON("config.json", "assets/config.json");
-  const C = raw && raw.configs ? raw.configs[0] : raw;
-  const audio = document.getElementById("audio");
-  audio.src = C.audio.src;
-  const lyrics = C.lyricsUrl ? await loadJSON(C.lyricsUrl) : null;
-  const words = (lyrics?.segments || []).flatMap(s => s.words || []);
-
-  function frame() {
-    const t = audio.currentTime;            // ← ÚNICO reloj de la animación
-    // dibujar el estado del segundo t (palabra actual = words.find(w => w.start <= t && t < w.end))
-    requestAnimationFrame(frame);
-  }
-  audio.play().catch(() => {});
-  requestAnimationFrame(frame);
-})();
-</script>
-```
-
----
-
-## 5. Promover un prototipo a plantilla real
-
-Solo cuando el usuario lo pida ("promové `<nombre>`"). Desde ese momento rige
-**`src/templates/AGENTS.md` completo**. Resumen de lo que cambia:
-
-1. **Mover** `sandbox/<nombre>/` a `lyrics/<id>/` o `commercial/<id>/`, con un id
-   definitivo (`lyrics-<nombre>`).
-2. **Rutas del job:** la carga de config pasa a `config.json` → `assets/config.json` → un
-   `DEFAULT_CONFIG` embebido. En el job, el pipeline deja `song.mp3` y `lyrics.json` al
-   lado del HTML y fuerza `audio.src = "song.mp3"` y `lyricsUrl = "lyrics.json"`.
-3. **Librerías de CDN → archivos locales** en `assets/` y declarados en `runtime_assets`.
-4. **Registrar** en `templates.json` (con `category_id: "in_progress"`, «En desarrollo») y
-   en `niches.json`.
-5. **Videos:** `reencode_media.py <id>`.
-6. **Reloj HyperFrames:** `optimize.py <id>` y `optimize.py --check <id>`.
-7. **Validar** con el checklist de la sección 10 de `src/templates/AGENTS.md`.
-8. El prototipo original se borra del sandbox (o se deja con una nota en `NOTAS.md`
-   apuntando a la plantilla), según lo que diga el usuario.
-
----
-
-## 6. Al terminar una sesión de prototipo
-
-Dejá en `NOTAS.md` del prototipo:
-- qué idea se probó y qué funciona;
-- qué falta o qué se descartó;
-- si cumple las 6 reglas de la sección 4 (y si no, por qué).
+- **Explainer** (tech/history/politics/economy): `kit.py promote <video-id>` mueve
+  `sandbox/<tema>/<id>/` a `src/templates/<tema>/<id>/` y corrige la ruta al motor. Desde ese momento
+  aparece en `/plantillas` (tarjeta + modal) listo para grabar y publicar.
+- **NodeMotion**: se sigue `nodemotion/AGENTS.md` (registro en `templates.json` + `niches.json`,
+  reloj HyperFrames, validación y tests).

@@ -149,7 +149,7 @@ def main() -> None:
     niches = {n.template.template_id: n for n in list_all_niches() if n.template and n.template.template_id}
     ids = args.templates or sorted(
         k for k, v in manifest.items()
-        if v["folder"].split("/")[0] in ("lyrics", "commercial") and v["category_id"] != "in_progress" and k in niches
+        if v["folder"].removeprefix("nodemotion/").split("/")[0] in ("lyrics", "commercial") and v["category_id"] != "in_progress" and k in niches
     )
     for template_id in ids:
         if template_id not in niches:

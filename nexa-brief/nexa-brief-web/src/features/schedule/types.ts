@@ -84,3 +84,59 @@ export interface PublishNowInput {
   platform: ChannelPlatform;
   accountAlias: string;
 }
+
+// ── Automatización por categoría + planificador con IA ──────────────────────
+
+export type CategoryCadence = "daily" | "alternate" | "custom";
+
+export interface CategoryAutomation {
+  categoryId: string;
+  displayName: string;
+  status: "active" | "planned" | "empty";
+  engine: "pipeline" | "explainer_kit";
+  defaultCadence: "daily" | "alternate";
+  slots: ScheduleSlot[];
+}
+
+export interface CategoryAutomationInput {
+  categoryPath: string;
+  /** Selectores "plataforma:alias". */
+  accounts: string[];
+  cadence: CategoryCadence;
+  /** Solo con cadence "custom". */
+  days?: Weekday[];
+  /** "HH:MM" en UTC. */
+  times: string[];
+}
+
+export interface PlannerMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+/** Un ítem propuesto por el planificador (mismo shape que guarda el backend). */
+export interface PlanItem {
+  date: string; // "YYYY-MM-DD"
+  time: string; // "HH:MM"
+  categoryPath: string;
+  design: string | null;
+  topic: string;
+  angle: string;
+  description: string;
+}
+
+export interface PlannerReply {
+  reply: string;
+  items: PlanItem[];
+  warnings: string[];
+}
+
+export type PlannerProvider = "deepseek" | "claude" | "codex";
+
+export interface SavedPlanItem extends PlanItem {
+  itemId: string;
+  productionId: string | null;
+  productionState: string | null;
+  videoId: string | null;
+  createdAt: string;
+}

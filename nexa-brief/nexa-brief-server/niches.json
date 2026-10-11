@@ -2935,5 +2935,306 @@
         "youtube_as_short": true
       }
     }
+  },
+  "categories": {
+    "node_tech": {
+      "display_name": "NodeTech",
+      "topic": "tecnología",
+      "status": "active",
+      "engine": "explainer_kit",
+      "folder": "nodetech",
+      "designs": [
+        "rough"
+      ],
+      "niches": [],
+      "children": {},
+      "strategy": {
+        "audience": "Hispanohablantes de 18 a 40 años curiosos por la tecnología y la IA, que no son ingenieros.",
+        "angle": "El lado humano y decisivo de la tecnología: cómo algo pasó de imposible a cotidiano, quién lo decidió y qué costó.",
+        "tone": "Intriga y revelación, ritmo de documental; cero jerga sin explicar.",
+        "title_formulas": [
+          "Cómo {X} pasó de {algo pequeño} a {algo enorme}",
+          "Así se hizo tan potente {X} (y casi nadie lo vio venir)",
+          "El día que {X} cambió {Y} para siempre",
+          "La decisión que convirtió a {X} en {Y}",
+          "Por qué {X} ya puede {Y}: la historia que no te contaron"
+        ],
+        "title_examples": [
+          "Cómo la IA pasó de no resolver nada a quitarte el trabajo",
+          "Así se hizo tan potente la IA (y casi nadie lo vio venir)",
+          "El verano de 1956 en que alguien le puso nombre a la inteligencia artificial",
+          "El número que no cabía: el error de 7 mil millones del Ariane 5"
+        ],
+        "topic_ideas": [
+          "Cómo nació la inteligencia artificial",
+          "Deep Blue contra Kasparov: el día que una máquina ganó",
+          "Cómo nació internet",
+          "El error del año 2000",
+          "El primer iPhone y la caída de Nokia",
+          "De dónde salió ChatGPT",
+          "El Apolo 11 y la alarma 1202",
+          "El bug del Ariane 5"
+        ],
+        "hashtags": [
+          "#tecnologia",
+          "#inteligenciaartificial",
+          "#historiadelatecnologia",
+          "#ia",
+          "#documental"
+        ],
+        "rules": [
+          "El título promete solo lo que el video cuenta: provocador sí, falso no.",
+          "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
+          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Toda cifra o fecha del texto tiene que estar en el guion."
+        ],
+        "language": "es-419",
+        "default_cadence": "daily"
+      }
+    },
+    "node_history": {
+      "display_name": "NodeHistory",
+      "topic": "historia",
+      "status": "active",
+      "engine": "explainer_kit",
+      "folder": "nodehistory",
+      "designs": [
+        "binary",
+        "acuarela",
+        "carta",
+        "collage",
+        "cronica",
+        "enmienda",
+        "grunge",
+        "pelicula",
+        "periodico",
+        "pop"
+      ],
+      "niches": [],
+      "children": {},
+      "strategy": {
+        "audience": "Hispanohablantes de 18 a 55 años que disfrutan historias reales contadas como un thriller.",
+        "angle": "Un solo momento decisivo (una noche, una decisión, un error), no una biografía completa.",
+        "tone": "Tensión contenida, respeto por las víctimas, sin morbo.",
+        "title_formulas": [
+          "La noche que {hecho}",
+          "{N} segundos que {consecuencia}",
+          "Nadie le creyó a {persona}… hasta que {hecho}",
+          "El error que {consecuencia}",
+          "Por qué {hecho} pudo no pasar nunca"
+        ],
+        "title_examples": [
+          "La conferencia de prensa que derribó el Muro de Berlín",
+          "Titanic: los 37 segundos que dejaron tantos botes vacíos",
+          "El hombre que rompió Enigma y fue castigado por ganar"
+        ],
+        "topic_ideas": [
+          "La caída del Muro de Berlín",
+          "Alan Turing y Enigma",
+          "La crisis de los misiles en Cuba",
+          "Chernóbil: la noche del reactor 4",
+          "El día que Pompeya desapareció",
+          "La carrera al Polo Sur"
+        ],
+        "hashtags": [
+          "#historia",
+          "#documental",
+          "#historiareal",
+          "#sabiasque"
+        ],
+        "rules": [
+          "El título promete solo lo que el video cuenta: provocador sí, falso no.",
+          "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
+          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Toda cifra o fecha del texto tiene que estar en el guion.",
+          "Temas de muertes y guerras: con respeto, sin morbo ni imágenes explícitas."
+        ],
+        "language": "es-419",
+        "default_cadence": "daily"
+      }
+    },
+    "node_motion": {
+      "display_name": "NodeMotion",
+      "topic": "música",
+      "status": "active",
+      "engine": "pipeline",
+      "designs": [],
+      "niches": [],
+      "children": {
+        "letras": {
+          "display_name": "Videos de letras",
+          "status": "active",
+          "niches": [
+            "lyrics_video_neon",
+            "lyrics_video_impact",
+            "lyrics_video_romantic",
+            "lyrics_video_latido",
+            "lyrics_video_suave",
+            "lyrics_video_calado",
+            "lyrics_video_expediente",
+            "lyrics_video_triste",
+            "lyrics_video_manifiesto",
+            "lyrics_video_resaltado",
+            "lyrics_video_cristal",
+            "lyrics_video_mirada",
+            "lyrics_video_night_journey",
+            "lyrics_video_collage",
+            "lyrics_video_mixtas",
+            "lyrics_video_grunge",
+            "lyrics_video_stylish_kinetic",
+            "lyrics_video_caution",
+            "lyrics_video_amor_impredecible",
+            "lyrics_video_ceniza",
+            "lyrics_video_lluvia_gris",
+            "lyrics_video_memoria",
+            "lyrics_video_vacio"
+          ]
+        },
+        "promos": {
+          "display_name": "Promos comerciales",
+          "status": "active",
+          "niches": [
+            "promo_video_editorial",
+            "promo_video_kinetic",
+            "promo_video_trendy",
+            "promo_video_dynamic",
+            "promo_video_urban",
+            "promo_video_sports"
+          ]
+        },
+        "fondos": {
+          "display_name": "Fondos y sujetos",
+          "status": "active",
+          "niches": [
+            "image_bg_portrait",
+            "subject_spotlight",
+            "landscape_scene_ambient",
+            "motion_backdrop_showcase"
+          ]
+        },
+        "instrumental": {
+          "display_name": "Instrumental y ambient",
+          "status": "active",
+          "niches": [
+            "ambient_music",
+            "animated_study"
+          ]
+        }
+      },
+      "strategy": {
+        "audience": "Personas que buscan la letra de una canción o un video para escucharla.",
+        "angle": "La canción primero: artista y canción al inicio del título, con calificador (Letra / Lyrics).",
+        "tone": "Emocional, según el ánimo de la canción.",
+        "title_formulas": [
+          "{Artista} - {Canción} (Letra)",
+          "{Canción} - {Artista} | Letra en español"
+        ],
+        "title_examples": [],
+        "topic_ideas": [],
+        "hashtags": [
+          "#letras",
+          "#lyrics",
+          "#musica"
+        ],
+        "rules": [
+          "El título promete solo lo que el video cuenta: provocador sí, falso no.",
+          "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
+          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Toda cifra o fecha del texto tiene que estar en el guion.",
+          "Ver docs/investigaciones/estrategia-cro-titulos-descripciones-2026-09.md."
+        ],
+        "language": "es-419",
+        "default_cadence": "daily"
+      }
+    },
+    "node_politics": {
+      "display_name": "NodePolitics",
+      "topic": "política",
+      "status": "empty",
+      "engine": "explainer_kit",
+      "folder": "nodepolitics",
+      "designs": [],
+      "niches": [],
+      "children": {},
+      "strategy": {
+        "audience": "Adultos hispanohablantes que quieren entender cómo se tomaron decisiones políticas que siguen pesando hoy.",
+        "angle": "Cómo se tomó una decisión política concreta y qué consecuencias tuvo, contado con hechos verificables.",
+        "tone": "Neutral y firme: explica, no toma partido.",
+        "title_formulas": [
+          "La decisión que dividió a {país}",
+          "Cómo {X} llegó al poder (y lo que vino después)",
+          "Por qué {ley/hecho} sigue importando hoy",
+          "El voto que cambió {Y}"
+        ],
+        "title_examples": [],
+        "topic_ideas": [
+          "La Enmienda 19 y el voto femenino",
+          "El Plan Marshall",
+          "La caída de la Unión Soviética",
+          "Watergate"
+        ],
+        "hashtags": [
+          "#politica",
+          "#historiapolitica",
+          "#documental"
+        ],
+        "rules": [
+          "El título promete solo lo que el video cuenta: provocador sí, falso no.",
+          "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
+          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Toda cifra o fecha del texto tiene que estar en el guion.",
+          "Neutralidad: no adjetivar a personas o partidos vivos; mostrar las posturas principales.",
+          "Nada de política electoral en curso: solo hechos cerrados con fuentes."
+        ],
+        "language": "es-419",
+        "default_cadence": "alternate"
+      }
+    },
+    "node_economy": {
+      "display_name": "NodeEconomy",
+      "topic": "economía",
+      "status": "planned",
+      "engine": "explainer_kit",
+      "folder": "nodeeconomy",
+      "designs": [],
+      "niches": [
+        "economy_finance"
+      ],
+      "children": {},
+      "strategy": {
+        "audience": "Hispanohablantes de 20 a 45 años que quieren entender el dinero sin tecnicismos.",
+        "angle": "Una crisis, una burbuja o una decisión económica contada como historia, con lo que enseña para hoy.",
+        "tone": "Claro, con tensión; explica cada término la primera vez.",
+        "title_formulas": [
+          "Cómo {X} perdió todo en un día",
+          "La crisis que nadie vio venir: {hecho}",
+          "Por qué tu dinero vale menos que en {año}",
+          "La burbuja de {X}: de {subida} a {caída}"
+        ],
+        "title_examples": [],
+        "topic_ideas": [
+          "La crisis de 2008",
+          "La burbuja de los tulipanes",
+          "El crac de 1929",
+          "La hiperinflación de Alemania en 1923",
+          "La burbuja puntocom"
+        ],
+        "hashtags": [
+          "#economia",
+          "#finanzas",
+          "#historiaeconomica",
+          "#dinero"
+        ],
+        "rules": [
+          "El título promete solo lo que el video cuenta: provocador sí, falso no.",
+          "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
+          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Toda cifra o fecha del texto tiene que estar en el guion.",
+          "Nunca dar consejos de inversión personalizados."
+        ],
+        "language": "es-419",
+        "default_cadence": "alternate"
+      }
+    }
   }
 }

@@ -11,6 +11,7 @@ from src.adapters.ai.factory import get_analysis_ai, get_codegen_ai
 from src.config.exceptions import NexaBriefError
 from src.config.niche_config import get_niche_config
 from src.config.settings import settings
+from src.core.categories import output_dir_for_niche
 from src.core.job import DurationConfig, DurationMode, Job, JobStage, VisualDesign
 from src.core.progress import (
     ProgressTracker,
@@ -96,7 +97,11 @@ async def run(
         raise ValueError(f"Job '{job.job_id}' está FAILED: retomar desde el último stage sano")
 
     # ── Directorio de salida ──────────────────────────────────────────────────
-    output_dir = settings.output_dir / job.job_id
+    # output/<categoría>/<subcategoría>/<job_id> (ej. output/node_motion/letras/ab12cd34).
+    # Un job retomado conserva la carpeta donde empezó.
+    output_dir = job.artifacts.output_dir or (
+        output_dir_for_niche(settings.output_dir, job.input.category_name) / job.job_id
+    )
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "logs").mkdir(exist_ok=True)
 

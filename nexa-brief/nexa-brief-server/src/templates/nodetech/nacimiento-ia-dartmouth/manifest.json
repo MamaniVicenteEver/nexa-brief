@@ -1,0 +1,226 @@
+{
+  "video_id": "nacimiento-ia-dartmouth",
+  "design": "binary",
+  "design_name": "NODEHISTORY",
+  "channel": "NODETECH",
+  "status": "renderizado",
+  "created": "2026-10-10",
+  "title": "EL VERANO QUE INVENTÓ LA IA",
+  "category": "node_tech",
+  "topic": "Cómo nació la inteligencia artificial",
+  "description": "Desde la conferencia de Dartmouth de 1956 hasta hoy",
+  "production_id": "e9ebf6b55354",
+  "pipeline_type": "explainer_kit",
+  "kicker": "DARTMOUTH · 1956",
+  "language": "es-419",
+  "duration_seconds": 213.55,
+  "script": {
+    "segments": 17,
+    "words": 426,
+    "arc": [
+      {
+        "id": "s01",
+        "tone": "intriga",
+        "intensity": 0.75
+      },
+      {
+        "id": "s02",
+        "tone": "explicativo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s03",
+        "tone": "explicativo",
+        "intensity": 0.55
+      },
+      {
+        "id": "s04",
+        "tone": "asombro",
+        "intensity": 0.7
+      },
+      {
+        "id": "s05",
+        "tone": "asombro",
+        "intensity": 0.65
+      },
+      {
+        "id": "s06",
+        "tone": "curiosidad",
+        "intensity": 0.6
+      },
+      {
+        "id": "s07",
+        "tone": "tensión",
+        "intensity": 0.45
+      },
+      {
+        "id": "s08",
+        "tone": "descubrimiento",
+        "intensity": 0.65
+      },
+      {
+        "id": "s09",
+        "tone": "revelación",
+        "intensity": 0.78
+      },
+      {
+        "id": "s10",
+        "tone": "clímax",
+        "intensity": 0.95
+      },
+      {
+        "id": "s11",
+        "tone": "aceleración",
+        "intensity": 0.9
+      },
+      {
+        "id": "s12",
+        "tone": "peso",
+        "intensity": 0.4
+      },
+      {
+        "id": "s13",
+        "tone": "silencio",
+        "intensity": 0.3
+      },
+      {
+        "id": "s14",
+        "tone": "curiosidad",
+        "intensity": 0.55
+      },
+      {
+        "id": "s15",
+        "tone": "asombro",
+        "intensity": 0.8
+      },
+      {
+        "id": "s16",
+        "tone": "cercano",
+        "intensity": 0.7
+      },
+      {
+        "id": "s17",
+        "tone": "cierre",
+        "intensity": 0.85
+      }
+    ]
+  },
+  "voice": {
+    "voice": "Charon",
+    "provenance": [
+      {
+        "part": 0,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Charon",
+        "dur": 206.32
+      }
+    ],
+    "wpm": 124,
+    "wer_aprox": 0.014,
+    "faltan": [
+      "mil",
+      "mil",
+      "debia nacer"
+    ],
+    "sobran": [
+      "debian hacer"
+    ]
+  },
+  "transcript": {
+    "words": 412,
+    "fake": false
+  },
+  "storyboard": {
+    "beats": 54,
+    "components": {
+      "binary.title": 2,
+      "binary.grid": 4,
+      "binary.icon": 10,
+      "binary.bubble": 1,
+      "binary.frame": 1,
+      "binary.word": 12,
+      "binary.rays": 3,
+      "binary.orbit": 2,
+      "binary.versus": 1,
+      "binary.counter": 2,
+      "binary.floor": 2,
+      "binary.tunnel": 2,
+      "binary.portrait": 1,
+      "common.flash": 3,
+      "common.lyric": 6,
+      "binary.chart": 1,
+      "binary.timeline": 1
+    },
+    "lyrics_moments": 6
+  },
+  "media": [
+    "mccarthy.jpg — John McCarthy Stanford.jpg — \"null0\" — CC BY-SA 2.0 — https://commons.wikimedia.org/wiki/File:John_McCarthy_Stanford.jpg",
+    "dartmouth.jpg — Dartmouth College campus 2007-06-23 Dartmouth Hall 01.JPG — Kane5187 — Public domain — https://commons.wikimedia.org/wiki/File:Dartmouth_College_campus_2007-06-23_Dartmouth_Hall_01.JPG",
+    "minsky.jpg — Marvin Minsky.jpg — Flickr contributor Steamtalks — CC BY-SA 2.0 — https://commons.wikimedia.org/wiki/File:Marvin_Minsky.jpg",
+    "shannon.jpg — C.E. Shannon. Tekniska museet 43069 (cropped).jpg — Unknown author — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:C.E._Shannon._Tekniska_museet_43069_(cropped).jpg"
+  ],
+  "video_formats": [
+    {
+      "id": "reels",
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "output_filename": "render/nacimiento-ia-dartmouth-9x16.mp4"
+    },
+    {
+      "id": "youtube",
+      "aspect_ratio": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "output_filename": "render/nacimiento-ia-dartmouth-16x9.mp4"
+    }
+  ],
+  "files": {
+    "BRIEF.md": 1931,
+    "PLAN.md": 10986,
+    "assets/config.json": 455,
+    "assets/lyrics.json": 47491,
+    "assets/media/CREDITS.md": 935,
+    "assets/media/dartmouth.jpg": 417273,
+    "assets/media/mccarthy.jpg": 447463,
+    "assets/media/minsky.jpg": 589131,
+    "assets/media/shannon.jpg": 408369,
+    "assets/script.json": 4798,
+    "assets/song.mp3": 5125895,
+    "assets/storyboard.json": 7190,
+    "brief.json": 4258,
+    "index.html": 748,
+    "manifest.json": 6876,
+    "publish.json": 2546,
+    "render/nacimiento-ia-dartmouth-16x9.mp4": 256170800,
+    "render/nacimiento-ia-dartmouth-9x16.mp4": 238074310,
+    "render/poster.jpg": 54571
+  },
+  "updated": "2026-10-10T11:39:05",
+  "youtube_title": "El verano de 1956 en que nació la inteligencia artificial",
+  "youtube_description": "En el verano de 1956, un grupo de científicos se encerró dos meses para lograr algo imposible: hacer que una máquina pensara. Allí nació el nombre 'inteligencia artificial', antes de que existiera la tecnología para cumplir esa promesa.\n\nEsta es la historia de la conferencia de Dartmouth, el momento exacto en que una idea sin pruebas se convirtió en un campo entero de la ciencia. Un error de cálculo: creyeron que bastaba un verano. Les tomó más de medio siglo.\n\nEn este documental corto vas a entender quiénes estuvieron en esa sala (McCarthy, Minsky, Shannon), por qué eligieron ese nombre, cómo la euforia inicial chocó con la realidad y provocó los 'inviernos de la IA', y qué hizo que la vieja promesa resucitara hasta llegar a tu celular.\n\nAprenderás por qué el nombre importó tanto como la tecnología, y cómo una apuesta optimista terminó moldeando el mundo que usas todos los días.\n\n¿Crees que los de Dartmouth imaginaban lo que su idea haría 70 años después? Cuéntanos en los comentarios.\n\nIMÁGENES\n- John McCarthy — foto de \"null0\" (Wikimedia Commons, CC BY-SA 2.0)\n- Dartmouth Hall, Dartmouth College — foto de Kane5187 (Wikimedia Commons, dominio público)",
+  "youtube_tags": [
+    "inteligencia artificial",
+    "historia de la IA",
+    "conferencia de Dartmouth",
+    "John McCarthy",
+    "Marvin Minsky",
+    "Claude Shannon",
+    "origen de la IA",
+    "qué es la inteligencia artificial",
+    "historia de la tecnología",
+    "inviernos de la IA",
+    "documental IA",
+    "machine learning historia",
+    "ciencia 1956",
+    "cómo nació la IA"
+  ],
+  "tiktok_caption": "La IA tuvo nombre antes de existir: todo empezó en un verano de 1956 🤯",
+  "tiktok_hashtags": [
+    "#inteligenciaartificial",
+    "#historiadelatecnologia",
+    "#ia",
+    "#sabiasque"
+  ],
+  "thumbnail_text": "Verano de 1956"
+}

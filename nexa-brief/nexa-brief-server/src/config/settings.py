@@ -320,6 +320,46 @@ class Settings(BaseSettings):
     # Si un horario SÍ tiene un video asignado a mano, siempre se respeta esa
     # asignación sin importar este flag — "el modo automático solo rellena huecos".
     schedule_auto_fill_enabled: bool = Field(default=True, alias="SCHEDULE_AUTO_FILL_ENABLED")
+    # Piloto automático de las categorías explainer (src/core/automation.py):
+    # pregrabar el video listo más antiguo cuando un horario vence dentro de N horas
+    # y no hay video grabado para ese canal…
+    schedule_prerecord_enabled: bool = Field(default=True, alias="SCHEDULE_PRERECORD_ENABLED")
+    schedule_prerecord_hours: int = Field(default=12, alias="SCHEDULE_PRERECORD_HOURS")
+    # …y producir con el agente local los ítems del plan semanal guardado cuya
+    # fecha cae dentro de las próximas N horas (con grabación automática).
+    schedule_autoproduce_enabled: bool = Field(default=True, alias="SCHEDULE_AUTOPRODUCE_ENABLED")
+    schedule_autoproduce_hours: int = Field(default=48, alias="SCHEDULE_AUTOPRODUCE_HOURS")
+
+    # ── Voz (src/adapters/voice/) ─────────────────────────────────────────────
+    # Rota entre GEMINI_API_KEY, GEMINI_API_KEY1…N. Cadena de modelos = la del
+    # explainer-kit (designs/*/design.json → voice.models).
+    voice_provider: str = Field(default="gemini", alias="VOICE_PROVIDER")
+    gemini_tts_voice: str = "Charon"
+    gemini_tts_models: list[str] = Field(
+        default=["gemini-3.8-flash-tts", "gemini-3.8-flash-lite-tts", "gemini-3.1-flash-tts-preview"]
+    )
+    # Mismo archivo que usa explainer-kit/tools/tts.py: comparten qué clave está agotada.
+    gemini_quota_state_path: Path = (
+        BASE_DIR / "src" / "templates" / "_tools" / "explainer-kit" / ".state" / "gemini-quota.json"
+    )
+
+    # ── Agentes locales (src/adapters/agent/) — Claude Code / Codex ───────────
+    # Corren con las suscripciones de esta máquina. Si el binario no está en
+    # PATH se busca solo (nvm, ~/.local/bin, app de ChatGPT); se puede fijar acá.
+    agent_claude_bin: str = Field(default="", alias="AGENT_CLAUDE_BIN")
+    agent_codex_bin: str = Field(default="", alias="AGENT_CODEX_BIN")
+    # Producir un video completo (investigar, guion, voz, storyboard) tarda.
+    agent_production_timeout_seconds: int = Field(default=5400, alias="AGENT_PRODUCTION_TIMEOUT_SECONDS")
+    # Una respuesta de texto/JSON (títulos, plan semanal).
+    agent_text_timeout_seconds: int = Field(default=300, alias="AGENT_TEXT_TIMEOUT_SECONDS")
+
+    # ── Explainer (NodeTech, NodeHistory, NodePolitics, NodeEconomy) ──────────
+    # Quién escribe títulos/descripciones: "claude" | "codex" (CLI local) | "deepseek" (API).
+    explainer_text_provider: str = Field(default="claude", alias="EXPLAINER_TEXT_PROVIDER")
+    # Quién produce el video completo con el explainer-kit: "claude" | "codex".
+    explainer_agent: str = Field(default="claude", alias="EXPLAINER_AGENT")
+    # Quién conversa en el planificador semanal de Programación.
+    planner_provider: str = Field(default="deepseek", alias="PLANNER_PROVIDER")
 
 
 settings = Settings()
