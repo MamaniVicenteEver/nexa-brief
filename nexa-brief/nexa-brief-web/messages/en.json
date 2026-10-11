@@ -150,6 +150,47 @@
       "templates": "templates · {lyric} lyric",
       "niches": "active niches",
       "produced": "of video produced"
+    },
+    "categories": {
+      "title": "NODE channel network",
+      "subtitle": "Each category with its funnel: producing → ready to record → recorded, waiting for its slot → published.",
+      "manage": "Templates",
+      "loadError": "Could not load the category overview.",
+      "designs": "{count, plural, =0 {no designs} one {# design} other {# designs}}",
+      "templates": "{count, plural, =0 {no templates} one {# template} other {# templates}}",
+      "autopilot": "Automatic",
+      "setup": "Needs setup",
+      "funnel": {
+        "producing": "Producing",
+        "readyToRecord": "Ready",
+        "recordedPending": "Recorded",
+        "published": "Published"
+      },
+      "noSchedule": "No schedule: it does not publish on its own yet.",
+      "everyDay": "Every day",
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      },
+      "next": "Next:",
+      "automation": "Plan: {planned} pending · pre-recording {prerecord} · auto-production {autoproduce}",
+      "on": "on",
+      "off": "off",
+      "missing": {
+        "empty_category": "Empty category: no own designs or templates (it can use the kit's).",
+        "no_content": "No ready videos or productions in progress: create one or save a weekly plan.",
+        "no_ready_video": "No ready or recorded video for the next slot.",
+        "no_schedule": "No schedule: set it up in Scheduling → Category automation.",
+        "autopublish_off": "Auto-publishing is off on the server (ENABLE_AUTO_PUBLISHING=false): schedules do not run."
+      },
+      "create": "Create video",
+      "openTemplates": "View templates",
+      "schedule": "Schedule"
     }
   },
   "channels": {
@@ -401,13 +442,13 @@
     }
   },
   "templates": {
-  "grid": {
-    "heading": "Templates",
-    "loading": "Loading templates...",
-    "empty": "No templates configured.",
-    "filterLabel": "Filter by category",
-    "all": "All"
-  },
+    "grid": {
+      "heading": "Templates",
+      "loading": "Loading templates...",
+      "empty": "No templates configured.",
+      "filterLabel": "Filter by category",
+      "all": "All"
+    },
     "card": {
       "tagImage": "Image",
       "tagVideo": "Video",
@@ -445,6 +486,72 @@
       "uploadNew": "Upload new",
       "chooseFromLibrary": "Choose from library",
       "remove": "Remove"
+    },
+    "prep": {
+      "heading": "Preparation",
+      "intro": "Explainer videos ready to record. By default a 10 s preview is recorded (fast, for review); \"Full\" renders everything, saves it to output/category/ and makes it available to its category's schedules. Publishing always uses the full video and starts as private.",
+      "loading": "Loading videos…",
+      "empty": "No explainer videos.",
+      "statusReady": "Ready to record",
+      "statusRendered": "Already rendered",
+      "statusPreparing": "In preparation",
+      "record": "Record",
+      "recording": "Recording…",
+      "account": "Publishing account",
+      "noAccount": "Record only",
+      "privacy": "Privacy",
+      "privacyPrivate": "Private",
+      "privacyUnlisted": "Unlisted",
+      "privacyPublic": "Public",
+      "publishAndRecord": "Record and publish",
+      "needsTitle": "Missing youtube_title in publish.json",
+      "jobState": {
+        "queued": "Queued",
+        "rendering": "Rendering…",
+        "publishing": "Publishing…",
+        "done": "Done",
+        "failed": "Failed"
+      },
+      "duration": "Duration",
+      "durationOption": {
+        "10": "10 s preview",
+        "20": "20 s preview",
+        "full": "Full"
+      },
+      "scheduled": "ready for its category's schedules",
+      "needsTexts": "Publishing texts are missing.",
+      "generateTexts": "Generate texts",
+      "generatingTexts": "Generating texts…",
+      "textsDone": "Publishing texts generated.",
+      "preview": "Preview",
+      "emptyCategory": "No videos from this category are in preparation yet.",
+      "filter": "Filter videos",
+      "filterAll": "All",
+      "filterDemos": "Design demos",
+      "demo": "Demo",
+      "demoNote": "design demo: same script as “The night the Wall fell”; publishing several duplicates content",
+      "tagPublishable": "Publishable",
+      "publishTexts": "Publishing texts"
+    },
+    "windows": {
+      "label": "Main categories",
+      "loading": "Loading categories…",
+      "loadError": "Couldn't load the categories.",
+      "status": {
+        "active": "Active",
+        "planned": "Planned",
+        "empty": "Empty"
+      },
+      "engine": {
+        "pipeline": "Templates",
+        "explainer_kit": "Explainer kit"
+      },
+      "templatesCount": "{count, plural, one {# template} other {# templates}}",
+      "designsCount": "{count, plural, one {# design} other {# designs}}",
+      "readyCount": "{count, plural, one {# ready} other {# ready}}",
+      "others": "Others",
+      "subcategories": "Subcategory",
+      "subcategoryEmpty": "This subcategory has no templates yet."
     }
   },
   "createVideo": {
@@ -480,7 +587,7 @@
       "lockedHint": "Lyric videos always last the full song, so the lyrics stay in sync with the audio."
     },
     "nichoField": {
-      "label": "Niche / music category",
+      "label": "Category / niche",
       "badge": "Pick one",
       "selectPlaceholder": "Select a category",
       "addCategoryButton": "+ Add category",
@@ -488,7 +595,13 @@
       "confirmAdd": "Add",
       "cancel": "Cancel",
       "templatesHintBefore": "You can see examples of each template in",
-      "templatesLink": "Templates"
+      "templatesLink": "Templates",
+      "explainerItem": "{name}: create explainer video",
+      "status": {
+        "active": "active",
+        "planned": "planned",
+        "empty": "empty"
+      }
     },
     "recorderEngineSection": {
       "title": "Recording engine",
@@ -650,9 +763,14 @@
       "timesLabel": "Times (UTC)",
       "removeTime": "Remove",
       "addTime": "+ Add time",
-      "nicheLabel": "Niche filter (optional)",
-      "anyNiche": "Any niche",
-      "saveError": "Couldn't save the schedule. Try again."
+      "nicheLabel": "Category or niche (optional)",
+      "anyNiche": "Any category",
+      "saveError": "Couldn't save the schedule. Try again.",
+      "categoriesGroup": "Main categories",
+      "categoryStatus": {
+        "planned": "planned",
+        "empty": "empty"
+      }
     },
     "assignVideo": {
       "title": "Assign video",
@@ -720,6 +838,65 @@
         "generic": "Couldn't publish to {platform}. You can retry.",
         "tiktokUnaudited": "TikTok hasn't approved your app yet: until then it only allows posting to private accounts. Set the account to private in the TikTok app and retry (the video is posted as \"Only me\")."
       }
+    },
+    "automation": {
+      "heading": "Automation by category",
+      "description": "Each category publishes on its own channels with the ready videos. Saving replaces that category's slots on the chosen channels.",
+      "loading": "Loading categories…",
+      "loadError": "Couldn't load the category automation.",
+      "configure": "Configure",
+      "noSlots": "No slots: this category doesn't publish on its own yet.",
+      "channels": "Channels",
+      "noAccounts": "No connected accounts to publish to.",
+      "cadenceLabel": "Frequency",
+      "cadence": {
+        "daily": "Every day",
+        "alternate": "Every other day",
+        "custom": "Custom"
+      },
+      "engine": {
+        "pipeline": "Templates",
+        "explainer_kit": "Explainer kit"
+      },
+      "utcNote": "Times are in UTC.",
+      "replaceNote": "Replaces the category's current slots on those channels.",
+      "saved": "{count, plural, one {Saved # slot} other {Saved # slots}}"
+    },
+    "planner": {
+      "heading": "AI planner",
+      "description": "Tell the AI what you want to publish this week; it proposes topic, design and time per day. The plan is a draft: producing is a separate step.",
+      "provider": "Provider",
+      "providers": {
+        "deepseek": "DeepSeek",
+        "claude": "Claude",
+        "codex": "Codex"
+      },
+      "weekStart": "Week starting",
+      "emptyChat": "E.g.: \"Plan the week: NodeTech every day and History every other day, current topics\".",
+      "thinking": "Thinking… this can take a couple of minutes.",
+      "messageLabel": "Message for the planner",
+      "placeholder": "Write your request (Ctrl+Enter to send)",
+      "send": "Send",
+      "sending": "Sending…",
+      "proposalHeading": "Proposed plan",
+      "savePlan": "{count, plural, =0 {Save plan} one {Save plan (#)} other {Save plan (#)}}",
+      "selectAll": "Select all",
+      "saved": "{count, plural, one {Saved # plan item} other {Saved # plan items}}",
+      "colDate": "Date",
+      "colCategory": "Category",
+      "colDesign": "Design",
+      "colTopic": "Topic",
+      "colAngle": "Angle",
+      "colProduction": "Production",
+      "colActions": "Actions",
+      "savedHeading": "Saved plan",
+      "loadingSaved": "Loading plan…",
+      "savedEmpty": "There is no saved plan yet.",
+      "notProduced": "Not produced",
+      "informational": "Informational",
+      "produce": "Produce",
+      "producing": "Sending…",
+      "produceStarted": "Production started. It records automatically when finished."
     }
   },
   "access": {
@@ -809,5 +986,117 @@
     },
     "channelsTitle": "Channels on autopilot",
     "channelVideos": "{count, plural, one {# video} other {# videos}}"
+  },
+  "explainer": {
+    "preview": {
+      "hint": "Live page of the video. Click inside if it doesn't start on its own."
+    },
+    "providers": {
+      "claude": "Claude",
+      "codex": "Codex",
+      "deepseek": "DeepSeek"
+    },
+    "window": {
+      "create": "Create video",
+      "topicIdeas": "Topic ideas",
+      "statusNote": {
+        "planned": "Planned category: it has no videos of its own yet. You can create the first one with the kit designs.",
+        "empty": "Empty category: nothing has been produced yet. Create the first video with the kit designs."
+      }
+    },
+    "designs": {
+      "heading": "Designs",
+      "preview": "View demo",
+      "noPreview": "No demo yet",
+      "sharedNote": "Uses the kit designs until it has its own.",
+      "loading": "Loading designs…",
+      "empty": "No designs available for this category."
+    },
+    "productions": {
+      "heading": "In production",
+      "intro": "Videos the local agent is building. Once ready they move to Preparation to be recorded.",
+      "loading": "Loading productions…",
+      "empty": "No productions in this category.",
+      "log": "View log",
+      "loadingLog": "Loading log…",
+      "emptyLog": "The log is empty.",
+      "autoRecord": "records when finished",
+      "resume": "Resume",
+      "resuming": "Resuming…"
+    },
+    "productionState": {
+      "queued": "Queued",
+      "creating": "Creating",
+      "producing": "Producing",
+      "finishing": "Finishing",
+      "ready": "Ready",
+      "recording": "Recording",
+      "done": "Done",
+      "incomplete": "Incomplete",
+      "failed": "Failed"
+    },
+    "fields": {
+      "topic": "Topic",
+      "topicPlaceholder": "What is the video about?",
+      "description": "Description (optional)",
+      "descriptionPlaceholder": "Focus, must-have facts, tone…",
+      "design": "Design",
+      "noDesigns": "No designs",
+      "textProvider": "Text provider",
+      "media": "Images and videos (optional)",
+      "mediaHint": "If you leave it empty, the AI finds the media.",
+      "removeFile": "Remove",
+      "agent": "Producing agent",
+      "autoRecord": "Record automatically when finished"
+    },
+    "create": {
+      "title": "Create video · {category}",
+      "description": "First (optionally) generate the texts to review and edit them; then prepare the video. The local agent produces it without recording.",
+      "generateBrief": "Generate texts",
+      "regenerateBrief": "Generate texts again",
+      "generatingBrief": "Generating texts…",
+      "briefWait": "This can take a few minutes. You can keep looking at the design meanwhile.",
+      "briefOptional": "Texts are optional: if you prepare the video without them, the agent writes them.",
+      "produce": "Prepare video (no recording)",
+      "produceAndRecord": "Prepare and record when finished",
+      "producing": "Sending…",
+      "started": "Production started: {video}. It shows up under \"In production\".",
+      "previewHeading": "Design preview",
+      "showPreview": "Show",
+      "hidePreview": "Hide",
+      "designsOwn": "{name} templates",
+      "designsOther": "{name} templates (you can use them too)"
+    },
+    "brief": {
+      "idea": "Idea",
+      "hook": "Hook",
+      "angle": "Angle",
+      "thesis": "Thesis",
+      "outline": "Outline",
+      "thumbnail": "Thumbnail text",
+      "mediaSuggestions": "Suggested media",
+      "title": "Title",
+      "alternatives": "Alternatives (click to use as title)",
+      "useAlternative": "Use as main title",
+      "description": "Description",
+      "caption": "Caption",
+      "listen": "Listen to voice",
+      "listening": "Synthesizing…"
+    },
+    "studio": {
+      "toggleSidebar": "Show or hide the panel",
+      "tab": {
+        "texts": "Titles & metadata",
+        "record": "Record & publish"
+      },
+      "textsHint": "These are the texts used when publishing on each network.",
+      "recordHeading": "Record",
+      "recordHint": "A 10 or 20 s preview for a quick check, or the full video (ready for its category schedules).",
+      "publishHeading": "Publish",
+      "publishHint": "Pick one or more channels: the full video is recorded and published to all, each network with its own texts and format.",
+      "loadingChannels": "Loading channels…",
+      "noChannels": "No connected channels. Connect them in Channels.",
+      "publishButton": "{count, plural, =0 {Pick at least one channel} one {Record & publish to # channel} other {Record & publish to # channels}}"
+    }
   }
 }

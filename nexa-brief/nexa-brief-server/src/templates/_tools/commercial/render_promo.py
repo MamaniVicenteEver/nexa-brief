@@ -10,8 +10,8 @@ se captura cada instante exacto y ffmpeg arma el mp4 a fps constantes. Tarda
 más que tiempo real, pero el resultado no depende de la potencia del equipo.
 
 Uso (rutas de página relativas a src/templates/):
-  python3 _tools/commercial/render_promo.py commercial/promo-trendy/index.html out.mp4
-  python3 _tools/commercial/render_promo.py lyrics/lyrics-grunge/index.html out.mp4 [--fps 30] [--size 1920x1080] [--from 0] [--to END] [--workers 3]
+  python3 _tools/commercial/render_promo.py nodemotion/commercial/promo-trendy/index.html out.mp4
+  python3 _tools/commercial/render_promo.py nodemotion/lyrics/lyrics-grunge/index.html out.mp4 [--fps 30] [--size 1920x1080] [--from 0] [--to END] [--workers 3]
 Requiere: playwright (chromium) y ffmpeg. Levanta su propio servidor HTTP.
 """
 import argparse, asyncio, functools, http.server, json, pathlib, subprocess, threading
@@ -44,7 +44,7 @@ async def render(args):
     W, H = map(int, args.size.lower().split("x"))
     httpd = serve(HERE)
     url = f"http://127.0.0.1:{httpd.server_address[1]}/{args.page}?t=0&headless=1"
-    page = pathlib.Path(args.page)   # relativo a src/templates/, p.ej. commercial/promo-trendy/index.html
+    page = pathlib.Path(args.page)   # relativo a src/templates/, p.ej. nodemotion/commercial/promo-trendy/index.html
     folder = HERE / page.parent
     cands = [folder / "assets" / (page.stem + ".config.json"), folder / "assets" / "config.json"]
     cfg_file = next(c for c in cands if c.exists())

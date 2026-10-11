@@ -2,12 +2,19 @@ import type { ChannelPlatform } from "@/features/channels";
 import { httpClient } from "@/infrastructure/api/http-client";
 import type {
   AssignVideoInput,
+  CategoryAutomation,
+  CategoryAutomationInput,
+  PlanItem,
+  PlannerMessage,
+  PlannerProvider,
+  PlannerReply,
   PublishNowInput,
   QueueEntry,
   QueueEntryFilters,
   QueueSource as QueueSourceType,
   QueueStatus,
   QueueVideoInput,
+  SavedPlanItem,
   ScheduleSlot,
   ScheduleSlotInput,
   ScheduleSlotUpdateInput,
@@ -211,4 +218,159 @@ export async function publishNow(input: PublishNowInput): Promise<QueueEntry> {
     },
   });
   return mapQueueEntry(dto);
+}
+
+// ── Automatización por categoría + planificador con IA ──────────────────────
+
+// El planificador usa un LLM: puede tardar 2–3 minutos.
+const PLANNER_TIMEOUT_MS = 300_000;
+
+interface CategoryAutomationDto {
+  category_id: string;
+  display_name: string;
+  status: CategoryAutomation["status"];
+  engine: CategoryAutomation["engine"];
+  default_cadence: CategoryAutomation["defaultCadence"];
+  slots: ScheduleSlotDto[];
+}
+
+export async function getCategoryAutomations(signal?: AbortSignal): Promise<CategoryAutomation[]> {
+  const dtos = await httpClient<CategoryAutomationDto[]>("/api/v1/schedule/categories", {
+    signal,
+  });
+  return dtos.map((dto) => ({
+    categoryId: dto.category_id,
+    displayName: dto.display_name,
+    status: dto.status,
+    engine: dto.engine,
+    defaultCadence: dto.default_cadence,
+    slots: dto.slots.map(mapScheduleSlot),
+  }));
+}
+
+export async function saveCategoryAutomation(
+  input: CategoryAutomationInput,
+): Promise<ScheduleSlot[]> {
+  const dtos = await httpClient<ScheduleSlotDto[]>("/api/v1/schedule/categories", {
+    method: "POST",
+    body: {
+      category_path: input.categoryPath,
+      accounts: input.accounts,
+      cadence: input.cadence,
+      days: input.cadence === "custom" ? (input.days ?? []) : null,
+      times: input.times,
+    },
+  });
+  return dtos.map(mapScheduleSlot);
+}
+
+interface PlanItemDto {
+  date: string;
+  time: string;
+  category_path: string;
+  design: string | null;
+  topic: string;
+  angle?: string;
+  description?: string;
+}
+
+interface SavedPlanItemDto extends PlanItemDto {
+  item_id: string;
+  production_id?: string | null;
+  production_state?: string | null;
+  video_id?: string | null;
+  created_at?: string;
+}
+
+function mapPlanItem(dto: PlanItemDto): PlanItem {
+  return {
+    date: dto.date,
+    time: dto.time,
+    categoryPath: dto.category_path,
+    design: dto.design ?? null,
+    topic: dto.topic,
+    angle: dto.angle ?? "",
+    description: dto.description ?? "",
+  };
+}
+
+function toPlanItemDto(item: PlanItem): PlanItemDto {
+  return {
+    date: item.date,
+    time: item.time,
+    category_path: item.categoryPath,
+    design: item.design,
+    topic: item.topic,
+    angle: item.angle,
+    description: item.description,
+  };
+}
+
+function mapSavedPlanItem(dto: SavedPlanItemDto): SavedPlanItem {
+  return {
+    ...mapPlanItem(dto),
+    itemId: dto.item_id,
+    productionId: dto.production_id ?? null,
+    productionState: dto.production_state ?? null,
+    videoId: dto.video_id ?? null,
+    createdAt: dto.created_at ?? "",
+  };
+}
+
+export async function plannerChat(input: {
+  messages: PlannerMessage[];
+  weekStart?: string;
+  provider?: PlannerProvider;
+}): Promise<PlannerReply> {
+  const dto = await httpClient<{ reply: string; items: PlanItemDto[]; warnings: string[] }>(
+    "/api/v1/schedule/planner/chat",
+    {
+      method: "POST",
+      body: {
+        messages: input.messages,
+        week_start: input.weekStart || null,
+        provider: input.provider ?? null,
+      },
+      timeoutMs: PLANNER_TIMEOUT_MS,
+    },
+  );
+  return { reply: dto.reply, items: dto.items.map(mapPlanItem), warnings: dto.warnings ?? [] };
+}
+
+export async function savePlanItems(items: PlanItem[]): Promise<SavedPlanItem[]> {
+  const dtos = await httpClient<SavedPlanItemDto[]>("/api/v1/schedule/planner/items", {
+    method: "POST",
+    body: { items: items.map(toPlanItemDto) },
+  });
+  return dtos.map(mapSavedPlanItem);
+}
+
+export async function getPlanItems(
+  fromDate?: string,
+  signal?: AbortSignal,
+): Promise<SavedPlanItem[]> {
+  const qs = buildQueryString({ from_date: fromDate });
+  const dtos = await httpClient<SavedPlanItemDto[]>(`/api/v1/schedule/planner/items${qs}`, {
+    signal,
+  });
+  return dtos.map(mapSavedPlanItem);
+}
+
+export async function deletePlanItem(itemId: string): Promise<void> {
+  await httpClient<void>(`/api/v1/schedule/planner/items/${itemId}`, { method: "DELETE" });
+}
+
+export async function producePlanItem(input: {
+  itemId: string;
+  agent?: string;
+  autoRecord?: boolean;
+}): Promise<{ itemId: string; productionId: string; videoId: string }> {
+  const dto = await httpClient<{ item_id: string; production_id: string; video_id: string }>(
+    `/api/v1/schedule/planner/items/${input.itemId}/produce`,
+    {
+      method: "POST",
+      body: { agent: input.agent ?? null, auto_record: input.autoRecord ?? true },
+    },
+  );
+  return { itemId: dto.item_id, productionId: dto.production_id, videoId: dto.video_id };
 }

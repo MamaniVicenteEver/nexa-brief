@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NEXA BRANDING / EMBLEM BUILDER</title>
+    <link rel="stylesheet" href="./marca.css" />
+  </head>
+  <body>
+    <main class="brand-page">
+      <header class="page-header">
+        <p id="page-label" class="page-label">NEXA BRANDING / EMBLEM BUILDER</p>
+        <div class="header-actions">
+          <button id="language-toggle" class="language-toggle" type="button" aria-pressed="false">
+            <span class="language-toggle-mark" aria-hidden="true">文A</span>
+            <span id="language-toggle-label">ENGLISH</span>
+          </button>
+          <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+            <span class="theme-toggle-mark" aria-hidden="true"></span>
+            <span id="theme-toggle-label">MODO CLARO</span>
+          </button>
+        </div>
+      </header>
+      <section id="emblem" class="emblem-stage" aria-label="Emblema de NODE"></section>
+      <section id="lines" class="lines-section" aria-labelledby="lines-title"></section>
+      <div id="preview-modal" class="preview-modal" hidden></div>
+    </main>
+    <script src="./marca.js" defer></script>
+  </body>
+</html>

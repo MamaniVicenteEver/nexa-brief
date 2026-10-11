@@ -5,7 +5,7 @@ Generadas con el núcleo común `_tools/commercial/build/core.js` + `build/sad-c
 revelados y destrucción de letras) + el archivo de escenas de cada una
 (`lluvia.js`, `memoria.js`, `ceniza.js`, `vacio.js`).
 
-Los HTML se GENERAN — no editar `lyrics/<id>/index.html` a mano:
+Los HTML se GENERAN — no editar `nodemotion/lyrics/<id>/index.html` a mano:
 
     python3 _tools/commercial/build/build.py lyrics-lluvia-gris lyrics-memoria lyrics-ceniza lyrics-vacio
 
@@ -20,4 +20,4 @@ escena: `layouts.<tipo>.trans`. Clips preferidos por escena: `layouts.<tipo>.med
 
 Render fluido (recomendado, son plantillas pesadas): cuadro a cuadro
 
-    python3 _tools/commercial/render_promo.py lyrics/lyrics-ceniza/index.html out.mp4 --workers 4
+    python3 _tools/commercial/render_promo.py nodemotion/lyrics/lyrics-ceniza/index.html out.mp4 --workers 4

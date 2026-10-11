@@ -239,3 +239,135 @@ async def publish_now(body: PublishNowRequest) -> QueueEntryResponse:
     _publish_tasks.add(task)
     task.add_done_callback(_on_publish_done)
     return _queue_response(entry)
+
+
+# ── Automatización por categoría + planificador con IA ───────────────────────
+# Ver src/core/schedule/planner.py. La categoría publica sola en sus canales
+# (diario o día por medio); el planificador conversa con la IA y propone qué
+# tema y diseño va cada día. El plan es un borrador: producir es explícito.
+
+from datetime import date as _date  # noqa: E402
+
+from pydantic import BaseModel, Field  # noqa: E402
+
+from src.core.schedule import planner  # noqa: E402
+
+
+class CategoryAutomationRequest(BaseModel):
+    category_path: str
+    accounts: list[str] = Field(..., description="['youtube:alias', 'tiktok:alias', …]")
+    cadence: str = Field("daily", pattern="^(daily|alternate|custom)$")
+    days: list[int] | None = None
+    times: list[str] = Field(default_factory=lambda: ["15:00"])
+
+
+class PlannerChatRequest(BaseModel):
+    messages: list[planner.ChatMessage]
+    week_start: _date | None = None
+    provider: str | None = Field(None, description="deepseek | claude | codex (default: PLANNER_PROVIDER)")
+
+
+class PlannerApplyRequest(BaseModel):
+    items: list[planner.PlanItem]
+
+
+class PlannerProduceRequest(BaseModel):
+    agent: str | None = None
+    auto_record: bool = True
+
+
+def _week_start(value: _date | None) -> _date:
+    from datetime import timedelta
+
+    today = _date.today()
+    return value or today + timedelta(days=(7 - today.weekday()) % 7 or 7)
+
+
+@router.get("/categories")
+async def list_category_automations() -> list[dict]:
+    return planner.automation_summary()
+
+
+@router.post("/categories", response_model=list[ScheduleSlotResponse], status_code=201)
+async def save_category_automation(body: CategoryAutomationRequest) -> list[ScheduleSlotResponse]:
+    try:
+        slots = await planner.create_category_automation(
+            body.category_path, body.accounts, body.cadence, body.times, body.days
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return [_slot_response(s) for s in slots]
+
+
+@router.post("/planner/chat", response_model=planner.PlannerReply)
+async def planner_chat(body: PlannerChatRequest) -> planner.PlannerReply:
+    from src.adapters.ai.factory import TEXT_PROVIDERS, get_text_ai
+    from src.config.exceptions import NexaBriefError
+    from src.config.settings import settings
+
+    provider = body.provider or settings.planner_provider
+    if provider not in TEXT_PROVIDERS:
+        raise HTTPException(status_code=400, detail=f"proveedor desconocido: {provider}")
+    try:
+        return await planner.chat(get_text_ai(provider), body.messages, _week_start(body.week_start))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except NexaBriefError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@router.post("/planner/items", status_code=201)
+async def planner_apply(body: PlannerApplyRequest) -> list[dict]:
+    return await planner.save_plan(body.items)
+
+
+@router.get("/planner/items")
+async def planner_items(from_date: str | None = None) -> list[dict]:
+    from src.presentation.api.routers.explainer import get_producer
+
+    producer = get_producer()
+    rows = planner.list_plan(from_date)
+    for row in rows:
+        prod = producer.get(row["production_id"]) if row.get("production_id") else None
+        row["production_state"] = prod["state"] if prod else None
+        row["video_id"] = prod["video_id"] if prod else None
+    return rows
+
+
+@router.delete("/planner/items/{item_id}", status_code=204)
+async def planner_delete_item(item_id: str) -> None:
+    if not await planner.delete_plan_item(item_id):
+        raise HTTPException(status_code=404, detail="ítem no encontrado")
+
+
+@router.post("/planner/items/{item_id}/produce", status_code=202)
+async def planner_produce_item(item_id: str, body: PlannerProduceRequest) -> dict:
+    """Lanza la producción (agente local) de un ítem del plan de una categoría explainer."""
+    from src.core.categories import get_category
+    from src.core.data import collection
+    from src.presentation.api.routers.explainer import get_producer
+
+    item = collection("content_plan").get(item_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="ítem no encontrado")
+    if item.get("production_id"):
+        raise HTTPException(status_code=409, detail="este ítem ya tiene una producción")
+    node = get_category(item["category_path"])
+    if node is None or node.engine != "explainer_kit":
+        raise HTTPException(status_code=400, detail="solo las categorías con motor explainer se producen con agente")
+    producer = get_producer()
+    await producer.recover_interrupted()
+    try:
+        rec = await producer.submit(
+            category_path=item["category_path"],
+            design=item["design"],
+            topic=item["topic"],
+            description=" ".join(x for x in (item.get("angle"), item.get("description")) if x),
+            agent=body.agent,
+            auto_record=body.auto_record,
+            plan_item_id=item_id,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    await planner.link_production(item_id, rec["production_id"])
+    return {"item_id": item_id, "production_id": rec["production_id"], "video_id": rec["video_id"]}

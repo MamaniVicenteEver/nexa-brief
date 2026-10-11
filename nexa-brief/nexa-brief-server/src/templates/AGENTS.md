@@ -55,26 +55,36 @@ modal, landing y Estudio). Por eso tiene que funcionar en los cuatro contextos.
 ## 3. Estructura obligatoria de una plantilla
 
 ```text
-src/templates/
-├── AGENTS.md                 ← este archivo
-├── README.md                 ← resumen del catálogo
-├── templates.json            ← catálogo: fuente de verdad (sección 4)
-├── lyrics/<template-id>/     ← plantillas de letras
-├── commercial/<template-id>/ ← promos
-├── image/<template-id>/      ← basadas en una imagen
-├── video/<template-id>/      ← basadas en un video
-├── sandbox/<prototipo>/      ← prototipos: reglas propias en sandbox/AGENTS.md
-└── _tools/                   ← generadores y herramientas (sección 8)
+src/templates/                         ← SOLO PRODUCCIÓN (lo que ya sabemos que funciona)
+├── AGENTS.md                          ← este archivo
+├── README.md                          ← resumen del catálogo
+├── templates.json                     ← catálogo: fuente de verdad (sección 4)
+├── nodemotion/                        ← categoría NodeMotion (música): las plantillas de este archivo
+│   ├── lyrics/<template-id>/          ← plantillas de letras
+│   ├── commercial/<template-id>/      ← promos
+│   ├── image/<template-id>/           ← basadas en una imagen
+│   └── video/<template-id>/           ← basadas en un video
+├── nodetech/<video-id>/               ← videos del explainer-kit, una carpeta por categoría
+├── nodehistory/<video-id>/              (nodepolitics/, nodeeconomy/ se crean al primer video)
+├── _tools/                            ← motores, generadores y herramientas (sección 8)
+│   └── explainer-kit/                 ← motor de videos explicativos (Tech, History, Politics, Economy)
+└── sandbox/                           ← casa de pruebas: una carpeta por categoría (sandbox/AGENTS.md)
 ```
 
-> **`sandbox/`** es la zona de prototipos: ahí rige `sandbox/AGENTS.md` (diseño libre,
-> estructura mínima y 6 reglas). Las reglas de este archivo se aplican a un prototipo
-> recién cuando se **promueve** a plantilla real.
+> **Las carpetas `node*/` de videos y `_tools/explainer-kit/`** no son plantillas de este catálogo:
+> no se registran en `templates.json` ni tienen nicho. Las rige **`_tools/explainer-kit/AGENTS.md`**
+> (cómo producir un video) y el backend las lista por categoría (`niches.json` → `categories`,
+> campos `folder` y `designs`). Cada video es solo datos; el motor no se edita.
+
+> **`sandbox/`** es la casa de pruebas: `sandbox/AGENTS.md` es el índice y cada categoría tiene su
+> `AGENTS.md` con todo lo aprendido (prototipos de música en `sandbox/nodemotion/`, ideas de videos
+> en `sandbox/nodetech/`, `nodehistory/`, …). Las reglas de este archivo se aplican a un prototipo
+> recién cuando se **promueve** a producción.
 
 Cada plantilla:
 
 ```text
-<categoria>/<template-id>/
+nodemotion/<tipo>/<template-id>/        ← tipo: lyrics | commercial | image | video
 ├── index.html                ← OBLIGATORIO. Todo el HTML/CSS/JS inline.
 ├── assets/
 │   ├── config.json           ← OBLIGATORIO. Config por defecto (la que se ve en /plantillas).
@@ -90,7 +100,7 @@ Cada plantilla:
 - El `template-id` es estable: **nunca se renombra** (lo usan el frontend, `niches.json`,
   `data/` y Remotion). Si hace falta mover la carpeta, se cambia `folder` en `templates.json`.
 - Nombres de carpeta en minúscula con guiones: `lyrics-mi-plantilla`, `promo-algo`.
-- Créditos de medios de stock: en el `CREDITS.md` de la familia (p. ej. `commercial/CREDITS.md`).
+- Créditos de medios de stock: en el `CREDITS.md` de la familia (p. ej. `nodemotion/commercial/CREDITS.md`).
 
 ---
 
@@ -102,14 +112,14 @@ Una plantilla **no existe para la app** hasta que está registrada en los dos.
 
 ```jsonc
 "lyrics-mi-plantilla": {
-  "folder": "lyrics/lyrics-mi-plantilla",
+  "folder": "nodemotion/lyrics/lyrics-mi-plantilla",
   "display_name": "Mi Plantilla",               // nombre visible
   "description": "Qué hace, en una o dos frases.",
   "native_orientation": "any",                   // "any" | "16:9" | "9:16"
-  "index_html": "lyrics/lyrics-mi-plantilla/index.html",
-  "config_json": "lyrics/lyrics-mi-plantilla/assets/config.json",
+  "index_html": "nodemotion/lyrics/lyrics-mi-plantilla/index.html",
+  "config_json": "nodemotion/lyrics/lyrics-mi-plantilla/assets/config.json",
   "vision_prompt": null,
-  "config_prompt": "lyrics/lyrics-mi-plantilla/prompts/config_mapper.md", // null si static_config
+  "config_prompt": "nodemotion/lyrics/lyrics-mi-plantilla/prompts/config_mapper.md", // null si static_config
   "remotion_component": null,                    // ruta informativa del port Remotion, o null
   "runtime_assets": ["assets/media"],            // archivos que el HTML necesita en el job (sección 5)
   "category_id": "lyrics",                       // ver "categories" al principio del archivo
@@ -125,7 +135,7 @@ Una plantilla **no existe para la app** hasta que está registrada en los dos.
 ```
 
 - `category_id` es **solo la agrupación visual** en la app. El **tipo** de plantilla
-  (letras, promo, imagen, video) lo decide su carpeta (`lyrics/…`, `commercial/…`).
+  (letras, promo, imagen, video) lo decide su carpeta (`nodemotion/lyrics/…`, `nodemotion/commercial/…`).
 - `inputs` declara canción, medios por slot (`kind`, `min`/`max`/`count`, `target`) y
   textos editables (`key` = ruta dentro de config, `default`, `max`). El formulario del
   Estudio y de Crear video se arma solo con esto: **no hay que tocar el frontend**.
@@ -303,7 +313,8 @@ al generar. Igual, después de regenerar SIEMPRE corré `optimize.py --check <id
 
 1. **Copiá la plantilla más parecida** como base (misma familia y mismo tipo de fondo),
    en vez de empezar de cero: así heredás el contrato de las secciones 5 y 6.
-2. Creá la carpeta `<categoria>/<nuevo-id>/` con la estructura de la sección 3.
+2. Prototipala primero en `sandbox/nodemotion/<id>/` (ver `sandbox/nodemotion/AGENTS.md`) y después
+   creá la carpeta `nodemotion/<tipo>/<nuevo-id>/` con la estructura de la sección 3.
 3. Poné en `assets/` una canción, una letra (`lyrics.json` real, formato Whisper) y los
    medios por defecto. Registrá los créditos de stock en el `CREDITS.md` de la familia.
 4. Registrala en `templates.json` (4.1) y en `niches.json` (4.2), clonando la entrada de

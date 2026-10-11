@@ -150,6 +150,47 @@
       "templates": "plantillas · {lyric} de letras",
       "niches": "nichos activos",
       "produced": "de video producido"
+    },
+    "categories": {
+      "title": "Red de canales NODE",
+      "subtitle": "Cada categoría con su embudo: en producción → listo para grabar → grabado esperando su horario → publicado.",
+      "manage": "Plantillas",
+      "loadError": "No se pudo cargar el resumen de categorías.",
+      "designs": "{count, plural, =0 {sin diseños} one {# diseño} other {# diseños}}",
+      "templates": "{count, plural, =0 {sin plantillas} one {# plantilla} other {# plantillas}}",
+      "autopilot": "Automática",
+      "setup": "Falta configurar",
+      "funnel": {
+        "producing": "Produciendo",
+        "readyToRecord": "Listos",
+        "recordedPending": "Grabados",
+        "published": "Publicados"
+      },
+      "noSchedule": "Sin horarios: todavía no publica sola.",
+      "everyDay": "Todos los días",
+      "days": {
+        "mon": "lun",
+        "tue": "mar",
+        "wed": "mié",
+        "thu": "jue",
+        "fri": "vie",
+        "sat": "sáb",
+        "sun": "dom"
+      },
+      "next": "Próxima:",
+      "automation": "Plan: {planned} pendientes · pregrabación {prerecord} · producción automática {autoproduce}",
+      "on": "activa",
+      "off": "apagada",
+      "missing": {
+        "empty_category": "Categoría vacía: sin diseños ni plantillas propias (puede usar los del kit).",
+        "no_content": "No hay videos listos ni producciones en curso: creá uno o guardá un plan semanal.",
+        "no_ready_video": "No hay ningún video listo o grabado para el próximo horario.",
+        "no_schedule": "Sin horarios: configurala en Programación → Automatización por categoría.",
+        "autopublish_off": "La publicación automática está apagada en el servidor (ENABLE_AUTO_PUBLISHING=false): los horarios no se ejecutan."
+      },
+      "create": "Crear video",
+      "openTemplates": "Ver plantillas",
+      "schedule": "Programar"
     }
   },
   "channels": {
@@ -401,13 +442,13 @@
     }
   },
   "templates": {
-  "grid": {
-    "heading": "Plantillas",
-    "loading": "Cargando plantillas...",
-    "empty": "No hay plantillas configuradas.",
-    "filterLabel": "Filtrar por categoría",
-    "all": "Todas"
-  },
+    "grid": {
+      "heading": "Plantillas",
+      "loading": "Cargando plantillas...",
+      "empty": "No hay plantillas configuradas.",
+      "filterLabel": "Filtrar por categoría",
+      "all": "Todas"
+    },
     "card": {
       "tagImage": "Imagen",
       "tagVideo": "Video",
@@ -445,6 +486,72 @@
       "uploadNew": "Subir nuevo",
       "chooseFromLibrary": "Elegir de biblioteca",
       "remove": "Quitar"
+    },
+    "prep": {
+      "heading": "Preparación",
+      "intro": "Videos del explainer listos para grabar. Por defecto se graba un preview de 10 s (rápido, para revisar); \"Completo\" renderiza todo, lo guarda en output/categoría/ y lo deja listo para los horarios de su categoría. Publicar siempre usa el video completo y empieza en privado.",
+      "loading": "Cargando videos…",
+      "empty": "No hay videos del explainer.",
+      "statusReady": "Listo para grabar",
+      "statusRendered": "Ya renderizado",
+      "statusPreparing": "En preparación",
+      "record": "Grabar",
+      "recording": "Grabando…",
+      "account": "Cuenta de publicación",
+      "noAccount": "Solo grabar",
+      "privacy": "Privacidad",
+      "privacyPrivate": "Privado",
+      "privacyUnlisted": "No listado",
+      "privacyPublic": "Público",
+      "publishAndRecord": "Grabar y publicar",
+      "needsTitle": "Falta youtube_title en publish.json",
+      "jobState": {
+        "queued": "En cola",
+        "rendering": "Renderizando…",
+        "publishing": "Publicando…",
+        "done": "Terminado",
+        "failed": "Falló"
+      },
+      "duration": "Duración",
+      "durationOption": {
+        "10": "Preview 10 s",
+        "20": "Preview 20 s",
+        "full": "Completo"
+      },
+      "scheduled": "listo para los horarios de su categoría",
+      "needsTexts": "Faltan los textos de publicación.",
+      "generateTexts": "Generar textos",
+      "generatingTexts": "Generando textos…",
+      "textsDone": "Textos de publicación generados.",
+      "preview": "Previsualizar",
+      "emptyCategory": "Todavía no hay videos de esta categoría en preparación.",
+      "filter": "Filtrar videos",
+      "filterAll": "Todos",
+      "filterDemos": "Demos de diseño",
+      "demo": "Demo",
+      "demoNote": "demo del diseño: mismo guion que «La noche que cayó el Muro»; publicar varios duplica contenido",
+      "tagPublishable": "Publicable",
+      "publishTexts": "Textos de publicación"
+    },
+    "windows": {
+      "label": "Categorías principales",
+      "loading": "Cargando categorías…",
+      "loadError": "No se pudieron cargar las categorías.",
+      "status": {
+        "active": "Activa",
+        "planned": "Planificada",
+        "empty": "Vacía"
+      },
+      "engine": {
+        "pipeline": "Plantillas",
+        "explainer_kit": "Explainer kit"
+      },
+      "templatesCount": "{count, plural, one {# plantilla} other {# plantillas}}",
+      "designsCount": "{count, plural, one {# diseño} other {# diseños}}",
+      "readyCount": "{count, plural, one {# listo} other {# listos}}",
+      "others": "Otras",
+      "subcategories": "Subcategoría",
+      "subcategoryEmpty": "Esta subcategoría todavía no tiene plantillas."
     }
   },
   "createVideo": {
@@ -480,7 +587,7 @@
       "lockedHint": "En los videos de letras la duración es siempre la de la canción completa, para que la letra coincida con el audio."
     },
     "nichoField": {
-      "label": "Nicho / categoría musical",
+      "label": "Categoría / nicho",
       "badge": "Elegí una",
       "selectPlaceholder": "Selecciona una categoría",
       "addCategoryButton": "+ Agregar categoría",
@@ -488,7 +595,13 @@
       "confirmAdd": "Agregar",
       "cancel": "Cancelar",
       "templatesHintBefore": "Puedes ver ejemplos de cada plantilla en",
-      "templatesLink": "Plantillas"
+      "templatesLink": "Plantillas",
+      "explainerItem": "{name}: crear video explicativo",
+      "status": {
+        "active": "activa",
+        "planned": "planificada",
+        "empty": "vacía"
+      }
     },
     "recorderEngineSection": {
       "title": "Motor de grabación",
@@ -650,9 +763,14 @@
       "timesLabel": "Horarios (UTC)",
       "removeTime": "Quitar",
       "addTime": "+ Agregar horario",
-      "nicheLabel": "Filtro de nicho (opcional)",
-      "anyNiche": "Cualquier nicho",
-      "saveError": "No se pudo guardar el horario. Reintentá."
+      "nicheLabel": "Categoría o nicho (opcional)",
+      "anyNiche": "Cualquier categoría",
+      "saveError": "No se pudo guardar el horario. Reintentá.",
+      "categoriesGroup": "Categorías principales",
+      "categoryStatus": {
+        "planned": "planificada",
+        "empty": "vacía"
+      }
     },
     "assignVideo": {
       "title": "Asignar video",
@@ -720,6 +838,65 @@
         "generic": "No se pudo publicar en {platform}. Podés reintentar.",
         "tiktokUnaudited": "TikTok todavía no aprobó tu app: mientras tanto solo permite publicar en cuentas privadas. Poné la cuenta en privado en la app de TikTok y reintentá (el video queda como \"Solo yo\")."
       }
+    },
+    "automation": {
+      "heading": "Automatización por categoría",
+      "description": "Cada categoría publica sola en sus canales con los videos listos. Guardar reemplaza los horarios de esa categoría en los canales elegidos.",
+      "loading": "Cargando categorías…",
+      "loadError": "No se pudo cargar la automatización por categoría.",
+      "configure": "Configurar",
+      "noSlots": "Sin horarios: esta categoría no publica sola todavía.",
+      "channels": "Canales",
+      "noAccounts": "No hay cuentas conectadas para publicar.",
+      "cadenceLabel": "Frecuencia",
+      "cadence": {
+        "daily": "Todos los días",
+        "alternate": "Día por medio",
+        "custom": "Personalizado"
+      },
+      "engine": {
+        "pipeline": "Plantillas",
+        "explainer_kit": "Explainer kit"
+      },
+      "utcNote": "Las horas están en UTC.",
+      "replaceNote": "Reemplaza los horarios actuales de la categoría en esos canales.",
+      "saved": "{count, plural, one {Se guardó # horario} other {Se guardaron # horarios}}"
+    },
+    "planner": {
+      "heading": "Planificador con IA",
+      "description": "Contale a la IA qué querés publicar esta semana; propone tema, diseño y hora por día. El plan es un borrador: producir es aparte.",
+      "provider": "Proveedor",
+      "providers": {
+        "deepseek": "DeepSeek",
+        "claude": "Claude",
+        "codex": "Codex"
+      },
+      "weekStart": "Semana desde",
+      "emptyChat": "Ej.: \"Armame la semana: NodeTech todos los días e Historia día por medio, temas de actualidad\".",
+      "thinking": "Pensando… puede tardar un par de minutos.",
+      "messageLabel": "Mensaje para el planificador",
+      "placeholder": "Escribí tu pedido (Ctrl+Enter para enviar)",
+      "send": "Enviar",
+      "sending": "Enviando…",
+      "proposalHeading": "Plan propuesto",
+      "savePlan": "{count, plural, =0 {Guardar plan} one {Guardar plan (#)} other {Guardar plan (#)}}",
+      "selectAll": "Seleccionar todo",
+      "saved": "{count, plural, one {Se guardó # ítem del plan} other {Se guardaron # ítems del plan}}",
+      "colDate": "Fecha",
+      "colCategory": "Categoría",
+      "colDesign": "Diseño",
+      "colTopic": "Tema",
+      "colAngle": "Ángulo",
+      "colProduction": "Producción",
+      "colActions": "Acciones",
+      "savedHeading": "Plan guardado",
+      "loadingSaved": "Cargando plan…",
+      "savedEmpty": "Todavía no hay un plan guardado.",
+      "notProduced": "Sin producir",
+      "informational": "Informativo",
+      "produce": "Producir",
+      "producing": "Enviando…",
+      "produceStarted": "Producción iniciada. Se graba automáticamente al terminar."
     }
   },
   "access": {
@@ -809,5 +986,117 @@
     },
     "channelsTitle": "Canales en piloto automático",
     "channelVideos": "{count, plural, one {# video} other {# videos}}"
+  },
+  "explainer": {
+    "preview": {
+      "hint": "Página en vivo del video. Hacé clic dentro si no arranca solo."
+    },
+    "providers": {
+      "claude": "Claude",
+      "codex": "Codex",
+      "deepseek": "DeepSeek"
+    },
+    "window": {
+      "create": "Crear video",
+      "topicIdeas": "Ideas de temas",
+      "statusNote": {
+        "planned": "Categoría planificada: todavía no tiene videos propios. Podés crear el primero con los diseños del kit.",
+        "empty": "Categoría vacía: todavía no hay nada producido. Creá el primer video con los diseños del kit."
+      }
+    },
+    "designs": {
+      "heading": "Diseños",
+      "preview": "Ver demo",
+      "noPreview": "Sin demo todavía",
+      "sharedNote": "Usa los diseños del kit hasta tener los propios.",
+      "loading": "Cargando diseños…",
+      "empty": "No hay diseños disponibles para esta categoría."
+    },
+    "productions": {
+      "heading": "En producción",
+      "intro": "Videos que el agente local está armando. Al quedar listos pasan a Preparación para grabarlos.",
+      "loading": "Cargando producciones…",
+      "empty": "No hay producciones en esta categoría.",
+      "log": "Ver log",
+      "loadingLog": "Cargando log…",
+      "emptyLog": "El log está vacío.",
+      "autoRecord": "graba al terminar",
+      "resume": "Retomar",
+      "resuming": "Retomando…"
+    },
+    "productionState": {
+      "queued": "En cola",
+      "creating": "Creando",
+      "producing": "Produciendo",
+      "finishing": "Terminando",
+      "ready": "Listo",
+      "recording": "Grabando",
+      "done": "Terminado",
+      "incomplete": "Incompleto",
+      "failed": "Falló"
+    },
+    "fields": {
+      "topic": "Tema",
+      "topicPlaceholder": "¿De qué trata el video?",
+      "description": "Descripción (opcional)",
+      "descriptionPlaceholder": "Enfoque, datos que no pueden faltar, tono…",
+      "design": "Diseño",
+      "noDesigns": "Sin diseños",
+      "textProvider": "Proveedor de textos",
+      "media": "Imágenes y videos (opcional)",
+      "mediaHint": "Si lo dejás vacío, la IA busca los medios.",
+      "removeFile": "Quitar",
+      "agent": "Agente que produce",
+      "autoRecord": "Grabar automáticamente al terminar"
+    },
+    "create": {
+      "title": "Crear video · {category}",
+      "description": "Primero (opcional) generá los textos para revisarlos y editarlos; después prepará el video. El agente local lo produce sin grabarlo.",
+      "generateBrief": "Generar textos",
+      "regenerateBrief": "Volver a generar textos",
+      "generatingBrief": "Generando textos…",
+      "briefWait": "Esto puede tardar unos minutos. Podés seguir mirando el diseño mientras tanto.",
+      "briefOptional": "Los textos son opcionales: si preparás el video sin generarlos, el agente los escribe.",
+      "produce": "Preparar video (sin grabar)",
+      "produceAndRecord": "Preparar y grabar al terminar",
+      "producing": "Enviando…",
+      "started": "Producción iniciada: {video}. Aparece en \"En producción\".",
+      "previewHeading": "Previsualizar diseño",
+      "showPreview": "Mostrar",
+      "hidePreview": "Ocultar",
+      "designsOwn": "Plantillas de {name}",
+      "designsOther": "Plantillas de {name} (también podés usarlas)"
+    },
+    "brief": {
+      "idea": "Idea",
+      "hook": "Gancho",
+      "angle": "Ángulo",
+      "thesis": "Tesis",
+      "outline": "Esquema",
+      "thumbnail": "Texto de miniatura",
+      "mediaSuggestions": "Medios sugeridos",
+      "title": "Título",
+      "alternatives": "Alternativas (clic para usarla como título)",
+      "useAlternative": "Usar como título principal",
+      "description": "Descripción",
+      "caption": "Texto",
+      "listen": "Escuchar voz",
+      "listening": "Sintetizando…"
+    },
+    "studio": {
+      "toggleSidebar": "Mostrar u ocultar el panel",
+      "tab": {
+        "texts": "Títulos y metadatos",
+        "record": "Grabar y publicar"
+      },
+      "textsHint": "Son los textos que se usan al publicar en cada red.",
+      "recordHeading": "Grabar",
+      "recordHint": "Preview de 10 o 20 s para revisar rápido, o el video completo (queda listo para los horarios de su categoría).",
+      "publishHeading": "Publicar",
+      "publishHint": "Elegí uno o varios canales: se graba el video completo y se publica en todos, cada red con sus propios textos y formato.",
+      "loadingChannels": "Cargando canales…",
+      "noChannels": "No hay canales conectados. Conectalos en Canales.",
+      "publishButton": "{count, plural, =0 {Elegí al menos un canal} one {Grabar y publicar en # canal} other {Grabar y publicar en # canales}}"
+    }
   }
 }

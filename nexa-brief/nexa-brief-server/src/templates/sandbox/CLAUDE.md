@@ -1,5 +1,5 @@
-# Sandbox de prototipos
+# Casa de pruebas (sandbox)
 
-Dentro de sandbox/ rigen las reglas de prototipo de este AGENTS.md, no las estrictas de src/templates/AGENTS.md (salvo al promover un prototipo):
+Índice de la casa de pruebas. Antes de trabajar, abrí el AGENTS.md de la carpeta del tema (nodemotion/, nodetech/, nodehistory/, nodepolitics/, nodeeconomy/):
 
 @AGENTS.md

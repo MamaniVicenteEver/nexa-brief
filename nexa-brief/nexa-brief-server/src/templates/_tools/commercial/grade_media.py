@@ -14,8 +14,8 @@ La matemática replica exactamente los filtros de la plantilla:
            (v-0.5)·c+0.5 → mapa lineal [dark → light] por canal.
   · css  → matriz saturate(s) de CSS → contrast(c) → brightness(b).
 
-Uso:  python3 _tools/commercial/grade_media.py commercial/promo-trendy/assets/config.json [--force]
-      (rutas de media relativas a la carpeta de la plantilla: commercial/promo-trendy/)
+Uso:  python3 _tools/commercial/grade_media.py nodemotion/commercial/promo-trendy/assets/config.json [--force]
+      (rutas de media relativas a la carpeta de la plantilla: nodemotion/commercial/promo-trendy/)
 """
 import json, pathlib, subprocess, sys
 
@@ -43,7 +43,7 @@ def run(cmd):
 
 def grade_config(cfg_path, force=False):
     cfg_path = pathlib.Path(cfg_path).resolve()
-    root = cfg_path.parent.parent            # commercial/promo-*/
+    root = cfg_path.parent.parent            # nodemotion/commercial/promo-*/
     db = json.loads(cfg_path.read_text())
     for case in db["configs"]:
         grades = case.get("grades") or {}

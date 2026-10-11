@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
+import { flattenCategories, useCategories } from "@/features/categories";
 import { useChannels } from "@/features/channels/hooks/useChannels";
 import { useNiches } from "@/features/create-video/hooks/useNiches";
 import { groupNiches } from "@/features/create-video/lib/niche-groups";
@@ -57,6 +58,8 @@ export function ScheduleSlotFormDialog({
   const { data: channels } = useChannels();
   const { data: niches } = useNiches();
   const nicheGroups = groupNiches(niches ?? []);
+  const { data: categoryTree } = useCategories();
+  const categoryOptions = flattenCategories(categoryTree ?? []);
   const createMutation = useCreateScheduleSlotMutation();
   const updateMutation = useUpdateScheduleSlotMutation();
 
@@ -284,6 +287,17 @@ export function ScheduleSlotFormDialog({
               className="rounded-xl border border-nb-line bg-transparent px-3 py-2 text-[13px] text-nb-ink outline-none focus:border-nb-ink"
             >
               <option value="">{t("slotForm.anyNiche")}</option>
+              {categoryOptions.length > 0 && (
+                <optgroup label={t("slotForm.categoriesGroup")}>
+                  {categoryOptions.map((category) => (
+                    <option key={category.path} value={category.path}>
+                      {category.status === "active"
+                        ? category.label
+                        : `${category.label} (${t(`slotForm.categoryStatus.${category.status}`)})`}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
               {nicheGroups.map((group) => (
                 <optgroup key={group.id} label={group.name}>
                   {group.niches.map((niche) => (

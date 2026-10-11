@@ -33,6 +33,7 @@ from src.core import job_tracker, publish_log
 from src.core.job import JobStage
 from src.core.schedule import queue_repository, slot_repository
 from src.core.schedule.models import QueueEntry, QueueSource, ScheduleSlot
+from src.core.categories import category_matches
 from src.core.metadata import copy_for_platform
 
 logger = structlog.get_logger(__name__)
@@ -222,7 +223,7 @@ def _pick_oldest_ready_job(slot: ScheduleSlot) -> str | None:
     records, _total = job_tracker.list_jobs(stage=JobStage.PACKAGED.value, limit=10_000, offset=0)
     candidates = sorted(records, key=lambda r: r.get("created_at", ""))
     for record in candidates:
-        if slot.niche_filter and record.get("category") != slot.niche_filter:
+        if not category_matches(record.get("category") or "", slot.niche_filter):
             continue
         job_id = record.get("job_id")
         if not job_id:

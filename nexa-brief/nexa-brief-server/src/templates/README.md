@@ -16,13 +16,16 @@ metadata de categoría para Plantillas, Crear video y Programación.
 Estructura física:
 
 ```text
-templates/
+templates/                      ← solo producción
 ├── templates.json
-├── lyrics/<template-id>/
-├── commercial/<template-id>/
-├── image/<template-id>/
-├── video/<template-id>/
-└── _tools/<family>/
+├── nodemotion/                 ← música (este catálogo)
+│   ├── lyrics/<template-id>/
+│   ├── commercial/<template-id>/
+│   ├── image/<template-id>/
+│   └── video/<template-id>/
+├── nodetech/ nodehistory/      ← videos del explainer-kit por categoría
+├── _tools/<family>/            ← generadores y herramientas (+ _tools/explainer-kit/, el motor explainer)
+└── sandbox/                    ← casa de pruebas por categoría (ver sandbox/AGENTS.md)
 ```
 
 Cada plantilla ejecutable debe tener, como mínimo:

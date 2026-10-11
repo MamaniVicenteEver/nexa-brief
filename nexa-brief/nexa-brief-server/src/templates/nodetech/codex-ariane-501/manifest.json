@@ -1,0 +1,244 @@
+{
+  "video_id": "codex-ariane-501",
+  "design": "rough",
+  "design_name": "PROTOTIPO",
+  "channel": "PROTOTIPO",
+  "status": "listo",
+  "created": "2026-10-07",
+  "title": "EL NÚMERO QUE NO CABÍA",
+  "pipeline_type": "explainer_kit",
+  "kicker": "ARIANE 501 · 4 JUN 1996",
+  "language": "es-419",
+  "duration_seconds": 213.55,
+  "script": {
+    "segments": 18,
+    "words": 536,
+    "arc": [
+      {
+        "id": "s01",
+        "tone": "suspenso",
+        "intensity": 0.8
+      },
+      {
+        "id": "s02",
+        "tone": "tensión",
+        "intensity": 0.65
+      },
+      {
+        "id": "s03",
+        "tone": "explicativo",
+        "intensity": 0.55
+      },
+      {
+        "id": "s04",
+        "tone": "explicativo",
+        "intensity": 0.62
+      },
+      {
+        "id": "s05",
+        "tone": "asombro",
+        "intensity": 0.7
+      },
+      {
+        "id": "s06",
+        "tone": "tensión creciente",
+        "intensity": 0.72
+      },
+      {
+        "id": "s07",
+        "tone": "cercano",
+        "intensity": 0.45
+      },
+      {
+        "id": "s08",
+        "tone": "revelación",
+        "intensity": 0.65
+      },
+      {
+        "id": "s09",
+        "tone": "aceleración",
+        "intensity": 0.82
+      },
+      {
+        "id": "s10",
+        "tone": "urgencia",
+        "intensity": 0.88
+      },
+      {
+        "id": "s11",
+        "tone": "clímax",
+        "intensity": 1.0
+      },
+      {
+        "id": "s12",
+        "tone": "clímax",
+        "intensity": 0.98
+      },
+      {
+        "id": "s13",
+        "tone": "peso",
+        "intensity": 0.3
+      },
+      {
+        "id": "s14",
+        "tone": "silencio",
+        "intensity": 0.25
+      },
+      {
+        "id": "s15",
+        "tone": "reflexivo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s16",
+        "tone": "reparación",
+        "intensity": 0.65
+      },
+      {
+        "id": "s17",
+        "tone": "cierre",
+        "intensity": 0.9
+      },
+      {
+        "id": "s18",
+        "tone": "cierre",
+        "intensity": 0.45
+      }
+    ]
+  },
+  "voice": {
+    "voice": "Sadaltager",
+    "provenance": [
+      {
+        "part": 0,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Sadaltager",
+        "dur": 69.44
+      },
+      {
+        "part": 1,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Sadaltager",
+        "dur": 67.64
+      },
+      {
+        "part": 2,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Sadaltager",
+        "dur": 68.52
+      }
+    ],
+    "wpm": 142,
+    "wer_aprox": 0.016,
+    "faltan": [
+      "kourou",
+      "con signo",
+      "coma",
+      "vulcain"
+    ],
+    "sobran": [
+      "coru",
+      "consigno",
+      "vulcan"
+    ]
+  },
+  "transcript": {
+    "words": 521,
+    "fake": false
+  },
+  "storyboard": {
+    "beats": 44,
+    "components": {
+      "rough.title": 2,
+      "rough.icon": 10,
+      "rough.photo": 5,
+      "rough.tally": 2,
+      "rough.annotate": 6,
+      "rough.flow": 3,
+      "rough.timeline": 2,
+      "rough.gauge": 1,
+      "rough.compare": 1,
+      "rough.load": 1,
+      "common.punch": 2,
+      "common.lyric": 4,
+      "rough.choice": 2,
+      "common.flash": 1,
+      "rough.stack": 1,
+      "rough.outrov1": 1
+    },
+    "lyrics_moments": 4
+  },
+  "media": [
+    "launch.jpg — Ariane 5 ECA VA258 depuis Toucan 03.jpg — Don-vip — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Ariane_5_ECA_VA258_depuis_Toucan_03.jpg",
+    "fragment.jpg — Ariane 501 Fragment.jpg — Deadpan — Public domain — https://commons.wikimedia.org/wiki/File:Ariane_501_Fragment.jpg",
+    "components.jpg — Belgian components for the Ariane 5 rocket.jpg — SpaceMusk — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Belgian_components_for_the_Ariane_5_rocket.jpg",
+    "fairing.jpg — Ariane 5 Payload Fairing Test.jpg — NASA — Public domain — https://commons.wikimedia.org/wiki/File:Ariane_5_Payload_Fairing_Test.jpg",
+    "pad.jpg — Ariane 5 launch pad.jpg — Philippe Semanaz / Philou.cn (username on Flickr) — CC BY-SA 2.0 — https://commons.wikimedia.org/wiki/File:Ariane_5_launch_pad.jpg"
+  ],
+  "video_formats": [
+    {
+      "id": "reels",
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "output_filename": "render/codex-ariane-501-9x16.mp4"
+    },
+    {
+      "id": "youtube",
+      "aspect_ratio": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "output_filename": "render/codex-ariane-501-16x9.mp4"
+    }
+  ],
+  "files": {
+    "PLAN.md": 14112,
+    "assets/config.json": 357,
+    "assets/lyrics.json": 59818,
+    "assets/media/CREDITS.md": 949,
+    "assets/media/components.jpg": 459532,
+    "assets/media/fairing.jpg": 690809,
+    "assets/media/fragment.jpg": 505847,
+    "assets/media/launch.jpg": 272235,
+    "assets/media/pad.jpg": 247023,
+    "assets/script.json": 5257,
+    "assets/song-with-outro.mp3": 5316484,
+    "assets/song.mp3": 5125895,
+    "assets/storyboard.json": 7942,
+    "index.html": 751,
+    "manifest.json": 6355,
+    "publish.json": 1327,
+    "render/outro-final-16x9.png": 241005,
+    "render/outro-final-9x16.png": 222784,
+    "render/poster.jpg": 29670
+  },
+  "updated": "2026-10-10T11:39:05",
+  "youtube_title": "Ariane 5: el número que no cabía y desvió un cohete",
+  "youtube_description": "Treinta y siete segundos después del despegue, el primer Ariane 5 perdió el control. No falló un motor: una conversión de datos llevó un número demasiado grande a un espacio demasiado pequeño.\n\nEste video reconstruye cómo una función heredada de Ariane 4, dos sistemas idénticos y una prueba que no representaba la trayectoria real convirtieron un error de software en una orden física.\n\nSuscríbete a PROTOTIPO para más historias de tecnología e innovación.\n\nIMÁGENES: Don-vip, SpaceMusk y Philippe Semanaz / Philou.cn, CC BY-SA 4.0 / CC BY-SA 2.0; Deadpan y NASA, dominio público. Créditos y enlaces completos: assets/media/CREDITS.md.",
+  "youtube_tags": [
+    "Ariane 5",
+    "Ariane 501",
+    "error de software",
+    "overflow",
+    "integer overflow",
+    "ingeniería de software",
+    "ESA",
+    "cohetes",
+    "tecnología",
+    "fallos de sistemas",
+    "software crítico",
+    "Kourou",
+    "informática",
+    "historia de la tecnología",
+    "PROTOTIPO"
+  ],
+  "tiktok_caption": "Un número de 64 bits no cabía en un entero de 16. Dos sistemas fallaron por la misma causa y el cohete corrigió un giro que nunca ocurrió.",
+  "tiktok_hashtags": [
+    "#Ariane5",
+    "#Software",
+    "#Ingeniería",
+    "#Tecnología",
+    "#ESA"
+  ],
+  "thumbnail_text": "NO CABÍA"
+}

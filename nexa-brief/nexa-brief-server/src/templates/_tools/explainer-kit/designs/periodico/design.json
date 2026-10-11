@@ -1,0 +1,101 @@
+{
+  "id": "periodico",
+  "family": "periodico",
+  "name": "TITULARES",
+  "tagline": "Historias contadas sobre papel de diario: cámara que vuela entre recortes, fotos B/N y titulares a máquina",
+  "topics": [
+    "historia",
+    "crónica",
+    "periodismo",
+    "efemérides",
+    "biografías",
+    "sucesos",
+    "política",
+    "ciudades"
+  ],
+  "channel": {
+    "name": "TITULARES",
+    "handle": "@titulares",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Cutive&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Text:wght@700&display=swap",
+  "scripts": [
+    "designs/common/text.js",
+    "designs/periodico/components/_periodico.js",
+    "designs/periodico/components/scenes.js",
+    "designs/common/outro-v1.js",
+    "designs/common/hook.js",
+    "designs/periodico/components/intros.js",
+    "designs/periodico/components/outro.js"
+  ],
+  "defaults": {
+    "family": "periodico",
+    "palette": {
+      "bg": "#0c0a0b",
+      "paper": "#d8d5d9",
+      "ink": "#141113",
+      "muted": "#8f8a8e",
+      "accent": "#8e4f72",
+      "bar": "#161315",
+      "barInk": "#efecef"
+    },
+    "fonts": {
+      "main": "Cutive",
+      "load": [
+        "400 40px Cutive",
+        "400 20px 'Old Standard TT'",
+        "700 20px 'Old Standard TT'",
+        "italic 400 20px 'Old Standard TT'",
+        "700 40px 'Libre Caslon Text'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "transition": {
+      "overlap": 1.0
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 5.5,
+      "thanks": "gracias por ver",
+      "channel": "NODEHISTORY",
+      "cta": "SUSCRÍBETE",
+      "support": "apoya el canal · comparte el video",
+      "handle": "youtube.com/@nodehistory",
+      "use": "periodico.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Tono de crónica de diario: preciso, con intriga contenida. No imitar a ninguna persona real. Ritmo pausado, alrededor de 130 palabras por minuto.",
+    "target_wpm": [
+      120,
+      138
+    ]
+  },
+  "media": {
+    "photos": "fotos históricas reales (lugares, personas, documentos); se muestran en B/N de alto contraste con marco negro fino",
+    "portrait_tip": "periodico.photo recorta 'cover' (1.5 en 16:9, 1.2 en 9:16): usar focus=[x,y] para apuntar el recorte; las 5–9 fotos se pueden repetir con otro encuadre",
+    "per_video": [
+      5,
+      9
+    ]
+  }
+}

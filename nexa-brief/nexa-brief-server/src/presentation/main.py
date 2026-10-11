@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.config.logging_config import setup_logging
 from src.config.settings import settings
 from src.presentation.api.routers import (
+    categories,
     history,
     library,
     niches,
@@ -23,7 +24,9 @@ from src.presentation.api.routers import (
     stats,
     stock,
     drafts,
+    explainer,
     media_plans,
+    voice,
 )
 
 
@@ -37,6 +40,9 @@ async def lifespan(app: FastAPI):
     setup_logging(settings.log_level)
     settings.output_dir.mkdir(parents=True, exist_ok=True)
     (settings.output_dir / "logs").mkdir(exist_ok=True)
+    # output/node_tech, output/node_history, output/node_motion/letras, …
+    from src.core.categories import ensure_output_dirs
+    ensure_output_dirs(settings.output_dir)
     logger.info("nexa_brief_started", output_dir=str(settings.output_dir))
 
     # ── Wire the realtime event bus to its WebSocket broadcaster ──────────────
@@ -155,6 +161,9 @@ app.include_router(stats.router, prefix="/api/v1")
 app.include_router(stock.router, prefix="/api/v1")
 app.include_router(drafts.router, prefix="/api/v1")
 app.include_router(media_plans.router, prefix="/api/v1")
+app.include_router(explainer.router, prefix="/api/v1")
+app.include_router(categories.router, prefix="/api/v1")
+app.include_router(voice.router, prefix="/api/v1")
 # YouTube OAuth 2.0 server-side flow
 app.include_router(youtube_oauth.router)
 

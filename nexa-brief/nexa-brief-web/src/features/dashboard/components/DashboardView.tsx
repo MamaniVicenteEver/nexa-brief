@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { ActivityPanel } from "./ActivityPanel";
 import { AlertsPanel } from "./AlertsPanel";
 import { CatalogStrip } from "./CatalogStrip";
+import { CategoriesPanel } from "./CategoriesPanel";
 import { ChannelsPanel } from "./ChannelsPanel";
 import { KpiRow } from "./KpiRow";
 import { PerformancePanel } from "./PerformancePanel";
@@ -65,6 +66,7 @@ export function DashboardView({ userName }: { userName: string | null }) {
         <div className="mt-8 flex flex-col gap-5">
           <KpiRow videos={data.videos} />
           <AlertsPanel alerts={data.alerts} />
+          <CategoriesPanel />
           <div className="grid gap-5 lg:grid-cols-[2fr_1fr]">
             <ChannelsPanel channels={data.channelList} />
             <PublicationsPanel publications={data.publications} />

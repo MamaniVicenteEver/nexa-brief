@@ -106,6 +106,22 @@ def _register_token_refresh(
     )
 
 
+async def _automation_tick() -> dict:
+    """Producción automática del plan + pregrabación (src/core/automation.py)."""
+    from src.core.automation import autoproduce_due, prerecord_due
+    from src.core.schedule.planner import link_production
+    from src.presentation.api.routers.explainer import get_producer, get_recorder
+
+    from datetime import datetime, timezone
+
+    now = datetime.now(timezone.utc)
+    producer = get_producer()
+    await producer.recover_interrupted()
+    produced = await autoproduce_due(now, producer, link_production)
+    recorded = await prerecord_due(now, get_recorder())
+    return {"autoproduced": produced, "prerecorded": recorded}
+
+
 def _register_schedule_tick(
     scheduler: BackgroundScheduler,
     facade: "PublisherFacade",
@@ -117,6 +133,13 @@ def _register_schedule_tick(
 
     def _schedule_tick() -> None:
         logger.info("scheduler_schedule_tick")
+        try:
+            # Piloto automático (producir planificados + pregrabar) antes de publicar.
+            auto = asyncio.run_coroutine_threadsafe(_automation_tick(), loop).result(timeout=120)
+            if auto["autoproduced"] or auto["prerecorded"]:
+                logger.info("scheduler_automation_done", **auto)
+        except Exception as exc:
+            logger.error("scheduler_automation_error", error=str(exc), error_type=type(exc).__name__)
         try:
             future = asyncio.run_coroutine_threadsafe(
                 engine.process_tick(facade), loop
