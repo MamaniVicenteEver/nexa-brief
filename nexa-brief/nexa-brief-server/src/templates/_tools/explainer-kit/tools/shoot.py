@@ -14,6 +14,11 @@ Uso (desde nexa-brief-server/):
 """
 import argparse, asyncio, functools, io, http.server, json, pathlib, threading, urllib.parse
 from PIL import Image, ImageDraw, ImageFont
+import os
+
+# En Docker se usa el Chromium del sistema (PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH);
+# fuera de Docker, el que instala `playwright install chromium`.
+CHROMIUM = os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH") or None
 
 KIT = pathlib.Path(__file__).resolve().parents[1]
 SANDBOX = KIT.parents[1]                     # src/templates/ (videos y kit)
@@ -38,7 +43,7 @@ async def shoot(specs, times, orients, prev, page, dur):
     base = f"http://127.0.0.1:{srv.server_port}/{KIT.relative_to(SANDBOX).as_posix()}/"
     shots, errors = [], []
     async with async_playwright() as p:
-        b = await p.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+        b = await p.chromium.launch(executable_path=CHROMIUM, args=["--autoplay-policy=no-user-gesture-required"])
         for o in orients:
             W, H = ORIENT[o]
             for name, params in specs:
