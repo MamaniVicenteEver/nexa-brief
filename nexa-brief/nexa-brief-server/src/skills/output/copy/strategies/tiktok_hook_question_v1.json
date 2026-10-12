@@ -1,0 +1,111 @@
+{
+  "id": "tiktok_hook_question_v1",
+  "platform": "tiktok",
+  "name": "TikTok · Afirmación + pregunta que haga recordar",
+  "description": "Pensado para el scroll: una afirmación con la que la persona se identifica y una pregunta que le hace recordar a alguien o algo, para que comente.",
+  "fields": {
+    "hook_statement": {
+      "type": "text",
+      "max_chars": 70,
+      "instruction": "Una afirmación corta, directa y verdadera sobre lo que siente la canción, con la que alguien que hace scroll se identifica al instante. Sin el nombre de la canción ni del artista. Termina con punto.",
+      "examples": {
+        "es": [
+          "Nadie te avisa que también se extraña lo que te hacía mal.",
+          "Hay personas que se van y siguen en todo.",
+          "Olvidar no es lo mismo que dejar de extrañar."
+        ],
+        "en": [
+          "Nobody warns you that you also miss what was bad for you.",
+          "Some people leave and stay in everything.",
+          "Forgetting isn't the same as not missing."
+        ]
+      },
+      "avoid": {
+        "es": [
+          "Esta canción está brutal.",
+          "POV: escuchas esta joya."
+        ],
+        "en": [
+          "This song is fire.",
+          "POV: you hear this gem."
+        ]
+      }
+    },
+    "memory_question": {
+      "type": "text",
+      "max_chars": 90,
+      "instruction": "Una pregunta corta que haga recordar a una persona o un momento propio, para que responda en los comentarios. Personal, nunca de sí o no sobre la canción.",
+      "examples": {
+        "es": [
+          "¿Te acuerdas de quién te hizo sentir así?",
+          "¿A quién le dedicarías esta canción sin decirle nada?"
+        ],
+        "en": [
+          "Do you remember who made you feel this way?",
+          "Who would you send this song to without saying a word?"
+        ]
+      },
+      "avoid": {
+        "es": [
+          "¿Te gustó?",
+          "¿La conocías?"
+        ],
+        "en": [
+          "Did you like it?",
+          "Did you know it?"
+        ]
+      }
+    },
+    "hashtags": {
+      "type": "list",
+      "min_items": 4,
+      "max_items": 4,
+      "instruction": "Exactamente 4 hashtags sin '#', en minúsculas y sin espacios: el artista, la canción, el sentimiento o tema, y uno amplio como 'letras' (o 'lyrics'). Nunca 'fyp', 'parati' ni 'viral'.",
+      "examples": {
+        "es": [
+          [
+            "morat",
+            "comoteatreves",
+            "desamor",
+            "letras"
+          ]
+        ],
+        "en": [
+          [
+            "adele",
+            "easyonme",
+            "heartbreak",
+            "lyrics"
+          ]
+        ]
+      }
+    }
+  },
+  "rotating": {},
+  "output": {
+    "title": {
+      "max_chars": 2000,
+      "templates": {
+        "es": [
+          "{hook_statement} {memory_question}\n{song} – {artist}",
+          "{hook_statement} {memory_question}\n{song}",
+          "{hook_statement} {memory_question}"
+        ],
+        "en": [
+          "{hook_statement} {memory_question}\n{song} – {artist}",
+          "{hook_statement} {memory_question}\n{song}",
+          "{hook_statement} {memory_question}"
+        ]
+      },
+      "multiline": true
+    },
+    "description": {
+      "max_chars": 2000,
+      "same_as": "title"
+    },
+    "tags": {
+      "from": "hashtags",
+      "style": "hashtag"
+    }
+  }
+}

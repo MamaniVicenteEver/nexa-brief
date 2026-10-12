@@ -1,0 +1,144 @@
+{
+  "id": "yt_search_exact_v1",
+  "platform": "youtube",
+  "name": "YouTube T1 · Búsqueda exacta",
+  "description": "Título 'Artista - Canción (Letra)': captura a quien ya busca la canción. La descripción lleva la misma estructura humana que T2.",
+  "fields": {
+    "song_summary": {
+      "type": "text",
+      "max_chars": 120,
+      "instruction": "Una sola frase, con tus palabras, que diga qué vive la persona de la canción. Concreta y humana, sin adjetivos de relleno.",
+      "examples": {
+        "es": [
+          "Dos personas que se quieren, pero llegaron en el momento equivocado."
+        ],
+        "en": [
+          "Two people in love who met at the wrong time."
+        ]
+      },
+      "avoid": {
+        "es": [
+          "Una canción increíble."
+        ],
+        "en": [
+          "An amazing song."
+        ]
+      }
+    },
+    "comment_question": {
+      "type": "text",
+      "max_chars": 200,
+      "instruction": "Una o dos preguntas personales que inviten a contar una experiencia propia relacionada con la canción, o a pedir qué canción subir después. Termina invitando a dejarlo en los comentarios.",
+      "examples": {
+        "es": [
+          "¿Qué recuerdo te trajo esta canción? ¿Qué otra te gustaría escuchar con este estilo? Déjalo en los comentarios."
+        ],
+        "en": [
+          "What memory did this song bring back? What other song would you like to hear in this style? Leave it in the comments."
+        ]
+      },
+      "avoid": {
+        "es": [
+          "¡Comenta y dale like!"
+        ],
+        "en": [
+          "Comment and like!"
+        ]
+      }
+    },
+    "hashtags": {
+      "type": "list",
+      "min_items": 3,
+      "max_items": 3,
+      "instruction": "Exactamente 3 hashtags sin '#', en CamelCase: el artista, la canción y 'Letra' (o 'Lyrics' en inglés).",
+      "examples": {
+        "es": [
+          [
+            "Morat",
+            "ComoTeAtreves",
+            "Letra"
+          ]
+        ],
+        "en": [
+          [
+            "Adele",
+            "EasyOnMe",
+            "Lyrics"
+          ]
+        ]
+      }
+    },
+    "tags": {
+      "type": "list",
+      "min_items": 10,
+      "max_items": 15,
+      "instruction": "Entre 10 y 15 tags de búsqueda en minúsculas, del más específico al más general. Sin '#' y sin repetir.",
+      "examples": {
+        "es": [
+          [
+            "cómo te atreves",
+            "morat",
+            "morat cómo te atreves",
+            "cómo te atreves letra",
+            "canciones de desamor",
+            "pop en español"
+          ]
+        ],
+        "en": [
+          [
+            "easy on me",
+            "adele",
+            "adele easy on me",
+            "easy on me lyrics"
+          ]
+        ]
+      }
+    }
+  },
+  "rotating": {
+    "subscribe_line": {
+      "es": [
+        "Si esta canción te llegó, apoya el canal suscribiéndote.",
+        "Suscríbete para más canciones que dicen lo que sientes.",
+        "Si quieres que sigamos subiendo canciones así, suscríbete y apoya el canal."
+      ],
+      "en": [
+        "If this song hit home, support the channel by subscribing.",
+        "Subscribe for more songs that say what you feel.",
+        "If you want us to keep sharing songs like this, subscribe and support the channel."
+      ]
+    }
+  },
+  "output": {
+    "title": {
+      "max_chars": 100,
+      "templates": {
+        "es": [
+          "{artist} - {song} (Letra)",
+          "{song} (Letra)"
+        ],
+        "en": [
+          "{artist} - {song} (Lyrics)",
+          "{song} (Lyrics)"
+        ]
+      }
+    },
+    "description": {
+      "max_chars": 5000,
+      "templates": {
+        "es": [
+          "Letra de \"{song}\" de {artist}.\n{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\nCRÉDITOS\nCanción: {song}\nArtista: {artist}\n\n{hashtags}",
+          "Letra de \"{song}\".\n{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\n{hashtags}"
+        ],
+        "en": [
+          "Lyrics of \"{song}\" by {artist}.\n{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\nCREDITS\nSong: {song}\nArtist: {artist}\n\n{hashtags}",
+          "Lyrics of \"{song}\".\n{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\n{hashtags}"
+        ]
+      }
+    },
+    "tags": {
+      "from": "tags",
+      "style": "keyword"
+    }
+  }
+}

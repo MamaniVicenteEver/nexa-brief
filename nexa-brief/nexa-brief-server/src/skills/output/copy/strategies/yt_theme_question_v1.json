@@ -1,0 +1,193 @@
+{
+  "id": "yt_theme_question_v1",
+  "platform": "youtube",
+  "name": "YouTube T2 · Pregunta del tema + artista",
+  "description": "El título abre con una pregunta sobre el sentimiento central de la canción y cierra con el artista. Busca clics desde inicio/sugeridos, no solo desde la búsqueda.",
+  "fields": {
+    "theme_question": {
+      "type": "text",
+      "max_chars": 60,
+      "instruction": "Una pregunta abierta sobre el sentimiento o la situación central de la canción, como la haría alguien que acaba de escucharla y se sintió identificado. Debe nacer de la letra, no ser genérica. Sin el nombre de la canción ni del artista.",
+      "examples": {
+        "es": [
+          "¿Qué haces cuando el amor se acaba de un solo lado?",
+          "¿Cuánto tiempo se tarda en olvidar a alguien?",
+          "¿Se puede extrañar a quien nunca fue tuyo?"
+        ],
+        "en": [
+          "What do you do when love ends on only one side?",
+          "How long does it take to stop missing someone?",
+          "Can you miss someone who was never yours?"
+        ]
+      },
+      "avoid": {
+        "es": [
+          "¿Te gusta esta canción?",
+          "¿Listo para sentir?",
+          "¿La mejor canción de 2026?"
+        ],
+        "en": [
+          "Do you like this song?",
+          "Ready to feel?",
+          "Best song of 2026?"
+        ]
+      }
+    },
+    "song_summary": {
+      "type": "text",
+      "max_chars": 120,
+      "instruction": "Una sola frase, con tus palabras, que diga qué vive la persona de la canción. Concreta y humana, sin adjetivos de relleno ni repetir el título.",
+      "examples": {
+        "es": [
+          "Dos personas que se quieren, pero llegaron en el momento equivocado.",
+          "Una despedida contada desde el lado de quien se queda."
+        ],
+        "en": [
+          "Two people in love who met at the wrong time.",
+          "A goodbye told by the one who stays behind."
+        ]
+      },
+      "avoid": {
+        "es": [
+          "Una canción increíble que te hará sentir mil emociones.",
+          "Sumérgete en este viaje musical."
+        ],
+        "en": [
+          "An amazing song that will make you feel a thousand emotions.",
+          "Immerse yourself in this musical journey."
+        ]
+      }
+    },
+    "comment_question": {
+      "type": "text",
+      "max_chars": 200,
+      "instruction": "Una o dos preguntas personales que inviten a contar una experiencia propia relacionada con la canción, o a pedir qué canción subir después. Termina invitando a dejarlo en los comentarios.",
+      "examples": {
+        "es": [
+          "¿Alguna vez esperaste un mensaje que nunca llegó? Cuéntanos tu historia en los comentarios.",
+          "¿Qué canción te acompañó la última vez que te rompieron el corazón? Déjala en los comentarios y quizá sea la próxima."
+        ],
+        "en": [
+          "Have you ever waited for a message that never came? Tell us your story in the comments.",
+          "What song got you through your last heartbreak? Leave it in the comments, it might be the next one."
+        ]
+      },
+      "avoid": {
+        "es": [
+          "¡Comenta y dale like!",
+          "¿Te gustó? Comenta."
+        ],
+        "en": [
+          "Comment and like!",
+          "Did you like it? Comment."
+        ]
+      }
+    },
+    "hashtags": {
+      "type": "list",
+      "min_items": 3,
+      "max_items": 3,
+      "instruction": "Exactamente 3 hashtags sin '#', en CamelCase y sin espacios: el artista, la canción y el tema o sentimiento principal. Si no se conoce el artista, usa el género.",
+      "examples": {
+        "es": [
+          [
+            "Morat",
+            "ComoTeAtreves",
+            "Desamor"
+          ]
+        ],
+        "en": [
+          [
+            "Adele",
+            "EasyOnMe",
+            "Heartbreak"
+          ]
+        ]
+      }
+    },
+    "tags": {
+      "type": "list",
+      "min_items": 10,
+      "max_items": 15,
+      "instruction": "Entre 10 y 15 tags de búsqueda en minúsculas, del más específico al más general: canción, artista, 'artista canción', 'canción letra' (o 'song lyrics'), género, sentimiento, tema. Sin '#' y sin repetir.",
+      "examples": {
+        "es": [
+          [
+            "cómo te atreves",
+            "morat",
+            "morat cómo te atreves",
+            "cómo te atreves letra",
+            "canciones de desamor",
+            "pop en español"
+          ]
+        ],
+        "en": [
+          [
+            "easy on me",
+            "adele",
+            "adele easy on me",
+            "easy on me lyrics",
+            "sad songs",
+            "heartbreak songs"
+          ]
+        ]
+      }
+    }
+  },
+  "rotating": {
+    "subscribe_line": {
+      "es": [
+        "Si esta canción te llegó, apoya el canal suscribiéndote.",
+        "Suscríbete para más canciones que dicen lo que sientes.",
+        "Cada semana elegimos nuevas canciones con letra. Si te gustó esta, suscríbete.",
+        "Si quieres que sigamos subiendo canciones así, suscríbete y apoya el canal.",
+        "Detrás de cada video hay horas de trabajo. Suscribirte nos ayuda a seguir."
+      ],
+      "en": [
+        "If this song hit home, support the channel by subscribing.",
+        "Subscribe for more songs that say what you feel.",
+        "Every week we pick new songs with lyrics. If you liked this one, subscribe.",
+        "If you want us to keep sharing songs like this, subscribe and support the channel.",
+        "Every video takes hours of work. Subscribing helps us keep going."
+      ]
+    }
+  },
+  "output": {
+    "title": {
+      "max_chars": 100,
+      "templates": {
+        "es": [
+          "{theme_question} | {artist} (Letra)",
+          "{theme_question} | {song} (Letra)",
+          "{artist} - {song} (Letra)",
+          "{song} (Letra)"
+        ],
+        "en": [
+          "{theme_question} | {artist} (Lyrics)",
+          "{theme_question} | {song} (Lyrics)",
+          "{artist} - {song} (Lyrics)",
+          "{song} (Lyrics)"
+        ]
+      }
+    },
+    "description": {
+      "max_chars": 5000,
+      "templates": {
+        "es": [
+          "Letra de \"{song}\" de {artist}.\n{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\nCRÉDITOS\nCanción: {song}\nArtista: {artist}\n\n{hashtags}",
+          "Letra de \"{song}\".\n{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\n{hashtags}",
+          "{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\n{hashtags}"
+        ],
+        "en": [
+          "Lyrics of \"{song}\" by {artist}.\n{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\nCREDITS\nSong: {song}\nArtist: {artist}\n\n{hashtags}",
+          "Lyrics of \"{song}\".\n{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\n{hashtags}",
+          "{song_summary}\n\n{comment_question}\n\n{subscribe_line}\n\n{hashtags}"
+        ]
+      }
+    },
+    "tags": {
+      "from": "tags",
+      "style": "keyword"
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "title": "Escenas Mixtas — Lyric Pack",
+  "about": "lyric video de estilos mezclados: metraje cinematográfico, rojo plano, papel y negro grunge; extendida pesada + condensada alta + sans liviana, ecos apilados, palabras gigantes con etiqueta, tickers y un solo color de acento.",
+  "out": "nodemotion/lyrics/lyrics-mixtas",
+  "html": "index.html",
+  "configPath": "assets/config.json",
+  "js": "mixed.js",
+  "fontLoads": [
+    "900 100px Archivo",
+    "800 100px Archivo",
+    "100px Anton",
+    "500 100px Inter"
+  ],
+  "css": "  :root { --fEx: \"Archivo\", sans-serif; --fCd: \"Anton\", sans-serif; --fLt: \"Inter\", sans-serif; }\n  .ex { font-family: var(--fEx); font-weight: 900; font-stretch: 125%; text-transform: uppercase; }\n  .sp { font-family: var(--fEx); font-weight: 800; font-stretch: 100%; text-transform: uppercase; }\n  .cd { font-family: var(--fCd); font-weight: 400; text-transform: uppercase; }\n  .lt { font-family: var(--fLt); font-weight: 500; text-transform: uppercase; }\n",
+  "config": {
+    "id": "default",
+    "description": "Lyric video de estilos mezclados: cada frase cae en una escena distinta — metraje cinematográfico, rojo plano, papel blanco con manchas o negro grunge — con tipografía extendida pesada, condensada alta y sans liviana, ecos apilados, palabras gigantes con etiqueta, tickers y un acento lima, rojo o naranja. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+    "audio": {
+      "src": "assets/song.mp3"
+    },
+    "lyricsUrl": "assets/lyrics.json",
+    "lyricsFilter": {
+      "minLogprob": -0.4,
+      "drop": [
+        "audio ?jungle",
+        "envato",
+        "subt[ií]tulos",
+        "amara\\.org"
+      ]
+    },
+    "fonts": {
+      "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Inter:wght@400;500&display=swap"
+    },
+    "palette": {
+      "lime": "#BEFF0A",
+      "red": "#B70004",
+      "orange": "#F16F05",
+      "white": "#FFFFFF",
+      "paper": "#F4F4F2",
+      "black": "#0B0B0C",
+      "ink": "#111111"
+    },
+    "grades": {
+      "cine": {
+        "type": "css",
+        "saturate": 0.85,
+        "contrast": 1.12,
+        "brightness": 0.78
+      }
+    },
+    "media": [
+      {
+        "id": "ocean",
+        "type": "video",
+        "src": "assets/media/ocean.mp4",
+        "poster": "assets/media/ocean-1.jpg"
+      },
+      {
+        "id": "beach",
+        "type": "video",
+        "src": "assets/media/beach-walk.mp4",
+        "poster": "assets/media/beach-walk-1.jpg"
+      },
+      {
+        "id": "night",
+        "type": "video",
+        "src": "assets/media/night-walk.mp4",
+        "poster": "assets/media/night-walk-1.jpg"
+      },
+      {
+        "id": "nebula",
+        "type": "video",
+        "src": "assets/media/nebula.mp4",
+        "poster": "assets/media/nebula-1.jpg"
+      },
+      {
+        "id": "nebula-pink",
+        "type": "video",
+        "src": "assets/media/nebula-pink.mp4",
+        "poster": "assets/media/nebula-pink-1.jpg"
+      },
+      {
+        "id": "match",
+        "type": "video",
+        "src": "assets/media/match.mp4",
+        "poster": "assets/media/match-1.jpg"
+      }
+    ],
+    "phrases": {
+      "maxWords": 6,
+      "maxSec": 3.0,
+      "minWords": 2
+    },
+    "timing": {
+      "leadSec": 0.12,
+      "holdSec": 0.9,
+      "gapSec": 2.4,
+      "echoSec": 1.2,
+      "cooldown": 4
+    },
+    "layouts": {
+      "echoCenter": {
+        "weight": 2.0,
+        "bgs": [
+          "media",
+          "black"
+        ]
+      },
+      "duoLight": {
+        "weight": 1.6,
+        "bgs": [
+          "media"
+        ]
+      },
+      "condensed": {
+        "weight": 1.6,
+        "bgs": [
+          "media",
+          "black"
+        ]
+      },
+      "fadeStack": {
+        "weight": 1.0,
+        "bgs": [
+          "media"
+        ]
+      },
+      "redFlat": {
+        "weight": 1.2,
+        "bgs": [
+          "red"
+        ]
+      },
+      "paperMix": {
+        "weight": 1.0,
+        "bgs": [
+          "paper"
+        ]
+      },
+      "spacedOut": {
+        "weight": 0.7,
+        "bgs": [
+          "paper"
+        ]
+      },
+      "giantSpread": {
+        "weight": 1.4,
+        "bgs": [
+          "red",
+          "black"
+        ]
+      },
+      "outlineRows": {
+        "weight": 0.9,
+        "bgs": [
+          "paper"
+        ]
+      },
+      "leftRight": {
+        "weight": 0.9,
+        "bgs": [
+          "paper"
+        ]
+      },
+      "band": {
+        "weight": 0.7,
+        "bgs": [
+          "paper"
+        ]
+      },
+      "ticker": {
+        "weight": 1.0,
+        "bgs": [
+          "media"
+        ]
+      },
+      "rightStack": {
+        "weight": 1.0,
+        "bgs": [
+          "media"
+        ]
+      },
+      "whiteCenter": {
+        "weight": 1.0,
+        "bgs": [
+          "paper"
+        ]
+      },
+      "blackStack": {
+        "weight": 0.9,
+        "bgs": [
+          "black"
+        ]
+      }
+    },
+    "intro": {
+      "title": "",
+      "artist": ""
+    },
+    "outro": {
+      "enabled": true,
+      "sec": 3.2,
+      "title": "Gracias",
+      "sub": "Por ver",
+      "feats": "Suscríbete · NEXA BRIEF"
+    },
+    "texture": {
+      "grain": 0.07
+    },
+    "debug": {
+      "enabled": false
+    },
+    "seed": 9
+  }
+}
