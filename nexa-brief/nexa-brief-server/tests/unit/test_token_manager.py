@@ -51,8 +51,13 @@ async def test_get_valid_token_fresh_token(storage_with_fresh_token):
 
 
 @pytest.mark.asyncio
-async def test_get_valid_token_refreshes_when_expiring(storage_with_expiring_token):
+async def test_get_valid_token_refreshes_when_expiring(storage_with_expiring_token, monkeypatch):
     """Triggers refresh when token expires within margin."""
+    # Credenciales de la app de prueba: el test no depende del .env de la máquina.
+    from src.config.settings import settings
+
+    monkeypatch.setattr(settings, "youtube_client_id", "test-client-id")
+    monkeypatch.setattr(settings, "youtube_client_secret", "test-client-secret")
     manager = TokenManager(storage_with_expiring_token)
 
     mock_response = MagicMock()
