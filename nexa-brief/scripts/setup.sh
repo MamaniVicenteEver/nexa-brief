@@ -19,7 +19,7 @@ warn() { printf '  ! %s\n' "$*" >&2; }
 die() { printf '  ✗ %s\n' "$*" >&2; exit 1; }
 
 # Lee VAR de un archivo .env (vacío si no está o no tiene valor).
-env_get() { grep -E "^$2=" "$1" 2>/dev/null | tail -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//'; }
+env_get() { { grep -E "^$2=" "$1" 2>/dev/null || true; } | tail -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//'; }
 # Pone VAR=valor en un .env: reemplaza la línea si existe, si no la agrega.
 env_set() {
   local file="$1" key="$2" value="$3"
