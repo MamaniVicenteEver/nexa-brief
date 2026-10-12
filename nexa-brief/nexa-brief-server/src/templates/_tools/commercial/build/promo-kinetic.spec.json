@@ -1,0 +1,433 @@
+{
+  "title": "Promo Kinetic — Tipografía",
+  "about": "pack de tipografía cinética: una palabra repetida en filas por escena con 20+ animaciones distintas (centro, ola, cascada, rotación, marcador, perspectiva, cortes…) sobre carbón con grano y rayas de película.",
+  "js": "kinetic.js",
+  "duration": 54.23,
+  "fontLoads": [
+    "900 100px Montserrat",
+    "500 100px 'JetBrains Mono'"
+  ],
+  "css": "  :root { --fK: \"Montserrat\", sans-serif; --fM: \"JetBrains Mono\", monospace; }\n  .ki { font-family: var(--fK); font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.92; }\n  .mono { font-family: var(--fM); font-weight: 500; }\n",
+  "config": {
+    "id": "default",
+    "description": "Promo de tipografía cinética: una palabra o frase por escena repetida en filas, con una animación distinta cada vez (desde el centro, ola, cascada, rotación, marcador, perspectiva, cortes, ondas, parpadeo), en blanco, rojo, verde, naranja o degradado sobre carbón con grano, rayas de película y contador de escena. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+    "audio": {
+      "src": "assets/promo-kinetic.mp3"
+    },
+    "lyricsUrl": "assets/promo-kinetic.lyrics.json",
+    "fonts": {
+      "googleUrl": "https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=JetBrains+Mono:wght@500&display=swap"
+    },
+    "palette": {
+      "bg": "#1C1C1D",
+      "white": "#BDBDB8",
+      "red": "#9B1F1F",
+      "green": "#1E8A2E",
+      "teal": "#2E9C74",
+      "orange": "#A23A12",
+      "yellow": "#D9C21A"
+    },
+    "media": [],
+    "brand": {
+      "tag": "NEXA"
+    },
+    "duration": 54.23,
+    "scenes": [
+      {
+        "type": "fromCenter",
+        "color": "white"
+      },
+      {
+        "type": "stretchChars",
+        "color": "red"
+      },
+      {
+        "type": "ripple",
+        "color": "white"
+      },
+      {
+        "type": "cascade",
+        "color": "white"
+      },
+      {
+        "type": "marker",
+        "color": "red"
+      },
+      {
+        "type": "ripple",
+        "color": "white"
+      },
+      {
+        "type": "gradient",
+        "color": "yellow"
+      },
+      {
+        "type": "rotating",
+        "color": "white"
+      },
+      {
+        "type": "sliced",
+        "color": "green"
+      },
+      {
+        "type": "cascade",
+        "color": "white"
+      },
+      {
+        "type": "dynamicScale",
+        "color": "white"
+      },
+      {
+        "type": "marker",
+        "color": "orange"
+      },
+      {
+        "type": "bigBlock",
+        "color": "white",
+        "block": "red"
+      },
+      {
+        "type": "growing",
+        "color": "teal"
+      },
+      {
+        "type": "breakDown",
+        "color": "red"
+      },
+      {
+        "type": "pushUp",
+        "color": "white"
+      },
+      {
+        "type": "gradient",
+        "color": "grad"
+      },
+      {
+        "type": "squeeze",
+        "color": "green"
+      },
+      {
+        "type": "perspective",
+        "color": "red"
+      },
+      {
+        "type": "bigBlock",
+        "color": "white",
+        "block": "orange"
+      },
+      {
+        "type": "constructor_",
+        "color": "white"
+      },
+      {
+        "type": "starway",
+        "color": "teal"
+      },
+      {
+        "type": "sliced",
+        "color": "white"
+      },
+      {
+        "type": "waving",
+        "color": "white"
+      },
+      {
+        "type": "squeeze",
+        "color": "white"
+      },
+      {
+        "type": "blink",
+        "color": "red"
+      },
+      {
+        "type": "typing",
+        "color": "white"
+      },
+      {
+        "type": "verticalWord",
+        "color": "red"
+      },
+      {
+        "type": "typing",
+        "color": "white"
+      }
+    ],
+    "texture": {
+      "grain": 0.08
+    },
+    "debug": {
+      "enabled": false
+    },
+    "seed": 29
+  },
+  "script": [
+    {
+      "start": 0.0,
+      "lines": [
+        "DESDE EL CENTRO"
+      ],
+      "words_at": [
+        0.08,
+        0.08,
+        0.08
+      ]
+    },
+    {
+      "start": 1.6,
+      "lines": [
+        "LUNES"
+      ],
+      "words_at": [
+        1.68
+      ]
+    },
+    {
+      "start": 3.6,
+      "lines": [
+        "WOW"
+      ],
+      "words_at": [
+        3.68
+      ]
+    },
+    {
+      "start": 5.5,
+      "lines": [
+        "TEXTO LLENO"
+      ],
+      "words_at": [
+        5.58,
+        5.58
+      ]
+    },
+    {
+      "start": 7.6,
+      "lines": [
+        "MAÑANA"
+      ],
+      "words_at": [
+        7.68
+      ]
+    },
+    {
+      "start": 9.0,
+      "lines": [
+        "CERCA"
+      ],
+      "words_at": [
+        9.08
+      ]
+    },
+    {
+      "start": 10.6,
+      "lines": [
+        "NOVIEMBRE"
+      ],
+      "words_at": [
+        10.68
+      ]
+    },
+    {
+      "start": 11.8,
+      "lines": [
+        "GIRANDO"
+      ],
+      "words_at": [
+        11.88
+      ]
+    },
+    {
+      "start": 13.9,
+      "lines": [
+        "HOLA MUNDO"
+      ],
+      "words_at": [
+        13.98,
+        13.98
+      ]
+    },
+    {
+      "start": 16.4,
+      "lines": [
+        "CAYENDO"
+      ],
+      "words_at": [
+        16.48
+      ]
+    },
+    {
+      "start": 18.1,
+      "lines": [
+        "ESCALA"
+      ],
+      "words_at": [
+        18.18
+      ]
+    },
+    {
+      "start": 20.2,
+      "lines": [
+        "MARCADOR"
+      ],
+      "words_at": [
+        20.28
+      ]
+    },
+    {
+      "start": 22.3,
+      "lines": [
+        "PRONTO"
+      ],
+      "words_at": [
+        22.38
+      ]
+    },
+    {
+      "start": 23.8,
+      "lines": [
+        "CRECIENDO"
+      ],
+      "words_at": [
+        23.88
+      ]
+    },
+    {
+      "start": 25.6,
+      "lines": [
+        "RUPTURA"
+      ],
+      "words_at": [
+        25.68
+      ]
+    },
+    {
+      "start": 27.5,
+      "lines": [
+        "EMPUJA"
+      ],
+      "words_at": [
+        27.58
+      ]
+    },
+    {
+      "start": 29.7,
+      "lines": [
+        "DEGRADADO"
+      ],
+      "words_at": [
+        29.78
+      ]
+    },
+    {
+      "start": 32.4,
+      "lines": [
+        "ESCALA"
+      ],
+      "words_at": [
+        32.48
+      ]
+    },
+    {
+      "start": 33.9,
+      "lines": [
+        "PERSPECTIVA"
+      ],
+      "words_at": [
+        33.98
+      ]
+    },
+    {
+      "start": 35.9,
+      "lines": [
+        "SAMURÁI"
+      ],
+      "words_at": [
+        35.98
+      ]
+    },
+    {
+      "start": 37.8,
+      "lines": [
+        "CONSTRUYE"
+      ],
+      "words_at": [
+        37.88
+      ]
+    },
+    {
+      "start": 39.4,
+      "lines": [
+        "ESCALERA"
+      ],
+      "words_at": [
+        39.48
+      ]
+    },
+    {
+      "start": 41.8,
+      "lines": [
+        "CORTADO"
+      ],
+      "words_at": [
+        41.88
+      ]
+    },
+    {
+      "start": 43.1,
+      "lines": [
+        "ONDULANTE"
+      ],
+      "words_at": [
+        43.18
+      ]
+    },
+    {
+      "start": 45.7,
+      "lines": [
+        "ESTACIÓN"
+      ],
+      "words_at": [
+        45.78
+      ]
+    },
+    {
+      "start": 46.9,
+      "lines": [
+        "ATENCIÓN"
+      ],
+      "words_at": [
+        46.98
+      ]
+    },
+    {
+      "start": 48.1,
+      "lines": [
+        "DELFÍN"
+      ],
+      "words_at": [
+        48.18
+      ]
+    },
+    {
+      "start": 49.8,
+      "lines": [
+        "ZAPATOS"
+      ],
+      "words_at": [
+        49.88
+      ]
+    },
+    {
+      "start": 51.8,
+      "lines": [
+        "ENCIENDE LA LUZ"
+      ],
+      "words_at": [
+        51.88,
+        51.88,
+        51.88
+      ],
+      "end": 54.23
+    }
+  ]
+}

@@ -34,7 +34,8 @@ interface HttpClientOptions {
 export async function httpClient<T>(path: string, options: HttpClientOptions = {}): Promise<T> {
   const { method = "GET", body, timeoutMs = DEFAULT_TIMEOUT_MS, signal, next } = options;
   const isFormData = body instanceof FormData;
-  const headers: HeadersInit = isFormData ? {} : { "Content-Type": "application/json" };
+  const headers: HeadersInit =
+    isFormData || method.toUpperCase() === "GET" ? {} : { "Content-Type": "application/json" };
 
   // Reintentar solo lecturas: reintentar POST podría duplicar trabajos de video.
   const attempts = method.toUpperCase() === "GET" ? MAX_IDEMPOTENT_RETRIES : 1;

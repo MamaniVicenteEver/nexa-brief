@@ -151,7 +151,7 @@ async def manual_publish(request: ManualPublishRequest) -> PublishResponse:
             privacy=request.privacy,
             **extra_kwargs,
         )
-        
+
         # Check if YouTube playlist needs to be linked
         if ":" in selector:
             platform, alias = selector.split(":", 1)
@@ -163,7 +163,7 @@ async def manual_publish(request: ManualPublishRequest) -> PublishResponse:
                     logger.info("api_manual_youtube_playlist_add_success", playlist_id=request.youtube_playlist_id)
                 except Exception as pl_exc:
                     logger.error("api_manual_youtube_playlist_add_failed", error=str(pl_exc))
-                    
+
     except PublisherError as exc:
         raise _map_publisher_error(exc) from exc
 
@@ -341,7 +341,7 @@ async def tiktok_oauth_start(
 
     # Default to dynamic callback based on current request host (great for ngrok / production)
     cb_url = redirect_uri or f"{request.base_url}api/v1/publish/auth/tiktok/callback"
-    
+
     params = {
         "client_key": client_key,
         "scope": "user.info.basic,video.upload,video.publish",
@@ -349,7 +349,7 @@ async def tiktok_oauth_start(
         "redirect_uri": cb_url,
         "state": alias,
     }
-    
+
     auth_url = f"https://www.tiktok.com/v2/auth/authorize/?{urllib.parse.urlencode(params)}"
     logger.info("tiktok_oauth_start", alias=alias, redirect_uri=cb_url)
     return RedirectResponse(url=auth_url)
@@ -367,22 +367,22 @@ async def tiktok_oauth_callback(
     if error:
         logger.error("tiktok_oauth_denied", error=error, description=error_description)
         return HTMLResponse(_html_error("Autorización cancelada", "TikTok no otorgó el permiso. Si fue un error, vuelve a intentarlo desde Canales.", detail=f"{error}: {error_description or ''}", platform="tiktok"), status_code=400)
-        
+
     if not code:
         return HTMLResponse(_html_error("Falta el código de autorización", "TikTok no devolvió el código necesario para completar la conexión.", platform="tiktok"), status_code=400)
-        
+
     alias = state or "cuenta_1"
     client_key = settings.tiktok_client_id
     client_secret = settings.tiktok_client_secret
-    
+
     if not client_key or not client_secret:
         return HTMLResponse(_html_error("Configuración incompleta", "Faltan las credenciales de la app de TikTok en el servidor.", detail="TIKTOK_CLIENT_ID / TIKTOK_CLIENT_SECRET no configurados en .env", platform="tiktok"), status_code=500)
-        
+
     # Reconstruct the exact redirect_uri sent during oauth start
     cb_url = f"{request.base_url}api/v1/publish/auth/tiktok/callback"
-    
+
     logger.info("tiktok_oauth_exchange", alias=alias, redirect_uri=cb_url)
-    
+
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             resp = await client.post(
@@ -399,38 +399,38 @@ async def tiktok_oauth_callback(
     except Exception as exc:
         logger.error("tiktok_oauth_network_error", error=str(exc))
         return HTMLResponse(_html_error("Sin conexión con TikTok", "No pudimos comunicarnos con TikTok. Revisa tu conexión e inténtalo de nuevo.", detail=str(exc), platform="tiktok"), status_code=502)
-        
+
     if resp.status_code != 200:
         logger.error("tiktok_oauth_exchange_failed", status=resp.status_code, body=resp.text)
         return HTMLResponse(_html_error("TikTok rechazó la conexión", "El intercambio del código de autorización falló.", detail=f"HTTP {resp.status_code}\n{resp.text[:400]}", platform="tiktok"), status_code=502)
-        
+
     data = resp.json()
     error_code = data.get("error") or data.get("data", {}).get("error_code")
     if error_code:
         logger.error("tiktok_oauth_error_response", response=data)
         return HTMLResponse(_html_error("TikTok devolvió un error", "La respuesta de TikTok no permitió completar la conexión.", detail=str(data), platform="tiktok"), status_code=400)
-        
+
     token_info = data.get("data", {})
     if not token_info:
         token_info = data
-        
+
     access_token = token_info.get("access_token")
     refresh_token = token_info.get("refresh_token")
     expires_in = token_info.get("expires_in", 86400)
     refresh_expires_in = token_info.get("refresh_expires_in", 31536000)
     open_id = token_info.get("open_id")
-    
+
     if not access_token:
         return HTMLResponse(_html_error("Token no recibido", "TikTok no devolvió un token de acceso.", platform="tiktok"), status_code=502)
-        
+
     try:
         encryption_key = settings.publisher_encryption_key
         if not encryption_key:
             raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en .env")
-            
+
         accounts_path = settings.accounts_json_path
         storage = TokenStorage(path=accounts_path, encryption_key=encryption_key)
-        
+
         storage.save_tokens(
             platform="tiktok",
             alias=alias,
@@ -439,19 +439,19 @@ async def tiktok_oauth_callback(
             expires_in=expires_in,
             refresh_expires_in=refresh_expires_in,
         )
-        
+
         storage._data.setdefault("tiktok", {}).setdefault(alias, {}).update({
             "name": alias,
             "target_id": open_id or alias,
             "avatar": "",
         })
         storage._save()
-        
+
         await _update_channels_json("tiktok", alias, alias, open_id or alias, avatar="")
     except Exception as exc:
         logger.error("tiktok_oauth_save_failed", error=str(exc))
         return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)
-        
+
     return HTMLResponse(_html_success("tiktok", alias, expires_in=expires_in, has_refresh_token=bool(refresh_token)))
 
 
@@ -459,6 +459,9 @@ async def tiktok_oauth_callback(
 
 def _load_google_credentials() -> tuple[str, str]:
     import json
+    # Primero el .env (YOUTUBE_CLIENT_ID/SECRET); client_secret.json queda como respaldo.
+    if settings.youtube_client_id and settings.youtube_client_secret:
+        return settings.youtube_client_id, settings.youtube_client_secret
     path = Path("client_secret.json")
     if not path.exists():
         raise HTTPException(status_code=500, detail="client_secret.json not found in workspace root")
@@ -480,7 +483,7 @@ async def youtube_oauth_start(
     """Redirect the browser to Google's OAuth consent screen for YouTube."""
     client_id, _ = _load_google_credentials()
     cb_url = redirect_uri or f"{request.base_url}api/v1/publish/auth/youtube/callback"
-    
+
     params = {
         "client_id": client_id,
         "redirect_uri": cb_url,
@@ -490,7 +493,7 @@ async def youtube_oauth_start(
         "access_type": "offline",
         "prompt": "consent",
     }
-    
+
     auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urllib.parse.urlencode(params)}"
     logger.info("youtube_oauth_start", alias=alias, redirect_uri=cb_url)
     return RedirectResponse(url=auth_url)
@@ -507,16 +510,16 @@ async def youtube_oauth_callback(
     if error:
         logger.error("youtube_oauth_denied", error=error)
         return HTMLResponse(_html_error("Autorización cancelada", "Google no otorgó el permiso. Si fue un error, vuelve a intentarlo desde Canales.", detail=error, platform="youtube"), status_code=400)
-        
+
     if not code:
         return HTMLResponse(_html_error("Falta el código de autorización", "Google no devolvió el código necesario para completar la conexión.", platform="youtube"), status_code=400)
-        
+
     alias = state or "canal_1"
     client_id, client_secret = _load_google_credentials()
     cb_url = f"{request.base_url}api/v1/publish/auth/youtube/callback"
-    
+
     logger.info("youtube_oauth_exchange", alias=alias, redirect_uri=cb_url)
-    
+
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             resp = await client.post(
@@ -533,19 +536,19 @@ async def youtube_oauth_callback(
     except Exception as exc:
         logger.error("youtube_oauth_network_error", error=str(exc))
         return HTMLResponse(_html_error("Sin conexión con Google", "No pudimos comunicarnos con Google. Revisa tu conexión e inténtalo de nuevo.", detail=str(exc), platform="youtube"), status_code=502)
-        
+
     if resp.status_code != 200:
         logger.error("youtube_oauth_exchange_failed", status=resp.status_code, body=resp.text)
         return HTMLResponse(_html_error("Google rechazó la conexión", "El intercambio del código de autorización falló.", detail=f"HTTP {resp.status_code}\n{resp.text[:400]}", platform="youtube"), status_code=502)
-        
+
     token_info = resp.json()
     access_token = token_info.get("access_token")
     refresh_token = token_info.get("refresh_token")
     expires_in = token_info.get("expires_in", 3600)
-    
+
     if not access_token:
         return HTMLResponse(_html_error("Token no recibido", "Google no devolvió un token de acceso.", platform="youtube"), status_code=502)
-        
+
     # Fetch YouTube channel info (name, channel_id, avatar)
     channel_name = alias
     channel_id = alias
@@ -566,15 +569,15 @@ async def youtube_oauth_callback(
                     avatar_url = snippet.get("thumbnails", {}).get("default", {}).get("url", "")
     except Exception as exc:
         logger.warning("youtube_oauth_fetch_channel_info_failed", error=str(exc))
-        
+
     try:
         encryption_key = settings.publisher_encryption_key
         if not encryption_key:
             raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en .env")
-            
+
         accounts_path = settings.accounts_json_path
         storage = TokenStorage(path=accounts_path, encryption_key=encryption_key)
-        
+
         storage.save_tokens(
             platform="youtube",
             alias=alias,
@@ -582,19 +585,19 @@ async def youtube_oauth_callback(
             refresh_token=refresh_token,
             expires_in=expires_in,
         )
-        
+
         storage._data.setdefault("youtube", {}).setdefault(alias, {}).update({
             "name": channel_name,
             "target_id": channel_id,
             "avatar": avatar_url,
         })
         storage._save()
-        
+
         await _update_channels_json("youtube", alias, channel_name, channel_id, avatar=avatar_url)
     except Exception as exc:
         logger.error("youtube_oauth_save_failed", error=str(exc))
         return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)
-        
+
     return HTMLResponse(_html_success("youtube", alias, name=channel_name, avatar=avatar_url, expires_in=expires_in, has_refresh_token=bool(refresh_token)))
 
 
@@ -610,9 +613,9 @@ async def facebook_oauth_start(
     app_id = settings.facebook_client_id
     if not app_id:
         raise HTTPException(status_code=500, detail="FACEBOOK_CLIENT_ID not configured in .env")
-        
+
     cb_url = redirect_uri or f"{request.base_url}api/v1/publish/auth/facebook/callback"
-    
+
     params = {
         "client_id": app_id,
         "redirect_uri": cb_url,
@@ -620,7 +623,7 @@ async def facebook_oauth_start(
         "state": alias,
         "response_type": "code",
     }
-    
+
     auth_url = f"https://www.facebook.com/v21.0/dialog/oauth?{urllib.parse.urlencode(params)}"
     logger.info("facebook_oauth_start", alias=alias, redirect_uri=cb_url)
     return RedirectResponse(url=auth_url)
@@ -638,13 +641,13 @@ async def facebook_oauth_callback(
     if error:
         logger.error("facebook_oauth_denied", error=error, description=error_description)
         return HTMLResponse(_html_error("Autorización cancelada", "Facebook no otorgó el permiso. Si fue un error, vuelve a intentarlo desde Canales.", detail=f"{error}: {error_description or ''}", platform="facebook"), status_code=400)
-        
+
     if not code:
         return HTMLResponse(_html_error("Falta el código de autorización", "Facebook no devolvió el código necesario para completar la conexión.", platform="facebook"), status_code=400)
-        
+
     alias = state or "pagina_1"
     app_id = settings.facebook_client_id
-    
+
     fb_secret = getattr(settings, "facebook_client_secret", None)
     if not fb_secret:
         try:
@@ -654,14 +657,14 @@ async def facebook_oauth_callback(
                      break
         except Exception:
             pass
-            
+
     if not app_id or not fb_secret:
         return HTMLResponse(_html_error("Configuración incompleta", "Faltan las credenciales de la app de Facebook en el servidor.", detail="FACEBOOK_CLIENT_ID / FACEBOOK_CLIENT_SECRET no configurados en .env", platform="facebook"), status_code=500)
-        
+
     cb_url = f"{request.base_url}api/v1/publish/auth/facebook/callback"
-    
+
     logger.info("facebook_oauth_exchange", alias=alias, redirect_uri=cb_url)
-    
+
     try:
         # Step A: Get User Access Token
         async with httpx.AsyncClient(timeout=30) as client:
@@ -677,9 +680,9 @@ async def facebook_oauth_callback(
             if resp.status_code != 200:
                 logger.error("facebook_oauth_user_token_failed", status=resp.status_code, body=resp.text)
                 return HTMLResponse(_html_error("Facebook rechazó la conexión", "El intercambio del código de autorización falló.", detail=resp.text[:400], platform="facebook"), status_code=502)
-                
+
             user_token = resp.json().get("access_token")
-            
+
             # Step B: Exchange for Long-Lived User Token (60 days)
             resp = await client.get(
                 "https://graph.facebook.com/v21.0/oauth/access_token",
@@ -693,9 +696,9 @@ async def facebook_oauth_callback(
             if resp.status_code != 200:
                 logger.error("facebook_oauth_long_lived_user_failed", status=resp.status_code, body=resp.text)
                 return HTMLResponse(_html_error("No se obtuvo un token duradero", "Facebook rechazó el intercambio por un token de larga duración.", detail=resp.text[:400], platform="facebook"), status_code=502)
-                
+
             long_lived_user_token = resp.json().get("access_token")
-            
+
             # Step C: Get Pages
             resp = await client.get(
                 "https://graph.facebook.com/v21.0/me/accounts",
@@ -704,23 +707,23 @@ async def facebook_oauth_callback(
             if resp.status_code != 200:
                 logger.error("facebook_oauth_pages_failed", status=resp.status_code, body=resp.text)
                 return HTMLResponse(_html_error("No pudimos leer tus páginas", "Facebook no devolvió la lista de páginas que administras.", detail=resp.text[:400], platform="facebook"), status_code=502)
-                
+
             pages = resp.json().get("data", [])
             if not pages:
                 return HTMLResponse(_html_error("No hay páginas para conectar", "Esta cuenta de Facebook no administra ninguna página. Crea una o pide acceso de administrador.", platform="facebook"), status_code=400)
-                
+
     except Exception as exc:
         logger.error("facebook_oauth_network_error", error=str(exc))
         return HTMLResponse(_html_error("Sin conexión con Facebook", "No pudimos comunicarnos con Facebook. Revisa tu conexión e inténtalo de nuevo.", detail=str(exc), platform="facebook"), status_code=502)
-        
+
     try:
         encryption_key = settings.publisher_encryption_key
         if not encryption_key:
             raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en .env")
-            
+
         accounts_path = settings.accounts_json_path
         storage = TokenStorage(path=accounts_path, encryption_key=encryption_key)
-        
+
         # Save first page with requested alias, and all pages for complete CRUD listing
         for idx, page in enumerate(pages):
             page_name = page.get("name")
@@ -728,27 +731,27 @@ async def facebook_oauth_callback(
             page_token = page.get("access_token")
             page_alias = alias if idx == 0 else f"pagina_{idx + 1}"
             avatar_url = f"https://graph.facebook.com/{page_id}/picture?type=large"
-            
+
             storage.save_tokens(
                 platform="facebook",
                 alias=page_alias,
                 access_token=page_token,
                 expires_in=None,
             )
-            
+
             storage._data.setdefault("facebook", {}).setdefault(page_alias, {}).update({
                 "name": page_name,
                 "target_id": page_id,
                 "avatar": avatar_url,
             })
             storage._save()
-            
+
             await _update_channels_json("facebook", page_alias, page_name, page_id, avatar=avatar_url)
-            
+
     except Exception as exc:
         logger.error("facebook_oauth_save_failed", error=str(exc))
         return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)
-        
+
     return HTMLResponse(_html_success("facebook", alias, name=pages[0].get("name"), avatar=f"https://graph.facebook.com/{pages[0].get('id')}/picture?type=large", extra_accounts=len(pages) - 1))
 
 

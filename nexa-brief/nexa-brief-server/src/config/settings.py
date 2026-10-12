@@ -101,6 +101,9 @@ class Settings(BaseSettings):
     # a la vez en todo el servidor; subir solo si el hardware real sostiene más
     # (ver docs/niches-reference.md o hacer un benchmark controlado primero).
     max_concurrent_recordings: int = 1
+    # Grabaciones del explainer a la vez. Benchmark 2026-10-11 (4 núcleos): 2 a la vez
+    # rinden solo ~16% más que en serie y cada una tarda ~67% más → 1 por defecto.
+    explainer_max_concurrent_recordings: int = Field(default=1, alias="EXPLAINER_MAX_CONCURRENT_RECORDINGS")
     # "libx264" (software, comportamiento actual) | "h264_vaapi" (hardware,
     # vía /dev/dri — libera casi toda la CPU durante el encode, dejándola
     # disponible para una grabación concurrente). Requiere que el driver VAAPI
@@ -246,6 +249,9 @@ class Settings(BaseSettings):
         ],
         alias="CORS_ALLOW_ORIGINS",
     )
+    # Orígenes extra por patrón, p. ej. la web abierta desde la red de Tailscale:
+    # CORS_ALLOW_ORIGIN_REGEX=^http://100\.[0-9.]+:3000$   (vacío = solo la lista de arriba)
+    cors_allow_origin_regex: str = Field(default="", alias="CORS_ALLOW_ORIGIN_REGEX")
 
     # Base URL of nexa-brief-web, used to link back to it from the OAuth
     # success/error pages (which are server-rendered HTML, not JSON).
@@ -270,6 +276,10 @@ class Settings(BaseSettings):
         default=BASE_DIR / "accounts.json",
         alias="ACCOUNTS_JSON_PATH",
     )
+    # Copia de accounts.json en base64 para levantar una máquina nueva solo con el .env:
+    # si accounts.json no existe, TokenStorage lo crea desde acá. Generar con
+    #   base64 -w0 accounts.json
+    accounts_json_b64: str = Field(default="", alias="ACCOUNTS_JSON_B64")
 
     # ── Social Publisher — TikTok OAuth 2.0 ──────────────────────────────────
     tiktok_client_id: str = Field(default="", alias="TIKTOK_CLIENT_ID")
@@ -348,6 +358,10 @@ class Settings(BaseSettings):
     # PATH se busca solo (nvm, ~/.local/bin, app de ChatGPT); se puede fijar acá.
     agent_claude_bin: str = Field(default="", alias="AGENT_CLAUDE_BIN")
     agent_codex_bin: str = Field(default="", alias="AGENT_CODEX_BIN")
+    # Modelo y esfuerzo de razonamiento de Codex (vacío = el default de ~/.codex/config.toml).
+    # Ej.: AGENT_CODEX_MODEL=gpt-6-luna, AGENT_CODEX_REASONING_EFFORT=xhigh.
+    agent_codex_model: str = Field(default="", alias="AGENT_CODEX_MODEL")
+    agent_codex_reasoning_effort: str = Field(default="", alias="AGENT_CODEX_REASONING_EFFORT")
     # Producir un video completo (investigar, guion, voz, storyboard) tarda.
     agent_production_timeout_seconds: int = Field(default=5400, alias="AGENT_PRODUCTION_TIMEOUT_SECONDS")
     # Una respuesta de texto/JSON (títulos, plan semanal).

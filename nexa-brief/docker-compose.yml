@@ -4,11 +4,12 @@ services:
   volume-init:
     image: busybox:1.37.0
     command: >-
-      sh -c 'mkdir -p /data /output /accounts && chown -R 10001:10001 /data /output /accounts'
+      sh -c 'mkdir -p /data /output /accounts /web-data && chown -R ${APP_UID:-10001}:${APP_GID:-10001} /data /output /accounts && chown -R 10001:10001 /web-data'
     volumes:
       - nexa_data:/data
       - nexa_output:/output
       - nexa_accounts:/accounts
+      - nexa_web_data:/web-data
     networks:
       - nexa_private
     restart: "no"
@@ -17,6 +18,9 @@ services:
     build:
       context: .
       dockerfile: nexa-brief-server/Dockerfile
+      args:
+        APP_UID: ${APP_UID:-10001}
+        APP_GID: ${APP_GID:-10001}
     env_file:
       - path: ./nexa-brief-server/.env
         required: false
@@ -38,6 +42,8 @@ services:
       - nexa_data:/app/data
       - nexa_output:/app/output
       - nexa_accounts:/app/accounts
+      # Plantillas con sus medios (make media-pull) y grabaciones, desde el disco del host.
+      - ./nexa-brief-server/src/templates:/app/src/templates
     depends_on:
       volume-init:
         condition: service_completed_successfully
@@ -70,7 +76,12 @@ services:
       AUTH_TRUST_HOST: "true"
     ports:
       - "${WEB_PORT:-3000}:3000"
+    volumes:
+      # Usuarios y solicitudes de acceso (data/users.json): sobreviven a los rebuilds.
+      - nexa_web_data:/app/data
     depends_on:
+      volume-init:
+        condition: service_completed_successfully
       api:
         condition: service_healthy
     networks:
@@ -96,3 +107,5 @@ volumes:
     name: nexa-brief-output
   nexa_accounts:
     name: nexa-brief-accounts
+  nexa_web_data:
+    name: nexa-brief-web-data

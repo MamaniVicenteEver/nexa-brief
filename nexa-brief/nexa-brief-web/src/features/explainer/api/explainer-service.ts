@@ -37,6 +37,8 @@ interface ExplainerJobDto {
   scheduled_job_id: string | null;
   publish_result: { post_id: string; url: string; platform: string; account_alias: string } | null;
   publish_results?: { account_selector: string; url?: string; error?: string }[];
+  formats?: ExplainerJob["formats"];
+  render_seconds?: number | null;
 }
 
 interface ExplainerVideoDto {
@@ -80,6 +82,8 @@ function mapJob(dto: ExplainerJobDto): ExplainerJob {
     outputs: dto.outputs,
     outputDir: dto.output_dir,
     scheduledJobId: dto.scheduled_job_id,
+    formats: dto.formats ?? [],
+    renderSeconds: dto.render_seconds ?? null,
     publishResults: (dto.publish_results ?? []).map((r) => ({
       accountSelector: r.account_selector,
       url: r.url ?? null,
@@ -151,6 +155,7 @@ export async function recordExplainerVideo(input: RecordExplainerInput): Promise
         privacy: input.privacy,
         account_selector: input.accountSelector ?? null,
         account_selectors: input.accountSelectors ?? [],
+        formats: input.formats ?? ["16x9"],
       },
     },
   );

@@ -1,0 +1,57 @@
+name: nexa-brief
+
+on:
+  pull_request:
+    paths: ["nexa-brief/**", ".github/workflows/nexa-brief.yml"]
+  push:
+    branches: [main]
+    paths: ["nexa-brief/**", ".github/workflows/nexa-brief.yml"]
+
+concurrency:
+  group: nexa-brief-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  server:
+    name: API (ruff + pytest)
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: nexa-brief/nexa-brief-server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - run: uv sync --frozen
+      - run: uv run ruff check src tests
+      - run: cp .env.example .env
+      - run: uv run pytest -q
+
+  web:
+    name: Web (biome + tsc + build)
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: nexa-brief/nexa-brief-web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: nexa-brief/nexa-brief-web/.nvmrc
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm exec tsc --noEmit
+      - run: pnpm build
+
+  docker:
+    name: Docker (build api + web)
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: nexa-brief
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build

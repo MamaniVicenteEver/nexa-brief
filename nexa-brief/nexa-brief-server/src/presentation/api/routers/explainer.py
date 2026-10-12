@@ -133,6 +133,8 @@ def _job_response(job: RecordJob) -> ExplainerJobResponse:
         publish_result=job.publish_result,
         publish_results=job.publish_results,
         scheduled_job_id=job.scheduled_job_id,
+        formats=list(job.formats),
+        render_seconds=job.render_seconds,
     )
 
 
@@ -213,6 +215,7 @@ async def record_explainer_video(video_id: str, body: RecordExplainerRequest) ->
             privacy=body.privacy,
             account_selector=body.account_selector,
             account_selectors=body.account_selectors,
+            formats=body.formats,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

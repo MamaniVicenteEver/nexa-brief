@@ -215,6 +215,10 @@ class CodexRunner(AgentRunnerPort):
                 cmd += ["-c", f"sandbox_workspace_write.writable_roots=[{roots}]"]
         else:
             cmd = [self._binary, "exec", "--skip-git-repo-check", "-C", str(cwd), "-o", str(last_path), "-s", "read-only"]
+        if settings.agent_codex_model:
+            cmd += ["-m", settings.agent_codex_model]
+        if settings.agent_codex_reasoning_effort:
+            cmd += ["-c", f"model_reasoning_effort={json.dumps(settings.agent_codex_reasoning_effort)}"]
         cmd.append("-")  # prompt por stdin
         code, timed_out, secs = await run_cli(
             cmd, cwd=cwd, log_path=log_path, timeout_seconds=timeout_seconds, stdin_text=prompt

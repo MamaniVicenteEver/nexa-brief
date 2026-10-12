@@ -11,6 +11,11 @@ Uso (desde nexa-brief-server/):  .venv/bin/python src/templates/_tools/explainer
 import asyncio, json, pathlib, sys
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import shoot  # noqa: E402  (reusa su servidor HTTP)
+import os
+
+# En Docker se usa el Chromium del sistema (PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH);
+# fuera de Docker, el que instala `playwright install chromium`.
+CHROMIUM = os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH") or None
 
 KIT = pathlib.Path(__file__).resolve().parents[1]
 
@@ -18,7 +23,7 @@ async def read():
     from playwright.async_api import async_playwright
     srv = shoot.serve(KIT.parent)
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page()
+        b = await p.chromium.launch(executable_path=CHROMIUM); pg = await b.new_page()
         await pg.goto(f"http://127.0.0.1:{srv.server_port}/explainer-kit/showcase/stage.html?list=1", wait_until="domcontentloaded", timeout=120000)
         await pg.wait_for_function("window.__catalog", timeout=60000)
         data = await pg.evaluate("({ comps: window.__catalog, icons: Object.keys(Kit.binary.ICONS), sketches: Object.keys(Kit.rough.SKETCHES) })")
