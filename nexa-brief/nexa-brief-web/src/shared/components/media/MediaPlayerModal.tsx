@@ -65,6 +65,8 @@ interface StageProps {
   onTime: (currentTime: number, duration: number) => void;
   onEnded: () => void;
   onPlayingChange: (playing: boolean) => void;
+  /** El stage se silenció solo (el navegador bloqueó el autoplay con sonido). */
+  onMutedChange?: (muted: boolean) => void;
 }
 
 function formatTime(seconds: number) {
@@ -81,11 +83,17 @@ function postToFrame(frame: HTMLIFrameElement | null, message: Record<string, un
 }
 
 const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: string }>(
-  function IframeStage({ url, title, playing, volume, muted, onTime, onEnded }, ref) {
+  function IframeStage(
+    { url, title, playing, volume, muted, onTime, onEnded, onPlayingChange, onMutedChange },
+    ref,
+  ) {
     const frameRef = useRef<HTMLIFrameElement>(null);
     const [restartKey, setRestartKey] = useState(0);
 
     const post = (message: Record<string, unknown>) => postToFrame(frameRef.current, message);
+    // Estado actual para reenviarlo cuando el reproductor del iframe avisa que está listo.
+    const latest = useRef({ playing, volume, muted });
+    latest.current = { playing, volume, muted };
 
     useImperativeHandle(ref, () => ({
       seek: (time) => post({ type: "nexa-template-seek", time }),
@@ -104,14 +112,24 @@ const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: s
     useEffect(() => {
       const handleMessage = (event: MessageEvent) => {
         if (event.source !== frameRef.current?.contentWindow) return;
+        if (event.data?.type === "nexa-template-ready") {
+          // El reproductor se carga después del evento load: lo que se mandó antes se perdió.
+          const { playing: wantPlaying, volume: vol, muted: mute } = latest.current;
+          postToFrame(frameRef.current, { type: "nexa-template-volume", volume: vol, muted: mute });
+          postToFrame(frameRef.current, { type: "nexa-template-playback", playing: wantPlaying });
+        }
         if (event.data?.type === "nexa-template-time") {
           onTime(Number(event.data.currentTime), Number(event.data.duration));
         }
         if (event.data?.type === "nexa-template-ended") onEnded();
+        // Estado real del reproductor: si el navegador rechazó el play(), el botón
+        // no queda en "Pausar" con el video quieto.
+        if (event.data?.type === "nexa-template-state") onPlayingChange(Boolean(event.data.playing));
+        if (event.data?.type === "nexa-template-muted") onMutedChange?.(Boolean(event.data.muted));
       };
       window.addEventListener("message", handleMessage);
       return () => window.removeEventListener("message", handleMessage);
-    }, [onTime, onEnded]);
+    }, [onTime, onEnded, onPlayingChange, onMutedChange]);
 
     return (
       <iframe
@@ -333,6 +351,7 @@ function PlayerBody({
     setPlaying(next);
     if (next) setEnded(false);
   }).current;
+  const handleMutedChange = useRef((next: boolean) => setMuted(next)).current;
 
   const changeViewport = (next: MediaViewport) => {
     if (next === viewport) return;
@@ -409,6 +428,7 @@ function PlayerBody({
     onTime: handleTime,
     onEnded: handleEnded,
     onPlayingChange: handlePlayingChange,
+    onMutedChange: handleMutedChange,
   };
 
   const viewportButton = (mode: MediaViewport, label: string, enabled: boolean) => (
