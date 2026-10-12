@@ -4,7 +4,7 @@ services:
   volume-init:
     image: busybox:1.37.0
     command: >-
-      sh -c 'mkdir -p /data /output /accounts /web-data && chown -R 10001:10001 /data /output /accounts /web-data'
+      sh -c 'mkdir -p /data /output /accounts /web-data && chown -R ${APP_UID:-10001}:${APP_GID:-10001} /data /output /accounts && chown -R 10001:10001 /web-data'
     volumes:
       - nexa_data:/data
       - nexa_output:/output
@@ -18,6 +18,9 @@ services:
     build:
       context: .
       dockerfile: nexa-brief-server/Dockerfile
+      args:
+        APP_UID: ${APP_UID:-10001}
+        APP_GID: ${APP_GID:-10001}
     env_file:
       - path: ./nexa-brief-server/.env
         required: false
@@ -39,6 +42,8 @@ services:
       - nexa_data:/app/data
       - nexa_output:/app/output
       - nexa_accounts:/app/accounts
+      # Plantillas con sus medios (make media-pull) y grabaciones, desde el disco del host.
+      - ./nexa-brief-server/src/templates:/app/src/templates
     depends_on:
       volume-init:
         condition: service_completed_successfully
