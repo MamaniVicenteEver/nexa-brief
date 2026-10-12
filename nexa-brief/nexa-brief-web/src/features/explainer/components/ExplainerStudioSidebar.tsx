@@ -12,6 +12,7 @@ import {
   type RecordDuration,
   type RecordFormat,
 } from "../types";
+import { PublishPackagePanel } from "./PublishPackagePanel";
 import { PublishTextsControl } from "./PublishTextsControl";
 
 type Tab = "texts" | "record";
@@ -66,6 +67,7 @@ function TextsTab({ video }: { video: ExplainerVideo }) {
   return (
     <div className="flex flex-col gap-2.5">
       {!video.publishReady && <PublishTextsControl videoId={video.videoId} />}
+      {video.publishPackage && <PublishPackagePanel review={video.publishPackage} />}
       <CopyBlock
         label="YouTube"
         title={video.youtubeTitle}

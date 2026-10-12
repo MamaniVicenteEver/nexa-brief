@@ -1,35 +1,196 @@
 {
-  "youtube_title": "El error que llevó a la humanidad a la Luna",
-  "youtube_description": "A diez kilómetros de la superficie lunar, la computadora del Apolo 11 hizo algo que nadie esperaba: mostró el error 1202 y empezó a reiniciarse. Ni Armstrong ni Houston sabían, al principio, qué significaba ese número.\n\nEn este documental corto reconstruimos esos minutos decisivos del 20 de julio de 1969: una computadora de apenas cuatro kilobytes, con el software tejido a mano con alambre de cobre, y la mujer detrás de todo, Margaret Hamilton, que había insistido en diseñar para el error.\n\nVas a entender por qué la máquina se saturó, qué tenía que ver un interruptor del radar de encuentro, y cómo un sistema de prioridades hizo que la computadora soltara lo secundario para seguir guiando el descenso en vez de colapsar.\n\nTambién verás la decisión de segundos en Houston —el 'Go' de Steve Bales y Jack Garman— y el momento en que Armstrong tomó el control manual para esquivar un cráter con el combustible casi agotado.\n\nAl final queda una idea: innovar no es construir algo que nunca falle, sino algo que sepa qué hacer cuando falla. ¿Qué otro 'error histórico' que terminó bien te gustaría que contáramos? Déjalo en los comentarios.",
-  "youtube_tags": [
-    "apolo 11",
-    "error 1202",
-    "margaret hamilton",
-    "llegada a la luna",
-    "1969",
-    "historia de la nasa",
-    "ingenieria de software",
-    "computadora del apolo",
-    "neil armstrong",
-    "alunizaje",
-    "carrera espacial",
-    "historia de la tecnologia",
-    "documental historia",
-    "sabias que"
+  "schema_version": 2,
+  "category": "node_tech",
+  "intro": {
+    "lines": [
+      "QUEDABAN",
+      "30 SEGUNDOS"
+    ],
+    "lines_portrait": [
+      "QUEDABAN",
+      "30",
+      "SEGUNDOS"
+    ],
+    "kicker": "APOLO 11 · 20 JUL 1969",
+    "sub": "LA ALARMA QUE CASI ABORTA LA LLEGADA A LA LUNA"
+  },
+  "thumbnail": {
+    "text_only": {
+      "lines": [
+        "LA COMPUTADORA",
+        "DEL APOLO 11",
+        "SE RINDIÓ"
+      ],
+      "highlight": "SE RINDIÓ",
+      "pair_title": "A"
+    },
+    "with_image": {
+      "text": "ELLA LO PREVIÓ",
+      "image": "hamilton.jpg",
+      "composition": "Hamilton de cuerpo entero con la pila de papeles, en la mitad derecha; el texto en la mitad izquierda, sobre fondo oscuro.",
+      "pair_title": "A",
+      "image_review": [
+        {
+          "image": "dsky.jpg",
+          "verdict": "débil",
+          "reason": "Objeto técnico que el público no reconoce; la pantalla está en blanco (criterios 3 y 1)."
+        },
+        {
+          "image": "hamilton.jpg",
+          "verdict": "elegida",
+          "reason": "Foto icónica, rostro + la pila de su código; aparece en el video."
+        }
+      ]
+    },
+    "chosen": "text_only"
+  },
+  "titles": {
+    "youtube": [
+      {
+        "option": "A",
+        "text": "La alarma que casi aborta la llegada a la Luna",
+        "strategy": 4,
+        "emotion": "Ansiedad"
+      },
+      {
+        "option": "B",
+        "text": "Tenía 26 años y segundos para decidir si se pisaba la Luna",
+        "strategy": 9,
+        "emotion": "Tensión"
+      },
+      {
+        "option": "C",
+        "text": "Programó para el error, y eso salvó al Apolo 11",
+        "strategy": 1,
+        "emotion": "Asombro"
+      }
+    ],
+    "facebook": {
+      "title": "La alarma que casi aborta la llegada a la Luna",
+      "first_line": "A 10 km de la Luna, la computadora del Apolo 11 mostró el error 1202. Houston tenía segundos para decidir."
+    },
+    "tiktok": {
+      "caption": "La alarma que casi aborta el Apolo 11 🚀 Y la mujer que la había previsto. ¿La conocías?"
+    },
+    "chosen": "A"
+  },
+  "description": {
+    "hook": "A 10 kilómetros de la Luna, la computadora del Apolo 11 mostró un número que nadie a bordo entendía: 1202. En Houston, un controlador de 26 años tenía segundos para decidir si abortaban.",
+    "context": "Una computadora con unos 4 kilobytes de memoria y un programa tejido a mano con alambre de cobre. Detrás, Margaret Hamilton y una idea que pocos tomaban en serio: diseñar para el error. Vas a ver por qué la máquina se saturó, cómo eligió qué soltar y por qué ese día no ganó una computadora potente, sino un software que sabía fallar.",
+    "chapters": [
+      {
+        "at": "0:00",
+        "title": "20 de julio de 1969: la computadora se rinde"
+      },
+      {
+        "at": "0:29",
+        "title": "Una computadora de 4 KB tejida a mano"
+      },
+      {
+        "at": "1:05",
+        "title": "Margaret Hamilton y la obsesión por el error"
+      },
+      {
+        "at": "1:40",
+        "title": "El radar que saturó la máquina"
+      },
+      {
+        "at": "2:11",
+        "title": "Abortar o seguir: la decisión de Houston"
+      },
+      {
+        "at": "2:36",
+        "title": "30 segundos de combustible"
+      },
+      {
+        "at": "3:05",
+        "title": "El día que nació la ingeniería de software"
+      }
+    ],
+    "reflection": "La próxima vez que tu teléfono cierre una aplicación para no congelarse, acuérdate de esa tarde de julio: innovar no es construir algo que nunca falle, es construir algo que sepa qué hacer cuando falla.",
+    "question": "¿Tú habrías dicho «Go» o habrías abortado? Te leemos en los comentarios.",
+    "gratitude": "G1_identidad",
+    "gratitude_topic": ""
+  },
+  "sources": [],
+  "credits": [
+    "Margaret Hamilton (restauración) — Draper Laboratory / Adam Cuerden — dominio público",
+    "Lunar Module Eagle (AS11-44-6581) — NASA — dominio público",
+    "Apollo DSKY — NASA / Dennis Taylor — dominio público",
+    "Core rope tester — ArnoldReinhold — CC BY-SA 4.0",
+    "Mission Control (S69-39593), Aldrin (AS11-40-5903), Mar de la Tranquilidad (AS11-37-5448) — NASA — dominio público"
   ],
-  "tiktok_caption": "A 10 km de la Luna, la computadora del Apolo 11 se rindió. El error 1202 casi aborta todo… y terminó salvándolos.",
+  "tags": {
+    "youtube": [
+      "Apolo 11",
+      "Apollo 11",
+      "alarma 1202",
+      "error 1202",
+      "Margaret Hamilton",
+      "llegada a la Luna",
+      "alunizaje",
+      "computadora del Apolo",
+      "ingeniería de software",
+      "historia de la tecnología",
+      "NASA",
+      "Steve Bales",
+      "documental corto"
+    ],
+    "youtube_hashtags": [
+      "#Apolo11",
+      "#MargaretHamilton",
+      "#NodeTech"
+    ],
+    "tiktok": [
+      "#apolo11",
+      "#historiadelatecnologia",
+      "#nasa",
+      "#sabiasque"
+    ],
+    "facebook": [
+      "#Apolo11",
+      "#Tecnología"
+    ]
+  },
+  "pinned_comment": "Gracias por llegar hasta el final 🚀 Dato que no entró en el video: la palabra que decidió todo fue una sola, «Go». ¿Qué otro momento de la carrera espacial quieres que contemos?",
+  "strategies_used": {
+    "title": "title_anchor_tension_v1",
+    "thumbnail": "thumb_two_modes_v1",
+    "platforms": "platforms_v1",
+    "description": "desc_nine_blocks_v1",
+    "gratitude": "gratitude_rotation_v1",
+    "tags": "tags_minimal_v1"
+  },
+  "youtube_title": "La alarma que casi aborta la llegada a la Luna",
+  "youtube_title_alternatives": [
+    "Tenía 26 años y segundos para decidir si se pisaba la Luna",
+    "Programó para el error, y eso salvó al Apolo 11"
+  ],
+  "youtube_description": "A 10 kilómetros de la Luna, la computadora del Apolo 11 mostró un número que nadie a bordo entendía: 1202. En Houston, un controlador de 26 años tenía segundos para decidir si abortaban.\n\nUna computadora con unos 4 kilobytes de memoria y un programa tejido a mano con alambre de cobre. Detrás, Margaret Hamilton y una idea que pocos tomaban en serio: diseñar para el error. Vas a ver por qué la máquina se saturó, cómo eligió qué soltar y por qué ese día no ganó una computadora potente, sino un software que sabía fallar.\n\nCAPÍTULOS\n0:00 20 de julio de 1969: la computadora se rinde\n0:29 Una computadora de 4 KB tejida a mano\n1:05 Margaret Hamilton y la obsesión por el error\n1:40 El radar que saturó la máquina\n2:11 Abortar o seguir: la decisión de Houston\n2:36 30 segundos de combustible\n3:05 El día que nació la ingeniería de software\n\nLa próxima vez que tu teléfono cierre una aplicación para no congelarse, acuérdate de esa tarde de julio: innovar no es construir algo que nunca falle, es construir algo que sepa qué hacer cuando falla.\n\nSi llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.\n\n¿Tú habrías dicho «Go» o habrías abortado? Te leemos en los comentarios.\n\nIMÁGENES (Wikimedia Commons)\n- Margaret Hamilton (restauración) — Draper Laboratory / Adam Cuerden — dominio público\n- Lunar Module Eagle (AS11-44-6581) — NASA — dominio público\n- Apollo DSKY — NASA / Dennis Taylor — dominio público\n- Core rope tester — ArnoldReinhold — CC BY-SA 4.0\n- Mission Control (S69-39593), Aldrin (AS11-40-5903), Mar de la Tranquilidad (AS11-37-5448) — NASA — dominio público\n\n#Apolo11 #MargaretHamilton #NodeTech",
+  "youtube_tags": [
+    "Apolo 11",
+    "Apollo 11",
+    "alarma 1202",
+    "error 1202",
+    "Margaret Hamilton",
+    "llegada a la Luna",
+    "alunizaje",
+    "computadora del Apolo",
+    "ingeniería de software",
+    "historia de la tecnología",
+    "NASA",
+    "Steve Bales",
+    "documental corto"
+  ],
+  "facebook_title": "La alarma que casi aborta la llegada a la Luna",
+  "facebook_description": "A 10 km de la Luna, la computadora del Apolo 11 mostró el error 1202. Houston tenía segundos para decidir.\n\nLa próxima vez que tu teléfono cierre una aplicación para no congelarse, acuérdate de esa tarde de julio: innovar no es construir algo que nunca falle, es construir algo que sepa qué hacer cuando falla.\n\n¿Tú habrías dicho «Go» o habrías abortado? Te leemos en los comentarios.\n\n#Apolo11 #Tecnología",
+  "tiktok_caption": "La alarma que casi aborta el Apolo 11 🚀 Y la mujer que la había previsto. ¿La conocías?",
   "tiktok_hashtags": [
     "#apolo11",
-    "#historia",
-    "#sabiasque",
-    "#espacio",
-    "#tecnologia"
+    "#historiadelatecnologia",
+    "#nasa",
+    "#sabiasque"
   ],
-  "thumbnail_text": "la alarma que casi aborta todo",
-  "youtube_title_alternatives": [
-    "1202: la alarma que casi aborta el alunizaje",
-    "Así una computadora que falló salvó al Apolo 11"
-  ],
-  "facebook_title": "La computadora del Apolo 11 falló camino a la Luna… y por eso llegaron",
-  "facebook_description": "A diez kilómetros de la superficie lunar apareció el error 1202 y nadie a bordo sabía qué era. Lo que pasó después cambió para siempre la forma en que programamos. ¿Sabías esta historia? Cuéntanos en los comentarios."
+  "thumbnail_text": "LA COMPUTADORA DEL APOLO 11 SE RINDIÓ",
+  "gratitude_used": "G1_identidad"
 }

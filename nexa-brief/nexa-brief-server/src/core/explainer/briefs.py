@@ -26,6 +26,7 @@ from src.config.exceptions import AIValidationError
 from src.core.categories import get_category, strategy_for
 from src.core.explainer.catalog import video_roots
 from src.core.explainer.designs import KitDesign
+from src.core.explainer.publishing.store import PUBLISH_FILE, is_package, read_publish
 from src.core.ports.ai_port import AIPort
 
 YOUTUBE_TITLE_MAX = 100
@@ -231,10 +232,14 @@ async def generate_publish_texts(ai: AIPort, video_dir: Path, *, category_path: 
 
 
 def write_publish_json(video_dir: Path, brief: ExplainerBrief, *, overwrite: bool = False) -> bool:
-    """Escribe publish.json; no pisa títulos existentes salvo overwrite=True."""
-    path = video_dir / "publish.json"
-    current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    if current.get("youtube_title") and not overwrite:
+    """Escribe publish.json (v1); no pisa títulos existentes salvo overwrite=True.
+
+    Nunca pisa un paquete v2 (src/core/explainer/publishing): sus campos planos se
+    derivan del paquete y mezclarle textos v1 lo dejaría inconsistente.
+    """
+    path = video_dir / PUBLISH_FILE
+    current = read_publish(video_dir)
+    if is_package(current) or (current.get("youtube_title") and not overwrite):
         return False
     path.write_text(json.dumps({**current, **brief.to_publish_json()}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return True

@@ -27,6 +27,46 @@ export interface ExplainerJob {
   renderSeconds: number | null;
 }
 
+export type TitleOptionId = "A" | "B" | "C";
+
+export interface TitleOption {
+  option: TitleOptionId;
+  text: string;
+  /** Número de estrategia de gancho (1–10) y su nombre. */
+  strategy: number;
+  strategyName: string;
+  emotion: string;
+}
+
+export interface PublishIssue {
+  level: "error" | "warning";
+  field: string;
+  message: string;
+}
+
+/** publish.json v2: el paquete de publicación (src/core/explainer/publishing en el server). */
+export interface PublishPackage {
+  intro: { lines: string[]; kicker: string; sub: string };
+  thumbnail: {
+    textOnly: { lines: string[]; highlight: string; pairTitle: TitleOptionId };
+    withImage: { text: string; imageUrl: string | null; pairTitle: TitleOptionId };
+    chosen: "text_only" | "with_image";
+  };
+  titles: {
+    youtube: TitleOption[];
+    chosen: TitleOptionId;
+  };
+  pinnedComment: string;
+}
+
+export interface PublishPackageReview {
+  /** null si el publish.json v2 no se pudo leer (el motivo está en `issues`). */
+  package: PublishPackage | null;
+  issues: PublishIssue[];
+  /** Largo máximo de un título de YouTube según la estrategia activa del server. */
+  titleMaxChars: number;
+}
+
 export interface ExplainerVideo {
   videoId: string;
   design: string;
@@ -56,6 +96,8 @@ export interface ExplainerVideo {
   /** Portada fija (render/poster.jpg); null si todavía no tiene. */
   posterUrl: string | null;
   lastJob: ExplainerJob | null;
+  /** Solo en videos con paquete de publicación v2. */
+  publishPackage: PublishPackageReview | null;
 }
 
 export interface RecordExplainerInput {
