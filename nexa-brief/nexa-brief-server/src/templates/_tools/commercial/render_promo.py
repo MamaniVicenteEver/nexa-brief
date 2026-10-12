@@ -15,6 +15,11 @@ Uso (rutas de página relativas a src/templates/):
 Requiere: playwright (chromium) y ffmpeg. Levanta su propio servidor HTTP.
 """
 import argparse, asyncio, functools, http.server, json, pathlib, subprocess, threading
+import os
+
+# En Docker se usa el Chromium del sistema (PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH);
+# fuera de Docker, el que instala `playwright install chromium`.
+CHROMIUM = os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH") or None
 
 HERE = pathlib.Path(__file__).resolve().parents[2]   # src/templates/
 
@@ -52,7 +57,7 @@ async def render(args):
     with tempfile.TemporaryDirectory() as td:
         outdir = pathlib.Path(td)
         async with async_playwright() as p:
-            b = await p.chromium.launch()
+            b = await p.chromium.launch(executable_path=CHROMIUM)
             probe = await b.new_page(); await probe.goto(url)
             await probe.wait_for_function("window.__promo && window.__promo.scenes().length > 0", timeout=60000)
             end = await probe.evaluate("(() => { const s = window.__promo.scenes(); return s[s.length - 1].t1; })()")

@@ -22,10 +22,11 @@ fi
 command -v rsync >/dev/null || { echo "Falta rsync (sudo apt install rsync)" >&2; exit 1; }
 
 # Solo medios, y solo los que usan las plantillas: se excluyen borradores (work/),
-# pruebas (sandbox/, lab/) y originales previos a la optimización.
+# pruebas (sandbox/, lab/), previews de grabación (render/preview/) y originales
+# previos a la optimización.
 FILTER=(
   --exclude='work/' --exclude='sandbox/' --exclude='lab/' --exclude='media_originals/'
-  --exclude='_referencias/' --exclude='_source/*.mp4' --exclude='node_modules/'
+  --exclude='_referencias/' --exclude='_source/*.mp4' --exclude='node_modules/' --exclude='render/preview/'
   --include='*/'
   --include='*.mp3' --include='*.mp4' --include='*.webm' --include='*.wav' --include='*.mov'
   --exclude='*'
