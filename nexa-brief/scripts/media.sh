@@ -15,8 +15,10 @@ set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REL="nexa-brief-server/src/templates/"
 
-remote="${MEDIA_REMOTE:-$(grep -E '^MEDIA_REMOTE=' "$ROOT/.env" 2>/dev/null | tail -1 | cut -d= -f2-)}"
-[[ -n "$remote" ]] || { echo "Falta MEDIA_REMOTE (ej. ever-server:Proyectos/nexa-brief/nexa-brief)" >&2; exit 1; }
+remote="${MEDIA_REMOTE:-$({ grep -E '^MEDIA_REMOTE=' "$ROOT/.env" 2>/dev/null || true; } | tail -1 | cut -d= -f2-)}"
+if [[ "${1:-}" =~ ^(pull|push|status)$ ]]; then
+  [[ -n "$remote" ]] || { echo "Falta MEDIA_REMOTE (ej. ever-server:Proyectos/nexa-brief/nexa-brief), en el entorno o en nexa-brief/.env" >&2; exit 1; }
+fi
 command -v rsync >/dev/null || { echo "Falta rsync (sudo apt install rsync)" >&2; exit 1; }
 
 # Solo medios, y solo los que usan las plantillas: se excluyen borradores (work/),
@@ -43,7 +45,7 @@ case "${1:-}" in
       | grep -E 'Number of regular files transferred|Total transferred file size'
     ;;
   *)
-    sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'
     exit 1
     ;;
 esac
