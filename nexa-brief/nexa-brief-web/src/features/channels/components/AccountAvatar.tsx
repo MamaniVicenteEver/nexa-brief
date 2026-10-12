@@ -24,6 +24,7 @@ export function AccountAvatar({
   return (
     <span className={cn("relative inline-block shrink-0", s.box)}>
       {account.avatar && !failed ? (
+        // biome-ignore lint/performance/noImgElement: avatar remoto de la red social, sin optimizar
         <img
           src={account.avatar}
           alt=""
