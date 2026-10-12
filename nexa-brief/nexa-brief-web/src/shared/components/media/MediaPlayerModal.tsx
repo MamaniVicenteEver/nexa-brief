@@ -28,7 +28,12 @@ export type MediaViewport = "mobile" | "desktop";
  * - `video`: un MP4 ya renderizado; cada viewport usa su propio archivo
  *   (youtube 16:9 en desktop, reels 9:16 en móvil). */
 export type MediaSource =
-  | { kind: "iframe"; url: string }
+  | {
+      kind: "iframe";
+      url: string;
+      /** Portada real del video: se ve hasta que arranca (en vez del negro de carga). */
+      poster?: string | null;
+    }
   | { kind: "video"; desktopUrl: string | null; mobileUrl: string | null };
 
 interface MediaPlayerModalProps {
@@ -67,6 +72,8 @@ interface StageProps {
   onPlayingChange: (playing: boolean) => void;
   /** El stage se silenció solo (el navegador bloqueó el autoplay con sonido). */
   onMutedChange?: (muted: boolean) => void;
+  /** El contenido ya arrancó (para quitar la portada de carga). */
+  onStarted?: () => void;
 }
 
 function formatTime(seconds: number) {
@@ -84,7 +91,7 @@ function postToFrame(frame: HTMLIFrameElement | null, message: Record<string, un
 
 const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: string }>(
   function IframeStage(
-    { url, title, playing, volume, muted, onTime, onEnded, onPlayingChange, onMutedChange },
+    { url, title, playing, volume, muted, onTime, onEnded, onPlayingChange, onMutedChange, onStarted },
     ref,
   ) {
     const frameRef = useRef<HTMLIFrameElement>(null);
@@ -126,10 +133,11 @@ const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: s
         // no queda en "Pausar" con el video quieto.
         if (event.data?.type === "nexa-template-state") onPlayingChange(Boolean(event.data.playing));
         if (event.data?.type === "nexa-template-muted") onMutedChange?.(Boolean(event.data.muted));
+        if (event.data?.type === "nexa-template-started") onStarted?.();
       };
       window.addEventListener("message", handleMessage);
       return () => window.removeEventListener("message", handleMessage);
-    }, [onTime, onEnded, onPlayingChange, onMutedChange]);
+    }, [onTime, onEnded, onPlayingChange, onMutedChange, onStarted]);
 
     return (
       <iframe
@@ -317,6 +325,9 @@ function PlayerBody({
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [resumeAt, setResumeAt] = useState(0);
+  // Hasta que el iframe informa tiempo > 0 se tapa el escenario con la portada:
+  // así no se ve el motor cargando (negro, cuadros a medio dibujar).
+  const [started, setStarted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(defaultSidebarOpen);
   const hasSidebar = sidebar !== undefined;
 
@@ -329,6 +340,7 @@ function PlayerBody({
     setDuration(0);
     setEnded(false);
     setPlaying(true);
+    setStarted(false);
   }, [iframeUrl]);
 
   const effectiveVolume = muted ? 0 : volume;
@@ -342,6 +354,7 @@ function PlayerBody({
   const handleTime = useRef((current: number, total: number) => {
     if (Number.isFinite(total) && total > 0) setDuration(total);
     if (Number.isFinite(current)) setTime(Math.max(0, current));
+    if (Number.isFinite(current) && current > 0.05) setStarted(true);
   }).current;
   const handleEnded = useRef(() => {
     setPlaying(false);
@@ -352,6 +365,7 @@ function PlayerBody({
     if (next) setEnded(false);
   }).current;
   const handleMutedChange = useRef((next: boolean) => setMuted(next)).current;
+  const handleStarted = useRef(() => setStarted(true)).current;
 
   const changeViewport = (next: MediaViewport) => {
     if (next === viewport) return;
@@ -375,7 +389,10 @@ function PlayerBody({
     if (ended || (duration > 0 && time >= duration - 0.05)) {
       setEnded(false);
       setTime(0);
-      if (source?.kind === "iframe") setDuration(0);
+      if (source?.kind === "iframe") {
+        setDuration(0);
+        setStarted(false);
+      }
       stageRef.current?.restart();
     }
     setPlaying(true);
@@ -429,6 +446,7 @@ function PlayerBody({
     onEnded: handleEnded,
     onPlayingChange: handlePlayingChange,
     onMutedChange: handleMutedChange,
+    onStarted: handleStarted,
   };
 
   const viewportButton = (mode: MediaViewport, label: string, enabled: boolean) => (
@@ -536,13 +554,26 @@ function PlayerBody({
             <div
               ref={stageBoxRef}
               className={cn(
-                "mx-auto max-w-full overflow-hidden rounded-[18px] bg-black transition-[width,height] duration-200",
+                "relative mx-auto max-w-full overflow-hidden rounded-[18px] bg-black transition-[width,height] duration-200",
                 viewport === "mobile" ? "max-h-[74vh] w-[min(390px,88vw)]" : "max-h-[74vh] w-full",
               )}
               style={{ aspectRatio: viewport === "mobile" ? "9 / 16" : "16 / 9" }}
             >
               {source.kind === "iframe" ? (
-                <IframeStage ref={stageRef} url={source.url} title={title} {...stageProps} />
+                <>
+                  <IframeStage ref={stageRef} url={source.url} title={title} {...stageProps} />
+                  {!started && (
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black">
+                      {source.poster && (
+                        // biome-ignore lint/performance/noImgElement: portada servida por la API, sin optimizar
+                        <img src={source.poster} alt="" className="absolute inset-0 size-full object-cover" />
+                      )}
+                      {playing && (
+                        <Loader2 className="relative size-8 animate-spin text-white/85 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]" />
+                      )}
+                    </div>
+                  )}
+                </>
               ) : (
                 videoUrl && (
                   <VideoStage

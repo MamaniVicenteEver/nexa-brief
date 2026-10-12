@@ -109,6 +109,8 @@ export function TemplateCard({
   const handleShowcaseOpenChange = (open: boolean) => {
     setShowcaseOpen(open);
     resetShowcase();
+    // La vista previa de la tarjeta seguiría bajando medios detrás del modal.
+    if (open) setShowcaseLive(false);
   };
 
   const trigger = (
@@ -148,7 +150,7 @@ export function TemplateCard({
             }}
             className="pointer-events-none size-full border-0 bg-black"
           />
-        ) : previewVideo ? (
+        ) : previewVideo && !showcasePreviewUrl ? (
           <video
             ref={fallbackVideoRef}
             src={previewVideo}
@@ -220,7 +222,11 @@ export function TemplateCard({
     return (
       <MediaPlayerModal
         {...modalProps}
-        source={modalPreviewUrl ? { kind: "iframe", url: modalPreviewUrl } : null}
+        source={
+          modalPreviewUrl
+            ? { kind: "iframe", url: modalPreviewUrl, poster: template.previewImageUrl }
+            : null
+        }
       />
     );
   }
@@ -229,6 +235,7 @@ export function TemplateCard({
       {...modalProps}
       template={template}
       defaultUrl={modalPreviewUrl}
+      poster={template.previewImageUrl}
       previewVolume={DEFAULT_PREVIEW_VOLUME}
     />
   );
