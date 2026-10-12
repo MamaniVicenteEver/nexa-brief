@@ -7,7 +7,10 @@ Duraciones:
     se registra como job empaquetado en job_tracker (así los horarios de la
     categoría lo recogen solos) y puede publicarse ahora.
 
-Un solo render a la vez (CPU pesada). Publicar es opt-in y, por defecto,
+Formatos: se graba solo lo pedido (por defecto 16:9); publicar en una red agrega
+el formato que esa red necesita (TikTok → 9:16, YouTube/Facebook → 16:9).
+
+Renders simultáneos: EXPLAINER_MAX_CONCURRENT_RECORDINGS (por defecto 1; CPU pesada). Publicar es opt-in y, por defecto,
 en privado. El render y el publicador se inyectan para poder probar sin
 renderizar ni subir nada real.
 """
@@ -18,6 +21,7 @@ import asyncio
 import json
 import shutil
 import sys
+import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -37,6 +41,7 @@ logger = structlog.get_logger(__name__)
 
 KIT_CLI: Path = KIT_DIR / "tools" / "kit.py"
 FORMATS = ("9x16", "16x9")
+DEFAULT_FORMATS = ("16x9",)   # desktop; 9:16 (móvil) solo si se pide
 PREVIEW_SECONDS = ("10", "20")
 DURATIONS = (*PREVIEW_SECONDS, "full")
 # TikTok necesita vertical; YouTube y Facebook usan horizontal.
@@ -60,12 +65,22 @@ class RenderError(RuntimeError):
     pass
 
 
-RenderRunner = Callable[[str, int | None], Awaitable[None]]
+RenderRunner = Callable[[str, int | None, tuple[str, ...]], Awaitable[None]]
 
 
-async def run_kit_render(video_id: str, seconds: int | None) -> None:
+def resolve_formats(formats: list[str] | tuple[str, ...] | None, selectors: list[str]) -> tuple[str, ...]:
+    """Formatos pedidos + los que exigen los canales elegidos, en el orden de FORMATS."""
+    wanted = set(formats or DEFAULT_FORMATS)
+    unknown = wanted - set(FORMATS)
+    if unknown:
+        raise ValueError(f"formato inválido: {', '.join(sorted(unknown))} (usa {', '.join(FORMATS)})")
+    wanted |= {PLATFORM_FORMAT[s.split(":", 1)[0]] for s in selectors if s.split(":", 1)[0] in PLATFORM_FORMAT}
+    return tuple(f for f in FORMATS if f in wanted)
+
+
+async def run_kit_render(video_id: str, seconds: int | None, formats: tuple[str, ...] = FORMATS) -> None:
     """Llama a `kit.py render <id>`; con `seconds` hace un preview de ese largo."""
-    cmd = [sys.executable, str(KIT_CLI), "render", video_id, "--formats", ",".join(FORMATS)]
+    cmd = [sys.executable, str(KIT_CLI), "render", video_id, "--formats", ",".join(formats)]
     if seconds:
         cmd += ["--seconds", str(seconds)]
     proc = await asyncio.create_subprocess_exec(
@@ -96,6 +111,7 @@ class RecordJob:
     privacy: str
     account_selector: str | None
     account_selectors: list[str] = field(default_factory=list)   # varios canales a la vez
+    formats: tuple[str, ...] = DEFAULT_FORMATS
     state: RecordState = RecordState.queued
     error: str | None = None
     outputs: list[str] = field(default_factory=list)
@@ -103,6 +119,7 @@ class RecordJob:
     scheduled_job_id: str | None = None
     publish_result: dict[str, Any] | None = None            # el primero (compatibilidad)
     publish_results: list[dict[str, Any]] = field(default_factory=list)
+    render_seconds: float | None = None   # cuánto tardó la grabación (render + copia)
 
     @property
     def seconds(self) -> int | None:
@@ -119,7 +136,7 @@ class ExplainerRecorder:
         self._render = render_runner
         self._publisher_getter = publisher_getter
         self._output_root = output_root or settings.output_dir
-        self._lock = asyncio.Lock()
+        self._slots = asyncio.Semaphore(max(1, settings.explainer_max_concurrent_recordings))
         self._jobs: dict[str, RecordJob] = {}
         self._tasks: set[asyncio.Task] = set()
 
@@ -139,6 +156,7 @@ class ExplainerRecorder:
         privacy: str = "private",
         account_selector: str | None = None,
         account_selectors: list[str] | None = None,
+        formats: list[str] | tuple[str, ...] | None = None,
     ) -> RecordJob:
         # un canal (account_selector) o varios (account_selectors), sin repetir
         selectors = list(dict.fromkeys([*(account_selectors or []), *([account_selector] if account_selector else [])]))
@@ -159,6 +177,7 @@ class ExplainerRecorder:
                 platform = selector.split(":", 1)[0]
                 if platform not in PLATFORM_FORMAT:
                     raise ValueError(f"plataforma no soportada: {platform}")
+        resolved_formats = resolve_formats(formats, selectors if publish else [])
 
         job = RecordJob(
             job_id=uuid.uuid4().hex[:12],
@@ -169,6 +188,7 @@ class ExplainerRecorder:
             privacy=privacy,
             account_selector=selectors[0] if selectors else None,
             account_selectors=selectors,
+            formats=resolved_formats,
         )
         self._jobs[job.job_id] = job
         task = asyncio.create_task(self._run(job, video))
@@ -185,7 +205,7 @@ class ExplainerRecorder:
             await asyncio.sleep(0.01)
 
     async def _run(self, job: RecordJob, video: ExplainerVideo) -> None:
-        async with self._lock:
+        async with self._slots:
             try:
                 await self._run_locked(job, video)
             except Exception as exc:  # noqa: BLE001 - el job guarda el error
@@ -194,20 +214,22 @@ class ExplainerRecorder:
                 logger.error("explainer_record_failed", video_id=job.video_id, error=job.error)
 
     async def _run_locked(self, job: RecordJob, video: ExplainerVideo) -> None:
+        started = time.monotonic()
         render_dir = video.path / "render"
         seconds = job.seconds
         src_dir = render_dir / "preview" if seconds else render_dir
 
         job.state = RecordState.rendering
-        if not all((src_dir / render_filename(video.video_id, f, seconds)).exists() for f in FORMATS):
-            await self._render(video.video_id, seconds)
+        missing = tuple(f for f in job.formats if not (src_dir / render_filename(video.video_id, f, seconds)).exists())
+        if missing:
+            await self._render(video.video_id, seconds, missing)
 
         out_dir = self._output_root / video.category_path / video.design / video.video_id
         if seconds:
             out_dir = out_dir / f"preview-{seconds}s"
         out_dir.mkdir(parents=True, exist_ok=True)
         job.output_dir = str(out_dir)
-        for fmt in FORMATS:
+        for fmt in job.formats:
             src = src_dir / render_filename(video.video_id, fmt, seconds)
             if not src.exists():
                 raise RenderError(f"falta el archivo renderizado: {src.name}")
@@ -215,11 +237,12 @@ class ExplainerRecorder:
             shutil.copy2(src, dst)
             job.outputs.append(str(dst))
 
+        job.render_seconds = round(time.monotonic() - started, 1)
         if seconds:
             job.state = RecordState.done
             return
 
-        job.scheduled_job_id = await self._register_for_scheduling(video, out_dir)
+        job.scheduled_job_id = await self._register_for_scheduling(video, out_dir, job.formats, job.render_seconds)
 
         if not job.publish:
             job.state = RecordState.done
@@ -266,7 +289,9 @@ class ExplainerRecorder:
         job.error = "; ".join(failures) or None
         job.state = RecordState.done
 
-    async def _register_for_scheduling(self, video: ExplainerVideo, out_dir: Path) -> str:
+    async def _register_for_scheduling(
+        self, video: ExplainerVideo, out_dir: Path, formats: tuple[str, ...], render_seconds: float
+    ) -> str:
         """Registra la grabación completa como job empaquetado en job_tracker.
 
         Así los horarios de la categoría (slot.niche_filter = 'node_tech', etc.)
@@ -301,7 +326,14 @@ class ExplainerRecorder:
         }
         (logs / "08_resumen_final.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
 
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(timezone.utc)
+        # La Biblioteca muestra "Generado en …" con generation_seconds: acá es el tiempo de grabación.
+        created = datetime.fromtimestamp(now.timestamp() - render_seconds, timezone.utc).isoformat()
+        file_paths = {
+            platform: str(out_dir / f"{video.video_id}-{fmt}.mp4")
+            for platform, fmt in (("youtube", "16x9"), ("tiktok", "9x16"))
+            if fmt in formats
+        }
         await collection("jobs").insert({
             "job_id": job_id,
             "category": video.category_path,
@@ -309,14 +341,13 @@ class ExplainerRecorder:
             "stage": JobStage.PACKAGED.value,
             "output_dir": str(out_dir),
             "errors": [],
-            "created_at": now,
-            "updated_at": now,
+            "created_at": created,
+            "updated_at": now.isoformat(),
+            "generation_seconds": render_seconds,
             "duration_seconds": video.duration_seconds,
-            "file_paths": {
-                "youtube": str(out_dir / f"{video.video_id}-16x9.mp4"),
-                "tiktok": str(out_dir / f"{video.video_id}-9x16.mp4"),
-            },
-            "ready_formats": ["youtube", "tiktok"],
+            "file_paths": file_paths,
+            "ready_formats": list(file_paths),
+            "formats": list(formats),
             "source": "explainer",
             "video_id": video.video_id,
             "design": video.design,

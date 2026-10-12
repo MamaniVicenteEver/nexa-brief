@@ -10,6 +10,7 @@ import {
   type ExplainerJob,
   type ExplainerVideo,
   type RecordDuration,
+  type RecordFormat,
 } from "../types";
 import { PublishTextsControl } from "./PublishTextsControl";
 
@@ -20,6 +21,10 @@ const TABS: { id: Tab; Icon: typeof Type }[] = [
 ];
 
 const FIELD = "w-full rounded-xl border border-nb-line bg-transparent px-3 py-2 text-[13px]";
+
+// 16:9 (desktop) va marcado por defecto; 9:16 (móvil) solo si se marca: cada formato
+// es una grabación entera, así que grabar los dos tarda el doble.
+const RECORD_FORMATS: RecordFormat[] = ["16x9", "9x16"];
 
 function CopyBlock({
   label,
@@ -90,6 +95,9 @@ function JobStatus({ job }: { job: ExplainerJob }) {
         {busy && <Loader2 className="size-3.5 animate-spin" />}
         {t(`prep.jobState.${job.state}`)} · {t(`prep.durationOption.${job.duration}`)}
       </span>
+      {job.formats.length > 0 && (
+        <span>{job.formats.map((f) => t(`prep.format.${f}`)).join(" · ")}</span>
+      )}
       {job.state === "done" && job.scheduledJobId && <span>{t("prep.scheduled")}</span>}
       {job.publishResults.map((r) =>
         r.url ? (
@@ -120,6 +128,7 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
   const { data: accounts = [], isLoading: accountsLoading } = usePublishAccounts();
   const [duration, setDuration] = useState<RecordDuration>("10");
   const [channels, setChannels] = useState<string[]>([]);
+  const [formats, setFormats] = useState<RecordFormat[]>(["16x9"]);
   // Publicar es para el público: por defecto, público (se puede cambiar).
   const [privacy, setPrivacy] = useState<ExplainerJob["privacy"]>("public");
 
@@ -128,6 +137,10 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
   const toggle = (selector: string) =>
     setChannels((prev) =>
       prev.includes(selector) ? prev.filter((s) => s !== selector) : [...prev, selector],
+    );
+  const toggleFormat = (format: RecordFormat) =>
+    setFormats((prev) =>
+      prev.includes(format) ? prev.filter((f) => f !== format) : [...prev, format],
     );
   const canPublish = video.ready && video.publishReady && channels.length > 0 && !busy;
 
@@ -138,6 +151,27 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
       <section className="flex flex-col gap-2">
         <h3 className="text-[13px] font-bold text-nb-ink">{t("recordHeading")}</h3>
         <p className="text-[11.5px] text-nb-mute">{t("recordHint")}</p>
+        <fieldset className="flex gap-2">
+          <legend className="sr-only">{t("formatsLabel")}</legend>
+          {RECORD_FORMATS.map((format) => (
+            <label
+              key={format}
+              className={cn(
+                "flex flex-1 cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-[13px]",
+                formats.includes(format) ? "border-nb-ink bg-nb-bg-2" : "border-nb-line",
+              )}
+            >
+              <input
+                type="checkbox"
+                checked={formats.includes(format)}
+                onChange={() => toggleFormat(format)}
+                className="size-4 accent-black"
+              />
+              {tp(`prep.format.${format}`)}
+            </label>
+          ))}
+        </fieldset>
+        <p className="text-[11.5px] text-nb-mute">{t("formatsHint")}</p>
         <div className="flex gap-2">
           <select
             aria-label={tp("prep.duration")}
@@ -151,8 +185,10 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
           </select>
           <button
             type="button"
-            disabled={!video.ready || busy}
-            onClick={() => mutate({ videoId: video.videoId, duration, publish: false, privacy })}
+            disabled={!video.ready || busy || formats.length === 0}
+            onClick={() =>
+              mutate({ videoId: video.videoId, duration, publish: false, privacy, formats })
+            }
             className="nb-btn-pill shrink-0 px-4 py-2 text-[13px] font-semibold disabled:opacity-50"
           >
             {busy ? tp("prep.recording") : tp("prep.record")}
@@ -213,6 +249,7 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
               publish: true,
               privacy,
               accountSelectors: channels,
+              formats,
             })
           }
           className="nb-btn-pill px-4 py-2.5 text-[13px] font-semibold disabled:opacity-50"
