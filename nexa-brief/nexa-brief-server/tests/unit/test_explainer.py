@@ -55,13 +55,15 @@ class _FakeRender:
     def __init__(self, videos_root: Path) -> None:
         self.videos_root = videos_root
         self.calls: list[tuple[str, int | None]] = []
+        self.formats: list[tuple[str, ...]] = []
 
-    async def __call__(self, video_id: str, seconds: int | None) -> None:
+    async def __call__(self, video_id: str, seconds: int | None, formats=("9x16", "16x9")) -> None:
         self.calls.append((video_id, seconds))
+        self.formats.append(tuple(formats))
         render = self.videos_root / video_id / "render"
         target = render / "preview" if seconds else render
         target.mkdir(parents=True, exist_ok=True)
-        for fmt in ("9x16", "16x9"):
+        for fmt in formats:
             (target / recorder_mod.render_filename(video_id, fmt, seconds)).write_bytes(b"mp4")
 
 
@@ -165,7 +167,7 @@ def test_publish_rules(videos_root: Path, make_recorder):
 @pytest.mark.parametrize("seconds", ["10", "20"])
 def test_preview_renders_short_clip_and_is_not_scheduled(videos_root: Path, make_recorder, tmp_path: Path, seconds: str):
     rec, render = make_recorder()
-    job = _record(rec, load_video(videos_root / "tech-1"), duration=seconds)
+    job = _record(rec, load_video(videos_root / "tech-1"), duration=seconds, formats=["9x16", "16x9"])
 
     assert job.state == RecordState.done, job.error
     assert render.calls == [("tech-1", int(seconds))]
@@ -205,7 +207,7 @@ def test_preview_does_not_reuse_full_render(videos_root: Path, make_recorder):
 
 
 def test_render_failure_marks_job_failed(videos_root: Path, tmp_path: Path):
-    async def render(video_id: str, seconds: int | None) -> None:
+    async def render(video_id: str, seconds: int | None, formats=()) -> None:
         raise recorder_mod.RenderError("kit.py render terminó con código 1")
 
     rec = ExplainerRecorder(render_runner=render, output_root=tmp_path / "out")
@@ -218,12 +220,12 @@ def test_one_render_at_a_time(videos_root: Path, tmp_path: Path):
     running = 0
     peak = 0
 
-    async def render(video_id: str, seconds: int | None) -> None:
+    async def render(video_id: str, seconds: int | None, formats=("16x9",)) -> None:
         nonlocal running, peak
         running += 1
         peak = max(peak, running)
         await asyncio.sleep(0.02)
-        await _FakeRender(videos_root)(video_id, seconds)
+        await _FakeRender(videos_root)(video_id, seconds, formats)
         running -= 1
 
     async def scenario():
@@ -241,7 +243,7 @@ def test_one_render_at_a_time(videos_root: Path, tmp_path: Path):
 
 def test_full_recording_registers_packaged_job(videos_root: Path, make_recorder, tmp_path: Path):
     rec, render = make_recorder()
-    job = _record(rec, load_video(videos_root / "hist-1"), duration="full")
+    job = _record(rec, load_video(videos_root / "hist-1"), duration="full", formats=["16x9", "9x16"])
 
     assert job.state == RecordState.done, job.error
     assert render.calls == [("hist-1", None)]
@@ -561,3 +563,46 @@ def test_publish_fails_only_if_every_channel_fails(videos_root: Path, make_recor
     job = _record(rec, load_video(videos_root / "tech-1"), duration="full", publish=True,
                   account_selectors=["youtube:a", "tiktok:b"])
     assert job.state == RecordState.failed and "ningún canal" in job.error
+
+
+# ── formatos: 16:9 por defecto, 9:16 solo si se pide o lo exige la red ─────────
+
+def test_default_records_only_desktop_16x9(videos_root: Path, make_recorder, tmp_path: Path):
+    rec, render = make_recorder()
+    job = _record(rec, load_video(videos_root / "hist-1"), duration="full")
+
+    assert job.state == RecordState.done, job.error
+    assert render.formats == [("16x9",)]
+    assert [Path(p).name for p in job.outputs] == ["hist-1-16x9.mp4"]
+    record = job_tracker.get(job.scheduled_job_id)
+    assert set(record["file_paths"]) == {"youtube"}
+    assert record["ready_formats"] == ["youtube"]
+
+
+def test_mobile_9x16_only_when_requested(videos_root: Path, make_recorder):
+    rec, render = make_recorder()
+    _record(rec, load_video(videos_root / "hist-1"), duration="full", formats=["16x9", "9x16"])
+    assert render.formats == [("9x16", "16x9")]
+
+
+def test_tiktok_publish_adds_vertical_even_if_not_requested(videos_root: Path, make_recorder):
+    publisher = _FakePublisher()
+    rec, render = make_recorder(publisher)
+    job = _record(rec, load_video(videos_root / "tech-1"), duration="full", publish=True,
+                  account_selectors=["tiktok:alias", "youtube:c"], formats=["16x9"])
+    assert job.state == RecordState.done, job.error
+    assert render.formats == [("9x16", "16x9")]
+
+
+def test_invalid_format_is_rejected(videos_root: Path, make_recorder):
+    rec, _ = make_recorder()
+    with pytest.raises(ValueError, match="formato inválido"):
+        rec.submit(load_video(videos_root / "tech-1"), formats=["4x3"])
+
+
+def test_full_recording_stores_generation_seconds_for_library(videos_root: Path, make_recorder):
+    rec, _ = make_recorder()
+    job = _record(rec, load_video(videos_root / "hist-1"), duration="full")
+    record = job_tracker.get(job.scheduled_job_id)
+    assert record["generation_seconds"] == job.render_seconds
+    assert job_tracker.generation_seconds(record) is not None

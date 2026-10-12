@@ -1,7 +1,7 @@
 """Encuentra los CLIs de Claude Code y Codex aunque no estén en el PATH del servidor.
 
-El servidor suele arrancar sin el PATH del shell interactivo (nvm no se
-carga), por eso se buscan también las rutas habituales de instalación.
+El servidor suele arrancar sin el PATH del shell interactivo (nvm ni el
+npm prefix de ~/.zshrc se cargan), por eso se buscan también las rutas habituales de instalación.
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ _HOME = Path.home()
 _CANDIDATES: dict[str, list[str]] = {
     "claude": [
         str(_HOME / ".local/bin/claude"),
+        str(_HOME / ".npm-global/bin/claude"),
         str(_HOME / ".claude/local/claude"),
         str(_HOME / ".nvm/versions/node/*/bin/claude"),
         "/usr/local/bin/claude",
@@ -23,6 +24,7 @@ _CANDIDATES: dict[str, list[str]] = {
     ],
     "codex": [
         str(_HOME / ".local/bin/codex"),
+        str(_HOME / ".npm-global/bin/codex"),
         str(_HOME / ".nvm/versions/node/*/bin/codex"),
         "/usr/local/bin/codex",
         "/usr/lib/chatgpt/resources/codex",

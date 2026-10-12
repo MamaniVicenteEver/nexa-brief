@@ -50,7 +50,9 @@ _REDIRECT_URI = "http://localhost:8000/api/oauth/youtube/callback"
 
 
 def _load_client_credentials() -> tuple[str, str]:
-    """Load client_id and client_secret from client_secret.json."""
+    """client_id/client_secret: YOUTUBE_CLIENT_ID/SECRET del .env, o client_secret.json."""
+    if settings.youtube_client_id and settings.youtube_client_secret:
+        return settings.youtube_client_id, settings.youtube_client_secret
     if not _SECRET_PATH.exists():
         raise HTTPException(
             status_code=500,

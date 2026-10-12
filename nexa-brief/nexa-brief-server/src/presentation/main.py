@@ -142,11 +142,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_allow_origins,
+    allow_origin_regex=settings.cors_allow_origin_regex or None,
     allow_credentials=False,  # sin cookies de auth en este flujo (el login vive en el frontend)
     allow_methods=["GET", "POST", "PUT", "DELETE"],  # verbos usados hoy en toda la API
     allow_headers=["*"],  # necesario por el boundary variable de multipart/form-data
+    allow_private_network=True,
 )
-
 app.include_router(videos.router, prefix="/api/v1")
 app.include_router(niches.router, prefix="/api/v1")
 # Publisher router is always registered; auth is managed via accounts.json
@@ -185,4 +186,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
