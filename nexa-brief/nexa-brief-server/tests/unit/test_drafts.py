@@ -163,6 +163,27 @@ def test_run_preview_persists_job_and_marks_ready(fake_stages: list[str]):
     assert not drafts.is_running(draft.draft_id)
 
 
+def test_preview_url_hidden_when_output_dir_is_missing(fake_stages: list[str], tmp_path: Path):
+    """Draft traído de otra máquina: su output_dir no existe acá, así que no se
+    ofrece "Mi versión" (el modal mostraba un 404 en vez de la plantilla)."""
+    async def scenario(output_dir: Path):
+        draft = await _create()
+        await drafts.run_preview(draft.draft_id, drafts.load_job(draft.draft_id))
+        job = drafts.load_job(draft.draft_id)
+        job.artifacts.output_dir = output_dir
+        drafts._save_job(draft.draft_id, job)
+        return await drafts.get(draft.draft_id), (await drafts.list_drafts(TEMPLATE_ID))[0]
+
+    existing = tmp_path / "out-ok"
+    existing.mkdir()
+    one, listed = asyncio.run(scenario(existing))
+    assert one.preview_url is not None and listed.preview_url is not None
+
+    one, listed = asyncio.run(scenario(tmp_path / "de-otra-maquina"))
+    assert one.preview_url is None and listed.preview_url is None
+    assert one.status == "preview_ready"
+
+
 def test_failed_stage_keeps_last_good_snapshot(fake_stages: list[str], monkeypatch):
     async def boom(job: Job, *_a, **_k) -> Job:
         raise RuntimeError("gemini caído")
