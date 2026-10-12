@@ -2,6 +2,9 @@
 SHELL := /bin/bash
 SERVER := nexa-brief-server
 WEB := nexa-brief-web
+# La API en Docker corre con tu UID/GID para poder escribir en src/templates (montado).
+export APP_UID ?= $(shell id -u)
+export APP_GID ?= $(shell id -g)
 
 .DEFAULT_GOAL := help
 .PHONY: help setup dev api web test lint format check seed-admin media-pull media-push media-status \

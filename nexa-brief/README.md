@@ -61,8 +61,9 @@ make docker-seed-admin      # primer usuario de la web dentro del contenedor
 - Web: http://localhost:3000 · API: http://localhost:8000 · Salud: http://localhost:8000/health · OpenAPI: http://localhost:8000/docs
 - `NEXT_PUBLIC_API_URL` es la URL que usa **el navegador** (`http://localhost:8000` o la IP del servidor), no
   `http://api:8000`, que solo existe dentro de Docker. Se fija al construir la imagen web.
-- Los medios de las plantillas entran a la imagen de la API si están en disco: corré `make media-pull` antes de
-  `make docker-build`.
+- La API monta `nexa-brief-server/src/templates` del disco: los medios que bajes con `make media-pull` y las
+  grabaciones se ven sin reconstruir. Construí con `make docker-build` (pasa tu UID/GID para que el contenedor
+  pueda escribir ahí); con `docker compose` directo, exportá antes `APP_UID=$(id -u) APP_GID=$(id -g)`.
 
 Verificar build, inicio, salud y una llamada real (`GET /api/v1/niches`):
 

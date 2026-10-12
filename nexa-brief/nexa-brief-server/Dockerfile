@@ -32,8 +32,12 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM base AS runtime
 ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium \
     REMOTION_PROJECT_DIR=/opt/remotion
-RUN groupadd --system --gid 10001 nexa \
-    && useradd --system --uid 10001 --gid nexa --home-dir /app --shell /usr/sbin/nologin nexa \
+# El compose monta src/templates del host (medios + grabaciones): con el UID/GID del
+# usuario del host (make docker-build los pasa) el contenedor puede escribir ahí.
+ARG APP_UID=10001
+ARG APP_GID=10001
+RUN groupadd --system --gid ${APP_GID} nexa \
+    && useradd --system --uid ${APP_UID} --gid nexa --home-dir /app --shell /usr/sbin/nologin nexa \
     && mkdir -p /app/data /app/output /app/.cache /home/nexa \
     && chown -R nexa:nexa /app /home/nexa
 COPY --from=dependencies /app/.venv /app/.venv

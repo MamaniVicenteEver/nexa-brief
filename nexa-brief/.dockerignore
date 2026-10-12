@@ -30,9 +30,8 @@
 **/*.mov
 **/*.mp3
 **/*.wav
-# Medios de las plantillas (bajados con `make media-pull`): la API los sirve y los graba.
-!nexa-brief-server/src/templates/**/assets/**
-!nexa-brief-server/src/templates/**/render/*.mp4
+# Los medios de las plantillas no entran a la imagen: el compose monta src/templates
+# del host (ver docker-compose.yml), así `make media-pull` se ve sin reconstruir.
 nexa-brief-server/src/templates/**/work
 nexa-brief-server/src/templates/sandbox
 
