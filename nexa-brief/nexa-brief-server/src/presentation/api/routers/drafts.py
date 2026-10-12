@@ -29,6 +29,7 @@ from src.core.job import DurationConfig, DurationMode, Job, JobPublishingConfig
 from src.core.orchestrator import Orchestrator
 from src.presentation.api.file_streaming import serve_file_with_range
 from src.presentation.api.preview_injection import inject_preview_scripts
+from src.presentation.api.preview_media import media_for_request, preview_config_json
 from src.presentation.api.resource_sources import (
     resolve_image_source,
     resolve_music_source,
@@ -245,4 +246,9 @@ async def get_draft_preview_file(draft_id: str, file_path: str, request: Request
     if path.suffix.lower() == ".html":
         content = inject_preview_scripts(path.read_text(encoding="utf-8"), request.query_params)
         return Response(content=content, media_type="text/html; charset=utf-8")
+    if path.suffix.lower() == ".json":
+        content = preview_config_json(path.read_text(encoding="utf-8"), request)
+        return Response(content=content, media_type="application/json")
+    path = media_for_request(path, request)
+    media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
     return serve_file_with_range(path, request.headers.get("range"), media_type)

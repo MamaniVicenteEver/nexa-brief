@@ -44,6 +44,7 @@ from src.presentation.api.resource_sources import (
     resolve_video_source,
 )
 from src.presentation.api.preview_injection import inject_preview_scripts
+from src.presentation.api.preview_media import media_for_request, preview_config_json
 from src.presentation.api.schemas.template_schema import (
     PREVIEW_ALLOWED_FILENAMES,
     PreviewStatusResponse,
@@ -181,6 +182,7 @@ async def get_template_asset(template_id: str, asset_path: str, request: Request
     if not path.is_relative_to(root) or path not in allowed_paths or not path.exists():
         raise HTTPException(status_code=404, detail="Preview asset not available")
 
+    path = media_for_request(path, request, always_preview=True)
     media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
     return serve_file_with_range(path, request.headers.get("range"), media_type)
 
@@ -194,6 +196,12 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
 
     template_root = asset_dir.parent.resolve()
     path = (template_root / file_path).resolve()
+    # El pipeline copia los assets a la raíz del output, así que hay plantillas que
+    # piden "song.mp3" a secas; en la carpeta de la plantilla vive en assets/.
+    if not path.is_file() and "/" not in file_path:
+        candidate = (asset_dir / file_path).resolve()
+        if candidate.is_file() and candidate.is_relative_to(template_root):
+            path = candidate
     allowed_suffixes = {
         ".html", ".json", ".mp3", ".mp4", ".webm", ".mov", ".jpg", ".jpeg",
         ".png", ".webp", ".svg", ".woff", ".woff2", ".ttf",
@@ -210,7 +218,12 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
         content = path.read_text(encoding="utf-8")
         if path.suffix.lower() == ".html":
             content = inject_preview_scripts(content, request.query_params)
+        else:
+            content = preview_config_json(content, request)
         return Response(content=content, media_type=media_type)
+    # Videos pedidos desde la tarjeta o el modal: copia liviana (ver preview_media).
+    path = media_for_request(path, request)
+    media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
     return serve_file_with_range(path, request.headers.get("range"), media_type)
 
 

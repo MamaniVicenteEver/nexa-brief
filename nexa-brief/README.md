@@ -47,6 +47,7 @@ make lint        # ruff + biome + tsc (lo mismo que la CI)
 make format      # arregla formato
 make media-pull  # baja los medios de las plantillas
 make media-push  # sube medios nuevos (plantillas creadas por vos)
+make preview-media  # copias livianas para las vistas previas (si no, se generan solas al abrirlas)
 ```
 
 ## Docker
