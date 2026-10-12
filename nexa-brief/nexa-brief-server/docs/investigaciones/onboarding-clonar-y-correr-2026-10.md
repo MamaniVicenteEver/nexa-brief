@@ -162,3 +162,40 @@ Más un `CONTRIBUTING.md` (ramas, commits, PRs, cómo pedir las claves) y el REA
 En una máquina limpia: `git clone` → `make setup` → `make dev` (o `make docker-up`) → iniciar sesión con el admin →
 ver una plantilla de NodeTech reproduciéndose → grabar un preview de 10 s. Se repite en `/tmp/fresh` del servidor
 después de cada fase.
+
+---
+
+## Estado después de los arreglos (2026-10-12, rama `chore/clone-ready`)
+
+| Punto del plan | Estado |
+|---|---|
+| P0.1 Código atrapado por `.gitignore` / `.dockerignore` | ✅ 41 archivos versionados; reglas ancladas + excepciones en el `.gitignore` más profundo. |
+| P0.2 Docker web | ✅ `packageManager: pnpm@11.25.0`, `engines`, `.nvmrc`; Dockerfile sin el truco de `approve-builds`. |
+| P0.3 Login | ✅ `make setup` genera `AUTH_SECRET` y crea el admin; Docker: volumen `nexa-brief-web-data` + `make docker-seed-admin`. El atajo "Entrar directo" solo existe con `next dev`. |
+| P0.4 Medios | ✅ `scripts/media.sh pull/push/status` (rsync por SSH, `MEDIA_REMOTE`). En Docker, `src/templates` se monta del host (la imagen no crece). |
+| P1.5 `.env.example` | ✅ Todas las variables de `settings.py` (las opcionales comentadas, con su default). |
+| P1.6 Cambios sin commit / IPs fijas | ✅ Commiteados; CORS y `allowedDevOrigins` por `CORS_ALLOW_ORIGIN_REGEX` / `ALLOWED_DEV_ORIGINS`. |
+| P1.7 Versiones | ✅ Node ≥ 22.14 (`.nvmrc` 22), pnpm 11.25.0, Python 3.10.12 (`uv.lock`). |
+| P1.8 Playwright en Ubuntu 26.04 | ✅ `make setup` reintenta con `PLAYWRIGHT_HOST_PLATFORM_OVERRIDE=ubuntu24.04-x64`. |
+| P1.9 Bug de Jamendo | ✅ |
+| P1.10 CI | ✅ `.github/workflows/nexa-brief.yml` (ruff + pytest, biome + tsc + build, docker build). |
+| P1.11 Restos en la raíz | ✅ README raíz; las carpetas sueltas no están en git (no afectan a un clon). |
+| P1.12 `data/` compartida | ⏸ Decisión pendiente (A/B). Un clon nuevo arranca con `data/` vacía y funciona. |
+| P2 ruff / biome | ✅ En cero (ruff configurado, `_tools` excluido). |
+| P2 Historial de git (343 MB) | ⏸ Sin tocar: reescribir la historia requiere coordinar con el equipo. |
+
+Extras encontrados al probar: 13 tests "rotos" eran el código faltante; un test dependía de las claves del
+`.env` de la máquina; `make setup` se cortaba en silencio sin `MEDIA_REMOTE` (bug de `pipefail`).
+
+### Prueba de aceptación (clon limpio de la rama en el servidor)
+
+- `make setup`: ✅ ~18 s con dependencias en caché; se puede repetir sin pisar nada; sin `MEDIA_REMOTE` termina avisando.
+- `make check`: ✅ ruff y biome en cero, `tsc` sin errores, pytest 349 passed + 1 skipped, con un `.env` vacío.
+- `make media-pull`: ✅ 3,6 GB; `media.sh status` por SSH desde otra máquina: 264 archivos.
+- Navegador desde otra máquina (Tailscale): ✅ login con el admin sembrado → Plantillas → NodeTech se reproduce
+  (audio 4:03) → "Grabar" preview 10 s → genera solo `16x9`.
+- Docker (`make docker-build` + `make docker-up`): ✅ API 5,7 GB y web 431 MB en 4:56; ambos `healthy`; Biblioteca 200;
+  audio montado 206; `make docker-seed-admin`; grabación real de 10 s **dentro del contenedor** en 19,4 s.
+  Para que funcionara hubo que arreglar dos cosas más: los medios dentro de la imagen la llevaban a 12,8 GB
+  (ahora se monta `src/templates`) y las herramientas del kit ignoraban el Chromium del sistema (grabar en Docker
+  no había funcionado nunca).
