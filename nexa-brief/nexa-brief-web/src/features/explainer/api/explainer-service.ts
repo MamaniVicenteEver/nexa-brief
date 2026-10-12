@@ -12,9 +12,13 @@ import type {
   ExplainerOptions,
   ExplainerVideo,
   Production,
+  PublishIssue,
+  PublishPackage,
+  PublishPackageReview,
   PublishTextsResult,
   RecordExplainerInput,
   TextProvider,
+  TitleOption,
 } from "../types";
 
 // Generar textos o un brief usa un LLM: puede tardar minutos.
@@ -39,6 +43,35 @@ interface ExplainerJobDto {
   publish_results?: { account_selector: string; url?: string; error?: string }[];
   formats?: ExplainerJob["formats"];
   render_seconds?: number | null;
+}
+
+interface TitleOptionDto {
+  option: TitleOption["option"];
+  text: string;
+  strategy: number;
+  emotion: string;
+}
+
+interface PublishPackageDto {
+  intro: { lines: string[]; kicker: string; sub: string };
+  thumbnail: {
+    text_only: { lines: string[]; highlight: string; pair_title: TitleOption["option"] };
+    with_image: { text: string; pair_title: TitleOption["option"] };
+    chosen: PublishPackage["thumbnail"]["chosen"];
+  };
+  titles: {
+    youtube: TitleOptionDto[];
+    chosen: TitleOption["option"];
+  };
+  pinned_comment: string;
+}
+
+interface PublishPackageReviewDto {
+  package: PublishPackageDto | null;
+  issues: PublishIssue[];
+  thumbnail_image_url: string | null;
+  hook_strategy_names: Record<string, string>;
+  title_max_chars: number | null;
 }
 
 interface ExplainerVideoDto {
@@ -66,6 +99,39 @@ interface ExplainerVideoDto {
   preview_url: string;
   poster_url?: string | null;
   last_job: ExplainerJobDto | null;
+  publish_package?: PublishPackageReviewDto | null;
+}
+
+function mapPublishPackage(dto: PublishPackageReviewDto): PublishPackageReview {
+  const p = dto.package;
+  return {
+    issues: dto.issues,
+    titleMaxChars: dto.title_max_chars ?? 0,
+    package: p && {
+      intro: p.intro,
+      thumbnail: {
+        textOnly: {
+          lines: p.thumbnail.text_only.lines,
+          highlight: p.thumbnail.text_only.highlight,
+          pairTitle: p.thumbnail.text_only.pair_title,
+        },
+        withImage: {
+          text: p.thumbnail.with_image.text,
+          imageUrl: dto.thumbnail_image_url ? resolveApiUrl(dto.thumbnail_image_url) : null,
+          pairTitle: p.thumbnail.with_image.pair_title,
+        },
+        chosen: p.thumbnail.chosen,
+      },
+      titles: {
+        youtube: p.titles.youtube.map((t) => ({
+          ...t,
+          strategyName: dto.hook_strategy_names[String(t.strategy)] ?? "",
+        })),
+        chosen: p.titles.chosen,
+      },
+      pinnedComment: p.pinned_comment,
+    },
+  };
 }
 
 function mapJob(dto: ExplainerJobDto): ExplainerJob {
@@ -126,6 +192,7 @@ function mapVideo(dto: ExplainerVideoDto): ExplainerVideo {
     previewUrl: resolveApiUrl(dto.preview_url),
     posterUrl: dto.poster_url ? resolveApiUrl(dto.poster_url) : null,
     lastJob: dto.last_job ? mapJob(dto.last_job) : null,
+    publishPackage: dto.publish_package ? mapPublishPackage(dto.publish_package) : null,
   };
 }
 

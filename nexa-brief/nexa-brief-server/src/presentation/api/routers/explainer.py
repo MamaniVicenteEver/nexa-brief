@@ -40,6 +40,8 @@ from src.config.exceptions import NexaBriefError
 from src.config.settings import settings
 from src.core.categories import explainer_folders, get_category, list_categories
 from src.core.explainer.briefs import ExplainerBrief, generate_brief, generate_publish_texts, write_publish_json
+from src.core.explainer.publishing import review as review_package
+from src.core.explainer.publishing.store import is_package, read_publish
 from src.core.explainer.catalog import TEMPLATES_DIR, ExplainerVideo, get_video, list_videos
 from src.core.explainer.designs import KitDesign, designs_for, list_designs, load_design
 from src.core.explainer.producer import ExplainerProducer
@@ -55,6 +57,8 @@ from src.presentation.api.schemas.explainer_schema import (
     ProductionRequest,
     ProductionResponse,
     ProviderStatus,
+    PublishIssueResponse,
+    PublishPackageResponse,
     PublishTextsRequest,
     PublishTextsResponse,
     RecordExplainerRequest,
@@ -138,6 +142,28 @@ def _job_response(job: RecordJob) -> ExplainerJobResponse:
     )
 
 
+def _publish_package(video: ExplainerVideo) -> PublishPackageResponse | None:
+    """Paquete v2 + validación; un paquete o estrategia rotos se informan sin tumbar la lista."""
+    try:
+        result = review_package(video)
+    except (ValueError, OSError) as exc:  # JSON roto, ValidationError, StrategyError
+        issue = PublishIssueResponse(level="error", field="publish.json", message=f"paquete inválido: {exc}")
+        return PublishPackageResponse(issues=[issue])
+    if result is None:
+        return None
+    image = result.package.thumbnail.with_image.image
+    title_rules = result.strategies.title
+    return PublishPackageResponse(
+        package=result.package,
+        hook_strategy_names={n: hook.name for n, hook in title_rules.hook_strategies.items()},
+        title_max_chars=title_rules.max_chars,
+        issues=[PublishIssueResponse(level=i.level, field=i.field, message=i.message) for i in result.issues],
+        thumbnail_image_url=(
+            _video_preview_url(video).replace("/index.html", f"/assets/media/{image}") if image else None
+        ),
+    )
+
+
 def _video_response(video: ExplainerVideo) -> ExplainerVideoResponse:
     top_id = video.category_path.split("/", 1)[0]
     top = list_categories().get(top_id)
@@ -167,6 +193,7 @@ def _video_response(video: ExplainerVideo) -> ExplainerVideoResponse:
         preview_url=_video_preview_url(video),
         poster_url=_poster_url(video),
         last_job=_job_response(last) if last else None,
+        publish_package=_publish_package(video),
     )
 
 
@@ -239,6 +266,12 @@ async def create_publish_texts(video_id: str, body: PublishTextsRequest) -> Publ
     video_dir = video.path
     if not any((video_dir / "assets" / f).exists() for f in ("script.json", "lyrics.json")):
         raise HTTPException(status_code=400, detail="el video todavía no tiene guion ni transcripción")
+    if is_package(read_publish(video_dir)):
+        raise HTTPException(
+            status_code=409,
+            detail="este video tiene un paquete de publicación v2: se edita su publish.json y se reconstruye "
+            "con `python -m src.core.explainer.publishing build <video_id>`",
+        )
     ai = _text_ai(body.provider)
     try:
         brief = await generate_publish_texts(

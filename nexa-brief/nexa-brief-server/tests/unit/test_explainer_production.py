@@ -106,6 +106,17 @@ async def test_publish_texts_for_existing_video(tmp_path: Path):
     assert write_publish_json(video, brief) is False
 
 
+async def test_publish_texts_never_overwrite_a_v2_package(tmp_path: Path):
+    video = tmp_path / "apolo"
+    (video / "assets").mkdir(parents=True)
+    (video / "assets" / "script.json").write_text(json.dumps({"title": "1202", "segments": [{"text": "Uno."}]}))
+    package = {"schema_version": 2, "youtube_title": "derivado del paquete"}
+    (video / "publish.json").write_text(json.dumps(package))
+    brief = await generate_publish_texts(_FakeAI(BRIEF), video, category_path="node_tech", design=None)
+    assert write_publish_json(video, brief, overwrite=True) is False
+    assert json.loads((video / "publish.json").read_text()) == package
+
+
 def test_slug_and_unique_ids(tmp_path: Path):
     assert slugify("¿Cómo nació la Inteligencia Artificial?") == "como-nacio-la-inteligencia-artificial"
     (tmp_path / "muro").mkdir()
