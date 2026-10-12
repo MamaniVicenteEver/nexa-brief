@@ -102,6 +102,9 @@ cat <<EOF
   Claves de servicios externos (Gemini, Pexels, YouTube…): completalas en
   nexa-brief-server/.env cuando las necesites. La API arranca sin ellas.
 
+  Usuario de la web: ${ADMIN_EMAIL:-admin@nexabrief.com}. Antes de exponer la web fuera
+  de tu máquina, cambiá la contraseña: make seed-admin EMAIL=… PASSWORD=…
+
   make dev      → API en http://localhost:8000 + web en http://localhost:3000
   make test     → tests del backend
   make help     → todos los comandos

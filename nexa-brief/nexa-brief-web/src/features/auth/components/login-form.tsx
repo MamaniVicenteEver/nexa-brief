@@ -48,9 +48,10 @@ export function LoginForm() {
     return doSignIn(values);
   }
 
-  // TODO(dev): auxiliar temporal para no tener que tipear user/pass en cada
-  // entrada durante desarrollo — usa el admin sembrado con scripts/seed-admin.mjs.
-  // Sacar este botón antes de cualquier despliegue real.
+  // Atajo de desarrollo: entra con el admin por defecto de scripts/seed-admin.mjs.
+  // Solo existe con `next dev`; en el build de producción (y en Docker) no se muestra,
+  // así nadie entra con un clic si el admin conserva la contraseña por defecto.
+  const showQuickLogin = process.env.NODE_ENV === "development";
   function quickLogin() {
     return doSignIn({ email: "admin@nexabrief.com", password: "admin123" });
   }
@@ -104,14 +105,16 @@ export function LoginForm() {
           {isPending ? "..." : t("loginButton")}
         </button>
 
-        <button
-          type="button"
-          onClick={quickLogin}
-          disabled={isPending}
-          className="rounded-full border border-dashed border-white/25 px-5 py-3 font-nb-sans text-xs font-semibold text-[#fafaf7]/60 transition-colors hover:border-white/45 hover:text-[#fafaf7] disabled:pointer-events-none disabled:opacity-60"
-        >
-          ⚡ Entrar directo (auxiliar, sacar después)
-        </button>
+        {showQuickLogin && (
+          <button
+            type="button"
+            onClick={quickLogin}
+            disabled={isPending}
+            className="rounded-full border border-dashed border-white/25 px-5 py-3 font-nb-sans text-xs font-semibold text-[#fafaf7]/60 transition-colors hover:border-white/45 hover:text-[#fafaf7] disabled:pointer-events-none disabled:opacity-60"
+          >
+            ⚡ Entrar directo (solo en desarrollo)
+          </button>
+        )}
       </form>
     </Form>
   );
