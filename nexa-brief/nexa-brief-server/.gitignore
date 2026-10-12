@@ -3,9 +3,9 @@
 !.env.example
 node_modules/
 .next/
-out/
-dist/
-build/
+/out/
+/dist/
+/build/
 .venv/
 __pycache__/
 *.py[cod]
@@ -16,10 +16,12 @@ __pycache__/
 .cache/
 coverage/
 *.log
-output/
-data/
-uploads/
-renders/
+# Anclados a la raíz del server: sin la barra inicial también atrapaban código
+# (src/adapters/data/, src/skills/output/, src/templates/_tools/*/build/).
+/output/
+/data/
+/uploads/
+/renders/
 *.mp4
 *.mov
 *.webm
@@ -32,3 +34,10 @@ client_secret*.json
 .DS_Store
 .idea/
 .vscode/
+
+# Código con nombre de carpeta genérico: lo atrapan las reglas data/, output/ y build/
+# de los .gitignore de nexa-brief/ y de la raíz del repo. Este archivo es el más
+# profundo, así que estas excepciones ganan.
+!src/adapters/data/
+!src/skills/output/
+!src/templates/_tools/*/build/

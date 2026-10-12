@@ -20,6 +20,9 @@
 # Generated and user-owned artifacts
 **/output
 **/data
+# ...salvo el código con esos nombres de carpeta.
+!nexa-brief-server/src/adapters/data
+!nexa-brief-server/src/skills/output
 **/uploads
 **/renders
 **/*.mp4
@@ -27,6 +30,11 @@
 **/*.mov
 **/*.mp3
 **/*.wav
+# Medios de las plantillas (bajados con `make media-pull`): la API los sirve y los graba.
+!nexa-brief-server/src/templates/**/assets/**
+!nexa-brief-server/src/templates/**/render/*.mp4
+nexa-brief-server/src/templates/**/work
+nexa-brief-server/src/templates/sandbox
 
 # VCS, editor and local-only files
 .git
