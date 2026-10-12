@@ -7,7 +7,7 @@ export APP_UID ?= $(shell id -u)
 export APP_GID ?= $(shell id -g)
 
 .DEFAULT_GOAL := help
-.PHONY: help setup dev api web test lint format check seed-admin media-pull media-push media-status \
+.PHONY: help setup dev api web test lint format check seed-admin media-pull media-push media-status preview-media \
         docker-build docker-up docker-down docker-logs docker-verify docker-seed-admin
 
 help: ## Lista los comandos
@@ -52,6 +52,9 @@ media-push: ## Sube audios/videos nuevos de las plantillas al remoto
 
 media-status: ## Qué medios faltan, sin copiar nada
 	./scripts/media.sh status
+
+preview-media: ## Versiones livianas de videos/imágenes para las vistas previas (se generan solas si falta)
+	cd $(SERVER) && uv run python -m src.presentation.api.preview_media src/templates/nodemotion
 
 docker-build: ## Construye las imágenes api + web
 	docker compose build
