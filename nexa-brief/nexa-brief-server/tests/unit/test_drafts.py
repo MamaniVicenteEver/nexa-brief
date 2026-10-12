@@ -274,9 +274,14 @@ def test_create_draft_rejects_unsupported_engine_400():
     from src.config.niche_config import list_all_niches
 
     unsupported = next(
-        n.template.template_id for n in list_all_niches()
-        if n.template and n.template.template_id and n.template.requires_lyrics and not supports_niche(n)
+        (
+            n.template.template_id for n in list_all_niches()
+            if n.template and n.template.template_id and n.template.requires_lyrics and not supports_niche(n)
+        ),
+        None,
     )
+    if unsupported is None:
+        pytest.skip("todas las plantillas de letras ya están validadas para HyperFrames")
     r = client.post("/api/v1/drafts", json={
         "template_id": unsupported, "auto_render": {"recorder_engine": "hyperframes"},
     })
