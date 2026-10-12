@@ -154,7 +154,8 @@ def cmd_manifest(a):
         "pipeline_type": "explainer_kit", "title": sc.get("title") or C.get("title"), "kicker": sc.get("kicker"),
         "language": sc.get("language", "es-419"), "duration_seconds": round(dur, 2) if dur else None,
         "script": {"segments": len(sc.get("segments", [])), "words": words, "arc": [{"id": s["id"], "tone": s["tone"], "intensity": s.get("intensity")} for s in sc.get("segments", [])]},
-        "voice": {"voice": qcj.get("voice"), "provenance": qcj.get("provenance"), "wpm": qcj.get("wpm"), "wer_aprox": qcj.get("wer_aprox"), "faltan": qcj.get("faltan", [])[:10], "sobran": qcj.get("sobran", [])[:10]},
+        # work/ no viaja con el repo: sin el QC de la voz se conserva el bloque que ya tenía el manifest.
+        "voice": {"voice": qcj.get("voice"), "provenance": qcj.get("provenance"), "wpm": qcj.get("wpm"), "wer_aprox": qcj.get("wer_aprox"), "faltan": qcj.get("faltan", [])[:10], "sobran": qcj.get("sobran", [])[:10]} if qcj else M.get("voice"),
         "transcript": {"words": sum(len(s.get("words", [])) for s in ly.get("segments", [])), "fake": bool((ly.get("metadata") or {}).get("fake"))},
         "storyboard": {"beats": len(sb.get("beats", [])), "components": uses, "lyrics_moments": uses.get("common.lyric", 0)},
         "media": credits,
