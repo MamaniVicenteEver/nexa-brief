@@ -6,6 +6,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from src.core.explainer.publishing import PublishPackage
+
 
 class ExplainerJobResponse(BaseModel):
     job_id: str
@@ -25,6 +27,25 @@ class ExplainerJobResponse(BaseModel):
     publish_results: list[dict] = Field(default_factory=list)
     formats: list[str] = Field(default_factory=list)
     render_seconds: float | None = None
+
+
+class PublishIssueResponse(BaseModel):
+    level: Literal["error", "warning"]
+    field: str
+    message: str
+
+
+class PublishPackageResponse(BaseModel):
+    """publish.json v2 (src/core/explainer/publishing) y lo que falta corregir antes de publicar."""
+
+    # None si el archivo no se pudo leer: el motivo va en `issues`.
+    package: PublishPackage | None = None
+    issues: list[PublishIssueResponse] = Field(default_factory=list)
+    thumbnail_image_url: str | None = None
+    # Nombre de cada estrategia de gancho ("4" → "Casi no pasa"), de la estrategia de títulos activa.
+    hook_strategy_names: dict[str, str] = Field(default_factory=dict)
+    # Largo máximo de un título de YouTube según la estrategia activa.
+    title_max_chars: int | None = None
 
 
 class ExplainerVideoResponse(BaseModel):
@@ -52,6 +73,8 @@ class ExplainerVideoResponse(BaseModel):
     preview_url: str
     poster_url: str | None = None
     last_job: ExplainerJobResponse | None = None
+    # Solo en videos con paquete de publicación v2.
+    publish_package: PublishPackageResponse | None = None
 
 
 class RecordExplainerRequest(BaseModel):
