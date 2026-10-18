@@ -869,28 +869,6 @@
   }
   @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
 
-  /* Intro (gancho): el nombre de la canción en neón al centro, sobre la foto o el
-     video de fondo encendido. Salida: solo neón sobre negro, sin fondo. Todo el
-     movimiento sale de audio.currentTime (updateCards); acá solo forma y layout. */
-  #intro { position: fixed; inset: 0; z-index: 8; pointer-events: none; overflow: hidden; text-transform: uppercase; opacity: 0; }
-  #introMedia { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none;
-    filter: saturate(1.25) contrast(1.08) brightness(.9); }
-  #intro .introGlow { position: absolute; inset: -10%;
-    background: radial-gradient(ellipse 46% 34% at 50% 50%, var(--neonGlow), transparent 70%); mix-blend-mode: screen; opacity: 0; }
-  #intro .introShade { position: absolute; inset: 0;
-    background: radial-gradient(ellipse 60% 36% at 50% 50%, rgba(6,2,1,.42), rgba(6,2,1,.06) 72%, rgba(6,2,1,.34) 100%),
-                linear-gradient(180deg, rgba(4,1,0,.45), transparent 24%, transparent 76%, rgba(4,1,0,.5)); }
-  #intro .introStack { position: absolute; left: 4vw; right: 4vw; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; align-items: center; text-align: center; }
-  #intro .eyebrow { font: 400 clamp(11px,1.7vmin,22px) var(--fontBlock); letter-spacing: .5em; margin-bottom: 3.2vmin; padding-left: .5em; }
-  #intro .tube { height: max(2px,.42vmin); width: 0; border-radius: 9px; background: var(--neonCore); }
-  #intro .artist { font: 400 clamp(16px,3.6vmin,50px) var(--fontTube); letter-spacing: .06em; margin: 3vmin 0 1.2vmin; }
-  #intro .title { font: 400 10vmin/1 var(--fontBlock); letter-spacing: -.03em; white-space: nowrap; margin: .6vmin 0 2.6vmin; }
-  #intro .title .ln { display: block; }
-  #intro .title .ch { display: inline-block; white-space: pre; }
-  #intro .sub { font: 400 clamp(12px,2.2vmin,30px) var(--fontBlock); letter-spacing: .32em; margin-top: 3vmin; padding-left: .32em; }
-  #intro .feats { font: 400 clamp(10px,1.6vmin,21px) var(--fontBlock); letter-spacing: .2em; margin-top: 1.2vmin; opacity: .85; }
-
   #outro { position: fixed; inset: 0; z-index: 9; pointer-events: none; overflow: hidden; background: #060302;
     color: var(--neonCore); text-transform: uppercase; text-align: center; opacity: 0; }
   #outro .outroHaze { position: absolute; inset: 0; opacity: 0;
@@ -903,7 +881,8 @@
   #outro .outroCta { font: 400 clamp(18px,4.8vmin,64px) var(--fontBlock); letter-spacing: .08em; margin-top: 5vmin; }
   #outro .outroSupport { font: 400 clamp(13px,2.9vmin,40px)/1.4 var(--fontBlock); letter-spacing: .03em; text-transform: none; margin-top: 6vmin; max-width: 80vw; }
   #outro .outroHandle { font: 400 clamp(12px,2.4vmin,34px) var(--fontBlock); letter-spacing: .2em; text-transform: none; margin-top: 2.2vmin; }
-  body.outroActive #viewport, body.outroActive #bg, body.outroActive #bgVideo, body.outroActive #bgTint { visibility: hidden; }
+  body.outroActive #viewport { opacity: 0.10; transition: opacity 1.6s ease; }
+  body.outroActive #bg, body.outroActive #bgVideo, body.outroActive #bgTint { opacity: 0.56; transition: opacity 1.6s ease; }
   #hint {
     position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
     font-family: var(--fontBlock); font-size: 1.5vh; letter-spacing: 0.5em;
@@ -914,8 +893,6 @@
 
   /* responsive móvil (solo orientación vertical — desktop queda intacto) */
   @media (orientation: portrait) {
-    #intro .title { margin-bottom: 3.4vmin; }
-    #intro .eyebrow { margin-bottom: 5vmin; }
     #outro .outroChannel { margin-top: 3vmin; font-size: 10.6vw; }
     #outro .outroThanks { font-size: 6.2vw; }
     #outro .outroCta { font-size: 7.6vw; margin-top: 6vmin; }
@@ -933,15 +910,6 @@
 <div id="vignette"></div>
 <div id="crt"></div>
 <div id="grain"></div>
-<div id="intro">
-  <img id="introMedia" alt="">
-  <div class="introGlow"></div><div class="introShade"></div>
-  <div class="introStack">
-    <div class="eyebrow"></div><div class="tube tubeTop"></div>
-    <div class="artist"></div><div class="title"></div>
-    <div class="tube tubeBot"></div><div class="sub"></div><div class="feats"></div>
-  </div>
-</div>
 <div id="outro">
   <div class="outroHaze"></div>
   <div class="outroStack">
@@ -951,6 +919,9 @@
 </div>
 <div id="hint">CLICK PARA EMPEZAR</div>
 <audio id="audio" preload="auto"></audio>
+
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
 
 <script type="module">
 /* ================================ CONFIG ================================ */
@@ -963,7 +934,7 @@
    Servir por HTTP (python3 -m http.server): por file:// el fetch se bloquea. */
 const ACTIVE_ID = null;   /* <-- forzar un id ("hola-remix" | "hola-remix-cian" | ...) · null = usa "activeId" del JSON */
 
-const DEFAULT_CONFIG = {"activeId":"default","configs":[{"id":"default","description":"Neón urbano nocturno — letras tubo que se encienden letra por letra, columnas escalonadas que retroceden en direcciones impredecibles sobre una foto de vida nocturna con CRT/grain/vignette. — metadata para marketing/SEO, la plantilla no la usa todavía.","audio":{"src":"assets/song.mp3"},"lyricsUrl":"assets/lyrics.json","bg":{"src":"assets/bg.png","filter":"grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18)"},"fonts":{"googleUrl":"https://fonts.googleapis.com/css2?family=Monoton&family=Archivo+Black&display=swap","tube":"\"Monoton\", cursive","block":"\"Archivo Black\", sans-serif"},"neon":{"core":"#FFE9CF","glow":"#FF5A1F","deep":"#E01400"},"intro":{"artist":"","title":"HOLA REMIX","sub":"","feats":"","eyebrow":"nodemotion presenta"},"outro":{"leadSec":8,"songTitle":"HOLA REMIX","thanks":"GRACIAS POR VER","channel":"nodemotion","cta":"SUSCRÍBETE","support":"Tu apoyo hace posible que sigamos trayendo más contenido.","handle":"youtube.com/@nodemotion"},"debug":{"enabled":false},"layout":{"stairVw":3.4,"colGapVw":52,"colGapVh":88,"rowsMin":2,"rowsMax":4,"verticalChance":0.13,"soloChance":0.14,"tubeChance":0.5,"dirWeights":{"left":0.55,"down":0.25,"up":0.2}},"seed":11}]};
+const DEFAULT_CONFIG = {"activeId":"default","configs":[{"id":"default","description":"Neón urbano nocturno — letras tubo que se encienden letra por letra, columnas escalonadas que retroceden en direcciones impredecibles sobre una foto de vida nocturna con CRT/grain/vignette. — metadata para marketing/SEO, la plantilla no la usa todavía.","audio":{"src":"assets/song.mp3"},"lyricsUrl":"assets/lyrics.json","bg":{"src":"assets/bg.png","filter":"grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18)"},"fonts":{"googleUrl":"https://fonts.googleapis.com/css2?family=Monoton&family=Archivo+Black&display=swap","tube":"\"Monoton\", cursive","block":"\"Archivo Black\", sans-serif"},"neon":{"core":"#FFE9CF","glow":"#FF5A1F","deep":"#E01400"},"intro":{"artist":"","title":"HOLA REMIX","sub":"","feats":"","eyebrow":"nodemotion presenta"},"outro":{"leadSec":8,"songTitle":"HOLA REMIX","thanks":"GRACIAS POR VER","channel":"nodemotion","cta":"SUSCRÍBETE","support":"Tu apoyo hace posible que sigamos trayendo más contenido.","handle":"youtube.com/@nodemotion"},"debug":{"enabled":false},"layout":{"stairVw":3.4,"colGapVw":52,"colGapVh":88,"rowsMin":2,"rowsMax":4,"verticalChance":0.13,"soloChance":0.14,"tubeChance": 0.3,"dirWeights":{"left":0.55,"down":0.25,"up":0.2}},"seed":11}]};
 
 async function loadDB() {
   try {
@@ -1025,11 +996,23 @@ function styleNeon(el, fs, outline) {
 }
 
 /* ---- intro (gancho) y salida: textos del config; todo el movimiento sale de t ---- */
-const intro = $("intro"), outro = $("outro"), introMedia = $("introMedia");
-const I = C.intro || {}, O = C.outro || {};
+const outro = $("outro");
+const O = C.outro || {};
 doc.documentElement.style.setProperty("--neonGlow", N.glow);
 doc.documentElement.style.setProperty("--neonDeep", N.deep);
-const qi = s => intro.querySelector(s), qo = s => outro.querySelector(s);
+const qo = s => outro.querySelector(s);
+let introDurationSeconds = window.NexaNeonIntro.DEFAULT_DURATION_SECONDS;
+const introController = window.NexaNeonIntro.createDOMIntro({
+  document: doc,
+  config: C.intro || {},
+  neon: N,
+  background: {
+    image: bgImage,
+    video: bgVideo,
+    tint: $("bgTint"),
+    baseFilter: C.bg?.filter || "grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18)",
+  },
+});
 const smooth = x => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
 const rise = (t, at, sec) => smooth((t - at) / sec);
 /* ruido determinista: el mismo t da siempre el mismo parpadeo (render cuadro a cuadro) */
@@ -1055,118 +1038,26 @@ const spans = (el, lines) => {
   });
 };
 /* el título largo se parte en dos renglones parejos (más grande y legible como miniatura) */
-function splitTitle(txt, portrait) {
-  const ws = txt.split(/\s+/).filter(Boolean);
-  if (ws.length < 2 || txt.length <= (portrait ? 9 : 15)) return [txt];
-  let best = [txt], score = 1e9;
-  for (let i = 1; i < ws.length; i++) {
-    const a = ws.slice(0, i).join(" "), b = ws.slice(i).join(" "), d = Math.abs(a.length - b.length);
-    if (d < score) { score = d; best = [a, b]; }
-  }
-  return best;
-}
 const setText = (el, v) => { el.textContent = v || ""; el.style.display = v ? "" : "none"; return el; };
 
-/* intro: textos */
-const songTitle = String(I.title || O.songTitle || "LETRAS DE NEÓN").toUpperCase();
-setText(qi(".eyebrow"), I.eyebrow || "nodemotion presenta");
-setText(qi(".artist"), I.artist); setText(qi(".sub"), I.sub); setText(qi(".feats"), I.feats);
-const introTitle = qi(".title");
-let titleChars = [], tubeW = 0;
-/* foto o video propio del gancho (intro.image); si no hay, se enciende el fondo del video */
-if (I.image) {
-  let m = introMedia;
-  if (/\.(mp4|webm|mov|m4v|ogg)(?:[?#].*)?$/i.test(I.image)) {
-    m = doc.createElement("video"); m.id = "introMedia"; m.muted = true; m.loop = true; m.playsInline = true;
-    introMedia.replaceWith(m); m.src = encodeURI(I.image); m.play().catch(() => {});
-  } else m.src = encodeURI(I.image);
-  m.style.display = "block";
-}
-/* salida: textos */
-setText(qo(".outroThanks"), O.thanks || "GRACIAS POR VER");
-const channelChars = spans(qo(".outroChannel"), [String(O.channel || "nodemotion").toUpperCase()]);
-setText(qo(".outroCta"), O.cta || "SUSCRÍBETE");
-setText(qo(".outroSupport"), O.support || "Tu apoyo hace posible que sigamos trayendo más contenido.");
-setText(qo(".outroHandle"), O.handle || "youtube.com/@nodemotion");
+const outroController = window.NexaNeonOutro.createDOMOutro({
+  root: outro,
+  config: O,
+  onShow: () => {
+    doc.body.classList.add("outroActive");
+    doc.body.classList.remove("introActive");
+  },
+});
 
-/* tamaños: el título y el canal ocupan el ancho disponible sin cortarse */
-function fitCards() {
-  const portrait = vw < vh, vm = Math.min(vw, vh) / 100;
-  titleChars = spans(introTitle, splitTitle(songTitle, portrait));
-  let fs = portrait ? vw * .26 : vh * .26;
-  introTitle.style.fontSize = fs + "px";
-  const maxW = vw * (portrait ? .88 : .84), maxH = vh * (portrait ? .3 : .44);
-  fs *= Math.min(1, maxW / Math.max(1, introTitle.scrollWidth), maxH / Math.max(1, introTitle.scrollHeight));
-  introTitle.style.fontSize = fs + "px";
-  tubeW = Math.min(introTitle.scrollWidth * .78, vw * .7);
-  styleNeon(introTitle, fs, false);
-  styleNeon(qi(".eyebrow"), vm * 1.7, false); styleNeon(qi(".artist"), vm * 3.6, false);
-  styleNeon(qi(".sub"), vm * 2.2, false); styleNeon(qi(".feats"), vm * 1.6, false);
-  const ch = qo(".outroChannel");
-  let cs = portrait ? vw * .2 : vm * 17;
-  ch.style.fontSize = cs + "px";
-  cs *= Math.min(1, vw * (portrait ? .88 : .8) / Math.max(1, ch.scrollWidth));
-  ch.style.fontSize = cs + "px";
-  styleNeon(ch, cs, false);
-  styleNeon(qo(".outroThanks"), vm * 3.6, false);
-  for (const el of outro.querySelectorAll(".outroCta, .outroSupport")) { el.style.color = N.core; el.style.textShadow = `0 0 ${vm * .5}px ${N.core}, 0 0 ${vm * 1.4}px ${N.glow}`; }
-  qo(".outroHandle").style.color = N.glow; qo(".outroHandle").style.textShadow = `0 0 ${vm * 1.2}px ${N.deep}`;
-  const tube = `0 0 ${vm * .5}px ${N.core}, 0 0 ${vm * 1.6}px ${N.glow}, 0 0 ${vm * 3.6}px ${N.deep}`;
-  for (const el of intro.querySelectorAll(".tube")) el.style.boxShadow = tube;
-}
-fitCards();
-doc.fonts.ready.then(fitCards);
-addEventListener("resize", () => fitCards());
-
-const BASE_FILTER = C.bg?.filter || "grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18)";
-let lastFilter = "", lastTint = "";
-let introEnd = Math.max(.8, Number(C.intro?.duration) || 2.8);
 let outroShown = false;
 function updateCards(t) {
-  const dur = audio.duration, lead = Math.max(3, Number(O.leadSec) || 8);
-  /* con el audio terminado el reloj vuelve al de pared (t≈0): se fija t al final para no perder la salida */
+  const dur = audio.duration;
+  /* Cuando termina, el navegador puede reiniciar currentTime; conservar el cierre. */
   if (audio.ended && isFinite(dur)) t = dur;
-  outroShown = isFinite(dur) && dur > 0 && (audio.ended || t >= dur - lead);
+  outroShown = outroController.update(t, dur, audio.ended).active;
   doc.body.classList.toggle("outroActive", outroShown);
-
-  /* ---------- intro: tiempos escalados a lo que dura (hasta la primera palabra) ---------- */
-  const end = introEnd, k = Math.min(1, Math.max(.45, (end - .45) / 2.5)), offAt = end - .45;
-  const show = outroShown ? 0 : 1 - rise(t, end - .12, .12);
-  intro.style.opacity = show.toFixed(3);
-  /* el fondo se enciende durante el gancho y vuelve solo al tono oscuro de la letra */
-  const lift = outroShown ? 0 : 1 - rise(t, offAt, .55);
-  const tc = (.55 + titleChars.length * Math.min(.06, .9 / Math.max(1, titleChars.length))) * k + .2;
-  const flash = Math.exp(-Math.max(0, t - tc) * 5) * (t >= tc ? 1 : 0);
-  const filt = lift > .002 ? `${BASE_FILTER} brightness(${(1 + 2.05 * lift + .6 * flash * lift).toFixed(3)}) saturate(${(1 + .35 * lift).toFixed(3)}) contrast(${(1 + .06 * lift).toFixed(3)})` : BASE_FILTER;
-  if (filt !== lastFilter) { bgImage.style.filter = filt; bgVideo.style.filter = filt; lastFilter = filt; }
-  const tint = (1 - .75 * lift).toFixed(2);
-  if (tint !== lastTint) { $("bgTint").style.opacity = tint; lastTint = tint; }
-  const im = $("introMedia"); if (I.image && im) im.style.opacity = lift.toFixed(3);
-  if (show > 0) {
-    const off = s => unlit(t, offAt, s);
-    qi(".eyebrow").style.opacity = (lit(t, .1 * k, 1) * off(1)).toFixed(3);
-    const tw = tubeW * rise(t, .25 * k, .5 * k);
-    for (const [i, el] of [...intro.querySelectorAll(".tube")].entries()) { el.style.width = tw.toFixed(1) + "px"; el.style.opacity = (lit(t, .25 * k, 5 + i) * off(5 + i)).toFixed(3); }
-    qi(".artist").style.opacity = (lit(t, .4 * k, 3) * off(3)).toFixed(3);
-    const st = Math.min(.06, .9 / Math.max(1, titleChars.length)) * k;
-    titleChars.forEach((el, i) => { el.style.opacity = (lit(t, .55 * k + i * st, 10 + i, .45) * off(10 + i)).toFixed(3); });
-    introTitle.style.transform = `scale(${(1.04 - .04 * rise(t, .5 * k, 1.6 * k) + .025 * flash).toFixed(4)})`;
-    qi(".sub").style.opacity = (lit(t, tc - .15, 7) * off(7)).toFixed(3);
-    qi(".feats").style.opacity = (lit(t, tc, 8) * off(8)).toFixed(3);
-    qi(".introGlow").style.opacity = ((.22 + .55 * flash) * rise(t, .5 * k, .5) * off(2)).toFixed(3);
-  }
-
-  /* ---------- salida: solo neón sobre negro, mismo encendido que la intro ---------- */
-  outro.style.opacity = outroShown ? rise(t, dur - lead, .35).toFixed(3) : "0";
-  if (!outroShown) return;
-  const ot = Math.max(0, t - (dur - lead)), s = lead / 8, endOff = lead - .6;
-  const L = (at, seed, d) => lit(ot, at * s, seed, d) * unlit(ot, endOff, seed);
-  qo(".outroHaze").style.opacity = (.32 * rise(ot, .5 * s, .8 * s) * unlit(ot, endOff, 40)).toFixed(3);
-  qo(".outroThanks").style.opacity = L(.15, 41).toFixed(3);
-  channelChars.forEach((el, i) => { el.style.opacity = L(.5 + i * .06, 50 + i, .45).toFixed(3); });
-  qo(".outroCta").style.opacity = L(2.6, 45, .3).toFixed(3);
-  qo(".outroSupport").style.opacity = (rise(ot, 3.6 * s, .6 * s) * unlit(ot, endOff, 47)).toFixed(3);
-  qo(".outroHandle").style.opacity = (lit(ot, 4.9 * s, 48) * unlit(ot, endOff, 48)).toFixed(3);
+  const introState = introController.update(t, outroShown, introDurationSeconds);
+  world.style.opacity = introState.active ? "0" : "1";
 }
 
 /* ---- lyrics: 100% desde lyricsUrl (JSON de Whisper) ---- */
@@ -1273,10 +1164,9 @@ function aimCamera(r) {
 }
 
 /* ---- reloj: audio si suena; si no, rAF ---- */
-let rafT0 = null, rafNow = 0, started = false;
-const clock = () => (!audio.paused && audio.currentTime > 0.05)
-  ? audio.currentTime
-  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+let started = false;
+/* La escena sigue al audio: si está pausado, intro y letra se quedan en su tiempo actual. */
+const clock = () => Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
 
 async function begin() {
   if (started) return;
@@ -1289,8 +1179,6 @@ addEventListener("pointerdown", begin, { once: true });
 /* ---- main ---- */
 let words = [], ptr = 0;
 function frame(now) {
-  rafNow = now;
-  if (rafT0 === null) rafT0 = now;
   const t = clock();
   updateCards(t);                         /* chequear ANTES de poner más palabras */
   if (!outroShown) {                     /* una vez que cierra, no entran palabras nuevas */
@@ -1330,7 +1218,16 @@ if (C.bg?.filter) {
   bgVideo.style.filter = C.bg.filter;
 }
 audio.src = encodeURI(C.audio.src);
-loadLyrics().then(w => { words = w; if (w.length) introEnd = Math.max(.8, w[0].t); });
+loadLyrics().then(w => {
+  words = w;
+  const firstLyricTime = w.reduce(
+    (first, word) => Number.isFinite(word.t) ? Math.min(first, word.t) : first,
+    Infinity
+  );
+  if (Number.isFinite(firstLyricTime)) {
+    introDurationSeconds = Math.max(0, firstLyricTime);
+  }
+});
 begin();
 requestAnimationFrame(frame);
 </script>

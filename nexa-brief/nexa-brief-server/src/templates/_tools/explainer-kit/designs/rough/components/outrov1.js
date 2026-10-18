@@ -105,7 +105,8 @@
       const supportSize = portrait ? 1.35 : 1.45 + 4 / u;
       const supportHalf = portrait ? bh / 2 : fullBh / 2;
       const supLines = R.wrap(p.support, portrait ? 27 : 62).map((line, i) => R.mono(ctx, g, line, { x: cx, y: subBy + supportHalf + u * (portrait ? 8 + i * 3.1 : 7 + i * 2.7), size: supportSize, color: P.muted, opacity: 0 }));
-      const hd = p.handle ? R.mono(ctx, g, p.handle, { x: cx, y: subBy + supportHalf + u * (portrait ? 8 + supLines.length * 3.1 : 7 + supLines.length * 2.7), size: 1.5, color: P.ink, opacity: 0 }) : null;
+      /* el usuario del canal va un poco separado del mensaje de apoyo (+1 u ≈ 10 px en 1080) */
+      const hd = p.handle ? R.mono(ctx, g, p.handle, { x: cx, y: subBy + supportHalf + u * (portrait ? 9 + supLines.length * 3.1 : 8 + supLines.length * 2.7), size: 1.5, color: P.ink, opacity: 0 }) : null;
 
       return {
         render(lt, b, t) {

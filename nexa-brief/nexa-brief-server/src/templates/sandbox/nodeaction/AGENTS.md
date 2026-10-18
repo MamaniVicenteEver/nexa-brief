@@ -180,6 +180,8 @@ simulado una vez a 120 Hz (sin escalones ni tirones aunque el objetivo cambie de
 Presets: `uk` · `us` · `de-empire` · `de` · `fr` · `it` · `mx` · `es` · `ru` · `ua` · `pl` · `nl` · `be` · `ie` · `ar` · `pe` ·
 `bo` · `co` · `ve` · `br` · `cl` · `cn` · `kr` · `jp` · `gr` · `tr`/`ottoman`, o `{ "stripes": ["#…", …], "dir": "h"|"v", "dot": "#…" }`.
 `team.body` = color del uniforme (brazos/piernas), `team.helmet` = casco; `look.head`: `brodie` (británico) · `stahl` (alemán).
+La bandera va en el pecho y también en la MOCHILA (se identifica el bando de frente y de espaldas, en 2D y 3D);
+`look.packFlag: false` la saca de la mochila. Las banderas se dibujan con las medidas reales de cada cara.
 Las armas `rifle`/`mg` disparan trazadoras finas, levantan polvo al fallar y, al acertar, un estallido rojo,
 gotas rojas y una marca roja en el cuerpo (`weapons.<id>.mark` / `blood`).
 

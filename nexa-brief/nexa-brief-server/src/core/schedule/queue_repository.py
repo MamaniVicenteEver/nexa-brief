@@ -57,6 +57,7 @@ async def create(
     scheduled_at: str | None = None,
     source: QueueSource = QueueSource.MANUAL,
     slot_id: str | None = None,
+    format: str | None = None,
 ) -> QueueEntry:
     """Crea una entry de cola nueva (ad-hoc, inmediata, o auto-fill de un slot).
 
@@ -71,10 +72,30 @@ async def create(
         account_alias=account_alias,
         slot_id=slot_id,
         scheduled_at=scheduled_at,
+        format=format,
         source=source,
         status=QueueStatus.QUEUED,
         created_at=now,
         updated_at=now,
+    )
+    await _entries().insert(_dump(entry))
+    await _publish_event(entry)
+    return entry
+
+
+async def start_direct(
+    job_id: str, platform: str, account_alias: str, *, format: str | None = None
+) -> QueueEntry:
+    """Record an explainer upload already handled by its recorder.
+
+    It starts in PUBLISHING, so the scheduler cannot pick it up and duplicate
+    the upload; the recorder marks the final result on the same entry.
+    """
+    now = _now_iso()
+    entry = QueueEntry(
+        entry_id=uuid.uuid4().hex[:8], job_id=job_id, platform=platform,
+        account_alias=account_alias, format=format, source=QueueSource.IMMEDIATE,
+        status=QueueStatus.PUBLISHING, created_at=now, updated_at=now,
     )
     await _entries().insert(_dump(entry))
     await _publish_event(entry)

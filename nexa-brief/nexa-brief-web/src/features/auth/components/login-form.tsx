@@ -34,23 +34,26 @@ export function LoginForm() {
   async function doSignIn(values: LoginInput) {
     setFormError(null);
     setIsPending(true);
-    const result = await signIn("credentials", { ...values, redirect: false });
-    setIsPending(false);
-
-    if (result?.error) {
+    try {
+      const result = await signIn("credentials", { ...values, redirect: false });
+      if (result?.error) {
+        setFormError(t("loginError"));
+        return;
+      }
+      router.push("/dashboard");
+    } catch {
       setFormError(t("loginError"));
-      return;
+    } finally {
+      setIsPending(false);
     }
-    router.push("/dashboard");
   }
 
   function onSubmit(values: LoginInput) {
     return doSignIn(values);
   }
 
-  // Atajo de desarrollo: entra con el admin por defecto de scripts/seed-admin.mjs.
-  // Solo existe con `next dev`; en el build de producción (y en Docker) no se muestra,
-  // así nadie entra con un clic si el admin conserva la contraseña por defecto.
+  // Development-only shortcut for the local seeded admin. Production Docker builds use
+  // NODE_ENV=production, so this control is not rendered there.
   const showQuickLogin = process.env.NODE_ENV === "development";
   function quickLogin() {
     return doSignIn({ email: "admin@nexabrief.com", password: "admin123" });

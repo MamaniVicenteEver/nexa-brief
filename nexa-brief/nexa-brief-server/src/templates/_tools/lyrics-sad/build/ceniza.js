@@ -93,7 +93,7 @@ B.diary = (sc, X) => {
 /* 6. brasas: la palabra protagonista en contorno, se "calienta" llenándose de brasa desde abajo */
 B.embers = (sc, X) => {
   const { W, H, u } = X, L = div(X.root, "lay", { background: "#060303" });
-  footage(X, L, 0, "ember", { opacity: 0.7 }); dark(X, L);
+  footage(X, L, 0, "ember", { opacity: 0.76 }); dark(X, L);
   const hi = heroIdx(sc.words), hero = sc.words[hi], s = U(hero.text);
   const fs = fit(s, ser, 0.04, 0.84 * W, 0.4 * H);
   const ol = word(X, L, s, { cls: ser, fs, x: W / 2, y: 0.47 * H, color: "transparent", ls: 0.04 });
@@ -147,16 +147,7 @@ B.tears = (sc, X) => {
 };
 
 B.intro = (sc, X) => B.embers(sc, X);
-B.outro = (sc, X) => {
-  const { W, H } = X, L = div(X.root, "lay", { background: "#050302" });
-  footage(X, L, 0, "ember", { opacity: 0.5 }); dark(X, L);
-  const [a, b, c] = sc.words;
-  if (a) { const t = lineNested(X, L, [a], { cls: ser, fs: 0.17 * H, x: W / 2, y: 0.42 * H, color: P.bone }, "ember"); burnChars(X, L, t, Math.max(a.rt + 1.6, X.dur - 1.2), 0.8); }
-  if (b) { const t = word(X, L, U(b.text), { cls: mono, fs: 0.035 * H, x: W / 2, y: 0.56 * H, color: P.ashText, ls: 0.5 }); reveal(X, t.el, b.rt, "fade", 1); }
-  if (c) { const t = word(X, L, U(c.text), { cls: mono, fs: 0.025 * H, x: W / 2, y: 0.63 * H, color: P.emberText, ls: 0.3 }); reveal(X, t.el, c.rt, "fade", 1); }
-  ashLayer(X, L);
-  enterFx(X, "burn", OV() * 1.6);
-};
+B.outro = (sc, X) => window.NexaCenizaOutro.render(sc, X, { P, ser, mono, div, footage, ashLayer, word, fit, reveal, config: C.outro || {} });
 
 const FITS = {
   burnAway: sc => J(sc.words).length <= 36 && sc.dur > 1.6,

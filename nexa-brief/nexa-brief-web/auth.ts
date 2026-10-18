@@ -5,6 +5,8 @@ import { getUserRepository } from "@/features/auth/repositories";
 import { loginSchema } from "@/features/auth/schema";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // The app is exposed through a Cloudflare Tunnel; use the forwarded public host.
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [

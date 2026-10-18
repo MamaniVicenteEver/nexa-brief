@@ -930,16 +930,15 @@
   .cardScreen .title { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 15vh; line-height: 0.9; letter-spacing: -0.015em; color: var(--paper); }
   .cardScreen .sub { font-family: "Space Grotesk", sans-serif; font-weight: 500; font-size: 2vh; letter-spacing: 0.44em; padding-left: 0.44em; color: var(--paper); }
   .cardScreen .feats { font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 1.3vh; letter-spacing: 0.34em; color: rgba(244,242,238,0.5); margin-top: 2.6vh; }
+  #intro .title { font-size: 23.25vh; }
   #intro.gone { opacity: 0; pointer-events: none; }
   #outro { opacity: 0; pointer-events: none; }
   #outro.show { opacity: 1; pointer-events: auto; }
-  body.outroActive #world, body.outroActive #bgMedia, body.outroActive #bgFallback {
-    opacity: 0.10; transition: opacity 1.6s ease;
-  }
 
   /* responsive móvil (solo orientación vertical — desktop queda intacto) */
   @media (orientation: portrait) {
     .cardScreen .title { font-size: min(15vh, 17vw); }
+    #intro .title { font-size: min(23.25vh, 26.35vw); }
     .cardScreen .artist { font-size: min(1.7vh, 3.4vw); letter-spacing: 0.34em; }
     .cardScreen .sub { font-size: min(2vh, 3.8vw); letter-spacing: 0.3em; }
     .cardScreen .feats { font-size: min(1.3vh, 2.8vw); letter-spacing: 0.22em; }
@@ -954,6 +953,8 @@
   }
 
 </style>
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
 </head>
 <body>
 <div id="bgFallback"></div>
@@ -1022,9 +1023,9 @@ const DEFAULT_CONFIG = { "activeId": "default", "configs": [{
   "lyricsUrl": "assets/lyrics.json",
   "bg": { "type": "none", "src": "", "filter": "grayscale(1) contrast(1.25) brightness(0.32)" },
   "colors": { "paper": "#F4F2EE", "ink": "#0A0A0A" },
-  "wordmark": "NEXA BRIEF — MANIFIESTO",
+  "wordmark": "NODEMOTION — MANIFIESTO",
   "intro": { "artist": "", "title": "Manifiesto", "sub": "", "feats": "" },
-  "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+  "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "Suscribite | NodeMotion" },
   "debug": { "enabled": false },
   "phrase": { "gapSec": 0.52, "maxWords": 5, "maxChars": 24 },
   "laminas": { "deck": ["pleno","pleno","columna","pleno","micro","borde","columna","contra","pleno","borde","micro","columna"],
@@ -1072,8 +1073,8 @@ function buildCard(id, cfg) {
   i.querySelector(".sub").textContent = cfg.sub;
   i.querySelector(".feats").textContent = cfg.feats;
 }
-buildCard("intro", C.intro);
-buildCard("outro", C.outro);
+buildCard("intro", window.NexaTemplateIntro.apply(C.intro));
+const outroController = window.NexaManifiestoOutro.createDOMOutro({root: $("outro"), config: C.outro || {}, onShow: () => { $("intro").classList.add("gone"); }});
 
 /* ---- lyrics: agrupar en FRASES conservando el timestamp de CADA palabra ---- */
 async function loadLyrics() {
@@ -1288,16 +1289,8 @@ addEventListener("pointerdown", () => {
 /* ---- outro por el final REAL del audio ---- */
 let outroShown = false;
 function maybeOutro() {
-  if (outroShown) return;
-  const dur = audio.duration;
-  if (!isFinite(dur) || dur <= 0) return;
-  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
-    outroShown = true;
-    doc.body.classList.add("outroActive");
-    doc.body.classList.remove("contraActive");
-    $("intro").classList.add("gone");
-    $("outro").classList.add("show");
-  }
+  const t = audio.ended && isFinite(audio.duration) ? audio.duration : audio.currentTime;
+  outroShown = outroController.update(t, audio.duration, audio.ended).active;
 }
 audio.addEventListener("ended", maybeOutro);
 

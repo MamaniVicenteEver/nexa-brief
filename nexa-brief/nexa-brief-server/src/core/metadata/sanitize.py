@@ -26,8 +26,16 @@ _EMOJI = re.compile(
 )
 
 
+def has_emoji(text: str) -> bool:
+    return bool(_EMOJI.search(text or ""))
+
+
+# Emoji used as a sentence break ("Apolo 11 🚀 Y la mujer…"): it becomes a period, not a glued sentence.
+_EMOJI_BREAK = re.compile(r"(?<=[\w)\]»\"'])\s*(?:" + _EMOJI.pattern + r")\s+(?=[A-ZÁÉÍÓÚÑ¿¡«])")
+
+
 def strip_emojis(text: str) -> str:
-    return _SPACES.sub(" ", _EMOJI.sub("", text)).strip()
+    return _SPACES.sub(" ", _EMOJI.sub("", _EMOJI_BREAK.sub(". ", text))).strip()
 
 
 def _clean_line(text: str) -> str:

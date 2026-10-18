@@ -247,7 +247,10 @@ def test_full_recording_registers_packaged_job(videos_root: Path, make_recorder,
 
     assert job.state == RecordState.done, job.error
     assert render.calls == [("hist-1", None)]
-    out = tmp_path / "output" / "node_history" / "binary" / "hist-1"
+    # una carpeta por grabación (output/<categoría>/<diseño>/<video>/<id de la grabación>)
+    out = Path(job.output_dir)
+    assert out.parent == tmp_path / "output" / "node_history" / "binary" / "hist-1"
+    assert job.scheduled_job_id.endswith(out.name)
     assert (out / "hist-1-16x9.mp4").exists()
 
     record = job_tracker.get(job.scheduled_job_id)
@@ -577,6 +580,88 @@ def test_default_records_only_desktop_16x9(videos_root: Path, make_recorder, tmp
     record = job_tracker.get(job.scheduled_job_id)
     assert set(record["file_paths"]) == {"youtube"}
     assert record["ready_formats"] == ["youtube"]
+
+
+class _FakeThumbnails:
+    """Imita thumbnails.render: escribe render/thumbnail-<opción>.jpg sin abrir el navegador."""
+
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, tuple[str, ...]]] = []
+
+    async def __call__(self, video, options):
+        self.calls.append((video.video_id, tuple(options)))
+        out = {}
+        for option in options:
+            path = video.path / "render" / f"thumbnail-{option}.jpg"
+            path.write_bytes(b"jpg")
+            out[option] = path
+        return out
+
+
+def test_full_recording_attaches_the_chosen_thumbnail(videos_root: Path, tmp_path: Path):
+    thumbs, publisher = _FakeThumbnails(), _FakePublisher()
+    rec = ExplainerRecorder(render_runner=_FakeRender(videos_root), publisher_getter=lambda: publisher,
+                            output_root=tmp_path / "output", thumbnail_renderer=thumbs)
+    job = _record(rec, load_video(videos_root / "hist-1"), duration="full", publish=True,
+                  account_selectors=["youtube:c", "tiktok:t"], thumbnail="A")
+    assert job.state == RecordState.done, job.error
+    assert thumbs.calls == [("hist-1", ("A",))]   # se captura de nuevo antes de publicar
+    youtube = next(c for c in publisher.calls if c["account_selector"] == "youtube:c")
+    tiktok = next(c for c in publisher.calls if c["account_selector"] == "tiktok:t")
+    assert youtube["thumbnail_path"].name == "thumbnail.jpg" and "thumbnail_path" not in tiktok
+    record = job_tracker.get(job.scheduled_job_id)
+    assert Path(record["file_paths"]["thumbnail"]).exists()
+    assert "thumbnail" not in record["ready_formats"]
+
+
+def test_v1_publish_can_offer_the_image_thumbnail(videos_root: Path, monkeypatch):
+    from src.core.explainer import thumbnails
+    from src.core.explainer.publishing import opening
+    monkeypatch.setattr(opening, "TEMPLATES_DIR", videos_root)
+    video_dir = videos_root / "hist-1"
+    (video_dir / "assets" / "media").mkdir(parents=True)
+    (video_dir / "assets" / "media" / "retrato.jpg").write_bytes(b"jpg")
+    data = json.loads((video_dir / "publish.json").read_text())
+    data.update(thumbnail_text="UN SOLO ERROR", thumbnail_image="retrato.jpg", thumbnail_image_side="left")
+    (video_dir / "publish.json").write_text(json.dumps(data))
+    specs = thumbnails.intro_specs(load_video(video_dir))
+    assert specs["B"]["component"] == "binary.introv2"
+    assert specs["B"]["params"]["src"] == "/hist-1/assets/media/retrato.jpg" and specs["B"]["params"]["imageSide"] == "left"
+    thumbnails.choose(load_video(video_dir), "B")
+    assert json.loads((video_dir / "publish.json").read_text())["thumbnail_option"] == "B"
+
+
+def test_unavailable_thumbnail_option_is_rejected(videos_root: Path, make_recorder):
+    rec, _ = make_recorder()
+    with pytest.raises(ValueError, match="no está disponible"):   # v1 sin foto elegida: solo A
+        rec.submit(load_video(videos_root / "hist-1"), duration="full", thumbnail="B")
+
+
+def test_previews_never_capture_thumbnails(videos_root: Path, tmp_path: Path):
+    thumbs = _FakeThumbnails()
+    rec = ExplainerRecorder(render_runner=_FakeRender(videos_root), output_root=tmp_path / "output", thumbnail_renderer=thumbs)
+    job = _record(rec, load_video(videos_root / "hist-1"), duration="10")
+    assert job.state == RecordState.done and thumbs.calls == []
+
+
+def test_scheduled_youtube_publish_uploads_the_explainer_thumbnail(videos_root: Path, tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(settings, "schedule_auto_fill_enabled", True)
+    rec = ExplainerRecorder(render_runner=_FakeRender(videos_root), output_root=tmp_path / "output",
+                            thumbnail_renderer=_FakeThumbnails())
+    _record(rec, load_video(videos_root / "hist-1"), duration="full")
+    asyncio.run(slot_repository.create(platform="youtube", account_alias="c", days=[0], times=["09:00"], niche_filter="node_history"))
+    publisher = _FakePublisher()
+    asyncio.run(engine.process_tick(publisher, now=MONDAY_9AM))
+    assert publisher.calls[0]["thumbnail_path"].name == "thumbnail.jpg"
+
+
+def test_explainer_publish_texts_drop_emojis(videos_root: Path):
+    publish = videos_root / "hist-1" / "publish.json"
+    data = json.loads(publish.read_text())
+    data.update(youtube_title="El muro cayó 🔥 Nadie lo esperaba", youtube_description="Línea 1 😱\nLínea 2", youtube_tags=["muro", "🔥"])
+    publish.write_text(json.dumps(data, ensure_ascii=False))
+    title, description, tags = recorder_mod._copy_for(load_video(videos_root / "hist-1"), "youtube")
+    assert (title, description, tags) == ("El muro cayó. Nadie lo esperaba", "Línea 1\nLínea 2", ["muro"])
 
 
 def test_mobile_9x16_only_when_requested(videos_root: Path, make_recorder):

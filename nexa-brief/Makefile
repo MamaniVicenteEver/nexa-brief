@@ -1,13 +1,17 @@
 # Nexa Brief — comandos del día a día. `make help` los lista.
 SHELL := /bin/bash
 SERVER := nexa-brief-server
+INTRO_SECONDS ?= 2.5
 WEB := nexa-brief-web
 # La API en Docker corre con tu UID/GID para poder escribir en src/templates (montado).
 export APP_UID ?= $(shell id -u)
 export APP_GID ?= $(shell id -g)
+# One root .env value feeds both local dev processes and Docker Compose.
+export PUBLIC_APP_URL := $(shell sed -n 's/^PUBLIC_APP_URL=//p' .env 2>/dev/null | tail -n1)
+export AUTH_URL := $(PUBLIC_APP_URL)
 
 .DEFAULT_GOAL := help
-.PHONY: help setup dev api web test lint format check seed-admin media-pull media-push media-status preview-media \
+.PHONY: help setup dev api web test lint format check seed-admin media-pull media-push media-status preview-media template-posters \
         docker-build docker-up docker-down docker-logs docker-verify docker-seed-admin
 
 help: ## Lista los comandos
@@ -55,6 +59,9 @@ media-status: ## Qué medios faltan, sin copiar nada
 
 preview-media: ## Versiones livianas de videos/imágenes para las vistas previas (se generan solas si falta)
 	cd $(SERVER) && uv run python -m src.presentation.api.preview_media src/templates/nodemotion
+
+template-posters: ## Capturas WebP de las intros renderizadas de NodeMotion
+	cd $(SERVER) && uv run python scripts/generate_template_posters.py --intro-seconds $(INTRO_SECONDS) $(if $(FORCE),--force,)
 
 docker-build: ## Construye las imágenes api + web
 	docker compose build

@@ -1,7 +1,7 @@
 """`publish.json` versión 2: el paquete de publicación de un video explainer.
 
-Guarda las piezas que se escriben (a mano o con IA): la intro del video, las dos
-miniaturas, los 3 títulos de YouTube y los de Facebook/TikTok, los bloques de la
+Guarda las piezas que se escriben (a mano o con IA): las dos miniaturas (la elegida
+también abre el video: opening.py), los 3 títulos de YouTube y los de Facebook/TikTok, los bloques de la
 descripción, las fuentes, los créditos, los tags y el comentario fijado. Lo que
 se puede calcular (la descripción armada, el agradecimiento, los campos planos
 que leen el grabador y el publicador) lo genera `store.save_package`, así nunca
@@ -18,6 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 SCHEMA_VERSION = 2
 
 OptionId = Literal["A", "B", "C"]
+ImageSide = Literal["auto", "left", "right"]
 ImageVerdict = Literal["elegida", "alternativa", "débil", "no pasa", "no disponible", "conseguir"]
 
 
@@ -30,21 +31,6 @@ class _Piece(BaseModel):
     """Un campo desconocido es un error: un typo no debe perderse en silencio."""
 
     model_config = ConfigDict(extra="forbid")
-
-
-class Intro(_Piece):
-    """Cartel de apertura (beat 0): en el feed de TikTok/Reels es el título."""
-
-    lines: list[str] = Field(min_length=1)
-    # Cortes para 9:16; vacío = los mismos renglones.
-    lines_portrait: list[str] = Field(default_factory=list)
-    kicker: str = ""
-    # Subtítulo bajo el cartel; solo si el componente del diseño lo dibuja (ver intro.py).
-    sub: str = ""
-
-    @property
-    def text(self) -> str:
-        return " ".join(self.lines)
 
 
 class ImageReview(_Piece):
@@ -76,13 +62,19 @@ class ThumbnailWithImage(_Piece):
     image: str | None
     composition: str
     pair_title: OptionId
+    # Lado de la foto en la intro 16:9 (<diseño>.introv2 → imageSide); "auto" alterna entre videos.
+    image_side: ImageSide = "auto"
     image_review: list[ImageReview] = Field(default_factory=list)
 
 
 class Thumbnail(_Piece):
+    """Las dos miniaturas. La elegida (`chosen`) es también la apertura del video (opening.py)."""
+
     text_only: ThumbnailTextOnly
     with_image: ThumbnailWithImage
     chosen: Literal["text_only", "with_image"] = "text_only"
+    # Antetítulo de las dos (lugar · fecha), p. ej. "APOLO 11 · 20 JUL 1969".
+    kicker: str = ""
 
     @property
     def chosen_text(self) -> str:
@@ -164,7 +156,6 @@ class Tags(_Piece):
 class PublishPackage(_Piece):
     schema_version: Literal[2] = SCHEMA_VERSION
     category: str
-    intro: Intro
     thumbnail: Thumbnail
     titles: Titles
     description: Description

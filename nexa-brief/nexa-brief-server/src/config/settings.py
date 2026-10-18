@@ -10,7 +10,8 @@ BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=BASE_DIR / ".env",
+        # Root .env owns shared public configuration; server .env keeps API secrets.
+        env_file=(BASE_DIR.parent / ".env", BASE_DIR / ".env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -180,6 +181,10 @@ class Settings(BaseSettings):
     # timeout de Remotion, pero sin benchmark todavía con contenido de
     # producción real. Default conservador, no medido contra un caso real.
     hyperframes_render_timeout_seconds: int = 1800
+    # El límite real crece con el video: max(el de arriba, segundos de video × esto). Medido
+    # 2026-10-14 en el i3-8100 con 2 workers: Neón (4:16, fondo de video) captura ~3,4 cuadros/s →
+    # ~9 s de render por segundo de video; 15 deja margen (antes cortaba a los 30 min a mitad).
+    hyperframes_timeout_seconds_per_video_second: float = 15.0
     # Workers de renderizado en paralelo dentro de UN render local (flag -w/--workers
     # del CLI) — no confundir con hyperframes_max_concurrent_renders (cuántos
     # renders simultáneos acepta el servidor).
@@ -253,9 +258,8 @@ class Settings(BaseSettings):
     # CORS_ALLOW_ORIGIN_REGEX=^http://100\.[0-9.]+:3000$   (vacío = solo la lista de arriba)
     cors_allow_origin_regex: str = Field(default="", alias="CORS_ALLOW_ORIGIN_REGEX")
 
-    # Base URL of nexa-brief-web, used to link back to it from the OAuth
-    # success/error pages (which are server-rendered HTML, not JSON).
-    frontend_url: str = Field(default="http://localhost:3001", alias="FRONTEND_URL")
+    # One canonical public origin shared by OAuth callbacks, emails and web redirects.
+    public_app_url: str = Field(default="", alias="PUBLIC_APP_URL")
 
     # ── Social Publisher — Feature Flag ───────────────────────────────────────
     # Set ENABLE_AUTO_PUBLISHING=true to activate Stage 9 in the pipeline.
@@ -304,6 +308,8 @@ class Settings(BaseSettings):
     facebook_client_secret: str = Field(default="", alias="FACEBOOK_CLIENT_SECRET")
     facebook_account_1_name: str = Field(default="pagina_1", alias="FACEBOOK_ACCOUNT_1_NAME")
     facebook_account_2_name: str = Field(default="pagina_2", alias="FACEBOOK_ACCOUNT_2_NAME")
+    # Shared Graph API version for Facebook Pages and Instagram Graph API.
+    meta_graph_api_version: str = Field(default="v26.0", alias="META_GRAPH_API_VERSION")
 
     # ── Social Publisher — Upload behaviour ──────────────────────────────────
     # Seconds before upload requests time out (videos can be large)
@@ -370,6 +376,11 @@ class Settings(BaseSettings):
     # ── Explainer (NodeTech, NodeHistory, NodePolitics, NodeEconomy) ──────────
     # Quién escribe títulos/descripciones: "claude" | "codex" (CLI local) | "deepseek" (API).
     explainer_text_provider: str = Field(default="claude", alias="EXPLAINER_TEXT_PROVIDER")
+    # Quién escribe los textos de publicación de NodeMotion (Preparar y al grabar): "deepseek" | "gemini".
+    copy_ai_provider: str = Field(default="deepseek", alias="COPY_AI_PROVIDER")
+    # Idioma de TODOS los textos de publicación de NodeMotion (canciones y promos): el del canal,
+    # aunque la canción sea en otro idioma (su nombre se deja tal cual).
+    copy_language: str = Field(default="es", alias="COPY_LANGUAGE")
     # Quién produce el video completo con el explainer-kit: "claude" | "codex".
     explainer_agent: str = Field(default="claude", alias="EXPLAINER_AGENT")
     # Quién conversa en el planificador semanal de Programación.

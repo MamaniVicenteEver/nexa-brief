@@ -398,6 +398,13 @@ Resumen de `docs/investigaciones/estrategia-cro-titulos-descripciones-2026-09.md
 - [ ] Videos mudos, ≤ 2–3 visibles a la vez, sin filtros CSS en vivo sobre `<video>`.
 - [ ] Se ve distinta de las plantillas existentes (sección 5.1).
 - [ ] Media con créditos anotados (autor + URL de Pexels).
+- [ ] La intro declara su miniatura: primera línea de `components/intro.js` =
+      `// @nexa thumbnail-at: <segundos>` — el segundo en que el cartel con el nombre de la canción se ve
+      completo (medido reproduciendo la plantilla). De ahí sale la miniatura de YouTube
+      (`src/modules/thumbnail_maker.py`, que además elige el cuadro más estable de ±0,3 s). Sin la marca
+      se captura el segundo 1, que puede caer en plena animación.
+- [ ] El cierre (`components/outro.js`) queda quieto hasta el último cuadro: nunca se desmonta ni
+      apaga letras al llegar al final del audio (el video tiene que terminar en el cartel completo).
 
 **Al promover (sección 2.3):**
 - [ ] Carpeta `nodemotion/<tipo>/<id>/` + `templates.json` (`in_progress`) + `niches.json` + `node_motion.children`.

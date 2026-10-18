@@ -3,10 +3,14 @@ import { useRealtimeEvent } from "@/features/realtime";
 import { getDraft, listDrafts } from "../api/studio-service";
 import type { Draft, DraftStatus } from "../types";
 
-const RUNNING: DraftStatus[] = ["previewing", "rendering"];
+const RUNNING: DraftStatus[] = ["previewing", "preparing", "rendering"];
 
 export function draftKey(draftId: string | null) {
   return ["draft", draftId] as const;
+}
+
+export function draftsKey(templateId: string) {
+  return ["drafts", templateId] as const;
 }
 
 export function isDraftRunning(draft: Draft | undefined | null): boolean {
@@ -36,14 +40,22 @@ export function useDraft(draftId: string | null) {
   return query;
 }
 
-/** Drafts previos de la plantilla (el más nuevo primero), para retomar el
- * último al reabrir el modal. */
+/** Prototipos de la plantilla (el más nuevo primero), en vivo: la lista del Sandbox
+ * y el selector de Grabar muestran el estado de cada uno. */
 export function useTemplateDrafts(templateId: string, enabled: boolean) {
-  return useQuery({
-    queryKey: ["drafts", templateId],
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: draftsKey(templateId),
     queryFn: ({ signal }) => listDrafts(templateId, signal),
     enabled,
     staleTime: 0,
     retry: 1,
+    refetchInterval: (q) => (q.state.data?.some(isDraftRunning) ? 5_000 : false),
   });
+
+  useRealtimeEvent<{ draft_id: string }>("draft_changed", () => {
+    if (enabled) queryClient.invalidateQueries({ queryKey: draftsKey(templateId) });
+  });
+
+  return query;
 }

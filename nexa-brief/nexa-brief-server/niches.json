@@ -536,12 +536,13 @@
       "id": "lyrics_video_neon",
       "display_name": "Video de Letras — Neón Urbano",
       "active": true,
-      "description": "Plantilla config-driven (05-lyrics/neon), sin análisis de imagen: letreros de tubo neón que se encienden letra por letra, columnas escalonadas con cámara impredecible, sobre una foto nocturna con grano/viñeta. La letra se sincroniza en tiempo real con la canción real (audio.currentTime) — requiere una canción real (se transcribe automáticamente, no música de stock) y la duración del video es SIEMPRE la duración real de la canción.",
+      "description": "Plantilla config-driven (05-lyrics/neon), sin análisis de imagen: letreros de tubo neón que se encienden letra por letra, columnas escalonadas con cámara impredecible, sobre el video nocturno integrado assets/remix.mp4 con grano/viñeta. La letra se sincroniza en tiempo real con la canción real (audio.currentTime) — requiere una canción real (se transcribe automáticamente, no música de stock) y la duración del video es SIEMPRE la duración real de la canción.",
       "pipeline_type": "config_driven_template",
       "recorder_engine": "remotion",
       "template": {
         "enabled": true,
         "template_id": "lyrics-neon",
+        "locked_config_keys": ["layout"],
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
@@ -561,11 +562,13 @@
         "requires_vision_extraction": false,
         "requires_lyrics": true,
         "media_dimension_key": null,
-        "media_src_filename": "bg.jpg",
+        "media_src_filename": "assets/remix.mp4",
+        "requires_image": false,
+        "requires_video": false,
         "wrap_as_case_collection": true
       },
       "search_instructions": {
-        "image": "Foto nocturna de ciudad, ambiente urbano o de fiesta — luces, calles, contraste alto. Sirve solo de fondo tratado con filtro, no se analiza en detalle.",
+        "image": "No se requiere una imagen de fondo: la plantilla usa el video integrado assets/remix.mp4.",
         "music": "REQUIERE una canción real (con letra) — no música instrumental de stock. Debe subirse por archivo o URL, nunca buscarse automáticamente: se transcribe la letra real para sincronizarla con el video."
       },
       "image": {
@@ -2985,7 +2988,7 @@
         "rules": [
           "El título promete solo lo que el video cuenta: provocador sí, falso no.",
           "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
-          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Sin MAYÚSCULAS sostenidas. Sin emojis en ningún texto (títulos, descripciones, captions).",
           "Toda cifra o fecha del texto tiene que estar en el guion."
         ],
         "language": "es-419",
@@ -3045,7 +3048,7 @@
         "rules": [
           "El título promete solo lo que el video cuenta: provocador sí, falso no.",
           "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
-          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Sin MAYÚSCULAS sostenidas. Sin emojis en ningún texto (títulos, descripciones, captions).",
           "Toda cifra o fecha del texto tiene que estar en el guion.",
           "Temas de muertes y guerras: con respeto, sin morbo ni imágenes explícitas."
         ],
@@ -3068,22 +3071,15 @@
             "lyrics_video_neon",
             "lyrics_video_impact",
             "lyrics_video_romantic",
-            "lyrics_video_latido",
-            "lyrics_video_suave",
             "lyrics_video_calado",
             "lyrics_video_expediente",
-            "lyrics_video_triste",
             "lyrics_video_manifiesto",
-            "lyrics_video_resaltado",
-            "lyrics_video_cristal",
-            "lyrics_video_mirada",
             "lyrics_video_night_journey",
             "lyrics_video_collage",
             "lyrics_video_mixtas",
             "lyrics_video_grunge",
             "lyrics_video_stylish_kinetic",
             "lyrics_video_caution",
-            "lyrics_video_amor_impredecible",
             "lyrics_video_ceniza",
             "lyrics_video_lluvia_gris",
             "lyrics_video_memoria",
@@ -3119,6 +3115,19 @@
             "ambient_music",
             "animated_study"
           ]
+        },
+        "fase_de_pruebas": {
+          "display_name": "Fase de pruebas",
+          "status": "active",
+          "niches": [
+            "lyrics_video_suave",
+            "lyrics_video_triste",
+            "lyrics_video_latido",
+            "lyrics_video_amor_impredecible",
+            "lyrics_video_cristal",
+            "lyrics_video_mirada",
+            "lyrics_video_resaltado"
+          ]
         }
       },
       "strategy": {
@@ -3139,7 +3148,7 @@
         "rules": [
           "El título promete solo lo que el video cuenta: provocador sí, falso no.",
           "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
-          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Sin MAYÚSCULAS sostenidas. Sin emojis en ningún texto (títulos, descripciones, captions).",
           "Toda cifra o fecha del texto tiene que estar en el guion.",
           "Ver docs/investigaciones/estrategia-cro-titulos-descripciones-2026-09.md."
         ],
@@ -3181,7 +3190,7 @@
         "rules": [
           "El título promete solo lo que el video cuenta: provocador sí, falso no.",
           "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
-          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Sin MAYÚSCULAS sostenidas. Sin emojis en ningún texto (títulos, descripciones, captions).",
           "Toda cifra o fecha del texto tiene que estar en el guion.",
           "Neutralidad: no adjetivar a personas o partidos vivos; mostrar las posturas principales.",
           "Nada de política electoral en curso: solo hechos cerrados con fuentes."
@@ -3228,7 +3237,7 @@
         "rules": [
           "El título promete solo lo que el video cuenta: provocador sí, falso no.",
           "Lo importante en los primeros 40 caracteres (en el celular el título se corta).",
-          "Sin MAYÚSCULAS sostenidas ni emojis de relleno; máximo 1 emoji en TikTok.",
+          "Sin MAYÚSCULAS sostenidas. Sin emojis en ningún texto (títulos, descripciones, captions).",
           "Toda cifra o fecha del texto tiene que estar en el guion.",
           "Nunca dar consejos de inversión personalizados."
         ],

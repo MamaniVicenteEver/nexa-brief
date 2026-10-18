@@ -1,0 +1,97 @@
+{
+ "id": "instagram_commercial_v1",
+ "platform": "instagram",
+ "name": "Instagram · Promo (comercial)",
+ "description": "Corto y puntual: qué anuncia la promo y una pregunta por el evento, promo o equipo para este diseño.",
+ "fields": {
+  "hook_statement": {
+   "type": "text",
+   "max_chars": 60,
+   "instruction": "Una frase corta (máximo 9 palabras) sobre lo que anuncia el video. El video es una promo (comercial) editada con textos animados al ritmo de la música: habla del evento, equipo, marca o producto que muestra y de cómo se ve, nunca de una canción, de letras ni de sentimientos de una canción. Nunca digas 'plantilla' ni el nombre del diseño.",
+   "examples": {
+    "es": [
+     "Así se anuncia una final.",
+     "Una colección que entra pisando fuerte."
+    ],
+    "en": [
+     "This is how you announce a final.",
+     "A collection that steps in strong."
+    ]
+   },
+   "avoid": {
+    "es": [
+     "Esta plantilla es épica."
+    ],
+    "en": [
+     "This template is epic."
+    ]
+   }
+  },
+  "event_question": {
+   "type": "text",
+   "max_chars": 70,
+   "instruction": "Una pregunta corta: para qué evento, promo, marca o equipo editarían este diseño. Nunca preguntes por canciones.",
+   "examples": {
+    "es": [
+     "¿Qué evento editarías así?",
+     "¿Para qué equipo lo harías?"
+    ],
+    "en": [
+     "What event would you edit like this?",
+     "Which team would you make it for?"
+    ]
+   }
+  },
+  "hashtags": {
+   "type": "list",
+   "min_items": 3,
+   "max_items": 3,
+   "instruction": "Exactamente 3 hashtags sin '#': tipo de promo, edición y rubro. Nunca 'fyp', 'parati' ni 'viral'.",
+   "examples": {
+    "es": [
+     [
+      "PromoDeportiva",
+      "EdicionDeVideo",
+      "MotionGraphics"
+     ]
+    ],
+    "en": [
+     [
+      "PromoDeportiva",
+      "EdicionDeVideo",
+      "MotionGraphics"
+     ]
+    ]
+   }
+  }
+ },
+ "rotating": {},
+ "output": {
+  "title": {
+   "max_chars": 255,
+   "templates": {
+    "es": [
+     "{hook_statement}"
+    ],
+    "en": [
+     "{hook_statement}"
+    ]
+   }
+  },
+  "description": {
+   "max_chars": 2000,
+   "templates": {
+    "es": [
+     "{event_question} Cuéntanos en los comentarios."
+    ],
+    "en": [
+     "{event_question} Tell us in the comments."
+    ]
+   }
+  },
+  "tags": {
+   "from": "hashtags",
+   "style": "hashtag"
+  }
+ }
+}

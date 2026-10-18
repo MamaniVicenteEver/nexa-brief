@@ -129,6 +129,10 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
         if platform == "tiktok":
             video_path: Path | None = job.artifacts.tiktok_video_path
             video_type = "tiktok"
+        elif platform == "instagram" and job.artifacts.reels_video_path:
+            # Reels: el 9:16 completo si el nicho lo genera (igual que schedule/engine.py)
+            video_path = job.artifacts.reels_video_path
+            video_type = "reels"
         else:
             video_path = job.artifacts.youtube_video_path
             video_type = "youtube"

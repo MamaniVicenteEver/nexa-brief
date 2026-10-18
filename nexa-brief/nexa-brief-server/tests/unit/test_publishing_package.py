@@ -1,4 +1,4 @@
-"""Paquete de publicación v2: modelo, descripción, cifras, validación, intro y guardado."""
+"""Paquete de publicación v2: modelo, descripción, cifras, validación, apertura y guardado."""
 
 from __future__ import annotations
 
@@ -21,22 +21,18 @@ from src.core.explainer.publishing.description import (
     render_facebook,
     render_youtube,
 )
-from src.core.explainer.publishing.intro import IntroError, apply_intro
+from src.core.explainer.publishing import opening as opening_mod
+from src.core.explainer.publishing.opening import CHOSEN_TO_OPTION, OpeningError, apply_opening, design_of, opening_specs
 from src.core.explainer.publishing.numbers import digit_numbers, numbers_in, word_numbers
-from src.core.explainer.publishing.package import Intro, PublishPackage
-from src.core.explainer.publishing.store import compat_fields, load_package, save_package
+from src.core.explainer.publishing.package import PublishPackage
+from src.core.explainer.publishing.store import compat_fields, is_package, load_package, read_publish, save_package
 from src.core.explainer.publishing.strategies import active_strategies
 
 PACKAGE = {
     "schema_version": 2,
     "category": "node_tech",
-    "intro": {
-        "lines": ["QUEDABAN", "30 SEGUNDOS"],
-        "lines_portrait": ["QUEDABAN", "30", "SEGUNDOS"],
-        "kicker": "APOLO 11 · 20 JUL 1969",
-        "sub": "LA ALARMA QUE CASI ABORTA LA LLEGADA A LA LUNA",
-    },
     "thumbnail": {
+        "kicker": "APOLO 11 · 20 JUL 1969",
         "text_only": {"lines": ["LA COMPUTADORA", "DEL APOLO 11", "SE RINDIÓ"], "highlight": "SE RINDIÓ", "pair_title": "A"},
         "with_image": {"text": "ELLA LO PREVIÓ", "image": "hamilton.jpg", "composition": "…", "pair_title": "A"},
         "chosen": "text_only",
@@ -48,7 +44,7 @@ PACKAGE = {
             {"option": "C", "text": "Programó para el error, y eso salvó al Apolo 11", "strategy": 1, "emotion": "Asombro"},
         ],
         "facebook": {"title": "La alarma que casi aborta la llegada a la Luna", "first_line": "A 10 km de la Luna, la computadora mostró el error 1202."},
-        "tiktok": {"caption": "La alarma que casi aborta el Apolo 11 🚀 ¿La conocías?"},
+        "tiktok": {"caption": "La alarma que casi aborta el Apolo 11. ¿La conocías?"},
         "chosen": "A",
     },
     "description": {
@@ -69,7 +65,7 @@ PACKAGE = {
         "tiktok": ["#apolo11", "#nasa", "#sabiasque"],
         "facebook": ["#Apolo11", "#Tecnología"],
     },
-    "pinned_comment": "Gracias por llegar hasta el final.",
+    "pinned_comment": "Dato extra: la alarma 1202 avisaba de una sobrecarga, no de una falla. ¿Qué otro momento de la carrera espacial te gustaría que investiguemos? ¿O de qué otro tema te gustaría escuchar?",
 }
 
 SCRIPT_TEXT = (
@@ -84,8 +80,9 @@ def strategies():
 
 
 @pytest.fixture
-def video_dir(tmp_path: Path) -> Path:
+def video_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Video mínimo con la forma del explainer-kit: guion, transcripción, storyboard, medios y renders."""
+    monkeypatch.setattr(opening_mod, "TEMPLATES_DIR", tmp_path)   # rutas de fotos relativas a este árbol
     d = tmp_path / "apolo-1202"
     media = d / "assets" / "media"
     media.mkdir(parents=True)
@@ -98,8 +95,9 @@ def video_dir(tmp_path: Path) -> Path:
     (d / "assets" / "lyrics.json").write_text(json.dumps({
         "segments": [{"words": [{"word": "1202."}, {"word": "1969."}, {"word": "10"}]}],
     }), encoding="utf-8")
+    (d / "assets" / "config.json").write_text(json.dumps({"configs": [{"id": "apolo-1202", "design": "rough"}]}), encoding="utf-8")
     (d / "assets" / "storyboard.json").write_text(json.dumps({"beats": [
-        {"t": 0, "use": "rough.title", "params": {"text": "1202", "textPortrait": "12\n02", "kicker": "APOLO 11", "sub": "EL ERROR", "accent": True, "blink": 3}},
+        {"t": 0, "use": "rough.title", "params": {"text": "1202", "textPortrait": "12\n02", "kicker": "APOLO 11", "sub": "EL ERROR"}, "until": "otro beat"},
         {"t": 4, "use": "rough.label", "params": {"text": "otro beat"}},
     ]}), encoding="utf-8")
     (d / "render" / "preview").mkdir(parents=True)
@@ -140,6 +138,13 @@ def test_highlight_cannot_span_two_lines():
 def test_unknown_fields_are_rejected():
     with pytest.raises(ValidationError, match="titel"):
         _package(titles__youtube__0__titel="typo")
+
+
+def test_image_side_defaults_to_auto_and_only_accepts_known_sides():
+    assert _package().thumbnail.with_image.image_side == "auto"
+    assert _package(thumbnail__with_image__image_side="left").thumbnail.with_image.image_side == "left"
+    with pytest.raises(ValidationError, match="image_side"):
+        _package(thumbnail__with_image__image_side="arriba")
 
 
 def test_chosen_title_must_exist_and_options_be_unique():
@@ -278,7 +283,13 @@ def test_valid_package_has_no_errors(strategies, video_dir):
     ({"tags__youtube_hashtags": ["#Apolo11", "#NASA", "#Luna"]}, "tags.youtube"),
     ({"tags__facebook": ["#Apolo11", "Tecnología"]}, "tags.facebook"),
     ({"titles__youtube__2__text": "Programó para el error, y eso salvó 7 misiones"}, "titles.youtube.C"),
-    ({"intro__lines": ["QUEDABAN", "45 SEGUNDOS"]}, "intro"),
+    ({"thumbnail__kicker": "APOLO 11 · 45 JUL 1969"}, "thumbnail.kicker"),
+    ({"pinned_comment": "Gracias por llegar hasta el final. Dato extra: algo. ¿Te gustó? ¿Qué tema sigue?"}, "pinned_comment"),
+    ({"pinned_comment": "Dato extra: la alarma 1202 era una sobrecarga. ¿Qué otro momento te gustaría ver?"}, "pinned_comment"),
+    ({"pinned_comment": "Dato extra: " + "muy largo " * 50 + "¿Uno? ¿Dos?"}, "pinned_comment"),
+    ({"pinned_comment": "Dato extra: la alarma 7777 era una sobrecarga. ¿Qué otro momento? ¿Qué otro tema?"}, "pinned_comment"),
+    ({"titles__tiktok__caption": "La alarma que casi aborta el Apolo 11 🚀"}, "titles.tiktok"),
+    ({"description__question": "¿Tú habrías dicho «Go»? 🤔"}, "description"),
 ])
 def test_each_rule_is_enforced(strategies, video_dir, changes, field):
     issues = check_package(_package(**changes), strategies, video_dir, duration_seconds=233)
@@ -291,11 +302,10 @@ def test_uncredited_thumbnail_image_is_an_error(strategies, video_dir):
     assert any("crédito" in i.message for i in issues if i.field == "thumbnail.with_image")
 
 
-def test_missing_image_is_a_warning_unless_that_thumbnail_is_chosen(strategies, video_dir):
-    pending = _package(thumbnail__with_image__image=None)
-    assert "thumbnail.with_image" in _fields(check_package(pending, strategies, video_dir, 233), "warning")
-    chosen = _package(thumbnail__with_image__image=None, thumbnail__chosen="with_image")
-    assert "thumbnail.with_image" in _fields(check_package(chosen, strategies, video_dir, 233))
+def test_both_thumbnail_options_are_required(strategies, video_dir):
+    for chosen in ("text_only", "with_image"):
+        pending = _package(thumbnail__with_image__image=None, thumbnail__chosen=chosen)
+        assert "thumbnail.with_image" in _fields(check_package(pending, strategies, video_dir, 233))
 
 
 def test_repeated_emotions_are_a_warning(strategies, video_dir):
@@ -304,45 +314,56 @@ def test_repeated_emotions_are_a_warning(strategies, video_dir):
     assert "titles.youtube" in _fields(issues, "warning")
 
 
-# ── intro ─────────────────────────────────────────────────────────────────────
+# ── apertura = miniatura elegida ─────────────────────────────────────────────
 
-def test_intro_updates_opening_beat_and_script_and_removes_stale_renders(video_dir):
-    result = apply_intro(video_dir, _package().intro)
+def _opening_beat(video_dir: Path) -> dict:
+    return json.loads((video_dir / "assets" / "storyboard.json").read_text())["beats"][0]
+
+
+def test_opening_is_the_chosen_thumbnail_and_removes_stale_renders(video_dir):
+    result = apply_opening(video_dir, _package())
     assert result.changed
     assert sorted(result.removed_renders) == ["render/apolo-1202-16x9.mp4", "render/preview/apolo-1202-9x16-10s.mp4"]
     assert (video_dir / "render" / "poster.jpg").exists()  # la portada no es un render: la regenera el kit
-    beat = json.loads((video_dir / "assets" / "storyboard.json").read_text())["beats"][0]
-    assert beat["params"] == {
-        "text": "QUEDABAN\n30 SEGUNDOS", "textPortrait": "QUEDABAN\n30\nSEGUNDOS", "kicker": "APOLO 11 · 20 JUL 1969",
-        "sub": "LA ALARMA QUE CASI ABORTA LA LLEGADA A LA LUNA", "accent": True, "blink": 3,
-    }
+    beat = _opening_beat(video_dir)
+    assert beat["use"] == "rough.introv1" and beat["until"] == "otro beat"   # el momento en que termina no cambia
+    assert beat["params"] == {"text": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ", "textPortrait": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ",
+                              "highlight": "SE RINDIÓ", "kicker": "APOLO 11 · 20 JUL 1969"}
     script = json.loads((video_dir / "assets" / "script.json").read_text())
-    assert (script["title"], script["subtitle"]) == ("QUEDABAN 30 SEGUNDOS", "LA ALARMA QUE CASI ABORTA LA LLEGADA A LA LUNA")
+    assert (script["title"], script["kicker"], script["subtitle"]) == ("LA COMPUTADORA DEL APOLO 11 SE RINDIÓ", "APOLO 11 · 20 JUL 1969", "")
     assert script["segments"][0]["text"] == SCRIPT_TEXT
 
 
-def test_applying_the_same_intro_twice_changes_nothing(video_dir):
-    apply_intro(video_dir, _package().intro)
+def test_choosing_b_opens_with_the_photo(video_dir):
+    apply_opening(video_dir, _package(thumbnail__chosen="with_image", thumbnail__with_image__image_side="left"))
+    beat = _opening_beat(video_dir)
+    assert beat["use"] == "rough.introv2"
+    assert beat["params"]["src"] == "assets/media/hamilton.jpg"  # relativa al video, como las demás escenas
+    assert "imageSide" not in beat["params"]   # rough.introv2 no tiene ese param
+    assert beat["params"]["text"] == "ELLA LO PREVIÓ"
+
+
+def test_intro_params_follow_what_each_design_accepts():
+    catalog = opening_mod.kit_catalog()
+    binary = opening_mod.intro_params(catalog["binary.introv2"], "ELLA LO\nPREVIÓ", "K", image_src="/x.jpg", image_side="left")
+    assert binary["imageSide"] == "left" and binary["textPortrait"] == "ELLA LO\nPREVIÓ" and "bg" not in binary
+    # contrato common/hook.js: resaltado con ^…^ en el texto y la foto como fondo
+    hook_a = opening_mod.intro_params(catalog["acuarela.introv1"], "LA NOCHE QUE\nCAYÓ EL MURO", "K", highlight="MURO")
+    assert hook_a == {"text": "LA NOCHE QUE\nCAYÓ EL ^MURO^", "kicker": "K"}
+    hook_b = opening_mod.intro_params(catalog["acuarela.introv2"], "NADIE DIO LA ORDEN", "K", image_src="/x.jpg")
+    assert hook_b == {"text": "NADIE DIO LA ORDEN", "kicker": "K", "src": "/x.jpg", "bg": "image"}
+
+
+def test_applying_the_same_opening_twice_changes_nothing(video_dir):
+    apply_opening(video_dir, _package())
     (video_dir / "render" / "apolo-1202-16x9.mp4").write_bytes(b"render nuevo")
-    assert apply_intro(video_dir, _package().intro).changed is False
+    assert apply_opening(video_dir, _package()).changed is False
     assert (video_dir / "render" / "apolo-1202-16x9.mp4").exists()
 
 
-def test_intro_portrait_defaults_to_landscape_lines(video_dir):
-    apply_intro(video_dir, Intro(lines=["DOS", "RENGLONES"], kicker="K"))
-    beat = json.loads((video_dir / "assets" / "storyboard.json").read_text())["beats"][0]
-    assert beat["params"]["textPortrait"] == "DOS\nRENGLONES"
-
-
-def test_binary_title_has_no_subtitle(video_dir):
-    path = video_dir / "assets" / "storyboard.json"
-    storyboard = json.loads(path.read_text())
-    storyboard["beats"][0] = {"t": 0, "use": "binary.title", "params": {"text": "X"}}
-    path.write_text(json.dumps(storyboard))
-    with pytest.raises(IntroError, match="no dibuja subtítulo"):
-        apply_intro(video_dir, _package().intro)
-    apply_intro(video_dir, Intro(lines=["2 MESES PARA", "CREAR LA IA"], kicker="DARTMOUTH · 1956"))
-    assert "sub" not in json.loads(path.read_text())["beats"][0]["params"]
+def test_b_without_its_photo_cannot_open_the_video(video_dir):
+    with pytest.raises(OpeningError, match="no está disponible"):
+        apply_opening(video_dir, _package(thumbnail__chosen="with_image", thumbnail__with_image__image=None))
 
 
 def test_unknown_opening_component_is_refused(video_dir):
@@ -350,8 +371,8 @@ def test_unknown_opening_component_is_refused(video_dir):
     storyboard = json.loads(path.read_text())
     storyboard["beats"][0]["use"] = "rough.label"
     path.write_text(json.dumps(storyboard))
-    with pytest.raises(IntroError, match="cartel de apertura"):
-        apply_intro(video_dir, _package().intro)
+    with pytest.raises(OpeningError, match="cartel de apertura"):
+        apply_opening(video_dir, _package())
 
 
 # ── guardado ──────────────────────────────────────────────────────────────────
@@ -401,16 +422,16 @@ def _write_v2(video_dir: Path, **changes) -> None:
     (video_dir / "publish.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
 
 
-def test_build_derives_publish_json_applies_intro_and_syncs_the_kit(video_dir, kit_calls):
+def test_build_derives_publish_json_opens_with_the_thumbnail_and_syncs_the_kit(video_dir, kit_calls):
     _write_v2(video_dir)
     result = service.build(_video(video_dir))
-    assert result.intro.changed and result.review.errors == []
+    assert result.opening.changed and result.review.errors == []
     assert json.loads((video_dir / "publish.json").read_text())["youtube_title"] == PACKAGE["titles"]["youtube"][0]["text"]
     assert kit_calls == [("manifest", "apolo-1202"), ("poster", "apolo-1202")]
 
     kit_calls.clear()
-    assert service.build(_video(video_dir)).intro.changed is False
-    assert kit_calls == [("manifest", "apolo-1202")]  # misma intro y portada existente: no se regenera
+    assert service.build(_video(video_dir)).opening.changed is False
+    assert kit_calls == [("manifest", "apolo-1202")]  # misma apertura y portada existente: no se regenera
 
 
 def test_build_refuses_a_v1_publish_json(video_dir, kit_calls):
@@ -468,7 +489,8 @@ def test_cli_build_prints_the_removed_renders(video_dir, monkeypatch, kit_calls,
 
 # ── videos reales de NodeTech ─────────────────────────────────────────────────
 
-NODETECH = sorted(p.parent for p in (TEMPLATES_DIR / "nodetech").glob("*/publish.json"))
+# los videos nuevos llegan con textos v1 (brief); solo los que ya tienen paquete v2 se comparan
+NODETECH = sorted(p.parent for p in (TEMPLATES_DIR / "nodetech").glob("*/publish.json") if is_package(read_publish(p.parent)))
 
 
 @pytest.mark.parametrize("video_dir", NODETECH, ids=lambda p: p.name)
@@ -480,7 +502,8 @@ def test_nodetech_packages_are_consistent(strategies, video_dir: Path):
     for key, value in compat_fields(video_dir.name, package, strategies).items():
         assert on_disk[key] == value, key
     beat = json.loads((video_dir / "assets" / "storyboard.json").read_text())["beats"][0]
-    assert beat["params"]["text"] == "\n".join(package.intro.lines)
+    spec = opening_specs(package, video_dir, design_of(video_dir))[CHOSEN_TO_OPTION[package.thumbnail.chosen]]
+    assert (beat["use"], beat["params"]) == (spec["component"], spec["params"])   # abre con la miniatura elegida
     manifest = json.loads((video_dir / "manifest.json").read_text())
     issues = check_package(package, strategies, video_dir, manifest.get("duration_seconds"))
     allowed = {"sources"} if video_dir.name == "apolo-1202" else set()  # fuentes pendientes (documentado)
@@ -511,7 +534,8 @@ def test_api_lists_the_package_and_its_issues_only_for_v2_videos():
     assert apolo["hook_strategy_names"]["4"] == "Casi no pasa"
     assert apolo["title_max_chars"] == 60
     history = client.get("/api/v1/explainer/videos?category=node_history").json()
-    assert history and all(v["publish_package"] is None for v in history)
+    # NodeHistory también publica con el paquete v2 (perfil categories/node_history.json)
+    assert history and all(v["publish_package"] and v["publish_package"]["package"] for v in history)
 
 
 def test_api_reports_a_broken_package_without_failing_the_list(monkeypatch):

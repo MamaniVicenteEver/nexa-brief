@@ -10,7 +10,7 @@ from __future__ import annotations
 import uuid
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -198,6 +198,13 @@ class JobInput(BaseModel):
             "contra remotion_adapter.supports_niche() en el router antes de aceptar el job."
         ),
     )
+    formats: list[Literal["16x9", "9x16"]] | None = Field(
+        default=None,
+        description=(
+            "Formatos a grabar ('16x9', '9x16'). None = todos los de video.formats del nicho. "
+            "El pipeline filtra video.formats con esta lista al cargar el nicho."
+        ),
+    )
 
 
 # ── Stage Artifacts (validated with Pydantic) ─────────────────────────────────
@@ -236,6 +243,7 @@ class PlatformCopyText(BaseModel):
     description: str
     tags: list[str] = Field(default_factory=list)
     strategy: str = ""              # id de la estrategia usada, ej. "yt_theme_question_v1"
+    pinned_comment: str = ""        # YouTube: comentario que se publica y se fija
 
 
 class VideoSummary(BaseModel):
@@ -248,6 +256,8 @@ class VideoSummary(BaseModel):
     language: str | None = None     # "es" | "en" — idioma en que se escribió el copy
     # Fuente de verdad para publicar: un texto por plataforma, cada uno con su estrategia.
     platform_copies: dict[str, PlatformCopyText] = Field(default_factory=dict)
+    # El comentario fijado de YouTube (lo publica core/schedule/engine.publish_entry).
+    pinned_comment: str = ""
 
 
 # ── Stage 9 — Publish Result ─────────────────────────────────────────────────

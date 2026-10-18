@@ -40,6 +40,7 @@ DOCUMENTS: dict[str, str] = {
     "template_config_files": "library/template_config_files",
     "progress": "progress",
     "draft_jobs": "studio/draft_jobs",          # Job serializado de cada draft (para retomarlo)
+    "template_originals": "studio/template_originals",  # medios del «Video original» de cada plantilla
     "stock_search_cache": "library/cache/stock_search",
 }
 

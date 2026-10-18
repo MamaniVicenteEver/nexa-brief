@@ -78,6 +78,12 @@ def test_strip_emojis_keeps_spanish_punctuation():
     assert strip_emojis("Canción – Artista") == "Canción – Artista"
 
 
+def test_strip_emojis_turns_a_sentence_break_into_a_period():
+    assert strip_emojis("Casi aborta el Apolo 11 🚀 Y la mujer lo previó.") == "Casi aborta el Apolo 11. Y la mujer lo previó."
+    assert strip_emojis("Ariane 5 🚀 ¿Sabías esto?") == "Ariane 5. ¿Sabías esto?"
+    assert strip_emojis("una idea 🔥 brillante") == "una idea brillante"
+
+
 # ── platform copy ───────────────────────────────────────────────────────────
 
 def test_copy_for_platform_from_model_and_dict():

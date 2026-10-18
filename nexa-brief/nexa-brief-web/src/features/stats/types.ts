@@ -25,6 +25,7 @@ export interface PublicationStats {
 }
 
 export interface PublicChannel {
+  id: string;
   platform: ChannelPlatform;
   name: string;
   avatar: string | null;

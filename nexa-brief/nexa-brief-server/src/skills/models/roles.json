@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "doc": "Qué modelo hace cada trabajo. Lo leen el backend (src/adapters/models/hub.py) y el kit (tools/delegate.py). Cambiar un proveedor acá cambia a quién se le pide, sin tocar código. Guía: src/templates/_tools/explainer-kit/guides/orquestacion.md",
+  "providers": {
+    "codex": {
+      "kind": "agent_cli",
+      "billing": "suscripción",
+      "model_setting": "AGENT_CODEX_MODEL",
+      "notes": "Codex CLI con la sesión de ChatGPT de la máquina, NUNCA con clave de API: el runner borra OPENAI_API_KEY/CODEX_API_KEY y fuerza forced_login_method=chatgpt. Informa tokens con --json."
+    },
+    "claude": {
+      "kind": "agent_cli",
+      "billing": "suscripción",
+      "notes": "Claude Code (claude -p) con la sesión de la máquina. Informa tokens en el evento result."
+    },
+    "deepseek": {
+      "kind": "api",
+      "billing": "api",
+      "models": { "flash": "deepseek-v4-flash", "pro": "deepseek-v4-pro" },
+      "key": "DEEPSEEK_API_KEY"
+    },
+    "gemini": { "kind": "api", "billing": "api", "key": "GEMINI_API_KEY" },
+    "gemini_tts": {
+      "kind": "api",
+      "billing": "api",
+      "notes": "kit.py voice: cadena de modelos del diseño y rotación de claves GEMINI_API_KEY*."
+    },
+    "whisper": { "kind": "local", "billing": "local", "model": "large-v3" }
+  },
+  "roles": {
+    "producer": {
+      "provider": "codex",
+      "does": "Orquesta el video: sigue explainer-kit/AGENTS.md pasos 2 a 9, decide qué delegar y revisa todo lo delegado."
+    },
+    "research": { "provider": "codex", "does": "Investiga en la web con fuentes y fecha (PLAN §1–3)." },
+    "script": { "provider": "codex", "does": "Escribe el guion para voz (assets/script.json)." },
+    "storyboard": { "provider": "codex", "does": "Dirige: qué se dibuja en cada frase (assets/storyboard.json)." },
+    "visual_review": { "provider": "codex", "does": "Mira las hojas PNG (kit.py sheet / components) y corrige." },
+    "component_draft": {
+      "provider": "deepseek",
+      "model": "flash",
+      "prompt": "prompts/component-author.md",
+      "output": "js",
+      "does": "Primer borrador de un componente propio del tema. El productor lo valida con kit.py components y lo mira."
+    },
+    "copy_draft": {
+      "provider": "deepseek",
+      "model": "flash",
+      "prompt": "prompts/delegate-copy.md",
+      "output": "json",
+      "does": "Borradores de títulos, miniaturas y comentario fijado según las estrategias activas; el productor elige y ajusta."
+    },
+    "fact_check": {
+      "provider": "deepseek",
+      "model": "flash",
+      "prompt": "prompts/delegate-fact-check.md",
+      "output": "md",
+      "does": "Segunda lectura del guion contra PLAN §3: marca cifras sin fuente, fechas dudosas y jerga sin explicar."
+    },
+    "voice": { "provider": "gemini_tts", "does": "Narración (kit.py voice)." },
+    "transcribe": { "provider": "whisper", "does": "Tiempos por palabra y control de la voz (kit.py transcribe)." },
+    "planner": { "provider": "deepseek", "does": "Plan semanal de temas por categoría (backend, PLANNER_PROVIDER)." },
+    "copy": { "provider": "deepseek", "does": "Textos de publicación de NodeMotion (backend, COPY_AI_PROVIDER)." }
+  }
+}

@@ -73,7 +73,7 @@ cada frase**, usando únicamente los componentes del catálogo.
 - [ ] El primer beat es el título en `t: 0`.
 - [ ] Todas las anclas existen en la transcripción, en orden.
 - [ ] Ningún hueco > 8 s sin beat nuevo; ningún plano < 1,5 s.
-- [ ] 4–6 `common.lyric`, cada una en una frase de intensidad alta o en el cierre.
+- [ ] `common.lyric` en la cantidad de la duración del video (`check` avisa), cada una en una frase de intensidad alta o en el cierre.
 - [ ] Cada imagen usada existe en la lista de medios.
 - [ ] Todos los `use` y `params` existen en CATALOG.md (nombres exactos, tipos correctos).
 

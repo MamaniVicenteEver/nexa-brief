@@ -15,6 +15,7 @@ strategies/<pieza>/<id>.json
   description/  los 9 bloques, sus títulos y las reglas de capítulos de YouTube
   gratitude/    las variantes de agradecimiento que rotan
   tags/         cantidades de tags y hashtags por plataforma
+  pinned/       comentario fijado: dato extra + 2 preguntas (tema y próximo video), tono natural
 ```
 
 Los fundamentos están en `docs/investigaciones/`: `titulos-gancho-categorias-node-2026-10.md`,
@@ -46,6 +47,20 @@ existente, palabras y renglones de las miniaturas, que no repitan palabras de su
 crédito, largos de Facebook y TikTok, hashtags prohibidos y obligatorios, reglas de capítulos de YouTube, largo de
 la descripción armada, variante de agradecimiento, tags y que **cada cifra escrita con dígitos** en títulos,
 miniaturas e intro esté en el guion o en la transcripción.
+
+### La intro de la miniatura con imagen
+
+`thumbnail.with_image` se dibuja con `<diseño>.introv2`: el texto en una mitad y la foto en la otra.
+`thumbnail.with_image.image_side` elige el lado de la foto en 16:9:
+
+| valor | efecto |
+|---|---|
+| `"auto"` (por defecto) | alterna entre videos según el texto: dos videos seguidos no tienen la misma intro |
+| `"left"` / `"right"` | lo fija; útil para que el rostro mire hacia el texto |
+
+En 9:16 la foto va siempre arriba (abajo la interfaz de TikTok/Reels la taparía). El encuadre de la foto
+(`zoom`, `focusX`, `focusY`), el contraste y el brillo del texto son parámetros del componente: están
+documentados en `src/templates/_tools/explainer-kit/CATALOG.md` (`binary.introv2`).
 
 Son **guía** para quien escribe (persona o IA) y no se validan automáticamente: `template` de cada estrategia de
 gancho, `wow_filter` (títulos), `image_criteria` (miniatura con imagen) y `emotion`/`anchors`/`avoid` del perfil de

@@ -9,9 +9,10 @@ export function usePublishNowMutation() {
 
   return useMutation({
     mutationFn: (input: PublishNowInput) => publishNow(input),
-    onSuccess: () => {
+    onSuccess: (_data, input) => {
       queryClient.invalidateQueries({ queryKey: QUEUE_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: JOBS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["job-publications", input.jobId] });
     },
   });
 }

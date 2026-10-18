@@ -12,6 +12,10 @@ de la plantilla, justo antes de que html_generator lo escriba en el output.
   ciclo (mezclar el material del usuario con el de demo se vería roto).
   Los archivos se COPIAN de la librería al output del job (el HTML los carga
   con rutas relativas y el grabador no debe depender de data/).
+- Medios con `target: "config"` (fondo opcional, ej. Neón): el primer asset se
+  copia a assets/inputs y su ruta va a `path` del config (ej. "bg.src"); el
+  `type` hermano, si existe, pasa a "image"/"video". Sin asset, queda el fondo
+  que trae la plantilla.
 - Medios con `target: "source"` (fondos de letras, imagen/video principal) no
   se tocan acá: siguen entrando por image/video source del job.
 
@@ -143,6 +147,23 @@ async def _apply_media_slot(
     return len(targets)
 
 
+def _apply_config_slot(config: dict[str, Any], slot: dict, asset_ids: list[str], output_dir: Path) -> bool:
+    if not asset_ids or not slot.get("path"):
+        return False
+    real_kind, source = _resolve_asset(slot["kind"], asset_ids[0])
+    relative = f"{INPUTS_DIR}/{slot['slot']}{source.suffix.lower()}"
+    (output_dir / INPUTS_DIR).mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, output_dir / relative)
+    _set_dotted(config, slot["path"], relative)
+    parent_path, _, _ = slot["path"].rpartition(".")
+    parent = config
+    for part in parent_path.split(".") if parent_path else []:
+        parent = parent.get(part) if isinstance(parent, dict) else None
+    if isinstance(parent, dict) and "type" in parent:
+        parent["type"] = real_kind
+    return True
+
+
 async def apply_template_inputs(
     config: dict[str, Any],
     inputs: TemplateInputs | None,
@@ -165,6 +186,9 @@ async def apply_template_inputs(
         slot = slots.get(slot_name)
         if slot is None:
             logger.warning("template_inputs_unknown_slot", template_id=template_id, slot=slot_name)
+            continue
+        if slot["target"] == "config":
+            replaced[slot_name] = int(_apply_config_slot(result, slot, list(asset_ids), output_dir))
             continue
         if slot["target"] != "media":
             continue  # entra por image/video source del job

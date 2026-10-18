@@ -39,6 +39,7 @@ class RenderedCopy:
     title: str
     description: str
     tags: list[str]
+    pinned_comment: str = ""
 
 
 def _text(value: Any) -> str | None:
@@ -126,4 +127,9 @@ def render_copy(
         )
 
     tags = clean_tags(tag_items) if out.tags.style == "keyword" else clean_hashtags(tag_items, max_count=30)
-    return RenderedCopy(strategy_id=strategy.id, title=title, description=description, tags=tags)
+    pinned = ""
+    if out.pinned_comment is not None:
+        pinned = _render_first_fitting(
+            out.pinned_comment.templates[language], values, out.pinned_comment.max_chars, "pinned_comment", multiline=True
+        )
+    return RenderedCopy(strategy_id=strategy.id, title=title, description=description, tags=tags, pinned_comment=pinned)

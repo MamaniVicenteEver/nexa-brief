@@ -61,7 +61,9 @@ export interface RequirementMediaSlot {
   min: number;
   max: number;
   orientation: "landscape" | "portrait" | "square" | null;
-  target: "source" | "media";
+  /** "config": fondo opcional que va a la ruta `path` del config (si no se sube, queda el de la plantilla). */
+  target: "source" | "media" | "config";
+  path?: string | null;
   label: string;
   hint: string;
 }

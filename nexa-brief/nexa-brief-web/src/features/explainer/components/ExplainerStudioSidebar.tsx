@@ -2,8 +2,15 @@
 
 import { Clapperboard, ExternalLink, Loader2, Type } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { AccountFormatChoice } from "@/shared/components/publish/AccountFormatChoice";
+import { BrandAccountPicker } from "@/shared/components/publish/BrandAccountPicker";
+import {
+  allowedFormatsFor,
+  formatFor,
+  groupAccountsByBrand,
+} from "@/shared/components/publish/brand-groups";
 import { usePublishAccounts, useRecordExplainerVideo } from "../hooks/useExplainer";
 import {
   ACTIVE_JOB_STATES,
@@ -11,9 +18,11 @@ import {
   type ExplainerVideo,
   type RecordDuration,
   type RecordFormat,
+  type ThumbnailPreview,
 } from "../types";
 import { PublishPackagePanel } from "./PublishPackagePanel";
 import { PublishTextsControl } from "./PublishTextsControl";
+import { ThumbnailPicker } from "./ThumbnailPicker";
 
 type Tab = "texts" | "record";
 const TABS: { id: Tab; Icon: typeof Type }[] = [
@@ -23,8 +32,8 @@ const TABS: { id: Tab; Icon: typeof Type }[] = [
 
 const FIELD = "w-full rounded-xl border border-nb-line bg-transparent px-3 py-2 text-[13px]";
 
-// 16:9 (desktop) va marcado por defecto; 9:16 (móvil) solo si se marca: cada formato
-// es una grabación entera, así que grabar los dos tarda el doble.
+// La grabación normal inicia en 16:9; en publicación, cada cuenta elige UNO de los formatos
+// marcados en «Grabar».
 const RECORD_FORMATS: RecordFormat[] = ["16x9", "9x16"];
 
 function CopyBlock({
@@ -62,12 +71,28 @@ function CopyBlock({
   );
 }
 
-function TextsTab({ video }: { video: ExplainerVideo }) {
+function TextsTab({
+  video,
+  thumbnailPreview,
+  onThumbnailPreview,
+}: {
+  video: ExplainerVideo;
+  thumbnailPreview: ThumbnailPreview | null;
+  onThumbnailPreview: (preview: ThumbnailPreview) => void;
+}) {
   const t = useTranslations("explainer.studio");
   return (
     <div className="flex flex-col gap-2.5">
       {!video.publishReady && <PublishTextsControl videoId={video.videoId} />}
-      {video.publishPackage && <PublishPackagePanel review={video.publishPackage} />}
+      {video.publishPackage && (
+        <PublishPackagePanel
+          review={video.publishPackage}
+          videoId={video.videoId}
+          thumbnails={video.thumbnails}
+          preview={thumbnailPreview}
+          onPreview={onThumbnailPreview}
+        />
+      )}
       <CopyBlock
         label="YouTube"
         title={video.youtubeTitle}
@@ -104,17 +129,25 @@ function JobStatus({ job }: { job: ExplainerJob }) {
       {job.publishResults.map((r) =>
         r.url ? (
           <a
-            key={r.accountSelector}
+            key={r.accountSelector + ":" + (r.format ?? "default")}
             href={r.url}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1 text-nb-ink underline underline-offset-2"
           >
-            {r.accountSelector} <ExternalLink className="size-3" />
+            {r.accountSelector}
+            {r.format
+              ? " · " + t(r.format === "16x9" ? "prep.format.16x9" : "prep.format.9x16")
+              : ""}{" "}
+            <ExternalLink className="size-3" />
           </a>
         ) : (
-          <span key={r.accountSelector} className="text-red-700">
-            {r.accountSelector}: {r.error}
+          <span key={r.accountSelector + ":" + (r.format ?? "default")} className="text-red-700">
+            {r.accountSelector}
+            {r.format
+              ? " · " + t(r.format === "16x9" ? "prep.format.16x9" : "prep.format.9x16")
+              : ""}
+            : {r.error}
           </span>
         ),
       )}
@@ -128,27 +161,83 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
   const tp = useTranslations("templates");
   const { mutate, isPending, error } = useRecordExplainerVideo();
   const { data: accounts = [], isLoading: accountsLoading } = usePublishAccounts();
-  const [duration, setDuration] = useState<RecordDuration>("10");
+  const [duration, setDuration] = useState<RecordDuration>("full");
   const [channels, setChannels] = useState<string[]>([]);
+  // Un solo formato por cuenta (elegir 9:16 desmarca 16:9 y al revés).
+  const [accountFormats, setAccountFormats] = useState<Record<string, RecordFormat>>({});
   const [formats, setFormats] = useState<RecordFormat[]>(["16x9"]);
   // Publicar es para el público: por defecto, público (se puede cambiar).
   const [privacy, setPrivacy] = useState<ExplainerJob["privacy"]>("public");
+  const [restored, setRestored] = useState(false);
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(
+        sessionStorage.getItem(`explainer-record-options:${video.videoId}`) || "null",
+      );
+      if (saved) {
+        if (["10", "20", "full"].includes(saved.duration)) setDuration(saved.duration);
+        if (Array.isArray(saved.channels)) setChannels(saved.channels);
+        if (saved.accountFormats && typeof saved.accountFormats === "object") {
+          // Las versiones anteriores guardaban una lista por cuenta: se queda la primera.
+          const restoredFormats: Record<string, RecordFormat> = {};
+          for (const [selector, value] of Object.entries(saved.accountFormats)) {
+            const format = Array.isArray(value) ? value[0] : value;
+            if (RECORD_FORMATS.includes(format as RecordFormat)) {
+              restoredFormats[selector] = format as RecordFormat;
+            }
+          }
+          setAccountFormats(restoredFormats);
+        }
+        if (Array.isArray(saved.formats) && saved.formats.length) setFormats(saved.formats);
+        if (["public", "unlisted", "private"].includes(saved.privacy)) setPrivacy(saved.privacy);
+      }
+    } catch {
+      /* Ignore invalid browser storage. */
+    }
+    setRestored(true);
+  }, [video.videoId]);
+  useEffect(() => {
+    if (!restored) return;
+    sessionStorage.setItem(
+      `explainer-record-options:${video.videoId}`,
+      JSON.stringify({
+        duration,
+        channels,
+        accountFormats,
+        formats,
+        privacy,
+      }),
+    );
+  }, [restored, video.videoId, duration, channels, accountFormats, formats, privacy]);
 
   const job = video.lastJob;
   const busy = isPending || (job !== null && ACTIVE_JOB_STATES.includes(job.state));
-  const toggle = (selector: string) =>
-    setChannels((prev) =>
-      prev.includes(selector) ? prev.filter((s) => s !== selector) : [...prev, selector],
-    );
   const toggleFormat = (format: RecordFormat) =>
     setFormats((prev) =>
       prev.includes(format) ? prev.filter((f) => f !== format) : [...prev, format],
     );
-  const canPublish = video.ready && video.publishReady && channels.length > 0 && !busy;
+  const selectedFormatFor = (selector: string): RecordFormat | null => {
+    const account = accounts.find((a) => a.selector === selector);
+    return account ? formatFor(account, formats, accountFormats) : null;
+  };
+  const groups = useMemo(() => groupAccountsByBrand(accounts, t("otherChannels")), [accounts, t]);
+  const formatLabels = { "16x9": tp("prep.format.16x9"), "9x16": tp("prep.format.9x16") };
+  const canPublish =
+    video.ready &&
+    video.publishReady &&
+    channels.length > 0 &&
+    channels.every((selector) => selectedFormatFor(selector) !== null) &&
+    !busy;
+  // Sin canales marcados el botón graba el video completo sin publicar: queda listo en
+  // Biblioteca para publicarlo otro día (con los formatos marcados arriba en «Grabar»).
+  const recordOnly = channels.length === 0;
+  const canRecordOnly = video.ready && !busy && formats.length > 0;
 
   return (
     <div className="flex flex-col gap-4">
       {job && <JobStatus job={job} />}
+
+      <ThumbnailPicker video={video} />
 
       <section className="flex flex-col gap-2">
         <h3 className="text-[13px] font-bold text-nb-ink">{t("recordHeading")}</h3>
@@ -205,25 +294,25 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
         {!accountsLoading && accounts.length === 0 && (
           <p className="text-[12px] text-nb-mute">{t("noChannels")}</p>
         )}
-        <div className="flex flex-col gap-1.5">
-          {accounts.map((a) => (
-            <label
-              key={a.selector}
-              className={cn(
-                "flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-[13px]",
-                channels.includes(a.selector) ? "border-nb-ink bg-nb-bg-2" : "border-nb-line",
-              )}
-            >
-              <input
-                type="checkbox"
-                checked={channels.includes(a.selector)}
-                onChange={() => toggle(a.selector)}
-                className="size-4 accent-black"
-              />
-              {a.label}
-            </label>
-          ))}
-        </div>
+        <BrandAccountPicker
+          groups={groups}
+          selected={channels}
+          onChange={setChannels}
+          renderSelected={(account) => (
+            <AccountFormatChoice
+              name={`format-${account.selector}`}
+              title={t("channelFormats")}
+              allowed={allowedFormatsFor(account.platform, formats)}
+              value={formatFor(account, formats, accountFormats)}
+              labels={formatLabels}
+              emptyLabel={t("noFormatForAccount")}
+              onChange={(format) =>
+                setAccountFormats((prev) => ({ ...prev, [account.selector]: format }))
+              }
+            />
+          )}
+        />
+        <p className="text-[11px] text-nb-mute">{t("perFormatHint")}</p>
         <label className="flex flex-col gap-1">
           <span className="text-[11px] font-bold tracking-[0.06em] text-nb-mute uppercase">
             {tp("prep.privacy")}
@@ -243,21 +332,42 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
         )}
         <button
           type="button"
-          disabled={!canPublish}
+          disabled={recordOnly ? !canRecordOnly : !canPublish}
           onClick={() =>
-            mutate({
-              videoId: video.videoId,
-              duration: "full",
-              publish: true,
-              privacy,
-              accountSelectors: channels,
-              formats,
-            })
+            recordOnly
+              ? mutate({
+                  videoId: video.videoId,
+                  duration: "full",
+                  publish: false,
+                  privacy,
+                  formats,
+                })
+              : mutate({
+                  videoId: video.videoId,
+                  duration: "full",
+                  publish: true,
+                  privacy,
+                  accountSelectors: channels,
+                  accountFormats: Object.fromEntries(
+                    channels.map((selector) => [
+                      selector,
+                      [selectedFormatFor(selector)].filter((f): f is RecordFormat => f !== null),
+                    ]),
+                  ),
+                  formats: RECORD_FORMATS.filter((format) =>
+                    channels.some((selector) => selectedFormatFor(selector) === format),
+                  ),
+                })
           }
           className="nb-btn-pill px-4 py-2.5 text-[13px] font-semibold disabled:opacity-50"
         >
-          {t("publishButton", { count: channels.length })}
+          {recordOnly
+            ? t("recordWithoutPublishing")
+            : t("publishButton", { count: channels.length })}
         </button>
+        {recordOnly && (
+          <p className="text-[11px] text-nb-mute">{t("recordWithoutPublishingHint")}</p>
+        )}
       </section>
 
       {error && <p className="text-[12px] text-red-600">{error.message}</p>}
@@ -266,7 +376,15 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
 }
 
 /** Panel lateral del Estudio de un video explicativo (mismo modal que NodeMotion). */
-export function ExplainerStudioSidebar({ video }: { video: ExplainerVideo }) {
+export function ExplainerStudioSidebar({
+  video,
+  thumbnailPreview,
+  onThumbnailPreview,
+}: {
+  video: ExplainerVideo;
+  thumbnailPreview: ThumbnailPreview | null;
+  onThumbnailPreview: (preview: ThumbnailPreview) => void;
+}) {
   const t = useTranslations("explainer.studio");
   const [tab, setTab] = useState<Tab>("texts");
   return (
@@ -290,7 +408,15 @@ export function ExplainerStudioSidebar({ video }: { video: ExplainerVideo }) {
         ))}
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        {tab === "texts" ? <TextsTab video={video} /> : <RecordTab video={video} />}
+        {tab === "texts" ? (
+          <TextsTab
+            video={video}
+            thumbnailPreview={thumbnailPreview}
+            onThumbnailPreview={onThumbnailPreview}
+          />
+        ) : (
+          <RecordTab key={video.videoId} video={video} />
+        )}
       </div>
     </div>
   );

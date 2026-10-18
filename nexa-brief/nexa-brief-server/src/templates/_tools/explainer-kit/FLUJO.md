@@ -38,6 +38,11 @@
 | Fotos | **Wikimedia Commons** (historia) y **Pexels** (genéricas) | `tools/media.py` |
 | Dibujo y render | **motor propio + Chromium** (Playwright) | `engine/`, `designs/`, `kit.py render` |
 | Componentes nuevos (opcional) | el agente principal, o **DeepSeek Flash** con reparación automática (borradores que después revisa alguien con ojos) | `tools/ai_loop.py` |
+| Borradores delegados (componentes, segunda lectura del guion, opciones de títulos) | **DeepSeek** (`kit.py delegate`, roles en `src/skills/models/roles.json`) | `guides/orquestacion.md §3` |
+| Registro de tokens e iteraciones | automático: backend + kit | `<video>/work/usage.jsonl` → `kit.py usage` → `usage.json` |
+
+Quién hace cada rol está en datos (`src/skills/models/roles.json`): hoy el productor es **Codex**
+con la sesión local de ChatGPT (nunca por API). Guía completa: `guides/orquestacion.md`.
 
 ## 3. Cómo pedirle un video a cualquier IA
 

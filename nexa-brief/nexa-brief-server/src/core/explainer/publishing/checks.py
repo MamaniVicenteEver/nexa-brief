@@ -4,7 +4,7 @@ Los límites salen de los archivos de estrategia (nada está fijo en el código)
 Además de largos y conteos, revisa lo que cuesta ver a ojo: que la miniatura no
 repita su título de pareja, que los capítulos cumplan las reglas de YouTube, que
 la imagen de la miniatura exista y tenga crédito y que cada cifra de títulos,
-miniaturas e intro esté en el guion o en la transcripción.
+miniaturas y antetítulo esté en el guion o en la transcripción.
 
 Las cifras se verifican solo cuando están escritas con dígitos («37», «6.000
 millones»): una cifra escrita con palabras en el título no se controla.
@@ -28,7 +28,7 @@ from src.core.explainer.publishing.description import (
 from src.core.explainer.publishing.numbers import digit_numbers, numbers_in
 from src.core.explainer.publishing.package import PublishPackage, words_of
 from src.core.explainer.publishing.strategies import ActiveStrategies
-from src.core.metadata.sanitize import youtube_tags_length
+from src.core.metadata.sanitize import has_emoji, youtube_tags_length
 
 Level = Literal["error", "warning"]
 
@@ -125,8 +125,8 @@ def check_package(
     if not _in_range(n_words, thumb_rules.with_image.words):
         error("thumbnail.with_image", f"{n_words} palabras (deben ser {_range_text(thumb_rules.with_image.words)})")
     if with_image.image is None:
-        severity = error if package.thumbnail.chosen == "with_image" else warning
-        severity("thumbnail.with_image", "falta conseguir la imagen: hasta entonces se usa la opción solo texto")
+        # las dos opciones tienen que existir: la persona elige con cuál abre el video
+        error("thumbnail.with_image", "falta la foto de la miniatura B (texto + imagen): las dos opciones son obligatorias")
     else:
         if not (video_dir / "assets" / "media" / with_image.image).is_file():
             error("thumbnail.with_image", f"la imagen {with_image.image} no está en assets/media/")
@@ -151,9 +151,6 @@ def check_package(
     caption = titles.tiktok.caption
     if len(caption) > platform_rules.tiktok_caption_max_chars:
         error("titles.tiktok", f"caption de {len(caption)} caracteres (máximo {platform_rules.tiktok_caption_max_chars})")
-    n_words = len(words_of(package.intro.text))
-    if not _in_range(n_words, platform_rules.screen_text_words):
-        error("intro", f"texto de 0–3 s de {n_words} palabras (deben ser {_range_text(platform_rules.screen_text_words)})")
     forbidden = {h.lower() for h in platform_rules.forbidden_hashtags}
     for field, tags in (("tags.tiktok", package.tags.tiktok), ("tags.facebook", package.tags.facebook)):
         for tag in tags:
@@ -215,6 +212,35 @@ def check_package(
         if missing:
             error(f"tags.{platform}", f"faltan los hashtags fijos de {strategies.category.channel}: {missing}")
 
+    # ── comentario fijado: dato extra + preguntas, natural ────────────────────
+    pinned_rules, pinned = strategies.pinned, package.pinned_comment.strip()
+    if len(pinned) > pinned_rules.max_chars:
+        error("pinned_comment", f"{len(pinned)} caracteres (máximo {pinned_rules.max_chars}): más corto, como un comentario")
+    if not pinned.startswith(pinned_rules.opener):
+        error("pinned_comment", f"tiene que empezar con «{pinned_rules.opener}» y el dato")
+    for opener in pinned_rules.forbidden_openers:
+        if opener.lower() in pinned.lower():
+            error("pinned_comment", f"«{opener}…» suena a plantilla: va directo al dato")
+    questions = pinned.count("?")
+    if questions != pinned_rules.questions or not pinned.endswith("?"):
+        error("pinned_comment", f"termina con {pinned_rules.questions} preguntas (una sobre el tema, otra sobre qué quieren ver); tiene {questions}")
+
+    # ── sin emojis (regla de los canales) ─────────────────────────────────────
+    d = package.description
+    texts = [
+        *((f"titles.youtube.{t.option}", t.text) for t in titles.youtube),
+        ("titles.facebook", f"{titles.facebook.title} {titles.facebook.first_line}"),
+        ("titles.tiktok", caption),
+        ("thumbnail", f"{text_only.text} {with_image.text}"),
+        ("thumbnail.kicker", package.thumbnail.kicker),
+        ("description", " ".join([d.hook, d.context, d.reflection, d.question, *(c.title for c in d.chapters)])),
+        ("tags", " ".join([*tags.youtube, *tags.youtube_hashtags, *tags.tiktok, *tags.facebook])),
+        ("pinned_comment", package.pinned_comment),
+    ]
+    for field, text in texts:
+        if has_emoji(text):
+            error(field, "tiene emojis: los canales no los usan (en ningún texto)")
+
     # ── cifras: lo que se promete tiene que estar en el video ─────────────────
     said = _video_numbers(video_dir)
     promised = [
@@ -223,7 +249,8 @@ def check_package(
         ("titles.tiktok", caption),
         ("thumbnail.text_only", text_only.text),
         ("thumbnail.with_image", with_image.text),
-        ("intro", f"{package.intro.text} {package.intro.sub}"),
+        ("thumbnail.kicker", package.thumbnail.kicker),
+        ("pinned_comment", package.pinned_comment),
     ]
     for field, text in promised:
         missing = sorted(digit_numbers(text) - said)

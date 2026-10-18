@@ -1,5 +1,9 @@
 const React = require('react');
+const RomanticIntro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-romantic/components/intro.js');
+const RomanticOutro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-romantic/components/outro.js');
 const {useCurrentFrame, AbsoluteFill, Audio, interpolate} = require('remotion');
+const {loadFont: loadAnton} = require('@remotion/google-fonts/Anton');
+loadAnton();
 const {loadFont: loadPlayfair} = require('@remotion/google-fonts/PlayfairDisplay');
 const {loadFont: loadGreatVibes} = require('@remotion/google-fonts/GreatVibes');
 const {
@@ -69,80 +73,7 @@ function RowEl({row, frame, C}) {
   );
 }
 
-function Card({cfg, C, opacity}) {
-  return React.createElement(
-    'div',
-    {
-      style: {
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '1.6vh',
-        textAlign: 'center',
-        padding: '0 6vw',
-        opacity,
-      },
-    },
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontFamily: C.fonts.serif,
-          fontStyle: 'italic',
-          fontSize: '3vh',
-          color: C.colors.muted,
-          letterSpacing: '0.22em',
-          textTransform: 'uppercase',
-        },
-      },
-      cfg.artist ?? ''
-    ),
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontFamily: C.fonts.script,
-          fontSize: '13vh',
-          color: C.colors.script,
-          lineHeight: 1.05,
-          textShadow: '0 0 26px rgba(216,120,130,0.3)',
-        },
-      },
-      cfg.title
-    ),
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontFamily: C.fonts.serif,
-          fontStyle: 'italic',
-          fontSize: '2.6vh',
-          color: C.colors.serif,
-          letterSpacing: '0.14em',
-        },
-      },
-      cfg.sub
-    ),
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontFamily: C.fonts.serif,
-          fontSize: '1.5vh',
-          letterSpacing: '0.32em',
-          opacity: 0.65,
-          color: C.colors.muted,
-          marginTop: '2.4vh',
-          textTransform: 'uppercase',
-        },
-      },
-      cfg.feats
-    )
-  );
-}
+
 
 function Bokeh({lights, frame, tint}) {
   const elapsedMs = (frame / FPS) * 1000;
@@ -197,16 +128,15 @@ function LyricsRomantic({configData, lyricsData, audioSrc, bgSrc}) {
   for (let i = windowStart; i <= lastIdx; i++) visible.push(i);
   const oldCutoff = lastIdx - (C.layout.oldAfter || 3);
 
-  const introVisible = ROWS.length === 0 || frame < ROWS[0].frame;
   const cardTransFrames = 1.6 * fps;
-  const introOpacity = ROWS.length
-    ? interpolate(frame, [ROWS[0].frame, ROWS[0].frame + cardTransFrames], [1, 0], {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp',
-      })
-    : 1;
-
-  const outroOpacity = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + cardTransFrames], [0, 1], {
+  const introDurationSeconds = ROWS.length
+    ? ROWS[0].frame / fps
+    : RomanticIntro.DEFAULT_DURATION_SECONDS;
+  const outroOpacity = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 1.1 * fps], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const backgroundDim = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 2.2 * fps], [1, 0.5], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -241,7 +171,7 @@ function LyricsRomantic({configData, lyricsData, audioSrc, bgSrc}) {
         objectFit: 'cover',
         filter: C.bg?.filter || '',
         transform: `scale(${bgScale}) translate(${bgTX}%, ${bgTY}%)`,
-        opacity: worldDim,
+        opacity: backgroundDim,
       },
     }),
     React.createElement('div', {
@@ -307,8 +237,13 @@ function LyricsRomantic({configData, lyricsData, audioSrc, bgSrc}) {
           "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")",
       },
     }),
-    introVisible && React.createElement(Card, {cfg: C.intro, C, opacity: introOpacity}),
-    frame >= OUTRO_FRAME && React.createElement(Card, {cfg: C.outro, C, opacity: outroOpacity})
+    RomanticIntro.createRemotionElement({
+      React, config: C.intro, C,
+      timeSeconds: frame / fps,
+      durationSeconds: introDurationSeconds,
+      outroActive: frame >= OUTRO_FRAME,
+    }),
+    frame >= OUTRO_FRAME && RomanticOutro.createRemotionElement({React, config: C.outro, opacity: outroOpacity, elapsedSeconds: Math.max(0, (frame - OUTRO_FRAME) / fps), width: WIDTH, height: HEIGHT})
   );
 }
 

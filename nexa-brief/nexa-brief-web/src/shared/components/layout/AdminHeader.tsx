@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ChevronDownIcon, LogOutIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -34,9 +35,17 @@ export function AdminHeader() {
     <nav className="nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between px-10 py-2.5">
       <Link
         href="/dashboard"
-        className="font-nb-sans text-[20px] font-bold tracking-[-0.03em] text-nb-ink no-underline"
+        aria-label={t("brand")}
+        className="inline-flex items-center gap-0 font-nb-sans text-[20px] font-bold tracking-[-0.03em] text-nb-ink no-underline"
       >
-        {t("brand")}
+        <Image
+          src="/logo/nexa-mark-bw-transparent.png"
+          alt=""
+          width={66}
+          height={66}
+          className="size-[60px] shrink-0 object-contain md:size-[66px]"
+        />
+        <span className="-ml-1" aria-hidden="true">exa Brief</span>
       </Link>
 
       <ul className="absolute left-1/2 flex -translate-x-1/2 gap-3 text-[12px]">

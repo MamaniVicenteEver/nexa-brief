@@ -15,6 +15,12 @@ interface AccountStatusResponseDto {
   expires_in_seconds: number | null;
   has_refresh_token: boolean;
   avatar: string | null;
+  handle?: string | null;
+  description?: string;
+  custom_url?: string | null;
+  profile_synced_at?: number | null;
+  linked_page_name?: string | null;
+  linked_page_id?: string | null;
   published_count: number;
   label?: string;
   notes?: string;
@@ -41,6 +47,12 @@ function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
     expiresInSeconds: dto.expires_in_seconds,
     hasRefreshToken: dto.has_refresh_token,
     avatar: dto.avatar,
+    handle: dto.handle ?? null,
+    description: dto.description ?? "",
+    customUrl: dto.custom_url ?? null,
+    profileSyncedAt: dto.profile_synced_at ?? null,
+    linkedPageName: dto.linked_page_name ?? null,
+    linkedPageId: dto.linked_page_id ?? null,
     publishedCount: dto.published_count,
     label: dto.label ?? "",
     notes: dto.notes ?? "",
@@ -96,6 +108,17 @@ export async function updateChannel(
     method: "PATCH",
     body: update,
   });
+  return mapChannelAccount(dto);
+}
+
+export async function refreshChannelProfile(
+  platform: ChannelPlatform,
+  alias: string,
+): Promise<ChannelAccount> {
+  const dto = await httpClient<AccountStatusResponseDto>(
+    accountPath(platform, alias) + "/refresh-profile",
+    { method: "POST" },
+  );
   return mapChannelAccount(dto);
 }
 

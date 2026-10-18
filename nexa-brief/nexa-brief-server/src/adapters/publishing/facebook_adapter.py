@@ -1,4 +1,4 @@
-"""Facebook Adapter — CRUD operations via the Facebook Graph API v21.0.
+"""Facebook Adapter — CRUD operations via the configured Meta Graph API version.
 
 Upload flow (Resumable 3-phase protocol):
   Phase 1 — start:    POST /{page-id}/videos?upload_phase=start&file_size={n}
@@ -11,9 +11,9 @@ Upload flow (Resumable 3-phase protocol):
 
 CRUD:
   Create → publish()       3-phase upload above
-  Read   → get_video()     GET /v21.0/{video_id}?fields=title,description,status
-  Update → update_video()  POST /v21.0/{video_id} with title/description
-  Delete → delete_video()  DELETE /v21.0/{video_id}
+  Read   → get_video()     GET /{video_id}?fields=title,description,status
+  Update → update_video()  POST /{video_id} with title/description
+  Delete → delete_video()  DELETE /{video_id}
 
 Token strategy:
   Facebook Page Access Tokens never expire when derived from a Long-Lived User Token.
@@ -43,17 +43,18 @@ from typing import Any
 import structlog
 
 from src.config.exceptions import PlatformAPIError, VideoNotFoundError
+from src.config.settings import settings
 from src.core.ports.publisher_port import PublishVideoResult, VideoMetadata
 from src.adapters.publishing.base_platform import BasePlatformAdapter, with_retry
 
 logger = structlog.get_logger(__name__)
 
-_GRAPH_BASE = "https://graph.facebook.com/v21.0"
+_GRAPH_BASE = f"https://graph.facebook.com/{settings.meta_graph_api_version}"
 _FB_CHUNK_SIZE = 4 * 1024 * 1024  # Facebook recommends 4 MB chunks in phase 2
 
 
 class FacebookAdapter(BasePlatformAdapter):
-    """Facebook Graph API v21.0 — full CRUD with 3-phase resumable upload."""
+    """Facebook Graph API — full CRUD with 3-phase resumable upload."""
 
     PLATFORM = "facebook"
 

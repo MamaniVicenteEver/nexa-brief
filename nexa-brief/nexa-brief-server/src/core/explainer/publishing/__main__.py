@@ -4,7 +4,7 @@
     uv run python -m src.core.explainer.publishing build <video_id> […]
 
 check: valida los paquetes v2 (sin argumentos, todos). Sale con código 1 si hay errores.
-build: vuelve a derivar publish.json, aplica la intro y sincroniza manifest y portada.
+build: vuelve a derivar publish.json, abre el video con la miniatura elegida y sincroniza manifest y portada.
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from src.core.explainer.publishing.service import KitError, build, review
 from src.core.explainer.publishing.store import is_package, read_publish
 
 # Lo que puede romper un video sin cortar los demás: paquete o estrategia inválidos
-# (ValidationError, StrategyError, GratitudeError, IntroError son ValueError), el kit o el disco.
+# (ValidationError, StrategyError, GratitudeError, OpeningError son ValueError), el kit o el disco.
 _VIDEO_ERRORS = (ValueError, KitError, OSError)
 
 
@@ -59,9 +59,9 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 built = build(video)
                 result = built.review
-                if built.intro.changed:
-                    removed = ", ".join(built.intro.removed_renders) or "ninguno"
-                    print(f"  {video.video_id}: intro aplicada · renders viejos borrados: {removed}")
+                if built.opening.changed:
+                    removed = ", ".join(built.opening.removed_renders) or "ninguno"
+                    print(f"  {video.video_id}: apertura = miniatura elegida · renders viejos borrados: {removed}")
         except _VIDEO_ERRORS as exc:
             print(f"✗ {video.video_id}: {exc}")
             failed = True

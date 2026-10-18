@@ -107,6 +107,12 @@ class AccountStatusResponse(BaseModel):
     expires_in_seconds: float | None
     has_refresh_token: bool
     avatar: str | None = None
+    handle: str | None = None
+    description: str = ""
+    custom_url: str | None = None
+    profile_synced_at: float | None = None
+    linked_page_name: str | None = None
+    linked_page_id: str | None = None
     published_count: int = 0        # Videos published to this channel (see data/canales/published_videos.json)
     label: str = ""                 # User-defined purpose, e.g. "Letras románticas"
     notes: str = ""

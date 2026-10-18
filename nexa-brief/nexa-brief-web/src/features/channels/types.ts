@@ -1,4 +1,4 @@
-export type ChannelPlatform = "youtube" | "tiktok" | "facebook";
+export type ChannelPlatform = "youtube" | "tiktok" | "facebook" | "instagram";
 
 export type ChannelStatus = "ok" | "requires_reauth";
 
@@ -11,6 +11,12 @@ export interface ChannelAccount {
   expiresInSeconds: number | null;
   hasRefreshToken: boolean;
   avatar: string | null;
+  handle: string | null;
+  description: string;
+  customUrl: string | null;
+  profileSyncedAt: number | null;
+  linkedPageName: string | null;
+  linkedPageId: string | null;
   publishedCount: number;
   /** User-defined purpose ("Letras románticas", "Clientes"…); empty when unset. */
   label: string;

@@ -168,6 +168,8 @@ class TokenManager:
             await self._refresh_youtube(alias, state)
         elif platform == "facebook":
             await self._refresh_facebook(alias, state)
+        elif platform == "instagram":
+            await self._refresh_facebook(alias, state)
         else:
             raise TokenRefreshError(f"Unknown platform: {platform}")
 

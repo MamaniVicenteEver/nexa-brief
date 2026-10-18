@@ -23,6 +23,8 @@
 | `binary.frame` | main | Foto real (blanco y negro) dentro de un marco de glifos punteado, con título en serif y ficha mono: documento histórico, lugar, objeto real. |
 | `binary.bubble` | main | Globo de diálogo de contorno con tres puntos que 'escriben' (esperar una respuesta, una pregunta en el aire). |
 | `binary.floor` | main | Piso infinito en perspectiva hecho de filas de glifos que se desplazan hacia la cámara (vacío, inmensidad, final reflexivo). |
+| `binary.introv1` | main | Miniatura de solo texto en el estilo monocromo de binary: el título hecho de partículas 0/1, en blanco puro, con la fecha en letras blancas encima. |
+| `binary.introv2` | main | Miniatura de texto e imagen: la frase (como en introv1, más chica) en una mitad y el retrato en glifos 0/1 en la otra; el lado de la foto se elige con imageSide. |
 | `binary.counter` | main | Número que se arma dígito a dígito como una tragamonedas (slot) o que cuenta hasta su valor (count), entre dos reglas de glifos: cifras enormes, años, cantidades. |
 | `binary.cipher` | main | Mensaje que se cifra letra por letra: texto claro arriba, columna de glifos que 'pasa por la máquina' y letra cifrada abajo en caja. Con mode='crib' muestra una frase conocida alineada bajo el cifrado (la llave). |
 | `binary.rotors` | main | Rotores/tambores de glifos que giran a distinto ritmo: con pocos (1-5) muestran el abecedario y la letra activa en una ventana (Enigma); con muchos (6-120) forman una batería de tambores girando a la vez (la Bomba). |
@@ -31,12 +33,17 @@
 | `binary.convoy` | main | Mar de glifos visto desde arriba con un convoy de barcos que cruza y submarinos al acecho. mode: attack (un barco se hunde), reroute (el convoy cambia de rumbo a tiempo), hunt (los submarinos quedan marcados y desaparecen). |
 | `binary.banknote` | main | Un billete hecho de glifos 0/1: marco doble, medallón ovalado con un retrato muestreado y el valor grande a la izquierda. Sirve para el momento en que un personaje 'termina en un billete'. |
 | `binary.wall` | main | Muro de ladrillos hechos de glifos con alambre arriba. mode=build lo levanta fila por fila; stand lo muestra quieto (división, encierro); break abre una brecha en el centro en `breakAt` y los fragmentos caen. |
+| `binary.chessboard` | main | Diagrama de ajedrez con piezas vectoriales y jugadas UCI animadas; muestra aperturas y momentos concretos de una partida. |
+| `binary.chesspiece` | main | Pieza de ajedrez con siluetas SVG trazadas en dígitos 0/1 generados por Canvas; permite elegir entre los dos caballos de referencia. |
+| `binary.searchtree` | main | Árbol esquemático de jugadas posibles con una ruta destacada; sirve para explicar búsqueda y evaluación sin afirmar que sea un registro literal del cálculo. |
 | `binary.outrov1` | main | Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa. |
 | `binary.outro` | main | Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa. Alias compatible para binary.outro. |
 | `rough.title` | main | Título de apertura GIGANTE (cartel: cada renglón al ancho total, ~80% del cuadro): las letras se dibujan en contorno y se rellenan; antetítulo en etiqueta lima, subtítulo debajo y subrayado a mano. Puede parpadear como alarma. |
 | `rough.icon` | main | Boceto de un objeto (diccionario rough/sketches.js) que se dibuja trazo a trazo; relleno rayado lima opcional, etiqueta arriba y nota manuscrita abajo. |
 | `rough.photo` | main | Foto real en blanco y negro (o virada a lima) que se revela con un barrido dentro de un marco dibujado a mano con cintas; nombre manuscrito y ficha mono debajo. Zoom lento (Ken Burns). |
 | `rough.annotate` | overlay | Marca a mano ENCIMA de lo que hay en pantalla: círculo, subrayado, flecha, caja o tachado, en lima, sobre una zona del cuadro de contenido; texto manuscrito opcional al lado. |
+| `rough.introv1` | main | Miniatura de solo texto con el tratamiento a mano de rough: título enorme, línea lima y antetítulo opcional. |
+| `rough.introv2` | main | Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto grande a color que se funde con el fondo (en 9:16 la foto va arriba). |
 | `rough.flow` | main | Cadena de 2-5 pasos (boceto + rótulo) unidos por flechas a mano que aparecen en orden: causa → efecto, un proceso, un sistema. `active` resalta un paso en lima. |
 | `rough.compare` | main | Comparación de escala por ÁREA: un cuadrado diminuto (lo chico, en lima) dentro de uno enorme (lo grande). Para 'millones de veces más': el chico queda casi un punto. Con valores y flecha manuscrita. |
 | `rough.stack` | main | Pila de tareas en cajas a mano; en `dropAt` las que no se conservan se tachan y caen, y las importantes suben y se pintan de lima. Para prioridades, triage, 'soltar lo secundario'. |
@@ -538,6 +545,58 @@ Etiquetas: espacio, vacío, cierre · capa: main
 {"use": "binary.floor", "params": {"text": "¿Y AHORA?"}}
 ```
 
+### `binary.introv1`
+
+Miniatura de solo texto en el estilo monocromo de binary: el título hecho de partículas 0/1, en blanco puro, con la fecha en letras blancas encima.
+
+Etiquetas: intro, miniatura, solo texto · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Título; '\n' parte renglones (2-4 renglones cortos). |
+| `textPortrait` | string | `""` | Cortes alternativos para 9:16 (más renglones = letras más grandes). |
+| `kicker` | string | `""` | Antetítulo (fecha, lugar) en letras blancas sobre el título. |
+| `fit` | enum (lines / block) | `"lines"` | lines = cada renglón al ancho total (cartel); block = mismo tamaño. |
+| `font` | string | `"900 100px 'Inter', sans-serif"` | Fuente canvas del título. |
+| `fill` | number [0.4–1] | `0.9` | Fracción del ancho del cuadro que ocupa. |
+| `morph` | number | `1.6` | Segundos que tardan las partículas en armar el título. |
+| `highlight` | string | `""` | Frase opcional que se destaca en una etiqueta invertida debajo del título. |
+| `sub` | string | `""` | Línea mono opcional debajo del título. |
+| `glow` | number [0–0.6] | `0.3` | Opacidad extra de los glifos del texto (más = blanco más luminoso). |
+
+```json
+{"use": "binary.introv1", "params": {"text": "EL HOMBRE\nQUE ROMPIÓ\nENIGMA", "kicker": "ALAN TURING · 1940", "highlight": "ENIGMA"}}
+```
+
+### `binary.introv2`
+
+Miniatura de texto e imagen: la frase (como en introv1, más chica) en una mitad y el retrato en glifos 0/1 en la otra; el lado de la foto se elige con imageSide.
+
+Etiquetas: intro, miniatura, texto e imagen · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Texto de la miniatura; sin '\n' se corta solo en 1–3 renglones (el corte con la letra más grande). |
+| `textPortrait` | string | `""` | Cortes alternativos para 9:16. |
+| `kicker` | string | `""` | Antetítulo (fecha, lugar) en caja blanca con letra negra sobre el texto. |
+| `highlight` | string | `""` | Frase opcional que se destaca en una etiqueta invertida debajo del texto. |
+| `sub` | string | `""` | Línea mono opcional debajo del texto. |
+| `src` | image | `""` | Retrato o foto del tema (archivo de assets/media/ o URL). Vacío = cartel «IMAGEN PENDIENTE». |
+| `imageSide` | enum (auto / left / right) | `"auto"` | Lado de la foto en 16:9 (el texto va en el otro). auto = alterna entre videos según el texto, así las intros no se ven siempre iguales; left/right lo fija (p. ej. para que el rostro mire hacia el texto). En 9:16 la foto va siempre arriba. |
+| `zoom` | number [1–3] | `1.2` | Ampliación de la foto (1 = entera): un retrato más grande se reconoce mejor. |
+| `focusX` | number [0–1] | `0.5` | Centro del recorte en la foto, horizontal (0 = izquierda). Moverlo hacia el rostro si queda cortado. |
+| `focusY` | number [0–1] | `0.5` | Centro del recorte en la foto, vertical (0 = arriba). |
+| `imageCell` | number [0.5–1.5] | `0.65` | Escala de glifos de la fotografía (menor = más detalle). |
+| `contrast` | number [1–2.5] | `1.9` | Contraste de la foto antes de muestrear (más = luces y sombras más separadas). |
+| `gamma` | number [1–3] | `1` | Curva de la foto: más alto = medios tonos y sombras más oscuros. |
+| `threshold` | number [0–0.8] | `0.14` | Brillo mínimo para formar la imagen (lo que queda debajo es negro). |
+| `glow` | number [0–0.6] | `0.3` | Opacidad extra de los glifos del texto (más = blanco más luminoso). |
+| `morph` | number | `1.1` | Segundos para armar texto e imagen. |
+
+```json
+{"use": "binary.introv2", "params": {"text": "ELLA LO\nPREVIÓ", "kicker": "APOLO 11 · 1969", "src": "assets/media/hamilton.jpg", "imageSide": "right"}}
+```
+
 ### `binary.counter`
 
 Número que se arma dígito a dígito como una tragamonedas (slot) o que cuenta hasta su valor (count), entre dos reglas de glifos: cifras enormes, años, cantidades.
@@ -690,6 +749,70 @@ Etiquetas: muro, frontera, división, caída, construcción · capa: main
 {"use": "binary.wall", "params": {"mode": "break", "label": "28 AÑOS", "breakAt": 2.2}}
 ```
 
+### `binary.chessboard`
+
+Diagrama de ajedrez con piezas vectoriales y jugadas UCI animadas; muestra aperturas y momentos concretos de una partida.
+
+Etiquetas: ajedrez, tablero, partida, movimientos · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `fen` | string | `"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"` | FEN inicial del tablero. |
+| `moves` | array | `[]` | Lista de jugadas UCI, como e2e4 o g5e6. |
+| `notation` | array | `[]` | Rótulo opcional por jugada, por ejemplo 8. Nxe6. |
+| `moveSec` | number [0.35–4] | `1.15` | Intervalo entre comienzos de jugadas. |
+| `animSec` | number [0.3–3] | `0.78` | Duración del desplazamiento de cada pieza. |
+| `delay` | number [0–5] | `0.4` | Espera antes de la primera jugada. |
+| `focus` | string | `""` | Casilla para enmarcar, por ejemplo b5. |
+| `label` | string | `""` | Etiqueta sobre el tablero. |
+| `note` | string | `""` | Nota debajo del tablero. |
+| `morph` | number | `1` | Segundos para armar la trama binaria. |
+
+```json
+{"use": "binary.chessboard", "params": {"fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "moves": ["e2e4", "c7c6", "d2d4", "d7d5"], "notation": ["1. e4", "1... c6", "2. d4", "2... d5"], "moveSec": 1.1, "label": "DEFENSA CARO-KANN", "note": "DIAGRAMA DE APERTURA"}}
+```
+
+### `binary.chesspiece`
+
+Pieza de ajedrez con siluetas SVG trazadas en dígitos 0/1 generados por Canvas; permite elegir entre los dos caballos de referencia.
+
+Etiquetas: ajedrez, caballo, torre, pieza · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `piece` | enum (pawn / knight / bishop / rook / queen / king) | `"knight"` | Tipo de pieza. |
+| `side` | enum (white / black) | `"white"` | Color de la pieza. |
+| `action` | enum (idle / advance / threatened / sacrifice) | `"idle"` | Tratamiento visual. |
+| `art` | enum (variable / referencia) | `"variable"` | Silueta SVG fuente del caballo: versión detallada o trazado de referencia. |
+| `srcVariable` | image | `""` | SVG del caballo detallado de 360 × 360. |
+| `srcReference` | image | `""` | SVG del caballo de referencia de 687 × 1024. |
+| `label` | string | `""` | Etiqueta superior. |
+| `note` | string | `""` | Nota inferior. |
+| `morph` | number | `1` | Segundos para armar la trama binaria. |
+
+```json
+{"use": "binary.chesspiece", "params": {"piece": "knight", "side": "white", "action": "threatened", "art": "variable", "label": "CABALLO BLANCO", "note": "EL PEÓN h6 AMENAZA g5"}}
+```
+
+### `binary.searchtree`
+
+Árbol esquemático de jugadas posibles con una ruta destacada; sirve para explicar búsqueda y evaluación sin afirmar que sea un registro literal del cálculo.
+
+Etiquetas: búsqueda, opciones, ramas, cálculo · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `depth` | number [2–4] | `4` | Cantidad de niveles de decisión. |
+| `branching` | number [2–3] | `2` | Ramas por posición. |
+| `focusPath` | array | `[1, 0, 1, 0]` | Índice de la rama destacada en cada nivel. |
+| `label` | string | `""` | Etiqueta superior. |
+| `note` | string | `""` | Nota inferior; usar ESQUEMA para aclarar el dibujo. |
+| `morph` | number | `1` | Segundos para armar la trama binaria. |
+
+```json
+{"use": "binary.searchtree", "params": {"depth": 4, "branching": 2, "focusPath": [1, 0, 1, 0], "label": "HARDWARE + BÚSQUEDA", "note": "ESQUEMA DE OPCIONES"}}
+```
+
 ### `binary.outrov1`
 
 Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa.
@@ -818,6 +941,46 @@ Etiquetas: énfasis, marca, flecha · capa: overlay
 
 ```json
 {"use": "rough.annotate", "params": {"kind": "circle", "x": 0.2, "y": 0.3, "w": 0.6, "h": 0.3, "note": "¡aquí!"}}
+```
+
+### `rough.introv1`
+
+Miniatura de solo texto con el tratamiento a mano de rough: título enorme, línea lima y antetítulo opcional.
+
+Etiquetas: intro, miniatura, solo texto · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Título; '\n' separa renglones. |
+| `textPortrait` | string | `""` | Cortes alternativos para 9:16. |
+| `highlight` | string | `""` | Renglón que se pinta en lima. |
+| `kicker` | string | `""` | Antetítulo en etiqueta lima. |
+| `sub` | string | `""` | Línea chica opcional bajo el título. |
+| `fill` | number [0.45–1] | `0.88` | Ancho ocupado por el título. |
+
+```json
+{"use": "rough.introv1", "params": {"text": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ", "highlight": "SE RINDIÓ", "kicker": "APOLO 11 · 1969"}}
+```
+
+### `rough.introv2`
+
+Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto grande a color que se funde con el fondo (en 9:16 la foto va arriba).
+
+Etiquetas: intro, miniatura, texto e imagen · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Título; '\n' separa renglones (2 a 4 renglones cortos). |
+| `textPortrait` | string | `""` | Cortes alternativos para 9:16. |
+| `highlight` | string | `""` | Renglón que se pinta en lima (el remate). |
+| `kicker` | string | `""` | Antetítulo en etiqueta lima. |
+| `sub` | string | `""` | Línea chica opcional bajo el título. |
+| `src` | image | `""` | Foto o render del objeto del tema (a color). |
+| `saturate` | number [0–1.4] | `1` | Color de la foto (0 = blanco y negro). |
+| `focus` | string | `"xMidYMid"` | Encuadre de la foto (preserveAspectRatio: xMinYMid, xMaxYMid…). |
+
+```json
+{"use": "rough.introv2", "params": {"text": "¿SE ACABÓ\nLA PC\nBARATA?", "highlight": "BARATA?", "kicker": "MEMORIA RAM · 2026", "src": "assets/media/hamilton.jpg"}}
 ```
 
 ### `rough.flow`

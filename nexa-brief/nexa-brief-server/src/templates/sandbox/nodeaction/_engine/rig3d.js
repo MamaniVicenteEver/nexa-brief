@@ -127,7 +127,7 @@
     const C8 = {}; for (const bu of [0, 1]) for (const sw of [-1, 1]) for (const fd of [-1, 1]) C8[`${bu}${sw}${fd}`] = cor(bu, sw, fd);
     const body = sty.torso === "$flag" ? a.body : col(sty.torso, a);
     const faces = [
-      { q: ["0-11", "011", "111", "1-11"], c: body, flag: sty.torso === "$flag" ? a.flag : null, front: true },
+      { q: ["0-11", "011", "111", "1-11"], c: body, flag: sty.torso === "$flag" ? a.flag : null, front: true, fw: 2 * tw, fh: Math.hypot(...v3.sub(Nt, Hb)) },
       { q: ["01-1", "0-1-1", "1-1-1", "11-1"], c: shade(body, 0.92), back: true },
       { q: ["011", "01-1", "11-1", "111"], c: shade(body, 0.8) },
       { q: ["0-1-1", "0-11", "1-11", "1-1-1"], c: shade(body, 0.8) },
@@ -137,7 +137,7 @@
       const pts = fc.q.map(k => C8[k]);
       const area = pts.reduce((m, p, i) => { const q = pts[(i + 1) % 4]; return m + (p.x * q.y - q.x * p.y); }, 0);
       if (area <= 0) continue;                                  /* cara de espaldas a la cámara (canvas: y hacia abajo) */
-      parts.push({ d: depth(...pts) + 0.0005, kind: "quad", pts: pts.map(p => [p.x, p.y]), c: fc.c, flag: fc.flag });
+      parts.push({ d: depth(...pts) + 0.0005, kind: "quad", pts: pts.map(p => [p.x, p.y]), c: fc.c, flag: fc.flag, fw: fc.fw, fh: fc.fh });
     }
     /* mochila (caja chica en la espalda) */
     if (sty.pack) {
@@ -149,7 +149,8 @@
         const pts = fq.map(([u, sw, fd]) => pk(u, sw, fd));
         const area = pts.reduce((m, p, i) => { const q = pts[(i + 1) % 4]; return m + (p.x * q.y - q.x * p.y); }, 0);
         if (area >= 0) continue;   /* (las caras de la mochila están en el orden inverso al del torso) */
-        parts.push({ d: depth(...pts), kind: "quad", pts: pts.map(p => [p.x, p.y]), c: shade(col(sty.pack, a), fq === pf[0] ? 1 : 0.85) });
+        /* la cara de atrás de la mochila lleva la bandera del bando (frente y espalda identificados) */
+        parts.push({ d: depth(...pts), kind: "quad", pts: pts.map(p => [p.x, p.y]), c: shade(col(sty.pack, a), fq === pf[0] ? 1 : 0.85), flag: fq === pf[0] && sty.packFlag !== false ? a.flag : null, fw: 2 * pw, fh: 2 * ph });
       }
     }
     /* marcas de impacto en el pecho (rojas) */
@@ -198,10 +199,11 @@
       if (pass !== "fill") { g.strokeStyle = OUT; g.lineWidth = 2 * e; g.stroke(); g.fillStyle = OUT; g.fill(); return; }
       g.fillStyle = p.c; g.fill();
       if (p.flag) {
-        /* bandera mapeada a la cara frontal (transformación afín del rectángulo) */
-        const [p0, p1, , p3] = p.pts;
-        g.save(); g.clip(); g.transform(p1[0] - p0[0], p1[1] - p0[1], p3[0] - p0[0], p3[1] - p0[1], p0[0], p0[1]);
-        A.drawFlag(g, p.flag, 0, 0, 1, 1); g.restore();
+        /* bandera mapeada a la cara (transformación afín) con las MEDIDAS REALES de la cara: así las
+           franjas guardan su proporción (en un cuadrado 1×1 las del Reino Unido tapaban el azul) */
+        const [p0, p1, , p3] = p.pts, fw = p.fw || 1, fh = p.fh || 1;
+        g.save(); g.clip(); g.transform((p1[0] - p0[0]) / fw, (p1[1] - p0[1]) / fw, (p3[0] - p0[0]) / fh, (p3[1] - p0[1]) / fh, p0[0], p0[1]);
+        A.drawFlag(g, p.flag, 0, 0, fw, fh); g.restore();
       }
     } else if (p.kind === "marks") {
       if (pass !== "fill") return;

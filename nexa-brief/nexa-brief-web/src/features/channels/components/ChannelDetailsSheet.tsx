@@ -200,6 +200,46 @@ export function ChannelDetailsSheet({
         </SheetHeader>
 
         <div className="flex flex-col gap-7 p-6">
+          {(account.platform === "youtube" || account.platform === "instagram") && (
+            <Section title={t(account.platform === "youtube" ? "youtubeProfile" : "instagramProfile")}>
+              <div className="rounded-2xl border border-nb-line">
+                <Row label={t("handle")}>
+                  {account.handle ? "@" + account.handle : account.alias}
+                </Row>
+                {account.customUrl && <Row label={t("customUrl")}>{account.customUrl}</Row>}
+                {account.platform === "instagram" && account.linkedPageName && (
+                  <Row label={t("linkedFacebookPage")}>{account.linkedPageName}</Row>
+                )}
+                <div className="border-t border-nb-line px-4 py-3">
+                  <p className="text-[11.5px] font-medium text-nb-mute">
+                    {t(account.platform === "youtube" ? "channelDescription" : "instagramBio")}
+                  </p>
+                  <p className="mt-1 max-h-44 overflow-y-auto whitespace-pre-wrap text-[12.5px] leading-[1.5] text-nb-ink-soft">
+                    {account.description || t("noDescription")}
+                  </p>
+                </div>
+                <Row label={t("profileLastSynced")}>
+                  {account.profileSyncedAt
+                    ? formatDate(account.profileSyncedAt, locale)
+                    : t("notSynced")}
+                </Row>
+              </div>
+              {account.targetId && (
+                <a
+                  href={account.platform === "youtube"
+                    ? "https://www.youtube.com/channel/" + encodeURIComponent(account.targetId)
+                    : account.customUrl ?? "https://www.instagram.com/" + encodeURIComponent(account.handle ?? account.alias)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-nb-ink-soft hover:text-nb-ink"
+                >
+                  {t(account.platform === "youtube" ? "openChannel" : "openInstagram")}
+                  <ArrowUpRight className="size-3.5" />
+                </a>
+              )}
+            </Section>
+          )}
+
           <Section
             title={t("usage")}
             action={

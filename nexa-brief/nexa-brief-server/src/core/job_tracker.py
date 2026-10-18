@@ -112,6 +112,13 @@ async def update(job: Job) -> None:
     for fmt, file_path in format_paths.items():
         if file_path is not None:
             file_paths[fmt] = str(file_path)
+    # Archivo por relación de aspecto, como los explainer (`recorder._register_for_scheduling`):
+    # "Publicar ahora" y la cola eligen el formato por cuenta con estas claves.
+    aspect_paths: dict[str, str] = dict(record.get("format_paths") or {})
+    if artifacts.youtube_video_path is not None:
+        aspect_paths["16x9"] = str(artifacts.youtube_video_path)
+    if artifacts.reels_video_path is not None and artifacts.reels_video_path != artifacts.youtube_video_path:
+        aspect_paths["9x16"] = str(artifacts.reels_video_path)
 
     duration_seconds = record.get("duration_seconds")
     if duration_seconds is None and artifacts.youtube_video_path is not None:
@@ -132,7 +139,25 @@ async def update(job: Job) -> None:
         "duration_seconds": duration_seconds,
         "file_paths": file_paths,
         "ready_formats": list(file_paths.keys()),
+        "format_paths": aspect_paths,
+        "formats": list(aspect_paths),
     })
+
+
+def format_paths(record: dict[str, Any]) -> dict[str, str]:
+    """Archivo por formato ('16x9' / '9x16'). Los jobs anteriores a `format_paths`
+    lo derivan de `file_paths` (el 9:16 solo si es un archivo distinto del 16:9)."""
+    stored = record.get("format_paths")
+    if stored:
+        return dict(stored)
+    files: dict[str, str] = record.get("file_paths") or {}
+    derived: dict[str, str] = {}
+    if files.get("youtube"):
+        derived["16x9"] = files["youtube"]
+    vertical = files.get("reels") or files.get("instagram")
+    if vertical and vertical != files.get("youtube"):
+        derived["9x16"] = vertical
+    return derived
 
 
 def _seconds_between(start_iso: str | None, end_iso: str | None) -> float | None:

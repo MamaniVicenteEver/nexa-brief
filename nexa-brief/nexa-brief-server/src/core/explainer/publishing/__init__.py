@@ -6,7 +6,7 @@ Módulos:
   description  arma las descripciones de YouTube y Facebook desde los bloques
   numbers      cifras en dígitos o en palabras, para verificar promesas
   checks       valida el paquete contra las estrategias y el video real
-  intro        lleva la intro del paquete al cartel de apertura y al guion
+  opening      la miniatura elegida abre el video (beat 0) y es la captura de la miniatura
   store        lee/escribe publish.json y deriva los campos planos de v1
   service      revisar y reconstruir un video (lo usan la API y la CLI)
 

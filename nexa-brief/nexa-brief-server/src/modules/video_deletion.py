@@ -163,6 +163,16 @@ def _remove_output_dir(record: dict[str, Any]) -> None:
     if path == root or root not in path.parents:
         logger.warning("video_deletion_output_outside_root", path=str(path))
         return
+    # Otro video de la Biblioteca usa la misma carpeta (las grabaciones explainer anteriores al
+    # 2026-10-14 compartían una por video): borrarla le quitaba los archivos a ese otro video.
+    shared = [
+        r["job_id"] for r in job_tracker.list_jobs(limit=100_000)[0]
+        if r.get("job_id") != record.get("job_id") and r.get("output_dir")
+        and Path(r["output_dir"]).resolve() == path
+    ]
+    if shared:
+        logger.warning("video_deletion_output_shared", path=str(path), shared_with=shared)
+        return
     if path.exists():
         shutil.rmtree(path, ignore_errors=True)
 

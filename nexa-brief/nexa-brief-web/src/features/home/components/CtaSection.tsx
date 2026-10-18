@@ -13,7 +13,7 @@ export async function CtaSection({ stats }: { stats: PublicStats | null }) {
   const max = Math.max(1, ...byPlatform.map((p) => p.total));
   const platforms = byPlatform.length
     ? byPlatform
-    : (["youtube", "tiktok", "facebook"] as const).map((platform) => ({
+    : (["youtube", "tiktok", "facebook", "instagram"] as const).map((platform) => ({
         platform,
         total: 0,
         last7Days: 0,

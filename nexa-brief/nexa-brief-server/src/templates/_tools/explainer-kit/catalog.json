@@ -1120,6 +1120,282 @@
    }
   },
   {
+   "name": "binary.introv1",
+   "summary": "Miniatura de solo texto en el estilo monocromo de binary: el título hecho de partículas 0/1, en blanco puro, con la fecha en letras blancas encima.",
+   "tags": [
+    "intro",
+    "miniatura",
+    "solo texto"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Título; '\\n' parte renglones (2-4 renglones cortos).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Cortes alternativos para 9:16 (más renglones = letras más grandes).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo (fecha, lugar) en letras blancas sobre el título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fit": {
+     "type": "enum",
+     "default": "lines",
+     "doc": "lines = cada renglón al ancho total (cartel); block = mismo tamaño.",
+     "required": false,
+     "options": [
+      "lines",
+      "block"
+     ],
+     "min": null,
+     "max": null
+    },
+    "font": {
+     "type": "string",
+     "default": "900 100px 'Inter', sans-serif",
+     "doc": "Fuente canvas del título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fill": {
+     "type": "number",
+     "default": 0.9,
+     "doc": "Fracción del ancho del cuadro que ocupa.",
+     "required": false,
+     "options": null,
+     "min": 0.4,
+     "max": 1
+    },
+    "morph": {
+     "type": "number",
+     "default": 1.6,
+     "doc": "Segundos que tardan las partículas en armar el título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Frase opcional que se destaca en una etiqueta invertida debajo del título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea mono opcional debajo del título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "glow": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Opacidad extra de los glifos del texto (más = blanco más luminoso).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.6
+    }
+   },
+   "example": {
+    "text": "EL HOMBRE\nQUE ROMPIÓ\nENIGMA",
+    "kicker": "ALAN TURING · 1940",
+    "highlight": "ENIGMA"
+   }
+  },
+  {
+   "name": "binary.introv2",
+   "summary": "Miniatura de texto e imagen: la frase (como en introv1, más chica) en una mitad y el retrato en glifos 0/1 en la otra; el lado de la foto se elige con imageSide.",
+   "tags": [
+    "intro",
+    "miniatura",
+    "texto e imagen"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Texto de la miniatura; sin '\\n' se corta solo en 1–3 renglones (el corte con la letra más grande).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Cortes alternativos para 9:16.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo (fecha, lugar) en caja blanca con letra negra sobre el texto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Frase opcional que se destaca en una etiqueta invertida debajo del texto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea mono opcional debajo del texto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Retrato o foto del tema (archivo de assets/media/ o URL). Vacío = cartel «IMAGEN PENDIENTE».",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "imageSide": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Lado de la foto en 16:9 (el texto va en el otro). auto = alterna entre videos según el texto, así las intros no se ven siempre iguales; left/right lo fija (p. ej. para que el rostro mire hacia el texto). En 9:16 la foto va siempre arriba.",
+     "required": false,
+     "options": [
+      "auto",
+      "left",
+      "right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1.2,
+     "doc": "Ampliación de la foto (1 = entera): un retrato más grande se reconoce mejor.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 3
+    },
+    "focusX": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Centro del recorte en la foto, horizontal (0 = izquierda). Moverlo hacia el rostro si queda cortado.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "focusY": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Centro del recorte en la foto, vertical (0 = arriba).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "imageCell": {
+     "type": "number",
+     "default": 0.65,
+     "doc": "Escala de glifos de la fotografía (menor = más detalle).",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": 1.5
+    },
+    "contrast": {
+     "type": "number",
+     "default": 1.9,
+     "doc": "Contraste de la foto antes de muestrear (más = luces y sombras más separadas).",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 2.5
+    },
+    "gamma": {
+     "type": "number",
+     "default": 1,
+     "doc": "Curva de la foto: más alto = medios tonos y sombras más oscuros.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 3
+    },
+    "threshold": {
+     "type": "number",
+     "default": 0.14,
+     "doc": "Brillo mínimo para formar la imagen (lo que queda debajo es negro).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.8
+    },
+    "glow": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Opacidad extra de los glifos del texto (más = blanco más luminoso).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.6
+    },
+    "morph": {
+     "type": "number",
+     "default": 1.1,
+     "doc": "Segundos para armar texto e imagen.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "ELLA LO\nPREVIÓ",
+    "kicker": "APOLO 11 · 1969",
+    "src": "assets/media/hamilton.jpg",
+    "imageSide": "right"
+   }
+  },
+  {
    "name": "binary.counter",
    "summary": "Número que se arma dígito a dígito como una tragamonedas (slot) o que cuenta hasta su valor (count), entre dos reglas de glifos: cifras enormes, años, cantidades.",
    "tags": [
@@ -1745,6 +2021,331 @@
    }
   },
   {
+   "name": "binary.chessboard",
+   "summary": "Diagrama de ajedrez con piezas vectoriales y jugadas UCI animadas; muestra aperturas y momentos concretos de una partida.",
+   "tags": [
+    "ajedrez",
+    "tablero",
+    "partida",
+    "movimientos"
+   ],
+   "layer": "main",
+   "params": {
+    "fen": {
+     "type": "string",
+     "default": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "doc": "FEN inicial del tablero.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "moves": {
+     "type": "array",
+     "default": [],
+     "doc": "Lista de jugadas UCI, como e2e4 o g5e6.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "notation": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulo opcional por jugada, por ejemplo 8. Nxe6.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "moveSec": {
+     "type": "number",
+     "default": 1.15,
+     "doc": "Intervalo entre comienzos de jugadas.",
+     "required": false,
+     "options": null,
+     "min": 0.35,
+     "max": 4
+    },
+    "animSec": {
+     "type": "number",
+     "default": 0.78,
+     "doc": "Duración del desplazamiento de cada pieza.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 3
+    },
+    "delay": {
+     "type": "number",
+     "default": 0.4,
+     "doc": "Espera antes de la primera jugada.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 5
+    },
+    "focus": {
+     "type": "string",
+     "default": "",
+     "doc": "Casilla para enmarcar, por ejemplo b5.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta sobre el tablero.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota debajo del tablero.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "morph": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundos para armar la trama binaria.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "moves": [
+     "e2e4",
+     "c7c6",
+     "d2d4",
+     "d7d5"
+    ],
+    "notation": [
+     "1. e4",
+     "1... c6",
+     "2. d4",
+     "2... d5"
+    ],
+    "moveSec": 1.1,
+    "label": "DEFENSA CARO-KANN",
+    "note": "DIAGRAMA DE APERTURA"
+   }
+  },
+  {
+   "name": "binary.chesspiece",
+   "summary": "Pieza de ajedrez con siluetas SVG trazadas en dígitos 0/1 generados por Canvas; permite elegir entre los dos caballos de referencia.",
+   "tags": [
+    "ajedrez",
+    "caballo",
+    "torre",
+    "pieza"
+   ],
+   "layer": "main",
+   "params": {
+    "piece": {
+     "type": "enum",
+     "default": "knight",
+     "doc": "Tipo de pieza.",
+     "required": false,
+     "options": [
+      "pawn",
+      "knight",
+      "bishop",
+      "rook",
+      "queen",
+      "king"
+     ],
+     "min": null,
+     "max": null
+    },
+    "side": {
+     "type": "enum",
+     "default": "white",
+     "doc": "Color de la pieza.",
+     "required": false,
+     "options": [
+      "white",
+      "black"
+     ],
+     "min": null,
+     "max": null
+    },
+    "action": {
+     "type": "enum",
+     "default": "idle",
+     "doc": "Tratamiento visual.",
+     "required": false,
+     "options": [
+      "idle",
+      "advance",
+      "threatened",
+      "sacrifice"
+     ],
+     "min": null,
+     "max": null
+    },
+    "art": {
+     "type": "enum",
+     "default": "variable",
+     "doc": "Silueta SVG fuente del caballo: versión detallada o trazado de referencia.",
+     "required": false,
+     "options": [
+      "variable",
+      "referencia"
+     ],
+     "min": null,
+     "max": null
+    },
+    "srcVariable": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG del caballo detallado de 360 × 360.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "srcReference": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG del caballo de referencia de 687 × 1024.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta superior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota inferior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "morph": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundos para armar la trama binaria.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "piece": "knight",
+    "side": "white",
+    "action": "threatened",
+    "art": "variable",
+    "label": "CABALLO BLANCO",
+    "note": "EL PEÓN h6 AMENAZA g5"
+   }
+  },
+  {
+   "name": "binary.searchtree",
+   "summary": "Árbol esquemático de jugadas posibles con una ruta destacada; sirve para explicar búsqueda y evaluación sin afirmar que sea un registro literal del cálculo.",
+   "tags": [
+    "búsqueda",
+    "opciones",
+    "ramas",
+    "cálculo"
+   ],
+   "layer": "main",
+   "params": {
+    "depth": {
+     "type": "number",
+     "default": 4,
+     "doc": "Cantidad de niveles de decisión.",
+     "required": false,
+     "options": null,
+     "min": 2,
+     "max": 4
+    },
+    "branching": {
+     "type": "number",
+     "default": 2,
+     "doc": "Ramas por posición.",
+     "required": false,
+     "options": null,
+     "min": 2,
+     "max": 3
+    },
+    "focusPath": {
+     "type": "array",
+     "default": [
+      1,
+      0,
+      1,
+      0
+     ],
+     "doc": "Índice de la rama destacada en cada nivel.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta superior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota inferior; usar ESQUEMA para aclarar el dibujo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "morph": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundos para armar la trama binaria.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "depth": 4,
+    "branching": 2,
+    "focusPath": [
+     1,
+     0,
+     1,
+     0
+    ],
+    "label": "HARDWARE + BÚSQUEDA",
+    "note": "ESQUEMA DE OPCIONES"
+   }
+  },
+  {
    "name": "binary.outrov1",
    "summary": "Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa.",
    "tags": [
@@ -2320,6 +2921,167 @@
     "w": 0.6,
     "h": 0.3,
     "note": "¡aquí!"
+   }
+  },
+  {
+   "name": "rough.introv1",
+   "summary": "Miniatura de solo texto con el tratamiento a mano de rough: título enorme, línea lima y antetítulo opcional.",
+   "tags": [
+    "intro",
+    "miniatura",
+    "solo texto"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Título; '\\n' separa renglones.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Cortes alternativos para 9:16.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglón que se pinta en lima.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo en etiqueta lima.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica opcional bajo el título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fill": {
+     "type": "number",
+     "default": 0.88,
+     "doc": "Ancho ocupado por el título.",
+     "required": false,
+     "options": null,
+     "min": 0.45,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ",
+    "highlight": "SE RINDIÓ",
+    "kicker": "APOLO 11 · 1969"
+   }
+  },
+  {
+   "name": "rough.introv2",
+   "summary": "Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto grande a color que se funde con el fondo (en 9:16 la foto va arriba).",
+   "tags": [
+    "intro",
+    "miniatura",
+    "texto e imagen"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Título; '\\n' separa renglones (2 a 4 renglones cortos).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Cortes alternativos para 9:16.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglón que se pinta en lima (el remate).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo en etiqueta lima.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica opcional bajo el título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto o render del objeto del tema (a color).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "saturate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Color de la foto (0 = blanco y negro).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1.4
+    },
+    "focus": {
+     "type": "string",
+     "default": "xMidYMid",
+     "doc": "Encuadre de la foto (preserveAspectRatio: xMinYMid, xMaxYMid…).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "¿SE ACABÓ\nLA PC\nBARATA?",
+    "highlight": "BARATA?",
+    "kicker": "MEMORIA RAM · 2026",
+    "src": "assets/media/hamilton.jpg"
    }
   },
   {

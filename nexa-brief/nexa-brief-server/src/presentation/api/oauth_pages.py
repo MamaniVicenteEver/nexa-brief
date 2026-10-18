@@ -11,7 +11,7 @@ import json
 from html import escape
 from urllib.parse import quote
 
-from src.config.settings import settings
+from src.presentation.api.oauth_urls import public_url
 
 _REDIRECT_SECONDS = 6
 
@@ -35,6 +35,15 @@ _PLATFORMS: dict[str, dict[str, str]] = {
         "icon": (
             '<path fill="#fff" d="M13.2 19v-6h2l.3-2.4h-2.3V9.1c0-.7.2-1.1 1.2-1.1h1.2V5.9a16 16 0 0 0-1.8-.1'
             'c-1.8 0-3 1.1-3 3.1v1.7H8.8V13h2V19z"/>'
+        ),
+    },
+    "instagram": {
+        "label": "Instagram",
+        "color": "#C13584",
+        "icon": (
+            '<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="#fff" stroke-width="2"/>'
+            '<circle cx="12" cy="12" r="4" fill="none" stroke="#fff" stroke-width="2"/>'
+            '<circle cx="17.6" cy="6.7" r="1.2" fill="#fff"/>'
         ),
     },
 }
@@ -100,7 +109,7 @@ font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;border:0;font
 
 
 def _channels_url(query: str = "") -> str:
-    return f"{settings.frontend_url.rstrip('/')}/canales{query}"
+    return f"{public_url('/canales')}{query}"
 
 
 def _platform(platform: str) -> dict[str, str]:
@@ -143,8 +152,9 @@ def render_oauth_success(
         else f'<div class="ph">{initial}</div>'
     )
     renewal = "Automática" if has_refresh_token else ("No necesaria" if not expires_in else "Manual")
+    extra_label = "Cuentas de Instagram adicionales" if platform == "instagram" else "Páginas adicionales"
     extra_row = (
-        f'<div class="row"><span>Páginas adicionales</span><strong>+{extra_accounts} conectadas</strong></div>'
+        f'<div class="row"><span>{extra_label}</span><strong>+{extra_accounts} conectadas</strong></div>'
         if extra_accounts
         else ""
     )
@@ -159,7 +169,7 @@ def render_oauth_success(
     <span class="status ok"><i></i>Cuenta conectada</span>
     <h1>{escape(display_name)}</h1>
     <p class="sub">Tu cuenta de <b>{escape(meta['label'])}</b> quedó vinculada a Nexa Brief<br>
-    y ya puede recibir publicaciones automáticas.</p>
+    {"y el perfil ya aparece en Canales." if platform == "instagram" else "y ya puede recibir publicaciones automáticas."}</p>
   </div>
   <div class="rows">
     <div class="row"><span>Plataforma</span><strong>{escape(meta['label'])}</strong></div>

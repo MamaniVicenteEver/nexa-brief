@@ -19,8 +19,8 @@ from pydantic import AfterValidator, BaseModel, ConfigDict, Field, RootModel, mo
 
 from src.config.settings import settings
 
-Piece = Literal["title", "thumbnail", "platforms", "description", "gratitude", "tags"]
-PIECES: tuple[Piece, ...] = ("title", "thumbnail", "platforms", "description", "gratitude", "tags")
+Piece = Literal["title", "thumbnail", "platforms", "description", "gratitude", "tags", "pinned"]
+PIECES: tuple[Piece, ...] = ("title", "thumbnail", "platforms", "description", "gratitude", "tags", "pinned")
 
 
 def explainer_skills_dir() -> Path:
@@ -92,7 +92,6 @@ class ThumbnailStrategy(_Strategy):
 class PlatformsStrategy(_Strategy):
     facebook_first_line_max_chars: int = Field(gt=0)
     tiktok_caption_max_chars: int = Field(gt=0)
-    screen_text_words: Range
     forbidden_hashtags: list[str]
 
 
@@ -136,6 +135,18 @@ class CategoryProfile(_Rules):
     required_hashtags: dict[Literal["youtube", "tiktok", "facebook"], list[str]] = Field(default_factory=dict)
 
 
+class PinnedStrategy(_Strategy):
+    """Comentario fijado: un dato extra y dos preguntas, escrito como lo escribiría una persona."""
+
+    max_chars: int = Field(gt=0)
+    opener: str                      # con qué empieza (p. ej. "Dato extra:")
+    questions: int = Field(ge=1)     # preguntas al final
+    forbidden_openers: list[str]     # comienzos de plantilla que suenan a robot
+    # Guía para quien escribe (persona o IA); no se valida automáticamente.
+    tone: list[str]
+    examples: list[str]
+
+
 STRATEGY_MODELS: dict[Piece, type[_Strategy]] = {
     "title": TitleStrategy,
     "thumbnail": ThumbnailStrategy,
@@ -143,6 +154,7 @@ STRATEGY_MODELS: dict[Piece, type[_Strategy]] = {
     "description": DescriptionStrategy,
     "gratitude": GratitudeStrategy,
     "tags": TagsStrategy,
+    "pinned": PinnedStrategy,
 }
 
 
@@ -208,6 +220,7 @@ class ActiveStrategies:
     description: DescriptionStrategy
     gratitude: GratitudeStrategy
     tags: TagsStrategy
+    pinned: PinnedStrategy
 
     def ids(self) -> dict[str, str]:
         return {piece: getattr(self, piece).id for piece in PIECES}

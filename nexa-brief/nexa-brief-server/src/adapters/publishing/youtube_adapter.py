@@ -26,6 +26,8 @@ Structured log events:
   youtube_upload_complete      — all chunks sent
   youtube_processing_poll      — polling for upload_status
   youtube_publish_success      — video fully processed and public
+  youtube_thumbnail_set        — custom thumbnail uploaded (thumbnails.set)
+  youtube_thumbnail_failed     — custom thumbnail rejected (the video stays published)
   youtube_quota_warning        — approaching or at daily quota
   youtube_update_start         — calling PUT /videos for metadata update
   youtube_update_done          — metadata updated successfully
@@ -38,8 +40,10 @@ from __future__ import annotations
 
 import asyncio
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import structlog
 
@@ -56,6 +60,48 @@ _UPLOAD_BASE = "https://www.googleapis.com/upload/youtube/v3"
 
 _POLL_INTERVAL = 10.0   # seconds
 _POLL_MAX_WAIT = 300.0  # seconds (5 min; YouTube processing can take a while)
+
+
+def _handle_from_custom_url(custom_url: str | None) -> str | None:
+    """Return a verified @handle from YouTube's customUrl field, if it contains one."""
+    if not custom_url:
+        return None
+    value = custom_url.strip()
+    path = urlparse(value).path if "://" in value else value
+    candidate = path.rstrip("/").rsplit("/", 1)[-1]
+    return candidate[1:] if candidate.startswith("@") and len(candidate) > 1 else None
+
+
+@dataclass(frozen=True, slots=True)
+class YouTubeChannelProfile:
+    channel_id: str
+    title: str
+    handle: str | None
+    description: str
+    custom_url: str | None
+    avatar: str | None
+
+    @classmethod
+    def from_resource(cls, resource: dict[str, Any]) -> "YouTubeChannelProfile":
+        snippet = resource.get("snippet") or {}
+        thumbnails = snippet.get("thumbnails") or {}
+        avatar = next(
+            (
+                thumbnails.get(size, {}).get("url")
+                for size in ("high", "medium", "default")
+                if thumbnails.get(size, {}).get("url")
+            ),
+            None,
+        )
+        custom_url = snippet.get("customUrl") or None
+        return cls(
+            channel_id=resource.get("id") or "",
+            title=snippet.get("title") or "",
+            handle=_handle_from_custom_url(custom_url),
+            description=snippet.get("description") or "",
+            custom_url=custom_url,
+            avatar=avatar,
+        )
 
 
 class YouTubeAdapter(BasePlatformAdapter):
@@ -87,6 +133,8 @@ class YouTubeAdapter(BasePlatformAdapter):
             account_alias: Key in accounts.json (e.g. 'canal_1').
             privacy:      'public' | 'private' | 'unlisted'.
             kwargs:       language — "es" | "en", sets defaultLanguage/defaultAudioLanguage.
+                          thumbnail_path — JPEG/PNG ≤ 2 MB uploaded with thumbnails.set after
+                          processing (needs a verified channel; a failure never fails the upload).
 
         Returns:
             PublishVideoResult with YouTube video_id and watch URL.
@@ -132,6 +180,19 @@ class YouTubeAdapter(BasePlatformAdapter):
         # ── Step 3: Poll for processing ───────────────────────────────────────
         await self._poll_processing(token=token, video_id=video_id, account_alias=account_alias)
 
+        # ── Step 4: Custom thumbnail (optional) ───────────────────────────────
+        thumbnail_path = kwargs.get("thumbnail_path")
+        if thumbnail_path:
+            await self._set_thumbnail(token, video_id, Path(thumbnail_path))
+
+        # A failed comment must not re-upload an already published video.
+        comment_text = str(kwargs.get("comment_text") or "").strip()
+        comment_posted = False
+        if comment_text:
+            comment_posted = await self._post_top_level_comment(
+                token, video_id, account_alias, comment_text
+            )
+
         elapsed = round(time.monotonic() - t_start, 2)
         logger.info(
             "youtube_publish_success",
@@ -146,8 +207,69 @@ class YouTubeAdapter(BasePlatformAdapter):
             url=f"https://www.youtube.com/watch?v={video_id}",
             platform=self.PLATFORM,
             account_alias=account_alias,
-            raw_response={"video_id": video_id},
+            raw_response={"video_id": video_id, "comment_posted": comment_posted},
         )
+
+    async def _post_top_level_comment(
+        self, token: str, video_id: str, account_alias: str, text: str
+    ) -> bool:
+        """Post the package comment once the upload succeeds; pinning is a UI action."""
+        try:
+            channel_id = self._token_manager._storage.get_state("youtube", account_alias).target_id
+            if not channel_id:
+                async with self._make_client() as client:
+                    channel_response = await client.get(
+                        f"{_YT_BASE}/channels",
+                        params={"part": "id", "mine": "true"},
+                        headers={"Authorization": f"Bearer {token}"},
+                    )
+                if channel_response.status_code != 200:
+                    logger.warning("youtube_comment_channel_lookup_failed", video_id=video_id,
+                                   status=channel_response.status_code)
+                    return False
+                items = channel_response.json().get("items") or []
+                channel_id = items[0].get("id") if items else None
+            if not channel_id:
+                logger.warning("youtube_comment_channel_missing", video_id=video_id)
+                return False
+            async with self._make_client() as client:
+                response = await client.post(
+                    f"{_YT_BASE}/commentThreads",
+                    params={"part": "snippet"},
+                    headers={"Authorization": f"Bearer {token}"},
+                    json={"snippet": {"channelId": channel_id, "videoId": video_id,
+                                      "topLevelComment": {"snippet": {"textOriginal": text}}}},
+                )
+            if response.status_code not in (200, 201):
+                logger.warning("youtube_comment_failed", video_id=video_id,
+                               status=response.status_code, body=response.text[:300])
+                return False
+            logger.info("youtube_comment_posted", video_id=video_id)
+            return True
+        except Exception as exc:  # comment failure must not duplicate an uploaded video
+            logger.warning("youtube_comment_failed", video_id=video_id, error=str(exc)[:300])
+            return False
+
+    async def _set_thumbnail(self, token: str, video_id: str, path: Path) -> bool:
+        """POST /upload/youtube/v3/thumbnails/set. Never raises: `publish` retries on errors and
+        would upload the whole video again; a missing thumbnail is only logged."""
+        url = f"{_UPLOAD_BASE}/thumbnails/set?videoId={video_id}"
+        content_type = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
+        try:
+            data = path.read_bytes()
+            self._log_request("POST", url, file_size_bytes=len(data))
+            t = time.monotonic()
+            async with self._make_client() as client:
+                resp = await client.post(url, headers={"Authorization": f"Bearer {token}", "Content-Type": content_type}, content=data)
+            self._log_response("POST", url, resp.status_code, time.monotonic() - t)
+        except Exception as exc:  # noqa: BLE001 - see docstring
+            logger.warning("youtube_thumbnail_failed", video_id=video_id, error=str(exc)[:300])
+            return False
+        if resp.status_code not in (200, 201):
+            logger.warning("youtube_thumbnail_failed", video_id=video_id, status=resp.status_code, body=resp.text[:300])
+            return False
+        logger.info("youtube_thumbnail_set", video_id=video_id, file=path.name)
+        return True
 
     async def _init_resumable_session(
         self,
@@ -333,6 +455,51 @@ class YouTubeAdapter(BasePlatformAdapter):
             f"YouTube processing timed out after {_POLL_MAX_WAIT}s (video_id={video_id})",
             platform=self.PLATFORM,
         )
+
+    # ── CHANNEL PROFILE ──────────────────────────────────────────────────────
+
+    @with_retry(max_retries=3)
+    async def get_channel_profile(
+        self,
+        account_alias: str,
+        *,
+        expected_channel_id: str | None = None,
+    ) -> YouTubeChannelProfile | None:
+        """Read the connected channel's public profile using its stored OAuth token."""
+        token = await self._token_manager.get_valid_token(self.PLATFORM, account_alias)
+        url = f"{_YT_BASE}/channels"
+        params = {"part": "snippet", "mine": "true", "maxResults": 50}
+        headers = {"Authorization": f"Bearer {token}"}
+        self._log_request("GET", url, account=account_alias, purpose="channel_profile")
+        started = time.monotonic()
+
+        async with self._make_client() as client:
+            response = await client.get(url, params=params, headers=headers)
+            self._log_response(
+                "GET",
+                url,
+                response.status_code,
+                time.monotonic() - started,
+                account=account_alias,
+                purpose="channel_profile",
+            )
+
+        if response.status_code != 200:
+            self._handle_api_error(response, "YouTube get channel profile")
+
+        items = response.json().get("items") or []
+        if not items:
+            return None
+
+        resource = next(
+            (item for item in items if item.get("id") == expected_channel_id),
+            None,
+        ) if expected_channel_id else None
+        if expected_channel_id and resource is None:
+            return None
+        resource = resource or items[0]
+        profile = YouTubeChannelProfile.from_resource(resource)
+        return profile if profile.channel_id and profile.title else None
 
     # ── READ ──────────────────────────────────────────────────────────────────
 

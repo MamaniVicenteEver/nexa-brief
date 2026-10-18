@@ -33,6 +33,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 
 from src.config.settings import settings
 from src.adapters.publishing.token_storage import TokenStorage
+from src.presentation.api.oauth_urls import public_url
 
 router = APIRouter(prefix="/api/oauth/youtube", tags=["youtube"])
 logger = structlog.get_logger(__name__)
@@ -44,9 +45,7 @@ _GOOGLE_AUTH_URL  = "https://accounts.google.com/o/oauth2/auth"
 _GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 _SCOPES = "https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.force-ssl"
 
-# The redirect_uri MUST match exactly what is in client_secret.json AND
-# in Google Cloud Console → Authorized redirect URIs.
-_REDIRECT_URI = "http://localhost:8000/api/oauth/youtube/callback"
+# OAuth callback URLs are derived from the canonical PUBLIC_APP_URL.
 
 
 def _load_client_credentials() -> tuple[str, str]:
@@ -88,7 +87,7 @@ async def youtube_oauth_start(alias: str = "canal_1") -> RedirectResponse:
 
     params = {
         "client_id": client_id,
-        "redirect_uri": _REDIRECT_URI,
+        "redirect_uri": public_url("/api/oauth/youtube/callback"),
         "response_type": "code",
         "scope": _SCOPES,
         "access_type": "offline",      # Request a refresh_token
@@ -119,7 +118,7 @@ async def youtube_oauth_callback(
     """Receive the authorization code from Google and exchange it for tokens.
 
     This endpoint is called automatically by Google after the user authorizes.
-    The redirect_uri must be: http://localhost:8000/api/oauth/youtube/callback
+    The redirect URI comes from the canonical PUBLIC_APP_URL configuration.
     """
     # ── Handle user denial ────────────────────────────────────────────────────
     if error:
@@ -149,7 +148,7 @@ async def youtube_oauth_callback(
                     "code": code,
                     "client_id": client_id,
                     "client_secret": client_secret,
-                    "redirect_uri": _REDIRECT_URI,
+                    "redirect_uri": public_url("/api/oauth/youtube/callback"),
                     "grant_type": "authorization_code",
                 },
             )

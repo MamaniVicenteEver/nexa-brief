@@ -1,8 +1,9 @@
 """Operaciones sobre el paquete de un video: revisar y reconstruir.
 
 `review` es de solo lectura (la usa la API para mostrar el paquete y lo que
-falta). `build` vuelve a derivar publish.json desde el paquete, aplica la intro
-y, si la intro cambió, sincroniza manifest.json y la portada con el kit.
+falta). `build` vuelve a derivar publish.json desde el paquete, pone la miniatura
+elegida como apertura del video (opening.py) y, si cambió, sincroniza manifest.json
+y la portada con el kit.
 """
 
 from __future__ import annotations
@@ -13,7 +14,7 @@ from dataclasses import dataclass, field
 
 from src.core.explainer.catalog import KIT_DIR, ExplainerVideo
 from src.core.explainer.publishing.checks import Issue, check_package
-from src.core.explainer.publishing.intro import IntroResult, apply_intro
+from src.core.explainer.publishing.opening import OpeningResult, apply_opening
 from src.core.explainer.publishing.package import SCHEMA_VERSION, PublishPackage
 from src.core.explainer.publishing.store import load_package, save_package
 from src.core.explainer.publishing.strategies import ActiveStrategies, active_strategies
@@ -48,7 +49,7 @@ def review(video: ExplainerVideo) -> PackageReview | None:
 @dataclass
 class BuildResult:
     review: PackageReview
-    intro: IntroResult
+    opening: OpeningResult
 
 
 def _kit(*args: str) -> None:
@@ -60,17 +61,17 @@ def _kit(*args: str) -> None:
 
 
 def build(video: ExplainerVideo) -> BuildResult:
-    """Deriva publish.json del paquete, aplica la intro y sincroniza manifest y portada."""
+    """Deriva publish.json del paquete, abre el video con la miniatura elegida y sincroniza manifest y portada."""
     package = load_package(video.path)
     if package is None:
         raise ValueError(f"{video.video_id}: publish.json no es un paquete v{SCHEMA_VERSION}; no hay nada que construir")
     strategies = active_strategies(package.category)
     save_package(video.path, package, strategies)
-    intro = apply_intro(video.path, package.intro)
+    opening = apply_opening(video.path, package)
     # manifest.json copia título y textos de publicación (kit.py manifest); la
     # portada de la web es un cuadro del cartel de apertura (kit.py poster).
     _kit("manifest", video.video_id)
-    if intro.changed or not (video.path / "render" / "poster.jpg").exists():
+    if opening.changed or not (video.path / "render" / "poster.jpg").exists():
         _kit("poster", video.video_id)
     issues = check_package(package, strategies, video.path, video.duration_seconds)
-    return BuildResult(review=PackageReview(package, strategies, issues), intro=intro)
+    return BuildResult(review=PackageReview(package, strategies, issues), opening=opening)

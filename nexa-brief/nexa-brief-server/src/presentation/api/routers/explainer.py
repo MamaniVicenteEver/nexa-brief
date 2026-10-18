@@ -29,8 +29,8 @@ from functools import lru_cache
 from pathlib import Path
 
 import structlog
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse, Response
 from pydantic import ValidationError
 
 from src.adapters.agent.factory import AGENTS, agents_status
@@ -40,12 +40,18 @@ from src.config.exceptions import NexaBriefError
 from src.config.settings import settings
 from src.core.categories import explainer_folders, get_category, list_categories
 from src.core.explainer.briefs import ExplainerBrief, generate_brief, generate_publish_texts, write_publish_json
+from src.core.explainer import lengths, thumbnails
 from src.core.explainer.publishing import review as review_package
 from src.core.explainer.publishing.store import is_package, read_publish
 from src.core.explainer.catalog import TEMPLATES_DIR, ExplainerVideo, get_video, list_videos
+from src.core.explainer.component_preview import ComponentPreviewError, build_component_previews
 from src.core.explainer.designs import KitDesign, designs_for, list_designs, load_design
 from src.core.explainer.producer import ExplainerProducer
 from src.core.explainer.recorder import ExplainerRecorder, RecordJob
+from src.presentation.api.schemas.component_preview_schema import (
+    ComponentPreviewBatchRequest,
+    ComponentPreviewBatchResponse,
+)
 from src.presentation.api.schemas.explainer_schema import (
     BriefRequest,
     CategoryDesignsResponse,
@@ -54,6 +60,8 @@ from src.presentation.api.schemas.explainer_schema import (
     ExplainerJobResponse,
     ExplainerOptionsResponse,
     ExplainerVideoResponse,
+    LengthOptionsResponse,
+    LengthPresetResponse,
     ProductionRequest,
     ProductionResponse,
     ProviderStatus,
@@ -62,6 +70,9 @@ from src.presentation.api.schemas.explainer_schema import (
     PublishTextsRequest,
     PublishTextsResponse,
     RecordExplainerRequest,
+    ThumbnailChoiceRequest,
+    ThumbnailOptionResponse,
+    ThumbnailsResponse,
 )
 
 router = APIRouter(tags=["explainer"])
@@ -73,7 +84,7 @@ MAX_UPLOAD_BYTES = 300 * 1024 * 1024
 
 @lru_cache(maxsize=1)
 def get_recorder() -> ExplainerRecorder:
-    return ExplainerRecorder(publisher_getter=get_publisher_facade)
+    return ExplainerRecorder(publisher_getter=get_publisher_facade, thumbnail_renderer=thumbnails.render)
 
 
 @lru_cache(maxsize=1)
@@ -93,6 +104,14 @@ def _poster_url(video: ExplainerVideo) -> str | None:
         return None
     base = _video_preview_url(video).replace("/index.html", "/render/poster.jpg")
     return f"{base}?v={int(poster.stat().st_mtime)}"
+
+
+def _render_video_url(video: ExplainerVideo, fmt: str) -> str | None:
+    """render/<video>-<fmt>.mp4 del video, si ya se grabó."""
+    name = f"{video.path.name}-{fmt}.mp4"
+    if not (video.path / "render" / name).exists():
+        return None
+    return _video_preview_url(video).replace("/index.html", f"/render/{name}")
 
 
 def _design_demo(design: KitDesign) -> ExplainerVideo | None:
@@ -117,7 +136,25 @@ def _design_response(design: KitDesign) -> DesignResponse:
         category_path=design.category_path,
         preview_url=_video_preview_url(demo) if demo else None,
         poster_url=_poster_url(demo) if demo else None,
+        video_url=_render_video_url(demo, "16x9") if demo else None,
+        video_portrait_url=_render_video_url(demo, "9x16") if demo else None,
     )
+
+
+def _thumbnails(video: ExplainerVideo) -> ThumbnailsResponse:
+    specs = thumbnails.intro_specs(video)
+    if not specs:
+        return ThumbnailsResponse()
+    base = _video_preview_url(video).replace("/index.html", "/render")
+    options = []
+    for option, spec in specs.items():
+        path = thumbnails.thumbnail_file(video, option)
+        url = f"{base}/{path.name}?v={int(path.stat().st_mtime)}" if path.exists() else None
+        # la foto va con ruta desde src/templates/ ("/nodehistory/…"): para el navegador, por la API de archivos
+        params = {k: (f"{FILES_PREFIX}{v}" if k == "src" and isinstance(v, str) and v.startswith("/") else v)
+                  for k, v in spec["params"].items()}
+        options.append(ThumbnailOptionResponse(option=option, component=spec["component"], params=params, url=url))
+    return ThumbnailsResponse(chosen=thumbnails.chosen_option(video), options=options)
 
 
 def _job_response(job: RecordJob) -> ExplainerJobResponse:
@@ -194,6 +231,7 @@ def _video_response(video: ExplainerVideo) -> ExplainerVideoResponse:
         poster_url=_poster_url(video),
         last_job=_job_response(last) if last else None,
         publish_package=_publish_package(video),
+        thumbnails=_thumbnails(video),
     )
 
 
@@ -243,11 +281,45 @@ async def record_explainer_video(video_id: str, body: RecordExplainerRequest) ->
             account_selector=body.account_selector,
             account_selectors=body.account_selectors,
             formats=body.formats,
+            account_formats=body.account_formats,
+            thumbnail=body.thumbnail,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     logger.info("explainer_record_submitted", video_id=video_id, job_id=job.job_id, publish=body.publish)
     return _job_response(job)
+
+
+def _video_or_404(video_id: str) -> ExplainerVideo:
+    video = get_video(video_id)
+    if video is None:
+        raise HTTPException(status_code=404, detail=f"video no encontrado: {video_id}")
+    return video
+
+
+@router.post("/explainer/videos/{video_id}/thumbnails", response_model=ThumbnailsResponse)
+async def capture_thumbnails(video_id: str) -> ThumbnailsResponse:
+    """Captura las miniaturas A (introv1) y B (introv2) con los textos actuales del paquete."""
+    video = _video_or_404(video_id)
+    if not thumbnails.intro_specs(video):
+        raise HTTPException(status_code=409, detail=f"el diseño {video.design} no tiene intros para miniaturas")
+    try:
+        await thumbnails.render(video)
+    except thumbnails.ThumbnailError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    return _thumbnails(video)
+
+
+@router.put("/explainer/videos/{video_id}/thumbnail", response_model=ThumbnailsResponse)
+async def choose_thumbnail(video_id: str, body: ThumbnailChoiceRequest) -> ThumbnailsResponse:
+    """Elige la miniatura que se sube a YouTube (queda en publish.json)."""
+    video = _video_or_404(video_id)
+    try:
+        thumbnails.choose(video, body.option)
+        await thumbnails.ensure(video, body.option)
+    except thumbnails.ThumbnailError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return _thumbnails(video)
 
 
 @router.get("/explainer/jobs/{job_id}", response_model=ExplainerJobResponse)
@@ -295,6 +367,12 @@ async def explainer_options() -> ExplainerOptionsResponse:
         text_providers=text,
         default_agent=settings.explainer_agent,
         default_text_provider=settings.explainer_text_provider,
+        lengths=LengthOptionsResponse(
+            presets=[LengthPresetResponse(minutes=p.minutes, id=p.id, label=p.label) for p in lengths.presets()],
+            default_minutes=lengths.default_minutes(),
+            min_minutes=lengths.min_minutes(),
+            max_minutes=lengths.max_minutes(),
+        ),
     )
 
 
@@ -344,6 +422,7 @@ async def create_brief(body: BriefRequest) -> dict:
             description=body.description,
             design=design,
             media_names=body.media_names,
+            minutes=body.minutes,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -388,6 +467,7 @@ async def create_production(
                 media_files=media_paths,
                 auto_record=req.auto_record,
                 plan_item_id=req.plan_item_id,
+                minutes=req.minutes,
             )
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -426,8 +506,17 @@ async def resume_production(production_id: str) -> ProductionResponse:
 
 # ── Previsualizar ────────────────────────────────────────────────────────────
 
+@router.post("/explainer/component-previews", response_model=ComponentPreviewBatchResponse)
+async def post_component_previews(body: ComponentPreviewBatchRequest) -> ComponentPreviewBatchResponse:
+    """Devuelve URLs del escenario aislado para uno o varios componentes del kit."""
+    try:
+        return ComponentPreviewBatchResponse(previews=build_component_previews(body.previews))
+    except ComponentPreviewError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
 @router.get("/explainer/files/{file_path:path}")
-async def get_explainer_file(file_path: str) -> FileResponse:
+async def get_explainer_file(file_path: str, request: Request) -> Response:
     """Sirve el kit y los videos para el iframe de preview: solo _tools/explainer-kit/ y
     las carpetas de categoría (nodetech/, nodehistory/…), nunca archivos ocultos."""
     root = TEMPLATES_DIR.resolve()
@@ -438,5 +527,20 @@ async def get_explainer_file(file_path: str) -> FileResponse:
         raise HTTPException(status_code=404, detail="no encontrado")
     if not target.is_file():
         raise HTTPException(status_code=404, detail="no encontrado")
-    # no-cache: el navegador revalida (ETag) y nunca usa un index.html o motor viejo
-    return FileResponse(target, headers={"Cache-Control": "no-cache"})
+    # Los previews cambian durante desarrollo: revalidamos, pero un ETag válido no
+    # debe volver a transferir el audio o las imágenes completas.
+    response = FileResponse(
+        target,
+        stat_result=target.stat(),
+        headers={"Cache-Control": "no-cache"},
+    )
+    etag = response.headers.get("etag")
+    if etag:
+        candidates = {tag.strip() for tag in request.headers.get("if-none-match", "").split(",")}
+        if "*" in candidates or etag in candidates or f"W/{etag}" in candidates:
+            headers = {"Cache-Control": "no-cache", "ETag": etag}
+            last_modified = response.headers.get("last-modified")
+            if last_modified:
+                headers["Last-Modified"] = last_modified
+            return Response(status_code=304, headers=headers)
+    return response

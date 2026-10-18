@@ -12,9 +12,10 @@ const PLATFORM_LABEL: Record<ChannelPlatform, string> = {
   youtube: "YouTube",
   tiktok: "TikTok",
   facebook: "Facebook",
+  instagram: "Instagram",
 };
 
-const PLATFORMS: ChannelPlatform[] = ["youtube", "tiktok", "facebook"];
+const PLATFORMS: ChannelPlatform[] = ["youtube", "tiktok", "facebook", "instagram"];
 
 function accountKey(account: ChannelAccount): string {
   return `${account.platform}:${account.alias}`;
@@ -53,6 +54,7 @@ export function ChannelsSection({ form }: { form: UseFormReturn<CreateVideoFormV
     youtube: [],
     tiktok: [],
     facebook: [],
+    instagram: [],
   };
   for (const channel of channels ?? []) {
     byPlatform[channel.platform]?.push(channel);

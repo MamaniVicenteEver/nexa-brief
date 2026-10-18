@@ -2,9 +2,18 @@
 
 import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import type { PublishIssue, PublishPackage, PublishPackageReview, TitleOptionId } from "../types";
+import { requestComponentPreviews } from "../api/component-preview-service";
+import type {
+  PublishIssue,
+  PublishPackage,
+  PublishPackageReview,
+  ThumbnailPreview,
+  TitleOptionId,
+  VideoThumbnails,
+} from "../types";
+import { ThumbnailArtwork } from "./ThumbnailArtwork";
 
 function Section({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -61,19 +70,6 @@ function Issues({ issues }: { issues: PublishIssue[] }) {
   );
 }
 
-/** El texto de la miniatura con la palabra de la tensión resaltada. */
-function Highlighted({ text, highlight }: { text: string; highlight: string }) {
-  const at = highlight ? text.indexOf(highlight) : -1;
-  if (at < 0) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, at)}
-      <span className="text-nb-green">{highlight}</span>
-      {text.slice(at + highlight.length)}
-    </>
-  );
-}
-
 function Titles({ pkg, maxChars }: { pkg: PublishPackage; maxChars: number }) {
   const t = useTranslations("explainer.studio.package");
   return (
@@ -99,48 +95,145 @@ function Titles({ pkg, maxChars }: { pkg: PublishPackage; maxChars: number }) {
   );
 }
 
-function Thumbnails({ pkg }: { pkg: PublishPackage }) {
+/** La captura real de la miniatura (render/thumbnail-<opción>.jpg); mientras no exista, el boceto. */
+function Captured({ url, fallback }: { url: string | null; fallback: ReactNode }) {
+  if (!url) return <>{fallback}</>;
+  // biome-ignore lint/performance/noImgElement: captura servida por la API, sin optimizar
+  return <img src={url} alt="" className="aspect-video w-full rounded-md object-cover" />;
+}
+
+function Thumbnails({
+  pkg,
+  videoId,
+  thumbnails,
+  preview,
+  onPreview,
+}: {
+  pkg: PublishPackage;
+  videoId: string;
+  thumbnails: VideoThumbnails;
+  preview: ThumbnailPreview | null;
+  onPreview: (preview: ThumbnailPreview) => void;
+}) {
   const t = useTranslations("explainer.studio.package");
   const { textOnly, withImage, chosen } = pkg.thumbnail;
   const pair = (option: TitleOptionId) => t("pair", { option });
+  const [componentPreviewUrls, setComponentPreviewUrls] = useState<Record<string, string>>({});
+  const captured = (option: TitleOptionId) =>
+    thumbnails.options.find((o) => o.option === option)?.url ?? null;
+
+  // La vista previa usa la intro REAL del diseño de este video (introv1/introv2 de rough, binary,
+  // acuarela, crónica…) con los mismos params con que abre el video: los arma el server.
+  useEffect(() => {
+    if (thumbnails.options.length === 0) {
+      setComponentPreviewUrls({});
+      return;
+    }
+    let current = true;
+    requestComponentPreviews(
+      thumbnails.options.map((o) => ({
+        key: o.option,
+        videoId,
+        component: o.component,
+        params: o.params,
+        timeSeconds: 4.5,
+      })),
+    )
+      .then((items) => {
+        if (!current) return;
+        setComponentPreviewUrls(
+          Object.fromEntries(items.map((item) => [item.key, item.previewUrl])),
+        );
+      })
+      .catch(() => {
+        if (!current) return;
+        setComponentPreviewUrls({});
+      });
+    return () => {
+      current = false;
+    };
+  }, [videoId, thumbnails]);
+
+  useEffect(() => {
+    if (!preview) return;
+    const componentPreviewUrl = componentPreviewUrls[preview.option];
+    if (componentPreviewUrl && preview.componentPreviewUrl !== componentPreviewUrl) {
+      onPreview({ ...preview, componentPreviewUrl });
+    }
+  }, [componentPreviewUrls, onPreview, preview]);
+
+  const optionA: ThumbnailPreview = {
+    option: "A",
+    lines: textOnly.lines,
+    highlight: textOnly.highlight,
+    componentPreviewUrl: componentPreviewUrls.A,
+  };
+  const optionB: ThumbnailPreview = {
+    option: "B",
+    text: withImage.text,
+    imageUrl: withImage.imageUrl,
+    componentPreviewUrl: componentPreviewUrls.B,
+  };
   return (
     <Section label={t("thumbnails")}>
-      <div className="flex flex-col gap-1 rounded-lg bg-black p-3">
-        {textOnly.lines.map((line) => (
-          <span key={line} className="text-[15px] leading-tight font-black text-white">
-            <Highlighted text={line} highlight={textOnly.highlight} />
-          </span>
-        ))}
-      </div>
+      <button
+        type="button"
+        aria-label={t("previewOption", { option: "A" })}
+        aria-pressed={preview?.option === "A"}
+        onClick={() => onPreview(optionA)}
+        className={cn(
+          "block w-full overflow-hidden rounded-lg border-2 text-left transition-colors",
+          preview?.option === "A" ? "border-nb-green" : "border-transparent hover:border-nb-line",
+        )}
+      >
+        <Captured
+          url={captured("A")}
+          fallback={<ThumbnailArtwork preview={optionA} imagePendingLabel={t("imagePending")} />}
+        />
+      </button>
       <div className="flex flex-wrap gap-1">
         <Chip active={chosen === "text_only"}>{t("textOnly")}</Chip>
         <Chip>{pair(textOnly.pairTitle)}</Chip>
       </div>
-      <div className="mt-1 flex items-stretch gap-2">
-        {withImage.imageUrl ? (
-          // biome-ignore lint/performance/noImgElement: imagen del video servida por la API, sin optimizar
-          <img
-            src={withImage.imageUrl}
-            alt=""
-            className="h-16 w-24 shrink-0 rounded-lg object-cover"
-          />
-        ) : (
-          <span className="flex h-16 w-24 shrink-0 items-center justify-center rounded-lg border border-dashed border-nb-line text-center text-[10px] text-nb-mute">
-            {t("imagePending")}
-          </span>
+      <button
+        type="button"
+        aria-label={t("previewOption", { option: "B" })}
+        aria-pressed={preview?.option === "B"}
+        onClick={() => onPreview(optionB)}
+        className={cn(
+          "mt-1 block w-full overflow-hidden rounded-lg border-2 text-left transition-colors",
+          preview?.option === "B" ? "border-nb-green" : "border-transparent hover:border-nb-line",
         )}
-        <span className="self-center text-[14px] font-black text-nb-ink">{withImage.text}</span>
-      </div>
+      >
+        <Captured
+          url={captured("B")}
+          fallback={<ThumbnailArtwork preview={optionB} imagePendingLabel={t("imagePending")} />}
+        />
+      </button>
       <div className="flex flex-wrap gap-1">
         <Chip active={chosen === "with_image"}>{t("withImage")}</Chip>
         <Chip>{pair(withImage.pairTitle)}</Chip>
       </div>
+      <p className="text-[11.5px] text-nb-mute">{t("thumbnailsHint")}</p>
+      <p className="text-[11.5px] text-nb-mute">{t("previewHint")}</p>
     </Section>
   );
 }
 
-/** Paquete de publicación v2: intro, títulos para Test & Compare, miniaturas y lo que falta revisar. */
-export function PublishPackagePanel({ review }: { review: PublishPackageReview }) {
+/** Paquete de publicación v2: miniaturas (la elegida abre el video), títulos para Test & Compare y lo que falta revisar. */
+export function PublishPackagePanel({
+  review,
+  videoId,
+  thumbnails,
+  preview,
+  onPreview,
+}: {
+  review: PublishPackageReview;
+  videoId: string;
+  thumbnails: VideoThumbnails;
+  preview: ThumbnailPreview | null;
+  onPreview: (preview: ThumbnailPreview) => void;
+}) {
   const t = useTranslations("explainer.studio.package");
   const pkg = review.package;
   return (
@@ -150,22 +243,14 @@ export function PublishPackagePanel({ review }: { review: PublishPackageReview }
       </Section>
       {pkg && (
         <>
-          <Section label={t("intro")}>
-            {pkg.intro.kicker && (
-              <span className="text-[10px] font-bold tracking-[0.06em] text-nb-ink-soft">
-                {pkg.intro.kicker}
-              </span>
-            )}
-            <p className="text-[15px] leading-tight font-black text-nb-ink">
-              {pkg.intro.lines.join(" ")}
-            </p>
-            {pkg.intro.sub && (
-              <p className="text-[11.5px] font-semibold text-nb-ink-soft">{pkg.intro.sub}</p>
-            )}
-            <p className="text-[11.5px] text-nb-mute">{t("introHint")}</p>
-          </Section>
+          <Thumbnails
+            pkg={pkg}
+            videoId={videoId}
+            thumbnails={thumbnails}
+            preview={preview}
+            onPreview={onPreview}
+          />
           <Titles pkg={pkg} maxChars={review.titleMaxChars} />
-          <Thumbnails pkg={pkg} />
           <Section label={t("pinnedComment")}>
             <p className="text-[12px] text-nb-ink-soft">{pkg.pinnedComment}</p>
           </Section>

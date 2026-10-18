@@ -41,6 +41,12 @@ export function ConnectAccountDialog({
   const value = alias.trim() || suggested;
   const invalid = !ALIAS_PATTERN.test(value);
   const willReplace = !invalid && existing.includes(value);
+  const aliasHint =
+    platform === "youtube"
+      ? t("youtubeAliasHint")
+      : platform === "instagram"
+        ? t("instagramAliasHint")
+        : t("aliasHint");
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
@@ -75,7 +81,7 @@ export function ConnectAccountDialog({
             <legend className="mb-2 text-[12.5px] font-semibold text-nb-ink">
               {t("platformLabel")}
             </legend>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {PLATFORMS.map((p) => (
                 <button
                   key={p}
@@ -121,7 +127,7 @@ export function ConnectAccountDialog({
               ? t("aliasInvalid")
               : willReplace
                 ? t("aliasExists", { alias: value })
-                : t("aliasHint")}
+                : aliasHint}
           </span>
         </label>
 

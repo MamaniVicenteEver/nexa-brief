@@ -29,7 +29,8 @@ from typing import Any, Protocol
 import structlog
 
 from src.config.settings import settings
-from src.core import job_tracker, publish_log
+from src.core import job_tracker, publish_log, notification_tracker
+from src.core.notification import Notification
 from src.core.job import JobStage
 from src.core.schedule import queue_repository, slot_repository
 from src.core.schedule.models import QueueEntry, QueueSource, ScheduleSlot
@@ -117,15 +118,31 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         return failed or updated
 
     file_paths: dict[str, str] = job_record.get("file_paths", {}) or {}
+    format_paths = job_tracker.format_paths(job_record)
+    explicit_format_path = format_paths.get(entry.format) if entry.format else None
     # youtube y facebook comparten el mismo archivo horizontal (ver social_publisher.py).
     # TikTok usa su clip propio si el nicho lo genera (generate_tiktok_clip); si
     # no (ej. nichos de letras), el video vertical completo (reels, 9:16).
-    if entry.platform == "tiktok":
+    if explicit_format_path:
+        video_path_str = explicit_format_path
+    elif entry.platform == "tiktok":
         video_path_str = file_paths.get("tiktok") or file_paths.get("reels")
+    elif entry.platform == "instagram":
+        video_path_str = file_paths.get("reels") or file_paths.get("tiktok") or file_paths.get("youtube")
     else:
         video_path_str = file_paths.get("youtube")
     copy = copy_for_platform(summary, entry.platform)
     extra_kwargs = {"language": copy.language} if entry.platform == "youtube" and copy.language else {}
+    # miniatura propia (explainer: la intro elegida; NodeMotion: el final de la intro); solo YouTube por API
+    # (si el video se grabó sin ella, se saca ahora del final de su intro; thumbnails.set: solo JPEG/PNG)
+    if entry.platform == "youtube":
+        from src.modules.thumbnail_maker import ensure_for_job
+
+        thumbnail = await ensure_for_job(file_paths)
+        if thumbnail is not None:
+            extra_kwargs["thumbnail_path"] = thumbnail
+    if entry.platform == "youtube" and summary.get("pinned_comment"):
+        extra_kwargs["comment_text"] = summary["pinned_comment"]
 
     if not video_path_str:
         failed = await queue_repository.mark_failed(
@@ -175,6 +192,15 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         title=copy.title,
         job_id=entry.job_id,
     )
+    if entry.platform == "youtube" and extra_kwargs.get("comment_text") and result.raw_response.get("comment_posted") is False:
+        try:
+            await notification_tracker.create(Notification(
+                type="video_failed", severity="warning", title="Comentario de YouTube pendiente",
+                message=f"El video se publicó en YouTube, pero no se pudo añadir el comentario: {result.url}",
+                job_id=entry.job_id, account_alias=entry.account_alias,
+            ))
+        except Exception as exc:
+            logger.warning("schedule_comment_notification_failed", error=str(exc))
     return published or updated
 
 

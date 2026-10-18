@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -23,6 +24,7 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { buildConnectChannelUrl } from "../api/channels-service";
 import { useExpiryLabel } from "../hooks/useExpiryLabel";
+import { useRefreshChannelProfileMutation } from "../hooks/useRefreshChannelProfileMutation";
 import { formatRelativeTime } from "../lib/channels";
 import type { ChannelAccount } from "../types";
 import { AccountAvatar } from "./AccountAvatar";
@@ -49,6 +51,7 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
   const t = useTranslations("channels.card");
   const locale = useLocale();
   const expiryLabel = useExpiryLabel();
+  const refreshProfile = useRefreshChannelProfileMutation();
   const [panel, setPanel] = useState<OpenPanel>(null);
   const needsReauth = account.status === "requires_reauth";
   const setOpen = (target: Exclude<OpenPanel, null>) => (open: boolean) =>
@@ -67,7 +70,20 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
           <h4 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-nb-ink">
             {account.name}
           </h4>
-          <p className="truncate text-[12px] text-nb-mute">@{account.alias}</p>
+          <p className="truncate text-[12px] text-nb-mute">
+            {account.platform === "youtube" || account.platform === "instagram"
+              ? account.handle
+                ? "@" + account.handle
+                : account.platform === "youtube"
+                  ? t("handleUnavailable")
+                  : "@" + account.alias
+              : "@" + account.alias}
+          </p>
+          {account.platform === "youtube" && (
+            <p className="truncate text-[10.5px] text-nb-mute/80">
+              {t("internalIdentifier", { alias: account.alias })}
+            </p>
+          )}
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger
@@ -85,6 +101,20 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
               <Pencil />
               {t("editUsage")}
             </DropdownMenuItem>
+            {(account.platform === "youtube" || account.platform === "instagram") && (
+              <DropdownMenuItem
+                disabled={refreshProfile.isPending}
+                onSelect={() =>
+                  refreshProfile.mutate({ platform: account.platform, alias: account.alias }, {
+                    onSuccess: () => toast.success(t("refreshSuccess")),
+                    onError: () => toast.error(t("refreshError")),
+                  })
+                }
+              >
+                <RefreshCw className={refreshProfile.isPending ? "animate-spin" : undefined} />
+                {refreshProfile.isPending ? t("refreshing") : t("refreshProfile")}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem asChild>
               <a href={buildConnectChannelUrl(account.platform, account.alias)}>
                 <RefreshCw />

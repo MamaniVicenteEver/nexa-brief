@@ -384,7 +384,7 @@ Mapeo de errores → HTTP: `TokenExpiredError→401`, `VideoNotFoundError→404`
 | Facebook | `GET /api/v1/publish/auth/facebook/start?alias=pagina_1` | `GET /api/v1/publish/auth/facebook/callback` |
 | YouTube (alterno, dentro del router `publisher`) | `GET /api/v1/publish/auth/youtube/start?alias=canal_1` | `GET /api/v1/publish/auth/youtube/callback` |
 
-> Nota: existen **dos** implementaciones del flujo OAuth de YouTube — una en [`youtube_oauth.py`](src/presentation/api/routers/youtube_oauth.py) (lee credenciales de `client_secret.json`, redirect fijo a `localhost:8000`) y otra dentro de [`publisher.py`](src/presentation/api/routers/publisher.py) (también lee `client_secret.json` pero con `redirect_uri` dinámico basado en `request.base_url`, útil para túneles como ngrok o producción). Ambas terminan guardando en el mismo `accounts.json`.
+> Nota: existen **dos** implementaciones del flujo OAuth de YouTube — una en [`youtube_oauth.py`](src/presentation/api/routers/youtube_oauth.py) (lee credenciales de `client_secret.json`, redirect fijo a `localhost:8000`) y otra dentro de [`publisher.py`](src/presentation/api/routers/publisher.py) (también lee `client_secret.json` y usa `PUBLIC_APP_URL` para el `redirect_uri`, válido detrás de Next.js y túneles). Ambas terminan guardando en el mismo `accounts.json`.
 
 **Secuencia típica (ejemplo TikTok):**
 
@@ -396,7 +396,7 @@ Usuario autoriza en TikTok
    → Backend intercambia code por access_token + refresh_token
    → TokenStorage.save_tokens(...) cifra y persiste en accounts.json
    → Se actualiza data/canales/channels.json (nombre, avatar, target_id)
-   → Devuelve página HTML de éxito/error, con link de vuelta a {FRONTEND_URL}/canales
+   → Devuelve página HTML de éxito/error, con link de vuelta al origen configurado en `PUBLIC_APP_URL`
 ```
 
 `GET /api/v1/publish/accounts` es la fuente autoritativa para listar canales (lee `accounts.json` en vivo vía `TokenStorage.list_accounts()`); `data/canales/channels.json` es un espejo público sin tokens, solo escrito por los callbacks de OAuth. `DELETE /api/v1/publish/accounts/{platform}/{alias}` desconecta un canal (borra sus tokens de `accounts.json` y su entrada de `data/canales/channels.json`) — no revoca el token en la plataforma, solo lo olvida localmente.

@@ -65,8 +65,9 @@
     const diag = (c, th) => { g.strokeStyle = c; g.lineWidth = th; g.beginPath(); g.moveTo(x, y); g.lineTo(x + w, y + h); g.moveTo(x, y + h); g.lineTo(x + w, y); g.stroke(); };
     if (F.draw === "uk") {
       g.fillStyle = "#1f3c88"; g.fillRect(x, y, w, h);
-      diag("#f4f4f4", m * 0.32); diag("#c8102e", m * 0.11);
-      bar("#f4f4f4", m * 0.46, true); bar("#f4f4f4", m * 0.46, false); bar("#c8102e", m * 0.26, true); bar("#c8102e", m * 0.26, false);
+      /* proporciones oficiales: cruz roja 1/5 de la altura, borde blanco hasta 1/3; aspas más finas */
+      diag("#f4f4f4", m * 0.2); diag("#c8102e", m * 0.07);
+      bar("#f4f4f4", m * 0.33, true); bar("#f4f4f4", m * 0.33, false); bar("#c8102e", m * 0.2, true); bar("#c8102e", m * 0.2, false);
     } else if (F.draw === "us") {
       for (let i = 0; i < 13; i++) { g.fillStyle = i % 2 ? "#f4f4f4" : "#b22234"; g.fillRect(x, y + h - (i + 1) * h / 13, w, h / 13 + 0.001); }
       const cw = w * 0.5, ch = h * 7 / 13; g.fillStyle = "#3c3b6e"; g.fillRect(x, y + h - ch, cw, ch);
@@ -587,7 +588,11 @@
       dot(H, tw * 0.5, sty.torso === "$flag" ? limbC : col(sty.torso, a)),
     ];
     const packY = lerp(H[1], N[1], 0.33), packH = Math.max(0.05, (N[1] - H[1]) * 0.55);
-    if (sty.pack && !front) body.push((gg, pass, oo) => { const e = grow(pass, oo, ew); gg.fillStyle = style(gg, pass, col(sty.pack, a)); rr(gg, -0.065 - e, packY - e, 0.13 + 2 * e, packH + 2 * e, 0.025 + e); gg.fill(); });
+    if (sty.pack && !front) body.push((gg, pass, oo) => {
+      const e = grow(pass, oo, ew); gg.fillStyle = style(gg, pass, col(sty.pack, a)); rr(gg, -0.065 - e, packY - e, 0.13 + 2 * e, packH + 2 * e, 0.025 + e); gg.fill();
+      /* bandera en la mochila (vista de espaldas) */
+      if (pass === "fill" && a.flag && sty.packFlag !== false) { gg.save(); rr(gg, -0.065, packY, 0.13, packH, 0.025); gg.clip(); drawFlag(gg, a.flag, -0.065, packY, 0.13, packH); gg.restore(); }
+    });
     if (sty.pack && front) body.push((gg, pass) => { if (pass !== "fill") return; gg.strokeStyle = col(sty.pack, a); gg.lineWidth = 0.014; for (const sd of [-1, 1]) { gg.beginPath(); gg.moveTo(sd * tw * 0.38, N[1] - 0.01); gg.lineTo(-sd * tw * 0.15, H[1] + 0.04); gg.stroke(); } });
     body.push(marks({ chest: [0, lerp(H[1], N[1], 0.55)] }, a, t));
     body.push((gg, pass, oo) => {
