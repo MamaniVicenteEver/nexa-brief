@@ -1,0 +1,114 @@
+{
+  "id": "atlas",
+  "family": "atlas",
+  "name": "NODEPOLITICS",
+  "tagline": "Política y geopolítica contadas sobre un mapamundi 2.5D: países que se encienden en blanco, alfileres negros y una cámara que viaja país por país",
+  "topics": [
+    "política internacional",
+    "geopolítica",
+    "elecciones",
+    "fronteras",
+    "guerras y tratados",
+    "bloques y alianzas",
+    "migraciones",
+    "historia política"
+  ],
+  "channel": {
+    "name": "NODEPOLITICS",
+    "handle": "youtube.com/@nodepolitics",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos (el handle real lo confirma el usuario)"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@600;700;800&family=PT+Sans+Narrow:wght@400;700&display=swap",
+  "scripts": [
+    "vendor/geo/d3-array.min.js",
+    "vendor/geo/d3-geo.min.js",
+    "vendor/geo/topojson-client.min.js",
+    "vendor/geo/countries-50m.js",
+    "designs/common/text.js",
+    "designs/common/hook.js",
+    "designs/atlas/components/_atlas.js",
+    "designs/atlas/components/map.js",
+    "designs/atlas/components/data.js",
+    "designs/atlas/components/intros.js",
+    "designs/atlas/components/outro.js"
+  ],
+  "defaults": {
+    "family": "atlas",
+    "palette": {
+      "bg": "#3f3d3b",
+      "land": "#353535",
+      "ink": "#f8f8f8",
+      "muted": "#8a8f91",
+      "accent": "#56e2f2",
+      "deep": "#1650b8",
+      "accentInk": "#0b0b0b",
+      "line": "#0d0d0d"
+    },
+    "fonts": {
+      "main": "PT Sans Narrow",
+      "load": [
+        "400 40px 'Archivo Black'",
+        "700 40px Archivo",
+        "800 40px Archivo",
+        "600 40px Archivo",
+        "700 40px 'PT Sans Narrow'",
+        "400 40px 'PT Sans Narrow'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "atlas": {
+      "tilt": 16,
+      "focal": 1.7,
+      "glow": 1,
+      "vignette": 1
+    },
+    "transition": {
+      "overlap": 0.6
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 5,
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODEPOLITICS",
+      "cta": "SUSCRÍBETE",
+      "support": "Apoya el canal y comparte el mapa.",
+      "handle": "youtube.com/@nodepolitics",
+      "use": "atlas.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de noticias internacionales y documental político, voz masculina madura, clara y firme, español latinoamericano neutro (sin ceceo). Informativo, sin dramatizar de más. No imitar a ninguna persona real. Ritmo ágil pero claro, alrededor de 128 palabras por minuto.",
+    "target_wpm": [
+      118,
+      135
+    ]
+  },
+  "media": {
+    "photos": "fotos reales (personas, lugares, documentos) que van DENTRO de los alfileres (sello circular en B/N contrastado) o en atlas.photo (alfiler gigante o tarjeta clavada en el mapa); el protagonista del diseño es el MAPA, las fotos acompañan",
+    "portrait_tip": "atlas.photo recorta 'cover' dentro del círculo del alfiler: usar focus=[x,y] para centrar la cara",
+    "per_video": [
+      3,
+      8
+    ],
+    "reuse": "una foto puede volver como sello de un alfiler chico (src en atlas.country)"
+  }
+}

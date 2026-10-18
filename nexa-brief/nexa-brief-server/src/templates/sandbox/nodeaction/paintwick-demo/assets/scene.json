@@ -1,0 +1,232 @@
+{
+  "version": 1,
+  "seed": 7,
+  "arena": {
+    "x": [
+      -2.2,
+      3.6
+    ],
+    "z": [
+      4.4,
+      10.5
+    ]
+  },
+  "teams": {
+    "tinta": {
+      "name": "Tinta",
+      "body": "#171717",
+      "paint": "#ff2d8f",
+      "accent": "#ff2d8f",
+      "style": "ink"
+    },
+    "color": {
+      "name": "Color"
+    }
+  },
+  "cast": [
+    {
+      "id": "wick",
+      "team": "tinta",
+      "style": "hero",
+      "hero": true,
+      "pos": [
+        -0.4,
+        4.7
+      ],
+      "face": 1
+    },
+    {
+      "id": "tinta-2",
+      "team": "tinta",
+      "pos": [
+        -1.9,
+        6.4
+      ],
+      "face": 1
+    },
+    {
+      "id": "tinta-3",
+      "team": "tinta",
+      "pos": [
+        -1.3,
+        8.6
+      ],
+      "face": 1
+    },
+    {
+      "id": "verde",
+      "team": "color",
+      "color": "#86e000",
+      "pos": [
+        2.2,
+        5.9
+      ],
+      "face": -1
+    },
+    {
+      "id": "naranja",
+      "team": "color",
+      "color": "#ff8a1f",
+      "pos": [
+        1.1,
+        8.4
+      ],
+      "face": -1
+    },
+    {
+      "id": "cian",
+      "team": "color",
+      "color": "#19c3ee",
+      "pos": [
+        3.2,
+        7.1
+      ],
+      "face": -1
+    },
+    {
+      "id": "morado",
+      "team": "color",
+      "color": "#9a5cff",
+      "pos": [
+        3.0,
+        9.8
+      ],
+      "face": -1
+    },
+    {
+      "id": "amarillo",
+      "team": "color",
+      "color": "#ffd31a",
+      "pos": [
+        0.2,
+        10.1
+      ],
+      "face": -1
+    }
+  ],
+  "plan": {
+    "mode": "skirmish",
+    "hero": "wick",
+    "seed": 11,
+    "start": 1.4,
+    "order": [
+      "verde",
+      "naranja",
+      "cian",
+      "morado",
+      "amarillo"
+    ],
+    "kills": [
+      "@verde",
+      "@naranja",
+      "@cian",
+      "@morado",
+      "@amarillo"
+    ],
+    "allyKills": [
+      "@compañero",
+      "@otro"
+    ],
+    "victoryAt": "@pie",
+    "victory": 3.5,
+    "foeFire": [
+      3.0,
+      5.0
+    ],
+    "allyFire": [
+      2.6,
+      4.2
+    ]
+  },
+  "timeline": [
+    {
+      "t": "@salta",
+      "actor": "wick",
+      "do": "jump",
+      "by": [
+        0.9,
+        0.3
+      ],
+      "height": 0.8,
+      "dur": 0.95
+    },
+    {
+      "t": "@corre",
+      "actor": "wick",
+      "do": "run",
+      "by": [
+        1.2,
+        -0.2
+      ]
+    },
+    {
+      "t": "@arrodilla",
+      "actor": "wick",
+      "do": "kneel",
+      "dur": 1.0
+    },
+    {
+      "t": "@dispara",
+      "actor": "wick",
+      "do": "shoot",
+      "target": "verde",
+      "hit": false
+    }
+  ],
+  "camera": {
+    "horizon": {
+      "landscape": 0.4,
+      "portrait": 0.55
+    },
+    "portraitZoom": 1.45,
+    "keys": [
+      {
+        "t": 0,
+        "x": 0.6,
+        "y": 1.0,
+        "z": 1.3,
+        "zoom": 1.1,
+        "follow": "wick",
+        "followX": 0.85,
+        "focus": 0.42,
+        "label": "Plano 1 · Silencio"
+      },
+      {
+        "t": "@pierde",
+        "blend": 1.4,
+        "x": 0.9,
+        "y": 0.8,
+        "z": 2.0,
+        "zoom": 1.15,
+        "follow": "wick",
+        "followX": 0.85,
+        "focus": 0.3,
+        "label": "Plano 2 · La caída"
+      },
+      {
+        "t": "@salta-0.4",
+        "blend": 1.0,
+        "x": 0.9,
+        "y": 0.7,
+        "z": 1.6,
+        "zoom": 1.12,
+        "follow": "wick",
+        "followX": 0.85,
+        "focus": 0.45,
+        "label": "Plano 3 · Uno por uno"
+      },
+      {
+        "t": "@pie-1.2",
+        "blend": 2.4,
+        "x": 1.0,
+        "y": 1.05,
+        "z": 2.6,
+        "zoom": 1.45,
+        "follow": "wick",
+        "followX": 1.0,
+        "focus": 0,
+        "label": "Plano 4 · El último en pie"
+      }
+    ]
+  }
+}

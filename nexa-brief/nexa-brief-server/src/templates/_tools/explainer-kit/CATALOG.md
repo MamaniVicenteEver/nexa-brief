@@ -182,6 +182,47 @@
 | `pop.introv1` | main | GANCHO de apertura (lo primero que se ve). Titular GIGANTE apilado en tiras violeta que golpea palabra por palabra: cada palabra entra APLASTADA en rosa, se rebana en bloques glitch y se asienta en menta con sacudida; la '^palabra^' va en caja menta con op-art animado (o la foto en duotono) DENTRO de las letras. En glitchAt el cuadro se rompe en bloques + parpadeo de paleta, salta la sombra rosa de las tiras y salen anillos. Fondo adaptable (bg: columns | opart | shapes | kanji | tiles | image con src | component con use/useParams); por defecto columnas de mosaicos que se deslizan. |
 | `pop.introv2` | main | GANCHO pregunta + revelación. Una cortina líquida violeta baja y la pregunta GIGANTE se DECODIFICA letra por letra (letras al azar en rosa que se resuelven en menta, con cursor); en stampAt la respuesta golpea como CINTA menta inclinada con glitch de bloques, sombra rosa, flecha gruesa que entra parpadeando y anillos; la pregunta pierde letras un instante. Fondo adaptable (bg: opart | columns | shapes | kanji | tiles | image con src | component con use/useParams); por defecto ondas op-art del duotono. |
 | `pop.outro` | main | Cierre del canal SIN recuadro, en lenguaje DUOTONO (bg: tiles | columns | opart | shapes | kanji | image con src | component con use/useParams; por defecto mosaico de marcas del canal que se desliza). GRACIAS POR VER que se decodifica → nombre del canal GIGANTE en tira violeta con letras que caen aplastadas en rosa y se asientan en menta → botón LIKE menta que se PRESIONA (se hunde en su sombra, se invierte y estalla en cruces) → flecha gruesa que crece parpadeando → placa rosa SUSCRÍBETE que golpea + campana que suena → apoyo en tira violeta → youtube.com/@canal. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt). |
+| `dinero.serif` | main | Palabra GIGANTE en didona condensada verde oscuro sobre pared gris verdosa (ref. 0,0 s 'MONEY'): las letras se paran una por una con sombra proyectada mientras la cámara las sigue; la foto entra desde la izquierda con desenfoque de movimiento; al terminar, la cámara se aleja de golpe y revela todo; sale con un barrido. Para la palabra/cifra que abre un tema. |
+| `dinero.title` | main | Título de apertura (t = 0) con el plano 1 de la referencia: el TÍTULO en didona condensada gigante verde oscuro, letra por letra con la cámara siguiéndolas, foto que entra desde la izquierda, alejamiento brusco y rótulo fino (kicker) que se escribe debajo. Sin subtítulos. |
+| `dinero.cash` | main | Ráfaga de fotos de billetes en teal frío (ref. 1,1 s): la 1ª entra desenfocada y oscura y se enfoca, cortes rápidos a la 2ª girada y re-encuadrada, un cuadro oscuro con líneas de barrido y la última queda con empuje lento. Para el momento en que aparece el dinero (cifras, presupuesto, pago). |
+| `dinero.count` | main | Foto en teal frío con empuje y paneo lentos y luz cálida en la esquina (ref. 3,2 s, mano contando billetes); encima, un rótulo FINO en mayúsculas y una línea en minúsculas que se DECODIFICAN letra por letra con una raya fina a la izquierda. Para nombrar una cifra, un trámite o una pregunta sobre la foto. |
+| `dinero.neon` | main | Palabra en MAYÚSCULAS finas blancas con brillo y sombra larga sobre fieltro verde con viñeta (ref. 2,0 s 'MONEY'): las letras aparecen desenfocadas y se enfocan, un cuadro oscuro, líneas finas de cursor, barrido con destello y re-encuadre más chico con la 2ª línea en minúsculas, anillo de chispa y subrayado que se dibuja con punta brillante; ornamento de billete en los bordes. Para nombrar un concepto con elegancia. |
+| `dinero.spin` | main | Palabras 3D que GIRAN con desenfoque de movimiento sobre gris claro con viñeta mientras caen monedas doradas (ref. 3,8–8,4 s 'Dirty Cash I Want YOU'): cada palabra entra volteándose (la 1ª se tipea), la cámara gira y salta de una a otra, las anteriores quedan desenfocadas; en `lensAt` un lente OJO DE PEZ encierra el cuadro en un rectángulo redondeado que rebota y la palabra verde parpadea. Para frases de impacto y momentos de tensión con el dinero. |
+| `dinero.block` | main | Frase en BLOQUE gigante Open Sans 800 verde oscuro sobre salvia (ref. 8,5 s 'MONEY TALKS'): las letras aparecen mientras la cámara panea, una barra verde sube con un billete arriba y garabatos que saltan, el 2º renglón sube con desenfoque y la cámara se aleja hasta llenar el cuadro de borde a borde. Para la frase-tesis o el dato que lo cambia todo. |
+| `dinero.head` | main | Ilustración plana sobre verde salvia (ref. 9,5–10,5 s): primero una palabra 3D chica con ojo de dibujo animado, sonrisa y rayitas; después una CABEZA negra de perfil con un ojo blanco que mira una TARJETA con degradé, marcador, ojo con destello, barra oscura con el lema y fila de rótulos chicos; todo se desliza lento. Para una idea, un plan, una decisión o la mente de alguien. |
+| `dinero.note` | main | Texto MÍNIMO en Open Sans 800 sobre blanco, negro o salvia (ref. 10,6 s 'MONEY / TALKS!' y 16,0 s 'HUH!'): los renglones se tipean escalonados hacia la derecha y el grupo salta a la izquierda y vuelve (en blanco) o queda quieto (en negro). Para una pausa, una reacción corta o un dato aireado. |
+| `dinero.pin` | main | Sobre negro verdoso, un ALFILER-PERSONA verde (cono con cabeza) sube desde abajo con un anillo blanco alrededor de la cabeza; a mitad del plano la cámara se aleja de golpe y el anillo se cierra sobre la cabeza; el rótulo se tipea al lado (ref. 11,6 s). Para señalar a una persona, un 'tú' o 'uno solo'. |
+| `dinero.outline` | main | La frase NARRADA sobre negro verdoso (ref. 12,3–14,2 s 'dirty cash want i you'): cada palabra se tipea cuando la voz la dice, en blanco Open Sans 800 con tamaños escalonados (la 1ª del renglón grande, las siguientes chicas y corridas), detrás la 1ª palabra GIGANTE solo en contorno, una estrella verde, la palabra clave en verde grande con un ojito y rayos verdes tenues. Es la 'letra grande' del diseño (reemplaza a common.lyric). |
+| `dinero.eye` | main | OJO gigante plano (almendra blanca con borde verde e iris verde) sobre negro verdoso (ref. 14,3 s): primero muy cerca, cortado por el borde, mientras el texto en mayúsculas blancas se tipea a la izquierda; en `split` la cámara se aleja de golpe y queda el ojo entero, inclinado, mirando, con el texto al costado. Para 'alguien mira', vigilancia, atención o deseo. |
+| `dinero.eyes` | main | OJOS de dibujo animado (esferas blancas con pupila) de distintos tamaños que aparecen, flotan y miran para todos lados sobre negro verdoso, con un texto corto verde al centro (ref. 15,5 s 'NEED YOU'). Para 'todos miran', la presión del público o una sensación de ser observado. |
+| `dinero.introv1` | main | GANCHO de apertura (lo primero que se ve). Titular en BLOQUE Open Sans 800 que entra palabra por palabra VOLTEÁNDOSE en 3D con desenfoque de movimiento (como 'Dirty Cash' de la referencia); la '^palabra^' va en verde billete y estalla en monedas; en glitchAt el cuadro se ABOMBA con el lente ojo de pez dentro de un rectángulo redondeado, tiembla y destella. Fondo adaptable (bg: paper | felt | sage | black | fog | image con src | component con use/useParams); por defecto gris claro con monedas que caen. |
+| `dinero.introv2` | main | GANCHO pregunta + revelación. La pregunta en MAYÚSCULAS finas blancas con brillo y sombra larga se DECODIFICA letra por letra sobre fieltro verde (como 'MONEY' de la referencia); en stampAt barrido con destello, la pregunta se achica arriba con un subrayado de punta brillante y la RESPUESTA cae gigante en Open Sans 800 verde volteándose en 3D con desenfoque, con anillo de chispa. Fondo adaptable (bg: felt | paper | sage | black | fog | image con src | component con use/useParams); por defecto fieltro verde. |
+| `dinero.outro` | main | Cierre del canal SIN recuadro en lenguaje NODECONOMY (bg: black | paper | felt | sage | fog | image con src | component con use/useParams; por defecto negro verdoso con rayos verdes): GRACIAS POR VER fina que se decodifica → nombre del canal GIGANTE con contorno fantasma detrás y relleno blanco que se tipea → botón LIKE verde que se presiona y suelta chispas (dos ojos lo miran) → flecha fina con punta brillante → SUSCRÍBETE en billete verde que golpea + campana que suena → apoyo → youtube.com/@canal. Tiempos sincronizables (likeAt, subscribeAt, bellAt, supportAt). |
+| `atlas.world` | main | Cámara del mapamundi 2.5D que viaja (zoom + paneo suave) a una región, a varios países o a un punto; opcionalmente pinta países en gris o blanco con parpadeo. Para situar la historia: 'todo empezó en Europa del Este', 'el bloque soviético'. |
+| `atlas.country` | main | LA escena de la referencia: la cámara viaja al país, el país se enciende en blanco con un parpadeo de 8 cuadros (o pasa por gris medio y después blanco), cae un alfiler negro tipo gota con rebote y la etiqueta sale de atrás del alfiler. El alfiler anterior queda chico. Para nombrar un país o una ciudad (pin=[lon,lat]). |
+| `atlas.route` | main | Montaje de la referencia: la cámara salta país por país (≈1 s cada uno), cada país se enciende en blanco, cae su alfiler y su etiqueta; los anteriores quedan chicos. Con line=true une los alfileres con una ruta punteada que avanza. Para listas de países, rutas de escape, expansión de un bloque, giras, contagios. |
+| `atlas.border` | main | Una línea que se dibuja sobre el mapa: MURO (negro grueso con canto cian que brilla), frontera punteada o ruta con flecha. Rótulos a cada lado (ESTE / OESTE) que entran deslizando. Para fronteras, muros, particiones, líneas de frente, rutas migratorias. |
+| `atlas.title` | main | Título de apertura: el mapamundi 2.5D con la costa cian se acerca lento mientras caen alfileres chicos en los países de la historia; el titular condensado blanco GRANDE ('^x^' en cian) se asienta cerrando la interletra. Primer beat del video (t=0). |
+| `atlas.stat` | main | Cierre de la referencia ('82 COUNTRIES LISTENING'): el mapa se apaga y desenfoca, y aparece una cifra con su texto en condensada blanca (la cifra cuenta hacia arriba si es número). Para el dato duro de la historia: víctimas, votos, años, países. |
+| `atlas.compare` | main | Dos países encendidos a la vez en el mapa, cada uno con su alfiler y su etiqueta, y abajo su cifra GRANDE en condensada blanca con un 'VS' cian en el medio. Para comparar dos países (población, votos, gasto, muertos, años). |
+| `atlas.photo` | main | Foto clavada en el mapa: un alfiler GIGANTE cae con rebote sobre el lugar con la foto dentro de su cabeza (B/N contrastado, como el sello de la referencia) o una tarjeta con borde blanco y puntero; nombre y rol al lado. Al salir se achica y queda un alfiler chico con la foto en el mapa. Para personas, lugares, documentos. |
+| `atlas.introv1` | main | GANCHO de apertura tipo golpe: la cámara se lanza del mundo entero hacia la región mientras los países de la historia se encienden en BLANCO en ráfaga (parpadeo de 8 cuadros cada uno, con alfileres chicos) y el titular condensado GIGANTE golpea palabra por palabra con sacudida ('^x^' en cian). Fondo adaptable: world (mapa), dark, image (src), component. |
+| `atlas.introv2` | main | GANCHO pregunta + revelación: la pregunta se tipea letra a letra en condensada blanca sobre el mundo apagado; en revealAt el mapa se enciende, la pregunta sube y se achica, la cámara cae sobre el país, que parpadea en blanco, y cae el alfiler con la RESPUESTA como etiqueta. Fondo adaptable (world, dark, image, component). |
+| `atlas.outro` | main | Cierre del canal SIN recuadro: la cámara se aleja al mundo entero con todo lo encendido y el mapa se apaga (final de la referencia). GRACIAS POR VER → canal en condensada gigante → alfiler LIKE que cae con el pulgar en el sello → ruta cian → placa blanca SUSCRÍBETE que se enciende con el parpadeo de los países + campana → apoyo tipeado → youtube.com/@canal. Tiempos sincronizables con la despedida (likeAt, subscribeAt, bellAt, supportAt). |
+| `imperio.title` | main | Apertura (ref 0–11 s): atlas físico con el país foco rayado y el SOL carmesí que late; la cámara se aleja y gira apenas; nacen los RAYOS translúcidos en abanico hacia `dir` con barquitos; el título en su IDIOMA ORIGINAL (kanji, alemán, ruso…) entra carácter por carácter con su traducción tipeada debajo y se borra de derecha a izquierda; después el título condensado blanco SUBE desde abajo con degradé. Primer beat del video. |
+| `imperio.map` | main | Atlas físico en movimiento lento (zoom y giro leve) sobre un país o región: territorio rayado, sol que late, rótulos de mares, rayos opcionales y PINES (punto carmesí + nombre) para lugares concretos (una base, una ciudad, un puerto). Para situar la historia y para respirar entre momentos fuertes. |
+| `imperio.expansion` | main | Expansión: desde el sol del país foco salen HACES carmesí translúcidos hacia cada región destino, uno tras otro; al llegar, la región se raya (territorio ocupado) y aparece su nombre en condensada blanca. Para invasiones, zonas de influencia, rutas de ataque o alcance de una doctrina. |
+| `imperio.archive` | main | Material de archivo (ref 11.5–27.7 s): el atlas se DESATURA a gris, baja humo oscuro desde arriba y la foto en blanco y negro se FUNDE en multiplicar con el mapa (lo claro deja ver el mapa, lo oscuro lo tapa); los rayos carmesí siguen encima, rosa de los vientos fina abajo a la derecha, grano y polvo; la cámara sigue alejándose. Para mostrar una foto histórica sin salir del mapa. |
+| `imperio.word` | overlay | Título condensado BLANCO (Fjalla One) sobre el plano en curso: cada renglón SUBE desde abajo con degradé de opacidad (arriba aparece primero) y desenfoque, y después el título se ACHICA lento y exponencial (rápido al principio) mientras el mapa sigue moviéndose (ref 10–27 s: 'JAPANESE EMPIRE'). Usalo como overlay sobre imperio.archive / imperio.map para el nombre del imperio, la doctrina o el tema del bloque. |
+| `imperio.native` | overlay | Nombre en su IDIOMA ORIGINAL (kanji, alemán, ruso, árabe latinizado…) en gris grande: cada carácter entra con escala y desenfoque escalonados, la traducción en mayúsculas negras se tipea debajo, y al final se borra de derecha a izquierda (ref 4.9–9.9 s: '南進論 · SOUTHERN EXPANSION DOCTRINE'). Overlay sobre un plano con mapa claro (imperio.map / imperio.title). |
+| `imperio.introv1` | main | GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none). |
+| `imperio.introv2` | main | GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none). |
+| `imperio.outro` | main | Cierre del canal SIN recuadro (bg: atlas | archivo | papel | image con src | component con use/useParams). GRACIAS POR VER → nombre del canal en condensada blanca que sube delante del SOL carmesí que sale desde abajo con sus rayos girando → LIKE (óvalo fino que se llena de carmesí) → flecha de línea fina → SUSCRÍBETE en franja carmesí + campana que suena → mensaje de apoyo tipeado → youtube.com/@canal. Fundido a negro. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt). |
+| `memorias.title` | main | Portada 'Historical Memories': título manuscrito grande (Mr Dafoe) que se escribe de izquierda a derecha + subtítulo en Quicksand, sobre papel de yeso con humo gris; bocetos a lápiz de una o dos fotos en las esquinas (layout center) o un boceto grande a un costado con el texto arriba a la izquierda (layout side). |
+| `memorias.scene` | main | El plano de la referencia: la foto aparece primero como BOCETO A LÁPIZ sobre el papel, después se colorea por manchas de tinta (reveal: full/right/left/center/bottom; lo demás queda en boceto), revienta una salpicadura de acuarela azul con gotas (negra con tone=bw) y aparece el bloque de texto: renglón manuscrito (kicker) + renglones en MAYÚSCULAS que se arman letra a letra (text, '\n' = renglón). Detrás, un recorte de periódico fantasma; zoom lento durante el plano y salida con humo. |
+| `memorias.introv1` | main | Gancho 'golpe': titular MANUSCRITO gigante (Mr Dafoe) que se escribe palabra a palabra sobre el papel, con rótulo en MAYÚSCULAS que se arma letra a letra arriba y subtítulo en Quicksand abajo; en dropAt revienta una salpicadura de acuarela azul detrás del titular con gotas y una sacudida, y la palabra ^marcada^ se tiñe de azul. Fondo: sketch (foto en boceto que se colorea) | smoke | image | component | none. |
+| `memorias.introv2` | main | Gancho 'pregunta + revelación': la pregunta en MAYÚSCULAS (Barlow 700) se arma letra a letra con glifos que parpadean; en stampAt la respuesta se escribe en manuscrita grande sobre una salpicadura de acuarela azul que revienta con gotas. Fondo: sketch | smoke | image | component | none. |
+| `memorias.outro` | main | Cierre del canal como la tarjeta final de la referencia: una mancha de tinta NEGRA crece desde abajo a la izquierda y traga el cuadro (bg ink; paper = sobre el papel con texto oscuro; image/component/none = contrato común) → 'gracias por ver' en sans fina → nombre del canal en manuscrita grande que se escribe → pulgar LIKE a trazo que se rellena con gotas azules → flecha fina → SUSCRÍBETE armado letra a letra + campana que suena → mensaje de apoyo → dirección en mayúsculas chiquitas. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt). |
 
 ## Comunes (cualquier familia)
 
@@ -3917,6 +3958,1011 @@ Etiquetas: cierre, canal, like, suscribirse, mosaico · capa: main
 
 ```json
 {"use": "pop.outro", "params": {"thanks": "GRACIAS POR VER", "channel": "DUOTONO", "cta": "SUSCRÍBETE", "support": "Tu apoyo nos ayuda a seguir creando y traer más contenido.", "handle": "youtube.com/@duotono"}}
+```
+
+## dinero · NODECONOMY
+
+### `dinero.serif`
+
+Palabra GIGANTE en didona condensada verde oscuro sobre pared gris verdosa (ref. 0,0 s 'MONEY'): las letras se paran una por una con sombra proyectada mientras la cámara las sigue; la foto entra desde la izquierda con desenfoque de movimiento; al terminar, la cámara se aleja de golpe y revela todo; sale con un barrido. Para la palabra/cifra que abre un tema.
+
+Etiquetas: texto, impacto, foto, cámara · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Palabra o frase corta (MAYÚSCULAS automáticas). '\n' parte renglones; 1 palabra = el plano de la referencia. |
+| `textPortrait` | string | `""` | Renglones para 9:16 (vacío = se reparten solos, ≤ 8 letras). |
+| `src` | image | `""` | Objeto/escena de abajo (foto en plata verdosa que entra desde la izquierda). |
+| `src2` | image | `""` | Segunda foto (figuras) que aparece a la derecha al alejarse la cámara. |
+| `reveal` | number [0.02–0.3] | `0.075` | Segundos entre letra y letra. |
+| `pull` | number | `-1` | Segundo del alejamiento de cámara (-1 = al terminar las letras). |
+| `focus` | array | `[0.5, 0.5]` | Punto de la foto que queda al centro del recorte [x,y] (0..1). |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"cut"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.serif", "params": {"text": "DINERO", "src": "../designs/dinero/samples/billete100.jpg"}}
+```
+
+### `dinero.title`
+
+Título de apertura (t = 0) con el plano 1 de la referencia: el TÍTULO en didona condensada gigante verde oscuro, letra por letra con la cámara siguiéndolas, foto que entra desde la izquierda, alejamiento brusco y rótulo fino (kicker) que se escribe debajo. Sin subtítulos.
+
+Etiquetas: intro, título, apertura · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Título (2–4 renglones cortos con '\n'). |
+| `textPortrait` | string | `""` | Renglones para 9:16 (vacío = se reparten solos, ≤ 8 letras). |
+| `src` | image | `""` | Objeto/escena de abajo (foto en plata verdosa que entra desde la izquierda). |
+| `src2` | image | `""` | Segunda foto (figuras) que aparece a la derecha al alejarse la cámara. |
+| `reveal` | number [0.02–0.3] | `0.075` | Segundos entre letra y letra. |
+| `pull` | number | `-1` | Segundo del alejamiento de cámara (-1 = al terminar las letras). |
+| `focus` | array | `[0.5, 0.5]` | Punto de la foto que queda al centro del recorte [x,y] (0..1). |
+| `kicker` | string | `""` | Rótulo fino (Montserrat 200) que se escribe al alejarse la cámara. |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"cut"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.title", "params": {"text": "EL PRECIO\nDE UNA IDEA", "kicker": "DARTMOUTH · 1956", "src": "../designs/dinero/samples/contando.jpg"}}
+```
+
+### `dinero.cash`
+
+Ráfaga de fotos de billetes en teal frío (ref. 1,1 s): la 1ª entra desenfocada y oscura y se enfoca, cortes rápidos a la 2ª girada y re-encuadrada, un cuadro oscuro con líneas de barrido y la última queda con empuje lento. Para el momento en que aparece el dinero (cifras, presupuesto, pago).
+
+Etiquetas: foto, dinero, ráfaga, billetes · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `src1` | image · obligatorio | `null` | Primera foto (entra desenfocada). |
+| `src2` | image | `""` | Segunda foto (girada; vacío = src1). |
+| `src3` | image | `""` | Foto final que queda (vacío = src2 o src1). |
+| `pace` | number [0.5–3] | `1` | Multiplica la duración de los cortes (1 = ritmo de la referencia: 0,63 s de ráfaga). |
+| `focus` | array | `[0.5, 0.5]` | Punto de la foto que queda al centro del recorte [x,y] (0..1). |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"whip"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.cash", "params": {"src1": "../designs/dinero/samples/billete100.jpg", "src2": "../designs/dinero/samples/abanico.jpg", "src3": "../designs/dinero/samples/dolar1957.jpg"}}
+```
+
+### `dinero.count`
+
+Foto en teal frío con empuje y paneo lentos y luz cálida en la esquina (ref. 3,2 s, mano contando billetes); encima, un rótulo FINO en mayúsculas y una línea en minúsculas que se DECODIFICAN letra por letra con una raya fina a la izquierda. Para nombrar una cifra, un trámite o una pregunta sobre la foto.
+
+Etiquetas: foto, texto, decodificar, dinero · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `src` | image · obligatorio | `null` | Foto de fondo. |
+| `text` | string · obligatorio | `null` | Rótulo principal (MAYÚSCULAS finas, ≤ 18 caracteres). |
+| `sub` | string | `""` | Segunda línea en minúsculas (≤ 22 caracteres). |
+| `cps` | number [3–None] | `12` | Letras por segundo que se resuelven. |
+| `focus` | array | `[0.5, 0.5]` | Punto de la foto que queda al centro del recorte [x,y] (0..1). |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"whip"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.count", "params": {"src": "../designs/dinero/samples/abanico.jpg", "text": "13.500 DÓLARES", "sub": "pidieron"}}
+```
+
+### `dinero.neon`
+
+Palabra en MAYÚSCULAS finas blancas con brillo y sombra larga sobre fieltro verde con viñeta (ref. 2,0 s 'MONEY'): las letras aparecen desenfocadas y se enfocan, un cuadro oscuro, líneas finas de cursor, barrido con destello y re-encuadre más chico con la 2ª línea en minúsculas, anillo de chispa y subrayado que se dibuja con punta brillante; ornamento de billete en los bordes. Para nombrar un concepto con elegancia.
+
+Etiquetas: texto, palabra, brillo, elegante · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Palabra o frase corta (≤ 14 caracteres en MAYÚSCULAS). |
+| `sub` | string | `""` | Segunda línea en minúsculas que llega en el re-encuadre (vacío = sin 2ª fase). |
+| `subAt` | number | `0.75` | Segundo del barrido y re-encuadre (acepta '@palabra'). |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"blob"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.neon", "params": {"text": "PRESUPUESTO", "sub": "la apuesta"}}
+```
+
+### `dinero.spin`
+
+Palabras 3D que GIRAN con desenfoque de movimiento sobre gris claro con viñeta mientras caen monedas doradas (ref. 3,8–8,4 s 'Dirty Cash I Want YOU'): cada palabra entra volteándose (la 1ª se tipea), la cámara gira y salta de una a otra, las anteriores quedan desenfocadas; en `lensAt` un lente OJO DE PEZ encierra el cuadro en un rectángulo redondeado que rebota y la palabra verde parpadea. Para frases de impacto y momentos de tensión con el dinero.
+
+Etiquetas: texto, 3D, cinético, monedas, clímax · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `words` | array | `[]` | Palabras/frases cortas en orden ('^x^' = verde billete). Vacío = las palabras narradas en el beat (≥ 3 letras, máx. 6). |
+| `accent` | array | `[]` | Palabras narradas que van en verde (modo automático). |
+| `lensAt` | number | `-2` | Segundo del lente ojo de pez (-2 = cuando entra la última palabra; -1 = sin lente). Acepta '@palabra'. |
+| `coins` | number [0–40] | `14` | Monedas que caen. |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"leak"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.spin", "params": {"words": ["Dinero", "^sucio^", "lo quiero", "^YA^"]}}
+```
+
+### `dinero.block`
+
+Frase en BLOQUE gigante Open Sans 800 verde oscuro sobre salvia (ref. 8,5 s 'MONEY TALKS'): las letras aparecen mientras la cámara panea, una barra verde sube con un billete arriba y garabatos que saltan, el 2º renglón sube con desenfoque y la cámara se aleja hasta llenar el cuadro de borde a borde. Para la frase-tesis o el dato que lo cambia todo.
+
+Etiquetas: texto, impacto, bloque, gigante · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | 1–2 renglones cortos con '\n' (en 9:16 se reparten ≤ 7 letras). |
+| `pole` | bool | `true` | Barra verde con billete arriba que sube entre las letras. |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"pixel"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.block", "params": {"text": "EL DINERO\nMANDA"}}
+```
+
+### `dinero.head`
+
+Ilustración plana sobre verde salvia (ref. 9,5–10,5 s): primero una palabra 3D chica con ojo de dibujo animado, sonrisa y rayitas; después una CABEZA negra de perfil con un ojo blanco que mira una TARJETA con degradé, marcador, ojo con destello, barra oscura con el lema y fila de rótulos chicos; todo se desliza lento. Para una idea, un plan, una decisión o la mente de alguien.
+
+Etiquetas: idea, persona, mente, tarjeta, plano · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `word` | string | `""` | Palabra 3D del primer tiempo (vacío = sin primer tiempo). |
+| `text` | string · obligatorio | `null` | Lema de la tarjeta (≤ 24 caracteres). |
+| `sub` | string | `""` | Rótulo chico debajo del lema. |
+| `chips` | array | `[]` | Hasta 4 rótulos mínimos en fila (cifras, palabras). |
+| `split` | number | `0.55` | Segundo del corte a la cabeza (si hay word). |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"cut"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.head", "params": {"word": "IDEA", "text": "INTENTA HASTA LOGRARLO", "sub": "LA APUESTA DE DARTMOUTH", "chips": ["1956", "10", "2 MESES", "IA"]}}
+```
+
+### `dinero.note`
+
+Texto MÍNIMO en Open Sans 800 sobre blanco, negro o salvia (ref. 10,6 s 'MONEY / TALKS!' y 16,0 s 'HUH!'): los renglones se tipean escalonados hacia la derecha y el grupo salta a la izquierda y vuelve (en blanco) o queda quieto (en negro). Para una pausa, una reacción corta o un dato aireado.
+
+Etiquetas: texto, mínimo, pausa, respiro · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | 1–3 renglones muy cortos con '\n' (cada uno se corre a la derecha). |
+| `bg` | enum (white / black / sage) | `"white"` | Fondo: white = tarjeta blanca (texto verde oscuro), black = negro verdoso (texto blanco), salvia. |
+| `size` | number [0.5–2.5] | `1` | Escala del texto (1 = legible en celular; la referencia es más chica). |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"cut"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.note", "params": {"text": "¿Y AHORA?", "bg": "black"}}
+```
+
+### `dinero.pin`
+
+Sobre negro verdoso, un ALFILER-PERSONA verde (cono con cabeza) sube desde abajo con un anillo blanco alrededor de la cabeza; a mitad del plano la cámara se aleja de golpe y el anillo se cierra sobre la cabeza; el rótulo se tipea al lado (ref. 11,6 s). Para señalar a una persona, un 'tú' o 'uno solo'.
+
+Etiquetas: persona, uno, foco, individuo · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `label` | string | `""` | Rótulo blanco que se tipea junto al alfiler (≤ 16 caracteres). |
+| `zoomAt` | number | `0.5` | Segundo del alejamiento. |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"cut"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.pin", "params": {"label": "UNO SOLO"}}
+```
+
+### `dinero.outline`
+
+La frase NARRADA sobre negro verdoso (ref. 12,3–14,2 s 'dirty cash want i you'): cada palabra se tipea cuando la voz la dice, en blanco Open Sans 800 con tamaños escalonados (la 1ª del renglón grande, las siguientes chicas y corridas), detrás la 1ª palabra GIGANTE solo en contorno, una estrella verde, la palabra clave en verde grande con un ojito y rayos verdes tenues. Es la 'letra grande' del diseño (reemplaza a common.lyric).
+
+Etiquetas: letra, frase, karaoke, texto, clímax · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `words` | array | `[]` | Palabras a mostrar ('^x^' = clave en verde). Vacío = las palabras NARRADAS en el beat, a su tiempo. |
+| `accent` | array | `[]` | Palabras narradas que van en verde grande (modo automático). |
+| `ghost` | string | `""` | Palabra gigante en contorno detrás (vacío = la 1ª de cada página). |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"cut"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.outline", "params": {"words": ["el", "dinero", "se", "^congeló^"]}}
+```
+
+### `dinero.eye`
+
+OJO gigante plano (almendra blanca con borde verde e iris verde) sobre negro verdoso (ref. 14,3 s): primero muy cerca, cortado por el borde, mientras el texto en mayúsculas blancas se tipea a la izquierda; en `split` la cámara se aleja de golpe y queda el ojo entero, inclinado, mirando, con el texto al costado. Para 'alguien mira', vigilancia, atención o deseo.
+
+Etiquetas: mirada, vigilancia, atención, texto · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | 1–2 renglones cortos ('\n'). |
+| `split` | number | `0.5` | Segundo del alejamiento. |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"cut"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.eye", "params": {"text": "TODOS\nMIRABAN"}}
+```
+
+### `dinero.eyes`
+
+OJOS de dibujo animado (esferas blancas con pupila) de distintos tamaños que aparecen, flotan y miran para todos lados sobre negro verdoso, con un texto corto verde al centro (ref. 15,5 s 'NEED YOU'). Para 'todos miran', la presión del público o una sensación de ser observado.
+
+Etiquetas: mirada, miedo, todos, público, texto · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string | `""` | Texto corto central (1–2 renglones). |
+| `count` | number [2–7] | `6` | Cantidad de ojos. |
+| `fx` | enum (cut / whip / blob / leak / pixel / scan / zoom / flash) | `"cut"` | Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello. |
+
+```json
+{"use": "dinero.eyes", "params": {"text": "TODOS\nQUIEREN"}}
+```
+
+### `dinero.introv1`
+
+GANCHO de apertura (lo primero que se ve). Titular en BLOQUE Open Sans 800 que entra palabra por palabra VOLTEÁNDOSE en 3D con desenfoque de movimiento (como 'Dirty Cash' de la referencia); la '^palabra^' va en verde billete y estalla en monedas; en glitchAt el cuadro se ABOMBA con el lente ojo de pez dentro de un rectángulo redondeado, tiembla y destella. Fondo adaptable (bg: paper | felt | sage | black | fog | image con src | component con use/useParams); por defecto gris claro con monedas que caen.
+
+Etiquetas: intro, gancho, apertura, título, impacto, 3D · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Titular gancho corto (2–6 palabras). '\n' = renglón; '^x^' = palabra en verde con monedas. |
+| `kicker` | string | `""` | Rótulo fino arriba (se decodifica). |
+| `sub` | string | `""` | Línea chica debajo del titular. |
+| `wordAt` | number | `0.35` | Segundo de la primera palabra. |
+| `stagger` | number [0.08–None] | `0.26` | Segundos entre palabras. |
+| `glitchAt` | number | `2.2` | Segundo del IMPACTO: lente ojo de pez + temblor + destello (-1 = sin impacto). Acepta '@palabra'. |
+| `bg` | enum (auto / paper / felt / sage / black / fog / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+
+```json
+{"use": "dinero.introv1", "params": {"text": "¿QUIÉN PAGA\nLA ^CUENTA^?", "kicker": "Economía · 2026", "sub": "nadie lo dice en voz alta", "glitchAt": 2.2}}
+```
+
+### `dinero.introv2`
+
+GANCHO pregunta + revelación. La pregunta en MAYÚSCULAS finas blancas con brillo y sombra larga se DECODIFICA letra por letra sobre fieltro verde (como 'MONEY' de la referencia); en stampAt barrido con destello, la pregunta se achica arriba con un subrayado de punta brillante y la RESPUESTA cae gigante en Open Sans 800 verde volteándose en 3D con desenfoque, con anillo de chispa. Fondo adaptable (bg: felt | paper | sage | black | fog | image con src | component con use/useParams); por defecto fieltro verde.
+
+Etiquetas: intro, gancho, apertura, pregunta, revelación, neón · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Pregunta gancho ('\n' = renglón). |
+| `kicker` | string | `""` | Rótulo fino arriba. |
+| `stamp` | string | `""` | Respuesta que cae (vacío = sin revelación). |
+| `stampAt` | number | `2.4` | Segundo de la revelación (acepta '@palabra'). |
+| `typeAt` | number | `0.3` | Segundo en que empieza a decodificarse la pregunta. |
+| `cps` | number [4–None] | `16` | Letras por segundo. |
+| `bg` | enum (auto / paper / felt / sage / black / fog / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+
+```json
+{"use": "dinero.introv2", "params": {"text": "¿CUÁNTO VALE\nUNA IDEA?", "kicker": "Dartmouth · 1956", "stamp": "7.500 DÓLARES", "stampAt": 2.4}}
+```
+
+### `dinero.outro`
+
+Cierre del canal SIN recuadro en lenguaje NODECONOMY (bg: black | paper | felt | sage | fog | image con src | component con use/useParams; por defecto negro verdoso con rayos verdes): GRACIAS POR VER fina que se decodifica → nombre del canal GIGANTE con contorno fantasma detrás y relleno blanco que se tipea → botón LIKE verde que se presiona y suelta chispas (dos ojos lo miran) → flecha fina con punta brillante → SUSCRÍBETE en billete verde que golpea + campana que suena → apoyo → youtube.com/@canal. Tiempos sincronizables (likeAt, subscribeAt, bellAt, supportAt).
+
+Etiquetas: cierre, canal, like, suscribirse · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `thanks` | string | `"GRACIAS POR VER"` | Rótulo inicial. |
+| `channel` | string | `"NODECONOMY"` | Nombre del canal (grande). |
+| `cta` | string | `"SUSCRÍBETE"` | Texto del botón de suscripción. |
+| `support` | string | `"Apoya el canal y comparte el video."` | Mensaje de apoyo. |
+| `handle` | string | `"youtube.com/@nodeconomy"` | Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla). |
+| `arrow` | bool | `true` | Flecha del LIKE a SUSCRÍBETE. |
+| `likeAt` | number [0–None] | `1` | Segundo del LIKE. |
+| `subscribeAt` | number [0–None] | `2.5` | Segundo de SUSCRÍBETE. |
+| `bellAt` | number [0–None] | `3.25` | Segundo de la campana. |
+| `supportAt` | number [0–None] | `3.65` | Segundo del mensaje de apoyo y la dirección. |
+| `bg` | enum (auto / paper / felt / sage / black / fog / image / component / none) | `"black"` | Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.66` | Oscurecido del fondo foto/componente. |
+
+```json
+{"use": "dinero.outro", "params": {"thanks": "GRACIAS POR VER", "channel": "NODECONOMY", "cta": "SUSCRÍBETE", "support": "Apoya el canal y comparte el video.", "handle": "youtube.com/@nodeconomy"}}
+```
+
+## atlas · NODEPOLITICS
+
+### `atlas.world`
+
+Cámara del mapamundi 2.5D que viaja (zoom + paneo suave) a una región, a varios países o a un punto; opcionalmente pinta países en gris o blanco con parpadeo. Para situar la historia: 'todo empezó en Europa del Este', 'el bloque soviético'.
+
+Etiquetas: mapa, región, contexto, cámara, continente · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `region` | enum (world / europe / western-europe / eastern-europe / africa / asia / middle-east / north-america / central-america / south-america / latin-america / americas / oceania / east-asia / southeast-asia / south-asia / central-asia) | `"world"` | Región con nombre (si no hay countries ni center). |
+| `countries` | array | `[]` | Países (inglés, p. ej. 'Germany') que la cámara encuadra juntos. |
+| `center` | array | `[]` | [lon,lat] centro de la cámara (con span). |
+| `span` | number [0–None] | `0` | Ancho visible en grados de longitud (con center). |
+| `zoom` | number [0.2–6] | `1` | Multiplica el zoom calculado. |
+| `paint` | array | `[]` | Países que se pintan (con parpadeo escalonado). |
+| `state` | enum (white / gray) | `"gray"` | Color de los países pintados. |
+| `paintAt` | number [0–None] | `0.7` | Segundo en que empieza a pintar (acepta '@palabra'). |
+| `stagger` | number [0–None] | `0.12` | Segundos entre país y país al pintar. |
+| `clear` | bool | `false` | Borra lo pintado y los alfileres anteriores (empezar un capítulo nuevo). |
+| `move` | number [0–None] | `0` | Segundos del viaje de cámara (0 = automático según distancia). |
+| `pins` | array | `[]` | Alfileres chicos sin etiqueta: [[lon,lat], …] o nombres de país (caen escalonados desde paintAt). |
+| `kicker` | string | `""` | Rótulo chico de cabecera (lugar · fecha). |
+
+```json
+{"use": "atlas.world", "params": {"region": "europe", "paint": ["Germany", "Poland", "Czechia", "Hungary"], "state": "gray", "kicker": "Europa · 1989"}}
+```
+
+### `atlas.country`
+
+LA escena de la referencia: la cámara viaja al país, el país se enciende en blanco con un parpadeo de 8 cuadros (o pasa por gris medio y después blanco), cae un alfiler negro tipo gota con rebote y la etiqueta sale de atrás del alfiler. El alfiler anterior queda chico. Para nombrar un país o una ciudad (pin=[lon,lat]).
+
+Etiquetas: país, lugar, alfiler, mapa, ciudad · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `country` | string · obligatorio | `null` | País (properties.name en inglés: 'Germany', 'United States of America'; acepta alias 'USA' y el nombre en español). |
+| `label` | string | `""` | Etiqueta (vacío = nombre en español del país; '-' = sin etiqueta). |
+| `sub` | string | `""` | Línea chica debajo de la etiqueta (año, ciudad, dato corto). |
+| `pin` | array | `[]` | [lon,lat] del alfiler (ciudad); vacío = centro del país. |
+| `src` | image | `""` | Foto dentro del sello del alfiler (B/N contrastado). |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `seal` | enum (globe / initials / none) | `"initials"` | Sello del alfiler si no hay foto: emblema B/N (globe), emblema con iniciales o liso. |
+| `state` | enum (white / gray / both / none) | `"white"` | Pintado: blanco, gris medio, gris y después blanco (both, en whiteAt) o sin pintar. |
+| `whiteAt` | number [0–None] | `1.6` | Con state=both: segundo en que pasa de gris a blanco (acepta '@palabra'). |
+| `span` | number [0–None] | `0` | Ancho visible en grados (0 = automático, ~34° o 2,3× el país). Ciudad: 6–10. |
+| `zoom` | number [0.2–6] | `1` | Multiplica el zoom. |
+| `move` | number [0.2–3] | `0.75` | Segundos del viaje de cámara. |
+| `pinAt` | number | `-1` | Segundo en que cae el alfiler (-1 = al llegar la cámara). |
+| `side` | enum (auto / left / right) | `"auto"` | Lado de la etiqueta. |
+
+```json
+{"use": "atlas.country", "params": {"country": "Germany", "label": "Alemania", "sub": "1989", "pin": [13.4, 52.52]}}
+```
+
+### `atlas.route`
+
+Montaje de la referencia: la cámara salta país por país (≈1 s cada uno), cada país se enciende en blanco, cae su alfiler y su etiqueta; los anteriores quedan chicos. Con line=true une los alfileres con una ruta punteada que avanza. Para listas de países, rutas de escape, expansión de un bloque, giras, contagios.
+
+Etiquetas: recorrido, lista, países, montaje, expansión, contagio · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `items` | array · obligatorio | `null` | Países en orden: 'Hungary' o { country, label, sub, pin:[lon,lat], state:'white|gray', at } (at = segundos desde el inicio del beat). |
+| `stagger` | number [0.3–None] | `1` | Segundos entre país y país (si el item no trae at). |
+| `first` | number [0–None] | `0.55` | Segundo del primer país. |
+| `camera` | enum (follow / fit) | `"follow"` | follow = viaja a cada país (referencia); fit = encuadra todos de una vez. |
+| `line` | bool | `false` | Ruta punteada blanca que une los alfileres. |
+| `span` | number [0–None] | `0` | Ancho visible en grados en follow (0 = automático). |
+| `zoom` | number [0.2–6] | `1` | Multiplica el zoom. |
+| `state` | enum (white / gray) | `"white"` | Color por defecto de los países. |
+| `clear` | bool | `false` | Borra lo pintado antes. |
+| `kicker` | string | `""` | Rótulo chico de cabecera. |
+
+```json
+{"use": "atlas.route", "params": {"items": ["Hungary", "Austria", "Czechia", "Germany"], "stagger": 1, "line": true}}
+```
+
+### `atlas.border`
+
+Una línea que se dibuja sobre el mapa: MURO (negro grueso con canto cian que brilla), frontera punteada o ruta con flecha. Rótulos a cada lado (ESTE / OESTE) que entran deslizando. Para fronteras, muros, particiones, líneas de frente, rutas migratorias.
+
+Etiquetas: frontera, muro, división, partición, ruta, línea · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `line` | array · obligatorio | `null` | Puntos [[lon,lat], …] de la línea, en orden. |
+| `style` | enum (wall / border / route) | `"wall"` | wall = muro negro con canto cian · border = punteada negra · route = blanca punteada con flecha. |
+| `drawAt` | number [0–None] | `0.5` | Segundo en que empieza a dibujarse. |
+| `drawSec` | number [0.2–None] | `1.6` | Segundos que tarda en dibujarse. |
+| `width` | number [0.3–4] | `1` | Grosor (×). |
+| `tags` | array | `[]` | Rótulos sobre el mapa: [{ text, at:[lon,lat], dark? }] (blancos con sombra; dark = negros con halo, sobre países blancos). |
+| `countries` | array | `[]` | Países que encuadra la cámara (si no, encuadra la línea). |
+| `center` | array | `[]` | [lon,lat] centro de la cámara (con span). |
+| `span` | number [0–None] | `0` | Ancho visible en grados (con center). |
+| `zoom` | number [0.2–6] | `1` | Multiplica el zoom. |
+| `paint` | array | `[]` | Países que se pintan. |
+| `state` | enum (white / gray) | `"white"` | Color de los países pintados. |
+| `keep` | bool | `true` | La línea queda en el mapa después del beat (false = se apaga al salir). |
+| `kicker` | string | `""` | Rótulo chico de cabecera. |
+
+```json
+{"use": "atlas.border", "params": {"line": [[10.9, 54], [10.75, 53.6], [10.6, 53.37], [11.5, 53.05], [10.95, 52.55], [11, 52.2], [10.6, 51.75], [10.25, 51.45], [10, 50.95], [10.1, 50.55], [10.9, 50.33], [11.9, 50.32], [12.1, 50.3]], "style": "wall", "tags": [{"text": "OESTE", "at": [8.4, 51.6]}, {"text": "ESTE", "at": [12.9, 51.9]}], "countries": ["Germany"], "paint": ["Germany"], "state": "gray", "kicker": "Alemania · 1949–1990"}}
+```
+
+### `atlas.title`
+
+Título de apertura: el mapamundi 2.5D con la costa cian se acerca lento mientras caen alfileres chicos en los países de la historia; el titular condensado blanco GRANDE ('^x^' en cian) se asienta cerrando la interletra. Primer beat del video (t=0).
+
+Etiquetas: título, apertura, portada, mundo · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Título ('\n' = renglón, '^x^' = palabra en cian). |
+| `textPortrait` | string | `""` | Versión 9:16 (renglones más cortos). |
+| `kicker` | string | `""` | Rótulo chico arriba (lugar · fecha). |
+| `sub` | string | `""` | Línea chica debajo. |
+| `region` | enum (world / europe / western-europe / eastern-europe / africa / asia / middle-east / north-america / central-america / south-america / latin-america / americas / oceania / east-asia / southeast-asia / south-asia / central-asia) | `"world"` | Hacia dónde se acerca la cámara. |
+| `pins` | array | `[]` | Países donde caen alfileres chicos (sin etiqueta). |
+| `dim` | number [0–1] | `0.42` | Oscurecido del mapa detrás del título. |
+
+```json
+{"use": "atlas.title", "params": {"text": "LA NOCHE QUE\nCAYÓ EL ^MURO^", "textPortrait": "LA NOCHE\nQUE CAYÓ\nEL ^MURO^", "kicker": "Berlín · 9 nov 1989", "region": "europe", "pins": ["Germany", "Hungary", "Czechia", "Poland"]}}
+```
+
+### `atlas.stat`
+
+Cierre de la referencia ('82 COUNTRIES LISTENING'): el mapa se apaga y desenfoca, y aparece una cifra con su texto en condensada blanca (la cifra cuenta hacia arriba si es número). Para el dato duro de la historia: víctimas, votos, años, países.
+
+Etiquetas: cifra, dato, número, conteo, impacto · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `value` | string · obligatorio | `null` | Cifra (si es número entero cuenta desde countFrom). |
+| `text` | string | `""` | Texto que acompaña ('países escuchando', 'muertos en el muro'). |
+| `kicker` | string | `""` | Rótulo chico arriba. |
+| `layout` | enum (auto / inline / stack) | `"auto"` | inline = una línea como la referencia; stack = cifra gigante arriba y texto abajo. |
+| `countFrom` | number | `0` | Desde dónde cuenta. |
+| `countSec` | number [0–None] | `1.1` | Segundos del conteo (0 = sin conteo). |
+| `accent` | bool | `false` | Cifra en cian (si es EL dato del video). |
+| `region` | enum ( / world / europe / western-europe / eastern-europe / africa / asia / middle-east / north-america / central-america / south-america / latin-america / americas / oceania / east-asia / southeast-asia / south-asia / central-asia) | `""` | Mover la cámara detrás (vacío = se queda donde estaba). |
+
+```json
+{"use": "atlas.stat", "params": {"value": "140", "text": "muertos en el muro", "kicker": "Berlín · 1961–1989"}}
+```
+
+### `atlas.compare`
+
+Dos países encendidos a la vez en el mapa, cada uno con su alfiler y su etiqueta, y abajo su cifra GRANDE en condensada blanca con un 'VS' cian en el medio. Para comparar dos países (población, votos, gasto, muertos, años).
+
+Etiquetas: comparación, versus, dos países, dato · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `left` | object · obligatorio | `null` | { country, label?, value, sub?, pin?:[lon,lat] } |
+| `right` | object · obligatorio | `null` | { country, label?, value, sub?, pin?:[lon,lat] } |
+| `vs` | string | `"VS"` | Texto del medio. |
+| `kicker` | string | `""` | Rótulo chico de cabecera. |
+| `zoom` | number [0.2–6] | `1` | Multiplica el zoom. |
+
+```json
+{"use": "atlas.compare", "params": {"left": {"country": "Germany", "value": "83 M", "sub": "habitantes"}, "right": {"country": "France", "value": "68 M", "sub": "habitantes"}, "kicker": "Población · 2024"}}
+```
+
+### `atlas.photo`
+
+Foto clavada en el mapa: un alfiler GIGANTE cae con rebote sobre el lugar con la foto dentro de su cabeza (B/N contrastado, como el sello de la referencia) o una tarjeta con borde blanco y puntero; nombre y rol al lado. Al salir se achica y queda un alfiler chico con la foto en el mapa. Para personas, lugares, documentos.
+
+Etiquetas: foto, persona, lugar, retrato, alfiler · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `src` | image · obligatorio | `null` | Foto. |
+| `focus` | array | `[0.5, 0.42]` | Punto de interés [x,y] (0..1) para el recorte. |
+| `country` | string | `""` | País donde se clava (se enciende en blanco). |
+| `pin` | array | `[]` | [lon,lat] exacto (ciudad); vacío = centro del país. |
+| `name` | string | `""` | Nombre (grande). |
+| `role` | string | `""` | Rol / lugar / fecha (chico). |
+| `frame` | enum (pin / card) | `"pin"` | pin = foto dentro del alfiler gigante; card = tarjeta rectangular con puntero. |
+| `span` | number [1–None] | `26` | Ancho visible en grados detrás. |
+| `keep` | bool | `true` | Deja un alfiler chico con la foto al salir. |
+
+```json
+{"use": "atlas.photo", "params": {"src": "turing.jpg", "country": "United Kingdom", "pin": [-0.74, 52], "name": "Alan Turing", "role": "Bletchley Park · 1940"}}
+```
+
+### `atlas.introv1`
+
+GANCHO de apertura tipo golpe: la cámara se lanza del mundo entero hacia la región mientras los países de la historia se encienden en BLANCO en ráfaga (parpadeo de 8 cuadros cada uno, con alfileres chicos) y el titular condensado GIGANTE golpea palabra por palabra con sacudida ('^x^' en cian). Fondo adaptable: world (mapa), dark, image (src), component.
+
+Etiquetas: intro, gancho, apertura, golpe, mapa · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Titular gancho (2–6 palabras). '\n' = renglón; '^x^' = palabra en cian. |
+| `kicker` | string | `""` | Rótulo chico arriba (lugar · fecha). |
+| `sub` | string | `""` | Línea chica debajo del titular. |
+| `countries` | array | `[]` | Países que se encienden en ráfaga (inglés). |
+| `region` | enum (world / europe / western-europe / eastern-europe / africa / asia / middle-east / north-america / central-america / south-america / latin-america / americas / oceania / east-asia / southeast-asia / south-asia / central-asia) | `"world"` | Hacia dónde se lanza la cámara (si no hay countries). |
+| `wordAt` | number | `0.45` | Segundo del primer golpe. |
+| `stagger` | number [0.08–None] | `0.3` | Segundos entre palabras. |
+| `bg` | enum (auto / world / dark / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+
+```json
+{"use": "atlas.introv1", "params": {"text": "¿POR QUÉ CAYÓ\nEL ^MURO^?", "kicker": "Berlín · 9 nov 1989", "sub": "la noche que nadie vio venir", "countries": ["Germany", "Poland", "Czechia", "Hungary", "Austria"], "region": "europe"}}
+```
+
+### `atlas.introv2`
+
+GANCHO pregunta + revelación: la pregunta se tipea letra a letra en condensada blanca sobre el mundo apagado; en revealAt el mapa se enciende, la pregunta sube y se achica, la cámara cae sobre el país, que parpadea en blanco, y cae el alfiler con la RESPUESTA como etiqueta. Fondo adaptable (world, dark, image, component).
+
+Etiquetas: intro, gancho, pregunta, revelación, país · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Pregunta ('\n' = renglón, '^x^' = cian). |
+| `answer` | string | `""` | Respuesta: etiqueta del alfiler (vacío = nombre del país). |
+| `country` | string · obligatorio | `null` | País de la revelación (inglés). |
+| `pin` | array | `[]` | [lon,lat] del alfiler (ciudad). |
+| `pinSrc` | image | `""` | Foto dentro del sello del alfiler. |
+| `span` | number [0–None] | `0` | Ancho visible en grados al revelar (0 = automático). |
+| `kicker` | string | `""` | Rótulo chico arriba. |
+| `revealAt` | number | `2.4` | Segundo de la revelación (acepta '@palabra'). |
+| `typeAt` | number | `0.3` | Segundo en que empieza el tipeo. |
+| `cps` | number [4–None] | `22` | Letras por segundo. |
+| `bg` | enum (auto / world / dark / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+
+```json
+{"use": "atlas.introv2", "params": {"text": "¿DÓNDE CAYÓ\nEL MURO?", "answer": "Berlín", "country": "Germany", "pin": [13.4, 52.52], "kicker": "9 nov 1989", "revealAt": 2.2}}
+```
+
+### `atlas.outro`
+
+Cierre del canal SIN recuadro: la cámara se aleja al mundo entero con todo lo encendido y el mapa se apaga (final de la referencia). GRACIAS POR VER → canal en condensada gigante → alfiler LIKE que cae con el pulgar en el sello → ruta cian → placa blanca SUSCRÍBETE que se enciende con el parpadeo de los países + campana → apoyo tipeado → youtube.com/@canal. Tiempos sincronizables con la despedida (likeAt, subscribeAt, bellAt, supportAt).
+
+Etiquetas: cierre, canal, like, suscribirse, mapa · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `thanks` | string | `"GRACIAS POR VER"` | Rótulo inicial. |
+| `channel` | string | `"NODEPOLITICS"` | Nombre del canal (grande). |
+| `cta` | string | `"SUSCRÍBETE"` | Texto del botón de suscripción. |
+| `support` | string | `"Apoya el canal y comparte el mapa."` | Mensaje de apoyo. |
+| `handle` | string | `"youtube.com/@nodepolitics"` | Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla). |
+| `arrow` | bool | `true` | Flecha del LIKE a SUSCRÍBETE. |
+| `likeAt` | number [0–None] | `1` | Segundo del LIKE. |
+| `subscribeAt` | number [0–None] | `2.5` | Segundo de SUSCRÍBETE. |
+| `bellAt` | number [0–None] | `3.25` | Segundo de la campana. |
+| `supportAt` | number [0–None] | `3.65` | Segundo del mensaje de apoyo y la dirección. |
+| `bg` | enum (auto / world / dark / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.6` | Oscurecido del fondo foto/componente. |
+
+```json
+{"use": "atlas.outro", "params": {"thanks": "GRACIAS POR VER", "channel": "NODEPOLITICS", "cta": "SUSCRÍBETE", "support": "Apoya el canal y comparte el mapa.", "handle": "youtube.com/@nodepolitics"}}
+```
+
+## imperio · NODEPOLITICS
+
+### `imperio.title`
+
+Apertura (ref 0–11 s): atlas físico con el país foco rayado y el SOL carmesí que late; la cámara se aleja y gira apenas; nacen los RAYOS translúcidos en abanico hacia `dir` con barquitos; el título en su IDIOMA ORIGINAL (kanji, alemán, ruso…) entra carácter por carácter con su traducción tipeada debajo y se borra de derecha a izquierda; después el título condensado blanco SUBE desde abajo con degradé. Primer beat del video.
+
+Etiquetas: apertura, título, mapa, imperio, sol, idioma original · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `country` | string | `"Japan"` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
+| `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
+| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
+| `sunSize` | number [0.2–6] | `3.6` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
+| `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
+| `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
+| `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
+| `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
+| `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
+| `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
+| `tilt` | number [-20–20] | `3` | Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas). |
+| `ease` | enum (auto / out / in / inOut / linear / expo) | `"auto"` | Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte. |
+| `rays` | number [0–60] | `28` | Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28). |
+| `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
+| `spread` | number [0–1] | `0.72` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
+| `rayFloor` | number [0–0.4] | `0.02` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
+| `rayAlpha` | number [0–1] | `0.56` | Opacidad de los rayos carmesí. |
+| `rayLen` | number [0.1–1] | `0.46` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
+| `raysAt` | number | `4` | Segundo en que nacen los rayos (acepta '@palabra'). |
+| `ships` | number [0–10] | `2` | Barquitos que avanzan sobre los rayos hacia el abanico. |
+| `rayColor` | string | `""` | Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f. |
+| `native` | string | `""` | Título en su idioma original (p. ej. '南進論', 'Geheime Kommandosache', 'Перестройка'). Vacío = sin este paso. |
+| `nativeSub` | string | `""` | Traducción chica en mayúsculas que se tipea debajo. |
+| `nativeAt` | number | `5` | Segundo en que entra el título original (acepta '@palabra'). |
+| `nativeOut` | number | `9.2` | Segundo en que se borra (de derecha a izquierda). −1 = se queda. |
+| `text` | string | `""` | Título condensado blanco (Fjalla One); '\n' parte renglones. Vacío = sin título grande. |
+| `textPortrait` | string | `""` | Versión del título para 9:16 (más renglones). |
+| `textAt` | number | `10` | Segundo en que sube el título condensado (acepta '@palabra'). |
+
+```json
+{"use": "imperio.title", "params": {"country": "Japan", "hatch": ["Japan"], "from": [150, 36, 95, 0], "to": [145, 35, 125, 3], "sunSize": 3.6, "native": "南進論", "nativeSub": "SOUTHERN EXPANSION DOCTRINE", "nativeAt": 5, "nativeOut": 9.2, "text": "JAPANESE\nEMPIRE", "textPortrait": "JAPANESE\nEMPIRE", "textAt": 10, "rays": 28, "raysAt": 4, "dir": 180, "spread": 0.72, "rayFloor": 0.02, "rayAlpha": 0.56, "rayLen": 0.46, "ships": 2, "labels": [{"t": "Mar del\nJapón", "at": [134.5, 40.2]}, {"t": "Mar\nAmarillo", "at": [123.6, 35.4]}, {"t": "Océano\nPacífico", "at": [150, 31]}]}}
+```
+
+### `imperio.map`
+
+Atlas físico en movimiento lento (zoom y giro leve) sobre un país o región: territorio rayado, sol que late, rótulos de mares, rayos opcionales y PINES (punto carmesí + nombre) para lugares concretos (una base, una ciudad, un puerto). Para situar la historia y para respirar entre momentos fuertes.
+
+Etiquetas: mapa, lugar, país, geografía, atlas · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
+| `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
+| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
+| `sunSize` | number [0.2–6] | `0.8` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
+| `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
+| `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
+| `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
+| `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
+| `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
+| `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
+| `tilt` | number [-20–20] | `2` | Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas). |
+| `ease` | enum (auto / out / in / inOut / linear / expo) | `"inOut"` | Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte. |
+| `rays` | number [0–60] | `0` | Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28). |
+| `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
+| `spread` | number [0–1] | `0.6` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
+| `rayFloor` | number [0–0.4] | `0.16` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
+| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos carmesí. |
+| `rayLen` | number [0.1–1] | `0.42` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
+| `raysAt` | number | `0.4` | Segundo en que nacen los rayos (acepta '@palabra'). |
+| `ships` | number [0–10] | `0` | Barquitos que avanzan sobre los rayos hacia el abanico. |
+| `rayColor` | string | `""` | Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f. |
+| `pins` | array | `[]` | Lugares: [{"t":"Bletchley Park", "at":[-0.74, 51.99]}] (punto carmesí + nombre). Entran escalonados. |
+| `pinAt` | number | `0.5` | Segundo en que entra el primer pin (acepta '@palabra'). |
+
+```json
+{"use": "imperio.map", "params": {"country": "United Kingdom", "from": "United Kingdom*1.5", "to": "United Kingdom*3.2", "pins": [{"t": "Bletchley Park", "at": [-0.74, 51.99]}, {"t": "Londres", "at": [-0.12, 51.5]}], "labels": [{"t": "Mar del\nNorte", "at": [3.5, 56]}, {"t": "Océano\nAtlántico", "at": [-15, 52]}], "compass": true}}
+```
+
+### `imperio.expansion`
+
+Expansión: desde el sol del país foco salen HACES carmesí translúcidos hacia cada región destino, uno tras otro; al llegar, la región se raya (territorio ocupado) y aparece su nombre en condensada blanca. Para invasiones, zonas de influencia, rutas de ataque o alcance de una doctrina.
+
+Etiquetas: expansión, conquista, invasión, influencia, mapa, rayos · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
+| `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
+| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
+| `sunSize` | number [0.2–6] | `1.3` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
+| `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
+| `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
+| `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
+| `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
+| `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
+| `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
+| `tilt` | number [-20–20] | `2` | Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas). |
+| `ease` | enum (auto / out / in / inOut / linear / expo) | `"inOut"` | Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte. |
+| `targets` | array · obligatorio | `[]` | Destinos: países o puntos: ["Philippines", {"at":"Indonesia", "t":"Indias Orientales"}, {"at":[151, -9], "t":"Nueva Guinea"}]. |
+| `at` | number | `0.6` | Segundo del primer haz (acepta '@palabra'). |
+| `stagger` | number [0.1–None] | `0.7` | Segundos entre haz y haz. |
+| `conquer` | bool | `true` | Rayar cada país destino cuando llega su haz. |
+| `ships` | number [0–3] | `1` | Barquitos por haz. |
+| `beam` | number [0.3–3] | `1` | Ancho de los haces (multiplicador). |
+
+```json
+{"use": "imperio.expansion", "params": {"country": "Japan", "targets": [{"at": "Philippines", "t": "Filipinas"}, {"at": "Indonesia", "t": "Indias Orientales"}, {"at": "Malaysia", "t": "Malasia"}, {"at": "Myanmar", "t": "Birmania"}], "hatch": ["Japan", "South Korea", "North Korea", "Taiwan"], "labels": [{"t": "Océano\nPacífico", "at": [150, 15]}, {"t": "Mar de la\nChina Meridional", "at": [114, 13]}], "compass": true}}
+```
+
+### `imperio.archive`
+
+Material de archivo (ref 11.5–27.7 s): el atlas se DESATURA a gris, baja humo oscuro desde arriba y la foto en blanco y negro se FUNDE en multiplicar con el mapa (lo claro deja ver el mapa, lo oscuro lo tapa); los rayos carmesí siguen encima, rosa de los vientos fina abajo a la derecha, grano y polvo; la cámara sigue alejándose. Para mostrar una foto histórica sin salir del mapa.
+
+Etiquetas: archivo, foto, blanco y negro, mapa, guerra, barco · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `src` | image · obligatorio | `null` | Foto de archivo (se pasa a B/N contrastado). |
+| `photoFocus` | array | `[0.5, 0.42]` | Punto de interés de la foto [x,y] 0..1. |
+| `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
+| `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
+| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
+| `sunSize` | number [0.2–6] | `1.3` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
+| `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
+| `compass` | bool | `true` | Rosa de los vientos de línea fina abajo a la derecha. |
+| `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
+| `enter` | number [0–2] | `0.7` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
+| `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
+| `zoom` | number [0.3–6] | `1.35` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
+| `tilt` | number [-20–20] | `3` | Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas). |
+| `ease` | enum (auto / out / in / inOut / linear / expo) | `"auto"` | Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte. |
+| `rays` | number [0–60] | `28` | Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28). |
+| `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
+| `spread` | number [0–1] | `0.72` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
+| `rayFloor` | number [0–0.4] | `0.02` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
+| `rayAlpha` | number [0–1] | `0.56` | Opacidad de los rayos carmesí. |
+| `rayLen` | number [0.1–1] | `0.46` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
+| `raysAt` | number | `0` | Segundo en que nacen los rayos (acepta '@palabra'). |
+| `ships` | number [0–10] | `3` | Barquitos que avanzan sobre los rayos hacia el abanico. |
+| `rayColor` | string | `"#b3122f"` | Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f. |
+| `grayDur` | number [0–None] | `0.9` | Segundos en que el atlas pasa de color a gris (0 = ya gris). |
+| `photoAt` | number | `0` | Segundo en que empieza a aparecer la foto. |
+| `photoDur` | number [0.1–None] | `0.9` | Duración del fundido de la foto. |
+| `photo` | number [0–1] | `0.95` | Intensidad de la foto (multiplicar). |
+| `smoke` | number [0–1] | `0.85` | Humo oscuro desde arriba. |
+| `caption` | string | `""` | Rótulo chico en itálica (lugar · año de la foto), abajo a la izquierda. |
+
+```json
+{"use": "imperio.archive", "params": {"src": "../designs/imperio/assets/uboat.jpg", "country": "Japan", "from": [145, 35, 125, 3], "to": [135, 32, 165, 6], "rays": 28, "dir": 180, "spread": 0.72, "rayFloor": 0.02, "rayAlpha": 0.56, "rayLen": 0.46, "ships": 2, "compass": true, "photoAt": 0, "photoDur": 0.9, "labels": [{"t": "MAR DE JAPÓN", "at": [135, 40]}, {"t": "OCÉANO PACÍFICO", "at": [151, 23]}]}}
+```
+
+### `imperio.word`
+
+Título condensado BLANCO (Fjalla One) sobre el plano en curso: cada renglón SUBE desde abajo con degradé de opacidad (arriba aparece primero) y desenfoque, y después el título se ACHICA lento y exponencial (rápido al principio) mientras el mapa sigue moviéndose (ref 10–27 s: 'JAPANESE EMPIRE'). Usalo como overlay sobre imperio.archive / imperio.map para el nombre del imperio, la doctrina o el tema del bloque.
+
+Etiquetas: título, texto, nombre, imperio, condensada · capa: overlay
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Texto ('\n' parte renglones). Mayúsculas automáticas. |
+| `textPortrait` | string | `""` | Versión para 9:16. |
+| `at` | number | `0.2` | Segundo en que sube (acepta '@palabra'). −1 = ya está (continúa el título de imperio.title sin volver a entrar). |
+| `shrinkAt` | number | `2.8` | Segundo en que empieza a achicarse (−1 = nunca). |
+| `shrinkTo` | number [0.1–1] | `0.18` | Escala final a la que tiende. |
+| `tau` | number [0.3–None] | `2.8` | Constante de tiempo del achique (s): más chico = más rápido. |
+| `y` | number [0.1–0.9] | `0.68` | Centro vertical (fracción del alto) en 16:9. |
+| `size` | number [0.2–0.95] | `0.62` | Ancho del renglón más largo (fracción del ancho) en 16:9; en 9:16 se usa 0.86. |
+| `rise` | number [-0.3–0.3] | `0.06` | Mientras se achica sube hacia el centro (fracción del alto). |
+| `tilt` | number [-15–15] | `0` | Giro inicial en grados. |
+| `spin` | number [-3–3] | `0.25` | Grados por segundo que gira (acompaña al mapa). |
+
+```json
+{"use": "imperio.word", "params": {"text": "JAPANESE\nEMPIRE", "at": 0.2, "shrinkAt": 2.8, "shrinkTo": 0.18, "tau": 2.8}}
+```
+
+### `imperio.native`
+
+Nombre en su IDIOMA ORIGINAL (kanji, alemán, ruso, árabe latinizado…) en gris grande: cada carácter entra con escala y desenfoque escalonados, la traducción en mayúsculas negras se tipea debajo, y al final se borra de derecha a izquierda (ref 4.9–9.9 s: '南進論 · SOUTHERN EXPANSION DOCTRINE'). Overlay sobre un plano con mapa claro (imperio.map / imperio.title).
+
+Etiquetas: título, idioma original, kanji, doctrina, cita, traducción · capa: overlay
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Texto en el idioma original (corto: 1–3 palabras o 2–6 caracteres CJK). |
+| `sub` | string | `""` | Traducción (mayúsculas automáticas). |
+| `at` | number | `0.2` | Segundo en que entra el primer carácter (acepta '@palabra'). |
+| `outAt` | number | `-1` | Segundo en que se borra (−1 = 1 s antes del final del beat). |
+| `x` | number [0–1] | `0.64` | Borde izquierdo (fracción del ancho) en 16:9. En 9:16 va centrado. |
+| `y` | number [0.1–0.9] | `0.6` | Línea base (fracción del alto). |
+| `width` | number [0.1–0.9] | `0.3` | Ancho máximo (fracción del ancho) en 16:9; en 9:16 se usa 0.7. |
+| `tilt` | number [-15–15] | `0` | Giro en grados. |
+
+```json
+{"use": "imperio.native", "params": {"text": "南進論", "sub": "DOCTRINA DE EXPANSIÓN AL SUR"}}
+```
+
+### `imperio.introv1`
+
+GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).
+
+Etiquetas: intro, gancho, apertura, título, impacto, sol · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Titular gancho (2–7 palabras). '\n' = renglón; '^x^' = palabras sobre franja carmesí. |
+| `kicker` | string | `""` | Rótulo chico arriba (lugar · fecha). |
+| `sub` | string | `""` | Línea chica en itálica debajo del titular. |
+| `country` | string | `""` | País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro. |
+| `sunAt` | number | `0.15` | Segundo en que cae el sol. |
+| `wordAt` | number | `0.7` | Segundo de la primera palabra. |
+| `stagger` | number [0.06–None] | `0.2` | Segundos entre palabras. |
+| `burstAt` | number | `2.6` | Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto). |
+| `bg` | enum (auto / atlas / archivo / papel / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.35` | Oscurecido del fondo foto/componente. |
+
+```json
+{"use": "imperio.introv1", "params": {"text": "EL IMPERIO QUE\nMIRÓ AL ^SUR^", "kicker": "Tokio · 1940", "sub": "la doctrina que llevó a la guerra del Pacífico", "country": "Japan"}}
+```
+
+### `imperio.introv2`
+
+GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).
+
+Etiquetas: intro, gancho, apertura, pregunta, revelación, sol naciente · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Pregunta gancho ('\n' = renglón). |
+| `kicker` | string | `""` | Rótulo chico arriba. |
+| `stamp` | string | `""` | Respuesta (1–3 palabras) que sube con el sol (vacío = sin revelación). |
+| `stampAt` | number | `2.6` | Segundo de la revelación (acepta '@palabra'). |
+| `typeAt` | number | `0.35` | Segundo en que empieza a escribirse la pregunta. |
+| `cps` | number [4–None] | `18` | Caracteres por segundo. |
+| `country` | string | `""` | País foco del fondo atlas/archivo. |
+| `bg` | enum (auto / atlas / archivo / papel / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.35` | Oscurecido del fondo foto/componente. |
+
+```json
+{"use": "imperio.introv2", "params": {"text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?", "kicker": "Pacífico · 1940", "stamp": "PETRÓLEO", "stampAt": 2.6, "country": "Japan", "bg": "archivo"}}
+```
+
+### `imperio.outro`
+
+Cierre del canal SIN recuadro (bg: atlas | archivo | papel | image con src | component con use/useParams). GRACIAS POR VER → nombre del canal en condensada blanca que sube delante del SOL carmesí que sale desde abajo con sus rayos girando → LIKE (óvalo fino que se llena de carmesí) → flecha de línea fina → SUSCRÍBETE en franja carmesí + campana que suena → mensaje de apoyo tipeado → youtube.com/@canal. Fundido a negro. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).
+
+Etiquetas: cierre, canal, like, suscribirse, sol · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `thanks` | string | `"GRACIAS POR VER"` | Rótulo inicial. |
+| `channel` | string | `"NODEPOLITICS"` | Nombre del canal (grande). |
+| `cta` | string | `"SUSCRÍBETE"` | Texto del botón de suscripción. |
+| `support` | string | `"Apoya el canal y comparte el video."` | Mensaje de apoyo. |
+| `handle` | string | `"youtube.com/@nodepolitics"` | Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla). |
+| `arrow` | bool | `true` | Flecha del LIKE a SUSCRÍBETE. |
+| `likeAt` | number [0–None] | `1` | Segundo del LIKE. |
+| `subscribeAt` | number [0–None] | `2.5` | Segundo de SUSCRÍBETE. |
+| `bellAt` | number [0–None] | `3.25` | Segundo de la campana. |
+| `supportAt` | number [0–None] | `3.65` | Segundo del mensaje de apoyo y la dirección. |
+| `country` | string | `""` | País foco del fondo atlas (vacío = mundo). |
+| `bg` | enum (auto / atlas / archivo / papel / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.5` | Oscurecido del fondo foto/componente. |
+
+```json
+{"use": "imperio.outro", "params": {"thanks": "GRACIAS POR VER", "channel": "NODEPOLITICS", "cta": "SUSCRÍBETE", "support": "Apoya el canal y comparte el video.", "handle": "youtube.com/@nodepolitics"}}
+```
+
+## memorias · MEMORIAS
+
+### `memorias.title`
+
+Portada 'Historical Memories': título manuscrito grande (Mr Dafoe) que se escribe de izquierda a derecha + subtítulo en Quicksand, sobre papel de yeso con humo gris; bocetos a lápiz de una o dos fotos en las esquinas (layout center) o un boceto grande a un costado con el texto arriba a la izquierda (layout side).
+
+Etiquetas: apertura, título, portada, boceto · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `title` | string · obligatorio | `null` | Título manuscrito ('\n' parte renglones). |
+| `sub` | string | `""` | Subtítulo chico (Quicksand). |
+| `src` | image | `""` | Foto que se dibuja como boceto (arriba a la derecha en center; a la derecha en side). |
+| `src2` | image | `""` | Segunda foto en boceto (abajo a la izquierda, solo center). |
+| `layout` | enum (center / side) | `"center"` | center = título al medio y bocetos en las esquinas; side = texto arriba a la izquierda y boceto grande a la derecha. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés [x,y] 0..1 para el recorte 'cover'. |
+| `focus2` | array | `[0.5, 0.5]` | Punto de interés [x,y] 0..1 para el recorte 'cover'. |
+| `titlePortrait` | string | `""` | Título alternativo para 9:16 ('\n' parte renglones). |
+
+```json
+{"use": "memorias.title", "params": {"title": "La noche del Muro", "sub": "Berlín · 9 de noviembre de 1989", "src": "assets/media/brandenburgo.jpg", "src2": "assets/media/bernauer.jpg", "layout": "center"}}
+```
+
+### `memorias.scene`
+
+El plano de la referencia: la foto aparece primero como BOCETO A LÁPIZ sobre el papel, después se colorea por manchas de tinta (reveal: full/right/left/center/bottom; lo demás queda en boceto), revienta una salpicadura de acuarela azul con gotas (negra con tone=bw) y aparece el bloque de texto: renglón manuscrito (kicker) + renglones en MAYÚSCULAS que se arman letra a letra (text, '\n' = renglón). Detrás, un recorte de periódico fantasma; zoom lento durante el plano y salida con humo.
+
+Etiquetas: foto, lugar, monumento, acuarela, boceto, dato · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `src` | image · obligatorio | `null` | La foto (a color para lugares; cielo visible ayuda). |
+| `kicker` | string | `""` | Renglón manuscrito arriba del bloque (Mr Dafoe). |
+| `text` | string | `""` | Renglones en MAYÚSCULAS ('\n' parte renglones; 1–3 renglones cortos). |
+| `kicker2` | string | `""` | Segundo renglón manuscrito, entre el 1.º y el 2.º renglón de text (como 'Modular Structure / FIRST… / Easily edit scenes / SECOND…'). |
+| `pos` | enum (bl / tl / tr / br) | `"bl"` | Esquina del bloque de texto (bl abajo-izq., tl arriba-izq., tr arriba-der., br abajo-der.). |
+| `tone` | enum (color / bw) | `"color"` | color = acuarela azul; bw = foto B/N con manchas de tinta negra (retratos, archivo). |
+| `reveal` | enum (full / right / left / center / bottom / none) | `"full"` | Qué parte se colorea; lo demás queda en boceto (none = solo boceto). |
+| `splash` | enum (auto / none / tl / tr / t / l / r / c / bl / br) | `"auto"` | Dónde revienta la salpicadura (auto = lejos del texto). |
+| `splashSize` | number [0.08–0.7] | `0.26` | Radio de la salpicadura (fracción del lado corto; 0,5–0,7 = aguada grande que pinta el cielo). |
+| `splashColor` | color | `""` | Color de la salpicadura (vacío = palette.splash, o tinta negra en bw). |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés [x,y] 0..1 para el recorte 'cover'. |
+| `ghost` | bool | `true` | Recorte de periódico + titular fantasma en el papel. |
+| `drift` | number [0–0.3] | `0.07` | Zoom lento durante el plano. |
+| `cut` | enum (auto / wash / whip) | `"auto"` | Corte de SALIDA: wash = se borra con una mancha de papel mientras asoma el boceto siguiente; whip = barrido de cámara con estela y el siguiente entra deslizándose; auto = como la referencia (barrido cada 3 escenas). |
+
+```json
+{"use": "memorias.scene", "params": {"src": "assets/media/brandenburgo.jpg", "kicker": "Berlín, 1989", "text": "Puerta de Brandeburgo\nEl muro pasaba detrás", "pos": "bl", "reveal": "right", "splash": "auto"}}
+```
+
+### `memorias.introv1`
+
+Gancho 'golpe': titular MANUSCRITO gigante (Mr Dafoe) que se escribe palabra a palabra sobre el papel, con rótulo en MAYÚSCULAS que se arma letra a letra arriba y subtítulo en Quicksand abajo; en dropAt revienta una salpicadura de acuarela azul detrás del titular con gotas y una sacudida, y la palabra ^marcada^ se tiñe de azul. Fondo: sketch (foto en boceto que se colorea) | smoke | image | component | none.
+
+Etiquetas: intro, gancho, apertura, titular, acuarela · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Titular manuscrito ('\n' = renglón; '^x^' = palabra que se tiñe de azul en el golpe). |
+| `kicker` | string | `""` | Rótulo en MAYÚSCULAS arriba (se arma letra a letra). |
+| `sub` | string | `""` | Línea chica abajo (Quicksand). |
+| `wordAt` | number [0–None] | `0.45` | Segundo en que empieza a escribirse la primera palabra. |
+| `stagger` | number [0.05–None] | `0.3` | Segundos entre palabra y palabra. |
+| `dropAt` | number [-1–None] | `2.3` | Segundo del golpe (salpicadura + sacudida); −1 = sin golpe; acepta '@palabra'. |
+| `bg` | enum (auto / sketch / smoke / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: sketch, smoke; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Velo de papel sobre el fondo (0 = nada; paleta clara: lava hacia el papel). |
+
+```json
+{"use": "memorias.introv1", "params": {"text": "La noche que\ncayó el ^Muro^", "kicker": "Berlín · 1989", "sub": "nadie dio la orden", "src": "assets/media/brandenburgo.jpg"}}
+```
+
+### `memorias.introv2`
+
+Gancho 'pregunta + revelación': la pregunta en MAYÚSCULAS (Barlow 700) se arma letra a letra con glifos que parpadean; en stampAt la respuesta se escribe en manuscrita grande sobre una salpicadura de acuarela azul que revienta con gotas. Fondo: sketch | smoke | image | component | none.
+
+Etiquetas: intro, gancho, pregunta, revelación, acuarela · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | La pregunta ('\n' = renglón). |
+| `kicker` | string | `""` | Renglón manuscrito chico arriba de la pregunta. |
+| `stamp` | string | `""` | La respuesta (manuscrita grande sobre la salpicadura). |
+| `stampAt` | number [0–None] | `2.4` | Segundo de la respuesta; acepta '@palabra'. |
+| `typeAt` | number [0–None] | `0.35` | Segundo en que empieza a armarse la pregunta. |
+| `cps` | number [4–None] | `22` | Letras por segundo de la pregunta. |
+| `bg` | enum (auto / sketch / smoke / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: sketch, smoke; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Velo de papel sobre el fondo (0 = nada; paleta clara: lava hacia el papel). |
+
+```json
+{"use": "memorias.introv2", "params": {"text": "¿Quién abrió\nel muro?", "kicker": "Berlín, 1989", "stamp": "Nadie dio la orden", "src": "assets/media/bernauer.jpg"}}
+```
+
+### `memorias.outro`
+
+Cierre del canal como la tarjeta final de la referencia: una mancha de tinta NEGRA crece desde abajo a la izquierda y traga el cuadro (bg ink; paper = sobre el papel con texto oscuro; image/component/none = contrato común) → 'gracias por ver' en sans fina → nombre del canal en manuscrita grande que se escribe → pulgar LIKE a trazo que se rellena con gotas azules → flecha fina → SUSCRÍBETE armado letra a letra + campana que suena → mensaje de apoyo → dirección en mayúsculas chiquitas. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).
+
+Etiquetas: cierre, canal, like, suscribirse, tinta · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `thanks` | string | `"gracias por ver"` | Rótulo inicial. |
+| `channel` | string | `"Memorias"` | Nombre del canal (grande). |
+| `cta` | string | `"Suscríbete"` | Texto del botón de suscripción. |
+| `support` | string | `"Apoya el canal y comparte la historia"` | Mensaje de apoyo. |
+| `handle` | string | `"youtube.com/@nodehistory"` | Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla). |
+| `arrow` | bool | `true` | Flecha del LIKE a SUSCRÍBETE. |
+| `likeAt` | number [0–None] | `1` | Segundo del LIKE. |
+| `subscribeAt` | number [0–None] | `2.5` | Segundo de SUSCRÍBETE. |
+| `bellAt` | number [0–None] | `3.25` | Segundo de la campana. |
+| `supportAt` | number [0–None] | `3.65` | Segundo del mensaje de apoyo y la dirección. |
+| `bg` | enum (auto / ink / paper / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: ink, paper; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.7` | Oscurecido del fondo foto/componente (el cierre tiene texto blanco). |
+
+```json
+{"use": "memorias.outro", "params": {"thanks": "gracias por ver", "channel": "Memorias", "cta": "Suscríbete", "support": "Apoya el canal y comparte la historia", "handle": "youtube.com/@nodehistory"}}
 ```
 
 ## Iconos de la familia binary (`icon`)

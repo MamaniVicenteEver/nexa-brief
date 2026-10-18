@@ -322,6 +322,8 @@ Tipo fijo por escena: `layouts.<tipo>.trans`.
 | Claves de config que el HTML principal no lee | Confunde a la IA y a quien edita (Collage) | Config = exactamente lo que el motor usa |
 | Editar a mano un `index.html` generado | Se pierde al regenerar | Editar el generador |
 | Guardar evidencia de render en `/tmp` | Se borró al reiniciar | `output/hf-demo-<id>/` |
+| Máscaras CSS (`mask-image`) con PNG en escala de grises sin alfa | CSS enmascara por **alfa**: el PNG se ve como un rectángulo opaco (pinceles y marcos «rotos» que no recortan) | PNG blanco con canal alfa (`_build/textures.py` de `promo-fuerza-motivacion`) |
+| Delegar una réplica «a ojo» a Codex sin verificar | Codex copió el logo de la referencia y dejó texto diminuto (2026-10-15) | Hoja comparativa ref ↔ plantilla en los mismos instantes y revisarla antes de entregar |
 
 ---
 

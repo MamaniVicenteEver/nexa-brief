@@ -1,0 +1,127 @@
+{
+  "id": "dinero",
+  "family": "dinero",
+  "name": "NODECONOMY",
+  "tagline": "Economía en tipografía cinética: verde dinero, gris niebla y negro verdoso",
+  "topics": [
+    "economía",
+    "dinero",
+    "finanzas personales",
+    "empresas",
+    "presupuestos",
+    "mercados",
+    "crisis",
+    "historia económica"
+  ],
+  "channel": {
+    "name": "NODECONOMY",
+    "handle": "@nodeconomy",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Oranienbaum&family=Montserrat:wght@200;300&family=Open+Sans:wdth,wght@75..100,300..800&display=swap",
+  "scripts": [
+    "designs/common/text.js",
+    "designs/dinero/components/_dinero.js",
+    "designs/dinero/components/title.js",
+    "designs/dinero/components/photo.js",
+    "designs/dinero/components/kinetic.js",
+    "designs/dinero/components/flat.js",
+    "designs/dinero/components/dark.js",
+    "designs/common/hook.js",
+    "designs/dinero/components/intros.js",
+    "designs/dinero/components/outro.js"
+  ],
+  "defaults": {
+    "family": "dinero",
+    "palette": {
+      "bg": "#020c0f",
+      "ink": "#fcfaf8",
+      "muted": "#545c5d",
+      "accent": "#1a961f",
+      "accentInk": "#020c0f",
+      "deep": "#145027",
+      "green": "#12721e",
+      "leaf": "#3a7e40",
+      "forest": "#003c18",
+      "felt": "#2a5424",
+      "feltDark": "#0c2418",
+      "sage": "#7d986f",
+      "sageLight": "#8da37c",
+      "flat": "#6c9054",
+      "fog": "#8e9578",
+      "fogDark": "#576357",
+      "paper": "#cac5c0",
+      "paperEdge": "#8f8e86",
+      "gold": "#c48a32",
+      "goldDark": "#7a4f18",
+      "leak": "#e8463a",
+      "white": "#fcfaf8",
+      "black": "#020c0f",
+      "teal": "#3f7a70",
+      "tealLight": "#9fded0"
+    },
+    "fonts": {
+      "main": "Open Sans",
+      "load": [
+        "400 40px Oranienbaum",
+        "200 40px Montserrat",
+        "300 40px Montserrat",
+        "700 40px 'Open Sans'",
+        "800 40px 'Open Sans'",
+        "600 40px 'Open Sans'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 4,
+      "gap": 0.5,
+      "hold": 0.3
+    },
+    "dinero": {
+      "grain": 0.035,
+      "vignette": 0.55
+    },
+    "transition": {
+      "overlap": 0.45
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 6,
+      "thanks": "gracias por ver",
+      "channel": "NODECONOMY",
+      "cta": "SUSCRÍBETE",
+      "support": "apoya el canal · comparte el video",
+      "handle": "youtube.com/@nodeconomy",
+      "use": "dinero.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de economía, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Claro y directo, con un punto de picardía cuando aparece el dinero. No imitar a ninguna persona real. Ritmo natural, alrededor de 125 palabras por minuto: deja respirar las cifras.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos reales (billetes, monedas, manos contando dinero, edificios, personas, objetos); se muestran tratadas en verde: gris verdoso desaturado, teal frío o verde dinero, nunca a todo color",
+    "portrait_tip": "las fotos de objetos se ven mejor recortadas sobre fondo liso; las de billetes/monedas llenan el cuadro con paneo y giro: focus=[x,y] apunta al sujeto",
+    "per_video": [
+      5,
+      9
+    ]
+  }
+}

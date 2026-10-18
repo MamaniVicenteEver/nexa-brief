@@ -1,0 +1,112 @@
+{
+  "id": "imperio",
+  "family": "imperio",
+  "name": "NODEPOLITICS",
+  "tagline": "Atlas histórico: el sol carmesí del imperio sobre su país, rayos que se expanden sobre el mar, título en su idioma original y archivo en blanco y negro fundido con el mapa",
+  "topics": [
+    "política",
+    "geopolítica",
+    "imperios",
+    "guerras",
+    "siglo XX",
+    "historia",
+    "expansión territorial",
+    "doctrinas",
+    "documental"
+  ],
+  "channel": {
+    "name": "NODEPOLITICS",
+    "handle": "youtube.com/@nodepolitics",
+    "language": "es-419",
+    "note": "nombre y handle provisionales: el usuario confirma el canal real"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Fjalla+One&family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Noto+Sans+JP:wght@700&display=swap",
+  "scripts": [
+    "vendor/geo/d3-array.min.js",
+    "vendor/geo/d3-geo.min.js",
+    "vendor/geo/topojson-client.min.js",
+    "vendor/geo/countries-50m.js",
+    "designs/common/text.js",
+    "designs/imperio/components/_imperio.js",
+    "designs/imperio/components/scenes.js",
+    "designs/imperio/components/type.js",
+    "designs/common/hook.js",
+    "designs/imperio/components/intros.js",
+    "designs/imperio/components/outro.js"
+  ],
+  "defaults": {
+    "family": "imperio",
+    "palette": {
+      "bg": "#7f9bab",
+      "ink": "#f6f6f8",
+      "muted": "#c9ced2",
+      "accent": "#b3122f",
+      "accentInk": "#ffffff",
+      "ocean": "#7f9bab",
+      "land": "#d6d7d2",
+      "sun": "#6c001b",
+      "ray": "#8a0f2a",
+      "native": "#4d5a66",
+      "sub": "#0f1a24"
+    },
+    "fonts": {
+      "main": "Fjalla One",
+      "load": [
+        "400 40px 'Fjalla One'",
+        "500 40px Montserrat",
+        "600 40px Montserrat",
+        "700 40px Montserrat",
+        "800 40px Montserrat",
+        "italic 500 40px Montserrat",
+        "700 40px 'Noto Sans JP'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "transition": {
+      "overlap": 0.6
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 5,
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODEPOLITICS",
+      "cta": "SUSCRÍBETE",
+      "support": "Apoya el canal y comparte el video.",
+      "handle": "youtube.com/@nodepolitics",
+      "use": "imperio.outro"
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Algenib",
+      "Orus",
+      "Sadaltager"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental geopolítico, voz masculina madura, grave y serena, español latinoamericano neutro (sin ceceo). Firme y neutral: explica, no toma partido. No imitar a ninguna persona real. Ritmo pausado, alrededor de 122 palabras por minuto, con peso en los nombres de países y fechas.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos de archivo reales (barcos, ejércitos, líderes, firmas, ciudades): se pasan a blanco y negro contrastado y se funden en multiplicar con el mapa; las de cielo claro arriba funcionan mejor (el mapa se ve a través)",
+    "portrait_tip": "imperio.archive recorta 'cover' a pantalla completa: usar focus=[x,y] para el sujeto; lo oscuro de la foto oscurece el mapa",
+    "per_video": [
+      4,
+      8
+    ]
+  }
+}

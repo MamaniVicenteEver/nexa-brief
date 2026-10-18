@@ -24,7 +24,8 @@ src/templates/
     ├── nodetech/             ← ideas de videos de tecnología  (+ _referencias/)
     ├── nodehistory/          ← ideas de videos de historia     (+ _referencias/)
     ├── nodepolitics/         ← ideas de videos de política
-    └── nodeeconomy/          ← ideas de videos de economía
+    ├── nodeeconomy/          ← ideas de videos de economía
+    └── nodeaction/           ← escenas de acción con personajes (motor propio: _engine/, escenas = datos)
 ```
 
 ## Qué leer según lo que vas a hacer
@@ -34,7 +35,12 @@ src/templates/
 | una plantilla nueva de letras, promo o fondo (música) | `nodemotion/AGENTS.md` |
 | un video explicativo de prueba (tech, historia, política, economía) | `EXPLAINER.md` → `<tema>/AGENTS.md` → `_tools/explainer-kit/AGENTS.md` |
 | un diseño nuevo para el motor explainer | `EXPLAINER.md` (sección de diseños nuevos) |
+| una escena de acción (batalla, enfrentamiento, disturbio…) con personajes | `nodeaction/AGENTS.md` |
 | pasar algo a producción | la sección "promover" del `AGENTS.md` del tema |
+
+**NodeAction también es distinto**: tiene su propio motor (`nodeaction/_engine/`, personajes articulados
+en un mundo 2.5D, director automático); comparte con los demás el contrato de grabación (`__promo`), la voz
+y la transcripción del explainer-kit. Todavía no se promueve a la app (prototipo).
 
 **NodeMotion es distinto**: cada plantilla es su propio `index.html` (canción + letra + medios) y
 pasa por el pipeline de plantillas. **Tech, History, Politics y Economy usan el mismo motor**

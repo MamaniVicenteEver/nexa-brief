@@ -19,7 +19,7 @@
 <script>
 (function () {
   const QS = new URLSearchParams(location.search), c = QS.get("c") || "";
-  const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop"];
+  const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop", "memorias", "dinero", "atlas", "imperio"];
   const prefix = c.split(".")[0];
   const d = QS.get("d") || (ids.includes(prefix) ? prefix : "binary");
   const s = document.createElement("script"); s.src = "../engine/loader.js"; s.dataset.design = d; s.dataset.noboot = "1";
