@@ -20,6 +20,9 @@
 # Generated and user-owned artifacts
 **/output
 **/data
+# ...salvo el código con esos nombres de carpeta.
+!nexa-brief-server/src/adapters/data
+!nexa-brief-server/src/skills/output
 **/uploads
 **/renders
 **/*.mp4
@@ -27,6 +30,10 @@
 **/*.mov
 **/*.mp3
 **/*.wav
+# Los medios de las plantillas no entran a la imagen: el compose monta src/templates
+# del host (ver docker-compose.yml), así `make media-pull` se ve sin reconstruir.
+nexa-brief-server/src/templates/**/work
+nexa-brief-server/src/templates/sandbox
 
 # VCS, editor and local-only files
 .git

@@ -14,6 +14,20 @@
                    nexa-template-reset                  volver al inicio en pausa
      video → app   nexa-template-time     {currentTime,duration}
                    nexa-template-ended
+                   nexa-template-state    {playing}     estado real (play/pause)
+                   nexa-template-muted    {muted}       si se silenció solo (ver abajo)
+                   nexa-template-ready                  ya escucha órdenes
+
+   Este archivo lo carga loader.js después de bajar design.json, así que el evento
+   load del iframe puede llegar ANTES de que exista este listener y la orden
+   "reproducir" de la app se pierde. Por eso, al quedar listo, avisa con
+   nexa-template-ready y la app le reenvía el estado actual.
+
+   Reproducción automática: el audio carga segundos después del clic que abrió el
+   modal y Chrome puede rechazar el play() con sonido (NotAllowedError). En ese
+   caso se reproduce en silencio, como YouTube, y la app muestra el botón de
+   silencio activo: un clic y suena. Si el play() se interrumpe (AbortError), se
+   reintenta.
 
    El motor (kit.js) en modo controlado usa audio.currentTime como ÚNICO reloj y
    sigue dibujando en pausa, así pausar, adelantar y retroceder muestran el cuadro
@@ -39,8 +53,22 @@
     a.muted = want.muted;
     if (!ready(a)) return;   /* se reintenta en loadedmetadata */
     if (want.seek != null) { a.currentTime = clampT(a, want.seek); want.seek = null; }
-    if (want.playing && a.paused) a.play().catch(() => { want.playing = false; report(); });
+    if (want.playing && a.paused) play(a, 0);
     if (!want.playing && !a.paused) a.pause();
+  }
+
+  function play(a, attempt) {
+    a.play().catch(err => {
+      if (!want.playing) return;
+      if (err && err.name === "NotAllowedError" && !a.muted) {
+        a.muted = want.muted = true;
+        parentPost({ type: "nexa-template-muted", muted: true });
+        return play(a, attempt + 1);
+      }
+      if (err && err.name === "AbortError" && attempt < 3) return setTimeout(() => apply(), 100);
+      want.playing = false;
+      parentPost({ type: "nexa-template-state", playing: false });
+    });
   }
 
   let lastSent = -1;
@@ -78,8 +106,11 @@
     a.addEventListener("loadedmetadata", () => { apply(); report(true); });
     a.addEventListener("timeupdate", () => report(false));
     a.addEventListener("seeked", () => report(true));
+    a.addEventListener("play", () => parentPost({ type: "nexa-template-state", playing: true }));
+    a.addEventListener("pause", () => { if (!a.ended) parentPost({ type: "nexa-template-state", playing: false }); });
     a.addEventListener("ended", () => { want.playing = false; report(true); parentPost({ type: "nexa-template-ended" }); });
     apply();
   }
   wire();
+  parentPost({ type: "nexa-template-ready" });
 })();

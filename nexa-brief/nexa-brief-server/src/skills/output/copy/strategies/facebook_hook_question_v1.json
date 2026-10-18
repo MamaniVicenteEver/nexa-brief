@@ -1,0 +1,124 @@
+{
+  "id": "facebook_hook_question_v1",
+  "platform": "facebook",
+  "name": "Facebook · Afirmación + pregunta para comentar o etiquetar",
+  "description": "Igual idea que TikTok, adaptada a Facebook: la afirmación va como primera línea (la única visible antes de 'ver más') y la pregunta invita a comentar o etiquetar a alguien.",
+  "fields": {
+    "hook_statement": {
+      "type": "text",
+      "max_chars": 80,
+      "instruction": "Una afirmación corta y verdadera sobre lo que siente la canción, con la que alguien se identifica al leerla. Distinta de la de TikTok. Sin el nombre de la canción ni del artista. Termina con punto.",
+      "examples": {
+        "es": [
+          "Hay canciones que llegan justo cuando no las buscabas.",
+          "A veces soltar también es una forma de querer."
+        ],
+        "en": [
+          "Some songs arrive right when you weren't looking for them.",
+          "Sometimes letting go is also a way of loving."
+        ]
+      },
+      "avoid": {
+        "es": [
+          "Temazo.",
+          "Qué buena canción."
+        ],
+        "en": [
+          "What a banger.",
+          "Great song."
+        ]
+      }
+    },
+    "memory_question": {
+      "type": "text",
+      "max_chars": 110,
+      "instruction": "Una pregunta que haga pensar en una persona concreta e invite a comentar o etiquetarla. Personal, nunca de sí o no sobre la canción.",
+      "examples": {
+        "es": [
+          "¿Quién se te vino a la mente? Cuéntanos o etiquétala.",
+          "¿A quién le mandarías esta canción sin decirle nada?"
+        ],
+        "en": [
+          "Who came to mind? Tell us or tag them.",
+          "Who would you send this song to without saying a word?"
+        ]
+      },
+      "avoid": {
+        "es": [
+          "¿Te gustó?"
+        ],
+        "en": [
+          "Did you like it?"
+        ]
+      }
+    },
+    "hashtags": {
+      "type": "list",
+      "min_items": 3,
+      "max_items": 3,
+      "instruction": "Exactamente 3 hashtags sin '#', en CamelCase: el artista, la canción y el sentimiento o tema.",
+      "examples": {
+        "es": [
+          [
+            "Morat",
+            "ComoTeAtreves",
+            "Desamor"
+          ]
+        ],
+        "en": [
+          [
+            "Adele",
+            "EasyOnMe",
+            "Heartbreak"
+          ]
+        ]
+      }
+    }
+  },
+  "rotating": {
+    "follow_line": {
+      "es": [
+        "Síguenos para más canciones con letra.",
+        "Síguenos: cada semana compartimos nuevas canciones con letra.",
+        "Si te llegó, síguenos para más canciones así."
+      ],
+      "en": [
+        "Follow us for more songs with lyrics.",
+        "Follow us: new songs with lyrics every week.",
+        "If this hit home, follow us for more songs like it."
+      ]
+    }
+  },
+  "output": {
+    "title": {
+      "max_chars": 255,
+      "templates": {
+        "es": [
+          "{hook_statement}"
+        ],
+        "en": [
+          "{hook_statement}"
+        ]
+      }
+    },
+    "description": {
+      "max_chars": 2000,
+      "templates": {
+        "es": [
+          "{memory_question}\n{song} – {artist}. {follow_line}",
+          "{memory_question}\n{song}. {follow_line}",
+          "{memory_question}\n{follow_line}"
+        ],
+        "en": [
+          "{memory_question}\n{song} – {artist}. {follow_line}",
+          "{memory_question}\n{song}. {follow_line}",
+          "{memory_question}\n{follow_line}"
+        ]
+      }
+    },
+    "tags": {
+      "from": "hashtags",
+      "style": "hashtag"
+    }
+  }
+}

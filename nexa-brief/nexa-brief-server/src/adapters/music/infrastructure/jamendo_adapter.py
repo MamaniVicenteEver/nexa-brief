@@ -78,5 +78,5 @@ class JamendoAdapter(MusicPort):
                 )
 
         raise MusicFetchError(
-            f"Jamendo: no tracks found for genre '{genre}' (tried tags: {jamendo_tag}, {_FALLBACK_TAG})"
+            f"Jamendo: no tracks found for genre '{genre}' (tried tags: {', '.join(tags_to_try)})"
         )

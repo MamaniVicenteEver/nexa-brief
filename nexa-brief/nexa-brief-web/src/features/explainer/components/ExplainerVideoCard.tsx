@@ -115,6 +115,7 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
       source={{
         kind: "iframe",
         url: withParam(video.previewUrl, `controls=1&volume=${PLAYER_VOLUME}`),
+        poster: video.posterUrl,
       }}
       defaultVolume={PLAYER_VOLUME}
       defaultViewport="desktop"

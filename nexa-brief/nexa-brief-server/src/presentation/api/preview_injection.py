@@ -10,6 +10,12 @@ Parámetros de query soportados:
   muted=1       → audio silenciado
   volume=<0..1> → volumen inicial (con controls=1)
   limit=<s>     → corta la vista previa a N segundos
+
+En el modal (controls=1, sin preview=card) la plantilla NO arranca hasta que sus
+audios y videos pueden reproducirse (canplay), y después arranca todo junto desde 0.
+Sin esa espera, por red (LAN/Tailscale) el fondo se animaba con reloj de pared antes
+de que sonara la canción, o sonaba sin el video de fondo, o al revés. Si un medio
+falla o tarda más de MEDIA_GATE_TIMEOUT_MS, arranca igual.
 """
 
 from __future__ import annotations
@@ -33,13 +39,21 @@ def inject_preview_scripts(content: str, query_params: Mapping[str, str]) -> str
       const queryParams = new URLSearchParams(window.location.search);
       const isCardPreview = queryParams.get("preview") === "card";
       const isControlledPreview = queryParams.get("controls") === "1";
+      const nativeSetTimeout = window.setTimeout.bind(window);
+      // Modal: esperar a que los medios estén listos antes de arrancar (ver docstring).
+      const MEDIA_GATE_TIMEOUT_MS = 8000;
+      let mediaReady = !(isControlledPreview && !isCardPreview);
+      // El límite se cuenta desde que abre la vista previa (no desde "load", que
+      // espera imágenes de fondo pesadas).
+      let gateDeadlinePassed = false;
+      if (!mediaReady) nativeSetTimeout(() => { gateDeadlinePassed = true; }, MEDIA_GATE_TIMEOUT_MS);
       const requestedLimit = Number(queryParams.get("limit"));
       const maxDuration = Number.isFinite(requestedLimit) && requestedLimit > 0
         ? requestedLimit
         : Number.POSITIVE_INFINITY;
       const initialPlaying = !isCardPreview;
       let requestedPlaying = initialPlaying;
-      let isPlaying = initialPlaying;
+      let isPlaying = initialPlaying && mediaReady;
       let resetVersion = 0;
 
       const previewStyle = document.createElement("style");
@@ -78,11 +92,15 @@ def inject_preview_scripts(content: str, query_params: Mapping[str, str]) -> str
         if (isPlaying) callback(...args);
       }, delay);
 
+      // Medios que la plantilla quiso reproducir mientras el modal espera: son los
+      // que hacen falta para arrancar (los de escenas posteriores no se esperan).
+      const wantedAtStart = new Set();
       HTMLMediaElement.prototype.play = function () {
         if (this.tagName === "VIDEO" || isCardPreview) {
           this.muted = true;
           this.volume = 0;
         }
+        if (!mediaReady) wantedAtStart.add(this);
         if (!isPlaying) {
           this.pause();
           return Promise.resolve();
@@ -142,13 +160,64 @@ def inject_preview_scripts(content: str, query_params: Mapping[str, str]) -> str
       };
 
       const setPlaying = (playing) => {
-        isPlaying = playing;
-        document.documentElement.toggleAttribute("data-nexa-preview-paused", !playing);
-        setMediaPlaying(playing);
+        isPlaying = playing && mediaReady;
+        document.documentElement.toggleAttribute("data-nexa-preview-paused", !isPlaying);
+        setMediaPlaying(isPlaying);
 
-        if (playing) {
+        if (isPlaying) {
           flushQueuedFrames();
         }
+      };
+
+      const hasSource = (media) =>
+        Boolean(media.getAttribute("src") || media.currentSrc || media.querySelector("source[src]"));
+
+      // Resuelve cuando lo necesario para arrancar puede reproducirse (canplay) o falló:
+      // los audios, los videos con autoplay y los que la plantilla intentó reproducir.
+      // Los videos de escenas posteriores NO se esperan ni se fuerzan a descargar.
+      // Se revisa cada 100 ms porque muchas plantillas asignan el src del audio recién
+      // después de leer su config.json: un audio sin src todavía se espera hasta
+      // UNSET_SRC_GRACE_MS. Sin nada que esperar, arranca enseguida.
+      const UNSET_SRC_GRACE_MS = 3000;
+      const neededAtStart = (media) =>
+        media.tagName === "AUDIO" || media.autoplay || wantedAtStart.has(media);
+      const waitForMedia = () => new Promise((resolve) => {
+        let elapsed = 0;
+        const check = () => {
+          const pending = [...document.querySelectorAll("audio, video")].filter((media) => {
+            if (!neededAtStart(media)) return false;
+            if (!hasSource(media)) return media.tagName === "AUDIO" && elapsed < UNSET_SRC_GRACE_MS;
+            // Un audio con error (p. ej. un src provisorio que da 404) se espera un poco:
+            // muchas plantillas lo corrigen al leer su config.json.
+            if (media.error) return media.tagName === "AUDIO" && elapsed < UNSET_SRC_GRACE_MS;
+            if (media.readyState >= 3) return false;
+            // En pausa el navegador solo baja metadata con preload="metadata"/"none".
+            if (media.preload !== "auto") media.preload = "auto";
+            if (media.networkState === HTMLMediaElement.NETWORK_EMPTY) {
+              try { media.load(); } catch (_) {}
+            }
+            return true;
+          });
+          if (pending.length === 0 || gateDeadlinePassed) return resolve();
+          elapsed += 100;
+          nativeSetTimeout(check, 100);
+        };
+        check();
+      });
+
+      const openMediaGate = () => {
+        if (mediaReady) return;
+        waitForMedia().then(() => {
+          if (mediaReady) return;
+          mediaReady = true;
+          document.querySelectorAll("audio, video").forEach((media) => {
+            try { if (media.currentTime > 0) media.currentTime = 0; } catch (_) {}
+          });
+          setPlaying(requestedPlaying);
+          // La app tapa el escenario con la portada hasta esta señal (o hasta tiempo > 0):
+          // una plantilla sin audio/video nunca informa tiempo.
+          window.parent.postMessage({ type: "nexa-template-started" }, "*");
+        });
       };
 
       const startCardRuntime = () => {
@@ -250,12 +319,21 @@ def inject_preview_scripts(content: str, query_params: Mapping[str, str]) -> str
         }
       }, true);
 
+      // La espera de medios arranca con el documento armado; "load" esperaría las
+      // imágenes de fondo (1–3 MB) aunque la canción ya esté lista.
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => nativeSetTimeout(openMediaGate, 0), { once: true });
+      } else {
+        nativeSetTimeout(openMediaGate, 0);
+      }
+
       window.addEventListener(
         "load",
         () => {
           window.setTimeout(() => {
             setPlaying(requestedPlaying);
             if (isCardPreview && !requestedPlaying) resetPreview();
+            openMediaGate();
           }, 100);
           if (isCardPreview) {
             [250, 600, 1200].forEach((delay) => {

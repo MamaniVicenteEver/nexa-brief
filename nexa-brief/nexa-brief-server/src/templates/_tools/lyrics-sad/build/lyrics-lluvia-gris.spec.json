@@ -1,0 +1,189 @@
+{
+  "title": "Lluvia Gris — Lyric Video",
+  "out": "nodemotion/lyrics/lyrics-lluvia-gris",
+  "js": [
+    "sad-common.js",
+    "lluvia.js"
+  ],
+  "about": "balada triste bajo la lluvia: metraje frío desaturado, serif itálica + sans espaciada, lluvia real, letras que gotean, reflejos mojados y vaho que se limpia.",
+  "fontLoads": [
+    "italic 400 100px 'Cormorant Garamond'",
+    "300 100px Inter",
+    "600 100px Inter"
+  ],
+  "css": "  :root { --fS: \"Cormorant Garamond\", serif; --fN: \"Inter\", sans-serif; }\n  .ser { font-family: var(--fS); font-style: italic; font-weight: 400; letter-spacing: 0.01em; }\n  .sn { font-family: var(--fN); font-weight: 300; text-transform: uppercase; }\n  .sn.bold { font-weight: 600; }\n",
+  "config": {
+    "id": "default",
+    "description": "Lyric video de balada triste bajo la lluvia: metraje frío y desaturado de vidrios mojados, calles nocturnas y paraguas, serif itálica fina con sans liviana espaciada, lluvia real cayendo sobre la letra, palabras que gotean y se derriten, reflejos en el asfalto y texto que limpia el vaho del vidrio. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+    "audio": {
+      "src": "assets/song.mp3"
+    },
+    "lyricsUrl": "assets/lyrics.json",
+    "lyricsFilter": {
+      "minLogprob": -0.6,
+      "drop": [
+        "gracias por ver",
+        "subt[ií]tulos",
+        "amara\\.org",
+        "audio ?jungle"
+      ]
+    },
+    "fonts": {
+      "googleUrl": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Inter:wght@300;600&display=swap"
+    },
+    "palette": {
+      "slate": "#1A2127",
+      "night": "#0B0F12",
+      "steel": "#8A98A3",
+      "pale": "#DCE2E6"
+    },
+    "grades": {
+      "rain": {
+        "type": "css",
+        "saturate": 0.22,
+        "contrast": 1.06,
+        "brightness": 0.68
+      },
+      "cold": {
+        "type": "duo",
+        "dark": "#0A1015",
+        "light": "#B9C7D0",
+        "contrast": 1.15
+      }
+    },
+    "render": {
+      "kbVideo": true
+    },
+    "media": [
+      {
+        "id": "rain-window",
+        "type": "video",
+        "src": "assets/media/rain-window.mp4",
+        "poster": "assets/media/rain-window-1.jpg"
+      },
+      {
+        "id": "drops",
+        "type": "video",
+        "src": "assets/media/drops.mp4",
+        "poster": "assets/media/drops-1.jpg"
+      },
+      {
+        "id": "street-rain",
+        "type": "video",
+        "src": "assets/media/street-rain.mp4",
+        "poster": "assets/media/street-rain-1.jpg"
+      },
+      {
+        "id": "umbrella",
+        "type": "video",
+        "src": "assets/media/umbrella.mp4",
+        "poster": "assets/media/umbrella-1.jpg"
+      },
+      {
+        "id": "rain-road",
+        "type": "video",
+        "src": "assets/media/rain-road.mp4",
+        "poster": "assets/media/rain-road-1.jpg"
+      },
+      {
+        "id": "window-woman",
+        "type": "video",
+        "src": "assets/media/window-woman.mp4",
+        "poster": "assets/media/window-woman-1.jpg"
+      }
+    ],
+    "phrases": {
+      "maxWords": 8,
+      "maxSec": 5.5,
+      "minWords": 3
+    },
+    "timing": {
+      "leadSec": 0.15,
+      "holdSec": 1.1,
+      "gapSec": 2.6,
+      "echoSec": 1.6,
+      "echoPhraseSec": 3.0,
+      "cooldown": 3
+    },
+    "transition": {
+      "overlapSec": 0.7,
+      "weights": {
+        "rain": 3,
+        "blur": 2.5,
+        "fade": 1.5,
+        "wipeDown": 1
+      }
+    },
+    "layouts": {
+      "window": {
+        "weight": 2.2,
+        "media": [
+          "rain-window",
+          "drops"
+        ]
+      },
+      "melt": {
+        "weight": 1.6,
+        "media": [
+          "drops",
+          "rain-window"
+        ]
+      },
+      "street": {
+        "weight": 1.4,
+        "media": [
+          "street-rain",
+          "rain-road"
+        ]
+      },
+      "fogged": {
+        "weight": 1.2,
+        "media": [
+          "window-woman",
+          "umbrella",
+          "street-rain"
+        ]
+      },
+      "echo": {
+        "weight": 1.2,
+        "media": [
+          "umbrella",
+          "rain-road",
+          "street-rain"
+        ]
+      },
+      "split": {
+        "weight": 1.0
+      },
+      "whisper": {
+        "weight": 0.9
+      },
+      "dropWords": {
+        "weight": 1.2,
+        "media": [
+          "drops",
+          "rain-window",
+          "rain-road"
+        ]
+      }
+    },
+    "intro": {
+      "title": "",
+      "artist": ""
+    },
+    "outro": {
+      "enabled": true,
+      "sec": 4.0,
+      "title": "Gracias",
+      "sub": "Por ver",
+      "feats": "Suscríbete · NEXA BRIEF"
+    },
+    "texture": {
+      "grain": 0.08
+    },
+    "debug": {
+      "enabled": false
+    },
+    "seed": 31
+  }
+}

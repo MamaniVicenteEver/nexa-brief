@@ -1,0 +1,157 @@
+{
+  "title": "Grunge Rojo — Lyric Video",
+  "about": "lyric video grunge de rap: B/N duro con niebla y papel rasgado, condensada gastada blanca y roja, fantasmas con desenfoque, grillas repetidas y garabatos de tiza.",
+  "out": "nodemotion/lyrics/lyrics-grunge",
+  "html": "index.html",
+  "configPath": "assets/config.json",
+  "js": "grunge.js",
+  "fontLoads": [
+    "100px Anton",
+    "900 100px Archivo",
+    "300 100px Oswald"
+  ],
+  "css": "  :root { --fCd: \"Anton\", sans-serif; --fEx: \"Archivo\", sans-serif; --fTh: \"Oswald\", sans-serif; }\n  .cd { font-family: var(--fCd); font-weight: 400; text-transform: uppercase; }\n  .ex { font-family: var(--fEx); font-weight: 900; font-stretch: 125%; text-transform: uppercase; }\n  .th { font-family: var(--fTh); font-weight: 300; text-transform: uppercase; }\n  .gr { -webkit-mask-image: var(--distress); mask-image: var(--distress); -webkit-mask-size: 220px 220px; mask-size: 220px 220px; }\n",
+  "config": {
+    "id": "default",
+    "description": "Lyric video grunge de rap: metraje urbano en blanco y negro duro con niebla y bordes de papel rasgado, letra condensada gastada en blanco y rojo con fantasmas de movimiento, grillas de frases repetidas y garabatos de tiza (círculos, flechas, tachones, coronas, rayos). — metadata para marketing/SEO, la plantilla no la usa todavía.",
+    "audio": {
+      "src": "assets/song.mp3"
+    },
+    "lyricsUrl": "assets/lyrics.json",
+    "lyricsFilter": {
+      "minLogprob": -0.4,
+      "drop": [
+        "audio ?jungle",
+        "envato",
+        "subt[ií]tulos",
+        "amara\\.org",
+        "oriel"
+      ]
+    },
+    "fonts": {
+      "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@300;500&display=swap"
+    },
+    "palette": {
+      "red": "#E8292E",
+      "white": "#F1F1EF",
+      "black": "#070707",
+      "paper": "#EDEDEA",
+      "ink": "#101010",
+      "chalk": "#F5F5F2"
+    },
+    "grades": {
+      "bw": {
+        "type": "duo",
+        "dark": "#040404",
+        "light": "#EDEDED",
+        "contrast": 1.55
+      }
+    },
+    "media": [
+      {
+        "id": "tunnel",
+        "type": "video",
+        "src": "assets/media/tunnel-dance.mp4",
+        "poster": "assets/media/tunnel-dance-1.jpg"
+      },
+      {
+        "id": "street",
+        "type": "video",
+        "src": "assets/media/street-dance.mp4",
+        "poster": "assets/media/street-dance-1.jpg"
+      },
+      {
+        "id": "hoodie",
+        "type": "video",
+        "src": "assets/media/hoodie.mp4",
+        "poster": "assets/media/hoodie-1.jpg"
+      },
+      {
+        "id": "crowd",
+        "type": "video",
+        "src": "assets/media/crowd.mp4",
+        "poster": "assets/media/crowd-1.jpg"
+      },
+      {
+        "id": "breakdance",
+        "type": "video",
+        "src": "assets/media/breakdance.mp4",
+        "poster": "assets/media/breakdance-1.jpg"
+      },
+      {
+        "id": "night",
+        "type": "video",
+        "src": "assets/media/night-hoodie.mp4",
+        "poster": "assets/media/night-hoodie-1.jpg"
+      }
+    ],
+    "phrases": {
+      "maxWords": 5,
+      "maxSec": 2.4,
+      "minWords": 2
+    },
+    "timing": {
+      "leadSec": 0.1,
+      "holdSec": 0.7,
+      "gapSec": 2.0,
+      "echoSec": 0.9,
+      "cooldown": 4
+    },
+    "layouts": {
+      "slam": {
+        "weight": 2.0
+      },
+      "twoTone": {
+        "weight": 1.6
+      },
+      "circle": {
+        "weight": 1.2
+      },
+      "spacedWide": {
+        "weight": 1.0
+      },
+      "grid": {
+        "weight": 1.0
+      },
+      "stackCols": {
+        "weight": 0.9
+      },
+      "torn": {
+        "weight": 1.0
+      },
+      "vertical": {
+        "weight": 0.7
+      },
+      "frameBox": {
+        "weight": 1.0
+      },
+      "stack3": {
+        "weight": 1.2
+      },
+      "blurGiant": {
+        "weight": 1.2
+      },
+      "strike": {
+        "weight": 1.0
+      }
+    },
+    "intro": {
+      "title": "",
+      "artist": ""
+    },
+    "outro": {
+      "enabled": true,
+      "sec": 3.2,
+      "title": "Gracias",
+      "sub": "Por ver",
+      "feats": "Suscríbete · NEXA BRIEF"
+    },
+    "texture": {
+      "grain": 0.1
+    },
+    "debug": {
+      "enabled": false
+    },
+    "seed": 13
+  }
+}

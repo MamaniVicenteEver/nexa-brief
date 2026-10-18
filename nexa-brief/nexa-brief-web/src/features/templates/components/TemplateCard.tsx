@@ -52,6 +52,11 @@ export function TemplateCard({
   const previewVideo = template.previewVideoUrl ?? PREVIEW_VIDEO[template.id];
   const [showcaseOpen, setShowcaseOpen] = useState(false);
   const [showcaseActive, setShowcaseActive] = useState(false);
+  // El iframe en vivo (motor + video + audio de la plantilla) se monta recién al
+  // primer hover/foco. Con las ~30 tarjetas montadas de entrada, el navegador
+  // abría decenas de descargas de video a la vez contra la API y el reproductor
+  // del modal quedaba esperando conexión (sobre todo por Tailscale/LAN).
+  const [showcaseLive, setShowcaseLive] = useState(false);
   const showcaseFrameRef = useRef<HTMLIFrameElement>(null);
   const fallbackVideoRef = useRef<HTMLVideoElement>(null);
   const recorderParam = hideRecorder ? "&norec=1" : "";
@@ -63,6 +68,7 @@ export function TemplateCard({
     : null;
 
   const setShowcasePlayback = (playing: boolean) => {
+    if (playing) setShowcaseLive(true);
     setShowcaseActive(playing);
     showcaseFrameRef.current?.contentWindow?.postMessage(
       { type: "nexa-template-preview", playing },
@@ -103,6 +109,8 @@ export function TemplateCard({
   const handleShowcaseOpenChange = (open: boolean) => {
     setShowcaseOpen(open);
     resetShowcase();
+    // La vista previa de la tarjeta seguiría bajando medios detrás del modal.
+    if (open) setShowcaseLive(false);
   };
 
   const trigger = (
@@ -125,8 +133,9 @@ export function TemplateCard({
       }}
     >
       <div className="relative flex aspect-[1.65] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-nb-bg-2 to-nb-line text-nb-ink-soft">
-        {showcasePreviewUrl ? (
+        {showcasePreviewUrl && showcaseLive ? (
           <iframe
+            ref={showcaseFrameRef}
             src={showcasePreviewUrl}
             title={`${template.displayName} preview`}
             aria-hidden="true"
@@ -141,7 +150,7 @@ export function TemplateCard({
             }}
             className="pointer-events-none size-full border-0 bg-black"
           />
-        ) : previewVideo ? (
+        ) : previewVideo && !showcasePreviewUrl ? (
           <video
             ref={fallbackVideoRef}
             src={previewVideo}
@@ -213,7 +222,11 @@ export function TemplateCard({
     return (
       <MediaPlayerModal
         {...modalProps}
-        source={modalPreviewUrl ? { kind: "iframe", url: modalPreviewUrl } : null}
+        source={
+          modalPreviewUrl
+            ? { kind: "iframe", url: modalPreviewUrl, poster: template.previewImageUrl }
+            : null
+        }
       />
     );
   }
@@ -222,6 +235,7 @@ export function TemplateCard({
       {...modalProps}
       template={template}
       defaultUrl={modalPreviewUrl}
+      poster={template.previewImageUrl}
       previewVolume={DEFAULT_PREVIEW_VOLUME}
     />
   );

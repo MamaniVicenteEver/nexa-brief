@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -21,6 +23,8 @@ class ExplainerJobResponse(BaseModel):
     output_dir: str | None = None
     publish_result: dict | None = None
     publish_results: list[dict] = Field(default_factory=list)
+    formats: list[str] = Field(default_factory=list)
+    render_seconds: float | None = None
 
 
 class ExplainerVideoResponse(BaseModel):
@@ -58,6 +62,11 @@ class RecordExplainerRequest(BaseModel):
     )
     publish: bool = False
     privacy: str = Field("private", pattern="^(private|unlisted|public)$")
+    formats: list[Literal["16x9", "9x16"]] = Field(
+        default_factory=lambda: ["16x9"],
+        min_length=1,
+        description="Qué grabar: '16x9' (desktop) y/o '9x16' (móvil). Publicar agrega el que exija cada red.",
+    )
     account_selectors: list[str] = Field(
         default_factory=list,
         description="Varios canales a la vez: ['youtube:canal_1', 'tiktok:alias', 'facebook:pagina'].",

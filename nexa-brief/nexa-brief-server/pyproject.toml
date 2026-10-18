@@ -42,3 +42,13 @@ dev = [
 asyncio_mode = "auto"
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+# Scripts de generación de plantillas (estilo compacto, fuera de la app).
+extend-exclude = ["src/templates/_tools", "pruebas"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E501"]

@@ -11,7 +11,10 @@ Architecture:
 
 from __future__ import annotations
 
+import base64
+import binascii
 import json
+import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -80,7 +83,7 @@ class TokenStorage:
 
     def _load(self) -> dict[str, Any]:
         """Load and parse accounts.json. Returns empty dict if missing."""
-        if not self._path.exists():
+        if not self._path.exists() and not self._seed_from_env():
             logger.warning("token_storage_file_missing", path=str(self._path))
             return {}
         try:
@@ -92,6 +95,24 @@ class TokenStorage:
         except (json.JSONDecodeError, OSError) as exc:
             logger.error("token_storage_load_error", path=str(self._path), error=str(exc))
             raise TokenError(f"Cannot load accounts.json: {exc}") from exc
+
+    def _seed_from_env(self) -> bool:
+        """Crea accounts.json desde ACCOUNTS_JSON_B64 (máquina nueva sin copiar archivos)."""
+        from src.config.settings import settings
+
+        # Solo el accounts.json de la app (ACCOUNTS_JSON_PATH), nunca otra ruta (tests, scripts).
+        if not settings.accounts_json_b64 or self._path.resolve() != Path(settings.accounts_json_path).resolve():
+            return False
+        try:
+            raw = base64.b64decode(settings.accounts_json_b64, validate=True).decode("utf-8")
+            json.loads(raw)
+        except (binascii.Error, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise TokenError(f"ACCOUNTS_JSON_B64 no es un accounts.json válido en base64: {exc}") from exc
+        fd = os.open(self._path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(raw)
+        logger.info("token_storage_seeded_from_env", path=str(self._path))
+        return True
 
     def _save(self) -> None:
         """Atomically write self._data back to accounts.json."""

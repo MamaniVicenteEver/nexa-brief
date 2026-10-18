@@ -1,0 +1,384 @@
+{
+  "title": "Promo Editorial — Final",
+  "about": "promo editorial de final deportiva: blanco y negro sobre papel arrugado, grotesca extendida pesada, bloques negros que barren, contornos gigantes, placas de jugadores y cierre de fecha / versus.",
+  "js": "editorial.js",
+  "duration": 33.43,
+  "fontLoads": [
+    "800 100px 'Archivo'",
+    "900 100px 'Archivo'"
+  ],
+  "css": "  :root { --fG: \"Archivo\", sans-serif; }\n  .gx { font-family: var(--fG); font-weight: 800; font-stretch: 112%; text-transform: uppercase; letter-spacing: -0.01em; }\n",
+  "config": {
+    "id": "default",
+    "description": "Promo editorial de una final deportiva: blanco y negro puro sobre papel arrugado, grotesca extendida pesada, bloques negros que barren la pantalla, nombres gigantes en contorno, recortes de jugadores con placa de nombre, versus de técnicos y cierre de fecha sobre negro. — metadata para marketing/SEO, la plantilla no la usa todavía.",
+    "audio": {
+      "src": "assets/promo-editorial.mp3"
+    },
+    "lyricsUrl": "assets/promo-editorial.lyrics.json",
+    "fonts": {
+      "googleUrl": "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap"
+    },
+    "palette": {
+      "paper": "#ECECEA",
+      "black": "#050505",
+      "white": "#FBFBFB"
+    },
+    "grades": {
+      "bw": {
+        "type": "duo",
+        "dark": "#0A0A0A",
+        "light": "#EFEFEF",
+        "contrast": 1.3
+      }
+    },
+    "brand": {
+      "left": "Leones",
+      "right": "Halcones",
+      "round": "Gran Final",
+      "name": "Liga Nexa",
+      "logo": ""
+    },
+    "media": [
+      {
+        "id": "stadium",
+        "type": "video",
+        "src": "assets/media/stadium.mp4",
+        "poster": "assets/media/stadium-1.jpg"
+      },
+      {
+        "id": "match",
+        "type": "video",
+        "src": "assets/media/match.mp4",
+        "poster": "assets/media/match-1.jpg"
+      },
+      {
+        "id": "trophy",
+        "type": "video",
+        "src": "assets/media/trophy.mp4",
+        "poster": "assets/media/trophy-1.jpg"
+      },
+      {
+        "id": "team-win",
+        "type": "video",
+        "src": "assets/media/team-win.mp4",
+        "poster": "assets/media/team-win-1.jpg"
+      },
+      {
+        "id": "coach",
+        "type": "video",
+        "src": "assets/media/coach.mp4",
+        "poster": "assets/media/coach-1.jpg"
+      },
+      {
+        "id": "soccer",
+        "type": "video",
+        "src": "assets/media/soccer.mp4",
+        "poster": "assets/media/soccer-1.jpg"
+      },
+      {
+        "id": "coach-2",
+        "type": "image",
+        "src": "assets/media/coach-2.jpg"
+      },
+      {
+        "id": "team-win-2",
+        "type": "image",
+        "src": "assets/media/team-win-2.jpg"
+      },
+      {
+        "id": "soccer-2",
+        "type": "image",
+        "src": "assets/media/soccer-2.jpg"
+      }
+    ],
+    "scenes": [
+      {
+        "type": "title"
+      },
+      {
+        "type": "mediaWord",
+        "media": [
+          "trophy"
+        ],
+        "cover": false
+      },
+      {
+        "type": "blocks"
+      },
+      {
+        "type": "mediaWord",
+        "media": [
+          "match"
+        ],
+        "coverFrom": "right"
+      },
+      {
+        "type": "nameCut"
+      },
+      {
+        "type": "mediaWord",
+        "media": [
+          "stadium"
+        ],
+        "cover": false
+      },
+      {
+        "type": "nameCut",
+        "bg": "black"
+      },
+      {
+        "type": "outlineName"
+      },
+      {
+        "type": "player",
+        "media": [
+          "team-win"
+        ],
+        "side": "left"
+      },
+      {
+        "type": "player",
+        "media": [
+          "soccer"
+        ],
+        "side": "right"
+      },
+      {
+        "type": "assemble"
+      },
+      {
+        "type": "versus",
+        "media": [
+          "coach",
+          "coach-2"
+        ]
+      },
+      {
+        "type": "bigNumber"
+      },
+      {
+        "type": "stack",
+        "align": "center"
+      },
+      {
+        "type": "stack",
+        "align": "left",
+        "y": 0.28
+      },
+      {
+        "type": "stack",
+        "align": "right",
+        "small": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "logo"
+      }
+    ],
+    "texture": {
+      "grain": 0.05
+    },
+    "debug": {
+      "enabled": false
+    },
+    "seed": 21
+  },
+  "script": [
+    {
+      "start": 0.0,
+      "lines": [
+        "LIGA",
+        "NEXA",
+        "CHAMPIONS"
+      ],
+      "words_at": [
+        0.35,
+        0.7,
+        1.0
+      ]
+    },
+    {
+      "start": 1.72,
+      "lines": [
+        "FINAL"
+      ],
+      "words_at": [
+        1.78
+      ]
+    },
+    {
+      "start": 3.3,
+      "lines": [
+        "FINAL",
+        "ROUND"
+      ],
+      "words_at": [
+        3.6,
+        3.75
+      ]
+    },
+    {
+      "start": 5.2,
+      "lines": [
+        "FINAL ROUND"
+      ],
+      "words_at": [
+        5.3,
+        5.3
+      ]
+    },
+    {
+      "start": 6.6,
+      "lines": [
+        "LEONES"
+      ],
+      "words_at": [
+        6.7
+      ]
+    },
+    {
+      "start": 7.0,
+      "lines": [
+        "LEONES"
+      ],
+      "words_at": [
+        7.05
+      ]
+    },
+    {
+      "start": 7.6,
+      "lines": [
+        "LEONES"
+      ],
+      "words_at": [
+        7.65
+      ]
+    },
+    {
+      "start": 10.1,
+      "lines": [
+        "HALCONES"
+      ],
+      "words_at": [
+        10.25
+      ]
+    },
+    {
+      "start": 12.6,
+      "lines": [
+        "LEONES",
+        "JUAN PÉREZ"
+      ],
+      "words_at": [
+        12.9,
+        13.2,
+        13.2
+      ]
+    },
+    {
+      "start": 14.0,
+      "lines": [
+        "HALCONES",
+        "MARIO SOTO"
+      ],
+      "words_at": [
+        14.3,
+        14.6,
+        14.6
+      ]
+    },
+    {
+      "start": 15.0,
+      "lines": [
+        "CAMPEÓN"
+      ],
+      "words_at": [
+        15.2
+      ]
+    },
+    {
+      "start": 18.9,
+      "lines": [
+        "LEONES VS HALCONES"
+      ],
+      "words_at": [
+        19.2,
+        19.2,
+        19.2
+      ]
+    },
+    {
+      "start": 21.3,
+      "lines": [
+        "11",
+        "19"
+      ],
+      "words_at": [
+        21.35,
+        21.45
+      ]
+    },
+    {
+      "start": 21.7,
+      "lines": [
+        "2026",
+        "11",
+        "19"
+      ],
+      "words_at": [
+        21.75,
+        22.2,
+        22.4
+      ]
+    },
+    {
+      "start": 23.2,
+      "lines": [
+        "2026",
+        "11",
+        "19",
+        "SÁBADO"
+      ],
+      "words_at": [
+        23.3,
+        23.4,
+        23.5,
+        23.6
+      ]
+    },
+    {
+      "start": 26.0,
+      "lines": [
+        "LIGA NEXA",
+        "2026",
+        "LEONES",
+        "VS",
+        "HALCONES"
+      ],
+      "words_at": [
+        27.0,
+        27.0,
+        27.0,
+        26.1,
+        26.3,
+        26.5
+      ]
+    },
+    {
+      "start": 29.0,
+      "lines": [
+        "LIGA NEXA",
+        "SUSCRÍBETE"
+      ],
+      "words_at": [
+        29.2,
+        29.2,
+        29.8
+      ],
+      "end": 33.43
+    }
+  ]
+}

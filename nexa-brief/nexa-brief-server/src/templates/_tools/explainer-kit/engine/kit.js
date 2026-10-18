@@ -237,7 +237,8 @@
       readyState: 1, duration: 0, currentTime: 0, paused: true,
       addEventListener() {}, play() { return Promise.resolve(); },
     };
-    if (C.audio?.src) audio.src = C.audio.src;
+    /* el loader puede haberlo asignado ya: reasignar el mismo src reinicia la carga */
+    if (C.audio?.src && audio.getAttribute?.("src") !== C.audio.src) audio.src = C.audio.src;
     const total = opts.total || await new Promise(res => {
       const done = () => res(isFinite(audio.duration) && audio.duration > 0 ? audio.duration : (words.at(-1)?.end ?? 10) + 2);
       if (audio.readyState >= 1) done(); else { audio.addEventListener("loadedmetadata", done, { once: true }); setTimeout(done, 3000); }

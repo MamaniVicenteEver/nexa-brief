@@ -531,7 +531,11 @@
       "demo": "Demo",
       "demoNote": "design demo: same script as “The night the Wall fell”; publishing several duplicates content",
       "tagPublishable": "Publishable",
-      "publishTexts": "Publishing texts"
+      "publishTexts": "Publishing texts",
+      "format": {
+        "16x9": "Desktop 16:9",
+        "9x16": "Mobile 9:16"
+      }
     },
     "windows": {
       "label": "Main categories",
@@ -1096,7 +1100,9 @@
       "publishHint": "Pick one or more channels: the full video is recorded and published to all, each network with its own texts and format.",
       "loadingChannels": "Loading channels…",
       "noChannels": "No connected channels. Connect them in Channels.",
-      "publishButton": "{count, plural, =0 {Pick at least one channel} one {Record & publish to # channel} other {Record & publish to # channels}}"
+      "publishButton": "{count, plural, =0 {Pick at least one channel} one {Record & publish to # channel} other {Record & publish to # channels}}",
+      "formatsLabel": "Formats",
+      "formatsHint": "Each format is a separate recording (both take twice as long). Publishing to TikTok records 9:16 even if unchecked."
     }
   }
 }

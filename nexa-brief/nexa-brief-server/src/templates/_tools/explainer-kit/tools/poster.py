@@ -15,6 +15,11 @@ from places import TEMPLATES, find_video, folders  # noqa: E402
 from shoot import serve  # noqa: E402
 
 from PIL import Image  # noqa: E402
+import os
+
+# En Docker se usa el Chromium del sistema (PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH);
+# fuera de Docker, el que instala `playwright install chromium`.
+CHROMIUM = os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH") or None
 
 W, H = 960, 540
 
@@ -25,7 +30,7 @@ async def posters(video_dirs, t):
     base = f"http://127.0.0.1:{srv.server_port}"
     done = []
     async with async_playwright() as p:
-        b = await p.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+        b = await p.chromium.launch(executable_path=CHROMIUM, args=["--autoplay-policy=no-user-gesture-required"])
         for d in video_dirs:
             pg = await b.new_page(viewport={"width": W, "height": H})
             rel = d.relative_to(TEMPLATES).as_posix()

@@ -30,7 +30,7 @@ def test_list_accounts_api(mock_facade):
             "avatar": "https://avatar.url/1",
         }
     ]
-    
+
     response = client.get("/api/v1/publish/accounts")
     assert response.status_code == 200
     data = response.json()
@@ -45,7 +45,7 @@ def test_youtube_playlists_api(mock_facade):
     mock_yt = MagicMock()
     mock_yt.list_playlists = AsyncMock(return_value=[{"id": "playlist_1", "title": "Cool Playlist"}])
     mock_facade._adapters = {"youtube": mock_yt}
-    
+
     response = client.get("/api/v1/publish/youtube/canal_1/playlists")
     assert response.status_code == 200
     data = response.json()
@@ -85,13 +85,13 @@ def test_tiktok_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tmp_
     mock_settings.tiktok_client_secret = "tiktok_secret"
     mock_settings.publisher_encryption_key = "a" * 44
     mock_settings.accounts_json_path = tmp_path / "accounts.json"
-    
+
     mock_storage = MagicMock()
     mock_storage_cls.return_value = mock_storage
-    
+
     mock_client = MagicMock()
     mock_httpx.return_value.__aenter__.return_value = mock_client
-    
+
     mock_resp = MagicMock()
     mock_resp.status_code = 200
     mock_resp.json.return_value = {
@@ -103,12 +103,12 @@ def test_tiktok_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tmp_
         }
     }
     mock_client.post = AsyncMock(return_value=mock_resp)
-    
+
     response = client.get("/api/v1/publish/auth/tiktok/callback?code=mock_code&state=cuenta_custom")
     assert response.status_code == 200
     assert "Cuenta conectada" in response.text
     assert "TikTok" in response.text
-    
+
     mock_storage.save_tokens.assert_called_once_with(
         platform="tiktok",
         alias="cuenta_custom",
@@ -128,13 +128,13 @@ def test_youtube_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, moc
     mock_load_creds.return_value = ("yt_id", "yt_secret")
     mock_settings.publisher_encryption_key = "a" * 44
     mock_settings.accounts_json_path = tmp_path / "accounts.json"
-    
+
     mock_storage = MagicMock()
     mock_storage_cls.return_value = mock_storage
-    
+
     mock_client = MagicMock()
     mock_httpx.return_value.__aenter__.return_value = mock_client
-    
+
     mock_token_resp = MagicMock()
     mock_token_resp.status_code = 200
     mock_token_resp.json.return_value = {
@@ -142,7 +142,7 @@ def test_youtube_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, moc
         "refresh_token": "yt_refresh_val",
         "expires_in": 3600,
     }
-    
+
     mock_channel_resp = MagicMock()
     mock_channel_resp.status_code = 200
     mock_channel_resp.json.return_value = {
@@ -156,15 +156,15 @@ def test_youtube_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, moc
             }
         ]
     }
-    
+
     mock_client.post = AsyncMock(return_value=mock_token_resp)
     mock_client.get = AsyncMock(return_value=mock_channel_resp)
-    
+
     response = client.get("/api/v1/publish/auth/youtube/callback?code=mock_code&state=canal_custom")
     assert response.status_code == 200
     assert "Cuenta conectada" in response.text
     assert "YouTube" in response.text
-    
+
     mock_storage.save_tokens.assert_called_once_with(
         platform="youtube",
         alias="canal_custom",
@@ -183,21 +183,21 @@ def test_facebook_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tm
     mock_settings.facebook_client_secret = "fb_secret"
     mock_settings.publisher_encryption_key = "a" * 44
     mock_settings.accounts_json_path = tmp_path / "accounts.json"
-    
+
     mock_storage = MagicMock()
     mock_storage_cls.return_value = mock_storage
-    
+
     mock_client = MagicMock()
     mock_httpx.return_value.__aenter__.return_value = mock_client
-    
+
     mock_user_tok_resp = MagicMock()
     mock_user_tok_resp.status_code = 200
     mock_user_tok_resp.json.return_value = {"access_token": "fb_user_token"}
-    
+
     mock_long_tok_resp = MagicMock()
     mock_long_tok_resp.status_code = 200
     mock_long_tok_resp.json.return_value = {"access_token": "fb_long_lived_user_token"}
-    
+
     mock_pages_resp = MagicMock()
     mock_pages_resp.status_code = 200
     mock_pages_resp.json.return_value = {
@@ -209,14 +209,14 @@ def test_facebook_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tm
             }
         ]
     }
-    
+
     mock_client.get = AsyncMock(side_effect=[mock_user_tok_resp, mock_long_tok_resp, mock_pages_resp])
-    
+
     response = client.get("/api/v1/publish/auth/facebook/callback?code=mock_code&state=pagina_custom")
     assert response.status_code == 200
     assert "Cuenta conectada" in response.text
     assert "Facebook" in response.text
-    
+
     mock_storage.save_tokens.assert_called_once_with(
         platform="facebook",
         alias="pagina_custom",

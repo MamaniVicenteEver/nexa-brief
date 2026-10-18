@@ -162,8 +162,8 @@ class _FakeRender:
     def __init__(self, videos: Path) -> None:
         self.videos = videos
 
-    async def __call__(self, video_id: str, seconds: int | None) -> None:
-        for fmt in ("9x16", "16x9"):
+    async def __call__(self, video_id: str, seconds: int | None, formats=("9x16", "16x9")) -> None:
+        for fmt in formats:
             (self.videos / video_id / "render" / f"{video_id}-{fmt}.mp4").write_bytes(b"mp4")
 
 

@@ -1,6 +1,9 @@
 /** "10"/"20" = preview rápido de N segundos; "full" = video completo (programable y publicable). */
 export type RecordDuration = "10" | "20" | "full";
 
+/** "16x9" = desktop (YouTube/Facebook); "9x16" = móvil (TikTok). */
+export type RecordFormat = "16x9" | "9x16";
+
 export type ExplainerJobState = "queued" | "rendering" | "publishing" | "done" | "failed";
 
 export interface ExplainerJob {
@@ -19,6 +22,9 @@ export interface ExplainerJob {
   publishResult: { postId: string; url: string; platform: string; accountAlias: string } | null;
   /** Un resultado por canal: url si se publicó, error si falló. */
   publishResults: { accountSelector: string; url: string | null; error: string | null }[];
+  formats: RecordFormat[];
+  /** Cuánto tardó la grabación (segundos); null mientras corre. */
+  renderSeconds: number | null;
 }
 
 export interface ExplainerVideo {
@@ -60,6 +66,8 @@ export interface RecordExplainerInput {
   accountSelector?: string;
   /** Varios canales a la vez ("youtube:alias", "tiktok:alias"…). */
   accountSelectors?: string[];
+  /** Qué grabar; por defecto solo 16:9. Publicar agrega el formato que exija cada red. */
+  formats?: RecordFormat[];
 }
 
 export const ACTIVE_JOB_STATES: ExplainerJobState[] = ["queued", "rendering", "publishing"];

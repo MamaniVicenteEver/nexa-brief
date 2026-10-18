@@ -27,6 +27,7 @@ from __future__ import annotations
 import uuid
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Literal
 
 import structlog
@@ -188,18 +189,34 @@ async def _recover_if_orphaned(draft: Draft) -> Draft:
     return recovered or draft
 
 
+def _hide_missing_preview(draft: Draft) -> Draft:
+    """Sin preview_url si la carpeta del preview ya no existe en esta máquina.
+
+    Pasa con datos traídos de otra máquina (output_dir es una ruta absoluta de
+    allá) o si se borró output/: la web abría "Mi versión" y el modal quedaba con
+    un 404 en vez de la plantilla. El registro no se toca.
+    """
+    if not draft.preview_url:
+        return draft
+    job = load_job(draft.draft_id)
+    output_dir = job.artifacts.output_dir if job is not None else None
+    if output_dir is not None and not Path(output_dir).is_dir():
+        return draft.model_copy(update={"preview_url": None})
+    return draft
+
+
 async def get(draft_id: str) -> Draft | None:
     record = _drafts().get(draft_id)
     if record is None:
         return None
-    return await _recover_if_orphaned(Draft.model_validate(record))
+    return _hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(record)))
 
 
 async def list_drafts(template_id: str | None = None) -> list[Draft]:
     """Drafts más recientes primero; `template_id` filtra por plantilla."""
     records = _drafts().list({"template_id": template_id} if template_id is not None else None)
     records.sort(key=lambda r: r.get("created_at", ""), reverse=True)
-    return [await _recover_if_orphaned(Draft.model_validate(r)) for r in records]
+    return [_hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(r))) for r in records]
 
 
 async def delete(draft_id: str) -> Draft | None:

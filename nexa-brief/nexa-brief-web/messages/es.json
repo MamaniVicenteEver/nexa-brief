@@ -531,7 +531,11 @@
       "demo": "Demo",
       "demoNote": "demo del diseño: mismo guion que «La noche que cayó el Muro»; publicar varios duplica contenido",
       "tagPublishable": "Publicable",
-      "publishTexts": "Textos de publicación"
+      "publishTexts": "Textos de publicación",
+      "format": {
+        "16x9": "Desktop 16:9",
+        "9x16": "Móvil 9:16"
+      }
     },
     "windows": {
       "label": "Categorías principales",
@@ -1096,7 +1100,9 @@
       "publishHint": "Elegí uno o varios canales: se graba el video completo y se publica en todos, cada red con sus propios textos y formato.",
       "loadingChannels": "Cargando canales…",
       "noChannels": "No hay canales conectados. Conectalos en Canales.",
-      "publishButton": "{count, plural, =0 {Elegí al menos un canal} one {Grabar y publicar en # canal} other {Grabar y publicar en # canales}}"
+      "publishButton": "{count, plural, =0 {Elegí al menos un canal} one {Grabar y publicar en # canal} other {Grabar y publicar en # canales}}",
+      "formatsLabel": "Formatos",
+      "formatsHint": "Cada formato es una grabación aparte (marcar los dos tarda el doble). Al publicar en TikTok se graba 9:16 aunque no esté marcado."
     }
   }
 }

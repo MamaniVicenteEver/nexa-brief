@@ -15,12 +15,15 @@ type ModalProps = Omit<ComponentProps<typeof MediaPlayerModal>, "sidebar" | "sou
 export function TemplateStudioModal({
   template,
   defaultUrl,
+  poster,
   previewVolume,
   ...modalProps
 }: ModalProps & {
   template: Template;
   /** Showcase original (Por defecto). */
   defaultUrl: string | null;
+  /** Portada del showcase (solo para la versión Por defecto). */
+  poster?: string | null;
   previewVolume: number;
 }) {
   const t = useTranslations("studio");
@@ -30,12 +33,13 @@ export function TemplateStudioModal({
   const mineUrl = studio.draftPreviewUrl
     ? `${studio.draftPreviewUrl}?controls=1&volume=${previewVolume}`
     : null;
-  const url = studio.view === "mine" && mineUrl ? mineUrl : defaultUrl;
+  const showingMine = studio.view === "mine" && mineUrl !== null;
+  const url = showingMine ? mineUrl : defaultUrl;
 
   return (
     <MediaPlayerModal
       {...modalProps}
-      source={url ? { kind: "iframe", url } : null}
+      source={url ? { kind: "iframe", url, poster: showingMine ? null : poster } : null}
       actions={<StudioVersionToggle studio={studio} />}
       sidebar={<StudioSidebar studio={studio} />}
       sidebarToggleLabel={t("toggleSidebar")}
