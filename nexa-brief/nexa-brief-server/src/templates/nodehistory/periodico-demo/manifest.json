@@ -4,14 +4,100 @@
   "design_name": "TITULARES",
   "channel": "TITULARES",
   "pipeline_type": "explainer_kit",
-  "title": "La noche que cayó el Muro",
-  "kicker": null,
+  "title": "NADIE DABA LA ORDEN",
+  "kicker": "BERLÍN · 9 NOV 1989",
   "language": "es-419",
   "duration_seconds": 209.74,
   "script": {
-    "segments": 0,
-    "words": 0,
-    "arc": []
+    "segments": 17,
+    "words": 499,
+    "arc": [
+      {
+        "id": "s01",
+        "tone": "intriga",
+        "intensity": 0.75
+      },
+      {
+        "id": "s02",
+        "tone": "explicativo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s03",
+        "tone": "peso",
+        "intensity": 0.55
+      },
+      {
+        "id": "s04",
+        "tone": "tensión",
+        "intensity": 0.6
+      },
+      {
+        "id": "s05",
+        "tone": "explicativo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s06",
+        "tone": "complicidad",
+        "intensity": 0.5
+      },
+      {
+        "id": "s07",
+        "tone": "curiosidad",
+        "intensity": 0.6
+      },
+      {
+        "id": "s08",
+        "tone": "tensión creciente",
+        "intensity": 0.8
+      },
+      {
+        "id": "s09",
+        "tone": "clímax",
+        "intensity": 1.0
+      },
+      {
+        "id": "s10",
+        "tone": "aceleración",
+        "intensity": 0.85
+      },
+      {
+        "id": "s11",
+        "tone": "urgencia",
+        "intensity": 0.9
+      },
+      {
+        "id": "s12",
+        "tone": "alivio",
+        "intensity": 0.95
+      },
+      {
+        "id": "s13",
+        "tone": "asombro",
+        "intensity": 0.8
+      },
+      {
+        "id": "s14",
+        "tone": "reflexivo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s15",
+        "tone": "peso",
+        "intensity": 0.4
+      },
+      {
+        "id": "s16",
+        "tone": "cierre",
+        "intensity": 0.85
+      },
+      {
+        "id": "s17",
+        "tone": "cierre",
+        "intensity": 0.45
+      }
+    ]
   },
   "voice": {
     "voice": null,
@@ -28,7 +114,7 @@
   "storyboard": {
     "beats": 48,
     "components": {
-      "periodico.introv1": 1,
+      "periodico.introv2": 1,
       "periodico.title": 2,
       "periodico.headline": 12,
       "periodico.photo": 14,
@@ -75,49 +161,50 @@
     "assets/media/muro-gente.jpg": 632812,
     "assets/media/nota.jpg": 361432,
     "assets/media/schabowski.jpg": 95151,
+    "assets/script.json": 5040,
     "assets/song-with-outro.mp3": 5255671,
     "assets/song.mp3": 5034362,
-    "assets/storyboard.json": 11717,
+    "assets/storyboard.json": 13590,
     "index.html": 765,
-    "manifest.json": 6165,
-    "publish.json": 2984,
+    "manifest.json": 9663,
+    "publish.json": 12341,
     "render/outro-final-16x9.png": 43173,
     "render/outro-final-9x16.png": 43996,
-    "render/poster.jpg": 76247
+    "render/poster.jpg": 93994,
+    "render/thumbnail-A.jpg": 268067,
+    "render/thumbnail-A.webp": 126142,
+    "render/thumbnail-B.jpg": 203895,
+    "render/thumbnail-B.webp": 85448
   },
-  "updated": "2026-10-18T17:23:56",
+  "updated": "2026-10-19T16:38:07",
   "status": "listo",
   "demo": true,
   "demo_note": "Demo del diseño: mismo guion que nodehistory/muro-de-berlin. Publicar varios duplica contenido.",
   "category": "node_history",
-  "youtube_title": "La noche que dos palabras abrieron el Muro de Berlín",
-  "youtube_description": "¿Cómo pudo caer el Muro de Berlín por dos palabras dichas antes de tiempo? El 9 de noviembre de 1989, Günter Schabowski, vocero del partido, leyó una norma que no debía anunciarse hasta el día siguiente y respondió una pregunta sin tener la respuesta: “de inmediato, sin demora”.\n\nDurante 28 años, Berlín estuvo partida en dos. En agosto de 1961 levantaron un muro de hormigón y alambre en medio de la ciudad; familias y vecinos quedaron separados. Al menos 140 personas murieron en ese muro. Pero en el otoño de 1989, miles escapaban por Hungría y Checoslovaquia, y cada lunes cientos de miles marchaban pidiendo libertad para viajar.\n\nEl gobierno quiso soltar un poco la cuerda con una norma de viaje que se anunciaría con calma. Schabowski recibió la nota sin que nadie le advirtiera que debía esperar. En la conferencia, al final, leyó el papel y dijo lo que creía: que entraba en vigor de inmediato. La televisión del Oeste lo repitió esa misma noche: las fronteras están abiertas.\n\nMiles salieron a los puestos fronterizos. En Bornholmer Strasse, el oficial Harald Jäger llamó a sus superiores y no recibió una orden clara. A las once y media de la noche abrió la barrera. Esa noche, los berlineses cruzaron, se abrazaron y subieron al muro con martillos y cinceles.\n\nEn este documental corto verás cómo un error burocrático y una decisión individual aceleraron el final del Muro y abrieron paso a la reunificación alemana del 3 de octubre de 1990. ¿Crees que la historia la mueven los grandes planes o los accidentes y decisiones de una noche? Cuéntanos en los comentarios.",
+  "youtube_title": "El Muro de Berlín se abrió antes de lo previsto",
+  "youtube_description": "Una nota que debía esperar hasta la mañana terminó en una respuesta que empujó a miles de personas hacia la frontera.\n\nBerlín llevaba décadas dividida. En 1989, una regla de viaje iba a anunciarse con calma al día siguiente. Günter Schabowski leyó la nota en una conferencia, no encontró la fecha de vigencia y respondió que era inmediata. La televisión transmitió la frase; en Bornholmer Straße, Harald Jäger abrió la barrera ante una multitud y sin una orden clara.\n\nCAPÍTULOS\n0:00 El papel que adelantó la historia\n0:18 Berlín partida en dos\n0:41 Las protestas y la nueva regla\n1:16 Schabowski recibe la nota\n1:36 La pregunta sobre la vigencia\n2:08 Miles de personas llegan a la frontera\n2:34 La barrera se abre en Bornholmer Straße\n3:11 Una respuesta que cambió la noche\n\nLa historia no siempre cambia por un plan perfecto. A veces la diferencia está en cómo actúa alguien cuando la multitud espera y nadie da una instrucción clara.\n\nSi llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.\n\n¿Qué pesa más en una crisis: la decisión de quienes gobiernan o la de las personas que están frente al problema?\n\nFUENTES\n- https://en.wikipedia.org/wiki/Fall_of_the_Berlin_Wall\n- https://en.wikipedia.org/wiki/G%C3%BCnter_Schabowski\n- https://en.wikipedia.org/wiki/Berlin_Wall\n- https://zzf-potsdam.de/en/research/projects/victims-at-the-berlin-wall\n- https://en.wikipedia.org/wiki/Monday_demonstrations_in_East_Germany\n\nIMÁGENES (Wikimedia Commons)\n- mauerbau.jpg — Bundesarchiv Bild 173-1321, Berlin, Mauerbau.jpg — Helmut J. Wolf — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_173-1321,_Berlin,_Mauerbau.jpg\n- schabowski.jpg — Bundesarchiv Bild 183-1989-1109-030, Berlin, Schabowski auf Pressekonferenz.jpg — Thomas Lehmann — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1109-030,_Berlin,_Schabowski_auf_Pressekonferenz.jpg\n- nota.jpg — Schabowski-notizzettel.jpg — Günter Schabowski — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Schabowski-notizzettel.jpg\n- bornholmer.jpg — Bundesarchiv Bild 183-1989-1118-017, Berlin, Grenzübergang Bornholmer Straße.jpg — Roeske, Robert — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1118-017,_Berlin,_Grenz%C3%BCbergang_Bornholmer_Stra%C3%9Fe.jpg\n- muro-gente.jpg — BerlinWall-BrandenburgGate.jpg — Sue Ream, photographer (San Francisco, California) — CC BY 3.0 — https://commons.wikimedia.org/wiki/File:BerlinWall-BrandenburgGate.jpg\n- mauerspecht.jpg — Andree Werder im November 1989 als Mauerspecht an der Berliner Mauer.jpg — Werdersen — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Andree_Werder_im_November_1989_als_Mauerspecht_an_der_Berliner_Mauer.jpg\n- leipzig.jpg — Bundesarchiv Bild 183-1989-1023-022, Leipzig, Montagsdemonstration.jpg — Friedrich Gahlbeck — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1023-022,_Leipzig,_Montagsdemonstration.jpg\n\n#NodeHistory #historia #GuerraFria",
   "youtube_tags": [
     "Muro de Berlín",
     "caída del Muro de Berlín",
     "Günter Schabowski",
     "Harald Jäger",
-    "Bornholmer Strasse",
-    "9 de noviembre de 1989",
-    "historia real",
+    "Bornholmer Straße",
+    "Berlín 1989",
+    "Alemania Oriental",
     "Guerra Fría",
-    "Berlín dividido",
     "reunificación alemana",
-    "documental corto",
-    "historia contemporánea",
-    "Alemania del Este",
-    "fronteras abiertas",
-    "NodeHistory"
+    "historia europea",
+    "protestas en Alemania Oriental",
+    "historia real",
+    "documental de historia"
   ],
-  "tiktok_caption": "Dos palabras dichas antes de tiempo abrieron el Muro de Berlín. ¿Error burocrático o historia en marcha?",
+  "tiktok_caption": "Dos palabras aceleraron una noche decisiva en Berlín. ¿Qué habrías hecho frente a esa multitud?",
   "tiktok_hashtags": [
     "#historia",
-    "#murodeberlin",
-    "#guerrafria",
-    "#documental",
-    "#sabiasque",
-    "#berlin"
+    "#MuroDeBerlin",
+    "#GuerraFria",
+    "#historiareal"
   ],
-  "thumbnail_text": "Abran la puerta",
+  "thumbnail_text": "NADIE DABA LA ORDEN",
   "target_minutes": null
 }

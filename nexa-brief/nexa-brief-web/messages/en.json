@@ -252,7 +252,17 @@
       "refreshProfile": "Refresh information",
       "refreshing": "Refreshing…",
       "refreshSuccess": "Profile information updated.",
-      "refreshError": "Couldn't update profile information."
+      "refreshError": "Couldn't update profile information.",
+      "verify": "Check",
+      "verifying": "Checking…",
+      "health": {
+        "connected": "Connection checked. The platform recognized this account.",
+        "reauth_required": "The platform rejected authorization. Reconnect this account.",
+        "identity_mismatch": "The token responded, but it doesn't match the saved channel.",
+        "permissions": "The account responded, but channel lookup permissions are missing.",
+        "unavailable": "The platform didn't respond correctly. Try again.",
+        "check_failed": "The check couldn't be completed. Try again."
+      }
     },
     "details": {
       "reconnect": "Reconnect account",

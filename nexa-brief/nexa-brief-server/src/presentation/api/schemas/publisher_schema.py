@@ -120,6 +120,16 @@ class AccountStatusResponse(BaseModel):
     last_published_at: float | None = None
 
 
+class ChannelHealthResponse(BaseModel):
+    """Result of a live, read-only account check against its platform API."""
+
+    platform: str
+    alias: str
+    status: str  # 'ok' | 'requires_reauth' | 'attention'
+    reason: str
+    checked_at: float
+
+
 class UpdateAccountRequest(BaseModel):
     """Body of PATCH /api/v1/publish/accounts/{platform}/{alias} — omitted fields stay unchanged."""
 

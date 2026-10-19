@@ -252,7 +252,17 @@
       "refreshProfile": "Actualizar información",
       "refreshing": "Actualizando…",
       "refreshSuccess": "Información de perfil actualizada.",
-      "refreshError": "No se pudo actualizar la información del perfil."
+      "refreshError": "No se pudo actualizar la información del perfil.",
+      "verify": "Verificar",
+      "verifying": "Verificando…",
+      "health": {
+        "connected": "Conexión comprobada. La plataforma reconoció esta cuenta.",
+        "reauth_required": "La plataforma rechazó la autorización. Reconecta esta cuenta.",
+        "identity_mismatch": "El token respondió, pero no corresponde al canal guardado.",
+        "permissions": "La cuenta respondió, pero faltan permisos para consultar el canal.",
+        "unavailable": "La plataforma no respondió correctamente. Inténtalo de nuevo.",
+        "check_failed": "No se pudo completar la comprobación. Inténtalo de nuevo."
+      }
     },
     "details": {
       "reconnect": "Reconectar cuenta",

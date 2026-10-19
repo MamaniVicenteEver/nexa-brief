@@ -1,5 +1,4 @@
-"""Publishing Scheduler — runs both background maintenance jobs on one shared
-APScheduler.BackgroundScheduler (a single daemon thread):
+"""Publishing Scheduler — runs token maintenance and, when enabled, publishing:
 
   1. Token refresh   — proactively refreshes near-expiry tokens, every 15 min.
   2. Schedule tick    — drives `src.core.schedule.engine.process_tick()`, every
@@ -193,4 +192,22 @@ def start_publishing_scheduler(
         schedule_tick_next_run=str(scheduler.get_job("schedule_tick").next_run_time),
     )
 
+    return scheduler
+
+
+def start_token_refresh_scheduler(
+    facade: "PublisherFacade",
+    loop: asyncio.AbstractEventLoop,
+) -> BackgroundScheduler:
+    """Keep refreshable OAuth tokens current without enabling auto-publishing."""
+    scheduler = BackgroundScheduler(daemon=True)
+    _register_token_refresh(scheduler, facade, loop)
+    scheduler.start()
+
+    logger.info(
+        "token_refresh_scheduler_started",
+        token_refresh_interval_minutes=_REFRESH_INTERVAL_MINUTES,
+        token_refresh_next_run=str(scheduler.get_job("token_refresh").next_run_time),
+        auto_publishing=False,
+    )
     return scheduler

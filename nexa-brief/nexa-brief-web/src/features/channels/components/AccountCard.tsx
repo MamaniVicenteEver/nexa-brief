@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Activity,
   ArrowRight,
   Clock,
   Ellipsis,
@@ -25,7 +26,9 @@ import {
 import { buildConnectChannelUrl } from "../api/channels-service";
 import { useExpiryLabel } from "../hooks/useExpiryLabel";
 import { useRefreshChannelProfileMutation } from "../hooks/useRefreshChannelProfileMutation";
+import { useVerifyChannelMutation } from "../hooks/useVerifyChannelMutation";
 import { formatRelativeTime } from "../lib/channels";
+import type { ChannelHealthResult } from "../api/channels-service";
 import type { ChannelAccount } from "../types";
 import { AccountAvatar } from "./AccountAvatar";
 import { ChannelDetailsSheet } from "./ChannelDetailsSheet";
@@ -52,7 +55,9 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
   const locale = useLocale();
   const expiryLabel = useExpiryLabel();
   const refreshProfile = useRefreshChannelProfileMutation();
+  const verifyConnection = useVerifyChannelMutation();
   const [panel, setPanel] = useState<OpenPanel>(null);
+  const [health, setHealth] = useState<ChannelHealthResult | null>(null);
   const needsReauth = account.status === "requires_reauth";
   const setOpen = (target: Exclude<OpenPanel, null>) => (open: boolean) =>
     setPanel(open ? target : null);
@@ -166,10 +171,51 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
 
       <div className="mt-auto flex items-center justify-between gap-2 p-4 pt-3.5">
         <StatusBadge status={account.status} />
+        <button
+          type="button"
+          disabled={verifyConnection.isPending}
+          onClick={() =>
+            verifyConnection.mutate(
+              { platform: account.platform, alias: account.alias },
+              {
+                onSuccess: setHealth,
+                onError: () =>
+                  setHealth({
+                    platform: account.platform,
+                    alias: account.alias,
+                    status: "attention",
+                    reason: "check_failed",
+                    checked_at: Date.now() / 1000,
+                  }),
+              },
+            )
+          }
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-nb-line px-2.5 py-1.5 text-[11px] font-semibold text-nb-ink-soft transition-colors hover:border-nb-mute hover:text-nb-ink disabled:cursor-wait disabled:opacity-60"
+        >
+          <Activity className={verifyConnection.isPending ? "size-3 animate-pulse" : "size-3"} />
+          {verifyConnection.isPending ? t("verifying") : t("verify")}
+        </button>
+      </div>
+      {health && (
+        <p
+          role="status"
+          className={cn(
+            "mx-4 -mt-1 mb-3 rounded-lg px-2.5 py-1.5 text-[11px] leading-snug",
+            health.status === "ok"
+              ? "bg-nb-green/10 text-nb-green"
+              : health.status === "requires_reauth"
+                ? "bg-red-500/10 text-red-700"
+                : "bg-amber-500/10 text-amber-800",
+          )}
+        >
+          {t(`health.${health.reason}`)}
+        </p>
+      )}
+      <div className="px-4 pb-4 -mt-1">
         {needsReauth ? (
           <a
             href={buildConnectChannelUrl(account.platform, account.alias)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-red-600 px-3.5 py-1.5 text-[12px] font-semibold text-white no-underline hover:bg-red-700"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-red-600 px-3.5 py-2 text-[12px] font-semibold text-white no-underline hover:bg-red-700"
           >
             <RefreshCw className="size-3" />
             {t("reconnect")}
@@ -178,7 +224,7 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
           <button
             type="button"
             onClick={() => setPanel("details")}
-            className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:text-nb-ink"
+            className="inline-flex w-full items-center justify-center gap-1 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:text-nb-ink"
           >
             {t("viewDetails")}
             <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />

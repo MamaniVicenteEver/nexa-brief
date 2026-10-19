@@ -64,6 +64,7 @@ from src.modules import video_deletion
 from src.presentation.api.schemas.publisher_schema import (
     AccountDeleteResponse,
     AccountStatusResponse,
+    ChannelHealthResponse,
     DeleteResponse,
     ManualPublishRequest,
     PublishedVideoResponse,
@@ -220,6 +221,162 @@ async def list_accounts() -> list[AccountStatusResponse]:
 
     logger.info("api_list_accounts", total=len(accounts))
     return [_account_response(a) for a in accounts]
+
+
+def _provider_error_code(response: httpx.Response) -> str | int | None:
+    try:
+        payload = response.json()
+    except ValueError:
+        return None
+    error = payload.get("error")
+    if isinstance(error, dict):
+        return error.get("code") or error.get("type")
+    data = payload.get("data")
+    if isinstance(data, dict):
+        return data.get("error_code")
+    return error if isinstance(error, (str, int)) else None
+
+
+def _health_response(
+    platform: str, alias: str, status: str, reason: str
+) -> ChannelHealthResponse:
+    return ChannelHealthResponse(
+        platform=platform,
+        alias=alias,
+        status=status,
+        reason=reason,
+        checked_at=time.time(),
+    )
+
+
+async def _check_meta_channel(platform: str, target_id: str, token: str) -> tuple[bool, str]:
+    fields = "id,name" if platform == "facebook" else "id,username"
+    url = f"https://graph.facebook.com/{settings.meta_graph_api_version}/{urllib.parse.quote(target_id, safe='')}"
+    async with httpx.AsyncClient(timeout=20) as client:
+        response = await client.get(
+            url,
+            params={"fields": fields},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+    if response.status_code != 200:
+        code = _provider_error_code(response)
+        if response.status_code == 401 or str(code) == "190":
+            return False, "reauth_required"
+        if response.status_code == 403 or str(code) in {"10", "200"}:
+            return False, "permissions"
+        return False, "unavailable"
+
+    profile = response.json()
+    if str(profile.get("id") or "") != str(target_id):
+        return False, "identity_mismatch"
+    return True, "connected"
+
+
+async def _check_tiktok_channel(target_id: str, token: str) -> tuple[bool, str]:
+    async with httpx.AsyncClient(timeout=20) as client:
+        response = await client.get(
+            "https://open.tiktokapis.com/v2/user/info/",
+            params={"fields": "open_id,display_name"},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+    if response.status_code != 200:
+        code = _provider_error_code(response)
+        if response.status_code == 401 or str(code).lower() in {"access_token_invalid", "invalid_token"}:
+            return False, "reauth_required"
+        if response.status_code == 403 or str(code).lower() == "scope_not_authorized":
+            return False, "permissions"
+        return False, "unavailable"
+
+    payload = response.json()
+    error = payload.get("error") or {}
+    error_code = str(error.get("code") or "ok").lower() if isinstance(error, dict) else str(error).lower()
+    if error_code not in {"", "ok"}:
+        if error_code in {"access_token_invalid", "invalid_token"}:
+            return False, "reauth_required"
+        if error_code == "scope_not_authorized":
+            return False, "permissions"
+        return False, "unavailable"
+
+    user = (payload.get("data") or {}).get("user") or {}
+    if str(user.get("open_id") or "") != str(target_id):
+        return False, "identity_mismatch"
+    return True, "connected"
+
+
+@router.post(
+    "/accounts/{platform}/{alias}/verify",
+    response_model=ChannelHealthResponse,
+)
+async def verify_account_connection(platform: str, alias: str) -> ChannelHealthResponse:
+    """Check OAuth validity and account identity with a harmless profile read."""
+    supported = {"youtube", "facebook", "instagram", "tiktok"}
+    if platform not in supported:
+        raise HTTPException(status_code=422, detail="Unsupported platform.")
+
+    facade = _get_facade()
+    account = next(
+        (item for item in facade.list_accounts() if item["platform"] == platform and item["alias"] == alias),
+        None,
+    )
+    if account is None:
+        raise HTTPException(status_code=404, detail=f"No account found for '{platform}:{alias}'.")
+
+    storage = facade._token_manager._storage
+    try:
+        token = await facade._token_manager.get_valid_token(platform, alias)
+    except TokenExpiredError:
+        return _health_response(platform, alias, "requires_reauth", "reauth_required")
+    except Exception as exc:
+        logger.warning("channel_health_token_check_failed", platform=platform, alias=alias, error_type=type(exc).__name__)
+        return _health_response(platform, alias, "attention", "check_failed")
+
+    try:
+        if platform == "youtube":
+            adapter = facade._adapters["youtube"]
+            expected_id = account.get("target_id")
+            profile = await adapter.get_channel_profile(
+                alias,
+                expected_channel_id=(expected_id if expected_id and expected_id != alias else None),
+            )
+            if profile is None:
+                return _health_response(platform, alias, "attention", "identity_mismatch")
+        elif platform in {"facebook", "instagram"}:
+            valid, reason = await _check_meta_channel(platform, account.get("target_id") or "", token)
+            if not valid:
+                if reason == "reauth_required":
+                    await storage.mark_requires_reauth(platform, alias, reason="platform rejected the OAuth token")
+                    return _health_response(platform, alias, "requires_reauth", reason)
+                return _health_response(platform, alias, "attention", reason)
+        else:
+            valid, reason = await _check_tiktok_channel(account.get("target_id") or "", token)
+            if not valid:
+                if reason == "reauth_required":
+                    await storage.mark_requires_reauth(platform, alias, reason="platform rejected the OAuth token")
+                    return _health_response(platform, alias, "requires_reauth", reason)
+                return _health_response(platform, alias, "attention", reason)
+    except PlatformAPIError as exc:
+        if exc.status_code == 401:
+            await storage.mark_requires_reauth(platform, alias, reason="platform rejected the OAuth token")
+            return _health_response(platform, alias, "requires_reauth", "reauth_required")
+        if exc.status_code == 403:
+            return _health_response(platform, alias, "attention", "permissions")
+        logger.warning(
+            "channel_health_provider_check_failed",
+            platform=platform,
+            alias=alias,
+            status_code=exc.status_code,
+        )
+        return _health_response(platform, alias, "attention", "unavailable")
+    except httpx.HTTPError as exc:
+        logger.warning("channel_health_network_error", platform=platform, alias=alias, error_type=type(exc).__name__)
+        return _health_response(platform, alias, "attention", "unavailable")
+    except Exception as exc:
+        logger.exception("channel_health_check_failed", platform=platform, alias=alias, error_type=type(exc).__name__)
+        return _health_response(platform, alias, "attention", "check_failed")
+
+    return _health_response(platform, alias, "ok", "connected")
 
 
 def _account_response(account: dict) -> AccountStatusResponse:
@@ -680,8 +837,36 @@ async def youtube_oauth_callback(
     if not access_token:
         return HTMLResponse(_html_error("Token no recibido", "Google no devolvió un token de acceso.", platform="youtube"), status_code=502)
 
+    try:
+        encryption_key = settings.publisher_encryption_key
+        if not encryption_key:
+            raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en el servidor")
+        storage = TokenStorage(path=settings.accounts_json_path, encryption_key=encryption_key)
+        existing = next(
+            (
+                item
+                for item in storage.list_accounts()
+                if item["platform"] == "youtube" and item["alias"] == alias
+            ),
+            {},
+        )
+    except Exception as exc:
+        logger.error("youtube_oauth_storage_unavailable", error_type=type(exc).__name__)
+        return HTMLResponse(
+            _html_error("No se pudo comprobar la cuenta", "Google autorizó el acceso, pero no pudimos leer la cuenta guardada. No se cambió la conexión.", platform="youtube"),
+            status_code=500,
+        )
+
+    # Al reconectar un alias existente, conservar su mismo canal de YouTube.
+    # Una cuenta de Google puede administrar varios canales; no hay que reemplazar
+    # el canal guardado por el primer resultado que devuelva la API.
+    expected_channel_id = existing.get("target_id")
+    if not expected_channel_id or expected_channel_id == alias:
+        expected_channel_id = None
+
     # Read public channel profile once at connection time; the internal alias remains Nexa's key.
     profile: YouTubeChannelProfile | None = None
+    profile_fetch_failed = False
     try:
         async with httpx.AsyncClient(timeout=10) as client:
             ch_resp = await client.get(
@@ -692,31 +877,42 @@ async def youtube_oauth_callback(
         if ch_resp.status_code == 200:
             channel_items = ch_resp.json().get("items") or []
             if channel_items:
-                profile = YouTubeChannelProfile.from_resource(channel_items[0])
+                channel = next(
+                    (item for item in channel_items if item.get("id") == expected_channel_id),
+                    None,
+                ) if expected_channel_id else channel_items[0]
+                if channel is not None:
+                    profile = YouTubeChannelProfile.from_resource(channel)
         else:
+            profile_fetch_failed = True
             logger.warning(
                 "youtube_oauth_fetch_channel_info_failed",
                 status_code=ch_resp.status_code,
             )
     except Exception as exc:
+        profile_fetch_failed = True
         logger.warning("youtube_oauth_fetch_channel_info_failed", error=str(exc))
 
-    try:
-        encryption_key = settings.publisher_encryption_key
-        if not encryption_key:
-            raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en .env")
-
-        accounts_path = settings.accounts_json_path
-        storage = TokenStorage(path=accounts_path, encryption_key=encryption_key)
-        existing = next(
-            (
-                item
-                for item in storage.list_accounts()
-                if item["platform"] == "youtube" and item["alias"] == alias
+    if expected_channel_id and profile is None:
+        if profile_fetch_failed:
+            return HTMLResponse(
+                _html_error(
+                    "No se pudo confirmar el canal",
+                    "Google autorizó el acceso, pero YouTube no permitió confirmar el canal asociado a este alias. No se cambiaron los tokens guardados; inténtalo de nuevo.",
+                    platform="youtube",
+                ),
+                status_code=502,
+            )
+        return HTMLResponse(
+            _html_error(
+                "El canal no coincide",
+                "La cuenta de Google elegida no tiene el canal de YouTube guardado para este alias. Vuelve atrás y autoriza con la cuenta que administra ese canal. La conexión guardada no se cambió.",
+                platform="youtube",
             ),
-            {},
+            status_code=409,
         )
 
+    try:
         channel_name = profile.title if profile else existing.get("name", alias)
         channel_id = profile.channel_id if profile else existing.get("target_id", "")
         handle = profile.handle if profile else existing.get("handle")

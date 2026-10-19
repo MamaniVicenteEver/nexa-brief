@@ -12,7 +12,7 @@ export AUTH_URL := $(PUBLIC_APP_URL)
 
 .DEFAULT_GOAL := help
 .PHONY: help setup dev api web test lint format check seed-admin media-pull media-push media-status preview-media template-posters \
-        docker-build docker-up docker-down docker-logs docker-verify docker-seed-admin
+        docker-build docker-up docker-down docker-logs docker-verify docker-seed-admin public-up public-status
 
 help: ## Lista los comandos
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  \033[1m%-18s\033[0m %s\n", $$1, $$2}'
@@ -80,3 +80,9 @@ docker-verify: ## Build + up + salud + una llamada real a la API
 
 docker-seed-admin: ## Admin dentro del contenedor web: make docker-seed-admin EMAIL=… PASSWORD=…
 	docker compose exec web node scripts/seed-admin.mjs $(EMAIL) $(PASSWORD)
+
+public-up: ## Inicia la app local si falta y conecta el túnel público
+	./cloudflare-tunnel/up.sh
+
+public-status: ## Revisa la app local, el contenedor y el dominio público
+	./cloudflare-tunnel/status.sh

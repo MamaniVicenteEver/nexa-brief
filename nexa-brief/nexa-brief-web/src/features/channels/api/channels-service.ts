@@ -37,6 +37,20 @@ interface PublishedVideoResponseDto {
   published_at: number;
 }
 
+export interface ChannelHealthResult {
+  platform: ChannelPlatform;
+  alias: string;
+  status: "ok" | "requires_reauth" | "attention";
+  reason:
+    | "connected"
+    | "reauth_required"
+    | "identity_mismatch"
+    | "permissions"
+    | "unavailable"
+    | "check_failed";
+  checked_at: number;
+}
+
 function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
   return {
     platform: dto.platform as ChannelPlatform,
@@ -120,6 +134,16 @@ export async function refreshChannelProfile(
     { method: "POST" },
   );
   return mapChannelAccount(dto);
+}
+
+export async function verifyChannelConnection(
+  platform: ChannelPlatform,
+  alias: string,
+): Promise<ChannelHealthResult> {
+  return httpClient<ChannelHealthResult>(accountPath(platform, alias) + "/verify", {
+    method: "POST",
+    timeoutMs: 30_000,
+  });
 }
 
 export async function disconnectChannel(platform: ChannelPlatform, alias: string): Promise<void> {
