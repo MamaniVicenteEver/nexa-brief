@@ -6,12 +6,35 @@ reporta: anclas que no existen, planos < 1,5 s o > 8 s (capa main), componentes 
 desconocidos, imágenes que faltan, cantidad de letras grandes y huecos. Imprime además la
 línea de tiempo resuelta (útil para revisar el ritmo).
 
+Los componentes propios del video (assets/components/, ver guides/components.md §6) cuentan
+como conocidos si `kit.py components <id>` ya los registró en assets/components/catalog.json.
+Las cantidades (letras grandes, planos, capítulos, palabras) escalan con `target_minutes`
+del guion (lengths.json).
+
 Uso (desde nexa-brief-server/):
   .venv/bin/python src/templates/_tools/explainer-kit/tools/check_storyboard.py src/templates/sandbox/explainer-binario
 """
 import json, pathlib, re, sys, unicodedata
 
 KIT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from lengths import of_script  # noqa: E402
+import outro as outro_tool  # noqa: E402
+
+LOCAL_CATALOG = "assets/components/catalog.json"
+
+
+def load_catalog(proto: pathlib.Path) -> dict:
+    """Catálogo del kit + componentes propios del video (si ya pasaron por `kit.py components`)."""
+    cat = {c["name"]: c for c in json.loads((KIT / "catalog.json").read_text())["comps"]}
+    local = proto / LOCAL_CATALOG
+    if local.exists():
+        cat.update({c["name"]: c for c in json.loads(local.read_text())["comps"]})
+    return cat
+
+
+def in_range(n, bounds):
+    return bounds[0] <= n <= bounds[1]
 
 def norm(s):
     s = unicodedata.normalize("NFD", str(s).lower()); s = "".join(c for c in s if unicodedata.category(c) != "Mn")
@@ -28,7 +51,10 @@ def main(proto):
     proto = pathlib.Path(proto)
     raw = json.loads((proto / "assets" / "config.json").read_text()); C = raw["configs"][0] if "configs" in raw else raw
     lyr = json.loads((proto / C["lyricsUrl"]).read_text()); sb = json.loads((proto / C["storyboardUrl"]).read_text())
-    cat = {c["name"]: c for c in json.loads((KIT / "catalog.json").read_text())["comps"]}
+    cat = load_catalog(proto)
+    script_path = proto / "assets" / "script.json"
+    script = json.loads(script_path.read_text()) if script_path.exists() else {}
+    T = of_script(script, C.get("design"))
     words = [{"t": w["word"].strip(), "s": w["start"], "n": norm(w["word"])} for s in lyr["segments"] for w in s.get("words", []) if w["word"].strip()]
     total = lyr.get("metadata", {}).get("duration") or (words[-1]["s"] + 3)
     errs, warns, beats, cur = [], [], [], 0
@@ -74,8 +100,16 @@ def main(proto):
             if dur > 8.5 and x["i"] != len(beats) - 1: warns.append(f"#{x['i']} {x['use']} dura {dur:.1f}s (> 8 s)")
     lyrics = sum(1 for x in beats if x["use"] == "common.lyric")
     big = lyrics + sum(1 for x in beats if x["use"] == "common.punch")
-    if not (4 <= lyrics <= 6): warns.append(f"{lyrics} letras grandes (common.lyric): lo recomendado es 4–6")
-    if big > 7: warns.append(f"{big} momentos de texto gigante (lyric + punch): más de 7 cansa y les quita fuerza; dejar solo los del PLAN §6")
+    lo, hi = T["lyrics"]
+    if not in_range(lyrics, T["lyrics"]): warns.append(f"{lyrics} letras grandes (common.lyric): lo recomendado es {lo}–{hi}")
+    if big > hi + 1: warns.append(f"{big} momentos de texto gigante (lyric + punch): más de {hi + 1} cansa y les quita fuerza; dejar solo los del PLAN §6")
+    n_main = len([x for x in beats if x["layer"] == "main"])
+    if not T["legacy"]:
+        if not in_range(n_main, T["beats"]): warns.append(f"{n_main} planos para {T['minutes']:g} min: lo recomendado es {T['beats'][0]}–{T['beats'][1]} (un plano cada 2,5–6 s)")
+        n_words = sum(len(s.get("text", "").split()) for s in script.get("segments", []))
+        if not in_range(n_words, T["words"]): warns.append(f"guion de {n_words} palabras para {T['minutes']:g} min: lo recomendado es {T['words'][0]}–{T['words'][1]}")
+        chapters = [s["chapter"] for s in script.get("segments", []) if s.get("chapter")]
+        if not in_range(len(chapters), T["chapters"]): warns.append(f"{len(chapters)} capítulos (segmentos con \"chapter\"): para {T['minutes']:g} min van {T['chapters'][0]}–{T['chapters'][1]}")
     # repeticiones: misma foto, mismo icono demasiadas veces, mismo componente seguido
     from collections import Counter
     srcs = Counter(v for x in beats for k, v in (x["b"].get("params") or {}).items() if k == "src")
@@ -87,7 +121,11 @@ def main(proto):
     mains = [x for x in beats if x["layer"] == "main"]
     for a, b, c in zip(mains, mains[1:], mains[2:]):
         if a["use"] == b["use"] == c["use"]: warns.append(f"#{a['i']}–#{c['i']} tres {a['use']} seguidos: alternar con un diagrama, una foto o un texto")
-    if beats and (beats[0]["use"].split(".")[1] != "title" or beats[0]["t0"] > 0.01): errs.append("el primer beat tiene que ser el título en t=0")
+    # apertura: el título clásico o, en los paquetes v2, la miniatura elegida (<familia>.introv1 / introv2)
+    if beats and (beats[0]["use"].split(".")[1] not in ("title", "introv1", "introv2") or beats[0]["t0"] > 0.01):
+        errs.append("el primer beat tiene que ser la apertura en t=0 (<familia>.title, o introv1/introv2 = la miniatura elegida)")
+    if outro_tool.spec_for(proto) is not None and not (lyr.get("metadata") or {}).get("outro"):
+        errs.append("falta el cierre con voz del canal (el video terminaría mudo): correr kit.py outro <id>")
     print(f"{proto.name}: {len(beats)} beats · {total:.1f} s · {len(words)} palabras · promedio {total / max(1, len([b for b in beats if b['layer'] == 'main'])):.1f} s/plano")
     for x in beats: print(f"  {x['t0']:6.1f}–{x['t1']:6.1f}  {x['use']:<16} {x['b'].get('at', 't=' + str(x['b'].get('t')))[:40]}")
     for e in errs: print("  ✗", e)

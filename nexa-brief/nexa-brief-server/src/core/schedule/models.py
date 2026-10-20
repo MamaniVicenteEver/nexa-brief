@@ -58,6 +58,7 @@ class QueueEntry(BaseModel):
     job_id: str
     platform: str
     account_alias: str
+    format: str | None = None
     slot_id: str | None = None
     scheduled_at: str | None = None    # None = inmediato
     source: QueueSource

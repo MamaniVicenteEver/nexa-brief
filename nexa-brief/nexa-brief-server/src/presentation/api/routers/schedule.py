@@ -234,6 +234,7 @@ async def publish_now(body: PublishNowRequest) -> QueueEntryResponse:
         account_alias=body.account_alias,
         scheduled_at=None,
         source=QueueSource.IMMEDIATE,
+        format=body.format,
     )
     task = asyncio.create_task(engine.publish_entry(facade, entry))
     _publish_tasks.add(task)

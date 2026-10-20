@@ -179,6 +179,12 @@ class TokenStorage:
                     "expires_in_seconds": expires_in,
                     "has_refresh_token": bool(entry.get("encrypted_refresh_token")),
                     "avatar": entry.get("avatar"),
+                    "handle": entry.get("handle"),
+                    "description": entry.get("description", ""),
+                    "custom_url": entry.get("custom_url"),
+                    "profile_synced_at": entry.get("profile_synced_at"),
+                    "linked_page_name": entry.get("linked_page_name"),
+                    "linked_page_id": entry.get("linked_page_id"),
                     "label": entry.get("label", ""),
                     "notes": entry.get("notes", ""),
                     "connected_at": entry.get("connected_at"),
@@ -195,6 +201,37 @@ class TokenStorage:
             entry["label"] = label.strip()
         if notes is not None:
             entry["notes"] = notes.strip()
+        self._save()
+        return True
+
+    def update_channel_profile(
+        self,
+        platform: str,
+        alias: str,
+        *,
+        name: str,
+        target_id: str,
+        handle: str | None,
+        description: str,
+        custom_url: str | None,
+        avatar: str | None,
+        profile_synced_at: float | None,
+    ) -> bool:
+        """Persist public channel metadata without touching tokens or user labels."""
+        self._data = self._load()
+        entry = self._data.get(platform, {}).get(alias)
+        if entry is None:
+            return False
+
+        entry.update({
+            "name": name,
+            "target_id": target_id,
+            "handle": handle,
+            "description": description,
+            "custom_url": custom_url,
+            "avatar": avatar,
+            "profile_synced_at": profile_synced_at,
+        })
         self._save()
         return True
 

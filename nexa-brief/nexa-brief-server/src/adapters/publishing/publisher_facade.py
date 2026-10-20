@@ -3,7 +3,7 @@
 This class is the ONLY public interface that the pipeline (Stage 9),
 the manual API router, and the scheduler interact with.  It:
 
-  - Initialises TokenStorage, TokenManager, and all 3 platform adapters.
+  - Initialises TokenStorage, TokenManager, and all platform adapters.
   - Routes publish/CRUD calls to the correct adapter based on the account selector.
   - Emits high-level structured log events (in addition to adapter-level events).
   - Provides list_accounts() for the management API.
@@ -26,22 +26,25 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import structlog
 
-from src.config.exceptions import PublisherError
+from src.config.exceptions import PublisherError, UnsupportedOperationError, VideoNotFoundError
 from src.config.settings import settings
+from src.core import channel_sync
+from src.core.ports.channel_catalog_port import ChannelCatalogPort
 from src.core.ports.publisher_port import PublisherPort, PublishVideoResult, VideoMetadata
 from src.adapters.publishing.token_storage import TokenStorage
 from src.adapters.publishing.token_manager import TokenManager
 from src.adapters.publishing.tiktok_adapter import TikTokAdapter
-from src.adapters.publishing.youtube_adapter import YouTubeAdapter
+from src.adapters.publishing.youtube_adapter import YouTubeAdapter, YouTubeChannelProfile
 from src.adapters.publishing.facebook_adapter import FacebookAdapter
+from src.adapters.publishing.instagram_adapter import InstagramAdapter
 
 logger = structlog.get_logger(__name__)
 
-_SUPPORTED_PLATFORMS = ("tiktok", "youtube", "facebook")
+_SUPPORTED_PLATFORMS = ("tiktok", "youtube", "facebook", "instagram")
 
 
 class PublisherFacade:
@@ -70,6 +73,7 @@ class PublisherFacade:
             "tiktok": TikTokAdapter(self._token_manager),
             "youtube": YouTubeAdapter(self._token_manager),
             "facebook": FacebookAdapter(self._token_manager),
+            "instagram": InstagramAdapter(self._token_manager),
         }
 
         logger.info(
@@ -238,12 +242,95 @@ class PublisherFacade:
         """Update an account's user-editable label/notes. Returns False if it doesn't exist."""
         return self._token_manager._storage.update_metadata(platform, alias, label=label, notes=notes)
 
+    async def refresh_youtube_profile(self, alias: str) -> dict[str, Any] | None:
+        """Refresh public YouTube channel metadata while keeping the internal alias stable."""
+        account = next(
+            (item for item in self.list_accounts() if item["platform"] == "youtube" and item["alias"] == alias),
+            None,
+        )
+        if account is None:
+            return None
+
+        adapter = cast(YouTubeAdapter, self._adapters["youtube"])
+        profile: YouTubeChannelProfile | None = await adapter.get_channel_profile(
+            alias,
+            expected_channel_id=(
+                account["target_id"]
+                if account.get("target_id") and account["target_id"] != alias
+                else None
+            ),
+        )
+        if profile is None:
+            return None
+
+        synced_at = time.time()
+        saved = self._token_manager._storage.update_channel_profile(
+            "youtube",
+            alias,
+            name=profile.title,
+            target_id=profile.channel_id,
+            handle=profile.handle,
+            description=profile.description,
+            custom_url=profile.custom_url,
+            avatar=profile.avatar,
+            profile_synced_at=synced_at,
+        )
+        if not saved:
+            return None
+
+        logger.info(
+            "youtube_channel_profile_refreshed",
+            account=alias,
+            channel_id=profile.channel_id,
+        )
+        return {
+            "channel_id": profile.channel_id,
+            "name": profile.title,
+            "handle": profile.handle,
+            "description": profile.description,
+            "custom_url": profile.custom_url,
+            "avatar": profile.avatar,
+            "profile_synced_at": synced_at,
+        }
+
     def remove_account(self, platform: str, alias: str) -> bool:
         """Delete a connected account's stored tokens. Returns True if it existed."""
         storage = self._token_manager._storage
         removed = storage.remove_account(platform, alias)
         logger.info("publisher_remove_account", platform=platform, account=alias, removed=removed)
         return removed
+
+    # ── Channel sync (Canales) ────────────────────────────────────────────────
+
+    def catalog_for(self, platform: str) -> ChannelCatalogPort | None:
+        """El adaptador de la red si sabe leer su catálogo (ChannelCatalogPort), si no None."""
+        adapter = self._adapters.get(platform)
+        return adapter if isinstance(adapter, ChannelCatalogPort) else None
+
+    async def sync_channel(self, platform: str, alias: str) -> channel_sync.SyncSummary:
+        """Trae de la plataforma los videos y totales de la cuenta (ver core/channel_sync.py)."""
+        catalog = self.catalog_for(platform)
+        if catalog is None:
+            raise UnsupportedOperationError(f"La sincronización de canales todavía no está disponible para {platform}.")
+        if not any(a["platform"] == platform and a["alias"] == alias for a in self.list_accounts()):
+            raise VideoNotFoundError(f"No hay una cuenta conectada '{platform}:{alias}'.")
+        return await channel_sync.sync_channel(platform, alias, catalog)
+
+    async def sync_all_channels(self) -> dict[str, str]:
+        """Sincroniza todas las cuentas que lo permiten; una que falla no frena a las demás."""
+        results: dict[str, str] = {}
+        for account in self.list_accounts():
+            platform, alias = account["platform"], account["alias"]
+            if self.catalog_for(platform) is None or account.get("status") == "requires_reauth":
+                continue
+            key = f"{platform}:{alias}"
+            try:
+                summary = await self.sync_channel(platform, alias)
+                results[key] = f"ok: {summary.imported} nuevos, {summary.updated} actualizados"
+            except Exception as exc:  # noqa: BLE001 - una cuenta caída no frena a las demás
+                results[key] = f"error: {exc}"
+                logger.warning("channel_sync_failed", platform=platform, account=alias, error=str(exc))
+        return results
 
     # ── Token refresh (used by scheduler) ────────────────────────────────────
 

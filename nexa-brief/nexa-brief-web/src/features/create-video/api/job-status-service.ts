@@ -20,6 +20,8 @@ interface JobSummaryDto {
   youtube_tags: string[];
   tiktok_caption: string;
   tiktok_hashtags: string[];
+  pinned_comment?: string;
+  platform_copies?: Record<string, { title: string; description: string; tags: string[] }>;
 }
 
 export interface JobProgressDto {
@@ -47,6 +49,7 @@ export interface JobDetailDto {
   duration_seconds: number | null;
   generation_seconds: number | null;
   files: JobFileDto[];
+  formats?: string[];
   summary: JobSummaryDto | null;
   progress?: JobProgressDto | null;
 }
@@ -71,6 +74,8 @@ function mapJobSummary(dto: JobSummaryDto): JobSummary {
     youtubeTags: dto.youtube_tags,
     tiktokCaption: dto.tiktok_caption,
     tiktokHashtags: dto.tiktok_hashtags,
+    pinnedComment: dto.pinned_comment ?? "",
+    platformCopies: dto.platform_copies ?? {},
   };
 }
 
@@ -88,6 +93,7 @@ export function mapJobDetail(dto: JobDetailDto): JobDetail {
     durationSeconds: dto.duration_seconds,
     generationSeconds: dto.generation_seconds ?? null,
     files: dto.files.map((f) => ({ ...f, url: f.url ? resolveApiUrl(f.url) : null })),
+    formats: dto.formats ?? [],
     summary: dto.summary ? mapJobSummary(dto.summary) : null,
     progress: dto.progress ? mapJobProgress(dto.progress) : null,
   };

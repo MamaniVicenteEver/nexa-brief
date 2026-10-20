@@ -327,14 +327,7 @@ B.blackStack = (sc, X) => {
 
 /* ---- tarjetas de intro / cierre ---- */
 B.intro = (sc, X) => { sc.slot.bg = "black"; B.echoCenter(sc, X); };
-B.outro = (sc, X) => {
-  sc.slot.bg = "paper";
-  const { W, H, u } = X, L = bgLayer(X), ws = sc.words;
-  const [a, b, c] = ws;
-  if (a) { const fa = Math.min(0.17 * H, fit(U(a.text), "cd", 0.02, 0.6 * W, 1e9)); const t = tx(L, U(a.text), { cls: "cd", fs: fa, x: W / 2, y: 0.4 * H, color: P.ink }); show(X, t.box, a.rt); }
-  if (b) { const t = tx(L, U(b.text), { cls: "lt", fs: 0.05 * H, x: W / 2, y: 0.53 * H, color: P.ink }); show(X, t.box, b.rt); }
-  if (c) { const t = tx(L, U(c.text), { cls: "cd", fs: Math.min(0.07 * H, fit(U(c.text), "cd", 0.02, 0.6 * W, 1e9)), x: W / 2, y: 0.64 * H, color: P.red }); show(X, t.box, c.rt); }
-};
+B.outro = (sc, X) => window.NexaMixtasOutro.render(sc, X, {P, U, bgLayer, tx, fit, show, div, EASE_OUT, config: C.outro || {}});
 
 /* cuándo cabe cada escena (frase = sc.words) */
 const FITS = {

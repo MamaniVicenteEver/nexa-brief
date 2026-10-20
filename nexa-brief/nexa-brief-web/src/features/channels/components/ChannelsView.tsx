@@ -4,7 +4,7 @@ import { Plus, TriangleAlert, WifiOff } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
-import { PLATFORMS } from "../constants/platforms";
+import { PLATFORM_META, PLATFORMS } from "../constants/platforms";
 import { useChannels } from "../hooks/useChannels";
 import { useConnectedAccountNotice } from "../hooks/useConnectedAccountNotice";
 import { groupByPlatform, matchesQuery } from "../lib/channels";
@@ -67,8 +67,17 @@ export function ChannelsView() {
     [channels.length, groups],
   );
   const reauthCount = channels.filter((c) => c.status === "requires_reauth").length;
-  const visiblePlatforms = filter === "all" ? PLATFORMS : [filter];
   const searching = query.trim().length > 0;
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const matchingPlatforms = searching
+    ? PLATFORMS.filter((platform) =>
+        PLATFORM_META[platform].label.toLocaleLowerCase().includes(normalizedQuery),
+      )
+    : [];
+  // Searching for a platform name should reveal its empty section and connect action,
+  // even before the first account has been linked.
+  const visiblePlatforms =
+    filter !== "all" ? [filter] : matchingPlatforms.length > 0 ? matchingPlatforms : PLATFORMS;
 
   return (
     <div className="mx-auto flex w-full min-w-0 max-w-[1280px] flex-col gap-6 px-4 pt-22 pb-16 sm:px-10">
@@ -128,7 +137,7 @@ export function ChannelsView() {
                 accounts={groups[platform].filter((a) => matchesQuery(a, query))}
                 totalAccounts={groups[platform].length}
                 aliasesByPlatform={aliasesByPlatform}
-                filtered={searching}
+                filtered={searching && !PLATFORM_META[platform].label.toLocaleLowerCase().includes(normalizedQuery)}
               />
             ))}
           </div>

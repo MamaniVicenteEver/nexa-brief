@@ -89,6 +89,24 @@ NODETECH (ver `../EXPLAINER.md` §4). Pedile al usuario el nombre y el handle re
 - Al promover, la app lo pone en NodePolitics por la carpeta (`nodepolitics/`) aunque el diseño sea de
   NodeHistory (o por `category: "node_politics"` en el manifest, que manda).
 
+- 2026-10-15 · dos diseños nuevos, réplicas de las referencias Klickpin de esta carpeta, con mapas
+  **d3-geo + topojson + world-atlas** (`_tools/explainer-kit/vendor/geo/`, offline y determinista):
+  - **`atlas`** (mapamundi oscuro, costas con brillo cian, países en blanco, alfileres negros que se acumulan).
+    La réplica fiel es SOLO mapa + país pintado + alfiler + etiqueta: Codex había agregado tarjetas de cifra,
+    líneas de frontera y zooms a nivel ciudad (el país llena la pantalla de blanco) que la referencia no tiene;
+    se sacaron del demo. Alfileres de tamaño fijo (no se achican con el zoom: cabeza 0,22·H activo, 0,13·H anteriores).
+    El sello de la referencia es un logo ajeno: se reemplazó por un emblema B/N genérico (o la foto, B/N).
+    `check` avisa "tres atlas.country seguidos": es lo esperado en este diseño. Demo `atlas-demo` con material de `nodehistory/muro-de-berlin`.
+  - **`imperio`** (atlas físico, sol carmesí que late, rayos en abanico, título original + condensada, archivo B/N).
+    Los rayos van en MULTIPLICAR: #a8606e en el tramo de mapa (sobre el océano da el #635f70–#706779 medido)
+    y carmesí #b3122f en el archivo (`rayColor`); en modo normal quedaban rosados. Apertura: de ~24° a ~84° de ancho (inOut); el sol no se
+    dibuja en el tramo de archivo (solo los rayos). Demo `imperio-demo` con material de `nodehistory/turing-enigma`.
+
+- 2026-10-16 · `imperio` estandarizado: el sol y los rayos usan la **bandera del país foco** (`flag: auto`;
+  Japón = carmesí de la referencia). Fluidez en vivo arreglada (ver `designs/imperio/DESIGN.md` → Fluidez): si un
+  diseño con mapa se traba en el navegador, medir con un perfil de Chrome antes de tocar nada; el costo real suele
+  estar en el primer `drawImage` (el canvas difiere el dibujo) y en recorrer la tierra de todo el mundo.
+
 ## 8. Promover
 
 `kit.py promote <id>` → crea `nodepolitics/<id>/` (la carpeta nace con el primer video), después

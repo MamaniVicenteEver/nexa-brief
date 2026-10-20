@@ -106,6 +106,17 @@ async def test_publish_texts_for_existing_video(tmp_path: Path):
     assert write_publish_json(video, brief) is False
 
 
+async def test_publish_texts_never_overwrite_a_v2_package(tmp_path: Path):
+    video = tmp_path / "apolo"
+    (video / "assets").mkdir(parents=True)
+    (video / "assets" / "script.json").write_text(json.dumps({"title": "1202", "segments": [{"text": "Uno."}]}))
+    package = {"schema_version": 2, "youtube_title": "derivado del paquete"}
+    (video / "publish.json").write_text(json.dumps(package))
+    brief = await generate_publish_texts(_FakeAI(BRIEF), video, category_path="node_tech", design=None)
+    assert write_publish_json(video, brief, overwrite=True) is False
+    assert json.loads((video / "publish.json").read_text()) == package
+
+
 def test_slug_and_unique_ids(tmp_path: Path):
     assert slugify("¿Cómo nació la Inteligencia Artificial?") == "como-nacio-la-inteligencia-artificial"
     (tmp_path / "muro").mkdir()
@@ -209,11 +220,22 @@ async def test_production_creates_video_runs_agent_and_ends_ready(tmp_path: Path
 
     scope = agent.runs[0]["scope"]
     assert scope.writable_dir == str(videos / "como-nacio-la-ia")
-    assert all("kit.py" in c or "media.py" in c for c in scope.commands)
+    assert all("kit.py" in c or "media.py" in c or "src.core.explainer.publishing" in c for c in scope.commands)
     assert "NO hagas el paso 10" in agent.runs[0]["prompt"]
     assert kit.calls[0][:3] == ["new", "rough", "como-nacio-la-ia"]
     # el catálogo respeta la categoría del manifest
     assert load_video(vdir).category_path == "node_tech"
+
+
+async def test_production_carries_the_target_length(tmp_path: Path):
+    producer, agent, kit, _ = _producer(tmp_path)
+    rec = await producer.submit(category_path="node_tech", design="rough", topic="Ajedrez contra la máquina", minutes=15)
+    await producer.wait(rec["production_id"])
+    assert rec["target_minutes"] == 15
+    assert kit.calls[0][-2:] == ["--minutes", "15"]
+    assert "Duración objetivo: 15 minutos" in agent.runs[0]["prompt"]
+    default = await producer.submit(category_path="node_tech", design="rough", topic="Otro tema largo")
+    assert default["target_minutes"] == 10   # sin duración: la normal (lengths.json)
 
 
 async def test_production_incomplete_then_resume(tmp_path: Path):
@@ -236,8 +258,8 @@ async def test_production_auto_record_registers_job_in_category_output(tmp_path:
     rec = await producer.submit(category_path="node_politics", design="enmienda", topic="La Enmienda 19", auto_record=True)
     final = await producer.wait(rec["production_id"])
     assert final["state"] == ProductionState.done.value, final["error"]
-    out = tmp_path / "output" / "node_politics" / "enmienda" / final["video_id"]
-    assert (out / f"{final['video_id']}-16x9.mp4").exists()
+    base = tmp_path / "output" / "node_politics" / "enmienda" / final["video_id"]
+    assert list(base.glob(f"*/{final['video_id']}-16x9.mp4")), "la grabación va en su propia carpeta"
     jobs = collection("jobs").list()
     assert jobs and jobs[0]["category"] == "node_politics"
     assert jobs[0]["video_id"] == final["video_id"]  # evita grabarlo dos veces
@@ -435,5 +457,8 @@ def test_route_design_groups_current_category_first():
     assert [g["category_path"] for g in groups][:2] == ["node_tech", "node_history"]
     assert [d["design_id"] for d in groups[0]["designs"]] == ["rough"]
     assert len(groups[1]["designs"]) == 10 and groups[1]["designs"][0]["poster_url"]
+    rough = groups[0]["designs"][0]
+    assert rough["video_url"] == "/api/v1/explainer/files/nodetech/apolo-1202/render/apolo-1202-16x9.mp4"
+    assert rough["video_portrait_url"].endswith("/render/apolo-1202-9x16.mp4")
     groups = client.get("/api/v1/explainer/design-groups", params={"first": "node_history"}).json()
     assert groups[0]["category_path"] == "node_history"

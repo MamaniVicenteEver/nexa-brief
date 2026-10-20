@@ -7,9 +7,9 @@ from typing import Awaitable, Callable
 
 import structlog
 
-from src.adapters.ai.factory import get_analysis_ai, get_codegen_ai
+from src.adapters.ai.factory import get_analysis_ai, get_codegen_ai, get_copy_ai
 from src.config.exceptions import NexaBriefError
-from src.config.niche_config import get_niche_config
+from src.config.niche_config import NicheConfig, get_niche_config
 from src.config.settings import settings
 from src.core.categories import output_dir_for_niche
 from src.core.job import DurationConfig, DurationMode, Job, JobStage, VisualDesign
@@ -113,7 +113,7 @@ async def run(
         return job
 
     # ── Cargar configuración del nicho ────────────────────────────────────────
-    niche_cfg = get_niche_config(job.input.category_name)
+    niche_cfg = restrict_formats(get_niche_config(job.input.category_name), job.input.formats)
 
     # Nichos con video.duration_locked_to_music=True (ej. lyrics_video_*): la
     # duración del video TIENE que ser la duración real de la canción — nunca
@@ -157,13 +157,13 @@ async def run(
         else:
             analysis_stage = ("visual_designer", lambda j: visual_designer.run(j, analysis_ai, niche_cfg))
         stages = [
-            ("input_analyzer",    lambda j: input_analyzer.run(j, analysis_ai, niche_cfg)),
+            ("input_analyzer",    lambda j: input_analyzer.run(j, get_copy_ai(), niche_cfg)),   # solo texto: DeepSeek
             ("resource_fetcher",  lambda j: resource_fetcher.run(j, niche_cfg, analysis_ai)),
             analysis_stage,
             ("prompt_architect",  lambda j: prompt_architect.run(j, niche_cfg)),
             ("html_generator",    lambda j: html_generator.run(j, codegen_ai, niche_cfg)),
             ("video_recorder",    lambda j: video_recorder.run(j, niche_cfg)),
-            ("result_summarizer", lambda j: result_summarizer.run(j, analysis_ai, niche_cfg)),
+            ("result_summarizer", lambda j: result_summarizer.run(j, get_copy_ai(), niche_cfg)),
             ("packager",          lambda j: packager.run(j, niche_cfg)),
         ]
         logger.info(
@@ -200,13 +200,13 @@ async def run(
             )
 
         stages = [
-            ("input_analyzer",    lambda j: input_analyzer.run(j, analysis_ai, niche_cfg)),
+            ("input_analyzer",    lambda j: input_analyzer.run(j, get_copy_ai(), niche_cfg)),   # solo texto: DeepSeek
             visual_designer_stage,
             ("resource_fetcher",  lambda j: resource_fetcher.run(j, niche_cfg, analysis_ai)),
             ("prompt_architect",  lambda j: prompt_architect.run(j, niche_cfg)),
             ("html_generator",    lambda j: html_generator.run(j, codegen_ai, niche_cfg)),
             ("video_recorder",    lambda j: video_recorder.run(j, niche_cfg)),
-            ("result_summarizer", lambda j: result_summarizer.run(j, analysis_ai, niche_cfg)),
+            ("result_summarizer", lambda j: result_summarizer.run(j, get_copy_ai(), niche_cfg)),
             ("packager",          lambda j: packager.run(j, niche_cfg)),
         ]
 
@@ -282,6 +282,21 @@ async def run(
         output=str(job.artifacts.output_dir),
     )
     return job
+
+
+_ASPECT = {"16x9": "16:9", "9x16": "9:16"}
+
+
+def restrict_formats(niche_cfg: NicheConfig, formats: list[str] | None) -> NicheConfig:
+    """Solo los formatos elegidos al grabar (recorder y packager trabajan sobre video.formats).
+    None o una lista que no deja ninguno = los del nicho, como siempre."""
+    if not formats:
+        return niche_cfg
+    wanted = {_ASPECT[f] for f in formats if f in _ASPECT}
+    kept = [fmt for fmt in niche_cfg.video.formats if fmt.aspect_ratio in wanted]
+    if not kept or len(kept) == len(niche_cfg.video.formats):
+        return niche_cfg
+    return niche_cfg.model_copy(update={"video": niche_cfg.video.model_copy(update={"formats": kept})})
 
 
 async def _fail(job: Job, tracker: ProgressTracker, on_stage: Callable[[Job], Awaitable[None]] | None, error: str) -> Job:

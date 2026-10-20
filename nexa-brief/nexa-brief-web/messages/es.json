@@ -37,12 +37,14 @@
     "eyebrow": "Stack tecnológico en uso"
   },
   "templatesRow": {
-    "eyebrow": "Catálogo de plantillas",
     "heading": "Una plantilla, un género distinto.",
     "subheading": "Pasá el mouse para verlas en movimiento. Tocá una para abrirla completa, con sonido.",
     "seeAll": "Ver todas las plantillas",
     "seeAllCount": "Ver las {count} plantillas",
     "previous": "Anteriores",
+    "filterAll": "Todo",
+    "filterLabel": "Filtrar por marca",
+    "tagNarrated": "Narrado",
     "next": "Siguientes"
   },
   "cta": {
@@ -243,11 +245,47 @@
       "disconnect": "Desconectar",
       "addUsage": "Asignar uso",
       "videos": "Videos",
+      "followers": "Seguidores",
+      "views": "Vistas",
       "lastPublished": "Última",
-      "token": "Token"
+      "token": "Token",
+      "syncedAgo": "Sincronizado {time}",
+      "sync": "Sincronizar",
+      "syncing": "Sincronizando…",
+      "syncSuccess": "Sincronización completa: {imported, plural, one {# nuevo} other {# nuevos}}, {updated, plural, one {# actualizado} other {# actualizados}}.",
+      "syncError": "No se pudo sincronizar el canal. Inténtalo de nuevo.",
+      "handleUnavailable": "YouTube no informó un @ público",
+      "internalIdentifier": "ID interno: {alias}",
+      "refreshProfile": "Actualizar información",
+      "refreshing": "Actualizando…",
+      "refreshSuccess": "Información de perfil actualizada.",
+      "refreshError": "No se pudo actualizar la información del perfil.",
+      "verify": "Verificar",
+      "verifying": "Verificando…",
+      "health": {
+        "connected": "Conexión comprobada. La plataforma reconoció esta cuenta.",
+        "reauth_required": "La plataforma rechazó la autorización. Reconecta esta cuenta.",
+        "identity_mismatch": "El token respondió, pero no corresponde al canal guardado.",
+        "permissions": "La cuenta respondió, pero faltan permisos para consultar el canal.",
+        "unavailable": "La plataforma no respondió correctamente. Inténtalo de nuevo.",
+        "check_failed": "No se pudo completar la comprobación. Inténtalo de nuevo."
+      }
     },
     "details": {
       "reconnect": "Reconectar cuenta",
+      "youtubeProfile": "Perfil de YouTube",
+      "instagramProfile": "Perfil de Instagram",
+      "linkedFacebookPage": "Página de Facebook vinculada",
+      "instagramBio": "Biografía de Instagram",
+      "openInstagram": "Abrir perfil en Instagram",
+      "handle": "@ público",
+      "customUrl": "URL del canal",
+      "channelDescription": "Descripción del canal",
+      "noHandle": "YouTube no informó un @ público.",
+      "noDescription": "El canal no tiene descripción.",
+      "profileLastSynced": "Información sincronizada",
+      "notSynced": "Todavía no sincronizada",
+      "openChannel": "Abrir canal en YouTube",
       "usage": "Uso",
       "edit": "Editar",
       "noLabel": "Sin uso asignado",
@@ -265,15 +303,22 @@
       "yes": "Sí",
       "no": "No",
       "recentVideos": "Últimos videos",
-      "noVideos": "Todavía no se publicó ningún video en esta cuenta desde Nexa Brief.",
+      "noVideos": "Todavía no hay videos registrados en esta cuenta.",
+      "originImported": "Importado",
+      "originNexa": "Desde Nexa",
+      "viewsCount": "{count} vistas",
+      "likesCount": "{count} Me gusta",
+      "commentsCount": "{count} comentarios",
       "disconnect": "Desconectar cuenta"
     },
     "connect": {
       "title": "Conectar una cuenta",
       "description": "Autoriza a Nexa Brief para publicar en tu nombre. Puedes conectar varias cuentas por plataforma.",
       "platformLabel": "Plataforma",
-      "aliasLabel": "Alias interno",
-      "aliasHint": "Identificador para elegir esta cuenta al publicar. Solo minúsculas, números, guion y guion bajo.",
+      "aliasLabel": "Identificador interno de Nexa",
+      "aliasHint": "Sirve para elegir esta cuenta al publicar. Solo minúsculas, números, guion y guion bajo.",
+      "youtubeAliasHint": "No es tu @ público. Después de autorizar, Nexa traerá el nombre, la descripción, la foto y el @ disponible desde YouTube.",
+      "instagramAliasHint": "Conecta una cuenta profesional (Empresa o Creador) vinculada a una página de Facebook. Nexa detectará los perfiles conectados a las páginas autorizadas.",
       "aliasInvalid": "Usa entre 1 y 32 caracteres: minúsculas, números, - o _.",
       "aliasExists": "Ya existe «{alias}»: se reconectará y reemplazará su autorización.",
       "securityNote": "Te llevaremos a {platform} para que apruebes el acceso. Los tokens se guardan cifrados y puedes desconectar la cuenta cuando quieras.",
@@ -342,6 +387,10 @@
       "tags": "Tags",
       "tiktokCaption": "Caption de TikTok",
       "publishedTo": "Dónde se publicó",
+      "publicationsLoading": "Cargando enlaces de publicación…",
+      "publicationsError": "No se pudieron cargar los enlaces de publicación.",
+      "publicationUrlUnavailable": "Enlace no disponible (ID)",
+      "publicationActivity": "Actividad de publicación",
       "createdAt": "Creado",
       "updatedAt": "Actualizado",
       "noPublishes": "Todavía no se publicó en ninguna plataforma.",
@@ -349,7 +398,12 @@
       "notFound": "No se encontró este video.",
       "generationTitle": "Tiempo de generación",
       "generationTotal": "Total",
-      "generationQueue": "En cola / arranque"
+      "generationQueue": "En cola / arranque",
+      "desktopFormat": "Desktop 16:9",
+      "mobileFormat": "Móvil 9:16",
+      "youtubeComment": "Comentario de YouTube",
+      "openPublication": "Abrir publicación",
+      "retryPublication": "Reintentar publicación"
     },
     "stages": {
       "pending": "En cola",
@@ -364,6 +418,74 @@
       "publishing": "Publicando...",
       "published": "Publicado",
       "failed": "Falló"
+    },
+    "playerSidebar": {
+      "toggle": "Detalles del video",
+      "tabs": {
+        "publishing": "Publicación",
+        "technical": "Info técnica"
+      },
+      "copy": {
+        "heading": "Textos por plataforma",
+        "title": "Título",
+        "description": "Descripción",
+        "tags": "Etiquetas",
+        "pinnedComment": "Comentario fijado",
+        "noCopy": "Sin textos para esta red",
+        "empty": "Este video todavía no tiene textos generados."
+      },
+      "publications": {
+        "heading": "Dónde se publicó",
+        "empty": "Todavía no se publicó en ninguna cuenta.",
+        "error": "No se pudieron cargar las publicaciones.",
+        "open": "Abrir publicación",
+        "noDate": "Sin fecha registrada"
+      },
+      "technical": {
+        "error": "No se pudo cargar la información técnica.",
+        "columns": {
+          "field": "Dato",
+          "value": "Valor"
+        },
+        "source": {
+          "pipeline": "Pipeline NodeMotion",
+          "explainer": "Explainer"
+        },
+        "files": {
+          "16x9": "Archivo 16:9",
+          "9x16": "Archivo 9:16",
+          "tiktok": "Archivo TikTok",
+          "instagram": "Copia para Instagram"
+        },
+        "rows": {
+          "jobId": "ID del trabajo",
+          "source": "Origen",
+          "category": "Categoría",
+          "template": "Plantilla o diseño",
+          "engine": "Motor de grabación",
+          "duration": "Duración del video",
+          "generation": "Tiempo total de generación",
+          "render": "Tiempo de grabación",
+          "passes": "Pasadas de grabación",
+          "formats": "Formatos grabados",
+          "language": "Idioma de los textos",
+          "strategies": "Estrategias de copy",
+          "createdAt": "Creado",
+          "updatedAt": "Actualizado",
+          "outputDir": "Carpeta de salida",
+          "resolution": "Resolución",
+          "fps": "Cuadros por segundo",
+          "videoCodec": "Códec de video",
+          "videoBitrate": "Bitrate de video",
+          "audio": "Audio",
+          "size": "Peso"
+        }
+      },
+      "downloads": {
+        "thumbnail": "Descargar miniatura",
+        "vertical": "Descargar video 9:16",
+        "noVertical": "Este video se grabó solo en 16:9. Grábalo también en 9:16 para TikTok."
+      }
     },
     "videoCard": {
       "publishedBadge": "Publicado",
@@ -489,7 +611,14 @@
     },
     "prep": {
       "heading": "Preparación",
-      "intro": "Videos del explainer listos para grabar. Por defecto se graba un preview de 10 s (rápido, para revisar); \"Completo\" renderiza todo, lo guarda en output/categoría/ y lo deja listo para los horarios de su categoría. Publicar siempre usa el video completo y empieza en privado.",
+      "emptyRendered": "Todavía no hay videos completos renderizados.",
+      "emptyPreparation": "No hay videos completos pendientes de grabación.",
+      "renderedIntro": "Videos completos que ya tienen un render final. Abrí una tarjeta para revisar sus formatos, textos y opciones de publicación.",
+      "tabRendered": "Renderizados",
+      "tabPreparation": "Por grabar",
+      "viewTabsLabel": "Estado de los videos",
+      "renderedHeading": "Renderizados",
+      "intro": "Videos con todos sus componentes listos, pendientes de grabación completa. Abrí una tarjeta para revisarlos o grabarlos.",
       "loading": "Cargando videos…",
       "empty": "No hay videos del explainer.",
       "statusReady": "Listo para grabar",
@@ -830,6 +959,8 @@
       "statusPublished": "Publicado",
       "openPost": "Ver",
       "showDetail": "Ver detalle técnico",
+      "formatLabel": "Formato del video",
+      "formats": { "16x9": "16:9", "9x16": "9:16" },
       "retryFailed": "Reintentar {count, plural, one {la fallida} other {las # fallidas}}",
       "closeKeepsGoing": "Cerrar",
       "close": "Cerrar",
@@ -945,37 +1076,48 @@
     "fullscreen": "Pantalla completa",
     "unavailable": "Vista previa no disponible.",
     "loadError": "No se pudo cargar este formato del video.",
-    "shortcutsHint": "Espacio · ← → · M · F"
+    "shortcutsHint": "Espacio · ← → · M · F",
+    "backToVideo": "Volver al video"
   },
   "howItWorks": {
-    "eyebrow": "Así funciona",
-    "headingLine1": "De una canción a tus canales,",
-    "headingEm": "sin tocar un editor.",
-    "body": "Nexa Brief controla el flujo completo: entiende la música, diseña el video, lo renderiza y lo publica en cada cuenta, al instante o en tus horarios.",
-    "techLibrary": "Biblioteca",
-    "metricTemplates": "{count} plantillas · {lyric} de letras",
-    "metricAi": "Título, descripción y hashtags automáticos",
-    "metricRender": "≈ {time} por video, de punta a punta",
-    "metricPublish": "{count, plural, one {# publicación} other {# publicaciones}} en {channels, plural, one {# canal} other {# canales}}",
+    "heading": "De una idea a tus canales.",
+    "body": "Una canción o un tema de historia, tecnología o economía. Nexa Brief escribe, anima, graba y publica el video en cada cuenta, al instante o en tus horarios.",
     "steps": {
       "input": {
-        "title": "Elegís la canción y el estilo",
-        "body": "Subís el audio o lo traés de tu biblioteca, y elegís la plantilla. Si no, la IA propone una."
+        "label": "Entrada",
+        "title": "Una canción o un tema",
+        "body": "Subís el audio o escribís el tema; elegís el diseño."
       },
-      "ai": {
-        "title": "La IA entiende y diseña",
-        "body": "Transcribe la letra palabra por palabra, lee el género y el tono, y arma el diseño y el texto de la publicación."
+      "write": {
+        "label": "Guion y textos",
+        "title": "La IA investiga y escribe",
+        "body": "Letra sincronizada o guion investigado, y el texto de cada red."
       },
       "render": {
-        "title": "Se renderiza en 1080p",
-        "body": "Un motor de video profesional anima cada escena sincronizada con el audio, en horizontal y vertical."
+        "label": "Video",
+        "title": "Voz, animación y render",
+        "body": "Narración, animación al ritmo del audio y miniatura, en los dos formatos."
       },
       "publish": {
-        "title": "Se publica solo",
-        "body": "Sale en YouTube, TikTok y Facebook, en una o varias cuentas a la vez. Vos solo revisás el resultado."
+        "label": "Publicación",
+        "title": "Sale en cada cuenta",
+        "body": "Al instante o programado, con el formato de cada red."
       }
     },
-    "note": "Hoy es un proyecto personal en etapa de prueba: así automatizo mis propios canales. Para lo que no tiene todos los derechos, genera arte de letras — visual, no el audio original."
+    "sample": {
+      "songLabel": "Canción",
+      "song": "Let Out The Beast — Ombré",
+      "topicLabel": "Tema",
+      "topic": "La noche en que cayó el Muro de Berlín",
+      "titleLabel": "Título",
+      "title": "La frontera de Berlín casi siguió cerrada esa noche",
+      "tags": "#historia  #berlin  #guerrafria",
+      "published": "Publicado",
+      "scheduled": "Programado"
+    },
+    "factPublications": "{count, plural, one {# publicación} other {# publicaciones}} en {channels, plural, one {# canal} other {# canales}}",
+    "factRender": "≈ {time} por video",
+    "factTemplates": "{count} plantillas y diseños"
   },
   "liveNumbers": {
     "eyebrow": "En vivo",
@@ -1017,8 +1159,8 @@
       "empty": "No hay diseños disponibles para esta categoría."
     },
     "productions": {
-      "heading": "En producción",
-      "intro": "Videos que el agente local está armando. Al quedar listos pasan a Preparación para grabarlos.",
+      "heading": "Proceso de creación",
+      "intro": "El agente prepara guiones, recursos y componentes. Aquí puedes revisar el estado, los errores y el log; esto no significa que el video esté publicado.",
       "loading": "Cargando producciones…",
       "empty": "No hay producciones en esta categoría.",
       "log": "Ver log",
@@ -1051,7 +1193,12 @@
       "mediaHint": "Si lo dejás vacío, la IA busca los medios.",
       "removeFile": "Quitar",
       "agent": "Agente que produce",
-      "autoRecord": "Grabar automáticamente al terminar"
+      "autoRecord": "Grabar automáticamente al terminar",
+      "length": "Duración",
+      "lengthOption": "{minutes} min · {label}",
+      "lengthCustom": "Otra (30 min o más)",
+      "lengthMinutes": "Minutos",
+      "lengthHint": "Cuanto más largo, más investigación, capítulos y componentes propios del tema; la producción tarda más."
     },
     "create": {
       "title": "Crear video · {category}",
@@ -1064,7 +1211,7 @@
       "produce": "Preparar video (sin grabar)",
       "produceAndRecord": "Preparar y grabar al terminar",
       "producing": "Enviando…",
-      "started": "Producción iniciada: {video}. Aparece en \"En producción\".",
+      "started": "Preparación iniciada: {video}. Aparece en \"Proceso de creación\".",
       "previewHeading": "Previsualizar diseño",
       "showPreview": "Mostrar",
       "hidePreview": "Ocultar",
@@ -1101,8 +1248,51 @@
       "loadingChannels": "Cargando canales…",
       "noChannels": "No hay canales conectados. Conectalos en Canales.",
       "publishButton": "{count, plural, =0 {Elegí al menos un canal} one {Grabar y publicar en # canal} other {Grabar y publicar en # canales}}",
+      "recordWithoutPublishing": "Grabar sin publicar",
+      "recordWithoutPublishingHint": "Sin canales marcados, el video se graba completo y queda listo en Biblioteca para publicarlo cuando quieras.",
       "formatsLabel": "Formatos",
-      "formatsHint": "Cada formato es una grabación aparte (marcar los dos tarda el doble). Al publicar en TikTok se graba 9:16 aunque no esté marcado."
+      "formatsHint": "Para publicar, cada cuenta elige uno de estos formatos. Para una grabación sin publicar, aplican al video completo.",
+      "package": {
+        "beforePublishing": "Antes de publicar",
+        "ready": "Paquete listo: cumple todas las reglas de las estrategias.",
+        "titles": "Títulos para Test & Compare",
+        "titlesHint": "Cargá los 3 en YouTube Studio: YouTube elige el ganador por tiempo de visualización.",
+        "chosen": "En uso",
+        "strategy": "{number} · {name}",
+        "chars": "{count}/{max}",
+        "thumbnails": "Miniatura y apertura del video",
+        "textOnly": "A · Solo texto",
+        "withImage": "B · Texto + imagen",
+        "pair": "Pareja: título {option}",
+        "imagePending": "Imagen pendiente",
+        "previewOption": "Ver miniatura {option}",
+        "previewHint": "Tocá una miniatura para verla en el reproductor.",
+        "pinnedComment": "Comentario fijado",
+        "thumbnailsHint": "La elegida abre el video (primeros segundos) y es la miniatura de YouTube; en TikTok y Reels hace de título. Se elige en «Grabar y publicar»."
+      },
+      "thumbnail": {
+        "heading": "Miniatura y apertura",
+        "hint": "La elegida abre el video y es la miniatura de YouTube. Si la cambias, el video se vuelve a grabar con la nueva apertura.",
+        "capture": "Capturar",
+        "recapture": "Capturar de nuevo",
+        "notCaptured": "Sin capturar",
+        "option": {
+          "A": "A · solo texto",
+          "B": "B · texto e imagen"
+        }
+      },
+      "autoVerticalNotice": "Instagram o TikTok requiere 9:16. Se grabará además del formato marcado.",
+      "autoVerticalResult": "9:16 se añadió para Instagram o TikTok.",
+      "otherChannels": "Otros",
+      "noFormatForAccount": "Esta cuenta no publica en los formatos marcados en «Grabar».",
+      "perFormatHint": "Cada cuenta publica en un solo formato. Solo aparecen los formatos marcados en «Grabar»."
+    },
+    "tray": {
+      "starting": "Iniciando grabación…",
+      "unavailable": "Estado no disponible; revisá Biblioteca.",
+      "dismiss": "Quitar de la lista",
+      "viewLibrary": "Ver video en Biblioteca",
+      "finished": "Grabación terminada"
     }
   }
 }

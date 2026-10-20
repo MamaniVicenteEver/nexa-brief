@@ -9,10 +9,10 @@ from __future__ import annotations
 import json
 
 from src.core.metadata.language import ContentLanguage
-from src.core.metadata.strategies import CopyStrategy, FieldSpec, Platform, load_voice
+from src.core.metadata.strategies import PLATFORMS, CopyStrategy, FieldSpec, Platform, load_voice
 
 _LANGUAGE_NAMES: dict[ContentLanguage, str] = {"es": "español", "en": "inglés (English)"}
-_PLATFORM_NAMES: dict[str, str] = {"youtube": "YOUTUBE", "tiktok": "TIKTOK", "facebook": "FACEBOOK"}
+_PLATFORM_NAMES: dict[str, str] = {platform: platform.upper() for platform in PLATFORMS}
 
 _SYSTEM = """\
 {voice}
@@ -24,11 +24,12 @@ Respondes ÚNICAMENTE con un objeto JSON válido, sin texto antes ni después y 
 _USER = """\
 IDIOMA OBLIGATORIO: {language_name} (código "{language}"). Todo lo que escribas va en ese idioma.
 
-DATOS DE LA CANCIÓN (son los únicos hechos conocidos):
+DATOS DEL VIDEO (son los únicos hechos conocidos):
 {facts}
 
 QUÉ TIENES QUE ESCRIBIR
-Los ejemplos de abajo son de OTRAS canciones: úsalos como modelo de estilo y de largo, nunca los copies ni los adaptes palabra por palabra. Todo tiene que salir de esta canción.
+Los ejemplos de abajo son de OTROS videos: úsalos como modelo de estilo y de largo, nunca los copies ni los adaptes palabra por palabra. Todo tiene que salir de este video.
+Nunca escribas "plantilla" ni el nombre del diseño o del estilo visual: es "este video" o "este diseño".
 
 Primero identifica la canción (sirve para todas las plataformas):
 - artist: nombre del artista, limpio. null si no se conoce con seguridad.
@@ -73,7 +74,7 @@ def _skeleton(strategies: dict[Platform, CopyStrategy]) -> str:
 
 
 def build_copy_prompt(
-    strategies: dict[Platform, CopyStrategy], facts: str, language: ContentLanguage
+    strategies: dict[Platform, CopyStrategy], facts: str, language: ContentLanguage, profile: str | None = None
 ) -> tuple[str, str]:
     """Returns (system, user) prompts."""
     sections = []
@@ -81,7 +82,7 @@ def build_copy_prompt(
         fields = "\n".join(_describe_field(n, s, language) for n, s in strategy.fields.items())
         sections.append(f"{_PLATFORM_NAMES[platform]} — {strategy.name}\n{strategy.description}\n{fields}")
 
-    system = _SYSTEM.format(voice=load_voice().strip())
+    system = _SYSTEM.format(voice=load_voice(profile).strip())
     user = _USER.format(
         language_name=_LANGUAGE_NAMES[language],
         language=language,

@@ -37,8 +37,10 @@ class TemplateMediaSlot(BaseModel):
     min: int = 1
     max: int = 1
     orientation: Literal["landscape", "portrait", "square"] | None = None
-    # "source" = va como imagen/video de fondo del job; "media" = reemplaza config.media.
-    target: Literal["source", "media"] = "source"
+    # "source" = va como imagen/video de fondo del job; "media" = reemplaza config.media;
+    # "config" = el archivo se escribe en la ruta `path` del config (fondo opcional).
+    target: Literal["source", "media", "config"] = "source"
+    path: str | None = None
     label: str
     hint: str = ""
 

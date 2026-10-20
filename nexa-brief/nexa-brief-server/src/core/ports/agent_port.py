@@ -10,7 +10,7 @@ máquina donde vive el servidor; más adelante se agregan agentes por API
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -42,6 +42,10 @@ class AgentRunResult:
     last_message: str      # respuesta final del agente (o la cola de la salida)
     duration_seconds: float
     timed_out: bool = False
+    # Uso informado por el CLI: input_tokens, cached_input_tokens, output_tokens, reasoning_tokens
+    # (y cost_usd si el proveedor lo da). Vacío si el CLI no lo informó.
+    usage: dict = field(default_factory=dict)
+    model: str = ""
 
     @property
     def ok(self) -> bool:

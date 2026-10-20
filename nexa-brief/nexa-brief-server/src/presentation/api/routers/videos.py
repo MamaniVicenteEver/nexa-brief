@@ -15,7 +15,7 @@ from src.adapters.recorder.infrastructure import hyperframes_adapter, remotion_a
 from src.config.exceptions import AssetNotFoundError
 from src.config.niche_config import NicheConfig, get_niche_config
 from src.config.settings import settings
-from src.core import history_tracker, job_tracker, notification_tracker
+from src.core import history_tracker, job_technical, job_tracker, notification_tracker
 from src.core.history import HistoryEvent
 from src.core.job import (
     AssetSourceType,
@@ -44,6 +44,7 @@ from src.presentation.api.schemas.video_schema import (
     JobDetailResponse,
     JobListItem,
     JobListResponse,
+    JobTechnicalResponse,
     VideoGenerationRequest,
 )
 
@@ -152,10 +153,10 @@ async def _validate_publishing(publishing: JobPublishingConfig) -> None:
                 detail=f"Invalid account format: '{account}'. Expected 'platform:alias'.",
             )
         platform, alias = account.split(":", 1)
-        if platform not in ["youtube", "facebook", "tiktok"]:
+        if platform not in ["youtube", "facebook", "tiktok", "instagram"]:
             raise HTTPException(
                 status_code=400,
-                detail=f"Unsupported platform: '{platform}'. Supported: youtube, facebook, tiktok.",
+                detail=f"Unsupported platform: '{platform}'. Supported: youtube, facebook, tiktok, instagram.",
             )
 
         try:
@@ -430,6 +431,16 @@ async def list_job_publications(job_id: str) -> list[video_deletion.Publication]
     return video_deletion.list_job_publications(job_id)
 
 
+@router.get("/videos/jobs/{job_id}/technical", response_model=JobTechnicalResponse)
+async def get_job_technical(job_id: str) -> JobTechnicalResponse:
+    """Ficha técnica del video (motor, tiempos, ffprobe de cada archivo) — pestaña
+    "Info técnica" del reproductor de Biblioteca. Lo desconocido viene en null."""
+    record = job_tracker.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found")
+    return JobTechnicalResponse(**await job_technical.build_technical(record))
+
+
 @router.delete("/videos/jobs/{job_id}", response_model=video_deletion.JobDeletion)
 async def delete_job(job_id: str, remote: bool = False) -> video_deletion.JobDeletion:
     """Elimina el video de Biblioteca (archivos + registros locales).
@@ -445,6 +456,25 @@ async def delete_job(job_id: str, remote: bool = False) -> video_deletion.JobDel
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
+def _resolve_job_output_file(stored_path: str) -> Path:
+    """Rebase a persisted absolute output path when jobs came from another host."""
+    path = Path(stored_path)
+    if path.is_file():
+        return path
+
+    output_root = Path(settings.output_dir).resolve()
+    # Older job records may contain e.g. /home/<other-host>/.../output/<relative file>.
+    # Reuse only a real file under this server's configured output directory.
+    for index in reversed([i for i, part in enumerate(path.parts) if part == "output"]):
+        suffix = path.parts[index + 1 :]
+        if not suffix or ".." in suffix:
+            continue
+        candidate = (output_root / Path(*suffix)).resolve()
+        if candidate.is_relative_to(output_root) and candidate.is_file():
+            return candidate
+    return path
+
+
 @router.get("/videos/jobs/{job_id}/file/{format}")
 async def get_job_file(job_id: str, format: str, request: Request) -> Response:
     if format not in job_tracker.FILE_FORMATS:
@@ -455,15 +485,48 @@ async def get_job_file(job_id: str, format: str, request: Request) -> Response:
     record = job_tracker.get(job_id)
     if record is None:
         raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found")
-    file_path_str = record.get("file_paths", {}).get(format)
+    file_paths = record.get("file_paths", {})
+    file_path_str = file_paths.get(format)
+    if not file_path_str and format == "reels" and record.get("source") == "explainer":
+        file_path_str = file_paths.get("instagram")
+    if format == "thumbnail" and (not file_path_str or not _resolve_job_output_file(file_path_str).is_file()):
+        # Videos grabados antes de la miniatura automática: se saca ahora del final de su intro.
+        from src.modules.thumbnail_maker import ensure_for_job
+
+        resolved = {k: str(_resolve_job_output_file(v)) for k, v in file_paths.items() if v}
+        made = await ensure_for_job(resolved)
+        file_path_str = str(made) if made else None
     if not file_path_str:
         raise HTTPException(
             status_code=404,
             detail=f"File not ready for job '{job_id}' (stage={record['stage']}).",
         )
-    path = Path(file_path_str)
-    if not path.exists():
+    path = _resolve_job_output_file(file_path_str)
+    if not path.is_file():
         raise HTTPException(status_code=404, detail="File no longer exists on disk.")
 
     media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
-    return serve_file_with_range(path, request.headers.get("range"), media_type)
+    response = serve_file_with_range(
+        path,
+        request.headers.get("range"),
+        media_type,
+        if_none_match=request.headers.get("if-none-match"),
+        if_modified_since=request.headers.get("if-modified-since"),
+        if_range=request.headers.get("if-range"),
+        # Job IDs and output formats are stable, so the browser can reuse these MP4 bytes.
+        cache_control="private, max-age=3600, immutable",
+    )
+    if request.query_params.get("download"):
+        # ?download=1 → se guarda como archivo (botones «Descargar» de Biblioteca)
+        response.headers["Content-Disposition"] = f'attachment; filename="{_download_name(record, format, path)}"'
+    return response
+
+
+def _download_name(record: dict, format: str, path: Path) -> str:
+    import re
+    import unicodedata
+
+    title = unicodedata.normalize("NFKD", str(record.get("title") or record["job_id"])).encode("ascii", "ignore").decode()
+    slug = re.sub(r"[^a-zA-Z0-9]+", "-", title).strip("-").lower()[:60] or record["job_id"]
+    suffix = {"reels": "-9x16", "youtube": "-16x9", "tiktok": "-tiktok", "thumbnail": "-miniatura"}.get(format, "")
+    return f"{slug}{suffix}{path.suffix.lower()}"

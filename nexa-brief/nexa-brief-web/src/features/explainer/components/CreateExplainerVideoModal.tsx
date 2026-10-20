@@ -59,6 +59,9 @@ export function CreateExplainerVideoModal({
   const [autoRecord, setAutoRecord] = useState(false);
   const [brief, setBrief] = useState<ExplainerBrief | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  // duración: un preset (5 · 10 · 15 · 30) o "custom" con minutos a mano (lengths.json)
+  const [lengthChoice, setLengthChoice] = useState<string>("");
+  const [customMinutes, setCustomMinutes] = useState(45);
 
   const designs = designGroups.flatMap((g) => g.designs);
   const selectedDesign = designs.find((d) => d.designId === design) ?? designs[0] ?? null;
@@ -68,6 +71,12 @@ export function CreateExplainerVideoModal({
     options?.textProviders.find((p) => p.name === name)?.available ?? true;
   const agentAvailable = (name: string) =>
     options?.agents.find((a) => a.name === name)?.available ?? true;
+  const lengths = options?.lengths;
+  const lengthValue = lengthChoice || String(lengths?.defaultMinutes ?? 10);
+  const minutes =
+    lengthValue === "custom"
+      ? Math.min(lengths?.maxMinutes ?? 60, Math.max(lengths?.minMinutes ?? 5, customMinutes))
+      : Number(lengthValue);
 
   const busy = briefMutation.isPending || productionMutation.isPending;
   const topicOk = topic.trim().length >= 3;
@@ -92,6 +101,7 @@ export function CreateExplainerVideoModal({
         design: selectedDesign?.designId,
         provider: selectedProvider,
         mediaNames: files.map((f) => f.name),
+        minutes,
       },
       { onSuccess: (result) => setBrief(result) },
     );
@@ -109,6 +119,7 @@ export function CreateExplainerVideoModal({
         brief,
         autoRecord,
         files,
+        minutes,
       },
       {
         onSuccess: (production) => {
@@ -276,6 +287,42 @@ export function CreateExplainerVideoModal({
               ) : (
                 <p className="text-[11.5px] text-nb-mute">{t("fields.mediaHint")}</p>
               )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className={LABEL_CLASS}>{t("fields.length")}</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <select
+                  aria-label={t("fields.length")}
+                  value={lengthValue}
+                  onChange={(e) => {
+                    setLengthChoice(e.target.value);
+                    setBrief(null);
+                  }}
+                  disabled={busy}
+                  className={INPUT_CLASS}
+                >
+                  {(lengths?.presets ?? []).map((preset) => (
+                    <option key={preset.id} value={String(preset.minutes)}>
+                      {t("fields.lengthOption", { minutes: preset.minutes, label: preset.label })}
+                    </option>
+                  ))}
+                  <option value="custom">{t("fields.lengthCustom")}</option>
+                </select>
+                {lengthValue === "custom" && (
+                  <input
+                    type="number"
+                    aria-label={t("fields.lengthMinutes")}
+                    min={lengths?.minMinutes ?? 5}
+                    max={lengths?.maxMinutes ?? 60}
+                    value={customMinutes}
+                    onChange={(e) => setCustomMinutes(Number(e.target.value))}
+                    disabled={busy}
+                    className={`${INPUT_CLASS} w-24`}
+                  />
+                )}
+              </div>
+              <p className="text-[11.5px] text-nb-mute">{t("fields.lengthHint")}</p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">

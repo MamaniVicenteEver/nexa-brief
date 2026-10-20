@@ -41,3 +41,5 @@ client_secret*.json
 !src/adapters/data/
 !src/skills/output/
 !src/templates/_tools/*/build/
+# cierre con voz del canal: parte del kit (no se genera por video), tiene que viajar con el repo
+!src/templates/_tools/explainer-kit/outro/voices/*.mp3

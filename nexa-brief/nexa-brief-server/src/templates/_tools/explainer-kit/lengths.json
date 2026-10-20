@@ -1,0 +1,38 @@
+{
+  "_doc": "Duración objetivo de los videos. Fuente única: la leen kit.py (new, status, check, voice), los guides, el backend (brief y producción) y la web. Cambiar acá cambia todo. Rangos [mínimo, máximo]; los valores 'per_minute' se multiplican por los minutos objetivo; las palabras salen de voice.target_wpm del diseño.",
+  "min_minutes": 5,
+  "default_minutes": 10,
+  "max_minutes": 60,
+  "presets": [
+    { "minutes": 5, "id": "corto", "label": "Corto" },
+    { "minutes": 10, "id": "normal", "label": "Normal" },
+    { "minutes": 15, "id": "serio", "label": "Serio" },
+    { "minutes": 30, "id": "largo", "label": "Largo" }
+  ],
+  "words_margin": [0.95, 1.08],
+  "per_minute": {
+    "segments": [3.0, 4.5],
+    "photos": [0.8, 1.6],
+    "lyrics": [0.6, 1.0],
+    "beats": [11, 17]
+  },
+  "chapter_seconds": [75, 150],
+  "domain_components": [
+    { "from_minutes": 5, "min": 1 },
+    { "from_minutes": 10, "min": 2 },
+    { "from_minutes": 15, "min": 3 },
+    { "from_minutes": 30, "min": 4 }
+  ],
+  "voice_words_per_request": 650,
+  "agent_minutes": { "base": 60, "per_video_minute": 10 },
+  "legacy": {
+    "_doc": "Videos sin target_minutes en script.json (los cortos de 3–4,5 min hechos antes de 2026-10-12).",
+    "words": [420, 560],
+    "segments": [14, 20],
+    "photos": [5, 9],
+    "lyrics": [4, 6],
+    "beats": [15, 80],
+    "chapters": [0, 0],
+    "domain_components": 0
+  }
+}

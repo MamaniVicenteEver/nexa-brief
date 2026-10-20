@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { httpClient } from "@/infrastructure/api/http-client";
 import {
+  captureThumbnails,
+  chooseThumbnail,
   createProduction,
   generateBrief,
   generatePublishTexts,
@@ -14,6 +16,7 @@ import {
   recordExplainerVideo,
   resumeProduction,
 } from "../api/explainer-service";
+import { useRecordingTrayStore } from "../store/recording-tray-store";
 import {
   ACTIVE_JOB_STATES,
   ACTIVE_PRODUCTION_STATES,
@@ -23,6 +26,7 @@ import {
   type Production,
   type RecordExplainerInput,
   type TextProvider,
+  type ThumbnailOptionId,
 } from "../types";
 
 const POLL_MS = 5_000;
@@ -48,6 +52,34 @@ export function useRecordExplainerVideo() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: RecordExplainerInput) => recordExplainerVideo(input),
+    onSuccess: (job, input) => {
+      const cached = queryClient.getQueriesData<ExplainerVideo[]>({ queryKey: VIDEOS_KEY });
+      const video = cached
+        .flatMap(([, videos]) => videos ?? [])
+        .find((item) => item.videoId === input.videoId);
+      useRecordingTrayStore.getState().addRecording({
+        jobId: job.jobId,
+        videoId: job.videoId,
+        title: video?.youtubeTitle || video?.title || input.videoId,
+      });
+      queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
+    },
+  });
+}
+
+export function useCaptureThumbnails() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (videoId: string) => captureThumbnails(videoId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: VIDEOS_KEY }),
+  });
+}
+
+export function useChooseThumbnail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { videoId: string; option: ThumbnailOptionId }) =>
+      chooseThumbnail(input.videoId, input.option),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: VIDEOS_KEY }),
   });
 }
@@ -163,15 +195,18 @@ export function useResumeProduction() {
 export interface PublishAccount {
   selector: string;
   label: string;
+  platform: string;
+  group: string;
 }
 
 interface AccountDto {
   platform: string;
   alias: string;
   name: string;
+  label?: string;
 }
 
-const PUBLISHABLE = ["youtube", "tiktok", "facebook"];
+const PUBLISHABLE = ["youtube", "tiktok", "facebook", "instagram"];
 
 export function usePublishAccounts() {
   return useQuery({
@@ -181,8 +216,10 @@ export function usePublishAccounts() {
       return dtos
         .filter((dto) => PUBLISHABLE.includes(dto.platform))
         .map((dto) => ({
-          selector: `${dto.platform}:${dto.alias}`,
-          label: `${dto.platform} · ${dto.name || dto.alias}`,
+          selector: dto.platform + ":" + dto.alias,
+          label: dto.platform + " · " + (dto.name || dto.alias),
+          platform: dto.platform,
+          group: dto.name?.trim() || dto.label?.trim() || dto.alias,
         }));
     },
     staleTime: 60_000,

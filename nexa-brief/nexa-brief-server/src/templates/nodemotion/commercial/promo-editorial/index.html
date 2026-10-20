@@ -825,6 +825,8 @@
 
   body.headless #hint { display: none !important; }
 </style>
+
+
 </head>
 <body>
 <div id="stage"></div>
@@ -1111,11 +1113,14 @@ async function loadScript() {
     const F = C.lyricsFilter || {}, drop = (F.drop || []).map(x => new RegExp(x, "i"));
     const bad = s => (F.minLogprob != null && s.avg_logprob != null && s.avg_logprob < F.minLogprob) ||
                      drop.some(re => re.test(s.text || ""));
-    return (j.segments || []).filter(s => !bad(s)).map(s => {
+    const out = (j.segments || []).filter(s => !bad(s)).map(s => {
       let words = (s.words || []).map(w => ({ text: String(w.word).trim(), t: w.start, end: w.end })).filter(w => w.text);
       if (!words.length && s.text) words = s.text.trim().split(/\s+/).map(x => ({ text: x, t: s.start, end: s.end }));
       return { start: s.start, end: s.end, text: (s.text || "").trim(), lines: s.lines, sub: s.sub, words };
     }).filter(s => isFinite(s.start)).sort((a, b) => a.start - b.start);
+    /* Audio puede tardar en entregar loadedmetadata; usa la duración ya anotada en lyrics.json. */
+    out.audioDurationSec = Number(j.metadata?.audio_duration_sec) || 0;
+    return out;
   } catch (e) {
     console.warn(`[${NAME}] No se pudo cargar`, C.lyricsUrl, e);
     return [];
@@ -1197,7 +1202,9 @@ function lyricTimeline(segs, dur, FITS) {
   const syn = (texts, t0) => texts.filter(Boolean).map((x, i) => ({ text: x, t: t0 + 0.25 + i * 0.45 + Tm.leadSec }));
   const I = C.intro || {}, O = C.outro || {};
   const first = ph.length ? Math.max(0, ph[0][0].t - Tm.leadSec) : dur;
-  if (first >= 1.2 && (I.title || I.artist)) list.push(mk("intro", 0, first, syn([I.title, I.artist], 0), { type: I.type || "intro" }));
+  const introTitle = window.NexaTemplateIntro?.title?.(I) || I.title || I.artist;
+  const introMin = window.NexaTemplateIntro?.minDuration?.() ?? 1.2;
+  if (first >= introMin && introTitle) list.push(mk("intro", 0, first, window.NexaTemplateIntro?.words ? window.NexaTemplateIntro.words(introTitle, 0, Tm.leadSec) : syn([introTitle], 0), { type: I.type || "intro" }));
   const heroes = [], hist = [];
   ph.forEach((ws, i) => {
     const t0 = i === 0 && !list.length ? 0 : Math.max(0, ws[0].t - Tm.leadSec);
@@ -1208,7 +1215,10 @@ function lyricTimeline(segs, dur, FITS) {
     if (t1 - lastEnd > Tm.gapSec) { gap = [lastEnd + Tm.holdSec, t1]; t1 = gap[0]; }
     const ly = mk("lyric", t0, t1, ws);
     list.push(ly);
-    if (!gap && !nx && O.enabled !== false && (O.title || O.sub) && dur - lastEnd > 1.2) gap = [Math.max(t0 + 0.6, lastEnd + 0.3), dur];
+    const minOutroTail = Number.isFinite(Number(O.minTailSec)) ? Math.max(0, Number(O.minTailSec)) : 1.2;
+    const outroBuffer = Number.isFinite(Number(O.tailBufferSec)) ? Math.max(0, Number(O.tailBufferSec)) : 0.3;
+    if (!gap && !nx && O.enabled !== false && (O.title || O.sub) && dur - lastEnd > minOutroTail)
+      gap = [Math.max(t0 + 0.6, lastEnd + outroBuffer), dur];
     if (!gap) return;
     ly.t1 = gap[0];
     /* tramo final: el cierre ocupa los últimos outro.sec segundos; antes, ecos */
@@ -1354,13 +1364,14 @@ function pickTrans(X) {
 }
 
 /* ---------------- media (video / imagen) ---------------- */
-/* Los videos (y el audio) se bajan enteros como blob al arrancar: el servidor
-   del grabador (SimpleHTTPRequestHandler) no soporta Range, y sin eso Chrome
-   tarda en tener datos y no puede buscar (el video se queda en 0 s). Con blob
-   la búsqueda por tiempo es instantánea. config.preload=false lo desactiva. */
+/* En la captura cuadro a cuadro los medios se bajan como blob porque el
+   servidor del grabador no admite Range. En la vista previa normal el navegador
+   transmite solo el clip activo y usa su poster mientras carga, sin bloquear el
+   resto de la página con variantes que aún no se muestran. config.preload=false
+   también permite desactivar la precarga durante captura. */
 const BLOBS = new Map();
 async function preloadMedia(timeoutMs = 8000) {
-  if (C.preload === false) return;
+  if (C.preload === false || window.__HF_RENDER_CAPTURE_MODE !== true) return;
   const srcs = new Set([C.audio?.src].filter(Boolean));
   for (const m of C.media || []) if (m.type === "video") {
     srcs.add(m.src);
@@ -1395,6 +1406,7 @@ function mbox(X, parent, k, css = {}, o = {}) {
   if (spec.type === "video") {
     el = doc.createElement("video");
     el.muted = true; el.playsInline = true; el.preload = "auto"; el.loop = true;
+    if (spec.poster) el.poster = encodeURI(spec.poster);
     el.src = srcURL(spec.src);
     X.videos.push({ v: el, spec, off: o.off || 0 });
   } else { el = doc.createElement("img"); el.src = spec.src; el.decoding = "sync"; }
@@ -1441,6 +1453,18 @@ function buildScene(sc) {
   X.pend = [];
   try { B[sc.type](sc, X); }
   catch (e) { console.warn(`[${NAME}] escena falló`, sc.type, e); }
+  if (sc.kind !== "intro" && sc.t0 === 0 && window.NexaTemplateIntro?.title) {
+    const title = window.NexaTemplateIntro.title(C.intro || {});
+    if (title) {
+      const L = div(root, "lay", { zIndex: 50, pointerEvents: "none" });
+      const baseFs = Math.min(0.17 * H, fit(title, ser, 0.04, 0.88 * W, 0.17 * H));
+      const titleFs = Math.min(baseFs * 1.45, fit(title, ser, 0.04, 0.94 * W, 0.25 * H));
+      const heading = word(X, L, title, { cls: ser, fs: titleFs, x: W / 2, y: 0.5 * H, color: P.bone, ls: 0.04 });
+      heading.el.style.whiteSpace = "nowrap";
+      heading.el.style.textShadow = "0 0 18px rgba(255,125,55,0.42)";
+      X.T(heading.el, "opacity", "0").to(0.02, 0.3, "1", EASE_OUT).to(1.05, 0.35, "0", EASE_IN);
+    }
+  }
   /* piezas que necesitan medir el texto ya maquetado (garabatos, marcos):
      se monta la escena oculta un instante, se mide y se desmonta */
   if (X.pend.length) {
@@ -1521,9 +1545,11 @@ async function boot() {
   if (DEBUG) hud.style.display = "block";
   if (QS.get("headless") === "1") doc.body.classList.add("headless");
   const fontsReady = Promise.race([Promise.all(FONT_LOADS.map(f => doc.fonts.load(f))).then(() => doc.fonts.ready), new Promise(r => __nbSetTimeout(r, 3000))]);
-  /* primero media + guion + fuentes; el audio (el reloj) arranca recién con
-     todo listo, así el primer cuadro de la escena 1 coincide con t = 0 */
-  const [segs] = await Promise.all([loadScript(), fontsReady, preloadMedia()]);
+  /* carga primero letra y fuentes: los clips pueden ser pesados y no deben
+     ocupar las conexiones que necesita la línea de tiempo. Después se precarga
+     media antes de arrancar el reloj, con el límite definido por preloadMedia. */
+  const [segs] = await Promise.all([loadScript(), fontsReady]);
+  await preloadMedia();
   audio.src = srcURL(C.audio.src);
   const aDur = await new Promise(res => {
     if (isFinite(audio.duration) && audio.duration > 0) return res(audio.duration);
@@ -1532,7 +1558,7 @@ async function boot() {
   });
   if (segs.length) {
     const last = segs[segs.length - 1];
-    const dur = isFinite(aDur) && aDur > 0 ? aDur : (last.end || last.start + 3);
+    const dur = isFinite(aDur) && aDur > 0 ? aDur : (segs.audioDurationSec || last.end || last.start + 3);
     measCache.clear();
     /* una plantilla puede traer su propia línea de tiempo (las de letra de canción) */
     scenes = (typeof makeTimeline === "function" ? makeTimeline : buildTimeline)(segs, dur);

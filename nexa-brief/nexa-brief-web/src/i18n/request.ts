@@ -6,7 +6,7 @@ import { routing } from "./routing";
  * (ej. `{ "resources": {...} }`) y se mezclan encima del base. Así cada
  * feature edita solo su archivo. Para agregar uno: crearlo en ambos idiomas y
  * sumarlo a FEATURE_NAMESPACES. */
-const FEATURE_NAMESPACES = ["resources", "studio", "createFlow"] as const;
+const FEATURE_NAMESPACES = ["resources", "studio", "createFlow", "legal"] as const;
 
 type Messages = Record<string, unknown>;
 

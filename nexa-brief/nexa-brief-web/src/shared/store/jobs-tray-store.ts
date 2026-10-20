@@ -8,6 +8,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 export interface TrackedJob {
   jobId: string;
   category: string;
+  /** Nombre a mostrar (p. ej. «Lyrics Mixtas · Prototipo 2»); sin esto, el del nicho. */
+  label?: string;
 }
 
 const MAX_TRACKED_JOBS = 20;

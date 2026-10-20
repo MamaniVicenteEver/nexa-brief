@@ -5,7 +5,8 @@ Herramienta: `tools/media.py` (busca, filtra licencias, baja, recodifica y anota
 
 ## 1. Cuántas y cuáles
 
-- **5–9 fotos por video** (una cada ~25–35 s como máximo). El resto del video lo dibujan los componentes.
+- **Fotos según la duración** (`kit.py status`; 4–8 en 5 min, 8–16 en 10, 24–48 en 30): como máximo
+  una cada ~25–35 s. El resto del video lo dibujan los componentes.
 - Se usan para lo que un dibujo NO puede decir: **la cara del protagonista**, **el lugar real**,
   **el objeto real** y **el documento real**. Para conceptos (una idea, un número) va un componente.
 - Orden de prioridad: 1) protagonista (retrato), 2) el lugar/objeto del punto crítico, 3) el

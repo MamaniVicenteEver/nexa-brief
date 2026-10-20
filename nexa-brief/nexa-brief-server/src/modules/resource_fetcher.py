@@ -151,6 +151,8 @@ async def run(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
     # resultado sobreescribe analyzed_input.duration_seconds (lo que
     # video_recorder / packager / result_summarizer usan río abajo), no
     # job.input.duration_seconds (que es inmutable, solo el valor de entrada).
+    await _add_outro_tail(job, niche_cfg, music_result.path, output_dir)
+
     analyzed_input = job.artifacts.analyzed_input
     if job.input.duration_config is not None:
         resolved_seconds = await _resolve_duration_seconds(job, music_result.path, logs_dir)
@@ -188,6 +190,46 @@ async def run(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
         }
     )
     return job.model_copy(update={"artifacts": artifacts}).advance(JobStage.RESOURCES_FETCHED)
+
+
+DEFAULT_OUTRO_TAIL_SECONDS = 4.0
+
+
+def _outro_tail_seconds(niche_cfg: NicheConfig) -> float:
+    if niche_cfg.video.outro_tail_seconds is not None:
+        return niche_cfg.video.outro_tail_seconds
+    template = niche_cfg.template
+    if template is None or not template.template_id:
+        return 0.0
+    from src.config.template_manifest import get_template_runtime_assets
+
+    try:
+        has_outro = any(p.name == "outro.js" for p in get_template_runtime_assets(template.template_id))
+    except Exception:
+        has_outro = False
+    return DEFAULT_OUTRO_TAIL_SECONDS if has_outro else 0.0
+
+
+async def _add_outro_tail(job: Job, niche_cfg: NicheConfig, music_path: Path, output_dir: Path) -> None:
+    """Silencio al final de la canción del job para que la salida de la plantilla tenga tiempo:
+    sin esto arranca con la última palabra y se ve menos de un segundo (o el cierre queda en negro).
+    Solo toca la copia del job (output_dir/song.mp3), nunca el archivo de la librería."""
+    tail = _outro_tail_seconds(niche_cfg)
+    if tail <= 0 or music_path.parent.resolve() != output_dir.resolve():
+        return
+    padded = music_path.with_name("song.tail.mp3")
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-v", "error", "-i", str(music_path), "-af", f"apad=pad_dur={tail}",
+        "-c:a", "libmp3lame", "-q:a", "2", str(padded),
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+    )
+    _, stderr = await proc.communicate()
+    if proc.returncode != 0:
+        logger.warning("outro_tail_failed", job_id=job.job_id, error=stderr.decode()[-300:])
+        padded.unlink(missing_ok=True)
+        return
+    padded.replace(music_path)
+    logger.info("outro_tail_added", job_id=job.job_id, seconds=tail)
 
 
 async def _get_audio_duration_seconds(path: Path) -> float:

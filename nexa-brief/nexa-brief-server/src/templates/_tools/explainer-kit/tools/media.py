@@ -52,7 +52,7 @@ def commons_info(titles):
     return out
 
 def pexels_key():
-    for f in [SERVER / ".env", pathlib.Path("/home/university/Documentos/Proyectos/nexa-brief/nexa-explainer/nexa-explainer-server/.env")]:
+    for f in [SERVER / ".env", SERVER.parents[1] / "nexa-explainer" / "nexa-explainer-server" / ".env"]:
         if f.exists():
             for l in f.read_text().splitlines():
                 if l.startswith("PEXELS_API_KEY="): return l.split("=", 1)[1].strip().strip('"')

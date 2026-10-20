@@ -60,6 +60,10 @@ class TokenManager:
 
     # ── Public API ────────────────────────────────────────────────────────────
 
+    def target_id(self, platform: str, alias: str) -> str:
+        """Id de la cuenta en su plataforma (canal, página o usuario IG); '' si no hay."""
+        return self._storage.get_state(platform, alias).target_id
+
     async def get_valid_token(self, platform: str, alias: str) -> str:
         """Return a valid, decrypted access token.
 
@@ -167,6 +171,8 @@ class TokenManager:
         elif platform == "youtube":
             await self._refresh_youtube(alias, state)
         elif platform == "facebook":
+            await self._refresh_facebook(alias, state)
+        elif platform == "instagram":
             await self._refresh_facebook(alias, state)
         else:
             raise TokenRefreshError(f"Unknown platform: {platform}")

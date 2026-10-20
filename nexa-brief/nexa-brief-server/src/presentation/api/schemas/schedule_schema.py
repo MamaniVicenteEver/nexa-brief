@@ -8,6 +8,8 @@ separation already used by `library_schema.py` vs `asset_library.py`.
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from src.core.schedule.models import QueueSource, QueueStatus
@@ -16,7 +18,7 @@ from src.core.schedule.models import QueueSource, QueueStatus
 # ── Slots ─────────────────────────────────────────────────────────────────────
 
 class ScheduleSlotCreateRequest(BaseModel):
-    platform: str = Field(..., description="'tiktok' | 'youtube' | 'facebook'")
+    platform: str = Field(..., description="'tiktok' | 'youtube' | 'facebook' | 'instagram'")
     account_alias: str = Field(..., description="Alias en accounts.json, e.g. 'cuenta_1'")
     days: list[int] = Field(default_factory=list, description="0=lunes..6=domingo (datetime.weekday())")
     times: list[str] = Field(default_factory=list, description='["09:00", "21:00"], 24h, UTC')
@@ -75,6 +77,8 @@ class PublishNowRequest(BaseModel):
     job_id: str
     platform: str
     account_alias: str
+    # Archivo a subir; None = el que corresponde a la plataforma (ver engine.publish_entry).
+    format: Literal["16x9", "9x16"] | None = None
 
 
 class QueueEntryResponse(BaseModel):
@@ -82,6 +86,7 @@ class QueueEntryResponse(BaseModel):
     job_id: str
     platform: str
     account_alias: str
+    format: str | None = None
     slot_id: str | None
     scheduled_at: str | None
     source: QueueSource

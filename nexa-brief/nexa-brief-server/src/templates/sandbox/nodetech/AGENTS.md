@@ -19,7 +19,11 @@
 - **Ejemplos**: "Cómo la IA pasó de no resolver nada a quitarte el trabajo" · "Así se hizo tan potente la IA (y casi nadie lo vio venir)" · "El verano de 1956 en que alguien le puso nombre a la inteligencia artificial" · "El número que no cabía: el error de 7 mil millones del Ariane 5".
 - **Temas sugeridos**: cómo nació la IA ✓ (hecho), Deep Blue contra Kasparov, cómo nació internet, el error del año 2000, el primer iPhone y la caída de Nokia, de dónde salió ChatGPT, el Apolo 11 y la alarma 1202 ✓ (hecho), el bug del Ariane 5 ✓ (hecho).
 - **Hashtags**: `#tecnologia #inteligenciaartificial #historiadelatecnologia #ia #documental`.
-- **Reglas**: título provocador pero verdadero; lo clave en 40 caracteres; sin mayúsculas sostenidas ni emojis de relleno (máx. 1 en TikTok); toda cifra del texto está en el guion.
+- **Reglas**: título provocador pero verdadero; lo clave en 40 caracteres; sin mayúsculas sostenidas y sin emojis (en ningún texto); toda cifra del texto está en el guion.
+- **Línea de actualidad (2026-10-15)**: además de historia de la tecnología, temas de HOY con título
+  alarmista y verdadero (estilo "¿Murió el software?", "¿Se acabó la PC barata?"), 9–14 min, datos de los
+  últimos 12 meses con fecha y fuente, imágenes actuales con licencia. El video contesta la pregunta del
+  título con datos. Reglas y equipo: `../../_tools/explainer-kit/guides/orquestacion.md §5`.
 
 ## 2. Diseños
 
@@ -42,6 +46,8 @@ Sin diseño propio nuevo todavía. Referencia visual del laboratorio rough.js: `
 | La partida en que Deep Blue ganó (1997) | rumores de lanzamientos, reseñas de productos, comparativas de precios |
 
 Evitá: producto actual en clave publicitaria, predicciones sin fuente, "la IA te va a reemplazar" sin datos.
+Sí vale un tema de actualidad si tiene un punto crítico con datos (la decisión de las fábricas de memoria
+de pasarse a la IA, no "los mejores kits de RAM").
 El puente al presente sí va (segunda persona: "el celular que tienes en la mano").
 
 ## 4. Dónde investigar

@@ -14,7 +14,7 @@ from src.core.metadata import (
     normalize_language,
     pick_from_probabilities,
 )
-from src.core.metadata.sanitize import clean_hashtags, clean_tags, clean_title, strip_emojis
+from src.core.metadata.sanitize import clean_hashtags, clean_tags, clean_title, strip_emojis, youtube_tags_length
 from src.modules import content_language
 
 
@@ -59,6 +59,14 @@ def test_clean_tags_dedupes_and_respects_youtube_char_budget():
     assert sum(len(t) for t in budget) + len(budget) - 1 <= 200
 
 
+def test_youtube_tags_length_counts_quotes_of_multi_word_tags_and_commas():
+    assert youtube_tags_length([]) == 0
+    assert youtube_tags_length(["NASA"]) == 4
+    assert youtube_tags_length(["Apolo 11", "NASA"]) == (8 + 2) + 1 + 4
+    budget = clean_tags([f"palabra {i:02d}" for i in range(15)], max_chars=40)
+    assert youtube_tags_length(budget) <= 40 < youtube_tags_length(budget + ["palabra 99"])
+
+
 def test_clean_hashtags_removes_hash_spaces_and_limits():
     assert clean_hashtags(["#Música Romántica", "letra", "#letra", "a", "b", "c", "d"]) == [
         "MúsicaRomántica", "letra", "a", "b", "c", "d"
@@ -68,6 +76,12 @@ def test_clean_hashtags_removes_hash_spaces_and_limits():
 def test_strip_emojis_keeps_spanish_punctuation():
     assert strip_emojis("¿Te pasó? 💔🔥 Cuéntanos 👇") == "¿Te pasó? Cuéntanos"
     assert strip_emojis("Canción – Artista") == "Canción – Artista"
+
+
+def test_strip_emojis_turns_a_sentence_break_into_a_period():
+    assert strip_emojis("Casi aborta el Apolo 11 🚀 Y la mujer lo previó.") == "Casi aborta el Apolo 11. Y la mujer lo previó."
+    assert strip_emojis("Ariane 5 🚀 ¿Sabías esto?") == "Ariane 5. ¿Sabías esto?"
+    assert strip_emojis("una idea 🔥 brillante") == "una idea brillante"
 
 
 # ── platform copy ───────────────────────────────────────────────────────────

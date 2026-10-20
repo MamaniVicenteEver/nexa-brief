@@ -84,6 +84,14 @@ def _get_render_semaphore() -> asyncio.Semaphore:
     return _semaphore
 
 
+def render_timeout_seconds(duration_seconds: float | None) -> int:
+    """Límite de un render: el fijo de settings o, si el video es largo, proporcional a su duración."""
+    base = settings.hyperframes_render_timeout_seconds
+    if not duration_seconds:
+        return base
+    return max(base, int(duration_seconds * settings.hyperframes_timeout_seconds_per_video_second))
+
+
 def _resolve_composition_dir(niche_cfg: "NicheConfig") -> Path | None:
     """`None` si el niche todavía no tiene una composición HyperFrames portada."""
     rel = _COMPOSITION_BY_TEMPLATE_ID.get(niche_cfg.template.template_id)
@@ -347,6 +355,7 @@ class HyperframesAdapter(RecorderPort):
                     await self._render(
                         bin_path, site_dir, output_dir / rp.filenames[0], effective_render_target,
                         output_dir.name, resolution=rp.resolution_flag, progress_span=(i, len(passes)),
+                        duration_seconds=duration_seconds,
                     )
                     pass_seconds.append(round(time.monotonic() - t0, 1))
                     for alias in rp.filenames[1:]:
@@ -401,7 +410,10 @@ class HyperframesAdapter(RecorderPort):
 
             report_step_progress(0.0)  # waiting for the render slot is not progress
             async with _get_render_semaphore():
-                await self._render(bin_path, site_dir, youtube_path, effective_render_target, output_dir.name)
+                await self._render(
+                    bin_path, site_dir, youtube_path, effective_render_target, output_dir.name,
+                    duration_seconds=duration_seconds,
+                )
             stats_extra = {}
 
         logger.info("hyperframes_render_done", output=str(youtube_path))
@@ -471,6 +483,7 @@ class HyperframesAdapter(RecorderPort):
         *,
         resolution: str | None = None,
         progress_span: tuple[int, int] = (0, 1),
+        duration_seconds: float | None = None,
     ) -> None:
         """Corre el CLI sobre site_dir y deja el mp4 en dest_path (borra site_dir al terminar)."""
         variables_path = site_dir / "_hyperframes_variables.json"
@@ -514,17 +527,18 @@ class HyperframesAdapter(RecorderPort):
             fraction = parse_percent(line)
             return None if fraction is None else (done + fraction) / total
 
+        timeout = render_timeout_seconds(duration_seconds)
         try:
             try:
                 result = await run_with_progress(
                     cmd,
                     cwd=site_dir,
-                    timeout=settings.hyperframes_render_timeout_seconds,
+                    timeout=timeout,
                     parse_progress=parse_progress,
                 )
             except asyncio.TimeoutError:
                 raise RecordingError(
-                    f"HyperFrames render timed out after {settings.hyperframes_render_timeout_seconds}s "
+                    f"HyperFrames render timed out after {timeout}s "
                     f"(site_dir={site_dir})"
                 )
         finally:

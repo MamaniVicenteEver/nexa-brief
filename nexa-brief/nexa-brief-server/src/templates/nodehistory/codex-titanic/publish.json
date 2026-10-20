@@ -1,8 +1,198 @@
 {
-  "youtube_title": "Titanic: los 37 segundos que dejaron tantos botes vacíos",
-  "youtube_description": "Un iceberg apareció en la oscuridad y el Titanic tuvo unos 37 segundos para reaccionar. Pero la tragedia no terminó con el choque: la evacuación reveló una seguridad insuficiente, sin simulacro y con botes que partieron lejos de su capacidad.\n\nEste video reconstruye la ventana crítica entre las 11:40 p. m. y el hundimiento, y explica por qué una capacidad máxima en el papel no garantizaba una evacuación real.\n\nSuscríbete a UNO CERO para más historias de momentos decisivos.\n\nIMÁGENES: todas las fotos son de dominio público. Créditos completos: assets/media/CREDITS.md.",
-  "youtube_tags": ["Titanic", "historia del Titanic", "37 segundos", "iceberg", "botes salvavidas", "naufragio", "historia marítima", "1912", "Atlántico Norte", "seguridad", "evacuación", "historia explicada", "documentales cortos", "UNO CERO"],
-  "tiktok_caption": "El Titanic llevaba botes, pero muchos salieron sin llenarse. ¿La tragedia fue solo el iceberg?",
-  "tiktok_hashtags": ["#Titanic", "#Historia", "#BotesSalvavidas", "#Naufragio", "#HistoriaExplicada"],
-  "thumbnail_text": "37 SEGUNDOS"
+  "schema_version": 2,
+  "category": "node_history",
+  "thumbnail": {
+    "text_only": {
+      "lines": [
+        "BOTES A BORDO",
+        "NO BASTARON",
+        "PARA SALVAR"
+      ],
+      "highlight": "NO BASTARON",
+      "pair_title": "A"
+    },
+    "with_image": {
+      "text": "BOTES SIN LLENAR",
+      "image": "titanic.jpg",
+      "composition": "El perfil del Titanic ocupa el lado derecho; el texto queda en el tercio izquierdo, sobre cielo limpio. Tratamiento documental en blanco y negro, sin mostrar víctimas.",
+      "pair_title": "A",
+      "image_side": "right",
+      "image_review": [
+        {
+          "image": "titanic.jpg",
+          "verdict": "elegida",
+          "reason": "El barco es el tema central y ocupa la mayor parte del cuadro; el cielo despejado deja espacio para el texto. La imagen lo muestra antes del choque, no como registro del impacto."
+        },
+        {
+          "image": "iceberg.jpg",
+          "verdict": "alternativa",
+          "reason": "Es fiel al momento del avistamiento, pero el recorte es borroso y el iceberg pierde detalle a tamaño pequeño."
+        },
+        {
+          "image": "lifeboat.jpg",
+          "verdict": "débil",
+          "reason": "La embarcación aparece llena y no representa con claridad la idea de plazas disponibles; además es una escena posterior al choque."
+        }
+      ]
+    },
+    "chosen": "text_only",
+    "kicker": "ATLÁNTICO NORTE · 1912"
+  },
+  "titles": {
+    "youtube": [
+      {
+        "option": "A",
+        "text": "El choque del Titanic dejó poco margen de maniobra",
+        "strategy": 4,
+        "emotion": "Tensión"
+      },
+      {
+        "option": "B",
+        "text": "Los botes del Titanic no daban para todos",
+        "strategy": 1,
+        "emotion": "Contradicción"
+      },
+      {
+        "option": "C",
+        "text": "Por qué varios botes del Titanic salieron incompletos",
+        "strategy": 8,
+        "emotion": "Curiosidad"
+      }
+    ],
+    "facebook": {
+      "title": "El choque del Titanic dejó poco margen de maniobra",
+      "first_line": "El informe examinó cómo empezó la evacuación y por qué varios botes salieron con plazas libres."
+    },
+    "tiktok": {
+      "caption": "El iceberg explica el choque del Titanic. La evacuación explica por qué muchos botes no se llenaron."
+    },
+    "chosen": "A"
+  },
+  "description": {
+    "hook": "El Titanic tuvo muy poco tiempo para corregir el rumbo. Pero el choque fue solo el inicio: la evacuación dejó plazas disponibles cuando a bordo había más personas que capacidad en los botes.",
+    "context": "La investigación británica calculó unos 37 segundos entre el avistamiento y el impacto. Después, la tripulación tuvo que organizar una salida sin simulacro previo. Este relato sigue el margen para virar, el descenso de los botes y las decisiones que dejaron parte de su capacidad sin usar.",
+    "chapters": [
+      {
+        "at": "0:00",
+        "title": "El avistamiento y el margen para virar"
+      },
+      {
+        "at": "0:29",
+        "title": "El impacto en el Atlántico Norte"
+      },
+      {
+        "at": "0:57",
+        "title": "Cuántos botes había a bordo"
+      },
+      {
+        "at": "1:30",
+        "title": "La evacuación empieza sin práctica común"
+      },
+      {
+        "at": "2:07",
+        "title": "Botes que parten con plazas libres"
+      },
+      {
+        "at": "2:24",
+        "title": "El hundimiento y las diferencias entre clases"
+      },
+      {
+        "at": "3:20",
+        "title": "El rescate y las recomendaciones del informe"
+      },
+      {
+        "at": "3:50",
+        "title": "La lección que dejó la evacuación"
+      }
+    ],
+    "reflection": "Una lista de equipos puede cumplir una regla y aun así quedarse corta cuando nadie ha practicado cómo usarla. La preparación también forma parte de la seguridad.",
+    "question": "¿Qué pesa más en una emergencia: tener los medios adecuados o haber practicado cómo usarlos?",
+    "gratitude": "G1_identidad",
+    "gratitude_topic": "la seguridad marítima"
+  },
+  "sources": [
+    "https://www.titanicinquiry.org/BOTInq/BOTReport/botRepCollision.php",
+    "https://www.titanicinquiry.org/BOTInq/BOTReport/BOTRepBoats.php",
+    "https://www.titanicinquiry.org/BOTInq/BOTReport/botRep01.php",
+    "https://www.titanicinquiry.org/USInq/USReport/AmInqRep03.php"
+  ],
+  "credits": [
+    "titanic.jpg — RMS Titanic 3 (cropped to ship).jpg — Francis Godolphin Osbourne Stuart — Public domain — https://commons.wikimedia.org/wiki/File:RMS_Titanic_3_(cropped_to_ship).jpg",
+    "iceberg.jpg — Possible Titanic iceberg from SS Birma.jpg — Crew of SS Birma — Public domain — https://commons.wikimedia.org/wiki/File:Possible_Titanic_iceberg_from_SS_Birma.jpg",
+    "captain-smith.jpg — Chief Purser McElroy and Captain Edward Smith, RMS Titanic, 11 April 1912.jpg — Formerly attributed to Francis Browne — Public domain — https://commons.wikimedia.org/wiki/File:Chief_Purser_McElroy_and_Captain_Edward_Smith,_RMS_Titanic,_11_April_1912.jpg",
+    "lifeboat.jpg — Photograph of a Lifeboat Carrying Titanic Survivors - NARA - 278337.jpg — Louis Ogden — Public domain — https://commons.wikimedia.org/wiki/File:Photograph_of_a_Lifeboat_Carrying_Titanic_Survivors_-_NARA_-_278337.jpg",
+    "carpathia.jpg — Carpathia - Titanic lifeboats.jpg — HO, The New York Times — Public domain — https://commons.wikimedia.org/wiki/File:Carpathia_-_Titanic_lifeboats.jpg"
+  ],
+  "tags": {
+    "youtube": [
+      "Titanic",
+      "historia del Titanic",
+      "naufragio del Titanic",
+      "evacuación del Titanic",
+      "botes salvavidas",
+      "iceberg del Titanic",
+      "William Murdoch",
+      "seguridad marítima",
+      "Atlántico Norte",
+      "investigación británica Titanic",
+      "historia marítima",
+      "documental histórico"
+    ],
+    "youtube_hashtags": [
+      "#Titanic",
+      "#historia",
+      "#NodeHistory"
+    ],
+    "tiktok": [
+      "#historia",
+      "#Titanic",
+      "#seguridadmaritima",
+      "#documental"
+    ],
+    "facebook": [
+      "#Historia",
+      "#Titanic"
+    ]
+  },
+  "pinned_comment": "Dato extra: La investigación señaló que no se hizo un simulacro ni una reunión adecuada de botes para ese viaje. ¿Qué protocolo de emergencia te parece esencial en una evacuación? ¿Qué otra historia marítima te gustaría ver después?",
+  "strategies_used": {
+    "title": "title_anchor_tension_v1",
+    "thumbnail": "thumb_two_modes_v1",
+    "platforms": "platforms_v1",
+    "description": "desc_nine_blocks_v1",
+    "gratitude": "gratitude_rotation_v1",
+    "tags": "tags_minimal_v1",
+    "pinned": "pinned_fact_two_questions_v1"
+  },
+  "youtube_title": "El choque del Titanic dejó poco margen de maniobra",
+  "youtube_title_alternatives": [
+    "Los botes del Titanic no daban para todos",
+    "Por qué varios botes del Titanic salieron incompletos"
+  ],
+  "youtube_description": "El Titanic tuvo muy poco tiempo para corregir el rumbo. Pero el choque fue solo el inicio: la evacuación dejó plazas disponibles cuando a bordo había más personas que capacidad en los botes.\n\nLa investigación británica calculó unos 37 segundos entre el avistamiento y el impacto. Después, la tripulación tuvo que organizar una salida sin simulacro previo. Este relato sigue el margen para virar, el descenso de los botes y las decisiones que dejaron parte de su capacidad sin usar.\n\nCAPÍTULOS\n0:00 El avistamiento y el margen para virar\n0:29 El impacto en el Atlántico Norte\n0:57 Cuántos botes había a bordo\n1:30 La evacuación empieza sin práctica común\n2:07 Botes que parten con plazas libres\n2:24 El hundimiento y las diferencias entre clases\n3:20 El rescate y las recomendaciones del informe\n3:50 La lección que dejó la evacuación\n\nUna lista de equipos puede cumplir una regla y aun así quedarse corta cuando nadie ha practicado cómo usarla. La preparación también forma parte de la seguridad.\n\nSi llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.\n\n¿Qué pesa más en una emergencia: tener los medios adecuados o haber practicado cómo usarlos?\n\nFUENTES\n- https://www.titanicinquiry.org/BOTInq/BOTReport/botRepCollision.php\n- https://www.titanicinquiry.org/BOTInq/BOTReport/BOTRepBoats.php\n- https://www.titanicinquiry.org/BOTInq/BOTReport/botRep01.php\n- https://www.titanicinquiry.org/USInq/USReport/AmInqRep03.php\n\nIMÁGENES (Wikimedia Commons)\n- titanic.jpg — RMS Titanic 3 (cropped to ship).jpg — Francis Godolphin Osbourne Stuart — Public domain — https://commons.wikimedia.org/wiki/File:RMS_Titanic_3_(cropped_to_ship).jpg\n- iceberg.jpg — Possible Titanic iceberg from SS Birma.jpg — Crew of SS Birma — Public domain — https://commons.wikimedia.org/wiki/File:Possible_Titanic_iceberg_from_SS_Birma.jpg\n- captain-smith.jpg — Chief Purser McElroy and Captain Edward Smith, RMS Titanic, 11 April 1912.jpg — Formerly attributed to Francis Browne — Public domain — https://commons.wikimedia.org/wiki/File:Chief_Purser_McElroy_and_Captain_Edward_Smith,_RMS_Titanic,_11_April_1912.jpg\n- lifeboat.jpg — Photograph of a Lifeboat Carrying Titanic Survivors - NARA - 278337.jpg — Louis Ogden — Public domain — https://commons.wikimedia.org/wiki/File:Photograph_of_a_Lifeboat_Carrying_Titanic_Survivors_-_NARA_-_278337.jpg\n- carpathia.jpg — Carpathia - Titanic lifeboats.jpg — HO, The New York Times — Public domain — https://commons.wikimedia.org/wiki/File:Carpathia_-_Titanic_lifeboats.jpg\n\n#Titanic #historia #NodeHistory",
+  "youtube_tags": [
+    "Titanic",
+    "historia del Titanic",
+    "naufragio del Titanic",
+    "evacuación del Titanic",
+    "botes salvavidas",
+    "iceberg del Titanic",
+    "William Murdoch",
+    "seguridad marítima",
+    "Atlántico Norte",
+    "investigación británica Titanic",
+    "historia marítima",
+    "documental histórico"
+  ],
+  "facebook_title": "El choque del Titanic dejó poco margen de maniobra",
+  "facebook_description": "El informe examinó cómo empezó la evacuación y por qué varios botes salieron con plazas libres.\n\nUna lista de equipos puede cumplir una regla y aun así quedarse corta cuando nadie ha practicado cómo usarla. La preparación también forma parte de la seguridad.\n\n¿Qué pesa más en una emergencia: tener los medios adecuados o haber practicado cómo usarlos?\n\n#Historia #Titanic",
+  "tiktok_caption": "El iceberg explica el choque del Titanic. La evacuación explica por qué muchos botes no se llenaron.",
+  "tiktok_hashtags": [
+    "#historia",
+    "#Titanic",
+    "#seguridadmaritima",
+    "#documental"
+  ],
+  "thumbnail_text": "BOTES A BORDO NO BASTARON PARA SALVAR",
+  "gratitude_used": "G1_identidad"
 }

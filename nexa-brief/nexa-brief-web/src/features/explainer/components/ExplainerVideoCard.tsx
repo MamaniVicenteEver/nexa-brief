@@ -1,12 +1,13 @@
 "use client";
 
-import { Play } from "lucide-react";
+import { ArrowLeft, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { MediaPlayerModal } from "@/shared/components/media/MediaPlayerModal";
-import type { ExplainerVideo } from "../types";
+import type { ExplainerVideo, ThumbnailPreview } from "../types";
 import { ExplainerStudioSidebar } from "./ExplainerStudioSidebar";
+import { ThumbnailArtwork } from "./ThumbnailArtwork";
 
 // Segundo que se muestra quieto en la tarjeta (después del título de apertura).
 const POSTER_SECOND = 6;
@@ -16,12 +17,24 @@ function withParam(url: string, param: string): string {
   return `${url}${url.includes("?") ? "&" : "?"}${param}`;
 }
 
+function playableComponentUrl(url: string): string {
+  if (typeof window === "undefined") return url;
+  const preview = new URL(url, window.location.origin);
+  preview.searchParams.delete("t"); // el cuadro congelado solo se usa en la tarjeta lateral
+  preview.searchParams.delete("loop");
+  preview.searchParams.set("controls", "1");
+  preview.searchParams.set("clock", "synthetic");
+  return preview.toString();
+}
+
 /** Tarjeta de un video del explainer, como las plantillas de NodeMotion: cuadro
  * portada y, al hacer clic, el modal con el reproductor, los textos y las acciones. */
 export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
   const t = useTranslations("templates");
   const tx = useTranslations("explainer");
+  const playerText = useTranslations("mediaPlayer");
   const [open, setOpen] = useState(false);
+  const [thumbnailPreview, setThumbnailPreview] = useState<ThumbnailPreview | null>(null);
   const recorded = video.rendered.length > 0;
   const badge = !video.ready
     ? t("prep.statusPreparing")
@@ -108,19 +121,53 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
   return (
     <MediaPlayerModal
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (!next) setThumbnailPreview(null);
+      }}
       trigger={trigger}
-      title={video.title}
+      title={
+        thumbnailPreview ? `${video.title} · Miniatura ${thumbnailPreview.option}` : video.title
+      }
       description={`${video.designName || video.design} · ${video.categoryName}${video.demo ? ` · ${t("prep.demoNote")}` : ""}`}
       source={{
         kind: "iframe",
-        url: withParam(video.previewUrl, `controls=1&volume=${PLAYER_VOLUME}`),
-        poster: video.posterUrl,
+        url: thumbnailPreview?.componentPreviewUrl
+          ? playableComponentUrl(thumbnailPreview.componentPreviewUrl)
+          : withParam(video.previewUrl, `controls=1&volume=${PLAYER_VOLUME}`),
+        poster: thumbnailPreview ? null : video.posterUrl,
       }}
+      actions={
+        thumbnailPreview?.componentPreviewUrl ? (
+          <button
+            type="button"
+            onClick={() => setThumbnailPreview(null)}
+            className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/85 transition-colors hover:bg-white/20 hover:text-white"
+          >
+            <ArrowLeft className="size-3.5" />
+            {playerText("backToVideo")}
+          </button>
+        ) : undefined
+      }
       defaultVolume={PLAYER_VOLUME}
       defaultViewport="desktop"
-      sidebar={<ExplainerStudioSidebar video={video} />}
+      sidebar={
+        <ExplainerStudioSidebar
+          video={video}
+          thumbnailPreview={thumbnailPreview}
+          onThumbnailPreview={setThumbnailPreview}
+        />
+      }
       sidebarToggleLabel={tx("studio.toggleSidebar")}
+      stagePreview={
+        thumbnailPreview && !thumbnailPreview.componentPreviewUrl ? (
+          <ThumbnailArtwork
+            preview={thumbnailPreview}
+            imagePendingLabel={tx("studio.package.imagePending")}
+          />
+        ) : null
+      }
+      onCloseStagePreview={() => setThumbnailPreview(null)}
     />
   );
 }

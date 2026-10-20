@@ -1,4 +1,4 @@
-"""Facebook Adapter — CRUD operations via the Facebook Graph API v21.0.
+"""Facebook Adapter — CRUD operations via the configured Meta Graph API version.
 
 Upload flow (Resumable 3-phase protocol):
   Phase 1 — start:    POST /{page-id}/videos?upload_phase=start&file_size={n}
@@ -11,9 +11,9 @@ Upload flow (Resumable 3-phase protocol):
 
 CRUD:
   Create → publish()       3-phase upload above
-  Read   → get_video()     GET /v21.0/{video_id}?fields=title,description,status
-  Update → update_video()  POST /v21.0/{video_id} with title/description
-  Delete → delete_video()  DELETE /v21.0/{video_id}
+  Read   → get_video()     GET /{video_id}?fields=title,description,status
+  Update → update_video()  POST /{video_id} with title/description
+  Delete → delete_video()  DELETE /{video_id}
 
 Token strategy:
   Facebook Page Access Tokens never expire when derived from a Long-Lived User Token.
@@ -37,25 +37,205 @@ Structured log events:
 from __future__ import annotations
 
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 import structlog
 
 from src.config.exceptions import PlatformAPIError, VideoNotFoundError
+from src.config.settings import settings
+from src.core.ports.channel_catalog_port import ChannelCatalogPort, ChannelStats, RemoteVideo
 from src.core.ports.publisher_port import PublishVideoResult, VideoMetadata
 from src.adapters.publishing.base_platform import BasePlatformAdapter, with_retry
 
 logger = structlog.get_logger(__name__)
 
-_GRAPH_BASE = "https://graph.facebook.com/v21.0"
+_GRAPH_BASE = f"https://graph.facebook.com/{settings.meta_graph_api_version}"
 _FB_CHUNK_SIZE = 4 * 1024 * 1024  # Facebook recommends 4 MB chunks in phase 2
 
 
-class FacebookAdapter(BasePlatformAdapter):
-    """Facebook Graph API v21.0 — full CRUD with 3-phase resumable upload."""
+def _optional_int(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _optional_float(value: Any) -> float | None:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _timestamp(value: str | None) -> float:
+    if not value:
+        return 0.0
+    try:
+        normalized = value.replace("Z", "+00:00")
+        if len(normalized) >= 5 and normalized[-5] in "+-" and normalized[-4:].isdigit():
+            normalized = f"{normalized[:-2]}:{normalized[-2:]}"
+        return datetime.fromisoformat(normalized).timestamp()
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _facebook_remote_video(item: dict[str, Any], *, kind: str = "video") -> RemoteVideo:
+    post_id = str(item.get("id") or "")
+    description = str(item.get("description") or "")
+    title = str(item.get("title") or "").strip()
+    if not title and description:
+        title = description.splitlines()[0].strip()
+    # Graph devuelve permalink_url relativo ("/reel/123/") en reels y videos de página.
+    permalink = str(item.get("permalink_url") or f"/{post_id}")
+    return RemoteVideo(
+        post_id=post_id,
+        url=permalink if permalink.startswith("http") else f"https://www.facebook.com/{permalink.lstrip('/')}",
+        title=title,
+        published_at=_timestamp(item.get("created_time")),
+        privacy="public",
+        duration_seconds=_optional_float(item.get("length")),
+        thumbnail_url=item.get("picture") or None,
+        # Facebook does not return these without additional permissions/fields.
+        views=None,
+        likes=None,
+        comments=None,
+        kind=kind,
+    )
+
+
+class FacebookAdapter(BasePlatformAdapter, ChannelCatalogPort):
+    """Facebook Graph API — full CRUD with 3-phase resumable upload."""
 
     PLATFORM = "facebook"
+
+    def __init__(self, token_manager: Any) -> None:
+        super().__init__(token_manager)
+        # list_channel_videos() immediately precedes get_channel_stats() in a sync. Reuse its
+        # complete, deduplicated count so a sync doesn't fetch the same catalog twice.
+        self._catalog_video_counts: dict[str, int] = {}
+
+    async def _catalog_get_json(
+        self, path: str, params: dict[str, Any], account_alias: str, purpose: str
+    ) -> dict[str, Any]:
+        token = await self._token_manager.get_valid_token(self.PLATFORM, account_alias)
+        url = f"{_GRAPH_BASE}/{path.lstrip('/')}"
+        self._log_request("GET", url, account=account_alias, purpose=purpose)
+        started = time.monotonic()
+        async with self._make_client() as client:
+            response = await client.get(url, params={**params, "access_token": token})
+            self._log_response("GET", url, response.status_code, time.monotonic() - started, account=account_alias)
+        if response.status_code != 200:
+            self._handle_api_error(response, f"Facebook {purpose}")
+        return response.json()
+
+    async def _catalog_get_next(
+        self, url: str, account_alias: str, purpose: str
+    ) -> dict[str, Any]:
+        # Graph's paging.next URL already carries the paging cursor and access token. Keep it
+        # out of request logs because it is a credential-bearing URL.
+        self._log_request("GET", "Facebook Graph paging.next", account=account_alias, purpose=purpose)
+        started = time.monotonic()
+        async with self._make_client() as client:
+            response = await client.get(url)
+            self._log_response(
+                "GET", "Facebook Graph paging.next", response.status_code,
+                time.monotonic() - started, account=account_alias,
+            )
+        if response.status_code != 200:
+            self._handle_api_error(response, f"Facebook {purpose}")
+        return response.json()
+
+    async def _list_video_edge(
+        self,
+        path: str,
+        account_alias: str,
+        *,
+        purpose: str,
+        params: dict[str, Any] | None = None,
+        kind: str = "video",
+        limit: int | None = None,
+    ) -> list[RemoteVideo]:
+        page = await self._catalog_get_json(
+            path,
+            {"fields": "id,title,description,created_time,permalink_url,length,picture", **(params or {})},
+            account_alias,
+            purpose,
+        )
+        videos: list[RemoteVideo] = []
+        while True:
+            videos.extend(
+                _facebook_remote_video(item, kind=kind)
+                for item in page.get("data", [])
+                if item.get("id")
+            )
+            if limit is not None and len(videos) >= limit:
+                return videos[:limit]
+            next_url = (page.get("paging") or {}).get("next")
+            if not next_url:
+                return videos
+            page = await self._catalog_get_next(next_url, account_alias, purpose)
+
+    @with_retry(max_retries=3)
+    async def list_channel_videos(
+        self, account_alias: str, *, limit: int | None = None
+    ) -> list[RemoteVideo]:
+        self._catalog_video_counts.pop(account_alias, None)
+        page_id = self._token_manager.target_id(self.PLATFORM, account_alias)
+        if not page_id:
+            raise PlatformAPIError(
+                "Facebook account has no Page ID. Reconnect it from Canales.",
+                platform=self.PLATFORM,
+                status_code=400,
+            )
+
+        regular = await self._list_video_edge(
+            f"{quote(page_id, safe='')}/videos", account_alias,
+            purpose="page_videos", params={"type": "uploaded"}, limit=limit,
+        )
+        reels = await self._list_video_edge(
+            f"{quote(page_id, safe='')}/video_reels", account_alias,
+            purpose="page_video_reels", kind="reel", limit=limit,
+        )
+
+        # A Reel may appear in both Page edges. Keep the explicit reel form and sort newest first.
+        by_id: dict[str, RemoteVideo] = {video.post_id: video for video in regular}
+        for video in reels:
+            by_id[video.post_id] = video
+        videos = sorted(by_id.values(), key=lambda video: video.published_at, reverse=True)
+        if limit is not None:
+            videos = videos[:limit]
+        else:
+            self._catalog_video_counts[account_alias] = len(videos)
+        return videos
+
+    @with_retry(max_retries=3)
+    async def get_channel_stats(self, account_alias: str) -> ChannelStats:
+        page_id = self._token_manager.target_id(self.PLATFORM, account_alias)
+        if not page_id:
+            raise PlatformAPIError(
+                "Facebook account has no Page ID. Reconnect it from Canales.",
+                platform=self.PLATFORM,
+                status_code=400,
+            )
+        data = await self._catalog_get_json(
+            quote(page_id, safe=""),
+            {"fields": "followers_count,fan_count"},
+            account_alias,
+            "page_stats",
+        )
+        video_count = self._catalog_video_counts.pop(account_alias, None)
+        if video_count is None:
+            video_count = len(await self.list_channel_videos(account_alias))
+            self._catalog_video_counts.pop(account_alias, None)
+        return ChannelStats(
+            video_count=video_count,
+            followers=_optional_int(data.get("followers_count"))
+            if data.get("followers_count") is not None
+            else _optional_int(data.get("fan_count")),
+        )
 
     # ── CREATE ────────────────────────────────────────────────────────────────
 

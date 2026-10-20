@@ -1,0 +1,34 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Letra en estilo opener grunge 'Final Cut': fondo de cartón carbón con parches tramados y scanlines, retratos en blanco y negro recortados en papel roto, texto condensado blanco y rojo con revelado desordenado, palabra gigante extendida en contorno que corre, garabatos rojos dibujados a mano, pinceladas blancas, barras, estelas y glitch en duotono rojo. Canción: Caution. — metadata para marketing/SEO, la plantilla no la usa.",
+      "audio": { "src": "song.mp3" },
+      "lyricsUrl": "lyrics.json",
+      "lyricsFilter": { "minLogprob": -0.6, "drop": ["gracias por ver", "subt[ií]tulos", "amara\\.org", "audio ?jungle", "suscr[ií]bete", "music licensing"] },
+      "fonts": { "googleUrl": "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@400;500;600;700&display=swap" },
+      "palette": { "bg": "#2B2B2B", "red": "#E3170A", "white": "#F4F4F2", "black": "#0B0B0B" },
+      "intro": { "title": "CAUTION", "artist": "SKRXLLA" },
+      "outro": { "title": "NEXA BRIEF", "sub": "SUSCRÍBETE" },
+      "phrases": { "maxWords": 7, "maxSec": 3.2, "gapSec": 0.6, "chunkWords": 2 },
+      "timing": { "leadSec": 0.12, "tailSec": 0.45 },
+      "stopwords": ["the", "a", "an", "and", "to", "of", "in", "on", "i", "i'm", "im", "me", "my", "you", "your", "it", "is", "for", "with", "out", "up", "get", "let", "gotta", "i'ma", "but", "so", "just", "like", "if", "please", "that", "them", "he", "she", "we", "they", "too", "can't", "yeah", "the,"],
+      "shots": ["profile", "profileRed", "scribble", "brush", "stack", "glitch", "distort", "strips", "empty", "duo", "trail", "giantFill"],
+      "media": [
+        { "id": "perfil-hombre", "src": "media/perfil-hombre.jpg", "red": "media/perfil-hombre-rojo.jpg" },
+        { "id": "rostro-mujer", "src": "media/rostro-mujer.jpg", "red": "media/rostro-mujer-rojo.jpg" },
+        { "id": "manos-rostro", "src": "media/manos-rostro.jpg", "red": "media/manos-rostro-rojo.jpg" },
+        { "id": "risa-calvo", "src": "media/risa-calvo.jpg", "red": "media/risa-calvo-rojo.jpg" },
+        { "id": "gafas-vr", "src": "media/gafas-vr.jpg", "red": "media/gafas-vr-rojo.jpg" },
+        { "id": "traje", "src": "media/traje.jpg", "red": "media/traje-rojo.jpg" },
+        { "id": "perfil-mujer", "src": "media/perfil-mujer.jpg", "red": "media/perfil-mujer-rojo.jpg" },
+        { "id": "brazos-arriba", "src": "media/brazos-arriba.jpg", "red": "media/brazos-arriba-rojo.jpg" },
+        { "id": "modelo-saco", "src": "media/modelo-saco.jpg", "red": "media/modelo-saco-rojo.jpg" },
+        { "id": "sentado", "src": "media/sentado.jpg", "red": "media/sentado-rojo.jpg" }
+      ],
+      "debug": { "enabled": false },
+      "seed": 41
+    }
+  ]
+}

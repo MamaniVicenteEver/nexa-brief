@@ -51,16 +51,22 @@ async def lifespan(app: FastAPI):
     from src.adapters.realtime.factory import wire_realtime
     wire_realtime()
 
-    # ── Start token refresh scheduler (only when publisher is configured) ─────
+    # ── Token refresh can run without automatic publishing ────────────────────
     global _scheduler
-    if settings.enable_auto_publishing and settings.publisher_encryption_key:
+    if settings.publisher_encryption_key:
         try:
             from src.adapters.publishing.factory import get_publisher_facade
-            from src.adapters.publishing.scheduler import start_publishing_scheduler
+            from src.adapters.publishing.scheduler import (
+                start_publishing_scheduler,
+                start_token_refresh_scheduler,
+            )
             facade = get_publisher_facade()
             loop = asyncio.get_event_loop()
-            _scheduler = start_publishing_scheduler(facade, loop)
-            logger.info("publisher_scheduler_active", active_account=settings.active_account)
+            if settings.enable_auto_publishing:
+                _scheduler = start_publishing_scheduler(facade, loop)
+                logger.info("publisher_scheduler_active", active_account=settings.active_account)
+            else:
+                _scheduler = start_token_refresh_scheduler(facade, loop)
         except Exception as exc:
             # Scheduler failure must NOT prevent the app from starting
             logger.warning("publisher_scheduler_start_failed", error=str(exc))

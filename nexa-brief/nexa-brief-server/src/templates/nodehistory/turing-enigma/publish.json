@@ -1,35 +1,162 @@
 {
-  "youtube_title": "El hombre que rompió Enigma con una máquina de lógica",
-  "youtube_description": "En 1940 el código más seguro del planeta cambiaba cada medianoche: Enigma. Un matemático de 28 años, Alan Turing, estaba convencido de que podía romperlo.\n\nMientras los submarinos alemanes hundían barcos en el Atlántico y Gran Bretaña se quedaba sin tiempo, en una mansión secreta llamada Bletchley Park nació una idea que cambió las reglas: si una persona no podía probar 159 trillones de combinaciones, una máquina sí podía descartar millones de ellas.\n\nEn este documental corto verás cómo Turing partió del trabajo de tres matemáticos polacos y diseñó la Bomba, cómo usó las frases previsibles de los alemanes como una llave, y cómo los mensajes navales empezaron a abrirse hasta acortar la guerra en al menos dos años.\n\nTambién recorremos su lado más humano: la pregunta de 1950 sobre si las máquinas pueden pensar, la máquina universal detrás de cada computadora de hoy, la condena por ser homosexual, la manzana a medio comer y el perdón oficial que llegó 55 años después.\n\n¿Crees que hoy reconocemos lo suficiente a quienes cambiaron el mundo en silencio? Cuéntanos en los comentarios.",
-  "youtube_tags": [
-    "alan turing",
-    "enigma",
-    "maquina enigma",
-    "bletchley park",
-    "segunda guerra mundial",
-    "la bomba turing",
-    "historia de la computacion",
-    "criptografia",
-    "inteligencia artificial",
-    "pueden pensar las maquinas",
-    "documental historia",
-    "matematicos",
-    "codigo nazi",
-    "historia de la tecnologia"
+  "schema_version": 2,
+  "category": "node_history",
+  "thumbnail": {
+    "text_only": {
+      "lines": [
+        "EL CÓDIGO",
+        "CEDIÓ A LA LÓGICA"
+      ],
+      "highlight": "CEDIÓ",
+      "pair_title": "B"
+    },
+    "with_image": {
+      "text": "LA MÁQUINA CEDIÓ",
+      "image": "turing.jpg",
+      "composition": "El retrato ocupa el lado derecho con el rostro como punto focal; el texto queda en el tercio izquierdo, sobre fondo oscuro y con contraste documental.",
+      "pair_title": "C",
+      "image_side": "right",
+      "image_review": [
+        {
+          "image": "turing.jpg",
+          "verdict": "elegida",
+          "reason": "El rostro de Turing domina el cuadro y corresponde al protagonista. El crédito identifica el retrato como una foto de Turing a los 16 años, anterior a Bletchley Park; no se presenta como una foto del trabajo de guerra."
+        },
+        {
+          "image": "bombe.jpg",
+          "verdict": "alternativa",
+          "reason": "La reconstrucción es fiel al tema, pero el tratamiento binario la vuelve poco reconocible a tamaño de miniatura."
+        },
+        {
+          "image": "enigma-rotors.jpg",
+          "verdict": "alternativa",
+          "reason": "Los rotores están en primer plano, aunque el encuadre no muestra el dispositivo completo y se reconoce menos sin contexto."
+        }
+      ]
+    },
+    "chosen": "text_only",
+    "kicker": "BLETCHLEY PARK · 1940"
+  },
+  "titles": {
+    "youtube": [
+      {
+        "option": "A",
+        "text": "La máquina que ayudó a descifrar Enigma",
+        "strategy": 3,
+        "emotion": "Asombro"
+      },
+      {
+        "option": "B",
+        "text": "La condena de Turing tras descifrar Enigma",
+        "strategy": 5,
+        "emotion": "Injusticia"
+      },
+      {
+        "option": "C",
+        "text": "La idea de Turing que aún vive en cada computadora",
+        "strategy": 6,
+        "emotion": "Relevancia"
+      }
+    ],
+    "facebook": {
+      "title": "La máquina que ayudó a descifrar Enigma",
+      "first_line": "Turing y otros criptógrafos abrieron mensajes secretos. Luego, él sufrió una condena discriminatoria."
+    },
+    "tiktok": {
+      "caption": "Alan Turing ayudó a descifrar Enigma. Después, su propio país lo condenó por ser homosexual."
+    },
+    "chosen": "A"
+  },
+  "description": {
+    "hook": "En 1940, Enigma cambiaba su clave cada medianoche. En Bletchley Park, Alan Turing y otros criptógrafos buscaron una manera de descifrar sus mensajes a máquina.",
+    "context": "El relato sigue el trabajo previo de los matemáticos polacos, la Bombe y la apertura de mensajes navales. Después, recorre la pregunta de Turing sobre las máquinas, la condena que recibió por ser homosexual y el reconocimiento que llegó décadas más tarde.",
+    "chapters": [
+      {
+        "at": "0:00",
+        "title": "Un matemático frente a Enigma"
+      },
+      {
+        "at": "0:18",
+        "title": "Cómo funcionaba la máquina cifradora"
+      },
+      {
+        "at": "0:56",
+        "title": "La Bombe y el trabajo polaco"
+      },
+      {
+        "at": "1:38",
+        "title": "La primera Bombe empieza a girar"
+      },
+      {
+        "at": "1:59",
+        "title": "Los mensajes navales se abren"
+      },
+      {
+        "at": "2:23",
+        "title": "Turing pregunta si las máquinas piensan"
+      },
+      {
+        "at": "3:07",
+        "title": "La condena y el tratamiento forzado"
+      },
+      {
+        "at": "3:44",
+        "title": "El perdón oficial y su legado"
+      },
+      {
+        "at": "4:00",
+        "title": "La idea que sigue en las computadoras"
+      }
+    ],
+    "reflection": "El trabajo que ayudó a cambiar una guerra permaneció en secreto, mientras Turing sufrió una condena discriminatoria. Recordar ambas partes permite contar su legado completo.",
+    "question": "¿Cómo deberíamos reconocer el trabajo colectivo detrás de un avance científico?",
+    "gratitude": "G1_identidad",
+    "gratitude_topic": "la historia de la computación"
+  },
+  "sources": [
+    "https://www.nationalarchives.gov.uk/explore-the-collection/stories/a-dramatic-plea-for-churchills-help/",
+    "https://www.gov.uk/government/news/royal-pardon-for-ww2-code-breaker-dr-alan-turing",
+    "https://turingarchive.kings.cam.ac.uk/about-alan-turing"
   ],
-  "tiktok_caption": "El código cambiaba cada medianoche y él construyó una máquina para romperlo 🤯",
-  "tiktok_hashtags": [
-    "#alanturing",
-    "#enigma",
-    "#historia",
-    "#tecnologia",
-    "#segundaguerramundial"
+  "credits": [
+    "turing.jpg — Alan Turing at age 16 — Possibly Arthur Reginald Chaffin (1893-1954) — Public domain (PD-old-auto-expired) — https://commons.wikimedia.org/wiki/File:Alan_Turing_at_age_16.jpg",
+    "enigma.jpg — Enigma-IMG 0487-black — Rama — CC BY-SA 2.0 FR — https://commons.wikimedia.org/wiki/File:Enigma-IMG_0487-black.jpg",
+    "enigma-rotors.jpg — Enigma rotors with alphabet rings — TedColes — CC0 1.0 — https://commons.wikimedia.org/wiki/File:Enigma_rotors_with_alphabet_rings.jpg",
+    "bletchley.jpg — Bletchley Park Mansion — DeFacto — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Bletchley_Park_Mansion.jpg",
+    "bombe.jpg — RebuiltBombeFrontView (Turing-Welchman Bombe rebuild, Bletchley Park) — TedColes — CC0 1.0 — https://commons.wikimedia.org/wiki/File:RebuiltBombeFrontView.jpg",
+    "uboat.jpg — 80-G-320287: U-249 surrendering, 9 May 1945 — U.S. Navy (official photograph; via National Museum of the U.S. Navy) — Public domain (PD-USGov-Military-Navy) — https://commons.wikimedia.org/wiki/File:80-G-320287_(35170880394).jpg",
+    "convoy.jpg — Convoy WS-12 en route to Cape Town, 1941 — U.S. Navy — Public domain (PD-USGov-Military-Navy) — https://commons.wikimedia.org/wiki/File:Convoy_WS-12_en_route_to_Cape_Town,_1941.jpg"
   ],
-  "thumbnail_text": "el código imposible",
-  "youtube_title_alternatives": [
-    "Así rompió Alan Turing el código imposible de los nazis",
-    "El día que una máquina de lógica derrotó a Enigma"
-  ],
-  "facebook_title": "El matemático que rompió el código imposible de los nazis",
-  "facebook_description": "Enigma cambiaba su clave cada medianoche y probarla a mano tomaría más que la edad del universo. Alan Turing construyó una máquina para vencerla y acortó la guerra años. ¿Sabías esta historia? Compártela."
+  "tags": {
+    "youtube": [
+      "Alan Turing",
+      "Enigma",
+      "Bletchley Park",
+      "Bombe",
+      "descifrado de Enigma",
+      "criptografía",
+      "Segunda Guerra Mundial",
+      "historia de la computación",
+      "matemáticos polacos",
+      "mensajes navales",
+      "test de Turing",
+      "historia real"
+    ],
+    "youtube_hashtags": [
+      "#NodeHistory",
+      "#historia",
+      "#Enigma"
+    ],
+    "tiktok": [
+      "#historia",
+      "#AlanTuring",
+      "#Enigma",
+      "#criptografia"
+    ],
+    "facebook": [
+      "#Historia",
+      "#AlanTuring"
+    ]
+  },
+  "pinned_comment": "Dato extra: El rostro de Turing aparece hoy en el billete británico de 50 libras. ¿Qué otra historia de la computación merece contarse completa? ¿Qué tema te gustaría ver después?"
 }

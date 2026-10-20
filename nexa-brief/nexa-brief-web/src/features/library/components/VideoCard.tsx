@@ -16,12 +16,12 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
+import { useChannels } from "@/features/channels/hooks/useChannels";
 import { STAGE_LABEL_KEY } from "@/features/create-video/stage";
 import { PublishNowDialog, type QueueEntry } from "@/features/schedule";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { MediaPlayerModal } from "@/shared/components/media/MediaPlayerModal";
-import { DeleteVideoDialog } from "./DeleteVideoDialog";
 import {
   canDelete,
   formatDuration,
@@ -32,11 +32,14 @@ import {
   type LibraryVideo,
   stageProgress,
 } from "../library-status";
+import { DeleteVideoDialog } from "./DeleteVideoDialog";
+import { VideoPlayerSidebar } from "./player-sidebar/VideoPlayerSidebar";
 
 const PLATFORM_LABEL: Record<QueueEntry["platform"], string> = {
   youtube: "YouTube",
   tiktok: "TikTok",
   facebook: "Facebook",
+  instagram: "Instagram",
 };
 
 const STATUS_STYLE: Record<LibraryStatus, { className: string; Icon: typeof Clock3 }> = {
@@ -86,18 +89,17 @@ export function VideoCard({ video }: { video: LibraryVideo }) {
               desktopUrl: jobFileUrl(job.jobId, "youtube"),
               mobileUrl: jobFileUrl(job.jobId, "reels"),
             }}
-            actions={
-              <>
-                {canPublish && publishButton("secondary", "px-3 py-1.5")}
-                <Link
-                  href={detailHref}
-                  className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/85 transition-colors hover:bg-white/20 hover:text-white"
-                >
-                  {t("videoCard.details")}
-                  <ArrowUpRight className="size-3.5" />
-                </Link>
-              </>
+            actions={canPublish ? publishButton("secondary", "px-3 py-1.5") : undefined}
+            // Textos, publicaciones e info técnica en el panel lateral: el modal no navega.
+            sidebar={
+              <VideoPlayerSidebar
+                jobId={job.jobId}
+                jobTitle={job.title}
+                categoryLabel={categoryLabel}
+                canPublish={canPublish}
+              />
             }
+            sidebarToggleLabel={t("playerSidebar.toggle")}
             trigger={
               <button
                 type="button"
@@ -211,7 +213,11 @@ export function VideoCard({ video }: { video: LibraryVideo }) {
 
 function CardMeta({ video }: { video: LibraryVideo }) {
   const t = useTranslations("library");
+  const { data: channels } = useChannels();
   const { status, published, scheduled } = video;
+  const channelName = (entry: QueueEntry) =>
+    channels?.find((c) => c.platform === entry.platform && c.alias === entry.accountAlias)?.name ||
+    entry.accountAlias;
 
   if (status === "failed") {
     return (
@@ -219,7 +225,8 @@ function CardMeta({ video }: { video: LibraryVideo }) {
     );
   }
 
-  if (published.length > 0) {
+  const uploading = scheduled.filter((e) => e.status === "publishing" || e.source === "immediate");
+  if (published.length > 0 || uploading.length > 0) {
     return (
       <div className="flex flex-wrap gap-1.5">
         {published.map((entry) => {
@@ -244,23 +251,19 @@ function CardMeta({ video }: { video: LibraryVideo }) {
             </span>
           );
         })}
-      </div>
-    );
-  }
-
-  const uploading = scheduled.filter((e) => e.status === "publishing" || e.source === "immediate");
-  if (uploading.length > 0) {
-    return (
-      <div className="flex flex-wrap gap-1.5">
-        {uploading.map((entry) => (
-          <span
-            key={entry.entryId}
-            className="inline-flex items-center gap-1 rounded-full bg-nb-accent-amber/25 px-2.5 py-1 text-[11px] font-semibold text-nb-ink-soft"
-          >
-            <Loader2 className="size-3 animate-spin" />
-            {PLATFORM_LABEL[entry.platform]} · {t("videoCard.publishingNow")}
-          </span>
-        ))}
+        {uploading.map((entry) => {
+          const label = `${PLATFORM_LABEL[entry.platform]} · ${t("videoCard.publishingNow")} · ${channelName(entry)}`;
+          return (
+            <span
+              key={entry.entryId}
+              title={label}
+              className="inline-flex max-w-full items-center gap-1 rounded-full bg-nb-accent-amber/25 px-2.5 py-1 text-[11px] font-semibold text-nb-ink-soft"
+            >
+              <Loader2 className="size-3 shrink-0 animate-spin" />
+              <span className="truncate">{label}</span>
+            </span>
+          );
+        })}
       </div>
     );
   }

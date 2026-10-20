@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Final Cut · Letra</title>
+<link id="gf" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@400;500;600;700&display=swap">
+<style>
+  :root { --bg:#2B2B2B; --red:#E3170A; --white:#F4F4F2; --black:#0B0B0B; }
+  html, body { margin:0; height:100%; background:#000; overflow:hidden; }
+  #stage { position:fixed; inset:0; overflow:hidden; background:var(--bg); }
+  .ab { position:absolute; left:0; top:0; }
+  .full { position:absolute; inset:0; }
+  .box { position:absolute; overflow:hidden; }
+  .box > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 30%; display:block; }
+  .mk { -webkit-mask-size:100% 100%; mask-size:100% 100%; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; }
+  .osw { font-family:Oswald, sans-serif; font-weight:500; line-height:1; white-space:nowrap; text-transform:uppercase; }
+  .ext { font-family:Archivo, sans-serif; font-variation-settings:"wdth" 125, "wght" 900; line-height:.9; white-space:nowrap; text-transform:uppercase; }
+  .outline { color:transparent; -webkit-text-stroke:1.6px rgba(244,244,242,.78); }
+  .ch { display:inline-block; white-space:pre; }
+  #bgl { position:absolute; inset:0; background:url(tex/paper.jpg) center/cover; }
+  #scan { position:absolute; inset:0; background:repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 7px); pointer-events:none; }
+  .hud { position:absolute; font:8px/1.25 monospace; color:rgba(255,255,255,.28); white-space:pre; }
+  .plus { position:absolute; color:#fff; font:300 18px/1 Archivo; }
+  #hudDbg { position:fixed; left:8px; bottom:8px; z-index:9; font:12px/1.3 monospace; color:#ff0; background:#000a; padding:4px 6px; display:none; white-space:pre; }
+  #loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; color:#777; font:14px monospace; }
+</style>
+</head>
+<body>
+<audio id="audio" preload="auto"></audio>
+<div id="stage"><div id="bgl"></div><div id="deco"></div><div id="scenes" class="full"></div><div id="scan"></div></div>
+<div id="loading">cargando…</div>
+<div id="hudDbg"></div>
+<script>
+/* «Final Cut» — réplica del opener grunge de Klickpin (carbón, blanco y negro + rojo) para letras.
+   Reloj único: audio.currentTime. Cada frase de la letra es una toma; las tomas siguen el orden
+   de la referencia (config.shots) y se repiten en ciclo. Dentro de la toma, el texto muestra el
+   fragmento cantado (1–2 palabras) y la palabra héroe de la frase corre gigante de fondo. */
+(async () => {
+  const Q = new URLSearchParams(location.search);
+  let FREEZE = Q.has("t") ? parseFloat(Q.get("t")) : null;
+  async function loadJSON(...urls) {
+    for (const u of urls) { try { const r = await fetch(u); if (r.ok) return await r.json(); } catch (e) {} }
+    return null;
+  }
+  const raw = await loadJSON("config.json", "assets/config.json");
+  if (!raw) { console.warn("sin config"); return; }
+  const C = raw.configs ? raw.configs[0] : raw;
+  const DEBUG = Q.has("debug") || (C.debug && C.debug.enabled);
+  for (const [k, v] of Object.entries(C.palette || {})) document.documentElement.style.setProperty("--" + k, v);
+  if (C.fonts && C.fonts.googleUrl) document.getElementById("gf").href = C.fonts.googleUrl;
+  const audio = document.getElementById("audio"); audio.src = C.audio.src;
+  const stage = document.getElementById("stage"), scenesEl = document.getElementById("scenes");
+
+  // ---------- letra → frases → fragmentos ----------
+  const lyr = C.lyricsUrl ? await loadJSON(C.lyricsUrl) : null;
+  const F = C.lyricsFilter || {}; const drop = (F.drop || []).map(s => new RegExp(s, "i"));
+  const segs = ((lyr && lyr.segments) || []).filter(s =>
+    !(s.avg_logprob != null && F.minLogprob != null && s.avg_logprob < F.minLogprob) && !drop.some(r => r.test(s.text || "")));
+  const words = [];
+  segs.forEach((s, si) => {
+    let ws = (s.words || []).map(w => ({ w: (w.word || "").trim(), start: w.start, end: w.end }));
+    if (!ws.length && (s.text || "").trim()) {               // segmento sin palabras: se reparte
+      const parts = s.text.trim().split(/\s+/); const d = (s.end - s.start) / parts.length;
+      ws = parts.map((p, j) => ({ w: p, start: s.start + j * d, end: s.start + (j + 1) * d }));
+    }
+    ws.filter(w => w.w).forEach(w => words.push({ ...w, seg: si }));
+  });
+  const PH = Object.assign({ maxWords: 7, maxSec: 3.2, gapSec: .6, chunkWords: 2 }, C.phrases || {});
+  const TM = Object.assign({ leadSec: .12, tailSec: .45 }, C.timing || {});
+  const phrases = [];
+  for (const w of words) {
+    const p = phrases[phrases.length - 1];
+    if (!p || w.start - p.end > PH.gapSec || p.words.length >= PH.maxWords || w.end - p.start > PH.maxSec || (w.seg !== p.seg && p.words.length >= 3))
+      phrases.push({ start: w.start, end: w.end, seg: w.seg, words: [w] });
+    else { p.words.push(w); p.end = w.end; }
+  }
+  const STOP = new Set((C.stopwords || []).map(s => s.toLowerCase()));
+  const clean = s => s.replace(/[^\p{L}\p{N}'’]/gu, "");
+  function hero(p) {
+    let best = p.words[0].w;
+    for (const w of p.words) { const c = clean(w.w); if (!STOP.has(c.toLowerCase()) && c.length > clean(best).length) best = c; }
+    return clean(best).toUpperCase() || "CAUTION";
+  }
+  function chunks(p, tEnd) {
+    const out = []; let cur = null;
+    for (const w of p.words) {
+      if (!cur || cur.words.length >= PH.chunkWords || clean(w.w).length >= 8 || clean(cur.words[0].w).length >= 8) { cur = { words: [], t0: w.start - TM.leadSec }; out.push(cur); }
+      cur.words.push(w); cur.end = w.end;
+    }
+    out.forEach((c, j) => { c.text = c.words.map(w => w.w).join(" ").replace(/[,.!?¿¡]/g, "").toUpperCase(); c.t1 = j + 1 < out.length ? out[j + 1].t0 : Math.min(tEnd, c.end + TM.tailSec); });
+    return out;
+  }
+
+  // ---------- medios (fotos) ----------
+  const MEDIA = [];
+  await Promise.all((C.media || []).map(async m => {
+    const o = { ...m };
+    for (const key of ["src", "red"]) if (m[key]) {
+      const im = new Image(); im.src = m[key]; try { await im.decode(); } catch (e) { console.warn("foto", m[key]); }
+      o[key + "Img"] = im;
+    }
+    MEDIA.push(o);
+  }));
+  try { await document.fonts.load('500 100px "Oswald"'); await document.fonts.load('900 100px "Archivo"'); } catch (e) {}
+  document.getElementById("loading").remove();
+
+  // ---------- utilidades ----------
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const E = { lin: x => x, out: x => 1 - Math.pow(1 - x, 3), inOut: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2, expo: x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), in: x => x * x * x };
+  const k = (t, a, b, v0, v1, e = E.out) => t <= a ? v0 : t >= b ? v1 : v0 + (v1 - v0) * e((t - a) / (b - a));
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const hash = (a, b) => mulberry32((a * 73856093) ^ (b * 19349663))();
+  function el(tag, cls, parent, css) { const e = document.createElement(tag); if (cls) e.className = cls; if (css) Object.assign(e.style, css); if (parent) parent.appendChild(e); return e; }
+  function S(e, p, v) { const c = e.__s || (e.__s = {}); if (c[p] !== v) { c[p] = v; e.style[p] = v; } }
+  function mask(e, name) { e.classList.add("mk"); e.style.webkitMaskImage = e.style.maskImage = `url(tex/${name}.png)`; }
+  function letters(parent, text, cls, css) { const w = el("div", cls, parent, css); w.chs = []; for (const c of text) { const s = el("span", "ch", w); s.textContent = c; w.chs.push(s); } return w; }
+  function fit(e, tw, maxFs) { e.style.fontSize = "100px"; const w = e.scrollWidth || 1; const fs = Math.min(100 * tw / w, maxFs || 1e9); e.style.fontSize = fs + "px"; return fs; }
+  let W = stage.clientWidth, H = stage.clientHeight;
+  const P = () => H > W;
+  const pick = (l, p) => P() ? p : l;
+
+  // fondo persistente: micro-texto HUD y cruces que titilan (como la referencia)
+  const deco = document.getElementById("deco");
+  const hudTxt = "SEQ 01 / FINAL CUT\nREC ● 00:00:24:12\nISO 800  F2.8\nGRAIN 35MM\n";
+  [[.012, .03], [.9, .86], [.62, .02]].forEach(([x, y]) => { const h = el("div", "hud", deco, { left: x * 100 + "%", top: y * 100 + "%" }); h.textContent = hudTxt; });
+  const pluses = [[.03, .2], [.88, .12], [.47, .88], [.93, .55], [.24, .93]].map(([x, y]) => { const p = el("div", "plus", deco, { left: x * 100 + "%", top: y * 100 + "%" }); p.textContent = "+"; return p; });
+
+  // ---------- piezas ----------
+  function photo(parent, m, opt = {}) {
+    const b = el("div", "box", parent, { background: "#f2f2f0" }); if (opt.torn !== false) mask(b, "torn");
+    const i = el("img", "", b); i.src = opt.red ? m.red : m.src; if (opt.pos) i.style.objectPosition = opt.pos; return b;
+  }
+  function place(e, x, y, w, h, rot) { S(e, "left", x + "px"); S(e, "top", y + "px"); if (w != null) S(e, "width", w + "px"); if (h != null) S(e, "height", h + "px"); S(e, "transform", rot ? `rotate(${rot}deg)` : "none"); }
+  function giant(parent, text, fill, size) {
+    const g = el("div", "ext" + (fill ? "" : " outline"), parent, { position: "absolute", color: fill ? "var(--white)" : "", fontSize: size + "px" });
+    g.textContent = (text + "  ").repeat(4); return g;
+  }
+  // garabato rojo a mano: bucles con radio ruidoso, se dibuja con stroke-dashoffset
+  function scribble(parent, cx, cy, rx, ry, turns, seed, width) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", W); svg.setAttribute("height", H); svg.style.cssText = "position:absolute;left:0;top:0;overflow:visible;pointer-events:none";
+    const r = mulberry32(seed); let d = ""; const n = Math.round(turns * 48); const a0 = r() * 6.28;
+    for (let i = 0; i <= n; i++) {
+      const a = a0 + i / 48 * 6.28, q = 1 + Math.sin(i * .21 + seed) * .12 + (r() - .5) * .03;
+      const x = cx + Math.cos(a) * rx * q + i * rx * .004, y = cy + Math.sin(a) * ry * q * (1 + i / n * .2);
+      d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+    }
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", d); p.setAttribute("fill", "none"); p.setAttribute("stroke", "var(--red)");
+    p.setAttribute("stroke-width", width || Math.min(W, H) * .011); p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-linejoin", "round");
+    svg.appendChild(p); parent.appendChild(svg);
+    const len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
+    svg.draw = (q) => S(p, "strokeDashoffset", (len * (1 - clamp(q, 0, 1))).toFixed(1));
+    return svg;
+  }
+  function wavy(parent, x0, y0, h, seed) {          // trazos rojos sobre la cara («DISTORT»)
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", W); svg.setAttribute("height", H); svg.style.cssText = "position:absolute;left:0;top:0;pointer-events:none";
+    const r = mulberry32(seed); const ps = [];
+    for (let j = 0; j < 3; j++) {
+      let d = ""; const x = x0 + (j - 1) * h * .12;
+      for (let i = 0; i <= 30; i++) { const yy = y0 + i / 30 * h, xx = x + Math.sin(i * .9 + j * 2) * h * .03 + (r() - .5) * 3; d += (i ? "L" : "M") + xx.toFixed(1) + " " + yy.toFixed(1); }
+      const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", d); p.setAttribute("fill", "none");
+      p.setAttribute("stroke", "var(--red)"); p.setAttribute("stroke-width", Math.min(W, H) * .007); p.setAttribute("stroke-linecap", "round"); svg.appendChild(p);
+      const len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.len = len; ps.push(p);
+    }
+    parent.appendChild(svg);
+    svg.draw = q => ps.forEach((p, j) => S(p, "strokeDashoffset", (p.len * (1 - clamp(q * 1.4 - j * .2, 0, 1))).toFixed(1)));
+    return svg;
+  }
+  function stroke(parent, name, color) { const s = el("div", "box", parent, { background: color || "var(--white)" }); mask(s, name); return s; }
+  function bars(parent, x, y, w, gap, th) {
+    return [1, .8, .92].map((f, j) => el("div", "ab", parent, { background: "var(--white)", left: x + "px", top: (y + j * gap) + "px", width: w * f + "px", height: th + "px" }));
+  }
+  function patch(parent, x, y, w, h) { const p = el("div", "box", parent, { background: "url(tex/hatch.jpg) center/cover", left: x + "px", top: y + "px", width: w + "px", height: h + "px", opacity: .9 }); return p; }
+
+  // texto de la letra: revelado desordenado con tracking que se cierra, salida por letras sueltas
+  function textSlot(root, sc, opt) {
+    const box = el("div", "ab", root);
+    let curC = null, w = null;
+    const size = opt.size || pick(H * .1, W * .13);
+    function build(c) {
+      if (w) w.remove();
+      w = letters(box, c.text, "osw", { position: "absolute", left: 0, top: 0, color: opt.color || "var(--white)", fontWeight: opt.weight || 500, fontSize: size + "px", letterSpacing: ".01em" });
+      const maxW = opt.maxW || pick(W * .5, W * .86);
+      if (w.scrollWidth > maxW) fit(w, maxW);
+      w.order = w.chs.map((_, j) => hash(j + 1, sc.i * 7 + c.t0 * 100 | 0));
+    }
+    return (t) => {
+      const c = sc.chunks.find(c => t >= c.t0 && t < c.t1) || null;
+      if (c !== curC) { curC = c; if (c) build(c); else if (w) { w.remove(); w = null; } }
+      if (!w || !c) return;
+      const p = t - c.t0, rem = c.t1 - t;
+      const ls = opt.track ? k(p, 0, .3, .55, .01, E.expo) : .01;
+      S(w, "letterSpacing", ls + "em");
+      const x = opt.align === "center" ? opt.x - w.scrollWidth / 2 : opt.align === "right" ? opt.x - w.scrollWidth : opt.x;
+      S(w, "transform", `translate(${x}px,${opt.y - w.offsetHeight / 2}px)`);
+      w.chs.forEach((ch, j) => { const r = w.order[j]; const on = p > r * .2 && !(rem < .12 && r > rem / .12); S(ch, "opacity", on ? "1" : "0"); });
+    };
+  }
+
+  // ---------- tomas (en el orden de la referencia) ----------
+  const SH = {};
+  // 1) perfil a la izquierda, texto blanco con garabato, barras y palabra en contorno abajo
+  SH.profile = (sc, root) => {
+    const pb = photo(root, sc.m); const pw = pick(W * .36, W * .62);
+    const pt = patch(root, pick(W * .56, W * .3), 0, pick(W * .44, W * .7), pick(H * .44, H * .2));
+    const g = giant(root, sc.hero, false, pick(H * .3, W * .26));
+    const sc1 = scribble(root, pick(W * .62, W * .6), pick(H * .4, H * .62), pick(W * .09, W * .2), pick(H * .1, H * .05), 1.25, sc.i + 3);
+    const bs = bars(root, pick(W * .62, W * .3), pick(H * .74, H * .8), pick(W * .38, W * .7), pick(H * .05, H * .028), pick(H * .028, H * .015));
+    const tx = textSlot(root, sc, { x: pick(W * .43, W * .1), y: pick(H * .6, H * .7), track: true });
+    return (lt, t) => {
+      place(pb, k(lt, 0, .18, -pw, 0, E.expo), pick(-H * .02, H * .04), pw, pick(H * 1.04, H * .56));
+      S(pt, "opacity", lt > .6 ? ".9" : "0");
+      S(g, "transform", `translate(${pick(W * .3, 0) - lt * W * .05}px,${pick(H * .74, H * .86)}px)`);
+      sc1.draw(k(lt, .1, .55, 0, 1, E.lin));
+      bs.forEach((b, j) => S(b, "transform", `translateX(${k(lt, .3 + j * .04, .5 + j * .04, W, 0, E.expo)}px)`));
+      tx(t);
+    };
+  };
+  // 2) mismo encuadre con eco de la foto, texto rojo, palabra rellena y pinceladas verticales
+  SH.profileRed = (sc, root) => {
+    const pw = pick(W * .32, W * .56);
+    const e1 = photo(root, sc.m); const pb = photo(root, sc.m);
+    const pt = patch(root, pick(W * .45, 0), 0, pick(W * .55, W), pick(H * .58, H * .3));
+    const v1 = stroke(root, "vstroke"), v2 = stroke(root, "vstroke");
+    const g = giant(root, sc.hero, true, pick(H * .26, W * .24));
+    const tx = textSlot(root, sc, { x: pick(W * .015, W * .06), y: pick(H * .62, H * .72), color: "var(--red)", size: pick(H * .11, W * .14) });
+    return (lt, t) => {
+      place(pb, 0, pick(-H * .02, H * .05), pw, pick(H * 1.04, H * .55));
+      place(e1, k(lt, .35, .55, 0, pick(W * .3, W * .4), E.expo), pick(-H * .02, H * .05), pw, pick(H * 1.04, H * .55));
+      S(e1, "opacity", lt > .35 ? "1" : "0");
+      place(v1, pick(W * .2, W * .1), 0, pick(W * .1, W * .2), H); S(v1, "clipPath", `inset(0 0 ${100 - k(lt, .45, .7, 0, 100, E.lin)}% 0)`);
+      place(v2, pick(W * .7, W * .7), pick(H * .2, H * .1), pick(W * .08, W * .16), H * .5, 18); S(v2, "clipPath", `inset(0 0 ${100 - k(lt, .55, .8, 0, 100, E.lin)}% 0)`);
+      S(g, "transform", `translate(${k(lt, 0, 3, pick(W * .45, W * .1), pick(W * .3, -W * .1), E.lin)}px,${pick(H * .74, H * .82)}px)`);
+      tx(t);
+    };
+  };
+  // 3) garabato rojo enorme cruzando, foto al centro-derecha, barrido blanco arriba
+  SH.scribble = (sc, root) => {
+    const pb = photo(root, sc.m);
+    const hs = stroke(root, "hstroke");
+    const g = giant(root, sc.hero, false, pick(H * .3, W * .26));
+    const big = scribble(root, pick(W * .38, W * .5), pick(H * .55, H * .5), pick(W * .45, W * .5), pick(H * .42, H * .3), 1.15, sc.i + 11, Math.min(W, H) * .016);
+    const tx = textSlot(root, sc, { x: pick(W * .015, W * .06), y: pick(H * .62, H * .78), color: "var(--red)", size: pick(H * .11, W * .14) });
+    return (lt, t) => {
+      place(pb, pick(W * .46, W * .3), pick(-H * .02, H * .14), pick(W * .3, W * .62), pick(H * 1.04, H * .56));
+      place(hs, pick(W * .05, 0), pick(H * .06, H * .06), pick(W * .45, W * .8), pick(H * .14, H * .07)); S(hs, "clipPath", `inset(0 ${100 - k(lt, 0, .3, 0, 100, E.lin)}% 0 0)`);
+      S(g, "transform", `translate(${pick(W * .6, W * .1) - lt * W * .05}px,${pick(H * .74, H * .86)}px)`);
+      big.draw(k(lt, 0, .5, 0, 1, E.lin));
+      tx(t);
+    };
+  };
+  // 4) pinceladas blancas verticales que barren a la izquierda, foto a la derecha
+  SH.brush = (sc, root) => {
+    const pb = photo(root, sc.m);
+    const g = giant(root, sc.hero, false, pick(H * .3, W * .26));
+    const tx = textSlot(root, sc, { x: pick(W * .015, W * .06), y: pick(H * .62, H * .7), color: "var(--red)", size: pick(H * .11, W * .14) });
+    const v1 = stroke(root, "vstroke"), v2 = stroke(root, "vstroke");
+    return (lt, t) => {
+      place(pb, pick(W * .45, W * .38), pick(-H * .02, H * .06), pick(W * .36, W * .62), pick(H * 1.04, H * .6));
+      place(v1, pick(W * .1, W * .02), -H * .02, pick(W * .13, W * .24), H * 1.04); S(v1, "clipPath", `inset(0 0 ${100 - k(lt, 0, .22, 0, 100, E.lin)}% 0)`);
+      place(v2, pick(W * .25, W * .27), -H * .02, pick(W * .07, W * .12), H * 1.04); S(v2, "clipPath", `inset(${100 - k(lt, .1, .3, 0, 100, E.lin)}% 0 0 0)`);
+      S(g, "transform", `translate(${pick(W * .55, W * .1) - lt * W * .05}px,${pick(H * .74, H * .86)}px)`);
+      tx(t);
+    };
+  };
+  // 5) palabra apilada en contorno rojo junto a la foto, mancha de tinta
+  SH.stack = (sc, root) => {
+    const blob = stroke(root, "blob", "#151515");
+    const pb = photo(root, sc.m);
+    const st = el("div", "", root, { position: "absolute" });
+    const fs = pick(H * .2, W * .18);
+    for (let j = 0; j < 6; j++) { const r = el("div", "osw", st, { fontWeight: 600, fontSize: fs + "px", lineHeight: .84, color: "transparent", webkitTextStroke: `1.5px var(--red)` }); r.textContent = sc.hero; }
+    const tx = textSlot(root, sc, { x: pick(W * .03, W * .06), y: pick(H * .86, H * .88), color: "var(--red)", size: pick(H * .09, W * .12) });
+    return (lt, t) => {
+      place(blob, pick(W * .02, -W * .1), pick(H * .3, H * .5), pick(H * .7, W * .8), pick(H * .7, W * .8)); S(blob, "transform", `scale(${k(lt, 0, .4, .2, 1)})`);
+      place(pb, pick(W * .5, W * .36), pick(-H * .02, H * .1), pick(W * .34, W * .62), pick(H * 1.04, H * .56));
+      S(st, "transform", `translate(${pick(W * .3, W * .08)}px,${k(lt, 0, 3, -fs * .4, -fs * .9, E.lin)}px)`);
+      [...st.children].forEach((r, j) => S(r, "opacity", lt > j * .04 ? "1" : "0"));
+      tx(t);
+    };
+  };
+  // 6) glitch: negro, foto en duotono rojo cortada en franjas, barras blancas y roja
+  SH.glitch = (sc, root) => {
+    el("div", "full", root, { background: "var(--black)" });
+    const n = 7, slices = [], pw = pick(W * .32, W * .7), ph = pick(H * .9, H * .5), px = pick(W * .34, W * .15), py = pick(H * .05, H * .2);
+    for (let j = 0; j < n; j++) {
+      const s = el("div", "ab", root, { width: pw + "px", height: ph / n + 1 + "px", background: `url(${sc.m.red}) center ${-j * ph / n}px / ${pw}px ${ph}px no-repeat`, top: (py + j * ph / n) + "px", left: px + "px" });
+      slices.push(s);
+    }
+    el("div", "ab", root, { left: px + "px", top: py + "px", width: pw + "px", height: ph + "px", background: "repeating-linear-gradient(0deg, rgba(255,255,255,.22) 0 1px, transparent 1px 5px)" });
+    const bs = bars(root, 0, pick(H * .45, H * .74), W, pick(H * .02, H * .012), 2);
+    const rb = el("div", "ab", root, { background: "var(--red)", height: pick(H * .03, H * .018) + "px", width: pick(W * .3, W * .5) + "px", left: pick(W * .5, W * .4) + "px", top: pick(H * .5, H * .76) + "px" });
+    const tx = textSlot(root, sc, { x: pick(W * .03, W * .06), y: pick(H * .78, H * .86), color: "var(--red)", track: true, size: pick(H * .1, W * .13) });
+    return (lt, t) => {
+      slices.forEach((s, j) => S(s, "transform", `translateX(${(hash(j, Math.floor(lt / .06)) - .5) * pw * (lt < .5 ? .25 : .06)}px)`));
+      bs.forEach((b, j) => S(b, "opacity", Math.floor(lt / .08 + j) % 3 ? "1" : "0"));
+      S(rb, "transform", `translateX(${k(lt, .1, .35, W, 0, E.expo)}px)`);
+      tx(t);
+    };
+  };
+  // 7) cara con trazos rojos, texto rojo grande a la derecha, palabra rellena arriba
+  SH.distort = (sc, root) => {
+    const pw = pick(W * .38, W * .7), ph = pick(H * .9, H * .5), px = pick(W * .03, W * .15), py = pick(H * .1, H * .14);
+    const pb = photo(root, sc.m);
+    const wv = wavy(root, px + pw * .45, py + ph * .12, ph * .7, sc.i);
+    const hs = stroke(root, "hstroke");
+    const g = giant(root, sc.hero, true, pick(H * .2, W * .2));
+    const tx = textSlot(root, sc, { x: pick(W * .44, W * .1), y: pick(H * .5, H * .76), color: "var(--red)", size: pick(H * .15, W * .17), weight: 600 });
+    return (lt, t) => {
+      place(pb, px, py, pw, ph, k(lt, 0, .2, -3, 0));
+      wv.draw(k(lt, .1, .7, 0, 1, E.lin));
+      place(hs, -W * .02, pick(H * .02, H * .02), pick(W * .45, W * .7), pick(H * .14, H * .07)); S(hs, "clipPath", `inset(0 ${100 - k(lt, 0, .2, 0, 100, E.lin)}% 0 0)`);
+      S(g, "transform", `translate(${k(lt, 0, 3, W * .4, -W * .1, E.lin)}px,${pick(-H * .02, H * .02)}px)`);
+      tx(t);
+    };
+  };
+  // 8) la foto repetida en tres tiras de papel roto, palabra en contorno arriba
+  SH.strips = (sc, root) => {
+    const g = giant(root, sc.hero, false, pick(H * .24, W * .22));
+    const sw = pick(W * .2, W * .3), xs = pick([W * .3, W * .52, W * .74], [W * .04, W * .36, W * .68]);
+    const strips = xs.map(() => photo(root, sc.m, { pos: "50% 25%" }));
+    const tx = textSlot(root, sc, { x: pick(W * .02, W * .05), y: pick(H * .55, H * .8), color: "var(--red)", size: pick(H * .12, W * .14) });
+    const d = sc.t1 - sc.t0;
+    return (lt, t) => {
+      S(g, "transform", `translate(${k(lt, 0, 3, 0, -W * .15, E.lin)}px,${pick(H * .02, H * .04)}px)`);
+      const merge = k(lt, Math.max(.8, d * .6), Math.max(1, d * .6 + .25), 0, 1, E.inOut);
+      strips.forEach((s, j) => {
+        const x = xs[j] + (xs[1] - xs[j]) * merge;
+        place(s, x, pick(H * .12, H * .2), sw, pick(H * .9, H * .55), (j - 1) * 1.5);
+        S(s, "opacity", lt > j * .1 && (j === 1 || merge < .98) ? "1" : "0");
+      });
+      tx(t);
+    };
+  };
+  // 9) sin foto: fondo, palabra en contorno arriba, garabato rojo grande, tinta y barridos
+  SH.empty = (sc, root) => {
+    const blob = stroke(root, "blob", "#171717");
+    const g = giant(root, sc.hero, false, pick(H * .26, W * .24));
+    const big = scribble(root, pick(W * .3, W * .45), pick(H * .66, H * .6), pick(W * .22, W * .38), pick(H * .2, H * .12), 1.4, sc.i + 21, Math.min(W, H) * .016);
+    const hs = stroke(root, "hstroke");
+    const tx = textSlot(root, sc, { x: pick(W * .55, W * .1), y: pick(H * .55, H * .4), track: true, size: pick(H * .11, W * .14) });
+    return (lt, t) => {
+      place(blob, pick(W * .4, W * .1), pick(H * .25, H * .3), pick(H * .6, W * .8), pick(H * .6, W * .8)); S(blob, "transform", `scale(${k(lt, 0, .5, .3, 1)})`);
+      S(g, "transform", `translate(${k(lt, 0, 3, -W * .05, -W * .25, E.lin)}px,${pick(H * .14, H * .1)}px)`);
+      big.draw(k(lt, 0, .5, 0, 1, E.lin));
+      place(hs, 0, pick(H * .86, H * .9), pick(W * .3, W * .6), pick(H * .1, H * .06)); S(hs, "clipPath", `inset(0 ${100 - k(lt, .2, .45, 0, 100, E.lin)}% 0 0)`);
+      tx(t);
+    };
+  };
+  // 10) pincelada blanca y foto sobre rayas verticales a la derecha
+  SH.duo = (sc, root) => {
+    const strp = el("div", "ab", root, { background: "repeating-linear-gradient(90deg,#f2f2f0 0 6px,#111 6px 12px)" });
+    const pb = photo(root, sc.m);
+    const v1 = stroke(root, "vstroke");
+    const tx = textSlot(root, sc, { x: pick(W * .05, W * .06), y: pick(H * .76, H * .84), color: "var(--red)", track: true, size: pick(H * .12, W * .14) });
+    return (lt, t) => {
+      place(strp, pick(W * .48, W * .3), pick(H * .3, H * .2), pick(W * .08, W * .1), pick(H * .66, H * .4));
+      place(pb, pick(W * .53, W * .36), pick(H * .26, H * .22), pick(W * .3, W * .58), pick(H * .76, H * .45));
+      place(v1, pick(W * .34, W * .14), -H * .02, pick(W * .09, W * .18), H * 1.04); S(v1, "clipPath", `inset(${100 - k(lt, 0, .25, 0, 100, E.lin)}% 0 0 0)`);
+      tx(t);
+    };
+  };
+  // 11) estela de copias que convergen, barras a la izquierda, letras gigantes dispersas
+  SH.trail = (sc, root) => {
+    const g = giant(root, sc.hero.split("").join(" "), false, pick(H * .26, W * .24));
+    const cps = [0, 1, 2, 3].map(() => photo(root, sc.m, { torn: false }));
+    const bs = bars(root, 0, pick(H * .2, H * .16), pick(W * .26, W * .4), pick(H * .06, H * .03), pick(H * .035, H * .018));
+    const tx = textSlot(root, sc, { x: pick(W * .2, W * .08), y: pick(H * .78, H * .82), color: "var(--red)", size: pick(H * .13, W * .15), weight: 600 });
+    return (lt, t) => {
+      S(g, "transform", `translate(${k(lt, 0, 3, W * .2, -W * .1, E.lin)}px,${pick(H * .18, H * .4)}px)`);
+      const pw = pick(W * .3, W * .6), ph = pick(H * .85, H * .5), x = pick(W * .3, W * .2), y = pick(H * .15, H * .12);
+      cps.forEach((c, j) => {
+        const off = (3 - j) * k(lt, 0, .45, 1, 0, E.out);
+        place(c, x - off * pw * .22, y - off * ph * .08, pw, ph);
+        S(c, "opacity", j === 3 ? "1" : (.25 + j * .15) * k(lt, .3, .5, 1, 0) + "");
+      });
+      bs.forEach((b, j) => S(b, "transform", `translateX(${k(lt, .2 + j * .05, .4 + j * .05, -W * .4, 0, E.expo)}px)`));
+      tx(t);
+    };
+  };
+  // 12) palabra rellena gigante que entra arriba sobre papel blanco, foto y garabato
+  SH.giantFill = (sc, root) => {
+    const hs = stroke(root, "hstroke");
+    const pb = photo(root, sc.m);
+    const g = giant(root, sc.hero, true, pick(H * .3, W * .26));
+    const s1 = scribble(root, pick(W * .7, W * .7), pick(H * .4, H * .38), pick(W * .09, W * .2), pick(H * .26, H * .12), 1.1, sc.i + 31);
+    const tx = textSlot(root, sc, { x: pick(W * .54, W * .1), y: pick(H * .78, H * .8), color: "var(--red)", size: pick(H * .13, W * .15) });
+    return (lt, t) => {
+      place(hs, -W * .02, pick(H * .04, H * .04), pick(W * .5, W * .8), pick(H * .26, H * .14)); S(hs, "clipPath", `inset(0 ${100 - k(lt, 0, .2, 0, 100, E.lin)}% 0 0)`);
+      place(pb, pick(W * .36, W * .3), pick(-H * .02, H * .2), pick(W * .3, W * .6), pick(H * 1.04, H * .5));
+      S(g, "transform", `translate(${k(lt, 0, .25, W, pick(W * .05, 0), E.expo) - lt * W * .02}px,${pick(H * .12, H * .06)}px)`);
+      s1.draw(k(lt, .15, .6, 0, 1, E.lin));
+      tx(t);
+    };
+  };
+  // CIERRE: marca con estela de copias sobre bloques negros, pincelada y garabato
+  SH.logo = (sc, root) => {
+    const blk = el("div", "ab", root, { background: "var(--black)" });
+    const v1 = stroke(root, "vstroke");
+    const s1 = scribble(root, W * .2, H * .62, W * .2, H * .12, .7, 77);
+    const make = () => { const w = el("div", "", root, { position: "absolute", left: "50%", top: "50%", display: "flex", width: "max-content", alignItems: "center", gap: ".18em", color: "var(--white)", fontFamily: "Archivo", fontVariationSettings: '"wdth" 100, "wght" 700', whiteSpace: "nowrap" }); const dot = el("span", "", w, { width: ".62em", height: ".78em", borderRadius: "60% 10% 60% 10%", background: "var(--red)", display: "inline-block", transform: "rotate(-20deg)" }); el("span", "", w).textContent = C.outro.title || "NEXA BRIEF"; return w; };
+    const cps = [0, 1, 2, 3, 4].map(make);
+    cps.forEach(c => fit(c, pick(W * .5, W * .84), H * .18));
+    const sub = el("div", "osw", root, { position: "absolute", left: "50%", top: pick(H * .64, H * .6) + "px", color: "var(--red)", fontSize: pick(H * .06, W * .08) + "px", letterSpacing: ".3em" }); sub.textContent = C.outro.sub || "";
+    return (lt) => {
+      place(blk, pick(W * .36, W * .2), 0, pick(W * .24, W * .5), H);
+      place(v1, pick(W * .8, W * .78), -H * .02, pick(W * .08, W * .16), H * 1.04); S(v1, "clipPath", `inset(0 0 ${100 - k(lt, .8, 1.1, 0, 100, E.lin)}% 0)`);
+      s1.draw(k(lt, .3, .8, 0, 1, E.lin));
+      cps.forEach((c, j) => {
+        const off = (4 - j) * k(lt, 0, .7, 1, 0, E.out), jit = lt < .7 ? (hash(j, Math.floor(lt / .05)) - .5) * W * .02 : 0;
+        S(c, "transform", `translate(calc(-50% + ${-off * W * .03 + jit}px), calc(-50% + ${-off * H * .04}px))`);
+        S(c, "opacity", j === 4 ? "1" : lt < .75 ? (.35 + j * .12) + "" : "0");
+      });
+      S(sub, "transform", `translateX(-50%)`); S(sub, "opacity", lt > 1 && Math.floor(lt / .5) % 6 ? "1" : lt > 1 ? ".4" : "0");
+    };
+  };
+
+  // ---------- línea de tiempo ----------
+  const shots = C.shots || Object.keys(SH).filter(s => s !== "logo");
+  const scenes = [];
+  const rnd = mulberry32(C.seed || 1);
+  const order = MEDIA.map((m, i) => ({ m, r: rnd() })).sort((a, b) => a.r - b.r).map(o => o.m);
+  const firstStart = phrases.length ? phrases[0].start - TM.leadSec : 3;
+  const lastEnd = phrases.length ? phrases[phrases.length - 1].end : 10;
+  const outroAt = lastEnd + .6;
+  // intro: título y artista con el encuadre de la primera toma de la referencia
+  const intro = { i: 0, t0: 0, t1: firstStart, shot: "profile", hero: C.intro.title || "CAUTION", m: order[0] };
+  intro.chunks = [{ text: C.intro.title || "", t0: .2, t1: firstStart * .52 }, { text: C.intro.artist || "", t0: firstStart * .52, t1: firstStart - .05 }].filter(c => c.text);
+  scenes.push(intro);
+  let echoN = 0;
+  phrases.forEach((p, j) => {
+    const t0 = p.start - TM.leadSec, t1 = j + 1 < phrases.length ? phrases[j + 1].start - TM.leadSec : outroAt;
+    const sc = { i: j + 1, t0, t1, shot: shots[(j + 1 + echoN) % shots.length], hero: hero(p), m: order[(j + 1 + echoN) % order.length] };
+    if (sc.shot === "distort") sc.m = order.find(m => /rostro|perfil-mujer/.test(m.id)) || sc.m;
+    sc.chunks = chunks(p, t1);
+    scenes.push(sc);
+    // hueco instrumental largo: la referencia corta cada ~1 s, así que seguimos el ciclo de tomas
+    // con ecos de la palabra héroe (sin texto) en vez de dejar una sola toma quieta
+    const free = t1 - (p.end + TM.tailSec + .4);
+    if (free > 1.6) {
+      sc.t1 = p.end + TM.tailSec + .4; const n = Math.round(free / 1.2);
+      for (let q = 0; q < n; q++) {
+        echoN++;
+        const e = { i: 1000 + echoN, t0: sc.t1 + q * free / n, t1: sc.t1 + (q + 1) * free / n, shot: shots[(j + 1 + echoN) % shots.length], hero: sc.hero, m: order[(j + 1 + echoN) % order.length], chunks: [] };
+        scenes.push(e);
+      }
+    }
+  });
+  scenes.push({ i: scenes.length, t0: outroAt, t1: Infinity, shot: "logo", hero: "", m: order[0], chunks: [] });
+
+  let cur = null;
+  function mount(sc) {
+    if (cur) cur.root.remove();
+    const root = el("div", "full", scenesEl);
+    const fn = (SH[sc.shot] || SH.profile)(sc, root);
+    cur = { sc, root, fn };
+  }
+  const hudD = document.getElementById("hudDbg"); if (DEBUG) hudD.style.display = "block";
+  function render(t) {
+    let sc = scenes[0]; for (const x of scenes) if (t >= x.t0) sc = x;
+    if (!cur || cur.sc !== sc) mount(sc);
+    const lt = t - sc.t0;
+    // corte con glitch: la toma entra temblando en franjas los primeros cuadros
+    S(cur.root, "transform", lt < .12 ? `translateX(${(hash(sc.i, Math.floor(lt / .03)) - .5) * W * .04}px)` : "none");
+    cur.fn(lt, t);
+    pluses.forEach((p, j) => S(p, "opacity", hash(j, Math.floor(t / .25)) > .4 ? "1" : "0"));
+    if (DEBUG) hudD.textContent = `t ${t.toFixed(2)}  toma ${sc.i} ${sc.shot}  lt ${lt.toFixed(2)}\nhéroe ${sc.hero}`;
+  }
+  addEventListener("resize", () => { W = stage.clientWidth; H = stage.clientHeight; if (cur) { const sc = cur.sc; cur.root.remove(); cur = null; mount(sc); } });
+
+  window.__finalcut = {
+    scenes,
+    seek(t) { FREEZE = +t; audio.pause(); audio.currentTime = FREEZE; render(FREEZE); return Promise.resolve(); },
+  };
+  function frame() { render(FREEZE != null ? FREEZE : audio.currentTime); requestAnimationFrame(frame); }
+  if (FREEZE != null) { audio.addEventListener("loadedmetadata", () => { audio.currentTime = FREEZE; }, { once: true }); requestAnimationFrame(frame); return; }
+  audio.play().catch(() => { addEventListener("pointerdown", () => audio.play(), { once: true }); });
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

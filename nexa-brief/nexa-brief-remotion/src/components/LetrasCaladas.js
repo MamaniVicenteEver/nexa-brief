@@ -16,10 +16,12 @@
 // El layout (qué lámina, qué palabra dónde) se hornea 100% en
 // core/letras-caladas-timeline.js (determinista dado seed+lyrics); este
 // componente solo decide QUÉ dibujar en el frame actual y hace el pintado
-// pixel a pixel, réplica 1:1 de paintVideo()/drawLamina()/drawCard() del
-// HTML original.
+// pixel a pixel, réplica 1:1 de paintVideo()/drawLamina() del HTML original.
+// La salida se dibuja desde el components/outro.js de esta plantilla.
 const React = require('react');
-const {AbsoluteFill, Audio, OffthreadVideo, useCurrentFrame} = require('remotion');
+const CaladoIntro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-calado/components/intro.js');
+const CaladoOutro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-calado/components/outro.js');
+const {AbsoluteFill, Audio, OffthreadVideo, useCurrentFrame, interpolate} = require('remotion');
 const {loadFont: loadAnton} = require('@remotion/google-fonts/Anton');
 const {loadFont: loadCaveat} = require('@remotion/google-fonts/Caveat');
 const {resolveMediaSrc} = require('../core/shared-timeline-utils');
@@ -165,44 +167,6 @@ function drawLamina(surfaces, videoImg, L, C, t) {
   }
 }
 
-// drawCard() del original — tarjetas de intro/outro: título calado al
-// centro (misma técnica destination-in), créditos chicos alrededor.
-function drawCard(surfaces, videoImg, cfg, C) {
-  const {ctx, maskCanvas, mctx, videoCanvas, vctx} = surfaces;
-  ctx.fillStyle = '#000';
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  if (C.video.ghostCalado > 0) paintVideo(ctx, videoImg, C.video.filter, C.video.ghostCalado);
-
-  const title = (cfg.title || '').toUpperCase();
-  const fs = Math.min(fitFsReal(ctx, title, WIDTH * 0.92, HEIGHT * 0.3), HEIGHT * 0.3);
-  mctx.clearRect(0, 0, WIDTH, HEIGHT);
-  mctx.fillStyle = '#fff';
-  mctx.textAlign = 'center';
-  mctx.textBaseline = 'middle';
-  mctx.font = `${fs}px ${FONT}`;
-  mctx.fillText(title, WIDTH / 2, HEIGHT * 0.47);
-  vctx.clearRect(0, 0, WIDTH, HEIGHT);
-  paintVideo(vctx, videoImg, C.video.filter, 1);
-  vctx.globalCompositeOperation = 'destination-in';
-  vctx.drawImage(maskCanvas, 0, 0, WIDTH, HEIGHT);
-  vctx.globalCompositeOperation = 'source-over';
-  ctx.drawImage(videoCanvas, 0, 0, WIDTH, HEIGHT);
-
-  ctx.save();
-  ctx.fillStyle = hexA(C.colors.ink, 0.8);
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.font = `${HEIGHT * 0.022}px ${FONT}`;
-  if ('letterSpacing' in ctx) ctx.letterSpacing = `${HEIGHT * 0.012}px`;
-  if (cfg.artist) ctx.fillText(cfg.artist.toUpperCase(), WIDTH / 2, HEIGHT * 0.47 - fs * 0.75);
-  if (cfg.sub) ctx.fillText(cfg.sub.toUpperCase(), WIDTH / 2, HEIGHT * 0.47 + fs * 0.72);
-  ctx.font = `${HEIGHT * 0.015}px ${FONT}`;
-  ctx.fillStyle = hexA(C.colors.ink, 0.5);
-  if (cfg.feats) ctx.fillText(cfg.feats.toUpperCase(), WIDTH / 2, HEIGHT * 0.86);
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
-  ctx.restore();
-}
-
 // #grain del original — SVG de feTurbulence animado en pasos de 4 (steps(4)
 // infinite a 0.95s); acá discretizado por frame en vez de tiempo real.
 const GRAIN_URL =
@@ -242,8 +206,14 @@ function LetrasCaladas({configData, lyricsData, audioSrc, bgSrc}) {
 
   const lastIdx = findLastIdx(LAMINAS, frame);
   const activeLam = lastIdx >= 0 ? LAMINAS[lastIdx] : null;
-  const introGone = LAMINAS.length > 0 && frame >= LAMINAS[0].frame;
+  const introDurationSeconds = LAMINAS.length
+    ? LAMINAS[0].frame / FPS
+    : CaladoIntro.DEFAULT_DURATION_SECONDS;
   const outroShown = frame >= OUTRO_FRAME;
+  const outroOpacity = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + CaladoOutro.TRANSITION_SECONDS * FPS], [0, 1], {
+    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
+  });
+  const introState = CaladoIntro.stateAt(t, introDurationSeconds, outroShown);
 
   // El pintado ENTERO pasa acá, sincronizado con el frame de video exacto
   // que Remotion decodificó para este cuadro (mismo patrón que
@@ -266,10 +236,29 @@ function LetrasCaladas({configData, lyricsData, audioSrc, bgSrc}) {
       ctx.scale(s, s);
       ctx.translate(-WIDTH / 2, -HEIGHT / 2);
 
-      if (!introGone && !outroShown) {
-        drawCard(surfaces, videoImg, C.intro, C);
+      if (introState.active && !outroShown) {
+        CaladoIntro.drawCanvasIntro({
+          ctx,
+          config: C.intro,
+          timeSeconds: t,
+          durationSeconds: introDurationSeconds,
+          width: WIDTH,
+          height: HEIGHT,
+          fontFamily: FONT,
+          maskCanvas,
+          maskContext: mctx,
+          videoCanvas,
+          videoContext: vctx,
+          backgroundVeilOpacity: 0.58,
+          drawBackground: (target, alpha = 1) => paintVideo(target, videoImg, C.video.filter, alpha),
+        });
       } else if (outroShown) {
-        drawCard(surfaces, videoImg, C.outro, C);
+        if (activeLam) drawLamina(surfaces, videoImg, activeLam, C, t);
+        CaladoOutro.drawCanvasOutro({
+          ctx, width: WIDTH, height: HEIGHT, config: C.outro, opacity: outroOpacity,
+          elapsedSeconds: Math.max(0, (frame - OUTRO_FRAME) / FPS), fontFamily: FONT,
+          drawBackground: (target, alpha = 1) => paintVideo(target, videoImg, C.video.filter, alpha),
+        });
       } else if (activeLam) {
         drawLamina(surfaces, videoImg, activeLam, C, t);
       } else {
@@ -279,7 +268,7 @@ function LetrasCaladas({configData, lyricsData, audioSrc, bgSrc}) {
 
       ctx.restore();
     },
-    [C, activeLam, introGone, outroShown, punchScale, t]
+    [C, activeLam, introState.active, introDurationSeconds, outroShown, punchScale, t]
   );
 
   const grainStep = Math.floor(frame / ((1.1 / 4) * FPS)) % 4;

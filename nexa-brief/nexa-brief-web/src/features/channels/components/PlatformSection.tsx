@@ -41,10 +41,16 @@ export function PlatformSection({
           <Plus className="size-4.5" />
         </span>
         <span className="text-[13.5px] font-bold text-nb-ink">
-          {totalAccounts === 0 ? t("connectFirst", { platform: label }) : t("connectAnother")}
+          {platform === "instagram"
+            ? totalAccounts === 0
+              ? t("connectInstagram")
+              : t("connectAnotherInstagram")
+            : totalAccounts === 0
+              ? t("connectFirst", { platform: label })
+              : t("connectAnother")}
         </span>
         <span className="max-w-[220px] text-[12px] leading-[1.5] text-nb-mute">
-          {t("connectHint")}
+          {platform === "instagram" ? t("instagramConnectHint") : t("connectHint")}
         </span>
       </button>
     </ConnectAccountDialog>
@@ -79,10 +85,16 @@ export function PlatformSection({
             className="inline-flex items-center gap-1.5 rounded-full border border-nb-line px-3.5 py-2 text-[12.5px] font-semibold text-nb-ink transition-colors hover:bg-nb-ink/[0.04]"
           >
             <Plus className="size-3.5" />
-            {t("addAccount")}
+            {platform === "instagram" ? t("connectInstagramShort") : t("addAccount")}
           </button>
         </ConnectAccountDialog>
       </header>
+
+      {platform === "instagram" && (
+        <p className="mb-4 max-w-3xl rounded-xl border border-nb-line bg-white/35 px-4 py-3 text-[12.5px] leading-[1.55] text-nb-mute">
+          {t("instagramHint")}
+        </p>
+      )}
 
       {filtered && accounts.length === 0 ? (
         <p className="rounded-[18px] border border-dashed border-nb-line px-4 py-8 text-center text-[12.5px] text-nb-mute">

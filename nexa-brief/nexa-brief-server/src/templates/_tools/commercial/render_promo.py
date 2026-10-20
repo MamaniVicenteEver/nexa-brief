@@ -71,8 +71,12 @@ async def render(args):
         httpd.shutdown()
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-framerate", str(args.fps), "-i", str(outdir / "%06d.jpg"),
                         "-ss", str(args.frm), "-t", str(t_end - args.frm), "-i", str(folder / cfg["audio"]["src"]),
-                        "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-preset", args.preset, "-crf", "18", "-pix_fmt", "yuv420p",
-                        "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", args.out], check=True)
+                        "-map", "0:v", "-map", "1:a", "-vf", "scale=out_range=tv,format=yuv420p",
+                        # crf 23 + tope 6 Mbps: el 9:16 de un video largo entra en el límite de Reels (300 MB)
+                        "-c:v", "libx264", "-preset", args.preset, "-crf", "23", "-maxrate", "6M", "-bufsize", "12M",
+                        "-pix_fmt", "yuv420p", "-color_range", "tv",
+                        "-c:a", "aac", "-b:a", "128k", "-ar", "48000",   # Instagram: audio ≤ 128 kbps
+                        "-shortest", "-movflags", "+faststart", args.out], check=True)
     print("listo:", args.out)
 
 if __name__ == "__main__":

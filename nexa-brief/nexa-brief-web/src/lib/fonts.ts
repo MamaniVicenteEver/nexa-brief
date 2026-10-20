@@ -1,4 +1,4 @@
-import { Fraunces, Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono, Outfit, Space_Grotesk } from "next/font/google";
 
 /**
  * Nexa Brief (Monax) type system — DESIGN-SYSTEM.md §3.
@@ -23,6 +23,13 @@ export const nbEditorial = Fraunces({
   subsets: ["latin"],
   weight: ["500", "600"],
   style: ["italic"],
+});
+
+/** Wordmark «Nexa Brief»: sans geométrica, la más cercana a la del logotipo. */
+export const nbBrand = Outfit({
+  variable: "--font-nb-brand",
+  subsets: ["latin"],
+  weight: ["600", "700"],
 });
 
 export const nbCode = JetBrains_Mono({
