@@ -30,8 +30,10 @@ from typing import Any, cast
 
 import structlog
 
-from src.config.exceptions import PublisherError
+from src.config.exceptions import PublisherError, UnsupportedOperationError, VideoNotFoundError
 from src.config.settings import settings
+from src.core import channel_sync
+from src.core.ports.channel_catalog_port import ChannelCatalogPort
 from src.core.ports.publisher_port import PublisherPort, PublishVideoResult, VideoMetadata
 from src.adapters.publishing.token_storage import TokenStorage
 from src.adapters.publishing.token_manager import TokenManager
@@ -297,6 +299,38 @@ class PublisherFacade:
         removed = storage.remove_account(platform, alias)
         logger.info("publisher_remove_account", platform=platform, account=alias, removed=removed)
         return removed
+
+    # ── Channel sync (Canales) ────────────────────────────────────────────────
+
+    def catalog_for(self, platform: str) -> ChannelCatalogPort | None:
+        """El adaptador de la red si sabe leer su catálogo (ChannelCatalogPort), si no None."""
+        adapter = self._adapters.get(platform)
+        return adapter if isinstance(adapter, ChannelCatalogPort) else None
+
+    async def sync_channel(self, platform: str, alias: str) -> channel_sync.SyncSummary:
+        """Trae de la plataforma los videos y totales de la cuenta (ver core/channel_sync.py)."""
+        catalog = self.catalog_for(platform)
+        if catalog is None:
+            raise UnsupportedOperationError(f"La sincronización de canales todavía no está disponible para {platform}.")
+        if not any(a["platform"] == platform and a["alias"] == alias for a in self.list_accounts()):
+            raise VideoNotFoundError(f"No hay una cuenta conectada '{platform}:{alias}'.")
+        return await channel_sync.sync_channel(platform, alias, catalog)
+
+    async def sync_all_channels(self) -> dict[str, str]:
+        """Sincroniza todas las cuentas que lo permiten; una que falla no frena a las demás."""
+        results: dict[str, str] = {}
+        for account in self.list_accounts():
+            platform, alias = account["platform"], account["alias"]
+            if self.catalog_for(platform) is None or account.get("status") == "requires_reauth":
+                continue
+            key = f"{platform}:{alias}"
+            try:
+                summary = await self.sync_channel(platform, alias)
+                results[key] = f"ok: {summary.imported} nuevos, {summary.updated} actualizados"
+            except Exception as exc:  # noqa: BLE001 - una cuenta caída no frena a las demás
+                results[key] = f"error: {exc}"
+                logger.warning("channel_sync_failed", platform=platform, account=alias, error=str(exc))
+        return results
 
     # ── Token refresh (used by scheduler) ────────────────────────────────────
 

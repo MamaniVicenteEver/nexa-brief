@@ -2,6 +2,19 @@ export type ChannelPlatform = "youtube" | "tiktok" | "facebook" | "instagram";
 
 export type ChannelStatus = "ok" | "requires_reauth";
 
+export interface ChannelStats {
+  videoCount: number | null;
+  followers: number | null;
+  views: number | null;
+}
+
+export interface VideoMetrics {
+  views: number | null;
+  likes: number | null;
+  comments: number | null;
+  syncedAt: number | null;
+}
+
 export interface ChannelAccount {
   platform: ChannelPlatform;
   alias: string;
@@ -18,6 +31,9 @@ export interface ChannelAccount {
   linkedPageName: string | null;
   linkedPageId: string | null;
   publishedCount: number;
+  stats: ChannelStats | null;
+  syncedAt: number | null;
+  canSync: boolean;
   /** User-defined purpose ("Letras románticas", "Clientes"…); empty when unset. */
   label: string;
   notes: string;
@@ -39,4 +55,20 @@ export interface PublishedVideo {
   url: string;
   title: string;
   publishedAt: number;
+  origin: "nexa" | "imported";
+  privacy: string | null;
+  kind: "video" | "short" | "reel" | null;
+  durationSeconds: number | null;
+  thumbnailUrl: string | null;
+  metrics: VideoMetrics | null;
+}
+
+export interface ChannelSyncResult {
+  platform: ChannelPlatform;
+  alias: string;
+  remoteTotal: number;
+  imported: number;
+  updated: number;
+  stats: ChannelStats;
+  syncedAt: number;
 }

@@ -3,7 +3,10 @@ import type {
   ChannelAccount,
   ChannelAccountUpdate,
   ChannelPlatform,
+  ChannelStats,
+  ChannelSyncResult,
   PublishedVideo,
+  VideoMetrics,
 } from "../types";
 
 interface AccountStatusResponseDto {
@@ -26,6 +29,13 @@ interface AccountStatusResponseDto {
   notes?: string;
   connected_at?: number | null;
   last_published_at?: number | null;
+  stats?: {
+    video_count?: number | null;
+    followers?: number | null;
+    views?: number | null;
+  } | null;
+  synced_at?: number | null;
+  can_sync?: boolean;
 }
 
 interface PublishedVideoResponseDto {
@@ -35,6 +45,31 @@ interface PublishedVideoResponseDto {
   url: string;
   title: string;
   published_at: number;
+  origin?: "nexa" | "imported";
+  privacy?: string | null;
+  kind?: "video" | "short" | "reel" | null;
+  duration_seconds?: number | null;
+  thumbnail_url?: string | null;
+  metrics?: {
+    views?: number | null;
+    likes?: number | null;
+    comments?: number | null;
+    synced_at?: number | null;
+  } | null;
+}
+
+interface ChannelSyncResponseDto {
+  platform: string;
+  alias: string;
+  remote_total: number;
+  imported: number;
+  updated: number;
+  stats: {
+    video_count: number | null;
+    followers: number | null;
+    views: number | null;
+  };
+  synced_at: number;
 }
 
 export interface ChannelHealthResult {
@@ -52,6 +87,13 @@ export interface ChannelHealthResult {
 }
 
 function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
+  const stats: ChannelStats | null = dto.stats
+    ? {
+        videoCount: dto.stats.video_count ?? null,
+        followers: dto.stats.followers ?? null,
+        views: dto.stats.views ?? null,
+      }
+    : null;
   return {
     platform: dto.platform as ChannelPlatform,
     alias: dto.alias,
@@ -68,6 +110,9 @@ function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
     linkedPageName: dto.linked_page_name ?? null,
     linkedPageId: dto.linked_page_id ?? null,
     publishedCount: dto.published_count,
+    stats,
+    syncedAt: dto.synced_at ?? null,
+    canSync: dto.can_sync ?? false,
     label: dto.label ?? "",
     notes: dto.notes ?? "",
     connectedAt: dto.connected_at ?? null,
@@ -76,6 +121,14 @@ function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
 }
 
 function mapPublishedVideo(dto: PublishedVideoResponseDto): PublishedVideo {
+  const metrics: VideoMetrics | null = dto.metrics
+    ? {
+        views: dto.metrics.views ?? null,
+        likes: dto.metrics.likes ?? null,
+        comments: dto.metrics.comments ?? null,
+        syncedAt: dto.metrics.synced_at ?? null,
+      }
+    : null;
   return {
     platform: dto.platform as ChannelPlatform,
     alias: dto.alias,
@@ -83,6 +136,28 @@ function mapPublishedVideo(dto: PublishedVideoResponseDto): PublishedVideo {
     url: dto.url,
     title: dto.title,
     publishedAt: dto.published_at,
+    origin: dto.origin ?? "nexa",
+    privacy: dto.privacy ?? null,
+    kind: dto.kind ?? null,
+    durationSeconds: dto.duration_seconds ?? null,
+    thumbnailUrl: dto.thumbnail_url ?? null,
+    metrics,
+  };
+}
+
+function mapChannelSyncResult(dto: ChannelSyncResponseDto): ChannelSyncResult {
+  return {
+    platform: dto.platform as ChannelPlatform,
+    alias: dto.alias,
+    remoteTotal: dto.remote_total,
+    imported: dto.imported,
+    updated: dto.updated,
+    stats: {
+      videoCount: dto.stats.video_count,
+      followers: dto.stats.followers,
+      views: dto.stats.views,
+    },
+    syncedAt: dto.synced_at,
   };
 }
 
@@ -109,6 +184,17 @@ export async function getChannelVideos(
   return [...unique.values()];
 }
 
+export async function syncAccount(
+  platform: ChannelPlatform,
+  alias: string,
+): Promise<ChannelSyncResult> {
+  const dto = await httpClient<ChannelSyncResponseDto>(`${accountPath(platform, alias)}/sync`, {
+    method: "POST",
+    timeoutMs: 120_000,
+  });
+  return mapChannelSyncResult(dto);
+}
+
 function accountPath(platform: ChannelPlatform, alias: string): string {
   return `/api/v1/publish/accounts/${platform}/${encodeURIComponent(alias)}`;
 }
@@ -130,7 +216,7 @@ export async function refreshChannelProfile(
   alias: string,
 ): Promise<ChannelAccount> {
   const dto = await httpClient<AccountStatusResponseDto>(
-    accountPath(platform, alias) + "/refresh-profile",
+    `${accountPath(platform, alias)}/refresh-profile`,
     { method: "POST" },
   );
   return mapChannelAccount(dto);
@@ -140,7 +226,7 @@ export async function verifyChannelConnection(
   platform: ChannelPlatform,
   alias: string,
 ): Promise<ChannelHealthResult> {
-  return httpClient<ChannelHealthResult>(accountPath(platform, alias) + "/verify", {
+  return httpClient<ChannelHealthResult>(`${accountPath(platform, alias)}/verify`, {
     method: "POST",
     timeoutMs: 30_000,
   });

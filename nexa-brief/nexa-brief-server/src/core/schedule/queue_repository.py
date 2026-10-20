@@ -44,6 +44,13 @@ async def _publish_event(entry: QueueEntry) -> None:
     )
 
 
+# Entries que ESTE proceso está publicando ahora mismo. Una subida a YouTube puede esperar varios
+# minutos a que la plataforma procese la HD (youtube_adapter.publish), así que el tiempo en
+# `publishing` no prueba que el proceso murió: solo se recuperan las que nadie está atendiendo.
+# Tras un reinicio el set arranca vacío y la recuperación por crash sigue funcionando igual.
+_in_flight: set[str] = set()
+
+
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -98,6 +105,7 @@ async def start_direct(
         status=QueueStatus.PUBLISHING, created_at=now, updated_at=now,
     )
     await _entries().insert(_dump(entry))
+    _in_flight.add(entry.entry_id)
     await _publish_event(entry)
     return entry
 
@@ -165,16 +173,19 @@ async def _update_status(entry_id: str, status: QueueStatus, **extra: Any) -> Qu
 
 
 async def mark_publishing(entry_id: str) -> QueueEntry | None:
+    _in_flight.add(entry_id)
     return await _update_status(entry_id, QueueStatus.PUBLISHING)
 
 
 async def mark_published(entry_id: str, post_id: str, url: str) -> QueueEntry | None:
+    _in_flight.discard(entry_id)
     return await _update_status(
         entry_id, QueueStatus.PUBLISHED, post_id=post_id, url=url, processed_at=_now_iso()
     )
 
 
 async def mark_failed(entry_id: str, error: str) -> QueueEntry | None:
+    _in_flight.discard(entry_id)
     return await _update_status(entry_id, QueueStatus.FAILED, error=error, processed_at=_now_iso())
 
 
@@ -234,6 +245,8 @@ async def recover_stale_publishing(older_than_seconds: int = 600) -> int:
     now_dt = datetime.now(timezone.utc)
     recovered = 0
     for record in _entries().list({"status": QueueStatus.PUBLISHING.value}):
+        if record["entry_id"] in _in_flight:
+            continue  # sigue subiéndose (p. ej. esperando la HD de YouTube): no está atascada
         updated_at = record.get("updated_at")
         try:
             updated_dt = datetime.fromisoformat(updated_at) if updated_at else None

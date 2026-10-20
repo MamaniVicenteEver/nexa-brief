@@ -19,6 +19,7 @@ Structured log events:
   scheduler_schedule_tick      — scheduled process_tick cycle begun
   scheduler_schedule_tick_done — process_tick cycle completed
   scheduler_schedule_tick_error— exception during a process_tick cycle (non-fatal)
+  scheduler_channel_sync_done  — daily channel sync completed (per-account results)
 """
 
 from __future__ import annotations
@@ -164,6 +165,33 @@ def _register_schedule_tick(
     )
 
 
+def _register_channel_sync(
+    scheduler: BackgroundScheduler,
+    facade: "PublisherFacade",
+    loop: asyncio.AbstractEventLoop,
+) -> None:
+    """Sincronización diaria de Canales (src/core/channel_sync.py): trae los videos nuevos que no
+    publicó Nexa y actualiza vistas/likes y los totales de cada cuenta."""
+
+    def _sync_tick() -> None:
+        logger.info("scheduler_channel_sync_tick")
+        try:
+            results = asyncio.run_coroutine_threadsafe(facade.sync_all_channels(), loop).result(timeout=900)
+            logger.info("scheduler_channel_sync_done", results=results)
+        except Exception as exc:
+            logger.error("scheduler_channel_sync_error", error=str(exc), error_type=type(exc).__name__)
+
+    scheduler.add_job(
+        _sync_tick,
+        trigger="interval",
+        hours=settings.channel_sync_interval_hours,
+        id="channel_sync",
+        replace_existing=True,
+        max_instances=1,
+        coalesce=True,
+    )
+
+
 def start_publishing_scheduler(
     facade: "PublisherFacade",
     loop: asyncio.AbstractEventLoop,
@@ -182,6 +210,8 @@ def start_publishing_scheduler(
     scheduler = BackgroundScheduler(daemon=True)
     _register_token_refresh(scheduler, facade, loop)   # lógica existente, sin cambios
     _register_schedule_tick(scheduler, facade, loop)
+    if settings.channel_sync_interval_hours > 0:
+        _register_channel_sync(scheduler, facade, loop)
     scheduler.start()
 
     logger.info(

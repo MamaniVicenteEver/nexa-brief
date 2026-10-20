@@ -25,6 +25,7 @@ Error handling:
 """
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import hmac
 import mimetypes
@@ -32,6 +33,7 @@ import re
 import secrets
 import time
 import urllib.parse
+from dataclasses import asdict
 from pathlib import Path
 
 import httpx
@@ -62,6 +64,8 @@ from src.core.data import collection
 from src.core.realtime.events import RealtimeEvent
 from src.modules import video_deletion
 from src.presentation.api.schemas.publisher_schema import (
+    ChannelStatsResponse,
+    ChannelSyncResponse,
     AccountDeleteResponse,
     AccountStatusResponse,
     ChannelHealthResponse,
@@ -380,12 +384,59 @@ async def verify_account_connection(platform: str, alias: str) -> ChannelHealthR
 
 
 def _account_response(account: dict) -> AccountStatusResponse:
-    videos = list_published_videos(account["platform"], account["alias"])
+    platform, alias = account["platform"], account["alias"]
+    videos = list_published_videos(platform, alias)
+    channel = collection("channels").first({"platform": platform, "alias": alias}) or {}
     return AccountStatusResponse(
         **account,
         published_count=len(videos),
         last_published_at=max((v.get("published_at") or 0 for v in videos), default=None) or None,
+        stats=channel.get("stats"),
+        synced_at=channel.get("synced_at"),
+        can_sync=_get_facade().catalog_for(platform) is not None,
     )
+
+
+# ── POST /publish/accounts/{platform}/{alias}/sync — Sincronizar con la plataforma ──
+
+@router.post("/accounts/{platform}/{alias}/sync", response_model=ChannelSyncResponse)
+async def sync_account(platform: str, alias: str) -> ChannelSyncResponse:
+    """Trae de la plataforma los videos que la cuenta ya tiene y sus totales.
+
+    Agrega al registro los que falten (origin="imported") y actualiza los números de los que ya
+    estaban; nunca duplica. Ver src/core/channel_sync.py."""
+    try:
+        summary = await _get_facade().sync_channel(platform, alias)
+    except PublisherError as exc:
+        raise _map_publisher_error(exc) from exc
+    await get_event_bus().publish(
+        RealtimeEvent(type="channel_status_changed", data={"platform": platform, "alias": alias, "status": "synced"})
+    )
+    return ChannelSyncResponse(
+        platform=summary.platform, alias=summary.alias, remote_total=summary.remote_total,
+        imported=summary.imported, updated=summary.updated,
+        stats=ChannelStatsResponse(**asdict(summary.stats)), synced_at=summary.synced_at,
+    )
+
+
+# Mismo motivo que en videos.py: asyncio.create_task no retiene la Task.
+_sync_tasks: set[asyncio.Task] = set()
+
+
+def _spawn_channel_sync(platform: str, alias: str) -> None:
+    """Sincroniza en segundo plano una cuenta recién conectada (su lista de videos no se pierde)."""
+    if _get_facade().catalog_for(platform) is None:
+        return
+
+    async def run() -> None:
+        try:
+            await sync_account(platform, alias)
+        except Exception as exc:  # noqa: BLE001 - conectar la cuenta ya funcionó; la sync se reintenta luego
+            logger.warning("channel_sync_on_connect_failed", platform=platform, alias=alias, error=str(exc))
+
+    task = asyncio.create_task(run())
+    _sync_tasks.add(task)
+    task.add_done_callback(_sync_tasks.discard)
 
 
 # ── PATCH /publish/accounts/{platform}/{alias} — Edit label/notes ────────────
@@ -610,6 +661,8 @@ async def _update_channels_json(
     await get_event_bus().publish(
         RealtimeEvent(type="channel_status_changed", data={"platform": platform, "alias": alias, "status": status})
     )
+    if status == "ok":
+        _spawn_channel_sync(platform, alias)
 
 
 async def _remove_from_channels_json(platform: str, alias: str) -> None:

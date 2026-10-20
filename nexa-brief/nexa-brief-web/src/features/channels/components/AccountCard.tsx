@@ -5,16 +5,19 @@ import {
   ArrowRight,
   Clock,
   Ellipsis,
+  Eye,
   Film,
   KeyRound,
   Pencil,
   Plus,
   RefreshCw,
   Unplug,
+  Users,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
+import { formatCompact } from "@/features/stats/format";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -23,12 +26,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
+import type { ChannelHealthResult } from "../api/channels-service";
 import { buildConnectChannelUrl } from "../api/channels-service";
 import { useExpiryLabel } from "../hooks/useExpiryLabel";
 import { useRefreshChannelProfileMutation } from "../hooks/useRefreshChannelProfileMutation";
+import { useSyncChannelMutation } from "../hooks/useSyncChannelMutation";
 import { useVerifyChannelMutation } from "../hooks/useVerifyChannelMutation";
 import { formatRelativeTime } from "../lib/channels";
-import type { ChannelHealthResult } from "../api/channels-service";
 import type { ChannelAccount } from "../types";
 import { AccountAvatar } from "./AccountAvatar";
 import { ChannelDetailsSheet } from "./ChannelDetailsSheet";
@@ -55,10 +59,12 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
   const locale = useLocale();
   const expiryLabel = useExpiryLabel();
   const refreshProfile = useRefreshChannelProfileMutation();
+  const syncChannel = useSyncChannelMutation();
   const verifyConnection = useVerifyChannelMutation();
   const [panel, setPanel] = useState<OpenPanel>(null);
   const [health, setHealth] = useState<ChannelHealthResult | null>(null);
   const needsReauth = account.status === "requires_reauth";
+  const videoCount = account.stats?.videoCount ?? account.publishedCount;
   const setOpen = (target: Exclude<OpenPanel, null>) => (open: boolean) =>
     setPanel(open ? target : null);
 
@@ -78,11 +84,11 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
           <p className="truncate text-[12px] text-nb-mute">
             {account.platform === "youtube" || account.platform === "instagram"
               ? account.handle
-                ? "@" + account.handle
+                ? `@${account.handle}`
                 : account.platform === "youtube"
                   ? t("handleUnavailable")
-                  : "@" + account.alias
-              : "@" + account.alias}
+                  : `@${account.alias}`
+              : `@${account.alias}`}
           </p>
           {account.platform === "youtube" && (
             <p className="truncate text-[10.5px] text-nb-mute/80">
@@ -110,10 +116,13 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
               <DropdownMenuItem
                 disabled={refreshProfile.isPending}
                 onSelect={() =>
-                  refreshProfile.mutate({ platform: account.platform, alias: account.alias }, {
-                    onSuccess: () => toast.success(t("refreshSuccess")),
-                    onError: () => toast.error(t("refreshError")),
-                  })
+                  refreshProfile.mutate(
+                    { platform: account.platform, alias: account.alias },
+                    {
+                      onSuccess: () => toast.success(t("refreshSuccess")),
+                      onError: () => toast.error(t("refreshError")),
+                    },
+                  )
                 }
               >
                 <RefreshCw className={refreshProfile.isPending ? "animate-spin" : undefined} />
@@ -157,44 +166,92 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
         )}
       </div>
 
-      <div className="mx-4 mt-3 grid grid-cols-3 gap-3 border-t border-nb-line pt-3">
-        <Stat icon={Film} label={t("videos")} value={String(account.publishedCount)} />
-        <Stat
-          icon={Clock}
-          label={t("lastPublished")}
-          value={
-            account.lastPublishedAt ? formatRelativeTime(account.lastPublishedAt, locale) : "—"
-          }
-        />
-        <Stat icon={KeyRound} label={t("token")} value={expiryLabel(account)} />
+      <div className="mx-4 mt-3 border-t border-nb-line pt-3">
+        <div className="grid grid-cols-3 gap-3">
+          <Stat icon={Film} label={t("videos")} value={String(videoCount)} />
+          {account.stats?.followers != null && (
+            <Stat
+              icon={Users}
+              label={t("followers")}
+              value={formatCompact(account.stats.followers, locale)}
+            />
+          )}
+          {account.stats?.views != null && (
+            <Stat
+              icon={Eye}
+              label={t("views")}
+              value={formatCompact(account.stats.views, locale)}
+            />
+          )}
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <Stat
+            icon={Clock}
+            label={t("lastPublished")}
+            value={
+              account.lastPublishedAt ? formatRelativeTime(account.lastPublishedAt, locale) : "—"
+            }
+          />
+          <Stat icon={KeyRound} label={t("token")} value={expiryLabel(account)} />
+        </div>
       </div>
+
+      {account.syncedAt != null && (
+        <p className="px-4 pt-2 text-[11px] text-nb-mute">
+          {t("syncedAgo", { time: formatRelativeTime(account.syncedAt, locale) })}
+        </p>
+      )}
 
       <div className="mt-auto flex items-center justify-between gap-2 p-4 pt-3.5">
         <StatusBadge status={account.status} />
-        <button
-          type="button"
-          disabled={verifyConnection.isPending}
-          onClick={() =>
-            verifyConnection.mutate(
-              { platform: account.platform, alias: account.alias },
-              {
-                onSuccess: setHealth,
-                onError: () =>
-                  setHealth({
-                    platform: account.platform,
-                    alias: account.alias,
-                    status: "attention",
-                    reason: "check_failed",
-                    checked_at: Date.now() / 1000,
-                  }),
-              },
-            )
-          }
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-nb-line px-2.5 py-1.5 text-[11px] font-semibold text-nb-ink-soft transition-colors hover:border-nb-mute hover:text-nb-ink disabled:cursor-wait disabled:opacity-60"
-        >
-          <Activity className={verifyConnection.isPending ? "size-3 animate-pulse" : "size-3"} />
-          {verifyConnection.isPending ? t("verifying") : t("verify")}
-        </button>
+        <div className="flex shrink-0 items-center gap-1.5">
+          {account.canSync && (
+            <button
+              type="button"
+              disabled={syncChannel.isPending}
+              onClick={() =>
+                syncChannel.mutate(
+                  { platform: account.platform, alias: account.alias },
+                  {
+                    onSuccess: (result) =>
+                      toast.success(
+                        t("syncSuccess", { imported: result.imported, updated: result.updated }),
+                      ),
+                    onError: () => toast.error(t("syncError")),
+                  },
+                )
+              }
+              className="inline-flex items-center gap-1 rounded-full border border-nb-line px-2 py-1.5 text-[11px] font-semibold text-nb-ink-soft transition-colors hover:border-nb-mute hover:text-nb-ink disabled:cursor-wait disabled:opacity-60"
+            >
+              <RefreshCw className={syncChannel.isPending ? "size-3 animate-spin" : "size-3"} />
+              {syncChannel.isPending ? t("syncing") : t("sync")}
+            </button>
+          )}
+          <button
+            type="button"
+            disabled={verifyConnection.isPending}
+            onClick={() =>
+              verifyConnection.mutate(
+                { platform: account.platform, alias: account.alias },
+                {
+                  onSuccess: setHealth,
+                  onError: () =>
+                    setHealth({
+                      platform: account.platform,
+                      alias: account.alias,
+                      status: "attention",
+                      reason: "check_failed",
+                      checked_at: Date.now() / 1000,
+                    }),
+                },
+              )
+            }
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-nb-line px-2.5 py-1.5 text-[11px] font-semibold text-nb-ink-soft transition-colors hover:border-nb-mute hover:text-nb-ink disabled:cursor-wait disabled:opacity-60"
+          >
+            <Activity className={verifyConnection.isPending ? "size-3 animate-pulse" : "size-3"} />
+            {verifyConnection.isPending ? t("verifying") : t("verify")}
+          </button>
+        </div>
       </div>
       {health && (
         <p

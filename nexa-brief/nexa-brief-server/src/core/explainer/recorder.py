@@ -42,6 +42,7 @@ from src.core.explainer.catalog import KIT_DIR, ExplainerVideo
 from src.core.job import JobStage
 from src.core.metadata.sanitize import strip_emojis
 from src.core.publish_log import record_published_video
+from src.modules.video_compressor import compress_for_publishing
 
 logger = structlog.get_logger(__name__)
 
@@ -313,10 +314,14 @@ class ExplainerRecorder:
             shutil.copy2(src, dst)
             job.outputs.append(str(dst))
 
-        job.render_seconds = round(time.monotonic() - started, 1)
         if seconds:
+            job.render_seconds = round(time.monotonic() - started, 1)
             job.state = RecordState.done
             return
+        # La copia que se publica va comprimida; el original sigue en render/ (no hace falta master).
+        for output in job.outputs:
+            await compress_for_publishing(Path(output), keep_master=False)
+        job.render_seconds = round(time.monotonic() - started, 1)
 
         thumbnail = await self._thumbnail(video, out_dir)
         job.scheduled_job_id = await self._register_for_scheduling(

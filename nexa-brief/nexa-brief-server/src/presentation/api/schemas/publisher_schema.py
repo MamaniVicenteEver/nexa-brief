@@ -118,6 +118,10 @@ class AccountStatusResponse(BaseModel):
     notes: str = ""
     connected_at: float | None = None
     last_published_at: float | None = None
+    # Sincronización de Canales: totales reales de la plataforma y cuándo se leyeron.
+    stats: ChannelStatsResponse | None = None
+    synced_at: float | None = None
+    can_sync: bool = False          # la red implementa ChannelCatalogPort
 
 
 class ChannelHealthResponse(BaseModel):
@@ -137,6 +141,35 @@ class UpdateAccountRequest(BaseModel):
     notes: str | None = Field(default=None, max_length=500)
 
 
+class VideoMetricsResponse(BaseModel):
+    """Números de un post según su plataforma, a la fecha de la última sincronización."""
+
+    views: int | None = None
+    likes: int | None = None
+    comments: int | None = None
+    synced_at: float | None = None
+
+
+class ChannelStatsResponse(BaseModel):
+    """Totales de la cuenta según su plataforma (None = la red no lo informa)."""
+
+    video_count: int | None = None
+    followers: int | None = None
+    views: int | None = None
+
+
+class ChannelSyncResponse(BaseModel):
+    """Resultado de POST /accounts/{platform}/{alias}/sync."""
+
+    platform: str
+    alias: str
+    remote_total: int
+    imported: int
+    updated: int
+    stats: ChannelStatsResponse
+    synced_at: float
+
+
 class PublishedVideoResponse(BaseModel):
     """One entry in the GET /api/v1/publish/accounts/{platform}/{alias}/videos list."""
 
@@ -147,6 +180,12 @@ class PublishedVideoResponse(BaseModel):
     title: str
     published_at: float
     job_id: str | None = None
+    origin: str = "nexa"            # 'nexa' (lo publicó Nexa) | 'imported' (sincronización de Canales)
+    privacy: str | None = None
+    kind: str | None = None         # 'video' | 'short' | 'reel'
+    duration_seconds: float | None = None
+    thumbnail_url: str | None = None
+    metrics: VideoMetricsResponse | None = None
 
 
 class DeleteResponse(BaseModel):

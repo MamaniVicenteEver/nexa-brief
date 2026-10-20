@@ -32,7 +32,7 @@ export function AdminHeader() {
   const isManagementActive = MANAGEMENT_LINKS.some((link) => pathname === link.href);
 
   return (
-    <nav className="nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between px-10 py-2.5">
+    <nav className="nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between px-10 py-1">
       <Link
         href="/dashboard"
         aria-label={t("brand")}
@@ -41,9 +41,9 @@ export function AdminHeader() {
         <Image
           src="/logo/nexa-mark-bw-transparent.png"
           alt=""
-          width={66}
-          height={66}
-          className="size-[60px] shrink-0 object-contain md:size-[66px]"
+          width={56}
+          height={56}
+          className="size-12 shrink-0 object-contain md:size-14"
         />
         <span className="-ml-1" aria-hidden="true">exa Brief</span>
       </Link>

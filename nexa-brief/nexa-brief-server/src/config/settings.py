@@ -321,6 +321,25 @@ class Settings(BaseSettings):
     # YouTube quota guard: daily limit and cost per upload
     youtube_daily_quota_limit: int = Field(default=10000, alias="YOUTUBE_DAILY_QUOTA_LIMIT")
     youtube_quota_cost_per_upload: int = Field(default=1600, alias="YOUTUBE_QUOTA_COST_PER_UPLOAD")
+    # Un video público se sube en privado y se hace público recién cuando YouTube terminó de
+    # procesar la HD: si sale público antes, los primeros espectadores lo ven en 360p.
+    # Pasado el tope de espera se hace público igual (mejor publicado que retenido).
+    youtube_wait_for_hd: bool = Field(default=True, alias="YOUTUBE_WAIT_FOR_HD")
+    youtube_hd_max_wait_seconds: int = Field(default=2700, alias="YOUTUBE_HD_MAX_WAIT_SECONDS")
+    # Sincronización de Canales (src/core/channel_sync.py): cada cuántas horas se releen los
+    # videos y totales de todas las cuentas. 0 = solo al conectar y con el botón «Sincronizar».
+    channel_sync_interval_hours: int = Field(default=24, alias="CHANNEL_SYNC_INTERVAL_HOURS")
+
+    # ── Compresión antes de publicar — src/modules/video_compressor.py ──────────
+    # El render sale a ~30 Mbps (HyperFrames "high" = CRF 15): se recomprime con H.264
+    # CRF 18 + tope de bitrate, ~64 % menos peso sin diferencia visible (medido 2026-10-20:
+    # 292 → 104 MB, SSIM 0,958, ~1,6× la duración del video). Las redes recomprimen igual.
+    video_compress_enabled: bool = Field(default=True, alias="VIDEO_COMPRESS_ENABLED")
+    video_compress_crf: int = Field(default=18, alias="VIDEO_COMPRESS_CRF")
+    video_compress_preset: str = Field(default="fast", alias="VIDEO_COMPRESS_PRESET")
+    video_compress_maxrate_mbps: int = Field(default=12, alias="VIDEO_COMPRESS_MAXRATE_MBPS")
+    # Conserva la grabación original como <nombre>.master.mp4 (para volver a comprimir distinto).
+    video_compress_keep_master: bool = Field(default=True, alias="VIDEO_COMPRESS_KEEP_MASTER")
 
     # ── Scheduling (Programación) — src/core/schedule/ ───────────────────────
     # Horarios recurrentes + cola de publicación: colecciones "schedule_slots"

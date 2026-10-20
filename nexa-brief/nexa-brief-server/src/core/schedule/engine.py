@@ -22,6 +22,8 @@ adivinar ahora.
 
 from __future__ import annotations
 
+import asyncio
+
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Protocol
@@ -59,9 +61,23 @@ class PublisherFacadeLike(Protocol):
 
 # ── Tick programado ──────────────────────────────────────────────────────────
 
+# Un tick a la vez: el scheduler espera 180 s el resultado, pero una subida a YouTube que espera
+# la HD sigue corriendo; si el tick siguiente arrancara igual, los dos tomarían las mismas
+# entries vencidas y las publicarían dos veces.
+_tick_lock = asyncio.Lock()
+
+
 async def process_tick(facade: PublisherFacadeLike, now: datetime | None = None) -> dict[str, Any]:
     """Un ciclo completo del scheduler: recupera entries atascadas, rellena
     huecos de auto-fill (si está habilitado) y publica todo lo que ya venció."""
+    if _tick_lock.locked():
+        logger.info("schedule_process_tick_skipped", reason="previous_tick_running")
+        return {"skipped": "previous_tick_running"}
+    async with _tick_lock:
+        return await _process_tick(facade, now)
+
+
+async def _process_tick(facade: PublisherFacadeLike, now: datetime | None) -> dict[str, Any]:
     now = now or datetime.now(timezone.utc)
 
     recovered = await queue_repository.recover_stale_publishing()

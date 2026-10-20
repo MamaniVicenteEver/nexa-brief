@@ -87,6 +87,12 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
     if missing:
         raise PackagingError(f"Job {job.job_id}: missing output files: {missing}")
 
+    # Antes del manifest, para que "files" registre el peso final que se publica.
+    from src.modules.video_compressor import compress_for_publishing
+
+    for fmt in niche_cfg.video.formats:
+        await compress_for_publishing(output_dir / fmt.output_filename)
+
     # job.artifacts.visual_design es None en niches pipeline_type="config_driven_template"
     # (ese flujo produce vision_analysis/template_config en su lugar, no un VisualDesign).
     style = job.artifacts.visual_design.style if job.artifacts.visual_design else niche_cfg.template.template_id

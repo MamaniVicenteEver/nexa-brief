@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -15,11 +16,54 @@ from src.adapters.publishing.instagram_media import probe, reels_safe_video
 from src.adapters.publishing.instagram_media_url import create_signed_media_token
 from src.config.exceptions import PlatformAPIError, UnsupportedOperationError
 from src.config.settings import settings
+from src.core.ports.channel_catalog_port import ChannelCatalogPort, ChannelStats, RemoteVideo
 from src.core.ports.publisher_port import PublishVideoResult, VideoMetadata
 
 logger = structlog.get_logger(__name__)
-_GRAPH_BASE = "https://graph.facebook.com/v21.0"
+_GRAPH_BASE = f"https://graph.facebook.com/{settings.meta_graph_api_version}"
 _POLL_INTERVAL_SECONDS = 3.0
+
+
+def _optional_int(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _timestamp(value: str | None) -> float:
+    if not value:
+        return 0.0
+    try:
+        normalized = value.replace("Z", "+00:00")
+        if len(normalized) >= 5 and normalized[-5] in "+-" and normalized[-4:].isdigit():
+            normalized = f"{normalized[:-2]}:{normalized[-2:]}"
+        return datetime.fromisoformat(normalized).timestamp()
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _instagram_remote_video(item: dict[str, Any]) -> RemoteVideo:
+    media_id = str(item.get("id") or "")
+    caption = str(item.get("caption") or "")
+    media_product_type = str(item.get("media_product_type") or "").upper()
+    kind = "reel" if media_product_type == "REELS" else "video"
+    permalink = item.get("permalink")
+    if not permalink:
+        route = "reel" if kind == "reel" else "p"
+        permalink = f"https://www.instagram.com/{route}/{media_id}/"
+    return RemoteVideo(
+        post_id=media_id,
+        url=str(permalink),
+        title=caption.splitlines()[0].strip() if caption else "",
+        published_at=_timestamp(item.get("timestamp")),
+        privacy="public",
+        thumbnail_url=item.get("thumbnail_url") or None,
+        views=None,
+        likes=_optional_int(item.get("like_count")),
+        comments=_optional_int(item.get("comments_count")),
+        kind=kind,
+    )
 
 
 def _poll_window_seconds(file_size_bytes: int, duration_seconds: float = 0.0) -> float:
@@ -29,10 +73,104 @@ def _poll_window_seconds(file_size_bytes: int, duration_seconds: float = 0.0) ->
     return min(900.0, 120.0 + max(file_size_bytes / (2 * 1024 * 1024), duration_seconds))
 
 
-class InstagramAdapter(BasePlatformAdapter):
+class InstagramAdapter(BasePlatformAdapter, ChannelCatalogPort):
     """Instagram Reels adapter using a linked Facebook Page access token."""
 
     PLATFORM = "instagram"
+
+    async def _catalog_get_json(
+        self, path: str, params: dict[str, Any], account_alias: str, purpose: str
+    ) -> dict[str, Any]:
+        token = await self._token_manager.get_valid_token(self.PLATFORM, account_alias)
+        url = f"{_GRAPH_BASE}/{path.lstrip('/')}"
+        self._log_request("GET", url, account=account_alias, purpose=purpose)
+        started = time.monotonic()
+        async with self._make_client() as client:
+            response = await client.get(url, params={**params, "access_token": token})
+            self._log_response("GET", url, response.status_code, time.monotonic() - started, account=account_alias)
+        if response.status_code != 200:
+            self._handle_api_error(response, f"Instagram {purpose}")
+        return response.json()
+
+    async def _catalog_get_next(
+        self, url: str, account_alias: str, purpose: str
+    ) -> dict[str, Any]:
+        # The URL returned by Graph contains an access token; never write it to request logs.
+        self._log_request("GET", "Instagram Graph paging.next", account=account_alias, purpose=purpose)
+        started = time.monotonic()
+        async with self._make_client() as client:
+            response = await client.get(url)
+            self._log_response(
+                "GET", "Instagram Graph paging.next", response.status_code,
+                time.monotonic() - started, account=account_alias,
+            )
+        if response.status_code != 200:
+            self._handle_api_error(response, f"Instagram {purpose}")
+        return response.json()
+
+    @with_retry(max_retries=3)
+    async def list_channel_videos(
+        self, account_alias: str, *, limit: int | None = None
+    ) -> list[RemoteVideo]:
+        instagram_user_id = self._token_manager.target_id(self.PLATFORM, account_alias)
+        if not instagram_user_id:
+            raise PlatformAPIError(
+                "Instagram account has no professional-account ID. Reconnect it from Canales.",
+                platform=self.PLATFORM,
+                status_code=400,
+            )
+        page = await self._catalog_get_json(
+            f"{quote(instagram_user_id, safe='')}/media",
+            {
+                "fields": (
+                    "id,caption,media_type,media_product_type,permalink,timestamp,thumbnail_url,"
+                    "like_count,comments_count"
+                )
+            },
+            account_alias,
+            "media_catalog",
+        )
+        videos: list[RemoteVideo] = []
+        seen: set[str] = set()
+        while True:
+            for item in page.get("data", []):
+                media_type = str(item.get("media_type") or "").upper()
+                product_type = str(item.get("media_product_type") or "").upper()
+                if media_type != "VIDEO" and product_type != "REELS":
+                    continue
+                video = _instagram_remote_video(item)
+                if not video.post_id or video.post_id in seen:
+                    continue
+                seen.add(video.post_id)
+                videos.append(video)
+                if limit is not None and len(videos) >= limit:
+                    return sorted(videos, key=lambda video: video.published_at, reverse=True)[:limit]
+            next_url = (page.get("paging") or {}).get("next")
+            if not next_url:
+                break
+            page = await self._catalog_get_next(next_url, account_alias, "media_catalog")
+        videos.sort(key=lambda video: video.published_at, reverse=True)
+        return videos[:limit] if limit is not None else videos
+
+    @with_retry(max_retries=3)
+    async def get_channel_stats(self, account_alias: str) -> ChannelStats:
+        instagram_user_id = self._token_manager.target_id(self.PLATFORM, account_alias)
+        if not instagram_user_id:
+            raise PlatformAPIError(
+                "Instagram account has no professional-account ID. Reconnect it from Canales.",
+                platform=self.PLATFORM,
+                status_code=400,
+            )
+        data = await self._catalog_get_json(
+            quote(instagram_user_id, safe=""),
+            {"fields": "followers_count,media_count"},
+            account_alias,
+            "account_stats",
+        )
+        return ChannelStats(
+            video_count=_optional_int(data.get("media_count")),
+            followers=_optional_int(data.get("followers_count")),
+        )
 
     async def publish(
         self,
