@@ -29,6 +29,7 @@
     "designs/dinero/components/flat.js",
     "designs/dinero/components/dark.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/dinero/components/intros.js",
     "designs/dinero/components/outro.js"
   ],
@@ -94,6 +95,11 @@
       "support": "apoya el canal · comparte el video",
       "handle": "youtube.com/@nodeconomy",
       "use": "dinero.outro"
+    },
+    "clip": {
+      "filter": "grayscale(0.6) sepia(0.35) hue-rotate(55deg) saturate(0.8)",
+      "frame": "palette.accent",
+      "dim": 0.18
     }
   },
   "voice": {

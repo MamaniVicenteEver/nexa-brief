@@ -23,6 +23,7 @@
     "designs/acuarela/components/_runtime.js",
     "designs/acuarela/components/scenes.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/acuarela/components/intros.js",
     "designs/common/outro-v1.js",
     "designs/acuarela/components/outro.js"
@@ -78,6 +79,11 @@
       "support": "Apoya el canal y comparte la historia",
       "handle": "youtube.com/@nodehistory",
       "use": "acuarela.outro"
+    },
+    "clip": {
+      "filter": "grayscale(0.85) sepia(0.25) contrast(1.05)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

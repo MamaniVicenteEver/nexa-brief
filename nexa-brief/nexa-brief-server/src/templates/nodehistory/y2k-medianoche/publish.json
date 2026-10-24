@@ -1,0 +1,117 @@
+{
+  "schema_version": 2,
+  "category": "node_history",
+  "thumbnail": {
+    "text_only": {
+      "lines": ["EL MUNDO", "ESPERÓ", "UNA FECHA"],
+      "highlight": "ESPERÓ",
+      "pair_title": "B"
+    },
+    "with_image": {
+      "text": "¿99 O 1900?",
+      "image": "y2k-date-error.jpg",
+      "composition": "El monitor que muestra una fecha de 1900 ocupa el foco; el texto queda en el espacio libre. La foto ilustra el tipo de error, no un sistema concreto mencionado en el guion.",
+      "pair_title": "A",
+      "image_side": "right",
+      "image_review": [
+        {
+          "image": "y2k-date-error.jpg",
+          "verdict": "elegida",
+          "reason": "El monitor con fecha de 1900 se reconoce como un error de calendario y ocupa el foco; la imagen se identifica como ilustrativa, no como una captura de un sistema específico de 1999."
+        }
+      ]
+    },
+    "chosen": "text_only",
+    "kicker": "MILLENNIUM · 31 DIC 1999"
+  },
+  "titles": {
+    "youtube": [
+      {
+        "option": "A",
+        "text": "¿Fue el año 2000 la mayor estafa informática?",
+        "strategy": 8,
+        "emotion": "Curiosidad"
+      },
+      {
+        "option": "B",
+        "text": "El año 2000 llegó primero a una isla deshabitada",
+        "strategy": 3,
+        "emotion": "Asombro"
+      },
+      {
+        "option": "C",
+        "text": "Los programadores que volvieron para arreglar Y2K",
+        "strategy": 5,
+        "emotion": "Injusticia"
+      }
+    ],
+    "facebook": {
+      "title": "¿Fue el año 2000 la mayor estafa informática?",
+      "first_line": "El defecto existía. La noche pasó con pocas interrupciones graves. ¿Qué cambió antes de la medianoche?"
+    },
+    "tiktok": {
+      "caption": "La medianoche llegó primero a una isla deshabitada. Después, equipos de guardia siguieron los reportes. ¿Qué ocurrió al cambiar la fecha?"
+    },
+    "chosen": "A"
+  },
+  "description": {
+    "hook": "El año 2000 empezó primero en una isla normalmente deshabitada. En salas de control, equipos esperaban reportes: ¿qué se había roto?",
+    "context": "Algunos programas guardaban el año con dos dígitos. Al pasar de 99 a 00, una fecha podía leerse como 1900. Años de arreglos y pruebas precedieron a la medianoche. Los informes de Estados Unidos y Reino Unido registran gastos de escalas y alcances distintos; las fallas verificadas fueron acotadas, y no es posible medir con certeza qué habría ocurrido sin la preparación.",
+    "chapters": [
+      {"at": "0:00", "title": "Millennium y la primera medianoche"},
+      {"at": "2:25", "title": "Dos dígitos: por qué 00 podía ser 1900"},
+      {"at": "4:55", "title": "El costo y las cifras que no coinciden"},
+      {"at": "7:25", "title": "La gente y las salas de guardia"},
+      {"at": "9:50", "title": "La falla real y sus límites"},
+      {"at": "11:50", "title": "¿Estafa? El debate y el caso 2038"}
+    ],
+    "reflection": "Que la mayoría de los sistemas siguiera funcionando no demuestra que el riesgo fuera inventado: antes hubo correcciones, pruebas y planes de contingencia. Tampoco demuestra que cada gasto fuera necesario. La evidencia permite ver el defecto y sus resultados; no reconstruir un contrafactual seguro.",
+    "question": "¿Te parece razonable invertir tanto para reducir un riesgo técnico antes de que ocurra? ¿Qué otra historia de tecnología quieres que investiguemos?"
+  },
+  "sources": [
+    "National Audit Office, The Millennium Threat (mayo de 1999): https://www.nao.org.uk/wp-content/uploads/1999/05/n9899436.pdf",
+    "U.S. Senate Special Committee on the Year 2000 Technology Problem, informe final (29 feb. 2000): https://www.govinfo.gov/content/pkg/GOVPUB-Y1_3-PURL-LPS90964/pdf/GOVPUB-Y1_3-PURL-LPS90964.pdf",
+    "U.S. Department of Commerce, The Economics of Y2K (17 nov. 1999): https://www.commerce.gov/sites/default/files/migrated/reports/y2k_1.pdf",
+    "John Koskinen, entrevista del Departamento de Estado (27 ene. 2000): https://usinfo.org/wf-archive/2000/000127/epf407.htm",
+    "Hansard, Cámara de los Comunes (20 ene. 2000): https://api.parliament.uk/historic-hansard/commons/2000/jan/20/millennium-bug",
+    "Hansard, respuesta escrita sobre Action 2000 (7 feb. 2000): https://api.parliament.uk/historic-hansard/written-answers/2000/feb/07/millennium-bug",
+    "U.S. Government Accountability Office, AIMD-00-290 (12 sep. 2000): https://www.gao.gov/assets/aimd-00-290.pdf",
+    "Associated Press, Ringing in the New Year Worldwide (30 dic. 1999): https://www.deseret.com/1999/12/30/19483185/ringing-in-the-new-year-worldwide/",
+    "Los Angeles Times/Bloomberg, reportes del día bisiesto (29 feb. 2000): https://www.latimes.com/archives/la-xpm-2000-feb-29-fi-3740-story.html",
+    "Los Angeles Times, demanda de programadores COBOL para Y2K (21 sep. 1998): https://www.latimes.com/archives/la-xpm-1998-sep-21-fi-24932-story.html",
+    "The Open Group, POSIX rationale (2024): https://pubs.opengroup.org/onlinepubs/9799919799/xrat/V4_xbd_chap01.html"
+  ],
+  "credits": [
+    "y2k-date-error.jpg — Bug de l'an 2000.jpg — Bug de l'an 2000 — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Bug_de_l%27an_2000.jpg",
+    "y2k-rollover-bangalore.jpg — In the wake of Y2K (4951290763).jpg — Ryan from Toronto, Canada — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:In_the_wake_of_Y2K_(4951290763).jpg",
+    "y2k-kvm-switch.jpg — KVM Switch - Y2K (524668420).jpg — Terinea IT Support from Edinburgh, Scotland — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:KVM_Switch_-_Y2K_(524668420).jpg",
+    "cobol-poster.jpg — COBOL poster (1969).jpg — Dietmar R. Winkler — Public domain — https://commons.wikimedia.org/wiki/File:COBOL_poster_(1969).jpg",
+    "cobol-program.jpg — COBOL programa informatico.jpg — Eric Peacock — Public domain — https://commons.wikimedia.org/wiki/File:COBOL_programa_informatico.jpg",
+    "cobol-tape.jpg — Cobol Compiler for Univac on a magnetic tape.jpg — Chirags — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Cobol_Compiler_for_Univac_on_a_magnetic_tape.jpg",
+    "community-terminal.jpg — Community Memory Terminal, circa 1975, Computer History Museum.jpg — The wub — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Community_Memory_Terminal,_circa_1975,_Computer_History_Museum.jpg",
+    "terminal-vt100.jpg — DEC VT100 terminal.jpg — Jason Scott — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:DEC_VT100_terminal.jpg",
+    "computer-room.jpg — Informatics computer room wide view.jpg — Jonathan Schilling — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Informatics_computer_room_wide_view.jpg",
+    "kiribati-iss.jpg — ISS020-E-5224 - View of Kiribati.jpg — Earth Science and Remote Sensing Unit, Lyndon B. Johnson Space Center — Public domain — https://commons.wikimedia.org/wiki/File:ISS020-E-5224_-_View_of_Kiribati.jpg"
+  ],
+  "tags": {
+    "youtube": [
+      "Y2K",
+      "problema del año 2000",
+      "bug del milenio",
+      "historia de la informática",
+      "año 2000",
+      "COBOL",
+      "programadores COBOL",
+      "medianoche de 1999",
+      "Kiribati",
+      "islas Chatham",
+      "John Koskinen",
+      "historia de la tecnología",
+      "errores de fecha"
+    ],
+    "youtube_hashtags": ["#NodeHistory", "#historia", "#Y2K"],
+    "tiktok": ["#historia", "#Y2K", "#COBOL", "#tecnología"],
+    "facebook": ["#Historia", "#Y2K"]
+  },
+  "pinned_comment": "Dato extra: el programa británico Action 2000 también recibió 58,4 millones de libras en subvenciones. ¿Qué otro sistema heredado te parece que merece una revisión? ¿Qué historia de tecnología quieres que contemos después?"
+}

@@ -20,6 +20,7 @@
   "fontsCss": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap",
   "scripts": [
     "designs/common/text.js",
+    "designs/common/clip.js",
     "designs/binary/components/_field.js",
     "designs/binary/components/icons.js",
     "designs/binary/components/shapes.js",
@@ -72,6 +73,11 @@
       "cta": "SUSCRÍBETE",
       "support": "APOYA ESTE CANAL · COMPARTE LA HISTORIA",
       "handle": "youtube.com/@nodehistory"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.4) brightness(0.95)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

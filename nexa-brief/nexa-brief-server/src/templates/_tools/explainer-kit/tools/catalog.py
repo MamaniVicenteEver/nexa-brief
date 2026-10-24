@@ -62,10 +62,33 @@ def md(data):
             "## Bocetos de la familia rough (`icon`)", "", " · ".join(f"`{n}`" for n in data["sketches"]), ""]
     return "\n".join(out)
 
+def quick(data, design_id):
+    """Hoja corta de UN diseño (designs/<d>/QUICK.md): lo único que hace falta para armar el storyboard
+    de un video con un diseño que ya existe. Una línea por componente: nombre, para qué, parámetros
+    (obligatorios con *) y un ejemplo listo para copiar. Ver src/skills/explainer/produce/SKILL.md."""
+    design = json.loads((KIT / "designs" / design_id / "design.json").read_text())
+    fam = design.get("family", design_id)
+    out = [f"# {design_id} · {design.get('name', design_id)} — hoja rápida", "",
+           "> GENERADO por `tools/catalog.py`. No editar a mano. Detalle completo de cada parámetro: `CATALOG.md`.",
+           "> Beat: `{ \"at\": \"palabras ancla exactas de la voz\", \"use\": \"componente\", \"params\": {…} }`; el 1.º en `\"t\": 0`.", ""]
+    for title, pref in ((f"Componentes de {fam}", fam), ("Comunes (todos los diseños)", "common")):
+        out += [f"## {title}", ""]
+        for c in (c for c in data["comps"] if c["name"].split(".")[0] == pref):
+            ps = ", ".join(f"{k}{'*' if s.get('required') else ''}" + (f"({'|'.join(map(str, s['options']))})" if s.get("options") else "")
+                           for k, s in c["params"].items())
+            out.append(f"- **`{c['name']}`** — {c['summary'].split('. ')[0].rstrip('.')}. Parámetros: {ps or '—'}")
+            if c.get("example"): out.append(f"  `{json.dumps({'use': c['name'], 'params': c['example']}, ensure_ascii=False)}`")
+        out.append("")
+    if fam == "binary": out += ["Iconos (`icon`): " + " · ".join(data["icons"]), ""]
+    if fam == "rough": out += ["Bocetos (`icon`): " + " · ".join(data["sketches"]), ""]
+    return "\n".join(out)
+
 def main():
     data = asyncio.run(read())
     (KIT / "catalog.json").write_text(json.dumps(data, ensure_ascii=False, indent=1))
     (KIT / "CATALOG.md").write_text(md(data))
+    for d in sorted(p.parent.name for p in (KIT / "designs").glob("*/design.json")):
+        (KIT / "designs" / d / "QUICK.md").write_text(quick(data, d))
     print(f"✓ CATALOG.md: {len(data['comps'])} componentes, {len(data['icons'])} iconos, {len(data['sketches'])} bocetos")
 
 if __name__ == "__main__":

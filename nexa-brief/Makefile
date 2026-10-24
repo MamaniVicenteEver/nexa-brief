@@ -6,6 +6,8 @@ WEB := nexa-brief-web
 # La API en Docker corre con tu UID/GID para poder escribir en src/templates (montado).
 export APP_UID ?= $(shell id -u)
 export APP_GID ?= $(shell id -g)
+# Docker scheduled publishing is opt-in; API publishing endpoints remain available.
+export NEXA_ENABLE_AUTO_PUBLISHING ?= false
 # One root .env value feeds both local dev processes and Docker Compose.
 export PUBLIC_APP_URL := $(shell sed -n 's/^PUBLIC_APP_URL=//p' .env 2>/dev/null | tail -n1)
 export AUTH_URL := $(PUBLIC_APP_URL)

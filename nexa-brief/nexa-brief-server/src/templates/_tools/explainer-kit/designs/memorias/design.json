@@ -24,6 +24,7 @@
     "designs/memorias/components/_memorias.js",
     "designs/memorias/components/scenes.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/memorias/components/intros.js",
     "designs/memorias/components/outro.js"
   ],
@@ -83,6 +84,11 @@
       "support": "Apoya el canal y comparte la historia",
       "handle": "youtube.com/@nodehistory",
       "use": "memorias.outro"
+    },
+    "clip": {
+      "filter": "saturate(0.9)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

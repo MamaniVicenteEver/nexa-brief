@@ -53,7 +53,7 @@
    * def = { name:"familia.nombre", summary:"una línea", tags:[…], example:{…params},
    *         params:{ clave:{ type, default, doc, required?, min?, max?, options? } },
    *         create(ctx, p) → { render(lt, beat), dispose?(), points?(), hold? } }
-   * `type`: string | number | color | bool | enum | image | icon | array | object
+   * `type`: string | number | color | bool | enum | image | video | icon | array | object
    */
   function register(def) {
     if (!/^[a-z]+\.[a-zA-Z0-9]+$/.test(def.name)) throw new Error(`Kit.register: nombre inválido ${def.name}`);
@@ -118,6 +118,27 @@
     return imgCache.get(src);
   }
   const loaded = new Map();               /* src → HTMLImageElement ya decodificada */
+
+  /* ------------------------------ clips de video ------------------------------
+     Un parámetro `type:"video"` es un clip mudo (assets/media/*.mp4, ver tools/media.py get … x.mp4).
+     Los componentes lo piden con ctx.clip(src, segundo) y lo dibujan como una imagen (drawImage).
+     El motor lo lleva al cuadro pedido: en vivo lo deja correr y corrige si se desfasa; en una
+     captura o un render cuadro a cuadro (seek / ?t=) salta al cuadro exacto y espera el `seeked`
+     antes de capturar, así cada cuadro sigue siendo función pura del tiempo. */
+  const vidCache = new Map();
+  function video(src) {
+    if (!vidCache.has(src)) vidCache.set(src, new Promise(res => {
+      const v = doc.createElement("video");
+      Object.assign(v, { muted: true, playsInline: true, preload: "auto", loop: false });
+      v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+      /* width/height = tamaño real: los componentes leen im.width/height igual que en una foto */
+      v.addEventListener("loadeddata", () => { v.width = v.videoWidth; v.height = v.videoHeight; res(v); }, { once: true });
+      v.addEventListener("error", () => { console.warn("[kit] no carga el clip", src); res(null); }, { once: true });
+      v.src = src; v.load();
+    }));
+    return vidCache.get(src);
+  }
+  const loadedVideos = new Map();         /* src → HTMLVideoElement con su primer cuadro listo */
 
   /* ------------------------------ transcripción ------------------------------ */
   function wordsOf(lyrics) {
@@ -287,10 +308,12 @@
     const fontLoads = [...new Set([...(C.fonts?.load || []), ...fonts])].map(f => wait(doc.fonts.load(f).catch(() => {}), fontWaitMs));
     const imgs = new Set();
     const firstFrameImgs = new Set();
+    const vids = new Set();
     for (const b of beats) {
       const activeAtInitial = INITIAL_TIME >= b.t0 &&
         INITIAL_TIME < b.t1 + (registry.get(b.use)?.post ?? (C.transition?.overlap ?? 0.6));
       for (const [k, v] of Object.entries(b.params || {})) {
+        if (registry.get(b.use)?.params?.[k]?.type === "video" && v) { vids.add(v); continue; }
         if (registry.get(b.use)?.params?.[k]?.type !== "image" || !v) continue;
         imgs.add(v);
         if (!PREVIEW_FIRST_FRAME || activeAtInitial) firstFrameImgs.add(v);
@@ -300,7 +323,13 @@
       const im = await image(src);
       if (im) loaded.set(src, im);
     };
-    await Promise.all([...fontLoads, ...[...firstFrameImgs].map(loadImage)]);
+    const loadVideo = async src => {
+      const v = await video(src);
+      if (v) loadedVideos.set(src, v);
+    };
+    /* La vista en vivo no espera los clips (se agregan al cargar); capturas y renders sí. */
+    const vidLoads = [...vids].map(src => PREVIEW_FIRST_FRAME ? (loadVideo(src), null) : wait(loadVideo(src), 20000));
+    await Promise.all([...fontLoads, ...[...firstFrameImgs].map(loadImage), ...vidLoads.filter(Boolean)]);
     if (!PREVIEW_FIRST_FRAME) await wait(doc.fonts.ready, 10000);
     const deferredImgs = PREVIEW_FIRST_FRAME
       ? [...imgs].filter(src => !firstFrameImgs.has(src))
@@ -330,6 +359,14 @@
       get stage() { return stage; },
       g: { bg: layers.bg.getContext("2d"), main: layers.main.getContext("2d"), top: layers.top.getContext("2d") },
       img: src => loaded.get(src) || null,
+      /** clip listo para dibujar en el segundo `time` del clip (o null si todavía no cargó) */
+      clip: (src, time) => {
+        const v = loadedVideos.get(src);
+        if (!v) return null;
+        const d = isFinite(v.duration) ? v.duration : 0;
+        wanted.set(v, d > 0 ? clamp(time, 0, Math.max(0, d - 0.05)) : 0);
+        return v;
+      },
       family: {},
     };
     for (const [name, rt] of families) if (rt.setup) ctx.family[name] = rt.setup(ctx) || {};
@@ -371,6 +408,36 @@
       });
     }
 
+    /* clips pedidos en este cuadro → segundo del clip; los no pedidos se pausan */
+    const wanted = new Map(), seeking = new Set();
+    function syncClips() {
+      /* exacto (captura, render cuadro a cuadro, pausa en el modal) o en vivo (corre y se corrige) */
+      const exact = forced != null || (CONTROLLED && audio.paused);
+      for (const v of loadedVideos.values()) {
+        const want = wanted.get(v);
+        if (want == null) { if (!v.paused) v.pause(); continue; }
+        if (exact) {
+          if (!v.paused) v.pause();
+          if (Math.abs(v.currentTime - want) > 0.5 / 30) { v.currentTime = want; seeking.add(v); }
+        } else {
+          if (Math.abs(v.currentTime - want) > 0.3) v.currentTime = want;
+          if (v.paused) v.play().catch(() => {});
+        }
+      }
+      wanted.clear();
+    }
+    /** espera a que los clips lleguen a su cuadro y vuelve a dibujar (capturas deterministas) */
+    async function settleClips(t) {
+      if (!seeking.size) return;
+      const vs = [...seeking]; seeking.clear();
+      await Promise.all(vs.map(v => new Promise(r => {
+        if (!v.seeking && v.readyState >= 2) return r();
+        v.addEventListener("seeked", r, { once: true }); setTimeout(r, 3000);
+      })));
+      render(t);
+      seeking.clear();
+    }
+
     function render(t) {
       t = clamp(t, 0, total);
       for (const k of ["bg", "main", "top"]) { const g = ctx.g[k]; g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, stage.W, stage.H); }
@@ -385,6 +452,7 @@
         try { inst.render && inst.render(t - b.t0, b, t); } catch (e) { console.error("[kit] render falló", b.use, e); }
       }
       for (const [name, rt] of families) if (rt.post) rt.post(t, ctx, ctx.family[name]);
+      syncClips();
       renderCaptions(t);
       if (opts.hud) opts.hud(t, active);
     }
@@ -408,7 +476,7 @@
 
     window.__promo = {
       scenes: () => beats.map(b => ({ t0: b.t0, t1: b.t1, type: b.use, seg: { text: b.at || "" } })).concat([{ t0: total, t1: total, type: "end", seg: { text: "" } }]),
-      async seek(t) { forced = t; render(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
+      async seek(t) { forced = t; render(t); await settleClips(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
       release() { forced = null; requestAnimationFrame(frame); },
       beats, total, words,
     };
@@ -416,6 +484,7 @@
     /* Dibuja antes de anunciar que el reproductor está listo: el audio no debe revelar
        un canvas todavía vacío. Esperamos dos frames para que el navegador pinte el inicial. */
     render(clock(performance.now()));
+    if (forced != null) await settleClips(forced);
     requestAnimationFrame(frame);
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     if (deferredImgs.length) setTimeout(() => {
@@ -433,6 +502,6 @@
     return ctx;
   }
 
-  window.Kit = { register, family, registry, fonts, catalog, resolveParams, boot, el, image, loaded, makeStage, deepMerge,
+  window.Kit = { register, family, registry, fonts, catalog, resolveParams, boot, el, image, loaded, video, loadedVideos, makeStage, deepMerge,
                  clamp, lerp, inv, ease, prog, rng, hash, norm, wordsOf, findAnchor, captionChunks };
 })();

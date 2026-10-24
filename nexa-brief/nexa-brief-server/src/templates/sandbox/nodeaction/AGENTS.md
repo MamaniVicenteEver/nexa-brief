@@ -50,6 +50,8 @@ sandbox/nodeaction/
 │   ├── frame.py               ← un cuadro a tamaño completo (y --crop) para mirar detalles
 │   ├── sfx.py                 ← sonido sintetizado desde la escena (+ mezcla con voz/música → song.mp3)
 │   └── delegate_text.py       ← delegar TEXTO a DeepSeek (guion, títulos). Nunca animación.
+├── _avatar/                   ← AVATAR 2D desde UNA imagen (rig de malla, gestos, labios): ver _avatar/AVATAR.md
+│                                 (estudio en _avatar/index.html · demo: avatar-demo/)
 ├── prompts/                   ← prompts de delegación (narracion-batalla.md = ejemplo)
 └── <escena>/                  ← una carpeta por escena (paintwick-demo = referencia)
     ├── index.html             ← NO se edita: solo carga el motor
@@ -382,3 +384,22 @@ de un storyboard del explainer-kit (videos de historia con batallas animadas).
 - Cámara muy baja (y ≈ 0,55) aplasta las manchas hasta volverlas rayas: y ≥ 0,8.
 - Las anclas del plan se buscan cada una desde el principio de la voz (un cursor común perdía las de aliados).
 - `render_promo.py` exige `config.json` con `configs[]` y una pista `audio.src` (por eso sfx.py siempre deja `song.mp3`).
+
+- 2026-10-22 · Prototipo **pizarra plana** (`pizarra-demo/` + motor aparte `_pizarra/pizarra.js`), réplica de
+  `../nuevos/ejmplo1/` (monigote de doble trazo, fondo gris liso, sin cámara, texto tipeado, títulos en arco).
+  No usa `_engine/` (no hay mundo 2.5D ni simulación): planos con items en un lienzo 1920×1080. Voz/texto
+  reutilizados de `turing-enigma` (0–48 s). Ver su `PLAN.md`.
+- Doble trazo limpio: trazar TODOS los miembros en negro (ancho + 2 bordes) y después todos en color de
+  fondo; si se dibuja miembro por miembro quedan líneas en las uniones.
+- Props con animación propia usan `k._t0` (tiempo compilado del item); `k.t0` no existe y deja NaN.
+- Abierto con Live Server, Chrome bloquea el autoplay: el motor corría mudo con el reloj de pared y quedaba
+  "trancado" en el final (pizarra vacía). Ahora el tiempo sale SIEMPRE de `audio.currentTime`; si `play()` falla
+  se muestra ▶ y se espera un clic (clic/espacio = pausa, al final reinicia) y el último cuadro se mantiene.
+- 2026-10-23 · **Pizarra modular** (`_pizarra/`: rig.js, characters/, props.js + props/estudio.js, pizarra.js) sobre
+  `../_proto/proto.js`. **Personaje intercambiable**: palito, profe, nina, abuelo, nino, obrera (`PERSONAJES.md`).
+  Formato: `_pizarra/ESCENA.md`. Video completo `pizarra-olvido/` (6:39). Fábrica: `../_proto/FABRICA.md`.
+- Flechas onduladas de la pizarra: dos curvas suaves seguidas por un tramo recto horizontal llevan el trazo al
+  centro de la punta; alinear la cabeza con ese tramo evita que el cuerpo termine en uno de sus costados.
+- 2026-10-23 · **Avatar desde una imagen** (`_avatar/`, personaje `chica`, demo `avatar-demo/` 49 s con voz): la
+  imagen se corta en capas por las líneas de tinta y se anima con malla + huesos (WebGL2); en reposo es la imagen
+  exacta. Gestos de brazos/manos, cara (parpadeo, cejas, giro), labios desde lyrics.json. Todo en `_avatar/AVATAR.md`.

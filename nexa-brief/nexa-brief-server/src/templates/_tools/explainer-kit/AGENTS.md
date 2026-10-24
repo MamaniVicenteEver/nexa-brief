@@ -1,5 +1,8 @@
 # AGENTS.md · explainer-kit — cómo producir un video explicativo narrado
 
+> **Vía rápida (diseño existente, el caso normal): `src/skills/explainer/produce/SKILL.md`.** Este
+> manual completo es la referencia; no hace falta leerlo entero para armar un video.
+
 > Para **cualquier agente de IA** (Codex, Claude, Gemini, DeepSeek…) o persona.
 > Si te dieron un **tema** (y opcionalmente título, descripción o diseño), este archivo te dice
 > exactamente qué hacer, en qué orden, con qué herramienta y cuándo un paso está terminado.
@@ -97,7 +100,12 @@ K=src/templates/_tools/explainer-kit/tools/kit.py      # y: M=…/tools/media.py
 - `guides/media.md`. Buscar: `.venv/bin/python $M search "<consulta en inglés>"`; bajar:
   `.venv/bin/python $M get <video-id> "File:…" nombre.jpg` (anota el crédito solo).
 - Fotos según la duración (`kit.py status`): protagonista, lugar/objeto del punto crítico, contraparte, legado.
-- **Hecho cuando**: cada foto del mapa visual existe, tiene crédito y (si podés ver imágenes) la miraste.
+- **Clips de video** (`guides/media.md §6`): en los momentos donde el movimiento cuenta algo (un
+  lanzamiento, una multitud, máquinas trabajando, una ciudad de noche) va un clip de 4–8 s en vez de la
+  foto: `.venv/bin/python $M search "<consulta>" --type video --source pixabay|commons`, después
+  `get <video-id> pixabay-video:<id> nombre.mp4 --start S --dur D`, y en el storyboard `common.clip`.
+  Cantidad según la duración (`kit.py check`: 2–8 en 13 min).
+- **Hecho cuando**: cada foto y clip del mapa visual existe, tiene crédito y (si podés ver imágenes) lo miraste.
 
 ### Paso 3c · Componentes propios del tema (PLAN §7a)
 - `guides/components.md §6` + `prompts/component-author.md`. Se escriben en `assets/components/`.

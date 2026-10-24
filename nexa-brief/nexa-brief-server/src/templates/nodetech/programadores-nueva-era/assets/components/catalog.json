@@ -1,0 +1,200 @@
+{
+ "comps": [
+  {
+   "name": "rough.abstractionLadder",
+   "summary": "Escalera de capas que sube el nivel de abstracción: de instrucciones de máquina a un agente que produce código. Sirve para narrar la evolución de las herramientas de programación sin sugerir pérdida de trabajo.",
+   "tags": [
+    "abstracción",
+    "generaciones",
+    "escalera",
+    "capas",
+    "programación"
+   ],
+   "layer": "main",
+   "params": {
+    "labels": {
+     "type": "array",
+     "default": [
+      "MÁQUINA",
+      "LENGUAJE",
+      "VISUAL",
+      "AGENTE"
+     ],
+     "doc": "Rótulos cortos de cada capa (3 a 5).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "active": {
+     "type": "number",
+     "default": 3,
+     "doc": "Índice de la capa activa (destacada en lima).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 4
+    },
+    "header": {
+     "type": "string",
+     "default": "NIVELES DE ABSTRACCIÓN",
+     "doc": "Título superior; puede ser vacío.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "activeTag": {
+     "type": "string",
+     "default": "ACTIVA",
+     "doc": "Rótulo de la capa resaltada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota manuscrita opcional al pie.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "labels": [
+     "MÁQUINA",
+     "LENGUAJE",
+     "VISUAL",
+     "AGENTE"
+    ],
+    "active": 3,
+    "header": "NIVELES DE ABSTRACCIÓN",
+    "activeTag": "ACTIVA",
+    "note": "cada capa esconde la de abajo"
+   }
+  },
+  {
+   "name": "rough.entryGate",
+   "summary": "Dos carriles dibujados a mano: el de tareas de entrada se estrecha como una puerta que se cierra, mientras el de revisión y diseño gana espacio. Sirve para el momento en que la narración dice que el primer peldaño se angosta.",
+   "tags": [
+    "trabajo",
+    "automatización",
+    "puerta",
+    "carriles"
+   ],
+   "layer": "main",
+   "params": {
+    "juniorLabel": {
+     "type": "string",
+     "default": "PRIMER PELDAÑO",
+     "doc": "Rótulo del carril que se estrecha.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "entryTasks": {
+     "type": "string",
+     "default": "tareas de entrada",
+     "doc": "Texto corto del carril de entrada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "reviewLabel": {
+     "type": "string",
+     "default": "REVISIÓN Y DISEÑO",
+     "doc": "Rótulo del carril que gana peso.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "reviewTasks": {
+     "type": "string",
+     "default": "criterio · diseño · responsabilidad",
+     "doc": "Texto corto del carril de revisión.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "se angosta",
+     "doc": "Nota manuscrita en lima (opcional).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "juniorLabel": "PRIMER PELDAÑO",
+    "entryTasks": "tareas de entrada",
+    "reviewLabel": "REVISIÓN Y DISEÑO",
+    "reviewTasks": "criterio · diseño · responsabilidad",
+    "note": "se angosta"
+   }
+  },
+  {
+   "name": "rough.reviewLens",
+   "summary": "Una hoja de código bajo la lupa de una revisión humana: el lente recorre las líneas y la marca de aprobación queda pendiente (o se completa). Sirve para el momento en que algo generado espera el visto bueno de alguien.",
+   "tags": [
+    "revisión",
+    "código",
+    "aprobación",
+    "lente"
+   ],
+   "layer": "main",
+   "params": {
+    "header": {
+     "type": "string",
+     "default": "REVISAR",
+     "doc": "Rótulo superior (mono, mayúsculas).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "status": {
+     "type": "string",
+     "default": "ANTES DE APROBAR",
+     "doc": "Rótulo inferior de estado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "approved": {
+     "type": "bool",
+     "default": false,
+     "doc": "Si es true, la marca de aprobación se completa en lima.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota manuscrita opcional (puede ir vacía).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "header": "REVISAR",
+    "status": "ANTES DE APROBAR",
+    "approved": false,
+    "note": ""
+   }
+  }
+ ]
+}

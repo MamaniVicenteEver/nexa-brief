@@ -1,5 +1,9 @@
 # AGENTS.md — Casa de pruebas (sandbox)
 
+> **¿Te pidieron un video con un diseño que ya existe? No es acá:** seguí
+> `src/skills/explainer/produce/SKILL.md` (vía rápida, carpeta de producción). Esta carpeta es solo para
+> lo NUEVO: plantillas y diseños nuevos, réplicas de un video de referencia, componentes de diseño.
+>
 > Acá se prueban ideas: plantillas nuevas, videos de prueba, diseños. Nada de esta carpeta sale
 > en la app ni se publica. Lo que ya funciona y está en producción vive fuera, en
 > `src/templates/` (reglas estrictas en `src/templates/AGENTS.md`).

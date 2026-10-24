@@ -61,6 +61,10 @@ make docker-up
 make docker-seed-admin      # primer usuario de la web dentro del contenedor
 ```
 
+Docker starts with scheduled publishing disabled for safety. Manual publishing still works; enable the
+background scheduler explicitly with `make docker-up NEXA_ENABLE_AUTO_PUBLISHING=true` after reviewing
+the saved schedule and queue.
+
 - Web: http://localhost:3000 · API: http://localhost:8000 · Salud: http://localhost:8000/health · OpenAPI: http://localhost:8000/docs
 - En Docker, `NEXT_PUBLIC_API_URL` queda vacío: el navegador usa el mismo origen (`/api/v1`) y Next.js reenvía
   las peticiones a `INTERNAL_API_URL=http://api:8000` dentro de la red privada. Configurá solo `PUBLIC_APP_URL` con la URL HTTPS pública (por ejemplo, el túnel) para que OAuth, los accesos y

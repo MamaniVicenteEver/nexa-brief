@@ -4,11 +4,14 @@ Entrada para cualquier agente de IA (Codex, Claude Code…) que trabaje en este 
 
 ## Si te piden un VIDEO explicativo (NodeTech, NodeHistory, NodeEconomy…)
 
-Leé, en este orden:
-1. `src/templates/_tools/explainer-kit/guides/orquestacion.md`: por dónde empezar, quién hace qué
-   (Codex, DeepSeek, Gemini, Whisper), qué delegar y el registro de tokens (`usage.json`).
-2. `src/templates/_tools/explainer-kit/AGENTS.md`: el pipeline de 10 pasos.
-3. `src/templates/sandbox/<categoría>/AGENTS.md`: lo propio de la categoría (estrategia, lecciones).
+**Con un diseño que ya existe (el caso normal): `src/skills/explainer/produce/SKILL.md` y nada más.**
+Es la vía rápida: carpeta de producción, qué leer (la hoja `designs/<diseño>/QUICK.md`, no el catálogo
+ni el motor), comandos exactos y presupuesto de tokens. No se trabaja en `sandbox/`.
+
+Solo para un diseño o plantilla NUEVA, una réplica de un video de referencia o tocar el motor (caro):
+1. `src/templates/_tools/explainer-kit/guides/orquestacion.md`: quién hace qué y qué delegar.
+2. `src/templates/_tools/explainer-kit/AGENTS.md`: el pipeline de 10 pasos completo.
+3. `src/templates/sandbox/<categoría>/AGENTS.md`: lo aprendido en la casa de pruebas.
 
 Qué modelo hace cada rol: `src/skills/models/roles.json` (el backend lo lee con `src/adapters/models/hub.py`).
 

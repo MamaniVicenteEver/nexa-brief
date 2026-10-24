@@ -24,6 +24,13 @@ import outro as outro_tool  # noqa: E402
 LOCAL_CATALOG = "assets/components/catalog.json"
 
 
+def clip_seconds(f: pathlib.Path) -> float | None:
+    """Duración de un clip con ffprobe (None si no se puede leer)."""
+    import subprocess
+    r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(f)], capture_output=True, text=True)
+    try: return float(r.stdout.strip())
+    except ValueError: return None
+
 def load_catalog(proto: pathlib.Path) -> dict:
     """Catálogo del kit + componentes propios del video (si ya pasaron por `kit.py components`)."""
     cat = {c["name"]: c for c in json.loads((KIT / "catalog.json").read_text())["comps"]}
@@ -81,6 +88,7 @@ def main(proto):
             for k, v in (b.get("params") or {}).items():
                 if k not in d["params"]: errs.append(f"#{i} {b['use']}: parámetro desconocido '{k}'")
                 elif d["params"][k]["type"] == "image" and v and not (proto / v).exists(): errs.append(f"#{i} imagen inexistente: {v}")
+                elif d["params"][k]["type"] == "video" and v and not (proto / v).exists(): errs.append(f"#{i} clip inexistente: {v}")
                 elif isinstance(v, str) and v.startswith("@") and find(words, v[1:], max(0, wi)) < 0: errs.append(f"#{i} {k}='{v}' no aparece después del ancla")
             for k, s in d["params"].items():
                 if s.get("required") and k not in (b.get("params") or {}): errs.append(f"#{i} {b['use']}: falta '{k}'")
@@ -98,6 +106,17 @@ def main(proto):
         if x["layer"] == "main" and x["use"] != "common.flash":
             if dur < 1.5: warns.append(f"#{x['i']} {x['use']} dura {dur:.1f}s (< 1,5 s)")
             if dur > 8.5 and x["i"] != len(beats) - 1: warns.append(f"#{x['i']} {x['use']} dura {dur:.1f}s (> 8 s)")
+    # clips de video: que el clip alcance para todo el beat (start + duración × rate) y cuántos hay
+    clips = [x for x in beats if x["use"] == "common.clip"]
+    for x in clips:
+        p = x["b"].get("params") or {}
+        f = proto / p.get("src", "")
+        need = float(p.get("start", 0)) + (x["t1"] - x["t0"]) * float(p.get("rate", 1))
+        have = clip_seconds(f) if f.is_file() else None
+        if have is not None and need > have + 0.1:
+            warns.append(f"#{x['i']} el clip {p.get('src')} dura {have:.1f}s y el beat pide {need:.1f}s: se congela el último cuadro (bajar start/rate o acortar el beat)")
+    if not T["legacy"] and "clips" in T and not in_range(len(clips), T["clips"]):
+        warns.append(f"{len(clips)} clips de video (common.clip) para {T['minutes']:g} min: lo recomendado es {T['clips'][0]}–{T['clips'][1]} (metraje real en los momentos clave)")
     lyrics = sum(1 for x in beats if x["use"] == "common.lyric")
     big = lyrics + sum(1 for x in beats if x["use"] == "common.punch")
     lo, hi = T["lyrics"]

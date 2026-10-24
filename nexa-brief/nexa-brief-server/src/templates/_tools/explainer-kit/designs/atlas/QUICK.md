@@ -1,0 +1,44 @@
+# atlas · NODEPOLITICS — hoja rápida
+
+> GENERADO por `tools/catalog.py`. No editar a mano. Detalle completo de cada parámetro: `CATALOG.md`.
+> Beat: `{ "at": "palabras ancla exactas de la voz", "use": "componente", "params": {…} }`; el 1.º en `"t": 0`.
+
+## Componentes de atlas
+
+- **`atlas.world`** — Cámara del mapamundi 2.5D que viaja (zoom + paneo suave) a una región, a varios países o a un punto; opcionalmente pinta países en gris o blanco con parpadeo. Parámetros: region(world|europe|western-europe|eastern-europe|africa|asia|middle-east|north-america|central-america|south-america|latin-america|americas|oceania|east-asia|southeast-asia|south-asia|central-asia), countries, center, span, zoom, paint, state(white|gray), paintAt, stagger, clear, move, pins, kicker
+  `{"use": "atlas.world", "params": {"region": "europe", "paint": ["Germany", "Poland", "Czechia", "Hungary"], "state": "gray", "kicker": "Europa · 1989"}}`
+- **`atlas.country`** — LA escena de la referencia: la cámara viaja al país, el país se enciende en blanco con un parpadeo de 8 cuadros (o pasa por gris medio y después blanco), cae un alfiler negro tipo gota con rebote y la etiqueta sale de atrás del alfiler. Parámetros: country*, label, sub, pin, src, focus, seal(globe|initials|none), state(white|gray|both|none), whiteAt, span, zoom, move, pinAt, side(auto|left|right)
+  `{"use": "atlas.country", "params": {"country": "Germany", "label": "Alemania", "sub": "1989", "pin": [13.4, 52.52]}}`
+- **`atlas.route`** — Montaje de la referencia: la cámara salta país por país (≈1 s cada uno), cada país se enciende en blanco, cae su alfiler y su etiqueta; los anteriores quedan chicos. Parámetros: items*, stagger, first, camera(follow|fit), line, span, zoom, state(white|gray), clear, kicker
+  `{"use": "atlas.route", "params": {"items": ["Hungary", "Austria", "Czechia", "Germany"], "stagger": 1, "line": true}}`
+- **`atlas.border`** — Una línea que se dibuja sobre el mapa: MURO (negro grueso con canto cian que brilla), frontera punteada o ruta con flecha. Parámetros: line*, style(wall|border|route), drawAt, drawSec, width, tags, countries, center, span, zoom, paint, state(white|gray), keep, kicker
+  `{"use": "atlas.border", "params": {"line": [[10.9, 54], [10.75, 53.6], [10.6, 53.37], [11.5, 53.05], [10.95, 52.55], [11, 52.2], [10.6, 51.75], [10.25, 51.45], [10, 50.95], [10.1, 50.55], [10.9, 50.33], [11.9, 50.32], [12.1, 50.3]], "style": "wall", "tags": [{"text": "OESTE", "at": [8.4, 51.6]}, {"text": "ESTE", "at": [12.9, 51.9]}], "countries": ["Germany"], "paint": ["Germany"], "state": "gray", "kicker": "Alemania · 1949–1990"}}`
+- **`atlas.title`** — Título de apertura: el mapamundi 2.5D con la costa cian se acerca lento mientras caen alfileres chicos en los países de la historia; el titular condensado blanco GRANDE ('^x^' en cian) se asienta cerrando la interletra. Parámetros: text*, textPortrait, kicker, sub, region(world|europe|western-europe|eastern-europe|africa|asia|middle-east|north-america|central-america|south-america|latin-america|americas|oceania|east-asia|southeast-asia|south-asia|central-asia), pins, dim
+  `{"use": "atlas.title", "params": {"text": "LA NOCHE QUE\nCAYÓ EL ^MURO^", "textPortrait": "LA NOCHE\nQUE CAYÓ\nEL ^MURO^", "kicker": "Berlín · 9 nov 1989", "region": "europe", "pins": ["Germany", "Hungary", "Czechia", "Poland"]}}`
+- **`atlas.stat`** — Cierre de la referencia ('82 COUNTRIES LISTENING'): el mapa se apaga y desenfoca, y aparece una cifra con su texto en condensada blanca (la cifra cuenta hacia arriba si es número). Parámetros: value*, text, kicker, layout(auto|inline|stack), countFrom, countSec, accent, region(|world|europe|western-europe|eastern-europe|africa|asia|middle-east|north-america|central-america|south-america|latin-america|americas|oceania|east-asia|southeast-asia|south-asia|central-asia)
+  `{"use": "atlas.stat", "params": {"value": "140", "text": "muertos en el muro", "kicker": "Berlín · 1961–1989"}}`
+- **`atlas.compare`** — Dos países encendidos a la vez en el mapa, cada uno con su alfiler y su etiqueta, y abajo su cifra GRANDE en condensada blanca con un 'VS' cian en el medio. Parámetros: left*, right*, vs, kicker, zoom
+  `{"use": "atlas.compare", "params": {"left": {"country": "Germany", "value": "83 M", "sub": "habitantes"}, "right": {"country": "France", "value": "68 M", "sub": "habitantes"}, "kicker": "Población · 2024"}}`
+- **`atlas.photo`** — Foto clavada en el mapa: un alfiler GIGANTE cae con rebote sobre el lugar con la foto dentro de su cabeza (B/N contrastado, como el sello de la referencia) o una tarjeta con borde blanco y puntero; nombre y rol al lado. Parámetros: src*, focus, country, pin, name, role, frame(pin|card), span, keep
+  `{"use": "atlas.photo", "params": {"src": "turing.jpg", "country": "United Kingdom", "pin": [-0.74, 52], "name": "Alan Turing", "role": "Bletchley Park · 1940"}}`
+- **`atlas.introv1`** — GANCHO de apertura tipo golpe: la cámara se lanza del mundo entero hacia la región mientras los países de la historia se encienden en BLANCO en ráfaga (parpadeo de 8 cuadros cada uno, con alfileres chicos) y el titular condensado GIGANTE golpea palabra por palabra con sacudida ('^x^' en cian). Parámetros: text*, kicker, sub, countries, region(world|europe|western-europe|eastern-europe|africa|asia|middle-east|north-america|central-america|south-america|latin-america|americas|oceania|east-asia|southeast-asia|south-asia|central-asia), wordAt, stagger, bg(auto|world|dark|image|component|none), src, focus, use, useParams, dim
+  `{"use": "atlas.introv1", "params": {"text": "¿POR QUÉ CAYÓ\nEL ^MURO^?", "kicker": "Berlín · 9 nov 1989", "sub": "la noche que nadie vio venir", "countries": ["Germany", "Poland", "Czechia", "Hungary", "Austria"], "region": "europe"}}`
+- **`atlas.introv2`** — GANCHO pregunta + revelación: la pregunta se tipea letra a letra en condensada blanca sobre el mundo apagado; en revealAt el mapa se enciende, la pregunta sube y se achica, la cámara cae sobre el país, que parpadea en blanco, y cae el alfiler con la RESPUESTA como etiqueta. Parámetros: text*, answer, country*, pin, pinSrc, span, kicker, revealAt, typeAt, cps, bg(auto|world|dark|image|component|none), src, focus, use, useParams, dim
+  `{"use": "atlas.introv2", "params": {"text": "¿DÓNDE CAYÓ\nEL MURO?", "answer": "Berlín", "country": "Germany", "pin": [13.4, 52.52], "kicker": "9 nov 1989", "revealAt": 2.2}}`
+- **`atlas.outro`** — Cierre del canal SIN recuadro: la cámara se aleja al mundo entero con todo lo encendido y el mapa se apaga (final de la referencia). Parámetros: thanks, channel, cta, support, handle, arrow, likeAt, subscribeAt, bellAt, supportAt, bg(auto|world|dark|image|component|none), src, focus, use, useParams, dim
+  `{"use": "atlas.outro", "params": {"thanks": "GRACIAS POR VER", "channel": "NODEPOLITICS", "cta": "SUSCRÍBETE", "support": "Apoya el canal y comparte el mapa.", "handle": "youtube.com/@nodepolitics"}}`
+
+## Comunes (todos los diseños)
+
+- **`common.punch`** — Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento. Parámetros: text*, size, style(solid|outline|glitch), stagger, y, hideCaptions
+  `{"use": "common.punch", "params": {"text": "MILLONES\nDE ^VIDAS^", "size": 0.9}}`
+- **`common.tag`** — Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose. Parámetros: text*, pos(top|bottom|center), boxed
+  `{"use": "common.tag", "params": {"text": "BLETCHLEY PARK · 1940", "pos": "top"}}`
+- **`common.flash`** — Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido. Parámetros: color, strength
+  `{"use": "common.flash", "params": {"color": "palette.ink", "dur": 0.5}}`
+- **`common.endcard`** — Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse). Parámetros: line, brand, cta
+  `{"use": "common.endcard", "params": {"line": "SEGUIMOS\nPREGUNTANDO", "brand": "NEXA BRIEF", "cta": "SUSCRÍBETE"}}`
+- **`common.lyric`** — Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. Parámetros: accent, size, maxChars, dimPast, y
+  `{"use": "common.lyric", "params": {"accent": ["vidas"], "size": 0.9}}`
+- **`common.clip`** — Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Parámetros: src*, start, rate, layout(full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub
+  `{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "layout": "full", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}`

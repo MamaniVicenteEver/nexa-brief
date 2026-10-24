@@ -28,6 +28,7 @@
     "designs/common/outro-v1.js",
     "designs/enmienda/components/fx.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/enmienda/components/intro.js",
     "designs/enmienda/components/outro.js"
   ],
@@ -82,6 +83,11 @@
       "support": "APOYA EL CANAL · COMPARTE EL EXPEDIENTE",
       "handle": "youtube.com/@nodehistory",
       "use": "enmienda.outro"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.4)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

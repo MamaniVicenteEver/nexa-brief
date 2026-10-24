@@ -1,0 +1,21 @@
+{
+  "activeId": "y2k-medianoche",
+  "configs": [
+    {
+      "id": "y2k-medianoche",
+      "design": "binary",
+      "title": "¿Fue el año 2000 la mayor estafa informática?",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "storyboardUrl": "assets/storyboard.json",
+      "seed": 862,
+      "components": [
+        "assets/components/crisisdesk.js",
+        "assets/components/midnightrelay.js",
+        "assets/components/y2kfield.js"
+      ]
+    }
+  ]
+}

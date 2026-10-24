@@ -1,0 +1,1833 @@
+{
+ "version": 1,
+ "family": "rough",
+ "title": "LA IA YA ESCRIBE CÓDIGO",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "rough.introv2",
+   "params": {
+    "text": "LA IA YA\nESCRIBE\nCÓDIGO",
+    "textPortrait": "LA IA YA\nESCRIBE\nCÓDIGO",
+    "highlight": "CÓDIGO",
+    "kicker": "CAMBIO DE ERA",
+    "src": "assets/media/coder-modern.jpg"
+   },
+   "until": "la serie diaria de"
+  },
+  {
+   "use": "rough.counter",
+   "params": {
+    "from": 0,
+    "to": 21.9,
+    "label": "VACANTES DE SOFTWARE",
+    "unit": "bajo febrero de 2020 (Indeed)",
+    "suffix": "%",
+    "prefix": "",
+    "dur": 2.2
+   },
+   "at": "la serie diaria de"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "understand",
+    "tag": "",
+    "caption": "bajo su base de febrero",
+    "accent": false
+   },
+   "at": "bajo su base de"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "question",
+    "tag": "LA CIFRA",
+    "caption": "¿el final?",
+    "accent": true
+   },
+   "at": "Parece anunciar el final,"
+  },
+  {
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "distinta"
+    ]
+   },
+   "at": "pero otra medida cuenta"
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/computer-operator.jpg",
+    "caption": "Oficina de Estadísticas Laborales",
+    "sub": "BLS · EE. UU."
+   },
+   "at": "La Oficina de Estadísticas"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "design",
+    "tag": "",
+    "caption": "opuestos para la próxima década",
+    "accent": false
+   },
+   "at": "opuestos para la próxima"
+  },
+  {
+   "use": "rough.compare",
+   "params": {
+    "small": {
+     "label": "PROGRAMADORES",
+     "value": "-7,3 %"
+    },
+    "big": {
+     "label": "DESARROLLADORES",
+     "value": "+10,2 %"
+    },
+    "ratio": 9,
+    "bigFirst": false
+   },
+   "at": "Un grupo llamado programadores"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "build",
+    "tag": "",
+    "caption": "el grupo de desarrolladores de",
+    "accent": false
+   },
+   "at": "El grupo de desarrolladores"
+  },
+  {
+   "use": "common.punch",
+   "params": {
+    "text": "¿CÓMO PUEDEN SER\n^CIERTAS^ LAS DOS?",
+    "size": 0.88
+   },
+   "at": "¿Cómo pueden ser ciertas"
+  },
+  {
+   "use": "rough.gauge",
+   "params": {
+    "from": 100,
+    "to": 92.7,
+    "max": 100,
+    "dur": 3,
+    "unit": "PROGRAMADORES 2025→2035",
+    "label": "PROYECCIÓN BLS",
+    "critical": 0.1
+   },
+   "at": "la categoría de programadores"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "measure",
+    "tag": "",
+    "caption": "la de desarrolladores de software",
+    "accent": true
+   },
+   "at": "La de desarrolladores de"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PROYECCIÓN 2025–2035",
+    "note": "no es una promesa",
+    "noteAt": 0.8,
+    "caption": "BLS · EMPLOYMENT PROJECTIONS"
+   },
+   "at": "Es una proyección, no"
+  },
+  {
+   "use": "rough.flow",
+   "params": {
+    "nodes": [
+     {
+      "icon": "code",
+      "label": "ESCRIBIR CÓDIGO"
+     },
+     {
+      "icon": "gear",
+      "label": "CONSTRUIR SISTEMAS"
+     }
+    ],
+    "active": 1,
+    "title": "NO SON LO MISMO"
+   },
+   "at": "No son nombres intercambiables."
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "ship",
+    "tag": "",
+    "caption": "la inteligencia artificial causará cada",
+    "accent": false
+   },
+   "at": "la inteligencia artificial causará"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PERO DEJA UNA PREGUNTA INCÓMODA:",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Pero deja una pregunta"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "work",
+    "tag": "",
+    "caption": "se encoge escribir código mientras",
+    "accent": false
+   },
+   "at": "¿se encoge escribir código"
+  },
+  {
+   "use": "common.punch",
+   "params": {
+    "text": "¿QUIÉN ^ASUME^\nEL ERROR DEL\nSISTEMA?",
+    "size": 0.88
+   },
+   "at": "¿Quién asume el error"
+  },
+  {
+   "use": "common.clip",
+   "params": {
+    "src": "assets/media/programador-teclea.mp4",
+    "layout": "full",
+    "caption": "Programar, hoy",
+    "sub": "CLIP ILUSTRATIVO · PEXELS"
+   },
+   "at": "Para entenderlo, hay que"
+  },
+  {
+   "use": "rough.abstractionLadder",
+   "params": {
+    "labels": [
+     "MÁQUINA",
+     "LENGUAJE",
+     "NEGOCIOS",
+     "VISUAL",
+     "AGENTE"
+    ],
+    "active": 0,
+    "header": "CAPAS DE AUTOMATIZACIÓN",
+    "note": "cada una promete simplificar"
+   },
+   "at": "Cada nueva capa de"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "spark",
+    "tag": "",
+    "caption": "y aun así quedaba una",
+    "accent": false
+   },
+   "at": "Y aun así quedaba"
+  },
+  {
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "nota"
+    ]
+   },
+   "at": "La pregunta no es"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "browser",
+    "tag": "",
+    "caption": "es quién nota que esa",
+    "accent": true
+   },
+   "at": "Es quién nota que"
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/univac-console.jpg",
+    "caption": "Una consola de los años cincuenta",
+    "sub": "UNIVAC · FOTO DE ARCHIVO"
+   },
+   "at": "La primera respuesta empezó"
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/hopper-portrait.jpg",
+    "caption": "Grace Hopper",
+    "sub": "1952 · A-0",
+    "focus": [
+     0.5,
+     0.3
+    ]
+   },
+   "at": "En 1952, Grace Hopper"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "database",
+    "tag": "",
+    "caption": "a una barrera concreta: los",
+    "accent": false
+   },
+   "at": "a una barrera concreta:"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "DEMASIADO CERCANAS A LA MÁQUINA",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "demasiado cercanas a la"
+  },
+  {
+   "use": "rough.flow",
+   "params": {
+    "nodes": [
+     {
+      "icon": "papers",
+      "label": "RUTINAS"
+     },
+     {
+      "icon": "link",
+      "label": "ENLAZAR"
+     },
+     {
+      "icon": "code",
+      "label": "PROGRAMA"
+     }
+    ],
+    "active": 1,
+    "title": "A-0"
+   },
+   "at": "Hopper trabajaba con A0,"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "terminal",
+    "tag": "",
+    "caption": "ya preparadas y enlazarlas para",
+    "accent": false
+   },
+   "at": "ya preparadas y enlazarlas"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "gear",
+    "tag": "A-0",
+    "caption": "traducía lo ya definido",
+    "accent": true
+   },
+   "at": "No entendía una intención"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "AYUDABA A TRADUCIR TRABAJO QUE",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Ayudaba a traducir trabajo"
+  },
+  {
+   "use": "rough.abstractionLadder",
+   "params": {
+    "labels": [
+     "MÁQUINA",
+     "RUTINAS",
+     "A-0"
+    ],
+    "active": 2,
+    "header": "UNA CAPA MENOS DE TRADUCCIÓN",
+    "note": "quitó trabajo repetitivo"
+   },
+   "at": "La diferencia parece pequeña,"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "waves",
+    "tag": "",
+    "caption": "pero cambia la historia. a-cero",
+    "accent": false
+   },
+   "at": "pero cambia la historia."
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "LA PROGRAMACIÓN. QUITÓ UNA CAPA",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "la programación. Quitó una"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "scribble",
+    "tag": "",
+    "caption": "dejó a las personas escribir",
+    "accent": true
+   },
+   "at": "dejó a las personas"
+  },
+  {
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "automática"
+    ]
+   },
+   "at": "Esa palabra, automática, ya"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "hook",
+    "tag": "",
+    "caption": "automática, ya estaba en el",
+    "accent": false
+   },
+   "at": "automática, ya estaba en"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "NO SIGNIFICABA QUE EL COMPUTADOR",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "No significaba que el"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "star",
+    "tag": "",
+    "caption": "significaba que una parte mecánica",
+    "accent": false
+   },
+   "at": "Significaba que una parte"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "CADA PASO A MANO. EL",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "cada paso a mano."
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/fortran-card.jpg",
+    "caption": "FORTRAN",
+    "sub": "IBM · 1954–1957"
+   },
+   "at": "El mismo impulso empujó"
+  },
+  {
+   "use": "rough.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "1952",
+      "label": "A-0"
+     },
+     {
+      "year": "1954",
+      "label": "empieza FORTRAN"
+     },
+     {
+      "year": "1957",
+      "label": "aparece el lenguaje"
+     }
+    ],
+    "active": 2
+   },
+   "at": "En 1954 empezó el"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "bulb",
+    "tag": "",
+    "caption": "apareció el lenguaje, pensado para",
+    "accent": false
+   },
+   "at": "apareció el lenguaje, pensado"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "laptop",
+    "tag": "FORTRAN",
+    "caption": "fórmulas, no engranajes",
+    "accent": false
+   },
+   "at": "No había que escribir"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "EL CIENTÍFICO PODÍA ACERCARSE A",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "El científico podía acercarse"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "pencil",
+    "tag": "",
+    "caption": "engranajes internos. la computadora resolvía",
+    "accent": true
+   },
+   "at": "engranajes internos. La computadora"
+  },
+  {
+   "use": "rough.reviewLens",
+   "params": {
+    "header": "REVISAR",
+    "status": "¿TIENE SENTIDO?",
+    "approved": false,
+    "note": "alguien decide"
+   },
+   "at": "Pero alguien todavía debía"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "question",
+    "tag": "",
+    "caption": "detectar un error y decidir",
+    "accent": false
+   },
+   "at": "detectar un error y"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "LA MÁQUINA PODÍA TRADUCIR UNA",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "La máquina podía traducir"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "up",
+    "tag": "",
+    "caption": "no podía inventar el objetivo",
+    "accent": false
+   },
+   "at": "no podía inventar el"
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/punch-card-1969.jpg",
+    "caption": "Tarjeta perforada",
+    "sub": "ARCHIVO"
+   },
+   "at": "Y entonces llegó una"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "ring",
+    "tag": "",
+    "caption": "que los negocios pudieran hablarle",
+    "accent": false
+   },
+   "at": "que los negocios pudieran"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "COMÚN. LA PROMESA ERA REAL",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "común. La promesa era"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "cube",
+    "tag": "",
+    "caption": "no tanto. el informe original",
+    "accent": true
+   },
+   "at": "no tanto. El informe"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "COBOL · INFORME ORIGINAL",
+    "note": "un idioma común",
+    "noteAt": 0.8,
+    "caption": "ABRIL DE 1960"
+   },
+   "at": "El informe original de"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "notebook",
+    "tag": "",
+    "caption": "pedía un idioma común para",
+    "accent": false
+   },
+   "at": "pedía un idioma común"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "DE DISTINTOS FABRICANTES. A MENUDO",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "de distintos fabricantes. A"
+  },
+  {
+   "use": "rough.annotate",
+   "params": {
+    "kind": "cross",
+    "note": "sin verificar",
+    "x": 0.2,
+    "y": 0.4,
+    "w": 0.6,
+    "h": 0.2
+   },
+   "at": "A menudo se repite"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "tv",
+    "tag": "",
+    "caption": "programas. esa frase no queda",
+    "accent": false
+   },
+   "at": "programas. Esa frase no"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "ASÍ QUE NO LA USAREMOS",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Así que no la"
+  },
+  {
+   "use": "rough.flow",
+   "params": {
+    "nodes": [
+     {
+      "icon": "book",
+      "label": "TEXTO LEGIBLE"
+     },
+     {
+      "icon": "server",
+      "label": "SIN ATARSE A UNA MÁQUINA"
+     }
+    ],
+    "active": 1,
+    "title": "COBOL"
+   },
+   "at": "La promesa comprobable era"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "scales",
+    "tag": "",
+    "caption": "y menos atado a una",
+    "accent": false
+   },
+   "at": "y menos atado a"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "COBOL ACERCÓ EL CÓDIGO AL",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "COBOL acercó el código"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "gradcap",
+    "tag": "",
+    "caption": "pero no eliminó las decisiones",
+    "accent": true
+   },
+   "at": "pero no eliminó las"
+  },
+  {
+   "use": "rough.abstractionLadder",
+   "params": {
+    "labels": [
+     "MÁQUINA",
+     "LENGUAJE",
+     "4GL / CASE"
+    ],
+    "active": 2,
+    "header": "OTRA ESCALERA",
+    "note": "formularios, reglas, requisitos"
+   },
+   "at": "llegó otra escalera. Los"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "calendar",
+    "tag": "",
+    "caption": "case ofrecían crear aplicaciones desde",
+    "accent": false
+   },
+   "at": "CASE ofrecían crear aplicaciones"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "REGLAS O REQUISITOS MÁS ESTRUCTURA",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "reglas o requisitos más"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "INFORME DE NASA · 1989",
+    "note": "código desde requisitos",
+    "noteAt": 0.8,
+    "caption": "HERRAMIENTAS CASE"
+   },
+   "at": "Un informe de NASA"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "bag",
+    "tag": "",
+    "caption": "que generaban código ejecutable y",
+    "accent": false
+   },
+   "at": "que generaban código ejecutable"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "FORMATEADOS. ES UNA IDEA QUE",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "formateados. Es una idea"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "pin",
+    "tag": "",
+    "caption": "expresar qué hace falta, no",
+    "accent": false
+   },
+   "at": "expresar qué hace falta,"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "warning",
+    "tag": "DEL PAPEL A LA REALIDAD",
+    "caption": "requisitos incompletos",
+    "accent": true
+   },
+   "at": "Eso nunca volvió triviales"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "LOS REQUISITOS PODÍAN SER INCOMPLE",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Los requisitos podían ser"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "camera",
+    "tag": "",
+    "caption": "un programa podía funcionar en",
+    "accent": true
+   },
+   "at": "Un programa podía funcionar"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "CON PERSONAS, DATOS Y EXCEPCIONES",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "con personas, datos y"
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/programmer-cubicle.jpg",
+    "caption": "Sin código y poco código",
+    "sub": "FOTO ILUSTRATIVA"
+   },
+   "at": "Después llegaron las plataformas"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "cloud",
+    "tag": "",
+    "caption": "microsoft las presenta como espacios",
+    "accent": false
+   },
+   "at": "Microsoft las presenta como"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PROFESIONALES PUEDEN COLABORAR, CO",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "profesionales pueden colaborar, con"
+  },
+  {
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "capas"
+    ]
+   },
+   "at": "La historia no prueba"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "bot",
+    "tag": "",
+    "caption": "muestra algo más limitado: el",
+    "accent": false
+   },
+   "at": "Muestra algo más limitado:"
+  },
+  {
+   "use": "common.punch",
+   "params": {
+    "text": "LAS ^CAPAS^\nSE SUMAN",
+    "size": 0.88
+   },
+   "at": "Las capas se suman,"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "mouse",
+    "tag": "",
+    "caption": "y lo humano. ahora la",
+    "accent": false
+   },
+   "at": "y lo humano. Ahora"
+  },
+  {
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "predijo",
+     "agente"
+    ]
+   },
+   "at": "En enero de 2025,"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "phone",
+    "tag": "",
+    "caption": "sería posible crear un agente",
+    "accent": true
+   },
+   "at": "sería posible crear un"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PARECIDAS A LAS DE UN",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "parecidas a las de"
+  },
+  {
+   "use": "rough.counter",
+   "params": {
+    "from": 0,
+    "to": 90,
+    "label": "DARIO AMODEI · 2025",
+    "unit": "del código lo escribiría la IA",
+    "suffix": "%",
+    "prefix": "",
+    "dur": 2.2
+   },
+   "at": "Dos meses después, el"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "server",
+    "tag": "",
+    "caption": "fue más lejos. predijo que",
+    "accent": false
+   },
+   "at": "fue más lejos. Predijo"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "MESES, Y CASI TODO EN",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "meses, y casi todo"
+  },
+  {
+   "use": "rough.annotate",
+   "params": {
+    "kind": "underline",
+    "note": "proporción, no puestos",
+    "x": 0.2,
+    "y": 0.6,
+    "w": 0.6,
+    "h": 0.1
+   },
+   "at": "Eso era una predicción"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "link",
+    "tag": "",
+    "caption": "no sobre puestos de trabajo",
+    "accent": false
+   },
+   "at": "no sobre puestos de"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "UNA LÍNEA GENERADA NO ES",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Una línea generada no"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "plus",
+    "tag": "",
+    "caption": "útil y conectada con el",
+    "accent": false
+   },
+   "at": "útil y conectada con"
+  },
+  {
+   "use": "rough.counter",
+   "params": {
+    "from": 0,
+    "to": 15000,
+    "label": "JETBRAINS 2026",
+    "unit": "desarrolladores profesionales",
+    "suffix": "",
+    "prefix": "+",
+    "dur": 2.2
+   },
+   "at": "En la encuesta mundial"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "rocket",
+    "tag": "",
+    "caption": "desarrolladores profesionales. cerca de 22%",
+    "accent": true
+   },
+   "at": "desarrolladores profesionales. Cerca de"
+  },
+  {
+   "use": "rough.counter",
+   "params": {
+    "from": 0,
+    "to": 22,
+    "label": "USAN AGENTES PARA >80 %",
+    "unit": "de su código",
+    "suffix": "%",
+    "prefix": "",
+    "dur": 2.2
+   },
+   "at": "Cerca de 22%, una"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "alarm",
+    "tag": "",
+    "caption": "de su código. la muestra",
+    "accent": false
+   },
+   "at": "de su código. La"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "NO ES UN CENSO. EN",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "no es un censo."
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/pdp10-mainframe.jpg",
+    "caption": "Stack Overflow",
+    "sub": "13.756 PARTICIPANTES"
+   },
+   "at": "En otra encuesta, Stack"
+  },
+  {
+   "use": "rough.counter",
+   "params": {
+    "from": 0,
+    "to": 73,
+    "label": "DELEGAN ESCRIBIR O EDITAR CÓDIGO",
+    "unit": "últimos 30 días",
+    "suffix": "%",
+    "prefix": "",
+    "dur": 2.2
+   },
+   "at": "señaló escribir o editar"
+  },
+  {
+   "use": "rough.stack",
+   "params": {
+    "title": "TAMBIÉN SE DELEGA",
+    "items": [
+     {
+      "label": "ESCRIBIR CÓDIGO",
+      "keep": true
+     },
+     {
+      "label": "PRUEBAS",
+      "keep": true
+     },
+     {
+      "label": "REVISIÓN"
+     }
+    ],
+    "dropAt": -1
+   },
+   "at": "La misma encuesta muestra"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "radar",
+    "tag": "",
+    "caption": "pero esos porcentajes vienen de",
+    "accent": false
+   },
+   "at": "Pero esos porcentajes vienen"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "NO SON UN CENSO DE",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "No son un censo"
+  },
+  {
+   "use": "common.clip",
+   "params": {
+    "src": "assets/media/manos-teclado.mp4",
+    "layout": "frame",
+    "caption": "Código generado",
+    "sub": "CLIP ILUSTRATIVO · PEXELS"
+   },
+   "at": "Entonces sí: los agentes"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "flag",
+    "tag": "",
+    "caption": "pero el dato no contesta",
+    "accent": false
+   },
+   "at": "Pero el dato no"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PARA ESO HAY QUE MIRAR",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Para eso hay que"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "papers",
+    "tag": "",
+    "caption": "categoría. en la proyección estadounidense",
+    "accent": true
+   },
+   "at": "categoría. En la proyección"
+  },
+  {
+   "use": "rough.compare",
+   "params": {
+    "small": {
+     "label": "PROGRAMADORES",
+     "value": "-7,3 %"
+    },
+    "big": {
+     "label": "DESARROLLADORES DE SOFTWARE",
+     "value": "+10,2 %"
+    },
+    "ratio": 9,
+    "bigFirst": true
+   },
+   "at": "En la proyección estadounidense"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "switch",
+    "tag": "",
+    "caption": "los desarrolladores de software suben",
+    "accent": false
+   },
+   "at": "Los desarrolladores de software"
+  },
+  {
+   "use": "common.punch",
+   "params": {
+    "text": "EL ^CÓDIGO^\nNO ES\nEL PUESTO",
+    "size": 0.88
+   },
+   "at": "El nombre del puesto"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "warning",
+    "tag": "",
+    "caption": "el trabajo de software no",
+    "accent": false
+   },
+   "at": "El trabajo de software"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PERO EL CONTRASTE DEJA UNA",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Pero el contraste deja"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "clock",
+    "tag": "",
+    "caption": "pueden perder valor antes de",
+    "accent": false
+   },
+   "at": "pueden perder valor antes"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "MANTENER SISTEMAS. LA PUERTA SE",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "mantener sistemas. La puerta"
+  },
+  {
+   "use": "rough.entryGate",
+   "params": {
+    "juniorLabel": "PRIMER PELDAÑO",
+    "entryTasks": "cambios, pruebas, documentación",
+    "reviewLabel": "REVISIÓN Y DISEÑO",
+    "reviewTasks": "criterio · diseño · responsabilidad",
+    "note": "se angosta"
+   },
+   "at": "La puerta se estrecha."
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "lock",
+    "tag": "JUNIORS",
+    "caption": "la entrada cambia",
+    "accent": true
+   },
+   "at": "Tareas que suelen enseñar"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PRUEBAS, DOCUMENTACIÓN, CORREGIR E",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "pruebas, documentación, corregir errores"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "target",
+    "tag": "",
+    "caption": "un agente bajo supervisión. no",
+    "accent": true
+   },
+   "at": "un agente bajo supervisión."
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PERO SÍ CAMBIA QUÉ SE",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "pero sí cambia qué"
+  },
+  {
+   "use": "rough.flow",
+   "params": {
+    "nodes": [
+     {
+      "icon": "bot",
+      "label": "AGENTE: PRIMERA VERSIÓN"
+     },
+     {
+      "icon": "person",
+      "label": "PERSONA: REVISAR"
+     }
+    ],
+    "active": 1,
+    "title": "QUIEN ENTRA"
+   },
+   "at": "No significa que un"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "keyboard",
+    "tag": "",
+    "caption": "significa que una empresa puede",
+    "accent": false
+   },
+   "at": "Significa que una empresa"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "Y PEDIR QUE QUIEN ENTRA",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "y pedir que quien"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "battery",
+    "tag": "",
+    "caption": "hizo. el stanford ai index",
+    "accent": false
+   },
+   "at": "hizo. El Stanford AI"
+  },
+  {
+   "use": "rough.counter",
+   "params": {
+    "from": 0,
+    "to": 20,
+    "label": "EMPLEO DE 22 A 25 AÑOS",
+    "unit": "bajo su máximo de 2022",
+    "suffix": "%",
+    "prefix": "",
+    "dur": 2.2
+   },
+   "at": "El Stanford AI Index"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "loop",
+    "tag": "",
+    "caption": "de desarrolladores estadounidenses de 22",
+    "accent": false
+   },
+   "at": "de desarrolladores estadounidenses de"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "BAJO SU MÁXIMO DE 2022",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "bajo su máximo de"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "STANFORD AI INDEX 2026",
+    "note": "una señal, no una sentencia",
+    "noteAt": 0.8,
+    "caption": "DESARROLLADORES DE EE. UU."
+   },
+   "at": "Es una señal importante,"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "stopwatch",
+    "tag": "",
+    "caption": "el informe dice que los",
+    "accent": true
+   },
+   "at": "El informe dice que"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "JÓVENES Y EN TRABAJOS MÁS",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "jóvenes y en trabajos"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "headset",
+    "tag": "",
+    "caption": "la ia explique por sí",
+    "accent": false
+   },
+   "at": "la IA explique por"
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/ibm360-room.jpg",
+    "caption": "Las vacantes",
+    "sub": "INDEED"
+   },
+   "at": "Las vacantes cuentan una"
+  },
+  {
+   "use": "rough.counter",
+   "params": {
+    "from": 0,
+    "to": 71,
+    "label": "DEL CRECIMIENTO DE AVISOS",
+    "unit": "venía de puestos senior",
+    "suffix": "%",
+    "prefix": "",
+    "dur": 2.2
+   },
+   "at": "del crecimiento reciente de"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "earth",
+    "tag": "",
+    "caption": "eso describe la composición del",
+    "accent": false
+   },
+   "at": "Eso describe la composición"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "NO EL TOTAL DE PUESTOS",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "no el total de"
+  },
+  {
+   "use": "rough.gauge",
+   "params": {
+    "from": 100,
+    "to": 72.5,
+    "max": 100,
+    "dur": 3,
+    "unit": "BAJO FEBRERO DE 2020",
+    "label": "AVISOS DE INDEED",
+    "critical": 0.3
+   },
+   "at": "Indeed halló sus avisos"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "ai",
+    "tag": "",
+    "caption": "la serie diaria de indeed",
+    "accent": false
+   },
+   "at": "La serie diaria de"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "DE OCTUBRE. CORTES DISTINTOS, MISM",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "de octubre. Cortes distintos,"
+  },
+  {
+   "use": "rough.flow",
+   "params": {
+    "nodes": [
+     {
+      "icon": "calendar",
+      "label": "VS. EL AÑO PASADO"
+     },
+     {
+      "icon": "calendar",
+      "label": "VS. FEBRERO 2020"
+     }
+    ],
+    "active": -1,
+    "title": "DOS REFERENCIAS"
+   },
+   "at": "Las dos cosas pueden"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "understand",
+    "tag": "",
+    "caption": "un mercado puede recuperarse frente",
+    "accent": true
+   },
+   "at": "Un mercado puede recuperarse"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PREVIA. ADEMÁS, LOS AVISOS NO",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "previa. Además, los avisos"
+  },
+  {
+   "use": "rough.annotate",
+   "params": {
+    "kind": "box",
+    "note": "avisos ≠ contrataciones",
+    "x": 0.2,
+    "y": 0.4,
+    "w": 0.6,
+    "h": 0.2
+   },
+   "at": "Además, los avisos no"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "design",
+    "tag": "",
+    "caption": "muestran lo que las empresas",
+    "accent": false
+   },
+   "at": "muestran lo que las"
+  },
+  {
+   "use": "common.clip",
+   "params": {
+    "src": "assets/media/baxter-robot.mp4",
+    "layout": "frame",
+    "caption": "Automatización",
+    "sub": "CLIP ILUSTRATIVO"
+   },
+   "at": "Indeed registró que el"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "build",
+    "tag": "",
+    "caption": "su análisis también advierte que",
+    "accent": false
+   },
+   "at": "Su análisis también advierte"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "PRUEBA QUE ELLAS HAYAN CAUSADO",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "prueba que ellas hayan"
+  },
+  {
+   "use": "rough.photo",
+   "params": {
+    "src": "assets/media/punch-card-1970s.jpg",
+    "caption": "Una transición desigual",
+    "sub": "ARCHIVO"
+   },
+   "at": "Así que no hay"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "measure",
+    "tag": "",
+    "caption": "tendrá empleo hay una transición",
+    "accent": false
+   },
+   "at": "tendrá empleo Hay una"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "CON MENOS ESPACIO PARA ALGUNAS",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "con menos espacio para"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "ship",
+    "tag": "",
+    "caption": "qué queda? primero, especificar. traducir",
+    "accent": true
+   },
+   "at": "¿Qué queda? Primero, especificar."
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "TRADUCIR UNA NECESIDAD HUMANA EN",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Traducir una necesidad humana"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "work",
+    "tag": "",
+    "caption": "qué debe pasar, qué no",
+    "accent": false
+   },
+   "at": "qué debe pasar, qué"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "RECIBE ALGO INESPERADO. DESPUÉS, R",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "recibe algo inesperado. Después,"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "spark",
+    "tag": "",
+    "caption": "revisar. no basta con que",
+    "accent": false
+   },
+   "at": "revisar. No basta con"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "HAY QUE ENCONTRAR ERRORES, LEER",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Hay que encontrar errores,"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "browser",
+    "tag": "",
+    "caption": "comprobar las pruebas y entender",
+    "accent": false
+   },
+   "at": "comprobar las pruebas y"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "TAMBIÉN DISEÑAR ARQUITECTURA: DECI",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "También diseñar arquitectura: decidir"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "database",
+    "tag": "",
+    "caption": "dónde se guarda la información",
+    "accent": true
+   },
+   "at": "dónde se guarda la"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "SERVICIO FALLA. EL PLANO DE",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "servicio falla. El plano"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "terminal",
+    "tag": "",
+    "caption": "máquina coloca ladrillos. y está",
+    "accent": false
+   },
+   "at": "máquina coloca ladrillos. Y"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "UN AGENTE PUEDE COMPLETAR UNA",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Un agente puede completar"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "waves",
+    "tag": "",
+    "caption": "dejó fuera la solicitud. ahí",
+    "accent": false
+   },
+   "at": "dejó fuera la solicitud."
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "EL NEGOCIO Y LAS CONSECUENCIAS",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "el negocio y las"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "scribble",
+    "tag": "",
+    "caption": "por último, seguridad. stack overflow",
+    "accent": false
+   },
+   "at": "Por último, seguridad. Stack"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "DELEGÓ BUSCAR RIESGOS DE SEGURIDAD",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "delegó buscar riesgos de"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "hook",
+    "tag": "",
+    "caption": "aun así, alguien debe decidir",
+    "accent": true
+   },
+   "at": "Aun así, alguien debe"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "ALGUIEN DEBE RESPONDER CUANDO UN",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "Alguien debe responder cuando"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "star",
+    "tag": "",
+    "caption": "no desaparece el oficio. cambia",
+    "accent": false
+   },
+   "at": "No desaparece el oficio."
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "TAMBIÉN CAMBIA QUIÉN ESCRIBE CADA",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "También cambia quién escribe"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "bulb",
+    "tag": "",
+    "caption": "la puerta puede estrecharse; por",
+    "accent": false
+   },
+   "at": "La puerta puede estrecharse;"
+  },
+  {
+   "use": "rough.note",
+   "params": {
+    "title": "DISEÑAR Y RESPONDER IMPORTA MÁS",
+    "note": "apunte",
+    "noteAt": 0.8,
+    "caption": "NOTAS"
+   },
+   "at": "diseñar y responder importa"
+  },
+  {
+   "use": "rough.icon",
+   "params": {
+    "icon": "pencil",
+    "tag": "",
+    "caption": "pero el puesto de entrada",
+    "accent": false
+   },
+   "at": "pero el puesto de"
+  },
+  {
+   "t": 676.47,
+   "offset": 0,
+   "dur": 12.32,
+   "use": "rough.outrov1",
+   "params": {
+    "likeAt": 4.54,
+    "subscribeAt": 5.02,
+    "bellAt": 7.08,
+    "supportAt": 8.1
+   }
+  }
+ ]
+}

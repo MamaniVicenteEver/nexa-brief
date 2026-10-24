@@ -30,6 +30,7 @@
     "designs/pop/components/graphic.js",
     "designs/common/outro-v1.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/pop/components/intros.js",
     "designs/pop/components/outro.js"
   ],
@@ -96,6 +97,11 @@
       "support": "apoya el canal · comparte el video",
       "handle": "youtube.com/@nodehistory",
       "use": "pop.outro"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.2)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

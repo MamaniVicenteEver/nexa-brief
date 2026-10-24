@@ -31,6 +31,7 @@
     "designs/imperio/components/scenes.js",
     "designs/imperio/components/type.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/imperio/components/intros.js",
     "designs/imperio/components/outro.js"
   ],
@@ -79,6 +80,11 @@
       "support": "Apoya el canal y comparte el video.",
       "handle": "youtube.com/@nodepolitics",
       "use": "imperio.outro"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.35)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

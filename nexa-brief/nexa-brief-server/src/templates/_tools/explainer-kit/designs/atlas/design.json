@@ -27,6 +27,7 @@
     "vendor/geo/countries-50m.js",
     "designs/common/text.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/atlas/components/_atlas.js",
     "designs/atlas/components/map.js",
     "designs/atlas/components/data.js",
@@ -80,6 +81,11 @@
       "support": "Apoya el canal y comparte el mapa.",
       "handle": "youtube.com/@nodepolitics",
       "use": "atlas.outro"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.3)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

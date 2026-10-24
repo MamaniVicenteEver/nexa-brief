@@ -26,6 +26,7 @@
     "designs/pelicula/components/fx.js",
     "designs/common/outro-v1.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/pelicula/components/intros.js",
     "designs/pelicula/components/outro.js"
   ],
@@ -73,6 +74,11 @@
       "support": "apoya el canal · comparte el video",
       "handle": "youtube.com/@nodehistory",
       "use": "pelicula.outro"
+    },
+    "clip": {
+      "filter": "sepia(0.85) contrast(1.1) brightness(0.9)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

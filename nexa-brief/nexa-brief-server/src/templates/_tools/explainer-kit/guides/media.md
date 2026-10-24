@@ -57,8 +57,47 @@ En el storyboard se usan como `"src": "assets/media/schabowski.jpg"`.
 - Revisar la descripción del archivo en Commons: fecha y lugar correctos (los archivos a veces
   traen pies de foto erróneos).
 
-## 6. Video (pendiente)
+## 6. Clips de video (`common.clip`)
 
-Los componentes actuales usan fotos fijas (con zoom lento). Clips de video (Pexels Videos, NASA)
-quedan para una próxima iteración: hace falta un componente `*.clip` que haga seek determinista
-del `<video>` en el render cuadro a cuadro. Mientras tanto: NO bajar videos.
+Unos segundos de metraje real donde el movimiento cuenta algo que una foto no: un cohete que
+despega, una multitud que avanza, servidores con luces, una fábrica, una ciudad de noche. No
+reemplazan a las fotos de personas (un retrato sigue siendo foto) ni a los diagramas.
+
+**Cuándo**: 2–8 por cada 13 min (`lengths.json → per_minute.clips`; `kit.py check` avisa), en los
+momentos clave del arco: la apertura de un capítulo, el punto crítico, el cierre. Nunca dos seguidos.
+
+**Dónde buscar** (`tools/media.py`, mismas licencias que las fotos):
+```bash
+M=src/templates/_tools/explainer-kit/tools/media.py
+.venv/bin/python $M search "rocket launch" --type video --source commons   # NASA, archivos históricos (PD / CC)
+.venv/bin/python $M search "server room" --type video --source pixabay      # genérico moderno (Pixabay License)
+.venv/bin/python $M search "office team" --type video --source pexels       # requiere PEXELS_API_KEY válida
+```
+**Bajar y preparar** (un nombre `.mp4` = clip):
+```bash
+.venv/bin/python $M get <video-id> pixabay-video:380334 servidores.mp4 --start 2 --dur 6
+.venv/bin/python $M get <video-id> "File:Apollo 11 launch….ogv" lanzamiento.mp4 --start 30 --dur 8
+```
+Recorta (`--start`, `--dur` ≤ 20 s), quita el audio, pasa a H.264 30 fps con lado máximo 1920 y un
+keyframe cada 6 cuadros (así el render salta al cuadro exacto rápido) y anota el crédito en
+`CREDITS.md`. La descarga original nunca se guarda en el video (es un dato no confiable: solo la lee ffmpeg).
+
+**En el storyboard**:
+```json
+{ "at": "miles de servidores", "use": "common.clip",
+  "params": { "src": "assets/media/servidores.mp4", "layout": "full", "caption": "Un centro de datos", "sub": "PIXABAY" } }
+```
+- `layout`: `full` (pantalla completa con empuje lento) o `frame` (dentro de un marco, deja aire).
+- `start` y `rate` (0,5 = cámara lenta): el clip tiene que durar `start + duración del beat × rate`;
+  si no alcanza, `check` avisa y se congela el último cuadro.
+- `tone`: `design` (el tratamiento de color del diseño, `design.json → defaults.clip.filter`) o `color`.
+- El clip es mudo: la voz manda. Si el texto del clip se lee, que no compita con los subtítulos.
+
+**Revisar**: `kit.py sheet <id>` muestra el cuadro del clip en su segundo; para verlo en movimiento,
+`kit.py render <id> --seconds N` (preview) o el modal de la app.
+
+**Cómo funciona** (para quien toque el motor): `engine/kit.js` acepta parámetros `type:"video"`, los
+precarga, y `ctx.clip(src, segundo)` devuelve el `<video>` para dibujarlo como una imagen. En vivo el
+clip corre y se corrige si se desfasa; en capturas y en el render cuadro a cuadro (`__promo.seek`)
+salta al cuadro exacto y espera el `seeked` antes de capturar. Un diseño nuevo solo declara
+`defaults.clip` (`filter`, `frame`, `dim`) en su design.json y suma `designs/common/clip.js` a `scripts`.

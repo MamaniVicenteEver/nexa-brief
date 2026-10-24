@@ -44,6 +44,9 @@ from src.core.explainer.lengths import agent_timeout_seconds, clamp_minutes
 from src.core.explainer.publishing.strategies import explainer_skills_dir
 from src.core.ports.agent_port import AgentRunnerPort, AgentScope
 
+# Punto de entrada de los agentes para producir con un diseño existente (no leen el kit entero).
+PRODUCE_SKILL = BASE_DIR / "src" / "skills" / "explainer" / "produce" / "SKILL.md"
+
 logger = structlog.get_logger(__name__)
 
 KIT_CLI = KIT_DIR / "tools" / "kit.py"
@@ -164,7 +167,9 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False) -
     minutes = record.get("target_minutes")   # None = producción anterior a lengths.json (formato corto)
     lines = [
         "Eres el productor de un video del explainer-kit de Nexa Brief.",
-        f"Lee COMPLETO {KIT_DIR / 'AGENTS.md'} y síguelo: pasos 2 a 9. NO hagas el paso 10 (render).",
+        # Vía rápida: el diseño ya existe, así que basta la hoja QUICK.md del diseño (no el kit entero).
+        f"Sigue {PRODUCE_SKILL} (vía rápida para un diseño existente; lee solo lo que indica): pasos 2 a 9."
+        " NO hagas el paso 10 (render).",
         f"El paso 1 ya está hecho: video `{vid}`, diseño `{record['design']}`, carpeta {video_dir}.",
     ]
     if minutes:

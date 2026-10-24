@@ -1,0 +1,2208 @@
+{
+ "version": 1,
+ "dim": 0.3,
+ "sat": [
+  {
+   "src": "../_mapas/media/sat-sudamerica.jpg",
+   "bounds": [
+    -85,
+    -50,
+    -40,
+    0
+   ]
+  }
+ ],
+ "regions": {
+  "Mundo": {
+   "poly": [
+    [
+     -179,
+     78
+    ],
+    [
+     179,
+     78
+    ],
+    [
+     179,
+     -55
+    ],
+    [
+     -179,
+     -55
+    ]
+   ]
+  },
+  "Sudamerica": {
+   "poly": [
+    [
+     -82,
+     13
+    ],
+    [
+     -34,
+     13
+    ],
+    [
+     -34,
+     -57
+    ],
+    [
+     -82,
+     -57
+    ]
+   ]
+  },
+  "AndesNorte": {
+   "poly": [
+    [
+     -82,
+     10
+    ],
+    [
+     -60,
+     10
+    ],
+    [
+     -60,
+     -30
+    ],
+    [
+     -82,
+     -30
+    ]
+   ]
+  },
+  "LitoralBoliviano": {
+   "poly": [
+    "Paralelo24Costa",
+    "Paralelo24Andes",
+    "RioLoaInterior",
+    "BocaRioLoa",
+    "Cobija",
+    "Mejillones",
+    "Antofagasta"
+   ],
+   "within": "Chile"
+  },
+  "ZonaFiscal": {
+   "poly": [
+    "Paralelo23Costa",
+    "Paralelo23Andes",
+    "Paralelo25Andes",
+    "Paralelo25Costa"
+   ],
+   "within": "Chile"
+  },
+  "TerritorioTregua": {
+   "poly": [
+    "Paralelo23Costa",
+    "Paralelo23Andes",
+    "RioLoaInterior",
+    "BocaRioLoa"
+   ],
+   "within": "Chile"
+  },
+  "Tarapaca": {
+   "poly": [
+    "TarapacaNW",
+    "TarapacaNE",
+    "TarapacaSE",
+    "TarapacaSW"
+   ],
+   "within": "Chile"
+  },
+  "TacnaRegion": {
+   "poly": [
+    "TacnaNW",
+    "TacnaNE",
+    "DivisionTacnaAricaEste",
+    "DivisionTacnaAricaOeste"
+   ],
+   "within": "Peru"
+  },
+  "AricaRegion": {
+   "poly": [
+    "DivisionTacnaAricaOeste",
+    "DivisionTacnaAricaEste",
+    "AricaSE",
+    "AricaSW"
+   ],
+   "within": "Chile"
+  }
+ },
+ "places": {
+  "Paralelo24Costa": [
+   -70.56,
+   -24.0
+  ],
+  "Paralelo24Andes": [
+   -67.55,
+   -24.0
+  ],
+  "Paralelo23Costa": [
+   -70.55,
+   -23.0
+  ],
+  "Paralelo23Andes": [
+   -68.55,
+   -23.0
+  ],
+  "Paralelo25Costa": [
+   -70.6,
+   -25.0
+  ],
+  "Paralelo25Andes": [
+   -68.45,
+   -25.0
+  ],
+  "BocaRioLoa": [
+   -70.06,
+   -21.43
+  ],
+  "RioLoaInterior": [
+   -67.55,
+   -21.43
+  ],
+  "AtacamaCentro": [
+   -69.12,
+   -22.82
+  ],
+  "MarAntofagasta": [
+   -71.18,
+   -23.65
+  ],
+  "OceanoPacifico": [
+   -73.45,
+   -22.4
+  ],
+  "ZonaFiscalCentro": [
+   -69.2,
+   -24.05
+  ],
+  "TarapacaNW": [
+   -70.35,
+   -19.0
+  ],
+  "TarapacaNE": [
+   -68.2,
+   -19.0
+  ],
+  "TarapacaSE": [
+   -68.2,
+   -21.5
+  ],
+  "TarapacaSW": [
+   -70.55,
+   -21.5
+  ],
+  "TacnaNW": [
+   -70.55,
+   -17.1
+  ],
+  "TacnaNE": [
+   -69.45,
+   -17.1
+  ],
+  "DivisionTacnaAricaOeste": [
+   -70.55,
+   -18.35
+  ],
+  "DivisionTacnaAricaEste": [
+   -69.45,
+   -18.35
+  ],
+  "AricaSE": [
+   -69.45,
+   -19.05
+  ],
+  "AricaSW": [
+   -70.55,
+   -19.05
+  ]
+ },
+ "camera": [
+  {
+   "t": "@El 14 de febrero-1.04",
+   "focus": [
+    "Sudamerica"
+   ],
+   "pad": 0.05,
+   "drift": 0.008
+  },
+  {
+   "t": "@14 de febrero de 1879+1.60",
+   "focus": [
+    "Bolivia",
+    "Chile",
+    "Peru"
+   ],
+   "pad": 0.22,
+   "drift": 0.008,
+   "dur": 2.6
+  },
+  {
+   "t": "@desembarcaron en Antofagasta",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008,
+   "dur": 2.6
+  },
+  {
+   "t": "@que decision transformaria",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@paises hoy bolivia",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@para entenderlo el",
+   "focus": [
+    "AndesNorte"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@la frontera conectaba",
+   "focus": [
+    "AndesNorte"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@en 1866 bolivia",
+   "focus": [
+    "LitoralBoliviano",
+    "Cobija",
+    "Mejillones",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@24 como limite",
+   "focus": [
+    "LitoralBoliviano",
+    "Cobija",
+    "Mejillones",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@desde el pacifico",
+   "focus": [
+    "LitoralBoliviano",
+    "Cobija",
+    "Mejillones",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@al norte de",
+   "focus": [
+    "LitoralBoliviano",
+    "Cobija",
+    "Mejillones",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@rio loa la",
+   "focus": [
+    "LitoralBoliviano",
+    "Cobija",
+    "Mejillones",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@eran puertos unidos",
+   "focus": [
+    "LitoralBoliviano",
+    "Cobija",
+    "Mejillones",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@de 1866 compartia",
+   "focus": [
+    "ZonaFiscal",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@el reparto abarcaba",
+   "focus": [
+    "ZonaFiscal",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@recursos extendian el",
+   "focus": [
+    "ZonaFiscal",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@otro acuerdo conservo",
+   "focus": [
+    "ZonaFiscal",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@tambien limito durante",
+   "focus": [
+    "ZonaFiscal",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@y capitales chilenos",
+   "focus": [
+    "ZonaFiscal",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@quien podia cambiar",
+   "focus": [
+    "ZonaFiscal",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@vacio explotaciones de",
+   "focus": [
+    "AtacamaCentro",
+    "Antofagasta",
+    "Mejillones"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@negocios conectaban la",
+   "focus": [
+    "AtacamaCentro",
+    "Antofagasta",
+    "Mejillones"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@a ambos lados",
+   "focus": [
+    "AtacamaCentro",
+    "Antofagasta",
+    "Mejillones"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@de 10 centavos",
+   "focus": [
+    "AtacamaCentro",
+    "Antofagasta",
+    "Mejillones"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@y ferrocarril de",
+   "focus": [
+    "AtacamaCentro",
+    "Antofagasta",
+    "Mejillones"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@ese cobro violaba",
+   "focus": [
+    "AtacamaCentro",
+    "Antofagasta",
+    "Mejillones"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@que la clausula",
+   "focus": [
+    "AtacamaCentro",
+    "Antofagasta",
+    "Mejillones"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@entre gobiernos y",
+   "focus": [
+    "AtacamaCentro",
+    "Antofagasta",
+    "Mejillones"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@ordeno rematar sus",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta",
+    "Calama"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@de 1879 lo",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta",
+    "Calama"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@la guerra desde",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta",
+    "Calama"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@en las semanas",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta",
+    "Calama"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@declaro la guerra#1",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta",
+    "Calama"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@la crisis ya",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta",
+    "Calama"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@barcos y rutas",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta",
+    "Calama"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@concentraria la resistencia",
+   "focus": [
+    "LitoralBoliviano",
+    "Antofagasta",
+    "Calama"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@calama junto al",
+   "focus": [
+    "Calama",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@avanzaron hacia la",
+   "focus": [
+    "Calama",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@estaba eduardo abaroa",
+   "focus": [
+    "Calama",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@otros civiles murio",
+   "focus": [
+    "Calama",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@hoy bolivia lo",
+   "focus": [
+    "Calama",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@la defensa local",
+   "focus": [
+    "Calama",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@en numero calama",
+   "focus": [
+    "Calama",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@bajo control chileno",
+   "focus": [
+    "Calama",
+    "Antofagasta"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@eran cosas distintas",
+   "focus": [
+    "Lima",
+    "La Paz"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@en 1873 chile",
+   "focus": [
+    "Lima",
+    "La Paz"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@la campana tambien",
+   "focus": [
+    "Tarapaca",
+    "TacnaRegion",
+    "AricaRegion",
+    "Iquique"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@el tratado de#2",
+   "focus": [
+    "Tarapaca",
+    "TacnaRegion",
+    "AricaRegion",
+    "Iquique"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@administracion chilena pendientes",
+   "focus": [
+    "Tarapaca",
+    "TacnaRegion",
+    "AricaRegion",
+    "Iquique"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@definitivo de paz",
+   "focus": [
+    "LitoralBoliviano",
+    "TerritorioTregua"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@una tregua indefinida",
+   "focus": [
+    "LitoralBoliviano",
+    "TerritorioTregua"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@pacto de tregua",
+   "focus": [
+    "LitoralBoliviano",
+    "TerritorioTregua"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@chile continuo gobernando",
+   "focus": [
+    "LitoralBoliviano",
+    "TerritorioTregua"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@el documento durante",
+   "focus": [
+    "LitoralBoliviano",
+    "TerritorioTregua"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@hubo tratados propuestos",
+   "focus": [
+    "LitoralBoliviano",
+    "TerritorioTregua"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@la administracion chilena",
+   "focus": [
+    "LitoralBoliviano",
+    "TerritorioTregua"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@octubre de 1904",
+   "focus": [
+    "Santiago",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@lo hicieron mediante",
+   "focus": [
+    "Santiago",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@decadas de guerra",
+   "focus": [
+    "Santiago",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@alli se reconocio",
+   "focus": [
+    "Santiago",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@por chile desde",
+   "focus": [
+    "Santiago",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@clausula convirtio el",
+   "focus": [
+    "Santiago",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@el litoral boliviano#3",
+   "focus": [
+    "Santiago",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@dejo de ser",
+   "focus": [
+    "Santiago",
+    "LitoralBoliviano"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@con el oceano",
+   "focus": [
+    "La Paz",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@frente a una",
+   "focus": [
+    "La Paz",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@transito comercial perpetuo",
+   "focus": [
+    "La Paz",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@mercancias podian circular",
+   "focus": [
+    "La Paz",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@pais tambien dispuso",
+   "focus": [
+    "La Paz",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@linea se inauguro",
+   "focus": [
+    "Arica",
+    "La Paz"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@los andes el",
+   "focus": [
+    "Arica",
+    "La Paz"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@en 1929 un",
+   "focus": [
+    "TacnaRegion",
+    "AricaRegion"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@arica bajo soberania",
+   "focus": [
+    "TacnaRegion",
+    "AricaRegion"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@bajo los terminos",
+   "focus": [
+    "La Paz",
+    "Antofagasta",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@pero no equivalia",
+   "focus": [
+    "La Paz",
+    "Antofagasta",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@en el centro",
+   "focus": [
+    "La Paz",
+    "The Hague"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@a la corte",
+   "focus": [
+    "La Paz",
+    "The Hague"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@la corte respondio",
+   "focus": [
+    "The Hague"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@no establecian una",
+   "focus": [
+    "The Hague"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@paises podian continuar",
+   "focus": [
+    "The Hague"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@1904 ni decidio",
+   "focus": [
+    "La Paz",
+    "Santiago"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@respondio la pregunta",
+   "focus": [
+    "La Paz",
+    "Santiago"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@fue como bolivia",
+   "focus": [
+    "La Paz",
+    "LitoralBoliviano",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  },
+  {
+   "t": "@guerra le quito",
+   "focus": [
+    "La Paz",
+    "LitoralBoliviano",
+    "Arica"
+   ],
+   "pad": 0.22,
+   "drift": 0.008
+  }
+ ],
+ "layers": [
+  {
+   "type": "fill",
+   "region": "Bolivia",
+   "color": "#e3122a",
+   "t": "@El 14 de febrero",
+   "fade": 0.45,
+   "strength": 1
+  },
+  {
+   "type": "fill",
+   "region": "Chile",
+   "color": "#1d4fff",
+   "t": "@El 14 de febrero+0.22",
+   "fade": 0.45,
+   "strength": 1
+  },
+  {
+   "type": "fill",
+   "region": "Peru",
+   "color": "#36d41a",
+   "t": "@El 14 de febrero+0.44",
+   "fade": 0.45,
+   "strength": 1
+  },
+  {
+   "type": "fill",
+   "region": "Argentina",
+   "color": "#8a1cff",
+   "t": "@Hoy Bolivia no",
+   "fade": 0.45,
+   "strength": 0.72,
+   "out": "@En 1866 Bolivia",
+   "fadeOut": 0.35
+  },
+  {
+   "type": "fill",
+   "region": "LitoralBoliviano",
+   "color": "#e3122a",
+   "t": "@Bolivia conservaba litoral",
+   "fade": 0.45,
+   "strength": 1,
+   "out": "@Chile respondió ocupando Antofagasta",
+   "fadeOut": 0.35
+  },
+  {
+   "type": "fill",
+   "region": "LitoralBoliviano",
+   "color": "#e3122a",
+   "t": "@Chile respondió ocupando Antofagasta",
+   "fade": 0.45,
+   "strength": 1,
+   "hatch": true,
+   "out": "@El pacto de tregua terminaba",
+   "fadeOut": 0.35
+  },
+  {
+   "type": "fill",
+   "region": "LitoralBoliviano",
+   "color": "#1d4fff",
+   "t": "@El pacto de tregua terminaba",
+   "fade": 0.45,
+   "strength": 1,
+   "hatch": true,
+   "out": "@El mapa cambió al leer su artículo segundo",
+   "fadeOut": 0.35
+  },
+  {
+   "type": "fill",
+   "region": "LitoralBoliviano",
+   "color": "#1d4fff",
+   "t": "@El mapa cambió al leer su artículo segundo",
+   "fade": 0.45,
+   "strength": 1
+  },
+  {
+   "type": "fill",
+   "region": "ZonaFiscal",
+   "color": "#e3122a",
+   "t": "@El tratado de 1866",
+   "fade": 0.45,
+   "strength": 0.5,
+   "hatch": true,
+   "out": "@En 1874 otro acuerdo",
+   "fadeOut": 0.35
+  },
+  {
+   "type": "fill",
+   "region": "Tarapaca",
+   "color": "#1d4fff",
+   "t": "@En 1883 el Tratado de Ancón",
+   "fade": 0.45,
+   "strength": 1,
+   "hatch": true,
+   "out": "@Tacna y Arica quedaron",
+   "fadeOut": 0.35
+  },
+  {
+   "type": "fill",
+   "region": "Tarapaca",
+   "color": "#1d4fff",
+   "t": "@Tacna y Arica quedaron",
+   "fade": 0.45,
+   "strength": 1
+  },
+  {
+   "type": "fill",
+   "region": "TacnaRegion",
+   "color": "#1d4fff",
+   "t": "@Tacna y Arica quedaron",
+   "fade": 0.45,
+   "strength": 1,
+   "hatch": true,
+   "out": "@En 1929 un acuerdo separado",
+   "fadeOut": 0.35
+  },
+  {
+   "type": "fill",
+   "region": "AricaRegion",
+   "color": "#1d4fff",
+   "t": "@Tacna y Arica quedaron",
+   "fade": 0.45,
+   "strength": 1,
+   "hatch": true,
+   "out": "@En 1929 un acuerdo separado",
+   "fadeOut": 0.35
+  },
+  {
+   "type": "fill",
+   "region": "TacnaRegion",
+   "color": "#36d41a",
+   "t": "@En 1929 un acuerdo separado",
+   "fade": 0.45,
+   "strength": 1
+  },
+  {
+   "type": "fill",
+   "region": "AricaRegion",
+   "color": "#1d4fff",
+   "t": "@En 1929 un acuerdo separado",
+   "fade": 0.45,
+   "strength": 1
+  },
+  {
+   "type": "flag",
+   "t": "@El 14 de febrero",
+   "flag": "bo",
+   "at": "Bolivia",
+   "style": "badge",
+   "size": 38,
+   "out": "@tropas chilenas desembarcaron",
+   "fadeOut": 0.2
+  },
+  {
+   "type": "flag",
+   "t": "@El 14 de febrero+0.22",
+   "flag": "cl",
+   "at": "Antofagasta",
+   "style": "badge",
+   "size": 38,
+   "out": "@tropas chilenas desembarcaron",
+   "fadeOut": 0.2
+  },
+  {
+   "type": "flag",
+   "t": "@El 14 de febrero+0.44",
+   "flag": "pe",
+   "at": "Peru",
+   "style": "badge",
+   "size": 38,
+   "out": "@tropas chilenas desembarcaron",
+   "fadeOut": 0.2
+  },
+  {
+   "type": "year",
+   "t": "@14 de febrero de 1879",
+   "text": "14 FEB 1879",
+   "size": 58,
+   "color": "#e3122a",
+   "out": "@fronteriza cambio de",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@desembarcaron en Antofagasta",
+   "at": "Antofagasta",
+   "text": "ANTOFAGASTA",
+   "side": "right",
+   "size": 24,
+   "out": "@fronteriza cambio de",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@desembarcaron en Antofagasta",
+   "at": "Antofagasta",
+   "icon": "anchor",
+   "text": "DESEMBARCO",
+   "color": "#ffd21a",
+   "size": 48,
+   "out": "@fronteriza cambio de",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@desembarcaron en Antofagasta",
+   "from": "MarAntofagasta",
+   "to": "Antofagasta",
+   "color": "#ffffff",
+   "w": 3.5,
+   "draw": 1.2,
+   "bow": 0.12,
+   "out": "@fronteriza cambio de",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Hoy Bolivia no posee",
+   "text": "MAPA ACTUAL",
+   "at": "AndesNorte",
+   "style": "tag",
+   "size": 30,
+   "out": "@conectaba territorio puertos",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@sobre el Pacífico",
+   "text": "PACÍFICO",
+   "at": "OceanoPacifico",
+   "style": "sea",
+   "size": 38,
+   "out": "@conectaba territorio puertos",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@el desierto de Atacama",
+   "text": "ATACAMA",
+   "at": "AtacamaCentro",
+   "style": "tag",
+   "size": 30,
+   "out": "@conectaba territorio puertos",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@En 1866 Bolivia",
+   "text": "1866",
+   "size": 60,
+   "out": "@paises la linea",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@paralelo 24 como límite",
+   "text": "PARALELO 24°",
+   "at": "ZonaFiscalCentro",
+   "style": "big",
+   "size": 34,
+   "color": "#ffd21a",
+   "out": "@paises la linea",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@paralelo 24 como límite",
+   "from": "Paralelo24Costa",
+   "to": "Paralelo24Andes",
+   "color": "#ffd21a",
+   "w": 4,
+   "draw": 1.7,
+   "out": "@En 1874 otro acuerdo",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@La costa incluía Cobija",
+   "at": "Cobija",
+   "text": "COBIJA",
+   "side": "left",
+   "size": 23,
+   "out": "@y antofagasta eran",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@La costa incluía Cobija",
+   "at": "Mejillones",
+   "text": "MEJILLONES",
+   "side": "right",
+   "size": 23,
+   "out": "@y antofagasta eran",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@La costa incluía Cobija",
+   "at": "Antofagasta",
+   "icon": "anchor",
+   "text": "PUERTO",
+   "color": "#ffd21a",
+   "size": 47,
+   "out": "@y antofagasta eran",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@del río Loa",
+   "from": "BocaRioLoa",
+   "to": "RioLoaInterior",
+   "color": "#8fd0ff",
+   "w": 3.2,
+   "draw": 1.4,
+   "out": "@y antofagasta eran",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@entre los paralelos 23 y 25",
+   "from": "Paralelo23Costa",
+   "to": "Paralelo23Andes",
+   "color": "#ffd21a",
+   "w": 3.3,
+   "draw": 1.1,
+   "out": "@frontera en 1874",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@entre los paralelos 23 y 25",
+   "from": "Paralelo25Costa",
+   "to": "Paralelo25Andes",
+   "color": "#ffd21a",
+   "w": 3.3,
+   "draw": 1.1,
+   "out": "@frontera en 1874",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@entre los paralelos 23 y 25",
+   "text": "ACUERDO FISCAL",
+   "at": "ZonaFiscalCentro",
+   "style": "tag",
+   "size": 27,
+   "out": "@frontera en 1874",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@En 1874 otro acuerdo",
+   "text": "1874",
+   "size": 60,
+   "out": "@industrias y capitales",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "big",
+   "t": "@durante 25 años ciertos",
+   "text": "25 AÑOS",
+   "sub": "LÍMITE A CIERTOS TRIBUTOS",
+   "size": 126,
+   "color": "#e3122a",
+   "out": "@industrias y capitales",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@Atacama era remoto",
+   "text": "DÉCADA DE 1870",
+   "size": 54,
+   "out": "@lados en 1878",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@explotaciones de salitre",
+   "at": "Mejillones",
+   "icon": "mine",
+   "text": "GUANO",
+   "color": "#ffd21a",
+   "size": 47,
+   "out": "@lados en 1878",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@explotaciones de salitre",
+   "at": "Antofagasta",
+   "icon": "mine",
+   "text": "SALITRE",
+   "color": "#ffd21a",
+   "size": 47,
+   "out": "@lados en 1878",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@En 1878 Bolivia aprobó",
+   "text": "1878",
+   "size": 58,
+   "out": "@antofagasta con capitales",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "big",
+   "t": "@10 centavos por quintal",
+   "text": "10¢",
+   "sub": "POR QUINTAL DE SALITRE",
+   "size": 210,
+   "color": "#e3122a",
+   "out": "@antofagasta con capitales",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@Afectaba a la Compañía",
+   "at": "Antofagasta",
+   "text": "LA COMPAÑÍA",
+   "side": "right",
+   "size": 23,
+   "out": "@antofagasta con capitales",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@10 centavos por quintal",
+   "at": "Antofagasta",
+   "icon": "mine",
+   "text": "SALITRE",
+   "color": "#ffd21a",
+   "size": 45,
+   "out": "@antofagasta con capitales",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@Chile sostuvo que ese cobro",
+   "text": "1874",
+   "size": 58,
+   "out": "@1874 bolivia respondio",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@Chile sostuvo que ese cobro",
+   "from": "Paralelo24Costa",
+   "to": "Paralelo24Andes",
+   "color": "#ffd21a",
+   "w": 3.7,
+   "draw": 1.1,
+   "dash": true,
+   "out": "@1874 bolivia respondio",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Chile sostuvo que ese cobro",
+   "text": "INTERPRETACIÓN\nDISPUTADA",
+   "at": "ZonaFiscalCentro",
+   "style": "big",
+   "size": 31,
+   "color": "#ffd21a",
+   "out": "@1874 bolivia respondio",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@Antofagasta el 14 de febrero",
+   "text": "14 FEB 1879",
+   "size": 58,
+   "color": "#e3122a",
+   "out": "@lo hizo antes",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@Chile respondió ocupando Antofagasta",
+   "at": "Antofagasta",
+   "text": "ANTOFAGASTA",
+   "side": "right",
+   "size": 23,
+   "out": "@lo hizo antes",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@Chile respondió ocupando Antofagasta",
+   "at": "Antofagasta",
+   "icon": "anchor",
+   "text": "OCUPACIÓN",
+   "color": "#1d4fff",
+   "size": 48,
+   "out": "@lo hizo antes",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@Chile respondió ocupando Antofagasta",
+   "from": "MarAntofagasta",
+   "to": "Antofagasta",
+   "color": "#1d4fff",
+   "w": 4,
+   "draw": 1.0,
+   "bow": 0.1,
+   "out": "@lo hizo antes",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@Bolivia declaró la guerra",
+   "text": "1879",
+   "size": 58,
+   "out": "@disputa ya no",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@Desde aquel puerto el control",
+   "from": "Antofagasta",
+   "to": "Calama",
+   "color": "#ffd21a",
+   "w": 4,
+   "draw": 1.7,
+   "bow": 0.12,
+   "out": "@disputa ya no",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "flag",
+   "t": "@Bolivia declaró la guerra",
+   "flag": "bo",
+   "at": "La Paz",
+   "style": "badge",
+   "size": 34,
+   "out": "@disputa ya no",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "flag",
+   "t": "@Bolivia declaró la guerra",
+   "flag": "cl",
+   "at": "Antofagasta",
+   "style": "badge",
+   "size": 34,
+   "out": "@disputa ya no",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@La crisis ya no cabía",
+   "text": "RUTA AL ALTIPLANO",
+   "at": "AtacamaCentro",
+   "style": "tag",
+   "size": 28,
+   "out": "@boliviana el primer",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@tropas barcos y rutas",
+   "from": "Antofagasta",
+   "to": "Calama",
+   "color": "#ffffff",
+   "w": 3.5,
+   "draw": 1.5,
+   "bow": 0.18,
+   "out": "@boliviana el primer",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@Una ciudad junto al Loa",
+   "at": "Calama",
+   "text": "CALAMA",
+   "side": "right",
+   "size": 24,
+   "out": "@boliviana el primer",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@El 23 de marzo",
+   "text": "23 MAR 1879",
+   "size": 54,
+   "out": "@la poblacion y",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@cerca de Calama junto al río",
+   "at": "Calama",
+   "icon": "battle",
+   "text": "TOPÁTER",
+   "color": "#ffd21a",
+   "size": 51,
+   "out": "@la poblacion y",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@cerca de Calama junto al río",
+   "at": "Calama",
+   "text": "CALAMA",
+   "side": "left",
+   "size": 24,
+   "out": "@la poblacion y",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@junto al río Loa",
+   "from": "BocaRioLoa",
+   "to": "RioLoaInterior",
+   "color": "#8fd0ff",
+   "w": 3.2,
+   "draw": 1.0,
+   "out": "@la poblacion y",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@Eduardo Abaroa un comerciante",
+   "at": "Calama",
+   "text": "EDUARDO ABAROA",
+   "side": "right",
+   "size": 25,
+   "color": "#ffffff",
+   "out": "@topater hoy bolivia",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Murió defendiendo la posición",
+   "text": "TOPÁTER",
+   "at": "Calama",
+   "style": "tag",
+   "size": 27,
+   "out": "@topater hoy bolivia",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@Ladislao Cabrera organizó la defensa",
+   "at": "Calama",
+   "text": "LADISLAO CABRERA",
+   "side": "left",
+   "size": 24,
+   "out": "@litoral seguia bajo",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Calama quedó ocupada",
+   "text": "CALAMA OCUPADA",
+   "at": "Calama",
+   "style": "tag",
+   "size": 25,
+   "color": "#1d4fff",
+   "out": "@litoral seguia bajo",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@Bolivia en 1873",
+   "text": "1873",
+   "size": 58,
+   "out": "@declaro la guerra#2",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Perú activó la alianza defensiva",
+   "text": "ALIANZA DEFENSIVA",
+   "at": "AndesNorte",
+   "style": "tag",
+   "size": 28,
+   "out": "@declaro la guerra#2",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@Perú activó la alianza defensiva",
+   "from": "Lima",
+   "to": "La Paz",
+   "color": "#ffffff",
+   "w": 3.5,
+   "draw": 2.0,
+   "bow": 0.18,
+   "dash": true,
+   "out": "@declaro la guerra#2",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "flag",
+   "t": "@Perú activó la alianza defensiva",
+   "flag": "pe",
+   "at": "Lima",
+   "style": "badge",
+   "size": 34,
+   "out": "@declaro la guerra#2",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "flag",
+   "t": "@Perú activó la alianza defensiva",
+   "flag": "bo",
+   "at": "La Paz",
+   "style": "badge",
+   "size": 34,
+   "out": "@declaro la guerra#2",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@En 1883 el Tratado de Ancón",
+   "text": "1883",
+   "size": 58,
+   "out": "@pendientes de plebiscito",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@En 1883 el Tratado de Ancón",
+   "at": "Iquique",
+   "text": "IQUIQUE",
+   "side": "left",
+   "size": 22,
+   "out": "@pendientes de plebiscito",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@Tacna y Arica quedaron",
+   "at": "Tacna",
+   "text": "TACNA",
+   "side": "left",
+   "size": 22,
+   "out": "@pendientes de plebiscito",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@Tacna y Arica quedaron",
+   "at": "Arica",
+   "text": "ARICA",
+   "side": "right",
+   "size": 22,
+   "out": "@pendientes de plebiscito",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@El 4 de abril de 1884",
+   "text": "1884",
+   "size": 58,
+   "out": "@pausa el pacto",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Bolivia aún no tenía un tratado",
+   "text": "TREGUA INDEFINIDA",
+   "at": "LitoralBoliviano",
+   "style": "big",
+   "size": 31,
+   "color": "#ffd21a",
+   "out": "@pausa el pacto",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@El 4 de abril de 1884",
+   "from": "Paralelo23Costa",
+   "to": "Paralelo23Andes",
+   "color": "#ffd21a",
+   "w": 3.6,
+   "draw": 1.2,
+   "dash": true,
+   "out": "@pausa el pacto",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Chile continuó gobernando",
+   "text": "ADMINISTRACIÓN CHILENA",
+   "at": "TerritorioTregua",
+   "style": "tag",
+   "size": 26,
+   "color": "#1d4fff",
+   "out": "@segun el documento",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@el territorio entre el paralelo 23",
+   "from": "Paralelo23Costa",
+   "to": "RioLoaInterior",
+   "color": "#1d4fff",
+   "w": 3.2,
+   "draw": 1.1,
+   "dash": true,
+   "out": "@segun el documento",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@tratados propuestos en 1895",
+   "text": "1895",
+   "size": 58,
+   "out": "@siguio mientras la",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@tratados propuestos en 1895",
+   "from": "La Paz",
+   "to": "Santiago",
+   "color": "#ffd21a",
+   "w": 3.4,
+   "draw": 2.0,
+   "bow": 0.16,
+   "dash": true,
+   "out": "@siguio mientras la",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@no entraron en vigor",
+   "text": "NO ENTRARON EN VIGOR",
+   "at": "Santiago",
+   "style": "big",
+   "size": 30,
+   "color": "#ffd21a",
+   "out": "@siguio mientras la",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@El 20 de octubre de 1904",
+   "text": "20 OCT 1904",
+   "size": 54,
+   "out": "@documento cerraba decadas",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@firmaron en Santiago",
+   "at": "Santiago",
+   "text": "SANTIAGO",
+   "side": "left",
+   "size": 24,
+   "out": "@documento cerraba decadas",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@firmaron en Santiago",
+   "at": "La Paz",
+   "text": "LA PAZ",
+   "side": "right",
+   "size": 24,
+   "out": "@documento cerraba decadas",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "big",
+   "t": "@un Tratado de Paz y Amistad",
+   "text": "PAZ Y AMISTAD",
+   "sub": "TRATADO DE 1904",
+   "size": 108,
+   "color": "#e3122a",
+   "out": "@documento cerraba decadas",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "big",
+   "t": "@El mapa cambió al leer su artículo segundo",
+   "text": "SOBERANÍA\nRECONOCIDA",
+   "sub": "ARTÍCULO SEGUNDO · 1904",
+   "size": 122,
+   "color": "#1d4fff",
+   "out": "@alli se reconocio",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@La frontera dejó de ser provisional",
+   "from": "Paralelo24Costa",
+   "to": "Paralelo24Andes",
+   "color": "#1d4fff",
+   "w": 4.1,
+   "draw": 1.6,
+   "out": "@Pero el tratado no cortó todos los vínculos",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@La frontera dejó de ser provisional",
+   "text": "FRONTERA FIJADA",
+   "at": "LitoralBoliviano",
+   "style": "tag",
+   "size": 28,
+   "color": "#1d4fff",
+   "out": "@Pero el tratado no cortó todos los vínculos",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Pero el tratado no cortó todos los vínculos",
+   "text": "¿QUÉ QUEDÓ?",
+   "at": "OceanoPacifico",
+   "style": "big",
+   "size": 35,
+   "color": "#ffd21a",
+   "out": "@con el oceano",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@El mismo acuerdo reconocía",
+   "text": "1904",
+   "size": 58,
+   "out": "@aunque la soberania",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@a Bolivia tránsito comercial",
+   "from": "La Paz",
+   "to": "Arica",
+   "color": "#ffffff",
+   "w": 3.6,
+   "draw": 1.8,
+   "bow": 0.16,
+   "out": "@aunque la soberania",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@a Bolivia tránsito comercial",
+   "from": "La Paz",
+   "to": "Antofagasta",
+   "color": "#ffffff",
+   "w": 3.3,
+   "draw": 1.8,
+   "bow": 0.18,
+   "dash": true,
+   "out": "@aunque la soberania",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@puertos del Pacífico",
+   "at": "Arica",
+   "icon": "anchor",
+   "text": "PUERTO",
+   "color": "#ffd21a",
+   "size": 45,
+   "out": "@aunque la soberania",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@La línea se inauguró en 1913",
+   "text": "1913",
+   "size": 58,
+   "out": "@unio el altiplano",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@También dispuso construir un ferrocarril",
+   "from": "Arica",
+   "to": "La Paz",
+   "color": "#ffd21a",
+   "w": 3.8,
+   "draw": 2.3,
+   "out": "@unio el altiplano",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "icon",
+   "t": "@También dispuso construir un ferrocarril",
+   "at": "Arica",
+   "icon": "anchor",
+   "text": "ARICA",
+   "color": "#ffd21a",
+   "size": 45,
+   "out": "@unio el altiplano",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@La línea se inauguró en 1913",
+   "at": "La Paz",
+   "text": "LA PAZ",
+   "side": "right",
+   "size": 23,
+   "out": "@unio el altiplano",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@En 1929 un acuerdo separado",
+   "text": "1929",
+   "size": 58,
+   "out": "@chilena bolivia mantuvo",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@devolvió Tacna a Perú",
+   "at": "Tacna",
+   "text": "TACNA · PERÚ",
+   "side": "left",
+   "size": 22,
+   "out": "@chilena bolivia mantuvo",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@dejó Arica bajo soberanía chilena",
+   "at": "Arica",
+   "text": "ARICA · CHILE",
+   "side": "right",
+   "size": 22,
+   "out": "@chilena bolivia mantuvo",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@Bolivia mantuvo acceso comercial",
+   "from": "La Paz",
+   "to": "Arica",
+   "color": "#ffffff",
+   "w": 3.6,
+   "draw": 1.6,
+   "bow": 0.16,
+   "out": "@los terminos de",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@Bolivia mantuvo acceso comercial",
+   "from": "La Paz",
+   "to": "Antofagasta",
+   "color": "#ffffff",
+   "w": 3.3,
+   "draw": 1.6,
+   "bow": 0.18,
+   "dash": true,
+   "out": "@los terminos de",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Bolivia mantuvo acceso comercial",
+   "text": "TRÁNSITO ≠ SOBERANÍA",
+   "at": "LitoralBoliviano",
+   "style": "big",
+   "size": 31,
+   "color": "#ffd21a",
+   "out": "@los terminos de",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@En 2013 Bolivia acudió",
+   "text": "2013",
+   "size": 58,
+   "out": "@soberano la corte",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "arrow",
+   "t": "@En 2013 Bolivia acudió",
+   "from": "La Paz",
+   "to": "The Hague",
+   "color": "#ffffff",
+   "w": 3.7,
+   "draw": 2.2,
+   "bow": 0.14,
+   "out": "@soberano la corte",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "pin",
+   "t": "@En 2013 Bolivia acudió",
+   "at": "The Hague",
+   "text": "CORTE INTERNACIONAL",
+   "side": "right",
+   "size": 22,
+   "out": "@soberano la corte",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Preguntó si Chile debía negociar",
+   "text": "ACCESO SOBERANO",
+   "at": "Santiago",
+   "style": "tag",
+   "size": 27,
+   "out": "@soberano la corte",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "year",
+   "t": "@La Corte respondió en 2018",
+   "text": "2018",
+   "size": 58,
+   "out": "@el dialogo el",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@no establecían una obligación de negociar",
+   "text": "SIN OBLIGACIÓN\nDE NEGOCIAR",
+   "at": "The Hague",
+   "style": "big",
+   "size": 31,
+   "color": "#ffd21a",
+   "out": "@el dialogo el",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@Añadió que ambos países podían",
+   "text": "DIÁLOGO POSIBLE",
+   "at": "The Hague",
+   "style": "tag",
+   "size": 27,
+   "out": "@el dialogo el",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "line",
+   "t": "@El fallo no reabrió",
+   "from": "La Paz",
+   "to": "Santiago",
+   "color": "#ffd21a",
+   "w": 3.2,
+   "draw": 1.5,
+   "dash": true,
+   "out": "@ni decidio que",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "label",
+   "t": "@El fallo no reabrió",
+   "text": "NO REABRE EL TRATADO",
+   "at": "AndesNorte",
+   "style": "tag",
+   "size": 27,
+   "out": "@ni decidio que",
+   "fadeOut": 0.24
+  },
+  {
+   "type": "big",
+   "t": "@Así fue como Bolivia perdió",
+   "text": "CÓMO BOLIVIA\nPERDIÓ SU MAR",
+   "sub": "GUERRA · TREGUA · TRATADO",
+   "size": 112,
+   "color": "#e3122a"
+  },
+  {
+   "type": "label",
+   "t": "@El tránsito comercial sobrevivió",
+   "text": "PACÍFICO",
+   "at": "OceanoPacifico",
+   "style": "sea",
+   "size": 35
+  }
+ ],
+ "intro": {
+  "style": "v1",
+  "text": "CÓMO BOLIVIA\nPERDIÓ EL ^MAR^",
+  "kicker": "Guerra del Pacífico · 1879",
+  "dur": 5.0
+ },
+ "outro": {
+  "channel": "NODEHISTORY",
+  "handle": "youtube.com/@nodehistory",
+  "dur": 6
+ },
+ "captions": {
+  "maxWords": 4,
+  "color": "#ffd21a",
+  "y": 0.885
+ }
+}

@@ -25,6 +25,7 @@
     "designs/grunge/components/photo.js",
     "designs/grunge/components/stamp.js",
     "designs/common/hook.js",
+    "designs/common/clip.js",
     "designs/grunge/components/intros.js",
     "designs/common/outro-v1.js",
     "designs/grunge/components/outro.js"
@@ -79,6 +80,11 @@
       "support": "APOYA EL CANAL · COMPARTE EL VIDEO",
       "handle": "youtube.com/@nodehistory",
       "use": "grunge.outro"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.6)",
+      "frame": "palette.accent",
+      "dim": 0.18
     }
   },
   "voice": {

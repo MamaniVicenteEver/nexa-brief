@@ -11,6 +11,7 @@
 | `common.flash` | overlay | Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido. |
 | `common.endcard` | main | Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse). |
 | `common.lyric` | main | Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. |
+| `common.clip` | main | Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo. |
 | `binary.title` | main | Título de apertura GIGANTE hecho de 0 y 1 (~80% del cuadro, estilo cartel: cada renglón ocupa todo el ancho) con antetítulo y línea; las partículas convergen desde el polvo. |
 | `binary.word` | main | Palabra o número grande hecho de glifos (momentos de alto impacto: '159 TRILLONES', '1952'), con rótulo arriba y nota abajo. |
 | `binary.portrait` | main | Retrato (o cualquier foto) reconstruido como grilla de 0 y 1: el brillo de la imagen define la opacidad de cada dígito. Pie de foto y contador de años opcionales. |
@@ -315,6 +316,31 @@ Etiquetas: impacto, letra, frase, clímax · capa: main
 
 ```json
 {"use": "common.lyric", "params": {"accent": ["vidas"], "size": 0.9}}
+```
+
+### `common.clip`
+
+Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo.
+
+Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `src` | video · obligatorio | `null` | Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4). |
+| `start` | number [0–None] | `0` | Segundo del clip desde el que arranca. |
+| `rate` | number [0.25–2] | `1` | Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate. |
+| `layout` | enum (full / frame) | `"full"` | full = pantalla completa; frame = dentro de un marco centrado. |
+| `size` | number [0.3–1] | `0.84` | layout frame: fracción del contenido que ocupa. |
+| `ar` | number | `0` | layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8). |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar. |
+| `zoom` | number [0–0.3] | `0.06` | Cuánto se acerca a lo largo del beat (empuje lento). |
+| `tone` | enum (design / color) | `"design"` | design = filtro del diseño (defaults.clip.filter); color = el clip tal cual. |
+| `dim` | number [-1–1] | `-1` | Oscurecido (para leer los subtítulos); -1 = el del diseño. |
+| `caption` | string | `""` | Rótulo (qué se ve); vacío = sin rótulo. |
+| `sub` | string | `""` | Línea chica bajo el rótulo (fuente, lugar, año). |
+
+```json
+{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "layout": "full", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}
 ```
 
 ## binary · NODEHISTORY

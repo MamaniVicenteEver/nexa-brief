@@ -262,6 +262,144 @@
    }
   },
   {
+   "name": "common.clip",
+   "summary": "Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo.",
+   "tags": [
+    "video",
+    "clip",
+    "metraje",
+    "foto",
+    "lugar",
+    "máquina"
+   ],
+   "layer": "main",
+   "params": {
+    "src": {
+     "type": "video",
+     "default": null,
+     "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo del clip desde el que arranca.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 2
+    },
+    "layout": {
+     "type": "enum",
+     "default": "full",
+     "doc": "full = pantalla completa; frame = dentro de un marco centrado.",
+     "required": false,
+     "options": [
+      "full",
+      "frame"
+     ],
+     "min": null,
+     "max": null
+    },
+    "size": {
+     "type": "number",
+     "default": 0.84,
+     "doc": "layout frame: fracción del contenido que ocupa.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 1
+    },
+    "ar": {
+     "type": "number",
+     "default": 0,
+     "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 0.06,
+     "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.3
+    },
+    "tone": {
+     "type": "enum",
+     "default": "design",
+     "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+     "required": false,
+     "options": [
+      "design",
+      "color"
+     ],
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": -1,
+     "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+     "required": false,
+     "options": null,
+     "min": -1,
+     "max": 1
+    },
+    "caption": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "src": "assets/media/servidores.mp4",
+    "layout": "full",
+    "caption": "Un centro de datos",
+    "sub": "PEXELS · 2026"
+   }
+  },
+  {
    "name": "binary.title",
    "summary": "Título de apertura GIGANTE hecho de 0 y 1 (~80% del cuadro, estilo cartel: cada renglón ocupa todo el ancho) con antetítulo y línea; las partículas convergen desde el polvo.",
    "tags": [
