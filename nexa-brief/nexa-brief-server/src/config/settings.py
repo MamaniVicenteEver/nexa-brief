@@ -316,6 +316,9 @@ class Settings(BaseSettings):
     # ── Social Publisher — Facebook OAuth 2.0 ────────────────────────────────
     facebook_client_id: str = Field(default="", alias="FACEBOOK_CLIENT_ID")
     facebook_client_secret: str = Field(default="", alias="FACEBOOK_CLIENT_SECRET")
+    facebook_login_for_business_config_id: str = Field(
+        default="", alias="FACEBOOK_LOGIN_FOR_BUSINESS_CONFIG_ID"
+    )
     facebook_account_1_name: str = Field(default="pagina_1", alias="FACEBOOK_ACCOUNT_1_NAME")
     facebook_account_2_name: str = Field(default="pagina_2", alias="FACEBOOK_ACCOUNT_2_NAME")
     # Shared Graph API version for Facebook Pages and Instagram Graph API.

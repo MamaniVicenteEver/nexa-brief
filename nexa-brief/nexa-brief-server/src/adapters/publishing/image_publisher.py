@@ -14,6 +14,7 @@ import httpx
 import structlog
 
 from src.config.settings import settings
+from src.config.exceptions import TokenError
 from src.core.image_posts.models import DeliverySpec, RemoteResult as DomainRemoteResult
 
 logger = structlog.get_logger(__name__)
@@ -511,21 +512,41 @@ class ImagePublisher:
         )
         return await adapter.delete_image_post(post_id, account_alias)
 
-    async def remove_remote_delivery(self, delivery: Any) -> dict[str, Any]:
+    async def remove_remote_delivery(self, delivery: Any, *, retry_api: bool = False) -> dict[str, Any]:
         """Retira un medio propio o conserva una instrucción verificable de borrado manual."""
         platform = str(value(delivery, "platform"))
         remote_id = str(nested(delivery, "remote", "post_id") or "")
-        if platform not in {"facebook", "instagram"} or not remote_id.isdigit() and not re.fullmatch(r"\d+_\d+", remote_id):
-            raise ValueError("La entrega no tiene un ID remoto válido")
-        token = await self._token_manager.get_valid_token(platform, str(value(delivery, "account_alias")))
+        if platform not in {"facebook", "instagram"}:
+            raise ValueError("Plataforma de entrega no admitida")
+        if not remote_id.isdigit() and not re.fullmatch(r"\d+_\d+", remote_id):
+            return {
+                "status": "removal_pending_manual",
+                "instruction": "Falta el ID remoto; localizar la publicación en la red y borrarla manualmente.",
+                "graph_response": {"delete": {"code": "REMOTE_ID_MISSING"}},
+            }
         path = quote(remote_id, safe="")
         instruction = (
             "Borrar desde la app de Instagram y luego pulsar Verificar eliminación."
             if platform == "instagram" else
             "Borrar desde la Página de Facebook y luego pulsar Verificar eliminación."
         )
+        if value(delivery, "status") == "removal_pending_manual":
+            instruction = str(value(delivery, "removal_instruction") or instruction)
+        try:
+            token = await self._token_manager.get_valid_token(
+                platform, str(value(delivery, "account_alias"))
+            )
+        except TokenError:
+            return {
+                "status": "removal_pending_manual",
+                "instruction": "Reconectar la cuenta y reintentar la eliminación por API.",
+                "graph_response": {"delete": {
+                    "code": "ACCOUNT_RECONNECT_REQUIRED",
+                    "message": "El token de la cuenta no está disponible o venció.",
+                }},
+            }
         async with self._client_factory(timeout=settings.api_timeout_seconds) as client:
-            if value(delivery, "status") == "removal_pending_manual":
+            if value(delivery, "status") == "removal_pending_manual" and not retry_api:
                 try:
                     await graph_json(client, "GET", path, token=token, params={"fields": "id"})
                 except MetaGraphError as exc:
@@ -544,12 +565,39 @@ class ImagePublisher:
                                 return {"status": "removed", "graph_response": {"verification": exc.as_result_error()}}
                     return {"status": "removal_pending_manual", "instruction": instruction,
                             "graph_response": {"verification": exc.as_result_error()}}
+                except httpx.HTTPError:
+                    return {"status": "removal_pending_manual", "instruction": instruction,
+                            "graph_response": {"verification": {
+                                "code": "NETWORK_ERROR", "message": "No se pudo contactar Meta Graph"
+                            }}}
                 return {"status": "removal_pending_manual", "instruction": instruction,
                         "graph_response": {"verification": {"status": "still_exists"}}}
+            if platform == "instagram":
+                token = self._token_manager.instagram_deletion_token(
+                    str(value(delivery, "account_alias"))
+                )
+                if not token:
+                    return {
+                        "status": "removal_pending_manual",
+                        "instruction": (
+                            "Reconectar Instagram para conceder instagram_manage_contents y volver a intentar "
+                            "la eliminación. Si Meta no concede el permiso, borrar desde Instagram "
+                            "y pulsar Verificar eliminación."
+                        ),
+                        "graph_response": {"delete": {
+                            "code": "RECONNECT_REQUIRED",
+                            "message": "Falta un token de usuario de Facebook vigente para borrar el medio.",
+                        }},
+                    }
             try:
                 response = await graph_json(client, "DELETE", path, token=token)
             except MetaGraphError as exc:
-                return {"status": "removal_pending_manual", "instruction": instruction,
+                permission_instruction = (
+                    "Meta rechazó el permiso instagram_manage_contents. Verificar su aprobación "
+                    "en la app de Meta y reconectar Instagram; luego pulsar Reintentar borrado por API."
+                    if platform == "instagram" and exc.permission_missing else instruction
+                )
+                return {"status": "removal_pending_manual", "instruction": permission_instruction,
                         "graph_response": {"delete": exc.as_result_error()}}
             except httpx.HTTPError:
                 return {"status": "removal_pending_manual", "instruction": instruction,

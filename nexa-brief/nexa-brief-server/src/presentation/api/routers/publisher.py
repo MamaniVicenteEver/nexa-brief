@@ -1040,11 +1040,13 @@ async def instagram_oauth_start(alias: str = "instagram_1") -> RedirectResponse:
         # sigue siendo válido y el adaptador marca el comentario como pendiente.
         "scope": (
             "pages_show_list,pages_read_engagement,instagram_basic,instagram_content_publish,"
-            "instagram_manage_comments,instagram_manage_insights"
+            "instagram_manage_comments,instagram_manage_insights,instagram_manage_contents"
         ),
         "state": f"{state_payload}:{signature}",
         "response_type": "code",
     }
+    if settings.facebook_login_for_business_config_id:
+        params["config_id"] = settings.facebook_login_for_business_config_id
     auth_url = f"https://www.facebook.com/v21.0/dialog/oauth?{urllib.parse.urlencode(params)}"
     logger.info("instagram_oauth_start", alias=alias, redirect_uri=callback_url)
     redirect = RedirectResponse(url=auth_url)
@@ -1194,6 +1196,7 @@ async def facebook_oauth_callback(
                 return HTMLResponse(_html_error("No se obtuvo un token duradero", "Meta rechazó el intercambio por un token de larga duración.", detail=resp.text[:400], platform=platform), status_code=400)
 
             long_lived_user_token = resp.json().get("access_token")
+            user_token_expires_in = int(resp.json().get("expires_in") or 60 * 60 * 24 * 60)
 
             # Step C: Get Pages
             pages_params = {"access_token": long_lived_user_token}
@@ -1303,6 +1306,11 @@ async def facebook_oauth_callback(
                     custom_url=profile_url,
                     avatar=avatar_url or None,
                     profile_synced_at=time.time(),
+                )
+                storage.save_instagram_deletion_token(
+                    account_alias,
+                    long_lived_user_token,
+                    user_token_expires_in,
                 )
                 storage._data["instagram"][account_alias].update({
                     "linked_page_name": page_name,

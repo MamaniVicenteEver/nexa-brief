@@ -703,13 +703,13 @@ export function PublishedPostModal({
     (delivery) => delivery.status === "removal_pending_manual",
   );
 
-  async function handleRemoval() {
+  async function handleRemoval(retryApi = false) {
     if (!publicationId || !publication || (!canRemove && !pendingRemoval)) return;
-    if (canRemove && !window.confirm(t("removeConfirm"))) return;
+    if ((canRemove || retryApi) && !window.confirm(t("removeConfirm"))) return;
     setRemoving(true);
     setRemovalError("");
     try {
-      await removePublishedPublication(publicationId, t("removeReason"));
+      await removePublishedPublication(publicationId, t("removeReason"), retryApi);
       await queryClient.invalidateQueries({ queryKey: PUBLICATIONS_QUERY_KEY });
     } catch (error) {
       setRemovalError(error instanceof Error ? error.message : t("removeError"));
@@ -964,6 +964,21 @@ export function PublishedPostModal({
                     {pendingRemoval && !canRemove ? t("verifyRemoval") : t("removePublication")}
                   </button>
                 )}
+                {pendingRemoval &&
+                  publication?.deliveries.some(
+                    (delivery) =>
+                      delivery.platform === "instagram" &&
+                      delivery.status === "removal_pending_manual",
+                  ) && (
+                    <button
+                      type="button"
+                      onClick={() => void handleRemoval(true)}
+                      disabled={removing}
+                      className="ml-2 inline-flex items-center gap-2 rounded-lg border border-red-300/40 px-3 py-2 text-xs font-bold text-red-200 disabled:opacity-50"
+                    >
+                      {t("retryApiRemoval")}
+                    </button>
+                  )}
               </div>
             )}
           </aside>

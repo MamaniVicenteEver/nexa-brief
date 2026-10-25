@@ -18,10 +18,10 @@ export function fetchPublication(publicationId: string, signal?: AbortSignal) {
   });
 }
 
-export function removePublication(publicationId: string, reason: string) {
+export function removePublication(publicationId: string, reason: string, retryApi = false) {
   return requestJson<unknown>(`/api/publications/${encodeURIComponent(publicationId)}/remove`, {
     method: "POST",
-    body: { reason },
+    body: { reason, retry_api: retryApi },
   });
 }
 

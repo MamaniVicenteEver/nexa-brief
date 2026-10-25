@@ -64,6 +64,10 @@ class TokenManager:
         """Id de la cuenta en su plataforma (canal, página o usuario IG); '' si no hay."""
         return self._storage.get_state(platform, alias).target_id
 
+    def instagram_deletion_token(self, alias: str) -> str | None:
+        """El borrado IG requiere token de usuario de Facebook, distinto del token de Página."""
+        return self._storage.get_instagram_deletion_token(alias)
+
     async def get_valid_token(self, platform: str, alias: str) -> str:
         """Return a valid, decrypted access token.
 

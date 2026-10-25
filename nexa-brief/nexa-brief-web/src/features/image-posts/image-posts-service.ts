@@ -809,8 +809,12 @@ export async function getPublicationDetail(
   return { ...detail, slides: slidesWithUrls, technical: { ...detail.technical, reel } };
 }
 
-export async function removePublishedPublication(publicationId: string, reason: string) {
-  return mapPublicationDetail(await removePublication(publicationId, reason));
+export async function removePublishedPublication(
+  publicationId: string,
+  reason: string,
+  retryApi = false,
+) {
+  return mapPublicationDetail(await removePublication(publicationId, reason, retryApi));
 }
 
 export async function refreshPublicationMetrics(

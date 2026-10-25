@@ -1116,7 +1116,9 @@ class ImagePostService:
             await self._emit("image_post_purged", {"publication_id": publication_id})
         return deleted
 
-    async def remove_publication(self, publication_id: str, reason: str, remover: Any) -> PublicationRecord:
+    async def remove_publication(
+        self, publication_id: str, reason: str, remover: Any, *, retry_api: bool = False
+    ) -> PublicationRecord:
         """Retira cada entrega remota y conserva el estudio completo como archivo."""
         record = self.repository.get(publication_id)
         if record is None:
@@ -1125,19 +1127,24 @@ class ImagePostService:
             raise ImagePostError("INVALID_REMOVAL_REASON", "Indica un motivo de hasta 300 caracteres", 422)
         if any(delivery.status == DeliveryStatus.PUBLISHING for delivery in record.deliveries):
             raise ImagePostError("PUBLISH_IN_PROGRESS", "Hay una entrega publicándose", 409)
-        if not record.deliveries or any(
-            delivery.status not in {DeliveryStatus.PUBLISHED, DeliveryStatus.REMOVAL_PENDING_MANUAL,
-                                    DeliveryStatus.REMOVED, DeliveryStatus.REMOVED_API,
-                                    DeliveryStatus.REMOVED_MANUALLY}
-            for delivery in record.deliveries
+        removable = {DeliveryStatus.PUBLISHED, DeliveryStatus.REMOVAL_PENDING_MANUAL,
+                     DeliveryStatus.REMOVED, DeliveryStatus.REMOVED_API,
+                     DeliveryStatus.REMOVED_MANUALLY}
+        skipped = {DeliveryStatus.FAILED_PERMANENT, DeliveryStatus.CANCELLED}
+        if not record.deliveries or not any(d.status in removable for d in record.deliveries) or any(
+            d.status not in removable | skipped for d in record.deliveries
         ):
             raise ImagePostError("NOT_PUBLISHED", "Solo se retiran publicaciones ya enviadas", 409)
 
         for delivery in record.deliveries:
             if delivery.status in {DeliveryStatus.REMOVED, DeliveryStatus.REMOVED_API,
-                                   DeliveryStatus.REMOVED_MANUALLY}:
+                                   DeliveryStatus.REMOVED_MANUALLY} | skipped:
                 continue
-            outcome = await remover.remove_remote_delivery(delivery)
+            outcome = await (
+                remover.remove_remote_delivery(delivery, retry_api=True)
+                if retry_api and delivery.status == DeliveryStatus.REMOVAL_PENDING_MANUAL
+                else remover.remove_remote_delivery(delivery)
+            )
             now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
             await self.repository.append_delivery_event(
                 publication_id, delivery.delivery_id,
@@ -1162,7 +1169,9 @@ class ImagePostService:
         record = self.repository.get(publication_id)
         assert record is not None
         pending = any(delivery.status == DeliveryStatus.REMOVAL_PENDING_MANUAL for delivery in record.deliveries)
-        next_status = PostStatus.REMOVAL_PENDING_MANUAL if pending else PostStatus.REMOVED
+        next_status = (PostStatus.REMOVAL_PENDING_MANUAL if pending else
+                       PostStatus.PARTIAL if any(d.status in skipped for d in record.deliveries)
+                       else PostStatus.REMOVED)
         if record.status != next_status:
             record = await self.repository.update(
                 publication_id, {"status": next_status.value}, record.record_version

@@ -1195,6 +1195,36 @@ async def test_remote_removal_also_marks_published_queue_entry_removed(tmp_path)
 
 
 @pytest.mark.asyncio
+async def test_partial_publication_removes_only_published_delivery(tmp_path):
+    components = build_publication_components(data_dir=tmp_path)
+    published = Delivery(
+        delivery_id="del_published", revision=1, platform="instagram", account_alias="instagram_2",
+        target_id="ig-test", placement="image", idempotency_key="partial-ig",
+        status=DeliveryStatus.PUBLISHED, remote={"post_id": "18387597508237716"},
+        created_at=NOW, updated_at=NOW, published_at=NOW,
+    )
+    failed = Delivery(
+        delivery_id="del_failed", revision=1, platform="facebook", account_alias="pagina_3",
+        target_id="page-test", placement="image", idempotency_key="partial-fb",
+        status=DeliveryStatus.FAILED_PERMANENT, created_at=NOW, updated_at=NOW,
+    )
+
+    class FakeRemover:
+        async def remove_remote_delivery(self, delivery):
+            assert delivery.delivery_id == "del_published"
+            return {"status": "removed", "graph_response": {"delete": {"success": True}}}
+
+    await components.repository.create(_record(status=PostStatus.PARTIAL).model_copy(
+        update={"deliveries": [published, failed]}
+    ))
+    updated = await components.service.remove_publication("pub_test", "Retirada", FakeRemover())
+    assert updated.status == PostStatus.PARTIAL
+    assert [d.status for d in updated.deliveries] == [
+        DeliveryStatus.REMOVED, DeliveryStatus.FAILED_PERMANENT,
+    ]
+
+
+@pytest.mark.asyncio
 async def test_purge_cannot_delete_a_queue_entry_claimed_for_publication(tmp_path):
     from src.core.schedule import queue_repository
 

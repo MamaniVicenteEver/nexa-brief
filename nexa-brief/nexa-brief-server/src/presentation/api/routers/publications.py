@@ -217,7 +217,8 @@ async def remove_publication(
         require_account_access(identity, record.editorial.category_id, delivery.platform, delivery.account_alias)
     try:
         updated = await get_publication_components().service.remove_publication(
-            publication_id, str(body.get("reason") or ""), get_image_publisher()
+            publication_id, str(body.get("reason") or ""), get_image_publisher(),
+            retry_api=body.get("retry_api") is True,
         )
     except Exception as exc:
         from src.core.image_posts.service import ImagePostError

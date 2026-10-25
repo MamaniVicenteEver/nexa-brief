@@ -711,6 +711,7 @@ async def test_oauth_requests_optional_image_comment_and_insight_scopes(monkeypa
     monkeypatch.setattr(settings, "facebook_client_id", "test-app-id")
     monkeypatch.setattr(settings, "publisher_encryption_key", "test-signing-key")
     monkeypatch.setattr(settings, "public_app_url", "https://nexa.example")
+    monkeypatch.setattr(settings, "facebook_login_for_business_config_id", "test-business-config")
 
     instagram = await instagram_oauth_start("instagram_2")
     facebook = await facebook_oauth_start("pagina_3")
@@ -719,5 +720,7 @@ async def test_oauth_requests_optional_image_comment_and_insight_scopes(monkeypa
 
     assert "instagram_manage_comments" in instagram_query["scope"].split(",")
     assert "instagram_manage_insights" in instagram_query["scope"].split(",")
+    assert "instagram_manage_contents" in instagram_query["scope"].split(",")
+    assert instagram_query["config_id"] == "test-business-config"
     assert "pages_manage_engagement" in facebook_query["scope"].split(",")
     assert "pages_read_user_engagement" in facebook_query["scope"].split(",")

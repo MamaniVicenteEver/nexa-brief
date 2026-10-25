@@ -271,6 +271,26 @@ class TokenStorage:
             expires_in_seconds=expires_in,
         )
 
+    def save_instagram_deletion_token(self, alias: str, token: str, expires_in: int) -> None:
+        """Guarda el token de usuario de Facebook separado del token de Página usado al publicar."""
+        self._data = self._load()
+        entry = self._data.get("instagram", {}).get(alias)
+        if entry is None:
+            raise TokenError(f"Instagram account '{alias}' not found")
+        entry["encrypted_deletion_user_token"] = self.encrypt(token)
+        entry["deletion_user_expires_at"] = time.time() + max(0, expires_in)
+        self._save()
+
+    def get_instagram_deletion_token(self, alias: str) -> str | None:
+        """Devuelve el token de usuario vigente; nunca el de Página como sustituto."""
+        self._data = self._load()
+        entry = self._data.get("instagram", {}).get(alias) or {}
+        encrypted = entry.get("encrypted_deletion_user_token")
+        expires_at = entry.get("deletion_user_expires_at")
+        if not encrypted or not isinstance(expires_at, (int, float)) or expires_at <= time.time():
+            return None
+        return self.decrypt(encrypted)
+
     async def mark_requires_reauth(self, platform: str, alias: str, reason: str = "") -> None:
         """Flag an account as needing manual re-authentication."""
         if platform not in self._data:
