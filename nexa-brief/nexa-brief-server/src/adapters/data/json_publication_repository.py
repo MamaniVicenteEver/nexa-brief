@@ -469,10 +469,16 @@ class JsonPublicationRepository:
         delivery_filters = ("platform", "account_alias", "placement", "delivery_status")
 
         def matching_deliveries(item: Mapping[str, Any]) -> list[dict[str, Any]]:
+            def matches_delivery_filter(delivery: Mapping[str, Any], field: str) -> bool:
+                expected = filters.get(field)
+                if not expected:
+                    return True
+                actual = delivery.get("status" if field == "delivery_status" else field)
+                return actual in expected if isinstance(expected, (list, tuple, set)) else actual == expected
+
             return [
                 delivery for delivery in item.get("delivery_summaries", [])
-                if all(not filters.get(field) or delivery.get("status" if field == "delivery_status" else field) == filters[field]
-                       for field in delivery_filters)
+                if all(matches_delivery_filter(delivery, field) for field in delivery_filters)
             ]
 
         def metric_for(item: Mapping[str, Any]) -> float | None:
@@ -538,9 +544,11 @@ class JsonPublicationRepository:
             path = self._record_path(record)
             with self._locked(path.with_suffix(".lock")):
                 path.unlink(missing_ok=True)
+                (path.parent / "plan.json").unlink(missing_ok=True)
                 entries = [item for item in self._read_index() if item["publication_id"] != publication_id]
                 self._write_atomic(self.index_path, entries)
-                return True
+            path.with_suffix(".lock").unlink(missing_ok=True)
+            return True
 
     def repair_index(self) -> int:
         """Reconstruye la proyección; se puede llamar al arranque o por scheduler."""

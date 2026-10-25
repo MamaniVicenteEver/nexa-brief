@@ -9,6 +9,7 @@ import {
   Clipboard,
   LoaderCircle,
   Music2,
+  Trash2,
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -27,6 +28,7 @@ import {
   useImageStrategies,
   usePublicationDetail,
 } from "../hooks/useImagePosts";
+import { removePublishedPublication } from "../image-posts-service";
 import type { MetricName, Platform, PublicationDeliveryDetail, PublicationSummary } from "../types";
 
 type SidebarTab = "technical" | "relevant";
@@ -638,6 +640,8 @@ export function PublishedPostModal({
     summary?.deliveries[0]?.deliveryId ?? null,
   );
   const [metric, setMetric] = useState<MetricName>("reach");
+  const [removing, setRemoving] = useState(false);
+  const [removalError, setRemovalError] = useState("");
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const currentDelivery =
     publication?.deliveries.find((delivery) => delivery.deliveryId === deliveryId) ??
@@ -694,6 +698,25 @@ export function PublishedPostModal({
   const activePlatform = currentDelivery?.platform ?? "instagram";
   const activeAlt =
     activePlatform === "facebook" ? currentSlide?.altTextFacebook : currentSlide?.altTextInstagram;
+  const canRemove = publication?.deliveries.some((delivery) => delivery.status === "published");
+  const pendingRemoval = publication?.deliveries.some(
+    (delivery) => delivery.status === "removal_pending_manual",
+  );
+
+  async function handleRemoval() {
+    if (!publicationId || !publication || (!canRemove && !pendingRemoval)) return;
+    if (canRemove && !window.confirm(t("removeConfirm"))) return;
+    setRemoving(true);
+    setRemovalError("");
+    try {
+      await removePublishedPublication(publicationId, t("removeReason"));
+      await queryClient.invalidateQueries({ queryKey: PUBLICATIONS_QUERY_KEY });
+    } catch (error) {
+      setRemovalError(error instanceof Error ? error.message : t("removeError"));
+    } finally {
+      setRemoving(false);
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -903,6 +926,46 @@ export function PublishedPostModal({
                 </div>
               )}
             </div>
+            {(canRemove || pendingRemoval || publication?.status === "removed") && (
+              <div className="border-t border-white/10 p-4">
+                {pendingRemoval && (
+                  <p className="mb-2 text-xs font-bold text-amber-200">
+                    {t("pendingRemovalNotice")}
+                  </p>
+                )}
+                {publication?.deliveries.map((delivery) =>
+                  delivery.removalInstruction ? (
+                    <p key={delivery.deliveryId} className="mb-2 text-xs text-amber-200">
+                      {delivery.platform === "instagram" ? "Instagram" : "Facebook"}:{" "}
+                      {delivery.removalInstruction}
+                    </p>
+                  ) : null,
+                )}
+                {publication?.status === "removed" && (
+                  <p className="mb-2 text-xs text-emerald-200">{t("removedNotice")}</p>
+                )}
+                {removalError && (
+                  <p role="alert" className="mb-2 text-xs text-red-300">
+                    {removalError}
+                  </p>
+                )}
+                {(canRemove || pendingRemoval) && (
+                  <button
+                    type="button"
+                    onClick={() => void handleRemoval()}
+                    disabled={removing}
+                    className="inline-flex items-center gap-2 rounded-lg border border-red-300/40 px-3 py-2 text-xs font-bold text-red-200 disabled:opacity-50"
+                  >
+                    {removing ? (
+                      <LoaderCircle className="size-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="size-4" />
+                    )}
+                    {pendingRemoval && !canRemove ? t("verifyRemoval") : t("removePublication")}
+                  </button>
+                )}
+              </div>
+            )}
           </aside>
         </div>
       </DialogContent>

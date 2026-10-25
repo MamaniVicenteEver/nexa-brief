@@ -112,7 +112,7 @@ function GalleryCard({
             ))}
           </div>
           <div className="flex items-center justify-between border-t border-nb-line pt-2 text-[11px] text-nb-mute">
-            <span className="capitalize">{item.status.replaceAll("_", " ")}</span>
+            <span>{t(`status.${item.status}`)}</span>
             <span>
               {metricValue === null
                 ? t("gallery.metricUnavailable")
@@ -237,6 +237,10 @@ export function PublishedGallery({
               <option value="all">{t("gallery.filters.publishedOnly")}</option>
               <option value="removed_api">{t("gallery.status.removed_api")}</option>
               <option value="removed_manually">{t("gallery.status.removed_manually")}</option>
+              <option value="removed">{t("gallery.status.removed")}</option>
+              <option value="removal_pending_manual">
+                {t("gallery.status.removal_pending_manual")}
+              </option>
             </select>
           </label>
           <label className="flex flex-col gap-1 text-[10px] font-bold text-nb-mute">

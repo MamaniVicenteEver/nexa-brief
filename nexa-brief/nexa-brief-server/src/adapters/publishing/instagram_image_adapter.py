@@ -25,6 +25,9 @@ from src.adapters.publishing.image_publisher import (
     delivery_assets,
     graph_json,
     remote_state,
+    remote_caption_matches,
+    remote_date_matches,
+    remote_visuals_match,
     report_remote,
     storage_key,
     value,
@@ -422,7 +425,7 @@ class InstagramImageAdapter:
             return "failed", None
 
     async def reconcile_image_delivery(self, delivery_spec: DeliverySpec) -> ImageAdapterResult:
-        """Consulta IDs existentes; si Meta no confirma la publicación, no repite POST."""
+        """Verifica cuenta, fecha, caption y media antes de marcar la entrega publicada."""
         alias = str(value(delivery_spec, "account_alias", ""))
         previous = remote_state(delivery_spec)
         media_id = previous.get("post_id")
@@ -436,18 +439,21 @@ class InstagramImageAdapter:
         try:
             token = await self._token_manager.get_valid_token(self.PLATFORM, alias)
             async with self._client_factory(timeout=settings.api_timeout_seconds) as client:
-                if media_id:
-                    payload = await graph_json(
-                        client,
-                        "GET",
-                        quote(str(media_id), safe=""),
-                        token=token,
-                        params={"fields": "id,permalink,media_type,media_product_type"},
+                account_id = str(
+                    value(delivery_spec, "target_id")
+                    or self._token_manager.target_id(self.PLATFORM, alias)
+                    or ""
+                )
+                configured_id = str(self._token_manager.target_id(self.PLATFORM, alias) or account_id)
+                if not account_id or configured_id != account_id:
+                    return ImageAdapterResult(
+                        status="outcome_unknown", remote=previous,
+                        last_error={"code": "REMOTE_ACCOUNT_UNVERIFIED", "message": "No se pudo confirmar la cuenta de Instagram de destino"},
                     )
-                    remote = {**previous, "post_id": str(payload.get("id") or media_id)}
-                    if payload.get("permalink"):
-                        remote["permalink"] = payload["permalink"]
-                    return ImageAdapterResult(status="published", remote=remote)
+                if media_id:
+                    return await self._verify_published_media(
+                        client, token, account_id, str(media_id), delivery_spec, previous
+                    )
                 state = await graph_json(
                     client,
                     "GET",
@@ -456,10 +462,10 @@ class InstagramImageAdapter:
                     params={"fields": "id,status_code,status,media_id,permalink"},
                 )
                 if str(state.get("status_code") or "").upper() == "PUBLISHED" and state.get("media_id"):
-                    remote = {**previous, "post_id": str(state["media_id"])}
-                    if state.get("permalink"):
-                        remote["permalink"] = state["permalink"]
-                    return ImageAdapterResult(status="published", remote=remote)
+                    return await self._verify_published_media(
+                        client, token, account_id, str(state["media_id"]), delivery_spec, previous,
+                        permalink=state.get("permalink"),
+                    )
                 if str(state.get("status_code") or "").upper() in {"ERROR", "EXPIRED"}:
                     return ImageAdapterResult(
                         status="failed_permanent",
@@ -479,6 +485,88 @@ class InstagramImageAdapter:
                 remote=previous,
                 last_error={"code": "RECONCILIATION_FAILED", "message": str(exc)[:300]},
             )
+
+    async def _verify_published_media(
+        self,
+        client: httpx.AsyncClient,
+        token: str,
+        account_id: str,
+        media_id: str,
+        delivery_spec: Any,
+        previous: dict[str, Any],
+        *,
+        permalink: str | None = None,
+    ) -> ImageAdapterResult:
+        membership = await graph_json(
+            client,
+            "GET",
+            f"{quote(account_id, safe='')}/media",
+            token=token,
+            params={"fields": "id", "limit": "100"},
+        )
+        owned_ids = {
+            str(item.get("id")) for item in membership.get("data", [])
+            if isinstance(item, dict) and item.get("id")
+        }
+        if media_id not in owned_ids:
+            return ImageAdapterResult(
+                status="outcome_unknown", remote=previous,
+                last_error={"code": "REMOTE_ACCOUNT_MISMATCH", "message": "El medio no aparece en la cuenta de Instagram de esta entrega"},
+            )
+        payload = await graph_json(
+            client,
+            "GET",
+            quote(media_id, safe=""),
+            token=token,
+            params={
+                "fields": "id,caption,media_type,media_product_type,timestamp,permalink,media_url,children{media_type,media_url}",
+            },
+        )
+        if not remote_caption_matches(payload.get("caption"), delivery_spec):
+            return ImageAdapterResult(
+                status="outcome_unknown", remote=previous,
+                last_error={"code": "REMOTE_CAPTION_MISMATCH", "message": "El caption remoto no coincide con esta entrega"},
+            )
+        if not remote_date_matches(payload.get("timestamp"), delivery_spec):
+            return ImageAdapterResult(
+                status="outcome_unknown", remote=previous,
+                last_error={"code": "REMOTE_DATE_MISMATCH", "message": "La fecha del medio remoto no coincide con esta entrega"},
+            )
+        placement = str(value(delivery_spec, "placement", "image"))
+        media_type = str(payload.get("media_type") or "").upper()
+        product_type = str(payload.get("media_product_type") or "").upper()
+        if placement == "reel":
+            correct_type = media_type == "VIDEO" and product_type == "REELS"
+            remote_urls = [str(payload.get("media_url") or "")]
+        elif placement == "carousel":
+            correct_type = media_type == "CAROUSEL_ALBUM"
+            children = payload.get("children") or {}
+            rows = children.get("data", []) if isinstance(children, dict) else []
+            remote_urls = [str(item.get("media_url") or "") for item in rows if isinstance(item, dict)]
+        else:
+            correct_type = media_type == "IMAGE"
+            remote_urls = [str(payload.get("media_url") or "")]
+        if not correct_type:
+            return ImageAdapterResult(
+                status="outcome_unknown", remote=previous,
+                last_error={"code": "REMOTE_MEDIA_TYPE_MISMATCH", "message": "El tipo del medio remoto no coincide con la entrega"},
+            )
+        if placement == "reel":
+            media_verified = len(remote_urls) == 1 and bool(remote_urls[0])
+        else:
+            media_verified = await remote_visuals_match(
+                client, self._media_storage, delivery_spec, remote_urls
+            )
+        if not media_verified:
+            return ImageAdapterResult(
+                status="outcome_unknown", remote=previous,
+                last_error={"code": "REMOTE_MEDIA_MISMATCH", "message": "El medio remoto no coincide con el arte aprobado"},
+            )
+        remote = {**previous, "post_id": str(payload.get("id") or media_id)}
+        final_permalink = payload.get("permalink") or permalink
+        if final_permalink:
+            remote["permalink"] = str(final_permalink)
+        return ImageAdapterResult(status="published", remote=remote)
 
     async def get_content_publishing_limit(self, account_alias: str) -> dict[str, Any]:
         """Lee la cuota vigente de Graph y preserva null si el permiso no está concedido."""

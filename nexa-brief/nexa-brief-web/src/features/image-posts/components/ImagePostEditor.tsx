@@ -193,9 +193,7 @@ export function ImagePostEditor({
   );
   const [previewPlatform, setPreviewPlatform] = useState<Platform>("instagram");
   const [activeSlide, setActiveSlide] = useState(0);
-  const [musicMode, setMusicMode] = useState<"none" | "convert_to_reel">(
-    post?.music.mode ?? "none",
-  );
+  const [musicMode, setMusicMode] = useState<"none" | "convert_to_reel">("none");
   const [licensedTracks, setLicensedTracks] = useState<LicensedMusicTrack[]>([]);
   const [musicAssetId, setMusicAssetId] = useState(post?.music.musicAssetId ?? "");
   const [musicSha256, setMusicSha256] = useState(post?.music.sourceSha256 ?? "");
@@ -277,7 +275,7 @@ export function ImagePostEditor({
           "",
       );
       setStyleId(currentPost.styleId);
-      setMusicMode(currentPost.music.mode);
+      setMusicMode("none");
       setDirty(false);
     }
   }, [currentPost, strategies]);
@@ -890,13 +888,16 @@ export function ImagePostEditor({
                 name="music-mode"
                 value="convert_to_reel"
                 checked={musicMode === "convert_to_reel"}
+                disabled
                 onChange={() => {
                   setMusicMode("convert_to_reel");
                   markDirty();
                 }}
               />
               <span>
-                <strong className="block text-nb-ink">{t("editor.convertReel")}</strong>
+                <strong className="block text-nb-ink">
+                  {t("editor.convertReel")} · {t("editor.comingSoon")}
+                </strong>
                 <span className="text-nb-mute">{t("editor.reelLicenseHint")}</span>
               </span>
             </label>

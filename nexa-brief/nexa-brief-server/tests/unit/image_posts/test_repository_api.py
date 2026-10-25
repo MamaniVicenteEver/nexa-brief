@@ -4,6 +4,7 @@ import asyncio
 import hashlib
 import json
 from concurrent.futures import ThreadPoolExecutor
+from unittest.mock import AsyncMock
 from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from types import SimpleNamespace
@@ -25,7 +26,7 @@ from src.adapters.data.publication_factory import (
     build_publication_components,
     set_publication_components,
 )
-from src.core.data import set_data_store
+from src.core.data import collection, set_data_store
 from src.core.image_posts.service import _copy_source_for_record
 from src.core.image_posts.service import ImagePostError, _approved_for_publication, _safe_error
 from src.adapters.publishing.image_publisher import ImagePublishError
@@ -283,6 +284,158 @@ async def test_review_rejects_claim_with_mismatched_archived_source(tmp_path):
 
 
 @pytest.mark.asyncio
+async def test_approval_rechecks_caption_numbers_against_the_cited_facts(tmp_path):
+    components = build_publication_components(data_dir=tmp_path)
+    plan_text = (
+        "## 3. Hechos verificados\n"
+        "| N.º | Hecho | Fuente publicada | Cotejo / uso |\n"
+        "| 1 | El sistema registró 42 segundos de demora. | https://example.org | Sí; cotejado. |\n"
+    )
+    components.service.material_source = SimpleNamespace(
+        load_verified_material=lambda *_args: SimpleNamespace(plan_text=plan_text)
+    )
+
+    for caption, should_approve in (("La demora fue de 42 segundos.", True),
+                                    ("La demora fue de 99 segundos.", False)):
+        record = _record(status=PostStatus.READY_FOR_REVIEW)
+        copy = PostCopy(
+            facebook=NetworkCopy(caption=caption, caption_claim_refs=["claim_1"]),
+            instagram=NetworkCopy(caption=caption, caption_claim_refs=["claim_1"]),
+        )
+        await components.repository.create(record.model_copy(update={
+            "publication_id": f"pub_numbers_{should_approve}",
+            "post_id": f"img_numbers_{should_approve}",
+            "editorial": record.editorial.model_copy(update={"copy_data": copy}),
+        }))
+
+        if should_approve:
+            approved = await components.service.review(f"pub_numbers_{should_approve}", 1, "approve")
+            assert approved.status == PostStatus.APPROVED
+        else:
+            with pytest.raises(ImagePostError) as captured:
+                await components.service.review(f"pub_numbers_{should_approve}", 1, "approve")
+            assert captured.value.code == "UNSOURCED_CAPTION_NUMBER"
+            assert "99" in str(captured.value)
+            assert components.repository.get("pub_numbers_False").status == PostStatus.READY_FOR_REVIEW
+
+
+@pytest.mark.asyncio
+async def test_approval_rechecks_first_comment_numbers(tmp_path):
+    components = build_publication_components(data_dir=tmp_path)
+    components.service.material_source = SimpleNamespace(
+        load_verified_material=lambda *_args: SimpleNamespace(plan_text=(
+            "## 3. Hechos verificados\n"
+            "| 1 | El sistema registró 42 segundos. | https://example.org | Sí; cotejado. |\n"
+        ))
+    )
+    record = _record(status=PostStatus.READY_FOR_REVIEW)
+    copy = PostCopy(
+        facebook=NetworkCopy(
+            caption="El sistema registró 42 segundos.", caption_claim_refs=["claim_1"],
+            first_comment="Fueron 99 segundos.", first_comment_claim_refs=["claim_1"],
+        ),
+        instagram=NetworkCopy(caption="El sistema registró 42 segundos.", caption_claim_refs=["claim_1"]),
+    )
+    await components.repository.create(record.model_copy(update={
+        "editorial": record.editorial.model_copy(update={"copy_data": copy}),
+    }))
+
+    with pytest.raises(ImagePostError) as captured:
+        await components.service.review("pub_test", 1, "approve")
+    assert captured.value.code == "UNSOURCED_CAPTION_NUMBER"
+    assert "primer comentario de facebook" in str(captured.value)
+
+
+@pytest.mark.asyncio
+async def test_approval_does_not_confuse_decimal_with_integer(tmp_path):
+    components = build_publication_components(data_dir=tmp_path)
+    components.service.material_source = SimpleNamespace(
+        load_verified_material=lambda *_args: SimpleNamespace(plan_text=(
+            "## 3. Hechos verificados\n"
+            "| 1 | El plazo fue de 2,5 meses. | https://example.org | Sí; cotejado. |\n"
+        ))
+    )
+    record = _record(status=PostStatus.READY_FOR_REVIEW)
+    copy = PostCopy(
+        facebook=NetworkCopy(caption="El plazo fue de 25 meses.", caption_claim_refs=["claim_1"]),
+        instagram=NetworkCopy(caption="El plazo fue de 2.5 meses.", caption_claim_refs=["claim_1"]),
+    )
+    await components.repository.create(record.model_copy(update={
+        "editorial": record.editorial.model_copy(update={"copy_data": copy}),
+    }))
+
+    with pytest.raises(ImagePostError) as captured:
+        await components.service.review("pub_test", 1, "approve")
+    assert captured.value.code == "UNSOURCED_CAPTION_NUMBER"
+    assert "25" in str(captured.value)
+
+
+@pytest.mark.asyncio
+async def test_cc_by_approval_requires_license_url_and_change_notice_in_plan_image_and_captions(tmp_path):
+    components = build_publication_components(data_dir=tmp_path)
+    record = _record(status=PostStatus.READY_FOR_REVIEW)
+    technical = record.technical.model_dump(mode="json")
+    media = {
+        "asset_id": "photo_1", "sha256": "c" * 64, "license_id": "CC BY 2.0",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "author": "Fotógrafa", "url": "https://commons.wikimedia.org/wiki/File:Photo.jpg",
+        "changes": "recortada y convertida a B/N",
+    }
+    credit = (
+        "Fotógrafa (CC BY 2.0) · https://creativecommons.org/licenses/by/2.0/ · "
+        "https://commons.wikimedia.org/wiki/File:Photo.jpg · Cambios: recortada y convertida a B/N"
+    )
+    technical["composition_plan"]["slides"][0]["media"] = [media]
+    technical["composition_plan"]["slides"][0]["texts"] = [
+        {"role": "credit", "value": credit, "claim_refs": []},
+    ]
+    caption = (
+        "Dato confirmado.\n\nCréditos visuales: Fotógrafa (CC BY 2.0; licencia: "
+        "https://creativecommons.org/licenses/by/2.0/; cambios: recortada y convertida a B/N) — "
+        "https://commons.wikimedia.org/wiki/File:Photo.jpg"
+    )
+    copy = PostCopy(
+        facebook=NetworkCopy(caption=caption, caption_claim_refs=["claim_1"]),
+        instagram=NetworkCopy(caption=caption, caption_claim_refs=["claim_1"]),
+    )
+    await components.repository.create(record.model_copy(update={
+        "technical": TechnicalRecord.model_validate(technical),
+        "editorial": record.editorial.model_copy(update={"copy_data": copy}),
+    }))
+
+    approved = await components.service.review("pub_test", 1, "approve")
+
+    check = next(item for item in approved.technical.validations if item.name == "claims_sources_license")
+    assert check.passed
+    assert check.details.license_count == 1
+
+    first = approved.technical.composition_plan.slides[0]
+    plan = approved.technical.composition_plan.model_copy(update={
+        "slides": [
+            first.model_copy(update={"texts": []}),
+            first.model_copy(update={"slide_id": "slide_02", "order": 2, "media": []}),
+        ],
+    })
+    rendered = approved.technical.slides[0]
+    technical_without_local_credit = approved.technical.model_copy(update={
+        "composition_plan": plan,
+        "slides": [rendered, rendered.model_copy(update={"slide_id": "slide_02", "order": 2})],
+    })
+    editorial = approved.editorial.model_copy(update={
+        "slides": [
+            approved.editorial.slides[0],
+            approved.editorial.slides[0].model_copy(update={"slide_id": "slide_02"}),
+        ],
+    })
+    with pytest.raises(ImagePostError, match="La lámina debe mostrar"):
+        components.service._require_publishable(
+            approved.model_copy(update={"technical": technical_without_local_credit}),
+            technical_without_local_credit.slides,
+            editorial,
+        )
+
+
+@pytest.mark.asyncio
 async def test_review_rejects_photo_if_network_caption_loses_attribution(tmp_path):
     components = build_publication_components(data_dir=tmp_path)
     record = _record(status=PostStatus.READY_FOR_REVIEW)
@@ -522,7 +675,10 @@ async def test_publication_gallery_uses_authenticated_short_lived_asset_urls(tmp
     app = FastAPI()
     app.include_router(publications.router, prefix="/api/v1")
     app.include_router(image_posts.router, prefix="/api/v1")
-    client = TestClient(app)
+    client = TestClient(app, headers={
+        "X-Nexa-Session-User": "admin@test.example",
+        "X-Nexa-Session-Role": "admin",
+    })
     try:
         record = _record()
         content = _jpeg((25, 35, 45))
@@ -533,21 +689,34 @@ async def test_publication_gallery_uses_authenticated_short_lived_asset_urls(tmp
             target_id="page-test", placement="image", idempotency_key="gallery-key",
             status=DeliveryStatus.PUBLISHED, created_at=NOW, updated_at=NOW, published_at=NOW,
         )
+        queued_delivery = Delivery(
+            delivery_id="del_not_published", revision=1, platform="instagram", account_alias="instagram_2",
+            target_id="ig-test", placement="image", idempotency_key="not-published-key",
+            status=DeliveryStatus.QUEUED, created_at=NOW, updated_at=NOW,
+        )
         record = record.model_copy(update={
             "status": PostStatus.COMPLETED,
             "technical": record.technical.model_copy(update={"slides": [slide]}),
-            "deliveries": [delivery],
+            "deliveries": [delivery, queued_delivery],
         })
         components.media.put(slide.storage_key, content, "image/jpeg", digest)
         await components.repository.create(record)
+        await components.repository.create(_record("pub_newer_draft").model_copy(update={
+            "post_id": "img_newer_draft", "status": PostStatus.DRAFT,
+            "created_at": NOW + timedelta(minutes=1),
+        }))
 
-        listing = client.get("/api/v1/publications")
+        listing = client.get("/api/v1/publications?limit=1")
         strategy_listing = client.get("/api/v1/publications?strategy_id=cifra_que_frena")
         strategy_miss = client.get("/api/v1/publications?strategy_id=hilo_guardable")
         detail = client.get(f"/api/v1/publications/{record.publication_id}")
         asset = client.get(f"/api/v1/publications/{record.publication_id}/assets/{slide.asset_id}/url")
 
         assert listing.status_code == 200
+        assert [item["publication_id"] for item in listing.json()["items"]] == ["pub_test"]
+        assert [row["delivery_id"] for row in listing.json()["items"][0]["delivery_summaries"]] == [
+            "del_gallery"
+        ]
         assert [item["strategy_id"] for item in strategy_listing.json()["items"]] == [
             "cifra_que_frena",
         ]
@@ -672,7 +841,10 @@ def test_image_posts_api_auth_and_idempotency(tmp_path):
     app = FastAPI()
     app.include_router(image_posts.router, prefix="/api/v1")
     app.include_router(publications.router, prefix="/api/v1")
-    client = TestClient(app)
+    client = TestClient(app, headers={
+        "X-Nexa-Session-User": "admin@test.example",
+        "X-Nexa-Session-Role": "admin",
+    })
     body = {
         "category_id": "node_tech", "source_video_id": "video_test",
         "template_id": "daily_fact", "style_id": "node_tech_rough", "seed": 7,
@@ -710,6 +882,396 @@ def test_image_posts_api_auth_and_idempotency(tmp_path):
         assert protected.status_code == 503
     finally:
         settings.app_env, settings.nexa_internal_token, settings.data_dir = old_env, old_token, old_data_dir
+        set_publication_components(None)
+        set_data_store(None)
+
+
+def test_image_post_session_acl_scopes_categories_and_accounts(tmp_path):
+    old_env, old_token, old_data_dir = settings.app_env, settings.nexa_internal_token, settings.data_dir
+    settings.app_env, settings.nexa_internal_token, settings.data_dir = "test", "", tmp_path
+    policy_path = tmp_path / "image_posts" / "access.json"
+    policy_path.parent.mkdir(parents=True)
+    policy_path.write_text(json.dumps({
+        "schema_version": 1,
+        "users": [{
+            "email": "editor@example.org", "categories": ["node_tech"],
+            "accounts": {"node_tech": ["facebook:pagina_3"]},
+        }],
+    }))
+    components = build_publication_components(data_dir=tmp_path)
+    set_publication_components(components)
+    facebook_delivery = Delivery(
+        delivery_id="del_acl_fb", revision=1, platform="facebook", account_alias="pagina_3",
+        target_id="page-test", placement="image", idempotency_key="acl-fb",
+        status=DeliveryStatus.PUBLISHED, created_at=NOW, updated_at=NOW, published_at=NOW,
+    )
+    instagram_delivery = Delivery(
+        delivery_id="del_acl_ig", revision=1, platform="instagram", account_alias="instagram_2",
+        target_id="ig-test", placement="image", idempotency_key="acl-ig",
+        status=DeliveryStatus.PUBLISHED, created_at=NOW, updated_at=NOW, published_at=NOW,
+    )
+    asyncio.run(components.repository.create(_record(publication_id="pub_acl").model_copy(
+        update={"deliveries": [facebook_delivery, instagram_delivery]}
+    )))
+    app = FastAPI()
+    app.include_router(image_posts.router, prefix="/api/v1")
+    app.include_router(publications.router, prefix="/api/v1")
+    editor = TestClient(app, headers={
+        "X-Nexa-Session-User": "editor@example.org", "X-Nexa-Session-Role": "editor",
+    })
+    admin = TestClient(app, headers={
+        "X-Nexa-Session-User": "admin@example.org", "X-Nexa-Session-Role": "admin",
+    })
+    anonymous = TestClient(app)
+    try:
+        assert editor.get("/api/v1/image-posts?category_id=node_tech").status_code == 200
+        assert editor.get("/api/v1/image-posts?category_id=node_history").status_code == 403
+        assert editor.get("/api/v1/image-posts/pub_acl").status_code == 403
+        own_gallery = editor.get(
+            "/api/v1/publications?category_id=node_tech&platform=facebook&account_alias=pagina_3"
+        )
+        assert own_gallery.status_code == 200
+        assert [row["delivery_id"] for row in own_gallery.json()["items"][0]["delivery_summaries"]] == [
+            "del_acl_fb"
+        ]
+        assert editor.get("/api/v1/image-posts/capabilities?category_id=node_tech").json()["accounts"]
+        assert all(
+            row["platform"] == "facebook"
+            for row in editor.get("/api/v1/image-posts/capabilities?category_id=node_tech").json()["accounts"]
+        )
+        blocked_account = editor.get(
+            "/api/v1/publications?category_id=node_tech&platform=instagram&account_alias=instagram_2"
+        )
+        assert blocked_account.status_code == 403
+        assert editor.get("/api/v1/publications?category_id=node_history").status_code == 403
+        assert admin.get("/api/v1/publications?limit=10").status_code == 200
+        assert anonymous.get("/api/v1/image-posts?category_id=node_tech").status_code == 401
+        policy_path.write_text(json.dumps({
+            "schema_version": 1,
+            "users": [{"email": "editor@example.org", "categories": ["node_tech"], "accounts": None}],
+        }))
+        assert editor.get("/api/v1/publications?category_id=node_tech").status_code == 503
+    finally:
+        settings.app_env, settings.nexa_internal_token, settings.data_dir = old_env, old_token, old_data_dir
+        set_publication_components(None)
+        set_data_store(None)
+
+
+@pytest.mark.asyncio
+async def test_scheduler_recovers_archived_queued_delivery_missing_from_queue(tmp_path, monkeypatch):
+    from src.core.schedule import queue_repository
+
+    old_data_dir = settings.data_dir
+    settings.data_dir = tmp_path
+    set_data_store(None)
+    components = build_publication_components(
+        data_dir=tmp_path,
+        account_provider=lambda: [{
+            "platform": "facebook", "alias": "pagina_3", "target_id": "page-test", "status": "ok",
+        }],
+    )
+    set_publication_components(components)
+    try:
+        await components.repository.create(_record())
+        monkeypatch.setattr(components.service, "_queue_deliveries", AsyncMock())
+        deliveries = await components.service.schedule_deliveries(
+            "pub_test", 1, [{"platform": "facebook", "account_alias": "pagina_3"}],
+            "crash-gap", immediate=True, request_idempotency_key="crash-gap-key",
+        )
+        delivery = deliveries[0]
+        assert queue_repository.find_for_delivery(delivery.delivery_id) is None
+
+        monkeypatch.undo()
+        assert await components.service.reconcile_queued_deliveries() == 1
+        restored = queue_repository.find_for_delivery(delivery.delivery_id)
+        assert restored is not None and restored.status.value == "queued"
+        assert restored.delivery_id == delivery.delivery_id
+        assert await components.service.reconcile_queued_deliveries() == 0
+        assert queue_repository.find_for_delivery(delivery.delivery_id).entry_id == restored.entry_id
+    finally:
+        settings.data_dir = old_data_dir
+        set_publication_components(None)
+        set_data_store(None)
+
+
+@pytest.mark.asyncio
+async def test_legal_purge_removes_plan_jpeg_mp4_and_queue_entry(tmp_path):
+    from src.core.schedule import queue_repository
+
+    old_data_dir = settings.data_dir
+    settings.data_dir = tmp_path
+    set_data_store(None)
+    components = build_publication_components(data_dir=tmp_path)
+    set_publication_components(components)
+    image_stream = BytesIO()
+    Image.new("RGB", (1080, 1350), (20, 80, 120)).save(image_stream, format="JPEG")
+    jpeg = image_stream.getvalue()
+    mp4 = b"\x00\x00\x00\x18ftypisom" + b"media"
+    slide_key = "node_tech/2026/10/pub_test/slides/01.jpg"
+    reel_key = "node_tech/2026/10/pub_test/reels/reel.mp4"
+    reel = ReelManifest(
+        asset_id="reel_test", storage_key=reel_key, duration_sec=10,
+        bytes=len(mp4), sha256=hashlib.sha256(mp4).hexdigest(),
+    )
+    record = _record()
+    slide = record.technical.slides[0].model_copy(update={
+        "storage_key": slide_key, "sha256": hashlib.sha256(jpeg).hexdigest(), "bytes": len(jpeg),
+    })
+    technical = record.technical.model_copy(update={"slides": [slide], "reel": reel})
+    delivery = Delivery(
+        delivery_id="del_purge", revision=1, platform="facebook", account_alias="pagina_3",
+        target_id="page-test", placement="image", idempotency_key="purge-key",
+        status=DeliveryStatus.QUEUED, created_at=NOW, updated_at=NOW,
+    )
+    record = record.model_copy(update={
+        "technical": technical, "deliveries": [delivery],
+    })
+    try:
+        components.media.put(slide_key, jpeg, "image/jpeg", slide.sha256)
+        components.media.put(reel_key, mp4, "video/mp4", reel.sha256)
+        await components.repository.create(record)
+        await queue_repository.create(
+            job_id=None, platform="facebook", account_alias="pagina_3", content_kind="image",
+            content_id="pub_test", delivery_id="del_purge",
+        )
+        record_path = components.port._record_path(record.model_dump(mode="json"))
+        assert (record_path.parent / "plan.json").exists()
+
+        assert await components.service.purge_publication(
+            "pub_test", policy="authorized_legal_purge"
+        )
+
+        assert components.repository.get("pub_test") is None
+        assert not (record_path.parent / "plan.json").exists()
+        assert queue_repository.find_for_delivery("del_purge") is None
+        with pytest.raises(FileNotFoundError):
+            components.media.get(slide_key)
+        with pytest.raises(FileNotFoundError):
+            components.media.get(reel_key)
+    finally:
+        settings.data_dir = old_data_dir
+        set_publication_components(None)
+        set_data_store(None)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(("post_status", "delivery_status"), [
+    (PostStatus.COMPLETED, DeliveryStatus.PUBLISHED),
+    (PostStatus.REMOVED, DeliveryStatus.REMOVED),
+    (PostStatus.REMOVAL_PENDING_MANUAL, DeliveryStatus.REMOVAL_PENDING_MANUAL),
+])
+async def test_published_plan_edit_renders_new_art_under_the_new_revision(
+    tmp_path, monkeypatch, post_status, delivery_status
+):
+    import src.core.image_posts.service as service_module
+    import src.core.image_posts.validate as plan_validation
+
+    components = build_publication_components(data_dir=tmp_path)
+    class FakeStyle:
+        version = "1.0.0"
+
+    class FakeStyles:
+        def get_style(self, *_args):
+            return FakeStyle()
+
+        def list_styles(self, *_args):
+            return [{"style_id": "node_tech_rough"}]
+
+    class FakeRenderer:
+        async def render(self, plan, _style, _media_bytes=None):
+            image_stream = BytesIO()
+            Image.new("RGB", (1080, 1350), (180, 40, 80)).save(image_stream, format="JPEG")
+            return {
+                "assets": [{
+                    "slide_id": plan.slides[0].slide_id, "content": image_stream.getvalue(),
+                    "width": 1080, "height": 1350,
+                }],
+                "technical": {"validations": [
+                    ValidationResult(name="jpeg", version="1", passed=True, checked_at=NOW).model_dump(mode="json"),
+                ]},
+            }
+
+    components.service.style_catalog = FakeStyles()
+    components.service.renderer = FakeRenderer()
+    monkeypatch.setattr(service_module, "engine_plan_hash", lambda *_args: "c" * 64)
+    monkeypatch.setattr(
+        plan_validation, "validate_plan", lambda *_args: SimpleNamespace(passed=True, errors=[])
+    )
+    original = _record(status=post_status)
+    published = Delivery(
+        delivery_id="del_already_published", revision=1, platform="facebook",
+        account_alias="pagina_3", target_id="page-test", placement="image",
+        idempotency_key="published-key", status=delivery_status,
+        created_at=NOW, updated_at=NOW, published_at=NOW,
+    )
+    original = original.model_copy(update={"deliveries": [published]})
+    await components.repository.create(original)
+    changed_plan = original.technical.composition_plan.model_dump(mode="json")
+    changed_plan["slides"][0]["texts"] = [{
+        "role": "headline", "value": "Titular nuevo", "claim_refs": ["claim_1"],
+    }]
+
+    revised = await components.service.save_plan(changed_plan, expected_revision=1)
+
+    assert revised.publication_id != original.publication_id
+    assert revised.revision == original.revision + 1
+    assert revised.technical.slides == []
+    assert components.repository.get(original.publication_id).status == post_status
+    assert components.service._record_for_plan("plan_test").publication_id == revised.publication_id
+    rendered = await components.service.render_plan("plan_test")
+    assert len(rendered.technical.slides) == 1
+    new_key = rendered.technical.slides[0].storage_key
+    assert revised.publication_id in new_key
+    assert original.publication_id not in new_key
+
+
+@pytest.mark.parametrize("delivery_status", [
+    DeliveryStatus.REMOVED, DeliveryStatus.REMOVAL_PENDING_MANUAL,
+])
+@pytest.mark.asyncio
+async def test_editing_removed_publication_preserves_archived_record(tmp_path, delivery_status):
+    components = build_publication_components(data_dir=tmp_path)
+    post_status = (
+        PostStatus.REMOVED if delivery_status == DeliveryStatus.REMOVED
+        else PostStatus.REMOVAL_PENDING_MANUAL
+    )
+    delivery = Delivery(
+        delivery_id="del_removed", revision=1, platform="instagram", account_alias="instagram_2",
+        target_id="ig-test", placement="image", idempotency_key="removed-key",
+        status=delivery_status, created_at=NOW, updated_at=NOW, published_at=NOW,
+    )
+    original = _record(status=post_status).model_copy(update={"deliveries": [delivery]})
+    await components.repository.create(original)
+
+    revised = await components.service.patch_post("pub_test", {
+        "revision": 1, "title": "Título revisado",
+    })
+
+    assert revised.publication_id != original.publication_id
+    assert revised.supersedes_publication_id == original.publication_id
+    assert revised.deliveries == []
+    archived = components.repository.get(original.publication_id)
+    assert archived.status == post_status
+    assert archived.editorial.title == original.editorial.title
+
+
+@pytest.mark.asyncio
+async def test_remote_removal_also_marks_published_queue_entry_removed(tmp_path):
+    from src.core.schedule import queue_repository
+
+    old_data_dir = settings.data_dir
+    settings.data_dir = tmp_path
+    set_data_store(None)
+    components = build_publication_components(data_dir=tmp_path)
+    delivery = Delivery(
+        delivery_id="del_remove_queue", revision=1, platform="facebook", account_alias="pagina_3",
+        target_id="page-test", placement="image", idempotency_key="remove-queue-key",
+        status=DeliveryStatus.PUBLISHED,
+        remote={"post_id": "123_456"},
+        created_at=NOW, updated_at=NOW, published_at=NOW,
+    )
+
+    class FakeRemover:
+        async def remove_remote_delivery(self, _delivery):
+            return {"status": "removed", "graph_response": {"delete": {"success": True}}}
+
+    try:
+        await components.repository.create(_record(status=PostStatus.COMPLETED).model_copy(
+            update={"deliveries": [delivery]}
+        ))
+        entry = await queue_repository.create(
+            job_id=None, platform="facebook", account_alias="pagina_3",
+            content_kind="image", content_id="pub_test", delivery_id=delivery.delivery_id,
+        )
+        await queue_repository.mark_published(entry.entry_id, "123_456", "")
+
+        await components.service.remove_publication("pub_test", "Retirada", FakeRemover())
+
+        assert components.repository.get("pub_test").deliveries[0].status == DeliveryStatus.REMOVED
+        assert queue_repository.get(entry.entry_id).status.value == "removed"
+    finally:
+        settings.data_dir = old_data_dir
+        set_data_store(None)
+
+
+@pytest.mark.asyncio
+async def test_purge_cannot_delete_a_queue_entry_claimed_for_publication(tmp_path):
+    from src.core.schedule import queue_repository
+
+    old_data_dir = settings.data_dir
+    settings.data_dir = tmp_path
+    set_data_store(None)
+    try:
+        entry = await queue_repository.create(
+            job_id=None, platform="facebook", account_alias="pagina_3",
+            content_kind="image", content_id="pub_test", delivery_id="del_claimed",
+        )
+        assert await queue_repository.mark_publishing(entry.entry_id) is not None
+        with pytest.raises(ValueError, match="mientras un worker"):
+            await queue_repository.delete_for_delivery("del_claimed")
+        assert queue_repository.get(entry.entry_id).status.value == "publishing"
+    finally:
+        queue_repository._in_flight.clear()
+        settings.data_dir = old_data_dir
+        set_data_store(None)
+
+
+@pytest.mark.asyncio
+async def test_long_image_publish_renews_persistent_lease_for_another_worker(tmp_path, monkeypatch):
+    import src.core.image_posts.service as service_module
+    from src.core.schedule import engine, queue_repository
+
+    entered = asyncio.Event()
+    release = asyncio.Event()
+
+    class SlowPublisher:
+        async def publish_image_delivery(self, _spec):
+            entered.set()
+            await release.wait()
+            return RemoteResult(post_id="post-slow", permalink="https://example.org/post-slow")
+
+    old_data_dir = settings.data_dir
+    settings.data_dir = tmp_path
+    set_data_store(None)
+    components = build_publication_components(
+        data_dir=tmp_path, publisher=SlowPublisher(),
+        account_provider=lambda: [{
+            "platform": "facebook", "alias": "pagina_3", "target_id": "page-test", "status": "ok",
+        }],
+    )
+    set_publication_components(components)
+    queue_repository._in_flight.clear()
+    monkeypatch.setattr(service_module, "_DELIVERY_HEARTBEAT_SECONDS", 0.01)
+    try:
+        await components.repository.create(_record())
+        delivery = (await components.service.schedule_deliveries(
+            "pub_test", 1, [{"platform": "facebook", "account_alias": "pagina_3"}],
+            "slow-publish", immediate=True, request_idempotency_key="slow-publish-key",
+        ))[0]
+        entry = queue_repository.find_for_delivery(delivery.delivery_id)
+        assert entry is not None
+        publishing = asyncio.create_task(engine.publish_entry(object(), entry))
+        await asyncio.wait_for(entered.wait(), timeout=1)
+        await asyncio.sleep(0.05)
+
+        # Simula el segundo worker: ya no comparte el set local del primero.
+        queue_repository._in_flight.discard(entry.entry_id)
+        stale = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat()
+        await collection("queue_entries").update(entry.entry_id, {"updated_at": stale})
+        assert await queue_repository.recover_stale_publishing(older_than_seconds=0) == 0
+        assert await components.service.reconcile_interrupted() == 0
+        current_queue = queue_repository.get(entry.entry_id)
+        current_delivery = components.service._find_delivery(delivery.delivery_id)[1]
+        assert current_queue.lease_until > datetime.now(timezone.utc).isoformat()
+        assert current_delivery.lease_until > datetime.now(timezone.utc)
+
+        release.set()
+        result = await asyncio.wait_for(publishing, timeout=1)
+        assert result.status.value == "published"
+    finally:
+        release.set()
+        queue_repository._in_flight.clear()
+        settings.data_dir = old_data_dir
         set_publication_components(None)
         set_data_store(None)
 
@@ -752,12 +1314,13 @@ async def test_publish_now_replay_launches_only_one_queue_task(tmp_path, monkeyp
             "publish-now-test", immediate=True, request_idempotency_key="deliveries-test",
         ))[0]
         key = "00000000-0000-4000-8000-000000000225"
-        first = await image_posts.publish_delivery_now(delivery.delivery_id, key)
+        admin = image_posts.ImageSession(email="admin@example.org", role="admin")
+        first = await image_posts.publish_delivery_now(delivery.delivery_id, key, identity=admin)
         await asyncio.sleep(0)
         entry = queue_repository.find_for_delivery(delivery.delivery_id)
         assert entry is not None and entry.scheduled_at is not None
         assert entry in queue_repository.find_due(datetime.now(timezone.utc).isoformat())
-        second = await image_posts.publish_delivery_now(delivery.delivery_id, key)
+        second = await image_posts.publish_delivery_now(delivery.delivery_id, key, identity=admin)
         assert first == second
         assert calls == 1
     finally:

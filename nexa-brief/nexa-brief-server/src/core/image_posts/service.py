@@ -7,6 +7,7 @@ import dataclasses
 import asyncio
 from dataclasses import asdict, is_dataclass
 import hashlib
+import hmac
 import inspect
 import json
 import re
@@ -43,6 +44,8 @@ from src.core.ports.image_post_resources import (
 
 logger = structlog.get_logger(__name__)
 _render_tasks: set[asyncio.Task] = set()
+_DELIVERY_HEARTBEAT_SECONDS = 30
+_PHOTO_CHANGES = "recortada y convertida a B/N"
 
 
 class ImageRenderer(Protocol):
@@ -161,6 +164,68 @@ def _copy_source_for_record(source: str) -> str:
     if source == "reglas":
         return "reglas: origen no especificado"
     return f"reglas: {source}"
+
+
+def _complete_photo_attribution(slides: list[dict[str, Any]], images: list[Any]) -> None:
+    """Guarda licencia y cambios en el plan y en el crédito visible de la lámina."""
+    by_hash = {str(image.sha256): image for image in images}
+    for slide in slides:
+        for media in slide.get("media", []):
+            image = by_hash.get(str(media.get("sha256") or ""))
+            if image is None:
+                continue
+            license_url = str(getattr(image, "license_url", "") or "")
+            source_url = str(getattr(image, "source_url", "") or media.get("url", ""))
+            author = str(getattr(image, "author", "") or "Autor desconocido")
+            license_id = str(getattr(image, "license", "") or media.get("license_id", ""))
+            media.update({"license_url": license_url or None, "changes": _PHOTO_CHANGES})
+            visible = (
+                f"{author} ({license_id}) · {license_url} · {source_url} · "
+                f"Cambios: {_PHOTO_CHANGES}"
+            )
+            for item in slide.get("texts", []):
+                if item.get("role") == "credit":
+                    item["value"] = visible
+
+
+def _verified_fact_texts(plan_text: str) -> dict[str, str]:
+    facts: dict[str, str] = {}
+    in_facts = False
+    for line in plan_text.splitlines():
+        if line.startswith("## "):
+            in_facts = line.startswith("## 3.")
+        if not in_facts or not line.lstrip().startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) >= 4 and cells[0].isdigit() and _approved_for_publication(cells[3]):
+            facts[f"claim_{cells[0]}"] = cells[1]
+    return facts
+
+
+def _caption_factual_text(caption: str) -> str:
+    paragraphs = []
+    for paragraph in caption.splitlines():
+        clean = paragraph.strip()
+        if clean.casefold().startswith(("fuentes:", "créditos visuales:")):
+            continue
+        paragraphs.append(clean)
+    return re.sub(r"https?://\S+", " ", " ".join(paragraphs))
+
+
+_NUMBER_TOKEN = re.compile(r"(?<!\w)\d+(?:[.,\s]\d{3})*(?:[.,]\d{1,2})?(?!\w)")
+
+
+def _number_values(text: str) -> set[str]:
+    """Normaliza miles sin confundir un decimal con un entero."""
+    values = set()
+    for match in _NUMBER_TOKEN.finditer(text):
+        token = match.group(0)
+        decimal = re.search(r"[.,](\d{1,2})$", token)
+        integer_part = token[:decimal.start()] if decimal else token
+        integer = str(int(re.sub(r"[.,\s]", "", integer_part)))
+        fraction = decimal.group(1).rstrip("0") if decimal else ""
+        values.add(f"{integer}.{fraction}" if fraction else integer)
+    return values
 
 
 def _cached_media(plan: Any, cache: ImageMediaCache) -> dict[str, bytes]:
@@ -330,11 +395,13 @@ class ImagePostService:
         }
         topic = topic or strategies.trim_words(str(material.topic or ""), 28)
         context = dataclasses.replace(context, topic=topic)
+        sourced_images = []
         if not strategy.needs_media:
             slides = strategy.build(facts, context, copy)
         else:
-            images = await self._licensed_images(strategy, facts, context, extras)
-            slides = strategy.build(facts, context, copy, images)
+            sourced_images = await self._licensed_images(strategy, facts, context, extras)
+            slides = strategy.build(facts, context, copy, sourced_images)
+            _complete_photo_attribution(slides, sourced_images)
         for slide in slides:
             for claim in slide.get("claim_refs", []):
                 usage = usage_by_claim.get(str(claim.get("id", "")))
@@ -563,6 +630,7 @@ class ImagePostService:
             return record
         published_statuses = {
             DeliveryStatus.PUBLISHED, DeliveryStatus.REMOVED_API, DeliveryStatus.REMOVED_MANUALLY,
+            DeliveryStatus.REMOVED, DeliveryStatus.REMOVAL_PENDING_MANUAL,
         }
         if not any(delivery.status in published_statuses for delivery in record.deliveries):
             cancelled = await self._cancel_queued_deliveries(record)
@@ -658,11 +726,12 @@ class ImagePostService:
             logger.warning("image_post_render_failed", plan_id=plan_id, error=_safe_error(exc))
 
     def _record_for_plan(self, plan_id: str) -> PublicationRecord | None:
+        matches = []
         for summary in self._all_summaries():
             record = self.repository.get(summary["publication_id"])
             if record and record.technical.composition_plan.plan_id == plan_id:
-                return record
-        return None
+                matches.append(record)
+        return max(matches, key=lambda item: (item.revision, item.created_at)) if matches else None
 
     async def render_plan(self, plan_id: str) -> PublicationRecord:
         record = self._record_for_plan(plan_id)
@@ -807,6 +876,7 @@ class ImagePostService:
         now = _now()
         published = any(delivery.status in {
             DeliveryStatus.PUBLISHED, DeliveryStatus.REMOVED_API, DeliveryStatus.REMOVED_MANUALLY,
+            DeliveryStatus.REMOVED, DeliveryStatus.REMOVAL_PENDING_MANUAL,
         } for delivery in record.deliveries)
         if published:
             changed = record.model_copy(update={
@@ -908,6 +978,8 @@ class ImagePostService:
         new_deliveries: list[Delivery] = []
         seen_keys: set[str] = set()
         music = record.technical.music
+        if music.mode == "convert_to_reel":
+            raise ImagePostError("MUSIC_COMING_SOON", "La música estará disponible próximamente", 409)
         for target in targets:
             platform, alias = target["platform"], target["account_alias"]
             mapping = self.account_mapping.resolve_account(record.editorial.category_id, platform, alias)
@@ -988,6 +1060,116 @@ class ImagePostService:
                 content_id=publication_id, delivery_id=delivery.delivery_id,
             )
 
+    async def reconcile_queued_deliveries(self) -> int:
+        """Recrea entradas ausentes tras una caída entre archivo y cola."""
+        from src.core.schedule import queue_repository
+
+        recovered = 0
+        for summary in self._all_summaries():
+            record = self.repository.get(summary["publication_id"])
+            if record is None:
+                continue
+            missing = [
+                delivery for delivery in record.deliveries
+                if delivery.status == DeliveryStatus.QUEUED
+                and queue_repository.find_for_delivery(delivery.delivery_id) is None
+            ]
+            if missing:
+                await self._queue_deliveries(
+                    record.publication_id, missing,
+                    immediate=all(delivery.scheduled_at is None for delivery in missing),
+                )
+                recovered += len(missing)
+        return recovered
+
+    async def purge_publication(self, publication_id: str, policy: str) -> bool:
+        """Elimina registro, plan, cola y JPEG/MP4 con hash comprobado."""
+        if policy != "authorized_legal_purge":
+            raise PermissionError("Purgar publicaciones requiere política explícita")
+        record = self.repository.get(publication_id)
+        if record is None:
+            return False
+        if any(delivery.status == DeliveryStatus.PUBLISHING for delivery in record.deliveries):
+            raise ImagePostError("PURGE_IN_PROGRESS", "Hay una entrega publicándose", 409)
+
+        assets = [*record.technical.slides]
+        if record.technical.reel:
+            assets.append(record.technical.reel)
+        media = {asset.storage_key: asset.sha256 for asset in assets}
+        for key, digest in media.items():
+            try:
+                stream = self.media.get(key)
+            except FileNotFoundError:
+                continue
+            content = stream.read()
+            if digest and not hmac.compare_digest(hashlib.sha256(content).hexdigest(), digest.lower()):
+                raise ImagePostError("PURGE_MEDIA_CHANGED", "No se purgó un medio cuyo hash cambió", 409)
+
+        from src.core.schedule import queue_repository
+
+        for delivery in record.deliveries:
+            await queue_repository.delete_for_delivery(delivery.delivery_id)
+        for key, digest in media.items():
+            self.media.delete(key, digest)
+        deleted = await self.repository.delete(publication_id, policy)
+        if deleted:
+            await self._emit("image_post_purged", {"publication_id": publication_id})
+        return deleted
+
+    async def remove_publication(self, publication_id: str, reason: str, remover: Any) -> PublicationRecord:
+        """Retira cada entrega remota y conserva el estudio completo como archivo."""
+        record = self.repository.get(publication_id)
+        if record is None:
+            raise ImagePostError("PUBLICATION_NOT_FOUND", "Publicación no encontrada", 404)
+        if not reason.strip() or len(reason) > 300:
+            raise ImagePostError("INVALID_REMOVAL_REASON", "Indica un motivo de hasta 300 caracteres", 422)
+        if any(delivery.status == DeliveryStatus.PUBLISHING for delivery in record.deliveries):
+            raise ImagePostError("PUBLISH_IN_PROGRESS", "Hay una entrega publicándose", 409)
+        if not record.deliveries or any(
+            delivery.status not in {DeliveryStatus.PUBLISHED, DeliveryStatus.REMOVAL_PENDING_MANUAL,
+                                    DeliveryStatus.REMOVED, DeliveryStatus.REMOVED_API,
+                                    DeliveryStatus.REMOVED_MANUALLY}
+            for delivery in record.deliveries
+        ):
+            raise ImagePostError("NOT_PUBLISHED", "Solo se retiran publicaciones ya enviadas", 409)
+
+        for delivery in record.deliveries:
+            if delivery.status in {DeliveryStatus.REMOVED, DeliveryStatus.REMOVED_API,
+                                   DeliveryStatus.REMOVED_MANUALLY}:
+                continue
+            outcome = await remover.remove_remote_delivery(delivery)
+            now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+            await self.repository.append_delivery_event(
+                publication_id, delivery.delivery_id,
+                {
+                    "status": outcome["status"],
+                    "removed_at": now if outcome["status"] == "removed" else None,
+                    "removal_requested_at": delivery.removal_requested_at or now,
+                    "removal_reason": delivery.removal_reason or reason.strip(),
+                    "removal_instruction": outcome.get("instruction"),
+                    "removal_graph_response": {
+                        **(delivery.removal_graph_response or {}),
+                        **(outcome.get("graph_response") or {}),
+                    },
+                },
+            )
+            if outcome["status"] == "removed" and delivery.remote.post_id:
+                from src.core.schedule import queue_repository
+
+                await queue_repository.mark_removed_by_post(
+                    delivery.platform, delivery.account_alias, delivery.remote.post_id
+                )
+        record = self.repository.get(publication_id)
+        assert record is not None
+        pending = any(delivery.status == DeliveryStatus.REMOVAL_PENDING_MANUAL for delivery in record.deliveries)
+        next_status = PostStatus.REMOVAL_PENDING_MANUAL if pending else PostStatus.REMOVED
+        if record.status != next_status:
+            record = await self.repository.update(
+                publication_id, {"status": next_status.value}, record.record_version
+            )
+        await self._emit("image_post_removal_changed", {"publication_id": publication_id})
+        return record
+
     async def publish_delivery(self, delivery_id: str) -> Delivery:
         record, delivery = self._find_delivery(delivery_id)
         if delivery is None or record is None:
@@ -1036,7 +1218,13 @@ class ImagePostService:
                           [slide.sha256 for slide in record.technical.slides]),
             alt_text=[text or "" for text in delivery.alt_text_sent],
             comment_allowed=delivery.comment_status == "pending",
+            expected_at=delivery.scheduled_at or delivery.created_at,
+            expected_duration_sec=(
+                record.technical.reel.duration_sec
+                if delivery.placement == "reel" and record.technical.reel else None
+            ),
         )
+        heartbeat = asyncio.create_task(self._delivery_heartbeat(delivery_id))
         try:
             publisher = self._publisher()
             result = await self._invoke(publisher.publish_image_delivery if hasattr(publisher, "publish_image_delivery") else publisher, spec)
@@ -1073,6 +1261,12 @@ class ImagePostService:
                 "OUTCOME_UNKNOWN" if ambiguous else "META_FAILED_PERMANENT" if status == DeliveryStatus.FAILED_PERMANENT else "META_UNAVAILABLE",
                 safe_message, 409 if ambiguous else 422 if status == DeliveryStatus.FAILED_PERMANENT else 503,
             ) from exc
+        finally:
+            heartbeat.cancel()
+            try:
+                await heartbeat
+            except asyncio.CancelledError:
+                pass
         final_status = DeliveryStatus.PUBLISHED
         published = await self._set_delivery(record, delivery, {
             "status": final_status.value, "remote": remote.model_dump(mode="json", exclude={"comment_status"}),
@@ -1084,6 +1278,23 @@ class ImagePostService:
         await self._emit("image_delivery_changed", {"delivery_id": delivery_id, "status": final_status.value,
                                                        "post_id": remote.post_id, "permalink": remote.permalink})
         return published
+
+    async def _delivery_heartbeat(self, delivery_id: str) -> None:
+        """Renueva la lease del registro y de la cola mientras Graph siga trabajando."""
+        from src.core.schedule import queue_repository
+
+        while True:
+            await asyncio.sleep(_DELIVERY_HEARTBEAT_SECONDS)
+            record, delivery = self._find_delivery(delivery_id)
+            if record is None or delivery is None or delivery.status != DeliveryStatus.PUBLISHING:
+                return
+            renewed_until = _now() + timedelta(minutes=2)
+            await self._set_delivery(record, delivery, {
+                "lease_until": renewed_until.isoformat().replace("+00:00", "Z"),
+            })
+            entry = queue_repository.find_for_delivery(delivery_id)
+            if entry and entry.status.value == "publishing":
+                await queue_repository.heartbeat(entry.entry_id, lease_until=renewed_until)
 
     def _find_delivery(self, delivery_id: str) -> tuple[PublicationRecord | None, Delivery | None]:
         for summary in self._all_summaries():
@@ -1198,8 +1409,24 @@ class ImagePostService:
             account_alias=delivery.account_alias, target_id=delivery.target_id,
             placement=delivery.placement, idempotency_key=delivery.idempotency_key,
             caption=delivery.caption, hashtags=delivery.hashtags,
-            first_comment=delivery.first_comment, media_keys=[], alt_text=[],
+            first_comment=delivery.first_comment,
+            media_keys=(
+                [record.technical.reel.storage_key]
+                if delivery.placement == "reel" and record.technical.reel
+                else [slide.storage_key for slide in record.technical.slides]
+            ),
+            media_sha256=(
+                [record.technical.reel.sha256]
+                if delivery.placement == "reel" and record.technical.reel and record.technical.reel.sha256
+                else [slide.sha256 for slide in record.technical.slides]
+            ),
+            alt_text=[text or "" for text in delivery.alt_text_sent],
             comment_allowed=False,
+            expected_at=delivery.scheduled_at or delivery.created_at,
+            expected_duration_sec=(
+                record.technical.reel.duration_sec
+                if delivery.placement == "reel" and record.technical.reel else None
+            ),
         )
         try:
             result = await self._invoke(self._publisher().reconcile_image_delivery, spec, lookup_remote)
@@ -1391,9 +1618,8 @@ class ImagePostService:
             delivery = await self._set_delivery(record, delivery, {"scheduled_at": None})
         return delivery
 
-    @staticmethod
     def _require_publishable(
-        record: PublicationRecord, rendered_slides: list[Any], editorial: EditorialRecord
+        self, record: PublicationRecord, rendered_slides: list[Any], editorial: EditorialRecord
     ) -> ValidationResult:
         claims = [claim for slide in record.technical.composition_plan.slides for claim in slide.claim_refs]
         sources = {source.source_id: source for source in editorial.sources}
@@ -1417,15 +1643,75 @@ class ImagePostService:
             for item in media for caption in captions
         ):
             raise ImagePostError("UNLICENSED_MEDIA", "Falta el crédito de la foto en un caption", 422)
+        for slide in record.technical.composition_plan.slides:
+            visible_credits = [text.value for text in slide.texts if text.role == "credit"]
+            for item in slide.media:
+                license_name = item.license_id.casefold()
+                requires_attribution = "cc0" not in license_name and bool(re.search(r"\bcc\s*by\b|\battribution\b", license_name))
+                if requires_attribution and (not item.license_url or not item.changes):
+                    raise ImagePostError(
+                        "UNLICENSED_MEDIA", "Falta el enlace de licencia o la declaración de cambios CC BY", 422
+                    )
+                if requires_attribution and any(
+                    part not in caption for part in (item.license_url or "", item.changes or "")
+                    for caption in captions
+                ):
+                    raise ImagePostError(
+                        "UNLICENSED_MEDIA", "Cada caption debe incluir URL de licencia y cambios de la foto", 422
+                    )
+                if requires_attribution:
+                    required = (item.author, item.license_id, item.license_url or "", item.changes or "")
+                    if not any(all(part in credit for part in required) for credit in visible_credits):
+                        raise ImagePostError(
+                            "UNLICENSED_MEDIA", "La lámina debe mostrar autor, licencia, enlace y cambios CC BY", 422
+                        )
         if not rendered_slides or len(editorial.slides) != len(rendered_slides):
             raise ImagePostError("INVALID_IMAGE", "Láminas publicadas y manifiesto no coinciden", 422)
         if any(not slide.alt_text_fb or not slide.alt_text_ig for slide in editorial.slides):
             raise ImagePostError("INVALID_PLAN", "Falta alt text por lámina y red", 422)
+        self._validate_caption_numbers(record, editorial)
         return ValidationResult(
             name="claims_sources_license", version="1", passed=True, checked_at=_now(),
             details={"claim_count": len(claims), "source_count": len(sources),
                      "license_count": len(media)},
         )
+
+    def _validate_caption_numbers(self, record: PublicationRecord, editorial: EditorialRecord) -> None:
+        plan_claims = {
+            claim.id: claim
+            for slide in record.technical.composition_plan.slides
+            for claim in slide.claim_refs
+        }
+        cited_texts: dict[str, str] = {}
+        if self.material_source is not None:
+            material = self.material_source.load_verified_material(
+                record.editorial.source_video_id, record.editorial.category_id
+            )
+            if material is not None:
+                cited_texts = _verified_fact_texts(material.plan_text)
+        for platform in ("facebook", "instagram"):
+            network = getattr(editorial.copy_data, platform)
+            for label, content, refs in (
+                ("caption", network.caption, network.caption_claim_refs),
+                ("primer comentario", network.first_comment or "", network.first_comment_claim_refs),
+            ):
+                content_numbers = _number_values(_caption_factual_text(content))
+                if not content_numbers:
+                    continue
+                fact_numbers = set()
+                for claim_id in refs:
+                    claim = plan_claims.get(claim_id)
+                    fact = cited_texts.get(claim_id)
+                    if claim is not None and fact is not None:
+                        fact_numbers.update(_number_values(fact))
+                unsupported = sorted(content_numbers - fact_numbers)
+                if unsupported:
+                    values = ", ".join(unsupported)
+                    raise ImagePostError(
+                        "UNSOURCED_CAPTION_NUMBER",
+                        f"El {label} de {platform} contiene cifras que no aparecen en los hechos citados: {values}.",
+                        422,
+                    )
 
 
 def _safe_error(exc: Exception) -> str:

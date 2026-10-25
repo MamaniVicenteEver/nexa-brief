@@ -742,7 +742,11 @@
       "completed": "Completada",
       "partial": "Parcial",
       "failed": "Fallida",
-      "cancelled": "Cancelada"
+      "cancelled": "Cancelada",
+      "removed": "Eliminada",
+      "removal_pending_manual": "Pendiente de borrado manual",
+      "removed_api": "Eliminada por API",
+      "removed_manually": "Eliminada manualmente"
     },
     "deliveryStatus": {
       "draft": "borrador",
@@ -754,7 +758,9 @@
       "outcome_unknown": "resultado incierto",
       "cancelled": "cancelada",
       "removed_api": "eliminada por API",
-      "removed_manually": "eliminada manualmente"
+      "removed_manually": "eliminada manualmente",
+      "removed": "eliminada",
+      "removal_pending_manual": "pendiente de borrado manual"
     },
     "deliveryCommentStatus": {
       "not_requested": "no solicitado",
@@ -800,6 +806,7 @@
       "noMusic": "Sin música",
       "noMusicHint": "Publicación como imagen o carrusel.",
       "convertReel": "Convertir a Reel",
+      "comingSoon": "Próximamente",
       "reelLicenseHint": "Requiere una pista licenciada y validada por el servidor.",
       "reelNotice": "La música cambia el destino a Reel 9:16 y ocupa cupo de video. El servidor vuelve a validar licencia, sincronización y uso comercial antes de permitir la entrega.",
       "musicAssetId": "ID de pista aprobada",
@@ -924,7 +931,9 @@
       "kind": { "image": "Imagen", "carousel": "Carrusel", "story": "Story", "reel": "Reel" },
       "status": {
         "removed_api": "Eliminadas por API",
-        "removed_manually": "Eliminadas manualmente"
+        "removed_manually": "Eliminadas manualmente",
+        "removed": "Eliminadas",
+        "removal_pending_manual": "Pendientes de borrado manual"
       },
       "metrics": {
         "reach": "alcance",
@@ -947,6 +956,13 @@
       "imageAlt": "Lámina publicada",
       "previewUnavailable": "La URL de vista previa no está disponible. Reintenta para renovar la firma.",
       "close": "Cerrar modal",
+      "removePublication": "Eliminar publicación",
+      "removeConfirm": "¿Eliminar todas las entregas de esta publicación en las redes? El archivo de estudio se conservará.",
+      "removeReason": "Retirada desde la galería",
+      "verifyRemoval": "Verificar eliminación",
+      "pendingRemovalNotice": "Pendiente de borrado manual",
+      "removedNotice": "Publicación eliminada de la red. El archivo de estudio se conserva.",
+      "removeError": "No se pudo solicitar la eliminación.",
       "previousSlide": "Lámina anterior",
       "nextSlide": "Lámina siguiente",
       "showSlide": "Mostrar lámina {number}",

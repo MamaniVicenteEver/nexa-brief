@@ -25,7 +25,7 @@ export function filterGalleryItems(
       (delivery) =>
         (filters.platform === "all" || delivery.platform === filters.platform) &&
         (filters.status === "all"
-          ? delivery.status === "published"
+          ? ["published", "removal_pending_manual"].includes(delivery.status)
           : delivery.status === filters.status),
     );
   });

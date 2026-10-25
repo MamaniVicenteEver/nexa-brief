@@ -19,6 +19,8 @@ from src.adapters.publishing.image_publisher import (
     ProgressPersistenceError,
     ImageAdapterResult,
     caption_for,
+    remote_caption_matches,
+    remote_date_matches,
     graph_json,
     remote_state,
     report_remote,
@@ -412,13 +414,9 @@ class ImageReelAdapter:
                 self._media_storage,
                 client_factory=self._client_factory,
             )
-            return await adapter.reconcile_image_delivery(
-                {
-                    "platform": platform,
-                    "account_alias": alias,
-                    "remote": previous,
-                }
-            )
+            spec = delivery_spec.model_dump(mode="python") if hasattr(delivery_spec, "model_dump") else dict(delivery_spec)
+            spec["remote"] = previous
+            return await adapter.reconcile_image_delivery(spec)
         if platform != "facebook" or not post_id:
             return ImageAdapterResult(
                 status="outcome_unknown",
@@ -433,7 +431,7 @@ class ImageReelAdapter:
                     "GET",
                     str(post_id),
                     token=token,
-                    params={"fields": "id,is_published,permalink_url,status"},
+                    params={"fields": "id,from{id},created_time,description,is_published,permalink_url,status,length,source"},
                 )
             status = raw.get("status") or {}
             if not isinstance(status, dict):
@@ -442,6 +440,28 @@ class ImageReelAdapter:
             progress_status = str(
                 value(value(status, "processing_progress", {}), "status", "")
             ).lower()
+            page_id = str(value(delivery_spec, "target_id") or self._token_manager.target_id(platform, alias) or "")
+            owner = raw.get("from") if isinstance(raw.get("from"), dict) else {}
+            expected_duration = value(delivery_spec, "expected_duration_sec")
+            try:
+                duration_matches = expected_duration is not None and abs(
+                    float(raw.get("length")) - float(expected_duration)
+                ) <= 1.5
+            except (TypeError, ValueError):
+                duration_matches = False
+            if (
+                not page_id
+                or str(owner.get("id") or "") != page_id
+                or not remote_caption_matches(raw.get("description"), delivery_spec)
+                or not remote_date_matches(raw.get("created_time"), delivery_spec)
+                or not duration_matches
+                or not str(raw.get("source") or "").startswith("https://")
+            ):
+                return ImageAdapterResult(
+                    status="outcome_unknown",
+                    remote=previous,
+                    last_error={"code": "REMOTE_PIECE_UNVERIFIED", "message": "No se pudo verificar Página, fecha, caption y duración del Reel"},
+                )
             if raw.get("is_published") is not True or video_status not in {"ready", "published"}:
                 return ImageAdapterResult(
                     status="outcome_unknown",

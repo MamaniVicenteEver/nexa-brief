@@ -77,6 +77,7 @@ class QueueEntry(BaseModel):
     created_at: str
     updated_at: str
     processed_at: str | None = None
+    lease_until: str | None = None
     content_kind: Literal["video", "image", "carousel", "reel"] = "video"
     content_id: str | None = None
     delivery_id: str | None = None

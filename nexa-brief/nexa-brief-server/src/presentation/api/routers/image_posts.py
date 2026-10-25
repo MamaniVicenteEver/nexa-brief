@@ -18,9 +18,15 @@ from src.presentation.api.schemas.image_posts_schema import (
     CreateDeliveriesRequest, ImagePostPatchRequest, PlanCreateRequest,
     PlanUpdateRequest, ReconcileRequest, RenderRequest, ReviewRequest,
 )
+from src.presentation.api.image_post_access import (
+    ImageSession, require_account_access, require_category_access, require_image_session,
+)
 from src.presentation.api.security import require_internal
 
-router = APIRouter(prefix="/image-posts", tags=["image-posts"], dependencies=[Depends(require_internal)])
+router = APIRouter(
+    prefix="/image-posts", tags=["image-posts"],
+    dependencies=[Depends(require_internal), Depends(require_image_session)],
+)
 _publish_tasks: set[asyncio.Task] = set()
 
 
@@ -78,6 +84,30 @@ def _post_json(record: PublicationRecord) -> dict[str, Any]:
     return result
 
 
+def _authorize_record(identity: ImageSession, record: PublicationRecord) -> None:
+    require_category_access(identity, record.editorial.category_id)
+    for delivery in record.deliveries:
+        require_account_access(
+            identity, record.editorial.category_id, delivery.platform, delivery.account_alias
+        )
+
+
+def _authorize_delivery(identity: ImageSession, record: PublicationRecord, delivery: Any) -> None:
+    require_account_access(
+        identity, record.editorial.category_id, delivery.platform, delivery.account_alias
+    )
+
+
+def _account_visible(identity: ImageSession, category_id: str, platform: str, alias: str) -> bool:
+    try:
+        require_account_access(identity, category_id, platform, alias)
+        return True
+    except HTTPException as exc:
+        if exc.status_code == 403:
+            return False
+        raise
+
+
 def _idempotency_key(value: str | None, *, required: bool = False) -> str | None:
     if not value:
         if required:
@@ -91,8 +121,9 @@ def _idempotency_key(value: str | None, *, required: bool = False) -> str | None
 
 
 @router.get("/styles")
-async def list_styles(category_id: str) -> dict[str, Any]:
+async def list_styles(category_id: str, identity: ImageSession = Depends(require_image_session)) -> dict[str, Any]:
     try:
+        require_category_access(identity, category_id)
         return {"styles": get_image_post_service().get_styles(category_id)}
     except Exception as exc:
         _raise(exc)
@@ -116,9 +147,16 @@ async def list_strategies() -> list[dict[str, Any]]:
 
 
 @router.get("/capabilities")
-async def get_capabilities(category_id: str) -> dict[str, Any]:
+async def get_capabilities(category_id: str, identity: ImageSession = Depends(require_image_session)) -> dict[str, Any]:
     try:
-        return get_image_post_service().capabilities(category_id)
+        service = get_image_post_service()
+        require_category_access(identity, category_id)
+        result = service.capabilities(category_id)
+        result["accounts"] = [
+            row for row in result["accounts"]
+            if _account_visible(identity, category_id, row["platform"], row["alias"])
+        ]
+        return result
     except Exception as exc:
         _raise(exc)
 
@@ -127,8 +165,10 @@ async def get_capabilities(category_id: str) -> dict[str, Any]:
 async def create_plan(
     body: PlanCreateRequest,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    identity: ImageSession = Depends(require_image_session),
 ) -> dict[str, Any]:
     try:
+        require_category_access(identity, body.category_id)
         plan, record = await get_image_post_service().create_plan(
             body.model_dump(exclude_none=True), _idempotency_key(idempotency_key, required=True)
         )
@@ -142,8 +182,14 @@ async def create_plan(
 async def update_plan(
     plan_id: str, body: PlanUpdateRequest,
     if_match: str | None = Header(default=None, alias="If-Match"),
+    identity: ImageSession = Depends(require_image_session),
 ) -> dict[str, Any]:
     try:
+        service = get_image_post_service()
+        existing = _record(service, plan_id)
+        if existing is None:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        _authorize_record(identity, existing)
         plan = body.model_dump(mode="json")
         if plan.get("plan_id") != plan_id:
             raise ImagePostError("INVALID_PLAN", "plan_id de la ruta y del cuerpo no coinciden")
@@ -153,7 +199,7 @@ async def update_plan(
             expected_revision = int(if_match.strip('"'))
         except ValueError as exc:
             raise HTTPException(status_code=400, detail="If-Match debe contener la revisión") from exc
-        record = await get_image_post_service().save_plan(plan, expected_revision)
+        record = await service.save_plan(plan, expected_revision)
         return {"plan": record.technical.composition_plan, "post": _post_json(record),
                 "validation": {"errors": [], "warnings": []}}
     except Exception as exc:
@@ -161,9 +207,17 @@ async def update_plan(
 
 
 @router.post("/plans/{plan_id}/render", status_code=status.HTTP_202_ACCEPTED)
-async def render_plan(plan_id: str, body: RenderRequest) -> dict[str, Any]:
+async def render_plan(
+    plan_id: str, body: RenderRequest,
+    identity: ImageSession = Depends(require_image_session),
+) -> dict[str, Any]:
     try:
-        record = await get_image_post_service().start_render(plan_id, review_required=body.review_required)
+        service = get_image_post_service()
+        existing = _record(service, plan_id)
+        if existing is None:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        _authorize_record(identity, existing)
+        record = await service.start_render(plan_id, review_required=body.review_required)
         return {"post_id": record.post_id, "publication_id": record.publication_id,
                 "status": record.status.value if hasattr(record.status, "value") else record.status}
     except Exception as exc:
@@ -176,8 +230,13 @@ async def list_image_posts(
     post_status: str | None = Query(default=None, alias="status"),
     limit: int = 24,
     cursor: str | None = None,
+    identity: ImageSession = Depends(require_image_session),
 ) -> dict[str, Any]:
     try:
+        if category_id:
+            require_category_access(identity, category_id)
+        elif not identity.is_admin:
+            raise HTTPException(status_code=403, detail="Elige una categoría autorizada para ver publicaciones.")
         page = get_image_post_service().list(
             {key: value for key, value in {"category_id": category_id, "status": post_status}.items() if value},
             limit=limit, cursor=cursor,
@@ -186,17 +245,26 @@ async def list_image_posts(
         for summary in page.items:
             record = get_image_post_service().get(summary["publication_id"])
             if record:
-                items.append(_post_json(record))
+                try:
+                    _authorize_record(identity, record)
+                except HTTPException as exc:
+                    if exc.status_code != 403:
+                        raise
+                else:
+                    items.append(_post_json(record))
         return {"items": items, "next_cursor": page.next_cursor, "as_of": page.as_of}
     except Exception as exc:
         _raise(exc)
 
 
 @router.get("/{post_id}")
-async def get_image_post(post_id: str) -> dict[str, Any]:
+async def get_image_post(
+    post_id: str, identity: ImageSession = Depends(require_image_session)
+) -> dict[str, Any]:
     record = _record(get_image_post_service(), post_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Image post not found")
+    _authorize_record(identity, record)
     return _post_json(record)
 
 
@@ -205,11 +273,13 @@ async def patch_image_post(
     post_id: str,
     body: ImagePostPatchRequest,
     if_match: str | None = Header(default=None, alias="If-Match"),
+    identity: ImageSession = Depends(require_image_session),
 ) -> dict[str, Any]:
     service = get_image_post_service()
     record = _record(service, post_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Image post not found")
+    _authorize_record(identity, record)
     if if_match and if_match.strip('"') not in {str(record.record_version), str(record.revision)}:
         raise HTTPException(status_code=409, detail={"code": "REVISION_CONFLICT"})
     try:
@@ -220,11 +290,15 @@ async def patch_image_post(
 
 
 @router.post("/{post_id}/review")
-async def review_image_post(post_id: str, body: ReviewRequest) -> dict[str, Any]:
+async def review_image_post(
+    post_id: str, body: ReviewRequest,
+    identity: ImageSession = Depends(require_image_session),
+) -> dict[str, Any]:
     service = get_image_post_service()
     record = _record(service, post_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Image post not found")
+    _authorize_record(identity, record)
     try:
         saved = await service.review(record.publication_id, body.revision, body.decision, body.note)
         return _post_json(saved)
@@ -237,11 +311,17 @@ async def create_deliveries(
     post_id: str,
     body: CreateDeliveriesRequest,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    identity: ImageSession = Depends(require_image_session),
 ) -> dict[str, Any]:
     service = get_image_post_service()
     record = _record(service, post_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Image post not found")
+    _authorize_record(identity, record)
+    for target in body.targets:
+        require_account_access(
+            identity, record.editorial.category_id, target.platform, target.account_alias
+        )
     key = _idempotency_key(idempotency_key, required=True)
     try:
         times = [target.scheduled_at for target in body.targets]
@@ -271,6 +351,7 @@ def _publish_done(task: asyncio.Task) -> None:
 async def publish_delivery_now(
     delivery_id: str,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    identity: ImageSession = Depends(require_image_session),
 ) -> dict[str, Any]:
     from src.core.schedule import engine, queue_repository
 
@@ -279,6 +360,7 @@ async def publish_delivery_now(
     record, delivery = service._find_delivery(delivery_id)
     if record is None or delivery is None:
         raise HTTPException(status_code=404, detail="Delivery not found")
+    _authorize_delivery(identity, record, delivery)
     request_key = f"publish-now:{delivery_id}:{key}"
     request_hash = hashlib.sha256(
         json.dumps({"delivery_id": delivery_id}, sort_keys=True, separators=(",", ":")).encode()
@@ -311,19 +393,34 @@ async def publish_delivery_now(
 
 
 @router.post("/deliveries/{delivery_id}/cancel")
-async def cancel_delivery(delivery_id: str) -> dict[str, Any]:
+async def cancel_delivery(
+    delivery_id: str, identity: ImageSession = Depends(require_image_session)
+) -> dict[str, Any]:
     try:
-        delivery = await get_image_post_service().cancel_delivery(delivery_id)
+        service = get_image_post_service()
+        record, existing = service._find_delivery(delivery_id)
+        if record is None or existing is None:
+            raise HTTPException(status_code=404, detail="Delivery not found")
+        _authorize_delivery(identity, record, existing)
+        delivery = await service.cancel_delivery(delivery_id)
         return delivery.model_dump(mode="json")
     except Exception as exc:
         _raise(exc)
 
 
 @router.post("/deliveries/{delivery_id}/reconcile")
-async def reconcile_delivery(delivery_id: str, body: ReconcileRequest) -> dict[str, Any]:
+async def reconcile_delivery(
+    delivery_id: str, body: ReconcileRequest,
+    identity: ImageSession = Depends(require_image_session),
+) -> dict[str, Any]:
     """Reintento manual de consulta remota, autenticado y sin publicar otra vez."""
     try:
-        delivery = await get_image_post_service().reconcile_delivery(
+        service = get_image_post_service()
+        record, existing = service._find_delivery(delivery_id)
+        if record is None or existing is None:
+            raise HTTPException(status_code=404, detail="Delivery not found")
+        _authorize_delivery(identity, record, existing)
+        delivery = await service.reconcile_delivery(
             delivery_id, manual=True, remote_post_id=body.remote_post_id,
         )
         return delivery.model_dump(mode="json")
@@ -332,19 +429,27 @@ async def reconcile_delivery(delivery_id: str, body: ReconcileRequest) -> dict[s
 
 
 @router.get("/deliveries/{delivery_id}")
-async def get_delivery(delivery_id: str) -> dict[str, Any]:
-    _record_obj, delivery = get_image_post_service()._find_delivery(delivery_id)
+async def get_delivery(
+    delivery_id: str, identity: ImageSession = Depends(require_image_session)
+) -> dict[str, Any]:
+    record, delivery = get_image_post_service()._find_delivery(delivery_id)
     if delivery is None:
         raise HTTPException(status_code=404, detail="Delivery not found")
+    if record is not None:
+        _authorize_delivery(identity, record, delivery)
     return delivery.model_dump(mode="json")
 
 
 @router.get("/{post_id}/assets/{asset_id}")
-async def get_preview_asset(post_id: str, asset_id: str) -> StreamingResponse:
+async def get_preview_asset(
+    post_id: str, asset_id: str,
+    identity: ImageSession = Depends(require_image_session),
+) -> StreamingResponse:
     service = get_image_post_service()
     record = _record(service, post_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Image post not found")
+    _authorize_record(identity, record)
     slide = next((item for item in record.technical.slides if item.asset_id == asset_id), None)
     if slide is None:
         raise HTTPException(status_code=404, detail="Asset not found")

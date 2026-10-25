@@ -10,7 +10,9 @@ export type ImagePostStatus =
   | "completed"
   | "partial"
   | "failed"
-  | "cancelled";
+  | "cancelled"
+  | "removed"
+  | "removal_pending_manual";
 export type DeliveryStatus =
   | "draft"
   | "queued"
@@ -21,7 +23,9 @@ export type DeliveryStatus =
   | "outcome_unknown"
   | "cancelled"
   | "removed_api"
-  | "removed_manually";
+  | "removed_manually"
+  | "removed"
+  | "removal_pending_manual";
 export type Platform = "facebook" | "instagram";
 export type Placement = "image" | "carousel" | "reel";
 export type MusicMode = "none" | "convert_to_reel";
@@ -213,6 +217,10 @@ export interface PublicationDeliveryDetail extends DeliverySummary {
   lastError: string | null;
   remote: RemoteResult;
   targetId: string | null;
+  removedAt: string | null;
+  removalReason: string | null;
+  removalInstruction: string | null;
+  removalGraphResponse: Record<string, unknown> | null;
 }
 
 export interface PublicationSummary {

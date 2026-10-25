@@ -98,10 +98,12 @@ async def _process_tick(facade: PublisherFacadeLike, now: datetime | None) -> di
 
     recovered = await queue_repository.recover_stale_publishing()
     reconciled = 0
+    queue_recovered = 0
     try:
         from src.adapters.data.publication_factory import get_publication_components
 
         service = get_publication_components().service
+        queue_recovered = await service.reconcile_queued_deliveries()
         await service.reconcile_interrupted()
         reconciled = await service.reconcile_due_deliveries(now)
     except Exception as exc:
@@ -125,6 +127,7 @@ async def _process_tick(facade: PublisherFacadeLike, now: datetime | None) -> di
 
     summary = {
         "recovered_stale": recovered,
+        "image_queue_recovered": queue_recovered,
         "image_reconciled": reconciled,
         "gaps_filled": filled,
         "due_processed": len(due_entries),

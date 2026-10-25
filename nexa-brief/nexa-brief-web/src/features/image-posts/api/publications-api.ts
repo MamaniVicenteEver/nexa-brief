@@ -7,14 +7,21 @@ export function fetchPublications(
   signal?: AbortSignal,
   cursor?: string | null,
 ) {
-  return requestJson<unknown>(`/api/v1/publications?${galleryQuery(filters, 24, cursor)}`, {
+  return requestJson<unknown>(`/api/publications?${galleryQuery(filters, 24, cursor)}`, {
     signal,
   });
 }
 
 export function fetchPublication(publicationId: string, signal?: AbortSignal) {
-  return requestJson<unknown>(`/api/v1/publications/${encodeURIComponent(publicationId)}`, {
+  return requestJson<unknown>(`/api/publications/${encodeURIComponent(publicationId)}`, {
     signal,
+  });
+}
+
+export function removePublication(publicationId: string, reason: string) {
+  return requestJson<unknown>(`/api/publications/${encodeURIComponent(publicationId)}/remove`, {
+    method: "POST",
+    body: { reason },
   });
 }
 
@@ -23,7 +30,7 @@ export function fetchPublicationAssetUrl(
   assetId: string,
   signal?: AbortSignal,
 ) {
-  const path = `/api/v1/publications/${encodeURIComponent(publicationId)}/assets/${encodeURIComponent(assetId)}/url?purpose=preview`;
+  const path = `/api/publications/${encodeURIComponent(publicationId)}/assets/${encodeURIComponent(assetId)}/url?purpose=preview`;
   return requestJson<unknown>(path, { signal });
 }
 
@@ -35,7 +42,7 @@ export function fetchPublicationMetrics(
 ) {
   const query = new URLSearchParams({ delivery_id: deliveryId, window });
   return requestJson<unknown>(
-    `/api/v1/publications/${encodeURIComponent(publicationId)}/metrics?${query}`,
+    `/api/publications/${encodeURIComponent(publicationId)}/metrics?${query}`,
     { signal },
   );
 }

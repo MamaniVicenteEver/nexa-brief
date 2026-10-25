@@ -20,6 +20,11 @@ coverage/
 # (src/adapters/data/, src/skills/output/, src/templates/_tools/*/build/).
 /output/
 /data/
+!/data/
+/data/*
+!/data/image_posts/
+/data/image_posts/*
+!/data/image_posts/access.json
 /uploads/
 /renders/
 *.mp4

@@ -1,16 +1,19 @@
 from __future__ import annotations
 
 import hashlib
+from datetime import datetime, timezone
+from io import BytesIO
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import parse_qs, parse_qsl, urlparse
 
 import httpx
 import pytest
+from PIL import Image, ImageDraw
 
 from src.adapters.publishing.facebook_image_adapter import FacebookImageAdapter
 from src.adapters.publishing.image_reel_adapter import ImageReelAdapter
-from src.adapters.publishing.image_publisher import ImagePublisher, MetaGraphError, graph_json
+from src.adapters.publishing.image_publisher import ImagePublisher, MetaGraphError, graph_json, remote_visuals_match
 from src.adapters.publishing.image_publisher import delivery_assets
 from src.adapters.publishing.instagram_image_adapter import InstagramImageAdapter
 from src.config.settings import settings
@@ -41,6 +44,35 @@ class FakeMediaStorage:
 
 def _jpeg() -> bytes:
     return b"\xff\xd8\xff" + b"synthetic-jpeg"
+
+
+def _pattern_jpeg(*, inverted: bool = False) -> bytes:
+    image = Image.new("RGB", (1080, 1350))
+    draw = ImageDraw.Draw(image)
+    for band in range(4):
+        light = band % 2 == 0
+        if inverted:
+            light = not light
+        value = 235 if light else 20
+        left = band * 270
+        draw.rectangle((left, 0, left + 269, 1349), fill=(value, value, value))
+    output = BytesIO()
+    image.save(output, format="JPEG", quality=92)
+    return output.getvalue()
+
+
+def _reconciliation_spec(platform: str, image: bytes) -> dict:
+    alias = "pagina_3" if platform == "facebook" else "instagram_2"
+    return {
+        "publication_id": "pub-1", "delivery_id": "delivery-1", "revision": 1,
+        "platform": platform, "account_alias": alias,
+        "target_id": "page-1" if platform == "facebook" else "ig-1",
+        "placement": "image", "idempotency_key": "key-1",
+        "caption": "Dato confirmado", "hashtags": [], "first_comment": None,
+        "media_keys": ["slide-1.jpg"], "media_sha256": [hashlib.sha256(image).hexdigest()],
+        "alt_text": ["Descripción"], "expected_at": datetime(2026, 10, 25, 10, tzinfo=timezone.utc),
+        "remote": {"post_id": "post-1" if platform == "facebook" else "media-1"},
+    }
 
 
 def _asset(index: int, *, platform: str = "instagram") -> dict[str, str]:
@@ -78,6 +110,41 @@ def test_delivery_assets_rejects_misaligned_hashes() -> None:
 
 
 @pytest.mark.asyncio
+async def test_remote_visual_comparison_rejects_lookalike_cdn_host() -> None:
+    approved = _pattern_jpeg()
+
+    def unexpected_request(request: httpx.Request) -> httpx.Response:
+        raise AssertionError(f"Unexpected request to {request.url}")
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(unexpected_request)) as client:
+        matched = await remote_visuals_match(
+            client, FakeMediaStorage({"slide-1.jpg": approved}),
+            _reconciliation_spec("facebook", approved),
+            ["https://evilfbcdn.net/photo.jpg"],
+        )
+    assert matched is False
+
+
+@pytest.mark.asyncio
+async def test_remote_visual_comparison_stops_oversized_download() -> None:
+    approved = _pattern_jpeg()
+
+    def oversized_image(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200, content=b"x" * (12 * 1024 * 1024 + 1),
+            headers={"content-type": "image/jpeg"},
+        )
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(oversized_image)) as client:
+        matched = await remote_visuals_match(
+            client, FakeMediaStorage({"slide-1.jpg": approved}),
+            _reconciliation_spec("facebook", approved),
+            ["https://scontent.fbcdn.net/photo.jpg"],
+        )
+    assert matched is False
+
+
+@pytest.mark.asyncio
 async def test_graph_error_does_not_expose_page_token():
     token = "page-token-that-must-remain-private"
 
@@ -91,6 +158,68 @@ async def test_graph_error_does_not_expose_page_token():
             await graph_json(client, "GET", "page-1", token=token)
     assert token not in str(captured.value)
     assert token not in captured.value.as_result_error()["message"]
+
+
+@pytest.mark.parametrize("mismatch", [None, "owner", "caption", "date", "media"])
+@pytest.mark.asyncio
+async def test_facebook_manual_reconciliation_checks_page_piece_date_caption_and_visual(mismatch):
+    approved = _pattern_jpeg()
+    remote_image = _pattern_jpeg(inverted=mismatch == "media")
+    remote_post = {
+        "id": "post-1", "from": {"id": "page-1" if mismatch != "owner" else "page-other"},
+        "created_time": "2026-10-25T10:00:00+0000" if mismatch != "date" else "2026-10-20T10:00:00+0000",
+        "message": "Dato confirmado" if mismatch != "caption" else "Otro texto",
+        "permalink_url": "https://facebook.test/post-1",
+        "full_picture": "https://scontent.fbcdn.net/post.jpg",
+    }
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "GET" and request.url.path.endswith("/post-1"):
+            return httpx.Response(200, json=remote_post)
+        if request.method == "GET" and request.url.host == "scontent.fbcdn.net":
+            return httpx.Response(200, content=remote_image, headers={"content-type": "image/jpeg"})
+        raise AssertionError(f"Unexpected reconciliation request {request.method} {request.url}")
+
+    adapter = FacebookImageAdapter(
+        FakeTokens(), FakeMediaStorage({"slide-1.jpg": approved}),
+        client_factory=lambda **kwargs: httpx.AsyncClient(transport=httpx.MockTransport(handler), **kwargs),
+    )
+    result = await adapter.reconcile_image_delivery(_reconciliation_spec("facebook", approved))
+
+    if mismatch is None:
+        assert result.status == "published", result.last_error
+        assert result.remote["post_id"] == "post-1"
+    else:
+        assert result.status == "outcome_unknown"
+        assert result.last_error["code"].startswith("REMOTE_")
+
+
+@pytest.mark.asyncio
+async def test_instagram_manual_reconciliation_confirms_account_feed_and_exact_media():
+    approved = _pattern_jpeg()
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "GET" and request.url.path.endswith("/ig-1/media"):
+            return httpx.Response(200, json={"data": [{"id": "media-1"}]})
+        if request.method == "GET" and request.url.path.endswith("/media-1"):
+            return httpx.Response(200, json={
+                "id": "media-1", "caption": "Dato confirmado", "media_type": "IMAGE",
+                "media_product_type": "FEED", "timestamp": "2026-10-25T10:00:00+0000",
+                "permalink": "https://instagram.test/p/media-1/",
+                "media_url": "https://scontent.cdninstagram.com/media.jpg",
+            })
+        if request.method == "GET" and request.url.host == "scontent.cdninstagram.com":
+            return httpx.Response(200, content=approved, headers={"content-type": "image/jpeg"})
+        raise AssertionError(f"Unexpected reconciliation request {request.method} {request.url}")
+
+    adapter = InstagramImageAdapter(
+        FakeTokens(), FakeMediaStorage({"slide-1.jpg": approved}),
+        client_factory=lambda **kwargs: httpx.AsyncClient(transport=httpx.MockTransport(handler), **kwargs),
+    )
+    result = await adapter.reconcile_image_delivery(_reconciliation_spec("instagram", approved))
+
+    assert result.status == "published", result.last_error
+    assert result.remote["post_id"] == "media-1"
 
 
 @pytest.mark.asyncio
@@ -137,7 +266,7 @@ async def test_facebook_five_photos_caption_permalink_and_comment_permission() -
 
     result = await adapter.publish_image_delivery(spec, on_remote_update=persist)
 
-    assert result.status == "published"
+    assert result.status == "published", result.last_error
     assert result.remote["photo_ids"] == [f"photo-{i}" for i in range(1, 6)]
     assert result.remote["post_id"] == "post-1"
     assert result.remote["permalink"] == "https://facebook.test/posts/1"
@@ -504,6 +633,11 @@ async def test_reel_reconciliation_confirms_only_a_published_facebook_video() ->
             200,
             json={
                 "id": "video-1",
+                "from": {"id": "page-1"},
+                "created_time": "2026-10-25T10:00:00+0000",
+                "description": "Texto Reel",
+                "length": 15,
+                "source": "https://video.fbcdn.net/reel.mp4",
                 "is_published": True,
                 "permalink_url": "https://facebook.test/reel/1",
                 "status": {
@@ -523,11 +657,15 @@ async def test_reel_reconciliation_confirms_only_a_published_facebook_video() ->
         {
             "platform": "facebook",
             "account_alias": "pagina_3",
+                "target_id": "page-1",
+                "caption": "Texto Reel",
+                "expected_at": datetime(2026, 10, 25, 10, tzinfo=timezone.utc),
+                "expected_duration_sec": 15,
             "remote": {"post_id": "video-1"},
         }
     )
 
-    assert result.status == "published"
+    assert result.status == "published", result.last_error
     assert result.remote["permalink"] == "https://facebook.test/reel/1"
     assert requests == ["GET"]
 

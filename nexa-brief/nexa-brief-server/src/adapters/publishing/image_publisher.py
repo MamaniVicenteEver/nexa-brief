@@ -1,10 +1,14 @@
 """Puerto de salida para publicaciones de imágenes y carruseles en Meta."""
 from __future__ import annotations
 
+import hashlib
+import hmac
 import inspect
 import re
+from datetime import datetime, timedelta, timezone
 from dataclasses import dataclass, field
 from typing import Any, Awaitable, Callable, Literal, Mapping
+from urllib.parse import quote, urlsplit
 
 import httpx
 import structlog
@@ -153,6 +157,106 @@ def caption_for(spec: Any) -> str:
         if str(tag).strip("#") and f"#{str(tag).lstrip('#')}" not in present
     ]
     return "\n\n".join(part for part in (caption, " ".join(missing)) if part)
+
+
+def remote_caption_matches(remote_caption: Any, spec: Any) -> bool:
+    expected = " ".join(caption_for(spec).split()).casefold()
+    actual = " ".join(str(remote_caption or "").split()).casefold()
+    return bool(expected) and actual == expected
+
+
+def remote_date_matches(remote_timestamp: Any, spec: Any, *, tolerance_hours: int = 48) -> bool:
+    expected = value(spec, "expected_at")
+    if isinstance(expected, str):
+        try:
+            expected = datetime.fromisoformat(expected.replace("Z", "+00:00"))
+        except ValueError:
+            return False
+    if not isinstance(expected, datetime) or expected.tzinfo is None:
+        return False
+    try:
+        actual_text = str(remote_timestamp).replace("Z", "+00:00")
+        # Graph timestamps commonly use RFC 3339 offsets without the colon (`+0000`).
+        actual_text = re.sub(r"([+-]\d{2})(\d{2})$", r"\1:\2", actual_text)
+        actual = datetime.fromisoformat(actual_text)
+    except (TypeError, ValueError):
+        return False
+    if actual.tzinfo is None:
+        return False
+    return abs(actual.astimezone(timezone.utc) - expected.astimezone(timezone.utc)) <= timedelta(hours=tolerance_hours)
+
+
+def _difference_hash(content: bytes) -> int:
+    from io import BytesIO
+    from PIL import Image
+
+    with Image.open(BytesIO(content)) as image:
+        pixels = list(image.convert("L").resize((9, 8)).getdata())
+    result = 0
+    bit = 0
+    for row in range(8):
+        for col in range(8):
+            left = pixels[row * 9 + col]
+            right = pixels[row * 9 + col + 1]
+            if left > right:
+                result |= 1 << bit
+            bit += 1
+    return result
+
+
+async def remote_visuals_match(
+    client: httpx.AsyncClient,
+    media_storage: Any,
+    spec: Any,
+    remote_urls: list[str],
+) -> bool:
+    """Compara fotos del post remoto con el arte aprobado tras las conversiones de Meta."""
+    assets = delivery_assets(spec)
+    if not assets or len(assets) != len(remote_urls):
+        return False
+    getter = getattr(media_storage, "get", None)
+    if getter is None:
+        return False
+    for asset, remote_url in zip(assets, remote_urls, strict=True):
+        parsed = urlsplit(remote_url)
+        host = (parsed.hostname or "").casefold()
+        allowed_hosts = ("fbcdn.net", "cdninstagram.com", "fbsbx.com")
+        if parsed.scheme != "https" or not any(
+            host == domain or host.endswith(f".{domain}") for domain in allowed_hosts
+        ):
+            return False
+        local = getter(storage_key(asset))
+        if inspect.isawaitable(local):
+            local = await local
+        if hasattr(local, "read"):
+            local = local.read()
+        if not isinstance(local, (bytes, bytearray)):
+            return False
+        expected_hash = value(asset, "sha256")
+        if expected_hash and not hmac.compare_digest(
+            hashlib.sha256(local).hexdigest(), str(expected_hash).lower()
+        ):
+            return False
+        try:
+            async with client.stream("GET", remote_url) as response:
+                if response.status_code != 200 or not response.headers.get(
+                    "content-type", ""
+                ).casefold().startswith("image/"):
+                    return False
+                content = bytearray()
+                async for chunk in response.aiter_bytes():
+                    content.extend(chunk)
+                    if len(content) > 12 * 1024 * 1024:
+                        return False
+        except httpx.HTTPError:
+            return False
+        try:
+            distance = (_difference_hash(bytes(local)) ^ _difference_hash(bytes(content))).bit_count()
+        except (OSError, ValueError):
+            return False
+        if distance > 12:
+            return False
+    return True
 
 
 def copy_validation_error(spec: Any) -> str | None:
@@ -406,6 +510,55 @@ class ImagePublisher:
             client_factory=self._client_factory,
         )
         return await adapter.delete_image_post(post_id, account_alias)
+
+    async def remove_remote_delivery(self, delivery: Any) -> dict[str, Any]:
+        """Retira un medio propio o conserva una instrucción verificable de borrado manual."""
+        platform = str(value(delivery, "platform"))
+        remote_id = str(nested(delivery, "remote", "post_id") or "")
+        if platform not in {"facebook", "instagram"} or not remote_id.isdigit() and not re.fullmatch(r"\d+_\d+", remote_id):
+            raise ValueError("La entrega no tiene un ID remoto válido")
+        token = await self._token_manager.get_valid_token(platform, str(value(delivery, "account_alias")))
+        path = quote(remote_id, safe="")
+        instruction = (
+            "Borrar desde la app de Instagram y luego pulsar Verificar eliminación."
+            if platform == "instagram" else
+            "Borrar desde la Página de Facebook y luego pulsar Verificar eliminación."
+        )
+        async with self._client_factory(timeout=settings.api_timeout_seconds) as client:
+            if value(delivery, "status") == "removal_pending_manual":
+                try:
+                    await graph_json(client, "GET", path, token=token, params={"fields": "id"})
+                except MetaGraphError as exc:
+                    if exc.status_code == 404 or (exc.code == "100" and exc.subcode == "33"):
+                        account_id = str(value(delivery, "target_id") or "")
+                        if account_id:
+                            try:
+                                listing = await graph_json(
+                                    client, "GET", f"{quote(account_id, safe='')}/media",
+                                    token=token, params={"fields": "id", "limit": "100"},
+                                )
+                            except (MetaGraphError, httpx.HTTPError):
+                                listing = {}
+                            ids = {str(row.get("id")) for row in listing.get("data", []) if isinstance(row, dict)}
+                            if "data" in listing and remote_id not in ids and not listing.get("paging", {}).get("next"):
+                                return {"status": "removed", "graph_response": {"verification": exc.as_result_error()}}
+                    return {"status": "removal_pending_manual", "instruction": instruction,
+                            "graph_response": {"verification": exc.as_result_error()}}
+                return {"status": "removal_pending_manual", "instruction": instruction,
+                        "graph_response": {"verification": {"status": "still_exists"}}}
+            try:
+                response = await graph_json(client, "DELETE", path, token=token)
+            except MetaGraphError as exc:
+                return {"status": "removal_pending_manual", "instruction": instruction,
+                        "graph_response": {"delete": exc.as_result_error()}}
+            except httpx.HTTPError:
+                return {"status": "removal_pending_manual", "instruction": instruction,
+                        "graph_response": {"delete": {"code": "NETWORK_ERROR", "message": "No se pudo contactar Meta Graph"}}}
+        safe_response = {"success": response.get("success")}
+        if response.get("success") is True:
+            return {"status": "removed", "graph_response": {"delete": safe_response}}
+        return {"status": "removal_pending_manual", "instruction": instruction,
+                "graph_response": {"delete": safe_response}}
 
 
 _image_publisher: ImagePublisher | None = None

@@ -153,11 +153,15 @@ def build_copy(
     seen_media = set()
     for slide in image_plan.slides:
         for media in slide.media:
-            key = (media.author, media.license_id, media.url)
+            key = (media.author, media.license_id, media.license_url, media.url, media.changes)
             if key in seen_media:
                 continue
             seen_media.add(key)
-            credits.append(f"{media.author} ({media.license_id}) — {media.url}")
+            license_url = f"; licencia: {media.license_url}" if media.license_url else ""
+            changes = f"; cambios: {media.changes}" if media.changes else ""
+            credits.append(
+                f"{media.author} ({media.license_id}{license_url}{changes}) — {media.url}"
+            )
     credits_line = "Créditos visuales: " + " · ".join(credits) if credits else ""
     caption_base = "\n\n".join(part for part in (title, editorial_line, source_line, credits_line, question) if part)
     caption_fb = caption_base

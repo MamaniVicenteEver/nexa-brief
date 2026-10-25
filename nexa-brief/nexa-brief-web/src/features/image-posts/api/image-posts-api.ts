@@ -34,13 +34,13 @@ function serializeMusic(music: MusicOption) {
 
 export function fetchImageStyles(categoryId: string, signal?: AbortSignal) {
   return requestJson<unknown>(
-    `/api/v1/image-posts/styles?category_id=${encodeURIComponent(categoryId)}`,
+    `/api/image-posts/styles?category_id=${encodeURIComponent(categoryId)}`,
     { signal },
   );
 }
 
 export function fetchImageStrategies(signal?: AbortSignal) {
-  return requestJson<unknown>("/api/v1/image-posts/strategies", { signal });
+  return requestJson<unknown>("/api/image-posts/strategies", { signal });
 }
 
 export interface LicensedMusicTrack {
@@ -59,28 +59,28 @@ export interface LicensedMusicTrack {
 }
 
 export function fetchLicensedMusic(signal?: AbortSignal) {
-  return requestJson<{ tracks: LicensedMusicTrack[] }>("/api/v1/image-posts/music", { signal });
+  return requestJson<{ tracks: LicensedMusicTrack[] }>("/api/image-posts/music", { signal });
 }
 
 export function fetchImageCapabilities(categoryId: string, signal?: AbortSignal) {
   return requestJson<unknown>(
-    `/api/v1/image-posts/capabilities?category_id=${encodeURIComponent(categoryId)}`,
+    `/api/image-posts/capabilities?category_id=${encodeURIComponent(categoryId)}`,
     { signal },
   );
 }
 
 export function fetchImagePosts(categoryId: string, signal?: AbortSignal) {
   const query = new URLSearchParams({ category_id: categoryId, limit: "50" });
-  return requestJson<unknown>(`/api/v1/image-posts?${query.toString()}`, { signal });
+  return requestJson<unknown>(`/api/image-posts?${query.toString()}`, { signal });
 }
 
 export function fetchImagePost(postId: string, signal?: AbortSignal) {
-  return requestJson<unknown>(`/api/v1/image-posts/${encodeURIComponent(postId)}`, { signal });
+  return requestJson<unknown>(`/api/image-posts/${encodeURIComponent(postId)}`, { signal });
 }
 
 export function createImagePlan(input: CreatePlanInput) {
   return withActionIdempotency("create-plan", input, (key) =>
-    requestJson<unknown>("/api/v1/image-posts/plans", {
+    requestJson<unknown>("/api/image-posts/plans", {
       method: "POST",
       body: input,
       idempotencyKey: key,
@@ -89,7 +89,7 @@ export function createImagePlan(input: CreatePlanInput) {
 }
 
 export function renderImagePlan(planId: string) {
-  return requestJson<unknown>(`/api/v1/image-posts/plans/${encodeURIComponent(planId)}/render`, {
+  return requestJson<unknown>(`/api/image-posts/plans/${encodeURIComponent(planId)}/render`, {
     method: "POST",
     body: {},
     idempotencyKey: randomRequestId(),
@@ -97,7 +97,7 @@ export function renderImagePlan(planId: string) {
 }
 
 export function patchImagePost(postId: string, patch: ImagePostPatch) {
-  return requestJson<unknown>(`/api/v1/image-posts/${encodeURIComponent(postId)}`, {
+  return requestJson<unknown>(`/api/image-posts/${encodeURIComponent(postId)}`, {
     method: "PATCH",
     body: {
       revision: patch.revision,
@@ -125,7 +125,7 @@ export function reviewImagePost(
   input: { revision: number; decision: "approve" | "reject"; note?: string },
 ) {
   return withActionIdempotency("review", { postId, input }, (key) =>
-    requestJson<unknown>(`/api/v1/image-posts/${encodeURIComponent(postId)}/review`, {
+    requestJson<unknown>(`/api/image-posts/${encodeURIComponent(postId)}/review`, {
       method: "POST",
       body: input,
       idempotencyKey: key,
@@ -138,7 +138,7 @@ export function createImageDeliveries(
   input: { revision: number; targets: DeliveryTargetInput[] },
 ) {
   return withActionIdempotency("deliveries", { postId, ...input }, (key) =>
-    requestJson<unknown>(`/api/v1/image-posts/${encodeURIComponent(postId)}/deliveries`, {
+    requestJson<unknown>(`/api/image-posts/${encodeURIComponent(postId)}/deliveries`, {
       method: "POST",
       body: { ...input, client_request_id: key },
       idempotencyKey: key,
@@ -149,7 +149,7 @@ export function createImageDeliveries(
 export function publishImageDelivery(deliveryId: string) {
   return withActionIdempotency("publish-now", { deliveryId }, (key) =>
     requestJson<unknown>(
-      `/api/v1/image-posts/deliveries/${encodeURIComponent(deliveryId)}/publish-now`,
+      `/api/image-posts/deliveries/${encodeURIComponent(deliveryId)}/publish-now`,
       {
         method: "POST",
         body: {},
@@ -161,7 +161,7 @@ export function publishImageDelivery(deliveryId: string) {
 
 export function cancelImageDelivery(deliveryId: string) {
   return requestJson<unknown>(
-    `/api/v1/image-posts/deliveries/${encodeURIComponent(deliveryId)}/cancel`,
+    `/api/image-posts/deliveries/${encodeURIComponent(deliveryId)}/cancel`,
     {
       method: "POST",
       body: {},
@@ -172,19 +172,19 @@ export function cancelImageDelivery(deliveryId: string) {
 
 export function reconcileImageDelivery(deliveryId: string, remotePostId?: string) {
   return requestJson<unknown>(
-    `/api/v1/image-posts/deliveries/${encodeURIComponent(deliveryId)}/reconcile`,
+    `/api/image-posts/deliveries/${encodeURIComponent(deliveryId)}/reconcile`,
     { method: "POST", body: remotePostId ? { remote_post_id: remotePostId } : {} },
   );
 }
 
 export function fetchImageDelivery(deliveryId: string, signal?: AbortSignal) {
-  return requestJson<unknown>(`/api/v1/image-posts/deliveries/${encodeURIComponent(deliveryId)}`, {
+  return requestJson<unknown>(`/api/image-posts/deliveries/${encodeURIComponent(deliveryId)}`, {
     signal,
   });
 }
 
 export function imagePostAssetUrl(postId: string, assetId: string): string {
-  return `/api/v1/image-posts/${encodeURIComponent(postId)}/assets/${encodeURIComponent(assetId)}`;
+  return `/api/image-posts/${encodeURIComponent(postId)}/assets/${encodeURIComponent(assetId)}`;
 }
 
 export function templateCount(templateId: ImageTemplateId): number {

@@ -26,6 +26,8 @@ class PostStatus(str, Enum):
     PARTIAL = "partial"
     FAILED = "failed"
     CANCELLED = "cancelled"
+    REMOVED = "removed"
+    REMOVAL_PENDING_MANUAL = "removal_pending_manual"
 
 
 class DeliveryStatus(str, Enum):
@@ -39,6 +41,8 @@ class DeliveryStatus(str, Enum):
     CANCELLED = "cancelled"
     REMOVED_API = "removed_api"
     REMOVED_MANUALLY = "removed_manually"
+    REMOVED = "removed"
+    REMOVAL_PENDING_MANUAL = "removal_pending_manual"
 
 
 class RemoteState(StrictModel):
@@ -82,8 +86,13 @@ class Delivery(StrictModel):
     created_at: datetime
     updated_at: datetime
     published_at: datetime | None = None
+    removed_at: datetime | None = None
+    removal_requested_at: datetime | None = None
+    removal_reason: str | None = None
+    removal_instruction: str | None = None
+    removal_graph_response: dict[str, Any] | None = None
 
-    @field_validator("scheduled_at", "next_attempt_at", "lease_until", "created_at", "updated_at", "published_at")
+    @field_validator("scheduled_at", "next_attempt_at", "lease_until", "created_at", "updated_at", "published_at", "removed_at", "removal_requested_at")
     @classmethod
     def delivery_timestamps_are_utc(cls, value: datetime | None) -> datetime | None:
         if value is not None and (value.tzinfo is None or value.utcoffset() != timezone.utc.utcoffset(value)):
@@ -167,8 +176,10 @@ class PlanMediaRef(StrictModel):
     asset_id: str
     sha256: str = Field(pattern=r"^[a-fA-F0-9]{64}$")
     license_id: str
+    license_url: str | None = None
     author: str
     url: str
+    changes: str | None = None
     focus: tuple[float, float] = (0.5, 0.5)
 
     @field_validator("url")
@@ -176,6 +187,13 @@ class PlanMediaRef(StrictModel):
     def media_url_is_https(cls, value: str) -> str:
         if not value.startswith("https://"):
             raise ValueError("El medio debe usar HTTPS")
+        return value
+
+    @field_validator("license_url")
+    @classmethod
+    def license_url_is_https(cls, value: str | None) -> str | None:
+        if value is not None and not value.startswith("https://"):
+            raise ValueError("La URL de licencia debe usar HTTPS")
         return value
 
 
@@ -463,6 +481,8 @@ class DeliverySpec(StrictModel):
     media_sha256: list[str] = Field(default_factory=list)
     alt_text: list[str]
     comment_allowed: bool = False
+    expected_at: datetime | None = None
+    expected_duration_sec: float | None = Field(default=None, gt=0)
 
 
 class RemoteResult(StrictModel):

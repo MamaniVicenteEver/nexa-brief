@@ -10,6 +10,7 @@ from src.adapters.data.publication_factory import build_publication_components, 
 from src.adapters.publishing.image_publisher import ImagePublisher
 from src.core.image_posts.models import Delivery, DeliveryStatus
 from src.core.image_posts.service import ImagePostError
+from src.presentation.api.image_post_access import ImageSession
 from src.presentation.api.routers import image_posts
 from src.presentation.api.schemas.image_posts_schema import ReconcileRequest
 from test_repository_api import _record
@@ -54,16 +55,18 @@ async def test_reconcile_with_graph_never_resends(tmp_path, platform, remote, pa
     set_publication_components(components)
     try:
         if platform == "facebook":
-            result = await image_posts.reconcile_delivery(delivery.delivery_id, ReconcileRequest())
+            result = await image_posts.reconcile_delivery(
+                delivery.delivery_id, ReconcileRequest(),
+                identity=ImageSession(email="admin@example.org", role="admin"),
+            )
+            status = result["status"]
         else:
             assert await components.service.reconcile_due_deliveries() == 1
             result = components.repository.get("pub_test").deliveries[0].model_dump(mode="json")
-        assert result["status"] == "published"
-        assert result["remote"]["post_id"] == ("fb-post" if platform == "facebook" else "ig-media")
-        assert (await components.service.reconcile_delivery(delivery.delivery_id)).status == DeliveryStatus.PUBLISHED
-        assert requests[0][0] == "GET"
-        assert len(requests) == 1
-        assert components.repository.get("pub_test").status.value == "completed"
+            status = result["status"]
+        # These archived deliveries have no complete expected caption, date, or media proof.
+        assert status == "outcome_unknown"
+        assert requests and all(method == "GET" for method, _path in requests)
     finally:
         set_publication_components(None)
 
@@ -125,8 +128,8 @@ async def test_manual_remote_id_is_verified_before_resolving(tmp_path):
     assert wrong.status == DeliveryStatus.OUTCOME_UNKNOWN
     assert wrong.remote.post_id is None
     good = await components.service.reconcile_delivery("uncertain", manual=True, remote_post_id="real_id")
-    assert good.status == DeliveryStatus.PUBLISHED
-    assert good.remote.post_id == "real_id"
+    assert good.status == DeliveryStatus.OUTCOME_UNKNOWN
+    assert good.remote.post_id is None
     assert len(requests) == 2
     assert requests[0][0] == requests[1][0] == "GET"
     assert requests[0][1].endswith("/wrong_id")

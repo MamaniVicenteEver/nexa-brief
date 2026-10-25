@@ -16,7 +16,7 @@ import hashlib
 import fcntl
 import uuid
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 from pathlib import Path
 
@@ -216,7 +216,9 @@ async def _update_status(
 async def mark_publishing(entry_id: str) -> QueueEntry | None:
     with _queue_claim_lock():
         entry = await _update_status(
-            entry_id, QueueStatus.PUBLISHING, only_if={"status": QueueStatus.QUEUED.value}
+            entry_id, QueueStatus.PUBLISHING,
+            only_if={"status": QueueStatus.QUEUED.value},
+            lease_until=(datetime.now(timezone.utc) + timedelta(minutes=2)).isoformat().replace("+00:00", "Z"),
         )
     if entry:
         _in_flight.add(entry_id)
@@ -226,19 +228,32 @@ async def mark_publishing(entry_id: str) -> QueueEntry | None:
 async def mark_published(entry_id: str, post_id: str, url: str) -> QueueEntry | None:
     _in_flight.discard(entry_id)
     return await _update_status(
-        entry_id, QueueStatus.PUBLISHED, post_id=post_id, url=url, processed_at=_now_iso()
+        entry_id, QueueStatus.PUBLISHED, post_id=post_id, url=url, processed_at=_now_iso(), lease_until=None
     )
 
 
 async def mark_failed(entry_id: str, error: str) -> QueueEntry | None:
     _in_flight.discard(entry_id)
-    return await _update_status(entry_id, QueueStatus.FAILED, error=error, processed_at=_now_iso())
+    return await _update_status(
+        entry_id, QueueStatus.FAILED, error=error, processed_at=_now_iso(), lease_until=None
+    )
 
 
 async def mark_outcome_unknown(entry_id: str, error: str) -> QueueEntry | None:
     _in_flight.discard(entry_id)
     return await _update_status(
-        entry_id, QueueStatus.OUTCOME_UNKNOWN, error=error, processed_at=_now_iso()
+        entry_id, QueueStatus.OUTCOME_UNKNOWN, error=error, processed_at=_now_iso(), lease_until=None
+    )
+
+
+async def heartbeat(entry_id: str, *, lease_until: datetime | None = None) -> QueueEntry | None:
+    """Renueva una publicación activa de forma visible para los demás workers."""
+    renewed = lease_until or datetime.now(timezone.utc) + timedelta(minutes=2)
+    return await _update_status(
+        entry_id,
+        QueueStatus.PUBLISHING,
+        only_if={"status": QueueStatus.PUBLISHING.value},
+        lease_until=renewed.astimezone(timezone.utc).isoformat().replace("+00:00", "Z"),
     )
 
 
@@ -306,6 +321,20 @@ async def delete_for_job(job_id: str) -> int:
     return len(removed)
 
 
+async def delete_for_delivery(delivery_id: str) -> int:
+    """Purga la referencia local de cola tras asegurar que no está publicando."""
+    with _queue_claim_lock():
+        entry = find_for_delivery(delivery_id)
+        if entry is None:
+            return 0
+        if entry.status == QueueStatus.PUBLISHING:
+            raise ValueError("No se puede purgar una entrega mientras un worker la publica")
+        removed = await _entries().delete_where({"delivery_id": delivery_id})
+    for record in removed:
+        await _publish_event(QueueEntry(**record))
+    return len(removed)
+
+
 async def recover_stale_publishing(older_than_seconds: int = 600) -> int:
     """Recuperación ante crash: entries atascadas en `publishing` (el proceso
     murió a mitad de un upload) se marcan `failed` para no bloquear la cola
@@ -315,6 +344,13 @@ async def recover_stale_publishing(older_than_seconds: int = 600) -> int:
     for record in _entries().list({"status": QueueStatus.PUBLISHING.value}):
         if record["entry_id"] in _in_flight:
             continue  # sigue subiéndose (p. ej. esperando la HD de YouTube): no está atascada
+        expected_lease = record.get("lease_until")
+        try:
+            lease_dt = datetime.fromisoformat(expected_lease.replace("Z", "+00:00")) if expected_lease else None
+        except ValueError:
+            lease_dt = None
+        if lease_dt is not None and lease_dt > now_dt:
+            continue
         updated_at = record.get("updated_at")
         try:
             updated_dt = datetime.fromisoformat(updated_at.replace("Z", "+00:00")) if updated_at else None
@@ -332,8 +368,10 @@ async def recover_stale_publishing(older_than_seconds: int = 600) -> int:
         entry = await _update_status(
             record["entry_id"],
             status,
+            only_if={"status": QueueStatus.PUBLISHING.value, "lease_until": expected_lease},
             error=error,
             processed_at=now_iso,
+            lease_until=None,
         )
         recovered += entry is not None
     return recovered

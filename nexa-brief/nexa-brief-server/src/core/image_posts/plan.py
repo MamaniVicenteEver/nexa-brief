@@ -30,6 +30,19 @@ def _text(value: Any, name: str) -> str:
     return value.strip()
 
 
+def _optional_text(value: Any, name: str) -> str | None:
+    if value is None:
+        return None
+    return _text(value, name)
+
+
+def _optional_https(value: Any, name: str) -> str | None:
+    result = _optional_text(value, name)
+    if result is not None and not result.startswith("https://"):
+        raise ImagePlanError(f"{name} debe usar HTTPS")
+    return result
+
+
 def _hash(value: Any, name: str) -> str:
     result = _text(value, name).lower()
     if not re.fullmatch(r"[a-f0-9]{64}", result):
@@ -74,6 +87,8 @@ class MediaRef:
     license_id: str
     author: str
     url: str
+    license_url: str | None = None
+    changes: str | None = None
     focus: tuple[float, float] = (0.5, 0.5)
 
     @classmethod
@@ -81,7 +96,7 @@ class MediaRef:
         data = _object(
             raw,
             "media",
-            {"asset_id", "sha256", "license_id", "author", "url", "focus"},
+            {"asset_id", "sha256", "license_id", "license_url", "author", "url", "changes", "focus"},
             {"asset_id", "sha256", "license_id", "author", "url"},
         )
         focus = data.get("focus", [0.5, 0.5])
@@ -100,8 +115,10 @@ class MediaRef:
             asset_id=_text(data["asset_id"], "media.asset_id"),
             sha256=_hash(data["sha256"], "media.sha256"),
             license_id=_text(data["license_id"], "media.license_id"),
+            license_url=_optional_https(data.get("license_url"), "media.license_url"),
             author=_text(data["author"], "media.author"),
             url=url,
+            changes=_optional_text(data.get("changes"), "media.changes"),
             focus=coordinates,
         )
 
@@ -110,8 +127,10 @@ class MediaRef:
             "asset_id": self.asset_id,
             "sha256": self.sha256,
             "license_id": self.license_id,
+            "license_url": self.license_url,
             "author": self.author,
             "url": self.url,
+            "changes": self.changes,
             "focus": list(self.focus),
         }
 

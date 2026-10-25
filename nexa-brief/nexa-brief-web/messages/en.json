@@ -742,7 +742,11 @@
       "completed": "Completed",
       "partial": "Partial",
       "failed": "Failed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "removed": "Removed",
+      "removal_pending_manual": "Pending manual removal",
+      "removed_api": "Removed by API",
+      "removed_manually": "Removed manually"
     },
     "deliveryStatus": {
       "draft": "draft",
@@ -754,7 +758,9 @@
       "outcome_unknown": "unknown outcome",
       "cancelled": "cancelled",
       "removed_api": "removed by API",
-      "removed_manually": "removed manually"
+      "removed_manually": "removed manually",
+      "removed": "removed",
+      "removal_pending_manual": "pending manual removal"
     },
     "deliveryCommentStatus": {
       "not_requested": "not requested",
@@ -800,6 +806,7 @@
       "noMusic": "No music",
       "noMusicHint": "Publish as an image or carousel.",
       "convertReel": "Convert to Reel",
+      "comingSoon": "Coming soon",
       "reelLicenseHint": "Requires a licensed track verified by the server.",
       "reelNotice": "Music changes the destination to a 9:16 Reel and uses a video slot. The server validates the license, sync, and commercial use before accepting delivery.",
       "musicAssetId": "Approved track ID",
@@ -922,7 +929,12 @@
         "oldest": "Oldest"
       },
       "kind": { "image": "Image", "carousel": "Carousel", "story": "Story", "reel": "Reel" },
-      "status": { "removed_api": "Removed by API", "removed_manually": "Removed manually" },
+      "status": {
+        "removed_api": "Removed by API",
+        "removed_manually": "Removed manually",
+        "removed": "Removed",
+        "removal_pending_manual": "Pending manual removal"
+      },
       "metrics": {
         "reach": "reach",
         "impressions": "impressions",
@@ -944,6 +956,13 @@
       "imageAlt": "Published slide",
       "previewUnavailable": "Preview URL unavailable. Retry to renew its signature.",
       "close": "Close modal",
+      "removePublication": "Delete publication",
+      "removeConfirm": "Delete every delivery of this publication from the networks? The study archive will be kept.",
+      "removeReason": "Removed from gallery",
+      "verifyRemoval": "Verify removal",
+      "pendingRemovalNotice": "Pending manual removal",
+      "removedNotice": "Publication removed from the network. The study archive remains available.",
+      "removeError": "Could not request removal.",
       "previousSlide": "Previous slide",
       "nextSlide": "Next slide",
       "showSlide": "Show slide {number}",

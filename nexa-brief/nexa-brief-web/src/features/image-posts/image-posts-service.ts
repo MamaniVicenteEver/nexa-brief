@@ -21,6 +21,7 @@ import {
   fetchPublicationAssetUrl,
   fetchPublicationMetrics,
   fetchPublications,
+  removePublication,
 } from "./api/publications-api";
 import { publicationFormat } from "./gallery-utils";
 import type {
@@ -96,6 +97,8 @@ function castPostStatus(value: unknown): ImagePostStatus {
     "partial",
     "failed",
     "cancelled",
+    "removed",
+    "removal_pending_manual",
   ];
   const candidate = text(value, "draft") as ImagePostStatus;
   return statuses.includes(candidate) ? candidate : "draft";
@@ -113,6 +116,8 @@ function castDeliveryStatus(value: unknown): DeliveryStatus {
     "cancelled",
     "removed_api",
     "removed_manually",
+    "removed",
+    "removal_pending_manual",
   ];
   const candidate = text(value, "draft") as DeliveryStatus;
   return statuses.includes(candidate) ? candidate : "draft";
@@ -374,6 +379,14 @@ function mapPublicationDelivery(
     lastError: nullableText(get(value, "last_error", "lastError")),
     remote: mapRemote(get(value, "remote")),
     targetId: nullableText(get(value, "target_id", "targetId")),
+    removedAt: nullableText(get(value, "removed_at", "removedAt")),
+    removalReason: nullableText(get(value, "removal_reason", "removalReason")),
+    removalInstruction: nullableText(get(value, "removal_instruction", "removalInstruction")),
+    removalGraphResponse: Object.keys(
+      asObject(get(value, "removal_graph_response", "removalGraphResponse")),
+    ).length
+      ? asObject(get(value, "removal_graph_response", "removalGraphResponse"))
+      : null,
   };
 }
 
@@ -504,6 +517,10 @@ function mapPublicationDetail(value: unknown, filters?: GalleryFilters): Publica
             commentId: null,
           },
           targetId: null,
+          removedAt: null,
+          removalReason: null,
+          removalInstruction: null,
+          removalGraphResponse: null,
         })),
     sourceVideoId: nullableText(get(editorial, "source_video_id", "sourceVideoId")),
     sourceVideoUrl: nullableText(get(editorial, "source_video_url", "sourceVideoUrl")),
@@ -790,6 +807,10 @@ export async function getPublicationDetail(
     reel = { ...reel, previewUrl: await resolveGalleryAsset(publicationId, reel.assetId, signal) };
   }
   return { ...detail, slides: slidesWithUrls, technical: { ...detail.technical, reel } };
+}
+
+export async function removePublishedPublication(publicationId: string, reason: string) {
+  return mapPublicationDetail(await removePublication(publicationId, reason));
 }
 
 export async function refreshPublicationMetrics(

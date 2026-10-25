@@ -23,6 +23,9 @@ from src.adapters.publishing.image_publisher import (
     delivery_assets,
     graph_json,
     remote_state,
+    remote_caption_matches,
+    remote_date_matches,
+    remote_visuals_match,
     report_remote,
     storage_key,
     value,
@@ -309,7 +312,7 @@ class FacebookImageAdapter:
             return "failed", None
 
     async def reconcile_image_delivery(self, delivery_spec: DeliverySpec) -> ImageAdapterResult:
-        """Resuelve una entrega usando el ID guardado, sin repetir POST de creación."""
+        """Verifica cuenta, fecha, caption y fotos antes de conciliar como publicada."""
         alias = str(value(delivery_spec, "account_alias", ""))
         previous = remote_state(delivery_spec)
         post_id = previous.get("post_id")
@@ -321,14 +324,53 @@ class FacebookImageAdapter:
             )
         try:
             token = await self._token_manager.get_valid_token(self.PLATFORM, alias)
+            page_id = str(value(delivery_spec, "target_id") or self._token_manager.target_id(self.PLATFORM, alias) or "")
+            if not page_id or str(self._token_manager.target_id(self.PLATFORM, alias) or page_id) != page_id:
+                return ImageAdapterResult(
+                    status="outcome_unknown", remote=previous,
+                    last_error={"code": "REMOTE_ACCOUNT_UNVERIFIED", "message": "No se pudo confirmar la Página de destino"},
+                )
             async with self._client_factory(timeout=settings.api_timeout_seconds) as client:
                 data = await graph_json(
                     client,
                     "GET",
                     quote(str(post_id), safe=""),
                     token=token,
-                    params={"fields": "id,permalink_url"},
+                    params={
+                        "fields": "id,from{id},created_time,message,caption,permalink_url,full_picture,attachments{media_type,media}",
+                    },
                 )
+                owner = data.get("from") if isinstance(data.get("from"), dict) else {}
+                if str(owner.get("id") or "") != page_id:
+                    return ImageAdapterResult(
+                        status="outcome_unknown", remote=previous,
+                        last_error={"code": "REMOTE_ACCOUNT_MISMATCH", "message": "El post no pertenece a la Página de esta entrega"},
+                    )
+                if not remote_caption_matches(data.get("message") or data.get("caption"), delivery_spec):
+                    return ImageAdapterResult(
+                        status="outcome_unknown", remote=previous,
+                        last_error={"code": "REMOTE_CAPTION_MISMATCH", "message": "El caption remoto no coincide con esta entrega"},
+                    )
+                if not remote_date_matches(data.get("created_time"), delivery_spec):
+                    return ImageAdapterResult(
+                        status="outcome_unknown", remote=previous,
+                        last_error={"code": "REMOTE_DATE_MISMATCH", "message": "La fecha del post remoto no coincide con esta entrega"},
+                    )
+                attachments = data.get("attachments") or {}
+                attachment_rows = attachments.get("data", []) if isinstance(attachments, dict) else []
+                media_urls = []
+                for item in attachment_rows:
+                    media = item.get("media") if isinstance(item, dict) else None
+                    image = media.get("image") if isinstance(media, dict) else None
+                    if isinstance(image, dict) and image.get("src"):
+                        media_urls.append(str(image["src"]))
+                if not media_urls and data.get("full_picture"):
+                    media_urls = [str(data["full_picture"])]
+                if not await remote_visuals_match(client, self._media_storage, delivery_spec, media_urls):
+                    return ImageAdapterResult(
+                        status="outcome_unknown", remote=previous,
+                        last_error={"code": "REMOTE_MEDIA_MISMATCH", "message": "Las fotos remotas no coinciden con el arte aprobado"},
+                    )
             remote = {**previous, "post_id": str(data.get("id") or post_id)}
             if data.get("permalink_url"):
                 remote["permalink"] = data["permalink_url"]
