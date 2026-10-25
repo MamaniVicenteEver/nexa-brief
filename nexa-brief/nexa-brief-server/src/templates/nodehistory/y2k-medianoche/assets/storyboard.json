@@ -1,1759 +1,1768 @@
 {
-  "version": 1,
-  "family": "binary",
-  "title": "¿Fue Y2K la mayor estafa informática?",
-  "defaults": {
-    "offset": -0.12
+ "version": 1,
+ "family": "binary",
+ "title": "¿Fue Y2K la mayor estafa informática?",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "binary.introv1",
+   "params": {
+    "text": "EL DÍA QUE\nTODO PUDO\nDETENERSE",
+    "kicker": "MILLENNIUM · 31 DIC 1999",
+    "textPortrait": "EL DÍA QUE\nTODO PUDO\nDETENERSE",
+    "highlight": "DETENERSE"
+   },
+   "until": "En salas de control"
   },
-  "beats": [
-    {
-      "t": 0,
-      "use": "binary.title",
-      "params": {
-        "text": "¿FUE EL AÑO 2000\nUNA ESTAFA?",
-        "textPortrait": "¿FUE EL\nAÑO 2000\nUNA\nESTAFA?",
-        "kicker": "MILLENNIUM · 31 DIC 1999"
-      },
-      "until": "En salas de control"
-    },
-    {
-      "at": "En salas de control",
-      "use": "binary.crisisdesk",
-      "params": {
-        "label": "SALAS DE CONTROL",
-        "states": [
-          "REPORTE",
-          "RESPALDO",
-          "RECUPERACIÓN"
-        ]
-      }
-    },
-    {
-      "at": "qué acaba de romperse",
-      "use": "binary.bubble",
-      "params": {
-        "text": ""
-      }
-    },
-    {
-      "at": "antes Caroline Island",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/kiribati-iss.jpg",
-        "title": "Kiribati desde la órbita",
-        "sub": "ISS · IMAGEN ILUSTRATIVA"
-      }
-    },
-    {
-      "at": "de la mañana del",
-      "use": "binary.counter",
-      "params": {
-        "value": "10:00",
-        "label": "GREENWICH · 31 DIC",
-        "note": "CAMBIO DE FECHA"
-      }
-    },
-    {
-      "at": "Su huso era",
-      "use": "binary.word",
-      "params": {
-        "text": "UTC+14",
-        "kicker": "HUSO HORARIO",
-        "note": "MILLENNIUM ISLAND"
-      }
-    },
-    {
-      "at": "normalmente estaba deshabitada",
-      "use": "binary.floor",
-      "params": {
-        "text": "DESHABITADA"
-      }
-    },
-    {
-      "at": "minutos después, la fecha",
-      "use": "common.lyric",
-      "until": "en las islas Chatham",
-      "params": {
-        "accent": [
-          "15",
-          "quince",
-          "minutos"
-        ]
-      }
-    },
-    {
-      "at": "minutos después, la fecha",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "en las islas Chatham",
-      "use": "binary.midnightrelay",
-      "params": {
-        "label": "EL CAMBIO VIAJA",
-        "first": "MILLENNIUM",
-        "second": "CHATHAM",
-        "third": "AUCKLAND"
-      }
-    },
-    {
-      "at": "Estaban en UTC",
-      "use": "binary.word",
-      "params": {
-        "text": "UTC+13:45",
-        "kicker": "CHATHAM",
-        "note": "PRIMER LUGAR HABITADO"
-      }
-    },
-    {
-      "at": "Auckland entró después",
-      "use": "binary.timeline",
-      "params": {
-        "items": [
-          {
-            "year": "+0 MIN",
-            "label": "MILLENNIUM"
-          },
-          {
-            "year": "+15 MIN",
-            "label": "CHATHAM"
-          },
-          {
-            "year": "DESPUÉS",
-            "label": "AUCKLAND"
-          }
-        ],
-        "active": 2,
-        "drawSec": 1.4
-      }
-    },
-    {
-      "at": "una sola cuenta atrás",
-      "use": "common.clip",
-      "params": {
-        "src": "assets/media/y2k-midnight-clock.mp4",
-        "layout": "full",
-        "caption": "",
-        "sub": ""
-      }
-    },
-    {
-      "at": "El título de hoy",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "question",
-          "label": "ESTAFA"
-        },
-        "right": {
-          "icon": "check",
-          "label": "RIESGO REAL"
-        },
-        "mid": "?"
-      }
-    },
-    {
-      "at": "a esa primera hora",
-      "use": "binary.icon",
-      "params": {
-        "icon": "clock",
-        "tag": "LA PRIMERA HORA",
-        "caption": ""
-      }
-    },
-    {
-      "at": "Si el riesgo era imaginario",
-      "use": "binary.rays",
-      "params": {
-        "mode": "x",
-        "label": "IMAGINARIO"
-      }
-    },
-    {
-      "at": "cada silencio era",
-      "use": "binary.tunnel",
-      "params": {
-        "text": "CADA SILENCIO"
-      }
-    },
-    {
-      "at": "un detalle diminuto",
-      "use": "binary.y2kfield",
-      "params": {
-        "label": "CAMPO DE AÑO"
-      }
-    },
-    {
-      "at": "no ocupaba cuatro cifras",
-      "use": "binary.counter",
-      "params": {
-        "value": "99",
-        "label": "EL AÑO",
-        "note": "DOS CIFRAS, NO CUATRO"
-      }
-    },
-    {
-      "at": "Cómo dos caracteres",
-      "use": "binary.bubble",
-      "params": {
-        "text": "¿DOS CARACTERES?"
-      }
-    },
-    {
-      "at": "que llevaban décadas",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/terminal-vt100.jpg",
-        "title": "Terminal DEC VT100",
-        "sub": "DÉCADAS FUNCIONANDO"
-      }
-    },
-    {
-      "at": "El primer dato rompe",
-      "use": "binary.rays",
-      "params": {
-        "mode": "burst",
-        "count": 18,
-        "label": "UNA IDEA POPULAR"
-      }
-    },
-    {
-      "at": "una computadora que de",
-      "use": "binary.icon",
-      "params": {
-        "icon": "chip",
-        "tag": "¿OLVIDÓ EL FUTURO?",
-        "caption": ""
-      }
-    },
-    {
-      "at": "Estaba escondido en",
-      "use": "binary.icon",
-      "params": {
-        "icon": "key",
-        "tag": "DECISIONES DE DISEÑO",
-        "caption": "muy viejas"
-      }
-    },
-    {
-      "at": "repetidas en programas",
-      "use": "binary.grid",
-      "params": {
-        "icon": "document",
-        "count": 16,
-        "label": "PROGRAMAS",
-        "revealSec": 2
-      }
-    },
-    {
-      "at": "guardar una fecha como",
-      "use": "binary.word",
-      "params": {
-        "text": "99",
-        "kicker": "EN LUGAR DE 1999",
-        "note": "AHORRABA MEMORIA"
-      }
-    },
-    {
-      "at": "memoria y espacio",
-      "use": "binary.icon",
-      "params": {
-        "icon": "chip",
-        "tag": "MEMORIA",
-        "caption": "ahorrar espacio"
-      }
-    },
-    {
-      "at": "En máquinas limitadas",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/community-terminal.jpg",
-        "title": "Terminal de 1975",
-        "sub": "MÁQUINAS LIMITADAS"
-      }
-    },
-    {
-      "at": "un byte, una",
-      "use": "binary.word",
-      "params": {
-        "text": "1 BYTE",
-        "kicker": "UNA UNIDAD DE MEMORIA",
-        "note": "PODÍA CONTAR"
-      }
-    },
-    {
-      "at": "Esa decisión parecía",
-      "use": "binary.icon",
-      "params": {
-        "icon": "eye",
-        "tag": "PARECÍA INOCENTE",
-        "caption": ""
-      }
-    },
-    {
-      "at": "el siglo empezaba",
-      "use": "binary.word",
-      "params": {
-        "text": "19",
-        "kicker": "EL SIGLO EMPEZABA POR",
-        "note": ""
-      }
-    },
-    {
-      "at": "se comparaban solo",
-      "use": "common.lyric",
-      "params": {
-        "accent": [
-          "dígitos"
-        ]
-      }
-    },
-    {
-      "at": "se comparaban solo",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "podía interpretarse como",
-      "use": "binary.y2kfield",
-      "params": {
-        "label": "¿1900 O 2000?"
-      }
-    },
-    {
-      "at": "No todos los sistemas",
-      "use": "binary.rays",
-      "params": {
-        "mode": "fan",
-        "count": 8,
-        "highlight": 3,
-        "label": "CADA PROGRAMA"
-      }
-    },
-    {
-      "at": "ordenaban mal una lista",
-      "use": "binary.icon",
-      "params": {
-        "icon": "book",
-        "tag": "ORDENABAN MAL",
-        "caption": "una lista"
-      }
-    },
-    {
-      "at": "otros calculaban edades",
-      "use": "binary.orbit",
-      "params": {
-        "icon": "gear",
-        "labels": [
-          "EDADES",
-          "VENCIMIENTOS",
-          "PAGOS"
-        ]
-      }
-    },
-    {
-      "at": "El error dependía",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/y2k-date-error.jpg",
-        "title": "Un error de fecha",
-        "sub": "PANTALLA CON AÑO 1900"
-      }
-    },
-    {
-      "at": "Por eso el trabajo",
-      "use": "common.clip",
-      "params": {
-        "src": "assets/media/y2k-typing.mp4",
-        "layout": "full",
-        "caption": "Corregir y probar",
-        "sub": "IMAGEN ILUSTRATIVA"
-      }
-    },
-    {
-      "at": "Había que localizar registros",
-      "use": "binary.timeline",
-      "params": {
-        "items": [
-          {
-            "year": "1",
-            "label": "LOCALIZAR"
-          },
-          {
-            "year": "2",
-            "label": "CORREGIR"
-          },
-          {
-            "year": "3",
-            "label": "PROBAR"
-          },
-          {
-            "year": "4",
-            "label": "VOLVER A PROBAR"
-          }
-        ],
-        "active": 3,
-        "drawSec": 2.4
-      }
-    },
-    {
-      "at": "El calendario era",
-      "use": "binary.icon",
-      "params": {
-        "icon": "hourglass",
-        "tag": "EL CALENDARIO",
-        "caption": "era pequeño"
-      }
-    },
-    {
-      "at": "la red de dependencias",
-      "use": "binary.grid",
-      "params": {
-        "icon": "gear",
-        "count": 24,
-        "label": "DEPENDENCIAS",
-        "revealSec": 2
-      }
-    },
-    {
-      "at": "El bug era real",
-      "use": "common.lyric",
-      "until": "Eso no significa",
-      "params": {
-        "accent": [
-          "real"
-        ]
-      }
-    },
-    {
-      "at": "El bug era real",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "Eso no significa",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "bulb",
-          "label": "BUG REAL"
-        },
-        "right": {
-          "icon": "cross",
-          "label": "CADA PREDICCIÓN"
-        },
-        "mid": "≠",
-        "pick": "left"
-      }
-    },
-    {
-      "at": "El riesgo dependía del",
-      "use": "binary.chart",
-      "params": {
-        "curve": "s",
-        "startLabel": "BAJO",
-        "endLabel": "SEGÚN EL USO",
-        "axisX": "SISTEMA",
-        "axisY": "RIESGO"
-      }
-    },
-    {
-      "at": "miles de organizaciones",
-      "use": "binary.grid",
-      "params": {
-        "icon": "house",
-        "count": 30,
-        "label": "ORGANIZACIONES",
-        "revealSec": 2.2
-      }
-    },
-    {
-      "at": "nadie había inventariado",
-      "use": "binary.icon",
-      "params": {
-        "icon": "lock",
-        "tag": "SIN INVENTARIO",
-        "caption": ""
-      }
-    },
-    {
-      "at": "Y aquí aparece",
-      "use": "binary.bubble",
-      "params": {
-        "text": "¿CUÁNTO COSTÓ?"
-      }
-    },
-    {
-      "at": "una noche tranquila",
-      "use": "binary.floor",
-      "params": {
-        "text": "UNA NOCHE TRANQUILA"
-      }
-    },
-    {
-      "at": "Las cifras oficiales",
-      "use": "binary.chart",
-      "params": {
-        "curve": "growth",
-        "endLabel": "CIFRAS OFICIALES"
-      }
-    },
-    {
-      "at": "no miden todas",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "banknote",
-          "label": "UNA CIFRA"
-        },
-        "right": {
-          "icon": "banknote",
-          "label": "OTRA CIFRA"
-        },
-        "mid": "≠"
-      }
-    },
-    {
-      "at": "El Departamento de Comercio",
-      "use": "binary.icon",
-      "params": {
-        "icon": "book",
-        "tag": "DEPTO. DE COMERCIO",
-        "caption": "basado en IDC"
-      }
-    },
-    {
-      "at": "gasto estadounidense en software",
-      "use": "binary.counter",
-      "params": {
-        "value": "114.000.000.000",
-        "label": "US$ · SOFTWARE Y2K",
-        "note": "ESTIMACIÓN IDC"
-      }
-    },
-    {
-      "at": "entre 1995",
-      "use": "binary.timeline",
-      "params": {
-        "items": [
-          {
-            "year": "1995",
-            "label": "DESDE"
-          },
-          {
-            "year": "2001",
-            "label": "HASTA"
-          }
-        ],
-        "active": 1,
-        "label": "GASTO EN EE. UU."
-      }
-    },
-    {
-      "at": "Era un modelo",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "chip",
-          "label": "MODELO"
-        },
-        "right": {
-          "icon": "gavel",
-          "label": "AUDITORÍA"
-        },
-        "mid": "≠",
-        "pick": "left"
-      }
-    },
-    {
-      "at": "El Senado usó",
-      "use": "binary.icon",
-      "params": {
-        "icon": "gavel",
-        "tag": "EL SENADO",
-        "caption": "otra aproximación"
-      }
-    },
-    {
-      "at": "El Senado usó otra",
-      "use": "common.lyric",
-      "until": "El propio informe",
-      "params": {
-        "accent": [
-          "millones"
-        ]
-      }
-    },
-    {
-      "at": "alrededor de 100 mil",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "El propio informe",
-      "use": "binary.counter",
-      "params": {
-        "value": "8.340.000.000",
-        "label": "GOBIERNO FEDERAL",
-        "note": "US$ · SEGÚN EL SENADO"
-      }
-    },
-    {
-      "at": "Son ámbitos distintos",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "house",
-          "label": "EMPRESAS Y GOBIERNO"
-        },
-        "right": {
-          "icon": "person",
-          "label": "SOLO FEDERAL"
-        },
-        "mid": "≠"
-      }
-    },
-    {
-      "at": "John Koskinen",
-      "use": "binary.word",
-      "params": {
-        "text": "KOSKINEN",
-        "kicker": "CONSEJO Y2K",
-        "note": "DIRECTOR"
-      }
-    },
-    {
-      "at": "millones federales",
-      "use": "binary.counter",
-      "params": {
-        "value": "8.500.000.000",
-        "label": "FEDERAL · KOSKINEN",
-        "note": "US$"
-      }
-    },
-    {
-      "at": "para el país",
-      "use": "binary.word",
-      "params": {
-        "text": "100.000\nMILLONES",
-        "kicker": "EE. UU. · KOSKINEN",
-        "note": "US$"
-      }
-    },
-    {
-      "at": "Para el mundo",
-      "use": "binary.icon",
-      "params": {
-        "icon": "globe",
-        "tag": "EL MUNDO",
-        "caption": "cerca de 200.000 millones"
-      }
-    },
-    {
-      "at": "El Senado recogió además",
-      "use": "binary.word",
-      "params": {
-        "text": "320.000\nMILLONES",
-        "kicker": "IDC MAGELLAN · MUNDO",
-        "note": "US$"
-      }
-    },
-    {
-      "at": "millones en Estados Unidos",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "globe",
-          "label": "MUNDO 320.000 M"
-        },
-        "right": {
-          "icon": "house",
-          "label": "EE. UU. 134.000 M"
-        },
-        "mid": "/"
-      }
-    },
-    {
-      "at": "No existe una cifra",
-      "use": "binary.rays",
-      "params": {
-        "mode": "x",
-        "label": "SIN CIFRA FINAL"
-      }
-    },
-    {
-      "at": "cambian el periodo",
-      "use": "binary.orbit",
-      "params": {
-        "icon": "question",
-        "labels": [
-          "PERIODO",
-          "RUBROS",
-          "MÉTODO"
-        ]
-      }
-    },
-    {
-      "at": "En Reino Unido",
-      "use": "binary.word",
-      "params": {
-        "text": "£380\nMILLONES",
-        "kicker": "REINO UNIDO",
-        "note": "GOBIERNO CENTRAL"
-      }
-    },
-    {
-      "at": "La Cámara de los",
-      "use": "binary.icon",
-      "params": {
-        "icon": "bell",
-        "tag": "CÁMARA DE LOS COMUNES",
-        "caption": "repitió el dato"
-      }
-    },
-    {
-      "at": "Son cifras grandes",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "crown",
-          "label": "REINO UNIDO"
-        },
-        "right": {
-          "icon": "globe",
-          "label": "MUNDO"
-        },
-        "mid": "≠"
-      }
-    },
-    {
-      "at": "Fue proporcionado",
-      "use": "binary.bubble",
-      "params": {
-        "text": "¿PROPORCIONADO?"
-      }
-    },
-    {
-      "at": "El Senado defendió",
-      "use": "binary.icon",
-      "params": {
-        "icon": "check",
-        "tag": "NECESARIO",
-        "caption": "según el Senado"
-      }
-    },
-    {
-      "at": "cada factura valiera",
-      "use": "binary.icon",
-      "params": {
-        "icon": "banknote",
-        "tag": "CADA FACTURA",
-        "caption": ""
-      }
-    },
-    {
-      "at": "Tampoco podemos observar",
-      "use": "binary.tunnel",
-      "params": {
-        "text": "¿Y SI NADIE CORREGÍA?"
-      }
-    },
-    {
-      "at": "Si el gasto evitó",
-      "use": "binary.chart",
-      "params": {
-        "curve": "decay",
-        "startLabel": "GASTO",
-        "endLabel": "FALLAS VISIBLES"
-      }
-    },
-    {
-      "at": "Si hubo exceso",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "banknote",
-          "label": "EXCESO"
-        },
-        "right": {
-          "icon": "gear",
-          "label": "MODERNIZACIÓN"
-        },
-        "mid": "?"
-      }
-    },
-    {
-      "at": "Los datos permiten",
-      "use": "binary.icon",
-      "params": {
-        "icon": "eye",
-        "tag": "DEBATIR LA ESCALA",
-        "caption": ""
-      }
-    },
-    {
-      "at": "no permiten reconstruir",
-      "use": "binary.floor",
-      "params": {
-        "text": "SIN REPARACIONES"
-      }
-    },
-    {
-      "at": "Antes de medianoche, alguien",
-      "use": "binary.y2kfield",
-      "params": {
-        "label": "CAMPOS DE 2 DÍGITOS"
-      }
-    },
-    {
-      "at": "Algunos expertos que",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/cobol-tape.jpg",
-        "title": "Compilador COBOL en cinta",
-        "sub": "UNIVAC · SISTEMAS ANTIGUOS"
-      }
-    },
-    {
-      "at": "A quién llamas",
-      "use": "binary.icon",
-      "params": {
-        "icon": "phone",
-        "tag": "¿A QUIÉN LLAMAS?",
-        "caption": ""
-      }
-    },
-    {
-      "at": "Una respuesta fue",
-      "use": "common.lyric",
-      "until": "El lenguaje se usaba",
-      "params": {
-        "accent": [
-          "cobol"
-        ]
-      }
-    },
-    {
-      "at": "Una respuesta fue",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "El lenguaje se usaba",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/cobol-program.jpg",
-        "title": "Un programa en COBOL",
-        "sub": "SISTEMAS DE NEGOCIO"
-      }
-    },
-    {
-      "at": "Un reportaje de",
-      "use": "binary.icon",
-      "params": {
-        "icon": "person",
-        "tag": "BRUCE FASSETT",
-        "caption": "según Los Angeles Times"
-      }
-    },
-    {
-      "at": "recontratado después de",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/cobol-poster.jpg",
-        "title": "Afiche de un curso COBOL",
-        "sub": "1969 · ILUSTRATIVO"
-      }
-    },
-    {
-      "at": "Equipos rastrearon archivos",
-      "use": "binary.grid",
-      "params": {
-        "icon": "keyboard",
-        "count": 12,
-        "label": "EQUIPOS",
-        "revealSec": 2
-      }
-    },
-    {
-      "at": "reglas enterradas",
-      "use": "binary.icon",
-      "params": {
-        "icon": "key",
-        "tag": "REGLAS ENTERRADAS",
-        "caption": ""
-      }
-    },
-    {
-      "at": "Una corrección podía",
-      "use": "binary.y2kfield",
-      "params": {
-        "label": "INTERPRETAR EL AÑO"
-      }
-    },
-    {
-      "at": "encontrar todos los lugares",
-      "use": "binary.rays",
-      "params": {
-        "mode": "fan",
-        "count": 12,
-        "highlight": 7,
-        "label": "TODOS LOS LUGARES"
-      }
-    },
-    {
-      "at": "También había que preparar",
-      "use": "binary.crisisdesk",
-      "params": {
-        "label": "PLAN ALTERNATIVO",
-        "states": [
-          "CONTINGENCIA",
-          "RESPALDO",
-          "PRIORIDADES"
-        ]
-      }
-    },
-    {
-      "at": "algunas organizaciones ensayaban",
-      "use": "binary.orbit",
-      "params": {
-        "icon": "gear",
-        "labels": [
-          "ENSAYAR",
-          "RESPALDAR",
-          "PRIORIZAR"
-        ]
-      }
-    },
-    {
-      "at": "La meta era",
-      "use": "binary.icon",
-      "params": {
-        "icon": "bulb",
-        "tag": "SERVICIO ESENCIAL",
-        "caption": "mantenerlo si fallaba"
-      }
-    },
-    {
-      "at": "Cuando Millennium celebraba",
-      "use": "common.clip",
-      "params": {
-        "src": "assets/media/y2k-fireworks-city.mp4",
-        "layout": "full",
-        "caption": "Fuegos de año nuevo",
-        "sub": "TBILISI · 2025 · ILUSTRATIVO"
-      }
-    },
-    {
-      "at": "centros de operaciones de",
-      "use": "binary.midnightrelay",
-      "params": {
-        "label": "LA MEDIANOCHE AVANZA",
-        "first": "MILLENNIUM",
-        "second": "CHATHAM",
-        "third": "AUCKLAND"
-      }
-    },
-    {
-      "at": "La pregunta de guardia",
-      "use": "binary.bubble",
-      "params": {
-        "text": "¿DENTRO DE LÍMITES?"
-      }
-    },
-    {
-      "at": "El comité del Senado",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/computer-room.jpg",
-        "title": "Una sala de cómputo",
-        "sub": "IMAGEN ILUSTRATIVA"
-      }
-    },
-    {
-      "at": "Su centro de coordinación",
-      "use": "binary.word",
-      "params": {
-        "text": "170–200",
-        "kicker": "PERSONAS DE GUARDIA",
-        "note": "CENTRO DE COORDINACIÓN"
-      }
-    },
-    {
-      "at": "FEMA repartió",
-      "use": "binary.counter",
-      "params": {
-        "value": "800",
-        "mode": "count",
-        "label": "FEMA",
-        "note": "PERSONAS ENTRE SUS CENTROS"
-      }
-    },
-    {
-      "at": "También hubo equipos",
-      "use": "binary.crisisdesk",
-      "params": {
-        "label": "EMPRESAS Y SERVICIOS",
-        "states": [
-          "GUARDIA",
-          "REPORTE",
-          "RESPALDO"
-        ]
-      }
-    },
-    {
-      "at": "La pregunta seguía abierta",
-      "use": "binary.rays",
-      "params": {
-        "mode": "burst",
-        "count": 14,
-        "label": "¿SE PROPAGA?"
-      }
-    },
-    {
-      "at": "La sala no podía",
-      "use": "binary.icon",
-      "params": {
-        "icon": "bell",
-        "tag": "SIN PROMESAS",
-        "caption": ""
-      }
-    },
-    {
-      "at": "el flujo de información",
-      "use": "common.clip",
-      "params": {
-        "src": "assets/media/y2k-server-room.mp4",
-        "layout": "full",
-        "caption": "El flujo de información",
-        "sub": "IMAGEN ILUSTRATIVA"
-      }
-    },
-    {
-      "at": "si un servicio crítico",
-      "use": "binary.chart",
-      "params": {
-        "curve": "decay",
-        "startLabel": "NORMAL",
-        "endLabel": "CAPACIDAD"
-      }
-    },
-    {
-      "at": "Poco después de la",
-      "use": "binary.counter",
-      "params": {
-        "value": "00:00",
-        "label": "GREENWICH",
-        "note": "1 DE ENERO"
-      }
-    },
-    {
-      "at": "el GAO documentó",
-      "use": "binary.word",
-      "params": {
-        "text": "GAO",
-        "kicker": "EL INFORME",
-        "note": "UNA FALLA DOCUMENTADA"
-      }
-    },
-    {
-      "at": "procesamiento terrestre",
-      "use": "binary.icon",
-      "params": {
-        "icon": "radar",
-        "tag": "SISTEMA SATELITAL",
-        "caption": "procesamiento en tierra"
-      }
-    },
-    {
-      "at": "No fue una caída",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "cross",
-          "label": "CAÍDA TOTAL"
-        },
-        "right": {
-          "icon": "radar",
-          "label": "BAJO CAPACIDAD"
-        },
-        "mid": "≠",
-        "pick": "right"
-      }
-    },
-    {
-      "at": "por debajo de su",
-      "use": "common.lyric",
-      "params": {
-        "accent": [
-          "plena"
-        ]
-      }
-    },
-    {
-      "at": "por debajo de su",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "El respaldo permitió cubrir",
-      "use": "binary.crisisdesk",
-      "params": {
-        "label": "MODO DEGRADADO",
-        "states": [
-          "FALLA",
-          "RESPALDO",
-          "PRIORIDADES"
-        ]
-      }
-    },
-    {
-      "at": "a menor capacidad",
-      "use": "binary.chart",
-      "params": {
-        "curve": "decay",
-        "startLabel": "NORMAL",
-        "endLabel": "MENOR CAPACIDAD"
-      }
-    },
-    {
-      "at": "El dato importante",
-      "use": "binary.rays",
-      "params": {
-        "mode": "x",
-        "label": "CATÁSTROFE SECRETA"
-      }
-    },
-    {
-      "at": "hubo una interrupción",
-      "use": "binary.timeline",
-      "params": {
-        "items": [
-          {
-            "year": "1",
-            "label": "INTERRUPCIÓN"
-          },
-          {
-            "year": "2",
-            "label": "MODO DEGRADADO"
-          },
-          {
-            "year": "3",
-            "label": "CONTINGENCIA"
-          }
-        ],
-        "active": 2,
-        "drawSec": 1.6
-      }
-    },
-    {
-      "at": "El sistema volvió",
-      "use": "binary.word",
-      "params": {
-        "text": "3 DE\nENERO",
-        "kicker": "PLENAMENTE OPERATIVO",
-        "note": "2000"
-      }
-    },
-    {
-      "at": "Esa fecha convierte",
-      "use": "binary.timeline",
-      "params": {
-        "items": [
-          {
-            "year": "1 ENE",
-            "label": "FALLA"
-          },
-          {
-            "year": "3 ENE",
-            "label": "CAPACIDAD PLENA"
-          }
-        ],
-        "active": 1
-      }
-    },
-    {
-      "at": "algo sí falló",
-      "use": "binary.icon",
-      "params": {
-        "icon": "bell",
-        "tag": "ALGO SÍ FALLÓ",
-        "caption": ""
-      }
-    },
-    {
-      "at": "los equipos necesitaron",
-      "use": "binary.icon",
-      "params": {
-        "icon": "hourglass",
-        "tag": "TIEMPO PARA RECUPERAR",
-        "caption": ""
-      }
-    },
-    {
-      "at": "El informe describe",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "eye",
-          "label": "LO QUE PASÓ"
-        },
-        "right": {
-          "icon": "question",
-          "label": "SIN CORRECCIONES"
-        },
-        "mid": "≠"
-      }
-    },
-    {
-      "at": "No sabemos cuánto",
-      "use": "binary.tunnel",
-      "params": {
-        "text": "NO SABEMOS"
-      }
-    },
-    {
-      "at": "sí que el respaldo",
-      "use": "binary.orbit",
-      "params": {
-        "icon": "radar",
-        "labels": [
-          "RESPALDO",
-          "FUNCIONES PRIORITARIAS"
-        ]
-      }
-    },
-    {
-      "at": "que Medicare recibió",
-      "use": "binary.counter",
-      "params": {
-        "value": "50.475",
-        "label": "RECLAMOS MAL FECHADOS",
-        "note": "MEDICARE"
-      }
-    },
-    {
-      "at": "enviadas por",
-      "use": "binary.word",
-      "params": {
-        "text": "872",
-        "kicker": "REMITENTES",
-        "note": ""
-      }
-    },
-    {
-      "at": "No son",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "person",
-          "label": "PERSONAS"
-        },
-        "right": {
-          "icon": "document",
-          "label": "REGISTROS"
-        },
-        "mid": "≠",
-        "pick": "right"
-      }
-    },
-    {
-      "at": "La Administración Federal",
-      "use": "binary.word",
-      "params": {
-        "text": "FAA",
-        "kicker": "AVIACIÓN FEDERAL",
-        "note": ""
-      }
-    },
-    {
-      "at": "sitios de alerta",
-      "use": "binary.grid",
-      "params": {
-        "icon": "waves",
-        "count": 8,
-        "label": "SITIOS",
-        "revealSec": 1.6
-      }
-    },
-    {
-      "at": "Se mostraban años",
-      "use": "binary.y2kfield",
-      "params": {
-        "label": "AÑOS INCORRECTOS"
-      }
-    },
-    {
-      "at": "La FAA dijo",
-      "use": "binary.icon",
-      "params": {
-        "icon": "check",
-        "tag": "SEGURIDAD SIN AFECTAR",
-        "caption": "ni servicio ni capacidad"
-      }
-    },
-    {
-      "at": "El día bisiesto",
-      "use": "binary.word",
-      "params": {
-        "text": "29\nFEB",
-        "kicker": "DÍA BISIESTO",
-        "note": "2000"
-      }
-    },
-    {
-      "at": "cajeros postales japoneses",
-      "use": "binary.counter",
-      "params": {
-        "value": "1.200 / 25.000",
-        "label": "CAJEROS POSTALES",
-        "note": "JAPÓN · DETENIDOS"
-      }
-    },
-    {
-      "at": "el ministerio aún",
-      "use": "binary.icon",
-      "params": {
-        "icon": "question",
-        "tag": "CAUSA SIN ESTABLECER",
-        "caption": ""
-      }
-    },
-    {
-      "at": "observatorios japoneses",
-      "use": "binary.grid",
-      "params": {
-        "icon": "eye",
-        "count": 6,
-        "label": "OBSERVATORIOS",
-        "revealSec": 1.4
-      }
-    },
-    {
-      "at": "registró mal las",
-      "use": "binary.icon",
-      "params": {
-        "icon": "water",
-        "tag": "LLUVIA MAL REGISTRADA",
-        "caption": ""
-      }
-    },
-    {
-      "at": "Problemas verificables",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "check",
-          "label": "VERIFICABLES"
-        },
-        "right": {
-          "icon": "cross",
-          "label": "CATÁSTROFE"
-        },
-        "mid": "≠",
-        "pick": "left"
-      }
-    },
-    {
-      "at": "El informe del Senado juntó",
-      "use": "binary.grid",
-      "params": {
-        "icon": "document",
-        "count": 30,
-        "label": "REPORTES",
-        "revealSec": 2
-      }
-    },
-    {
-      "at": "no todos habían sido",
-      "use": "binary.rays",
-      "params": {
-        "mode": "x",
-        "label": "SIN VERIFICAR"
-      }
-    },
-    {
-      "at": "deja fuera rumores",
-      "use": "binary.floor",
-      "params": {
-        "text": "FUERA: LOS RUMORES"
-      }
-    },
-    {
-      "at": "Así que volvamos",
-      "use": "binary.word",
-      "params": {
-        "text": "¿ESTAFA?",
-        "kicker": "LA PALABRA DEL TÍTULO",
-        "note": ""
-      }
-    },
-    {
-      "at": "Para sostenerla",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "cross",
-          "label": "EL FALLO NO EXISTÍA"
-        },
-        "right": {
-          "icon": "banknote",
-          "label": "GASTO = MANIOBRA"
-        },
-        "mid": "O"
-      }
-    },
-    {
-      "at": "La evidencia muestra",
-      "use": "binary.rays",
-      "params": {
-        "mode": "x",
-        "label": "LO PRIMERO: FALSO"
-      }
-    },
-    {
-      "at": "deja lo segundo",
-      "use": "binary.bubble",
-      "params": {
-        "text": "ABIERTO AL DEBATE"
-      }
-    },
-    {
-      "at": "El Senado dijo",
-      "use": "binary.icon",
-      "params": {
-        "icon": "gavel",
-        "tag": "EL SENADO",
-        "caption": "preparación necesaria"
-      }
-    },
-    {
-      "at": "Koskinen defendió",
-      "use": "binary.icon",
-      "params": {
-        "icon": "person",
-        "tag": "KOSKINEN",
-        "caption": "defendió el trabajo"
-      }
-    },
-    {
-      "at": "tenían razones para",
-      "use": "binary.rays",
-      "params": {
-        "mode": "fan",
-        "count": 6,
-        "highlight": 2,
-        "label": "SUS RAZONES"
-      }
-    },
-    {
-      "at": "Los modelos de gasto",
-      "use": "binary.orbit",
-      "params": {
-        "icon": "banknote",
-        "labels": [
-          "QUÉ SE INCLUYE",
-          "MONTO"
-        ]
-      }
-    },
-    {
-      "at": "Una evaluación académica",
-      "use": "binary.icon",
-      "params": {
-        "icon": "book",
-        "tag": "EVALUACIÓN ACADÉMICA",
-        "caption": "posterior"
-      }
-    },
-    {
-      "at": "el costo de prevenir",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "banknote",
-          "label": "COSTO: SE CUENTA"
-        },
-        "right": {
-          "icon": "eye",
-          "label": "DAÑO: NO SE VE"
-        },
-        "mid": "≠"
-      }
-    },
-    {
-      "at": "Por eso nadie puede",
-      "use": "common.lyric",
-      "params": {
-        "accent": [
-          "indispensable"
-        ]
-      }
-    },
-    {
-      "at": "Por eso nadie puede",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "La pregunta útil",
-      "use": "binary.bubble",
-      "params": {
-        "text": "LA PREGUNTA ÚTIL"
-      }
-    },
-    {
-      "at": "si el defecto podía",
-      "use": "binary.orbit",
-      "params": {
-        "icon": "gear",
-        "labels": [
-          "DEFECTO",
-          "SERVICIOS",
-          "ARREGLOS",
-          "CONTINGENCIAS"
-        ]
-      }
-    },
-    {
-      "at": "Los documentos confirman",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/y2k-kvm-switch.jpg",
-        "title": "Un equipo con sello Y2K",
-        "sub": "LA PREPARACIÓN, A LA VISTA"
-      }
-    },
-    {
-      "at": "Hoy se habla",
-      "use": "common.lyric",
-      "until": "El caso clásico",
-      "params": {
-        "accent": [
-          "2038"
-        ]
-      }
-    },
-    {
-      "at": "Hoy se habla",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "El caso clásico",
-      "use": "binary.counter",
-      "params": {
-        "value": "2038",
-        "mode": "count",
-        "from": 1970,
-        "label": "SEGUNDOS DESDE 1970",
-        "note": "UN CONTADOR"
-      }
-    },
-    {
-      "at": "guardados en entero",
-      "use": "binary.word",
-      "params": {
-        "text": "32 BITS",
-        "kicker": "ENTERO CON SIGNO",
-        "note": ""
-      }
-    },
-    {
-      "at": "Ese rango termina",
-      "use": "binary.timeline",
-      "params": {
-        "items": [
-          {
-            "year": "1970",
-            "label": "EMPIEZA"
-          },
-          {
-            "year": "2038",
-            "label": "19 DE ENERO"
-          }
-        ],
-        "active": 1
-      }
-    },
-    {
-      "at": "No significa que",
-      "use": "binary.icon",
-      "params": {
-        "icon": "clock",
-        "tag": "NO TODOS LOS RELOJES",
-        "caption": ""
-      }
-    },
-    {
-      "at": "El estándar POSIX",
-      "use": "binary.word",
-      "params": {
-        "text": "64 BITS",
-        "kicker": "POSIX ACTUAL",
-        "note": "AL MENOS"
-      }
-    },
-    {
-      "at": "aunque sistemas viejos",
-      "use": "binary.icon",
-      "params": {
-        "icon": "chip",
-        "tag": "SISTEMAS VIEJOS",
-        "caption": "merecen revisión"
-      }
-    },
-    {
-      "at": "En Millennium, la primera",
-      "use": "binary.midnightrelay",
-      "params": {
-        "label": "LA PRIMERA MEDIANOCHE",
-        "first": "MILLENNIUM",
-        "second": "CHATHAM",
-        "third": "AUCKLAND"
-      }
-    },
-    {
-      "at": "sin catástrofe global",
-      "use": "binary.frame",
-      "params": {
-        "src": "assets/media/y2k-rollover-bangalore.jpg",
-        "title": "Después del cambio de fecha",
-        "sub": "BANGALORE · 2000"
-      }
-    },
-    {
-      "at": "Hubo años de pruebas",
-      "use": "binary.grid",
-      "params": {
-        "icon": "check",
-        "count": 12,
-        "label": "PRUEBAS",
-        "revealSec": 2
-      }
-    },
-    {
-      "at": "El silencio no demuestra",
-      "use": "common.lyric",
-      "params": {
-        "accent": [
-          "problema"
-        ]
-      }
-    },
-    {
-      "at": "El silencio no demuestra",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "la mayor estafa informática",
-      "use": "binary.title",
-      "params": {
-        "text": "¿LA MAYOR\nESTAFA?",
-        "textPortrait": "¿LA\nMAYOR\nESTAFA?",
-        "kicker": "LA PREGUNTA"
-      }
-    },
-    {
-      "at": "No hay evidencia",
-      "use": "common.lyric",
-      "params": {
-        "accent": [
-          "estafa"
-        ]
-      }
-    },
-    {
-      "at": "No hay evidencia",
-      "use": "common.flash",
-      "dur": 0.4,
-      "layer": "overlay"
-    },
-    {
-      "at": "Fue proporcionado cada",
-      "use": "binary.versus",
-      "params": {
-        "left": {
-          "icon": "banknote",
-          "label": "CADA GASTO"
-        },
-        "right": {
-          "icon": "question",
-          "label": "¿PROPORCIONADO?"
-        },
-        "mid": "?"
-      }
-    },
-    {
-      "at": "las fallas fueron",
-      "use": "binary.timeline",
-      "params": {
-        "items": [
-          {
-            "year": "BUG",
-            "label": "REAL"
-          },
-          {
-            "year": "FALLAS",
-            "label": "ACOTADAS"
-          },
-          {
-            "year": "SIN ARREGLOS",
-            "label": "NO SE MIDE"
-          }
-        ],
-        "active": 1
-      }
-    },
-    {
-      "at": "Entre esos ceros",
-      "use": "binary.grid",
-      "params": {
-        "icon": "person",
-        "count": 16,
-        "label": "PERSONAS",
-        "revealSec": 2
-      }
-    },
-    {
-      "at": "equipos de guardia y",
-      "use": "binary.crisisdesk",
-      "params": {
-        "label": "EQUIPOS DE GUARDIA",
-        "states": [
-          "PRUEBAS",
-          "GUARDIA",
-          "RESPUESTA"
-        ]
-      }
-    },
-    {
-      "at": "nos deja un límite",
-      "use": "binary.word",
-      "params": {
-        "text": "2038",
-        "kicker": "UN LÍMITE CONOCIDO",
-        "note": "PUEDE REVISARSE"
-      }
-    },
-    {
-      "at": "sin otra cuenta",
-      "use": "binary.title",
-      "params": {
-        "text": "¿FUE EL AÑO 2000\nUNA ESTAFA?",
-        "textPortrait": "¿FUE EL\nAÑO 2000\nUNA\nESTAFA?",
-        "kicker": "MILLENNIUM · 31 DIC 1999"
-      }
-    }
-  ]
+  {
+   "at": "En salas de control",
+   "use": "binary.crisisdesk",
+   "params": {
+    "label": "SALAS DE CONTROL",
+    "states": [
+     "REPORTE",
+     "RESPALDO",
+     "RECUPERACIÓN"
+    ]
+   }
+  },
+  {
+   "at": "qué acaba de romperse",
+   "use": "binary.bubble",
+   "params": {
+    "text": ""
+   }
+  },
+  {
+   "at": "antes Caroline Island",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/kiribati-iss.jpg",
+    "title": "Kiribati desde la órbita",
+    "sub": "ISS · IMAGEN ILUSTRATIVA"
+   }
+  },
+  {
+   "at": "de la mañana del",
+   "use": "binary.counter",
+   "params": {
+    "value": "10:00",
+    "label": "GREENWICH · 31 DIC",
+    "note": "CAMBIO DE FECHA"
+   }
+  },
+  {
+   "at": "Su huso era",
+   "use": "binary.word",
+   "params": {
+    "text": "UTC+14",
+    "kicker": "HUSO HORARIO",
+    "note": "MILLENNIUM ISLAND"
+   }
+  },
+  {
+   "at": "normalmente estaba deshabitada",
+   "use": "binary.floor",
+   "params": {
+    "text": "DESHABITADA"
+   }
+  },
+  {
+   "at": "minutos después, la fecha",
+   "use": "common.lyric",
+   "until": "en las islas Chatham",
+   "params": {
+    "accent": [
+     "15",
+     "quince",
+     "minutos"
+    ]
+   }
+  },
+  {
+   "at": "minutos después, la fecha",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "en las islas Chatham",
+   "use": "binary.midnightrelay",
+   "params": {
+    "label": "EL CAMBIO VIAJA",
+    "first": "MILLENNIUM",
+    "second": "CHATHAM",
+    "third": "AUCKLAND"
+   }
+  },
+  {
+   "at": "Estaban en UTC",
+   "use": "binary.word",
+   "params": {
+    "text": "UTC+13:45",
+    "kicker": "CHATHAM",
+    "note": "PRIMER LUGAR HABITADO"
+   }
+  },
+  {
+   "at": "Auckland entró después",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "+0 MIN",
+      "label": "MILLENNIUM"
+     },
+     {
+      "year": "+15 MIN",
+      "label": "CHATHAM"
+     },
+     {
+      "year": "DESPUÉS",
+      "label": "AUCKLAND"
+     }
+    ],
+    "active": 2,
+    "drawSec": 1.4
+   }
+  },
+  {
+   "at": "una sola cuenta atrás",
+   "use": "common.clip",
+   "params": {
+    "src": "assets/media/y2k-midnight-clock.mp4",
+    "caption": "",
+    "sub": ""
+   },
+   "dur": 6.0
+  },
+  {
+   "at": "El título de hoy",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "question",
+     "label": "ESTAFA"
+    },
+    "right": {
+     "icon": "check",
+     "label": "RIESGO REAL"
+    },
+    "mid": "?"
+   },
+   "offset": 3.24
+  },
+  {
+   "at": "a esa primera hora",
+   "use": "binary.word",
+   "params": {
+    "text": "PRIMERA\nHORA",
+    "kicker": "VOLVAMOS A ESA"
+   }
+  },
+  {
+   "at": "Si el riesgo era imaginario",
+   "use": "binary.rays",
+   "params": {
+    "mode": "x",
+    "label": "IMAGINARIO"
+   }
+  },
+  {
+   "at": "cada silencio era",
+   "use": "binary.tunnel",
+   "params": {
+    "text": "CADA SILENCIO"
+   }
+  },
+  {
+   "at": "un detalle diminuto",
+   "use": "binary.y2kfield",
+   "params": {
+    "label": "CAMPO DE AÑO"
+   }
+  },
+  {
+   "at": "no ocupaba cuatro cifras",
+   "use": "binary.counter",
+   "params": {
+    "value": "99",
+    "label": "EL AÑO",
+    "note": "DOS CIFRAS, NO CUATRO"
+   }
+  },
+  {
+   "at": "Cómo dos caracteres",
+   "use": "binary.bubble",
+   "params": {
+    "text": "¿DOS CARACTERES?"
+   }
+  },
+  {
+   "at": "que llevaban décadas",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/terminal-vt100.jpg",
+    "title": "Terminal DEC VT100",
+    "sub": "DÉCADAS FUNCIONANDO"
+   }
+  },
+  {
+   "at": "El primer dato rompe",
+   "use": "binary.rays",
+   "params": {
+    "mode": "burst",
+    "count": 18,
+    "label": "UNA IDEA POPULAR"
+   }
+  },
+  {
+   "at": "una computadora que de",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "chip",
+     "label": "OLVIDA EL FUTURO"
+    },
+    "right": {
+     "icon": "gear",
+     "label": "DECISIONES DE DISEÑO"
+    },
+    "mid": "≠"
+   }
+  },
+  {
+   "at": "Estaba escondido en",
+   "use": "binary.word",
+   "params": {
+    "text": "DECISIONES\nDE DISEÑO",
+    "kicker": "MUY VIEJAS",
+    "note": "REPETIDAS EN PROGRAMAS"
+   }
+  },
+  {
+   "at": "repetidas en programas",
+   "use": "binary.grid",
+   "params": {
+    "icon": "document",
+    "count": 16,
+    "label": "PROGRAMAS",
+    "revealSec": 2
+   }
+  },
+  {
+   "at": "guardar una fecha como",
+   "use": "binary.word",
+   "params": {
+    "text": "99",
+    "kicker": "EN LUGAR DE 1999",
+    "note": "AHORRABA MEMORIA"
+   }
+  },
+  {
+   "at": "memoria y espacio",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "clock",
+     "label": "1999"
+    },
+    "right": {
+     "icon": "clock",
+     "label": "99"
+    },
+    "mid": "→"
+   }
+  },
+  {
+   "at": "En máquinas limitadas",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/community-terminal.jpg",
+    "title": "Terminal de 1975",
+    "sub": "MÁQUINAS LIMITADAS"
+   }
+  },
+  {
+   "at": "un byte, una",
+   "use": "binary.word",
+   "params": {
+    "text": "1 BYTE",
+    "kicker": "UNA UNIDAD DE MEMORIA",
+    "note": "PODÍA CONTAR"
+   }
+  },
+  {
+   "at": "Esa decisión parecía",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "clock",
+     "label": "00"
+    },
+    "right": {
+     "icon": "clock",
+     "label": "1900"
+    },
+    "mid": "?"
+   }
+  },
+  {
+   "at": "el siglo empezaba",
+   "use": "binary.word",
+   "params": {
+    "text": "19",
+    "kicker": "EL SIGLO EMPEZABA POR",
+    "note": ""
+   }
+  },
+  {
+   "at": "se comparaban solo",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "dígitos"
+    ]
+   }
+  },
+  {
+   "at": "se comparaban solo",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "podía interpretarse como",
+   "use": "binary.y2kfield",
+   "params": {
+    "label": "¿1900 O 2000?"
+   }
+  },
+  {
+   "at": "No todos los sistemas",
+   "use": "binary.rays",
+   "params": {
+    "mode": "fan",
+    "count": 8,
+    "highlight": 3,
+    "label": "CADA PROGRAMA"
+   }
+  },
+  {
+   "at": "ordenaban mal una lista",
+   "use": "binary.word",
+   "params": {
+    "text": "LISTA\nMAL ORDENADA",
+    "kicker": "ALGUNOS PROGRAMAS"
+   }
+  },
+  {
+   "at": "otros calculaban edades",
+   "use": "binary.orbit",
+   "params": {
+    "icon": "gear",
+    "labels": [
+     "EDADES",
+     "VENCIMIENTOS",
+     "PAGOS"
+    ]
+   }
+  },
+  {
+   "at": "El error dependía",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/y2k-date-error.jpg",
+    "title": "Un error de fecha",
+    "sub": "PANTALLA CON AÑO 1900"
+   }
+  },
+  {
+   "at": "Por eso el trabajo",
+   "use": "common.clip",
+   "params": {
+    "src": "assets/media/y2k-typing.mp4",
+    "caption": "Corregir y probar",
+    "sub": "IMAGEN ILUSTRATIVA"
+   },
+   "dur": 6.5
+  },
+  {
+   "at": "Había que localizar registros",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "1",
+      "label": "LOCALIZAR"
+     },
+     {
+      "year": "2",
+      "label": "CORREGIR"
+     },
+     {
+      "year": "3",
+      "label": "PROBAR"
+     },
+     {
+      "year": "4",
+      "label": "VOLVER A PROBAR"
+     }
+    ],
+    "active": 3,
+    "drawSec": 2.4
+   },
+   "offset": 1.88
+  },
+  {
+   "at": "El calendario era",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "clock",
+     "label": "CALENDARIO PEQUEÑO"
+    },
+    "right": {
+     "icon": "gear",
+     "label": "RED DE DEPENDENCIAS"
+    },
+    "mid": "≠"
+   }
+  },
+  {
+   "at": "la red de dependencias",
+   "use": "binary.grid",
+   "params": {
+    "icon": "gear",
+    "count": 24,
+    "label": "DEPENDENCIAS",
+    "revealSec": 2
+   }
+  },
+  {
+   "at": "El bug era real",
+   "use": "common.lyric",
+   "until": "Eso no significa",
+   "params": {
+    "accent": [
+     "real"
+    ]
+   }
+  },
+  {
+   "at": "El bug era real",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "Eso no significa",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "bulb",
+     "label": "BUG REAL"
+    },
+    "right": {
+     "icon": "cross",
+     "label": "CADA PREDICCIÓN"
+    },
+    "mid": "≠",
+    "pick": "left"
+   }
+  },
+  {
+   "at": "El riesgo dependía del",
+   "use": "binary.chart",
+   "params": {
+    "curve": "s",
+    "startLabel": "BAJO",
+    "endLabel": "SEGÚN EL USO",
+    "axisX": "SISTEMA",
+    "axisY": "RIESGO"
+   }
+  },
+  {
+   "at": "miles de organizaciones",
+   "use": "binary.grid",
+   "params": {
+    "icon": "house",
+    "count": 30,
+    "label": "ORGANIZACIONES",
+    "revealSec": 2.2
+   }
+  },
+  {
+   "at": "nadie había inventariado",
+   "use": "binary.word",
+   "params": {
+    "text": "SIN INVENTARIO",
+    "kicker": "PROGRAMAS QUE NADIE HABÍA",
+    "note": "POR COMPLETO"
+   }
+  },
+  {
+   "at": "Y aquí aparece",
+   "use": "binary.bubble",
+   "params": {
+    "text": "¿CUÁNTO COSTÓ?"
+   }
+  },
+  {
+   "at": "una noche tranquila",
+   "use": "binary.floor",
+   "params": {
+    "text": "UNA NOCHE TRANQUILA"
+   }
+  },
+  {
+   "at": "Las cifras oficiales",
+   "use": "binary.chart",
+   "params": {
+    "curve": "growth",
+    "endLabel": "CIFRAS OFICIALES"
+   }
+  },
+  {
+   "at": "no miden todas",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "banknote",
+     "label": "UNA CIFRA"
+    },
+    "right": {
+     "icon": "banknote",
+     "label": "OTRA CIFRA"
+    },
+    "mid": "≠"
+   }
+  },
+  {
+   "at": "El Departamento de Comercio",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/commerce-building.jpg",
+    "title": "Departamento de Comercio",
+    "sub": "ESTIMACIÓN BASADA EN IDC"
+   }
+  },
+  {
+   "at": "gasto estadounidense en software",
+   "use": "binary.counter",
+   "params": {
+    "value": "114.000.000.000",
+    "label": "US$ · SOFTWARE Y2K",
+    "note": "ESTIMACIÓN IDC"
+   }
+  },
+  {
+   "at": "entre 1995",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "1995",
+      "label": "DESDE"
+     },
+     {
+      "year": "2001",
+      "label": "HASTA"
+     }
+    ],
+    "active": 1,
+    "label": "GASTO EN EE. UU."
+   }
+  },
+  {
+   "at": "Era un modelo",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "chip",
+     "label": "MODELO"
+    },
+    "right": {
+     "icon": "gavel",
+     "label": "AUDITORÍA"
+    },
+    "mid": "≠",
+    "pick": "left"
+   }
+  },
+  {
+   "at": "El Senado usó otra",
+   "use": "common.lyric",
+   "until": "El propio informe",
+   "params": {
+    "accent": [
+     "millones"
+    ]
+   }
+  },
+  {
+   "at": "alrededor de 100 mil",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "El propio informe",
+   "use": "binary.counter",
+   "params": {
+    "value": "8.340.000.000",
+    "label": "GOBIERNO FEDERAL",
+    "note": "US$ · SEGÚN EL SENADO"
+   }
+  },
+  {
+   "at": "Son ámbitos distintos",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "house",
+     "label": "EMPRESAS Y GOBIERNO"
+    },
+    "right": {
+     "icon": "person",
+     "label": "SOLO FEDERAL"
+    },
+    "mid": "≠"
+   }
+  },
+  {
+   "at": "John Koskinen",
+   "use": "binary.word",
+   "params": {
+    "text": "KOSKINEN",
+    "kicker": "CONSEJO Y2K",
+    "note": "DIRECTOR"
+   }
+  },
+  {
+   "at": "millones federales",
+   "use": "binary.counter",
+   "params": {
+    "value": "8.500.000.000",
+    "label": "FEDERAL · KOSKINEN",
+    "note": "US$"
+   }
+  },
+  {
+   "at": "para el país",
+   "use": "binary.word",
+   "params": {
+    "text": "100.000\nMILLONES",
+    "kicker": "EE. UU. · KOSKINEN",
+    "note": "US$"
+   }
+  },
+  {
+   "at": "Para el mundo",
+   "use": "binary.counter",
+   "params": {
+    "value": "200.000",
+    "mode": "slot",
+    "label": "MILLONES",
+    "note": "PARA EL MUNDO"
+   }
+  },
+  {
+   "at": "El Senado recogió además",
+   "use": "binary.word",
+   "params": {
+    "text": "320.000\nMILLONES",
+    "kicker": "IDC MAGELLAN · MUNDO",
+    "note": "US$"
+   }
+  },
+  {
+   "at": "millones en Estados Unidos",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "globe",
+     "label": "MUNDO 320.000 M"
+    },
+    "right": {
+     "icon": "house",
+     "label": "EE. UU. 134.000 M"
+    },
+    "mid": "/"
+   }
+  },
+  {
+   "at": "No existe una cifra",
+   "use": "binary.rays",
+   "params": {
+    "mode": "x",
+    "label": "SIN CIFRA FINAL"
+   }
+  },
+  {
+   "at": "cambian el periodo",
+   "use": "binary.orbit",
+   "params": {
+    "icon": "question",
+    "labels": [
+     "PERIODO",
+     "RUBROS",
+     "MÉTODO"
+    ]
+   }
+  },
+  {
+   "at": "En Reino Unido",
+   "use": "binary.word",
+   "params": {
+    "text": "£380\nMILLONES",
+    "kicker": "REINO UNIDO",
+    "note": "GOBIERNO CENTRAL"
+   }
+  },
+  {
+   "at": "La Cámara de los",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/commons-chamber.jpg",
+    "title": "Cámara de los Comunes",
+    "sub": "REPITIÓ EL DATO"
+   }
+  },
+  {
+   "at": "Son cifras grandes",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "crown",
+     "label": "REINO UNIDO"
+    },
+    "right": {
+     "icon": "globe",
+     "label": "MUNDO"
+    },
+    "mid": "≠"
+   }
+  },
+  {
+   "at": "Fue proporcionado",
+   "use": "binary.bubble",
+   "params": {
+    "text": "¿PROPORCIONADO?"
+   }
+  },
+  {
+   "at": "El Senado defendió",
+   "use": "binary.word",
+   "params": {
+    "text": "NECESARIA",
+    "kicker": "LA PREPARACIÓN",
+    "note": "EL SENADO DIJO"
+   }
+  },
+  {
+   "at": "cada factura valiera",
+   "use": "common.punch",
+   "params": {
+    "text": "¿FUE\nPROPORCIONADO?"
+   }
+  },
+  {
+   "at": "Tampoco podemos observar",
+   "use": "binary.tunnel",
+   "params": {
+    "text": "¿Y SI NADIE CORREGÍA?"
+   }
+  },
+  {
+   "at": "Si el gasto evitó",
+   "use": "binary.chart",
+   "params": {
+    "curve": "decay",
+    "startLabel": "GASTO",
+    "endLabel": "FALLAS VISIBLES"
+   }
+  },
+  {
+   "at": "Si hubo exceso",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "banknote",
+     "label": "EXCESO"
+    },
+    "right": {
+     "icon": "gear",
+     "label": "MODERNIZACIÓN"
+    },
+    "mid": "?"
+   }
+  },
+  {
+   "at": "Los datos permiten",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "banknote",
+     "label": "EL COSTO SE PUEDE CONTAR"
+    },
+    "right": {
+     "icon": "question",
+     "label": "EL DAÑO NO SE OBSERVA"
+    },
+    "mid": "?"
+   }
+  },
+  {
+   "at": "no permiten reconstruir",
+   "use": "binary.floor",
+   "params": {
+    "text": "SIN REPARACIONES"
+   }
+  },
+  {
+   "at": "Antes de medianoche, alguien",
+   "use": "binary.y2kfield",
+   "params": {
+    "label": "CAMPOS DE 2 DÍGITOS"
+   }
+  },
+  {
+   "at": "Algunos expertos que",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/cobol-tape.jpg",
+    "title": "Compilador COBOL en cinta",
+    "sub": "UNIVAC · SISTEMAS ANTIGUOS"
+   }
+  },
+  {
+   "at": "A quién llamas",
+   "use": "binary.bubble",
+   "params": {
+    "text": "¿A QUIÉN LLAMAS?"
+   }
+  },
+  {
+   "at": "Una respuesta fue",
+   "use": "common.lyric",
+   "until": "El lenguaje se usaba",
+   "params": {
+    "accent": [
+     "cobol"
+    ]
+   }
+  },
+  {
+   "at": "Una respuesta fue",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "El lenguaje se usaba",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/cobol-program.jpg",
+    "title": "Un programa en COBOL",
+    "sub": "SISTEMAS DE NEGOCIO"
+   }
+  },
+  {
+   "at": "Un reportaje de",
+   "use": "binary.word",
+   "params": {
+    "text": "BRUCE\nFASSETT",
+    "kicker": "PROGRAMADORES COBOL",
+    "note": "RECONTRATADO DESPUÉS DE JUBILARSE"
+   }
+  },
+  {
+   "at": "recontratado después de",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/cobol-poster.jpg",
+    "title": "Afiche de un curso COBOL",
+    "sub": "1969 · ILUSTRATIVO"
+   }
+  },
+  {
+   "at": "Equipos rastrearon archivos",
+   "use": "binary.grid",
+   "params": {
+    "icon": "keyboard",
+    "count": 12,
+    "label": "EQUIPOS",
+    "revealSec": 2
+   }
+  },
+  {
+   "at": "reglas enterradas",
+   "use": "binary.word",
+   "params": {
+    "text": "REGLAS\nENTERRADAS",
+    "kicker": "EQUIPOS RASTREARON ARCHIVOS",
+    "note": "COMPROBARON RESULTADOS"
+   }
+  },
+  {
+   "at": "Una corrección podía",
+   "use": "binary.y2kfield",
+   "params": {
+    "label": "INTERPRETAR EL AÑO"
+   }
+  },
+  {
+   "at": "encontrar todos los lugares",
+   "use": "binary.rays",
+   "params": {
+    "mode": "fan",
+    "count": 12,
+    "highlight": 7,
+    "label": "TODOS LOS LUGARES"
+   }
+  },
+  {
+   "at": "También había que preparar",
+   "use": "binary.crisisdesk",
+   "params": {
+    "label": "PLAN ALTERNATIVO",
+    "states": [
+     "CONTINGENCIA",
+     "RESPALDO",
+     "PRIORIDADES"
+    ]
+   }
+  },
+  {
+   "at": "algunas organizaciones ensayaban",
+   "use": "binary.orbit",
+   "params": {
+    "icon": "gear",
+    "labels": [
+     "ENSAYAR",
+     "RESPALDAR",
+     "PRIORIZAR"
+    ]
+   }
+  },
+  {
+   "at": "La meta era",
+   "use": "binary.word",
+   "params": {
+    "text": "SERVICIO\nESENCIAL",
+    "kicker": "LA META ERA",
+    "note": "MANTENERLO SI FALLABA"
+   }
+  },
+  {
+   "at": "Cuando Millennium celebraba",
+   "use": "common.clip",
+   "params": {
+    "src": "assets/media/y2k-fireworks-city.mp4",
+    "caption": "Fuegos de año nuevo",
+    "sub": "TBILISI · 2025 · ILUSTRATIVO"
+   },
+   "dur": 6.0
+  },
+  {
+   "at": "centros de operaciones de",
+   "use": "binary.midnightrelay",
+   "params": {
+    "label": "LA MEDIANOCHE AVANZA",
+    "first": "MILLENNIUM",
+    "second": "CHATHAM",
+    "third": "AUCKLAND"
+   },
+   "offset": 1.02
+  },
+  {
+   "at": "La pregunta de guardia",
+   "use": "binary.bubble",
+   "params": {
+    "text": "¿DENTRO DE LÍMITES?"
+   }
+  },
+  {
+   "at": "El comité del Senado",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/computer-room.jpg",
+    "title": "Una sala de cómputo",
+    "sub": "IMAGEN ILUSTRATIVA"
+   }
+  },
+  {
+   "at": "Su centro de coordinación",
+   "use": "binary.word",
+   "params": {
+    "text": "170–200",
+    "kicker": "PERSONAS DE GUARDIA",
+    "note": "CENTRO DE COORDINACIÓN"
+   }
+  },
+  {
+   "at": "FEMA repartió",
+   "use": "binary.counter",
+   "params": {
+    "value": "800",
+    "mode": "count",
+    "label": "FEMA",
+    "note": "PERSONAS ENTRE SUS CENTROS"
+   }
+  },
+  {
+   "at": "También hubo equipos",
+   "use": "binary.crisisdesk",
+   "params": {
+    "label": "EMPRESAS Y SERVICIOS",
+    "states": [
+     "GUARDIA",
+     "REPORTE",
+     "RESPALDO"
+    ]
+   }
+  },
+  {
+   "at": "La pregunta seguía abierta",
+   "use": "binary.rays",
+   "params": {
+    "mode": "burst",
+    "count": 14,
+    "label": "¿SE PROPAGA?"
+   }
+  },
+  {
+   "at": "La sala no podía",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/satellite-control-room.jpg",
+    "title": "Sala de control satelital",
+    "sub": "FLUJO DE INFORMACIÓN · IMAGEN ILUSTRATIVA"
+   }
+  },
+  {
+   "at": "el flujo de información",
+   "use": "common.clip",
+   "params": {
+    "src": "assets/media/y2k-server-room.mp4",
+    "caption": "El flujo de información",
+    "sub": "IMAGEN ILUSTRATIVA"
+   }
+  },
+  {
+   "at": "Poco después de la",
+   "use": "binary.counter",
+   "params": {
+    "value": "00:00",
+    "label": "GREENWICH",
+    "note": "1 DE ENERO"
+   }
+  },
+  {
+   "at": "el GAO documentó",
+   "use": "binary.word",
+   "params": {
+    "text": "GAO",
+    "kicker": "EL INFORME",
+    "note": "UNA FALLA DOCUMENTADA"
+   }
+  },
+  {
+   "at": "procesamiento terrestre",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/satellite-ground-team.jpg",
+    "title": "Equipo de una estación terrestre",
+    "sub": "SISTEMA SATELITAL · IMAGEN ILUSTRATIVA"
+   }
+  },
+  {
+   "at": "No fue una caída",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "cross",
+     "label": "CAÍDA TOTAL"
+    },
+    "right": {
+     "icon": "radar",
+     "label": "BAJO CAPACIDAD"
+    },
+    "mid": "≠",
+    "pick": "right"
+   }
+  },
+  {
+   "at": "por debajo de su",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "plena"
+    ]
+   }
+  },
+  {
+   "at": "por debajo de su",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "El respaldo permitió cubrir",
+   "use": "binary.crisisdesk",
+   "params": {
+    "label": "MODO DEGRADADO",
+    "states": [
+     "FALLA",
+     "RESPALDO",
+     "PRIORIDADES"
+    ]
+   }
+  },
+  {
+   "at": "a menor capacidad",
+   "use": "binary.chart",
+   "params": {
+    "curve": "decay",
+    "startLabel": "NORMAL",
+    "endLabel": "MENOR CAPACIDAD"
+   }
+  },
+  {
+   "at": "El dato importante",
+   "use": "binary.rays",
+   "params": {
+    "mode": "x",
+    "label": "CATÁSTROFE SECRETA"
+   }
+  },
+  {
+   "at": "hubo una interrupción",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "1",
+      "label": "INTERRUPCIÓN"
+     },
+     {
+      "year": "2",
+      "label": "MODO DEGRADADO"
+     },
+     {
+      "year": "3",
+      "label": "CONTINGENCIA"
+     }
+    ],
+    "active": 2,
+    "drawSec": 1.6
+   }
+  },
+  {
+   "at": "El sistema volvió",
+   "use": "binary.word",
+   "params": {
+    "text": "3 DE\nENERO",
+    "kicker": "PLENAMENTE OPERATIVO",
+    "note": "2000"
+   }
+  },
+  {
+   "at": "Esa fecha convierte",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "1 ENE",
+      "label": "FALLA"
+     },
+     {
+      "year": "3 ENE",
+      "label": "CAPACIDAD PLENA"
+     }
+    ],
+    "active": 1
+   }
+  },
+  {
+   "at": "algo sí falló",
+   "use": "binary.word",
+   "params": {
+    "text": "ALGO SÍ\nFALLÓ",
+    "kicker": "EL RESPALDO LIMITÓ EL IMPACTO"
+   }
+  },
+  {
+   "at": "los equipos necesitaron",
+   "use": "binary.counter",
+   "params": {
+    "value": "3",
+    "mode": "count",
+    "from": 0,
+    "label": "DE ENERO",
+    "note": "PLENAMENTE OPERATIVO"
+   }
+  },
+  {
+   "at": "El informe describe",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "eye",
+     "label": "LO QUE PASÓ"
+    },
+    "right": {
+     "icon": "question",
+     "label": "SIN CORRECCIONES"
+    },
+    "mid": "≠"
+   }
+  },
+  {
+   "at": "No sabemos cuánto",
+   "use": "binary.tunnel",
+   "params": {
+    "text": "NO SABEMOS"
+   }
+  },
+  {
+   "at": "sí que el respaldo",
+   "use": "binary.orbit",
+   "params": {
+    "icon": "radar",
+    "labels": [
+     "RESPALDO",
+     "FUNCIONES PRIORITARIAS"
+    ]
+   }
+  },
+  {
+   "at": "que Medicare recibió",
+   "use": "binary.counter",
+   "params": {
+    "value": "50.475",
+    "label": "RECLAMOS MAL FECHADOS",
+    "note": "MEDICARE"
+   }
+  },
+  {
+   "at": "enviadas por",
+   "use": "binary.word",
+   "params": {
+    "text": "872",
+    "kicker": "REMITENTES",
+    "note": ""
+   }
+  },
+  {
+   "at": "No son",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "person",
+     "label": "PERSONAS"
+    },
+    "right": {
+     "icon": "document",
+     "label": "REGISTROS"
+    },
+    "mid": "≠",
+    "pick": "right"
+   }
+  },
+  {
+   "at": "La Administración Federal",
+   "use": "binary.word",
+   "params": {
+    "text": "FAA",
+    "kicker": "AVIACIÓN FEDERAL",
+    "note": ""
+   }
+  },
+  {
+   "at": "sitios de alerta",
+   "use": "binary.grid",
+   "params": {
+    "icon": "waves",
+    "count": 8,
+    "label": "SITIOS",
+    "revealSec": 1.6
+   }
+  },
+  {
+   "at": "Se mostraban años",
+   "use": "binary.y2kfield",
+   "params": {
+    "label": "AÑOS INCORRECTOS"
+   }
+  },
+  {
+   "at": "La FAA dijo",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/airport-anemometer.jpg",
+    "title": "Anemómetro de aeropuerto",
+    "sub": "MEDICIÓN DE VIENTO · IMAGEN ILUSTRATIVA"
+   }
+  },
+  {
+   "at": "El día bisiesto",
+   "use": "binary.word",
+   "params": {
+    "text": "29\nFEB",
+    "kicker": "DÍA BISIESTO",
+    "note": "2000"
+   }
+  },
+  {
+   "at": "cajeros postales japoneses",
+   "use": "binary.counter",
+   "params": {
+    "value": "1.200 / 25.000",
+    "label": "CAJEROS POSTALES",
+    "note": "JAPÓN · DETENIDOS"
+   }
+  },
+  {
+   "at": "el ministerio aún",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/yucho-atm.jpg",
+    "title": "Cajeros de Japan Post",
+    "sub": "HASTA 1.200 DE 25.000"
+   }
+  },
+  {
+   "at": "observatorios japoneses",
+   "use": "binary.grid",
+   "params": {
+    "icon": "eye",
+    "count": 6,
+    "label": "OBSERVATORIOS",
+    "revealSec": 1.4
+   }
+  },
+  {
+   "at": "registró mal las",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/rain-gauge.jpg",
+    "title": "Pluviómetro",
+    "sub": "LLUVIA MAL REGISTRADA · IMAGEN ILUSTRATIVA"
+   }
+  },
+  {
+   "at": "Problemas verificables",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "check",
+     "label": "VERIFICABLES"
+    },
+    "right": {
+     "icon": "cross",
+     "label": "CATÁSTROFE"
+    },
+    "mid": "≠",
+    "pick": "left"
+   }
+  },
+  {
+   "at": "El informe del Senado juntó",
+   "use": "binary.grid",
+   "params": {
+    "icon": "document",
+    "count": 30,
+    "label": "REPORTES",
+    "revealSec": 2
+   }
+  },
+  {
+   "at": "no todos habían sido",
+   "use": "binary.rays",
+   "params": {
+    "mode": "x",
+    "label": "SIN VERIFICAR"
+   }
+  },
+  {
+   "at": "deja fuera rumores",
+   "use": "binary.floor",
+   "params": {
+    "text": "FUERA: LOS RUMORES"
+   }
+  },
+  {
+   "at": "Así que volvamos",
+   "use": "binary.word",
+   "params": {
+    "text": "¿ESTAFA?",
+    "kicker": "LA PALABRA DEL TÍTULO",
+    "note": ""
+   }
+  },
+  {
+   "at": "Para sostenerla",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "cross",
+     "label": "EL FALLO NO EXISTÍA"
+    },
+    "right": {
+     "icon": "banknote",
+     "label": "GASTO = MANIOBRA"
+    },
+    "mid": "O"
+   }
+  },
+  {
+   "at": "La evidencia muestra",
+   "use": "binary.rays",
+   "params": {
+    "mode": "x",
+    "label": "LO PRIMERO: FALSO"
+   }
+  },
+  {
+   "at": "deja lo segundo",
+   "use": "binary.bubble",
+   "params": {
+    "text": "ABIERTO AL DEBATE"
+   }
+  },
+  {
+   "at": "El Senado dijo",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/senate-chamber.jpg",
+    "title": "Senado de Estados Unidos",
+    "sub": "LA PREPARACIÓN ERA NECESARIA"
+   }
+  },
+  {
+   "at": "Koskinen defendió",
+   "use": "binary.word",
+   "params": {
+    "text": "KOSKINEN",
+    "kicker": "DEFENDIÓ EL TRABAJO"
+   }
+  },
+  {
+   "at": "tenían razones para",
+   "use": "binary.rays",
+   "params": {
+    "mode": "fan",
+    "count": 6,
+    "highlight": 2,
+    "label": "SUS RAZONES"
+   }
+  },
+  {
+   "at": "Los modelos de gasto",
+   "use": "binary.orbit",
+   "params": {
+    "icon": "banknote",
+    "labels": [
+     "QUÉ SE INCLUYE",
+     "MONTO"
+    ]
+   }
+  },
+  {
+   "at": "Una evaluación académica",
+   "use": "binary.word",
+   "params": {
+    "text": "DIFICULTAD\nCENTRAL",
+    "kicker": "EL COSTO SE PUEDE CONTAR",
+    "note": "EL DAÑO NO SE OBSERVA"
+   }
+  },
+  {
+   "at": "el costo de prevenir",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "banknote",
+     "label": "COSTO: SE CUENTA"
+    },
+    "right": {
+     "icon": "eye",
+     "label": "DAÑO: NO SE VE"
+    },
+    "mid": "≠"
+   }
+  },
+  {
+   "at": "Por eso nadie puede",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "indispensable"
+    ]
+   }
+  },
+  {
+   "at": "Por eso nadie puede",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "La pregunta útil",
+   "use": "binary.bubble",
+   "params": {
+    "text": "LA PREGUNTA ÚTIL"
+   }
+  },
+  {
+   "at": "si el defecto podía",
+   "use": "binary.orbit",
+   "params": {
+    "icon": "gear",
+    "labels": [
+     "DEFECTO",
+     "SERVICIOS",
+     "ARREGLOS",
+     "CONTINGENCIAS"
+    ]
+   }
+  },
+  {
+   "at": "Los documentos confirman",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/y2k-kvm-switch.jpg",
+    "title": "Un equipo con sello Y2K",
+    "sub": "LA PREPARACIÓN, A LA VISTA"
+   }
+  },
+  {
+   "at": "Hoy se habla",
+   "use": "common.lyric",
+   "until": "El caso clásico",
+   "params": {
+    "accent": [
+     "2038"
+    ]
+   }
+  },
+  {
+   "at": "Hoy se habla",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "El caso clásico",
+   "use": "binary.counter",
+   "params": {
+    "value": "2038",
+    "mode": "count",
+    "from": 1970,
+    "label": "SEGUNDOS DESDE 1970",
+    "note": "UN CONTADOR"
+   }
+  },
+  {
+   "at": "guardados en entero",
+   "use": "binary.word",
+   "params": {
+    "text": "32 BITS",
+    "kicker": "ENTERO CON SIGNO",
+    "note": ""
+   }
+  },
+  {
+   "at": "Ese rango termina",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "1970",
+      "label": "EMPIEZA"
+     },
+     {
+      "year": "2038",
+      "label": "19 DE ENERO"
+     }
+    ],
+    "active": 1
+   }
+  },
+  {
+   "at": "No significa que",
+   "use": "binary.word",
+   "params": {
+    "text": "19 DE\nENERO 2038",
+    "kicker": "RANGO DE 32 BITS"
+   }
+  },
+  {
+   "at": "El estándar POSIX",
+   "use": "binary.word",
+   "params": {
+    "text": "64 BITS",
+    "kicker": "POSIX ACTUAL",
+    "note": "AL MENOS"
+   }
+  },
+  {
+   "at": "aunque sistemas viejos",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/univac-mainframe.jpg",
+    "title": "Consola UNIVAC",
+    "sub": "SISTEMAS ANTIGUOS · IMAGEN ILUSTRATIVA"
+   }
+  },
+  {
+   "at": "En Millennium, la primera",
+   "use": "binary.midnightrelay",
+   "params": {
+    "label": "LA PRIMERA MEDIANOCHE",
+    "first": "MILLENNIUM",
+    "second": "CHATHAM",
+    "third": "AUCKLAND"
+   }
+  },
+  {
+   "at": "sin catástrofe global",
+   "use": "binary.frame",
+   "params": {
+    "src": "assets/media/y2k-rollover-bangalore.jpg",
+    "title": "Después del cambio de fecha",
+    "sub": "BANGALORE · 2000"
+   }
+  },
+  {
+   "at": "Hubo años de pruebas",
+   "use": "binary.grid",
+   "params": {
+    "icon": "check",
+    "count": 12,
+    "label": "PRUEBAS",
+    "revealSec": 2
+   }
+  },
+  {
+   "at": "El silencio no demuestra",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "problema"
+    ]
+   }
+  },
+  {
+   "at": "El silencio no demuestra",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "la mayor estafa informática",
+   "use": "binary.title",
+   "params": {
+    "text": "¿LA MAYOR\nESTAFA?",
+    "textPortrait": "¿LA\nMAYOR\nESTAFA?",
+    "kicker": "LA PREGUNTA"
+   }
+  },
+  {
+   "at": "No hay evidencia",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "estafa"
+    ]
+   }
+  },
+  {
+   "at": "No hay evidencia",
+   "use": "common.flash",
+   "dur": 0.4,
+   "layer": "overlay"
+  },
+  {
+   "at": "Fue proporcionado cada",
+   "use": "binary.versus",
+   "params": {
+    "left": {
+     "icon": "banknote",
+     "label": "CADA GASTO"
+    },
+    "right": {
+     "icon": "question",
+     "label": "¿PROPORCIONADO?"
+    },
+    "mid": "?"
+   }
+  },
+  {
+   "at": "las fallas fueron",
+   "use": "binary.timeline",
+   "params": {
+    "items": [
+     {
+      "year": "BUG",
+      "label": "REAL"
+     },
+     {
+      "year": "FALLAS",
+      "label": "ACOTADAS"
+     },
+     {
+      "year": "SIN ARREGLOS",
+      "label": "NO SE MIDE"
+     }
+    ],
+    "active": 1
+   }
+  },
+  {
+   "at": "Entre esos ceros",
+   "use": "binary.grid",
+   "params": {
+    "icon": "person",
+    "count": 16,
+    "label": "PERSONAS",
+    "revealSec": 2
+   }
+  },
+  {
+   "at": "equipos de guardia y",
+   "use": "binary.crisisdesk",
+   "params": {
+    "label": "EQUIPOS DE GUARDIA",
+    "states": [
+     "PRUEBAS",
+     "GUARDIA",
+     "RESPUESTA"
+    ]
+   }
+  },
+  {
+   "at": "nos deja un límite",
+   "use": "binary.word",
+   "params": {
+    "text": "2038",
+    "kicker": "UN LÍMITE CONOCIDO",
+    "note": "PUEDE REVISARSE"
+   }
+  },
+  {
+   "at": "sin otra cuenta",
+   "use": "binary.title",
+   "params": {
+    "text": "¿FUE EL AÑO 2000\nUNA ESTAFA?",
+    "textPortrait": "¿FUE EL\nAÑO 2000\nUNA\nESTAFA?",
+    "kicker": "MILLENNIUM · 31 DIC 1999"
+   }
+  }
+ ]
 }

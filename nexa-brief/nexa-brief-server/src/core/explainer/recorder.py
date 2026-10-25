@@ -18,13 +18,16 @@ renderizar ni subir nada real.
 from __future__ import annotations
 
 import asyncio
+import inspect
 import json
+import math
+import os
 import shutil
 import sys
 import time
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any, Awaitable, Callable
@@ -72,7 +75,42 @@ class RenderError(RuntimeError):
     pass
 
 
-RenderRunner = Callable[[str, int | None, tuple[str, ...]], Awaitable[None]]
+RenderRunner = Callable[..., Awaitable[None]]
+RenderOutputCallback = Callable[[str], None]
+
+
+def _consume_render_line(job: "RecordJob", line: str, render_started: float) -> None:
+    """Actualiza el progreso global a partir del protocolo de kit.py/render_promo.py."""
+    parts = line.split()
+    if parts[:1] == ["@@format"] and len(parts) >= 4:
+        fmt = parts[1]
+        if fmt in job.formats:
+            job.progress_format = fmt
+            job.progress_phase = "capturing"
+            job.progress = max(job.progress, job.formats.index(fmt) / len(job.formats))
+    elif parts[:1] == ["@@progress"] and len(parts) == 3 and job.progress_format in job.formats:
+        try:
+            frames_done, frames_total = int(parts[1]), int(parts[2])
+        except ValueError:
+            return
+        if frames_total <= 0:
+            return
+        fraction = min(1.0, max(0.0, frames_done / frames_total))
+        job.progress_phase = "capturing"
+        # Reserva un 5 % del formato para el paso de codificación, cuyo progreso
+        # ffmpeg no informa; el render completo marca 1 al terminar el proceso.
+        job.progress = max(
+            job.progress,
+            (job.formats.index(job.progress_format) + fraction * 0.95) / len(job.formats),
+        )
+    elif parts[:1] == ["@@phase"] and len(parts) == 2 and parts[1] == "encode":
+        job.progress_phase = "encoding"
+
+    if job.progress > 0:
+        elapsed = max(0.0, time.monotonic() - render_started)
+        job.eta_seconds = 0 if job.progress >= 1 else math.ceil(elapsed * (1 - job.progress) / job.progress)
+
+
 # Captura la miniatura de un video (thumbnails.render): (video, opciones) → {opción: archivo}
 ThumbnailRenderer = Callable[[ExplainerVideo, tuple[str, ...]], Awaitable[dict[str, Path]]]
 
@@ -87,17 +125,30 @@ def resolve_formats(formats: list[str] | tuple[str, ...] | None, selectors: list
     return tuple(f for f in FORMATS if f in wanted)
 
 
-async def run_kit_render(video_id: str, seconds: int | None, formats: tuple[str, ...] = FORMATS) -> None:
-    """Llama a `kit.py render <id>`; con `seconds` hace un preview de ese largo."""
+async def run_kit_render(
+    video_id: str,
+    seconds: int | None,
+    formats: tuple[str, ...] = FORMATS,
+    on_output: RenderOutputCallback | None = None,
+) -> None:
+    """Llama a `kit.py render <id>` leyendo su salida en vivo línea a línea."""
     cmd = [sys.executable, str(KIT_CLI), "render", video_id, "--formats", ",".join(formats)]
     if seconds:
         cmd += ["--seconds", str(seconds)]
+    env = os.environ.copy()
+    env["PYTHONUNBUFFERED"] = "1"
     proc = await asyncio.create_subprocess_exec(
-        *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT
+        *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT, env=env
     )
-    out, _ = await proc.communicate()
+    tail = ""
+    if proc.stdout is not None:
+        while line := await proc.stdout.readline():
+            text = line.decode("utf-8", "replace")
+            tail = (tail + text)[-800:]
+            if on_output is not None:
+                on_output(text.rstrip("\r\n"))
+    await proc.wait()
     if proc.returncode != 0:
-        tail = out.decode("utf-8", "replace")[-800:]
         raise RenderError(f"kit.py render terminó con código {proc.returncode}: {tail}")
 
 
@@ -138,6 +189,12 @@ class RecordJob:
     publish_results: list[dict[str, Any]] = field(default_factory=list)
     render_seconds: float | None = None   # cuánto tardó la grabación (render + copia)
     thumbnail: str | None = None          # miniatura elegida ("A" introv1 / "B" introv2); None = la del paquete
+    progress: float = 0.0                  # fracción global de los formatos solicitados
+    progress_format: str | None = None
+    progress_phase: str | None = None      # capturing | encoding
+    started_at: datetime | None = None
+    eta_seconds: int | None = None
+    finished_at: datetime | None = None
 
     @property
     def seconds(self) -> int | None:
@@ -167,6 +224,18 @@ class ExplainerRecorder:
     def latest_for_video(self, video_id: str) -> RecordJob | None:
         matches = [j for j in self._jobs.values() if j.video_id == video_id]
         return matches[-1] if matches else None
+
+    def list_jobs(self, *, active: bool = True) -> list[RecordJob]:
+        """Jobs activos y terminados en las últimas 24 h, o todos si active=False."""
+        jobs = list(self._jobs.values())
+        if not active:
+            return list(reversed(jobs))
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+        return [
+            job for job in reversed(jobs)
+            if job.state in (RecordState.queued, RecordState.rendering, RecordState.publishing)
+            or (job.finished_at is not None and job.finished_at >= cutoff)
+        ]
 
     def submit(
         self,
@@ -260,6 +329,7 @@ class ExplainerRecorder:
                 job.error = str(exc)[-800:]
                 logger.error("explainer_record_failed", video_id=job.video_id, error=job.error)
             finally:
+                job.finished_at = datetime.now(timezone.utc)
                 if job.duration == "full":
                     successful = sum(bool(r.get("url")) for r in job.publish_results)
                     failed = len(job.publish_results) - successful
@@ -294,7 +364,29 @@ class ExplainerRecorder:
         job.state = RecordState.rendering
         missing = tuple(f for f in job.formats if not (src_dir / render_filename(video.video_id, f, seconds)).exists())
         if missing:
-            await self._render(video.video_id, seconds, missing)
+            job.started_at = datetime.now(timezone.utc)
+            render_started = time.monotonic()
+
+            def on_output(line: str) -> None:
+                _consume_render_line(job, line, render_started)
+
+            try:
+                parameters = inspect.signature(self._render).parameters.values()
+                supports_callback = any(
+                    parameter.name == "on_output" or parameter.kind == inspect.Parameter.VAR_KEYWORD
+                    for parameter in parameters
+                )
+            except (TypeError, ValueError):
+                supports_callback = False
+            if supports_callback:
+                await self._render(video.video_id, seconds, missing, on_output=on_output)
+            else:
+                # Compatibilidad con RenderRunner inyectados antes del callback.
+                await self._render(video.video_id, seconds, missing)
+        else:
+            job.started_at = datetime.now(timezone.utc)
+        job.progress = 1.0
+        job.eta_seconds = 0
 
         out_dir = self._output_root / video.category_path / video.design / video.video_id
         if seconds:

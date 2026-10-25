@@ -10,12 +10,12 @@ from __future__ import annotations
 
 import asyncio
 import json
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from fastapi.testclient import TestClient
 
 from src.config.settings import settings
 from src.core import job_tracker
@@ -26,9 +26,6 @@ from src.core.explainer.recorder import ExplainerRecorder, RecordState
 from src.core.metadata import copy_for_platform
 from src.core.schedule import engine, queue_repository, slot_repository
 from src.core.schedule.models import QueueStatus
-from src.presentation.main import app
-
-client = TestClient(app)
 
 MONDAY_9AM = datetime(2026, 10, 12, 9, 0, tzinfo=timezone.utc)  # weekday() == 0
 
@@ -294,21 +291,27 @@ def test_tiktok_publish_uses_vertical(videos_root: Path, make_recorder, monkeypa
 
 # ── programación por categoría ──────────────────────────────────────────────
 
-def test_category_slot_publishes_recorded_video(videos_root: Path, make_recorder, monkeypatch):
+async def test_category_slot_publishes_recorded_video(videos_root: Path, make_recorder, monkeypatch, api_client):
     """Flujo completo: grabar → horario de NodeHistory → tick → publicado."""
     monkeypatch.setattr(settings, "schedule_auto_fill_enabled", True)
+
+    async def no_thumbnail(_file_paths):
+        return None
+
+    monkeypatch.setattr("src.modules.thumbnail_maker.ensure_for_job", no_thumbnail)
     rec, _ = make_recorder()
-    job = _record(rec, load_video(videos_root / "hist-1"), duration="full")
+    submitted = rec.submit(load_video(videos_root / "hist-1"), duration="full")
+    job = await rec.wait(submitted.job_id)
 
     # El horario se crea por la API, como lo hace la web.
-    response = client.post(
+    response = await api_client.post(
         "/api/v1/schedule/slots",
         json={"platform": "youtube", "account_alias": "canal_1", "days": [0], "times": ["09:00"], "niche_filter": "node_history"},
     )
     assert response.status_code == 201, response.text
 
     publisher = _FakePublisher()
-    summary = asyncio.run(engine.process_tick(publisher, now=MONDAY_9AM))
+    summary = await engine.process_tick(publisher, now=MONDAY_9AM)
 
     assert summary["gaps_filled"] == 1
     assert list(summary["results"].values()) == ["published"]
@@ -335,15 +338,21 @@ def test_category_slot_does_not_take_other_categories(videos_root: Path, make_re
     assert publisher.calls == []
 
 
-def test_same_video_is_not_published_twice_to_same_account(videos_root: Path, make_recorder, monkeypatch):
+async def test_same_video_is_not_published_twice_to_same_account(videos_root: Path, make_recorder, monkeypatch):
     monkeypatch.setattr(settings, "schedule_auto_fill_enabled", True)
+
+    async def no_thumbnail(_file_paths):
+        return None
+
+    monkeypatch.setattr("src.modules.thumbnail_maker.ensure_for_job", no_thumbnail)
     rec, _ = make_recorder()
-    _record(rec, load_video(videos_root / "tech-1"), duration="full")
-    asyncio.run(slot_repository.create(platform="youtube", account_alias="c", days=[0, 1], times=["09:00"], niche_filter="node_tech"))
+    submitted = rec.submit(load_video(videos_root / "tech-1"), duration="full")
+    await rec.wait(submitted.job_id)
+    await slot_repository.create(platform="youtube", account_alias="c", days=[0, 1], times=["09:00"], niche_filter="node_tech")
 
     publisher = _FakePublisher()
-    asyncio.run(engine.process_tick(publisher, now=MONDAY_9AM))
-    asyncio.run(engine.process_tick(publisher, now=datetime(2026, 10, 13, 9, 0, tzinfo=timezone.utc)))
+    await engine.process_tick(publisher, now=MONDAY_9AM)
+    await engine.process_tick(publisher, now=datetime(2026, 10, 13, 9, 0, tzinfo=timezone.utc))
     assert len(publisher.calls) == 1
 
 
@@ -382,11 +391,16 @@ def test_slot_filter_follows_category_tree(tmp_path: Path, niche_filter, picked)
 def test_kit_render_command(monkeypatch, seconds, expected_tail):
     captured: list[tuple] = []
 
+    class _Stdout:
+        async def readline(self):
+            return b""
+
     class _Proc:
         returncode = 0
+        stdout = _Stdout()
 
-        async def communicate(self):
-            return b"ok", None
+        async def wait(self):
+            return 0
 
     async def fake_exec(*cmd, **kwargs):
         captured.append(cmd)
@@ -402,11 +416,19 @@ def test_kit_render_command(monkeypatch, seconds, expected_tail):
 
 
 def test_kit_render_failure_raises(monkeypatch):
+    class _Stdout:
+        def __init__(self):
+            self.lines = [b"Traceback: boom\n", b""]
+
+        async def readline(self):
+            return self.lines.pop(0)
+
     class _Proc:
         returncode = 2
+        stdout = _Stdout()
 
-        async def communicate(self):
-            return b"Traceback: boom", None
+        async def wait(self):
+            return 2
 
     async def fake_exec(*cmd, **kwargs):
         return _Proc()
@@ -416,10 +438,70 @@ def test_kit_render_failure_raises(monkeypatch):
         asyncio.run(recorder_mod.run_kit_render("x", 10))
 
 
+def test_kit_render_forwards_output_as_it_arrives(monkeypatch):
+    class _Stdout:
+        def __init__(self):
+            self.lines = [b"@@format 16x9 1 1\n", b"@@progress 3 5\n", b""]
+
+        async def readline(self):
+            return self.lines.pop(0)
+
+    class _Proc:
+        returncode = 0
+        stdout = _Stdout()
+
+        async def wait(self):
+            return 0
+
+    captured = {}
+
+    async def fake_exec(*cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured.update(kwargs)
+        return _Proc()
+
+    monkeypatch.setattr(recorder_mod.asyncio, "create_subprocess_exec", fake_exec)
+    received: list[str] = []
+    asyncio.run(recorder_mod.run_kit_render("x", None, ("16x9",), on_output=received.append))
+    assert received == ["@@format 16x9 1 1", "@@progress 3 5"]
+    assert captured["env"]["PYTHONUNBUFFERED"] == "1"
+
+
+def test_render_progress_protocol_aggregates_formats_and_estimates_eta():
+    job = recorder_mod.RecordJob(
+        job_id="j1",
+        video_id="tech-1",
+        category_path="node_tech",
+        duration="full",
+        publish=False,
+        privacy="private",
+        account_selector=None,
+        formats=("16x9", "9x16"),
+    )
+    started = time.monotonic() - 12
+
+    recorder_mod._consume_render_line(job, "@@format 16x9 1 2", started)
+    recorder_mod._consume_render_line(job, "@@progress 50 100", started)
+    assert job.progress == pytest.approx(0.2375)
+    assert job.progress_format == "16x9"
+    assert job.progress_phase == "capturing"
+    assert job.eta_seconds is not None and job.eta_seconds > 0
+
+    recorder_mod._consume_render_line(job, "@@phase encode", started)
+    assert job.progress_phase == "encoding"
+    assert job.progress == pytest.approx(0.2375)
+
+    recorder_mod._consume_render_line(job, "@@format 9x16 2 2", started)
+    recorder_mod._consume_render_line(job, "@@progress 50 100", started)
+    assert job.progress_format == "9x16"
+    assert job.progress_phase == "capturing"
+    assert job.progress == pytest.approx(0.7375)
+
+
 # ── API HTTP ────────────────────────────────────────────────────────────────
 
-def test_api_lists_real_videos_with_category():
-    response = client.get("/api/v1/explainer/videos")
+async def test_api_lists_real_videos_with_category(api_client):
+    response = await api_client.get("/api/v1/explainer/videos")
     assert response.status_code == 200
     by_id = {item["video_id"]: item for item in response.json()}
     if "codex-titanic" in by_id:
@@ -429,19 +511,20 @@ def test_api_lists_real_videos_with_category():
         assert by_id["codex-titanic"]["ready"] is True
 
 
-def test_api_categories_tree():
-    response = client.get("/api/v1/categories")
+async def test_api_categories_tree(api_client):
+    response = await api_client.get("/api/v1/categories")
     assert response.status_code == 200
     tree = {c["id"]: c for c in response.json()}
     assert set(tree) == {"node_tech", "node_history", "node_motion", "node_politics", "node_economy"}
     assert tree["node_tech"]["designs"] == ["rough"]
     assert [c["path"] for c in tree["node_motion"]["children"]] == [
         "node_motion/letras", "node_motion/promos", "node_motion/fondos", "node_motion/instrumental",
+        "node_motion/fase_de_pruebas",
     ]
 
 
-def test_api_record_404_for_unknown_video():
-    assert client.post("/api/v1/explainer/videos/no-existe/record", json={}).status_code == 404
+async def test_api_record_404_for_unknown_video(api_client):
+    assert (await api_client.post("/api/v1/explainer/videos/no-existe/record", json={})).status_code == 404
 
 
 @pytest.mark.parametrize(
@@ -453,30 +536,38 @@ def test_api_record_404_for_unknown_video():
         ({"privacy": "secreto"}, 422),                                                  # privacidad inválida
     ],
 )
-def test_api_record_validation(body, status):
-    response = client.post("/api/v1/explainer/videos/codex-titanic/record", json=body)
+async def test_api_record_validation(body, status, api_client):
+    response = await api_client.post("/api/v1/explainer/videos/codex-titanic/record", json=body)
     assert response.status_code == status, response.text
 
 
-def test_api_record_accepts_and_reports_job(monkeypatch, make_recorder, videos_root):
+async def test_api_record_accepts_and_reports_job(monkeypatch, make_recorder, videos_root, api_client):
     """POST devuelve 202 con el job; GET /jobs/{id} lo encuentra."""
     rec, _ = make_recorder()
     monkeypatch.setattr("src.presentation.api.routers.explainer.get_recorder", lambda: rec)
     monkeypatch.setattr("src.presentation.api.routers.explainer.get_video", lambda vid: load_video(videos_root / "tech-1"))
 
-    response = client.post("/api/v1/explainer/videos/tech-1/record", json={"duration": "20"})
+    response = await api_client.post("/api/v1/explainer/videos/tech-1/record", json={"duration": "20"})
     assert response.status_code == 202, response.text
     body = response.json()
     assert body["duration"] == "20"
     assert body["category_path"] == "node_tech"
 
-    job = client.get(f"/api/v1/explainer/jobs/{body['job_id']}")
+    job = await api_client.get(f"/api/v1/explainer/jobs/{body['job_id']}")
     assert job.status_code == 200
     assert job.json()["video_id"] == "tech-1"
+    assert 0 <= job.json()["progress"] <= 1
+    assert {"progress_format", "progress_phase", "started_at", "eta_seconds"} <= job.json().keys()
+    listed = await api_client.get("/api/v1/explainer/jobs?active=true")
+    assert listed.status_code == 200
+    assert any(item["job_id"] == body["job_id"] for item in listed.json())
+    await rec.wait(body["job_id"])
+    recent = await api_client.get("/api/v1/explainer/jobs?active=true")
+    assert any(item["job_id"] == body["job_id"] and item["state"] == "done" for item in recent.json())
 
 
-def test_api_unknown_job_404():
-    assert client.get("/api/v1/explainer/jobs/nope").status_code == 404
+async def test_api_unknown_job_404(api_client):
+    assert (await api_client.get("/api/v1/explainer/jobs/nope")).status_code == 404
 
 
 # ── contrato con el CLI real ────────────────────────────────────────────────
@@ -491,7 +582,7 @@ def _load_kit_module():
 
 
 @pytest.mark.parametrize("seconds", [10, 20, None])
-def test_kit_cli_writes_the_files_the_recorder_reads(tmp_path: Path, monkeypatch, seconds):
+def test_kit_cli_writes_the_files_the_recorder_reads(tmp_path: Path, monkeypatch, seconds, capsys):
     """Ejecuta el cmd_render REAL de kit.py (sin render_promo) y compara las rutas.
 
     La prueba en vivo del 2026-10-10 falló justo aquí: kit.py escribía
@@ -513,6 +604,7 @@ def test_kit_cli_writes_the_files_the_recorder_reads(tmp_path: Path, monkeypatch
 
     expected_dir = video_dir / "render" / "preview" if seconds else video_dir / "render"
     assert written == [expected_dir / recorder_mod.render_filename("vid", f, seconds) for f in ("9x16", "16x9")]
+    assert capsys.readouterr().out.splitlines() == ["@@format 9x16 1 2", "@@format 16x9 2 2"]
 
 
 def test_kit_cli_stops_when_render_fails(tmp_path: Path, monkeypatch):

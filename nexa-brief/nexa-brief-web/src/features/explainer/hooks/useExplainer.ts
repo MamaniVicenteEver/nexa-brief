@@ -10,6 +10,7 @@ import {
   getCategoryDesigns,
   getDesignGroups,
   getExplainerOptions,
+  getExplainerJobs,
   getExplainerVideos,
   getProduction,
   getProductions,
@@ -22,6 +23,7 @@ import {
   ACTIVE_PRODUCTION_STATES,
   type BriefInput,
   type CreateProductionInput,
+  type ExplainerJob,
   type ExplainerVideo,
   type Production,
   type RecordExplainerInput,
@@ -30,8 +32,11 @@ import {
 } from "../types";
 
 const POLL_MS = 5_000;
+const RECORDING_POLL_MS = 3_000;
 const VIDEOS_KEY = ["explainer-videos"] as const;
+export { VIDEOS_KEY as EXPLAINER_VIDEOS_QUERY_KEY };
 const PRODUCTIONS_KEY = ["explainer-productions"] as const;
+export const RECORDING_JOBS_QUERY_KEY = ["explainer-recordings"] as const;
 
 /** Sin `categoryPath` trae todos los videos; con él, solo los de esa categoría. */
 export function useExplainerVideos(categoryPath?: string) {
@@ -42,7 +47,7 @@ export function useExplainerVideos(categoryPath?: string) {
     refetchInterval: (query) => {
       const videos = (query.state.data ?? []) as ExplainerVideo[];
       const busy = videos.some((v) => v.lastJob && ACTIVE_JOB_STATES.includes(v.lastJob.state));
-      return busy ? POLL_MS : false;
+      return busy ? RECORDING_POLL_MS : false;
     },
     refetchOnWindowFocus: false,
   });
@@ -63,8 +68,42 @@ export function useRecordExplainerVideo() {
         title: video?.youtubeTitle || video?.title || input.videoId,
       });
       queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
+      queryClient.invalidateQueries({ queryKey: RECORDING_JOBS_QUERY_KEY });
     },
   });
+}
+
+/** Sondea grabaciones mientras haya alguna activa y se detiene al terminar. */
+export function useExplainerRecordings() {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: RECORDING_JOBS_QUERY_KEY,
+    queryFn: ({ signal }) => getExplainerJobs(signal),
+    refetchInterval: (query) => {
+      const jobs = query.state.data ?? [];
+      return jobs.some((job) => ACTIVE_JOB_STATES.includes(job.state)) ? RECORDING_POLL_MS : false;
+    },
+    refetchOnWindowFocus: false,
+  });
+  const previous = useRef<Map<string, ExplainerJob["state"]>>(new Map());
+  useEffect(() => {
+    const jobs = query.data;
+    if (!jobs) return;
+    const finished = jobs.some((job) => {
+      const before = previous.current.get(job.jobId);
+      return (
+        before !== undefined &&
+        ACTIVE_JOB_STATES.includes(before) &&
+        !ACTIVE_JOB_STATES.includes(job.state)
+      );
+    });
+    previous.current = new Map(jobs.map((job) => [job.jobId, job.state]));
+    if (finished) {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
+    }
+  }, [query.data, queryClient]);
+  return query;
 }
 
 export function useCaptureThumbnails() {

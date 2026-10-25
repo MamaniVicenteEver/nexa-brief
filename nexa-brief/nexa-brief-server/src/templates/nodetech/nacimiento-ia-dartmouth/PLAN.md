@@ -21,8 +21,8 @@
 
 | # | hecho (fecha, cifra, nombre exacto) | fuente (URL) | ¿se usa? |
 |---|---|---|---|
-| 1 | El Dartmouth Summer Research Project on Artificial Intelligence se hizo en el verano de 1956 en Dartmouth College, Hanover, New Hampshire (aprox. junio–agosto, 6–8 semanas). | https://en.wikipedia.org/wiki/Dartmouth_workshop | sí (s01) |
-| 2 | La propuesta fue escrita en 1955 (fechada 31 ago / enviada sept. 1955) por John McCarthy, Marvin Minsky, Nathaniel Rochester y Claude Shannon. | https://en.wikipedia.org/wiki/Dartmouth_workshop | sí (s02, s05) |
+| 1 | El taller de inteligencia artificial de Dartmouth se reunió en Dartmouth Hall en el verano de 1956. | https://provost.dartmouth.edu/sites/provost/files/2025-12/Report%20on%20Artificial%20Intelligence%20at%20Dartmouth%20%28Dobson%2C%202025.06.30%29.pdf | No publicar en esta imagen; la foto elegida muestra a McCarthy, no Dartmouth Hall. |
+| 2 | En 1955, John McCarthy, Marvin Minsky, Nathaniel Rochester y Claude Shannon firmaron la propuesta del taller de Dartmouth sobre inteligencia artificial. | https://archive.computerhistory.org/resources/access/text/2023/06/102720392-05-01-acc.pdf | Sí; cotejado con la portada de la propuesta original archivada por Computer History Museum. |
 | 3 | Frase textual de la propuesta: «We propose that a 2-month, 10-man study of artificial intelligence be carried out during the summer of 1956…». | https://en.wikipedia.org/wiki/Dartmouth_workshop | sí (s03) |
 | 4 | Conjetura central: «every aspect of learning or any other feature of intelligence can in principle be so precisely described that a machine can be made to simulate it». | https://en.wikipedia.org/wiki/Dartmouth_workshop | sí (s04) |
 | 5 | McCarthy pidió 13.500 dólares a la Fundación Rockefeller; concedieron 7.500 (menos de la mitad). | https://www.rockefellerfoundation.org/perspective/seventy-years-after-the-birth-of-ai-the-work-begins/ · https://dartmouthalumnimagazine.com/articles/birth-artificial-intelligence | sí (s06) |

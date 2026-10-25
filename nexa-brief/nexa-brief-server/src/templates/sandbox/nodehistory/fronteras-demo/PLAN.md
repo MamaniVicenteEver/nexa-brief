@@ -1,6 +1,6 @@
 # fronteras-demo · prototipo de mapas satelitales (NodeHistory)
 
-Réplica del estilo de los 3 videos de `sandbox/nuevos/ejmplo2/` (Bolivia y sus territorios, guerra en
+Réplica del estilo de los 3 videos de `sandbox/referencias/nodehistory/mapas-con-banderas/` (Bolivia y sus territorios, guerra en
 Ucrania, "países que podrían nacer"). Prototipo, 2026-10-22. No es un video para publicar.
 
 ## Material reutilizado (sin gastar voz)

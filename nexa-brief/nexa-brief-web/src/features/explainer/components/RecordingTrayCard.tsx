@@ -10,6 +10,8 @@ import { getExplainerJob } from "../api/explainer-service";
 import type { TrackedRecording } from "../store/recording-tray-store";
 import { useRecordingTrayStore } from "../store/recording-tray-store";
 import { ACTIVE_JOB_STATES } from "../types";
+import { RECORDING_JOBS_QUERY_KEY } from "../hooks/useExplainer";
+import { RecordingProgress } from "./RecordingProgress";
 
 export function RecordingTrayCard({ tracked }: { tracked: TrackedRecording }) {
   const t = useTranslations("explainer.tray");
@@ -21,13 +23,15 @@ export function RecordingTrayCard({ tracked }: { tracked: TrackedRecording }) {
     queryFn: ({ signal }) => getExplainerJob(tracked.jobId, signal),
     refetchInterval: (query) => {
       const state = query.state.data?.state;
-      return !state || ACTIVE_JOB_STATES.includes(state) ? 4_000 : false;
+      return !state || ACTIVE_JOB_STATES.includes(state) ? 3_000 : false;
     },
     retry: 1,
   });
   useEffect(() => {
     if (job?.scheduledJobId || job?.state === "done" || job?.state === "failed") {
       queryClient.invalidateQueries({ queryKey: JOBS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["explainer-videos"] });
+      queryClient.invalidateQueries({ queryKey: RECORDING_JOBS_QUERY_KEY });
     }
   }, [job?.scheduledJobId, job?.state, queryClient]);
   const busy = !job || ACTIVE_JOB_STATES.includes(job.state);
@@ -53,9 +57,12 @@ export function RecordingTrayCard({ tracked }: { tracked: TrackedRecording }) {
       </div>
       {job && (
         <>
-          <p className="mt-2 text-nb-mute">
-            {job.formats.map((f) => tp(`prep.format.${f}`)).join(" · ")}
-          </p>
+          {ACTIVE_JOB_STATES.includes(job.state) && <RecordingProgress job={job} />}
+          {!ACTIVE_JOB_STATES.includes(job.state) && (
+            <p className="mt-2 text-nb-mute">
+              {job.formats.map((f) => tp(`prep.format.${f}`)).join(" · ")}
+            </p>
+          )}
           {job.publishResults.map((result) =>
             result.url ? (
               <a

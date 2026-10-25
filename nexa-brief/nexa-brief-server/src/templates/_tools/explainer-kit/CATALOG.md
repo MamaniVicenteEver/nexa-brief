@@ -329,8 +329,8 @@ Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
 | `src` | video · obligatorio | `null` | Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4). |
 | `start` | number [0–None] | `0` | Segundo del clip desde el que arranca. |
 | `rate` | number [0.25–2] | `1` | Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate. |
-| `layout` | enum (full / frame) | `"full"` | full = pantalla completa; frame = dentro de un marco centrado. |
-| `size` | number [0.3–1] | `0.84` | layout frame: fracción del contenido que ocupa. |
+| `layout` | enum (auto / full / frame) | `"auto"` | auto = el del diseño (defaults.clip.layout; si no hay, full); full = pantalla completa; frame = dentro de un marco centrado. Dejarlo en auto. |
+| `size` | number [0–1] | `0` | layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84). |
 | `ar` | number | `0` | layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8). |
 | `focus` | array | `[0.5, 0.5]` | Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar. |
 | `zoom` | number [0–0.3] | `0.06` | Cuánto se acerca a lo largo del beat (empuje lento). |
@@ -340,7 +340,7 @@ Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
 | `sub` | string | `""` | Línea chica bajo el rótulo (fuente, lugar, año). |
 
 ```json
-{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "layout": "full", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}
+{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}
 ```
 
 ## binary · NODEHISTORY

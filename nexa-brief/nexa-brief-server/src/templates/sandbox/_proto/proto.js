@@ -17,6 +17,16 @@
 (() => {
   "use strict";
   const QS = new URLSearchParams(location.search);
+  const CONTROLLED = QS.get("controls") === "1";
+  const SCRIPT_SRC = document.currentScript && document.currentScript.src;
+  const bridgeReady = CONTROLLED && SCRIPT_SRC ? new Promise(resolve => {
+    if (window.NexaPlayerBridge) return resolve(true);
+    const script = document.createElement("script");
+    script.src = new URL("../../_tools/player/bridge.js", SCRIPT_SRC).href;
+    script.onload = () => resolve(true);
+    script.onerror = () => { console.warn("[proto] no se pudo cargar el puente de controles"); resolve(false); };
+    document.head.appendChild(script);
+  }) : Promise.resolve(false);
 
   /* ---------- utilidades ---------- */
   const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -258,9 +268,9 @@
 
     /* reproductor (el tiempo SIEMPRE sale del audio) */
     const FROZEN = QS.has("t") && !QS.has("headless") ? parseFloat(QS.get("t")) : null;
-    let forced = FROZEN, t0wall = null;
+    let forced = FROZEN, t0wall = null, controlledTime = FROZEN == null ? 0 : FROZEN;
     const hasAudio = !!(audio && C.audio?.src);
-    const clock = now => forced != null ? forced : hasAudio ? audio.currentTime : (t0wall == null ? ((t0wall = now), 0) : ((now - t0wall) / 1000) % END);
+    const clock = now => forced != null ? forced : hasAudio ? audio.currentTime : CONTROLLED ? controlledTime : (t0wall == null ? ((t0wall = now), 0) : ((now - t0wall) / 1000) % END);
     function frame(now) { if (forced == null) render(clock(now)); requestAnimationFrame(frame); }
     addEventListener("resize", () => { size(); E.resize && E.resize(ctx); render(forced ?? clock(performance.now())); });
     const btn = document.createElement("div");
@@ -269,7 +279,7 @@
     document.body.appendChild(btn);
     const showBtn = v => { btn.style.display = v ? "block" : "none"; };
     function toggle() {
-      if (!hasAudio || forced != null) return;
+      if (CONTROLLED || !hasAudio || forced != null) return;
       if (audio.ended || audio.currentTime >= END - 0.05) audio.currentTime = 0;
       if (audio.paused) audio.play().then(() => showBtn(false), () => showBtn(true)); else { audio.pause(); showBtn(true); }
     }
@@ -288,10 +298,95 @@
       release() { forced = null; if (!window.__loop) { window.__loop = 1; requestAnimationFrame(frame); } },
       missingAnchors: () => [...T.missing],
     };
+    window.__nexaProtoControl = {
+      setTime(t, freeze = true) {
+        controlledTime = clamp(Number(t) || 0, 0, END);
+        forced = freeze ? controlledTime : null;
+        render(controlledTime);
+      },
+      release() {
+        forced = null;
+        if (!window.__loop) { window.__loop = 1; requestAnimationFrame(frame); }
+      },
+    };
+    if (CONTROLLED && bridgeReady) bridgeReady.then(loaded => {
+      if (!loaded || !window.NexaPlayerBridge) return;
+      let playerPlaying = false, synthTime = Number.isFinite(FROZEN) ? FROZEN : 0, synthStamp = 0, endedHandler = null;
+      const getTime = () => hasAudio ? audio.currentTime || 0 : synthTime;
+      const getDuration = () => hasAudio && Number.isFinite(audio.duration) ? audio.duration : END;
+      const notifyEnded = () => { playerPlaying = false; if (endedHandler) endedHandler(); };
+      function syntheticFrame(now) {
+        if (!playerPlaying || hasAudio) return;
+        if (synthStamp) synthTime = Math.min(getDuration(), synthTime + (now - synthStamp) / 1000);
+        synthStamp = now;
+        window.__nexaProtoControl.setTime(synthTime, false);
+        if (synthTime >= getDuration() - 0.02) { playerPlaying = false; window.__nexaProtoControl.setTime(getDuration(), true); notifyEnded(); }
+        else requestAnimationFrame(syntheticFrame);
+      }
+      const waitMetadata = () => {
+        if (!hasAudio || audio.readyState >= 1) return Promise.resolve();
+        audio.preload = "auto";
+        try { audio.load(); } catch (_) { /* carga ya iniciada */ }
+        return new Promise(resolve => {
+          let done = false;
+          const finish = () => { if (done) return; done = true; clearTimeout(timer); resolve(); };
+          const timer = setTimeout(finish, 4000);
+          audio.addEventListener("loadedmetadata", finish, { once: true });
+          audio.addEventListener("error", finish, { once: true });
+        });
+      };
+      const waitSeek = () => new Promise(resolve => {
+        let done = false;
+        const finish = () => { if (done) return; done = true; clearTimeout(timer); resolve(); };
+        const timer = setTimeout(finish, 1500);
+        audio.addEventListener("seeked", finish, { once: true });
+      });
+      window.NexaPlayerBridge.attach({
+        duration: getDuration,
+        currentTime: getTime,
+        play() {
+          playerPlaying = true;
+          if (hasAudio) { window.__nexaProtoControl.release(); return audio.play(); }
+          synthStamp = 0;
+          requestAnimationFrame(syntheticFrame);
+        },
+        pause() {
+          playerPlaying = false;
+          if (hasAudio) {
+            audio.pause();
+            return window.__promo.seek(getTime());
+          }
+          window.__nexaProtoControl.setTime(getTime(), true);
+        },
+        async seek(t) {
+          const wasPlaying = playerPlaying;
+          if (hasAudio) {
+            await waitMetadata();
+            const target = clamp(t, 0, Number.isFinite(audio.duration) ? Math.max(0, audio.duration - 0.02) : END);
+            if (Math.abs(audio.currentTime - target) > 0.01) { audio.currentTime = target; await waitSeek(); }
+            await window.__promo.seek(target);
+            if (wasPlaying) window.__promo.release();
+          } else {
+            synthTime = clamp(t, 0, getDuration());
+            window.__nexaProtoControl.setTime(synthTime, !wasPlaying);
+            if (wasPlaying) synthStamp = performance.now();
+          }
+        },
+        setVolume(volume, muted) {
+          if (!hasAudio) return;
+          audio.volume = clamp(volume, 0, 1);
+          audio.muted = Boolean(muted);
+        },
+        onEnded(callback) {
+          endedHandler = callback;
+          if (hasAudio) audio.addEventListener("ended", notifyEnded);
+        },
+      });
+    });
     if (QS.has("headless")) { forced = 0; render(0); return; }
     if (FROZEN != null) { render(FROZEN); return; }
     render(0); window.__loop = 1; requestAnimationFrame(frame);
-    if (hasAudio && !QS.has("paused")) audio.play().then(() => showBtn(false), () => showBtn(true)); else if (hasAudio) showBtn(true);
+    if (hasAudio && !QS.has("paused") && !CONTROLLED) audio.play().then(() => showBtn(false), () => showBtn(true)); else if (hasAudio) showBtn(!CONTROLLED);
   }
 
   window.Proto = { run, U, makeTimer, loadImg, outroTimes };

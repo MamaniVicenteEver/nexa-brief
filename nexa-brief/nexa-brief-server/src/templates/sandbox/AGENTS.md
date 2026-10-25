@@ -1,5 +1,8 @@
 # AGENTS.md — Casa de pruebas (sandbox)
 
+**Guía rápida para cualquier agente nuevo:** leé primero [`SANDBOX.md`](SANDBOX.md). Después,
+abrí solo el `AGENTS.md` de la carpeta en la que vas a trabajar.
+
 > **¿Te pidieron un video con un diseño que ya existe? No es acá:** seguí
 > `src/skills/explainer/produce/SKILL.md` (vía rápida, carpeta de producción). Esta carpeta es solo para
 > lo NUEVO: plantillas y diseños nuevos, réplicas de un video de referencia, componentes de diseño.
@@ -29,8 +32,14 @@ src/templates/
     ├── nodehistory/          ← ideas de videos de historia     (+ _referencias/)
     ├── nodepolitics/         ← ideas de videos de política
     ├── nodeeconomy/          ← ideas de videos de economía
-    └── nodeaction/           ← escenas de acción con personajes (motor propio: _engine/, escenas = datos)
+    ├── nodeaction/           ← escenas de acción con personajes (motor propio: _engine/, escenas = datos)
+    └── referencias/          ← material de inspiración: <categoría>/<idea-id>/ (no son proyectos)
 ```
+
+Las referencias están separadas de los proyectos. Para buscar una idea, usá
+`referencias/<categoría>/<idea-id>/` y leé `referencias/README.md`; ahí se explica qué guardar y cómo
+analizarlo antes de crear un prototipo. Las categorías válidas son `nodetech`, `nodehistory`,
+`nodepolitics`, `nodeeconomy`, `nodeaction`, `nodemotion` y `otros`.
 
 ## Qué leer según lo que vas a hacer
 
@@ -40,6 +49,7 @@ src/templates/
 | un video explicativo de prueba (tech, historia, política, economía) | `EXPLAINER.md` → `<tema>/AGENTS.md` → `_tools/explainer-kit/AGENTS.md` |
 | un diseño nuevo para el motor explainer | `EXPLAINER.md` (sección de diseños nuevos) |
 | una escena de acción (batalla, enfrentamiento, disturbio…) con personajes | `nodeaction/AGENTS.md` |
+| inspiración visual o narrativa previa a una idea | `referencias/README.md` y la subcarpeta de su categoría |
 | pasar algo a producción | la sección "promover" del `AGENTS.md` del tema |
 
 **NodeAction también es distinto**: tiene su propio motor (`nodeaction/_engine/`, personajes articulados

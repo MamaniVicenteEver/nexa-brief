@@ -43,6 +43,21 @@ fotos). Referencias terminadas para imitar el nivel: `nodehistory/turing-enigma`
 5. **No edites** `index.html` del video ni el motor (`engine/`). Todo se configura con JSON.
 6. **Cuota de voz**: cada pedido de TTS cuesta. Generá la voz UNA vez, cuando el guion esté final.
 
+### Lo que ya resuelve el sistema (no lo corrijas en cada video)
+
+Estas reglas viven en el motor y en `design.json` de cada diseño. Si algo de esto se ve mal, se arregla
+ahí (una vez, para todos los videos y los futuros), no en el storyboard de un video:
+
+| Qué | Dónde se configura | binary / rough |
+|---|---|---|
+| Clips (`common.clip`) centrados en marco, rótulo debajo | `defaults.clip.layout` / `size` | `frame`, 0.92 |
+| Duración mínima de un componente (el motor corre los beats siguientes) | `defaults.minDur` | `{"common.clip": 6}` |
+| Overlays sin `dur`/`until` (marcas a mano, rótulos) se van con la escena de debajo | `defaults.overlay` | `endWithScene`, 2,5–8 s |
+| Un solo cierre: el `outro`/`outrovN` del storyboard reemplaza al automático | `engine/kit.js` | siempre |
+| Bordes del fondo en negro puro (YouTube/Reels rellenan con #000 en pantallas anchas) | `frame()` del fondo del diseño | rough: degradado a #000; binary: fondo #000 |
+
+Un diseño oscuro nuevo debe terminar sus bordes en `#000` y declarar estos `defaults`.
+
 ## 2. Roles (un solo agente puede cumplirlos todos, en este orden)
 
 | rol | hace | entrega |

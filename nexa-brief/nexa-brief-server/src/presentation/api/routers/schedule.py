@@ -79,6 +79,9 @@ async def create_slot(body: ScheduleSlotCreateRequest) -> ScheduleSlotResponse:
         times=body.times,
         enabled=body.enabled,
         niche_filter=body.niche_filter,
+        content_kind=body.content_kind,
+        category_id=body.category_id,
+        timezone=body.timezone,
     )
     return _slot_response(slot)
 

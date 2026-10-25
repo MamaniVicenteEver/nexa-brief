@@ -85,9 +85,15 @@ keyframe cada 6 cuadros (así el render salta al cuadro exacto rápido) y anota 
 **En el storyboard**:
 ```json
 { "at": "miles de servidores", "use": "common.clip",
-  "params": { "src": "assets/media/servidores.mp4", "layout": "full", "caption": "Un centro de datos", "sub": "PIXABAY" } }
+  "params": { "src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PIXABAY" } }
 ```
-- `layout`: `full` (pantalla completa con empuje lento) o `frame` (dentro de un marco, deja aire).
+- `layout` y `size`: **no los pongas** (quedan en `auto`). Los decide el diseño en
+  `design.json → defaults.clip.layout/size` (binary y rough: `frame` centrado al 92%, como las fotos,
+  con el rótulo debajo del marco). Solo fijalos si un clip concreto lo necesita de verdad.
+- **Duración**: el clip se ve completo, mínimo `design.json → defaults.minDur["common.clip"]` segundos
+  (binary y rough: 6 s). Si la voz pasa enseguida al beat siguiente, el MOTOR alarga el clip y corre
+  los beats que caían dentro (`engine/kit.js → resolveBeats`); no hace falta `dur` ni `offset` a mano.
+  Por eso bajá clips de **6–8 s** (`--dur 8`).
 - `start` y `rate` (0,5 = cámara lenta): el clip tiene que durar `start + duración del beat × rate`;
   si no alcanza, `check` avisa y se congela el último cuadro.
 - `tone`: `design` (el tratamiento de color del diseño, `design.json → defaults.clip.filter`) o `color`.
@@ -100,4 +106,5 @@ keyframe cada 6 cuadros (así el render salta al cuadro exacto rápido) y anota 
 precarga, y `ctx.clip(src, segundo)` devuelve el `<video>` para dibujarlo como una imagen. En vivo el
 clip corre y se corrige si se desfasa; en capturas y en el render cuadro a cuadro (`__promo.seek`)
 salta al cuadro exacto y espera el `seeked` antes de capturar. Un diseño nuevo solo declara
-`defaults.clip` (`filter`, `frame`, `dim`) en su design.json y suma `designs/common/clip.js` a `scripts`.
+`defaults.clip` (`filter`, `frame`, `dim`, `layout`, `size`) y, si quiere clips con duración mínima,
+`defaults.minDur: {"common.clip": 6}` en su design.json, y suma `designs/common/clip.js` a `scripts`.

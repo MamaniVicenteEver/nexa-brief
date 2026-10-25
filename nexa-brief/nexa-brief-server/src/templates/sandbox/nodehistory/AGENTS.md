@@ -104,7 +104,7 @@ Checklist: `../EXPLAINER.md` §7, más: respeto en temas de muertes revisado en 
 
 ## 8. Prototipo de mapas satelitales (2026-10-22)
 
-- `fronteras-demo/` + motor propio `_mapas/mapas.js` (réplica de `../nuevos/ejmplo2/`, 3 videos 9:16):
+- `fronteras-demo/` + motor propio `_mapas/mapas.js` (réplica de `../referencias/nodehistory/mapas-con-banderas/`, 3 videos 9:16):
   satélite NASA Blue Marble pasado a Mercator, países con color + borde neón, rayado, flechas, banderas,
   año, subtítulos amarillos y cámara que viaja. Escena = solo datos (`assets/scene.json`); ver su `PLAN.md`.
   Voz/texto reutilizados del Muro (0–58 s). Es prototipo: si se aprueba, pasarlo a diseño del explainer-kit

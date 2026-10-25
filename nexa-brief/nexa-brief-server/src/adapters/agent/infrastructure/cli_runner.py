@@ -41,7 +41,11 @@ CLAUDE_SECRET_DENY = ["Read(**/.env)", "Read(**/.env.*)", "Read(**/accounts.json
 LONG_COMMAND_ENV = {"BASH_DEFAULT_TIMEOUT_MS": "1800000", "BASH_MAX_TIMEOUT_MS": "3600000"}
 
 
-def claude_scoped_tools(writable_dir: str, commands: list[str]) -> list[str]:
+def claude_scoped_tools(
+    writable_dir: str,
+    commands: list[str],
+    extra_writable: tuple[str, ...] = (),
+) -> list[str]:
     """Permisos acotados para un agente sin supervisión (rutas relativas a `cwd`).
 
     Solo escribe dentro de `writable_dir` y solo corre los `commands` dados
@@ -49,12 +53,22 @@ def claude_scoped_tools(writable_dir: str, commands: list[str]) -> list[str]:
     En las reglas de Claude Code una ruta absoluta se escribe `//ruta`.
     """
     if writable_dir.startswith("/"):
-        writable_dir = "/" + writable_dir
+        writable_dir = "//" + writable_dir.lstrip("/")
+    extra_paths = [
+        f"//{path.lstrip('/')}" if path.startswith("/") else path
+        for path in extra_writable
+    ]
+    bash_rules = [
+        f"Bash({command}{'*' if command.endswith('/') else ' *'})"
+        for command in commands
+    ]
     return [
         *CLAUDE_READ_TOOLS,
         f"Edit({writable_dir}/**)",
         f"Write({writable_dir}/**)",
-        *(f"Bash({c}:*)" for c in commands),
+        *(f"Edit({path}/**)" for path in extra_paths),
+        *(f"Write({path}/**)" for path in extra_paths),
+        *bash_rules,
     ]
 
 
@@ -192,11 +206,15 @@ class ClaudeCodeRunner(AgentRunnerPort):
         # El prompt va por stdin: los prompts largos no entran bien como argumento.
         if scope is not None:
             # stream-json: el log muestra cada paso del agente mientras trabaja.
-            tools = claude_scoped_tools(scope.writable_dir, list(scope.commands))
+            tools = claude_scoped_tools(scope.writable_dir, list(scope.commands), scope.extra_writable)
             cmd = [
                 self._binary, "-p", "--output-format", "stream-json", "--verbose",
                 "--allowedTools", *tools, "--disallowedTools", *CLAUDE_SECRET_DENY,
             ]
+            if scope.model:
+                cmd += ["--model", scope.model]
+            if scope.reasoning_effort:
+                cmd += ["--effort", scope.reasoning_effort]
             code, timed_out, secs = await run_cli(
                 cmd,
                 cwd=cwd,
@@ -268,10 +286,12 @@ class CodexRunner(AgentRunnerPort):
         else:
             cmd = [self._binary, "exec", "--json", "--skip-git-repo-check", "-C", str(cwd), "-o", str(last_path), "-s", "read-only"]
         cmd += ["-c", 'forced_login_method="chatgpt"']
-        if settings.agent_codex_model:
-            cmd += ["-m", settings.agent_codex_model]
-        if settings.agent_codex_reasoning_effort:
-            cmd += ["-c", f"model_reasoning_effort={json.dumps(settings.agent_codex_reasoning_effort)}"]
+        model = (scope.model if scope is not None else None) or settings.agent_codex_model
+        effort = (scope.reasoning_effort if scope is not None else None) or settings.agent_codex_reasoning_effort
+        if model:
+            cmd += ["-m", model]
+        if effort:
+            cmd += ["-c", f"model_reasoning_effort={json.dumps(effort)}"]
         cmd.append("-")  # prompt por stdin
         code, timed_out, secs = await run_cli(
             cmd, cwd=cwd, log_path=log_path, timeout_seconds=timeout_seconds, stdin_text=prompt,
@@ -279,4 +299,4 @@ class CodexRunner(AgentRunnerPort):
         )
         last = _tail(last_path, 20000) or _tail(log_path, 4000)
         return AgentRunResult(exit_code=code, last_message=last.strip(), duration_seconds=secs, timed_out=timed_out,
-                              usage=codex_usage(log_path), model=settings.agent_codex_model or "codex (modelo por defecto)")
+                              usage=codex_usage(log_path), model=model or "codex (modelo por defecto)")

@@ -13,6 +13,7 @@ Guía para personas y agentes: src/templates/_tools/explainer-kit/guides/orquest
 from __future__ import annotations
 
 import json
+import time
 from functools import lru_cache
 
 from src.config.settings import BASE_DIR, settings
@@ -66,6 +67,20 @@ def text_for(role: str) -> AIPort:
     from src.adapters.ai.factory import get_text_ai
 
     return get_text_ai(provider)
+
+
+async def text_json_with_usage(role: str, system: str, prompt: str) -> tuple[dict, dict]:
+    """Obtiene JSON y uso real cuando el proveedor lo expone; desconocido queda nulo."""
+    adapter = text_for(role)
+    measured = getattr(adapter, "complete_json_with_usage", None)
+    if measured is not None:
+        result, usage = await measured(system, prompt)
+    else:
+        started = time.monotonic()
+        result = await adapter.complete_json(system, prompt)
+        usage = {"provider": provider_for(role), "model": model_for(role),
+                 "seconds": round(time.monotonic() - started, 2)}
+    return result, {**usage, "role": role}
 
 
 def describe() -> list[dict]:

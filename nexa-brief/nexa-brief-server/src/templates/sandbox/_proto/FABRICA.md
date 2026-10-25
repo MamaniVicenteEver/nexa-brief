@@ -4,8 +4,8 @@ Dos motores, un núcleo compartido. Un video = solo datos (`assets/scene.json`);
 
 | prototipo | motor | ejemplo completo | formato | referencia |
 |---|---|---|---|---|
-| Mapas satelitales (NodeHistory) | `nodehistory/_mapas/` (`ESCENA.md`) | `nodehistory/bolivia-mar/` (8:01) | 9:16 y 16:9 | `nuevos/ejmplo2/` |
-| Pizarra con personaje (NodeAction) | `nodeaction/_pizarra/` (`ESCENA.md`, `PERSONAJES.md`) | `nodeaction/pizarra-olvido/` (6:39) | 16:9 | `nuevos/ejmplo1/` |
+| Mapas satelitales (NodeHistory) | `nodehistory/_mapas/` (`ESCENA.md`) | `nodehistory/bolivia-mar/` (8:01) | 9:16 y 16:9 | `referencias/nodehistory/mapas-con-banderas/` |
+| Pizarra con personaje (NodeAction) | `nodeaction/_pizarra/` (`ESCENA.md`, `PERSONAJES.md`) | `nodeaction/pizarra-olvido/` (6:39) | 16:9 | `referencias/nodeaction/welcome-to-the-eng-pizarra/` |
 
 Núcleo `_proto/proto.js` (igual para los dos): carga, anclas `"@palabra"`, reproductor (el tiempo sale del
 audio; ▶ si el navegador bloquea el autoplay; clic/espacio pausa, ←/→ 5 s), contrato de grabación

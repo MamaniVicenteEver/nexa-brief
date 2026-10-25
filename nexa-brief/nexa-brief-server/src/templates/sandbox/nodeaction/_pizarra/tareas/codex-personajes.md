@@ -6,7 +6,7 @@ Claude (orquestador) revisa lo que entregues. Solo podés escribir en
 NO modifiques `rig.js`, `pizarra.js`, `props.js`, `palito.js` ni nada fuera de esas rutas. Sin git commit.
 
 Leé: `PERSONAJES.md` (contrato), `rig.js` (helpers), `characters/palito.js` (ejemplo) y mirá la referencia
-`src/templates/sandbox/nuevos/ejmplo1/videoplayback.mp4` (extraé cuadros con ffmpeg para ver el trazo).
+`src/templates/sandbox/referencias/nodeaction/welcome-to-the-eng-pizarra/videoplayback.mp4` (extraé cuadros con ffmpeg para ver el trazo).
 
 ## Personajes a crear (mismo trazo de la referencia, cada uno reconocible por su silueta)
 1. `profe`: pelo corto peinado al costado, anteojos redondos, bigote, corbata (rombo) y saco abierto.

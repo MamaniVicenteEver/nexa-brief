@@ -1,6 +1,6 @@
 # pizarra-demo · prototipo de pizarra plana (NodeAction)
 
-Réplica del estilo de `sandbox/nuevos/ejmplo1/videoplayback.mp4` ("The English Narratives", 6:46, 16:9).
+Réplica del estilo de `sandbox/referencias/nodeaction/welcome-to-the-eng-pizarra/videoplayback.mp4` ("The English Narratives", 6:46, 16:9).
 Prototipo, 2026-10-22. No es un video para publicar.
 
 ## Material reutilizado (sin gastar voz)

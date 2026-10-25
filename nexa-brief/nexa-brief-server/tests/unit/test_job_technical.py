@@ -135,6 +135,7 @@ async def test_technical_pipeline_job(output_root: Path, fake_ffprobe: list[Path
 @pytest.mark.asyncio
 async def test_technical_explainer_job(
     output_root: Path, fake_ffprobe: list[Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    api_client,
 ):
     out = output_root / "node_history" / "binary" / "deep-blue"
     wide = _write(out / "deep-blue-16x9.mp4")
@@ -159,7 +160,7 @@ async def test_technical_explainer_job(
         format_paths={"16x9": str(wide), "9x16": str(tall)},
     ))
 
-    body = client.get("/api/v1/videos/jobs/explainer-deep-blue-1/technical").json()
+    body = (await api_client.get("/api/v1/videos/jobs/explainer-deep-blue-1/technical")).json()
     assert body["source"] == "explainer"
     assert body["engine"] == "explainer-kit"
     assert (body["template"], body["template_label"]) == ("binary", "NODEHISTORY")

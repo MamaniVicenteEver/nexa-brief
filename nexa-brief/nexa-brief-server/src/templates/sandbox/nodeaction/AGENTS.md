@@ -386,7 +386,7 @@ de un storyboard del explainer-kit (videos de historia con batallas animadas).
 - `render_promo.py` exige `config.json` con `configs[]` y una pista `audio.src` (por eso sfx.py siempre deja `song.mp3`).
 
 - 2026-10-22 · Prototipo **pizarra plana** (`pizarra-demo/` + motor aparte `_pizarra/pizarra.js`), réplica de
-  `../nuevos/ejmplo1/` (monigote de doble trazo, fondo gris liso, sin cámara, texto tipeado, títulos en arco).
+  `../referencias/nodeaction/welcome-to-the-eng-pizarra/` (monigote de doble trazo, fondo gris liso, sin cámara, texto tipeado, títulos en arco).
   No usa `_engine/` (no hay mundo 2.5D ni simulación): planos con items en un lienzo 1920×1080. Voz/texto
   reutilizados de `turing-enigma` (0–48 s). Ver su `PLAN.md`.
 - Doble trazo limpio: trazar TODOS los miembros en negro (ancho + 2 bordes) y después todos en color de

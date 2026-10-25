@@ -77,7 +77,17 @@
     "clip": {
       "filter": "grayscale(1) contrast(1.4) brightness(0.95)",
       "frame": "palette.ink",
-      "dim": 0.18
+      "dim": 0.18,
+      "layout": "frame",
+      "size": 0.92
+    },
+    "minDur": {
+      "common.clip": 6
+    },
+    "overlay": {
+      "endWithScene": true,
+      "min": 2.5,
+      "max": 8
     }
   },
   "voice": {

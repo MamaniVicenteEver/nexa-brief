@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import asyncio
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -65,6 +65,7 @@ class PublisherFacadeLike(Protocol):
 # la HD sigue corriendo; si el tick siguiente arrancara igual, los dos tomarían las mismas
 # entries vencidas y las publicarían dos veces.
 _tick_lock = asyncio.Lock()
+_last_publication_index_repair: tuple[str, datetime] | None = None
 
 
 async def process_tick(facade: PublisherFacadeLike, now: datetime | None = None) -> dict[str, Any]:
@@ -78,13 +79,43 @@ async def process_tick(facade: PublisherFacadeLike, now: datetime | None = None)
 
 
 async def _process_tick(facade: PublisherFacadeLike, now: datetime | None) -> dict[str, Any]:
+    global _last_publication_index_repair
     now = now or datetime.now(timezone.utc)
 
+    data_root = str(settings.data_dir)
+    if (
+        _last_publication_index_repair is None
+        or _last_publication_index_repair[0] != data_root
+        or now - _last_publication_index_repair[1] >= timedelta(hours=1)
+    ):
+        try:
+            from src.adapters.data.publication_factory import get_publication_components
+
+            get_publication_components().port.repair_index()
+            _last_publication_index_repair = (data_root, now)
+        except Exception as exc:
+            logger.warning("schedule_publication_index_repair_error", error=str(exc))
+
     recovered = await queue_repository.recover_stale_publishing()
+    reconciled = 0
+    try:
+        from src.adapters.data.publication_factory import get_publication_components
+
+        service = get_publication_components().service
+        await service.reconcile_interrupted()
+        reconciled = await service.reconcile_due_deliveries(now)
+    except Exception as exc:
+        logger.warning("schedule_image_reconcile_error", error=str(exc))
 
     filled = 0
     if settings.schedule_auto_fill_enabled:
         filled = await _fill_gaps(now)
+        try:
+            from src.adapters.data.publication_factory import get_publication_components
+
+            filled += await get_publication_components().service.fill_due_image_slots(now)
+        except Exception as exc:
+            logger.warning("schedule_image_fill_error", error=str(exc))
 
     due_entries = queue_repository.find_due(now.isoformat())
     results: dict[str, str] = {}
@@ -94,6 +125,7 @@ async def _process_tick(facade: PublisherFacadeLike, now: datetime | None) -> di
 
     summary = {
         "recovered_stale": recovered,
+        "image_reconciled": reconciled,
         "gaps_filled": filled,
         "due_processed": len(due_entries),
         "results": results,
@@ -114,9 +146,12 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
     descripción/tags desde `job_tracker.get_summary()` (el único lugar donde
     sobrevive esa metadata tras terminar el pipeline).
     """
+    if entry.content_kind != "video":
+        return await _publish_image_entry(entry)
+
     updated = await queue_repository.mark_publishing(entry.entry_id)
     if updated is None:
-        raise ValueError(f"QueueEntry '{entry.entry_id}' not found.")
+        return queue_repository.get(entry.entry_id) or entry
 
     job_record = job_tracker.get(entry.job_id)
     if job_record is None:
@@ -220,6 +255,28 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
     return published or updated
 
 
+async def _publish_image_entry(entry: QueueEntry) -> QueueEntry:
+    """Despacha por el puerto de publicaciones; no usa el facade de video."""
+    updated = await queue_repository.mark_publishing(entry.entry_id)
+    if updated is None:
+        return queue_repository.get(entry.entry_id) or entry
+    try:
+        from src.adapters.data.publication_factory import get_publication_components
+
+        delivery = await get_publication_components().service.publish_delivery(entry.delivery_id or "")
+    except Exception as exc:
+        code = getattr(exc, "code", "")
+        if code == "OUTCOME_UNKNOWN":
+            failed = await queue_repository.mark_outcome_unknown(entry.entry_id, str(exc))
+        else:
+            failed = await queue_repository.mark_failed(entry.entry_id, str(exc))
+        return failed or updated
+    remote = delivery.remote
+    return await queue_repository.mark_published(
+        entry.entry_id, post_id=remote.post_id or "", url=remote.permalink or ""
+    ) or updated
+
+
 # ── Auto-fill (modo automático: solo rellena huecos) ────────────────────────
 
 async def _fill_gaps(now: datetime) -> int:
@@ -233,6 +290,10 @@ async def _fill_gaps(now: datetime) -> int:
     occurrence_date = now.strftime("%Y-%m-%d")
 
     for slot in slot_repository.list_slots(enabled=True):
+        # La cola de videos conserva su elección actual; las imágenes usan el
+        # servicio de publicaciones y slots con zona/categoría explícitas.
+        if slot.content_kind != "video":
+            continue
         if weekday not in slot.days or hhmm not in slot.times:
             continue
 

@@ -17,6 +17,11 @@ const extraDevOrigins = (process.env.ALLOWED_DEV_ORIGINS ?? "")
   .filter(Boolean);
 
 const nextConfig: NextConfig = {
+  // Las ideas admiten adjuntos de hasta 300 MB por archivo; el límite por
+  // defecto de Proxy (10 MB) truncaría los multipart antes de llegar a FastAPI.
+  experimental: {
+    proxyClientMaxBodySize: "1gb",
+  },
   // Mantiene /api/v1 en el origen público y reenvía HTTP + WebSocket al API local.
   async rewrites() {
     const apiUrl = process.env.INTERNAL_API_URL ?? "http://127.0.0.1:8000";
@@ -51,7 +56,14 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   // `next dev` abierto desde otra máquina (IP de LAN/Tailscale): ALLOWED_DEV_ORIGINS=100.x.x.x,otra
   // The public tunnel host follows PUBLIC_APP_URL; optional extra local hosts remain supported.
-  allowedDevOrigins: [...new Set([...extraDevOrigins, ...(publicAppHost ? [publicAppHost] : [])])],
+  allowedDevOrigins: [
+    ...new Set([
+      ...extraDevOrigins,
+      ...(publicAppHost ? [publicAppHost] : []),
+      "192.168.20.23",
+      "127.0.0.1",
+    ]),
+  ],
 };
 
 export default withNextIntl(nextConfig);

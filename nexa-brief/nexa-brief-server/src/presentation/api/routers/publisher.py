@@ -28,7 +28,6 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import hmac
-import mimetypes
 import re
 import secrets
 import time
@@ -45,7 +44,10 @@ from src.config.settings import settings
 from src.presentation.api.oauth_pages import render_oauth_error, render_oauth_success
 from src.presentation.api.oauth_urls import public_url
 from src.presentation.api.file_streaming import serve_file_with_range
-from src.adapters.publishing.instagram_media_url import resolve_signed_media_token
+from src.adapters.publishing.instagram_media_url import (
+    resolve_signed_media_token,
+    signed_media_mime,
+)
 from src.adapters.publishing.token_storage import TokenStorage
 from src.adapters.publishing.youtube_adapter import YouTubeChannelProfile
 
@@ -1034,7 +1036,12 @@ async def instagram_oauth_start(alias: str = "instagram_1") -> RedirectResponse:
     params = {
         "client_id": app_id,
         "redirect_uri": callback_url,
-        "scope": "pages_show_list,pages_read_engagement,instagram_basic,instagram_content_publish",
+        # Meta puede no aprobar estos permisos en la app; publicar sin ellos
+        # sigue siendo válido y el adaptador marca el comentario como pendiente.
+        "scope": (
+            "pages_show_list,pages_read_engagement,instagram_basic,instagram_content_publish,"
+            "instagram_manage_comments,instagram_manage_insights"
+        ),
         "state": f"{state_payload}:{signature}",
         "response_type": "code",
     }
@@ -1067,7 +1074,10 @@ async def facebook_oauth_start(
     params = {
         "client_id": app_id,
         "redirect_uri": cb_url,
-        "scope": "pages_manage_posts,pages_show_list,pages_read_engagement,pages_manage_metadata,pages_messaging",
+        "scope": (
+            "pages_manage_posts,pages_show_list,pages_read_engagement,pages_manage_metadata,"
+            "pages_messaging,pages_manage_engagement,pages_read_user_engagement"
+        ),
         "state": alias,
         "response_type": "code",
     }
@@ -1394,7 +1404,7 @@ async def list_youtube_playlists(alias: str) -> list[dict[str, str]]:
 
 @router.get("/instagram/media/{token}", tags=["instagram"], include_in_schema=False)
 async def get_instagram_upload_media(token: str, request: Request) -> Response:
-    """Public, short-lived, HMAC-protected MP4 URL fetched by Meta during Reel publishing."""
+    """URL pública breve y firmada para JPEG o MP4 que Meta descarga al publicar."""
     try:
         path = resolve_signed_media_token(token)
     except ValueError:
@@ -1403,7 +1413,7 @@ async def get_instagram_upload_media(token: str, request: Request) -> Response:
     return serve_file_with_range(
         path,
         request.headers.get("range"),
-        mimetypes.guess_type(str(path))[0] or "video/mp4",
+        signed_media_mime(path),
         if_none_match=request.headers.get("if-none-match"),
         if_modified_since=request.headers.get("if-modified-since"),
         if_range=request.headers.get("if-range"),

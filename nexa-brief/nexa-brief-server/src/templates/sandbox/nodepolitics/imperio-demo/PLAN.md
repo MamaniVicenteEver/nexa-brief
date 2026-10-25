@@ -6,7 +6,7 @@ Prueba de componentes y del lenguaje visual para el diseño `imperio`: atlas fí
 
 ## Referencia visual
 
-- Video: `sandbox/nodepolitics/From Klickpin.com- Try Cozy workwear outfit ideas that are packed with ideas people keep saving and clicking on lately for ideas worth saving righ.mp4`.
+- Video: `sandbox/referencias/nodepolitics/cozy-workwear-outfits/From Klickpin.com- Try Cozy workwear outfit ideas that are packed with ideas people keep saving and clicking on lately for ideas worth saving righ.mp4`.
 - Hojas de referencia: `scratchpad/ref/v3/sheet01.jpg` y `sheet02.jpg`; lectura adicional a 4 fps en el scratchpad de Codex.
 - La referencia solo guía el lenguaje visual. No se copiaron sus fotogramas ni texturas.
 

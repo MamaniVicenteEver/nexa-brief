@@ -303,10 +303,11 @@
     },
     "layout": {
      "type": "enum",
-     "default": "full",
-     "doc": "full = pantalla completa; frame = dentro de un marco centrado.",
+     "default": "auto",
+     "doc": "auto = el del diseño (defaults.clip.layout; si no hay, full); full = pantalla completa; frame = dentro de un marco centrado. Dejarlo en auto.",
      "required": false,
      "options": [
+      "auto",
       "full",
       "frame"
      ],
@@ -315,11 +316,11 @@
     },
     "size": {
      "type": "number",
-     "default": 0.84,
-     "doc": "layout frame: fracción del contenido que ocupa.",
+     "default": 0,
+     "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
      "required": false,
      "options": null,
-     "min": 0.3,
+     "min": 0,
      "max": 1
     },
     "ar": {
@@ -394,7 +395,6 @@
    },
    "example": {
     "src": "assets/media/servidores.mp4",
-    "layout": "full",
     "caption": "Un centro de datos",
     "sub": "PEXELS · 2026"
    }

@@ -24,6 +24,15 @@ import outro as outro_tool  # noqa: E402
 LOCAL_CATALOG = "assets/components/catalog.json"
 
 
+
+def _media_exists(proto: pathlib.Path, src: str) -> bool:
+    """assets/… relativo al video, o /carpeta/video/assets/… relativo a src/templates (lo escribe publishing/opening.py)."""
+    if src.startswith(("http://", "https://")):
+        return True
+    if src.startswith("/"):
+        return (pathlib.Path(__file__).resolve().parents[3] / src.lstrip("/")).exists()
+    return (proto / src).exists()
+
 def clip_seconds(f: pathlib.Path) -> float | None:
     """Duración de un clip con ffprobe (None si no se puede leer)."""
     import subprocess
@@ -87,7 +96,7 @@ def main(proto):
             layer = b.get("layer", d["layer"])
             for k, v in (b.get("params") or {}).items():
                 if k not in d["params"]: errs.append(f"#{i} {b['use']}: parámetro desconocido '{k}'")
-                elif d["params"][k]["type"] == "image" and v and not (proto / v).exists(): errs.append(f"#{i} imagen inexistente: {v}")
+                elif d["params"][k]["type"] == "image" and v and not _media_exists(proto, v): errs.append(f"#{i} imagen inexistente: {v}")
                 elif d["params"][k]["type"] == "video" and v and not (proto / v).exists(): errs.append(f"#{i} clip inexistente: {v}")
                 elif isinstance(v, str) and v.startswith("@") and find(words, v[1:], max(0, wi)) < 0: errs.append(f"#{i} {k}='{v}' no aparece después del ancla")
             for k, s in d["params"].items():

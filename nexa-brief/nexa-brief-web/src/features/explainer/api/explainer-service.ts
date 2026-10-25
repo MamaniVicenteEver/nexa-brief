@@ -33,6 +33,8 @@ const UPLOAD_TIMEOUT_MS = 300_000;
 interface ExplainerJobDto {
   job_id: string;
   video_id: string;
+  title?: string | null;
+  poster_url?: string | null;
   state: ExplainerJob["state"];
   category_path: string;
   duration: ExplainerJob["duration"];
@@ -52,6 +54,11 @@ interface ExplainerJobDto {
   }[];
   formats?: ExplainerJob["formats"];
   render_seconds?: number | null;
+  progress?: number;
+  progress_format?: ExplainerJob["progressFormat"];
+  progress_phase?: ExplainerJob["progressPhase"];
+  started_at?: string | null;
+  eta_seconds?: number | null;
 }
 
 interface TitleOptionDto {
@@ -175,6 +182,8 @@ function mapJob(dto: ExplainerJobDto): ExplainerJob {
   return {
     jobId: dto.job_id,
     videoId: dto.video_id,
+    title: dto.title ?? null,
+    posterUrl: dto.poster_url ? resolveApiUrl(dto.poster_url) : null,
     state: dto.state,
     categoryPath: dto.category_path,
     duration: dto.duration,
@@ -187,6 +196,11 @@ function mapJob(dto: ExplainerJobDto): ExplainerJob {
     scheduledJobId: dto.scheduled_job_id,
     formats: dto.formats ?? [],
     renderSeconds: dto.render_seconds ?? null,
+    progress: dto.progress ?? 0,
+    progressFormat: dto.progress_format ?? null,
+    progressPhase: dto.progress_phase ?? null,
+    startedAt: dto.started_at ?? null,
+    etaSeconds: dto.eta_seconds ?? null,
     publishResults: (dto.publish_results ?? []).map((r) => ({
       accountSelector: r.account_selector,
       format: r.format,
@@ -274,6 +288,12 @@ export async function recordExplainerVideo(input: RecordExplainerInput): Promise
 export async function getExplainerJob(jobId: string, signal?: AbortSignal): Promise<ExplainerJob> {
   const dto = await httpClient<ExplainerJobDto>(`/api/v1/explainer/jobs/${jobId}`, { signal });
   return mapJob(dto);
+}
+
+/** Jobs activos y grabaciones terminadas recientemente, para la Biblioteca. */
+export async function getExplainerJobs(signal?: AbortSignal): Promise<ExplainerJob[]> {
+  const dtos = await httpClient<ExplainerJobDto[]>("/api/v1/explainer/jobs?active=true", { signal });
+  return dtos.map(mapJob);
 }
 
 /** Captura de nuevo las miniaturas A (introv1) y B (introv2) con los textos actuales. */

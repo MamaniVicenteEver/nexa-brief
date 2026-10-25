@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -27,6 +28,13 @@ class ExplainerJobResponse(BaseModel):
     publish_results: list[dict] = Field(default_factory=list)
     formats: list[str] = Field(default_factory=list)
     render_seconds: float | None = None
+    progress: float = Field(default=0.0, ge=0.0, le=1.0)
+    progress_format: str | None = None
+    progress_phase: Literal["capturing", "encoding"] | None = None
+    started_at: datetime | None = None
+    eta_seconds: int | None = None
+    title: str | None = None
+    poster_url: str | None = None
 
 
 class PublishIssueResponse(BaseModel):
@@ -95,6 +103,87 @@ class ExplainerVideoResponse(BaseModel):
     # Solo en videos con paquete de publicación v2.
     publish_package: PublishPackageResponse | None = None
     thumbnails: ThumbnailsResponse = Field(default_factory=ThumbnailsResponse)
+
+
+class SandboxItemResponse(BaseModel):
+    id: str
+    folder: str
+    subcategory: str | None = None
+    path: str
+    kind: Literal[
+        "explainer_kit",
+        "nodeaction",
+        "mapas",
+        "pizarra",
+        "proto",
+        "hyperframes",
+        "reference",
+        "other",
+    ]
+    title: str
+    status: str | None = None
+    design: str | None = None
+    has_index: bool
+    has_poster: bool
+    has_info: bool = False
+    total_tokens: int | None = None
+    thumbnail_url: str | None = None
+    player: Literal["protocol", "video", "none"] = "none"
+    videos: list[str] = Field(default_factory=list)
+    notes_file: str | None = None
+    updated_at: str | None = None
+    promotable: bool = False
+    promote_blocker: str | None = None
+
+
+class SandboxPromotionResponse(BaseModel):
+    video_id: str
+    from_path: str
+    to_path: str
+    category_path: str
+
+
+class SandboxFolderResponse(BaseModel):
+    folder: str
+    label: str
+    role: Literal["projects", "references"] = "projects"
+    category_id: str | None = None
+    items: list[SandboxItemResponse] = Field(default_factory=list)
+
+
+class SandboxModelUsageResponse(BaseModel):
+    provider: str
+    model: str
+    input_tokens: int
+    cached_input_tokens: int
+    fresh_input_tokens: int
+    output_tokens: int
+    reasoning_tokens: int
+    total_tokens: int
+
+
+class SandboxBaselineResponse(BaseModel):
+    id: str
+    total_tokens: int
+
+
+class SandboxForecastResponse(BaseModel):
+    min: float
+    max: float
+    basis: str
+
+
+class SandboxInfoResponse(BaseModel):
+    info: dict | None = None
+    totals_by_model: list[SandboxModelUsageResponse] = Field(default_factory=list)
+    fresh_input_tokens: int = 0
+    total_tokens: int = 0
+    cached_tokens: int = 0
+    estimated: bool = False
+    baseline: SandboxBaselineResponse | None = None
+    ratio_vs_baseline: float | None = None
+    forecast_next: SandboxForecastResponse | None = None
+    verdict: Literal["eficiente", "aceptable", "caro"] | None = None
 
 
 class RecordExplainerRequest(BaseModel):

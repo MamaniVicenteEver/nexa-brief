@@ -25,8 +25,12 @@ from src.presentation.api.routers import (
     stock,
     drafts,
     explainer,
+    sandbox,
+    prototypes,
     media_plans,
     voice,
+    image_posts,
+    publications,
 )
 
 
@@ -44,6 +48,16 @@ async def lifespan(app: FastAPI):
     from src.core.categories import ensure_output_dirs
     ensure_output_dirs(settings.output_dir)
     logger.info("nexa_brief_started", output_dir=str(settings.output_dir))
+
+    # Marcar runs que quedaron sin proceso al reiniciar y reactivar la cola persistida.
+    await prototypes.get_prototype_run_service().recover_interrupted()
+
+    # Reparar el índice derivado y dejar publicaciones interrumpidas en
+    # conciliación; una entrega ambigua nunca se reenvía automáticamente.
+    from src.adapters.data.publication_factory import get_publication_components
+    publication_components = get_publication_components()
+    publication_components.port.repair_index()
+    await publication_components.service.reconcile_interrupted()
 
     # ── Wire the realtime event bus to its WebSocket broadcaster ──────────────
     # Always on (unlike the scheduler below) — every write path that publishes
@@ -132,6 +146,14 @@ openapi_tags = [
         "description": "Recurring publishing slots and the publish queue (Programación) — auto-fill + manual assignment + immediate publish.",
     },
     {
+        "name": "image-posts",
+        "description": "Planes, revisión y entregas FB/IG de publicaciones de imagen.",
+    },
+    {
+        "name": "publications",
+        "description": "Archivo y galería autenticada de publicaciones y métricas.",
+    },
+    {
         "name": "realtime",
         "description": "WebSocket push for channel/job/notification changes — replaces frontend polling.",
     },
@@ -150,7 +172,7 @@ app.add_middleware(
     allow_origins=settings.cors_allow_origins,
     allow_origin_regex=settings.cors_allow_origin_regex or None,
     allow_credentials=False,  # sin cookies de auth en este flujo (el login vive en el frontend)
-    allow_methods=["GET", "POST", "PUT", "DELETE"],  # verbos usados hoy en toda la API
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["*"],  # necesario por el boundary variable de multipart/form-data
     allow_private_network=True,
 )
@@ -169,6 +191,10 @@ app.include_router(stock.router, prefix="/api/v1")
 app.include_router(drafts.router, prefix="/api/v1")
 app.include_router(media_plans.router, prefix="/api/v1")
 app.include_router(explainer.router, prefix="/api/v1")
+app.include_router(sandbox.router, prefix="/api/v1")
+app.include_router(prototypes.router, prefix="/api/v1")
+app.include_router(image_posts.router, prefix="/api/v1")
+app.include_router(publications.router, prefix="/api/v1")
 app.include_router(categories.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 # YouTube OAuth 2.0 server-side flow

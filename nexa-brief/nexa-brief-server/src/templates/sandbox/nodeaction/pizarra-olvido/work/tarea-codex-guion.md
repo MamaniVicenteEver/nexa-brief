@@ -5,7 +5,7 @@ NO renderices, NO hagas git commit, NO toques nada fuera de `src/templates/sandb
 
 ## Contexto
 - Es un video explicativo de PIZARRA (motor `sandbox/nodeaction/_pizarra/`, ver
-  `sandbox/nodeaction/pizarra-demo/PLAN.md` y la referencia `sandbox/nuevos/ejmplo1/videoplayback.mp4`,
+  `sandbox/nodeaction/pizarra-demo/PLAN.md` y la referencia `sandbox/referencias/nodeaction/welcome-to-the-eng-pizarra/videoplayback.mp4`,
   "The English Narratives"): un monigote en el centro que cambia de pose y de cara, dibujos de línea negra
   simples (reloj, cerebro, libro, calendario, flechas, gráficos de barras/curva, bombilla, papeles…), texto
   negro tipeado palabra por palabra, títulos en arco ("EL HÁBITO DE 5 MINUTOS · PASO 1 — …"), rótulos verdes.

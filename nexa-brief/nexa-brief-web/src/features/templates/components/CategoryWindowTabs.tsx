@@ -3,7 +3,10 @@
 import { useTranslations } from "next-intl";
 import type { CategoryNode } from "@/features/categories";
 import { useCategoryDesigns, useExplainerVideos } from "@/features/explainer";
+import { SandboxCategoryTab } from "@/features/sandbox";
 import { cn } from "@/lib/utils";
+
+export const SANDBOX_CATEGORY_ID = "sandbox";
 
 const STATUS_TONE: Record<CategoryNode["status"], string> = {
   active: "bg-nb-green/70 text-nb-green-dark",
@@ -116,6 +119,10 @@ export function CategoryWindowTabs({
           onSelect={() => onSelect(category.id)}
         />
       ))}
+      <SandboxCategoryTab
+        selected={selectedId === SANDBOX_CATEGORY_ID}
+        onSelect={() => onSelect(SANDBOX_CATEGORY_ID)}
+      />
     </div>
   );
 }

@@ -33,3 +33,14 @@
 - ✓ Diagramas de causa→efecto, comparaciones de escala, dispositivos dibujados.
 - ✓ Texto dentro de cajas sin rayado; el rayado lima va detrás y tenue.
 - ✗ Texto encima de un rayado fuerte. ✗ Más de un elemento lima por plano.
+
+## Reglas automáticas del diseño (design.json → defaults)
+
+- **Clips**: `clip.layout = "frame"`, `clip.size = 0.92` → centrados, un poco más grandes que las fotos, rótulo
+  debajo. En el storyboard no se pone `layout` ni `size`.
+- **Duración mínima**: `minDur = {"common.clip": 6}` → el motor alarga el clip a 6 s y corre los beats siguientes.
+  Bajar clips de 6–8 s.
+- **Overlays**: `overlay = {"endWithScene": true, "min": 2.5, "max": 8}` → una marca sin `dur`/`until` desaparece
+  cuando cambia la escena de debajo.
+- **Bordes**: El fondo (`#0a0a0b` + puntos) se degrada a `#000` en el 6% de cada borde (`components/_rough.js → frame`).
+- Si hay que cambiar uno de estos criterios, se cambia aquí (design.json), nunca video por video.

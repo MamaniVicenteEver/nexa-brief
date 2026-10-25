@@ -12,12 +12,18 @@ lee, ver `engine.py`).
 from __future__ import annotations
 
 import json
+import hashlib
+import fcntl
 import uuid
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from typing import Any
+from pathlib import Path
 
 import structlog
 
+from src.adapters.data.layout import COLLECTIONS
+from src.config.settings import settings
 from src.core.data import collection
 from src.core.realtime.event_bus import get_event_bus
 from src.core.realtime.events import RealtimeEvent
@@ -55,25 +61,47 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+@contextmanager
+def _queue_claim_lock():
+    """Serializa alta/reclamo de imágenes entre workers con JSON compartido."""
+    relative_path, _ = COLLECTIONS["queue_entries"]
+    lock_path = settings.data_dir / Path(relative_path).parent / ".queue-claim.lock"
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+b") as stream:
+        fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+
+
 # ── Create ───────────────────────────────────────────────────────────────────
 
 async def create(
-    job_id: str,
+    job_id: str | None,
     platform: str,
     account_alias: str,
     scheduled_at: str | None = None,
     source: QueueSource = QueueSource.MANUAL,
     slot_id: str | None = None,
     format: str | None = None,
+    content_kind: str = "video",
+    content_id: str | None = None,
+    delivery_id: str | None = None,
 ) -> QueueEntry:
     """Crea una entry de cola nueva (ad-hoc, inmediata, o auto-fill de un slot).
 
     Para ocurrencias de un `ScheduleSlot` que necesitan dedup por
     (slot_id, scheduled_at) usar `upsert_for_slot_occurrence` en su lugar
     (usada por el endpoint de asignación manual)."""
+    if content_kind == "video" and not job_id:
+        raise ValueError("Las entradas de video requieren job_id")
+    if content_kind != "video" and (not content_id or not delivery_id):
+        raise ValueError("Las entradas de imagen requieren content_id y delivery_id")
     now = _now_iso()
+    entry_id = hashlib.sha256(delivery_id.encode()).hexdigest()[:16] if delivery_id else uuid.uuid4().hex[:8]
     entry = QueueEntry(
-        entry_id=uuid.uuid4().hex[:8],
+        entry_id=entry_id,
         job_id=job_id,
         platform=platform,
         account_alias=account_alias,
@@ -84,8 +112,19 @@ async def create(
         status=QueueStatus.QUEUED,
         created_at=now,
         updated_at=now,
+        content_kind=content_kind,
+        content_id=content_id,
+        delivery_id=delivery_id,
     )
-    await _entries().insert(_dump(entry))
+    if delivery_id:
+        with _queue_claim_lock():
+            existing = _entries().first({"delivery_id": delivery_id})
+            if existing:
+                return QueueEntry(**existing)
+            stored = await _entries().upsert(_dump(entry), match=["delivery_id"])
+            entry = QueueEntry(**stored)
+    else:
+        await _entries().insert(_dump(entry))
     await _publish_event(entry)
     return entry
 
@@ -161,9 +200,11 @@ async def upsert_for_slot_occurrence(
 
 # ── Status transitions ──────────────────────────────────────────────────────
 
-async def _update_status(entry_id: str, status: QueueStatus, **extra: Any) -> QueueEntry | None:
+async def _update_status(
+    entry_id: str, status: QueueStatus, *, only_if: dict[str, Any] | None = None, **extra: Any
+) -> QueueEntry | None:
     record = await _entries().update(
-        entry_id, {**extra, "status": status.value, "updated_at": _now_iso()}
+        entry_id, {**extra, "status": status.value, "updated_at": _now_iso()}, only_if=only_if
     )
     if record is None:
         return None
@@ -173,8 +214,13 @@ async def _update_status(entry_id: str, status: QueueStatus, **extra: Any) -> Qu
 
 
 async def mark_publishing(entry_id: str) -> QueueEntry | None:
-    _in_flight.add(entry_id)
-    return await _update_status(entry_id, QueueStatus.PUBLISHING)
+    with _queue_claim_lock():
+        entry = await _update_status(
+            entry_id, QueueStatus.PUBLISHING, only_if={"status": QueueStatus.QUEUED.value}
+        )
+    if entry:
+        _in_flight.add(entry_id)
+    return entry
 
 
 async def mark_published(entry_id: str, post_id: str, url: str) -> QueueEntry | None:
@@ -187,6 +233,13 @@ async def mark_published(entry_id: str, post_id: str, url: str) -> QueueEntry | 
 async def mark_failed(entry_id: str, error: str) -> QueueEntry | None:
     _in_flight.discard(entry_id)
     return await _update_status(entry_id, QueueStatus.FAILED, error=error, processed_at=_now_iso())
+
+
+async def mark_outcome_unknown(entry_id: str, error: str) -> QueueEntry | None:
+    _in_flight.discard(entry_id)
+    return await _update_status(
+        entry_id, QueueStatus.OUTCOME_UNKNOWN, error=error, processed_at=_now_iso()
+    )
 
 
 async def cancel(entry_id: str) -> QueueEntry:
@@ -209,6 +262,21 @@ async def cancel(entry_id: str) -> QueueEntry:
         raise ValueError(
             f"QueueEntry '{entry_id}' cannot be cancelled (status={current.get('status')})."
         )
+    entry = QueueEntry(**record)
+    await _publish_event(entry)
+    return entry
+
+
+async def reschedule(entry_id: str, scheduled_at: str | None) -> QueueEntry | None:
+    """Cambia la hora de una entrada pendiente, incluida la publicación inmediata."""
+    with _queue_claim_lock():
+        record = await _entries().update(
+            entry_id,
+            {"scheduled_at": scheduled_at, "updated_at": _now_iso()},
+            only_if={"status": QueueStatus.QUEUED.value},
+        )
+    if record is None:
+        return None
     entry = QueueEntry(**record)
     await _publish_event(entry)
     return entry
@@ -249,16 +317,22 @@ async def recover_stale_publishing(older_than_seconds: int = 600) -> int:
             continue  # sigue subiéndose (p. ej. esperando la HD de YouTube): no está atascada
         updated_at = record.get("updated_at")
         try:
-            updated_dt = datetime.fromisoformat(updated_at) if updated_at else None
+            updated_dt = datetime.fromisoformat(updated_at.replace("Z", "+00:00")) if updated_at else None
         except ValueError:
             updated_dt = None
         if updated_dt is not None and (now_dt - updated_dt).total_seconds() < older_than_seconds:
             continue
         now_iso = now_dt.isoformat()
+        status = QueueStatus.OUTCOME_UNKNOWN if record.get("content_kind", "video") != "video" else QueueStatus.FAILED
+        error = (
+            "Image delivery requires remote reconciliation after worker interruption."
+            if status == QueueStatus.OUTCOME_UNKNOWN
+            else "Recovered from crash: stuck in 'publishing' state."
+        )
         entry = await _update_status(
             record["entry_id"],
-            QueueStatus.FAILED,
-            error="Recovered from crash: stuck in 'publishing' state.",
+            status,
+            error=error,
             processed_at=now_iso,
         )
         recovered += entry is not None
@@ -269,6 +343,11 @@ async def recover_stale_publishing(older_than_seconds: int = 600) -> int:
 
 def get(entry_id: str) -> QueueEntry | None:
     record = _entries().get(entry_id)
+    return QueueEntry(**record) if record else None
+
+
+def find_for_delivery(delivery_id: str) -> QueueEntry | None:
+    record = _entries().first({"delivery_id": delivery_id})
     return QueueEntry(**record) if record else None
 
 
@@ -299,14 +378,14 @@ def find_pending_for_slot_occurrence(slot_id: str, scheduled_at: str) -> QueueEn
 
 def find_due(now_iso: str) -> list[QueueEntry]:
     """Entries `queued` con `scheduled_at` ya vencido (<= now), listas para publicar."""
-    now_dt = datetime.fromisoformat(now_iso)
+    now_dt = datetime.fromisoformat(now_iso.replace("Z", "+00:00"))
     due: list[QueueEntry] = []
     for record in _entries().list({"status": QueueStatus.QUEUED.value}):
         scheduled_at = record.get("scheduled_at")
         if not scheduled_at:
             continue
         try:
-            scheduled_dt = datetime.fromisoformat(scheduled_at)
+            scheduled_dt = datetime.fromisoformat(scheduled_at.replace("Z", "+00:00"))
         except ValueError:
             continue
         if scheduled_dt <= now_dt:

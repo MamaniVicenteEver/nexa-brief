@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from src.core.schedule.models import QueueSource, QueueStatus
 
@@ -26,6 +26,17 @@ class ScheduleSlotCreateRequest(BaseModel):
     niche_filter: str | None = Field(
         default=None, description="Matchea job_tracker's 'category'; None = cualquier nicho."
     )
+    content_kind: Literal["video", "image", "carousel", "reel"] = "video"
+    category_id: str | None = None
+    timezone: str = Field("UTC", description="Zona IANA para contenido de imagen y horarios locales.")
+
+    @model_validator(mode="after")
+    def image_slot_has_category(self):
+        if self.content_kind != "video" and not self.category_id:
+            raise ValueError("Los slots de imagen requieren category_id")
+        if self.content_kind != "video" and self.platform not in {"facebook", "instagram"}:
+            raise ValueError("Los slots de imagen solo aceptan Facebook o Instagram")
+        return self
 
 
 class ScheduleSlotUpdateRequest(BaseModel):
@@ -37,6 +48,15 @@ class ScheduleSlotUpdateRequest(BaseModel):
     times: list[str] | None = None
     enabled: bool | None = None
     niche_filter: str | None = None
+    content_kind: Literal["video", "image", "carousel", "reel"] | None = None
+    category_id: str | None = None
+    timezone: str | None = None
+
+    @model_validator(mode="after")
+    def image_slot_has_category(self):
+        if self.content_kind and self.content_kind != "video" and not self.category_id:
+            raise ValueError("Los slots de imagen requieren category_id")
+        return self
 
 
 class ScheduleSlotResponse(BaseModel):
@@ -47,6 +67,9 @@ class ScheduleSlotResponse(BaseModel):
     times: list[str]
     enabled: bool
     niche_filter: str | None
+    content_kind: Literal["video", "image", "carousel", "reel"] = "video"
+    category_id: str | None = None
+    timezone: str = "UTC"
     created_at: str
     updated_at: str
 
@@ -83,7 +106,7 @@ class PublishNowRequest(BaseModel):
 
 class QueueEntryResponse(BaseModel):
     entry_id: str
-    job_id: str
+    job_id: str | None = None
     platform: str
     account_alias: str
     format: str | None = None
@@ -97,6 +120,9 @@ class QueueEntryResponse(BaseModel):
     created_at: str
     updated_at: str
     processed_at: str | None
+    content_kind: Literal["video", "image", "carousel", "reel"] = "video"
+    content_id: str | None = None
+    delivery_id: str | None = None
 
 
 class QueueListResponse(BaseModel):

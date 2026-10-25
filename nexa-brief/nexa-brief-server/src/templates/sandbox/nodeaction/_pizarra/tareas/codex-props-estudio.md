@@ -8,7 +8,7 @@ Sin git commit.
 Leé `props.js` (formato: `Pizarra.props.<nombre> = (g, s, p, t, k)`, dibujado centrado en (0,0), `s` = tamaño,
 `p` = parámetros del item, `k._t0` = cuándo apareció) y copiá su estilo exacto: línea negra `#151515`, relleno
 blanco `#fff` o del fondo, grosor ≈ `s * 0.02–0.03`, sin sombras ni degradados, todo determinista desde `t`.
-Mirá la referencia `src/templates/sandbox/nuevos/ejmplo1/videoplayback.mp4` (cuadros con ffmpeg) para el nivel de
+Mirá la referencia `src/templates/sandbox/referencias/nodeaction/welcome-to-the-eng-pizarra/videoplayback.mp4` (cuadros con ffmpeg) para el nivel de
 detalle: simple, limpio, reconocible al instante.
 
 El archivo empieza igual que props.js (lee `window.Pizarra.rig` y `Proto.U`) y hace

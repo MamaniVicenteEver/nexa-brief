@@ -80,6 +80,30 @@ logger = structlog.get_logger(__name__)
 
 FILES_PREFIX = "/api/v1/explainer/files"
 MAX_UPLOAD_BYTES = 300 * 1024 * 1024
+SANDBOX_SHARED_DIRS = frozenset({"_engine", "_mapas", "_pizarra", "_avatar", "_player"})
+
+
+def is_servable(parts: tuple[str, ...]) -> bool:
+    """Valida la forma de una ruta que puede servirse desde templates."""
+    if not parts or any(not part or part in {".", ".."} or part.startswith(".") for part in parts):
+        return False
+    if "_codex" in parts:
+        return False
+    if parts[:2] == ("_tools", "explainer-kit"):
+        return len(parts) >= 3
+    if parts[:2] == ("_tools", "player"):
+        return len(parts) >= 3
+    if parts[0] in explainer_folders():
+        return len(parts) >= 2
+    if parts[0] != "sandbox" or len(parts) < 3:
+        return False
+    if parts[1] == "_proto":
+        return len(parts) >= 3
+    if parts[1].startswith("_"):
+        return False
+    if parts[2] in SANDBOX_SHARED_DIRS:
+        return len(parts) >= 4
+    return not parts[2].startswith("_") and len(parts) >= 4
 
 
 @lru_cache(maxsize=1)
@@ -176,6 +200,13 @@ def _job_response(job: RecordJob) -> ExplainerJobResponse:
         scheduled_job_id=job.scheduled_job_id,
         formats=list(job.formats),
         render_seconds=job.render_seconds,
+        progress=job.progress,
+        progress_format=job.progress_format,
+        progress_phase=job.progress_phase,
+        started_at=job.started_at,
+        eta_seconds=job.eta_seconds,
+        title=(video.youtube_title or video.title) if (video := get_video(job.video_id)) else None,
+        poster_url=_poster_url(video) if video else None,
     )
 
 
@@ -328,6 +359,12 @@ async def get_explainer_job(job_id: str) -> ExplainerJobResponse:
     if job is None:
         raise HTTPException(status_code=404, detail=f"job no encontrado: {job_id}")
     return _job_response(job)
+
+
+@router.get("/explainer/jobs", response_model=list[ExplainerJobResponse])
+async def list_explainer_jobs(active: bool = True) -> list[ExplainerJobResponse]:
+    """Lista jobs activos y terminados en las últimas 24 h (o todos con active=false)."""
+    return [_job_response(job) for job in get_recorder().list_jobs(active=active)]
 
 
 @router.post("/explainer/videos/{video_id}/publish-texts", response_model=PublishTextsResponse)
@@ -517,13 +554,13 @@ async def post_component_previews(body: ComponentPreviewBatchRequest) -> Compone
 
 @router.get("/explainer/files/{file_path:path}")
 async def get_explainer_file(file_path: str, request: Request) -> Response:
-    """Sirve el kit y los videos para el iframe de preview: solo _tools/explainer-kit/ y
-    las carpetas de categoría (nodetech/, nodehistory/…), nunca archivos ocultos."""
+    """Sirve archivos del kit, categorías y sandbox para previews de solo lectura."""
     root = TEMPLATES_DIR.resolve()
-    target = (root / file_path).resolve()
-    parts = target.relative_to(root).parts if target.is_relative_to(root) else ()
-    in_kit = parts[:2] == ("_tools", "explainer-kit")
-    if not parts or not (in_kit or parts[0] in explainer_folders()) or any(p.startswith(".") for p in parts):
+    parts = tuple(file_path.split("/"))
+    if not is_servable(parts):
+        raise HTTPException(status_code=404, detail="no encontrado")
+    target = root.joinpath(*parts).resolve()
+    if not target.is_relative_to(root):
         raise HTTPException(status_code=404, detail="no encontrado")
     if not target.is_file():
         raise HTTPException(status_code=404, detail="no encontrado")

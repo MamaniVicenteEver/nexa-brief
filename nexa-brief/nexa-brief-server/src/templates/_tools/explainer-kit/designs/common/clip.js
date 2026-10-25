@@ -6,7 +6,11 @@
 
      "clip": { "filter": "grayscale(1) contrast(1.35)",   // filtro CSS de canvas (ctx.filter)
                "frame":  "palette.ink",                    // color del marco (layout "frame")
-               "dim":    0.18 }                            // oscurecido base a pantalla completa
+               "dim":    0.18,                             // oscurecido base a pantalla completa
+               "layout": "frame",                          // layout por defecto del diseño (si el beat no lo fija)
+               "size":   0.92 }                            // tamaño por defecto del marco
+   y la duración mínima del clip en pantalla: design.json → defaults.minDur {"common.clip": 6}
+   (el motor alarga el beat y corre los siguientes; ver resolveBeats en engine/kit.js).
 
    El clip es un .mp4 mudo y corto en assets/media/ que baja y prepara tools/media.py
    (`get <video> pexels-video:123 nombre.mp4 --start 4 --dur 8`): recorte, 30 fps y un
@@ -32,13 +36,13 @@
   K.register({
     name: "common.clip", tags: ["video", "clip", "metraje", "foto", "lugar", "máquina"], layer: "main",
     summary: "Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo.",
-    example: { src: "assets/media/servidores.mp4", layout: "full", caption: "Un centro de datos", sub: "PEXELS · 2026" },
+    example: { src: "assets/media/servidores.mp4", caption: "Un centro de datos", sub: "PEXELS · 2026" },
     params: {
       src: { type: "video", required: true, doc: "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4)." },
       start: { type: "number", default: 0, min: 0, doc: "Segundo del clip desde el que arranca." },
       rate: { type: "number", default: 1, min: 0.25, max: 2, doc: "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate." },
-      layout: { type: "enum", options: ["full", "frame"], default: "full", doc: "full = pantalla completa; frame = dentro de un marco centrado." },
-      size: { type: "number", default: 0.84, min: 0.3, max: 1, doc: "layout frame: fracción del contenido que ocupa." },
+      layout: { type: "enum", options: ["auto", "full", "frame"], default: "auto", doc: "auto = el del diseño (defaults.clip.layout; si no hay, full); full = pantalla completa; frame = dentro de un marco centrado. Dejarlo en auto." },
+      size: { type: "number", default: 0, min: 0, max: 1, doc: "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84)." },
       ar: { type: "number", default: 0, doc: "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8)." },
       focus: { type: "array", default: [0.5, 0.5], doc: "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar." },
       zoom: { type: "number", default: 0.06, min: 0, max: 0.3, doc: "Cuánto se acerca a lo largo del beat (empuje lento)." },
@@ -53,6 +57,8 @@
       const color = v => (typeof v === "string" && v.startsWith("palette.") ? pal[v.slice(8)] : v) || pal.ink;
       const frameColor = color(T.frame || "palette.ink");
       const font = C.fonts?.main || "Inter";
+      /* auto = lo que dice el diseño: así un cambio de criterio se hace en design.json, no en cada video */
+      p = { ...p, layout: p.layout === "auto" || !p.layout ? (T.layout || "full") : p.layout, size: p.size || T.size || 0.84 };
       return {
         render(lt, b) {
           const G = ctx.g.main, st = ctx.stage, { W, H, u, portrait } = st;
@@ -62,6 +68,7 @@
           if (a <= 0) return;
           const z = 1 + p.zoom * clamp(lt / dur);
           G.save(); G.globalAlpha *= a;
+          let frameBottom = (H + H * 0.62) / 2;   /* borde inferior del marco: el rótulo va debajo */
           if (p.layout === "full") {
             G.fillStyle = pal.bg; G.fillRect(0, 0, W, H);
             if (v) { G.filter = filter; cover(G, v, -u, -u, W + 2 * u, H + 2 * u, p.focus, z); G.filter = "none"; }
@@ -76,9 +83,10 @@
             G.fillStyle = pal.bg2 || pal.bg; G.fillRect(x, y, w, h);
             if (v) { G.save(); G.beginPath(); G.rect(x, y, w, h); G.clip(); G.filter = filter; cover(G, v, x, y, w, h, p.focus, z); G.restore(); }
             G.strokeStyle = frameColor; G.lineWidth = Math.max(2, u * 0.35); G.strokeRect(x, y, w, h);
+            frameBottom = y + h;
           }
           if (p.caption) {
-            const ty = p.layout === "full" ? H - st.caption.h - u * (portrait ? 14 : 10) : (H + (H * 0.62)) / 2;
+            const ty = p.layout === "full" ? H - st.caption.h - u * (portrait ? 14 : 10) : frameBottom + u * (portrait ? 6 : 5);
             const tx = p.layout === "full" ? u * 6 : W / 2, align = p.layout === "full" ? "left" : "center";
             const ca = prog(lt, 0.5, 0.5);
             G.globalAlpha = a * ca; G.textAlign = align; G.textBaseline = "alphabetic";

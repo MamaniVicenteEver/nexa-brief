@@ -33,7 +33,9 @@ siguiendo AGENTS.md y guides/; este script no "piensa", solo ejecuta y verifica.
 import argparse, datetime, hashlib, json, os, pathlib, re, shutil, subprocess, sys, wave
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from places import KIT, SERVER, TEMPLATES, find_video, folder_for_design, is_sandbox  # noqa: E402
+from places import KIT, SERVER, TEMPLATES, find_video, folder_for_design  # noqa: E402
+sys.path.insert(0, str(SERVER))
+from src.core.explainer.promote import PromoteError, promote  # noqa: E402
 from lengths import of_script  # noqa: E402
 import outro as outro_tool  # noqa: E402
 import usage  # noqa: E402
@@ -245,10 +247,14 @@ def cmd_render(a):
     out_dir = d / "render" / "preview" if a.seconds else d / "render"
     out_dir.mkdir(parents=True, exist_ok=True)
     suffix = f"-{a.seconds:g}s" if a.seconds else ""
-    for f in a.formats.split(","):
+    formats = a.formats.split(",")
+    for i, f in enumerate(formats, start=1):
+        print(f"@@format {f} {i} {len(formats)}", flush=True)
         cmd = [PY, TEMPLATES / "_tools/commercial/render_promo.py", os.path.relpath(d / "index.html", TEMPLATES), out_dir / f"{a.id}-{f}{suffix}.mp4", "--size", sizes[f], "--workers", "4"]
         if a.seconds: cmd += ["--to", str(a.seconds)]
-        r = run(cmd, cwd=TEMPLATES)
+        env = dict(os.environ)
+        env["PYTHONUNBUFFERED"] = "1"
+        r = run(cmd, cwd=TEMPLATES, env=env)
         if r.returncode: sys.exit(r.returncode)
     if not a.seconds: cmd_manifest(a)
 
@@ -258,18 +264,17 @@ def cmd_poster(a):
 
 def cmd_promote(a):
     """sandbox/<carpeta>/<id> → <carpeta>/<id> (producción): mueve la carpeta y corrige la ruta al motor."""
-    d = vdir(a.id)
-    if not is_sandbox(d): sys.exit(f"{a.id} ya está en producción ({d.relative_to(TEMPLATES)})")
-    st = (jload(d / "manifest.json", {}) or {}).get("status")
-    if st not in ("listo", "renderizado") and not a.force:
-        sys.exit(f"{a.id} está '{st}': terminá los pasos 2–9 (kit.py status) o usá --force")
-    dest = TEMPLATES / d.parent.name / a.id
-    if dest.exists(): sys.exit(f"ya existe {dest.relative_to(TEMPLATES)}")
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(str(d), str(dest))
-    html = dest / "index.html"
-    html.write_text(re.sub(r'src="[^"]*engine/loader\.js"', f'src="{os.path.relpath(KIT, dest)}/engine/loader.js"', html.read_text()))
-    print(f"✓ {d.relative_to(TEMPLATES)} → {dest.relative_to(TEMPLATES)} · ya aparece en la app (/plantillas)")
+    d = find_video(a.id)
+    if d is None:
+        sys.exit(f"No existe {a.id}")
+    try:
+        plan = promote(d, force=a.force)
+    except PromoteError as exc:
+        sys.exit(exc.message)
+    print(
+        f"✓ {plan.source.relative_to(TEMPLATES)} → "
+        f"{plan.destination.relative_to(TEMPLATES)} · ya aparece en la app (/plantillas)"
+    )
 
 def cmd_catalog(a):
     run([PY, TOOLS / "catalog.py"])

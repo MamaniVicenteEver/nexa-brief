@@ -3,7 +3,7 @@
 > Historia en acuarela: cada lugar nace como boceto a lápiz, se colorea por manchas de tinta y
 > revienta una salpicadura de acuarela.
 
-Réplica de la referencia `sandbox/nodehistory/From Klickpin.com- Save Beautiful minimalist bedroom decor….mp4`
+Réplica de la referencia `sandbox/referencias/nodehistory/minimalist-bedroom-decor/`
 (105 s, 1280×720, 25 fps; plantilla de Envato "Historical Memories · Watercolor Ink Slideshow").
 Recursos tomados de `acuarela` (TINTA: máscaras de tinta por umbral de ruido fractal) y `carta`
 (revelado de fotos por manchas). El runtime es propio (`_memorias.js`): NO se carga el de acuarela.

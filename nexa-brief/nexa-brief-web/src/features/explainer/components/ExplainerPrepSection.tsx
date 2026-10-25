@@ -99,6 +99,7 @@ export function ExplainerPrepSection({ categoryPath }: { categoryPath?: string }
         })}
       </div>
 
+      {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a tabpanel with no controls needs keyboard focus */}
       <div id="explainer-videos-panel" role="tabpanel" tabIndex={0}>
         <p className="mb-5 text-sm text-nb-mute">
           {view === "preparation" ? t("prep.intro") : t("prep.renderedIntro")}

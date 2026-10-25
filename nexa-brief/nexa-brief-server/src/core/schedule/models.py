@@ -17,6 +17,8 @@ from __future__ import annotations
 
 from enum import Enum
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -28,6 +30,7 @@ class QueueStatus(str, Enum):
     CANCELLED = "cancelled"
     # El post se eliminó de la plataforma desde Nexa Brief (ver core/video_deletion.py).
     REMOVED = "removed"
+    OUTCOME_UNKNOWN = "outcome_unknown"
 
 
 class QueueSource(str, Enum):
@@ -46,6 +49,11 @@ class ScheduleSlot(BaseModel):
     times: list[str] = Field(default_factory=list)    # ["09:00", "21:00"], 24h, UTC
     enabled: bool = True
     niche_filter: str | None = None    # matchea job_tracker's "category"
+    # Los slots viejos se interpretan como video; las franjas de imagen guardan
+    # categoría y zona explícitas para resolver DST sin adivinar.
+    content_kind: Literal["video", "image", "carousel", "reel"] = "video"
+    category_id: str | None = None
+    timezone: str = "UTC"
     created_at: str
     updated_at: str
 
@@ -55,7 +63,7 @@ class QueueEntry(BaseModel):
     o una publicación ad-hoc/inmediata sin horario recurrente asociado."""
 
     entry_id: str
-    job_id: str
+    job_id: str | None = None
     platform: str
     account_alias: str
     format: str | None = None
@@ -69,3 +77,6 @@ class QueueEntry(BaseModel):
     created_at: str
     updated_at: str
     processed_at: str | None = None
+    content_kind: Literal["video", "image", "carousel", "reel"] = "video"
+    content_id: str | None = None
+    delivery_id: str | None = None

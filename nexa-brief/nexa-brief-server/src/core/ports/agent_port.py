@@ -34,6 +34,10 @@ class AgentScope:
     os_sandbox_dir: str | None = None
     # Rutas absolutas extra que el agente puede escribir (p. ej. el estado del kit).
     extra_writable: tuple[str, ...] = ()
+    # Modelo y esfuerzo específicos para el trabajo acotado. Si no se indican,
+    # cada runner conserva su configuración habitual.
+    model: str | None = None
+    reasoning_effort: str | None = None
 
 
 @dataclass

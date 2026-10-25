@@ -199,11 +199,37 @@
     beats.forEach((b, i) => {
       if (b.dur != null) b.t1 = b.t0 + b.dur;
       else if (b.until) { const wi = findAnchor(words, b.until, Math.max(0, b.wordIndex)); b.t1 = wi >= 0 ? words[wi].start : b.t0 + 3; }
-      else { const nx = beats.slice(i + 1).find(x => x.layer === b.layer); b.t1 = nx ? nx.t0 : total; }
+      else {
+        const nx = beats.slice(i + 1).find(x => x.layer === b.layer); b.t1 = nx ? nx.t0 : total;
+        /* design.json → defaults.overlay.endWithScene: un overlay sin dur/until (marca a mano, rótulo…)
+           se va con la escena sobre la que se dibujó, en vez de quedar hasta el próximo overlay
+           (que puede estar a minutos). Mínimo `min` s, máximo `max` s. */
+        const OV = sb.overlay;
+        if (OV?.endWithScene && b.layer !== "main") {
+          const scene = beats.slice(i + 1).find(x => x.layer === "main" && x.t0 > b.t0);
+          if (scene) b.t1 = Math.min(b.t1, Math.max(scene.t0, b.t0 + (OV.min ?? 2.5)));
+          b.t1 = Math.min(b.t1, b.t0 + (OV.max ?? 8));
+        }
+      }
       b.dur = Math.max(0.2, b.t1 - b.t0);
     });
+    /* duración mínima por componente (design.json → defaults.minDur, p. ej. {"common.clip": 6}; o
+       "minDur" en el beat): si la voz pasa enseguida al beat siguiente, el beat se alarga y los de su
+       misma capa que caían dentro arrancan cuando termina (si les queda < 1 s, se saltan). Así ningún
+       video tiene que correr beats a mano para que un clip se vea completo. */
+    const MIN = sb.minDur || {};
+    beats.forEach((b, i) => {
+      const min = b.minDur ?? MIN[b.use];
+      if (b.skip || !min || b.dur >= min) return;
+      b.t1 = Math.min(total, b.t0 + min); b.dur = b.t1 - b.t0;
+      for (const nx of beats.slice(i + 1)) {
+        if (nx.layer !== b.layer || nx.t0 >= b.t1) continue;
+        if (nx.t1 - b.t1 < 1) nx.skip = true;
+        else { nx.t0 = b.t1; nx.dur = nx.t1 - nx.t0; }
+      }
+    });
     if (miss.length) console.warn("[kit] anclas no encontradas:", miss);
-    return beats;
+    return beats.filter(b => !b.skip);
   }
 
   /* ------------------------------ subtítulos ------------------------------ */
@@ -286,7 +312,7 @@
        Con cierre con voz (tools/outro.py) config.outro.start/dur dicen dónde empieza la voz del cierre. */
     const SB = sb ? { ...sb, beats: [...sb.beats] } : { beats: [] };
     const O = C.outro;
-    if (O && O.enabled !== false && !SB.beats.some(b => /\.outro$/.test(b.use))) {
+    if (O && O.enabled !== false && !SB.beats.some(b => /\.outro(v\d+)?$/.test(b.use))) {
       const use = O.use || `${C.family}.outro`;
       if (registry.has(use)) {
         /* nunca encima de la voz: empieza después de la última palabra (y dura lo que quede) */
@@ -297,6 +323,7 @@
         if (dur >= 2.5) SB.beats.push({ t: t0, offset: 0, use, params: p, dur, hideCaptions: true });
       }
     }
+    SB.minDur = C.minDur; SB.overlay = C.overlay;
     const beats = resolveBeats(SB, words, total);
 
     /* En la reproducción en vivo se esperan solo las imágenes visibles al abrir.

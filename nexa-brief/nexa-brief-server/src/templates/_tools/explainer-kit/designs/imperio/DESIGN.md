@@ -4,7 +4,7 @@ Diseño documental para política e historia. El recurso visual central es un at
 
 ## 1. Referencia
 
-Video de referencia: `sandbox/nodepolitics/From Klickpin.com- Try Cozy workwear outfit ideas that are packed with ideas people keep saving and clicking on lately for ideas worth saving righ.mp4` (27,708 s; 736×414; 24 fps). Se estudió el original y las hojas `scratchpad/ref/v3/sheet01.jpg` y `sheet02.jpg`; no se reutilizaron sus fotogramas ni texturas.
+Video de referencia: `sandbox/referencias/nodepolitics/cozy-workwear-outfits/From Klickpin.com- Try Cozy workwear outfit ideas that are packed with ideas people keep saving and clicking on lately for ideas worth saving righ.mp4` (27,708 s; 736×414; 24 fps). Se estudió el original y las hojas `scratchpad/ref/v3/sheet01.jpg` y `sheet02.jpg`; no se reutilizaron sus fotogramas ni texturas.
 
 ### Ritmo y composición
 

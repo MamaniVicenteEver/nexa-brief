@@ -5,8 +5,10 @@ import { useTranslations } from "next-intl";
 import { Suspense, useEffect, useState } from "react";
 import { useCategories } from "@/features/categories";
 import { ExplainerCategoryWindow } from "@/features/explainer";
+import { PublicationsSection } from "@/features/image-posts";
+import { SandboxWindow } from "@/features/sandbox";
 import { useTemplates } from "../hooks/useTemplates";
-import { CategoryWindowTabs } from "./CategoryWindowTabs";
+import { CategoryWindowTabs, SANDBOX_CATEGORY_ID } from "./CategoryWindowTabs";
 import { groupMotionTemplates, MotionCategoryWindow } from "./MotionCategoryWindow";
 
 const DEFAULT_CATEGORY = "node_tech";
@@ -22,11 +24,16 @@ function CategoryWindows() {
   const [lastCategory, setLastCategory] = useState(DEFAULT_CATEGORY);
 
   const isKnown = (id: string | null): id is string =>
-    id !== null && categories.some((c) => c.id === id);
+    id === SANDBOX_CATEGORY_ID || (id !== null && categories.some((c) => c.id === id));
 
   // Si se llega con ?cat= (link compartido), se recuerda aunque luego cambie la ruta.
   useEffect(() => {
-    if (catParam && categories.some((c) => c.id === catParam)) setLastCategory(catParam);
+    if (
+      catParam &&
+      (catParam === SANDBOX_CATEGORY_ID || categories.some((category) => category.id === catParam))
+    ) {
+      setLastCategory(catParam);
+    }
   }, [catParam, categories]);
 
   const selectedId = isKnown(catParam)
@@ -46,10 +53,10 @@ function CategoryWindows() {
     window.history.replaceState(null, "", url.pathname + url.search + url.hash);
   };
 
-  if (categoriesLoading) {
+  if (categoriesLoading && catParam !== SANDBOX_CATEGORY_ID) {
     return <p className="py-10 text-center text-sm text-nb-mute">{t("windows.loading")}</p>;
   }
-  if (isError || categories.length === 0) {
+  if ((isError || categories.length === 0) && catParam !== SANDBOX_CATEGORY_ID) {
     return <p className="py-10 text-center text-sm text-nb-mute">{t("windows.loadError")}</p>;
   }
 
@@ -61,6 +68,7 @@ function CategoryWindows() {
         templateCount={motionCount}
         onSelect={select}
       />
+      {selectedId === SANDBOX_CATEGORY_ID && <SandboxWindow />}
       {selected?.engine === "pipeline" && (
         <MotionCategoryWindow
           key={selected.id}
@@ -71,6 +79,13 @@ function CategoryWindows() {
       )}
       {selected?.engine === "explainer_kit" && (
         <ExplainerCategoryWindow key={selected.id} category={selected} />
+      )}
+      {selected && selectedId !== SANDBOX_CATEGORY_ID && (
+        <PublicationsSection
+          key={`publications-${selected.id}`}
+          category={selected}
+          categories={categories}
+        />
       )}
     </>
   );

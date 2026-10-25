@@ -17,6 +17,11 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    # ── API boundary secrets ─────────────────────────────────────────────────
+    app_env: str = Field(default="development", alias="APP_ENV")
+    nexa_internal_token: str = Field(default="", alias="NEXA_INTERNAL_TOKEN")
+    nexa_link_secret: str = Field(default="", alias="NEXA_LINK_SECRET")
+
     # ── API Keys ──────────────────────────────────────────────────────────────
     gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
     deepseek_api_key: str = Field(default="", alias="DEEPSEEK_API_KEY")
@@ -260,6 +265,11 @@ class Settings(BaseSettings):
 
     # One canonical public origin shared by OAuth callbacks, emails and web redirects.
     public_app_url: str = Field(default="", alias="PUBLIC_APP_URL")
+    # Canonical origin used by signed prototype links shared with chat agents.
+    public_base_url: str = Field(
+        default="https://nexa-brief.everdev.space",
+        alias="PUBLIC_BASE_URL",
+    )
 
     # ── Social Publisher — Feature Flag ───────────────────────────────────────
     # Set ENABLE_AUTO_PUBLISHING=true to activate Stage 9 in the pipeline.

@@ -4,7 +4,7 @@ Réplica del lenguaje de una pieza tipográfica cinética sobre dinero: didona v
 
 ## Referencia y medición
 
-- Referencia: `sandbox/nodeeconomy/From Klickpin.com- Save Beautiful minimalist bedroom decor that make your next project look polished and expensive for ideas worth saving right no (1).mp4`.
+- Referencia: `sandbox/referencias/nodeeconomy/minimalist-bedroom-decor/From Klickpin.com- Save Beautiful minimalist bedroom decor that make your next project look polished and expensive for ideas worth saving right no (1).mp4`.
 - Duración medida: **16,7667 s**, 720×540, 30 fps (503 cuadros). `ffmpeg select='gt(scene,0.2)'` detecta cambios destacados desde 0,5667 s; la pieza también usa cortes internos muy rápidos, por eso la tabla agrupa las ráfagas en un solo movimiento.
 - Hoja de control anterior: `scratchpad/d1/f/` (cuadros a 10 fps); capturas preliminares de componentes: `scratchpad/d1/h*.jpg`, `s*.jpg` y `k/*.png`.
 

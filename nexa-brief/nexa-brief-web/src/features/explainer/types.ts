@@ -9,6 +9,8 @@ export type ExplainerJobState = "queued" | "rendering" | "publishing" | "done" |
 export interface ExplainerJob {
   jobId: string;
   videoId: string;
+  title: string | null;
+  posterUrl: string | null;
   state: ExplainerJobState;
   categoryPath: string;
   duration: RecordDuration;
@@ -30,6 +32,12 @@ export interface ExplainerJob {
   formats: RecordFormat[];
   /** Cuánto tardó la grabación (segundos); null mientras corre. */
   renderSeconds: number | null;
+  /** Fracción global (0–1) considerando todos los formatos solicitados. */
+  progress: number;
+  progressFormat: RecordFormat | null;
+  progressPhase: "capturing" | "encoding" | null;
+  startedAt: string | null;
+  etaSeconds: number | null;
 }
 
 export type TitleOptionId = "A" | "B" | "C";

@@ -25,6 +25,9 @@ services:
       - path: ./nexa-brief-server/.env
         required: false
     environment:
+      # El API local de `make dev` usa APP_ENV=development; el contenedor nunca
+      # debe permitir el fallback de token ausente.
+      APP_ENV: production
       OUTPUT_DIR: /app/output
       DATA_DIR: /app/data
       ACCOUNTS_JSON_PATH: /app/accounts/accounts.json
