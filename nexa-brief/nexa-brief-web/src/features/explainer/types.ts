@@ -1,7 +1,7 @@
 /** "10"/"20" = preview rápido de N segundos; "full" = video completo (programable y publicable). */
 export type RecordDuration = "10" | "20" | "full";
 
-/** "16x9" = desktop (YouTube/Facebook); "9x16" = móvil (TikTok). */
+/** Formato horizontal 16:9 o vertical 9:16; cada cuenta define cuál publica. */
 export type RecordFormat = "16x9" | "9x16";
 
 export type ExplainerJobState = "queued" | "rendering" | "publishing" | "done" | "failed";
@@ -9,6 +9,8 @@ export type ExplainerJobState = "queued" | "rendering" | "publishing" | "done" |
 export interface ExplainerJob {
   jobId: string;
   videoId: string;
+  title: string | null;
+  posterUrl: string | null;
   state: ExplainerJobState;
   categoryPath: string;
   duration: RecordDuration;
@@ -20,11 +22,88 @@ export interface ExplainerJob {
   outputDir: string | null;
   scheduledJobId: string | null;
   publishResult: { postId: string; url: string; platform: string; accountAlias: string } | null;
-  /** Un resultado por canal: url si se publicó, error si falló. */
-  publishResults: { accountSelector: string; url: string | null; error: string | null }[];
+  /** Un resultado por cuenta y formato: URL si se publicó, error si falló. */
+  publishResults: {
+    accountSelector: string;
+    format?: RecordFormat;
+    url: string | null;
+    error: string | null;
+  }[];
   formats: RecordFormat[];
   /** Cuánto tardó la grabación (segundos); null mientras corre. */
   renderSeconds: number | null;
+  /** Fracción global (0–1) considerando todos los formatos solicitados. */
+  progress: number;
+  progressFormat: RecordFormat | null;
+  progressPhase: "capturing" | "encoding" | null;
+  startedAt: string | null;
+  etaSeconds: number | null;
+}
+
+export type TitleOptionId = "A" | "B" | "C";
+
+export interface TitleOption {
+  option: TitleOptionId;
+  text: string;
+  /** Número de estrategia de gancho (1–10) y su nombre. */
+  strategy: number;
+  strategyName: string;
+  emotion: string;
+}
+
+/** Una de las composiciones de miniatura que se puede previsualizar en el reproductor. */
+export type ThumbnailPreview =
+  | { option: "A"; lines: string[]; highlight: string; componentPreviewUrl?: string }
+  | { option: "B"; text: string; imageUrl: string | null; componentPreviewUrl?: string }
+  | { option: "C"; text: string; imageUrl: string | null; componentPreviewUrl?: string };
+
+export interface PublishIssue {
+  level: "error" | "warning";
+  field: string;
+  message: string;
+}
+
+/** publish.json v2: el paquete de publicación (src/core/explainer/publishing en el server). */
+export interface PublishPackage {
+  thumbnail: {
+    /** Antetítulo de las dos miniaturas (lugar · fecha). */
+    kicker: string;
+    textOnly: { lines: string[]; highlight: string; pairTitle: TitleOptionId };
+    withImage: {
+      text: string;
+      imageUrl: string | null;
+      pairTitle: TitleOptionId;
+      /** Lado de la foto en la intro 16:9; "auto" alterna entre videos. */
+      imageSide: "auto" | "left" | "right";
+    };
+    tabloid: {
+      text: string;
+      imageUrl: string | null;
+      imageSide: "auto" | "left" | "right";
+      mode: "impact" | "split";
+      strap: string;
+      seal: string;
+      tapeText: string;
+      marker: boolean;
+      target: [number, number];
+      pairTitle: TitleOptionId;
+    };
+    /** La elegida es también la apertura del video (los primeros segundos). */
+    chosen: "text_only" | "with_image" | "tabloid";
+  };
+  titles: {
+    youtube: TitleOption[];
+    chosen: TitleOptionId;
+  };
+  pinnedComment: string;
+}
+
+export interface PublishPackageReview {
+  /** null si el publish.json v2 no se pudo leer (el motivo está en `issues`). */
+  package: PublishPackage | null;
+  issues: PublishIssue[];
+  /** Largo máximo de un título de YouTube según la estrategia activa del server. */
+  titleMaxChars: number;
 }
 
 export interface ExplainerVideo {
@@ -51,11 +130,37 @@ export interface ExplainerVideo {
   designName: string;
   /** Demo de un diseño (mismo guion que otro video): ojo al publicar. */
   demo: boolean;
+  /** Narrativa guardada en la configuración del video. */
+  narrativeId: string | null;
+  narrativeLabel: string | null;
+  qualityIssues: string[];
   /** URL absoluta de la página HTML que reproduce el video (para un iframe). */
   previewUrl: string;
   /** Portada fija (render/poster.jpg); null si todavía no tiene. */
   posterUrl: string | null;
   lastJob: ExplainerJob | null;
+  /** Solo en videos con paquete de publicación v2. */
+  publishPackage: PublishPackageReview | null;
+  /** Miniaturas de YouTube: capturas de la intro (A = introv1, B = introv2). */
+  thumbnails: VideoThumbnails;
+}
+
+export type ThumbnailOptionId = "A" | "B" | "C";
+
+export interface VideoThumbnail {
+  option: ThumbnailOptionId;
+  /** <diseño>.introv1 (A, solo texto) o <diseño>.introv2 (B, texto + foto). */
+  component: string;
+  /** Params con que esa intro abre el video (los mismos de la captura): para la vista previa. */
+  params: Record<string, unknown>;
+  /** Captura render/thumbnail-<opción>.jpg; null si todavía no se capturó. */
+  url: string | null;
+}
+
+export interface VideoThumbnails {
+  /** null si el diseño no tiene intros para miniaturas. */
+  chosen: ThumbnailOptionId | null;
+  options: VideoThumbnail[];
 }
 
 export interface RecordExplainerInput {
@@ -66,8 +171,12 @@ export interface RecordExplainerInput {
   accountSelector?: string;
   /** Varios canales a la vez ("youtube:alias", "tiktok:alias"…). */
   accountSelectors?: string[];
-  /** Qué grabar; por defecto solo 16:9. Publicar agrega el formato que exija cada red. */
+  /** Formatos para una grabación sin publicar. Al publicar, accountFormats determina cada destino. */
   formats?: RecordFormat[];
+  /** Formatos seleccionados por canal; cada formato genera una publicación independiente. */
+  accountFormats?: Record<string, RecordFormat[]>;
+  /** Miniatura que se sube a YouTube; sin valor, la guardada en el video. */
+  thumbnail?: ThumbnailOptionId;
 }
 
 export const ACTIVE_JOB_STATES: ExplainerJobState[] = ["queued", "rendering", "publishing"];
@@ -82,11 +191,59 @@ export interface ProviderStatus<N extends string = string> {
   available: boolean;
 }
 
+export interface LengthPreset {
+  minutes: number;
+  id: string;
+  label: string;
+}
+
+/** Duración de los videos (explainer-kit/lengths.json en el server). */
+export interface LengthOptions {
+  presets: LengthPreset[];
+  defaultMinutes: number;
+  minMinutes: number;
+  maxMinutes: number;
+}
+
 export interface ExplainerOptions {
   agents: ProviderStatus<AgentName>[];
   textProviders: ProviderStatus<TextProvider>[];
   defaultAgent: AgentName;
   defaultTextProvider: TextProvider;
+  lengths: LengthOptions;
+  /** Vacío si el servidor no pudo cargar narrativas: el modal oculta el selector. */
+  narratives: NarrativeOption[];
+  defaultNarrative: string | null;
+}
+
+export type TitleLevel = "basico" | "medio" | "alto" | "negro";
+
+/** Un acto de una narrativa: orden, peso relativo e intensidad (nunca segundos). */
+export interface NarrativeAct {
+  id: string;
+  name: string;
+  weight: string;
+  intensity: "baja" | "media" | "alta" | "maxima";
+  /** false: no va en el guion (título, outro con voz del canal). */
+  spoken: boolean;
+}
+
+export interface NarrativeTitleLevel {
+  id: TitleLevel;
+  name: string;
+  description: string;
+}
+
+/** Estrategia narrativa elegible al crear un video (src/skills/explainer/strategies/narrative/). */
+export interface NarrativeOption {
+  id: string;
+  label: string;
+  name: string;
+  description: string;
+  status: string;
+  acts: NarrativeAct[];
+  titleLevels: NarrativeTitleLevel[];
+  defaultTitleLevel: TitleLevel | null;
 }
 
 export interface ExplainerDesign {
@@ -100,6 +257,9 @@ export interface ExplainerDesign {
   previewUrl: string | null;
   /** Portada del video demo del diseño. */
   posterUrl: string | null;
+  /** MP4 grabados de la demo (16:9 y 9:16), o null si todavía no se grabó. */
+  videoUrl: string | null;
+  videoPortraitUrl: string | null;
 }
 
 /** Diseños del kit agrupados por la categoría dueña (selector visual del modal). */
@@ -119,6 +279,8 @@ export interface CategoryDesigns {
 /** Textos y ángulo de un video. Se envía tal cual (snake_case) al backend. */
 export interface ExplainerBrief {
   video_id: string;
+  narrative_id?: string | null;
+  title_level?: TitleLevel | null;
   working_title: string;
   hook: string;
   angle: string;
@@ -138,6 +300,10 @@ export interface BriefInput {
   design?: string;
   provider?: TextProvider;
   mediaNames?: string[];
+  /** Duración objetivo en minutos. */
+  minutes?: number;
+  narrativeId?: string;
+  titleLevel?: TitleLevel;
 }
 
 export type ProductionState =
@@ -169,10 +335,13 @@ export interface Production {
   agent: string;
   autoRecord: boolean;
   state: ProductionState;
+  phase: string | null;
   error: string | null;
   videoStatus: string | null;
   recordJobId: string | null;
   media: string[];
+  narrativeId: string | null;
+  titleLevel: TitleLevel | null;
   brief: ExplainerBrief | null;
   agentReport: string | null;
   planItemId: string | null;
@@ -191,6 +360,10 @@ export interface CreateProductionInput {
   autoRecord?: boolean;
   planItemId?: string;
   files?: File[];
+  /** Duración objetivo en minutos. */
+  minutes?: number;
+  narrativeId?: string;
+  titleLevel?: TitleLevel;
 }
 
 export interface PublishTextsResult {

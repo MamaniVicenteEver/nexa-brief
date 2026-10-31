@@ -53,6 +53,8 @@ export interface JobSummary {
   youtubeTags: string[];
   tiktokCaption: string;
   tiktokHashtags: string[];
+  pinnedComment: string;
+  platformCopies: Record<string, { title: string; description: string; tags: string[] }>;
 }
 
 /** GET /videos/jobs/{jobId} — usado para pollear el progreso. */
@@ -70,6 +72,8 @@ export interface JobDetail {
   /** Segundos que tardó en generarse (null mientras sigue en curso). */
   generationSeconds: number | null;
   files: JobFile[];
+  /** Relaciones de aspecto grabadas ("16x9", "9x16"). */
+  formats: string[];
   summary: JobSummary | null;
   /** Solo para jobs que el servidor está corriendo o corrió hace poco. */
   progress: JobProgress | null;

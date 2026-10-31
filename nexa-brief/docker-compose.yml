@@ -25,6 +25,9 @@ services:
       - path: ./nexa-brief-server/.env
         required: false
     environment:
+      # El API local de `make dev` usa APP_ENV=development; el contenedor nunca
+      # debe permitir el fallback de token ausente.
+      APP_ENV: production
       OUTPUT_DIR: /app/output
       DATA_DIR: /app/data
       ACCOUNTS_JSON_PATH: /app/accounts/accounts.json
@@ -33,9 +36,12 @@ services:
       # Incluye WEB_PORT (el puerto "oficial" del contenedor web) más el rango
       # 3000-3003 que usa `pnpm dev` corrido a mano en el host — Next.js cae
       # automáticamente al siguiente puerto libre, así que no alcanza con uno solo.
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL:-http://localhost:3000}
       CORS_ALLOW_ORIGINS: '["http://localhost:${WEB_PORT:-3000}","http://127.0.0.1:${WEB_PORT:-3000}","http://localhost:3000","http://127.0.0.1:3000","http://localhost:3001","http://127.0.0.1:3001","http://localhost:3002","http://127.0.0.1:3002","http://localhost:3003","http://127.0.0.1:3003"]'
       API_TIMEOUT_SECONDS: "5"
       AI_MAX_RETRIES: "3"
+      # Scheduled publishing stays opt-in in Docker; manual publishing remains available.
+      ENABLE_AUTO_PUBLISHING: ${NEXA_ENABLE_AUTO_PUBLISHING:-false}
     ports:
       - "${API_PORT:-8000}:8000"
     volumes:
@@ -53,7 +59,7 @@ services:
     security_opt:
       - no-new-privileges:true
     shm_size: 1gb
-    restart: on-failure:3
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5).status == 200 else 1)"]
       interval: 5s
@@ -65,14 +71,16 @@ services:
       context: ./nexa-brief-web
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL-}
+        INTERNAL_API_URL: ${INTERNAL_API_URL:-http://api:8000}
     env_file:
       - path: ./nexa-brief-web/.env.local
         required: false
     environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
-      AUTH_URL: ${AUTH_URL:-http://localhost:${WEB_PORT:-3000}}
-      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:${WEB_PORT:-3000}}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL-}
+      INTERNAL_API_URL: ${INTERNAL_API_URL:-http://api:8000}
+      AUTH_URL: ${PUBLIC_APP_URL:-http://localhost:3000}
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL:-http://localhost:3000}
       AUTH_TRUST_HOST: "true"
     ports:
       - "${WEB_PORT:-3000}:3000"
@@ -89,7 +97,7 @@ services:
     init: true
     security_opt:
       - no-new-privileges:true
-    restart: on-failure:3
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health', {signal: AbortSignal.timeout(5000)}).then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
       interval: 5s

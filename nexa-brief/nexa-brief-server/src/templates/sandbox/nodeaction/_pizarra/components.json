@@ -1,0 +1,2153 @@
+{
+  "comps": [
+    {
+      "name": "pizarra.item.man",
+      "summary": "Personaje; poses acepta [{at,pose,face}].",
+      "tags": [
+        "personaje"
+      ],
+      "layer": "main",
+      "params": {
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "X lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Y lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición en segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": null,
+          "doc": "Orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "type": {
+          "type": "enum",
+          "default": "man",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "man"
+          ],
+          "min": null,
+          "max": null
+        },
+        "id": {
+          "type": "string",
+          "default": null,
+          "doc": "ID cast/hold.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "h": {
+          "type": "number",
+          "default": null,
+          "doc": "Altura en px; obligatorio para calcular el rig.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "character": {
+          "type": "string",
+          "default": "palito",
+          "doc": "Personaje.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "look": {
+          "type": "object",
+          "default": null,
+          "doc": "Retoques; colors.fill/skin/shoe/accent.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poses": {
+          "type": "array",
+          "default": [],
+          "doc": "Poses.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "lookX": {
+          "type": "number",
+          "default": 0,
+          "doc": "Mirada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.item.prop",
+      "summary": "Prop dibujado; s default 160, hold usa id:mano y dx/dy.",
+      "tags": [
+        "prop"
+      ],
+      "layer": "main",
+      "params": {
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "X lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Y lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición en segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": null,
+          "doc": "Orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "pop",
+          "doc": "Entrada.",
+          "required": false,
+          "options": [
+            "pop",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wiggle": {
+          "type": "number",
+          "default": 0,
+          "doc": "Oscilación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "type": {
+          "type": "enum",
+          "default": "prop",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "prop"
+          ],
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": null,
+          "doc": "Prop.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "s": {
+          "type": "number",
+          "default": 160,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hold": {
+          "type": "string",
+          "default": null,
+          "doc": "ID y mano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "doc": "Offset X.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "doc": "Offset Y.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.item.type",
+      "summary": "Texto tipeado; text o words [{text,at,color}].",
+      "tags": [
+        "texto"
+      ],
+      "layer": "main",
+      "params": {
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "X lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Y lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición en segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": null,
+          "doc": "Orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Entrada por defecto para type.",
+          "required": false,
+          "options": [
+            "pop",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wiggle": {
+          "type": "number",
+          "default": 0,
+          "doc": "Oscilación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "type": {
+          "type": "enum",
+          "default": "type",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "type"
+          ],
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "words": {
+          "type": "array",
+          "default": null,
+          "doc": "Palabras.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 52,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "doc": "Peso.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "step": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Segundos entre palabras.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "maxW": {
+          "type": "number",
+          "default": null,
+          "doc": "Ancho máximo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "align": {
+          "type": "enum",
+          "default": "center",
+          "doc": "Alineación.",
+          "required": false,
+          "options": [
+            "left",
+            "center",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "serif": {
+          "type": "bool",
+          "default": false,
+          "doc": "Usa Fraunces serif.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "lh": {
+          "type": "number",
+          "default": 1.28,
+          "doc": "Interlineado multiplicador.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.item.arc",
+      "summary": "Texto en arco.",
+      "tags": [
+        "texto"
+      ],
+      "layer": "main",
+      "params": {
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "X lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Y lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición en segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": null,
+          "doc": "Orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Entrada por defecto para arc.",
+          "required": false,
+          "options": [
+            "pop",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wiggle": {
+          "type": "number",
+          "default": 0,
+          "doc": "Oscilación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "type": {
+          "type": "enum",
+          "default": "arc",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "arc"
+          ],
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 56,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "radius": {
+          "type": "number",
+          "default": 620,
+          "doc": "Radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de escritura.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.item.script",
+      "summary": "Rótulo manuscrito verde.",
+      "tags": [
+        "texto"
+      ],
+      "layer": "main",
+      "params": {
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "X lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Y lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición en segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": null,
+          "doc": "Orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "pop",
+          "doc": "Entrada.",
+          "required": false,
+          "options": [
+            "pop",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wiggle": {
+          "type": "number",
+          "default": 0,
+          "doc": "Oscilación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "type": {
+          "type": "enum",
+          "default": "script",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "script"
+          ],
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 70,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Inclinación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#127a3d",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.item.label",
+      "summary": "Rótulo pequeño.",
+      "tags": [
+        "texto"
+      ],
+      "layer": "main",
+      "params": {
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "X lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Y lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición en segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": null,
+          "doc": "Orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "pop",
+          "doc": "Entrada.",
+          "required": false,
+          "options": [
+            "pop",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wiggle": {
+          "type": "number",
+          "default": 0,
+          "doc": "Oscilación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "type": {
+          "type": "enum",
+          "default": "label",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "label"
+          ],
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 26,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.item.rule",
+      "summary": "Línea bajo un dato.",
+      "tags": [
+        "transición"
+      ],
+      "layer": "main",
+      "params": {
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "X lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Y lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición en segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": null,
+          "doc": "Orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "pop",
+          "doc": "Entrada.",
+          "required": false,
+          "options": [
+            "pop",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wiggle": {
+          "type": "number",
+          "default": 0,
+          "doc": "Oscilación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "type": {
+          "type": "enum",
+          "default": "rule",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "rule"
+          ],
+          "min": null,
+          "max": null
+        },
+        "w": {
+          "type": "number",
+          "default": null,
+          "doc": "Ancho.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "lw": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Grosor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.item.vs",
+      "summary": "Divisor vertical con VS.",
+      "tags": [
+        "transición"
+      ],
+      "layer": "main",
+      "params": {
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "X lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Y lienzo 1920x1080.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición en segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": null,
+          "doc": "Orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "pop",
+          "doc": "Entrada.",
+          "required": false,
+          "options": [
+            "pop",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wiggle": {
+          "type": "number",
+          "default": 0,
+          "doc": "Oscilación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "type": {
+          "type": "enum",
+          "default": "vs",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "vs"
+          ],
+          "min": null,
+          "max": null
+        },
+        "h": {
+          "type": "number",
+          "default": null,
+          "doc": "Altura.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.character.palito",
+      "summary": "Monigote base. Se elige con character.",
+      "tags": [
+        "personaje"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/characters/palito.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.character.profe",
+      "summary": "Docente con anteojos, bigote y saco. Se elige con character.",
+      "tags": [
+        "personaje"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/characters/profe.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": []
+    },
+    {
+      "name": "pizarra.character.nina",
+      "summary": "Estudiante con flequillo y coleta. Se elige con character.",
+      "tags": [
+        "personaje"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/characters/nina.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.character.abuelo",
+      "summary": "Abuelo con barba/anteojos; admite look.cane. Se elige con character.",
+      "tags": [
+        "personaje"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/characters/abuelo.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": []
+    },
+    {
+      "name": "pizarra.character.nino",
+      "summary": "Niño con gorra y mochila. Se elige con character.",
+      "tags": [
+        "personaje"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/characters/nino.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": []
+    },
+    {
+      "name": "pizarra.character.obrera",
+      "summary": "Trabajadora con casco y overol. Se elige con character.",
+      "tags": [
+        "personaje"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/characters/obrera.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": []
+    },
+    {
+      "name": "pizarra.prop.clock",
+      "summary": "Reloj. Ver params.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {
+        "hour": {
+          "type": "number",
+          "default": 11.75,
+          "doc": "Hora.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spin": {
+          "type": "number",
+          "default": 0,
+          "doc": "Giro por segundo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.bulb",
+      "summary": "Bombilla de idea. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.prop.enigma",
+      "summary": "Máquina Enigma. Ver params.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {
+        "spin": {
+          "type": "number",
+          "default": 0,
+          "doc": "Giro rotores.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.prop.letter",
+      "summary": "Letra en tarjeta. Ver params.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "A",
+          "doc": "Letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#151515",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.rotor",
+      "summary": "Rotor. Ver params.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {
+        "spin": {
+          "type": "number",
+          "default": 2,
+          "doc": "Velocidad.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.prop.papers",
+      "summary": "Pila de papeles. Ver params.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {
+        "from": {
+          "type": "number",
+          "default": 2,
+          "doc": "Inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "number",
+          "default": 14,
+          "doc": "Final.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "grow": {
+          "type": "number",
+          "default": 3,
+          "doc": "Segundos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.paper",
+      "summary": "Hoja con líneas. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.lock",
+      "summary": "Candado. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.prop.x",
+      "summary": "X. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.check",
+      "summary": "Marca de verificación. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.arrow",
+      "summary": "Flecha. Ver params.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {
+        "len": {
+          "type": "number",
+          "default": null,
+          "doc": "Fallback 2*s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "w": {
+          "type": "number",
+          "default": null,
+          "doc": "Fallback 0.06*s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#151515",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "draw": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Duración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "curly": {
+          "type": "bool",
+          "default": false,
+          "doc": "Curva doble.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bow": {
+          "type": "number",
+          "default": 0,
+          "doc": "Arco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.universe",
+      "summary": "Planeta y órbitas. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.prop.envelope",
+      "summary": "Sobre. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo"
+      ]
+    },
+    {
+      "name": "pizarra.prop.question",
+      "summary": "Signo de pregunta. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.sub",
+      "summary": "Submarino. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props.js",
+      "demo": "sandbox/nodeaction/pizarra-demo/index.html",
+      "used_by": []
+    },
+    {
+      "name": "pizarra.prop.exam",
+      "summary": "Examen; acepta q texto. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.book",
+      "summary": "Libro; acepta open y title. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.card",
+      "summary": "Tarjeta; acepta text, back, flipAt. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.brain",
+      "summary": "Cerebro; acepta glow. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.eye",
+      "summary": "Ojo parpadeante. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.hourglass",
+      "summary": "Reloj de arena; dur number default 5. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {
+        "dur": {
+          "type": "number",
+          "default": 5,
+          "doc": "Duración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.curve",
+      "summary": "Curva; acepta points, draw, flat, labels. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.calendar",
+      "summary": "Calendario; acepta days, marks, markAt. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.bubble",
+      "summary": "Globo; acepta text, kind, tail. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.magnifier",
+      "summary": "Lupa. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.plant",
+      "summary": "Planta. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.puzzle",
+      "summary": "Rompecabezas; acepta pieces, joinAt. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.star",
+      "summary": "Estrella. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.bed",
+      "summary": "Cama. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.moon",
+      "summary": "Luna. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.syllables",
+      "summary": "Sílabas; acepta items. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.percent",
+      "summary": "Porcentaje; acepta text, strike. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.scientist",
+      "summary": "Científico. Sin parámetros propios documentados.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.columns",
+      "summary": "Columnas; acepta left y right. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.prop.pile",
+      "summary": "Pila; acepta n, split, splitAt. Parámetros/defaults/types no confirmados en documentación; revisar estudio.js.",
+      "tags": [
+        "prop",
+        "estudio"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_pizarra/props/estudio.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.transition",
+      "summary": "Transición común: enter pop/fade/none, rotación, wiggle, move={to:[x,y],at,dur} y salida out.",
+      "tags": [
+        "transición"
+      ],
+      "layer": "main",
+      "params": {
+        "enter": {
+          "type": "enum",
+          "default": "pop",
+          "doc": "Entrada.",
+          "required": false,
+          "options": [
+            "pop",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wiggle": {
+          "type": "number",
+          "default": 0,
+          "doc": "Oscilación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "object",
+          "default": null,
+          "doc": "{to:[x,y],at,dur}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/pizarra.js",
+      "demo": "sandbox/nodeaction/pizarra-olvido/index.html",
+      "used_by": [
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "pizarra.character.estudianteReferencia",
+      "summary": "Estudiante 2D articulado con sudadera, cabello y auriculares; colores configurables.",
+      "tags": [
+        "personaje",
+        "pizarra",
+        "avatar"
+      ],
+      "layer": "main",
+      "params": {
+        "look.colors": {
+          "type": "object",
+          "default": null,
+          "doc": "shirt, hair, skin y accent",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/characters/estudiante-referencia.js",
+      "demo": "sandbox/nodeaction/prueba-avatar-comparacion/index.html",
+      "used_by": [
+        "sandbox/nodeaction/prueba-avatar-comparacion"
+      ]
+    },
+    {
+      "name": "pizarra.prop.imagen",
+      "summary": "Imagen local o recorte de hoja, precargada antes de iniciar pizarra.",
+      "tags": [
+        "imagen",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {
+        "src": {
+          "type": "string",
+          "default": null,
+          "doc": "Ruta de imagen local",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "crop": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,ancho,alto] normalizados",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/imagenes.js",
+      "demo": "sandbox/nodeaction/prueba-avatar-comparacion/index.html",
+      "used_by": [
+        "sandbox/nodeaction/prueba-avatar-comparacion",
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    },
+    {
+      "name": "pizarra.prop.panel",
+      "summary": "Panel editorial con fondo y acento configurables.",
+      "tags": [
+        "pizarra",
+        "editorial",
+        "componente"
+      ],
+      "layer": "main",
+      "params": {
+        "s": {
+          "type": "number",
+          "default": 200,
+          "doc": "Ancho o tamaño en unidades del lienzo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/contexto.js",
+      "demo": "sandbox/nodeaction/adicciones-juan/index.html",
+      "used_by": [
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    },
+    {
+      "name": "pizarra.prop.redApoyo",
+      "summary": "Red de apoyo con nodos y líneas animados determinísticamente.",
+      "tags": [
+        "pizarra",
+        "editorial",
+        "componente"
+      ],
+      "layer": "main",
+      "params": {
+        "s": {
+          "type": "number",
+          "default": 200,
+          "doc": "Ancho o tamaño en unidades del lienzo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/contexto.js",
+      "demo": "sandbox/nodeaction/adicciones-juan/index.html",
+      "used_by": [
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    },
+    {
+      "name": "pizarra.prop.ruta",
+      "summary": "Camino de pasos animado a partir del tiempo de escena.",
+      "tags": [
+        "pizarra",
+        "editorial",
+        "componente"
+      ],
+      "layer": "main",
+      "params": {
+        "s": {
+          "type": "number",
+          "default": 200,
+          "doc": "Ancho o tamaño en unidades del lienzo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/contexto.js",
+      "demo": "sandbox/nodeaction/adicciones-juan/index.html",
+      "used_by": [
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    },
+    {
+      "name": "pizarra.prop.puerta",
+      "summary": "Puerta estilizada con apertura animada para indicar acceso y apoyo.",
+      "tags": [
+        "pizarra",
+        "apoyo",
+        "editorial"
+      ],
+      "layer": "main",
+      "params": {
+        "s": {
+          "type": "number",
+          "default": 200,
+          "doc": "Tamaño del dibujo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/contexto.js",
+      "demo": "sandbox/nodeaction/adicciones-juan/index.html",
+      "used_by": [
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    }
+  ]
+}

@@ -208,6 +208,15 @@
    ],
    "layer": "main",
    "params": {
+    "text": {
+     "type": "string",
+     "default": "",
+     "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
     "accent": {
      "type": "array",
      "default": [],
@@ -259,6 +268,234 @@
      "vidas"
     ],
     "size": 0.9
+   }
+  },
+  {
+   "name": "common.logo",
+   "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+   "tags": [
+    "logo",
+    "obsoleto"
+   ],
+   "layer": "main",
+   "params": {
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": null,
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "name": {
+     "type": "string",
+     "default": "",
+     "doc": null,
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {}
+  },
+  {
+   "name": "common.clip",
+   "summary": "Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo.",
+   "tags": [
+    "video",
+    "clip",
+    "metraje",
+    "foto",
+    "lugar",
+    "máquina"
+   ],
+   "layer": "main",
+   "params": {
+    "src": {
+     "type": "video",
+     "default": null,
+     "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo del clip desde el que arranca.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "layout": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "auto = el del diseño (defaults.clip.layout; si no hay, full); full = pantalla completa; frame = dentro de un marco centrado. Dejarlo en auto.",
+     "required": false,
+     "options": [
+      "auto",
+      "full",
+      "frame"
+     ],
+     "min": null,
+     "max": null
+    },
+    "size": {
+     "type": "number",
+     "default": 0,
+     "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "ar": {
+     "type": "number",
+     "default": 0,
+     "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 0.06,
+     "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.3
+    },
+    "tone": {
+     "type": "enum",
+     "default": "design",
+     "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+     "required": false,
+     "options": [
+      "design",
+      "color"
+     ],
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": -1,
+     "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+     "required": false,
+     "options": null,
+     "min": -1,
+     "max": 1
+    },
+    "caption": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "src": "assets/media/servidores.mp4",
+    "caption": "Un centro de datos",
+    "sub": "PEXELS · 2026"
    }
   },
   {
@@ -1027,6 +1264,57 @@
      "options": null,
      "min": null,
      "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
     }
    },
    "example": {
@@ -1117,6 +1405,378 @@
    },
    "example": {
     "text": "¿Y AHORA?"
+   }
+  },
+  {
+   "name": "binary.introv1",
+   "summary": "Miniatura de solo texto en el estilo monocromo de binary: el título hecho de partículas 0/1, en blanco puro, con la fecha en letras blancas encima.",
+   "tags": [
+    "intro",
+    "miniatura",
+    "solo texto"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Título; '\\n' parte renglones (2-4 renglones cortos).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Cortes alternativos para 9:16 (más renglones = letras más grandes).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo (fecha, lugar) en letras blancas sobre el título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fit": {
+     "type": "enum",
+     "default": "lines",
+     "doc": "lines = cada renglón al ancho total (cartel); block = mismo tamaño.",
+     "required": false,
+     "options": [
+      "lines",
+      "block"
+     ],
+     "min": null,
+     "max": null
+    },
+    "font": {
+     "type": "string",
+     "default": "900 100px 'Inter', sans-serif",
+     "doc": "Fuente canvas del título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fill": {
+     "type": "number",
+     "default": 0.9,
+     "doc": "Fracción del ancho del cuadro que ocupa.",
+     "required": false,
+     "options": null,
+     "min": 0.4,
+     "max": 1
+    },
+    "morph": {
+     "type": "number",
+     "default": 1.6,
+     "doc": "Segundos que tardan las partículas en armar el título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Frase opcional que se destaca en una etiqueta invertida debajo del título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea mono opcional debajo del título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "glow": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Opacidad extra de los glifos del texto (más = blanco más luminoso).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.6
+    }
+   },
+   "example": {
+    "text": "EL HOMBRE\nQUE ROMPIÓ\nENIGMA",
+    "kicker": "ALAN TURING · 1940",
+    "highlight": "ENIGMA"
+   }
+  },
+  {
+   "name": "binary.introv2",
+   "summary": "Miniatura de texto e imagen: la frase (como en introv1, más chica) en una mitad y el retrato en glifos 0/1 en la otra; el lado de la foto se elige con imageSide.",
+   "tags": [
+    "intro",
+    "miniatura",
+    "texto e imagen"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Texto de la miniatura; sin '\\n' se corta solo en 1–3 renglones (el corte con la letra más grande).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Cortes alternativos para 9:16.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo (fecha, lugar) en caja blanca con letra negra sobre el texto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Frase opcional que se destaca en una etiqueta invertida debajo del texto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea mono opcional debajo del texto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Retrato o foto del tema (archivo de assets/media/ o URL). Vacío = cartel «IMAGEN PENDIENTE».",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "video": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip .mp4 local, siempre mudo, convertido a glifos.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "poster": {
+     "type": "image",
+     "default": "",
+     "doc": "Imagen inicial y respaldo; si falta, usa src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo inicial del clip.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad del clip.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip si termina antes del beat; evita congelar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "imageSide": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Lado de la foto en 16:9 (el texto va en el otro). auto = alterna entre videos según el texto, así las intros no se ven siempre iguales; left/right lo fija (p. ej. para que el rostro mire hacia el texto). En 9:16 la foto va siempre arriba.",
+     "required": false,
+     "options": [
+      "auto",
+      "left",
+      "right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1.2,
+     "doc": "Ampliación de la foto (1 = entera): un retrato más grande se reconoce mejor.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 3
+    },
+    "focusX": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Centro del recorte en la foto, horizontal (0 = izquierda). Moverlo hacia el rostro si queda cortado.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "focusY": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Centro del recorte en la foto, vertical (0 = arriba).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "imageCell": {
+     "type": "number",
+     "default": 0.65,
+     "doc": "Escala de glifos de la fotografía (menor = más detalle).",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": 1.5
+    },
+    "contrast": {
+     "type": "number",
+     "default": 1.9,
+     "doc": "Contraste de la foto antes de muestrear (más = luces y sombras más separadas).",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 2.5
+    },
+    "gamma": {
+     "type": "number",
+     "default": 1,
+     "doc": "Curva de la foto: más alto = medios tonos y sombras más oscuros.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 3
+    },
+    "threshold": {
+     "type": "number",
+     "default": 0.14,
+     "doc": "Brillo mínimo para formar la imagen (lo que queda debajo es negro).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.8
+    },
+    "glow": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Opacidad extra de los glifos del texto (más = blanco más luminoso).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.6
+    },
+    "morph": {
+     "type": "number",
+     "default": 1.1,
+     "doc": "Segundos para armar texto e imagen.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "ELLA LO\nPREVIÓ",
+    "kicker": "APOLO 11 · 1969",
+    "src": "assets/media/hamilton.jpg",
+    "imageSide": "right"
    }
   },
   {
@@ -1745,6 +2405,331 @@
    }
   },
   {
+   "name": "binary.chessboard",
+   "summary": "Diagrama de ajedrez con piezas vectoriales y jugadas UCI animadas; muestra aperturas y momentos concretos de una partida.",
+   "tags": [
+    "ajedrez",
+    "tablero",
+    "partida",
+    "movimientos"
+   ],
+   "layer": "main",
+   "params": {
+    "fen": {
+     "type": "string",
+     "default": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "doc": "FEN inicial del tablero.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "moves": {
+     "type": "array",
+     "default": [],
+     "doc": "Lista de jugadas UCI, como e2e4 o g5e6.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "notation": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulo opcional por jugada, por ejemplo 8. Nxe6.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "moveSec": {
+     "type": "number",
+     "default": 1.15,
+     "doc": "Intervalo entre comienzos de jugadas.",
+     "required": false,
+     "options": null,
+     "min": 0.35,
+     "max": 4
+    },
+    "animSec": {
+     "type": "number",
+     "default": 0.78,
+     "doc": "Duración del desplazamiento de cada pieza.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 3
+    },
+    "delay": {
+     "type": "number",
+     "default": 0.4,
+     "doc": "Espera antes de la primera jugada.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 5
+    },
+    "focus": {
+     "type": "string",
+     "default": "",
+     "doc": "Casilla para enmarcar, por ejemplo b5.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta sobre el tablero.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota debajo del tablero.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "morph": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundos para armar la trama binaria.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "moves": [
+     "e2e4",
+     "c7c6",
+     "d2d4",
+     "d7d5"
+    ],
+    "notation": [
+     "1. e4",
+     "1... c6",
+     "2. d4",
+     "2... d5"
+    ],
+    "moveSec": 1.1,
+    "label": "DEFENSA CARO-KANN",
+    "note": "DIAGRAMA DE APERTURA"
+   }
+  },
+  {
+   "name": "binary.chesspiece",
+   "summary": "Pieza de ajedrez con siluetas SVG trazadas en dígitos 0/1 generados por Canvas; permite elegir entre los dos caballos de referencia.",
+   "tags": [
+    "ajedrez",
+    "caballo",
+    "torre",
+    "pieza"
+   ],
+   "layer": "main",
+   "params": {
+    "piece": {
+     "type": "enum",
+     "default": "knight",
+     "doc": "Tipo de pieza.",
+     "required": false,
+     "options": [
+      "pawn",
+      "knight",
+      "bishop",
+      "rook",
+      "queen",
+      "king"
+     ],
+     "min": null,
+     "max": null
+    },
+    "side": {
+     "type": "enum",
+     "default": "white",
+     "doc": "Color de la pieza.",
+     "required": false,
+     "options": [
+      "white",
+      "black"
+     ],
+     "min": null,
+     "max": null
+    },
+    "action": {
+     "type": "enum",
+     "default": "idle",
+     "doc": "Tratamiento visual.",
+     "required": false,
+     "options": [
+      "idle",
+      "advance",
+      "threatened",
+      "sacrifice"
+     ],
+     "min": null,
+     "max": null
+    },
+    "art": {
+     "type": "enum",
+     "default": "variable",
+     "doc": "Silueta SVG fuente del caballo: versión detallada o trazado de referencia.",
+     "required": false,
+     "options": [
+      "variable",
+      "referencia"
+     ],
+     "min": null,
+     "max": null
+    },
+    "srcVariable": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG del caballo detallado de 360 × 360.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "srcReference": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG del caballo de referencia de 687 × 1024.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta superior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota inferior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "morph": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundos para armar la trama binaria.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "piece": "knight",
+    "side": "white",
+    "action": "threatened",
+    "art": "variable",
+    "label": "CABALLO BLANCO",
+    "note": "EL PEÓN h6 AMENAZA g5"
+   }
+  },
+  {
+   "name": "binary.searchtree",
+   "summary": "Árbol esquemático de jugadas posibles con una ruta destacada; sirve para explicar búsqueda y evaluación sin afirmar que sea un registro literal del cálculo.",
+   "tags": [
+    "búsqueda",
+    "opciones",
+    "ramas",
+    "cálculo"
+   ],
+   "layer": "main",
+   "params": {
+    "depth": {
+     "type": "number",
+     "default": 4,
+     "doc": "Cantidad de niveles de decisión.",
+     "required": false,
+     "options": null,
+     "min": 2,
+     "max": 4
+    },
+    "branching": {
+     "type": "number",
+     "default": 2,
+     "doc": "Ramas por posición.",
+     "required": false,
+     "options": null,
+     "min": 2,
+     "max": 3
+    },
+    "focusPath": {
+     "type": "array",
+     "default": [
+      1,
+      0,
+      1,
+      0
+     ],
+     "doc": "Índice de la rama destacada en cada nivel.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta superior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota inferior; usar ESQUEMA para aclarar el dibujo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "morph": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundos para armar la trama binaria.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "depth": 4,
+    "branching": 2,
+    "focusPath": [
+     1,
+     0,
+     1,
+     0
+    ],
+    "label": "HARDWARE + BÚSQUEDA",
+    "note": "ESQUEMA DE OPCIONES"
+   }
+  },
+  {
    "name": "binary.outrov1",
    "summary": "Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa.",
    "tags": [
@@ -1960,6 +2945,390 @@
     "channel": "NODETECH",
     "cta": "SUSCRÍBETE",
     "support": "Tu apoyo hace posible que sigamos trayendo nuevas historias y miradas sobre el pasado."
+   }
+  },
+  {
+   "name": "common.tabloid",
+   "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+   "tags": [
+    "miniatura",
+    "intro",
+    "alerta",
+    "tabloide",
+    "gancho"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Titular corto; máximo 6 palabras recomendado.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto opcional; también sirve de respaldo del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "srcAfter": {
+     "type": "image",
+     "default": "",
+     "doc": "Segunda foto del split.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "video": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "poster": {
+     "type": "image",
+     "default": "",
+     "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo inicial del clip.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad del clip.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "muted": {
+     "type": "bool",
+     "default": true,
+     "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "accent": {
+     "type": "string",
+     "default": "",
+     "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bullet": {
+     "type": "string",
+     "default": "",
+     "doc": "Cifra y leyenda.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bulletScale": {
+     "type": "number",
+     "default": 1,
+     "doc": "Escala de la cifra y su recuadro.",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": 1.5
+    },
+    "beforeLabel": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta del antes.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "afterLabel": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta del después.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "imageSide": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Lado de foto horizontal.",
+     "required": false,
+     "options": [
+      "auto",
+      "left",
+      "right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "mode": {
+     "type": "enum",
+     "default": "impact",
+     "doc": "Foto única o split.",
+     "required": false,
+     "options": [
+      "impact",
+      "split"
+     ],
+     "min": null,
+     "max": null
+    },
+    "palette": {
+     "type": "enum",
+     "default": "brand",
+     "doc": "Identidad del diseño o estilo clásico de alerta.",
+     "required": false,
+     "options": [
+      "brand",
+      "alert"
+     ],
+     "min": null,
+     "max": null
+    },
+    "strap": {
+     "type": "string",
+     "default": "",
+     "doc": "Cintillo superior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "seal": {
+     "type": "string",
+     "default": "",
+     "doc": "Sello opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "tapeText": {
+     "type": "string",
+     "default": "",
+     "doc": "Texto de cinta opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "marker": {
+     "type": "bool",
+     "default": false,
+     "doc": "Marca alrededor del foco.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": null,
+     "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "target": {
+     "type": "array",
+     "default": [
+      0.72,
+      0.52
+     ],
+     "doc": "Obsoleto: usar focus con radio.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textIn": {
+     "type": "enum",
+     "default": "slam",
+     "doc": "Entrada de cada renglón del titular.",
+     "required": false,
+     "options": [
+      "slam",
+      "slide",
+      "typewriter",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.16,
+     "doc": "Separación en segundos entre renglones.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "accentIn": {
+     "type": "enum",
+     "default": "slide",
+     "doc": "Entrada del acento después de su renglón.",
+     "required": false,
+     "options": [
+      "slam",
+      "slide",
+      "typewriter",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "bulletIn": {
+     "type": "enum",
+     "default": "slam",
+     "doc": "Entrada de la cifra después del titular.",
+     "required": false,
+     "options": [
+      "slam",
+      "slide",
+      "typewriter",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "inDuration": {
+     "type": "number",
+     "default": 0.42,
+     "doc": "Duración en segundos de cada entrada.",
+     "required": false,
+     "options": null,
+     "min": 0.05,
+     "max": 2
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "TÚ ERES EL SIGUIENTE",
+    "accent": "SIGUIENTE",
+    "strap": "AMAZON · IA"
+   }
+  },
+  {
+   "name": "common.question",
+   "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+   "tags": [
+    "pregunta",
+    "comentarios",
+    "cierre",
+    "texto"
+   ],
+   "layer": "overlay",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "y": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 0.8
+    }
+   },
+   "example": {
+    "text": "¿La IA te quita trabajo?"
    }
   },
   {
@@ -2225,6 +3594,57 @@
      "options": null,
      "min": null,
      "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
     }
    },
    "example": {
@@ -2320,6 +3740,263 @@
     "w": 0.6,
     "h": 0.3,
     "note": "¡aquí!"
+   }
+  },
+  {
+   "name": "rough.introv1",
+   "summary": "Miniatura de solo texto con el tratamiento a mano de rough: título enorme, línea lima y antetítulo opcional.",
+   "tags": [
+    "intro",
+    "miniatura",
+    "solo texto"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Título; '\\n' separa renglones.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Cortes alternativos para 9:16.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglón que se pinta en lima.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo en etiqueta lima.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica opcional bajo el título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fill": {
+     "type": "number",
+     "default": 0.88,
+     "doc": "Ancho ocupado por el título.",
+     "required": false,
+     "options": null,
+     "min": 0.45,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ",
+    "highlight": "SE RINDIÓ",
+    "kicker": "APOLO 11 · 1969"
+   }
+  },
+  {
+   "name": "rough.introv2",
+   "summary": "Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto o video grande a color que se funde con el fondo (en 9:16 va arriba).",
+   "tags": [
+    "intro",
+    "miniatura",
+    "texto e imagen"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Título; '\\n' separa renglones (2 a 4 renglones cortos).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Cortes alternativos para 9:16.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglón que se pinta en lima (el remate).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo en etiqueta lima.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica opcional bajo el título.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto o render del objeto del tema (a color).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "video": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip .mp4 local, siempre mudo; reemplaza la foto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "poster": {
+     "type": "image",
+     "default": "",
+     "doc": "Imagen inicial y respaldo del video; si falta, usa src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo inicial del clip.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad del clip.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip si termina antes del beat; evita congelar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "saturate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Color de la foto (0 = blanco y negro).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1.4
+    },
+    "focus": {
+     "type": "string",
+     "default": "xMidYMid",
+     "doc": "Encuadre de la foto (preserveAspectRatio: xMinYMid, xMaxYMid…).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "¿SE ACABÓ\nLA PC\nBARATA?",
+    "highlight": "BARATA?",
+    "kicker": "MEMORIA RAM · 2026",
+    "src": "assets/media/hamilton.jpg"
    }
   },
   {
@@ -17979,6 +19656,5720 @@
     "support": "Tu apoyo nos ayuda a seguir creando y traer más contenido.",
     "handle": "youtube.com/@duotono"
    }
+  },
+  {
+   "name": "dinero.serif",
+   "summary": "Palabra GIGANTE en didona condensada verde oscuro sobre pared gris verdosa (ref. 0,0 s 'MONEY'): las letras se paran una por una con sombra proyectada mientras la cámara las sigue; la foto entra desde la izquierda con desenfoque de movimiento; al terminar, la cámara se aleja de golpe y revela todo; sale con un barrido. Para la palabra/cifra que abre un tema.",
+   "tags": [
+    "texto",
+    "impacto",
+    "foto",
+    "cámara"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Palabra o frase corta (MAYÚSCULAS automáticas). '\\n' parte renglones; 1 palabra = el plano de la referencia.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglones para 9:16 (vacío = se reparten solos, ≤ 8 letras).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Objeto/escena de abajo (foto en plata verdosa que entra desde la izquierda).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src2": {
+     "type": "image",
+     "default": "",
+     "doc": "Segunda foto (figuras) que aparece a la derecha al alejarse la cámara.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "reveal": {
+     "type": "number",
+     "default": 0.075,
+     "doc": "Segundos entre letra y letra.",
+     "required": false,
+     "options": null,
+     "min": 0.02,
+     "max": 0.3
+    },
+    "pull": {
+     "type": "number",
+     "default": -1,
+     "doc": "Segundo del alejamiento de cámara (-1 = al terminar las letras).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "cut",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "DINERO",
+    "src": "../designs/dinero/samples/billete100.jpg"
+   }
+  },
+  {
+   "name": "dinero.title",
+   "summary": "Título de apertura (t = 0) con el plano 1 de la referencia: el TÍTULO en didona condensada gigante verde oscuro, letra por letra con la cámara siguiéndolas, foto que entra desde la izquierda, alejamiento brusco y rótulo fino (kicker) que se escribe debajo. Sin subtítulos.",
+   "tags": [
+    "intro",
+    "título",
+    "apertura"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Título (2–4 renglones cortos con '\\n').",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglones para 9:16 (vacío = se reparten solos, ≤ 8 letras).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Objeto/escena de abajo (foto en plata verdosa que entra desde la izquierda).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src2": {
+     "type": "image",
+     "default": "",
+     "doc": "Segunda foto (figuras) que aparece a la derecha al alejarse la cámara.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "reveal": {
+     "type": "number",
+     "default": 0.075,
+     "doc": "Segundos entre letra y letra.",
+     "required": false,
+     "options": null,
+     "min": 0.02,
+     "max": 0.3
+    },
+    "pull": {
+     "type": "number",
+     "default": -1,
+     "doc": "Segundo del alejamiento de cámara (-1 = al terminar las letras).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo fino (Montserrat 200) que se escribe al alejarse la cámara.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "cut",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "EL PRECIO\nDE UNA IDEA",
+    "kicker": "DARTMOUTH · 1956",
+    "src": "../designs/dinero/samples/contando.jpg"
+   }
+  },
+  {
+   "name": "dinero.cash",
+   "summary": "Ráfaga de fotos de billetes en teal frío (ref. 1,1 s): la 1ª entra desenfocada y oscura y se enfoca, cortes rápidos a la 2ª girada y re-encuadrada, un cuadro oscuro con líneas de barrido y la última queda con empuje lento. Para el momento en que aparece el dinero (cifras, presupuesto, pago).",
+   "tags": [
+    "foto",
+    "dinero",
+    "ráfaga",
+    "billetes"
+   ],
+   "layer": "main",
+   "params": {
+    "src1": {
+     "type": "image",
+     "default": null,
+     "doc": "Primera foto (entra desenfocada).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src2": {
+     "type": "image",
+     "default": "",
+     "doc": "Segunda foto (girada; vacío = src1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src3": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto final que queda (vacío = src2 o src1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pace": {
+     "type": "number",
+     "default": 1,
+     "doc": "Multiplica la duración de los cortes (1 = ritmo de la referencia: 0,63 s de ráfaga).",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": 3
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "whip",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "src1": "../designs/dinero/samples/billete100.jpg",
+    "src2": "../designs/dinero/samples/abanico.jpg",
+    "src3": "../designs/dinero/samples/dolar1957.jpg"
+   }
+  },
+  {
+   "name": "dinero.count",
+   "summary": "Foto en teal frío con empuje y paneo lentos y luz cálida en la esquina (ref. 3,2 s, mano contando billetes); encima, un rótulo FINO en mayúsculas y una línea en minúsculas que se DECODIFICAN letra por letra con una raya fina a la izquierda. Para nombrar una cifra, un trámite o una pregunta sobre la foto.",
+   "tags": [
+    "foto",
+    "texto",
+    "decodificar",
+    "dinero"
+   ],
+   "layer": "main",
+   "params": {
+    "src": {
+     "type": "image",
+     "default": null,
+     "doc": "Foto de fondo.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Rótulo principal (MAYÚSCULAS finas, ≤ 18 caracteres).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Segunda línea en minúsculas (≤ 22 caracteres).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cps": {
+     "type": "number",
+     "default": 12,
+     "doc": "Letras por segundo que se resuelven.",
+     "required": false,
+     "options": null,
+     "min": 3,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "whip",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "src": "../designs/dinero/samples/abanico.jpg",
+    "text": "13.500 DÓLARES",
+    "sub": "pidieron"
+   }
+  },
+  {
+   "name": "dinero.neon",
+   "summary": "Palabra en MAYÚSCULAS finas blancas con brillo y sombra larga sobre fieltro verde con viñeta (ref. 2,0 s 'MONEY'): las letras aparecen desenfocadas y se enfocan, un cuadro oscuro, líneas finas de cursor, barrido con destello y re-encuadre más chico con la 2ª línea en minúsculas, anillo de chispa y subrayado que se dibuja con punta brillante; ornamento de billete en los bordes. Para nombrar un concepto con elegancia.",
+   "tags": [
+    "texto",
+    "palabra",
+    "brillo",
+    "elegante"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Palabra o frase corta (≤ 14 caracteres en MAYÚSCULAS).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Segunda línea en minúsculas que llega en el re-encuadre (vacío = sin 2ª fase).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "subAt": {
+     "type": "number",
+     "default": 0.75,
+     "doc": "Segundo del barrido y re-encuadre (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "blob",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "PRESUPUESTO",
+    "sub": "la apuesta"
+   }
+  },
+  {
+   "name": "dinero.spin",
+   "summary": "Palabras 3D que GIRAN con desenfoque de movimiento sobre gris claro con viñeta mientras caen monedas doradas (ref. 3,8–8,4 s 'Dirty Cash I Want YOU'): cada palabra entra volteándose (la 1ª se tipea), la cámara gira y salta de una a otra, las anteriores quedan desenfocadas; en `lensAt` un lente OJO DE PEZ encierra el cuadro en un rectángulo redondeado que rebota y la palabra verde parpadea. Para frases de impacto y momentos de tensión con el dinero.",
+   "tags": [
+    "texto",
+    "3D",
+    "cinético",
+    "monedas",
+    "clímax"
+   ],
+   "layer": "main",
+   "params": {
+    "words": {
+     "type": "array",
+     "default": [],
+     "doc": "Palabras/frases cortas en orden ('^x^' = verde billete). Vacío = las palabras narradas en el beat (≥ 3 letras, máx. 6).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "accent": {
+     "type": "array",
+     "default": [],
+     "doc": "Palabras narradas que van en verde (modo automático).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "lensAt": {
+     "type": "number",
+     "default": -2,
+     "doc": "Segundo del lente ojo de pez (-2 = cuando entra la última palabra; -1 = sin lente). Acepta '@palabra'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "coins": {
+     "type": "number",
+     "default": 14,
+     "doc": "Monedas que caen.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 40
+    },
+    "fx": {
+     "type": "enum",
+     "default": "leak",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "words": [
+     "Dinero",
+     "^sucio^",
+     "lo quiero",
+     "^YA^"
+    ]
+   }
+  },
+  {
+   "name": "dinero.block",
+   "summary": "Frase en BLOQUE gigante Open Sans 800 verde oscuro sobre salvia (ref. 8,5 s 'MONEY TALKS'): las letras aparecen mientras la cámara panea, una barra verde sube con un billete arriba y garabatos que saltan, el 2º renglón sube con desenfoque y la cámara se aleja hasta llenar el cuadro de borde a borde. Para la frase-tesis o el dato que lo cambia todo.",
+   "tags": [
+    "texto",
+    "impacto",
+    "bloque",
+    "gigante"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "1–2 renglones cortos con '\\n' (en 9:16 se reparten ≤ 7 letras).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pole": {
+     "type": "bool",
+     "default": true,
+     "doc": "Barra verde con billete arriba que sube entre las letras.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "pixel",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "EL DINERO\nMANDA"
+   }
+  },
+  {
+   "name": "dinero.head",
+   "summary": "Ilustración plana sobre verde salvia (ref. 9,5–10,5 s): primero una palabra 3D chica con ojo de dibujo animado, sonrisa y rayitas; después una CABEZA negra de perfil con un ojo blanco que mira una TARJETA con degradé, marcador, ojo con destello, barra oscura con el lema y fila de rótulos chicos; todo se desliza lento. Para una idea, un plan, una decisión o la mente de alguien.",
+   "tags": [
+    "idea",
+    "persona",
+    "mente",
+    "tarjeta",
+    "plano"
+   ],
+   "layer": "main",
+   "params": {
+    "word": {
+     "type": "string",
+     "default": "",
+     "doc": "Palabra 3D del primer tiempo (vacío = sin primer tiempo).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Lema de la tarjeta (≤ 24 caracteres).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico debajo del lema.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "chips": {
+     "type": "array",
+     "default": [],
+     "doc": "Hasta 4 rótulos mínimos en fila (cifras, palabras).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "split": {
+     "type": "number",
+     "default": 0.55,
+     "doc": "Segundo del corte a la cabeza (si hay word).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "cut",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "word": "IDEA",
+    "text": "INTENTA HASTA LOGRARLO",
+    "sub": "LA APUESTA DE DARTMOUTH",
+    "chips": [
+     "1956",
+     "10",
+     "2 MESES",
+     "IA"
+    ]
+   }
+  },
+  {
+   "name": "dinero.note",
+   "summary": "Texto MÍNIMO en Open Sans 800 sobre blanco, negro o salvia (ref. 10,6 s 'MONEY / TALKS!' y 16,0 s 'HUH!'): los renglones se tipean escalonados hacia la derecha y el grupo salta a la izquierda y vuelve (en blanco) o queda quieto (en negro). Para una pausa, una reacción corta o un dato aireado.",
+   "tags": [
+    "texto",
+    "mínimo",
+    "pausa",
+    "respiro"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "1–3 renglones muy cortos con '\\n' (cada uno se corre a la derecha).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "white",
+     "doc": "Fondo: white = tarjeta blanca (texto verde oscuro), black = negro verdoso (texto blanco), salvia.",
+     "required": false,
+     "options": [
+      "white",
+      "black",
+      "sage"
+     ],
+     "min": null,
+     "max": null
+    },
+    "size": {
+     "type": "number",
+     "default": 1,
+     "doc": "Escala del texto (1 = legible en celular; la referencia es más chica).",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": 2.5
+    },
+    "fx": {
+     "type": "enum",
+     "default": "cut",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "¿Y AHORA?",
+    "bg": "black"
+   }
+  },
+  {
+   "name": "dinero.pin",
+   "summary": "Sobre negro verdoso, un ALFILER-PERSONA verde (cono con cabeza) sube desde abajo con un anillo blanco alrededor de la cabeza; a mitad del plano la cámara se aleja de golpe y el anillo se cierra sobre la cabeza; el rótulo se tipea al lado (ref. 11,6 s). Para señalar a una persona, un 'tú' o 'uno solo'.",
+   "tags": [
+    "persona",
+    "uno",
+    "foco",
+    "individuo"
+   ],
+   "layer": "main",
+   "params": {
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo blanco que se tipea junto al alfiler (≤ 16 caracteres).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoomAt": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Segundo del alejamiento.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "cut",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "label": "UNO SOLO"
+   }
+  },
+  {
+   "name": "dinero.outline",
+   "summary": "La frase NARRADA sobre negro verdoso (ref. 12,3–14,2 s 'dirty cash want i you'): cada palabra se tipea cuando la voz la dice, en blanco Open Sans 800 con tamaños escalonados (la 1ª del renglón grande, las siguientes chicas y corridas), detrás la 1ª palabra GIGANTE solo en contorno, una estrella verde, la palabra clave en verde grande con un ojito y rayos verdes tenues. Es la 'letra grande' del diseño (reemplaza a common.lyric).",
+   "tags": [
+    "letra",
+    "frase",
+    "karaoke",
+    "texto",
+    "clímax"
+   ],
+   "layer": "main",
+   "params": {
+    "words": {
+     "type": "array",
+     "default": [],
+     "doc": "Palabras a mostrar ('^x^' = clave en verde). Vacío = las palabras NARRADAS en el beat, a su tiempo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "accent": {
+     "type": "array",
+     "default": [],
+     "doc": "Palabras narradas que van en verde grande (modo automático).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ghost": {
+     "type": "string",
+     "default": "",
+     "doc": "Palabra gigante en contorno detrás (vacío = la 1ª de cada página).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "cut",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "words": [
+     "el",
+     "dinero",
+     "se",
+     "^congeló^"
+    ]
+   }
+  },
+  {
+   "name": "dinero.eye",
+   "summary": "OJO gigante plano (almendra blanca con borde verde e iris verde) sobre negro verdoso (ref. 14,3 s): primero muy cerca, cortado por el borde, mientras el texto en mayúsculas blancas se tipea a la izquierda; en `split` la cámara se aleja de golpe y queda el ojo entero, inclinado, mirando, con el texto al costado. Para 'alguien mira', vigilancia, atención o deseo.",
+   "tags": [
+    "mirada",
+    "vigilancia",
+    "atención",
+    "texto"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "1–2 renglones cortos ('\\n').",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "split": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Segundo del alejamiento.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fx": {
+     "type": "enum",
+     "default": "cut",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "TODOS\nMIRABAN"
+   }
+  },
+  {
+   "name": "dinero.eyes",
+   "summary": "OJOS de dibujo animado (esferas blancas con pupila) de distintos tamaños que aparecen, flotan y miran para todos lados sobre negro verdoso, con un texto corto verde al centro (ref. 15,5 s 'NEED YOU'). Para 'todos miran', la presión del público o una sensación de ser observado.",
+   "tags": [
+    "mirada",
+    "miedo",
+    "todos",
+    "público",
+    "texto"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": "",
+     "doc": "Texto corto central (1–2 renglones).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "count": {
+     "type": "number",
+     "default": 6,
+     "doc": "Cantidad de ojos.",
+     "required": false,
+     "options": null,
+     "min": 2,
+     "max": 7
+    },
+    "fx": {
+     "type": "enum",
+     "default": "cut",
+     "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+     "required": false,
+     "options": [
+      "cut",
+      "whip",
+      "blob",
+      "leak",
+      "pixel",
+      "scan",
+      "zoom",
+      "flash"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "TODOS\nQUIEREN"
+   }
+  },
+  {
+   "name": "dinero.introv1",
+   "summary": "GANCHO de apertura (lo primero que se ve). Titular en BLOQUE Open Sans 800 que entra palabra por palabra VOLTEÁNDOSE en 3D con desenfoque de movimiento (como 'Dirty Cash' de la referencia); la '^palabra^' va en verde billete y estalla en monedas; en glitchAt el cuadro se ABOMBA con el lente ojo de pez dentro de un rectángulo redondeado, tiembla y destella. Fondo adaptable (bg: paper | felt | sage | black | fog | image con src | component con use/useParams); por defecto gris claro con monedas que caen.",
+   "tags": [
+    "intro",
+    "gancho",
+    "apertura",
+    "título",
+    "impacto",
+    "3D"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Titular gancho corto (2–6 palabras). '\\n' = renglón; '^x^' = palabra en verde con monedas.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo fino arriba (se decodifica).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica debajo del titular.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "wordAt": {
+     "type": "number",
+     "default": 0.35,
+     "doc": "Segundo de la primera palabra.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.26,
+     "doc": "Segundos entre palabras.",
+     "required": false,
+     "options": null,
+     "min": 0.08,
+     "max": null
+    },
+    "glitchAt": {
+     "type": "number",
+     "default": 2.2,
+     "doc": "Segundo del IMPACTO: lente ojo de pez + temblor + destello (-1 = sin impacto). Acepta '@palabra'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "paper",
+      "felt",
+      "sage",
+      "black",
+      "fog",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "¿QUIÉN PAGA\nLA ^CUENTA^?",
+    "kicker": "Economía · 2026",
+    "sub": "nadie lo dice en voz alta",
+    "glitchAt": 2.2
+   }
+  },
+  {
+   "name": "dinero.introv2",
+   "summary": "GANCHO pregunta + revelación. La pregunta en MAYÚSCULAS finas blancas con brillo y sombra larga se DECODIFICA letra por letra sobre fieltro verde (como 'MONEY' de la referencia); en stampAt barrido con destello, la pregunta se achica arriba con un subrayado de punta brillante y la RESPUESTA cae gigante en Open Sans 800 verde volteándose en 3D con desenfoque, con anillo de chispa. Fondo adaptable (bg: felt | paper | sage | black | fog | image con src | component con use/useParams); por defecto fieltro verde.",
+   "tags": [
+    "intro",
+    "gancho",
+    "apertura",
+    "pregunta",
+    "revelación",
+    "neón"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Pregunta gancho ('\\n' = renglón).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo fino arriba.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stamp": {
+     "type": "string",
+     "default": "",
+     "doc": "Respuesta que cae (vacío = sin revelación).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stampAt": {
+     "type": "number",
+     "default": 2.4,
+     "doc": "Segundo de la revelación (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "typeAt": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Segundo en que empieza a decodificarse la pregunta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cps": {
+     "type": "number",
+     "default": 16,
+     "doc": "Letras por segundo.",
+     "required": false,
+     "options": null,
+     "min": 4,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "paper",
+      "felt",
+      "sage",
+      "black",
+      "fog",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "¿CUÁNTO VALE\nUNA IDEA?",
+    "kicker": "Dartmouth · 1956",
+    "stamp": "7.500 DÓLARES",
+    "stampAt": 2.4
+   }
+  },
+  {
+   "name": "dinero.outro",
+   "summary": "Cierre del canal SIN recuadro en lenguaje NODECONOMY (bg: black | paper | felt | sage | fog | image con src | component con use/useParams; por defecto negro verdoso con rayos verdes): GRACIAS POR VER fina que se decodifica → nombre del canal GIGANTE con contorno fantasma detrás y relleno blanco que se tipea → botón LIKE verde que se presiona y suelta chispas (dos ojos lo miran) → flecha fina con punta brillante → SUSCRÍBETE en billete verde que golpea + campana que suena → apoyo → youtube.com/@canal. Tiempos sincronizables (likeAt, subscribeAt, bellAt, supportAt).",
+   "tags": [
+    "cierre",
+    "canal",
+    "like",
+    "suscribirse"
+   ],
+   "layer": "main",
+   "params": {
+    "thanks": {
+     "type": "string",
+     "default": "GRACIAS POR VER",
+     "doc": "Rótulo inicial.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "channel": {
+     "type": "string",
+     "default": "NODECONOMY",
+     "doc": "Nombre del canal (grande).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cta": {
+     "type": "string",
+     "default": "SUSCRÍBETE",
+     "doc": "Texto del botón de suscripción.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "support": {
+     "type": "string",
+     "default": "Apoya el canal y comparte el video.",
+     "doc": "Mensaje de apoyo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "handle": {
+     "type": "string",
+     "default": "youtube.com/@nodeconomy",
+     "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "arrow": {
+     "type": "bool",
+     "default": true,
+     "doc": "Flecha del LIKE a SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "likeAt": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundo del LIKE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "subscribeAt": {
+     "type": "number",
+     "default": 2.5,
+     "doc": "Segundo de SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "bellAt": {
+     "type": "number",
+     "default": 3.25,
+     "doc": "Segundo de la campana.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "supportAt": {
+     "type": "number",
+     "default": 3.65,
+     "doc": "Segundo del mensaje de apoyo y la dirección.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "black",
+     "doc": "Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "paper",
+      "felt",
+      "sage",
+      "black",
+      "fog",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.66,
+     "doc": "Oscurecido del fondo foto/componente.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "thanks": "GRACIAS POR VER",
+    "channel": "NODECONOMY",
+    "cta": "SUSCRÍBETE",
+    "support": "Apoya el canal y comparte el video.",
+    "handle": "youtube.com/@nodeconomy"
+   }
+  },
+  {
+   "name": "atlas.world",
+   "summary": "Cámara del mapamundi 2.5D que viaja (zoom + paneo suave) a una región, a varios países o a un punto; opcionalmente pinta países en gris o blanco con parpadeo. Para situar la historia: 'todo empezó en Europa del Este', 'el bloque soviético'.",
+   "tags": [
+    "mapa",
+    "región",
+    "contexto",
+    "cámara",
+    "continente"
+   ],
+   "layer": "main",
+   "params": {
+    "region": {
+     "type": "enum",
+     "default": "world",
+     "doc": "Región con nombre (si no hay countries ni center).",
+     "required": false,
+     "options": [
+      "world",
+      "europe",
+      "western-europe",
+      "eastern-europe",
+      "africa",
+      "asia",
+      "middle-east",
+      "north-america",
+      "central-america",
+      "south-america",
+      "latin-america",
+      "americas",
+      "oceania",
+      "east-asia",
+      "southeast-asia",
+      "south-asia",
+      "central-asia"
+     ],
+     "min": null,
+     "max": null
+    },
+    "countries": {
+     "type": "array",
+     "default": [],
+     "doc": "Países (inglés, p. ej. 'Germany') que la cámara encuadra juntos.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "center": {
+     "type": "array",
+     "default": [],
+     "doc": "[lon,lat] centro de la cámara (con span).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "span": {
+     "type": "number",
+     "default": 0,
+     "doc": "Ancho visible en grados de longitud (con center).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1,
+     "doc": "Multiplica el zoom calculado.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "paint": {
+     "type": "array",
+     "default": [],
+     "doc": "Países que se pintan (con parpadeo escalonado).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "state": {
+     "type": "enum",
+     "default": "gray",
+     "doc": "Color de los países pintados.",
+     "required": false,
+     "options": [
+      "white",
+      "gray"
+     ],
+     "min": null,
+     "max": null
+    },
+    "paintAt": {
+     "type": "number",
+     "default": 0.7,
+     "doc": "Segundo en que empieza a pintar (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.12,
+     "doc": "Segundos entre país y país al pintar.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "clear": {
+     "type": "bool",
+     "default": false,
+     "doc": "Borra lo pintado y los alfileres anteriores (empezar un capítulo nuevo).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "move": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundos del viaje de cámara (0 = automático según distancia).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "pins": {
+     "type": "array",
+     "default": [],
+     "doc": "Alfileres chicos sin etiqueta: [[lon,lat], …] o nombres de país (caen escalonados desde paintAt).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico de cabecera (lugar · fecha).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "region": "europe",
+    "paint": [
+     "Germany",
+     "Poland",
+     "Czechia",
+     "Hungary"
+    ],
+    "state": "gray",
+    "kicker": "Europa · 1989"
+   }
+  },
+  {
+   "name": "atlas.country",
+   "summary": "LA escena de la referencia: la cámara viaja al país, el país se enciende en blanco con un parpadeo de 8 cuadros (o pasa por gris medio y después blanco), cae un alfiler negro tipo gota con rebote y la etiqueta sale de atrás del alfiler. El alfiler anterior queda chico. Para nombrar un país o una ciudad (pin=[lon,lat]).",
+   "tags": [
+    "país",
+    "lugar",
+    "alfiler",
+    "mapa",
+    "ciudad"
+   ],
+   "layer": "main",
+   "params": {
+    "country": {
+     "type": "string",
+     "default": null,
+     "doc": "País (properties.name en inglés: 'Germany', 'United States of America'; acepta alias 'USA' y el nombre en español).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta (vacío = nombre en español del país; '-' = sin etiqueta).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica debajo de la etiqueta (año, ciudad, dato corto).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pin": {
+     "type": "array",
+     "default": [],
+     "doc": "[lon,lat] del alfiler (ciudad); vacío = centro del país.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto dentro del sello del alfiler (B/N contrastado).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "seal": {
+     "type": "enum",
+     "default": "initials",
+     "doc": "Sello del alfiler si no hay foto: emblema B/N (globe), emblema con iniciales o liso.",
+     "required": false,
+     "options": [
+      "globe",
+      "initials",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "state": {
+     "type": "enum",
+     "default": "white",
+     "doc": "Pintado: blanco, gris medio, gris y después blanco (both, en whiteAt) o sin pintar.",
+     "required": false,
+     "options": [
+      "white",
+      "gray",
+      "both",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "whiteAt": {
+     "type": "number",
+     "default": 1.6,
+     "doc": "Con state=both: segundo en que pasa de gris a blanco (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "span": {
+     "type": "number",
+     "default": 0,
+     "doc": "Ancho visible en grados (0 = automático, ~34° o 2,3× el país). Ciudad: 6–10.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1,
+     "doc": "Multiplica el zoom.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "move": {
+     "type": "number",
+     "default": 0.75,
+     "doc": "Segundos del viaje de cámara.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 3
+    },
+    "pinAt": {
+     "type": "number",
+     "default": -1,
+     "doc": "Segundo en que cae el alfiler (-1 = al llegar la cámara).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "side": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Lado de la etiqueta.",
+     "required": false,
+     "options": [
+      "auto",
+      "left",
+      "right"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "country": "Germany",
+    "label": "Alemania",
+    "sub": "1989",
+    "pin": [
+     13.4,
+     52.52
+    ]
+   }
+  },
+  {
+   "name": "atlas.route",
+   "summary": "Montaje de la referencia: la cámara salta país por país (≈1 s cada uno), cada país se enciende en blanco, cae su alfiler y su etiqueta; los anteriores quedan chicos. Con line=true une los alfileres con una ruta punteada que avanza. Para listas de países, rutas de escape, expansión de un bloque, giras, contagios.",
+   "tags": [
+    "recorrido",
+    "lista",
+    "países",
+    "montaje",
+    "expansión",
+    "contagio"
+   ],
+   "layer": "main",
+   "params": {
+    "items": {
+     "type": "array",
+     "default": null,
+     "doc": "Países en orden: 'Hungary' o { country, label, sub, pin:[lon,lat], state:'white|gray', at } (at = segundos desde el inicio del beat).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundos entre país y país (si el item no trae at).",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": null
+    },
+    "first": {
+     "type": "number",
+     "default": 0.55,
+     "doc": "Segundo del primer país.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "camera": {
+     "type": "enum",
+     "default": "follow",
+     "doc": "follow = viaja a cada país (referencia); fit = encuadra todos de una vez.",
+     "required": false,
+     "options": [
+      "follow",
+      "fit"
+     ],
+     "min": null,
+     "max": null
+    },
+    "line": {
+     "type": "bool",
+     "default": false,
+     "doc": "Ruta punteada blanca que une los alfileres.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "span": {
+     "type": "number",
+     "default": 0,
+     "doc": "Ancho visible en grados en follow (0 = automático).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1,
+     "doc": "Multiplica el zoom.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "state": {
+     "type": "enum",
+     "default": "white",
+     "doc": "Color por defecto de los países.",
+     "required": false,
+     "options": [
+      "white",
+      "gray"
+     ],
+     "min": null,
+     "max": null
+    },
+    "clear": {
+     "type": "bool",
+     "default": false,
+     "doc": "Borra lo pintado antes.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico de cabecera.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "items": [
+     "Hungary",
+     "Austria",
+     "Czechia",
+     "Germany"
+    ],
+    "stagger": 1,
+    "line": true
+   }
+  },
+  {
+   "name": "atlas.border",
+   "summary": "Una línea que se dibuja sobre el mapa: MURO (negro grueso con canto cian que brilla), frontera punteada o ruta con flecha. Rótulos a cada lado (ESTE / OESTE) que entran deslizando. Para fronteras, muros, particiones, líneas de frente, rutas migratorias.",
+   "tags": [
+    "frontera",
+    "muro",
+    "división",
+    "partición",
+    "ruta",
+    "línea"
+   ],
+   "layer": "main",
+   "params": {
+    "line": {
+     "type": "array",
+     "default": null,
+     "doc": "Puntos [[lon,lat], …] de la línea, en orden.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "style": {
+     "type": "enum",
+     "default": "wall",
+     "doc": "wall = muro negro con canto cian · border = punteada negra · route = blanca punteada con flecha.",
+     "required": false,
+     "options": [
+      "wall",
+      "border",
+      "route"
+     ],
+     "min": null,
+     "max": null
+    },
+    "drawAt": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Segundo en que empieza a dibujarse.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "drawSec": {
+     "type": "number",
+     "default": 1.6,
+     "doc": "Segundos que tarda en dibujarse.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": null
+    },
+    "width": {
+     "type": "number",
+     "default": 1,
+     "doc": "Grosor (×).",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 4
+    },
+    "tags": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulos sobre el mapa: [{ text, at:[lon,lat], dark? }] (blancos con sombra; dark = negros con halo, sobre países blancos).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "countries": {
+     "type": "array",
+     "default": [],
+     "doc": "Países que encuadra la cámara (si no, encuadra la línea).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "center": {
+     "type": "array",
+     "default": [],
+     "doc": "[lon,lat] centro de la cámara (con span).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "span": {
+     "type": "number",
+     "default": 0,
+     "doc": "Ancho visible en grados (con center).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1,
+     "doc": "Multiplica el zoom.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "paint": {
+     "type": "array",
+     "default": [],
+     "doc": "Países que se pintan.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "state": {
+     "type": "enum",
+     "default": "white",
+     "doc": "Color de los países pintados.",
+     "required": false,
+     "options": [
+      "white",
+      "gray"
+     ],
+     "min": null,
+     "max": null
+    },
+    "keep": {
+     "type": "bool",
+     "default": true,
+     "doc": "La línea queda en el mapa después del beat (false = se apaga al salir).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico de cabecera.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "line": [
+     [
+      10.9,
+      54
+     ],
+     [
+      10.75,
+      53.6
+     ],
+     [
+      10.6,
+      53.37
+     ],
+     [
+      11.5,
+      53.05
+     ],
+     [
+      10.95,
+      52.55
+     ],
+     [
+      11,
+      52.2
+     ],
+     [
+      10.6,
+      51.75
+     ],
+     [
+      10.25,
+      51.45
+     ],
+     [
+      10,
+      50.95
+     ],
+     [
+      10.1,
+      50.55
+     ],
+     [
+      10.9,
+      50.33
+     ],
+     [
+      11.9,
+      50.32
+     ],
+     [
+      12.1,
+      50.3
+     ]
+    ],
+    "style": "wall",
+    "tags": [
+     {
+      "text": "OESTE",
+      "at": [
+       8.4,
+       51.6
+      ]
+     },
+     {
+      "text": "ESTE",
+      "at": [
+       12.9,
+       51.9
+      ]
+     }
+    ],
+    "countries": [
+     "Germany"
+    ],
+    "paint": [
+     "Germany"
+    ],
+    "state": "gray",
+    "kicker": "Alemania · 1949–1990"
+   }
+  },
+  {
+   "name": "atlas.title",
+   "summary": "Título de apertura: el mapamundi 2.5D con la costa cian se acerca lento mientras caen alfileres chicos en los países de la historia; el titular condensado blanco GRANDE ('^x^' en cian) se asienta cerrando la interletra. Primer beat del video (t=0).",
+   "tags": [
+    "título",
+    "apertura",
+    "portada",
+    "mundo"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Título ('\\n' = renglón, '^x^' = palabra en cian).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Versión 9:16 (renglones más cortos).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico arriba (lugar · fecha).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica debajo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "region": {
+     "type": "enum",
+     "default": "world",
+     "doc": "Hacia dónde se acerca la cámara.",
+     "required": false,
+     "options": [
+      "world",
+      "europe",
+      "western-europe",
+      "eastern-europe",
+      "africa",
+      "asia",
+      "middle-east",
+      "north-america",
+      "central-america",
+      "south-america",
+      "latin-america",
+      "americas",
+      "oceania",
+      "east-asia",
+      "southeast-asia",
+      "south-asia",
+      "central-asia"
+     ],
+     "min": null,
+     "max": null
+    },
+    "pins": {
+     "type": "array",
+     "default": [],
+     "doc": "Países donde caen alfileres chicos (sin etiqueta).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.42,
+     "doc": "Oscurecido del mapa detrás del título.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "LA NOCHE QUE\nCAYÓ EL ^MURO^",
+    "textPortrait": "LA NOCHE\nQUE CAYÓ\nEL ^MURO^",
+    "kicker": "Berlín · 9 nov 1989",
+    "region": "europe",
+    "pins": [
+     "Germany",
+     "Hungary",
+     "Czechia",
+     "Poland"
+    ]
+   }
+  },
+  {
+   "name": "atlas.stat",
+   "summary": "Cierre de la referencia ('82 COUNTRIES LISTENING'): el mapa se apaga y desenfoca, y aparece una cifra con su texto en condensada blanca (la cifra cuenta hacia arriba si es número). Para el dato duro de la historia: víctimas, votos, años, países.",
+   "tags": [
+    "cifra",
+    "dato",
+    "número",
+    "conteo",
+    "impacto"
+   ],
+   "layer": "main",
+   "params": {
+    "value": {
+     "type": "string",
+     "default": null,
+     "doc": "Cifra (si es número entero cuenta desde countFrom).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "text": {
+     "type": "string",
+     "default": "",
+     "doc": "Texto que acompaña ('países escuchando', 'muertos en el muro').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico arriba.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "layout": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "inline = una línea como la referencia; stack = cifra gigante arriba y texto abajo.",
+     "required": false,
+     "options": [
+      "auto",
+      "inline",
+      "stack"
+     ],
+     "min": null,
+     "max": null
+    },
+    "countFrom": {
+     "type": "number",
+     "default": 0,
+     "doc": "Desde dónde cuenta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "countSec": {
+     "type": "number",
+     "default": 1.1,
+     "doc": "Segundos del conteo (0 = sin conteo).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "accent": {
+     "type": "bool",
+     "default": false,
+     "doc": "Cifra en cian (si es EL dato del video).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "region": {
+     "type": "enum",
+     "default": "",
+     "doc": "Mover la cámara detrás (vacío = se queda donde estaba).",
+     "required": false,
+     "options": [
+      "",
+      "world",
+      "europe",
+      "western-europe",
+      "eastern-europe",
+      "africa",
+      "asia",
+      "middle-east",
+      "north-america",
+      "central-america",
+      "south-america",
+      "latin-america",
+      "americas",
+      "oceania",
+      "east-asia",
+      "southeast-asia",
+      "south-asia",
+      "central-asia"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "value": "140",
+    "text": "muertos en el muro",
+    "kicker": "Berlín · 1961–1989"
+   }
+  },
+  {
+   "name": "atlas.compare",
+   "summary": "Dos países encendidos a la vez en el mapa, cada uno con su alfiler y su etiqueta, y abajo su cifra GRANDE en condensada blanca con un 'VS' cian en el medio. Para comparar dos países (población, votos, gasto, muertos, años).",
+   "tags": [
+    "comparación",
+    "versus",
+    "dos países",
+    "dato"
+   ],
+   "layer": "main",
+   "params": {
+    "left": {
+     "type": "object",
+     "default": null,
+     "doc": "{ country, label?, value, sub?, pin?:[lon,lat] }",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "right": {
+     "type": "object",
+     "default": null,
+     "doc": "{ country, label?, value, sub?, pin?:[lon,lat] }",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "vs": {
+     "type": "string",
+     "default": "VS",
+     "doc": "Texto del medio.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico de cabecera.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1,
+     "doc": "Multiplica el zoom.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    }
+   },
+   "example": {
+    "left": {
+     "country": "Germany",
+     "value": "83 M",
+     "sub": "habitantes"
+    },
+    "right": {
+     "country": "France",
+     "value": "68 M",
+     "sub": "habitantes"
+    },
+    "kicker": "Población · 2024"
+   }
+  },
+  {
+   "name": "atlas.photo",
+   "summary": "Foto clavada en el mapa: un alfiler GIGANTE cae con rebote sobre el lugar con la foto dentro de su cabeza (B/N contrastado, como el sello de la referencia) o una tarjeta con borde blanco y puntero; nombre y rol al lado. Al salir se achica y queda un alfiler chico con la foto en el mapa. Para personas, lugares, documentos.",
+   "tags": [
+    "foto",
+    "persona",
+    "lugar",
+    "retrato",
+    "alfiler"
+   ],
+   "layer": "main",
+   "params": {
+    "src": {
+     "type": "image",
+     "default": null,
+     "doc": "Foto.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.42
+     ],
+     "doc": "Punto de interés [x,y] (0..1) para el recorte.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "country": {
+     "type": "string",
+     "default": "",
+     "doc": "País donde se clava (se enciende en blanco).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pin": {
+     "type": "array",
+     "default": [],
+     "doc": "[lon,lat] exacto (ciudad); vacío = centro del país.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "name": {
+     "type": "string",
+     "default": "",
+     "doc": "Nombre (grande).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "role": {
+     "type": "string",
+     "default": "",
+     "doc": "Rol / lugar / fecha (chico).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "frame": {
+     "type": "enum",
+     "default": "pin",
+     "doc": "pin = foto dentro del alfiler gigante; card = tarjeta rectangular con puntero.",
+     "required": false,
+     "options": [
+      "pin",
+      "card"
+     ],
+     "min": null,
+     "max": null
+    },
+    "span": {
+     "type": "number",
+     "default": 26,
+     "doc": "Ancho visible en grados detrás.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": null
+    },
+    "keep": {
+     "type": "bool",
+     "default": true,
+     "doc": "Deja un alfiler chico con la foto al salir.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "src": "turing.jpg",
+    "country": "United Kingdom",
+    "pin": [
+     -0.74,
+     52
+    ],
+    "name": "Alan Turing",
+    "role": "Bletchley Park · 1940"
+   }
+  },
+  {
+   "name": "atlas.introv1",
+   "summary": "GANCHO de apertura tipo golpe: la cámara se lanza del mundo entero hacia la región mientras los países de la historia se encienden en BLANCO en ráfaga (parpadeo de 8 cuadros cada uno, con alfileres chicos) y el titular condensado GIGANTE golpea palabra por palabra con sacudida ('^x^' en cian). Fondo adaptable: world (mapa), dark, image (src), component.",
+   "tags": [
+    "intro",
+    "gancho",
+    "apertura",
+    "golpe",
+    "mapa"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Titular gancho (2–6 palabras). '\\n' = renglón; '^x^' = palabra en cian.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico arriba (lugar · fecha).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica debajo del titular.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "countries": {
+     "type": "array",
+     "default": [],
+     "doc": "Países que se encienden en ráfaga (inglés).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "region": {
+     "type": "enum",
+     "default": "world",
+     "doc": "Hacia dónde se lanza la cámara (si no hay countries).",
+     "required": false,
+     "options": [
+      "world",
+      "europe",
+      "western-europe",
+      "eastern-europe",
+      "africa",
+      "asia",
+      "middle-east",
+      "north-america",
+      "central-america",
+      "south-america",
+      "latin-america",
+      "americas",
+      "oceania",
+      "east-asia",
+      "southeast-asia",
+      "south-asia",
+      "central-asia"
+     ],
+     "min": null,
+     "max": null
+    },
+    "wordAt": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Segundo del primer golpe.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Segundos entre palabras.",
+     "required": false,
+     "options": null,
+     "min": 0.08,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "world",
+      "dark",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
+    "kicker": "Berlín · 9 nov 1989",
+    "sub": "la noche que nadie vio venir",
+    "countries": [
+     "Germany",
+     "Poland",
+     "Czechia",
+     "Hungary",
+     "Austria"
+    ],
+    "region": "europe"
+   }
+  },
+  {
+   "name": "atlas.introv2",
+   "summary": "GANCHO pregunta + revelación: la pregunta se tipea letra a letra en condensada blanca sobre el mundo apagado; en revealAt el mapa se enciende, la pregunta sube y se achica, la cámara cae sobre el país, que parpadea en blanco, y cae el alfiler con la RESPUESTA como etiqueta. Fondo adaptable (world, dark, image, component).",
+   "tags": [
+    "intro",
+    "gancho",
+    "pregunta",
+    "revelación",
+    "país"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Pregunta ('\\n' = renglón, '^x^' = cian).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "answer": {
+     "type": "string",
+     "default": "",
+     "doc": "Respuesta: etiqueta del alfiler (vacío = nombre del país).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "country": {
+     "type": "string",
+     "default": null,
+     "doc": "País de la revelación (inglés).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pin": {
+     "type": "array",
+     "default": [],
+     "doc": "[lon,lat] del alfiler (ciudad).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pinSrc": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto dentro del sello del alfiler.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "span": {
+     "type": "number",
+     "default": 0,
+     "doc": "Ancho visible en grados al revelar (0 = automático).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico arriba.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "revealAt": {
+     "type": "number",
+     "default": 2.4,
+     "doc": "Segundo de la revelación (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "typeAt": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Segundo en que empieza el tipeo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cps": {
+     "type": "number",
+     "default": 22,
+     "doc": "Letras por segundo.",
+     "required": false,
+     "options": null,
+     "min": 4,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "world",
+      "dark",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "¿DÓNDE CAYÓ\nEL MURO?",
+    "answer": "Berlín",
+    "country": "Germany",
+    "pin": [
+     13.4,
+     52.52
+    ],
+    "kicker": "9 nov 1989",
+    "revealAt": 2.2
+   }
+  },
+  {
+   "name": "atlas.outro",
+   "summary": "Cierre del canal SIN recuadro: la cámara se aleja al mundo entero con todo lo encendido y el mapa se apaga (final de la referencia). GRACIAS POR VER → canal en condensada gigante → alfiler LIKE que cae con el pulgar en el sello → ruta cian → placa blanca SUSCRÍBETE que se enciende con el parpadeo de los países + campana → apoyo tipeado → youtube.com/@canal. Tiempos sincronizables con la despedida (likeAt, subscribeAt, bellAt, supportAt).",
+   "tags": [
+    "cierre",
+    "canal",
+    "like",
+    "suscribirse",
+    "mapa"
+   ],
+   "layer": "main",
+   "params": {
+    "thanks": {
+     "type": "string",
+     "default": "GRACIAS POR VER",
+     "doc": "Rótulo inicial.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "channel": {
+     "type": "string",
+     "default": "NODEPOLITICS",
+     "doc": "Nombre del canal (grande).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cta": {
+     "type": "string",
+     "default": "SUSCRÍBETE",
+     "doc": "Texto del botón de suscripción.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "support": {
+     "type": "string",
+     "default": "Apoya el canal y comparte el mapa.",
+     "doc": "Mensaje de apoyo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "handle": {
+     "type": "string",
+     "default": "youtube.com/@nodepolitics",
+     "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "arrow": {
+     "type": "bool",
+     "default": true,
+     "doc": "Flecha del LIKE a SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "likeAt": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundo del LIKE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "subscribeAt": {
+     "type": "number",
+     "default": 2.5,
+     "doc": "Segundo de SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "bellAt": {
+     "type": "number",
+     "default": 3.25,
+     "doc": "Segundo de la campana.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "supportAt": {
+     "type": "number",
+     "default": 3.65,
+     "doc": "Segundo del mensaje de apoyo y la dirección.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "world",
+      "dark",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.6,
+     "doc": "Oscurecido del fondo foto/componente.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "thanks": "GRACIAS POR VER",
+    "channel": "NODEPOLITICS",
+    "cta": "SUSCRÍBETE",
+    "support": "Apoya el canal y comparte el mapa.",
+    "handle": "youtube.com/@nodepolitics"
+   }
+  },
+  {
+   "name": "imperio.title",
+   "summary": "Apertura (ref 0–11 s): atlas físico con el país foco rayado y el SOL carmesí que late; la cámara se aleja y gira apenas; nacen los RAYOS translúcidos en abanico hacia `dir` con barquitos; el título en su IDIOMA ORIGINAL (kanji, alemán, ruso…) entra carácter por carácter con su traducción tipeada debajo y se borra de derecha a izquierda; después el título condensado blanco SUBE desde abajo con degradé. Primer beat del video.",
+   "tags": [
+    "apertura",
+    "título",
+    "mapa",
+    "imperio",
+    "sol",
+    "idioma original"
+   ],
+   "layer": "main",
+   "params": {
+    "country": {
+     "type": "string",
+     "default": "Japan",
+     "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "hatch": {
+     "type": "array",
+     "default": null,
+     "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sun": {
+     "type": "bool",
+     "default": true,
+     "doc": "Círculo carmesí que late sobre el país foco.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunAt": {
+     "type": "array",
+     "default": null,
+     "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunSize": {
+     "type": "number",
+     "default": 3.6,
+     "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "labels": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "compass": {
+     "type": "bool",
+     "default": false,
+     "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "gray": {
+     "type": "number",
+     "default": 0,
+     "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "enter": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 2
+    },
+    "flag": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "from": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "to": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1.3,
+     "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 6
+    },
+    "tilt": {
+     "type": "number",
+     "default": 3,
+     "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+     "required": false,
+     "options": null,
+     "min": -20,
+     "max": 20
+    },
+    "ease": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+     "required": false,
+     "options": [
+      "auto",
+      "out",
+      "in",
+      "inOut",
+      "linear",
+      "expo"
+     ],
+     "min": null,
+     "max": null
+    },
+    "rays": {
+     "type": "number",
+     "default": 28,
+     "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 60
+    },
+    "dir": {
+     "type": "number",
+     "default": 180,
+     "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "spread": {
+     "type": "number",
+     "default": 0.72,
+     "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "rayFloor": {
+     "type": "number",
+     "default": 0.02,
+     "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.4
+    },
+    "rayAlpha": {
+     "type": "number",
+     "default": 0.56,
+     "doc": "Opacidad de los rayos carmesí.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "rayLen": {
+     "type": "number",
+     "default": 0.46,
+     "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 1
+    },
+    "raysAt": {
+     "type": "number",
+     "default": 4,
+     "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ships": {
+     "type": "number",
+     "default": 2,
+     "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 10
+    },
+    "rayColor": {
+     "type": "string",
+     "default": "",
+     "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "native": {
+     "type": "string",
+     "default": "",
+     "doc": "Título en su idioma original (p. ej. '南進論', 'Geheime Kommandosache', 'Перестройка'). Vacío = sin este paso.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "nativeSub": {
+     "type": "string",
+     "default": "",
+     "doc": "Traducción chica en mayúsculas que se tipea debajo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "nativeAt": {
+     "type": "number",
+     "default": 5,
+     "doc": "Segundo en que entra el título original (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "nativeOut": {
+     "type": "number",
+     "default": 9.2,
+     "doc": "Segundo en que se borra (de derecha a izquierda). −1 = se queda.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "text": {
+     "type": "string",
+     "default": "",
+     "doc": "Título condensado blanco (Fjalla One); '\\n' parte renglones. Vacío = sin título grande.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Versión del título para 9:16 (más renglones).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textAt": {
+     "type": "number",
+     "default": 10,
+     "doc": "Segundo en que sube el título condensado (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "country": "Japan",
+    "hatch": [
+     "Japan"
+    ],
+    "from": [
+     150,
+     36,
+     95,
+     0
+    ],
+    "to": [
+     145,
+     35,
+     125,
+     3
+    ],
+    "sunSize": 3.6,
+    "native": "南進論",
+    "nativeSub": "SOUTHERN EXPANSION DOCTRINE",
+    "nativeAt": 5,
+    "nativeOut": 9.2,
+    "text": "JAPANESE\nEMPIRE",
+    "textPortrait": "JAPANESE\nEMPIRE",
+    "textAt": 10,
+    "rays": 28,
+    "raysAt": 4,
+    "dir": 180,
+    "spread": 0.72,
+    "rayFloor": 0.02,
+    "rayAlpha": 0.56,
+    "rayLen": 0.46,
+    "ships": 2,
+    "labels": [
+     {
+      "t": "Mar del\nJapón",
+      "at": [
+       134.5,
+       40.2
+      ]
+     },
+     {
+      "t": "Mar\nAmarillo",
+      "at": [
+       123.6,
+       35.4
+      ]
+     },
+     {
+      "t": "Océano\nPacífico",
+      "at": [
+       150,
+       31
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "imperio.map",
+   "summary": "Atlas físico en movimiento lento (zoom y giro leve) sobre un país o región: territorio rayado, sol que late, rótulos de mares, rayos opcionales y PINES (punto carmesí + nombre) para lugares concretos (una base, una ciudad, un puerto). Para situar la historia y para respirar entre momentos fuertes.",
+   "tags": [
+    "mapa",
+    "lugar",
+    "país",
+    "geografía",
+    "atlas"
+   ],
+   "layer": "main",
+   "params": {
+    "country": {
+     "type": "string",
+     "default": "",
+     "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "hatch": {
+     "type": "array",
+     "default": null,
+     "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sun": {
+     "type": "bool",
+     "default": true,
+     "doc": "Círculo carmesí que late sobre el país foco.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunAt": {
+     "type": "array",
+     "default": null,
+     "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunSize": {
+     "type": "number",
+     "default": 0.8,
+     "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "labels": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "compass": {
+     "type": "bool",
+     "default": false,
+     "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "gray": {
+     "type": "number",
+     "default": 0,
+     "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "enter": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 2
+    },
+    "flag": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "from": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "to": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1.3,
+     "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 6
+    },
+    "tilt": {
+     "type": "number",
+     "default": 2,
+     "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+     "required": false,
+     "options": null,
+     "min": -20,
+     "max": 20
+    },
+    "ease": {
+     "type": "enum",
+     "default": "inOut",
+     "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+     "required": false,
+     "options": [
+      "auto",
+      "out",
+      "in",
+      "inOut",
+      "linear",
+      "expo"
+     ],
+     "min": null,
+     "max": null
+    },
+    "rays": {
+     "type": "number",
+     "default": 0,
+     "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 60
+    },
+    "dir": {
+     "type": "number",
+     "default": 180,
+     "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "spread": {
+     "type": "number",
+     "default": 0.6,
+     "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "rayFloor": {
+     "type": "number",
+     "default": 0.16,
+     "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.4
+    },
+    "rayAlpha": {
+     "type": "number",
+     "default": 0.82,
+     "doc": "Opacidad de los rayos carmesí.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "rayLen": {
+     "type": "number",
+     "default": 0.42,
+     "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 1
+    },
+    "raysAt": {
+     "type": "number",
+     "default": 0.4,
+     "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ships": {
+     "type": "number",
+     "default": 0,
+     "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 10
+    },
+    "rayColor": {
+     "type": "string",
+     "default": "",
+     "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pins": {
+     "type": "array",
+     "default": [],
+     "doc": "Lugares: [{\"t\":\"Bletchley Park\", \"at\":[-0.74, 51.99]}] (punto carmesí + nombre). Entran escalonados.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pinAt": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Segundo en que entra el primer pin (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "country": "United Kingdom",
+    "from": "United Kingdom*1.5",
+    "to": "United Kingdom*3.2",
+    "pins": [
+     {
+      "t": "Bletchley Park",
+      "at": [
+       -0.74,
+       51.99
+      ]
+     },
+     {
+      "t": "Londres",
+      "at": [
+       -0.12,
+       51.5
+      ]
+     }
+    ],
+    "labels": [
+     {
+      "t": "Mar del\nNorte",
+      "at": [
+       3.5,
+       56
+      ]
+     },
+     {
+      "t": "Océano\nAtlántico",
+      "at": [
+       -15,
+       52
+      ]
+     }
+    ],
+    "compass": true
+   }
+  },
+  {
+   "name": "imperio.expansion",
+   "summary": "Expansión: desde el sol del país foco salen HACES carmesí translúcidos hacia cada región destino, uno tras otro; al llegar, la región se raya (territorio ocupado) y aparece su nombre en condensada blanca. Para invasiones, zonas de influencia, rutas de ataque o alcance de una doctrina.",
+   "tags": [
+    "expansión",
+    "conquista",
+    "invasión",
+    "influencia",
+    "mapa",
+    "rayos"
+   ],
+   "layer": "main",
+   "params": {
+    "country": {
+     "type": "string",
+     "default": "",
+     "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "hatch": {
+     "type": "array",
+     "default": null,
+     "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sun": {
+     "type": "bool",
+     "default": true,
+     "doc": "Círculo carmesí que late sobre el país foco.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunAt": {
+     "type": "array",
+     "default": null,
+     "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunSize": {
+     "type": "number",
+     "default": 1.3,
+     "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "labels": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "compass": {
+     "type": "bool",
+     "default": false,
+     "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "gray": {
+     "type": "number",
+     "default": 0,
+     "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "enter": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 2
+    },
+    "flag": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "from": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "to": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1.3,
+     "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 6
+    },
+    "tilt": {
+     "type": "number",
+     "default": 2,
+     "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+     "required": false,
+     "options": null,
+     "min": -20,
+     "max": 20
+    },
+    "ease": {
+     "type": "enum",
+     "default": "inOut",
+     "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+     "required": false,
+     "options": [
+      "auto",
+      "out",
+      "in",
+      "inOut",
+      "linear",
+      "expo"
+     ],
+     "min": null,
+     "max": null
+    },
+    "targets": {
+     "type": "array",
+     "default": [],
+     "doc": "Destinos: países o puntos: [\"Philippines\", {\"at\":\"Indonesia\", \"t\":\"Indias Orientales\"}, {\"at\":[151, -9], \"t\":\"Nueva Guinea\"}].",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "at": {
+     "type": "number",
+     "default": 0.6,
+     "doc": "Segundo del primer haz (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.7,
+     "doc": "Segundos entre haz y haz.",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": null
+    },
+    "conquer": {
+     "type": "bool",
+     "default": true,
+     "doc": "Rayar cada país destino cuando llega su haz.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ships": {
+     "type": "number",
+     "default": 1,
+     "doc": "Barquitos por haz.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 3
+    },
+    "beam": {
+     "type": "number",
+     "default": 1,
+     "doc": "Ancho de los haces (multiplicador).",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 3
+    }
+   },
+   "example": {
+    "country": "Japan",
+    "targets": [
+     {
+      "at": "Philippines",
+      "t": "Filipinas"
+     },
+     {
+      "at": "Indonesia",
+      "t": "Indias Orientales"
+     },
+     {
+      "at": "Malaysia",
+      "t": "Malasia"
+     },
+     {
+      "at": "Myanmar",
+      "t": "Birmania"
+     }
+    ],
+    "hatch": [
+     "Japan",
+     "South Korea",
+     "North Korea",
+     "Taiwan"
+    ],
+    "labels": [
+     {
+      "t": "Océano\nPacífico",
+      "at": [
+       150,
+       15
+      ]
+     },
+     {
+      "t": "Mar de la\nChina Meridional",
+      "at": [
+       114,
+       13
+      ]
+     }
+    ],
+    "compass": true
+   }
+  },
+  {
+   "name": "imperio.archive",
+   "summary": "Material de archivo (ref 11.5–27.7 s): el atlas se DESATURA a gris, baja humo oscuro desde arriba y la foto en blanco y negro se FUNDE en multiplicar con el mapa (lo claro deja ver el mapa, lo oscuro lo tapa); los rayos carmesí siguen encima, rosa de los vientos fina abajo a la derecha, grano y polvo; la cámara sigue alejándose. Para mostrar una foto histórica sin salir del mapa.",
+   "tags": [
+    "archivo",
+    "foto",
+    "blanco y negro",
+    "mapa",
+    "guerra",
+    "barco"
+   ],
+   "layer": "main",
+   "params": {
+    "src": {
+     "type": "image",
+     "default": null,
+     "doc": "Foto de archivo (se pasa a B/N contrastado).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "photoFocus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.42
+     ],
+     "doc": "Punto de interés de la foto [x,y] 0..1.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "country": {
+     "type": "string",
+     "default": "",
+     "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "hatch": {
+     "type": "array",
+     "default": null,
+     "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sun": {
+     "type": "bool",
+     "default": true,
+     "doc": "Círculo carmesí que late sobre el país foco.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunAt": {
+     "type": "array",
+     "default": null,
+     "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunSize": {
+     "type": "number",
+     "default": 1.3,
+     "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "labels": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "compass": {
+     "type": "bool",
+     "default": true,
+     "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "gray": {
+     "type": "number",
+     "default": 0,
+     "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "enter": {
+     "type": "number",
+     "default": 0.7,
+     "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 2
+    },
+    "flag": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "from": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "to": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1.35,
+     "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 6
+    },
+    "tilt": {
+     "type": "number",
+     "default": 3,
+     "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+     "required": false,
+     "options": null,
+     "min": -20,
+     "max": 20
+    },
+    "ease": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+     "required": false,
+     "options": [
+      "auto",
+      "out",
+      "in",
+      "inOut",
+      "linear",
+      "expo"
+     ],
+     "min": null,
+     "max": null
+    },
+    "rays": {
+     "type": "number",
+     "default": 28,
+     "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 60
+    },
+    "dir": {
+     "type": "number",
+     "default": 180,
+     "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "spread": {
+     "type": "number",
+     "default": 0.72,
+     "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "rayFloor": {
+     "type": "number",
+     "default": 0.02,
+     "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.4
+    },
+    "rayAlpha": {
+     "type": "number",
+     "default": 0.56,
+     "doc": "Opacidad de los rayos carmesí.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "rayLen": {
+     "type": "number",
+     "default": 0.46,
+     "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 1
+    },
+    "raysAt": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ships": {
+     "type": "number",
+     "default": 3,
+     "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 10
+    },
+    "rayColor": {
+     "type": "string",
+     "default": "#b3122f",
+     "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "grayDur": {
+     "type": "number",
+     "default": 0.9,
+     "doc": "Segundos en que el atlas pasa de color a gris (0 = ya gris).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "photoAt": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo en que empieza a aparecer la foto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "photoDur": {
+     "type": "number",
+     "default": 0.9,
+     "doc": "Duración del fundido de la foto.",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": null
+    },
+    "photo": {
+     "type": "number",
+     "default": 0.95,
+     "doc": "Intensidad de la foto (multiplicar).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "smoke": {
+     "type": "number",
+     "default": 0.85,
+     "doc": "Humo oscuro desde arriba.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "caption": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico en itálica (lugar · año de la foto), abajo a la izquierda.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "src": "../designs/imperio/assets/uboat.jpg",
+    "country": "Japan",
+    "from": [
+     145,
+     35,
+     125,
+     3
+    ],
+    "to": [
+     135,
+     32,
+     165,
+     6
+    ],
+    "rays": 28,
+    "dir": 180,
+    "spread": 0.72,
+    "rayFloor": 0.02,
+    "rayAlpha": 0.56,
+    "rayLen": 0.46,
+    "ships": 2,
+    "compass": true,
+    "photoAt": 0,
+    "photoDur": 0.9,
+    "labels": [
+     {
+      "t": "MAR DE JAPÓN",
+      "at": [
+       135,
+       40
+      ]
+     },
+     {
+      "t": "OCÉANO PACÍFICO",
+      "at": [
+       151,
+       23
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "imperio.word",
+   "summary": "Título condensado BLANCO (Fjalla One) sobre el plano en curso: cada renglón SUBE desde abajo con degradé de opacidad (arriba aparece primero) y desenfoque, y después el título se ACHICA lento y exponencial (rápido al principio) mientras el mapa sigue moviéndose (ref 10–27 s: 'JAPANESE EMPIRE'). Usalo como overlay sobre imperio.archive / imperio.map para el nombre del imperio, la doctrina o el tema del bloque.",
+   "tags": [
+    "título",
+    "texto",
+    "nombre",
+    "imperio",
+    "condensada"
+   ],
+   "layer": "overlay",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Texto ('\\n' parte renglones). Mayúsculas automáticas.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textPortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Versión para 9:16.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "at": {
+     "type": "number",
+     "default": 0.2,
+     "doc": "Segundo en que sube (acepta '@palabra'). −1 = ya está (continúa el título de imperio.title sin volver a entrar).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "shrinkAt": {
+     "type": "number",
+     "default": 2.8,
+     "doc": "Segundo en que empieza a achicarse (−1 = nunca).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "shrinkTo": {
+     "type": "number",
+     "default": 0.18,
+     "doc": "Escala final a la que tiende.",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 1
+    },
+    "tau": {
+     "type": "number",
+     "default": 2.8,
+     "doc": "Constante de tiempo del achique (s): más chico = más rápido.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": null
+    },
+    "y": {
+     "type": "number",
+     "default": 0.68,
+     "doc": "Centro vertical (fracción del alto) en 16:9.",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 0.9
+    },
+    "size": {
+     "type": "number",
+     "default": 0.62,
+     "doc": "Ancho del renglón más largo (fracción del ancho) en 16:9; en 9:16 se usa 0.86.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 0.95
+    },
+    "rise": {
+     "type": "number",
+     "default": 0.06,
+     "doc": "Mientras se achica sube hacia el centro (fracción del alto).",
+     "required": false,
+     "options": null,
+     "min": -0.3,
+     "max": 0.3
+    },
+    "tilt": {
+     "type": "number",
+     "default": 0,
+     "doc": "Giro inicial en grados.",
+     "required": false,
+     "options": null,
+     "min": -15,
+     "max": 15
+    },
+    "spin": {
+     "type": "number",
+     "default": 0.25,
+     "doc": "Grados por segundo que gira (acompaña al mapa).",
+     "required": false,
+     "options": null,
+     "min": -3,
+     "max": 3
+    }
+   },
+   "example": {
+    "text": "JAPANESE\nEMPIRE",
+    "at": 0.2,
+    "shrinkAt": 2.8,
+    "shrinkTo": 0.18,
+    "tau": 2.8
+   }
+  },
+  {
+   "name": "imperio.native",
+   "summary": "Nombre en su IDIOMA ORIGINAL (kanji, alemán, ruso, árabe latinizado…) en gris grande: cada carácter entra con escala y desenfoque escalonados, la traducción en mayúsculas negras se tipea debajo, y al final se borra de derecha a izquierda (ref 4.9–9.9 s: '南進論 · SOUTHERN EXPANSION DOCTRINE'). Overlay sobre un plano con mapa claro (imperio.map / imperio.title).",
+   "tags": [
+    "título",
+    "idioma original",
+    "kanji",
+    "doctrina",
+    "cita",
+    "traducción"
+   ],
+   "layer": "overlay",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Texto en el idioma original (corto: 1–3 palabras o 2–6 caracteres CJK).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Traducción (mayúsculas automáticas).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "at": {
+     "type": "number",
+     "default": 0.2,
+     "doc": "Segundo en que entra el primer carácter (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "outAt": {
+     "type": "number",
+     "default": -1,
+     "doc": "Segundo en que se borra (−1 = 1 s antes del final del beat).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "x": {
+     "type": "number",
+     "default": 0.64,
+     "doc": "Borde izquierdo (fracción del ancho) en 16:9. En 9:16 va centrado.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "y": {
+     "type": "number",
+     "default": 0.6,
+     "doc": "Línea base (fracción del alto).",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 0.9
+    },
+    "width": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Ancho máximo (fracción del ancho) en 16:9; en 9:16 se usa 0.7.",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 0.9
+    },
+    "tilt": {
+     "type": "number",
+     "default": 0,
+     "doc": "Giro en grados.",
+     "required": false,
+     "options": null,
+     "min": -15,
+     "max": 15
+    }
+   },
+   "example": {
+    "text": "南進論",
+    "sub": "DOCTRINA DE EXPANSIÓN AL SUR"
+   }
+  },
+  {
+   "name": "imperio.introv1",
+   "summary": "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+   "tags": [
+    "intro",
+    "gancho",
+    "apertura",
+    "título",
+    "impacto",
+    "sol"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Titular gancho (2–7 palabras). '\\n' = renglón; '^x^' = palabras sobre franja carmesí.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico arriba (lugar · fecha).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica en itálica debajo del titular.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "country": {
+     "type": "string",
+     "default": "",
+     "doc": "País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunAt": {
+     "type": "number",
+     "default": 0.15,
+     "doc": "Segundo en que cae el sol.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "wordAt": {
+     "type": "number",
+     "default": 0.7,
+     "doc": "Segundo de la primera palabra.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.2,
+     "doc": "Segundos entre palabras.",
+     "required": false,
+     "options": null,
+     "min": 0.06,
+     "max": null
+    },
+    "burstAt": {
+     "type": "number",
+     "default": 2.6,
+     "doc": "Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "atlas",
+      "archivo",
+      "papel",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.35,
+     "doc": "Oscurecido del fondo foto/componente.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "EL IMPERIO QUE\nMIRÓ AL ^SUR^",
+    "kicker": "Tokio · 1940",
+    "sub": "la doctrina que llevó a la guerra del Pacífico",
+    "country": "Japan"
+   }
+  },
+  {
+   "name": "imperio.introv2",
+   "summary": "GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+   "tags": [
+    "intro",
+    "gancho",
+    "apertura",
+    "pregunta",
+    "revelación",
+    "sol naciente"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Pregunta gancho ('\\n' = renglón).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico arriba.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stamp": {
+     "type": "string",
+     "default": "",
+     "doc": "Respuesta (1–3 palabras) que sube con el sol (vacío = sin revelación).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stampAt": {
+     "type": "number",
+     "default": 2.6,
+     "doc": "Segundo de la revelación (acepta '@palabra').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "typeAt": {
+     "type": "number",
+     "default": 0.35,
+     "doc": "Segundo en que empieza a escribirse la pregunta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cps": {
+     "type": "number",
+     "default": 18,
+     "doc": "Caracteres por segundo.",
+     "required": false,
+     "options": null,
+     "min": 4,
+     "max": null
+    },
+    "country": {
+     "type": "string",
+     "default": "",
+     "doc": "País foco del fondo atlas/archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "atlas",
+      "archivo",
+      "papel",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.35,
+     "doc": "Oscurecido del fondo foto/componente.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?",
+    "kicker": "Pacífico · 1940",
+    "stamp": "PETRÓLEO",
+    "stampAt": 2.6,
+    "country": "Japan",
+    "bg": "archivo"
+   }
+  },
+  {
+   "name": "imperio.outro",
+   "summary": "Cierre del canal SIN recuadro (bg: atlas | archivo | papel | image con src | component con use/useParams). GRACIAS POR VER → nombre del canal en condensada blanca que sube delante del SOL carmesí que sale desde abajo con sus rayos girando → LIKE (óvalo fino que se llena de carmesí) → flecha de línea fina → SUSCRÍBETE en franja carmesí + campana que suena → mensaje de apoyo tipeado → youtube.com/@canal. Fundido a negro. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).",
+   "tags": [
+    "cierre",
+    "canal",
+    "like",
+    "suscribirse",
+    "sol"
+   ],
+   "layer": "main",
+   "params": {
+    "thanks": {
+     "type": "string",
+     "default": "GRACIAS POR VER",
+     "doc": "Rótulo inicial.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "channel": {
+     "type": "string",
+     "default": "NODEPOLITICS",
+     "doc": "Nombre del canal (grande).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cta": {
+     "type": "string",
+     "default": "SUSCRÍBETE",
+     "doc": "Texto del botón de suscripción.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "support": {
+     "type": "string",
+     "default": "Apoya el canal y comparte el video.",
+     "doc": "Mensaje de apoyo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "handle": {
+     "type": "string",
+     "default": "youtube.com/@nodepolitics",
+     "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "arrow": {
+     "type": "bool",
+     "default": true,
+     "doc": "Flecha del LIKE a SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "likeAt": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundo del LIKE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "subscribeAt": {
+     "type": "number",
+     "default": 2.5,
+     "doc": "Segundo de SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "bellAt": {
+     "type": "number",
+     "default": 3.25,
+     "doc": "Segundo de la campana.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "supportAt": {
+     "type": "number",
+     "default": 3.65,
+     "doc": "Segundo del mensaje de apoyo y la dirección.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "country": {
+     "type": "string",
+     "default": "",
+     "doc": "País foco del fondo atlas (vacío = mundo).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "atlas",
+      "archivo",
+      "papel",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Oscurecido del fondo foto/componente.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "thanks": "GRACIAS POR VER",
+    "channel": "NODEPOLITICS",
+    "cta": "SUSCRÍBETE",
+    "support": "Apoya el canal y comparte el video.",
+    "handle": "youtube.com/@nodepolitics"
+   }
+  },
+  {
+   "name": "memorias.title",
+   "summary": "Portada 'Historical Memories': título manuscrito grande (Mr Dafoe) que se escribe de izquierda a derecha + subtítulo en Quicksand, sobre papel de yeso con humo gris; bocetos a lápiz de una o dos fotos en las esquinas (layout center) o un boceto grande a un costado con el texto arriba a la izquierda (layout side).",
+   "tags": [
+    "apertura",
+    "título",
+    "portada",
+    "boceto"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": null,
+     "doc": "Título manuscrito ('\\n' parte renglones).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Subtítulo chico (Quicksand).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto que se dibuja como boceto (arriba a la derecha en center; a la derecha en side).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src2": {
+     "type": "image",
+     "default": "",
+     "doc": "Segunda foto en boceto (abajo a la izquierda, solo center).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "layout": {
+     "type": "enum",
+     "default": "center",
+     "doc": "center = título al medio y bocetos en las esquinas; side = texto arriba a la izquierda y boceto grande a la derecha.",
+     "required": false,
+     "options": [
+      "center",
+      "side"
+     ],
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus2": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "titlePortrait": {
+     "type": "string",
+     "default": "",
+     "doc": "Título alternativo para 9:16 ('\\n' parte renglones).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "La noche del Muro",
+    "sub": "Berlín · 9 de noviembre de 1989",
+    "src": "assets/media/brandenburgo.jpg",
+    "src2": "assets/media/bernauer.jpg",
+    "layout": "center"
+   }
+  },
+  {
+   "name": "memorias.scene",
+   "summary": "El plano de la referencia: la foto aparece primero como BOCETO A LÁPIZ sobre el papel, después se colorea por manchas de tinta (reveal: full/right/left/center/bottom; lo demás queda en boceto), revienta una salpicadura de acuarela azul con gotas (negra con tone=bw) y aparece el bloque de texto: renglón manuscrito (kicker) + renglones en MAYÚSCULAS que se arman letra a letra (text, '\\n' = renglón). Detrás, un recorte de periódico fantasma; zoom lento durante el plano y salida con humo.",
+   "tags": [
+    "foto",
+    "lugar",
+    "monumento",
+    "acuarela",
+    "boceto",
+    "dato"
+   ],
+   "layer": "main",
+   "params": {
+    "src": {
+     "type": "image",
+     "default": null,
+     "doc": "La foto (a color para lugares; cielo visible ayuda).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglón manuscrito arriba del bloque (Mr Dafoe).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "text": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglones en MAYÚSCULAS ('\\n' parte renglones; 1–3 renglones cortos).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker2": {
+     "type": "string",
+     "default": "",
+     "doc": "Segundo renglón manuscrito, entre el 1.º y el 2.º renglón de text (como 'Modular Structure / FIRST… / Easily edit scenes / SECOND…').",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "pos": {
+     "type": "enum",
+     "default": "bl",
+     "doc": "Esquina del bloque de texto (bl abajo-izq., tl arriba-izq., tr arriba-der., br abajo-der.).",
+     "required": false,
+     "options": [
+      "bl",
+      "tl",
+      "tr",
+      "br"
+     ],
+     "min": null,
+     "max": null
+    },
+    "tone": {
+     "type": "enum",
+     "default": "color",
+     "doc": "color = acuarela azul; bw = foto B/N con manchas de tinta negra (retratos, archivo).",
+     "required": false,
+     "options": [
+      "color",
+      "bw"
+     ],
+     "min": null,
+     "max": null
+    },
+    "reveal": {
+     "type": "enum",
+     "default": "full",
+     "doc": "Qué parte se colorea; lo demás queda en boceto (none = solo boceto).",
+     "required": false,
+     "options": [
+      "full",
+      "right",
+      "left",
+      "center",
+      "bottom",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "splash": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Dónde revienta la salpicadura (auto = lejos del texto).",
+     "required": false,
+     "options": [
+      "auto",
+      "none",
+      "tl",
+      "tr",
+      "t",
+      "l",
+      "r",
+      "c",
+      "bl",
+      "br"
+     ],
+     "min": null,
+     "max": null
+    },
+    "splashSize": {
+     "type": "number",
+     "default": 0.26,
+     "doc": "Radio de la salpicadura (fracción del lado corto; 0,5–0,7 = aguada grande que pinta el cielo).",
+     "required": false,
+     "options": null,
+     "min": 0.08,
+     "max": 0.7
+    },
+    "splashColor": {
+     "type": "color",
+     "default": "",
+     "doc": "Color de la salpicadura (vacío = palette.splash, o tinta negra en bw).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ghost": {
+     "type": "bool",
+     "default": true,
+     "doc": "Recorte de periódico + titular fantasma en el papel.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "drift": {
+     "type": "number",
+     "default": 0.07,
+     "doc": "Zoom lento durante el plano.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.3
+    },
+    "cut": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Corte de SALIDA: wash = se borra con una mancha de papel mientras asoma el boceto siguiente; whip = barrido de cámara con estela y el siguiente entra deslizándose; auto = como la referencia (barrido cada 3 escenas).",
+     "required": false,
+     "options": [
+      "auto",
+      "wash",
+      "whip"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "src": "assets/media/brandenburgo.jpg",
+    "kicker": "Berlín, 1989",
+    "text": "Puerta de Brandeburgo\nEl muro pasaba detrás",
+    "pos": "bl",
+    "reveal": "right",
+    "splash": "auto"
+   }
+  },
+  {
+   "name": "memorias.introv1",
+   "summary": "Gancho 'golpe': titular MANUSCRITO gigante (Mr Dafoe) que se escribe palabra a palabra sobre el papel, con rótulo en MAYÚSCULAS que se arma letra a letra arriba y subtítulo en Quicksand abajo; en dropAt revienta una salpicadura de acuarela azul detrás del titular con gotas y una sacudida, y la palabra ^marcada^ se tiñe de azul. Fondo: sketch (foto en boceto que se colorea) | smoke | image | component | none.",
+   "tags": [
+    "intro",
+    "gancho",
+    "apertura",
+    "titular",
+    "acuarela"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Titular manuscrito ('\\n' = renglón; '^x^' = palabra que se tiñe de azul en el golpe).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo en MAYÚSCULAS arriba (se arma letra a letra).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sub": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea chica abajo (Quicksand).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "wordAt": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Segundo en que empieza a escribirse la primera palabra.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.3,
+     "doc": "Segundos entre palabra y palabra.",
+     "required": false,
+     "options": null,
+     "min": 0.05,
+     "max": null
+    },
+    "dropAt": {
+     "type": "number",
+     "default": 2.3,
+     "doc": "Segundo del golpe (salpicadura + sacudida); −1 = sin golpe; acepta '@palabra'.",
+     "required": false,
+     "options": null,
+     "min": -1,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: sketch, smoke; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "sketch",
+      "smoke",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Velo de papel sobre el fondo (0 = nada; paleta clara: lava hacia el papel).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "La noche que\ncayó el ^Muro^",
+    "kicker": "Berlín · 1989",
+    "sub": "nadie dio la orden",
+    "src": "assets/media/brandenburgo.jpg"
+   }
+  },
+  {
+   "name": "memorias.introv2",
+   "summary": "Gancho 'pregunta + revelación': la pregunta en MAYÚSCULAS (Barlow 700) se arma letra a letra con glifos que parpadean; en stampAt la respuesta se escribe en manuscrita grande sobre una salpicadura de acuarela azul que revienta con gotas. Fondo: sketch | smoke | image | component | none.",
+   "tags": [
+    "intro",
+    "gancho",
+    "pregunta",
+    "revelación",
+    "acuarela"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "La pregunta ('\\n' = renglón).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "",
+     "doc": "Renglón manuscrito chico arriba de la pregunta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stamp": {
+     "type": "string",
+     "default": "",
+     "doc": "La respuesta (manuscrita grande sobre la salpicadura).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stampAt": {
+     "type": "number",
+     "default": 2.4,
+     "doc": "Segundo de la respuesta; acepta '@palabra'.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "typeAt": {
+     "type": "number",
+     "default": 0.35,
+     "doc": "Segundo en que empieza a armarse la pregunta.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "cps": {
+     "type": "number",
+     "default": 22,
+     "doc": "Letras por segundo de la pregunta.",
+     "required": false,
+     "options": null,
+     "min": 4,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: sketch, smoke; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "sketch",
+      "smoke",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Velo de papel sobre el fondo (0 = nada; paleta clara: lava hacia el papel).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "text": "¿Quién abrió\nel muro?",
+    "kicker": "Berlín, 1989",
+    "stamp": "Nadie dio la orden",
+    "src": "assets/media/bernauer.jpg"
+   }
+  },
+  {
+   "name": "memorias.outro",
+   "summary": "Cierre del canal como la tarjeta final de la referencia: una mancha de tinta NEGRA crece desde abajo a la izquierda y traga el cuadro (bg ink; paper = sobre el papel con texto oscuro; image/component/none = contrato común) → 'gracias por ver' en sans fina → nombre del canal en manuscrita grande que se escribe → pulgar LIKE a trazo que se rellena con gotas azules → flecha fina → SUSCRÍBETE armado letra a letra + campana que suena → mensaje de apoyo → dirección en mayúsculas chiquitas. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).",
+   "tags": [
+    "cierre",
+    "canal",
+    "like",
+    "suscribirse",
+    "tinta"
+   ],
+   "layer": "main",
+   "params": {
+    "thanks": {
+     "type": "string",
+     "default": "gracias por ver",
+     "doc": "Rótulo inicial.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "channel": {
+     "type": "string",
+     "default": "Memorias",
+     "doc": "Nombre del canal (grande).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cta": {
+     "type": "string",
+     "default": "Suscríbete",
+     "doc": "Texto del botón de suscripción.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "support": {
+     "type": "string",
+     "default": "Apoya el canal y comparte la historia",
+     "doc": "Mensaje de apoyo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "handle": {
+     "type": "string",
+     "default": "youtube.com/@nodehistory",
+     "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "arrow": {
+     "type": "bool",
+     "default": true,
+     "doc": "Flecha del LIKE a SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "likeAt": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundo del LIKE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "subscribeAt": {
+     "type": "number",
+     "default": 2.5,
+     "doc": "Segundo de SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "bellAt": {
+     "type": "number",
+     "default": 3.25,
+     "doc": "Segundo de la campana.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "supportAt": {
+     "type": "number",
+     "default": 3.65,
+     "doc": "Segundo del mensaje de apoyo y la dirección.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: ink, paper; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "ink",
+      "paper",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.7,
+     "doc": "Oscurecido del fondo foto/componente (el cierre tiene texto blanco).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    }
+   },
+   "example": {
+    "thanks": "gracias por ver",
+    "channel": "Memorias",
+    "cta": "Suscríbete",
+    "support": "Apoya el canal y comparte la historia",
+    "handle": "youtube.com/@nodehistory"
+   }
   }
  ],
  "icons": [
@@ -18115,5 +25506,34 @@
   "coin",
   "gift",
   "nextcube"
- ]
+ ],
+ "quality": {
+  "icon_component": "rough.icon",
+  "icon_max_share": 0.25,
+  "short_minutes": 8,
+  "short_icon_max_share": 0.32,
+  "icon_max_consecutive": 2,
+  "repeat_max_uses": 6,
+  "repeat_max_share": 0.15,
+  "media_min_per_minute": 0.65,
+  "max_media_gap_seconds": 75,
+  "min_photo_seconds": 5,
+  "long_video_minutes": 8,
+  "video_min_seconds": 8,
+  "long_video_min_spans": 2,
+  "long_video_span_seconds": 12,
+  "clip_min_seconds": 12,
+  "clip_max_seconds": 18,
+  "voice_target_ppm": 130,
+  "voice_warn_ppm": 138,
+  "distinct_min_minutes": 8,
+  "distinct_min": 10,
+  "custom_min_minutes": 8,
+  "custom_min": 4,
+  "explicit_text_max_words": 7,
+  "check_opening_acts": [
+   "golpe",
+   "miedo"
+  ]
+ }
 }

@@ -1,0 +1,842 @@
+{
+  "version": 1,
+  "family": "rough",
+  "title": "Clonan tu voz con 3 segundos de audio: las llamadas falsas de familiares que piden dinero con IA",
+  "defaults": {
+    "offset": -0.12
+  },
+  "beats": [
+    {
+      "t": 0,
+      "use": "common.tabloid",
+      "params": {
+        "text": "TU VOZ, SU ESTAFA",
+        "mode": "impact",
+        "accent": "ESTAFA",
+        "bullet": "2023 · MICROSOFT",
+        "bulletScale": 0.82,
+        "beforeLabel": "",
+        "afterLabel": "",
+        "strap": "",
+        "seal": "",
+        "tapeText": "",
+        "marker": false,
+        "target": [
+          0.72,
+          0.52
+        ],
+        "focus": [
+          0.41,
+          0.48,
+          0.18
+        ],
+        "src": "/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets/media/llamada.jpg",
+        "imageSide": "right"
+      }
+    },
+    {
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/pantalla.jpg",
+        "caption": "MICROSOFT RESEARCH",
+        "logo": "assets/media/logos/microsoft.svg",
+        "logoName": "Microsoft",
+        "logoSize": 0.35
+      },
+      "t": 1.5
+    },
+    {
+      "at": "Tu familia escucha esa voz. Primero publicas",
+      "use": "rough.incomingCall",
+      "params": {
+        "callerName": "FAMILIA"
+      }
+    },
+    {
+      "at": "Después alguien escucha una voz parecida a",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/celular.jpg",
+        "caption": "UN AUDIO PUBLICADO",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "La Comisión Federal de Comercio advierte que",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/contactos.jpg",
+        "caption": "COMISIÓN FEDERAL DE COMERCIO",
+        "logo": "assets/media/logos/ftc.svg",
+        "logoName": "FTC",
+        "logoSize": 0.35
+      }
+    },
+    {
+      "at": "describe llamadas que anuncian accidentes, detenciones y",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/contactos.jpg",
+        "text": "UNA LLAMADA\nURGENTE",
+        "highlight": "URGENTE"
+      }
+    },
+    {
+      "at": "Tu madre escucha una emergencia; quien llama",
+      "use": "rough.incomingCall",
+      "params": {
+        "callerName": "MAMÁ"
+      }
+    },
+    {
+      "at": "Y lo peor: el FBI advirtió sobre",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/despacho.jpg",
+        "caption": "ADVERTENCIA SOBRE VOCES",
+        "logo": "assets/media/logos/fbi.svg",
+        "logoName": "FBI",
+        "logoSize": 0.35
+      }
+    },
+    {
+      "at": "inteligencia artificial que imitan a altos funcionarios.",
+      "use": "common.punch",
+      "params": {
+        "text": "VOZ\nGENERADA"
+      }
+    },
+    {
+      "at": "puerta para entrar en cuentas. En el",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/pantalla.jpg",
+        "caption": "CONTACTO APARENTE",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "de transferencias. En tu familia, una voz",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/oficina.jpg",
+        "caption": "FRAUDE EMPRESARIAL",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "Según el FBI, las víctimas denunciaron más",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/despacho.jpg",
+        "text": "ESTAFA DE\nEMERGENCIA",
+        "highlight": "EMERGENCIA",
+        "video": "assets/media/llamada-video.mp4"
+      },
+      "minDur": 8
+    },
+    {
+      "at": "que casi nadie leyó. En enero de",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/manos.jpg",
+        "text": "UNA MUESTRA\nDE VOZ",
+        "highlight": "DE VOZ"
+      }
+    },
+    {
+      "at": "En sus pruebas, utilizó tres segundos de",
+      "use": "common.tabloid",
+      "params": {
+        "src": "assets/media/pantalla.jpg",
+        "text": "3 SEGUNDOS\nDE MUESTRA",
+        "accent": "3 SEGUNDOS",
+        "bullet": "MICROSOFT · 2023",
+        "mode": "impact"
+      }
+    },
+    {
+      "at": "mayo de 2026, Débora Del Mastro contó",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/llamada.jpg",
+        "caption": "LLAMADA ILUSTRATIVA",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "Dijo que creyó escuchar a su hija",
+      "use": "rough.incomingCall",
+      "params": {
+        "callerName": "HIJA"
+      }
+    },
+    {
+      "at": "a su hija y exigió 5,400 dólares.",
+      "use": "rough.paymentRequest",
+      "params": {
+        "amount": "$5.400"
+      }
+    },
+    {
+      "at": "esa presión. Ahora, la parte que los",
+      "use": "common.punch",
+      "params": {
+        "text": "LA PARTE\nQUE FALTA"
+      }
+    },
+    {
+      "at": "condiciones de prueba. No garantiza una copia",
+      "use": "rough.choice",
+      "params": {
+        "question": "LA PRUEBA",
+        "options": [
+          "LABORATORIO",
+          "GARANTÍA"
+        ],
+        "pick": 0
+      }
+    },
+    {
+      "at": "ella sospecha que imitaron la voz con",
+      "use": "rough.note",
+      "params": {
+        "title": "EL CASO DE DEBORAH",
+        "note": "sospecha de IA",
+        "lines": 4
+      }
+    },
+    {
+      "at": "herramienta usada. Los más de 5 millones",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 5,
+        "label": "FBI · EMERGENCIAS",
+        "unit": "MILLONES DENUNCIADOS",
+        "dur": 2
+      }
+    },
+    {
+      "at": "informe no dice que todas esas pérdidas",
+      "use": "common.lyric",
+      "params": {
+        "text": "NO SE DESGLOSA\nVOZ CLONADA"
+      }
+    },
+    {
+      "at": "como persona. Un sistema aprende patrones del",
+      "use": "rough.flow",
+      "params": {
+        "title": "CÓMO FUNCIONA",
+        "nodes": [
+          {
+            "icon": "waves",
+            "label": "MUESTRA"
+          },
+          {
+            "icon": "ai",
+            "label": "MODELO"
+          },
+          {
+            "icon": "headset",
+            "label": "VOZ"
+          }
+        ]
+      }
+    },
+    {
+      "at": "grabación original aporta pistas de timbre y",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/manos.jpg",
+        "caption": "MUESTRA DE VOZ",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "resultado intenta unirlos en un audio que",
+      "use": "rough.stack",
+      "params": {
+        "title": "DOS INGREDIENTES",
+        "items": [
+          {
+            "label": "MUESTRA",
+            "keep": true
+          },
+          {
+            "label": "TEXTO",
+            "keep": true
+          },
+          {
+            "label": "AUDIO NUEVO",
+            "keep": true
+          }
+        ]
+      }
+    },
+    {
+      "at": "demostrar que esa persona pronunció la frase",
+      "use": "rough.choice",
+      "params": {
+        "question": "¿QUÉ DEMUESTRA?",
+        "options": [
+          "SUENA PARECIDA",
+          "EMERGENCIA REAL"
+        ],
+        "pick": 0
+      }
+    },
+    {
+      "at": "ruido, el idioma, el modelo y el",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/celular.jpg",
+        "text": "LA CALIDAD\nDEPENDE",
+        "highlight": "DEPENDE",
+        "video": "assets/media/oficina-video.mp4"
+      },
+      "minDur": 8
+    },
+    {
+      "at": "conversación larga. Microsoft informó que su sistema",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 60000,
+        "label": "ENTRENAMIENTO",
+        "unit": "HORAS DE HABLA INGLESA",
+        "dur": 2
+      }
+    },
+    {
+      "at": "no prueban el mismo rendimiento en todas",
+      "use": "rough.note",
+      "params": {
+        "title": "RESULTADOS",
+        "note": "no son universales",
+        "lines": 4
+      }
+    },
+    {
+      "at": "reconocer a alguien. Después otra persona entra",
+      "use": "rough.incomingCall",
+      "params": {
+        "callerName": "FAMILIAR"
+      }
+    },
+    {
+      "at": "El cambio de interlocutor desplaza tu atención",
+      "use": "rough.flow",
+      "params": {
+        "title": "EL RELEVO",
+        "nodes": [
+          {
+            "icon": "headset",
+            "label": "VOZ"
+          },
+          {
+            "icon": "person",
+            "label": "INTERLOCUTOR"
+          },
+          {
+            "icon": "coin",
+            "label": "PEDIDO"
+          }
+        ]
+      }
+    },
+    {
+      "at": "revisar la historia. Ese relevo no nació",
+      "use": "common.lyric",
+      "params": {
+        "text": "LA PRISA\nIMPIDE COMPROBAR"
+      }
+    },
+    {
+      "at": "La llamada necesitaba convencer a la familia,",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/telefono-antiguo.jpg",
+        "text": "UNA ESTAFA\nMÁS ANTIGUA",
+        "highlight": "MÁS ANTIGUA"
+      }
+    },
+    {
+      "at": "de la llamada estafa del abuelo desde",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "2008",
+            "label": "DENUNCIAS AL FBI"
+          },
+          {
+            "year": "2012",
+            "label": "ALERTA DEL FBI"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "La historia venía acompañada de una orden:",
+      "use": "rough.paymentRequest",
+      "params": {
+        "amount": "FIANZA"
+      }
+    },
+    {
+      "at": "impedía que otra persona comprobara lo que",
+      "use": "rough.icon",
+      "params": {
+        "icon": "lock",
+        "caption": "el secreto impide verificar",
+        "accent": true
+      }
+    },
+    {
+      "at": "temía preocupar a la familia. La explicación",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/llamada.jpg",
+        "caption": "LA EXCUSA DEL SECRETO",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "diciembre de 2018, la Comisión Federal de",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 41,
+        "label": "FTC · 2018",
+        "unit": "MILLONES DENUNCIADOS",
+        "dur": 2
+      }
+    },
+    {
+      "at": "y amigos durante los 12 meses anteriores.",
+      "use": "rough.compare",
+      "params": {
+        "small": {
+          "label": "PERÍODO PREVIO",
+          "value": "26 M"
+        },
+        "big": {
+          "label": "12 MESES · FTC",
+          "value": "41 M"
+        },
+        "ratio": 1.6
+      }
+    },
+    {
+      "at": "esa categoría de denuncias, no dinero robado",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/telefono-antiguo.jpg",
+        "text": "UN ENGAÑO\nANTERIOR A LA IA",
+        "highlight": "ANTERIOR A LA IA"
+      }
+    },
+    {
+      "at": "la agencia. No cuentan necesariamente todos los",
+      "use": "rough.title",
+      "params": {
+        "text": "DENUNCIAS\nNO SON TODOS\nLOS CASOS"
+      }
+    },
+    {
+      "at": "tenemos otra medición, con un alcance distinto.",
+      "use": "rough.note",
+      "params": {
+        "title": "OTRA MEDICIÓN",
+        "note": "alcance distinto",
+        "lines": 4
+      }
+    },
+    {
+      "at": "registró más de 5 millones en pérdidas",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 5,
+        "label": "FBI · EMERGENCIAS",
+        "unit": "MILLONES DENUNCIADOS",
+        "dur": 2,
+        "prefix": "+"
+      }
+    },
+    {
+      "at": "cifras como una misma serie. Provienen de",
+      "use": "rough.choice",
+      "params": {
+        "question": "LAS CIFRAS",
+        "options": [
+          "CATEGORÍAS DISTINTAS",
+          "UNA MISMA SERIE"
+        ],
+        "pick": 0
+      }
+    },
+    {
+      "at": "tienen una historia anterior a la voz",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "2008",
+            "label": "ESTAFA DEL ABUELO"
+          },
+          {
+            "year": "2023",
+            "label": "VOZ SINTÉTICA"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Escuchar a alguien querido en peligro puede",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/contactos.jpg",
+        "text": "EL MIEDO\nES HUMANO",
+        "highlight": "HUMANO",
+        "video": "assets/media/llamada-video.mp4"
+      },
+      "minDur": 8
+    },
+    {
+      "at": "hace falta que una persona sea ingenua",
+      "use": "common.lyric",
+      "params": {
+        "text": "EL MIEDO\nNO ES UNA FALLA"
+      }
+    },
+    {
+      "at": "una falla moral. Entonces llega la siguiente",
+      "use": "rough.stack",
+      "params": {
+        "title": "LA PRESIÓN",
+        "items": [
+          {
+            "label": "NO CUELGUES",
+            "keep": false
+          },
+          {
+            "label": "NO PREGUNTES",
+            "keep": false
+          },
+          {
+            "label": "NO CUENTES",
+            "keep": false
+          }
+        ]
+      }
+    },
+    {
+      "at": "prisa y el secreto cierran las puertas",
+      "use": "rough.flow",
+      "params": {
+        "title": "LA SALIDA",
+        "nodes": [
+          {
+            "icon": "phone",
+            "label": "COLGAR"
+          },
+          {
+            "icon": "check",
+            "label": "VERIFICAR"
+          }
+        ]
+      }
+    },
+    {
+      "at": "a construir la escena. Un nombre o",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/pantalla.jpg",
+        "caption": "DATOS EN REDES",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "dice ser. El FBI ya explicaba en",
+      "use": "rough.browser",
+      "params": {
+        "url": "ftc.gov",
+        "title": "IDENTIDAD FINGIDA",
+        "link": "verificar",
+        "clickAt": 3
+      }
+    },
+    {
+      "at": "fingida. Es una pista, no una contraseña.",
+      "use": "rough.choice",
+      "params": {
+        "question": "UNA PISTA",
+        "options": [
+          "DATO PUBLICADO",
+          "PRUEBA DE IDENTIDAD"
+        ],
+        "pick": 0
+      }
+    },
+    {
+      "at": "FBI advierte que los mensajes pueden aparentar",
+      "use": "rough.icon",
+      "params": {
+        "icon": "phone",
+        "caption": "un número puede aparentar confianza",
+        "accent": true
+      }
+    },
+    {
+      "at": "otro canal. En una empresa cambia el",
+      "use": "common.clip",
+      "params": {
+        "src": "assets/media/oficina-video.mp4",
+        "caption": "VERIFICAR EN EL TRABAJO",
+        "sub": "IMAGEN ILUSTRATIVA · PIXABAY"
+      },
+      "minDur": 12
+    },
+    {
+      "at": "Un mensaje convincente pretende saltarse el procedimiento",
+      "use": "rough.paymentRequest",
+      "params": {
+        "amount": "DINERO"
+      }
+    },
+    {
+      "at": "extraordinaria. La cadena de autorización existe precisamente",
+      "use": "rough.stack",
+      "params": {
+        "title": "AUTORIZACIÓN",
+        "items": [
+          {
+            "label": "PEDIDO",
+            "keep": true
+          },
+          {
+            "label": "VERIFICAR",
+            "keep": true
+          },
+          {
+            "label": "APROBAR",
+            "keep": true
+          }
+        ]
+      }
+    },
+    {
+      "at": "informe del FBI para 2025 registró más",
+      "use": "rough.gauge",
+      "params": {
+        "from": 0,
+        "to": 30,
+        "max": 30,
+        "label": "FBI · EMPRESAS",
+        "unit": "MILLONES DE DÓLARES",
+        "dur": 2
+      }
+    },
+    {
+      "at": "artificial. No todas fueron llamadas. El mismo",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/despacho.jpg",
+        "text": "NO TODAS\nSON LLAMADAS",
+        "highlight": "NO TODAS",
+        "video": "assets/media/servidores-video.mp4"
+      },
+      "minDur": 12
+    },
+    {
+      "at": "con inteligencia artificial. Abarca distintos delitos y",
+      "use": "rough.title",
+      "params": {
+        "text": "LA IA ABARCA\nVARIOS DELITOS"
+      }
+    },
+    {
+      "at": "Comercio informó que las pérdidas denunciadas por",
+      "use": "rough.gauge",
+      "params": {
+        "from": 0,
+        "to": 3500,
+        "max": 3500,
+        "label": "FTC · SUPLANTACIÓN",
+        "unit": "MILLONES DE DÓLARES",
+        "dur": 2
+      }
+    },
+    {
+      "at": "Estados Unidos. Esa cifra incluye suplantaciones de",
+      "use": "rough.network",
+      "params": {
+        "center": "SUPLANTACIÓN",
+        "labels": [
+          "EMPRESAS",
+          "AUTORIDADES",
+          "PERSONAS"
+        ],
+        "count": 8,
+        "growSec": 3
+      }
+    },
+    {
+      "at": "No mide cuánto se perdió por la",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/oficina.jpg",
+        "caption": "SUPLANTACIÓN DE IDENTIDAD",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "la cifra entera en pérdidas por inteligencia",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/pantalla.jpg",
+        "text": "CIFRAS\nCON CONTEXTO",
+        "highlight": "CONTEXTO"
+      }
+    },
+    {
+      "at": "La diferencia cambia lo que realmente sabemos.",
+      "use": "rough.load",
+      "params": {
+        "title": "COMPROBAR",
+        "tasks": [
+          "EMERGENCIA",
+          "FAMILIAR",
+          "DATOS"
+        ],
+        "capacity": 3
+      }
+    },
+    {
+      "at": "eso hay que comprobarla sin depender de",
+      "use": "rough.title",
+      "params": {
+        "text": "VERIFICA\nPOR OTRO CANAL",
+        "accent": true
+      }
+    },
+    {
+      "at": "como al dinero. Si una persona no",
+      "use": "rough.flow",
+      "params": {
+        "title": "COMPROBAR",
+        "nodes": [
+          {
+            "icon": "phone",
+            "label": "LLAMAR"
+          },
+          {
+            "icon": "person",
+            "label": "CONTACTAR"
+          },
+          {
+            "icon": "check",
+            "label": "CONFIRMAR"
+          }
+        ]
+      }
+    },
+    {
+      "at": "una amenaza inmediata, los servicios de emergencia",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/celular.jpg",
+        "caption": "BUSCAR AYUDA",
+        "sub": "IMAGEN ILUSTRATIVA"
+      }
+    },
+    {
+      "at": "una voz personalizada a una aplicación. La",
+      "use": "rough.browser",
+      "params": {
+        "url": "",
+        "title": "VOZ PERSONALIZADA",
+        "link": "USOS LEGÍTIMOS"
+      }
+    },
+    {
+      "at": "Los tres segundos del gancho son una",
+      "use": "rough.gauge",
+      "params": {
+        "from": 0,
+        "to": 3,
+        "max": 3,
+        "unit": "SEGUNDOS",
+        "label": "PRUEBA DE LABORATORIO"
+      }
+    },
+    {
+      "at": "petición que usa una voz convincente para",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/llamada.jpg",
+        "text": "VOZ Y\nURGENCIA",
+        "highlight": "URGENCIA"
+      }
+    },
+    {
+      "at": "Guárdenla fuera de publicaciones y conversaciones públicas.",
+      "use": "rough.network",
+      "params": {
+        "center": "FAMILIA",
+        "labels": [
+          "PALABRA",
+          "ACUERDO",
+          "PRIVADO"
+        ],
+        "count": 6
+      }
+    },
+    {
+      "at": "a conocerla. Segundo, cuelga y llama a",
+      "use": "rough.introv2",
+      "params": {
+        "src": "assets/media/manos.jpg",
+        "text": "CUELGA Y\nVUELVE A LLAMAR",
+        "highlight": "VUELVE A LLAMAR",
+        "video": "assets/media/mensajes-video.mp4"
+      },
+      "minDur": 8
+    },
+    {
+      "at": "confianza o a los servicios de emergencia",
+      "use": "rough.load",
+      "params": {
+        "title": "RED DE AYUDA",
+        "tasks": [
+          "FAMILIA",
+          "CERCANOS",
+          "EMERGENCIAS"
+        ],
+        "capacity": 3
+      }
+    },
+    {
+      "at": "el trabajo, confirma el pedido mediante el",
+      "use": "rough.title",
+      "params": {
+        "text": "NO ENVÍES\nDINERO NI CÓDIGOS",
+        "accent": true
+      },
+      "until": "te pregunto a ti, en serio. ¿Tu"
+    },
+    {
+      "at": "te pregunto a ti, en serio. ¿Tu",
+      "use": "common.question",
+      "params": {
+        "text": "¿Tu familia tiene una palabra clave?"
+      },
+      "until": "Gracias por llegar hasta aquí"
+    }
+  ]
+}

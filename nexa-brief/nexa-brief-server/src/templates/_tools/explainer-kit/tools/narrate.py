@@ -18,12 +18,13 @@ Uso (desde nexa-brief-server/):
       --voice Charon [--model gemini-3.8-flash-tts] [--parts 1] [--dry]
 """
 from __future__ import annotations
-import argparse, json, pathlib, re, subprocess, sys, unicodedata, wave
+import argparse, json, pathlib, re, subprocess, sys, time, unicodedata, wave
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import tts  # noqa: E402
 
 BASE = ("Narrador de documental, voz humana madura y cercana, español latinoamericano neutro "
-        "(sin ceceo ni acento de España). No imitar a ninguna persona real. Dicción clara, respiración natural.")
+        "(sin ceceo ni acento de España). No imitar a ninguna persona real. Dicción clara, respiración natural. "
+        "Ritmo objetivo de 130 palabras por minuto; deja pausas naturales entre ideas y respirar al final de cada oración.")
 STYLE = {
     "intriga": "Empieza bajo y cercano, con intriga contenida, como quien cuenta un secreto. Ritmo moderado.",
     "suspenso": "Suspenso: voz contenida, casi susurrada al principio, frases cortas con aire entre ellas.",
@@ -47,23 +48,23 @@ STYLE = {
     "alivio": "Alivio: suelta el aire, voz emocionada y cálida, más lenta, sonrisa.",
     "reflexivo": "Reflexivo, sereno, ritmo medio-lento.",
     "cercano": "Cercano, como hablándole a una sola persona; cálido.",
+    "alarma": "Alarma: firme y apurada, como un aviso urgente de noticiero; cada cifra golpeada, sin gritar.",
     "admiración": "Con admiración y respeto; el nombre propio dicho con claridad y una mínima pausa antes.",
 }
-SLOW = {"intriga", "suspenso", "asombro", "peso", "silencio", "dolor contenido", "duelo", "cierre", "reflexivo", "alivio"}
 BEFORE_LONG = {"silencio", "dolor contenido", "duelo"}
-BEFORE_BREATH = {"clímax", "urgencia", "tensión creciente"}
+BEFORE_BREATH = {"clímax", "urgencia", "tensión creciente", "alarma"}
 
 def mark(seg: dict, prev: dict | None) -> str:
     """inserta etiquetas de ritmo según el tono (y el del segmento anterior)."""
     t = seg["text"].strip()
-    if seg["tone"] in SLOW:          # pausa corta entre oraciones
-        t = re.sub(r"([.?!])\s+(?=[¿¡A-ZÁÉÍÓÚÑ])", r"\1 <short pause> ", t)
+    t = re.sub(r"([.?!])\s+(?=[¿¡A-ZÁÉÍÓÚÑ])", r"\1 <short pause> ", t)
     if prev is not None and seg["tone"] in BEFORE_LONG: t = "<long pause> " + t
     elif seg["tone"] in BEFORE_BREATH: t = "<breath> " + t
     return t
 
 def chunks(script: dict, base: str = None) -> list[dict]:
-    base = base or BASE
+    base = re.sub(r"alrededor de \d+ palabras por minuto", "alrededor de 130 palabras por minuto", base or BASE, flags=re.I)
+    base += " Objetivo de 130 palabras por minuto para este relato: sin apuro, con pausas naturales entre ideas."
     out, prev = [], None
     for s in script["segments"]:
         inten = s.get("intensity", 0.5)
@@ -131,8 +132,29 @@ def load_design(d: str) -> dict:
     if not p.exists(): p = pathlib.Path(__file__).resolve().parents[1] / "designs" / d / "design.json"
     return json.loads(p.read_text())
 
+VIDEO_DIR = None   # carpeta del video (assets/script.json → ../): ahí va el registro de uso
+
 def generate_group(script, grp, f, voice, model):
     """una parte con un modelo, rotando claves. 3.1 no tiene `interactions`: va por prompt de director."""
+    started = time.time()
+    try:
+        result = _generate_group(script, grp, f, voice, model)
+    except Exception as exc:
+        _record_voice(model, started, ok=False, note=f"{type(exc).__name__}: {exc}"[:200])
+        raise
+    _record_voice(model, started, ok=True, note=f"{len(grp)} bloques")
+    return result
+
+def _record_voice(model, started, ok, note):
+    if VIDEO_DIR is None: return
+    import usage
+    u = tts.LAST_USAGE if ok else {}
+    usage.record(VIDEO_DIR, provider="gemini_tts", model=model, role="voice", step=pathlib.Path(model).name,
+                 seconds=time.time() - started, ok=ok, note=note,
+                 input_tokens=u.get("promptTokenCount"), output_tokens=u.get("candidatesTokenCount"),
+                 reasoning_tokens=u.get("thoughtsTokenCount"))
+
+def _generate_group(script, grp, f, voice, model):
     def call(key):
         if "3.1" in model:
             segs = [dict(x, text=c["text"]) for x, c in zip([x for x in script["segments"] if x["id"] in {c["id"] for c in grp}], grp)]
@@ -145,12 +167,15 @@ def main():
     ap.add_argument("script"); ap.add_argument("out")
     ap.add_argument("--design", default="", help="id o ruta de design.json: voz, modelos, silencios y estilo base")
     ap.add_argument("--voice", default=""); ap.add_argument("--model", default="", help="forzar un modelo (si no, la cadena del diseño)")
-    ap.add_argument("--parts", type=int, default=0, help="0 = automático (1 pedido; si el servidor falla, 3 partes)")
+    ap.add_argument("--parts", type=int, default=0, help="0 = automático: un pedido cada ~650 palabras (lengths.json); si el servidor falla, el doble de partes")
     ap.add_argument("--only-part", type=int, default=-1)
     ap.add_argument("--dry", action="store_true"); ap.add_argument("--no-qc", action="store_true")
     ap.add_argument("--lead", type=float, default=None); ap.add_argument("--tail", type=float, default=None)
     a = ap.parse_args()
     script = json.loads(pathlib.Path(a.script).read_text())
+    global VIDEO_DIR
+    if pathlib.Path(a.script).resolve().parent.name == "assets":
+        VIDEO_DIR = pathlib.Path(a.script).resolve().parents[1]
     D = load_design(a.design or script.get("design", "binary"))
     V = D.get("voice", {})
     voice = a.voice or script.get("voice") or V.get("voice", "Charon")
@@ -161,7 +186,13 @@ def main():
         for c in cs: print(f"[{c['id']}] {c['style']}\n   {c['text']}\n")
         return
     out = pathlib.Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
-    plans = [a.parts] if a.parts else [1, 3]
+    if a.parts:
+        plans = [a.parts]
+    else:
+        # un guion largo (10–30 min) en un solo pedido falla o se corta: partes por largo (lengths.json)
+        from lengths import voice_parts
+        first = min(len(cs), voice_parts(sum(len(c["text"].split()) for c in cs)))
+        plans = list(dict.fromkeys([first, min(len(cs), max(3, first * 2))]))
     prov, files, n = [], [], 1
     for n in plans:
         size = -(-len(cs) // n); groups = [cs[i:i + size] for i in range(0, len(cs), size)]

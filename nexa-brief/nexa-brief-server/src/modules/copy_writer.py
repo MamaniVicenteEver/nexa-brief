@@ -60,7 +60,15 @@ def _section(title: str, lines: list[str]) -> str:
     return f"{title}:\n" + "\n".join(f"- {line}" for line in lines) if lines else ""
 
 
-def build_facts(job: Job, niche_cfg: NicheConfig) -> str:
+def _design_style(niche_cfg: NicheConfig) -> str:
+    """La descripción visual del diseño (templates.json), sin su nombre."""
+    from src.config.template_manifest import get_template_description
+
+    template_id = niche_cfg.template.template_id if niche_cfg.template else None
+    return get_template_description(template_id, "") if template_id else ""
+
+
+def build_facts(job: Job, niche_cfg: NicheConfig, user_notes: str = "", research: str = "") -> str:
     """Only what is actually known about this video — the AI must not go beyond it."""
     artifacts = job.artifacts
     song = job.input.song_info
@@ -68,12 +76,18 @@ def build_facts(job: Job, niche_cfg: NicheConfig) -> str:
     vision = artifacts.vision_analysis
     analyzed = artifacts.analyzed_input
 
-    sections = [
-        _section("Tipo de video", [
-            "video con la letra de la canción en pantalla (lyric video)" if niche_cfg.template.requires_lyrics
-            else "video musical con visuales animados (sin letra en pantalla)"
-        ]),
-    ]
+    commercial = copy_profile(niche_cfg) == "commercial"
+    if commercial:
+        kind = ("promo (comercial) editada con textos animados al ritmo de la música; la música solo acompaña,"
+                " no es una canción para presentar")
+    elif niche_cfg.template.requires_lyrics:
+        kind = "video con la letra de la canción en pantalla (lyric video)"
+    else:
+        kind = "video musical con visuales animados (sin letra en pantalla)"
+    sections = [_section("Tipo de video", [kind])]
+    style = _design_style(niche_cfg)
+    if style:
+        sections.append(_section("Cómo se ve el video (descríbelo con tus palabras; nunca lo nombres)", [style]))
     if song:
         sections.append(_section("Canción según el usuario (fuente más confiable, usar tal cual)", [
             f"Nombre: {song.song_name}" if song.song_name else "",
@@ -81,6 +95,11 @@ def build_facts(job: Job, niche_cfg: NicheConfig) -> str:
             f"De qué trata: {song.topic}" if song.topic else "",
             f"Descripción: {song.description}" if song.description else "",
         ]))
+    if user_notes.strip():
+        sections.append(_section("Lo que cuenta la persona sobre la canción (fuente confiable: úsalo y no lo contradigas)",
+                                 [user_notes.strip()]))
+    if research.strip():
+        sections.append(_section("Investigación previa (resumen de lo anterior y de la letra)", [research.strip()]))
     sections.append(_section("Pista de audio (nombre de archivo o catálogo: puede traer ruido como 'Audio', 'Official', números)", [
         f"Nombre: {music.get('track_name')}" if music.get("track_name") else "",
         f"Artista: {music.get('artist')}" if music.get("artist") else "",
@@ -88,7 +107,9 @@ def build_facts(job: Job, niche_cfg: NicheConfig) -> str:
     ]))
     excerpt = _lyrics_excerpt(artifacts.lyrics_json)
     if excerpt:
-        sections.append(_section("Letra (transcrita del audio, puede tener pequeños errores)", [excerpt]))
+        title = ("Textos que aparecen en pantalla (los nombres de evento, equipos o marca salen de acá)" if commercial
+                 else "Letra (transcrita del audio, puede tener pequeños errores)")
+        sections.append(_section(title, [excerpt]))
     if vision is not None:
         overview = vision.get("scene_overview") or {}
         sections.append(_section("Imagen del video", [
@@ -108,6 +129,30 @@ def build_facts(job: Job, niche_cfg: NicheConfig) -> str:
     return "\n\n".join(s for s in sections if s)
 
 
+# ── profile ─────────────────────────────────────────────────────────────────
+
+def copy_profile(niche_cfg: NicheConfig) -> str | None:
+    """Qué juego de estrategias usa este video: "commercial" para las promos (categoría
+    `commercial` de templates.json), "visual" para los videos sin letra en pantalla (fondos,
+    instrumental); None = el de canciones con letra."""
+    from src.config.template_manifest import get_template_category_id
+
+    template_id = niche_cfg.template.template_id if niche_cfg.template else None
+    if template_id and get_template_category_id(template_id) == "commercial":
+        return "commercial"
+    if not niche_cfg.template.requires_lyrics:
+        return "visual"
+    return None
+
+
+def copy_language(profile: str | None, detected: str) -> str:
+    """Los textos van en el idioma del canal (COPY_LANGUAGE, español), sea canción o promo y
+    aunque la canción esté en otro idioma: el nombre de la canción se deja como es."""
+    from src.config.settings import settings
+
+    return settings.copy_language or detected
+
+
 # ── generation ──────────────────────────────────────────────────────────────
 
 async def write_copy(
@@ -116,9 +161,10 @@ async def write_copy(
     language: ContentLanguage,
     seed: str,
     strategies: dict[str, CopyStrategy] | None = None,
+    profile: str | None = None,
 ) -> CopyResult:
-    strategies = strategies or active_strategies()
-    system, user = build_copy_prompt(strategies, facts, language)
+    strategies = strategies or active_strategies(profile=profile)
+    system, user = build_copy_prompt(strategies, facts, language, profile)
 
     raw = await ai.complete_json(system, user)
     raws = [raw]

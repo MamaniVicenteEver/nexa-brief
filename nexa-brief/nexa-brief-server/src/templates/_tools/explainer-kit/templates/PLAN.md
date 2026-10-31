@@ -7,7 +7,7 @@
 
 - **Tema (lo que pidió la persona):**
 - **Público:** curiosos de 18–40 años en YouTube / Reels / TikTok, sin conocimientos previos.
-- **Duración objetivo:** 3:00–4:30 (420–560 palabras).
+- **Duración objetivo:** `target_minutes` de assets/script.json (rangos: `tools/lengths.py <min> --design <diseño>`).
 
 ## 2. Tesis y emoción
 
@@ -47,20 +47,33 @@
 | Resolución | | 0.5 | | reparación / reflexivo |
 | Cierre (vuelve al título) | último | 0.8–0.9 | | cierre |
 
-## 6. Momentos de letra grande (4–6)
+## 6. Momentos de letra grande (cantidad según la duración: lengths.json)
 
 | frase exacta del guion | por qué | palabra en acento |
 |---|---|---|
 | | | |
 
-## 7. Mapa visual (segmento → componentes del catálogo)
+## 7. Inventario visual y mapa visual
+
+### 7a. Inventario visual (guides/components.md §6.1)
+
+Objetos y mecanismos del tema que alguien que sabe del tema esperaría VER.
+
+| objeto / mecanismo | planos que lo necesitan | ¿en el clímax? | componente del catálogo que lo dibuja | decisión (usar / crear `<familia>.<nombre>`) |
+|---|---|---|---|---|
+| | | | | |
+
+- Mínimo de componentes propios según la duración (1 · 2 · 3 · 4 para 5 · 10 · 15 · 30 min).
+  Si el tema no tiene objetos propios, escribir "sin componentes propios: <motivo>".
+
+### 7b. Mapa visual (segmento → componentes)
 
 | seg | qué se dice (resumen) | componente(s) | medio (foto) |
 |---|---|---|---|
 | s01 | | `<familia>.title` (t=0) | |
 
-- **Componentes que FALTAN** (si un concepto clave no tiene buen componente): nombre propuesto,
-  qué dibuja, params → se crean siguiendo `guides/components.md` ANTES del storyboard.
+- **Componentes propios a crear** (de 7a): nombre, qué dibuja, params → se crean en
+  `assets/components/` y se aprueban con `kit.py components` (guides/components.md §6) ANTES del storyboard.
 
 ## 8. Medios necesarios
 
@@ -70,8 +83,10 @@
 
 ## 9. Publicación (se copia a `publish.json`)
 
+Sin emojis en ningún texto (títulos, descripciones, captions, comentario fijado).
+
 - **Título YouTube** (≤ 70 caracteres, con gancho):
-- **Descripción** (3 párrafos: gancho, contexto, CTA + créditos de imágenes):
+- **Descripción** (gancho, contexto, capítulos de `manifest.chapters` si es ≥ 10 min, CTA + créditos de imágenes):
 - **Tags** (12–18):
 - **Texto TikTok/Reels** (1–2 frases + pregunta):
 - **Texto de miniatura** (≤ 4 palabras):

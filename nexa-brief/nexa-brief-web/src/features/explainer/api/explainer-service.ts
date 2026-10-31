@@ -11,12 +11,23 @@ import type {
   ExplainerJob,
   ExplainerOptions,
   ExplainerVideo,
+  NarrativeAct,
+  NarrativeTitleLevel,
   Production,
+  PublishIssue,
+  PublishPackage,
+  PublishPackageReview,
   PublishTextsResult,
   RecordExplainerInput,
   TextProvider,
+  ThumbnailOptionId,
+  TitleLevel,
+  TitleOption,
+  VideoThumbnails,
 } from "../types";
 
+// Capturar las miniaturas abre el navegador del server (~10 s cada una).
+const THUMBNAILS_TIMEOUT_MS = 120_000;
 // Generar textos o un brief usa un LLM: puede tardar minutos.
 const PUBLISH_TEXTS_TIMEOUT_MS = 240_000;
 const BRIEF_TIMEOUT_MS = 300_000;
@@ -25,6 +36,8 @@ const UPLOAD_TIMEOUT_MS = 300_000;
 interface ExplainerJobDto {
   job_id: string;
   video_id: string;
+  title?: string | null;
+  poster_url?: string | null;
   state: ExplainerJob["state"];
   category_path: string;
   duration: ExplainerJob["duration"];
@@ -36,9 +49,65 @@ interface ExplainerJobDto {
   output_dir: string | null;
   scheduled_job_id: string | null;
   publish_result: { post_id: string; url: string; platform: string; account_alias: string } | null;
-  publish_results?: { account_selector: string; url?: string; error?: string }[];
+  publish_results?: {
+    account_selector: string;
+    format?: "16x9" | "9x16";
+    url?: string;
+    error?: string;
+  }[];
   formats?: ExplainerJob["formats"];
   render_seconds?: number | null;
+  progress?: number;
+  progress_format?: ExplainerJob["progressFormat"];
+  progress_phase?: ExplainerJob["progressPhase"];
+  started_at?: string | null;
+  eta_seconds?: number | null;
+}
+
+interface TitleOptionDto {
+  option: TitleOption["option"];
+  text: string;
+  strategy: number;
+  emotion: string;
+}
+
+interface PublishPackageDto {
+  thumbnail: {
+    kicker: string;
+    text_only: { lines: string[]; highlight: string; pair_title: TitleOption["option"] };
+    with_image: {
+      text: string;
+      pair_title: TitleOption["option"];
+      image_side: PublishPackage["thumbnail"]["withImage"]["imageSide"];
+    };
+    tabloid: {
+      text: string;
+      image: string | null;
+      image_side: PublishPackage["thumbnail"]["tabloid"]["imageSide"];
+      mode: PublishPackage["thumbnail"]["tabloid"]["mode"];
+      strap: string;
+      seal: string;
+      tape_text: string;
+      marker: boolean;
+      target: [number, number];
+      pair_title: TitleOption["option"];
+    } | null;
+    chosen: PublishPackage["thumbnail"]["chosen"];
+  };
+  titles: {
+    youtube: TitleOptionDto[];
+    chosen: TitleOption["option"];
+  };
+  pinned_comment: string;
+}
+
+interface PublishPackageReviewDto {
+  package: PublishPackageDto | null;
+  issues: PublishIssue[];
+  thumbnail_image_url: string | null;
+  thumbnail_tabloid_image_url: string | null;
+  hook_strategy_names: Record<string, string>;
+  title_max_chars: number | null;
 }
 
 interface ExplainerVideoDto {
@@ -63,15 +132,91 @@ interface ExplainerVideoDto {
   tiktok_hashtags?: string[];
   design_name?: string;
   demo?: boolean;
+  narrative_id?: string | null;
+  narrative_label?: string | null;
+  quality_issues?: string[];
   preview_url: string;
   poster_url?: string | null;
   last_job: ExplainerJobDto | null;
+  publish_package?: PublishPackageReviewDto | null;
+  thumbnails?: ThumbnailsDto;
+}
+
+interface ThumbnailsDto {
+  chosen: ThumbnailOptionId | null;
+  options: {
+    option: ThumbnailOptionId;
+    component: string;
+    params: Record<string, unknown>;
+    url: string | null;
+  }[];
+}
+
+function mapThumbnails(dto: ThumbnailsDto | undefined): VideoThumbnails {
+  return {
+    chosen: dto?.chosen ?? null,
+    options: (dto?.options ?? []).map((o) => ({
+      option: o.option,
+      component: o.component,
+      params: o.params ?? {},
+      url: o.url ? resolveApiUrl(o.url) : null,
+    })),
+  };
+}
+
+function mapPublishPackage(dto: PublishPackageReviewDto): PublishPackageReview {
+  const p = dto.package;
+  return {
+    issues: dto.issues,
+    titleMaxChars: dto.title_max_chars ?? 0,
+    package: p && {
+      thumbnail: {
+        kicker: p.thumbnail.kicker,
+        textOnly: {
+          lines: p.thumbnail.text_only.lines,
+          highlight: p.thumbnail.text_only.highlight,
+          pairTitle: p.thumbnail.text_only.pair_title,
+        },
+        withImage: {
+          text: p.thumbnail.with_image.text,
+          imageUrl: dto.thumbnail_image_url ? resolveApiUrl(dto.thumbnail_image_url) : null,
+          pairTitle: p.thumbnail.with_image.pair_title,
+          imageSide: p.thumbnail.with_image.image_side,
+        },
+        tabloid: {
+          text: p.thumbnail.tabloid?.text || p.thumbnail.text_only.lines.join(" "),
+          imageUrl: dto.thumbnail_tabloid_image_url
+            ? resolveApiUrl(dto.thumbnail_tabloid_image_url)
+            : null,
+          imageSide: p.thumbnail.tabloid?.image_side ?? p.thumbnail.with_image.image_side,
+          mode: p.thumbnail.tabloid?.mode ?? "impact",
+          strap: p.thumbnail.tabloid?.strap ?? p.thumbnail.kicker,
+          seal: p.thumbnail.tabloid?.seal ?? "",
+          tapeText: p.thumbnail.tabloid?.tape_text ?? "",
+          marker: p.thumbnail.tabloid?.marker ?? false,
+          target: p.thumbnail.tabloid?.target ?? [0.72, 0.52],
+          pairTitle: p.thumbnail.tabloid?.pair_title ?? "C",
+        },
+        chosen: p.thumbnail.chosen,
+      },
+      titles: {
+        youtube: p.titles.youtube.map((t) => ({
+          ...t,
+          strategyName: dto.hook_strategy_names[String(t.strategy)] ?? "",
+        })),
+        chosen: p.titles.chosen,
+      },
+      pinnedComment: p.pinned_comment,
+    },
+  };
 }
 
 function mapJob(dto: ExplainerJobDto): ExplainerJob {
   return {
     jobId: dto.job_id,
     videoId: dto.video_id,
+    title: dto.title ?? null,
+    posterUrl: dto.poster_url ? resolveApiUrl(dto.poster_url) : null,
     state: dto.state,
     categoryPath: dto.category_path,
     duration: dto.duration,
@@ -84,8 +229,14 @@ function mapJob(dto: ExplainerJobDto): ExplainerJob {
     scheduledJobId: dto.scheduled_job_id,
     formats: dto.formats ?? [],
     renderSeconds: dto.render_seconds ?? null,
+    progress: dto.progress ?? 0,
+    progressFormat: dto.progress_format ?? null,
+    progressPhase: dto.progress_phase ?? null,
+    startedAt: dto.started_at ?? null,
+    etaSeconds: dto.eta_seconds ?? null,
     publishResults: (dto.publish_results ?? []).map((r) => ({
       accountSelector: r.account_selector,
+      format: r.format,
       url: r.url ?? null,
       error: r.error ?? null,
     })),
@@ -123,9 +274,14 @@ function mapVideo(dto: ExplainerVideoDto): ExplainerVideo {
     tiktokHashtags: dto.tiktok_hashtags ?? [],
     designName: dto.design_name ?? dto.design,
     demo: dto.demo ?? false,
+    narrativeId: dto.narrative_id ?? null,
+    narrativeLabel: dto.narrative_label ?? null,
+    qualityIssues: dto.quality_issues ?? [],
     previewUrl: resolveApiUrl(dto.preview_url),
     posterUrl: dto.poster_url ? resolveApiUrl(dto.poster_url) : null,
     lastJob: dto.last_job ? mapJob(dto.last_job) : null,
+    publishPackage: dto.publish_package ? mapPublishPackage(dto.publish_package) : null,
+    thumbnails: mapThumbnails(dto.thumbnails),
   };
 }
 
@@ -156,10 +312,48 @@ export async function recordExplainerVideo(input: RecordExplainerInput): Promise
         account_selector: input.accountSelector ?? null,
         account_selectors: input.accountSelectors ?? [],
         formats: input.formats ?? ["16x9"],
+        account_formats: input.accountFormats ?? null,
+        thumbnail: input.thumbnail ?? null,
       },
     },
   );
   return mapJob(dto);
+}
+
+/** Estado de una grabación, también cuando se cierra el modal de Plantillas. */
+export async function getExplainerJob(jobId: string, signal?: AbortSignal): Promise<ExplainerJob> {
+  const dto = await httpClient<ExplainerJobDto>(`/api/v1/explainer/jobs/${jobId}`, { signal });
+  return mapJob(dto);
+}
+
+/** Jobs activos y grabaciones terminadas recientemente, para la Biblioteca. */
+export async function getExplainerJobs(signal?: AbortSignal): Promise<ExplainerJob[]> {
+  const dtos = await httpClient<ExplainerJobDto[]>("/api/v1/explainer/jobs?active=true", {
+    signal,
+  });
+  return dtos.map(mapJob);
+}
+
+/** Captura de nuevo las miniaturas A (introv1) y B (introv2) con los textos actuales. */
+export async function captureThumbnails(videoId: string): Promise<VideoThumbnails> {
+  const dto = await httpClient<ThumbnailsDto>(`/api/v1/explainer/videos/${videoId}/thumbnails`, {
+    method: "POST",
+    timeoutMs: THUMBNAILS_TIMEOUT_MS,
+  });
+  return mapThumbnails(dto);
+}
+
+/** Elige la miniatura que se sube a YouTube (queda guardada en el video). */
+export async function chooseThumbnail(
+  videoId: string,
+  option: ThumbnailOptionId,
+): Promise<VideoThumbnails> {
+  const dto = await httpClient<ThumbnailsDto>(`/api/v1/explainer/videos/${videoId}/thumbnail`, {
+    method: "PUT",
+    body: { option },
+    timeoutMs: THUMBNAILS_TIMEOUT_MS,
+  });
+  return mapThumbnails(dto);
 }
 
 export async function generatePublishTexts(input: {
@@ -185,15 +379,53 @@ interface OptionsDto {
   text_providers: { name: TextProvider; available: boolean }[];
   default_agent: AgentName;
   default_text_provider: TextProvider;
+  lengths: {
+    presets: { minutes: number; id: string; label: string }[];
+    default_minutes: number;
+    min_minutes: number;
+    max_minutes: number;
+  };
+  narratives?: {
+    id: string;
+    label: string;
+    name: string;
+    description: string;
+    status: string;
+    acts: NarrativeAct[];
+    title_levels: NarrativeTitleLevel[];
+    default_title_level: TitleLevel | null;
+  }[];
+  default_narrative?: string | null;
 }
 
-export async function getExplainerOptions(signal?: AbortSignal): Promise<ExplainerOptions> {
-  const dto = await httpClient<OptionsDto>("/api/v1/explainer/options", { signal });
+export async function getExplainerOptions(
+  categoryPath?: string,
+  signal?: AbortSignal,
+): Promise<ExplainerOptions> {
+  const query = categoryPath ? `?category=${encodeURIComponent(categoryPath)}` : "";
+  const dto = await httpClient<OptionsDto>(`/api/v1/explainer/options${query}`, { signal });
   return {
     agents: dto.agents,
     textProviders: dto.text_providers,
     defaultAgent: dto.default_agent,
     defaultTextProvider: dto.default_text_provider,
+    lengths: {
+      presets: dto.lengths.presets,
+      defaultMinutes: dto.lengths.default_minutes,
+      minMinutes: dto.lengths.min_minutes,
+      maxMinutes: dto.lengths.max_minutes,
+    },
+    narratives: (dto.narratives ?? []).map((narrative) => ({
+      id: narrative.id,
+      label: narrative.label,
+      name: narrative.name,
+      description: narrative.description,
+      status: narrative.status,
+      acts: narrative.acts,
+      titleLevels: narrative.title_levels,
+      defaultTitleLevel: narrative.default_title_level,
+    })),
+    defaultNarrative: dto.default_narrative ?? null,
   };
 }
 
@@ -206,6 +438,8 @@ interface DesignDto {
   category_path: string | null;
   preview_url: string | null;
   poster_url?: string | null;
+  video_url?: string | null;
+  video_portrait_url?: string | null;
 }
 
 interface DesignsDto {
@@ -224,6 +458,8 @@ function mapDesign(d: DesignDto): ExplainerDesign {
     categoryPath: d.category_path,
     previewUrl: d.preview_url ? resolveApiUrl(d.preview_url) : null,
     posterUrl: d.poster_url ? resolveApiUrl(d.poster_url) : null,
+    videoUrl: d.video_url ? resolveApiUrl(d.video_url) : null,
+    videoPortraitUrl: d.video_portrait_url ? resolveApiUrl(d.video_portrait_url) : null,
   };
 }
 
@@ -263,6 +499,9 @@ export async function generateBrief(input: BriefInput): Promise<ExplainerBrief> 
       design: input.design ?? null,
       provider: input.provider ?? null,
       media_names: input.mediaNames ?? [],
+      minutes: input.minutes ?? null,
+      narrative_id: input.narrativeId ?? null,
+      title_level: input.titleLevel ?? null,
     },
     timeoutMs: BRIEF_TIMEOUT_MS,
   });
@@ -278,10 +517,13 @@ interface ProductionDto {
   agent: string;
   auto_record?: boolean;
   state: Production["state"];
+  phase?: string | null;
   error?: string | null;
   video_status?: string | null;
   record_job_id?: string | null;
   media?: string[];
+  narrative_id?: string | null;
+  title_level?: TitleLevel | null;
   brief?: ExplainerBrief | null;
   agent_report?: string | null;
   plan_item_id?: string | null;
@@ -301,10 +543,13 @@ function mapProduction(dto: ProductionDto): Production {
     agent: dto.agent,
     autoRecord: dto.auto_record ?? false,
     state: dto.state,
+    phase: dto.phase ?? null,
     error: dto.error ?? null,
     videoStatus: dto.video_status ?? null,
     recordJobId: dto.record_job_id ?? null,
     media: dto.media ?? [],
+    narrativeId: dto.narrative_id ?? null,
+    titleLevel: dto.title_level ?? null,
     brief: dto.brief ?? null,
     agentReport: dto.agent_report ?? null,
     planItemId: dto.plan_item_id ?? null,
@@ -328,6 +573,9 @@ export async function createProduction(input: CreateProductionInput): Promise<Pr
       brief: input.brief ?? null,
       auto_record: input.autoRecord ?? false,
       plan_item_id: input.planItemId ?? null,
+      minutes: input.minutes ?? null,
+      narrative_id: input.narrativeId ?? null,
+      title_level: input.titleLevel ?? null,
     }),
   );
   for (const file of input.files ?? []) form.append("files", file);

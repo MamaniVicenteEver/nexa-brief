@@ -3,6 +3,7 @@
 Todas las imágenes vienen de Wikimedia Commons. Se volvieron a codificar como JPEG (calidad 90, lado máximo 1600 px, RGB, sin metadatos). La licencia CC BY-SA exige atribución y compartir igual.
 
 hamilton.jpg — Margaret Hamilton - restoration (with the Apollo guidance software listings) — Draper Laboratory (restoration: Adam Cuerden) — Public domain (PD-US-no notice) — https://commons.wikimedia.org/wiki/File:Margaret_Hamilton_-_restoration.jpg
+hamilton-rostro.jpg — recorte de hamilton.jpg, misma fuente y licencia de dominio público.
 lm-eagle.jpg — Apollo 11 Lunar Module Eagle in landing configuration in lunar orbit from the Command and Service Module Columbia (AS11-44-6581) — NASA (Michael Collins) — Public domain (PD-USGov-NASA) — https://commons.wikimedia.org/wiki/File:Apollo_11_Lunar_Module_Eagle_in_landing_configuration_in_lunar_orbit_from_the_Command_and_Service_Module_Columbia.jpg
 dsky.jpg — Apollo display and keyboard unit (DSKY) used on F-8 DFBW — NASA / Dennis Taylor — Public domain (PD-USGov-NASA) — https://commons.wikimedia.org/wiki/File:Apollo_display_and_keyboard_unit_(DSKY)_used_on_F-8_DFBW_DVIDS683588.jpg
 core-rope.jpg — Core rope tester at Draper Hack the Moon exhibit — ArnoldReinhold — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Core_rope_tester_at_Draper_Hack_the_Moon_exhibit.jpg

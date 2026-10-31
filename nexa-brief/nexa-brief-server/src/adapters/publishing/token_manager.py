@@ -60,6 +60,14 @@ class TokenManager:
 
     # ── Public API ────────────────────────────────────────────────────────────
 
+    def target_id(self, platform: str, alias: str) -> str:
+        """Id de la cuenta en su plataforma (canal, página o usuario IG); '' si no hay."""
+        return self._storage.get_state(platform, alias).target_id
+
+    def instagram_deletion_token(self, alias: str) -> str | None:
+        """El borrado IG requiere token de usuario de Facebook, distinto del token de Página."""
+        return self._storage.get_instagram_deletion_token(alias)
+
     async def get_valid_token(self, platform: str, alias: str) -> str:
         """Return a valid, decrypted access token.
 
@@ -68,6 +76,8 @@ class TokenManager:
         Raises:
             TokenExpiredError: Account is marked requires_reauth or refresh exhausted.
         """
+        if self._storage.get_mode(platform, alias) in {"browser", "service"}:
+            raise TokenExpiredError(f"Account {platform}:{alias} uses a browser session and has no OAuth token.")
         lock = self._locks[self._lock_key(platform, alias)]
         async with lock:
             state = self._storage.get_state(platform, alias)
@@ -109,6 +119,8 @@ class TokenManager:
 
         Idempotent: does nothing if token is still fresh.
         """
+        if self._storage.get_mode(platform, alias) in {"browser", "service"}:
+            return
         try:
             await self.get_valid_token(platform, alias)
         except TokenExpiredError:
@@ -167,6 +179,8 @@ class TokenManager:
         elif platform == "youtube":
             await self._refresh_youtube(alias, state)
         elif platform == "facebook":
+            await self._refresh_facebook(alias, state)
+        elif platform == "instagram":
             await self._refresh_facebook(alias, state)
         else:
             raise TokenRefreshError(f"Unknown platform: {platform}")

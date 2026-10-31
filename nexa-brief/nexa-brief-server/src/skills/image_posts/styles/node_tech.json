@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "style_id": "node_tech_rough",
+  "category_id": "node_tech",
+  "version": "1.0.0",
+  "design_id": "rough",
+  "palette": {
+    "bg": "#0a0a0b",
+    "bg2": "#121314",
+    "ink": "#ededea",
+    "muted": "#90918d",
+    "accent": "#c8ff2e",
+    "accentInk": "#10120b"
+  },
+  "fonts": {
+    "headline": "Inter",
+    "body": "Inter",
+    "mono": "JetBrains Mono",
+    "decorative": "Caveat",
+    "font_assets": [
+      {
+        "family": "Inter",
+        "weight": 400,
+        "style": "normal",
+        "path": "fonts/inter-400.ttf",
+        "sha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      },
+      {
+        "family": "Inter",
+        "weight": 900,
+        "style": "normal",
+        "path": "fonts/inter-900.ttf",
+        "sha256": "5b717029a2c4cfca2167e97be1157edb24151591e5ec96eb484745c392817a7a",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      },
+      {
+        "family": "JetBrains Mono",
+        "weight": 600,
+        "style": "normal",
+        "path": "fonts/jetbrains-mono-600.ttf",
+        "sha256": "df54dbfafba61d4911eb3dab9bba2d20531fb009f01d64dd42fa96ab862584d8",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      },
+      {
+        "family": "Caveat",
+        "weight": 700,
+        "style": "normal",
+        "path": "fonts/caveat-700.ttf",
+        "sha256": "f4365d9874c1b64026aca48786cf835a5decf2c740c06de04dbb05ce8c93ff37",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      }
+    ]
+  },
+  "textures": [],
+  "grid": {
+    "margin_px": 72,
+    "columns": 12,
+    "gutter_px": 24,
+    "safe_bottom_px": 110
+  },
+  "composition": {
+    "allowed_components": [
+      "image.rough.daily_fact",
+      "image.rough.five_slides"
+    ],
+    "photo_filter": "grayscale(1) contrast(1.3)",
+    "contrast_min": 4.5,
+    "headline_lines_max": 2,
+    "body_lines_max": 4
+  },
+  "tone": {
+    "language": "es",
+    "voice": "curioso, preciso y cercano",
+    "rules": [
+      "Explicar la jerga antes de usarla.",
+      "Cada cifra debe apuntar a una fuente verificada.",
+      "No presentar una proyección como un resultado observado.",
+      "Usar un solo acento lima por bloque visual."
+    ]
+  },
+  "brand": {
+    "name": "NodeTech",
+    "handle": "@nodetech_es"
+  }
+}

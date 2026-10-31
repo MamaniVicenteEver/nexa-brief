@@ -1,0 +1,105 @@
+[
+  {
+    "id": "explainer-kit",
+    "path": "_tools/explainer-kit",
+    "kind": "engine",
+    "components": "_tools/explainer-kit/catalog.json",
+    "designs": "_tools/explainer-kit/designs/index.json",
+    "reference_template": "sandbox/nodehistory/memorias-demo",
+    "docs": [
+      "_tools/explainer-kit/AGENTS.md",
+      "_tools/explainer-kit/designs/index.json"
+    ],
+    "status": "estable"
+  },
+  {
+    "id": "proto",
+    "path": "sandbox/_proto",
+    "kind": "runtime",
+    "components": "sandbox/_proto/components.json",
+    "reference_template": "sandbox/nodehistory/bolivia-mar",
+    "docs": [
+      "sandbox/_proto/FABRICA.md",
+      "sandbox/nodehistory/_mapas/ESCENA.md"
+    ],
+    "status": "experimental"
+  },
+  {
+    "id": "nodeaction",
+    "path": "sandbox/nodeaction/_engine",
+    "kind": "engine",
+    "components": "sandbox/nodeaction/_engine/components.json",
+    "reference_template": "sandbox/nodeaction/somme-1916-3d",
+    "docs": [
+      "sandbox/nodeaction/AGENTS.md"
+    ],
+    "status": "experimental"
+  },
+  {
+    "id": "nodeaction-pizarra",
+    "path": "sandbox/nodeaction/_pizarra",
+    "kind": "engine",
+    "components": "sandbox/nodeaction/_pizarra/components.json",
+    "reference_template": "sandbox/nodeaction/pizarra-olvido",
+    "docs": [
+      "sandbox/nodeaction/_pizarra/ESCENA.md",
+      "sandbox/nodeaction/_pizarra/PERSONAJES.md"
+    ],
+    "depends_on": [
+      "proto"
+    ],
+    "status": "experimental"
+  },
+  {
+    "id": "nodeaction-avatar",
+    "path": "sandbox/nodeaction/_avatar",
+    "kind": "engine",
+    "components": "sandbox/nodeaction/_avatar/components.json",
+    "reference_template": "sandbox/nodeaction/avatar-demo",
+    "docs": [
+      "sandbox/nodeaction/_avatar/AVATAR.md"
+    ],
+    "depends_on": [
+      "proto"
+    ],
+    "status": "experimental"
+  },
+  {
+    "id": "nodehistory-mapas",
+    "path": "sandbox/nodehistory/_mapas",
+    "kind": "engine",
+    "components": "sandbox/nodehistory/_mapas/components.json",
+    "reference_template": "sandbox/nodehistory/bolivia-mar",
+    "docs": [
+      "sandbox/nodehistory/_mapas/ESCENA.md"
+    ],
+    "depends_on": [
+      "proto"
+    ],
+    "status": "experimental"
+  },
+  {
+    "id": "nodemotion-lyrics-final-cut",
+    "path": "sandbox/nodemotion/lyrics-final-cut",
+    "kind": "standalone",
+    "components": "sandbox/nodemotion/_player/components.json",
+    "reference_template": "sandbox/nodemotion/lyrics-final-cut",
+    "docs": [
+      "sandbox/nodemotion/AGENTS.md"
+    ],
+    "status": "experimental",
+    "notes": "HTML autónomo; el adaptador compartido solo conecta controles de previsualización, no el render."
+  },
+  {
+    "id": "nodemotion-promo-fuerza-motivacion",
+    "path": "sandbox/nodemotion/promo-fuerza-motivacion",
+    "kind": "standalone",
+    "components": "sandbox/nodemotion/_player/components.json",
+    "reference_template": "sandbox/nodemotion/promo-fuerza-motivacion",
+    "docs": [
+      "sandbox/nodemotion/AGENTS.md"
+    ],
+    "status": "experimental",
+    "notes": "HTML autónomo; el adaptador compartido solo conecta controles de previsualización, no el render."
+  }
+]

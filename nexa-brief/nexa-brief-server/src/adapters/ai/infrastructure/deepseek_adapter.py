@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+import time
 
 import structlog
 from openai import AsyncOpenAI
@@ -44,6 +45,41 @@ class DeepSeekAdapter(AIPort):
             return json.loads(raw)
         except json.JSONDecodeError as exc:
             raise AIValidationError(f"DeepSeek JSON parse error: {exc}") from exc
+
+    async def complete_json_with_usage(self, system_prompt: str, user_prompt: str) -> tuple[dict, dict]:
+        """Devuelve el JSON y el consumo informado por la API para el redactor."""
+        for attempt in range(1, self._max_retries + 1):
+            started = time.monotonic()
+            try:
+                response = await self._client.chat.completions.create(
+                    model=self._model,
+                    messages=[{"role": "system", "content": system_prompt},
+                              {"role": "user", "content": user_prompt}],
+                    max_tokens=settings.ai_max_output_tokens,
+                    temperature=0.7,
+                )
+                content = response.choices[0].message.content or ""
+                match = _JSON_FENCE.search(content)
+                result = json.loads(match.group(1) if match else content.strip())
+                usage = response.usage
+                details = getattr(usage, "completion_tokens_details", None)
+                return result, {
+                    "provider": "deepseek", "model": response.model or self._model,
+                    "input_tokens": getattr(usage, "prompt_tokens", None),
+                    "cached_input_tokens": getattr(usage, "prompt_cache_hit_tokens", None),
+                    "output_tokens": getattr(usage, "completion_tokens", None),
+                    "total_tokens": getattr(usage, "total_tokens", None),
+                    "reasoning_tokens": getattr(details, "reasoning_tokens", None),
+                    "seconds": round(time.monotonic() - started, 2),
+                }
+            except (json.JSONDecodeError, IndexError) as exc:
+                raise AIValidationError(f"DeepSeek JSON parse error: {exc}") from exc
+            except Exception as exc:
+                logger.warning("deepseek_retry", attempt=attempt, error=str(exc))
+                if attempt == self._max_retries:
+                    raise AIGenerationError(f"DeepSeek failed after {attempt} attempts: {exc}") from exc
+                await asyncio.sleep(settings.ai_retry_delay_seconds * attempt)
+        raise AIGenerationError("DeepSeek: unreachable")
 
     async def complete_text(self, system_prompt: str, user_prompt: str) -> str:
         """Call DeepSeek and return the raw text response."""

@@ -5,9 +5,9 @@
   "channel": "PROTOTIPO",
   "status": "listo",
   "created": "2026-10-07",
-  "title": "EL NÚMERO QUE NO CABÍA",
+  "title": "NO FUE EL MOTOR: UN NÚMERO LO DESTRUYÓ",
   "pipeline_type": "explainer_kit",
-  "kicker": "ARIANE 501 · 4 JUN 1996",
+  "kicker": "ARIANE 5 · 4 JUN 1996",
   "language": "es-419",
   "duration_seconds": 213.55,
   "script": {
@@ -149,7 +149,7 @@
   "storyboard": {
     "beats": 44,
     "components": {
-      "rough.title": 2,
+      "rough.introv1": 1,
       "rough.icon": 10,
       "rough.photo": 5,
       "rough.tally": 2,
@@ -164,6 +164,7 @@
       "rough.choice": 2,
       "common.flash": 1,
       "rough.stack": 1,
+      "rough.title": 1,
       "rough.outrov1": 1
     },
     "lyrics_moments": 4
@@ -201,44 +202,41 @@
     "assets/media/fragment.jpg": 505847,
     "assets/media/launch.jpg": 272235,
     "assets/media/pad.jpg": 247023,
-    "assets/script.json": 5257,
+    "assets/script.json": 5765,
     "assets/song-with-outro.mp3": 5316484,
     "assets/song.mp3": 5125895,
-    "assets/storyboard.json": 7942,
+    "assets/storyboard.json": 11675,
     "index.html": 751,
-    "manifest.json": 6355,
-    "publish.json": 1327,
+    "manifest.json": 7838,
+    "publish.json": 9420,
     "render/outro-final-16x9.png": 241005,
     "render/outro-final-9x16.png": 222784,
-    "render/poster.jpg": 29670
+    "render/poster.jpg": 51324
   },
-  "updated": "2026-10-10T11:39:05",
-  "youtube_title": "Ariane 5: el número que no cabía y desvió un cohete",
-  "youtube_description": "Treinta y siete segundos después del despegue, el primer Ariane 5 perdió el control. No falló un motor: una conversión de datos llevó un número demasiado grande a un espacio demasiado pequeño.\n\nEste video reconstruye cómo una función heredada de Ariane 4, dos sistemas idénticos y una prueba que no representaba la trayectoria real convirtieron un error de software en una orden física.\n\nSuscríbete a PROTOTIPO para más historias de tecnología e innovación.\n\nIMÁGENES: Don-vip, SpaceMusk y Philippe Semanaz / Philou.cn, CC BY-SA 4.0 / CC BY-SA 2.0; Deadpan y NASA, dominio público. Créditos y enlaces completos: assets/media/CREDITS.md.",
+  "updated": "2026-10-18T15:54:23",
+  "youtube_title": "Un solo número destruyó un cohete en 39 segundos",
+  "youtube_description": "Durante 36 segundos, el primer Ariane 5 voló perfecto. Luego un número que no cabía en el espacio que le habían reservado hizo que el cohete corrigiera un giro que nunca ocurrió.\n\n4 de junio de 1996, Kourou. Una función heredada de Ariane 4, que ya no hacía falta, siguió corriendo. Intentó guardar un número de 64 bits en un espacio de 16, y las dos computadoras de navegación, idénticas, fallaron por la misma causa. Con el vuelo se perdieron los cuatro satélites Cluster de la Agencia Espacial Europea.\n\nCAPÍTULOS\n0:00 4 de junio de 1996: despegue en Kourou\n0:28 Dos computadoras idénticas\n0:38 La función que nadie necesitaba\n0:58 64 bits en un espacio de 16\n1:34 El cohete corrige un giro que nunca ocurrió\n2:08 Segundo 39\n2:33 Qué falló de verdad\n2:59 La lección\n\nEl número no era enorme para el universo: solo era demasiado grande para el espacio que le habían reservado. Cuántas veces un problema no es el tamaño de la idea, sino el lugar donde la quisimos meter.\n\nGracias por ver el video completo. Cada historia la armamos con fuentes que puedes revisar abajo, y tu tiempo es lo que la hace posible. Si te dejó algo, un solo gesto ayuda muchísimo: compártelo con una persona a la que le encante la ingeniería.\n\n¿Conocías otro error de software que haya costado tan caro? Cuéntanos.\n\nFUENTES\n- ESA — Flight 501 failure: first information (esa.int)\n- ESA — Ariane 501: Presentation of Inquiry Board report (esa.int)\n- Informe de la Junta de Investigación del Ariane 501 (texto completo)\n\nIMÁGENES (Wikimedia Commons)\n- Ariane 5 ECA VA258 — Don-vip — CC BY-SA 4.0\n- Ariane 501 Fragment — Deadpan — dominio público\n- Belgian components for the Ariane 5 rocket — SpaceMusk — CC BY-SA 4.0\n- Ariane 5 Payload Fairing Test — NASA — dominio público\n- Ariane 5 launch pad — Philippe Semanaz / Philou.cn — CC BY-SA 2.0\n- Webb Liftoff on Ariane 5 — ESA/CNES/Arianespace/Optique Vidéo du CSG - JM Guillon — CC BY 4.0\n\n#Ariane5 #ErrorDeSoftware #NodeTech",
   "youtube_tags": [
     "Ariane 5",
     "Ariane 501",
+    "vuelo 501",
     "error de software",
-    "overflow",
+    "desbordamiento de enteros",
     "integer overflow",
-    "ingeniería de software",
+    "Agencia Espacial Europea",
     "ESA",
-    "cohetes",
-    "tecnología",
-    "fallos de sistemas",
-    "software crítico",
-    "Kourou",
-    "informática",
-    "historia de la tecnología",
-    "PROTOTIPO"
+    "satélites Cluster",
+    "cohete",
+    "ingeniería de software",
+    "documental corto"
   ],
-  "tiktok_caption": "Un número de 64 bits no cabía en un entero de 16. Dos sistemas fallaron por la misma causa y el cohete corrigió un giro que nunca ocurrió.",
+  "tiktok_caption": "Un número demasiado grande destruyó el primer Ariane 5. ¿Sabías que un error de software puede hacer esto?",
   "tiktok_hashtags": [
-    "#Ariane5",
-    "#Software",
-    "#Ingeniería",
-    "#Tecnología",
-    "#ESA"
+    "#ariane5",
+    "#programacion",
+    "#historiadelatecnologia",
+    "#sabiasque"
   ],
-  "thumbnail_text": "NO CABÍA"
+  "thumbnail_text": "NO FUE EL MOTOR: UN NÚMERO LO DESTRUYÓ",
+  "target_minutes": null
 }

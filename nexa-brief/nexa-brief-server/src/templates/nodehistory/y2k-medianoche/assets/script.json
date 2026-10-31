@@ -1,0 +1,282 @@
+{
+  "id": "y2k-medianoche",
+  "title": "EL DÍA QUE TODO PUDO DETENERSE",
+  "subtitle": "",
+  "kicker": "MILLENNIUM · 31 DIC 1999",
+  "language": "es-419",
+  "audience": "Historia de la informática para público general, vertical y horizontal",
+  "target_minutes": 13,
+  "voice_direction": "Voz masculina madura, español latino neutro. Thriller histórico de energía contenida: intriga al abrir, claridad al explicar la fecha, tensión precisa durante el cambio de husos y alivio sin triunfalismo al contar las fallas reales. Tono humano al hablar de programadores; pronunciar las siglas y las cifras en español natural. Nunca alarmista ni teatral.",
+  "segments": [
+    {
+      "id": "s01",
+      "tone": "intriga",
+      "intensity": 0.8,
+      "text": "En la isla Millennium, en Kiribati, el año dos mil empezó mientras el resto esperaba. En salas de control, equipos miraban los reportes con una pregunta: ¿qué acaba de romperse?",
+      "chapter": "La primera medianoche"
+    },
+    {
+      "id": "s02",
+      "tone": "tensión",
+      "intensity": 0.8,
+      "text": "Millennium, antes Caroline Island, cambió de fecha a las diez de la mañana del treinta y uno de diciembre en Greenwich. Su huso era UTC más catorce; la isla normalmente estaba deshabitada."
+    },
+    {
+      "id": "s03",
+      "tone": "revelación",
+      "intensity": 0.7,
+      "text": "Quince minutos después, la fecha cambió en las islas Chatham, primera localidad permanentemente habitada en recibir el año. Estaban en UTC más trece horas y cuarenta y cinco minutos. Auckland entró después; no hubo una sola cuenta atrás mundial."
+    },
+    {
+      "id": "s04",
+      "tone": "suspenso",
+      "intensity": 0.75,
+      "text": "El título de hoy pregunta si Y2K fue una estafa. Para responderlo, volvamos a esa primera hora. Si el riesgo era imaginario, las máquinas no tenían nada que hacer. Si era real, cada silencio era una noticia."
+    },
+    {
+      "id": "s05",
+      "tone": "pregunta",
+      "intensity": 0.7,
+      "text": "Pero para saber qué estaban vigilando hay que entender un detalle diminuto: en muchos programas, el año no ocupaba cuatro cifras. ¿Cómo dos caracteres podían poner en duda sistemas que llevaban décadas funcionando?"
+    },
+    {
+      "id": "s06",
+      "tone": "reenganche",
+      "intensity": 0.75,
+      "text": "El primer dato rompe una idea popular: el problema no estaba en una computadora que de pronto olvidara el futuro. Estaba escondido en decisiones de diseño muy viejas, repetidas en programas y archivos de todo tipo."
+    },
+    {
+      "id": "s07",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Durante años, guardar una fecha como noventa y nueve en lugar de mil novecientos noventa y nueve ahorraba memoria y espacio. En máquinas limitadas, un byte, una unidad de memoria, podía contar."
+    },
+    {
+      "id": "s08",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Esa decisión parecía inocente mientras los programas asumieran que el siglo empezaba por diecinueve. Pero en algunos sistemas se comparaban solo los dos últimos dígitos: cero-cero podía interpretarse como mil novecientos, no como dos mil."
+    },
+    {
+      "id": "s09",
+      "tone": "revelación",
+      "intensity": 0.65,
+      "text": "No todos los sistemas estaban condenados a hacer eso. Cada programa tenía sus reglas: algunos ordenaban mal una lista, otros calculaban edades, vencimientos o pagos con una fecha equivocada. El error dependía del campo y de lo que el programa hacía con él."
+    },
+    {
+      "id": "s10",
+      "tone": "tensión",
+      "intensity": 0.7,
+      "text": "Por eso el trabajo no era cambiar una cifra y apagar el ordenador. Había que localizar registros, corregir código, probar con fechas límite y volver a probar lo que dependía de ese resultado. El calendario era pequeño; la red de dependencias, no.",
+      "chapter": "Por qué fallaba la fecha"
+    },
+    {
+      "id": "s11",
+      "tone": "revelación",
+      "intensity": 0.7,
+      "text": "El bug era real. Eso no significa que cada predicción de desastre fuera correcta. El riesgo dependía del sistema y de su uso. La dificultad era saber qué podía fallar cuando miles de organizaciones usaban programas que nadie había inventariado por completo."
+    },
+    {
+      "id": "s12",
+      "tone": "reenganche",
+      "intensity": 0.75,
+      "text": "Y aquí aparece la pregunta que vuelve sospechosa la historia: si tantas revisiones terminaron en una noche tranquila, ¿cuánto costó crear esa calma? Las cifras oficiales parecen enormes, pero no miden todas lo mismo."
+    },
+    {
+      "id": "s13",
+      "tone": "asombro",
+      "intensity": 0.65,
+      "text": "El Departamento de Comercio de Estados Unidos publicó una estimación basada en IDC: ciento catorce mil millones de dólares de gasto estadounidense en software Y2K entre mil novecientos noventa y cinco y dos mil uno. Era un modelo, no una auditoría global."
+    },
+    {
+      "id": "s14",
+      "tone": "explicativo",
+      "intensity": 0.6,
+      "text": "El Senado usó otra aproximación: alrededor de cien mil millones para el trabajo de empresas y gobierno en Estados Unidos. El propio informe también cita ocho mil trescientos cuarenta millones para el gobierno federal. Son ámbitos distintos, así que no se suman."
+    },
+    {
+      "id": "s15",
+      "tone": "comparación",
+      "intensity": 0.65,
+      "text": "John Koskinen, quien dirigía el Consejo presidencial de conversión al año dos mil, habló de unos ocho mil quinientos millones federales y estimó cerca de cien mil millones para el país. Para el mundo calculó entonces algo cerca de doscientos mil millones."
+    },
+    {
+      "id": "s16",
+      "tone": "cautela",
+      "intensity": 0.55,
+      "text": "El Senado recogió además una estimación de IDC Magellan de trescientos veinte mil millones en todo el mundo, ciento treinta y cuatro mil millones en Estados Unidos. No existe una cifra final única: cambian el periodo, los rubros y el método."
+    },
+    {
+      "id": "s17",
+      "tone": "asombro",
+      "intensity": 0.6,
+      "text": "En Reino Unido, el gobierno central calculó trescientas ochenta millones de libras. La Cámara de los Comunes repitió ese dato después del cambio. Son cifras grandes, pero no cuentan lo mismo que una estimación mundial de empresas, equipos y software."
+    },
+    {
+      "id": "s18",
+      "tone": "reflexivo",
+      "intensity": 0.45,
+      "text": "¿Fue proporcionado? El Senado defendió el esfuerzo como necesario. Eso es una evaluación de quienes coordinaron la respuesta, no una prueba de que cada factura valiera la pena. Tampoco podemos observar lo que habría pasado si nadie corregía nada."
+    },
+    {
+      "id": "s19",
+      "tone": "duda",
+      "intensity": 0.45,
+      "text": "Si el gasto evitó fallas, el resultado las vuelve menos visibles. Si hubo exceso o modernización aprovechada, algunas inversiones quizá fueron útiles más allá del cambio de fecha. Los datos permiten debatir la escala; no permiten reconstruir un mundo sin reparaciones.",
+      "chapter": "El precio de corregir"
+    },
+    {
+      "id": "s20",
+      "tone": "reenganche",
+      "intensity": 0.75,
+      "text": "Antes de medianoche, alguien tuvo que encontrar los campos de dos dígitos, probarlos y reemplazarlos. Algunos expertos que conocían sistemas antiguos ya se habían jubilado. ¿A quién llamas cuando el conocimiento se jubila?"
+    },
+    {
+      "id": "s21",
+      "tone": "humano",
+      "intensity": 0.6,
+      "text": "Una respuesta fue volver a llamar a programadores COBOL con experiencia. El lenguaje se usaba en sistemas de negocio desde hacía décadas. Un reportaje de Los Angeles Times contó la historia de Bruce Fassett, recontratado después de jubilarse."
+    },
+    {
+      "id": "s22",
+      "tone": "tono humano",
+      "intensity": 0.5,
+      "text": "Equipos rastrearon archivos, buscaron reglas enterradas y comprobaron resultados. Una corrección podía ser tan pequeña como cambiar cómo se interpreta un año; encontrar todos los lugares donde hacía falta, eso era lo difícil."
+    },
+    {
+      "id": "s23",
+      "tone": "revelación",
+      "intensity": 0.65,
+      "text": "También había que preparar un plan alternativo. Si un sistema no podía corregirse a tiempo, algunas organizaciones ensayaban contingencias, respaldos y prioridades. La meta era mantener un servicio esencial si fallaba."
+    },
+    {
+      "id": "s24",
+      "tone": "reenganche",
+      "intensity": 0.75,
+      "text": "Cuando Millennium celebraba el año nuevo, el cambio se acercaba a centros de operaciones de países que todavía lo esperaban. La pregunta de guardia era concreta: ¿el sistema sigue dentro de límites seguros?"
+    },
+    {
+      "id": "s25",
+      "tone": "tensión",
+      "intensity": 0.75,
+      "text": "El comité del Senado describió personal extra de guardia. Su centro de coordinación reunió entre ciento setenta y doscientas personas; FEMA repartió alrededor de ochocientas entre sus centros. También hubo equipos de empresas y servicios esenciales."
+    },
+    {
+      "id": "s26",
+      "tone": "intriga",
+      "intensity": 0.8,
+      "text": "La pregunta seguía abierta: ¿habría una falla que se propagara de un sistema a otro? La sala no podía responderla con promesas. Solo podía observar el flujo de información y priorizar si un servicio crítico perdía capacidad."
+    },
+    {
+      "id": "s27",
+      "tone": "revelación",
+      "intensity": 0.85,
+      "text": "Poco después de la medianoche de Greenwich, el GAO documentó una falla en el procesamiento terrestre de un sistema satelital de inteligencia del Departamento de Defensa. No fue una caída total: operó por debajo de su capacidad plena."
+    },
+    {
+      "id": "s28",
+      "tone": "clímax",
+      "intensity": 1.0,
+      "text": "El respaldo permitió cubrir las necesidades de mayor prioridad, aunque a menor capacidad que en tiempos normales. El dato importante no es imaginar una catástrofe secreta. Es que hubo una interrupción concreta, un modo degradado y una contingencia que funcionó.",
+      "chapter": "La sala no duerme"
+    },
+    {
+      "id": "s29",
+      "tone": "alivio",
+      "intensity": 0.9,
+      "text": "El sistema volvió a estar plenamente operativo el tres de enero. Esa fecha convierte el incidente en una historia más precisa: algo sí falló, el respaldo limitó el impacto y los equipos necesitaron tiempo para recuperar la capacidad completa."
+    },
+    {
+      "id": "s30",
+      "tone": "clímax",
+      "intensity": 0.95,
+      "text": "El informe describe la falla y la respuesta, pero no permite comparar con un mundo sin correcciones. No sabemos cuánto habría cambiado; sí que el respaldo permitió atender las funciones prioritarias."
+    },
+    {
+      "id": "s31",
+      "tone": "sobrio",
+      "intensity": 0.5,
+      "text": "El GAO encontró que Medicare recibió al menos cincuenta mil cuatrocientas setenta y cinco reclamaciones con fechas equivocadas, enviadas por ochocientos setenta y dos remitentes. No son cincuenta mil personas lesionadas: son registros que tuvieron que corregirse."
+    },
+    {
+      "id": "s32",
+      "tone": "sobrio",
+      "intensity": 0.5,
+      "text": "La Administración Federal de Aviación encontró problemas de fecha en ocho sitios de alerta de cizalladura de viento. Se mostraban años incorrectos y algunos datos meteorológicos se rechazaban. La FAA dijo que no afectaron la seguridad, el servicio ni la capacidad nacional."
+    },
+    {
+      "id": "s33",
+      "tone": "revelación",
+      "intensity": 0.6,
+      "text": "El día bisiesto también dejó señales. Medios contemporáneos reportaron que hasta mil doscientos de veinticinco mil cajeros postales japoneses se detuvieron. En ese momento, el ministerio aún no había establecido la causa exacta de todas esas interrupciones."
+    },
+    {
+      "id": "s34",
+      "tone": "precisión",
+      "intensity": 0.55,
+      "text": "La prensa informó además que seis observatorios japoneses no reconocieron el veintinueve de febrero y una estación registró mal las lluvias. Problemas verificables, de escala distinta, sin evidencia para convertirlos en una catástrofe humana."
+    },
+    {
+      "id": "s35",
+      "tone": "reflexivo",
+      "intensity": 0.45,
+      "text": "El informe del Senado juntó cientos de reportes, pero también advirtió que no todos habían sido verificados ni vinculados específicamente a Y2K. Por eso esta historia deja fuera rumores repetidos durante años, aunque suenen más dramáticos."
+    },
+    {
+      "id": "s36",
+      "tone": "reenganche",
+      "intensity": 0.75,
+      "text": "Así que volvamos a la palabra del título. ¿Estafa? Para sostenerla tendríamos que demostrar que el fallo no existía o que el gasto fue una maniobra. La evidencia muestra lo primero falso y deja lo segundo abierto al debate."
+    },
+    {
+      "id": "s37",
+      "tone": "reflexivo",
+      "intensity": 0.55,
+      "text": "El Senado dijo que la preparación había sido necesaria. Koskinen defendió el trabajo. Esa postura cuenta, pero quienes dirigían la respuesta tenían razones para protegerla. Los modelos de gasto tampoco son una factura universal: los montos cambian según qué se incluya.",
+      "chapter": "¿Estafa o prevención?"
+    },
+    {
+      "id": "s38",
+      "tone": "matiz",
+      "intensity": 0.55,
+      "text": "Una evaluación académica posterior señaló una dificultad central: el costo de prevenir un riesgo se puede contar; el daño del escenario que no ocurrió no se observa directamente. Por eso nadie puede probar cuánto de cada dólar fue indispensable."
+    },
+    {
+      "id": "s39",
+      "tone": "puente",
+      "intensity": 0.6,
+      "text": "La pregunta útil no es si cada gasto fue perfecto. Es si el defecto podía afectar servicios y si invertir en arreglos y contingencias era razonable. Los documentos confirman el problema y la preparación."
+    },
+    {
+      "id": "s40",
+      "tone": "explicativo",
+      "intensity": 0.6,
+      "text": "Hoy se habla del problema de dos mil treinta y ocho. El caso clásico afecta contadores de segundos desde mil novecientos setenta guardados en entero con signo de treinta y dos bits. Ese rango termina el diecinueve de enero de dos mil treinta y ocho."
+    },
+    {
+      "id": "s41",
+      "tone": "cautela",
+      "intensity": 0.55,
+      "text": "No significa que todos los relojes digitales vayan a detenerse ese día. El estándar POSIX actual pide un tipo de tiempo de al menos sesenta y cuatro bits, aunque sistemas viejos y dispositivos específicos todavía merecen revisión."
+    },
+    {
+      "id": "s42",
+      "tone": "cierre",
+      "intensity": 0.8,
+      "text": "En Millennium, la primera medianoche pasó sin catástrofe global. Hubo años de pruebas antes y también fallas documentadas en otros sistemas. El silencio no demuestra que no hubiera problema: fue parte de una respuesta colectiva."
+    },
+    {
+      "id": "s43",
+      "tone": "cierre",
+      "intensity": 0.85,
+      "text": "¿Fue Y2K la mayor estafa informática? No hay evidencia para llamarlo estafa. ¿Fue proporcionado cada gasto? No podemos demostrarlo con certeza. El bug era real; las fallas fueron acotadas y no podemos medir qué habría pasado sin los arreglos."
+    },
+    {
+      "id": "s44",
+      "tone": "cierre",
+      "intensity": 0.65,
+      "text": "Entre esos ceros quedaron programadores, equipos de guardia y personas que revisaron fechas. El problema de dos mil treinta y ocho nos deja un límite conocido, que puede revisarse con tiempo y sin otra cuenta atrás mundial."
+    }
+  ],
+  "design": "binary"
+}

@@ -3,7 +3,10 @@ import type {
   ChannelAccount,
   ChannelAccountUpdate,
   ChannelPlatform,
+  ChannelStats,
+  ChannelSyncResult,
   PublishedVideo,
+  VideoMetrics,
 } from "../types";
 
 interface AccountStatusResponseDto {
@@ -12,14 +15,29 @@ interface AccountStatusResponseDto {
   name: string;
   target_id: string;
   status: string;
+  mode?: "api" | "service";
+  last_session_check?: number | null;
   expires_in_seconds: number | null;
   has_refresh_token: boolean;
   avatar: string | null;
+  handle?: string | null;
+  description?: string;
+  custom_url?: string | null;
+  profile_synced_at?: number | null;
+  linked_page_name?: string | null;
+  linked_page_id?: string | null;
   published_count: number;
   label?: string;
   notes?: string;
   connected_at?: number | null;
   last_published_at?: number | null;
+  stats?: {
+    video_count?: number | null;
+    followers?: number | null;
+    views?: number | null;
+  } | null;
+  synced_at?: number | null;
+  can_sync?: boolean;
 }
 
 interface PublishedVideoResponseDto {
@@ -29,19 +47,76 @@ interface PublishedVideoResponseDto {
   url: string;
   title: string;
   published_at: number;
+  origin?: "nexa" | "imported";
+  privacy?: string | null;
+  kind?: "video" | "short" | "reel" | null;
+  duration_seconds?: number | null;
+  thumbnail_url?: string | null;
+  metrics?: {
+    views?: number | null;
+    likes?: number | null;
+    comments?: number | null;
+    synced_at?: number | null;
+  } | null;
+}
+
+interface ChannelSyncResponseDto {
+  platform: string;
+  alias: string;
+  remote_total: number;
+  imported: number;
+  updated: number;
+  stats: {
+    video_count: number | null;
+    followers: number | null;
+    views: number | null;
+  };
+  synced_at: number;
+}
+
+export interface ChannelHealthResult {
+  platform: ChannelPlatform;
+  alias: string;
+  status: "ok" | "requires_reauth" | "attention";
+  reason:
+    | "connected"
+    | "reauth_required"
+    | "identity_mismatch"
+    | "permissions"
+    | "unavailable"
+    | "check_failed";
+  checked_at: number;
 }
 
 function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
+  const stats: ChannelStats | null = dto.stats
+    ? {
+        videoCount: dto.stats.video_count ?? null,
+        followers: dto.stats.followers ?? null,
+        views: dto.stats.views ?? null,
+      }
+    : null;
   return {
     platform: dto.platform as ChannelPlatform,
     alias: dto.alias,
     name: dto.name,
     targetId: dto.target_id,
     status: dto.status === "requires_reauth" ? "requires_reauth" : "ok",
+    mode: dto.mode === "service" ? "service" : "api",
+    lastSessionCheck: dto.last_session_check ?? null,
     expiresInSeconds: dto.expires_in_seconds,
     hasRefreshToken: dto.has_refresh_token,
     avatar: dto.avatar,
+    handle: dto.handle ?? null,
+    description: dto.description ?? "",
+    customUrl: dto.custom_url ?? null,
+    profileSyncedAt: dto.profile_synced_at ?? null,
+    linkedPageName: dto.linked_page_name ?? null,
+    linkedPageId: dto.linked_page_id ?? null,
     publishedCount: dto.published_count,
+    stats,
+    syncedAt: dto.synced_at ?? null,
+    canSync: dto.can_sync ?? false,
     label: dto.label ?? "",
     notes: dto.notes ?? "",
     connectedAt: dto.connected_at ?? null,
@@ -50,6 +125,14 @@ function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
 }
 
 function mapPublishedVideo(dto: PublishedVideoResponseDto): PublishedVideo {
+  const metrics: VideoMetrics | null = dto.metrics
+    ? {
+        views: dto.metrics.views ?? null,
+        likes: dto.metrics.likes ?? null,
+        comments: dto.metrics.comments ?? null,
+        syncedAt: dto.metrics.synced_at ?? null,
+      }
+    : null;
   return {
     platform: dto.platform as ChannelPlatform,
     alias: dto.alias,
@@ -57,6 +140,28 @@ function mapPublishedVideo(dto: PublishedVideoResponseDto): PublishedVideo {
     url: dto.url,
     title: dto.title,
     publishedAt: dto.published_at,
+    origin: dto.origin ?? "nexa",
+    privacy: dto.privacy ?? null,
+    kind: dto.kind ?? null,
+    durationSeconds: dto.duration_seconds ?? null,
+    thumbnailUrl: dto.thumbnail_url ?? null,
+    metrics,
+  };
+}
+
+function mapChannelSyncResult(dto: ChannelSyncResponseDto): ChannelSyncResult {
+  return {
+    platform: dto.platform as ChannelPlatform,
+    alias: dto.alias,
+    remoteTotal: dto.remote_total,
+    imported: dto.imported,
+    updated: dto.updated,
+    stats: {
+      videoCount: dto.stats.video_count,
+      followers: dto.stats.followers,
+      views: dto.stats.views,
+    },
+    syncedAt: dto.synced_at,
   };
 }
 
@@ -83,6 +188,17 @@ export async function getChannelVideos(
   return [...unique.values()];
 }
 
+export async function syncAccount(
+  platform: ChannelPlatform,
+  alias: string,
+): Promise<ChannelSyncResult> {
+  const dto = await httpClient<ChannelSyncResponseDto>(`${accountPath(platform, alias)}/sync`, {
+    method: "POST",
+    timeoutMs: 120_000,
+  });
+  return mapChannelSyncResult(dto);
+}
+
 function accountPath(platform: ChannelPlatform, alias: string): string {
   return `/api/v1/publish/accounts/${platform}/${encodeURIComponent(alias)}`;
 }
@@ -96,6 +212,84 @@ export async function updateChannel(
     method: "PATCH",
     body: update,
   });
+  return mapChannelAccount(dto);
+}
+
+export async function refreshChannelProfile(
+  platform: ChannelPlatform,
+  alias: string,
+): Promise<ChannelAccount> {
+  const dto = await httpClient<AccountStatusResponseDto>(
+    `${accountPath(platform, alias)}/refresh-profile`,
+    { method: "POST" },
+  );
+  return mapChannelAccount(dto);
+}
+
+export async function verifyChannelConnection(
+  platform: ChannelPlatform,
+  alias: string,
+): Promise<ChannelHealthResult> {
+  return httpClient<ChannelHealthResult>(`${accountPath(platform, alias)}/verify`, {
+    method: "POST",
+    timeoutMs: 30_000,
+  });
+}
+
+export interface TikTokPairingResponse {
+  pairing_id: string;
+  import_url: string;
+}
+
+export interface BrowserSessionStatus {
+  state:
+    | "starting"
+    | "queued"
+    | "waiting_qr"
+    | "scanned"
+    | "logged_in"
+    | "done"
+    | "failed"
+    | "expired"
+    | "cancelled";
+  qr_png_b64?: string;
+  identity?: { username?: string | null; nickname?: string | null; avatar_url?: string | null };
+  error?: string;
+}
+
+export async function createTikTokPairing(alias: string): Promise<TikTokPairingResponse> {
+  return httpClient<TikTokPairingResponse>("/api/v1/publish/browser/tiktok/pair", {
+    method: "POST",
+    body: { alias },
+  });
+}
+
+export async function startTikTokQr(alias: string): Promise<{ session_id: string }> {
+  return httpClient<{ session_id: string }>("/api/v1/publish/browser/tiktok/qr/start", {
+    method: "POST",
+    body: { alias },
+    timeoutMs: 30_000,
+  });
+}
+
+export async function getBrowserSession(sessionId: string): Promise<BrowserSessionStatus> {
+  return httpClient<BrowserSessionStatus>(
+    `/api/v1/publish/browser/sessions/${encodeURIComponent(sessionId)}`,
+    { timeoutMs: 15_000 },
+  );
+}
+
+export async function cancelBrowserSession(sessionId: string): Promise<void> {
+  await httpClient(`/api/v1/publish/browser/sessions/${encodeURIComponent(sessionId)}/cancel`, {
+    method: "POST",
+  });
+}
+
+export async function checkTikTokBrowserSession(alias: string): Promise<ChannelAccount> {
+  const dto = await httpClient<AccountStatusResponseDto>(
+    `/api/v1/publish/accounts/tiktok/${encodeURIComponent(alias)}/check-session`,
+    { method: "POST", timeoutMs: 120_000 },
+  );
   return mapChannelAccount(dto);
 }
 

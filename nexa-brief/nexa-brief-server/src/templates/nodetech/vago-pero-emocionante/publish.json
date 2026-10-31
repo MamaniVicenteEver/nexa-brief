@@ -1,29 +1,197 @@
 {
-  "youtube_title": "Vago, pero emocionante: las 3 palabras que crearon la Web",
-  "youtube_description": "Marzo de 1989. En el CERN, un jefe escribió tres palabras en la portada de la propuesta de Tim Berners-Lee: \"vago, pero emocionante\". Así empezó la World Wide Web.\n\nLa NeXT que no se podía apagar, el primer sitio web de la historia y la decisión de 1993 que hizo la web libre para todos, sin patentes ni licencias.\n\n¿Qué idea \"vaga\" tienes guardada? Cuéntanos. Suscríbete a PROTOTIPO: tecnología, innovación y creación, dibujadas a mano.\n\nIMÁGENES (Wikimedia Commons)\n- Sir Tim Berners- Lee.jpg — Amy Martin Photography — CC BY-SA 4.0\n- First Web Server.jpg — User:Coolcaesar at en.wikipedia — CC BY-SA 3.0\n- CERN-first-server-p1030757.jpg — Rama — CC BY-SA 2.0 fr\n- CERN-aerial 2.jpg — Brücke-Osteuropa — CC0\n- Robert Cailliau - TNW Conference 2010 - Day 1 (4560062693).jpg — Julia de Boer / The Next Web — CC BY-SA 2.0",
+  "schema_version": 2,
+  "category": "node_tech",
+  "thumbnail": {
+    "text_only": {
+      "lines": [
+        "PUDO COBRAR",
+        "POR CADA PÁGINA",
+        "DE INTERNET"
+      ],
+      "highlight": "CADA PÁGINA",
+      "pair_title": "B"
+    },
+    "with_image": {
+      "text": "TODA LA WEB VIVÍA AQUÍ",
+      "image": "next-servidor.jpg",
+      "composition": "La computadora ocupa 2/3 del cuadro; la etiqueta escrita a mano encerrada en un círculo rojo; el texto en el tercio libre.",
+      "pair_title": "A",
+      "image_side": "auto",
+      "image_review": [
+        {
+          "image": "portada de la propuesta de 1989",
+          "verdict": "no disponible",
+          "reason": "No está entre los medios del video y su licencia (CERN) está sin verificar."
+        },
+        {
+          "image": "tim.jpg",
+          "verdict": "no pasa",
+          "reason": "Fondo rosa con logos y textos de un evento (criterio 8)."
+        },
+        {
+          "image": "next-servidor.jpg",
+          "verdict": "elegida",
+          "reason": "Objeto de la época con una nota escrita a mano; aparece en el video («toda la web vivía en esa caja»)."
+        }
+      ]
+    },
+    "chosen": "text_only",
+    "kicker": "CERN · MARZO 1989"
+  },
+  "titles": {
+    "youtube": [
+      {
+        "option": "A",
+        "text": "Su jefe llamó «vaga» a la idea que creó la Web",
+        "strategy": 1,
+        "emotion": "Asombro"
+      },
+      {
+        "option": "B",
+        "text": "Inventó la Web y nunca la patentó",
+        "strategy": 10,
+        "emotion": "Asombro positivo"
+      },
+      {
+        "option": "C",
+        "text": "La Web nació de una propuesta que casi nadie entendió",
+        "strategy": 4,
+        "emotion": "Curiosidad"
+      }
+    ],
+    "facebook": {
+      "title": "Inventó la Web y nunca la patentó",
+      "first_line": "Su jefe escribió «vago, pero emocionante» en la portada. Esa propuesta se convirtió en la Web, y su autor la regaló al mundo."
+    },
+    "tiktok": {
+      "caption": "La idea que su jefe llamó «vaga» hoy es la Web. Y nunca la patentó. ¿Lo sabías?"
+    },
+    "chosen": "A"
+  },
+  "description": {
+    "hook": "Marzo de 1989. Un jefe del CERN leyó la propuesta de uno de sus ingenieros y escribió tres palabras en la portada: «vago, pero emocionante». Esa propuesta se convirtió en la Web.",
+    "context": "Tim Berners-Lee tenía 33 años y estaba cansado de que la información del laboratorio se perdiera. Su jefe, Mike Sendall, no la entendió del todo, pero le dio tiempo. Vas a ver la NeXT que nadie podía apagar, el primer sitio web de la historia y la decisión del 30 de abril de 1993 que hizo la Web libre, sin patentes ni licencias.",
+    "chapters": [
+      {
+        "at": "0:00",
+        "title": "Marzo de 1989: tres palabras en una portada"
+      },
+      {
+        "at": "0:20",
+        "title": "El caos de información del CERN"
+      },
+      {
+        "at": "0:44",
+        "title": "La pregunta de Tim Berners-Lee"
+      },
+      {
+        "at": "1:10",
+        "title": "«Vago, pero emocionante»"
+      },
+      {
+        "at": "1:23",
+        "title": "El primer sitio web de la historia"
+      },
+      {
+        "at": "1:48",
+        "title": "¿Quién sería el dueño?"
+      },
+      {
+        "at": "2:12",
+        "title": "30 de abril de 1993: la Web libre"
+      },
+      {
+        "at": "2:43",
+        "title": "De una idea vaga a casi 6.000 millones de personas"
+      }
+    ],
+    "reflection": "A veces la idea que cambia el mundo no llega clara ni perfecta. Llega vaga, pero emocionante. Y alguien tiene el valor de no tirarla a la basura.",
+    "question": "¿Qué idea «vaga» tienes guardada que todavía no te animaste a mostrar?",
+    "gratitude": "G4_impacto",
+    "gratitude_topic": ""
+  },
+  "sources": [
+    "CERN — Information Management: A Proposal (info.cern.ch/Proposal.html)",
+    "CNBC (2019) — la nota que el inventor de la Web recibió de su jefe",
+    "ITU — estadísticas de uso de internet"
+  ],
+  "credits": [
+    "Sir Tim Berners-Lee — Amy Martin Photography — CC BY-SA 4.0",
+    "First Web Server — Coolcaesar (en.wikipedia) — CC BY-SA 3.0",
+    "CERN first server — Rama — CC BY-SA 2.0 fr",
+    "CERN aerial — Brücke-Osteuropa — CC0",
+    "Robert Cailliau (TNW 2010) — Julia de Boer / The Next Web — CC BY-SA 2.0"
+  ],
+  "tags": {
+    "youtube": [
+      "World Wide Web",
+      "cómo nació la Web",
+      "historia de internet",
+      "Tim Berners-Lee",
+      "Tim Berners Lee",
+      "CERN",
+      "vague but exciting",
+      "primer sitio web",
+      "Mike Sendall",
+      "Robert Cailliau",
+      "historia de la tecnología",
+      "documental corto"
+    ],
+    "youtube_hashtags": [
+      "#WorldWideWeb",
+      "#TimBernersLee",
+      "#NodeTech"
+    ],
+    "tiktok": [
+      "#internet",
+      "#historiadelatecnologia",
+      "#timbernerslee",
+      "#sabiasque"
+    ],
+    "facebook": [
+      "#Internet",
+      "#Tecnología"
+    ]
+  },
+  "pinned_comment": "Dato extra: la computadora NeXT donde funcionó la primera web tenía pegado un cartel que decía «Esta máquina es un servidor. ¡NO LA APAGUES!». ¿Qué otro invento que usamos todos los días te gustaría que contemos? ¿O de qué otro tema te gustaría escuchar el próximo video?",
+  "strategies_used": {
+    "title": "title_anchor_tension_v1",
+    "thumbnail": "thumb_two_modes_v1",
+    "platforms": "platforms_v1",
+    "description": "desc_nine_blocks_v1",
+    "gratitude": "gratitude_rotation_v1",
+    "tags": "tags_minimal_v1",
+    "pinned": "pinned_fact_two_questions_v1"
+  },
+  "youtube_title": "Su jefe llamó «vaga» a la idea que creó la Web",
+  "youtube_title_alternatives": [
+    "Inventó la Web y nunca la patentó",
+    "La Web nació de una propuesta que casi nadie entendió"
+  ],
+  "youtube_description": "Marzo de 1989. Un jefe del CERN leyó la propuesta de uno de sus ingenieros y escribió tres palabras en la portada: «vago, pero emocionante». Esa propuesta se convirtió en la Web.\n\nTim Berners-Lee tenía 33 años y estaba cansado de que la información del laboratorio se perdiera. Su jefe, Mike Sendall, no la entendió del todo, pero le dio tiempo. Vas a ver la NeXT que nadie podía apagar, el primer sitio web de la historia y la decisión del 30 de abril de 1993 que hizo la Web libre, sin patentes ni licencias.\n\nCAPÍTULOS\n0:00 Marzo de 1989: tres palabras en una portada\n0:20 El caos de información del CERN\n0:44 La pregunta de Tim Berners-Lee\n1:10 «Vago, pero emocionante»\n1:23 El primer sitio web de la historia\n1:48 ¿Quién sería el dueño?\n2:12 30 de abril de 1993: la Web libre\n2:43 De una idea vaga a casi 6.000 millones de personas\n\nA veces la idea que cambia el mundo no llega clara ni perfecta. Llega vaga, pero emocionante. Y alguien tiene el valor de no tirarla a la basura.\n\nGracias por llegar al final. Ver un video completo es la mejor forma de apoyarnos: ayuda a que YouTube lo muestre a más personas y nos permite seguir trayendo historias como esta.\n\n¿Qué idea «vaga» tienes guardada que todavía no te animaste a mostrar?\n\nFUENTES\n- CERN — Information Management: A Proposal (info.cern.ch/Proposal.html)\n- CNBC (2019) — la nota que el inventor de la Web recibió de su jefe\n- ITU — estadísticas de uso de internet\n\nIMÁGENES (Wikimedia Commons)\n- Sir Tim Berners-Lee — Amy Martin Photography — CC BY-SA 4.0\n- First Web Server — Coolcaesar (en.wikipedia) — CC BY-SA 3.0\n- CERN first server — Rama — CC BY-SA 2.0 fr\n- CERN aerial — Brücke-Osteuropa — CC0\n- Robert Cailliau (TNW 2010) — Julia de Boer / The Next Web — CC BY-SA 2.0\n\n#WorldWideWeb #TimBernersLee #NodeTech",
   "youtube_tags": [
-    "tim berners-lee",
-    "world wide web",
+    "World Wide Web",
+    "cómo nació la Web",
     "historia de internet",
-    "cern",
+    "Tim Berners-Lee",
+    "Tim Berners Lee",
+    "CERN",
     "vague but exciting",
     "primer sitio web",
-    "next computer",
-    "como nacio la web",
-    "tecnologia",
-    "innovacion",
-    "documental",
-    "historia de la tecnologia",
-    "robert cailliau",
-    "web libre"
+    "Mike Sendall",
+    "Robert Cailliau",
+    "historia de la tecnología",
+    "documental corto"
   ],
-  "tiktok_caption": "Su jefe escribió “vago, pero emocionante”… y así nació la Web. ¿Lo sabías?",
+  "facebook_title": "Inventó la Web y nunca la patentó",
+  "facebook_description": "Su jefe escribió «vago, pero emocionante» en la portada. Esa propuesta se convirtió en la Web, y su autor la regaló al mundo.\n\nA veces la idea que cambia el mundo no llega clara ni perfecta. Llega vaga, pero emocionante. Y alguien tiene el valor de no tirarla a la basura.\n\n¿Qué idea «vaga» tienes guardada que todavía no te animaste a mostrar?\n\n#Internet #Tecnología",
+  "tiktok_caption": "La idea que su jefe llamó «vaga» hoy es la Web. Y nunca la patentó. ¿Lo sabías?",
   "tiktok_hashtags": [
-    "tecnologia",
-    "internet",
-    "historia",
-    "innovacion",
-    "web"
+    "#internet",
+    "#historiadelatecnologia",
+    "#timbernerslee",
+    "#sabiasque"
   ],
-  "thumbnail_text": "VAGO, PERO…"
+  "thumbnail_text": "PUDO COBRAR POR CADA PÁGINA DE INTERNET",
+  "gratitude_used": "G4_impacto"
 }

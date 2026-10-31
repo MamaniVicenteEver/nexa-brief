@@ -87,6 +87,17 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
 # pipeline_type == "config_driven_template"
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _apply_locked_keys(config_dict: dict, config_path: Path | None, keys: list[str]) -> None:
+    """Pisa con el valor de la plantilla las claves que la plantilla decide (no la IA)."""
+    if config_path is None or not config_path.exists():
+        return
+    raw = json.loads(config_path.read_text(encoding="utf-8"))
+    template_config = raw["configs"][0] if isinstance(raw, dict) and isinstance(raw.get("configs"), list) and raw["configs"] else raw
+    for key in keys:
+        if isinstance(template_config, dict) and key in template_config:
+            config_dict[key] = template_config[key]
+
+
 async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     t_start = time.monotonic()
     logger.info(
@@ -120,6 +131,8 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
             )
         system_prompt = system_prompt_path.read_text(encoding="utf-8")
         config_dict = await ai.complete_json(system_prompt, job.artifacts.prompt_text)
+        if isinstance(config_dict, dict) and niche_cfg.template.locked_config_keys:
+            _apply_locked_keys(config_dict, template_paths["config_json"], niche_cfg.template.locked_config_keys)
 
     if not isinstance(config_dict, dict):
         raise AIGenerationError(f"Config Mapper no devolvió un objeto JSON: {type(config_dict).__name__}")

@@ -51,6 +51,8 @@ export interface QueueEntry {
   jobId: string;
   platform: ChannelPlatform;
   accountAlias: string;
+  /** Archivo publicado ("16x9" / "9x16"); null = el que le corresponde a la plataforma. */
+  format?: string | null;
   slotId: string | null;
   scheduledAt: string | null;
   source: QueueSource;
@@ -79,10 +81,16 @@ export interface QueueVideoInput {
   scheduledAt: string;
 }
 
+/** Relación de aspecto de un archivo del video. */
+export type VideoFormat = "16x9" | "9x16";
+
 export interface PublishNowInput {
   jobId: string;
+  idempotencyKey: string;
   platform: ChannelPlatform;
   accountAlias: string;
+  /** Archivo a subir; sin valor, el que corresponde a la plataforma. */
+  format?: VideoFormat;
 }
 
 // ── Automatización por categoría + planificador con IA ──────────────────────

@@ -33,6 +33,9 @@ async def create(
     times: list[str],
     enabled: bool = True,
     niche_filter: str | None = None,
+    content_kind: str = "video",
+    category_id: str | None = None,
+    timezone: str = "UTC",
 ) -> ScheduleSlot:
     """Crea un nuevo horario recurrente."""
     now = _now_iso()
@@ -44,6 +47,9 @@ async def create(
         times=times,
         enabled=enabled,
         niche_filter=niche_filter,
+        content_kind=content_kind,
+        category_id=category_id,
+        timezone=timezone,
         created_at=now,
         updated_at=now,
     )

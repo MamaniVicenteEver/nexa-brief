@@ -3,7 +3,7 @@ export interface UserRecord {
   email: string;
   name: string;
   passwordHash: string;
-  role: "admin";
+  role: "admin" | "editor";
   createdAt: string;
 }
 

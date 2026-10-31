@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+import time
 from pathlib import Path
 
 import structlog
@@ -59,6 +60,40 @@ class GeminiFlashAdapter(AIPort):
             raise AIGenerationError("GEMINI_API_KEY is not set.")
         self._client = genai.Client(api_key=settings.gemini_api_key)
         self._model = settings.gemini_model
+
+    async def complete_json_with_usage(self, system_prompt: str, user_prompt: str) -> tuple[dict, dict]:
+        """Devuelve el uso que reporta Gemini junto con el JSON."""
+        for attempt in range(1, settings.ai_max_retries + 1):
+            started = time.monotonic()
+            try:
+                response = await self._client.aio.models.generate_content(
+                    model=self._model,
+                    contents=user_prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_prompt,
+                        response_mime_type="application/json",
+                        max_output_tokens=settings.ai_max_output_tokens,
+                    ),
+                )
+                result = _extract_json(response.text)
+                usage = response.usage_metadata
+                return result, {
+                    "provider": "gemini", "model": response.model_version or self._model,
+                    "input_tokens": getattr(usage, "prompt_token_count", None),
+                    "cached_input_tokens": getattr(usage, "cached_content_token_count", None),
+                    "output_tokens": getattr(usage, "candidates_token_count", None),
+                    "total_tokens": getattr(usage, "total_token_count", None),
+                    "reasoning_tokens": getattr(usage, "thoughts_token_count", None),
+                    "seconds": round(time.monotonic() - started, 2),
+                }
+            except AIValidationError:
+                raise
+            except Exception as exc:
+                logger.warning("gemini_retry", attempt=attempt, error=str(exc))
+                if attempt == settings.ai_max_retries:
+                    raise AIGenerationError(f"Gemini failed after {attempt} attempts: {exc}") from exc
+                await asyncio.sleep(settings.ai_retry_delay_seconds * attempt)
+        raise AIGenerationError("Gemini: unreachable")
 
     async def complete_json(self, system_prompt: str, user_prompt: str) -> dict:
         """Call Gemini in JSON mode and return a parsed dict."""

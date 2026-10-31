@@ -1,35 +1,208 @@
 {
-  "youtube_title": "Las dos palabras que derribaron el Muro de Berlín",
+  "schema_version": 2,
+  "category": "node_history",
+  "thumbnail": {
+    "text_only": {
+      "lines": [
+        "UNA NOTA",
+        "FUERA DE HORA",
+        "CAMBIÓ TODO"
+      ],
+      "highlight": "FUERA DE HORA",
+      "pair_title": "B"
+    },
+    "with_image": {
+      "text": "NADIE DABA LA ORDEN",
+      "image": "bornholmer.jpg",
+      "composition": "El puesto de frontera y la fila de personas ocupan el cuadro; el texto se reserva para el tercio libre. Tratamiento documental acorde al diseño, sin víctimas ni texto ajeno.",
+      "pair_title": "A",
+      "image_side": "right",
+      "image_review": [
+        {
+          "image": "bornholmer.jpg",
+          "verdict": "elegida",
+          "reason": "Reconocible como cruce fronterizo, con barrera y personas en primer plano. La foto es del mismo puesto de Bornholmer Straße, aunque documenta un momento posterior a la apertura; de los medios disponibles, es la escena más cercana al clímax y evita el retrato diminuto de la sala de prensa."
+        },
+        {
+          "image": "schabowski.jpg",
+          "verdict": "alternativa",
+          "reason": "Corresponde a la conferencia exacta, pero el encuadre amplio deja a Schabowski demasiado pequeño para reconocerlo a tamaño de miniatura."
+        },
+        {
+          "image": "nota.jpg",
+          "verdict": "no pasa",
+          "reason": "El manuscrito no se reconoce ni se lee a tamaño pequeño, y no nombra el tema por sí solo."
+        },
+        {
+          "image": "muro-gente.jpg",
+          "verdict": "débil",
+          "reason": "La imagen muestra la celebración posterior a la apertura; la escena del cruce de frontera es más cercana al momento narrado."
+        }
+      ]
+    },
+    "chosen": "text_only",
+    "kicker": "BERLÍN · 9 NOV 1989"
+  },
+  "titles": {
+    "youtube": [
+      {
+        "option": "A",
+        "text": "El Muro de Berlín se abrió antes de lo previsto",
+        "strategy": 4,
+        "emotion": "Tensión"
+      },
+      {
+        "option": "B",
+        "text": "Dos palabras llevaron a miles a la frontera",
+        "strategy": 3,
+        "emotion": "Asombro"
+      },
+      {
+        "option": "C",
+        "text": "La pregunta sobre la fecha que cambió Berlín",
+        "strategy": 8,
+        "emotion": "Curiosidad"
+      }
+    ],
+    "facebook": {
+      "title": "El Muro de Berlín se abrió antes de lo previsto",
+      "first_line": "Una respuesta sin una fecha clara puso a miles de personas frente a los puestos fronterizos esa noche."
+    },
+    "tiktok": {
+      "caption": "Dos palabras aceleraron una noche decisiva en Berlín. ¿Qué habrías hecho frente a esa multitud?"
+    },
+    "chosen": "A"
+  },
+  "description": {
+    "hook": "Una nota que debía esperar hasta la mañana terminó en una respuesta que empujó a miles de personas hacia la frontera.",
+    "context": "Berlín llevaba décadas dividida. En 1989, una regla de viaje iba a anunciarse con calma al día siguiente. Günter Schabowski leyó la nota en una conferencia, no encontró la fecha de vigencia y respondió que era inmediata. La televisión transmitió la frase; en Bornholmer Straße, Harald Jäger abrió la barrera ante una multitud y sin una orden clara.",
+    "chapters": [
+      {
+        "at": "0:00",
+        "title": "El papel que adelantó la historia"
+      },
+      {
+        "at": "0:18",
+        "title": "Berlín partida en dos"
+      },
+      {
+        "at": "0:41",
+        "title": "Las protestas y la nueva regla"
+      },
+      {
+        "at": "1:16",
+        "title": "Schabowski recibe la nota"
+      },
+      {
+        "at": "1:36",
+        "title": "La pregunta sobre la vigencia"
+      },
+      {
+        "at": "2:08",
+        "title": "Miles de personas llegan a la frontera"
+      },
+      {
+        "at": "2:34",
+        "title": "La barrera se abre en Bornholmer Straße"
+      },
+      {
+        "at": "3:11",
+        "title": "Una respuesta que cambió la noche"
+      }
+    ],
+    "reflection": "La historia no siempre cambia por un plan perfecto. A veces la diferencia está en cómo actúa alguien cuando la multitud espera y nadie da una instrucción clara.",
+    "question": "¿Qué pesa más en una crisis: la decisión de quienes gobiernan o la de las personas que están frente al problema?",
+    "gratitude": "G1_identidad",
+    "gratitude_topic": "la memoria histórica"
+  },
+  "sources": [
+    "https://en.wikipedia.org/wiki/Fall_of_the_Berlin_Wall",
+    "https://en.wikipedia.org/wiki/G%C3%BCnter_Schabowski",
+    "https://en.wikipedia.org/wiki/Berlin_Wall",
+    "https://zzf-potsdam.de/en/research/projects/victims-at-the-berlin-wall",
+    "https://en.wikipedia.org/wiki/Monday_demonstrations_in_East_Germany"
+  ],
+  "credits": [
+    "mauerbau.jpg — Bundesarchiv Bild 173-1321, Berlin, Mauerbau.jpg — Helmut J. Wolf — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_173-1321,_Berlin,_Mauerbau.jpg",
+    "schabowski.jpg — Bundesarchiv Bild 183-1989-1109-030, Berlin, Schabowski auf Pressekonferenz.jpg — Thomas Lehmann — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1109-030,_Berlin,_Schabowski_auf_Pressekonferenz.jpg",
+    "nota.jpg — Schabowski-notizzettel.jpg — Günter Schabowski — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Schabowski-notizzettel.jpg",
+    "bornholmer.jpg — Bundesarchiv Bild 183-1989-1118-017, Berlin, Grenzübergang Bornholmer Straße.jpg — Roeske, Robert — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1118-017,_Berlin,_Grenz%C3%BCbergang_Bornholmer_Stra%C3%9Fe.jpg",
+    "muro-gente.jpg — BerlinWall-BrandenburgGate.jpg — Sue Ream, photographer (San Francisco, California) — CC BY 3.0 — https://commons.wikimedia.org/wiki/File:BerlinWall-BrandenburgGate.jpg",
+    "mauerspecht.jpg — Andree Werder im November 1989 als Mauerspecht an der Berliner Mauer.jpg — Werdersen — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Andree_Werder_im_November_1989_als_Mauerspecht_an_der_Berliner_Mauer.jpg",
+    "leipzig.jpg — Bundesarchiv Bild 183-1989-1023-022, Leipzig, Montagsdemonstration.jpg — Friedrich Gahlbeck — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1023-022,_Leipzig,_Montagsdemonstration.jpg"
+  ],
+  "tags": {
+    "youtube": [
+      "Muro de Berlín",
+      "caída del Muro de Berlín",
+      "Günter Schabowski",
+      "Harald Jäger",
+      "Bornholmer Straße",
+      "Berlín 1989",
+      "Alemania Oriental",
+      "Guerra Fría",
+      "reunificación alemana",
+      "historia europea",
+      "protestas en Alemania Oriental",
+      "historia real",
+      "documental de historia"
+    ],
+    "youtube_hashtags": [
+      "#NodeHistory",
+      "#historia",
+      "#GuerraFria"
+    ],
+    "tiktok": [
+      "#historia",
+      "#MuroDeBerlin",
+      "#GuerraFria",
+      "#historiareal"
+    ],
+    "facebook": [
+      "#Historia",
+      "#MuroDeBerlin"
+    ]
+  },
+  "pinned_comment": "Dato extra: La reunificación alemana llegó el 3 de octubre de 1990, menos de un año después de la apertura. ¿Qué otra frontera cambió por una decisión inesperada? ¿Qué historia te gustaría escuchar después?",
+  "strategies_used": {
+    "title": "title_anchor_tension_v1",
+    "thumbnail": "thumb_two_modes_v1",
+    "platforms": "platforms_v1",
+    "description": "desc_nine_blocks_v1",
+    "gratitude": "gratitude_rotation_v1",
+    "tags": "tags_minimal_v1",
+    "pinned": "pinned_fact_two_questions_v1"
+  },
+  "youtube_title": "El Muro de Berlín se abrió antes de lo previsto",
   "youtube_title_alternatives": [
-    "Nadie le avisó a Schabowski: el error que abrió el Muro",
-    "Por qué el Muro de Berlín cayó en una conferencia de prensa"
+    "Dos palabras llevaron a miles a la frontera",
+    "La pregunta sobre la fecha que cambió Berlín"
   ],
-  "youtube_description": "El 9 de noviembre de 1989, casi a las 7 de la tarde, un vocero leyó un papel que casi no conocía y dijo dos palabras que nadie había autorizado: «de inmediato, sin demora». Esa frase, dicha en el momento justo, terminó derribando el Muro de Berlín.\n\nDurante 28 años, Berlín estuvo partida en dos. En agosto de 1961, el gobierno de Alemania del Este levantó de un día para otro un muro de hormigón y alambre en medio de la ciudad. Familias separadas por una calle, vecinos que dejaron de verse para siempre. Al menos 140 personas murieron en ese muro. Pero en el otoño de 1989 algo se estaba rompiendo: miles de alemanes del Este escapaban por Hungría y Checoslovaquia, y cada lunes cientos de miles marchaban pidiendo libertad para viajar.\n\nEl gobierno decidió soltar un poco la cuerda y redactó una regla nueva: viajar al Oeste, con permiso, con trámites y con orden. Iba a anunciarse al día siguiente. El encargado de contarlo era Günter Schabowski, el vocero del partido, y a él le entregaron la nota sin advertirle que debía esperar. La conferencia fue larga y aburrida. Al final sacó el papel, lo leyó tal cual, y cuando un periodista preguntó cuándo entraba en vigor, buscó la respuesta en sus papeles, no la encontró y dijo lo que creía.\n\nEn este video verás cómo una respuesta improvisada se convirtió en una noche entera de historia: la televisión del Oeste repitiendo que las fronteras estaban abiertas, la multitud frente al cruce de Bornholmer Strasse, y el oficial Harald Jäger tomando a las once y media de la noche la decisión que ningún superior quiso tomar. La gente cruzó, los berlineses se subieron al muro con martillos y cinceles, y menos de un año después, el 3 de octubre de 1990, Alemania volvió a ser un solo país.\n\nLa historia suele contarse con grandes batallas y grandes líderes. Esta vez, la movieron dos palabras. ¿Tú habrías abierto la barrera esa noche sin una orden clara? Cuéntanoslo en los comentarios.",
+  "youtube_description": "Una nota que debía esperar hasta la mañana terminó en una respuesta que empujó a miles de personas hacia la frontera.\n\nBerlín llevaba décadas dividida. En 1989, una regla de viaje iba a anunciarse con calma al día siguiente. Günter Schabowski leyó la nota en una conferencia, no encontró la fecha de vigencia y respondió que era inmediata. La televisión transmitió la frase; en Bornholmer Straße, Harald Jäger abrió la barrera ante una multitud y sin una orden clara.\n\nCAPÍTULOS\n0:00 El papel que adelantó la historia\n0:18 Berlín partida en dos\n0:41 Las protestas y la nueva regla\n1:16 Schabowski recibe la nota\n1:36 La pregunta sobre la vigencia\n2:08 Miles de personas llegan a la frontera\n2:34 La barrera se abre en Bornholmer Straße\n3:11 Una respuesta que cambió la noche\n\nLa historia no siempre cambia por un plan perfecto. A veces la diferencia está en cómo actúa alguien cuando la multitud espera y nadie da una instrucción clara.\n\nSi llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.\n\n¿Qué pesa más en una crisis: la decisión de quienes gobiernan o la de las personas que están frente al problema?\n\nFUENTES\n- https://en.wikipedia.org/wiki/Fall_of_the_Berlin_Wall\n- https://en.wikipedia.org/wiki/G%C3%BCnter_Schabowski\n- https://en.wikipedia.org/wiki/Berlin_Wall\n- https://zzf-potsdam.de/en/research/projects/victims-at-the-berlin-wall\n- https://en.wikipedia.org/wiki/Monday_demonstrations_in_East_Germany\n\nIMÁGENES (Wikimedia Commons)\n- mauerbau.jpg — Bundesarchiv Bild 173-1321, Berlin, Mauerbau.jpg — Helmut J. Wolf — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_173-1321,_Berlin,_Mauerbau.jpg\n- schabowski.jpg — Bundesarchiv Bild 183-1989-1109-030, Berlin, Schabowski auf Pressekonferenz.jpg — Thomas Lehmann — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1109-030,_Berlin,_Schabowski_auf_Pressekonferenz.jpg\n- nota.jpg — Schabowski-notizzettel.jpg — Günter Schabowski — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Schabowski-notizzettel.jpg\n- bornholmer.jpg — Bundesarchiv Bild 183-1989-1118-017, Berlin, Grenzübergang Bornholmer Straße.jpg — Roeske, Robert — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1118-017,_Berlin,_Grenz%C3%BCbergang_Bornholmer_Stra%C3%9Fe.jpg\n- muro-gente.jpg — BerlinWall-BrandenburgGate.jpg — Sue Ream, photographer (San Francisco, California) — CC BY 3.0 — https://commons.wikimedia.org/wiki/File:BerlinWall-BrandenburgGate.jpg\n- mauerspecht.jpg — Andree Werder im November 1989 als Mauerspecht an der Berliner Mauer.jpg — Werdersen — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Andree_Werder_im_November_1989_als_Mauerspecht_an_der_Berliner_Mauer.jpg\n- leipzig.jpg — Bundesarchiv Bild 183-1989-1023-022, Leipzig, Montagsdemonstration.jpg — Friedrich Gahlbeck — CC BY-SA 3.0 de — https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-1989-1023-022,_Leipzig,_Montagsdemonstration.jpg\n\n#NodeHistory #historia #GuerraFria",
   "youtube_tags": [
-    "muro de berlin",
-    "caida del muro de berlin",
-    "9 de noviembre de 1989",
-    "guerra fria",
-    "gunter schabowski",
-    "harald jager",
-    "bornholmer strasse",
-    "reunificacion alemana",
-    "historia de alemania",
-    "berlin 1989",
-    "documental de historia",
+    "Muro de Berlín",
+    "caída del Muro de Berlín",
+    "Günter Schabowski",
+    "Harald Jäger",
+    "Bornholmer Straße",
+    "Berlín 1989",
+    "Alemania Oriental",
+    "Guerra Fría",
+    "reunificación alemana",
+    "historia europea",
+    "protestas en Alemania Oriental",
     "historia real",
-    "conferencia de prensa schabowski"
+    "documental de historia"
   ],
-  "facebook_title": "Dos palabras improvisadas abrieron el Muro de Berlín",
-  "facebook_description": "Un vocero leyó una nota que casi no conocía y respondió «de inmediato, sin demora» a una pregunta para la que nadie lo había preparado. Esa noche miles de berlineses caminaron hacia la frontera y un solo oficial tuvo que decidir si abría o no. ¿Qué habrías hecho tú en su lugar?",
-  "tiktok_caption": "Leyó un papel que casi no conocía y dijo «de inmediato». Esa noche, el Muro de Berlín se abrió.",
+  "facebook_title": "El Muro de Berlín se abrió antes de lo previsto",
+  "facebook_description": "Una respuesta sin una fecha clara puso a miles de personas frente a los puestos fronterizos esa noche.\n\nLa historia no siempre cambia por un plan perfecto. A veces la diferencia está en cómo actúa alguien cuando la multitud espera y nadie da una instrucción clara.\n\n¿Qué pesa más en una crisis: la decisión de quienes gobiernan o la de las personas que están frente al problema?\n\n#Historia #MuroDeBerlin",
+  "tiktok_caption": "Dos palabras aceleraron una noche decisiva en Berlín. ¿Qué habrías hecho frente a esa multitud?",
   "tiktok_hashtags": [
     "#historia",
-    "#murodeberlin",
-    "#guerrafria",
-    "#documental",
-    "#1989",
+    "#MuroDeBerlin",
+    "#GuerraFria",
     "#historiareal"
   ],
-  "thumbnail_text": "«DE INMEDIATO, SIN DEMORA»"
+  "thumbnail_text": "UNA NOTA FUERA DE HORA CAMBIÓ TODO",
+  "gratitude_used": "G1_identidad"
 }

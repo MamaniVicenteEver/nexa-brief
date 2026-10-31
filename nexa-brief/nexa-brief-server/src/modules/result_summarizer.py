@@ -20,14 +20,16 @@ from src.core.job import Job, JobStage, PlatformCopyText, VideoSummary
 from src.core.metadata import CopyRenderError, StrategyError
 from src.core.ports.ai_port import AIPort
 from src.modules.content_language import resolve_content_language
-from src.modules.copy_writer import CopyResult, build_facts, write_copy
+from src.modules.copy_writer import CopyResult, build_facts, copy_language, copy_profile, write_copy
 
 logger = structlog.get_logger(__name__)
 
 
 def _to_summary(result: CopyResult, language: str) -> VideoSummary:
     copies = {
-        platform: PlatformCopyText(title=c.title, description=c.description, tags=c.tags, strategy=c.strategy_id)
+        platform: PlatformCopyText(
+            title=c.title, description=c.description, tags=c.tags, strategy=c.strategy_id, pinned_comment=c.pinned_comment
+        )
         for platform, c in result.copies.items()
     }
     youtube = copies.get("youtube")
@@ -40,19 +42,40 @@ def _to_summary(result: CopyResult, language: str) -> VideoSummary:
         tiktok_hashtags=tiktok.tags if tiktok else [],
         language=language,
         platform_copies=copies,
+        pinned_comment=youtube.pinned_comment if youtube else "",
     )
+
+
+def _write_prepared(job: Job) -> Job:
+    """Textos preparados en el Sandbox (src/core/draft_details.py): se usan tal cual, sin IA."""
+    summary = job.artifacts.summary
+    logs_dir = job.artifacts.output_dir / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    final_summary = {
+        **summary.model_dump(),
+        "language_source": "prepared",
+        "music": job.artifacts.music_meta,
+        "image": job.artifacts.image_meta,
+    }
+    (logs_dir / "08_resumen_final.json").write_bytes(orjson.dumps(final_summary, option=orjson.OPT_INDENT_2))
+    logger.info("result_summarizer_prepared", job_id=job.job_id, title=summary.youtube_title)
+    return job.advance(JobStage.SUMMARY_GENERATED)
 
 
 async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     t_start = time.monotonic()
     logger.info("result_summarizer_start", job_id=job.job_id)
+    if job.artifacts.summary is not None and job.artifacts.summary.platform_copies:
+        return _write_prepared(job)
 
     language = await resolve_content_language(job)
+    profile = copy_profile(niche_cfg)
+    language_code = copy_language(profile, language.code)
     try:
-        result = await write_copy(ai, build_facts(job, niche_cfg), language.code, seed=job.job_id)
+        result = await write_copy(ai, build_facts(job, niche_cfg), language_code, seed=job.job_id, profile=profile)
     except (StrategyError, CopyRenderError) as exc:
         raise AIValidationError(f"Copy generation failed: {exc}") from exc
-    summary = _to_summary(result, language.code)
+    summary = _to_summary(result, language_code)
 
     logs_dir = job.artifacts.output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
@@ -74,7 +97,7 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
         "result_summarizer_done",
         job_id=job.job_id,
         title=summary.youtube_title,
-        language=language.code,
+        language=language_code,
         strategies={p: c.strategy for p, c in summary.platform_copies.items()},
         elapsed=round(time.monotonic() - t_start, 2),
     )

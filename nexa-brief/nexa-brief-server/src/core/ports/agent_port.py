@@ -10,7 +10,7 @@ máquina donde vive el servidor; más adelante se agregan agentes por API
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -34,6 +34,12 @@ class AgentScope:
     os_sandbox_dir: str | None = None
     # Rutas absolutas extra que el agente puede escribir (p. ej. el estado del kit).
     extra_writable: tuple[str, ...] = ()
+    # Modelo y esfuerzo específicos para el trabajo acotado. Si no se indican,
+    # cada runner conserva su configuración habitual.
+    model: str | None = None
+    reasoning_effort: str | None = None
+    # Variables heredadas por las herramientas que ejecuta este agente.
+    extra_env: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -42,6 +48,10 @@ class AgentRunResult:
     last_message: str      # respuesta final del agente (o la cola de la salida)
     duration_seconds: float
     timed_out: bool = False
+    # Uso informado por el CLI: input_tokens, cached_input_tokens, output_tokens, reasoning_tokens
+    # (y cost_usd si el proveedor lo da). Vacío si el CLI no lo informó.
+    usage: dict = field(default_factory=dict)
+    model: str = ""
 
     @property
     def ok(self) -> bool:

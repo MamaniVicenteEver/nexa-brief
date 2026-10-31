@@ -25,11 +25,15 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "media_plans": ("studio/media_plans.json", "plan_id"),
     # Explainer (NodeTech/History/Politics/Economy): producciones con agente local
     "explainer_productions": ("explainer/productions.json", "production_id"),
+    # Fábrica: ejecuciones del agente líder para prototipos del sandbox
+    "prototype_runs": ("prototypes/runs.json", "run_id"),
     # Plan de contenido semanal (planificador con IA en Programación)
     "content_plan": ("schedule/content_plan.json", "item_id"),
     # canales/ ya tiene datos reales (cuentas conectadas): se conserva su ruta.
     "channels": ("canales/channels.json", None),
     "published_videos": ("canales/published_videos.json", None),
+    # Archivo de publicaciones de imagen: esta lista es una proyección derivada.
+    "publication_index": ("publicaciones/index.json", "publication_id"),
 }
 
 # name → carpeta relativa a data/ (un .json por clave)
@@ -40,6 +44,7 @@ DOCUMENTS: dict[str, str] = {
     "template_config_files": "library/template_config_files",
     "progress": "progress",
     "draft_jobs": "studio/draft_jobs",          # Job serializado de cada draft (para retomarlo)
+    "template_originals": "studio/template_originals",  # medios del «Video original» de cada plantilla
     "stock_search_cache": "library/cache/stock_search",
 }
 
@@ -48,4 +53,10 @@ FILES: dict[str, str] = {
     "images": "library/files/images",
     "music": "library/files/music",
     "videos": "library/files/videos",
+    # Medios inmutables de publicaciones aprobadas.
+    "publication_media": "publicaciones",
 }
+
+# Raíz del archivo de publicaciones. Los adapters de publicaciones son los
+# únicos que resuelven rutas por debajo de este namespace.
+PUBLICATIONS_ROOT = "publicaciones"

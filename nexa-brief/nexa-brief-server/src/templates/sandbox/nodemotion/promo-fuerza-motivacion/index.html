@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fuerza · Motivación</title>
+<link id="gf" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap">
+<style>
+  :root { --red:#C8102E; --cream:#F3F0EA; --ink:#141418; --grey:#4A4446; --pink:#FF5A8C; --violet:#6A2BFF; --cyan:#18B4FF; }
+  html, body { margin:0; height:100%; background:#000; overflow:hidden; }
+  #stage { position:fixed; width:max(100vw,177.7778vh); height:max(100vh,56.25vw); left:50%; top:50%; transform:translate(-50%,-50%); overflow:hidden; background:var(--ink); }
+  .ab { position:absolute; left:0; top:0; }
+  .full { position:absolute; inset:0; }
+  .box { position:absolute; overflow:hidden; }
+  .box video, .box img, .box canvas { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .mk { -webkit-mask-size:100% 100%; mask-size:100% 100%; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; }
+  .anton { font-family:Anton, sans-serif; line-height:.86; white-space:nowrap; }
+  .arch { font-family:Archivo, sans-serif; white-space:nowrap; line-height:.92; }
+  .stamp { -webkit-mask-image:url(tex/speckle.png); mask-image:url(tex/speckle.png); -webkit-mask-size:34vmin auto; mask-size:34vmin auto; }
+  .ch { display:inline-block; white-space:pre; }
+  #hud { position:fixed; left:8px; bottom:8px; z-index:9; font:12px/1.3 monospace; color:#ff0; background:#000a; padding:4px 6px; display:none; white-space:pre; }
+  #loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; color:#777; font:14px monospace; }
+</style>
+</head>
+<body>
+<audio id="audio" preload="auto"></audio>
+<div id="stage"></div>
+<div id="loading">cargando…</div>
+<div id="hud"></div>
+<script>if(new URLSearchParams(location.search).get("controls")==="1"){const adapter=document.createElement("script");adapter.src=new URL("../_player/adapter.js",document.currentScript.src||location.href).href;document.head.appendChild(adapter)}</script>
+<script>
+/* Promo «Fuerza · Motivación» — réplica del intro fitness de Klickpin (crema/rojo/negro).
+   Reloj único: audio.currentTime. Cada segmento de lyrics.json es una escena: un estallido
+   gráfico (~1,1 s: estampado, marcos de pincel, filas glitch, palabra gigante o tiza) que
+   termina asentándose en el video a pantalla completa con el texto blanco pequeño. */
+(async () => {
+  const Q = new URLSearchParams(location.search);
+  let FREEZE = Q.has("t") ? parseFloat(Q.get("t")) : null;
+
+  async function loadJSON(...urls) {
+    for (const u of urls) { try { const r = await fetch(u); if (r.ok) return await r.json(); } catch (e) {} }
+    return null;
+  }
+  const raw = await loadJSON("config.json", "assets/config.json");
+  if (!raw) { console.warn("sin config"); return; }
+  const C = raw.configs ? raw.configs[0] : raw;
+  const DEBUG = Q.has("debug") || (C.debug && C.debug.enabled);
+  for (const [k, v] of Object.entries(C.palette || {})) document.documentElement.style.setProperty("--" + k, v);
+  if (C.fonts && C.fonts.googleUrl) document.getElementById("gf").href = C.fonts.googleUrl;
+
+  const audio = document.getElementById("audio");
+  audio.src = C.audio.src;
+  const stage = document.getElementById("stage");
+
+  // ---------- letra / guion ----------
+  const lyr = C.lyricsUrl ? await loadJSON(C.lyricsUrl) : null;
+  const F = C.lyricsFilter || {};
+  const drop = (F.drop || []).map(s => new RegExp(s, "i"));
+  const segs = ((lyr && lyr.segments) || []).filter(s =>
+    !(s.avg_logprob != null && F.minLogprob != null && s.avg_logprob < F.minLogprob) &&
+    !drop.some(r => r.test(s.text || "")) && (s.text || "").trim());
+
+  // ---------- medios: precarga como blob (el server de pruebas no soporta Range) ----------
+  const MEDIA = {};
+  await Promise.all((C.media || []).map(async m => {
+    const o = { ...m, url: m.src, posterUrl: m.poster, dur: 8 };
+    try { o.url = URL.createObjectURL(await (await fetch(m.src)).blob()); } catch (e) { console.warn("media", m.src); }
+    if (m.poster) {
+      try { o.posterUrl = URL.createObjectURL(await (await fetch(m.poster)).blob()); } catch (e) {}
+      o.img = new Image(); o.img.src = o.posterUrl; try { await o.img.decode(); } catch (e) {}
+    }
+    MEDIA[m.id] = o;
+  }));
+  const mediaIds = Object.keys(MEDIA);
+  try { await document.fonts.load('900 100px "Archivo"'); await document.fonts.load('100px "Anton"'); await document.fonts.load('italic 900 100px "Archivo"'); } catch (e) {}
+  document.getElementById("loading").remove();
+
+  // ---------- utilidades ----------
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const E = {
+    lin: x => x,
+    out: x => 1 - Math.pow(1 - x, 3),
+    inOut: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+    expo: x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x),
+    back: x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); },
+    in: x => x * x * x,
+  };
+  const k = (t, a, b, v0, v1, e = E.out) => t <= a ? v0 : t >= b ? v1 : v0 + (v1 - v0) * e((t - a) / (b - a));
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const hash = (a, b) => { const r = mulberry32((a * 73856093) ^ (b * 19349663)); return r(); };
+  function el(tag, cls, parent, css) {
+    const e = document.createElement(tag); if (cls) e.className = cls;
+    if (css) Object.assign(e.style, css); if (parent) parent.appendChild(e); return e;
+  }
+  // escribe estilos solo si cambian (evita trabajo de estilo por cuadro)
+  function S(e, prop, val) { const c = e.__s || (e.__s = {}); if (c[prop] !== val) { c[prop] = val; e.style[prop] = val; } }
+  function mask(e, name, size) {
+    e.classList.add("mk"); e.style.webkitMaskImage = e.style.maskImage = name ? `url(tex/${name}.png)` : "none";
+    if (size) e.style.webkitMaskSize = e.style.maskSize = size;
+  }
+  function letters(parent, text, cls, css) {
+    const w = el("div", cls, parent, css); const chs = [];
+    for (const c of text) { const s = el("span", "ch", w); s.textContent = c; chs.push(s); }
+    w.chs = chs; return w;
+  }
+  // ajusta el tamaño de fuente para que el texto mida `tw` de ancho (y no supere `maxH`)
+  function fit(e, tw, maxFs) {
+    e.style.fontSize = "100px"; const w = e.scrollWidth || 1;
+    const fs = Math.min(100 * tw / w, maxFs || 1e9); e.style.fontSize = fs + "px"; return fs;
+  }
+  let W = stage.clientWidth, H = stage.clientHeight;
+  const portrait = () => H > W;
+
+  // ---------- escenas ----------
+  const T = Object.assign({ burstSec: 1.1, burstMaxFrac: .5, exitSec: .18 }, C.timing || {});
+  const scenesCfg = C.scenes || [{ type: "stamp" }];
+  function textAt(t) {
+    let found = null;
+    for (const s of segs) { if (s.start <= t) found = s; else break; }
+    return found ? (found.text || "").trim().toUpperCase() : "";
+  }
+  const cycleSec = Number(C.reference && C.reference.duration) || 19.033;
+  const endTime = Number(C.duration || C.audio.duration) || (segs.length ? segs[segs.length - 1].end : cycleSec);
+  const scenes = [];
+  let visualIndex = 0;
+  for (let base = 0; base < endTime; base += cycleSec) {
+    for (let j = 0; j < scenesCfg.length; j++) {
+      const cfg = scenesCfg[j];
+      const t0 = base + (Number(cfg.at) || 0);
+      if (t0 >= endTime) continue;
+      const t1 = base + (j + 1 < scenesCfg.length ? Number(scenesCfg[j + 1].at) : cycleSec);
+      const media = MEDIA[cfg.media] ? cfg.media : mediaIds[visualIndex % mediaIds.length];
+      const sc = { i: visualIndex, t0, t1, text: textAt(t0), cfg, media, type: cfg.type, dur: t1 - t0 };
+      const burstSec = Number(cfg.burstSec) || T.burstSec;
+      const burstMaxFrac = Number(cfg.burstMaxFrac) || T.burstMaxFrac;
+      sc.B = cfg.type === "hold" ? 0 : Math.min(burstSec, sc.dur * burstMaxFrac);
+      sc.rnd = mulberry32((C.seed || 1) * 1000 + visualIndex * 101);
+      scenes.push(sc); visualIndex++;
+    }
+  }
+  scenes.forEach((s, i) => { s.prev = scenes[i - 1] || null; });
+
+  // un <video> por escena; se destruye al salir (no acumulamos decodificadores)
+  function video(sc, id, parent, offset) {
+    const m = MEDIA[id]; const v = el("video", "", parent);
+    v.muted = true; v.playsInline = true; v.preload = "auto"; v.loop = false; v.src = m.url;
+    if (m.posterUrl) v.poster = m.posterUrl;
+    v.__off = offset || 0; v.__dur = m.dur; (sc.videos || (sc.videos = [])).push(v);
+    v.addEventListener("loadedmetadata", () => { v.__dur = v.duration || m.dur; }, { once: true });
+    return v;
+  }
+  function poster(id, parent) { const i = el("img", "", parent); i.src = MEDIA[id].posterUrl; return i; }
+  function syncVideos(sc, lt, playing) {
+    for (const v of sc.videos || []) {
+      if (!v.isConnected || v.offsetParent === null && getComputedStyle(v.parentElement).display === "none") { if (!v.paused) v.pause(); continue; }
+      const d = Math.max(.5, (v.__dur || 8) - .15);
+      const want = (v.__off + Math.max(0, lt)) % d;
+      if (playing) {
+        if (v.paused) v.play().catch(() => {});
+        if (Math.abs(v.currentTime - want) > .3) v.currentTime = want;
+      } else {
+        if (!v.paused) v.pause();
+        if (Math.abs(v.currentTime - want) > .04) v.currentTime = want;
+      }
+    }
+  }
+
+  // caja del video principal: posición/tamaño en px, rotación y máscara
+  function setBox(b, cx, cy, w, h, rot) {
+    S(b, "left", (cx - w / 2) + "px"); S(b, "top", (cy - h / 2) + "px");
+    S(b, "width", w + "px"); S(b, "height", h + "px"); S(b, "transform", rot ? `rotate(${rot}deg)` : "none");
+  }
+
+  // ----- texto que se asienta sobre el video (blanco pequeño) -----
+  function holdText(sc, root) {
+    const it = sc.cfg.hold !== "upright";
+    const w = letters(root, sc.text, "arch", {
+      position: "absolute", left: "50%", top: "50%", color: "#fff",
+      fontStyle: it ? "italic" : "normal",
+      fontVariationSettings: it ? '"wdth" 112, "wght" 850' : '"wdth" 78, "wght" 800',
+      letterSpacing: it ? ".05em" : ".07em", textShadow: "0 0 .35em rgba(0,0,0,.25)",
+    });
+    const n = sc.text.length;
+    // En horizontal el referente deja mucho aire alrededor del rótulo; en 9:16
+    // conservamos un ancho mayor para que la frase siga leyéndose en móvil.
+    const tw = portrait() ? W * clamp(.06 * n, .36, .78) : W * clamp(.042 * n, .3, .6);  // ref: «GET FIT» ≈ 27 % del ancho, «YOUR GOALS» ≈ 42 %
+    w.fs = fit(w, tw, H * .11);
+    w.style.display = "none";
+    w.update = (lt) => {
+      const a = sc.B, end = sc.dur - T.exitSec;
+      if (lt < a - .05 || lt >= sc.dur) { S(w, "display", "none"); return; }
+      S(w, "display", "block");
+      const p = lt - a;
+      if (sc.holdShrink) {                      // entra gigante y se encoge (filas → video)
+        const s = k(lt, a - .05, a + .22, 3.4, 1, E.expo);
+        S(w, "transform", `translate(-50%,-50%) scale(${s})`);
+        w.chs.forEach(c => S(c, "opacity", "1"));
+      } else if (it) {                          // itálica: entra desde la derecha cerrando el tracking
+        const ls = k(p, 0, .45, .9, .05, E.expo), x = k(p, 0, .45, W * .18, 0, E.expo);
+        S(w, "letterSpacing", ls + "em"); S(w, "transform", `translate(calc(-50% + ${x}px),-50%)`);
+        w.chs.forEach((c, j) => S(c, "opacity", p > j * .025 ? "1" : "0"));
+      } else {                                  // recta: letras que parpadean hasta quedarse
+        S(w, "transform", "translate(-50%,-50%)");
+        w.chs.forEach((c, j) => { const on = p > .25 || hash(sc.i * 31 + j, Math.floor(p / .05)) > .45; S(c, "opacity", on ? "1" : "0"); });
+      }
+      if (lt > end) {                           // salida: se apagan letras sueltas
+        const q = (lt - end) / T.exitSec;
+        w.chs.forEach((c, j) => { if (hash(sc.i * 17 + j, 3) < q * 1.2) S(c, "opacity", "0"); });
+      }
+    };
+    return w;
+  }
+
+  // copia RGB desplazada (aberración cromática) de un bloque de texto
+  function ghosts(parent, make) {
+    const g1 = make(parent); const g2 = make(parent);
+    g1.style.color = "var(--cyan)"; g2.style.color = "var(--violet)";
+    g1.style.opacity = g2.style.opacity = "0"; return [g1, g2];
+  }
+
+  const B = {};
+
+  // 1) ESTAMPADO: letras rojas sobre crema, se estiran a pantalla completa, tarjeta de video que crece
+  B.stamp = (sc, root) => {
+    const bg = el("div", "full", root, { background: "var(--cream)" });
+    const wrap = el("div", "ab", root, { transformOrigin: "0 0" });
+    const mk = (p) => letters(p, sc.text, "anton stamp", { position: "absolute", left: 0, top: 0, color: "var(--red)" });
+    const gs = ghosts(wrap, mk); const word = mk(wrap);
+    // ref: letras de ~60 % de la altura, alineadas a la izquierda, la palabra se sale por la derecha
+    const fs = portrait() ? fit(word, W * .92, H * .3) : H * .74; word.style.fontSize = fs + "px";
+    gs.forEach(g => g.style.fontSize = fs + "px");
+    const x0 = portrait() ? (W - word.scrollWidth) / 2 : W * .025, y0 = portrait() ? H * .3 : H * .1;
+    wrap.style.left = x0 + "px"; wrap.style.top = y0 + "px";
+    const box = el("div", "box", root); mask(box, "card"); const v = video(sc, sc.media, box, 0);
+    const hold = holdText(sc, root);
+    const n = sc.text.length, step = Math.min(.06, .42 / n);
+    return (lt) => {
+      const b = sc.B;
+      const inBurst = lt < b;
+      S(bg, "display", inBurst ? "block" : "none"); S(wrap, "display", lt < b - .12 ? "block" : "none");
+      word.chs.forEach((c, j) => {
+        const a = j * step; const s = k(lt, a, a + .1, 1.5, 1, E.out);
+        S(c, "opacity", lt >= a ? "1" : "0"); S(c, "transform", `scale(${s}) rotate(${k(lt, a, a + .1, j % 2 ? 6 : -5, 0)}deg)`);
+      });
+      gs.forEach((g, j) => g.chs.forEach((c, q) => S(c, "opacity", lt >= q * step ? "1" : "0")));
+      const sy = k(lt, .42, .78, 1, portrait() ? 1.6 : 2.7, E.inOut), sx = k(lt, .42, .78, 1, .94, E.inOut);
+      S(wrap, "transform", `translate(${k(lt, .42, .8, 0, -W * .06, E.inOut)}px,${k(lt, .42, .78, 0, -y0 + H * .02, E.inOut)}px) scale(${sx},${sy})`);
+      const go = lt > .5 && lt < .95 ? .85 : 0, dx = W * .006 * (1 + Math.sin(lt * 60));
+      S(gs[0], "opacity", go + ""); S(gs[0], "transform", `translate(${-dx}px,0)`);
+      S(gs[1], "opacity", go + ""); S(gs[1], "transform", `translate(${dx * 1.4}px,${dx * .3}px)`);
+      // tarjeta: aparece chica y torcida, crece y termina cubriendo todo
+      if (lt < .26) S(box, "display", "none");
+      else if (inBurst) {
+        S(box, "display", "block"); mask(box, "card");
+        const w = lt < .86 ? k(lt, .26, .86, W * .22, W * (portrait() ? .9 : .7), E.out) : k(lt, .86, b, W * (portrait() ? .9 : .7), W * 1.3, E.inOut);
+        const h = lt < .86 ? w * (portrait() ? 1.0 : .56) : k(lt, .86, b, W * (portrait() ? .9 : .7) * (portrait() ? 1 : .56), H * 1.3, E.inOut);
+        setBox(box, k(lt, .26, b, W * .34, W * .5), k(lt, .26, b, H * .42, H * .5), w, h, k(lt, .26, .9, -4, 0));
+      } else { S(box, "display", "block"); mask(box, null); setBox(box, W / 2, H / 2, W, H, 0); }
+      hold.update(lt);
+    };
+  };
+
+  // 2) MARCOS: tarjetas sobre crema, caja roja con texto, letras rojas gigantes que corren,
+  //    marco de pincel negro alrededor del video con el texto rojo adentro, zoom a pantalla completa
+  B.frames = (sc, root) => {
+    const bg = el("div", "full", root, { background: "var(--cream)" });
+    const prevId = sc.prev ? sc.prev.media : sc.media;
+    const pc = el("div", "box", root); mask(pc, "card"); poster(prevId, pc);
+    const rb = el("div", "box", root, { background: "var(--red)" }); mask(rb, "brushbox");
+    const pt = letters(root, sc.prev ? sc.prev.text : sc.text, "arch", { position: "absolute", color: "#fff", fontStyle: "italic", fontVariationSettings: '"wdth" 112, "wght" 850', letterSpacing: ".04em" });
+    fit(pt, W * (portrait() ? .5 : .2), H * .06);
+    const giant = letters(root, (sc.text + "  ").repeat(3), "anton stamp", { position: "absolute", color: "var(--red)", fontSize: (portrait() ? W * .32 : H * .42) + "px" });
+    const fr = el("div", "box", root, { background: "var(--ink)" }); mask(fr, "frame");
+    const box = el("div", "box", root); const v = video(sc, sc.media, box, 0);
+    const red = letters(root, sc.text, "anton stamp", { position: "absolute", left: "50%", top: "50%", color: "var(--red)" });
+    const cw = W * (portrait() ? .82 : .58), chh = cw * (portrait() ? .56 : .64);
+    fit(red, cw * .8, chh * .55);
+    const hold = holdText(sc, root);
+    const gW = giant.scrollWidth;
+    return (lt) => {
+      const b = sc.B, inB = lt < b;
+      S(bg, "display", inB ? "block" : "none");
+      // tarjeta previa con caja roja y texto blanco (lo que se va)
+      const out = k(lt, .28, .5, 0, H * .7, E.in);
+      S(pc, "display", inB && lt < .5 ? "block" : "none");
+      setBox(pc, W * (portrait() ? .5 : .3), H * (portrait() ? .25 : .26) - out * .2, W * (portrait() ? .6 : .26), W * (portrait() ? .38 : .15), -2 + Math.sin(lt * 40) * .6);
+      S(rb, "display", inB && lt < .5 ? "block" : "none");
+      setBox(rb, W * (portrait() ? .5 : .22), H * .66 + out, W * (portrait() ? .7 : .3), H * (portrait() ? .14 : .26), 1);
+      S(pt, "display", inB && lt < .45 ? "block" : "none");
+      S(pt, "transform", `translate(${W * (portrait() ? .5 : .22) - pt.scrollWidth / 2}px,${H * .66 + out - pt.offsetHeight / 2}px)`);
+      pt.chs.forEach((c, j) => S(c, "opacity", j < pt.chs.length * (1 - k(lt, .05, .35, 0, 1)) ? "1" : "0"));
+      // letras rojas gigantes corriendo
+      S(giant, "display", inB && lt > .22 && lt < .72 ? "block" : "none");
+      S(giant, "transform", `translate(${k(lt, .22, .72, W * .25, -gW * .45, E.lin)}px,${H * (portrait() ? .56 : .5)}px)`);
+      // video: tarjeta chica arriba → centro con marco → pantalla completa
+      let cx, cy, w, h;
+      if (lt < .62) { cx = k(lt, 0, .62, W * (portrait() ? .5 : .42), W * .38, E.inOut); cy = k(lt, 0, .62, H * (portrait() ? .26 : .34), H * .42, E.inOut); w = k(lt, 0, .62, W * (portrait() ? .55 : .35), cw, E.inOut); h = w * (portrait() ? .56 : .64); }
+      else if (lt < .95) { cx = W / 2; cy = H / 2; w = cw; h = chh; }
+      else if (inB) { const q = k(lt, .95, b, 0, 1, E.in); cx = W / 2; cy = H / 2; w = cw + (W * 1.02 - cw) * q; h = chh + (H * 1.02 - chh) * q; }
+      else { cx = W / 2; cy = H / 2; w = W; h = H; }
+      setBox(box, cx, cy, w, h, lt < .62 ? k(lt, 0, .62, 3, 0) : 0);
+      if (inB) { mask(box, lt < .62 ? "card" : null); } else mask(box, null);
+      const fon = inB && lt > .35;
+      S(fr, "display", fon ? "block" : "none");
+      if (fon) { const pop = k(lt, .35, .55, 1.35, 1, E.back); const fw = (w + Math.min(W, H) * .16) * pop, fh = (h + Math.min(W, H) * .16) * pop; setBox(fr, cx, cy, fw, fh, k(lt, .35, .55, -3, 0)); }
+      S(red, "display", inB && lt > .64 && lt < b - .04 ? "block" : "none");
+      red.chs.forEach((c, j) => S(c, "opacity", lt > .64 + j * .02 ? "1" : "0"));
+      S(red, "transform", `translate(-50%,-50%) scale(${k(lt, .95, b, 1, 1.6, E.in)})`);
+      hold.update(lt);
+    };
+  };
+
+  // 3) FILAS: goteo rojo (o pixelado + pincel) → palabra repetida en filas con glitch y
+  //    video al centro → garabato → pincel negro con el video → palabra gigante que se encoge
+  B.rows = (sc, root) => {
+    sc.holdShrink = true;
+    const prevId = sc.prev ? sc.prev.media : sc.media;
+    const black = sc.cfg.ink === "black";
+    const bgPrev = el("div", "full", root); poster(prevId, el("div", "box full", bgPrev));
+    // goteo
+    const drips = el("div", "full", root); const dr = [];
+    drips.style.zIndex = "30";
+    for (let j = 0; j < 46; j++) {
+      const d = el("div", "ab", drips, { background: "var(--red)", width: (2 + sc.rnd() * 13) + "px", left: (sc.rnd() * 100) + "%", height: "0px", borderRadius: "0 0 40% 40%" });
+      d.sp = .6 + sc.rnd() * 1.4; d.dl = sc.rnd() * .12; dr.push(d);
+    }
+    // pixelado + pincel negro con el texto anterior
+    const pix = el("div", "full", root); const cv = el("canvas", "", pix, { width: "100%", height: "100%", imageRendering: "pixelated", position: "absolute", inset: 0 });
+    cv.width = 40; cv.height = Math.round(40 * H / W);
+    try { const im = MEDIA[prevId].img; const g = cv.getContext("2d"); const r = Math.max(cv.width / im.width, cv.height / im.height); g.drawImage(im, (cv.width - im.width * r) / 2, (cv.height - im.height * r) / 2, im.width * r, im.height * r); } catch (e) {}
+    const pstroke = el("div", "box", pix, { background: "var(--ink)" }); mask(pstroke, "stroke");
+    const ptxt = letters(pix, sc.prev ? sc.prev.text : "", "arch", { position: "absolute", left: "50%", top: "50%", color: "var(--red)", fontStyle: "italic", fontVariationSettings: '"wdth" 110, "wght" 850' });
+    fit(ptxt, W * .4, H * .13);
+    const redBg = el("div", "full", root, { background: "var(--red)" });
+    const blocks = el("div", "full", root); const bl = [];
+    const cols = ["var(--pink)", "var(--violet)", "#1a1a1a", "#fff", "#8c0a20"];
+    for (let j = 0; j < 34; j++) { const s = 10 + sc.rnd() * 34; bl.push(el("div", "ab", blocks, { width: s + "px", height: s + "px", left: (sc.rnd() * 96) + "%", top: (sc.rnd() * 94) + "%", background: cols[j % cols.length] })); }
+    const rowsW = el("div", "full", root);
+    const rows = [];
+    for (let r = 0; r < 3; r++) {
+      const row = letters(rowsW, sc.text, "arch", { position: "absolute", left: "50%", color: black ? "var(--ink)" : "#fff", fontVariationSettings: black ? '"wdth" 125, "wght" 900' : '"wdth" 86, "wght" 800', letterSpacing: black ? ".02em" : ".05em" });
+      rows.push(row);
+    }
+    const rfs = fit(rows[0], W * (portrait() ? .84 : (black ? .62 : .56)), H * .24); rows.forEach(r => r.style.fontSize = rfs + "px");
+    const rh = rows[0].offsetHeight;
+    rows.forEach((r, j) => { r.style.top = (H / 2 + (j - 1) * rh * 1.02) + "px"; });
+    const grey = el("div", "full", root, { background: "var(--grey)" });
+    const box = el("div", "box", root); const v = video(sc, sc.media, box, 0);
+    const ghostB = el("div", "box", root, { opacity: .5, mixBlendMode: "normal" }); poster(sc.media, ghostB);
+    const scr = el("div", "box", root, { background: "var(--ink)" }); mask(scr, "scribble");
+    const sweep = el("div", "box", root, { background: "var(--ink)" }); mask(sweep, "stroke");
+    const giant = letters(root, sc.text, "arch", { position: "absolute", left: "50%", top: "50%", color: "#fff", fontVariationSettings: '"wdth" 80, "wght" 850' });
+    fit(giant, W * 1.05, H * .5);
+    const hold = holdText(sc, root);
+    const pixMode = sc.cfg.intro === "pixel";
+    const tw = W * (portrait() ? .44 : .2), th = tw * .62;
+    return (lt) => {
+      const b = sc.B, inB = lt < b;
+      const M = Object.assign({ dripsStart:0, dripsEnd:.3, rowsStart:.3, rowsEnd:.68, greyEnd:.8, giantStart:.82 }, sc.cfg.milestones || {});
+      const a1 = .3;                        // pixelado: fin de la primera capa
+      S(bgPrev, "display", inB && lt < M.rowsStart && !pixMode ? "block" : "none");
+      S(drips, "display", inB && lt >= M.dripsStart && lt < M.dripsEnd && !pixMode ? "block" : "none");
+      if (!pixMode && lt >= M.dripsStart && lt < M.dripsEnd) dr.forEach(d => S(d, "height", Math.max(0, (lt - M.dripsStart - d.dl) * d.sp * H * 4) + "px"));
+      S(pix, "display", inB && pixMode && lt < .34 ? "block" : "none");
+      if (pixMode && lt < .34) { setBox(pstroke, W / 2, H / 2, W * 1.1, H * .3, -2); S(ptxt, "transform", "translate(-50%,-50%)"); S(pstroke, "clipPath", `inset(0 ${100 - k(lt, 0, .16, 0, 100)}% 0 0)`); }
+      const redOn = inB && lt >= (pixMode ? .34 : M.rowsStart) && (pixMode || !(lt >= M.rowsEnd && lt < M.greyEnd));
+      S(redBg, "display", redOn ? "block" : "none");
+      const blockEnd = pixMode ? .46 : M.rowsStart + .16;
+      const blockStart = pixMode ? a1 : M.rowsStart;
+      S(blocks, "display", inB && lt >= blockStart && lt < blockEnd && Math.floor(lt / .04) % 3 ? "block" : "none");
+      if (lt >= blockStart && lt < blockEnd) bl.forEach((q, j) => S(q, "transform", `translate(${(hash(j, Math.floor(lt / .05)) - .5) * 60}px,0)`));
+      const rowsOn = inB && lt >= (pixMode ? 1.34 : M.rowsStart) && lt < (pixMode ? 2.45 : M.rowsEnd);
+      S(rowsW, "display", rowsOn ? "block" : "none");
+      if (rowsOn) rows.forEach((r, j) => {
+        S(r, "transform", `translate(calc(-50% + ${(j - 1) * k(lt, pixMode ? 1.34 : M.rowsStart, pixMode ? 1.62 : M.rowsEnd, W * .05, 0)}px),-50%)`);
+        r.chs.forEach((c, q) => { const off = hash(j * 50 + q, Math.floor(lt / .07)) < (black ? .07 : .12); S(c, "opacity", off ? "0" : "1"); S(c, "color", !black && hash(q, j + 9) < .1 ? "var(--pink)" : ""); });
+      });
+      S(grey, "display", inB && !pixMode && lt >= M.rowsEnd && lt < M.greyEnd ? "block" : "none");
+      // video
+      let shown = true;
+      if (!inB) { setBox(box, W / 2, H / 2, W, H, 0); mask(box, null); }
+      else if (pixMode && lt < .34) shown = false;
+      else if (pixMode && lt < 1.34) { const w = k(lt, .34, .62, W * .2, W * .28, E.out); setBox(box, W / 2, H * .5, w, w * .56, 0); mask(box, null); }
+      else if (!pixMode && lt < M.rowsStart) { setBox(box, W / 2, H / 2, W, H, 0); mask(box, null); }
+      else if (pixMode && lt < 2.45) { const s = k(lt, 1.34, 1.54, .72, 1, E.back); setBox(box, W / 2, H / 2, tw * s, th * s, 0); mask(box, null); }
+      else if (!pixMode && lt < M.greyEnd) { const s = k(lt, M.rowsStart, M.rowsStart + .1, .4, 1, E.back); setBox(box, W / 2, H / 2, tw * s, th * s, 0); mask(box, null); }
+      else if (!pixMode && lt < M.giantStart) { setBox(box, W / 2, H / 2, tw, th, 0); mask(box, null); }
+      else if (lt < b - .1) { setBox(box, W / 2, H * .5, W * 1.15, H * .78, -3); mask(box, "stroke"); }
+      else { setBox(box, W / 2, H / 2, W, H, 0); mask(box, null); }
+      S(box, "display", shown ? "block" : "none");
+      const gOn = inB && lt > (pixMode ? 1.34 : M.rowsStart + .08) && lt < (pixMode ? 2.45 : M.rowsStart + .2);
+      S(ghostB, "display", gOn ? "block" : "none"); if (gOn) setBox(ghostB, W / 2 + W * .012, H / 2 - 3, tw, th, 0);
+      const scrOn = inB && ((!pixMode && lt >= M.rowsEnd && lt < M.greyEnd) || (pixMode && lt > 1.55 && lt < 2.25));
+      S(scr, "display", scrOn ? "block" : "none");
+      if (scrOn) { setBox(scr, W / 2, H / 2, tw * 1.6, th * 1.3, -4); S(scr, "clipPath", `inset(0 ${100 - k(lt, M.rowsEnd, M.rowsEnd + .16, 0, 100, E.lin)}% 0 0)`); }
+      const swOn = inB && !pixMode && lt > M.giantStart && lt < b - .1;
+      S(sweep, "display", swOn ? "block" : "none");
+      if (swOn) { const p0 = pixMode ? .55 : M.giantStart; setBox(sweep, W * .35, H * (pixMode ? .82 : .9), W * 1.1, H * .38, -6); S(sweep, "clipPath", `inset(0 ${100 - k(lt, p0, p0 + .18, 0, 100, E.lin)}% 0 0)`); }
+      const gi = inB && lt > (pixMode ? 2.45 : M.giantStart) && lt < b - .05;
+      S(giant, "display", gi ? "block" : "none");
+      if (gi) { S(giant, "transform", `translate(-50%,-50%) translateX(${k(lt, pixMode ? 2.45 : M.giantStart, b, W * .04, -W * .04, E.lin)}px)`); giant.chs.forEach((c, q) => S(c, "opacity", hash(q, 77) < .25 ? ".25" : "1")); }
+      hold.update(lt);
+    };
+  };
+
+  // 4) GIGANTE: barrido de pincel rojo, tiras de video rotas sobre rojo y la palabra
+  //    gigante negra en itálica cruzando la pantalla
+  B.giant = (sc, root) => {
+    const prevId = sc.prev ? sc.prev.media : sc.media;
+    const bgPrev = el("div", "full", root); poster(prevId, el("div", "box full", bgPrev));
+    const sw = el("div", "box", root, { background: "var(--red)" }); mask(sw, "stroke");
+    const frag = letters(root, sc.prev ? sc.prev.text.replace(/\s+/g, "").slice(1, 5) : "", "anton", { position: "absolute", color: "var(--ink)" });
+    fit(frag, W * .6, H * .7);
+    const redBg = el("div", "full", root, { background: "var(--red)" });
+    const s1 = el("div", "box", root); mask(s1, "card"); poster(sc.media, s1);
+    const box = el("div", "box", root); const v = video(sc, sc.media, box, 0);
+    const big = letters(root, sc.text, "arch", { position: "absolute", left: 0, top: "50%", color: "var(--ink)", fontStyle: "italic", fontVariationSettings: '"wdth" 100, "wght" 900', letterSpacing: "-.01em" });
+    fit(big, W * (portrait() ? 1.5 : 1.25), H * (portrait() ? .3 : .62));
+    const bw = big.scrollWidth;
+    const hold = holdText(sc, root);
+    return (lt) => {
+      const b = sc.B, inB = lt < b;
+      S(bgPrev, "display", inB && lt < .2 ? "block" : "none");
+      S(sw, "display", inB && lt < .2 ? "block" : "none");
+      if (lt < .2) { setBox(sw, W / 2, H * .42, W * 1.2, H * .5, -4); S(sw, "clipPath", `inset(0 ${100 - k(lt, 0, .16, 0, 100, E.lin)}% 0 0)`); }
+      S(frag, "display", inB && lt > .08 && lt < .2 ? "block" : "none");
+      S(frag, "transform", `translate(${W * .1}px,${H * .1}px)`);
+      S(redBg, "display", inB && lt >= .2 && lt < .62 ? "block" : "none");
+      const sOn = inB && lt >= .2 && lt < .62;
+      S(s1, "display", sOn ? "block" : "none");
+      if (sOn) setBox(s1, k(lt, .2, .62, W * .2, W * .1, E.lin), H * .44, W * .32, H * .36, 2);
+      if (!inB) { setBox(box, W / 2, H / 2, W, H, 0); mask(box, null); }
+      else if (lt < .2) S(box, "display", "none");
+      else if (lt < .62) { S(box, "display", "block"); mask(box, "card"); setBox(box, k(lt, .2, .62, W * .78, W * .64, E.lin), H * .56, W * .42, H * .42, -2); }
+      else { S(box, "display", "block"); mask(box, lt < .74 ? "card" : null); const q = k(lt, .62, .74, 0, 1, E.out); setBox(box, W * .64 + (W * .5 - W * .64) * q, H * .56 + (H * .5 - H * .56) * q, W * .42 + (W * 1.02 - W * .42) * q, H * .42 + (H * 1.02 - H * .42) * q, -2 * (1 - q)); }
+      if (!inB) S(box, "display", "block");
+      const bOn = inB && lt >= .2 && lt < b - .08;
+      S(big, "display", bOn ? "block" : "none");
+      if (bOn) {
+        S(big, "transform", `translate(${k(lt, .2, b, W * .35, W - bw - W * .25, E.lin)}px,-50%)`);
+        big.chs.forEach((c, q) => { const r = hash(q, 5); S(c, "color", lt > .74 && r < .3 ? "var(--red)" : ""); S(c, "opacity", lt > .86 && r < (lt - .86) * 5 ? "0" : "1"); });
+      }
+      hold.update(lt);
+    };
+  };
+
+  // HOLD: plano limpio de video y rótulo, usado cuando la referencia sostiene
+  // una frase entre dos estallidos tipográficos.
+  B.hold = (sc, root) => {
+    const box = el("div", "box", root); video(sc, sc.media, box, 0);
+    const hold = holdText(sc, root);
+    return (lt) => {
+      setBox(box, W / 2, H / 2, W, H, 0); mask(box, null);
+      hold.update(lt);
+    };
+  };
+
+  // 5) TIZA: destello crema, fondo negro con la frase blanca extendida corriendo, óvalos de
+  //    tiza, cruces rojas, parche de papel con el video y garabato, tarjeta sobre crema
+  B.chalk = (sc, root) => {
+    const cream = el("div", "full", root, { background: "var(--cream)" });
+    const ink = el("div", "full", root, { background: "var(--ink)" });
+    const lines = [];
+    for (let j = 0; j < 7; j++) lines.push(el("div", "ab", ink, { width: "1.5px", height: "130%", top: "-15%", left: (8 + j * 14 + sc.rnd() * 6) + "%", background: "rgba(255,255,255,.35)", transform: `rotate(${(sc.rnd() - .5) * 8}deg)` }));
+    const chalk = el("div", "box", ink, { background: "#fff" }); mask(chalk, "chalk");
+    const chalk2 = el("div", "box", ink, { background: "#fff" }); mask(chalk2, "chalk");
+    const xs = [];
+    for (let j = 0; j < 3; j++) { const x = el("div", "ab", ink, { color: "var(--red)", font: `900 ${Math.min(W, H) * .035}px Archivo`, left: [.3, .82, .64][j] * 100 + "%", top: [.2, .4, .78][j] * 100 + "%" }); x.textContent = "✕"; xs.push(x); }
+    const big = letters(ink, sc.text, "arch", { position: "absolute", left: 0, top: "50%", color: "var(--cream)", fontStyle: "italic", fontVariationSettings: '"wdth" 125, "wght" 900', letterSpacing: ".06em" });
+    fit(big, W * (portrait() ? 2.2 : 1.6), H * (portrait() ? .22 : .32));
+    const bw = big.scrollWidth;
+    const patch = el("div", "box", root, { background: "var(--cream)" }); mask(patch, "card");
+    const box = el("div", "box", root); const v = video(sc, sc.media, box, 0);
+    const scr = el("div", "box", root, { background: "var(--ink)" }); mask(scr, "scribble");
+    const ov = letters(root, sc.text.split(" ")[0], "arch", { position: "absolute", left: "50%", top: "50%", color: "#fff", fontStyle: "italic", fontVariationSettings: '"wdth" 125, "wght" 900', letterSpacing: ".08em" });
+    fit(ov, W * (portrait() ? .6 : .3), H * .14);
+    const hold = holdText(sc, root);
+    return (lt) => {
+      const b = sc.B, inB = lt < b;
+      S(cream, "display", inB && (lt < .1 || lt >= .86) ? "block" : "none");
+      const iOn = inB && lt >= .1 && lt < .86;
+      S(ink, "display", iOn ? "block" : "none");
+      if (iOn) {
+        S(big, "transform", `translate(${k(lt, .1, .86, W * .08, W * .3 - bw, E.lin)}px,-50%)`);
+        setBox(chalk, W * .42, H * .16, W * .55, H * .12, -3); S(chalk, "clipPath", `inset(0 ${100 - k(lt, .1, .4, 0, 100, E.lin)}% 0 0)`);
+        setBox(chalk2, W * .55, H * .1, W * .4, H * .08, 4); S(chalk2, "clipPath", `inset(0 ${100 - k(lt, .3, .55, 0, 100, E.lin)}% 0 0)`);
+        xs.forEach((x, j) => S(x, "opacity", Math.floor(lt / .08 + j) % 3 ? "1" : "0"));
+      }
+      const pOn = inB && lt >= .5 && lt < .86;
+      S(patch, "display", pOn ? "block" : "none");
+      S(scr, "display", pOn && lt > .58 ? "block" : "none");
+      const pw = W * (portrait() ? .7 : .34), ph = pw * .6;
+      if (pOn) { const pop = k(lt, .5, .58, .6, 1, E.back); setBox(patch, W * .55, H * .5, pw * pop, ph * pop, 2); setBox(scr, W * .56, H * .52, pw * .7, ph * .7, -5); S(scr, "clipPath", `inset(0 ${100 - k(lt, .58, .74, 0, 100, E.lin)}% 0 0)`); }
+      if (!inB) { S(box, "display", "block"); setBox(box, W / 2, H / 2, W, H, 0); mask(box, null); }
+      else if (pOn) { S(box, "display", "block"); mask(box, null); const pop = k(lt, .5, .58, .6, 1, E.back); setBox(box, W * .55, H * .5, pw * .82 * pop, ph * .76 * pop, 2); }
+      else if (lt >= .86) { S(box, "display", "block"); mask(box, "card"); const q = k(lt, .98, b, 0, 1, E.in); setBox(box, W / 2, H / 2, W * (.62 + q * .5), H * (.6 + q * .5), 0); }
+      else S(box, "display", "none");
+      S(ov, "display", inB && lt >= .86 ? "block" : "none");
+      S(ov, "transform", `translate(-50%,-50%) translateX(${k(lt, .86, b, W * .02, -W * .02, E.lin)}px)`);
+      hold.update(lt);
+    };
+  };
+
+  // ---------- montaje / reloj ----------
+  let cur = null;
+  function unmount() {
+    if (!cur) return;
+    for (const v of cur.sc.videos || []) { v.pause(); v.removeAttribute("src"); v.load(); }
+    cur.sc.videos = []; cur.root.remove(); cur = null;
+  }
+  function mount(source, text) {
+    unmount();
+    const sc = { ...source, text, videos: [], rnd: mulberry32((C.seed || 1) * 1000 + source.i * 101) };
+    if (source.prev) sc.prev = { ...source.prev, text: textAt(source.t0 - .01) };
+    const root = el("div", "full", stage);
+    sc.holdShrink = false;
+    const fn = (B[sc.type] || B.stamp)(sc, root);
+    cur = { source, text, sc, root, fn };
+  }
+  function sceneAt(t) {
+    let s = scenes[0];
+    for (const x of scenes) if (t >= x.t0) s = x;
+    return s;
+  }
+  const hud = document.getElementById("hud"); if (DEBUG) hud.style.display = "block";
+  function render(t) {
+    if (!scenes.length) return;
+    const sc = sceneAt(t);
+    const line = textAt(t);
+    if (!cur || cur.source !== sc || cur.text !== line) mount(sc, line);
+    const lt = t - sc.t0;
+    cur.fn(lt);
+    syncVideos(cur.sc, lt, FREEZE == null && !audio.paused);
+    if (DEBUG) hud.textContent = `t ${t.toFixed(2)}  escena ${sc.i} ${sc.type}  lt ${lt.toFixed(2)}\n${line}`;
+  }
+  addEventListener("resize", () => { W = stage.clientWidth; H = stage.clientHeight; if (cur) { const sc = cur.source; mount(sc, textAt(FREEZE == null ? audio.currentTime : FREEZE)); } });
+
+  // gancho de validación: congela en t y resuelve cuando los videos visibles llegaron
+  window.__fuerza = {
+    scenes,
+    seek(t) {
+      FREEZE = Number(t);
+      if (!Number.isFinite(FREEZE)) return Promise.resolve([]);
+      audio.pause(); audio.currentTime = FREEZE; render(FREEZE);
+      const vs = (cur && cur.sc.videos) || [];
+      return Promise.all(vs.map(v => new Promise(res => {
+        const ok = () => v.readyState >= 2 && !v.seeking;
+        if (ok()) return res(); const f = () => { if (ok()) { v.removeEventListener("seeked", f); v.removeEventListener("loadeddata", f); res(); } };
+        v.addEventListener("seeked", f); v.addEventListener("loadeddata", f); setTimeout(res, 3000);
+      })));
+    },
+  };
+
+  function frame() { render(FREEZE != null && Number.isFinite(FREEZE) ? FREEZE : audio.currentTime); requestAnimationFrame(frame); }
+  if (FREEZE != null && Number.isFinite(FREEZE)) {
+    audio.addEventListener("loadedmetadata", () => { audio.currentTime = FREEZE; }, { once: true });
+    render(FREEZE);
+    requestAnimationFrame(frame);
+    return;
+  }
+  audio.play().catch(() => { addEventListener("pointerdown", () => audio.play(), { once: true }); });
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

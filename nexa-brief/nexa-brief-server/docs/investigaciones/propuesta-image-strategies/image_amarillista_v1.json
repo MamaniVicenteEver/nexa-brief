@@ -1,0 +1,211 @@
+{
+  "estado": "borrador_no_ejecutable",
+  "schema_version": 1,
+  "id": "image_amarillista_v1",
+  "version": "1.0.0-draft",
+  "formato": {
+    "ancho_px": 1080,
+    "alto_px": 1350,
+    "min_laminas": 3,
+    "max_laminas": 5
+  },
+  "roles": [
+    {
+      "id": "portada",
+      "regla": "Hecho y alcance indispensable, fuente visible; comprensible sola.",
+      "evidencia": {
+        "clasificacion": "solida",
+        "url": "https://www.nature.com/articles/s41562-023-01538-4",
+        "alcance": "Clasificación del estudio anterior; no demuestra eficacia del carrusel."
+      },
+      "ejemplo_real": {
+        "recurso": "NASA describe alarmas y aterrizaje",
+        "url": "https://science.nasa.gov/solar-system/moon/history-of-lunar-exploration/"
+      }
+    },
+    {
+      "id": "prueba",
+      "regla": "Fuente, cifra, fecha, unidad y denominador pertinentes.",
+      "evidencia": {
+        "clasificacion": "mixta",
+        "url": "https://metr.org/Early_2025_AI_Experienced_OS_Devs_Study-paper.pdf",
+        "alcance": "Clasificación del estudio anterior; no demuestra eficacia del carrusel."
+      },
+      "ejemplo_real": {
+        "recurso": "Our World in Data atribuye gráfico a ONU",
+        "url": "https://ourworldindata.org/explorers/population-and-demography"
+      }
+    },
+    {
+      "id": "giro",
+      "regla": "Contexto y limitación sin ocultar previamente matices esenciales.",
+      "evidencia": {
+        "clasificacion": "mixta",
+        "url": "https://www.cmu.edu/dietrich/sds/docs/loewenstein/PsychofCuriosity.pdf",
+        "alcance": "Clasificación del estudio anterior; no demuestra eficacia del carrusel."
+      },
+      "ejemplo_real": {
+        "recurso": "METR contrasta expectativas y resultados",
+        "url": "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/"
+      }
+    },
+    {
+      "id": "verdad",
+      "regla": "Conclusión proporcionada; no exige comparación numérica.",
+      "evidencia": {
+        "clasificacion": "sin_evidencia",
+        "url": "../amarillista-analisis-imagenes-2026-10.md",
+        "alcance": "Clasificación del estudio anterior; no demuestra eficacia del carrusel."
+      },
+      "ejemplo_real": {
+        "recurso": "NASA reconstruye alarmas y decisión",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/apollo50th/pdf/A11_MissionReport.pdf"
+      }
+    },
+    {
+      "id": "que_hacer",
+      "regla": "Opcional: acción sustentada o comparación compatible.",
+      "evidencia": {
+        "clasificacion": "sin_evidencia",
+        "url": "../amarillista-analisis-imagenes-2026-10.md",
+        "alcance": "Clasificación del estudio anterior; no demuestra eficacia del carrusel."
+      },
+      "ejemplo_real": {
+        "recurso": "Our World in Data compara años con unidad y fuente",
+        "url": "https://ourworldindata.org/explorers/population-and-demography"
+      }
+    },
+    {
+      "id": "cierre",
+      "regla": "Marca, logo si verificado o logotipo tipográfico, pregunta abierta y CTA con @ confirmado.",
+      "evidencia": {
+        "clasificacion": "mixta",
+        "url": "https://www.cmu.edu/dietrich/sds/docs/loewenstein/PsychofCuriosity.pdf",
+        "alcance": "Clasificación del estudio anterior; no demuestra eficacia del carrusel."
+      },
+      "ejemplo_real": {
+        "recurso": "Our World in Data formula pregunta investigable",
+        "url": "https://ourworldindata.org/world-population-growth"
+      }
+    }
+  ],
+  "composiciones": {
+    "3": [
+      [
+        "portada",
+        "prueba"
+      ],
+      [
+        "giro",
+        "verdad"
+      ],
+      [
+        "cierre"
+      ]
+    ],
+    "4": [
+      [
+        "portada"
+      ],
+      [
+        "prueba"
+      ],
+      [
+        "giro",
+        "verdad"
+      ],
+      [
+        "cierre"
+      ]
+    ],
+    "5": [
+      [
+        "portada"
+      ],
+      [
+        "prueba"
+      ],
+      [
+        "giro",
+        "verdad"
+      ],
+      [
+        "que_hacer"
+      ],
+      [
+        "cierre"
+      ]
+    ]
+  },
+  "titulo": {
+    "max_palabras": 8,
+    "max_caracteres_unicode_nfc": 60,
+    "limites_simultaneos": true,
+    "fuente_ejemplos": "https://metr.org/Early_2025_AI_Experienced_OS_Devs_Study-paper.pdf",
+    "niveles": {
+      "basico": {
+        "reglas": [
+          "Alarma explicada",
+          "Hecho y alcance fieles"
+        ],
+        "ejemplo": "Un ensayo halló demoras al programar con IA",
+        "riesgo_meta": "Omitir población o condiciones puede inducir a error."
+      },
+      "medio": {
+        "reglas": [
+          "Segunda persona",
+          "Consecuencia condicionada y sustentada"
+        ],
+        "ejemplo": "Tu programación con IA puede tomar más tiempo",
+        "riesgo_meta": "Puede insinuar una predicción individual no probada."
+      },
+      "alto": {
+        "reglas": [
+          "Sentencia breve",
+          "No extrapolar"
+        ],
+        "ejemplo": "La IA ralentizó tareas en un ensayo",
+        "riesgo_meta": "Puede exagerar causalidad o alcance si falta contexto."
+      },
+      "negro": {
+        "reglas": [
+          "Una palabra en mayúsculas",
+          "Léxico visceral proporcionado",
+          "Curiosidad sin ocultar el hecho"
+        ],
+        "ejemplo": "IA: golpe al TIEMPO en un ensayo limitado",
+        "riesgo_meta": "Mayor riesgo de exageración o de ocultar información esencial."
+      }
+    }
+  },
+  "cierre": {
+    "pregunta_max_palabras": 8,
+    "pregunta_admite_mas_de_dos_respuestas": true,
+    "cta": "Síguenos para más curiosidades",
+    "requiere_handle_confirmado": true
+  },
+  "controles": {
+    "automaticos": [
+      "roles y orden",
+      "cantidad de láminas",
+      "4:5",
+      "longitud de título y pregunta",
+      "fuente visible en portada y URL en metadatos",
+      "referencias a hechos",
+      "marca y CTA",
+      "contraste y área de acentos"
+    ],
+    "humanos": [
+      "fidelidad a fuente",
+      "contexto y causalidad",
+      "pregunta genuina y abierta",
+      "licencia y contenido de foto",
+      "legibilidad real",
+      "riesgo de clickbait"
+    ]
+  },
+  "identidad_8020": {
+    "referencia": "image_styles_ejemplo.json",
+    "precedente": "src/templates/_tools/explainer-kit/designs/common/tabloid.js: palette brand"
+  }
+}

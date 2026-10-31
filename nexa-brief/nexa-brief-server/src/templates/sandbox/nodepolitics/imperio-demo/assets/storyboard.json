@@ -1,0 +1,1261 @@
+{
+ "version": 1,
+ "family": "imperio",
+ "title": "EL IMPERIO QUE MIRÓ AL SUR · DEMO VISUAL",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "imperio.title",
+   "dur": 11.8,
+   "params": {
+    "country": "Japan",
+    "hatch": [
+     "Japan"
+    ],
+    "from": [
+     135.5,
+     36.4,
+     24,
+     0
+    ],
+    "to": [
+     140,
+     31,
+     84,
+     4
+    ],
+    "sunSize": 2.2,
+    "native": "南進論",
+    "nativeSub": "SOUTHERN EXPANSION DOCTRINE",
+    "nativeAt": 4.4,
+    "nativeOut": 9.2,
+    "text": "",
+    "textPortrait": "",
+    "textAt": 99,
+    "rays": 28,
+    "raysAt": 3.6,
+    "dir": 180,
+    "spread": 0.92,
+    "rayLen": 0.46,
+    "ships": 2,
+    "labels": [
+     {
+      "t": "Mar del\nJapón",
+      "at": [
+       134.5,
+       40.2
+      ]
+     },
+     {
+      "t": "Mar\nAmarillo",
+      "at": [
+       123.6,
+       35.4
+      ]
+     },
+     {
+      "t": "Océano\nPacífico",
+      "at": [
+       150,
+       31
+      ]
+     }
+    ],
+    "ease": "inOut",
+    "rayFloor": 0.0
+   },
+   "offset": 0
+  },
+  {
+   "t": 10.1,
+   "offset": 0,
+   "use": "imperio.word",
+   "dur": 17.6,
+   "params": {
+    "text": "JAPANESE\nEMPIRE",
+    "textPortrait": "JAPANESE\nEMPIRE",
+    "at": 0,
+    "shrinkAt": 2.8,
+    "shrinkTo": 0.18,
+    "tau": 2.8,
+    "size": 0.72,
+    "y": 0.68,
+    "rise": 0.2,
+    "spin": 0.25
+   }
+  },
+  {
+   "t": 11.8,
+   "use": "imperio.archive",
+   "dur": 15.9,
+   "params": {
+    "src": "assets/media/uboat.jpg",
+    "country": "Japan",
+    "hatch": [
+     "Japan"
+    ],
+    "from": [
+     140,
+     31,
+     84,
+     4
+    ],
+    "to": [
+     118,
+     18,
+     100,
+     6
+    ],
+    "sunSize": 0.3,
+    "rays": 28,
+    "raysAt": 0,
+    "dir": 180,
+    "spread": 0.72,
+    "rayLen": 0.46,
+    "ships": 2,
+    "photoAt": 0,
+    "photo": 0.75,
+    "smoke": 0.85,
+    "grayDur": 0.9,
+    "compass": true,
+    "labels": [
+     {
+      "t": "Mar del\nJapón",
+      "at": [
+       135,
+       40
+      ]
+     },
+     {
+      "t": "Océano\nPacífico",
+      "at": [
+       151,
+       23
+      ]
+     }
+    ],
+    "sun": false
+   },
+   "offset": 0
+  },
+  {
+   "t": 27.7,
+   "use": "imperio.archive",
+   "params": {
+    "src": "assets/media/enigma.jpg",
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.3",
+    "to": "Germany*4.8",
+    "photoAt": 0,
+    "grayDur": 0.8,
+    "photo": 0.88,
+    "smoke": 0.72,
+    "rays": 12,
+    "raysAt": 0.2,
+    "dir": 270,
+    "spread": 0.54,
+    "rayLen": 0.34,
+    "ships": 1,
+    "compass": true,
+    "caption": "ALEMANIA · ENIGMA"
+   },
+   "offset": 0
+  },
+  {
+   "at": "Las combinaciones posibles",
+   "use": "imperio.word",
+   "dur": 4.8,
+   "params": {
+    "text": "159\nTRILLONES",
+    "textPortrait": "159\nTRILLONES",
+    "at": 0.2,
+    "shrinkAt": 2.8,
+    "shrinkTo": 0.18,
+    "tau": 2.8,
+    "size": 0.56,
+    "y": 0.58
+   }
+  },
+  {
+   "at": "Un número de",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [
+     {
+      "t": "ATLÁNTICO NORTE",
+      "at": [
+       -18,
+       52
+      ]
+     },
+     {
+      "t": "REINO UNIDO",
+      "at": [
+       -3,
+       55
+      ]
+     },
+     {
+      "t": "ALEMANIA",
+      "at": [
+       10,
+       51
+      ]
+     }
+    ],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Probarlas todas",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 10,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 1,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Y aunque alguien",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "Germany",
+    "targets": [
+     "United Kingdom"
+    ],
+    "from": "Germany*3.2",
+    "at": 0.35,
+    "stagger": 0.55,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.82,
+    "hatch": [
+     "Germany"
+    ],
+    "enter": 0.45
+   }
+  },
+  {
+   "at": "En el Atlántico",
+   "use": "imperio.archive",
+   "params": {
+    "src": "assets/media/convoy.jpg",
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*4",
+    "to": "United Kingdom*5.5",
+    "photoAt": 0,
+    "grayDur": 0.7,
+    "photo": 0.9,
+    "smoke": 0.72,
+    "rays": 8,
+    "raysAt": 0.25,
+    "dir": 180,
+    "spread": 0.6,
+    "rayLen": 0.32,
+    "ships": 1,
+    "compass": true,
+    "caption": "ATLÁNTICO NORTE"
+   }
+  },
+  {
+   "at": "Gran Bretaña",
+   "use": "imperio.map",
+   "params": {
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.0",
+    "to": "United Kingdom*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 180,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "En una mansión",
+   "use": "imperio.archive",
+   "params": {
+    "src": "assets/media/bletchley.jpg",
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.5",
+    "to": "United Kingdom*5.0",
+    "photoAt": 0,
+    "grayDur": 0.8,
+    "photo": 0.9,
+    "smoke": 0.72,
+    "rays": 9,
+    "raysAt": 0.2,
+    "dir": 180,
+    "spread": 0.58,
+    "rayLen": 0.33,
+    "ships": 1,
+    "compass": true,
+    "caption": "BLETCHLEY PARK"
+   }
+  },
+  {
+   "at": "tuvo una idea",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Si una persona",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [
+     {
+      "t": "ATLÁNTICO NORTE",
+      "at": [
+       -18,
+       52
+      ]
+     },
+     {
+      "t": "REINO UNIDO",
+      "at": [
+       -3,
+       55
+      ]
+     },
+     {
+      "t": "ALEMANIA",
+      "at": [
+       10,
+       51
+      ]
+     }
+    ],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "sí podía",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "Poland",
+    "targets": [
+     "Germany"
+    ],
+    "from": "Poland*3.2",
+    "at": 0.3,
+    "stagger": 0.5,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.8,
+    "hatch": [
+     "Poland"
+    ],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "tres matemáticos polacos",
+   "use": "imperio.map",
+   "params": {
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.0",
+    "to": "United Kingdom*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 180,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "diseñó la Bomba",
+   "use": "imperio.archive",
+   "params": {
+    "src": "assets/media/bombe.jpg",
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.5",
+    "to": "United Kingdom*5.0",
+    "photoAt": 0,
+    "grayDur": 0.8,
+    "photo": 0.9,
+    "smoke": 0.72,
+    "rays": 9,
+    "raysAt": 0.2,
+    "dir": 180,
+    "spread": 0.58,
+    "rayLen": 0.33,
+    "ships": 1,
+    "compass": true,
+    "caption": "LA BOMBA"
+   }
+  },
+  {
+   "at": "tambores girando",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "buscando contradicciones",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "Germany",
+    "targets": [
+     "United Kingdom"
+    ],
+    "from": "Germany*3.0",
+    "at": 0.35,
+    "stagger": 0.55,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.82,
+    "hatch": [
+     "Germany"
+    ],
+    "enter": 0.45
+   }
+  },
+  {
+   "at": "Su secreto era",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Los alemanes repetían",
+   "use": "imperio.archive",
+   "params": {
+    "src": "assets/media/enigma-rotors.jpg",
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.2",
+    "to": "Germany*4.6",
+    "photoAt": 0,
+    "grayDur": 0.8,
+    "photo": 0.9,
+    "smoke": 0.68,
+    "rays": 8,
+    "raysAt": 0.2,
+    "dir": 270,
+    "spread": 0.56,
+    "rayLen": 0.3,
+    "ships": 1,
+    "compass": true,
+    "caption": "ROTORES ENIGMA"
+   }
+  },
+  {
+   "at": "palabras previsibles",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [
+     {
+      "t": "ATLÁNTICO NORTE",
+      "at": [
+       -18,
+       52
+      ]
+     },
+     {
+      "t": "REINO UNIDO",
+      "at": [
+       -3,
+       55
+      ]
+     },
+     {
+      "t": "ALEMANIA",
+      "at": [
+       10,
+       51
+      ]
+     }
+    ],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "la primera Bomba",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "United Kingdom",
+    "targets": [
+     "Germany"
+    ],
+    "from": "United Kingdom*3.0",
+    "at": 0.35,
+    "stagger": 0.55,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.82,
+    "hatch": [
+     "United Kingdom"
+    ],
+    "enter": 0.45
+   }
+  },
+  {
+   "at": "Al principio tardaba",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Y entonces llegó",
+   "layer": "overlay",
+   "use": "common.flash",
+   "dur": 0.45,
+   "params": {}
+  },
+  {
+   "at": "Y entonces llegó",
+   "until": "Los mensajes navales",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "momento"
+    ]
+   }
+  },
+  {
+   "at": "Los mensajes navales",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Los convoyes",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "United Kingdom",
+    "targets": [
+     "Germany"
+    ],
+    "from": "United Kingdom*3.4",
+    "at": 0.3,
+    "stagger": 0.5,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.8,
+    "hatch": [
+     "United Kingdom"
+    ]
+   }
+  },
+  {
+   "at": "Los submarinos que",
+   "until": "ahora eran",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "United Kingdom",
+    "targets": [
+     "Germany"
+    ],
+    "from": "United Kingdom*3.4",
+    "at": 0.3,
+    "stagger": 0.5,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.8,
+    "hatch": [
+     "United Kingdom"
+    ]
+   }
+  },
+  {
+   "at": "ahora eran",
+   "until": "Muchos historiadores",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "cazados"
+    ]
+   }
+  },
+  {
+   "at": "Muchos historiadores",
+   "use": "imperio.word",
+   "dur": 4.8,
+   "params": {
+    "text": "−2\nAÑOS",
+    "textPortrait": "−2\nAÑOS",
+    "at": 0.2,
+    "shrinkAt": 2.8,
+    "shrinkTo": 0.18,
+    "tau": 2.8,
+    "size": 0.56,
+    "y": 0.58
+   }
+  },
+  {
+   "at": "Millones de vidas",
+   "until": "Pero nadie",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "vidas"
+    ]
+   }
+  },
+  {
+   "at": "Pero nadie",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 10,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 1,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Turing volvió",
+   "use": "imperio.map",
+   "params": {
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.0",
+    "to": "United Kingdom*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 180,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Y siguió pensando",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "Germany",
+    "targets": [
+     "United Kingdom"
+    ],
+    "from": "Germany*3.2",
+    "at": 0.35,
+    "stagger": 0.55,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.82,
+    "hatch": [
+     "Germany"
+    ],
+    "enter": 0.45
+   }
+  },
+  {
+   "at": "pueden pensar",
+   "until": "Si una máquina conversa",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "pensar"
+    ]
+   }
+  },
+  {
+   "at": "Si una máquina conversa",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 10,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 1,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Años antes",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "capaz de",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "United Kingdom",
+    "targets": [
+     "Germany"
+    ],
+    "from": "United Kingdom*3.2",
+    "at": 0.35,
+    "stagger": 0.55,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.82,
+    "hatch": [
+     "United Kingdom"
+    ],
+    "enter": 0.45
+   }
+  },
+  {
+   "at": "Unos y ceros",
+   "use": "imperio.word",
+   "dur": 4.8,
+   "params": {
+    "text": "1 0",
+    "textPortrait": "1 0",
+    "at": 0.2,
+    "shrinkAt": 2.8,
+    "shrinkTo": 0.18,
+    "tau": 2.8,
+    "size": 0.56,
+    "y": 0.58
+   }
+  },
+  {
+   "at": "La idea detrás",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Pero el país",
+   "use": "imperio.map",
+   "params": {
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.5",
+    "to": "United Kingdom*4.8",
+    "sunSize": 1.4,
+    "rays": 0,
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "En 1952",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "United Kingdom",
+    "targets": [
+     "Germany"
+    ],
+    "from": "United Kingdom*3.2",
+    "at": 0.35,
+    "stagger": 0.55,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.82,
+    "hatch": [
+     "United Kingdom"
+    ],
+    "enter": 0.45
+   }
+  },
+  {
+   "at": "fue condenado",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Le dieron a elegir",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [
+     {
+      "t": "ATLÁNTICO NORTE",
+      "at": [
+       -18,
+       52
+      ]
+     },
+     {
+      "t": "REINO UNIDO",
+      "at": [
+       -3,
+       55
+      ]
+     },
+     {
+      "t": "ALEMANIA",
+      "at": [
+       10,
+       51
+      ]
+     }
+    ],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "prisión o",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "United Kingdom",
+    "targets": [
+     "Germany"
+    ],
+    "from": "United Kingdom*3.2",
+    "at": 0.3,
+    "stagger": 0.5,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.8,
+    "hatch": [
+     "United Kingdom"
+    ],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Dos años después",
+   "use": "imperio.word",
+   "dur": 4.8,
+   "params": {
+    "text": "7 JUN\n1954",
+    "textPortrait": "7 JUN\n1954",
+    "at": 0.2,
+    "shrinkAt": 2.8,
+    "shrinkTo": 0.18,
+    "tau": 2.8,
+    "size": 0.56,
+    "y": 0.58
+   }
+  },
+  {
+   "at": "Dos años después",
+   "use": "imperio.archive",
+   "params": {
+    "src": "assets/media/turing.jpg",
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.4",
+    "to": "United Kingdom*4.6",
+    "photoAt": 0,
+    "grayDur": 0.8,
+    "photo": 0.92,
+    "smoke": 0.65,
+    "rays": 8,
+    "raysAt": 0.2,
+    "dir": 180,
+    "spread": 0.6,
+    "rayLen": 0.32,
+    "ships": 1,
+    "compass": true,
+    "caption": "ALAN TURING"
+   },
+   "offset": 0
+  },
+  {
+   "at": "lo encontraron",
+   "use": "imperio.map",
+   "params": {
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.0",
+    "to": "United Kingdom*4.4",
+    "sunSize": 1.4,
+    "rays": 10,
+    "raysAt": 0.35,
+    "dir": 180,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 1,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Junto a su cama",
+   "use": "imperio.map",
+   "params": {
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.0",
+    "to": "United Kingdom*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 180,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Pasaron",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "Germany",
+    "targets": [
+     "United Kingdom"
+    ],
+    "from": "Germany*3.2",
+    "at": 0.35,
+    "stagger": 0.55,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.82,
+    "hatch": [
+     "Germany"
+    ],
+    "enter": 0.45
+   }
+  },
+  {
+   "at": "perdón oficial",
+   "use": "imperio.map",
+   "params": {
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.0",
+    "to": "United Kingdom*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 180,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Hoy su rostro",
+   "use": "imperio.map",
+   "params": {
+    "country": "United Kingdom",
+    "hatch": [
+     "United Kingdom"
+    ],
+    "from": "United Kingdom*3.0",
+    "to": "United Kingdom*4.4",
+    "sunSize": 1.4,
+    "rays": 10,
+    "raysAt": 0.35,
+    "dir": 180,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 1,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Turing rompió",
+   "use": "imperio.expansion",
+   "params": {
+    "country": "United Kingdom",
+    "targets": [
+     "Germany"
+    ],
+    "from": "United Kingdom*3.2",
+    "at": 0.35,
+    "stagger": 0.55,
+    "conquer": true,
+    "ships": 1,
+    "beam": 0.82,
+    "hatch": [
+     "United Kingdom"
+    ],
+    "enter": 0.45
+   }
+  },
+  {
+   "at": "Pero el código",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 0,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 0,
+    "labels": [],
+    "enter": 0.4
+   }
+  },
+  {
+   "at": "Estaba en nosotros",
+   "until": "Y cada vez",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "nosotros"
+    ]
+   }
+  },
+  {
+   "at": "Y cada vez",
+   "use": "imperio.map",
+   "params": {
+    "country": "Germany",
+    "hatch": [
+     "Germany"
+    ],
+    "from": "Germany*3.0",
+    "to": "Germany*4.4",
+    "sunSize": 1.4,
+    "rays": 10,
+    "raysAt": 0.35,
+    "dir": 270,
+    "spread": 0.65,
+    "rayLen": 0.34,
+    "ships": 1,
+    "labels": [],
+    "enter": 0.4
+   }
+  }
+ ],
+ "notes": "Los dos primeros planos siguen el ritmo de la referencia; la narración y los medios restantes son una copia de Turing-Enigma para probar el kit."
+}

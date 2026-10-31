@@ -15,6 +15,7 @@ import base64
 import binascii
 import json
 import os
+import shutil
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -144,6 +145,8 @@ class TokenStorage:
                 f"Account '{alias}' not found in platform '{platform}'. "
                 f"Check accounts.json and ACTIVE_ACCOUNT setting."
             )
+        if entry.get("mode", "api") in {"browser", "service"}:
+            raise TokenError(f"Account '{platform}:{alias}' uses a browser session, not an OAuth token.")
         return TokenState(
             name=entry.get("name", alias),
             target_id=entry.get("target_id", ""),
@@ -176,14 +179,59 @@ class TokenStorage:
                     "name": entry.get("name", alias),
                     "target_id": entry.get("target_id", ""),
                     "status": entry.get("status", "ok"),
+                    "mode": entry.get("mode", "api"),
                     "expires_in_seconds": expires_in,
                     "has_refresh_token": bool(entry.get("encrypted_refresh_token")),
                     "avatar": entry.get("avatar"),
+                    "handle": entry.get("handle"),
+                    "description": entry.get("description", ""),
+                    "custom_url": entry.get("custom_url"),
+                    "profile_synced_at": entry.get("profile_synced_at"),
+                    "linked_page_name": entry.get("linked_page_name"),
+                    "linked_page_id": entry.get("linked_page_id"),
                     "label": entry.get("label", ""),
                     "notes": entry.get("notes", ""),
                     "connected_at": entry.get("connected_at"),
+                    "last_session_check": entry.get("last_session_check"),
                 })
         return result
+
+    def get_mode(self, platform: str, alias: str) -> str | None:
+        """Return the account credential mode (`api` by default)."""
+        self._data = self._load()
+        entry = self._data.get(platform, {}).get(alias)
+        return str(entry.get("mode", "api")) if entry is not None else None
+
+    def save_browser_account(
+        self,
+        platform: str,
+        alias: str,
+        identity: dict[str, Any],
+        profile_dir: str,
+    ) -> None:
+        """Persist browser identity metadata without storing any cookies or tokens."""
+        self._data = self._load()
+        entry = self._data.setdefault(platform, {}).setdefault(alias, {})
+        username = str(identity.get("username") or "").strip().lstrip("@")
+        nickname = str(identity.get("nickname") or username or alias).strip()
+        entry.pop("encrypted_access_token", None)
+        entry.pop("encrypted_refresh_token", None)
+        entry.pop("expires_at", None)
+        entry.pop("refresh_expires_at", None)
+        entry.update({
+            "mode": "service",
+            "name": nickname or f"@{username}",
+            "target_id": username,
+            "username": username,
+            "handle": username,
+            "avatar": identity.get("avatar_url"),
+            "profile_dir": profile_dir,
+            "status": "ok",
+            "last_session_check": time.time(),
+            "connected_at": entry.get("connected_at", time.time()),
+        })
+        self._save()
+        logger.info("browser_account_saved", platform=platform, account=alias)
 
     def update_metadata(self, platform: str, alias: str, *, label: str | None = None, notes: str | None = None) -> bool:
         """Update user-editable, non-secret fields of an account. Returns False if it doesn't exist."""
@@ -195,6 +243,37 @@ class TokenStorage:
             entry["label"] = label.strip()
         if notes is not None:
             entry["notes"] = notes.strip()
+        self._save()
+        return True
+
+    def update_channel_profile(
+        self,
+        platform: str,
+        alias: str,
+        *,
+        name: str,
+        target_id: str,
+        handle: str | None,
+        description: str,
+        custom_url: str | None,
+        avatar: str | None,
+        profile_synced_at: float | None,
+    ) -> bool:
+        """Persist public channel metadata without touching tokens or user labels."""
+        self._data = self._load()
+        entry = self._data.get(platform, {}).get(alias)
+        if entry is None:
+            return False
+
+        entry.update({
+            "name": name,
+            "target_id": target_id,
+            "handle": handle,
+            "description": description,
+            "custom_url": custom_url,
+            "avatar": avatar,
+            "profile_synced_at": profile_synced_at,
+        })
         self._save()
         return True
 
@@ -216,6 +295,7 @@ class TokenStorage:
 
         entry = self._data[platform][alias]
         entry["encrypted_access_token"] = self.encrypt(access_token)
+        entry["mode"] = "api"
         entry["status"] = "ok"
         entry.setdefault("connected_at", time.time())
 
@@ -234,6 +314,26 @@ class TokenStorage:
             expires_in_seconds=expires_in,
         )
 
+    def save_instagram_deletion_token(self, alias: str, token: str, expires_in: int) -> None:
+        """Guarda el token de usuario de Facebook separado del token de Página usado al publicar."""
+        self._data = self._load()
+        entry = self._data.get("instagram", {}).get(alias)
+        if entry is None:
+            raise TokenError(f"Instagram account '{alias}' not found")
+        entry["encrypted_deletion_user_token"] = self.encrypt(token)
+        entry["deletion_user_expires_at"] = time.time() + max(0, expires_in)
+        self._save()
+
+    def get_instagram_deletion_token(self, alias: str) -> str | None:
+        """Devuelve el token de usuario vigente; nunca el de Página como sustituto."""
+        self._data = self._load()
+        entry = self._data.get("instagram", {}).get(alias) or {}
+        encrypted = entry.get("encrypted_deletion_user_token")
+        expires_at = entry.get("deletion_user_expires_at")
+        if not encrypted or not isinstance(expires_at, (int, float)) or expires_at <= time.time():
+            return None
+        return self.decrypt(encrypted)
+
     async def mark_requires_reauth(self, platform: str, alias: str, reason: str = "") -> None:
         """Flag an account as needing manual re-authentication."""
         if platform not in self._data:
@@ -242,6 +342,8 @@ class TokenStorage:
             self._data[platform][alias] = {}
 
         self._data[platform][alias]["status"] = "requires_reauth"
+        if self._data[platform][alias].get("mode") == "browser":
+            self._data[platform][alias]["last_session_check"] = time.time()
         self._save()
         logger.error(
             "token_reauth_required",
@@ -262,6 +364,7 @@ class TokenStorage:
         if not accounts or alias not in accounts:
             return False
 
+        entry = accounts[alias]
         del accounts[alias]
         if not accounts:
             del self._data[platform]

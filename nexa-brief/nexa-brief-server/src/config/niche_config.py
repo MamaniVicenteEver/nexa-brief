@@ -101,6 +101,10 @@ class VideoFormat(BaseModel):
 
 class VideoConfig(BaseModel):
     duration_seconds: int = 60
+    # Segundos de silencio que se agregan al final de la canción para que la salida de la plantilla
+    # («Gracias por ver · Suscríbete») se vea completa. None = 4 s si la plantilla tiene
+    # components/outro.js, 0 si no (ver resource_fetcher._outro_tail_seconds).
+    outro_tail_seconds: float | None = None
     formats: list[VideoFormat] = Field(default_factory=list)
     # tiktok_video.mp4 es un clip de 61s con fades DERIVADO del formato 9:16 (no es
     # una grabación aparte, es un recorte rápido por FFmpeg) — pero sigue siendo un
@@ -197,6 +201,9 @@ class ConfigDrivenTemplateConfig(BaseModel):
     # config.json curado y estable. En ese caso se reutiliza ese config como
     # base y no se invoca al modelo para reconstruirlo en cada job.
     static_config: bool = False
+    # Claves que se copian SIEMPRE del config.json de la plantilla, aunque el config lo arme la IA
+    # (ej. "layout" en Neón: la mezcla de estilos de letra se decide en la plantilla, no por video).
+    locked_config_keys: list[str] = Field(default_factory=list)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

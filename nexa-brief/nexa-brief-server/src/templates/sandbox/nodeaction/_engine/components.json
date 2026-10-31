@@ -1,0 +1,2114 @@
+{
+  "comps": [
+    {
+      "name": "action.character",
+      "summary": "Actor 2.5D; pos=[x,z]. Colores y estilo pueden heredarse desde team.",
+      "tags": [
+        "personaje"
+      ],
+      "layer": "main",
+      "params": {
+        "id": {
+          "type": "string",
+          "default": null,
+          "doc": "ID unico.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "team": {
+          "type": "string",
+          "default": null,
+          "doc": "ID en teams.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "style": {
+          "type": "enum",
+          "default": "trooper",
+          "doc": "Estilo.",
+          "required": false,
+          "options": [
+            "hero",
+            "trooper",
+            "ink",
+            "plain",
+            "soldier"
+          ],
+          "min": null,
+          "max": null
+        },
+        "hero": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca protagonista.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "array",
+          "default": [
+            0,
+            8
+          ],
+          "doc": "Posicion [x,z].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "face": {
+          "type": "number",
+          "default": 1,
+          "doc": "1 derecha, -1 izquierda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hp": {
+          "type": "number",
+          "default": 1,
+          "doc": "Impactos para caer.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "weapon": {
+          "type": "enum",
+          "default": "paint",
+          "doc": "Arma; null desarma.",
+          "required": false,
+          "options": [
+            "paint",
+            "rifle",
+            "mg",
+            "rock",
+            null
+          ],
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "doc": "Color conjunto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": null,
+          "doc": "Color de cuerpo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "paint": {
+          "type": "string",
+          "default": null,
+          "doc": "Color de impacto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": null,
+          "doc": "Color acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "helmet": {
+          "type": "string",
+          "default": null,
+          "doc": "Color casco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flag": {
+          "type": "string",
+          "default": null,
+          "doc": "Bandera del torso.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wave": {
+          "type": "number",
+          "default": null,
+          "doc": "Oleada advance.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "officer": {
+          "type": "bool",
+          "default": false,
+          "doc": "Toca silbato en advance.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hidden": {
+          "type": "bool",
+          "default": false,
+          "doc": "Empieza oculto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fall": {
+          "type": "enum",
+          "default": null,
+          "doc": "Tipo de caida.",
+          "required": false,
+          "options": [
+            "back",
+            "forward",
+            "knees",
+            "mixed"
+          ],
+          "min": null,
+          "max": null
+        },
+        "away": {
+          "type": "bool",
+          "default": false,
+          "doc": "Mira hacia el fondo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "view": {
+          "type": "enum",
+          "default": null,
+          "doc": "Vista fija.",
+          "required": false,
+          "options": [
+            "side"
+          ],
+          "min": null,
+          "max": null
+        },
+        "look": {
+          "type": "object",
+          "default": null,
+          "doc": "Sobrescribe estilo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/prueba-3d",
+        "sandbox/nodeaction/somme-1916",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.team",
+      "summary": "Apariencia heredable por los actores del bando.",
+      "tags": [
+        "equipo"
+      ],
+      "layer": "main",
+      "params": {
+        "name": {
+          "type": "string",
+          "default": null,
+          "doc": "Nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": null,
+          "doc": "Color cuerpo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "paint": {
+          "type": "string",
+          "default": null,
+          "doc": "Color impactos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": null,
+          "doc": "Color acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "style": {
+          "type": "string",
+          "default": null,
+          "doc": "Estilo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "helmet": {
+          "type": "string",
+          "default": null,
+          "doc": "Color casco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flag": {
+          "type": "string",
+          "default": null,
+          "doc": "Bandera.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/prueba-3d",
+        "sandbox/nodeaction/somme-1916",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.background",
+      "summary": "Fondo color, imagen o video.",
+      "tags": [
+        "fondo",
+        "video"
+      ],
+      "layer": "main",
+      "params": {
+        "type": {
+          "type": "enum",
+          "default": "color",
+          "doc": "Tipo.",
+          "required": false,
+          "options": [
+            "color",
+            "image",
+            "video"
+          ],
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffffff",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "string",
+          "default": null,
+          "doc": "Ruta imagen/video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": null,
+          "doc": "Oscurecimiento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "loop": {
+          "type": "bool",
+          "default": false,
+          "doc": "Repite video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/prueba-3d",
+        "sandbox/nodeaction/somme-1916",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.move",
+      "summary": "Andares: walk, run, sprint, strafe o march.",
+      "tags": [
+        "movimiento"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo o ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "actor": {
+          "type": "string",
+          "default": null,
+          "doc": "ID actor.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": null,
+          "doc": "Tipo de andar.",
+          "required": true,
+          "options": [
+            "walk",
+            "run",
+            "sprint",
+            "strafe",
+            "march"
+          ],
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Destino [x,z].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "by": {
+          "type": "array",
+          "default": null,
+          "doc": "Desplazamiento [dx,dz].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": null,
+          "doc": "Duracion.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": null,
+          "doc": "Velocidad.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/prueba-3d",
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.jump",
+      "summary": "Salto con arco y aterrizaje.",
+      "tags": [
+        "movimiento"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo/ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "actor": {
+          "type": "string",
+          "default": null,
+          "doc": "ID actor.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": "jump",
+          "doc": "Accion.",
+          "required": true,
+          "options": [
+            "jump"
+          ],
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Destino [x,z].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "by": {
+          "type": "array",
+          "default": null,
+          "doc": "Desplazamiento [dx,dz].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "height": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Altura.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Duracion.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "style": {
+          "type": "enum",
+          "default": "tuck",
+          "doc": "Estilo.",
+          "required": false,
+          "options": [
+            "tuck",
+            "hop",
+            "flip"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo"
+      ]
+    },
+    {
+      "name": "action.aim",
+      "summary": "Apunta a un actor o coordenada.",
+      "tags": [
+        "arma"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo/ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "actor": {
+          "type": "string",
+          "default": null,
+          "doc": "ID actor.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": "aim",
+          "doc": "Accion.",
+          "required": true,
+          "options": [
+            "aim"
+          ],
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "string",
+          "default": null,
+          "doc": "ID blanco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "array",
+          "default": null,
+          "doc": "Coordenada [x,y,z].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 1,
+          "doc": "Duracion.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.shoot",
+      "summary": "Disparo/lanzamiento; el motor calcula trayectoria, impacto, destello y manchas.",
+      "tags": [
+        "proyectil",
+        "efecto"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo/ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "actor": {
+          "type": "string",
+          "default": null,
+          "doc": "ID actor.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": null,
+          "doc": "Accion.",
+          "required": true,
+          "options": [
+            "shoot",
+            "throw"
+          ],
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "string",
+          "default": null,
+          "doc": "ID blanco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "array",
+          "default": null,
+          "doc": "Coordenada [x,y,z].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hit": {
+          "type": "bool",
+          "default": true,
+          "doc": "Si impacta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "lethal": {
+          "type": "bool",
+          "default": true,
+          "doc": "Si derriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "weapon": {
+          "type": "string",
+          "default": null,
+          "doc": "Arma.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "impactAt": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Instante impacto; motor adelanta disparo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/prueba-3d",
+        "sandbox/nodeaction/somme-1916",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.pose",
+      "summary": "Pose registrada en rig.js.",
+      "tags": [
+        "pose"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Tiempo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "actor": {
+          "type": "string",
+          "default": null,
+          "doc": "ID actor.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": "pose",
+          "doc": "Accion.",
+          "required": true,
+          "options": [
+            "pose"
+          ],
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": null,
+          "doc": "Nombre pose.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 2,
+          "doc": "Duracion.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/rig.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.kneel",
+      "summary": "Arrodillarse.",
+      "tags": [
+        "pose"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Tiempo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "actor": {
+          "type": "string",
+          "default": null,
+          "doc": "ID actor.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": "kneel",
+          "doc": "Accion.",
+          "required": true,
+          "options": [
+            "kneel"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duracion.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/prueba-3d"
+      ]
+    },
+    {
+      "name": "action.visibility-turn-death",
+      "summary": "hide/show/face/die son acciones disponibles; argumentos particulares no consolidados, consultar core.js.",
+      "tags": [
+        "accion"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.whistle",
+      "summary": "Silbato de oficial.",
+      "tags": [
+        "sonido"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Tiempo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "actor": {
+          "type": "string",
+          "default": null,
+          "doc": "ID actor.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": "whistle",
+          "doc": "Accion.",
+          "required": true,
+          "options": [
+            "whistle"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Duracion.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.plan.skirmish",
+      "summary": "Director de escaramuza con protagonista, bajas, aliados y rivales.",
+      "tags": [
+        "director",
+        "escena"
+      ],
+      "layer": "main",
+      "params": {
+        "mode": {
+          "type": "enum",
+          "default": "skirmish",
+          "doc": "Modo.",
+          "required": true,
+          "options": [
+            "skirmish"
+          ],
+          "min": null,
+          "max": null
+        },
+        "hero": {
+          "type": "string",
+          "default": null,
+          "doc": "ID protagonista.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seed": {
+          "type": "number",
+          "default": null,
+          "doc": "Default scene.seed.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number|string",
+          "default": 1,
+          "doc": "Inicio; 1 segundo por defecto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "heroMoves": {
+          "type": "array",
+          "default": [
+            "run",
+            "jump",
+            "kneel",
+            "run",
+            "stand",
+            "jump",
+            "kneel"
+          ],
+          "doc": "Ciclo por defecto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "order": {
+          "type": "array",
+          "default": null,
+          "doc": "IDs rivales; default por cercania.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kills": {
+          "type": "array",
+          "default": null,
+          "doc": "Anclas de bajas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "allyKills": {
+          "type": "array",
+          "default": null,
+          "doc": "Anclas de bajas aliadas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gap": {
+          "type": "array",
+          "default": [
+            0.5,
+            1.0
+          ],
+          "doc": "Pausa entre bajas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "range": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Distancia combate.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "foeFire": {
+          "type": "array",
+          "default": [
+            1.0,
+            2.2
+          ],
+          "doc": "Cadencia rival.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "allyFire": {
+          "type": "array",
+          "default": [
+            1.1,
+            2.0
+          ],
+          "doc": "Cadencia aliada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "foeMove": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Probabilidad reacomodo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flips": {
+          "type": "bool",
+          "default": false,
+          "doc": "Permite mortal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "victoryAt": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Instante final.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "victoryPose": {
+          "type": "string",
+          "default": "victory",
+          "doc": "Pose final.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "victory": {
+          "type": "number",
+          "default": 3,
+          "doc": "Duracion pose.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/planner.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo"
+      ]
+    },
+    {
+      "name": "action.plan.advance",
+      "summary": "Director de oleadas para asalto/carga.",
+      "tags": [
+        "director",
+        "escena"
+      ],
+      "layer": "main",
+      "params": {
+        "mode": {
+          "type": "enum",
+          "default": "advance",
+          "doc": "Modo.",
+          "required": true,
+          "options": [
+            "advance"
+          ],
+          "min": null,
+          "max": null
+        },
+        "attackers": {
+          "type": "string",
+          "default": null,
+          "doc": "Equipo atacante.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "defenders": {
+          "type": "string",
+          "default": null,
+          "doc": "Equipo defensor.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "defendersUp": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparicion defensores.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fireAt": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Inicio de fuego.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fireUntil": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Fin de fuego.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "waves": {
+          "type": "array",
+          "default": [
+            {
+              "wave": 1,
+              "at": 1
+            }
+          ],
+          "doc": "Oleadas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "casualties": {
+          "type": "array",
+          "default": [],
+          "doc": "Bajas {at,over,n,wave?}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "survivors": {
+          "type": "array",
+          "default": [],
+          "doc": "IDs sobrevivientes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cover": {
+          "type": "array",
+          "default": [],
+          "doc": "Cobertura {actor,at,to,pose}.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "goalZ": {
+          "type": "number",
+          "default": null,
+          "doc": "Profundidad objetivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "burst": {
+          "type": "number",
+          "default": 4,
+          "doc": "Tiros por rafaga.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "every": {
+          "type": "array",
+          "default": [
+            0.7,
+            1.5
+          ],
+          "doc": "Pausa.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "array",
+          "default": [
+            0.42,
+            0.68
+          ],
+          "doc": "Rango velocidad.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wander": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Desvio lateral.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fireChance": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Chance disparar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kneelChance": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Chance arrodillarse.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "shotsPerStop": {
+          "type": "array",
+          "default": [
+            2,
+            3
+          ],
+          "doc": "Tiros por parada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "legs": {
+          "type": "number",
+          "default": 4,
+          "doc": "Tramos base.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seed": {
+          "type": "number",
+          "default": null,
+          "doc": "Pisa scene.seed para variar la coreografía.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/planner.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.camera.key",
+      "summary": "Key de camara: posicion, follow, frame, orbit y overrides portrait.",
+      "tags": [
+        "camara"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Tiempo/ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "x": {
+          "type": "number",
+          "default": 0,
+          "doc": "X.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 1.35,
+          "doc": "Altura.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "z": {
+          "type": "number",
+          "default": 1,
+          "doc": "Z.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pitch": {
+          "type": "number",
+          "default": 0,
+          "doc": "Inclinacion grados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "yaw": {
+          "type": "number",
+          "default": 0,
+          "doc": "Giro grados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "smooth": {
+          "type": "number",
+          "default": 1.4,
+          "doc": "Respuesta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cut": {
+          "type": "bool",
+          "default": false,
+          "doc": "Corte seco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": null,
+          "doc": "Etiqueta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "follow": {
+          "type": "string",
+          "default": null,
+          "doc": "ID actor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "number",
+          "default": null,
+          "doc": "Peso del punto entre actor y blanco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "doc": "Offset X.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dz": {
+          "type": "number",
+          "default": null,
+          "doc": "Offset Z.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "followX": {
+          "type": "number",
+          "default": 0.65,
+          "doc": "Mezcla X.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "followZ": {
+          "type": "number",
+          "default": null,
+          "doc": "Mezcla Z.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "frame": {
+          "type": "string|array",
+          "default": null,
+          "doc": "all, alive, team:id o IDs.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "frameX": {
+          "type": "number",
+          "default": 1,
+          "doc": "Mezcla X grupo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "frameZ": {
+          "type": "number",
+          "default": null,
+          "doc": "Mezcla Z grupo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "orbit": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Actor o [x,z].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "radius": {
+          "type": "number",
+          "default": 5,
+          "doc": "Radio orbita.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "portrait": {
+          "type": "object",
+          "default": null,
+          "doc": "Override vertical.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "blend": {
+          "type": "number",
+          "default": null,
+          "doc": "Alias aceptado por el motor para smooth.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/camera.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/somme-1916",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.camera.effects",
+      "summary": "Efectos globales: drift y rumble; 0 los apaga.",
+      "tags": [
+        "camara",
+        "efecto"
+      ],
+      "layer": "main",
+      "params": {
+        "drift": {
+          "type": "number",
+          "default": 1,
+          "doc": "Flotacion.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "rumble": {
+          "type": "number",
+          "default": 1,
+          "doc": "Ondulacion por explosiones.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/camera.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.weapon",
+      "summary": "Armas del runtime; perfiles no se configuran por escena.",
+      "tags": [
+        "arma"
+      ],
+      "layer": "main",
+      "params": {
+        "name": {
+          "type": "enum",
+          "default": null,
+          "doc": "Arma.",
+          "required": false,
+          "options": [
+            "paint",
+            "rock",
+            "rifle",
+            "mg"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/prueba-3d",
+        "sandbox/nodeaction/somme-1916",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.ground.trench",
+      "summary": "Trinchera estatica en plano de suelo.",
+      "tags": [
+        "prop",
+        "suelo"
+      ],
+      "layer": "main",
+      "params": {
+        "type": {
+          "type": "enum",
+          "default": "trench",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "trench"
+          ],
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Extremo [x,z].",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Extremo [x,z].",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "w": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Ancho.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#ddd5c6",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "edge": {
+          "type": "string",
+          "default": "#bfb5a3",
+          "doc": "Borde.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/fx.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.ground.crater",
+      "summary": "Cráter estático en plano de suelo.",
+      "tags": [
+        "prop",
+        "suelo"
+      ],
+      "layer": "main",
+      "params": {
+        "type": {
+          "type": "enum",
+          "default": "crater",
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "crater"
+          ],
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "array",
+          "default": null,
+          "doc": "Centro [x,z].",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "r": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#a0968a",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/fx.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.fx.poppies",
+      "summary": "Amapolas deterministas sobre el campo.",
+      "tags": [
+        "efecto"
+      ],
+      "layer": "main",
+      "params": {
+        "at": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Instante.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 4,
+          "doc": "Ventana tiempo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "perBody": {
+          "type": "number",
+          "default": 2,
+          "doc": "Cantidad por caído.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "extra": {
+          "type": "number",
+          "default": 40,
+          "doc": "Cantidad extra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "area": {
+          "type": "object",
+          "default": null,
+          "doc": "x:[min,max], z:[min,max].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/fx.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.event.blast",
+      "summary": "Explosión en un punto del mundo. kill es el radio letal en unidades del mundo.",
+      "tags": [
+        "efecto",
+        "explosión"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo o ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": "blast",
+          "doc": "Tipo de evento.",
+          "required": true,
+          "options": [
+            "blast"
+          ],
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "array",
+          "default": null,
+          "doc": "Centro [x,z].",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 1,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kill": {
+          "type": "number",
+          "default": 0,
+          "doc": "Radio de efecto letal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.event.barrage",
+      "summary": "Bombardeo determinista en un área hasta until. Defaults de área, cadencia y tamaño están en params.",
+      "tags": [
+        "efecto",
+        "explosión"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo o ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": "barrage",
+          "doc": "Tipo de evento.",
+          "required": true,
+          "options": [
+            "barrage"
+          ],
+          "min": null,
+          "max": null
+        },
+        "until": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Fin de bombardeo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "area": {
+          "type": "object",
+          "default": {
+            "x": [
+              -4,
+              4
+            ],
+            "z": [
+              10,
+              14
+            ]
+          },
+          "doc": "Rangos x/z.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "every": {
+          "type": "array",
+          "default": [
+            0.3,
+            0.7
+          ],
+          "doc": "Intervalo entre impactos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "array",
+          "default": [
+            0.6,
+            1.1
+          ],
+          "doc": "Rango de tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kill": {
+          "type": "number",
+          "default": 0,
+          "doc": "Radio letal de cada impacto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.render",
+      "summary": "El modo 3d selecciona el rig con volumen; si se omite se usa el rig 2.5D.",
+      "tags": [
+        "personaje",
+        "render"
+      ],
+      "layer": "main",
+      "params": {
+        "render": {
+          "type": "enum",
+          "default": null,
+          "doc": "Solo el modo 3d está habilitado explícitamente.",
+          "required": false,
+          "options": [
+            "3d"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/somme-1916-3d/index.html",
+      "used_by": [
+        "sandbox/nodeaction/prueba-3d",
+        "sandbox/nodeaction/somme-1916-3d"
+      ]
+    },
+    {
+      "name": "action.tint",
+      "summary": "Overlay de color global en el mundo, interpolado desde t.",
+      "tags": [
+        "efecto",
+        "color"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo/ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "a": {
+          "type": "number",
+          "default": 0,
+          "doc": "Alpha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "blend": {
+          "type": "number",
+          "default": 3,
+          "doc": "Modo de composición.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/somme-1916/index.html",
+      "used_by": [
+        "sandbox/nodeaction/somme-1916"
+      ]
+    },
+    {
+      "name": "action.camera.settings",
+      "summary": "Opciones globales de cámara en scene.camera.",
+      "tags": [
+        "cámara"
+      ],
+      "layer": "main",
+      "params": {
+        "horizon": {
+          "type": "number|object",
+          "default": null,
+          "doc": "Número o {landscape,portrait}; defaults 0.42/0.4.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "portraitZoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Multiplicador de zoom en vertical.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "smooth": {
+          "type": "number",
+          "default": 1.4,
+          "doc": "Respuesta global si la key no declara smooth/blend.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drift": {
+          "type": "number",
+          "default": 1,
+          "doc": "Intensidad de flotación; 0 la apaga.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "rumble": {
+          "type": "number",
+          "default": 1,
+          "doc": "Intensidad de ondulación; 0 la apaga.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_engine/core.js",
+      "demo": "sandbox/nodeaction/paintwick-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/paintwick-demo",
+        "sandbox/nodeaction/somme-1916"
+      ],
+      "example": {
+        "horizon": {
+          "landscape": 0.4,
+          "portrait": 0.55
+        },
+        "portraitZoom": 1.45
+      }
+    }
+  ]
+}

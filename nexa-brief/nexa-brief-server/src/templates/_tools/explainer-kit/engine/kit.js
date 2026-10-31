@@ -53,7 +53,7 @@
    * def = { name:"familia.nombre", summary:"una línea", tags:[…], example:{…params},
    *         params:{ clave:{ type, default, doc, required?, min?, max?, options? } },
    *         create(ctx, p) → { render(lt, beat), dispose?(), points?(), hold? } }
-   * `type`: string | number | color | bool | enum | image | icon | array | object
+   * `type`: string | number | color | bool | enum | image | video | icon | array | object
    */
   function register(def) {
     if (!/^[a-z]+\.[a-zA-Z0-9]+$/.test(def.name)) throw new Error(`Kit.register: nombre inválido ${def.name}`);
@@ -107,13 +107,38 @@
   /** carga una imagen una sola vez (el director espera todas antes del primer cuadro) */
   function image(src) {
     if (!imgCache.has(src)) imgCache.set(src, new Promise(res => {
-      const im = new Image(); im.decoding = "sync";
-      im.onload = () => res(im); im.onerror = () => { console.warn("[kit] no carga", src); res(null); };
+      const im = new Image(); im.decoding = "async";
+      im.onload = () => {
+        if (typeof im.decode === "function") im.decode().catch(() => {}).then(() => res(im));
+        else res(im);
+      };
+      im.onerror = () => { console.warn("[kit] no carga", src); res(null); };
       im.src = src;
     }));
     return imgCache.get(src);
   }
   const loaded = new Map();               /* src → HTMLImageElement ya decodificada */
+
+  /* ------------------------------ clips de video ------------------------------
+     Un parámetro `type:"video"` es un clip mudo (assets/media/*.mp4, ver tools/media.py get … x.mp4).
+     Los componentes lo piden con ctx.clip(src, segundo) y lo dibujan como una imagen (drawImage).
+     El motor lo lleva al cuadro pedido: en vivo lo deja correr y corrige si se desfasa; en una
+     captura o un render cuadro a cuadro (seek / ?t=) salta al cuadro exacto y espera el `seeked`
+     antes de capturar, así cada cuadro sigue siendo función pura del tiempo. */
+  const vidCache = new Map();
+  function video(src) {
+    if (!vidCache.has(src)) vidCache.set(src, new Promise(res => {
+      const v = doc.createElement("video");
+      Object.assign(v, { muted: true, playsInline: true, preload: "auto", loop: false });
+      v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+      /* width/height = tamaño real: los componentes leen im.width/height igual que en una foto */
+      v.addEventListener("loadeddata", () => { v.width = v.videoWidth; v.height = v.videoHeight; res(v); }, { once: true });
+      v.addEventListener("error", () => { console.warn("[kit] no carga el clip", src); res(null); }, { once: true });
+      v.src = src; v.load();
+    }));
+    return vidCache.get(src);
+  }
+  const loadedVideos = new Map();         /* src → HTMLVideoElement con su primer cuadro listo */
 
   /* ------------------------------ transcripción ------------------------------ */
   function wordsOf(lyrics) {
@@ -174,11 +199,37 @@
     beats.forEach((b, i) => {
       if (b.dur != null) b.t1 = b.t0 + b.dur;
       else if (b.until) { const wi = findAnchor(words, b.until, Math.max(0, b.wordIndex)); b.t1 = wi >= 0 ? words[wi].start : b.t0 + 3; }
-      else { const nx = beats.slice(i + 1).find(x => x.layer === b.layer); b.t1 = nx ? nx.t0 : total; }
+      else {
+        const nx = beats.slice(i + 1).find(x => x.layer === b.layer); b.t1 = nx ? nx.t0 : total;
+        /* design.json → defaults.overlay.endWithScene: un overlay sin dur/until (marca a mano, rótulo…)
+           se va con la escena sobre la que se dibujó, en vez de quedar hasta el próximo overlay
+           (que puede estar a minutos). Mínimo `min` s, máximo `max` s. */
+        const OV = sb.overlay;
+        if (OV?.endWithScene && b.layer !== "main") {
+          const scene = beats.slice(i + 1).find(x => x.layer === "main" && x.t0 > b.t0);
+          if (scene) b.t1 = Math.min(b.t1, Math.max(scene.t0, b.t0 + (OV.min ?? 2.5)));
+          b.t1 = Math.min(b.t1, b.t0 + (OV.max ?? 8));
+        }
+      }
       b.dur = Math.max(0.2, b.t1 - b.t0);
     });
+    /* duración mínima por componente (design.json → defaults.minDur, p. ej. {"common.clip": 6}; o
+       "minDur" en el beat): si la voz pasa enseguida al beat siguiente, el beat se alarga y los de su
+       misma capa que caían dentro arrancan cuando termina (si les queda < 1 s, se saltan). Así ningún
+       video tiene que correr beats a mano para que un clip se vea completo. */
+    const MIN = sb.minDur || {};
+    beats.forEach((b, i) => {
+      const min = b.minDur ?? MIN[b.use];
+      if (b.skip || !min || b.dur >= min) return;
+      b.t1 = Math.min(total, b.t0 + min); b.dur = b.t1 - b.t0;
+      for (const nx of beats.slice(i + 1)) {
+        if (nx.layer !== b.layer || nx.t0 >= b.t1) continue;
+        if (nx.t1 - b.t1 < 1) nx.skip = true;
+        else { nx.t0 = b.t1; nx.dur = nx.t1 - nx.t0; }
+      }
+    });
     if (miss.length) console.warn("[kit] anclas no encontradas:", miss);
-    return beats;
+    return beats.filter(b => !b.skip);
   }
 
   /* ------------------------------ subtítulos ------------------------------ */
@@ -227,6 +278,11 @@
     if (!C.family && D) C.family = D.family;
     const QS = new URLSearchParams(location.search);
     const FROZEN = QS.has("t") ? parseFloat(QS.get("t")) : null;
+    const CONTROLLED = QS.get("controls") === "1";
+    const SYNTHETIC_CLOCK = CONTROLLED && QS.get("clock") === "synthetic";
+    /* Solo el reproductor normal prioriza el primer cuadro; capturas y relojes sintéticos
+       conservan la precarga completa para que sus cuadros sigan siendo deterministas. */
+    const PREVIEW_FIRST_FRAME = CONTROLLED && !SYNTHETIC_CLOCK && FROZEN == null;
     const root = opts.root || doc.getElementById("stage");
     root.style.background = C.palette.bg;
     doc.body.style.background = C.palette.bg;
@@ -239,36 +295,72 @@
     };
     /* el loader puede haberlo asignado ya: reasignar el mismo src reinicia la carga */
     if (C.audio?.src && audio.getAttribute?.("src") !== C.audio.src) audio.src = C.audio.src;
-    const total = opts.total || await new Promise(res => {
-      const done = () => res(isFinite(audio.duration) && audio.duration > 0 ? audio.duration : (words.at(-1)?.end ?? 10) + 2);
+    const lyricsDuration = Number(lyrics?.metadata?.duration);
+    const durationEstimate = Number.isFinite(lyricsDuration) && lyricsDuration > 0
+      ? lyricsDuration
+      : (words.at(-1)?.end ?? 10) + 2;
+    /* La vista viva usa la duración de la transcripción y no descarga el audio
+       antes de pintar. Capturas y renders siguen tomando la duración real del audio. */
+    const total = opts.total || (PREVIEW_FIRST_FRAME ? durationEstimate : await new Promise(res => {
+      const done = () => res(isFinite(audio.duration) && audio.duration > 0 ? audio.duration : durationEstimate);
       if (audio.readyState >= 1) done(); else { audio.addEventListener("loadedmetadata", done, { once: true }); setTimeout(done, 3000); }
-    });
+    }));
+    const START_AT = clamp(opts.startAt ?? 0, 0, total);
+    const INITIAL_TIME = FROZEN != null ? clamp(FROZEN, 0, total) : START_AT;
     /* cierre (gracias por ver · canal · suscribite · apoyo): se agrega solo al final del audio
-       (la narración deja varios segundos de silencio para esto). config.outro.enabled=false lo apaga */
+       (la narración deja varios segundos de silencio para esto). config.outro.enabled=false lo apaga.
+       Con cierre con voz (tools/outro.py) config.outro.start/dur dicen dónde empieza la voz del cierre. */
     const SB = sb ? { ...sb, beats: [...sb.beats] } : { beats: [] };
     const O = C.outro;
-    if (O && O.enabled !== false && !SB.beats.some(b => /\.outro$/.test(b.use))) {
+    if (O && O.enabled !== false && !SB.beats.some(b => /\.outro(v\d+)?$/.test(b.use))) {
       const use = O.use || `${C.family}.outro`;
       if (registry.has(use)) {
         /* nunca encima de la voz: empieza después de la última palabra (y dura lo que quede) */
         const lastWord = words.length ? words[words.length - 1].end + 0.35 : 0;
-        const t0 = Math.max(total - Math.min(O.dur ?? 5, total * 0.3), lastWord), dur = total - t0, p = {};
+        const t0 = O.start != null ? O.start : Math.max(total - Math.min(O.dur ?? 5, total * 0.3), lastWord);
+        const dur = total - t0, p = {};
         for (const k of Object.keys(registry.get(use).params)) if (O[k] !== undefined) p[k] = O[k];
         if (dur >= 2.5) SB.beats.push({ t: t0, offset: 0, use, params: p, dur, hideCaptions: true });
       }
     }
+    SB.minDur = C.minDur; SB.overlay = C.overlay;
     const beats = resolveBeats(SB, words, total);
 
-    /* fuentes + imágenes declaradas por los beats antes del primer cuadro.
-       Kit.fonts: cada archivo de componentes declara las fuentes que dibuja en canvas;
-       si una se pide recién al dibujar, los primeros cuadros salen con otra fuente. */
+    /* En la reproducción en vivo se esperan solo las imágenes visibles al abrir.
+       Las demás se precargan después del primer cuadro; las capturas mantienen la carga completa. */
     const wait = (pr, ms) => Promise.race([pr, new Promise(r => setTimeout(r, ms))]);
-    const fontLoads = [...new Set([...(C.fonts?.load || []), ...fonts])].map(f => wait(doc.fonts.load(f).catch(() => {}), 10000));
+    /* La vista en vivo no debe quedarse esperando fuentes remotas: usa el fallback
+       en el primer cuadro y el bucle vuelve a dibujar cuando la fuente termine de cargar. */
+    const fontWaitMs = PREVIEW_FIRST_FRAME ? 700 : 10000;
+    const fontLoads = [...new Set([...(C.fonts?.load || []), ...fonts])].map(f => wait(doc.fonts.load(f).catch(() => {}), fontWaitMs));
     const imgs = new Set();
-    for (const b of beats) for (const [k, v] of Object.entries(b.params || {}))
-      if (registry.get(b.use)?.params?.[k]?.type === "image" && v) imgs.add(v);
-    await Promise.all([...fontLoads, ...[...imgs].map(s => image(s).then(im => im && loaded.set(s, im)))]);
-    await wait(doc.fonts.ready, 10000);
+    const firstFrameImgs = new Set();
+    const vids = new Set();
+    for (const b of beats) {
+      const activeAtInitial = INITIAL_TIME >= b.t0 &&
+        INITIAL_TIME < b.t1 + (registry.get(b.use)?.post ?? (C.transition?.overlap ?? 0.6));
+      for (const [k, v] of Object.entries(b.params || {})) {
+        if (registry.get(b.use)?.params?.[k]?.type === "video" && v) { vids.add(v); continue; }
+        if (registry.get(b.use)?.params?.[k]?.type !== "image" || !v) continue;
+        imgs.add(v);
+        if (!PREVIEW_FIRST_FRAME || activeAtInitial) firstFrameImgs.add(v);
+      }
+    }
+    const loadImage = async src => {
+      const im = await image(src);
+      if (im) loaded.set(src, im);
+    };
+    const loadVideo = async src => {
+      const v = await video(src);
+      if (v) loadedVideos.set(src, v);
+    };
+    /* La vista en vivo no espera los clips (se agregan al cargar); capturas y renders sí. */
+    const vidLoads = [...vids].map(src => PREVIEW_FIRST_FRAME ? (loadVideo(src), null) : wait(loadVideo(src), 20000));
+    await Promise.all([...fontLoads, ...[...firstFrameImgs].map(loadImage), ...vidLoads.filter(Boolean)]);
+    if (!PREVIEW_FIRST_FRAME) await wait(doc.fonts.ready, 10000);
+    const deferredImgs = PREVIEW_FIRST_FRAME
+      ? [...imgs].filter(src => !firstFrameImgs.has(src))
+      : [];
 
     /* capas: fondo (canvas), principal (canvas + svg), overlay (dom), subtítulos */
     let stage = makeStage(root.clientWidth || innerWidth, root.clientHeight || innerHeight);
@@ -294,6 +386,14 @@
       get stage() { return stage; },
       g: { bg: layers.bg.getContext("2d"), main: layers.main.getContext("2d"), top: layers.top.getContext("2d") },
       img: src => loaded.get(src) || null,
+      /** clip listo para dibujar en el segundo `time` del clip (o null si todavía no cargó) */
+      clip: (src, time) => {
+        const v = loadedVideos.get(src);
+        if (!v) return null;
+        const d = isFinite(v.duration) ? v.duration : 0;
+        wanted.set(v, d > 0 ? clamp(time, 0, Math.max(0, d - 0.05)) : 0);
+        return v;
+      },
       family: {},
     };
     for (const [name, rt] of families) if (rt.setup) ctx.family[name] = rt.setup(ctx) || {};
@@ -335,6 +435,36 @@
       });
     }
 
+    /* clips pedidos en este cuadro → segundo del clip; los no pedidos se pausan */
+    const wanted = new Map(), seeking = new Set();
+    function syncClips() {
+      /* exacto (captura, render cuadro a cuadro, pausa en el modal) o en vivo (corre y se corrige) */
+      const exact = forced != null || (CONTROLLED && audio.paused);
+      for (const v of loadedVideos.values()) {
+        const want = wanted.get(v);
+        if (want == null) { if (!v.paused) v.pause(); continue; }
+        if (exact) {
+          if (!v.paused) v.pause();
+          if (Math.abs(v.currentTime - want) > 0.5 / 30) { v.currentTime = want; seeking.add(v); }
+        } else {
+          if (Math.abs(v.currentTime - want) > 0.3) v.currentTime = want;
+          if (v.paused) v.play().catch(() => {});
+        }
+      }
+      wanted.clear();
+    }
+    /** espera a que los clips lleguen a su cuadro y vuelve a dibujar (capturas deterministas) */
+    async function settleClips(t) {
+      if (!seeking.size) return;
+      const vs = [...seeking]; seeking.clear();
+      await Promise.all(vs.map(v => new Promise(r => {
+        if (!v.seeking && v.readyState >= 2) return r();
+        v.addEventListener("seeked", r, { once: true }); setTimeout(r, 3000);
+      })));
+      render(t);
+      seeking.clear();
+    }
+
     function render(t) {
       t = clamp(t, 0, total);
       for (const k of ["bg", "main", "top"]) { const g = ctx.g[k]; g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, stage.W, stage.H); }
@@ -349,19 +479,18 @@
         try { inst.render && inst.render(t - b.t0, b, t); } catch (e) { console.error("[kit] render falló", b.use, e); }
       }
       for (const [name, rt] of families) if (rt.post) rt.post(t, ctx, ctx.family[name]);
+      syncClips();
       renderCaptions(t);
       if (opts.hud) opts.hud(t, active);
     }
 
     /* reloj: audio si suena; si no (sin gesto del usuario) reloj de pared */
     let forced = FROZEN, t0wall = null;
-    const START_AT = clamp(opts.startAt ?? 0, 0, total);
     const LOOP = QS.has("loop");          /* galería: repetir en bucle sin audio */
     /* ?controls=1 (modal de la app, ver engine/player.js): el audio es el único reloj,
        así pausa/adelantar/retroceder muestran el cuadro exacto y se sigue dibujando en pausa */
-    const CONTROLLED = QS.get("controls") === "1";
     const clock = now => forced != null ? forced
-      : CONTROLLED ? (audio.currentTime || 0)
+      : CONTROLLED ? (SYNTHETIC_CLOCK ? (window.__nexaClock?.currentTime || 0) : (audio.currentTime || 0))
       : (!audio.paused && audio.currentTime > 0) ? audio.currentTime
       : (t0wall == null ? (t0wall = now, START_AT) : LOOP ? START_AT + ((now - t0wall) / 1000) % Math.max(total - START_AT, 0.001) : START_AT + (now - t0wall) / 1000);
     function frame(now) {
@@ -374,15 +503,32 @@
 
     window.__promo = {
       scenes: () => beats.map(b => ({ t0: b.t0, t1: b.t1, type: b.use, seg: { text: b.at || "" } })).concat([{ t0: total, t1: total, type: "end", seg: { text: "" } }]),
-      async seek(t) { forced = t; render(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
+      async seek(t) { forced = t; render(t); await settleClips(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
       release() { forced = null; requestAnimationFrame(frame); },
       beats, total, words,
     };
     if (FROZEN == null && !QS.has("paused") && !CONTROLLED) audio.play().catch(() => {});
+    /* Dibuja antes de anunciar que el reproductor está listo: el audio no debe revelar
+       un canvas todavía vacío. Esperamos dos frames para que el navegador pinte el inicial. */
+    render(clock(performance.now()));
+    if (forced != null) await settleClips(forced);
     requestAnimationFrame(frame);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    if (deferredImgs.length) setTimeout(() => {
+      let next = 0;
+      const worker = async () => {
+        while (next < deferredImgs.length) {
+          const src = deferredImgs[next++];
+          const im = await image(src);
+          if (im) loaded.set(src, im);
+        }
+      };
+      const workers = Array.from({ length: Math.min(2, deferredImgs.length) }, () => worker());
+      void Promise.all(workers).catch(error => console.warn("[kit] precarga en segundo plano falló", error));
+    }, 0);
     return ctx;
   }
 
-  window.Kit = { register, family, registry, fonts, catalog, resolveParams, boot, el, image, loaded, makeStage, deepMerge,
+  window.Kit = { register, family, registry, fonts, catalog, resolveParams, boot, el, image, loaded, video, loadedVideos, makeStage, deepMerge,
                  clamp, lerp, inv, ease, prog, rng, hash, norm, wordsOf, findAnchor, captionChunks };
 })();

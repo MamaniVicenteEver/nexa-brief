@@ -22,12 +22,25 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from src.config.settings import BASE_DIR
+from src.core.explainer import narrative
 from src.core.categories import category_for_design, explainer_folders, get_category
 
 TEMPLATES_DIR: Path = BASE_DIR / "src" / "templates"
 KIT_DIR: Path = TEMPLATES_DIR / "_tools" / "explainer-kit"
 READY_STATUSES = frozenset({"listo", "renderizado"})
 UNCATEGORIZED = "sin_categoria"
+
+
+@dataclass
+class ThumbnailVariant:
+    option: str
+    label: str
+    mode: str
+    lines: list[str] = field(default_factory=list)
+    text: str = ""
+    highlight: str = ""
+    image_path: str | None = None
+    paired_title: str = "A"
 
 
 @dataclass
@@ -47,9 +60,13 @@ class ExplainerVideo:
     facebook_description: str = ""
     tiktok_caption: str = ""
     tiktok_hashtags: list[str] = field(default_factory=list)
+    thumbnail_variants: list[ThumbnailVariant] = field(default_factory=list)
     topic: str = ""
+    narrative_id: str | None = None      # estrategia narrativa del guion (None = videos anteriores)
+    narrative_label: str | None = None
     has_poster: bool = False
     demo: bool = False      # demo de un diseño (mismo guion que otro video): ojo al publicar
+    quality_issues: list[str] = field(default_factory=list)
 
     @property
     def ready(self) -> bool:
@@ -71,6 +88,21 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
     if not manifest:
         return None
     publish = _read_json(video_dir / "publish.json")
+    story = narrative.recorded(video_dir)
+    thumbnail_variants = [
+        ThumbnailVariant(
+            option=str(item.get("option", "")),
+            label=str(item.get("label", "")),
+            mode=str(item.get("mode", "text")),
+            lines=[str(line) for line in item.get("lines", []) if isinstance(line, str)],
+            text=str(item.get("text", "")),
+            highlight=str(item.get("highlight", "")),
+            image_path=str(item["image_path"]) if item.get("image_path") else None,
+            paired_title=str(item.get("paired_title", "A")),
+        )
+        for item in publish.get("thumbnail_variants", [])
+        if isinstance(item, dict) and item.get("option") in {"A", "B", "C"}
+    ]
     design = manifest.get("design") or "binary"
     override = manifest.get("category")
     if override and get_category(override) is not None:
@@ -95,8 +127,12 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         facebook_description=publish.get("facebook_description", "") or "",
         tiktok_caption=publish.get("tiktok_caption", "") or "",
         tiktok_hashtags=list(publish.get("tiktok_hashtags", []) or []),
+        thumbnail_variants=thumbnail_variants,
         topic=manifest.get("topic", "") or "",
+        narrative_id=story.narrative_id,
+        narrative_label=story.label,
         demo=bool(manifest.get("demo")),
+        quality_issues=[str(issue) for issue in manifest.get("quality_issues", []) if isinstance(issue, str)],
         has_poster=(video_dir / "render" / "poster.jpg").exists(),
     )
 

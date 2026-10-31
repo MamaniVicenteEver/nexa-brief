@@ -1,0 +1,242 @@
+{
+ "id": "yt_visual_v1",
+ "platform": "youtube",
+ "name": "YouTube · Video musical sin letra en pantalla",
+ "description": "Como yt_theme_question_v3 pero para videos sin letra en pantalla: sin «(Letra)» ni la línea de la letra.",
+ "fields": {
+  "theme_question": {
+   "type": "text",
+   "max_chars": 60,
+   "instruction": "Una pregunta abierta sobre el sentimiento o la situación central de la canción, como la haría alguien que acaba de escucharla y se sintió identificado. Debe nacer de la letra, no ser genérica. Sin el nombre de la canción ni del artista. Nunca digas 'plantilla' ni el nombre del diseño o del estilo visual (por ejemplo 'carta', 'neón', 'collage'): habla de la canción o de 'este video'.",
+   "examples": {
+    "es": [
+     "¿Qué haces cuando el amor se acaba de un solo lado?",
+     "¿Cuánto tiempo se tarda en olvidar a alguien?",
+     "¿Se puede extrañar a quien nunca fue tuyo?"
+    ],
+    "en": [
+     "What do you do when love ends on only one side?",
+     "How long does it take to stop missing someone?",
+     "Can you miss someone who was never yours?"
+    ]
+   },
+   "avoid": {
+    "es": [
+     "¿Te gusta esta canción?",
+     "¿Listo para sentir?",
+     "¿La mejor canción de 2026?"
+    ],
+    "en": [
+     "Do you like this song?",
+     "Ready to feel?",
+     "Best song of 2026?"
+    ]
+   }
+  },
+  "song_summary": {
+   "type": "text",
+   "max_chars": 160,
+   "instruction": "Es la PRIMERA línea de la descripción y lo único que se ve antes de 'más': tiene que enganchar por sí sola. Una o dos frases, con tus palabras, sobre lo que vive la persona de la canción. Concreta y humana, sin nombrar la canción ni al artista (van más abajo) y sin adjetivos de relleno. Nunca digas 'plantilla' ni el nombre del diseño o del estilo visual (por ejemplo 'carta', 'neón', 'collage'): habla de la canción o de 'este video'.",
+   "examples": {
+    "es": [
+     "Dos personas que se quieren, pero llegaron en el momento equivocado.",
+     "Saber que alguien ya no va a volver y aun así dejarle la puerta entreabierta."
+    ],
+    "en": [
+     "Two people in love who met at the wrong time.",
+     "Knowing someone won't come back and still leaving the door half open."
+    ]
+   },
+   "avoid": {
+    "es": [
+     "Una canción increíble que te hará sentir mil emociones.",
+     "Sumérgete en este viaje musical."
+    ],
+    "en": [
+     "An amazing song that will make you feel a thousand emotions.",
+     "Immerse yourself in this musical journey."
+    ]
+   }
+  },
+  "comment_question": {
+   "type": "text",
+   "max_chars": 200,
+   "instruction": "Una o dos preguntas personales que inviten a contar una experiencia propia relacionada con la canción. Termina invitando a dejarlo en los comentarios. NO preguntes qué canción subir ni con qué canción ver este diseño: eso ya lo dice otra línea fija de la descripción. Nunca digas 'plantilla' ni el nombre del diseño o del estilo visual.",
+   "examples": {
+    "es": [
+     "¿Alguna vez esperaste un mensaje que nunca llegó? Cuéntanos tu historia en los comentarios.",
+     "¿Qué le dirías hoy a la persona en la que pensaste? Escríbelo en los comentarios."
+    ],
+    "en": [
+     "Have you ever waited for a message that never came? Tell us your story in the comments.",
+     "What would you say today to the person you thought of? Write it in the comments."
+    ]
+   },
+   "avoid": {
+    "es": [
+     "¡Comenta y dale like!",
+     "¿Te gustó? Comenta.",
+     "¿Qué canción quieres que subamos?",
+     "¿Con qué canción te gustaría ver este diseño?"
+    ],
+    "en": [
+     "Comment and like!",
+     "Did you like it? Comment.",
+     "Which song should we upload next?",
+     "Which song would you like to see with this design?"
+    ]
+   }
+  },
+  "hashtags": {
+   "type": "list",
+   "min_items": 3,
+   "max_items": 3,
+   "instruction": "Exactamente 3 hashtags sin '#', en CamelCase y sin espacios: el artista, la canción y el tema o sentimiento principal. Si no se conoce el artista, usa el género.",
+   "examples": {
+    "es": [
+     [
+      "Morat",
+      "ComoTeAtreves",
+      "Desamor"
+     ]
+    ],
+    "en": [
+     [
+      "Adele",
+      "EasyOnMe",
+      "Heartbreak"
+     ]
+    ]
+   }
+  },
+  "tags": {
+   "type": "list",
+   "min_items": 14,
+   "max_items": 15,
+   "instruction": "Entre 14 y 15 tags en minúsculas, sin '#' y sin repetir, pensados como lo que la gente escribe en el buscador. Repártelos así: (1) como máximo 4 con el nombre: canción, artista, 'artista canción', 'canción artista'; (2) 4 o 5 del tema o sentimiento, variados, como frases de búsqueda reales ('canciones de desamor', 'canciones para superar a alguien', 'amor que duele'); (3) 3 o 4 del momento o uso ('canciones para llorar', 'canciones para dedicar', 'música para cuando te rompen el corazón'); (4) 1 o 2 del género o estilo y 1 amplio ('música para relajarse' u otro amplio). No repitas la misma palabra en muchos tags: cada tag debe atraer una búsqueda distinta.",
+   "examples": {
+    "es": [
+     [
+      "cómo te atreves",
+      "morat",
+      "morat cómo te atreves",
+      "cómo te atreves letra",
+      "canciones de desamor",
+      "amor no correspondido",
+      "canciones para olvidar a alguien",
+      "corazón roto",
+      "canciones para llorar",
+      "canciones para dedicar",
+      "música para cuando extrañas a alguien",
+      "pop en español",
+      "canciones con letra"
+     ]
+    ],
+    "en": [
+     [
+      "easy on me",
+      "adele",
+      "adele easy on me",
+      "easy on me lyrics",
+      "breakup songs",
+      "songs about moving on",
+      "love that hurts",
+      "heartbreak",
+      "sad songs to cry to",
+      "songs to dedicate",
+      "songs for when you miss someone",
+      "soul pop",
+      "songs with lyrics"
+     ]
+    ]
+   }
+  }
+ },
+ "rotating": {
+  "subscribe_line": {
+   "es": [
+    "Si te gustó este video, suscríbete: cada semana editamos uno nuevo.",
+    "Suscríbete para ver el próximo video que editemos.",
+    "Si quieres que sigamos editando videos así, suscríbete y apoya el canal."
+   ],
+   "en": [
+    "If you liked this video, subscribe: we edit a new one every week.",
+    "Subscribe to see the next video we edit.",
+    "If you want us to keep editing videos like this, subscribe and support the channel."
+   ]
+  },
+  "design_line": {
+   "es": [
+    "Editamos este video escena por escena al ritmo de la canción. ¿Con qué canción te gustaría ver este diseño? Déjala en los comentarios y la trabajamos para un próximo video.",
+    "Nos llevó tiempo cuadrar cada escena con la música. ¿Qué canción te gustaría ver con este diseño? Déjala en los comentarios y la preparamos para un próximo video."
+   ],
+   "en": [
+    "We edited this video scene by scene to the rhythm of the song. Which song would you like to see with this design? Leave it in the comments and we'll work on it for a future video.",
+    "Matching every scene to the music took time. Which song would you like to see with this design? Leave it in the comments and we'll prepare it for a future video."
+   ]
+  },
+  "pinned_line": {
+   "es": [
+    "¿Con qué canción te gustaría ver este diseño? Escríbela y la editamos para un próximo video.",
+    "¿Qué canción te gustaría ver con este diseño? Te leemos y elegimos la próxima de sus comentarios.",
+    "¿Con qué canción quieres que trabajemos este diseño? La más pedida va en un próximo video."
+   ],
+   "en": [
+    "Which song would you like to see with this design? Write it and we'll edit it for a future video.",
+    "Which song should we do with this design next? We read every comment and pick the next one from here.",
+    "Which song do you want us to work on with this design? The most requested one goes in a future video."
+   ]
+  }
+ },
+ "output": {
+  "title": {
+   "max_chars": 100,
+   "templates": {
+    "es": [
+     "{theme_question} | {artist}",
+     "{theme_question} | {song}",
+     "{artist} - {song}",
+     "{song}",
+     "{theme_question}"
+    ],
+    "en": [
+     "{theme_question} | {artist}",
+     "{theme_question} | {song}",
+     "{artist} - {song}",
+     "{song}",
+     "{theme_question}"
+    ]
+   }
+  },
+  "description": {
+   "max_chars": 5000,
+   "templates": {
+    "es": [
+     "{song_summary}\n\n{comment_question}\n\n{design_line}\n\n{subscribe_line}\n\n{hashtags}",
+     "{song_summary}\n\n{comment_question}\n\n{design_line}\n\n{subscribe_line}\n\n{hashtags}",
+     "{song_summary}\n\n{comment_question}\n\n{design_line}\n\n{subscribe_line}\n\n{hashtags}"
+    ],
+    "en": [
+     "{song_summary}\n\n{comment_question}\n\n{design_line}\n\n{subscribe_line}\n\n{hashtags}",
+     "{song_summary}\n\n{comment_question}\n\n{design_line}\n\n{subscribe_line}\n\n{hashtags}",
+     "{song_summary}\n\n{comment_question}\n\n{design_line}\n\n{subscribe_line}\n\n{hashtags}"
+    ]
+   }
+  },
+  "tags": {
+   "from": "tags",
+   "style": "keyword"
+  },
+  "pinned_comment": {
+   "max_chars": 500,
+   "templates": {
+    "es": [
+     "{pinned_line}"
+    ],
+    "en": [
+     "{pinned_line}"
+    ]
+   }
+  }
+ }
+}

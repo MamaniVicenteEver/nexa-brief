@@ -23,13 +23,18 @@
   "scripts": [
     "vendor/rough.js",
     "designs/common/text.js",
+    "designs/common/logo.js",
+    "designs/common/clip.js",
     "designs/rough/components/_rough.js",
     "designs/rough/components/sketches.js",
     "designs/rough/components/shapes.js",
+    "designs/rough/components/intros.js",
     "designs/rough/components/ui.js",
     "designs/rough/components/extra.js",
     "designs/rough/components/outrov1.js",
-    "designs/rough/components/outro.js"
+    "designs/rough/components/outro.js",
+    "designs/common/tabloid.js",
+    "designs/common/question.js"
   ],
   "defaults": {
     "family": "rough",
@@ -73,6 +78,21 @@
       "cta": "SUSCRÍBETE",
       "support": "apoya el canal · comparte el video",
       "handle": "youtube.com/@nodetech"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.3)",
+      "frame": "palette.accent",
+      "dim": 0.18,
+      "layout": "frame",
+      "size": 0.92
+    },
+    "minDur": {
+      "common.clip": 8
+    },
+    "overlay": {
+      "endWithScene": true,
+      "min": 2.5,
+      "max": 8
     }
   },
   "voice": {

@@ -1,569 +1,572 @@
 {
- "version": 1,
- "family": "rough",
- "title": "1202 · el error que llevó a la humanidad a la Luna",
- "defaults": {
-  "offset": -0.12
- },
- "beats": [
-  {
-   "t": 0,
-   "use": "rough.title",
-   "params": {
-    "text": "1202",
-    "textPortrait": "12\n02",
-    "kicker": "APOLO 11 · 20 JUL 1969",
-    "sub": "EL ERROR QUE LLEVÓ A LA HUMANIDAD A LA LUNA",
-    "accent": true,
-    "blink": 3
-   },
-   "until": "A 10 kilómetros"
+  "version": 1,
+  "family": "rough",
+  "title": "1202 · el error que llevó a la humanidad a la Luna",
+  "defaults": {
+    "offset": -0.12
   },
-  {
-   "at": "A 10 kilómetros",
-   "use": "rough.photo",
-   "params": {
-    "src": "assets/media/lm-eagle.jpg",
-    "caption": "El Águila",
-    "sub": "MÓDULO LUNAR · 10 KM SOBRE LA LUNA",
-    "tone": "mono",
-    "focus": [
-     0.5,
-     0.5
-    ]
-   }
-  },
-  {
-   "at": "la computadora del",
-   "use": "rough.icon",
-   "params": {
-    "icon": "chip",
-    "tag": "COMPUTADORA DE GUIADO",
-    "caption": "algo que nadie esperaba"
-   }
-  },
-  {
-   "at": "Se rinde",
-   "use": "common.punch",
-   "params": {
-    "text": "SE ^RINDE^",
-    "size": 0.8
-   },
-   "dur": 1.6
-  },
-  {
-   "at": "En la pantalla",
-   "use": "rough.dsky",
-   "params": {
-    "code": "1202",
-    "alarm": true
-   }
-  },
-  {
-   "at": "Armstrong pregunta",
-   "use": "rough.icon",
-   "params": {
-    "icon": "astronaut",
-    "tag": "ARMSTRONG",
-    "caption": "¿qué significa?"
-   }
-  },
-  {
-   "at": "Nadie a bordo",
-   "use": "rough.icon",
-   "params": {
-    "icon": "question",
-    "caption": "nadie a bordo lo sabe",
-    "accent": true
-   }
-  },
-  {
-   "at": "Y la nave",
-   "use": "rough.descent",
-   "params": {
-    "mode": "auto",
-    "dur": 5.5,
-    "altFrom": 10000
-   }
-  },
-  {
-   "at": "Para entender",
-   "use": "rough.photo",
-   "params": {
-    "src": "assets/media/dsky.jpg",
-    "caption": "la computadora del Apolo",
-    "sub": "AGC · PANTALLA Y TECLADO (DSKY)"
-   }
-  },
-  {
-   "at": "Tenía",
-   "use": "rough.icon",
-   "params": {
-    "icon": "chip",
-    "tag": "MEMORIA DE TRABAJO",
-    "caption": "2048 palabras"
-   }
-  },
-  {
-   "at": "kilobytes",
-   "use": "rough.compare",
-   "params": {
-    "small": {
-     "label": "APOLO 11",
-     "value": "≈ 4 KB"
+  "beats": [
+    {
+      "t": 0,
+      "use": "common.tabloid",
+      "params": {
+        "text": "CASI ABORTAN LA LUNA",
+        "mode": "impact",
+        "accent": "LUNA",
+        "bullet": "1202",
+        "beforeLabel": "",
+        "afterLabel": "",
+        "strap": "",
+        "seal": "",
+        "tapeText": "",
+        "marker": false,
+        "target": [
+          0.72,
+          0.52
+        ],
+        "focus": [
+          0.49,
+          0.34,
+          0.15
+        ],
+        "src": "/nodetech/apolo-1202/assets/media/hamilton-rostro.jpg",
+        "imageSide": "right"
+      },
+      "until": "A 10 kilómetros"
     },
-    "big": {
-     "label": "TU TELÉFONO",
-     "value": "MILLONES DE VECES MÁS"
+    {
+      "at": "A 10 kilómetros",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/lm-eagle.jpg",
+        "caption": "El Águila",
+        "sub": "MÓDULO LUNAR · 10 KM SOBRE LA LUNA",
+        "tone": "mono",
+        "focus": [
+          0.5,
+          0.5
+        ]
+      }
     },
-    "ratio": 1000000,
-    "bigAt": "@El teléfono"
-   }
-  },
-  {
-   "at": "Su programa",
-   "use": "rough.icon",
-   "params": {
-    "icon": "database",
-    "tag": "NO EN UN DISCO",
-    "caption": "¿entonces dónde?"
-   }
-  },
-  {
-   "at": "Estaba tejido",
-   "use": "common.punch",
-   "params": {
-    "text": "ESTABA\n^TEJIDO^",
-    "size": 0.8
-   },
-   "until": "Mujeres en una"
-  },
-  {
-   "at": "Mujeres en una",
-   "use": "rough.photo",
-   "params": {
-    "src": "assets/media/core-rope.jpg",
-    "caption": "memoria de cuerda",
-    "sub": "ALAMBRE DE COBRE TEJIDO A MANO · MASSACHUSETTS"
-   }
-  },
-  {
-   "at": "Si el alambre",
-   "use": "rough.rope",
-   "params": {
-    "bits": "101101",
-    "caption": "un programa tejido a mano",
-    "drawSec": "@un 0"
-   }
-  },
-  {
-   "at": "Y quien dirigía",
-   "use": "rough.photo",
-   "params": {
-    "src": "assets/media/hamilton.jpg",
-    "caption": "Margaret Hamilton",
-    "sub": "DIRECTORA DE SOFTWARE · 32 AÑOS",
-    "ar": 0.8,
-    "focus": [
-     0.5,
-     0.3
-    ]
-   }
-  },
-  {
-   "at": "Hamilton tenía",
-   "use": "common.lyric",
-   "params": {
-    "accent": [
-     "error"
-    ]
-   },
-   "until": "Se preguntaba"
-  },
-  {
-   "at": "Se preguntaba",
-   "use": "rough.icon",
-   "params": {
-    "icon": "warning",
-    "caption": "¿y si algo sale mal?",
-    "accent": true
-   }
-  },
-  {
-   "at": "Si un astronauta",
-   "use": "rough.icon",
-   "params": {
-    "icon": "keyboard",
-    "tag": "EL BOTÓN EQUIVOCADO"
-   }
-  },
-  {
-   "at": "Si la computadora",
-   "use": "rough.icon",
-   "params": {
-    "icon": "chip",
-    "tag": "DEMASIADO TRABAJO",
-    "caption": "más del que puede hacer"
-   }
-  },
-  {
-   "at": "Así que programó",
-   "use": "rough.icon",
-   "params": {
-    "icon": "code",
-    "tag": "ALGO POCO COMÚN",
-    "caption": "prioridades"
-   }
-  },
-  {
-   "at": "Si la máquina se",
-   "use": "rough.stack",
-   "params": {
-    "title": "PRIORIDADES",
-    "items": [
-     {
-      "label": "ATERRIZAR",
-      "keep": true
-     },
-     {
-      "label": "NAVEGAR",
-      "keep": true
-     },
-     {
-      "label": "PANTALLA"
-     },
-     {
-      "label": "RADAR"
-     }
-    ],
-    "dropAt": "@soltar"
-   }
-  },
-  {
-   "at": "Esa tarde",
-   "use": "rough.icon",
-   "params": {
-    "icon": "switch",
-    "tag": "RADAR DE ENCUENTRO",
-    "caption": "una posición imprevista"
-   }
-  },
-  {
-   "at": "El radar empezó",
-   "use": "rough.flow",
-   "params": {
-    "nodes": [
-     {
-      "icon": "radar",
-      "label": "RADAR"
-     },
-     {
-      "icon": "chip",
-      "label": "COMPUTADORA"
-     }
-    ],
-    "active": 0,
-    "title": "LE ROBA TIEMPO"
-   }
-  },
-  {
-   "at": "La máquina que",
-   "use": "rough.load",
-   "params": {
-    "tasks": [
-     "ATERRIZAR",
-     "NAVEGAR",
-     "PANTALLA",
-     "SENSORES"
-    ],
-    "capacity": 4,
-    "stepSec": 0.35,
-    "overflowAt": "@se llenó",
-    "extra": [
-     "RADAR",
-     "RADAR"
-    ],
-    "overflowLabel": "1202"
-   }
-  },
-  {
-   "at": "no hay espacio",
-   "use": "common.lyric",
-   "params": {
-    "accent": [
-     "espacio"
-    ]
-   },
-   "until": "Y entonces la computadora"
-  },
-  {
-   "at": "Y entonces la computadora",
-   "use": "rough.icon",
-   "params": {
-    "icon": "check",
-    "tag": "LO QUE HAMILTON DISEÑÓ",
-    "accent": true
-   }
-  },
-  {
-   "at": "Se reinició",
-   "use": "rough.flow",
-   "params": {
-    "nodes": [
-     {
-      "icon": "loop",
-      "label": "REINICIO"
-     },
-     {
-      "icon": "close",
-      "label": "DESCARTA"
-     },
-     {
-      "icon": "rocket",
-      "label": "SIGUE"
-     }
-    ],
-    "active": 2,
-    "stepSec": 1.0
-   }
-  },
-  {
-   "at": "En Houston",
-   "use": "rough.photo",
-   "params": {
-    "src": "assets/media/mission-control.jpg",
-    "caption": "Control de Misión",
-    "sub": "HOUSTON · STEVE BALES, 26 AÑOS"
-   }
-  },
-  {
-   "at": "abortar el alunizaje",
-   "use": "rough.choice",
-   "params": {
-    "options": [
-     "ABORTAR",
-     "SEGUIR"
-    ],
-    "question": "¿abortar o seguir?"
-   }
-  },
-  {
-   "at": "A su lado",
-   "use": "rough.icon",
-   "params": {
-    "icon": "headset",
-    "tag": "JACK GARMAN",
-    "caption": "reconoció el código"
-   }
-  },
-  {
-   "at": "La respuesta fue una",
-   "use": "rough.choice",
-   "params": {
-    "options": [
-     "ABORTAR",
-     "SEGUIR"
-    ],
-    "pick": 1,
-    "pickAt": "@Go",
-    "question": "una sola palabra"
-   }
-  },
-  {
-   "at": "volvió a sonar",
-   "use": "rough.tally",
-   "params": {
-    "icon": "alarm",
-    "count": 5,
-    "interval": 0.45,
-    "label": "ALARMA 1202"
-   }
-  },
-  {
-   "at": "seguimos",
-   "offset": -0.3,
-   "use": "common.punch",
-   "params": {
-    "text": "^SEGUIMOS^",
-    "size": 0.86
-   },
-   "until": "Pero el peligro"
-  },
-  {
-   "at": "Pero el peligro",
-   "use": "rough.icon",
-   "params": {
-    "icon": "warning",
-    "tag": "TODAVÍA NO",
-    "accent": true
-   }
-  },
-  {
-   "at": "El piloto automático",
-   "use": "rough.descent",
-   "params": {
-    "mode": "manual",
-    "hazard": "CRÁTER CON ROCAS",
-    "target": "un lugar plano",
-    "dur": 9,
-    "altFrom": 150,
-    "divertAt": "@tomó el control"
-   },
-   "until": "El combustible"
-  },
-  {
-   "at": "El combustible",
-   "use": "rough.gauge",
-   "params": {
-    "from": 90,
-    "to": 30,
-    "max": 120,
-    "unit": "SEGUNDOS DE COMBUSTIBLE",
-    "label": "COMBUSTIBLE",
-    "dur": "@Treinta segundos",
-    "critical": 0.3
-   }
-  },
-  {
-   "at": "Houston aquí",
-   "use": "common.lyric",
-   "params": {
-    "accent": [
-     "Tranquilidad"
-    ]
-   },
-   "until": "El Águila ha"
-  },
-  {
-   "at": "El Águila ha",
-   "use": "rough.photo",
-   "params": {
-    "src": "assets/media/aldrin.jpg",
-    "caption": "El Águila ha alunizado",
-    "sub": "20 DE JULIO DE 1969",
-    "ar": 0.9,
-    "focus": [
-     0.5,
-     0.35
-    ]
-   }
-  },
-  {
-   "at": "Ese día",
-   "use": "rough.icon",
-   "params": {
-    "icon": "chip",
-    "tag": "NO GANÓ LA POTENCIA"
-   }
-  },
-  {
-   "at": "Ganó un software",
-   "use": "common.lyric",
-   "params": {
-    "accent": [
-     "fallar"
-    ]
-   },
-   "until": "Hamilton le puso"
-  },
-  {
-   "at": "Hamilton le puso",
-   "use": "common.punch",
-   "params": {
-    "text": "INGENIERÍA\nDE ^SOFTWARE^",
-    "size": 0.9
-   },
-   "until": "Muchos se burlaron"
-  },
-  {
-   "at": "Muchos se burlaron",
-   "use": "rough.timeline",
-   "params": {
-    "items": [
-     {
-      "year": "1969",
-      "label": "se burlaron del término"
-     },
-     {
-      "year": "HOY",
-      "label": "la base de todo"
-     }
-    ],
-    "active": 1
-   }
-  },
-  {
-   "at": "Cada vez que tu",
-   "use": "rough.flow",
-   "params": {
-    "nodes": [
-     {
-      "icon": "phone",
-      "label": "TU TELÉFONO"
-     },
-     {
-      "icon": "close",
-      "label": "CIERRA UNA APP"
-     },
-     {
-      "icon": "check",
-      "label": "NO SE CONGELA"
-     }
-    ],
-    "active": 2
-   }
-  },
-  {
-   "at": "a pesar de",
-   "use": "rough.icon",
-   "params": {
-    "icon": "waves",
-    "tag": "UN ECO DE JULIO DE 1969"
-   }
-  },
-  {
-   "at": "Porque innovar",
-   "use": "common.lyric",
-   "params": {
-    "accent": [
-     "nunca"
-    ]
-   },
-   "until": "Es construir algo que sepa"
-  },
-  {
-   "at": "Es construir algo que sepa",
-   "use": "common.lyric",
-   "params": {
-    "accent": [
-     "falla"
-    ]
-   },
-   "until": "1202 El error"
-  },
-  {
-   "at": "1202 El error",
-   "use": "rough.title",
-    "dur": 4.67,
-   "params": {
-    "text": "1202",
-    "textPortrait": "12\n02",
-    "sub": "EL ERROR QUE LLEVÓ A LA HUMANIDAD A LA LUNA",
-    "accent": true,
-    "underline": true
-   }
-  },
-   {
-     "t": 230.896327,
-     "offset": 0,
-     "dur": 12.32,
-     "use": "rough.outrov1",
-     "params": {
-       "likeAt": 4.54,
-       "subscribeAt": 5.02,
-       "bellAt": 7.08,
-       "supportAt": 8.1
-     }
-   }
- ]
+    {
+      "at": "la computadora del",
+      "use": "rough.icon",
+      "params": {
+        "icon": "chip",
+        "tag": "COMPUTADORA DE GUIADO",
+        "caption": "algo que nadie esperaba"
+      }
+    },
+    {
+      "at": "Se rinde",
+      "use": "common.punch",
+      "params": {
+        "text": "SE ^RINDE^",
+        "size": 0.8
+      },
+      "dur": 1.6
+    },
+    {
+      "at": "En la pantalla",
+      "use": "rough.dsky",
+      "params": {
+        "code": "1202",
+        "alarm": true
+      }
+    },
+    {
+      "at": "Armstrong pregunta",
+      "use": "rough.icon",
+      "params": {
+        "icon": "astronaut",
+        "tag": "ARMSTRONG",
+        "caption": "¿qué significa?"
+      }
+    },
+    {
+      "at": "Nadie a bordo",
+      "use": "rough.icon",
+      "params": {
+        "icon": "question",
+        "caption": "nadie a bordo lo sabe",
+        "accent": true
+      }
+    },
+    {
+      "at": "Y la nave",
+      "use": "rough.descent",
+      "params": {
+        "mode": "auto",
+        "dur": 5.5,
+        "altFrom": 10000
+      }
+    },
+    {
+      "at": "Para entender",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/dsky.jpg",
+        "caption": "la computadora del Apolo",
+        "sub": "AGC · PANTALLA Y TECLADO (DSKY)"
+      }
+    },
+    {
+      "at": "Tenía",
+      "use": "rough.icon",
+      "params": {
+        "icon": "chip",
+        "tag": "MEMORIA DE TRABAJO",
+        "caption": "2048 palabras"
+      }
+    },
+    {
+      "at": "kilobytes",
+      "use": "rough.compare",
+      "params": {
+        "small": {
+          "label": "APOLO 11",
+          "value": "≈ 4 KB"
+        },
+        "big": {
+          "label": "TU TELÉFONO",
+          "value": "MILLONES DE VECES MÁS"
+        },
+        "ratio": 1000000,
+        "bigAt": "@El teléfono"
+      }
+    },
+    {
+      "at": "Su programa",
+      "use": "rough.icon",
+      "params": {
+        "icon": "database",
+        "tag": "NO EN UN DISCO",
+        "caption": "¿entonces dónde?"
+      }
+    },
+    {
+      "at": "Estaba tejido",
+      "use": "common.punch",
+      "params": {
+        "text": "ESTABA\n^TEJIDO^",
+        "size": 0.8
+      },
+      "until": "Mujeres en una"
+    },
+    {
+      "at": "Mujeres en una",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/core-rope.jpg",
+        "caption": "memoria de cuerda",
+        "sub": "ALAMBRE DE COBRE TEJIDO A MANO · MASSACHUSETTS"
+      }
+    },
+    {
+      "at": "Si el alambre",
+      "use": "rough.rope",
+      "params": {
+        "bits": "101101",
+        "caption": "un programa tejido a mano",
+        "drawSec": "@un 0"
+      }
+    },
+    {
+      "at": "Y quien dirigía",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/hamilton.jpg",
+        "caption": "Margaret Hamilton",
+        "sub": "DIRECTORA DE SOFTWARE · 32 AÑOS",
+        "ar": 0.8,
+        "focus": [
+          0.5,
+          0.3
+        ]
+      }
+    },
+    {
+      "at": "Hamilton tenía",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "error"
+        ]
+      },
+      "until": "Se preguntaba"
+    },
+    {
+      "at": "Se preguntaba",
+      "use": "rough.icon",
+      "params": {
+        "icon": "warning",
+        "caption": "¿y si algo sale mal?",
+        "accent": true
+      }
+    },
+    {
+      "at": "Si un astronauta",
+      "use": "rough.icon",
+      "params": {
+        "icon": "keyboard",
+        "tag": "EL BOTÓN EQUIVOCADO"
+      }
+    },
+    {
+      "at": "Si la computadora",
+      "use": "rough.icon",
+      "params": {
+        "icon": "chip",
+        "tag": "DEMASIADO TRABAJO",
+        "caption": "más del que puede hacer"
+      }
+    },
+    {
+      "at": "Así que programó",
+      "use": "rough.icon",
+      "params": {
+        "icon": "code",
+        "tag": "ALGO POCO COMÚN",
+        "caption": "prioridades"
+      }
+    },
+    {
+      "at": "Si la máquina se",
+      "use": "rough.stack",
+      "params": {
+        "title": "PRIORIDADES",
+        "items": [
+          {
+            "label": "ATERRIZAR",
+            "keep": true
+          },
+          {
+            "label": "NAVEGAR",
+            "keep": true
+          },
+          {
+            "label": "PANTALLA"
+          },
+          {
+            "label": "RADAR"
+          }
+        ],
+        "dropAt": "@soltar"
+      }
+    },
+    {
+      "at": "Esa tarde",
+      "use": "rough.icon",
+      "params": {
+        "icon": "switch",
+        "tag": "RADAR DE ENCUENTRO",
+        "caption": "una posición imprevista"
+      }
+    },
+    {
+      "at": "El radar empezó",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "radar",
+            "label": "RADAR"
+          },
+          {
+            "icon": "chip",
+            "label": "COMPUTADORA"
+          }
+        ],
+        "active": 0,
+        "title": "LE ROBA TIEMPO"
+      }
+    },
+    {
+      "at": "La máquina que",
+      "use": "rough.load",
+      "params": {
+        "tasks": [
+          "ATERRIZAR",
+          "NAVEGAR",
+          "PANTALLA",
+          "SENSORES"
+        ],
+        "capacity": 4,
+        "stepSec": 0.35,
+        "overflowAt": "@se llenó",
+        "extra": [
+          "RADAR",
+          "RADAR"
+        ],
+        "overflowLabel": "1202"
+      }
+    },
+    {
+      "at": "no hay espacio",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "espacio"
+        ]
+      },
+      "until": "Y entonces la computadora"
+    },
+    {
+      "at": "Y entonces la computadora",
+      "use": "rough.icon",
+      "params": {
+        "icon": "check",
+        "tag": "LO QUE HAMILTON DISEÑÓ",
+        "accent": true
+      }
+    },
+    {
+      "at": "Se reinició",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "loop",
+            "label": "REINICIO"
+          },
+          {
+            "icon": "close",
+            "label": "DESCARTA"
+          },
+          {
+            "icon": "rocket",
+            "label": "SIGUE"
+          }
+        ],
+        "active": 2,
+        "stepSec": 1.0
+      }
+    },
+    {
+      "at": "En Houston",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/mission-control.jpg",
+        "caption": "Control de Misión",
+        "sub": "HOUSTON · STEVE BALES, 26 AÑOS"
+      }
+    },
+    {
+      "at": "abortar el alunizaje",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "ABORTAR",
+          "SEGUIR"
+        ],
+        "question": "¿abortar o seguir?"
+      }
+    },
+    {
+      "at": "A su lado",
+      "use": "rough.icon",
+      "params": {
+        "icon": "headset",
+        "tag": "JACK GARMAN",
+        "caption": "reconoció el código"
+      }
+    },
+    {
+      "at": "La respuesta fue una",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "ABORTAR",
+          "SEGUIR"
+        ],
+        "pick": 1,
+        "pickAt": "@Go",
+        "question": "una sola palabra"
+      }
+    },
+    {
+      "at": "volvió a sonar",
+      "use": "rough.tally",
+      "params": {
+        "icon": "alarm",
+        "count": 5,
+        "interval": 0.45,
+        "label": "ALARMA 1202"
+      }
+    },
+    {
+      "at": "seguimos",
+      "offset": -0.3,
+      "use": "common.punch",
+      "params": {
+        "text": "^SEGUIMOS^",
+        "size": 0.86
+      },
+      "until": "Pero el peligro"
+    },
+    {
+      "at": "Pero el peligro",
+      "use": "rough.icon",
+      "params": {
+        "icon": "warning",
+        "tag": "TODAVÍA NO",
+        "accent": true
+      }
+    },
+    {
+      "at": "El piloto automático",
+      "use": "rough.descent",
+      "params": {
+        "mode": "manual",
+        "hazard": "CRÁTER CON ROCAS",
+        "target": "un lugar plano",
+        "dur": 9,
+        "altFrom": 150,
+        "divertAt": "@tomó el control"
+      },
+      "until": "El combustible"
+    },
+    {
+      "at": "El combustible",
+      "use": "rough.gauge",
+      "params": {
+        "from": 90,
+        "to": 30,
+        "max": 120,
+        "unit": "SEGUNDOS DE COMBUSTIBLE",
+        "label": "COMBUSTIBLE",
+        "dur": "@Treinta segundos",
+        "critical": 0.3
+      }
+    },
+    {
+      "at": "Houston aquí",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "Tranquilidad"
+        ]
+      },
+      "until": "El Águila ha"
+    },
+    {
+      "at": "El Águila ha",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/aldrin.jpg",
+        "caption": "El Águila ha alunizado",
+        "sub": "20 DE JULIO DE 1969",
+        "ar": 0.9,
+        "focus": [
+          0.5,
+          0.35
+        ]
+      }
+    },
+    {
+      "at": "Ese día",
+      "use": "rough.icon",
+      "params": {
+        "icon": "chip",
+        "tag": "NO GANÓ LA POTENCIA"
+      }
+    },
+    {
+      "at": "Ganó un software",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "fallar"
+        ]
+      },
+      "until": "Hamilton le puso"
+    },
+    {
+      "at": "Hamilton le puso",
+      "use": "common.punch",
+      "params": {
+        "text": "INGENIERÍA\nDE ^SOFTWARE^",
+        "size": 0.9
+      },
+      "until": "Muchos se burlaron"
+    },
+    {
+      "at": "Muchos se burlaron",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "1969",
+            "label": "se burlaron del término"
+          },
+          {
+            "year": "HOY",
+            "label": "la base de todo"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Cada vez que tu",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "phone",
+            "label": "TU TELÉFONO"
+          },
+          {
+            "icon": "close",
+            "label": "CIERRA UNA APP"
+          },
+          {
+            "icon": "check",
+            "label": "NO SE CONGELA"
+          }
+        ],
+        "active": 2
+      }
+    },
+    {
+      "at": "a pesar de",
+      "use": "rough.icon",
+      "params": {
+        "icon": "waves",
+        "tag": "UN ECO DE JULIO DE 1969"
+      }
+    },
+    {
+      "at": "Porque innovar",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "nunca"
+        ]
+      },
+      "until": "Es construir algo que sepa"
+    },
+    {
+      "at": "Es construir algo que sepa",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "falla"
+        ]
+      },
+      "until": "1202 El error"
+    },
+    {
+      "at": "1202 El error",
+      "use": "rough.title",
+      "dur": 4.67,
+      "params": {
+        "text": "1202",
+        "textPortrait": "12\n02",
+        "sub": "EL ERROR QUE LLEVÓ A LA HUMANIDAD A LA LUNA",
+        "accent": true,
+        "underline": true
+      }
+    }
+  ]
 }

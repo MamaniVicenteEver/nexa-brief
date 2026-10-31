@@ -956,9 +956,6 @@
   #intro.gone { opacity: 0; pointer-events: none; }
   #outro { opacity: 0; pointer-events: none; }
   #outro.show { opacity: 1; pointer-events: auto; }
-  body.outroActive #viewport, body.outroActive #paper, body.outroActive #rays, body.outroActive #bg {
-    opacity: 0.12; transition: opacity 1.8s ease;
-  }
   #hint { display: none !important;
     position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
     font-family: var(--fontCaption); font-size: 1.6vh; letter-spacing: 0.5em;
@@ -978,6 +975,8 @@
   }
 
 </style>
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
 </head>
 <body>
 <!-- filtro de tinta rugosa para los sellos stencil -->
@@ -1048,7 +1047,7 @@ const DEFAULT_CONFIG = { "activeId": "default", "configs": [{
     ]
   },
   "intro": { "artist": "", "title": "", "sub": "", "feats": "" },
-  "outro": { "leadSec": 8, "songTitle": "", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+  "outro": { "leadSec": 8, "songTitle": "", "title": "Gracias", "sub": "Por ver", "feats": "Suscribite | NodeMotion" },
   "debug": { "enabled": false },
   "layout": {
     "sceneWordsMin": 2, "sceneWordsMax": 4,
@@ -1124,8 +1123,13 @@ function buildCard(id, cfg) {
   i.querySelector(".sub").textContent = cfg.sub;
   i.querySelector(".feats").textContent = cfg.feats;
 }
-buildCard("intro", C.intro);
-buildCard("outro", C.outro);
+buildCard("intro", window.NexaTemplateIntro.apply(C.intro));
+const outroController = window.NexaCollageOutro.createDOMOutro({root: $("outro"), config: C.outro || {}, onShow: () => {
+  $("intro").classList.add("gone");
+  $("viewport").style.opacity = "0";
+  for (const item of current) item.el.classList.add("cold");
+  captionEl.classList.remove("on");
+}});
 
 /* ---- lyrics: 100% desde lyricsUrl (JSON de Whisper) ---- */
 async function loadLyrics() {
@@ -1320,17 +1324,9 @@ addEventListener("pointerdown", begin, { once: true });
 /* ---- outro: se dispara por el FINAL REAL del audio, no por la letra ---- */
 let outroShown = false;
 function maybeOutro() {
-  if (outroShown) return;
-  const dur = audio.duration;
-  if (!isFinite(dur) || dur <= 0) return;
-  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
-    outroShown = true;
-    doc.body.classList.add("outroActive");
-    $("intro").classList.add("gone");
-    $("outro").classList.add("show");
-    for (const item of current) item.el.classList.add("cold");
-    captionEl.classList.remove("on");
-  }
+  const t = audio.ended && isFinite(audio.duration) ? audio.duration : audio.currentTime;
+  outroShown = outroController.update(t, audio.duration, audio.ended).active;
+  $("viewport").style.opacity = outroShown ? "0" : "";
 }
 audio.addEventListener("ended", maybeOutro);
 

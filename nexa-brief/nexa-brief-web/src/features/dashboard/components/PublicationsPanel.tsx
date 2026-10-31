@@ -4,6 +4,11 @@ import { PLATFORM_META } from "@/features/channels/constants/platforms";
 import type { PublicationStats } from "@/features/stats";
 import { Panel } from "./Panel";
 
+function getPlatformMeta(platform: string): { label: string; color: string } {
+  const meta = PLATFORM_META[platform as keyof typeof PLATFORM_META];
+  return meta ?? { label: platform || "Otra plataforma", color: "#737373" };
+}
+
 export function PublicationsPanel({ publications }: { publications: PublicationStats }) {
   const t = useTranslations("dashboard.publications");
   const max = Math.max(1, ...publications.byPlatform.map((p) => p.total));
@@ -23,7 +28,7 @@ export function PublicationsPanel({ publications }: { publications: PublicationS
             <PlatformIcon platform={platform} className="size-8 shrink-0" />
             <div className="min-w-0 flex-1">
               <div className="flex items-baseline justify-between text-[12.5px]">
-                <span className="font-semibold text-nb-ink">{PLATFORM_META[platform].label}</span>
+                <span className="font-semibold text-nb-ink">{getPlatformMeta(platform).label}</span>
                 <span className="text-nb-mute">
                   <span className="font-bold text-nb-ink tabular-nums">{total}</span>
                   {last7Days > 0 && ` · +${last7Days} ${t("thisWeek")}`}
@@ -34,7 +39,7 @@ export function PublicationsPanel({ publications }: { publications: PublicationS
                   className="h-full rounded-full"
                   style={{
                     width: `${total ? Math.max(6, (total / max) * 100) : 0}%`,
-                    background: PLATFORM_META[platform].color,
+                    background: getPlatformMeta(platform).color,
                   }}
                 />
               </div>

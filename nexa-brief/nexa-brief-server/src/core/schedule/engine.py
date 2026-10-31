@@ -22,14 +22,17 @@ adivinar ahora.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+import asyncio
+
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
 import structlog
 
 from src.config.settings import settings
-from src.core import job_tracker, publish_log
+from src.core import job_tracker, publish_log, notification_tracker
+from src.core.notification import Notification
 from src.core.job import JobStage
 from src.core.schedule import queue_repository, slot_repository
 from src.core.schedule.models import QueueEntry, QueueSource, ScheduleSlot
@@ -58,16 +61,63 @@ class PublisherFacadeLike(Protocol):
 
 # ── Tick programado ──────────────────────────────────────────────────────────
 
+# Un tick a la vez: el scheduler espera 180 s el resultado, pero una subida a YouTube que espera
+# la HD sigue corriendo; si el tick siguiente arrancara igual, los dos tomarían las mismas
+# entries vencidas y las publicarían dos veces.
+_tick_lock = asyncio.Lock()
+_last_publication_index_repair: tuple[str, datetime] | None = None
+
+
 async def process_tick(facade: PublisherFacadeLike, now: datetime | None = None) -> dict[str, Any]:
     """Un ciclo completo del scheduler: recupera entries atascadas, rellena
     huecos de auto-fill (si está habilitado) y publica todo lo que ya venció."""
+    if _tick_lock.locked():
+        logger.info("schedule_process_tick_skipped", reason="previous_tick_running")
+        return {"skipped": "previous_tick_running"}
+    async with _tick_lock:
+        return await _process_tick(facade, now)
+
+
+async def _process_tick(facade: PublisherFacadeLike, now: datetime | None) -> dict[str, Any]:
+    global _last_publication_index_repair
     now = now or datetime.now(timezone.utc)
 
+    data_root = str(settings.data_dir)
+    if (
+        _last_publication_index_repair is None
+        or _last_publication_index_repair[0] != data_root
+        or now - _last_publication_index_repair[1] >= timedelta(hours=1)
+    ):
+        try:
+            from src.adapters.data.publication_factory import get_publication_components
+
+            get_publication_components().port.repair_index()
+            _last_publication_index_repair = (data_root, now)
+        except Exception as exc:
+            logger.warning("schedule_publication_index_repair_error", error=str(exc))
+
     recovered = await queue_repository.recover_stale_publishing()
+    reconciled = 0
+    queue_recovered = 0
+    try:
+        from src.adapters.data.publication_factory import get_publication_components
+
+        service = get_publication_components().service
+        queue_recovered = await service.reconcile_queued_deliveries()
+        await service.reconcile_interrupted()
+        reconciled = await service.reconcile_due_deliveries(now)
+    except Exception as exc:
+        logger.warning("schedule_image_reconcile_error", error=str(exc))
 
     filled = 0
     if settings.schedule_auto_fill_enabled:
         filled = await _fill_gaps(now)
+        try:
+            from src.adapters.data.publication_factory import get_publication_components
+
+            filled += await get_publication_components().service.fill_due_image_slots(now)
+        except Exception as exc:
+            logger.warning("schedule_image_fill_error", error=str(exc))
 
     due_entries = queue_repository.find_due(now.isoformat())
     results: dict[str, str] = {}
@@ -77,6 +127,8 @@ async def process_tick(facade: PublisherFacadeLike, now: datetime | None = None)
 
     summary = {
         "recovered_stale": recovered,
+        "image_queue_recovered": queue_recovered,
+        "image_reconciled": reconciled,
         "gaps_filled": filled,
         "due_processed": len(due_entries),
         "results": results,
@@ -97,9 +149,12 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
     descripción/tags desde `job_tracker.get_summary()` (el único lugar donde
     sobrevive esa metadata tras terminar el pipeline).
     """
+    if entry.content_kind != "video":
+        return await _publish_image_entry(entry)
+
     updated = await queue_repository.mark_publishing(entry.entry_id)
     if updated is None:
-        raise ValueError(f"QueueEntry '{entry.entry_id}' not found.")
+        return queue_repository.get(entry.entry_id) or entry
 
     job_record = job_tracker.get(entry.job_id)
     if job_record is None:
@@ -117,15 +172,35 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         return failed or updated
 
     file_paths: dict[str, str] = job_record.get("file_paths", {}) or {}
+    format_paths = job_tracker.format_paths(job_record)
+    explicit_format_path = format_paths.get(entry.format) if entry.format else None
     # youtube y facebook comparten el mismo archivo horizontal (ver social_publisher.py).
     # TikTok usa su clip propio si el nicho lo genera (generate_tiktok_clip); si
     # no (ej. nichos de letras), el video vertical completo (reels, 9:16).
-    if entry.platform == "tiktok":
+    if explicit_format_path:
+        video_path_str = explicit_format_path
+    elif entry.platform == "tiktok":
         video_path_str = file_paths.get("tiktok") or file_paths.get("reels")
+    elif entry.platform == "instagram":
+        video_path_str = file_paths.get("reels") or file_paths.get("tiktok") or file_paths.get("youtube")
     else:
         video_path_str = file_paths.get("youtube")
     copy = copy_for_platform(summary, entry.platform)
     extra_kwargs = {"language": copy.language} if entry.platform == "youtube" and copy.language else {}
+    if entry.platform == "tiktok":
+        # Retrying/recovering this queue entry must consult the original
+        # service job, including when the HTTP response was lost after a click.
+        extra_kwargs["idempotency_key"] = entry.idempotency_key or f"schedule:{entry.entry_id}"
+    # miniatura propia (explainer: la intro elegida; NodeMotion: el final de la intro); solo YouTube por API
+    # (si el video se grabó sin ella, se saca ahora del final de su intro; thumbnails.set: solo JPEG/PNG)
+    if entry.platform == "youtube":
+        from src.modules.thumbnail_maker import ensure_for_job
+
+        thumbnail = await ensure_for_job(file_paths)
+        if thumbnail is not None:
+            extra_kwargs["thumbnail_path"] = thumbnail
+    if entry.platform == "youtube" and summary.get("pinned_comment"):
+        extra_kwargs["comment_text"] = summary["pinned_comment"]
 
     if not video_path_str:
         failed = await queue_repository.mark_failed(
@@ -175,7 +250,38 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         title=copy.title,
         job_id=entry.job_id,
     )
+    if entry.platform == "youtube" and extra_kwargs.get("comment_text") and result.raw_response.get("comment_posted") is False:
+        try:
+            await notification_tracker.create(Notification(
+                type="video_failed", severity="warning", title="Comentario de YouTube pendiente",
+                message=f"El video se publicó en YouTube, pero no se pudo añadir el comentario: {result.url}",
+                job_id=entry.job_id, account_alias=entry.account_alias,
+            ))
+        except Exception as exc:
+            logger.warning("schedule_comment_notification_failed", error=str(exc))
     return published or updated
+
+
+async def _publish_image_entry(entry: QueueEntry) -> QueueEntry:
+    """Despacha por el puerto de publicaciones; no usa el facade de video."""
+    updated = await queue_repository.mark_publishing(entry.entry_id)
+    if updated is None:
+        return queue_repository.get(entry.entry_id) or entry
+    try:
+        from src.adapters.data.publication_factory import get_publication_components
+
+        delivery = await get_publication_components().service.publish_delivery(entry.delivery_id or "")
+    except Exception as exc:
+        code = getattr(exc, "code", "")
+        if code == "OUTCOME_UNKNOWN":
+            failed = await queue_repository.mark_outcome_unknown(entry.entry_id, str(exc))
+        else:
+            failed = await queue_repository.mark_failed(entry.entry_id, str(exc))
+        return failed or updated
+    remote = delivery.remote
+    return await queue_repository.mark_published(
+        entry.entry_id, post_id=remote.post_id or "", url=remote.permalink or ""
+    ) or updated
 
 
 # ── Auto-fill (modo automático: solo rellena huecos) ────────────────────────
@@ -191,6 +297,10 @@ async def _fill_gaps(now: datetime) -> int:
     occurrence_date = now.strftime("%Y-%m-%d")
 
     for slot in slot_repository.list_slots(enabled=True):
+        # La cola de videos conserva su elección actual; las imágenes usan el
+        # servicio de publicaciones y slots con zona/categoría explícitas.
+        if slot.content_kind != "video":
+            continue
         if weekday not in slot.days or hhmm not in slot.times:
             continue
 

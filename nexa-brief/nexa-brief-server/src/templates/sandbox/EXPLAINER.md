@@ -75,11 +75,14 @@ K=src/templates/_tools/explainer-kit/tools/kit.py
 M=src/templates/_tools/explainer-kit/tools/media.py
 
 # 1 · crear la carpeta en la casa de pruebas (--folder es OBLIGATORIO para no caer en producción)
-.venv/bin/python $K new <diseño> <video-id> --title "Título provisional" --folder sandbox/<carpeta>
+#     --minutes: duración objetivo (5 corto · 10 normal · 15 serio · 30 largo; lengths.json)
+.venv/bin/python $K new <diseño> <video-id> --title "Título provisional" --minutes 10 --folder sandbox/<carpeta>
 .venv/bin/python $K status <video-id>          # en cualquier momento: qué falta (busca el id solo)
 
 # 2 · PLAN.md (≥ 10 hechos con URL en §3; status exige ≥ 8 filas "| n | … https://")
 # 3 · assets/script.json  (guides/storytelling.md)
+# 3c · componentes propios del tema (inventario visual de PLAN §7a) en assets/components/
+.venv/bin/python $K components <video-id>      # control + hoja work/components/<nombre>.png → mirarla y completar review.md
 # 3b · fotos con licencia
 .venv/bin/python $M search "<consulta en inglés>"            # ✓ = licencia aceptada; --source pexels para genéricas
 .venv/bin/python $M get <video-id> "File:…" nombre.jpg        # baja, recodifica y anota CREDITS.md
@@ -170,9 +173,14 @@ cada video aporte investigación propia.
 
 ## 4. Guion, voz, medios y storyboard (reglas cortas + dónde está el detalle)
 
+**Duración** (`lengths.json`, fuente única; `tools/lengths.py <min>` muestra los rangos): 5 min como
+mínimo, 10 lo normal, 15 serio, 30 o más si se pide. Los videos anteriores (sin `target_minutes`)
+siguen con las reglas del formato corto de abajo.
+
 **Guion** (`guides/storytelling.md`, entero):
 - Un punto crítico, una tesis de una frase, un protagonista humano con nombre.
-- 14–20 segmentos de 15–45 palabras, **420–560 palabras** (3:15–4:30 a ~120–130 ppm).
+- Segmentos de 15–45 palabras; cantidad de palabras, segmentos y capítulos según `target_minutes`
+  (10 min ≈ 1100–1400 palabras en 4–8 capítulos con mini-arco y re-gancho; formato corto anterior: 420–560).
 - **Números en palabras** ("mil novecientos cincuenta y seis"); Whisper los devuelve en cifras.
 - Oraciones de 6–18 palabras. Español latino neutro con **tú** en la narración ("tienes", "computadora", "celular").
 - Curva `intensity`: ≥ 2 bajadas reales; pico 1.0 en el **60–72 %**; caída 0.2–0.4 después; cierre que vuelve al título.
@@ -185,7 +193,7 @@ Modelos `gemini-3.8-flash-tts` → `3.8-flash-lite-tts` → `3.1-flash-tts-previ
 descartada: Schedar (repite frases).
 
 **Medios** (`guides/media.md`):
-- 5–9 fotos (como máximo una cada ~25 s): protagonista, lugar/objeto del punto crítico, contraparte, legado.
+- Fotos según la duración (como máximo una cada ~25 s): protagonista, lugar/objeto del punto crítico, contraparte, legado.
 - Licencias: PD, CC0, CC BY, CC BY-SA, Pexels. Rechazar NC, ND, fair use. Créditos CC BY/BY-SA en la descripción.
 - Wikimedia Commons primero (consultas en inglés: nombre + año, lugar + evento). Pexels solo para lo genérico moderno, nunca para personas históricas.
 - Retratos para `binary.portrait`: frontales, fondo liso. Nada de marcas de agua ni imágenes generadas con IA presentadas como reales.
@@ -282,7 +290,7 @@ Fuente: `niches.json → categories.<id>.strategy` (audiencia, ángulo, tono, `t
 + `docs/investigaciones/estrategia-cro-titulos-descripciones-2026-09.md`.
 
 - **Provocador pero verdadero**: contraste, tensión o una pregunta abierta; promete solo lo que el video cuenta (CTR alto + retención baja = el algoritmo deja de mostrarlo).
-- Lo importante en los **primeros 40 caracteres**; máximo 70 en YouTube. Sin MAYÚSCULAS sostenidas ni emojis de relleno (máx. 1 emoji en TikTok).
+- Lo importante en los **primeros 40 caracteres**; máximo 70 en YouTube. Sin MAYÚSCULAS sostenidas. **Sin emojis** en ningún texto (YouTube, Facebook, TikTok); el backend los borra igual al publicar.
 - Toda cifra o fecha del título/descripción **está en el guion** y en PLAN §3.
 - `thumbnail_text`: 3–4 palabras que **complementan** el título, no lo repiten.
 - Descripción: 2 primeras líneas con gancho + palabras clave; contexto; qué vas a entender; pregunta para comentarios; bloque `IMÁGENES` con los créditos CC BY/BY-SA.
@@ -299,7 +307,8 @@ Fuente: `niches.json → categories.<id>.strategy` (audiencia, ángulo, tono, `t
 - [ ] Voz real (no `preview`): `narration.qc.json` sin `faltan`/`sobran` reales; ppm en rango del diseño.
 - [ ] `lyrics.json` de Whisper real (no sintético) y storyboard re-validado después.
 - [ ] Hojas 9:16 y 16:9 **miradas**: título ~80 % del primer cuadro, nada cortado, fotos correctas, un acento por plano, sin planos negros ni repetidos.
-- [ ] 420–560 palabras, pico de intensidad en 60–72 %, 4–6 letras grandes, cierre que vuelve al título.
+- [ ] Palabras, capítulos y letras grandes en el rango de `target_minutes`, pico de intensidad en 60–75 %, cierre que vuelve al título.
+- [ ] Inventario visual (PLAN §7a) resuelto: componentes propios aprobados en `work/components/review.md` o justificados.
 - [ ] Toda cifra con fuente; ninguna cita inventada; temas sensibles con respeto.
 - [ ] `CREDITS.md` completo y créditos en `youtube_description`.
 - [ ] `publish.json` revisado contra PLAN (título verdadero, ≤ 70 caracteres, lo clave en 40).

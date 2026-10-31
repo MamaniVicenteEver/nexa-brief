@@ -1,0 +1,53 @@
+# pelicula · ARCHIVO 35 — hoja rápida
+
+> GENERADO por `tools/catalog.py`. No editar a mano. Detalle completo de cada parámetro: `CATALOG.md`.
+> Beat: `{ "at": "palabras ancla exactas de la voz", "use": "componente", "params": {…} }`; el 1.º en `"t": 0`.
+
+## Componentes de pelicula
+
+- **`pelicula.title`** — Apertura (ref 0–3 s): foto de archivo que entra desenfocada y hace foco, dos filas de perforaciones arriba y una abajo que entran deslizándose, arcos finos, y el bloque año + titular + subtítulo que CAE desde arriba con estela y hace glitch de franjas. Parámetros: src*, year, title, sub, kicker, layout(under|over), color(orange|red), pos(center|left|right|topLeft|topRight|bottomLeft|bottomRight|bigLeft|bigRight), size, textIn(drop|rise|glitch|flash|fade|none), textAt, glitches, drift(left|right|up|none), focus, enter(cut|whip|whipR|whipUp|whipDown|zoom|focus|glitch|fade), exit(none|whip|whipR|whipUp|whipDown|zoom), leak(none|burn|prism|flash|bar), leakDir(ltr|rtl), flush
+  `{"use": "pelicula.title", "params": {"src": "assets/media/muro-gente.jpg", "year": "1989", "title": "LA NOCHE QUE\nCAYÓ EL MURO", "sub": "BERLÍN · 9 DE NOVIEMBRE"}}`
+- **`pelicula.year`** — Plano principal de la referencia: número GIGANTE naranja/rojo + titular crema + subtítulo con barra roja sobre una foto virada con filas de perforaciones en doble exposición. Parámetros: src*, src2, year, title, sub, kicker, layout(under|over), color(orange|red), pos(center|left|right|topLeft|topRight|bottomLeft|bottomRight|bigLeft|bigRight), size, textIn(drop|rise|glitch|flash|fade|none), textAt, glitches, drift(left|right|up|none), strips(frame|top|bottom|double|side|none), camera(in|out|left|right|rise|fall|still), ghost, punch, punchPos(center|left|right|topLeft|topRight|bottomLeft|bottomRight|bigLeft|bigRight), punchSize, focus, enter(cut|whip|whipR|whipUp|whipDown|zoom|focus|glitch|fade), exit(none|whip|whipR|whipUp|whipDown|zoom), leak(none|burn|prism|flash|bar), leakDir(ltr|rtl), flush
+  `{"use": "pelicula.year", "params": {"src": "assets/media/mauerbau.jpg", "year": "1961", "title": "SE LEVANTA EL MURO", "sub": "AGOSTO · BERLÍN", "pos": "right", "strips": "frame", "punch": 3.2}}`
+- **`pelicula.photo`** — Foto de archivo a pantalla completa (ref 18.6–24 s y 30.6–32.4 s): fila de perforaciones cortada por el borde, Ken Burns lento, arcos finos, doble exposición opcional y un titular chico opcional. Parámetros: src*, src2, ghost, title, sub, pos(center|left|right|topLeft|topRight|bottomLeft|bottomRight|bigLeft|bigRight), perfs(top|bottom|both|none), camera(in|out|left|right|rise|fall|still), focus, enter(cut|whip|whipR|whipUp|whipDown|zoom|focus|glitch|fade), exit(none|whip|whipR|whipUp|whipDown|zoom), leak(none|burn|prism|flash|bar), leakDir(ltr|rtl), flush
+  `{"use": "pelicula.photo", "params": {"src": "assets/media/bornholmer.jpg", "title": "BORNHOLMER STRASSE", "sub": "PASO FRONTERIZO · BERLÍN"}}`
+- **`pelicula.strip`** — Montaje en tiras de película (ref 3.6–6.8 s y 38–43.7 s): 2–3 fotos como cuadros de tiras horizontales que corren en sentidos opuestos, perforaciones en los bordes, doble exposición y una barra de luz que cruza el cuadro. Parámetros: src*, src2, src3, layout(split|band), sweep, enter(cut|whip|whipR|whipUp|whipDown|zoom|focus|glitch|fade), exit(none|whip|whipR|whipUp|whipDown|zoom), leak(none|burn|prism|flash|bar), leakDir(ltr|rtl), flush
+  `{"use": "pelicula.strip", "params": {"src": "assets/media/mauerbau.jpg", "src2": "assets/media/bornholmer.jpg", "src3": "assets/media/muro-gente.jpg", "layout": "split"}}`
+- **`pelicula.reel`** — Rollo vertical (ref 13–15 s y 53–55.6 s): la foto como cuadros de una tira vertical con perforaciones a ambos lados que corre hacia arriba, tira lateral a la derecha y fondo lavado en blanco; bloque de año/titular opcional al costado. Parámetros: src*, src2, src3, year, title, sub, kicker, layout(under|over), color(orange|red), pos(center|left|right|topLeft|topRight|bottomLeft|bottomRight|bigLeft|bigRight), size, textIn(drop|rise|glitch|flash|fade|none), textAt, glitches, drift(left|right|up|none), speed, enter(cut|whip|whipR|whipUp|whipDown|zoom|focus|glitch|fade), exit(none|whip|whipR|whipUp|whipDown|zoom), leak(none|burn|prism|flash|bar), leakDir(ltr|rtl), flush
+  `{"use": "pelicula.reel", "params": {"src": "assets/media/nota.jpg", "src2": "assets/media/schabowski.jpg", "title": "LA NOTA", "sub": "9 DE NOVIEMBRE DE 1989"}}`
+- **`pelicula.quote`** — Frase narrada en titular grande (ref 15.5–17 s, el punch de 'NO PLUGINS REQUIRED'): las palabras dichas dentro del plano caen en mayúsculas crema erosionadas justo cuando la voz las dice; 'accent' las pinta naranja; número gigante opcional detrás y subtítulo con barra roja. Parámetros: src*, src2, accent, ghost, sub, strips(frame|top|bottom|double|side|none), camera(in|out|left|right|rise|fall|still), size, maxChars, enter(cut|whip|whipR|whipUp|whipDown|zoom|focus|glitch|fade), exit(none|whip|whipR|whipUp|whipDown|zoom), leak(none|burn|prism|flash|bar), leakDir(ltr|rtl), flush
+  `{"use": "pelicula.quote", "params": {"src": "assets/media/schabowski.jpg", "accent": ["inmediato"], "ghost": "1989"}}`
+- **`pelicula.leak`** — Destello de película (light leak) que tapa un corte: burn (naranja→ámbar→blanco desde un costado, ref 13.1/24.3/31.8/45.9/55.7 s), prism (banda rojo-blanco-verde que cruza, ref 3.1/15.2/37.4/49.3 s), flash (golpe blanco cálido, ref 20.6/27.1 s) o bar (barra de luz, ref 4.3 s). Parámetros: kind(burn|prism|flash|bar), dir(ltr|rtl), strength
+  `{"use": "pelicula.leak", "params": {"kind": "burn", "dir": "ltr"}}`
+- **`pelicula.glitch`** — Glitch de franjas de TODO el cuadro (foto + texto): bandas horizontales desplazadas y duplicadas que cambian cada cuadro (ref 32.7–33.2, 45.3, 50.6, 55.0 s). Parámetros: strength, flicker
+  `{"use": "pelicula.glitch", "params": {"strength": 1}}`
+- **`pelicula.introv1`** — GANCHO de apertura (lo primero que se ve). Parámetros: text*, kicker, sub, countdown, wordAt, stagger, burnAt, bg(auto|strips|projector|reel|leader|image|component|none), src, focus, use, useParams, dim
+  `{"use": "pelicula.introv1", "params": {"text": "¿POR QUÉ CAYÓ\nEL ^MURO^?", "kicker": "Berlín · 9 nov 1989", "sub": "la noche que nadie vio venir", "burnAt": 2.9}}`
+- **`pelicula.introv2`** — GANCHO tipo intertítulo de cine mudo. Parámetros: text*, kicker, stamp, stampAt, typeAt, cps, bg(auto|strips|projector|reel|leader|image|component|none), src, focus, use, useParams, dim
+  `{"use": "pelicula.introv2", "params": {"text": "¿QUIÉN ABRIÓ\nEL MURO?", "kicker": "Archivo · Berlín 1989", "stamp": "NADIE DIO LA ORDEN", "stampAt": 2.5}}`
+- **`pelicula.outro`** — Cierre del canal SIN recuadro (bg: projector | strips | reel | leader | image con src | component con use/useParams). Parámetros: thanks, channel, cta, support, handle, arrow, likeAt, subscribeAt, bellAt, supportAt, bg(auto|projector|strips|reel|leader|image|component|none), src, focus, use, useParams, dim
+  `{"use": "pelicula.outro", "params": {"thanks": "GRACIAS POR VER", "channel": "ARCHIVO 35", "cta": "SUSCRÍBETE", "support": "Tu apoyo nos ayuda a seguir rescatando historias.", "handle": "youtube.com/@archivo35"}}`
+
+## Comunes (todos los diseños)
+
+- **`common.punch`** — Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento. Parámetros: text*, size, style(solid|outline|glitch), stagger, y, hideCaptions
+  `{"use": "common.punch", "params": {"text": "MILLONES\nDE ^VIDAS^", "size": 0.9}}`
+- **`common.tag`** — Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose. Parámetros: text*, pos(top|bottom|center), boxed
+  `{"use": "common.tag", "params": {"text": "BLETCHLEY PARK · 1940", "pos": "top"}}`
+- **`common.flash`** — Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido. Parámetros: color, strength
+  `{"use": "common.flash", "params": {"color": "palette.ink", "dur": 0.5}}`
+- **`common.endcard`** — Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse). Parámetros: line, brand, cta
+  `{"use": "common.endcard", "params": {"line": "SEGUIMOS\nPREGUNTANDO", "brand": "NEXA BRIEF", "cta": "SUSCRÍBETE"}}`
+- **`common.lyric`** — Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. Parámetros: text, accent, size, maxChars, dimPast, y
+  `{"use": "common.lyric", "params": {"accent": ["vidas"], "size": 0.9}}`
+- **`common.logo`** — Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual. Parámetros: src, name
+- **`common.clip`** — Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Parámetros: src*, start, rate, loop, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
+  `{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}`
+- **`common.tabloid`** — Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio. Parámetros: text*, src, srcAfter, video, poster, start, rate, loop, muted, accent, bullet, bulletScale, beforeLabel, afterLabel, imageSide(auto|left|right), mode(impact|split), palette(brand|alert), strap, seal, tapeText, marker, focus, target, textIn(slam|slide|typewriter|none), stagger, accentIn(slam|slide|typewriter|none), bulletIn(slam|slide|typewriter|none), inDuration, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
+  `{"use": "common.tabloid", "params": {"text": "TÚ ERES EL SIGUIENTE", "accent": "SIGUIENTE", "strap": "AMAZON · IA"}}`
+- **`common.question`** — Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9. Parámetros: text*, y
+  `{"use": "common.question", "params": {"text": "¿La IA te quita trabajo?"}}`
+
+## Marcas e instituciones
+
+El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Usá `logo`, `logoName`, `logoPos` y `logoSize` en el beat visual (`rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`). `common.logo` está obsoleto. Preferí SVG; el PNG debe ser transparente.

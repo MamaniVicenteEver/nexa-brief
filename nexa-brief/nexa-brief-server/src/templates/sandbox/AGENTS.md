@@ -1,5 +1,12 @@
 # AGENTS.md — Casa de pruebas (sandbox)
 
+**Guía rápida para cualquier agente nuevo:** leé primero [`SANDBOX.md`](SANDBOX.md). Después,
+abrí solo el `AGENTS.md` de la carpeta en la que vas a trabajar.
+
+> **¿Te pidieron un video con un diseño que ya existe? No es acá:** seguí
+> `src/skills/explainer/produce/SKILL.md` (vía rápida, carpeta de producción). Esta carpeta es solo para
+> lo NUEVO: plantillas y diseños nuevos, réplicas de un video de referencia, componentes de diseño.
+>
 > Acá se prueban ideas: plantillas nuevas, videos de prueba, diseños. Nada de esta carpeta sale
 > en la app ni se publica. Lo que ya funciona y está en producción vive fuera, en
 > `src/templates/` (reglas estrictas en `src/templates/AGENTS.md`).
@@ -24,8 +31,15 @@ src/templates/
     ├── nodetech/             ← ideas de videos de tecnología  (+ _referencias/)
     ├── nodehistory/          ← ideas de videos de historia     (+ _referencias/)
     ├── nodepolitics/         ← ideas de videos de política
-    └── nodeeconomy/          ← ideas de videos de economía
+    ├── nodeeconomy/          ← ideas de videos de economía
+    ├── nodeaction/           ← escenas de acción con personajes (motor propio: _engine/, escenas = datos)
+    └── referencias/          ← material de inspiración: <categoría>/<idea-id>/ (no son proyectos)
 ```
+
+Las referencias están separadas de los proyectos. Para buscar una idea, usá
+`referencias/<categoría>/<idea-id>/` y leé `referencias/README.md`; ahí se explica qué guardar y cómo
+analizarlo antes de crear un prototipo. Las categorías válidas son `nodetech`, `nodehistory`,
+`nodepolitics`, `nodeeconomy`, `nodeaction`, `nodemotion` y `otros`.
 
 ## Qué leer según lo que vas a hacer
 
@@ -34,7 +48,13 @@ src/templates/
 | una plantilla nueva de letras, promo o fondo (música) | `nodemotion/AGENTS.md` |
 | un video explicativo de prueba (tech, historia, política, economía) | `EXPLAINER.md` → `<tema>/AGENTS.md` → `_tools/explainer-kit/AGENTS.md` |
 | un diseño nuevo para el motor explainer | `EXPLAINER.md` (sección de diseños nuevos) |
+| una escena de acción (batalla, enfrentamiento, disturbio…) con personajes | `nodeaction/AGENTS.md` |
+| inspiración visual o narrativa previa a una idea | `referencias/README.md` y la subcarpeta de su categoría |
 | pasar algo a producción | la sección "promover" del `AGENTS.md` del tema |
+
+**NodeAction también es distinto**: tiene su propio motor (`nodeaction/_engine/`, personajes articulados
+en un mundo 2.5D, director automático); comparte con los demás el contrato de grabación (`__promo`), la voz
+y la transcripción del explainer-kit. Todavía no se promueve a la app (prototipo).
 
 **NodeMotion es distinto**: cada plantilla es su propio `index.html` (canción + letra + medios) y
 pasa por el pipeline de plantillas. **Tech, History, Politics y Economy usan el mismo motor**

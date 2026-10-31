@@ -1,0 +1,274 @@
+{
+  "version": 1,
+  "background": "#ffffff",
+  "end": 31.6,
+  "shotsEnd": 31.6,
+  "outro": {
+    "enabled": false
+  },
+  "captions": {
+    "enabled": true,
+    "maxWords": 5,
+    "font": "'DM Sans', sans-serif",
+    "color": "#222222",
+    "stroke": false,
+    "size": 34,
+    "yLandscape": 0.94
+  },
+  "shots": [
+    {
+      "t": 0,
+      "items": [
+        {
+          "type": "man",
+          "id": "estudiante",
+          "x": 505,
+          "y": 950,
+          "h": 720,
+          "character": "estudianteReferencia",
+          "poses": [
+            {
+              "at": 0,
+              "pose": "stand",
+              "face": "smile"
+            },
+            {
+              "at": "@evita",
+              "pose": "think",
+              "face": "think"
+            },
+            {
+              "at": "@Distribuye",
+              "pose": "point",
+              "face": "smile"
+            },
+            {
+              "at": "@Un análisis",
+              "pose": "talk",
+              "face": "talk"
+            },
+            {
+              "at": "@espaciar",
+              "pose": "point",
+              "face": "smile"
+            },
+            {
+              "at": "@retener",
+              "pose": "cheer",
+              "face": "smile"
+            }
+          ]
+        },
+        {
+          "type": "label",
+          "x": 1320,
+          "y": 180,
+          "size": 30,
+          "text": "A · PERSONAJE ARTICULADO",
+          "at": 0
+        },
+        {
+          "type": "type",
+          "x": 1310,
+          "y": 465,
+          "size": 70,
+          "text": "EVITA UNA SOLA NOCHE",
+          "maxW": 920,
+          "at": 0,
+          "out": "@Distribuye"
+        },
+        {
+          "type": "type",
+          "x": 1310,
+          "y": 465,
+          "size": 70,
+          "text": "REPASA EN VARIOS DÍAS",
+          "maxW": 920,
+          "at": "@Distribuye",
+          "out": "@Un análisis"
+        },
+        {
+          "type": "type",
+          "x": 1310,
+          "y": 465,
+          "size": 65,
+          "text": "ESPACIAR AYUDA A RECORDAR",
+          "maxW": 960,
+          "at": "@Un análisis"
+        },
+        {
+          "type": "label",
+          "x": 1310,
+          "y": 590,
+          "size": 34,
+          "text": "Un hábito para aprender mejor",
+          "at": 0
+        }
+      ]
+    },
+    {
+      "t": 15.8,
+      "items": [
+        {
+          "type": "prop",
+          "name": "imagen",
+          "src": "assets/poses-detalle-transparente.png",
+          "id": "pose-reposo-0",
+          "x": 505,
+          "y": 568,
+          "s": 820,
+          "height": 710,
+          "crop": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "enter": "none",
+          "at": 15.8,
+          "out": "@evita#2"
+        },
+        {
+          "type": "prop",
+          "name": "imagen",
+          "src": "assets/poses-detalle-transparente.png",
+          "id": "pose-pensar-1",
+          "x": 505,
+          "y": 568,
+          "s": 820,
+          "height": 710,
+          "crop": [
+            0.5,
+            0,
+            0.5,
+            0.5
+          ],
+          "enter": "none",
+          "at": "@evita#2",
+          "out": "@Distribuye#2"
+        },
+        {
+          "type": "prop",
+          "name": "imagen",
+          "src": "assets/poses-detalle-transparente.png",
+          "id": "pose-señalar-2",
+          "x": 505,
+          "y": 568,
+          "s": 820,
+          "height": 710,
+          "crop": [
+            0,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "enter": "none",
+          "at": "@Distribuye#2",
+          "out": "@Un análisis#2"
+        },
+        {
+          "type": "prop",
+          "name": "imagen",
+          "src": "assets/poses-detalle-transparente.png",
+          "id": "pose-reposo-3",
+          "x": 505,
+          "y": 568,
+          "s": 820,
+          "height": 710,
+          "crop": [
+            0,
+            0,
+            0.5,
+            0.5
+          ],
+          "enter": "none",
+          "at": "@Un análisis#2",
+          "out": "@espaciar#2"
+        },
+        {
+          "type": "prop",
+          "name": "imagen",
+          "src": "assets/poses-detalle-transparente.png",
+          "id": "pose-señalar-4",
+          "x": 505,
+          "y": 568,
+          "s": 820,
+          "height": 710,
+          "crop": [
+            0,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "enter": "none",
+          "at": "@espaciar#2",
+          "out": "@retener#2"
+        },
+        {
+          "type": "prop",
+          "name": "imagen",
+          "src": "assets/poses-detalle-transparente.png",
+          "id": "pose-celebrar-5",
+          "x": 505,
+          "y": 568,
+          "s": 820,
+          "height": 710,
+          "crop": [
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "enter": "none",
+          "at": "@retener#2",
+          "out": 31.6
+        },
+        {
+          "type": "label",
+          "x": 1320,
+          "y": 180,
+          "size": 30,
+          "text": "B · POSES ILUSTRADAS",
+          "at": 15.8
+        },
+        {
+          "type": "type",
+          "x": 1310,
+          "y": 465,
+          "size": 70,
+          "text": "EVITA UNA SOLA NOCHE",
+          "maxW": 920,
+          "at": 15.8,
+          "out": "@Distribuye#2"
+        },
+        {
+          "type": "type",
+          "x": 1310,
+          "y": 465,
+          "size": 70,
+          "text": "REPASA EN VARIOS DÍAS",
+          "maxW": 920,
+          "at": "@Distribuye#2",
+          "out": "@Un análisis#2"
+        },
+        {
+          "type": "type",
+          "x": 1310,
+          "y": 465,
+          "size": 65,
+          "text": "ESPACIAR AYUDA A RECORDAR",
+          "maxW": 960,
+          "at": "@Un análisis#2"
+        },
+        {
+          "type": "label",
+          "x": 1310,
+          "y": 590,
+          "size": 34,
+          "text": "Un hábito para aprender mejor",
+          "at": 15.8
+        }
+      ]
+    }
+  ]
+}

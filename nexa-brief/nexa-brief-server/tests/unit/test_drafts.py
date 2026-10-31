@@ -112,21 +112,63 @@ def test_pipeline_resume_from_pending_runs_everything(fake_stages: list[str]):
     assert len(fake_stages) == 8
 
 
-def test_pipeline_resume_includes_publisher_when_enabled(fake_stages: list[str], monkeypatch):
-    from src.modules import social_publisher
-
-    async def fake_publish(job: Job, _facade) -> Job:
-        fake_stages.append("social_publisher")
-        return job.advance(JobStage.PUBLISHED)
-
-    monkeypatch.setattr(social_publisher, "run", fake_publish)
-    monkeypatch.setattr("src.adapters.publishing.factory.get_publisher_facade", lambda: None)
+def test_render_options_turn_off_pipeline_publishing(fake_stages: list[str]):
+    # Las cuentas se publican por la cola al terminar (draft_publishing), no en el pipeline.
     job = drafts.apply_render_options(
-        _job(JobStage.HTML_GENERATED), RenderOptions(publish_accounts=["youtube:canal_1"])
+        _job(JobStage.HTML_GENERATED), RenderOptions(publish_accounts=["youtube:canal_1"], formats=["16x9"])
     )
+    assert job.input.publishing.enabled is False
+    assert job.input.formats == ["16x9"]
     final = asyncio.run(pipeline.run(job, resume=True))
-    assert final.stage == JobStage.PUBLISHED
-    assert fake_stages == ["video_recorder", "result_summarizer", "packager", "social_publisher"]
+    assert final.stage == JobStage.PACKAGED
+    assert fake_stages == ["video_recorder", "result_summarizer", "packager"]
+
+
+def test_prepared_details_become_the_job_summary():
+    from src.core.draft_details import DraftDetails, PlatformDetails
+
+    details = DraftDetails(song_name="Cielo", language="es", copies={
+        "youtube": PlatformDetails(title="Cielo · Letra", description="d", tags=["a"]),
+        "instagram": PlatformDetails(title="Cielo", description="ig"),
+    })
+    job = drafts.apply_render_options(_job(JobStage.HTML_GENERATED), RenderOptions(), details)
+    assert job.artifacts.summary.youtube_title == "Cielo · Letra"
+    assert job.artifacts.summary.platform_copies["instagram"].description == "ig"
+
+
+def test_result_summarizer_uses_prepared_summary_without_ai(tmp_path: Path):
+    from src.core.draft_details import DraftDetails, PlatformDetails, to_summary
+    from src.modules import result_summarizer
+
+    details = DraftDetails(copies={"youtube": PlatformDetails(title="T", description="D")})
+    job = _job(JobStage.VIDEO_RECORDED)
+    job = job.model_copy(update={"artifacts": job.artifacts.model_copy(
+        update={"summary": to_summary(details), "output_dir": tmp_path})})
+    result = asyncio.run(result_summarizer.run(job, ai=None, niche_cfg=None))   # sin IA: no la toca
+    assert result.stage == JobStage.SUMMARY_GENERATED
+    assert (tmp_path / "logs" / "08_resumen_final.json").exists()
+
+
+def test_restrict_formats_keeps_only_the_chosen_ones():
+    from src.config.niche_config import get_niche_config
+
+    niche = get_niche_config(NICHE_ID)
+    assert len(niche.video.formats) == 2
+    only_169 = pipeline.restrict_formats(niche, ["16x9"])
+    assert [f.aspect_ratio for f in only_169.video.formats] == ["16:9"]
+    assert pipeline.restrict_formats(niche, None) is niche
+    assert pipeline.restrict_formats(niche, ["16x9", "9x16"]) is niche
+
+
+def test_format_for_each_account():
+    from src.core.draft_publishing import format_for
+
+    both = RenderOptions(formats=["16x9", "9x16"], account_formats={"facebook:p": "9x16", "youtube:c": "9x16"})
+    assert format_for("youtube:c", both) == "16x9"          # YouTube publica en 16:9
+    assert format_for("facebook:p", both) == "9x16"         # lo que eligió la persona
+    assert format_for("instagram:i", both) == "9x16"        # el de su red
+    only = RenderOptions(formats=["16x9"])
+    assert format_for("instagram:i", only) == "16x9"        # solo hay lo grabado
 
 
 def test_pipeline_resume_failed_job_raises(fake_stages: list[str]):
@@ -404,3 +446,67 @@ def test_preview_file_injects_scripts_and_protects_paths(_isolated_output: Path)
     assert client.get(f"{base}/..%2F..%2Fdata%2Fsecret.json").status_code == 404
     assert client.get(f"{base}/missing.html").status_code == 404
     assert client.get("/api/v1/drafts/nope/preview/index.html").status_code == 404
+
+
+# ── Sandbox: nombre, preparar, detalles ──────────────────────────────────────
+
+def test_prepare_generates_details_then_save_marks_edited(fake_stages: list[str], monkeypatch):
+    from src.core import draft_details
+    from src.core.draft_details import DraftDetails, PlatformDetails
+
+    seen_notes: list[str] = []
+
+    async def fake_generate(job, niche_id, seed, notes=""):
+        seen_notes.append(notes)
+        return DraftDetails(song_name="Cielo", copies={"youtube": PlatformDetails(title="Cielo")})
+
+    monkeypatch.setattr(draft_details, "generate", fake_generate)
+
+    async def scenario():
+        draft = await _create(name="Prototipo 1")
+        await drafts.run_preview(draft.draft_id, drafts.load_job(draft.draft_id))
+        ready = await drafts.get(draft.draft_id)
+        assert drafts.can_prepare(ready, drafts.load_job(draft.draft_id))
+        started = await drafts.start_prepare(draft.draft_id, "  Cielo de Ana Ruiz, habla de una despedida  ")
+        assert started.status == "preparing" and started.song_notes == "Cielo de Ana Ruiz, habla de una despedida"
+        await drafts.run_prepare(started, drafts.load_job(draft.draft_id))
+        prepared = await drafts.get(draft.draft_id)
+        assert prepared.status == "prepared" and prepared.details.song_name == "Cielo"
+        assert seen_notes == ["Cielo de Ana Ruiz, habla de una despedida"]   # la información llega a la IA
+        assert drafts.can_render(prepared, drafts.load_job(draft.draft_id))
+        saved = await drafts.save_details(draft.draft_id, prepared.details.model_copy(update={"song_name": "Cielo 2"}))
+        assert saved.details.edited and saved.details.song_name == "Cielo 2"
+        renamed = await drafts.rename(draft.draft_id, "  Mi versión ")
+        assert renamed.name == "Mi versión"
+
+    asyncio.run(scenario())
+
+
+def test_prepare_failure_keeps_preview_ready(fake_stages: list[str], monkeypatch):
+    from src.core import draft_details
+
+    async def boom(*_a, **_k):
+        raise RuntimeError("sin cuota")
+
+    monkeypatch.setattr(draft_details, "generate", boom)
+
+    async def scenario():
+        draft = await _create()
+        await drafts.run_preview(draft.draft_id, drafts.load_job(draft.draft_id))
+        started = await drafts.start_prepare(draft.draft_id)
+        await drafts.run_prepare(started, drafts.load_job(draft.draft_id))
+        after = await drafts.get(draft.draft_id)
+        assert after.status == "preview_ready"
+        assert "sin cuota" in after.errors[0]
+
+    asyncio.run(scenario())
+
+
+def test_render_requires_16x9_format_400(fake_stages: list[str]):
+    created = client.post("/api/v1/drafts", json={"template_id": TEMPLATE_ID}).json()
+    for _ in range(50):
+        if client.get(f"/api/v1/drafts/{created['draft_id']}").json()["status"] == "preview_ready":
+            break
+        time.sleep(0.05)
+    response = client.post(f"/api/v1/drafts/{created['draft_id']}/render", json={"formats": ["9x16"]})
+    assert response.status_code == 400

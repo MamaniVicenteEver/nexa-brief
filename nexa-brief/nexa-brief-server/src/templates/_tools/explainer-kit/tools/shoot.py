@@ -26,6 +26,54 @@ SANDBOX = KIT.parents[1]                     # src/templates/ (videos y kit)
 class _Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a, **k): pass
 
+    def send_head(self):
+        self._range_left = None
+        path = self.translate_path(self.path)
+        if not path.lower().endswith(".mp4") or not os.path.isfile(path):
+            return super().send_head()
+        source = open(path, "rb")
+        size = os.fstat(source.fileno()).st_size
+        request = self.headers.get("Range", "")
+        start, end = 0, size - 1
+        if request.startswith("bytes="):
+            bounds = request[6:].split(",", 1)[0].split("-", 1)
+            try:
+                if bounds[0]:
+                    start = int(bounds[0])
+                    end = min(int(bounds[1]), size - 1) if bounds[1] else size - 1
+                else:
+                    start = max(0, size - int(bounds[1]))
+            except (ValueError, IndexError):
+                source.close()
+                self.send_error(416, "Rango inválido")
+                return None
+            if start >= size or end < start:
+                source.close()
+                self.send_response(416)
+                self.send_header("Content-Range", f"bytes */{size}")
+                self.end_headers()
+                return None
+        self._range_left = end - start + 1
+        self.send_response(206 if request.startswith("bytes=") else 200)
+        self.send_header("Content-Type", self.guess_type(path))
+        self.send_header("Content-Length", str(self._range_left))
+        self.send_header("Accept-Ranges", "bytes")
+        if request.startswith("bytes="):
+            self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
+        self.end_headers()
+        source.seek(start)
+        return source
+
+    def copyfile(self, source, output):
+        if self._range_left is None:
+            return super().copyfile(source, output)
+        while self._range_left > 0:
+            data = source.read(min(64 * 1024, self._range_left))
+            if not data:
+                break
+            output.write(data)
+            self._range_left -= len(data)
+
 def serve(root):
     h = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(_Quiet, directory=str(root)))
     threading.Thread(target=h.serve_forever, daemon=True).start()

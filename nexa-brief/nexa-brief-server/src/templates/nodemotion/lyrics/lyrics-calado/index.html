@@ -834,6 +834,8 @@
 <div id="grain"></div>
 <audio id="audio" preload="auto"></audio>
 
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
 <script type="module">
 /* ================================ CONFIG ================================
    CALADO — el video se ve A TRAVÉS de las letras (texto knockout, estilo
@@ -875,7 +877,7 @@ const DEFAULT_CONFIG = { "activeId": "default", "configs": [{
              "dimSolido": 0.42, "ghostCalado": 0.05 },
   "colors": { "ink": "#F4EFE6", "palette": ["#FF7A1A", "#4FC3FF", "#E0362C", "#FFD23F"],
               "outline": "rgba(244,239,230,0.10)" },
-  "intro": { "artist": "", "title": "", "sub": "", "feats": "NEXA BRIEF" },
+  "intro": { "artist": "", "title": "Colapso", "sub": "", "feats": "NODEMOTION" },
   "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
   "debug": { "enabled": false },
   "phrase": { "gapSec": 0.5, "maxWords": 4, "maxChars": 20 },
@@ -901,6 +903,9 @@ const CONFIG = DB.configs.find(c => c.id === DB.activeId) || DB.configs[0];
 
 const doc = document, $ = id => doc.getElementById(id);
 const C = CONFIG, audio = $("audio"), vid = $("vid"), fx = $("fx"), ctx = fx.getContext("2d");
+const introController = window.NexaCaladoIntro;
+const introTitle = introController.resolveTitle(C.intro || {});
+let introDurationSeconds = introController.DEFAULT_DURATION_SECONDS;
 const M = doc.createElement("canvas"), mctx = M.getContext("2d");   /* máscara de texto */
 const V = doc.createElement("canvas"), vctx = V.getContext("2d");   /* video recortado */
 let vw = innerWidth, vh = innerHeight, dpr = Math.min(devicePixelRatio || 1, 2);
@@ -1156,10 +1161,11 @@ function drawLamina(L, t) {
 }
 
 /* ---- reloj: audio si suena; si no, rAF ---- */
-let rafT0 = null, rafNow = 0, started = false;
-const clock = () => (!audio.paused && audio.currentTime > 0.05)
-  ? audio.currentTime
-  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+let started = false;
+/* La escena sigue al audio: si está pausado, intro y letra se quedan en su tiempo actual. */
+const outroController = window.NexaCaladoOutro.createController(C.outro || {});
+
+const clock = () => Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
 
 async function begin() {
   if (started) return;
@@ -1176,57 +1182,24 @@ addEventListener("pointerdown", () => {
 /* ---- outro por el final REAL del audio ---- */
 let outroShown = false;
 function maybeOutro() {
-  if (outroShown) return;
-  const dur = audio.duration;
-  if (!isFinite(dur) || dur <= 0) return;
-  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) outroShown = true;
+  const state = outroController.update(audio.currentTime, audio.duration, audio.ended);
+  outroShown = state.active;
+  return state;
 }
 audio.addEventListener("ended", maybeOutro);
 
-/* ---- intro / outro: el título va CALADO — el video late dentro del nombre ---- */
-function drawCard(cfg, t) {
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, vw, vh);
-  if (C.video.ghostCalado > 0) paintVideo(ctx, C.video.filter, C.video.ghostCalado);
-  const title = cfg.title.toUpperCase();
-  const fs = Math.min(fitFs(ctx, title, vw * 0.92, vh * 0.30), vh * 0.30);
-  mctx.clearRect(0, 0, vw, vh);
-  mctx.fillStyle = "#fff";
-  mctx.textAlign = "center"; mctx.textBaseline = "middle";
-  mctx.font = `${fs}px ${FONT}`;
-  mctx.fillText(title, vw / 2, vh * 0.47);
-  vctx.clearRect(0, 0, vw, vh);
-  paintVideo(vctx, C.video.filter, 1);
-  vctx.globalCompositeOperation = "destination-in";
-  vctx.drawImage(M, 0, 0, vw, vh);
-  vctx.globalCompositeOperation = "source-over";
-  ctx.drawImage(V, 0, 0, vw, vh);
-  /* créditos chicos en blanco cálido */
-  ctx.save();
-  ctx.fillStyle = hexA(C.colors.ink, 0.8);
-  ctx.textAlign = "center"; ctx.textBaseline = "middle";
-  ctx.font = `${vh * 0.022}px ${FONT}`;
-  if ("letterSpacing" in ctx) ctx.letterSpacing = vh * 0.012 + "px";
-  if (cfg.artist) ctx.fillText(cfg.artist.toUpperCase(), vw / 2, vh * 0.47 - fs * 0.75);
-  if (cfg.sub) ctx.fillText(cfg.sub.toUpperCase(), vw / 2, vh * 0.47 + fs * 0.72);
-  ctx.font = `${vh * 0.015}px ${FONT}`;
-  ctx.fillStyle = hexA(C.colors.ink, 0.5);
-  if (cfg.feats) ctx.fillText(cfg.feats.toUpperCase(), vw / 2, vh * 0.86);
-  if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
-  ctx.restore();
-}
+/* ---- salida: el diseño de Impacto se dibuja desde components/outro.js ---- */
+
 
 /* ---- main ---- */
-let phrases = [], ptr = 0, introGone = false, activeLam = null, lastWordT = -1;
+let phrases = [], ptr = 0, activeLam = null, lastWordT = -1;
 function frame(now) {
-  rafNow = now;
-  if (rafT0 === null) rafT0 = now;
   const t = clock();
-  maybeOutro();
+  const outroState = maybeOutro();
+  const introState = introController.stateAt(t, introDurationSeconds, outroShown);
 
   if (!outroShown) {
     while (ptr < phrases.length && t >= phrases[ptr].t) {
-      introGone = true;
       activeLam = makeLamina(phrases[ptr].words);
       punch = C.laminas.punch * 1.8;
       ptr++;
@@ -1245,9 +1218,21 @@ function frame(now) {
   punch *= 0.86;
   ctx.translate(vw / 2, vh / 2); ctx.scale(s, s); ctx.translate(-vw / 2, -vh / 2);
 
-  if (!introGone && !outroShown) drawCard(C.intro, t);
-  else if (outroShown) drawCard(C.outro, t);
-  else if (activeLam) drawLamina(activeLam, t);
+  if (introState.active && !outroShown) {
+    introController.drawCanvasIntro({
+      ctx, config: C.intro, title: introTitle, timeSeconds: t,
+      durationSeconds: introDurationSeconds, width: vw, height: vh, fontFamily: FONT,
+      maskCanvas: M, maskContext: mctx, videoCanvas: V, videoContext: vctx,
+      backgroundVeilOpacity: 0.58,
+      drawBackground: (target, alpha = 1) => paintVideo(target, C.video.filter, alpha),
+    });
+  } else if (outroShown) {
+    window.NexaCaladoOutro.drawCanvasOutro({
+      ctx, width: vw, height: vh, config: C.outro, opacity: outroState.opacity,
+      elapsedSeconds: Math.max(0, outroState.time - (outroState.duration - outroState.lead)),
+      drawBackground: (target, alpha = 1) => paintVideo(target, C.video.filter, alpha),
+    });
+  } else if (activeLam) drawLamina(activeLam, t);
 
   ctx.restore();
   requestAnimationFrame(frame);
@@ -1256,7 +1241,10 @@ function frame(now) {
 vid.src = encodeURI(C.video.src);
 vid.play().catch(() => {});
 audio.src = encodeURI(C.audio.src);
-loadLyrics().then(p => { phrases = p; });
+loadLyrics().then(p => {
+  phrases = p;
+  if (p.length && Number.isFinite(p[0].t)) introDurationSeconds = Math.max(0, p[0].t);
+});
 begin();
 sizeCanvases();
 doc.body.classList.add("ready");

@@ -1,0 +1,158 @@
+{
+ "comps": [
+  {
+   "name": "binary.crisisdesk",
+   "summary": "Una mesa de operaciones con tres terminales y una persona de guardia; los indicadores recorren reporte, respaldo y recuperación.",
+   "tags": [
+    "sala de crisis",
+    "guardia",
+    "contingencia",
+    "Y2K"
+   ],
+   "layer": "main",
+   "params": {
+    "label": {
+     "type": "string",
+     "default": "CENTRO DE OPERACIONES",
+     "doc": "Nombre corto del centro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "states": {
+     "type": "array",
+     "default": [
+      "REPORTE",
+      "RESPALDO",
+      "RECUPERACIÓN"
+     ],
+     "doc": "Tres etapas de la guardia.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "morph": {
+     "type": "number",
+     "default": 1.2,
+     "doc": "Tiempo para formar la sala.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 3
+    }
+   },
+   "example": {
+    "label": "CENTRO DE OPERACIONES",
+    "states": [
+     "REPORTE",
+     "RESPALDO",
+     "RECUPERACIÓN"
+    ]
+   }
+  },
+  {
+   "name": "binary.midnightrelay",
+   "summary": "Una ruta de tres relojes enlaza Kiritimati, Chatham y Auckland mientras el cambio de fecha avanza por el Pacífico.",
+   "tags": [
+    "husos horarios",
+    "Kiribati",
+    "Nueva Zelanda",
+    "medianoche",
+    "Y2K"
+   ],
+   "layer": "main",
+   "params": {
+    "label": {
+     "type": "string",
+     "default": "EL CAMBIO VIAJA",
+     "doc": "Título corto de la ruta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "first": {
+     "type": "string",
+     "default": "MILLENNIUM",
+     "doc": "Primera isla reportada en entrar al año nuevo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "second": {
+     "type": "string",
+     "default": "CHATHAM",
+     "doc": "Zona de Nueva Zelanda que entra quince minutos después.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "third": {
+     "type": "string",
+     "default": "AUCKLAND",
+     "doc": "Siguiente referencia horaria.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "label": "EL CAMBIO VIAJA",
+    "first": "MILLENNIUM",
+    "second": "CHATHAM",
+    "third": "AUCKLAND"
+   }
+  },
+  {
+   "name": "binary.y2kfield",
+   "summary": "Calendario digital hecho de dígitos binarios: muestra el campo de año de dos dígitos y el paso de 99 a 00, con la ambigüedad de leer 00 como 1900. Sirve para explicar por qué se usaban dos dígitos y qué podía pasar al cambiar de siglo.",
+   "tags": [
+    "fecha",
+    "año",
+    "dos dígitos",
+    "y2k",
+    "calendario"
+   ],
+   "layer": "main",
+   "params": {
+    "morph": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundos de armado de la forma.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 3
+    },
+    "showHint": {
+     "type": "bool",
+     "default": true,
+     "doc": "Mostrar rótulos 99 / 00 / 1900.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "CAMPO DE AÑO",
+     "doc": "Etiqueta superior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "morph": 1,
+    "showHint": true,
+    "label": "CAMPO DE AÑO"
+   }
+  }
+ ]
+}

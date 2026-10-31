@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowUpRight, Check, Copy, Pencil, RefreshCw, Trash2, Unplug } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Film, Pencil, RefreshCw, Trash2, Unplug } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import { formatCompact } from "@/features/stats/format";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -108,10 +109,22 @@ const REMOTE_DELETE_PLATFORMS = new Set(["youtube", "facebook"]);
 
 function RecentVideoRow({ video }: { video: PublishedVideo }) {
   const t = useTranslations("channels.deleteVideo");
+  const detailsT = useTranslations("channels.details");
   const locale = useLocale();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const canDelete = REMOTE_DELETE_PLATFORMS.has(video.platform);
   const platform = PLATFORM_META[video.platform].label;
+  const metrics = [
+    video.metrics?.views != null
+      ? detailsT("viewsCount", { count: formatCompact(video.metrics.views, locale) })
+      : null,
+    video.metrics?.likes != null
+      ? detailsT("likesCount", { count: formatCompact(video.metrics.likes, locale) })
+      : null,
+    video.metrics?.comments != null
+      ? detailsT("commentsCount", { count: formatCompact(video.metrics.comments, locale) })
+      : null,
+  ].filter(Boolean);
 
   return (
     <li className="group flex items-center gap-1 rounded-xl transition-colors hover:bg-nb-ink/[0.04]">
@@ -121,13 +134,32 @@ function RecentVideoRow({ video }: { video: PublishedVideo }) {
         rel="noopener noreferrer"
         className="flex min-w-0 flex-1 items-center gap-3 px-3 py-2.5 no-underline"
       >
+        {video.thumbnailUrl ? (
+          <span
+            aria-hidden="true"
+            className="size-12 shrink-0 rounded-lg bg-cover bg-center"
+            style={{ backgroundImage: `url(${JSON.stringify(video.thumbnailUrl)})` }}
+          />
+        ) : (
+          <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-nb-ink/[0.05] text-nb-mute">
+            <Film className="size-4" />
+          </span>
+        )}
         <span className="min-w-0 flex-1">
           <span className="block truncate text-[13px] font-semibold text-nb-ink">
             {video.title}
           </span>
-          <span className="text-[11.5px] text-nb-mute">
-            {formatDate(video.publishedAt, locale)}
+          <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[10.5px] text-nb-mute">
+            <span>{formatDate(video.publishedAt, locale)}</span>
+            <span className="rounded-full bg-nb-ink/[0.06] px-1.5 py-0.5 font-medium text-nb-ink-soft">
+              {video.origin === "imported" ? detailsT("originImported") : detailsT("originNexa")}
+            </span>
           </span>
+          {metrics.length > 0 && (
+            <span className="mt-0.5 block truncate text-[10.5px] text-nb-mute">
+              {metrics.join(" · ")}
+            </span>
+          )}
         </span>
         <ArrowUpRight className="size-4 shrink-0 text-nb-mute transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-nb-ink" />
       </a>
@@ -200,6 +232,51 @@ export function ChannelDetailsSheet({
         </SheetHeader>
 
         <div className="flex flex-col gap-7 p-6">
+          {(account.platform === "youtube" || account.platform === "instagram") && (
+            <Section
+              title={t(account.platform === "youtube" ? "youtubeProfile" : "instagramProfile")}
+            >
+              <div className="rounded-2xl border border-nb-line">
+                <Row label={t("handle")}>
+                  {account.handle ? `@${account.handle}` : account.alias}
+                </Row>
+                {account.customUrl && <Row label={t("customUrl")}>{account.customUrl}</Row>}
+                {account.platform === "instagram" && account.linkedPageName && (
+                  <Row label={t("linkedFacebookPage")}>{account.linkedPageName}</Row>
+                )}
+                <div className="border-t border-nb-line px-4 py-3">
+                  <p className="text-[11.5px] font-medium text-nb-mute">
+                    {t(account.platform === "youtube" ? "channelDescription" : "instagramBio")}
+                  </p>
+                  <p className="mt-1 max-h-44 overflow-y-auto whitespace-pre-wrap text-[12.5px] leading-[1.5] text-nb-ink-soft">
+                    {account.description || t("noDescription")}
+                  </p>
+                </div>
+                <Row label={t("profileLastSynced")}>
+                  {account.profileSyncedAt
+                    ? formatDate(account.profileSyncedAt, locale)
+                    : t("notSynced")}
+                </Row>
+              </div>
+              {account.targetId && (
+                <a
+                  href={
+                    account.platform === "youtube"
+                      ? `https://www.youtube.com/channel/${encodeURIComponent(account.targetId)}`
+                      : (account.customUrl ??
+                        `https://www.instagram.com/${encodeURIComponent(account.handle ?? account.alias)}`)
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-nb-ink-soft hover:text-nb-ink"
+                >
+                  {t(account.platform === "youtube" ? "openChannel" : "openInstagram")}
+                  <ArrowUpRight className="size-3.5" />
+                </a>
+              )}
+            </Section>
+          )}
+
           <Section
             title={t("usage")}
             action={
@@ -232,7 +309,7 @@ export function ChannelDetailsSheet({
             <div className="grid grid-cols-2 gap-2.5">
               <div className="rounded-2xl border border-nb-line p-3.5">
                 <p className="text-[22px] font-extrabold tracking-[-0.02em]">
-                  {account.publishedCount}
+                  {account.stats?.videoCount ?? account.publishedCount}
                 </p>
                 <p className="text-[11.5px] text-nb-mute">{t("publishedVideos")}</p>
               </div>

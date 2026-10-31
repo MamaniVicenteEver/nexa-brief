@@ -97,6 +97,14 @@ NODETECH (ver `../EXPLAINER.md` §4). Pedile al usuario el nombre y el handle re
   retrato quedaba algo tenue; mirá la hoja antes de apoyarte en él.
 - Lo heredado de History y Tech aplica igual (punto crítico, protagonista, jerga traducida).
 
+- 2026-10-15 · diseño **`dinero`** (réplica de la referencia Klickpin "MONEY" verde de esta carpeta): tipografía
+  cinética, fotos en teal, plano verde, ojo de cerradura, ojos. Demo `dinero-demo` con la voz de
+  `nodetech/nacimiento-ia-dartmouth` (sólo prueba visual). Revisión con hoja densa (3 fps) referencia vs render:
+  el orden de planos ya coincidía; lo que faltaba estaba DENTRO de los componentes (giro 3D continuo y
+  desenfoque de movimiento en `dinero.spin`, tono partido medido en `dinero.count` (sombras cálidas #753f1e, medios #798e85, luces menta #b1d6c6; `keep` 0,04), ojo de cerradura
+  centrado sin alejarse, `dinero.outline` en minúsculas con dos palabras por renglón). Comparar siempre a
+  ≥ 3 fps: a 1 fps parecían errores cosas que sí estaban en la referencia (la cortinilla verde de 2 s).
+
 ## 8. Promover
 
 `kit.py promote <id>` → crea `nodeeconomy/<id>/` (la carpeta nace con el primer video), después

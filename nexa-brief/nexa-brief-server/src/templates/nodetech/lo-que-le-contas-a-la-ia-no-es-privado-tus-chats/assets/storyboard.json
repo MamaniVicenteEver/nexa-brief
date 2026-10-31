@@ -1,0 +1,907 @@
+{
+  "version": 1,
+  "family": "rough",
+  "title": "Lo que le contás a la IA no es privado",
+  "defaults": {
+    "offset": -0.12
+  },
+  "beats": [
+    {
+      "t": 0,
+      "use": "common.tabloid",
+      "params": {
+        "text": "TUS CHATS ANTE UN JUEZ",
+        "mode": "impact",
+        "accent": "JUEZ",
+        "bullet": "20 MILLONES",
+        "beforeLabel": "",
+        "afterLabel": "",
+        "strap": "",
+        "seal": "",
+        "tapeText": "",
+        "marker": false,
+        "target": [
+          0.72,
+          0.4
+        ],
+        "focus": [
+          0.72,
+          0.55,
+          0.15
+        ],
+        "src": "/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/assets/media/chat-juicio.png",
+        "imageSide": "right"
+      }
+    },
+    {
+      "at": "legal. Primero le cuentas a",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/telefono.jpg",
+        "caption": "Una conversación personal",
+        "sub": "TRABAJO · FAMILIA · SALUD"
+      }
+    },
+    {
+      "at": "orden obligó a conservar conversaciones,",
+      "use": "rough.legalWarrant",
+      "params": {
+        "title": "ORDEN DE CONSERVACIÓN"
+      }
+    },
+    {
+      "at": "director de OpenAI advirtió que",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/datos.jpg",
+        "caption": "ChatGPT · protección legal",
+        "sub": "IMAGEN ILUSTRATIVA",
+        "logo": "assets/media/logos/openai-transparent.svg",
+        "logoName": "OpenAI",
+        "logoInvert": true
+      }
+    },
+    {
+      "at": "o un terapeuta. Tu trabajo,",
+      "use": "rough.temporaryChat",
+      "params": {
+        "title": "UNA CONVERSACIÓN PERSONAL"
+      }
+    },
+    {
+      "at": "guardada en sistemas de una",
+      "use": "common.clip",
+      "params": {
+        "src": "assets/media/escribiendo.mp4",
+        "layout": "full",
+        "caption": "Una conversación digital",
+        "sub": "IMAGEN ILUSTRATIVA",
+        "tone": "color",
+        "rate": 0.9
+      }
+    },
+    {
+      "at": "búsquedas. El enlace llevaba información",
+      "use": "rough.chatRedaction",
+      "params": {
+        "title": "ENLACES EN BUSCADORES"
+      }
+    },
+    {
+      "at": "que permite a otra persona",
+      "use": "rough.introv2",
+      "params": {
+        "text": "UN ENLACE\nCOMPARTIDO",
+        "highlight": "COMPARTIDO",
+        "src": "assets/media/telefono.jpg",
+        "video": "assets/media/telefono-video.mp4"
+      }
+    },
+    {
+      "at": "En un tribunal de Nueva York",
+      "use": "rough.introv2",
+      "params": {
+        "text": "UNA DISPUTA\nPOR PRUEBAS",
+        "highlight": "PRUEBAS",
+        "src": "assets/media/tribunal.jpg"
+      }
+    },
+    {
+      "at": "leyó. El 13 de mayo",
+      "use": "rough.retentionCalendar",
+      "params": {
+        "title": "13 MAYO 2025"
+      }
+    },
+    {
+      "at": "La demanda enfrentaba a medios, entre ellos The New York Times",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/tribunal.jpg",
+        "caption": "Demanda por derechos de autor",
+        "sub": "IMAGEN ILUSTRATIVA",
+        "logo": "assets/media/logos/new-york-times.png",
+        "logoName": "The New York Times",
+        "logoInvert": true,
+        "logoPos": "bottom-right",
+        "logoSize": 0.32
+      }
+    },
+    {
+      "at": "La orden alcanzó información que",
+      "use": "rough.chatRedaction",
+      "params": {
+        "title": "REGISTROS MARCADOS PARA BORRAR"
+      }
+    },
+    {
+      "at": "persona que escribía no era",
+      "use": "common.lyric",
+      "params": {
+        "text": "No era parte del juicio"
+      }
+    },
+    {
+      "at": "después. En julio de 2025,",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "MAYO 2025",
+            "label": "ORDEN"
+          },
+          {
+            "year": "JULIO 2025",
+            "label": "ADVERTENCIA"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "en una IA no cuenta",
+      "use": "rough.choice",
+      "params": {
+        "question": "¿MISMA PROTECCIÓN?",
+        "options": [
+          "IA",
+          "ABOGADO O TERAPEUTA"
+        ],
+        "pick": 1,
+        "pickAt": 2.2
+      }
+    },
+    {
+      "at": "Bradley Heppner preparó documentos con Claude",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/portatil.jpg",
+        "caption": "Caso Heppner",
+        "sub": "IMAGEN ILUSTRATIVA",
+        "logo": "assets/media/logos/claude.png",
+        "logoName": "Claude",
+        "logoInvert": true
+      }
+    },
+    {
+      "at": "En febrero de 2026, el",
+      "use": "rough.legalWarrant",
+      "params": {
+        "title": "DECISIÓN · FEBRERO 2026"
+      }
+    },
+    {
+      "at": "legal. Ahora, la parte que",
+      "use": "rough.stack",
+      "params": {
+        "title": "TRES COSAS DISTINTAS",
+        "items": [
+          {
+            "label": "CONSERVAR",
+            "keep": true
+          },
+          {
+            "label": "REVISAR",
+            "keep": true
+          },
+          {
+            "label": "PUBLICAR",
+            "keep": true
+          }
+        ]
+      }
+    },
+    {
+      "at": "todo el mundo son tres",
+      "use": "rough.introv2",
+      "params": {
+        "text": "NO ES LO\nMISMO",
+        "highlight": "MISMO",
+        "src": "assets/media/datos.jpg",
+        "video": "assets/media/servidores-video.mp4"
+      }
+    },
+    {
+      "at": "la obligación general de retener",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "MAYO 2025",
+            "label": "RETENCIÓN"
+          },
+          {
+            "year": "26 SEP 2025",
+            "label": "FIN DE OBLIGACIÓN GENERAL"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "empresa informó después que conservaría",
+      "use": "rough.retentionCalendar",
+      "params": {
+        "title": "CONJUNTO HISTÓRICO LIMITADO"
+      }
+    },
+    {
+      "at": "no significaba enviar automáticamente esos",
+      "use": "rough.flow",
+      "params": {
+        "title": "CONSERVAR NO ES ENVIAR",
+        "nodes": [
+          {
+            "icon": "database",
+            "label": "GUARDAR"
+          },
+          {
+            "icon": "lock",
+            "label": "ACCESO RESTRINGIDO"
+          }
+        ]
+      }
+    },
+    {
+      "at": "reducido de sus áreas legal",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/servidores.jpg",
+        "caption": "Acceso restringido",
+        "sub": "LEGAL Y SEGURIDAD · SEGÚN OPENAI"
+      }
+    },
+    {
+      "at": "Los medios pidieron una muestra",
+      "use": "rough.tally",
+      "params": {
+        "icon": "papers",
+        "count": 2,
+        "label": "DISPUTA POR REGISTROS",
+        "interval": 0.7
+      }
+    },
+    {
+      "at": "Stein explicó que OpenAI había",
+      "use": "rough.counter",
+      "params": {
+        "to": 20000000,
+        "label": "MUESTRA PROPUESTA",
+        "unit": "REGISTROS",
+        "dur": 2.5,
+        "from": 0
+      }
+    },
+    {
+      "at": "millones. Después, OpenAI se opuso",
+      "use": "rough.compare",
+      "params": {
+        "small": {
+          "label": "PROPUESTA",
+          "value": "20 MILLONES"
+        },
+        "big": {
+          "label": "SOLICITUD",
+          "value": "120 MILLONES"
+        },
+        "ratio": 6
+      }
+    },
+    {
+      "at": "pertinentes. Los demandantes pidieron acceso",
+      "use": "rough.choice",
+      "params": {
+        "question": "¿CÓMO REVISAR?",
+        "options": [
+          "SELECCIONAR",
+          "MUESTRA COMPLETA"
+        ],
+        "pick": 0,
+        "pickAt": 2.2
+      }
+    },
+    {
+      "at": "de 2025, la jueza Wang",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "NOV 2025",
+            "label": "ORDEN DE PRODUCIR"
+          },
+          {
+            "year": "ENE 2026",
+            "label": "DECISIÓN CONFIRMADA"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "juez Stein confirmó esa decisión.",
+      "use": "rough.legalWarrant",
+      "params": {
+        "title": "REGISTROS DESIDENTIFICADOS"
+      }
+    },
+    {
+      "at": "se seleccionó entre conversaciones de",
+      "use": "rough.introv2",
+      "params": {
+        "text": "UNA MUESTRA\nLIMITADA",
+        "highlight": "LIMITADA",
+        "src": "assets/media/datos.jpg",
+        "video": "assets/media/escribiendo.mp4"
+      }
+    },
+    {
+      "at": "no demuestra que tu conversación",
+      "use": "common.lyric",
+      "params": {
+        "text": "No demuestra que estuvieras incluido"
+      }
+    },
+    {
+      "at": "registros pasaron por un proceso",
+      "use": "rough.chatRedaction",
+      "params": {
+        "title": "DATOS PERSONALES OCULTOS"
+      }
+    },
+    {
+      "at": "Desidentificar reduce exposición. Pero no",
+      "use": "common.punch",
+      "params": {
+        "text": "REDUCE EL RIESGO\nNO LO ^ELIMINA^"
+      }
+    },
+    {
+      "at": "marzo de 2026, la jueza",
+      "use": "rough.counter",
+      "params": {
+        "to": 78000000,
+        "label": "OTRO LOTE ORDENADO",
+        "unit": "MÁS 10 MILLONES",
+        "dur": 2.5,
+        "from": 0
+      }
+    },
+    {
+      "at": "no demuestra por sí sola",
+      "use": "rough.note",
+      "params": {
+        "title": "PROTOCOLO DE PRIVACIDAD",
+        "note": "orden no implica entrega demostrada"
+      }
+    },
+    {
+      "at": "Enterprise, Edu ni la interfaz",
+      "use": "rough.stack",
+      "params": {
+        "title": "LA MUESTRA NO ABARCABA",
+        "items": [
+          {
+            "label": "BUSINESS",
+            "keep": true
+          },
+          {
+            "label": "ENTERPRISE",
+            "keep": true
+          },
+          {
+            "label": "EDU",
+            "keep": true
+          },
+          {
+            "label": "API",
+            "keep": true
+          }
+        ]
+      }
+    },
+    {
+      "at": "la pregunta importante: si borras",
+      "use": "rough.title",
+      "params": {
+        "text": "¿QUÉ PASA\nSI LO BORRAS?",
+        "kicker": "PRIVACIDAD · IA"
+      }
+    },
+    {
+      "at": "de la política de retención",
+      "use": "rough.flow",
+      "params": {
+        "title": "DEPENDE DEL CASO",
+        "nodes": [
+          {
+            "icon": "phone",
+            "label": "TIPO DE CHAT"
+          },
+          {
+            "icon": "clock",
+            "label": "RETENCIÓN"
+          },
+          {
+            "icon": "scales",
+            "label": "OBLIGACIÓN LEGAL"
+          }
+        ]
+      }
+    },
+    {
+      "at": "permanece en tu cuenta hasta",
+      "use": "rough.choice",
+      "params": {
+        "question": "EN EL HISTORIAL",
+        "options": [
+          "ARCHIVAR",
+          "BORRAR"
+        ],
+        "pick": 1,
+        "pickAt": 2.2
+      }
+    },
+    {
+      "at": "Cuando eliminas un chat, desaparece",
+      "use": "rough.retentionCalendar",
+      "params": {
+        "title": "HASTA 30 DÍAS"
+      }
+    },
+    {
+      "at": "Hay excepciones, entre ellas obligaciones",
+      "use": "rough.gauge",
+      "params": {
+        "label": "PLAZO CON EXCEPCIONES",
+        "to": 30,
+        "max": 30,
+        "unit": "DÍAS",
+        "dur": 3,
+        "from": 0
+      }
+    },
+    {
+      "at": "Un chat temporal sigue otra",
+      "use": "rough.temporaryChat",
+      "params": {
+        "title": "OTRA RUTA"
+      }
+    },
+    {
+      "at": "modelos mientras siga siendo temporal.",
+      "use": "rough.note",
+      "params": {
+        "title": "CHAT TEMPORAL",
+        "note": "sin historial ni entrenamiento por defecto"
+      }
+    },
+    {
+      "at": "Si guardas una conversación temporal,",
+      "use": "rough.gauge",
+      "params": {
+        "label": "COPIA POR SEGURIDAD",
+        "to": 30,
+        "max": 30,
+        "unit": "DÍAS",
+        "dur": 3,
+        "from": 0
+      }
+    },
+    {
+      "at": "que nunca existió una copia.",
+      "use": "common.lyric",
+      "params": {
+        "text": "Temporal no significa sin copia"
+      }
+    },
+    {
+      "at": "puerta. Algunas herramientas conectadas o",
+      "use": "rough.network",
+      "params": {
+        "center": "CHAT",
+        "labels": [
+          "HERRAMIENTA",
+          "TERCERO"
+        ],
+        "count": 8
+      }
+    },
+    {
+      "at": "del destinatario y puede conservarse",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/teclado.jpg",
+        "caption": "Herramientas conectadas",
+        "sub": "LA POLÍTICA DEL DESTINATARIO PUEDE SER DIFERENTE"
+      }
+    },
+    {
+      "at": "entrenamiento de retención. Usar contenido",
+      "use": "rough.introv2",
+      "params": {
+        "text": "DOS CONTROLES\nDISTINTOS",
+        "highlight": "DISTINTOS",
+        "src": "assets/media/servidores.jpg",
+        "video": "assets/media/servidores-video.mp4"
+      }
+    },
+    {
+      "at": "aparezca en tu historial o",
+      "use": "rough.choice",
+      "params": {
+        "question": "NO SON LO MISMO",
+        "options": [
+          "ENTRENAR",
+          "GUARDAR"
+        ],
+        "pick": 0,
+        "pickAt": 2.2
+      }
+    },
+    {
+      "at": "personal de ChatGPT, puedes desactivar",
+      "use": "rough.browser",
+      "params": {
+        "title": "Controles de datos",
+        "link": "MEJORAR EL MODELO",
+        "caption": "CUENTA PERSONAL"
+      }
+    },
+    {
+      "at": "OpenAI, eso evita que las",
+      "use": "rough.chatRedaction",
+      "params": {
+        "title": "HISTORIAL NO SE BORRA"
+      }
+    },
+    {
+      "at": "importante: si envías una valoración",
+      "use": "rough.note",
+      "params": {
+        "title": "VALORACIÓN",
+        "note": "el chat asociado puede usarse para entrenar"
+      }
+    },
+    {
+      "at": "La memoria y el entrenamiento",
+      "use": "rough.stack",
+      "params": {
+        "title": "AJUSTES SEPARADOS",
+        "items": [
+          {
+            "label": "ENTRENAMIENTO",
+            "keep": true
+          },
+          {
+            "label": "MEMORIA",
+            "keep": true
+          },
+          {
+            "label": "HISTORIAL",
+            "keep": true
+          }
+        ]
+      }
+    },
+    {
+      "at": "dice que no entrena con",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/oficina.jpg",
+        "caption": "Espacios de trabajo",
+        "sub": "ADMINISTRACIÓN · RETENCIÓN · ACCESO"
+      }
+    },
+    {
+      "at": "aquí hablamos de los servidores",
+      "use": "common.clip",
+      "params": {
+        "src": "assets/media/telefono-video.mp4",
+        "layout": "full",
+        "tone": "color",
+        "caption": "Información que sale del dispositivo",
+        "sub": "IMAGEN ILUSTRATIVA",
+        "rate": 0.85
+      }
+    },
+    {
+      "at": "algunas conversaciones compartidas de",
+      "use": "rough.browser",
+      "params": {
+        "title": "Enlaces compartidos",
+        "link": "VISIBLE EN BUSCADORES",
+        "caption": "JULIO 2025 · OPCIÓN RETIRADA"
+      }
+    },
+    {
+      "at": "usuario eligiera hacer un enlace",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "JUL 2025",
+            "label": "ENLACES EN BUSCADORES"
+          },
+          {
+            "year": "DESPUÉS",
+            "label": "OPCIÓN RETIRADA"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Eso no significa que Google indexara",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/telefono.jpg",
+        "caption": "Enlaces compartidos y buscadores",
+        "sub": "IMAGEN ILUSTRATIVA",
+        "logo": "assets/media/logos/google.png",
+        "logoName": "Google"
+      }
+    },
+    {
+      "at": "buscadores, quien tenga un enlace",
+      "use": "rough.network",
+      "params": {
+        "center": "ENLACE",
+        "labels": [
+          "ABRIR",
+          "REENVIAR",
+          "COPIAR"
+        ],
+        "count": 8
+      }
+    },
+    {
+      "at": "copia que otra persona ya",
+      "use": "rough.choice",
+      "params": {
+        "question": "ELIMINAR EL ENLACE",
+        "options": [
+          "DETIENE ACCESO",
+          "BORRA COPIAS"
+        ],
+        "pick": 0,
+        "pickAt": 2.2
+      }
+    },
+    {
+      "at": "proveedores de confianza pueden acceder",
+      "use": "rough.note",
+      "params": {
+        "title": "ACCESO AUTORIZADO",
+        "note": "seguridad · soporte · asuntos legales"
+      }
+    },
+    {
+      "at": "del entrenamiento. Ese acceso tiene",
+      "use": "rough.stack",
+      "params": {
+        "title": "ACCESO CON REGLAS",
+        "items": [
+          {
+            "label": "SEGURIDAD",
+            "keep": true
+          },
+          {
+            "label": "SOPORTE",
+            "keep": true
+          },
+          {
+            "label": "LEGAL",
+            "keep": true
+          }
+        ]
+      }
+    },
+    {
+      "at": "correo sobre la gestión de Enron",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/teclado.jpg",
+        "caption": "Correo de 2001 · prueba en 2006",
+        "sub": "IMAGEN ILUSTRATIVA",
+        "logo": "assets/media/logos/enron.png",
+        "logoName": "Enron"
+      }
+    },
+    {
+      "at": "juicio de Jeffrey Skilling. Antes,",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/tribunal.jpg",
+        "caption": "Tribunal de apelaciones de Nueva York",
+        "sub": "IMAGEN ILUSTRATIVA · OTRO TRIBUNAL"
+      }
+    },
+    {
+      "at": "de 2025 trató una muestra",
+      "use": "rough.compare",
+      "params": {
+        "small": {
+          "label": "ENRON",
+          "value": "UN CORREO"
+        },
+        "big": {
+          "label": "CHATGPT",
+          "value": "UNA MUESTRA"
+        },
+        "ratio": 5
+      }
+    },
+    {
+      "at": "es más simple. Una comunicación",
+      "use": "common.lyric",
+      "params": {
+        "text": "Una comunicación puede ser prueba"
+      }
+    },
+    {
+      "at": "que todo mensaje llegue a",
+      "use": "rough.legalWarrant",
+      "params": {
+        "title": "REQUISITOS APLICABLES"
+      }
+    },
+    {
+      "at": "solicitudes civiles válidas de datos",
+      "use": "rough.browser",
+      "params": {
+        "title": "Solicitudes civiles",
+        "link": "PROCEDIMIENTO VÁLIDO",
+        "caption": "ESTADOS UNIDOS"
+      }
+    },
+    {
+      "at": "según el país y el",
+      "use": "rough.choice",
+      "params": {
+        "question": "LA PROTECCIÓN DEPENDE",
+        "options": [
+          "PAÍS",
+          "CASO"
+        ],
+        "pick": 1,
+        "pickAt": 2.2
+      }
+    },
+    {
+      "at": "documentos fueron obtenidos de sus",
+      "use": "rough.introv2",
+      "params": {
+        "text": "EL CASO\nHEPPNER",
+        "highlight": "HEPPNER",
+        "src": "assets/media/portatil.jpg",
+        "video": "assets/media/laptop-video.mp4"
+      }
+    },
+    {
+      "at": "análisis. No debemos presumir que",
+      "use": "rough.note",
+      "params": {
+        "title": "PRIVILEGIO LEGAL",
+        "note": "el análisis depende de las circunstancias"
+      }
+    },
+    {
+      "at": "Otros asistentes tienen políticas, controles",
+      "use": "rough.flow",
+      "params": {
+        "title": "PREGUNTAS CLAVE",
+        "nodes": [
+          {
+            "icon": "database",
+            "label": "QUÉ SE RECOGE"
+          },
+          {
+            "icon": "eye",
+            "label": "QUIÉN ACCEDE"
+          },
+          {
+            "icon": "clock",
+            "label": "CUÁNTO TIEMPO"
+          }
+        ]
+      }
+    },
+    {
+      "at": "y durante cuánto tiempo. Primero,",
+      "use": "rough.title",
+      "params": {
+        "text": "TOMA EL\nCONTROL",
+        "kicker": "PRIVACIDAD · IA"
+      }
+    },
+    {
+      "at": "datos. Desactiva la mejora del",
+      "use": "rough.browser",
+      "params": {
+        "title": "Configuración",
+        "link": "CONTROLES DE DATOS",
+        "caption": "REVISA ENTRENAMIENTO"
+      }
+    },
+    {
+      "at": "los que ya no necesites.",
+      "use": "rough.temporaryChat",
+      "params": {
+        "title": "CONSULTAS SIN HISTORIAL"
+      }
+    },
+    {
+      "at": "Recuerda el posible plazo de",
+      "use": "rough.gauge",
+      "params": {
+        "label": "POSIBLE COPIA DE SEGURIDAD",
+        "to": 30,
+        "max": 30,
+        "unit": "DÍAS",
+        "dur": 3,
+        "from": 0
+      }
+    },
+    {
+      "at": "tipo de exposición, no borra",
+      "use": "rough.stack",
+      "params": {
+        "title": "EVITA COMPARTIR",
+        "items": [
+          {
+            "label": "CONTRASEÑAS",
+            "keep": false
+          },
+          {
+            "label": "TARJETAS",
+            "keep": false
+          },
+          {
+            "label": "SECRETOS",
+            "keep": false
+          },
+          {
+            "label": "DATOS AJENOS",
+            "keep": false
+          }
+        ]
+      }
+    },
+    {
+      "at": "laborales o información íntima de",
+      "use": "rough.chatRedaction",
+      "params": {
+        "title": "SUSTITUYE DATOS IDENTIFICATORIOS"
+      },
+      "until": "concreto, consulta a un profesional."
+    },
+    {
+      "at": "concreto, consulta a un profesional.",
+      "use": "common.question",
+      "params": {
+        "text": "¿Qué nunca le contarías a una IA?"
+      },
+      "until": "Gracias por llegar hasta aquí"
+    }
+  ]
+}

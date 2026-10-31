@@ -2,77 +2,511 @@
   "version": 1,
   "family": "binary",
   "title": "El verano que inventó la IA",
-  "defaults": { "offset": -0.12 },
+  "defaults": {
+    "offset": -0.12
+  },
   "beats": [
-    { "t": 0, "use": "binary.title", "params": { "text": "EL VERANO\nQUE INVENTÓ\nLA IA", "textPortrait": "EL\nVERANO\nQUE INVENTÓ\nLA IA", "kicker": "DARTMOUTH · 1956" }, "until": "Un grupo" },
-
-    { "at": "Un grupo", "use": "binary.grid", "params": { "icon": "person", "count": 6, "label": "UN GRUPO", "revealSec": 2.4 } },
-    { "at": "lograr algo", "use": "binary.icon", "params": { "icon": "chip", "tag": "¿PENSAR?", "caption": "algo imposible" } },
-    { "at": "una máquina", "use": "binary.bubble", "params": {} },
-
-    { "at": "empezado", "use": "binary.frame", "params": { "src": "assets/media/dartmouth.jpg", "title": "Dartmouth College", "sub": "HANOVER · EEUU" } },
-    { "at": "En 1955", "use": "binary.word", "params": { "text": "1955", "kicker": "UNA CARTA", "note": "UNA PROPUESTA AUDAZ" } },
-    { "at": "Prometen algo", "use": "binary.rays", "params": { "mode": "burst", "count": 12, "label": "UNA PROMESA ENORME" } },
-    { "at": "Dicen que", "use": "binary.word", "params": { "text": "2 MESES\n10 PERSONAS", "kicker": "LA PROMESA" } },
-    { "at": "resolver cómo", "use": "binary.orbit", "params": { "icon": "gear", "labels": ["APRENDER", "RAZONAR"], "tags": ["LA META"] } },
-
-    { "at": "Su apuesta", "use": "binary.word", "params": { "text": "UNA SOLA\nFRASE", "kicker": "LA CONJETURA" } },
-    { "at": "cualquier rasgo", "use": "binary.versus", "params": { "left": { "icon": "book", "label": "LA MENTE" }, "right": { "icon": "chip", "label": "LA MÁQUINA" }, "mid": "=" } },
-
-    { "at": "Los nombres", "use": "binary.grid", "params": { "icon": "person", "count": 4, "label": "LOS FUNDADORES", "revealSec": 3.4 } },
-
-    { "at": "Pidieron", "use": "binary.counter", "params": { "value": "13.500", "mode": "slot", "label": "PIDIERON", "note": "DÓLARES · ROCKEFELLER", "dur": 1.8 } },
-    { "at": "Les dieron", "use": "binary.word", "params": { "text": "7.500", "kicker": "LES DIERON", "note": "MENOS DE LA MITAD" } },
-    { "at": "Con eso", "use": "binary.floor", "params": { "text": "TODO UN CAMPO" } },
-
-    { "at": "Pero había", "use": "binary.icon", "params": { "icon": "cross", "tag": "UN PROBLEMA" } },
-    { "at": "No existía", "use": "binary.tunnel", "params": { "text": "NO HABÍA NADA" } },
-    { "at": "ni siquiera", "use": "binary.word", "params": { "text": "SIN\nNOMBRE", "kicker": "LO QUE FALTABA" } },
-
-    { "at": "Ahí entra", "use": "binary.portrait", "params": { "src": "assets/media/mccarthy.jpg", "caption": "John McCarthy", "sub": "DARTMOUTH · 1956", "threshold": 0.12 } },
-    { "at": "matemáticas puras", "use": "binary.rays", "params": { "mode": "fan", "count": 8, "highlight": 7, "label": "UN CAMINO PROPIO" } },
-    { "at": "Necesitaba", "use": "binary.icon", "params": { "icon": "crown", "tag": "SU BANDERA" } },
-
-    { "at": "dos palabras", "use": "binary.word", "params": { "text": "DOS\nPALABRAS", "kicker": "ELIGIÓ" } },
-    { "at": "Las escribió", "use": "binary.icon", "params": { "icon": "document", "tag": "LA PROPUESTA" } },
-    { "at": "inteligencia", "use": "common.flash", "dur": 0.45, "layer": "overlay" },
-    { "at": "inteligencia", "use": "common.lyric", "params": { "accent": ["artificial"] }, "until": "Un nombre" },
-    { "at": "Un nombre", "use": "binary.floor", "params": { "text": "UNA CIENCIA\nQUE NO EXISTÍA" } },
-
-    { "at": "Y el nombre", "use": "common.flash", "dur": 0.4, "layer": "overlay" },
-    { "at": "Y el nombre", "use": "common.lyric", "params": { "accent": ["creó"] }, "until": "Ese verano" },
-    { "at": "Ese verano", "use": "binary.word", "params": { "text": "UN CAMPO\nENTERO", "kicker": "QUEDÓ BAUTIZADO" } },
-    { "at": "Una idea", "use": "binary.icon", "params": { "icon": "bulb", "tag": "SIN MÁQUINA", "caption": "ya tenía futuro" } },
-
-    { "at": "La euforia", "use": "binary.rays", "params": { "mode": "burst", "count": 14, "label": "EUFORIA" } },
-    { "at": "programa llamado", "use": "binary.icon", "params": { "icon": "gear", "tag": "LOGIC THEORIST", "caption": "el primer programa de IA" } },
-    { "at": "demostró", "use": "binary.counter", "params": { "value": "38", "mode": "count", "from": 0, "label": "DEMOSTRÓ", "note": "TEOREMAS DE LÓGICA", "dur": 1.6 } },
-    { "at": "Una máquina", "use": "common.lyric", "params": { "accent": ["razonaba"] }, "until": "Todos creyeron" },
-    { "at": "Todos creyeron", "use": "binary.word", "params": { "text": "EL FUTURO\nLLEGÓ", "kicker": "TODOS CREYERON" } },
-
-    { "at": "Pero las promesas", "use": "binary.chart", "params": { "curve": "growth", "startLabel": "PROMESAS", "endLabel": "¿?", "axisX": "EXPECTATIVAS" } },
-    { "at": "Pasaban los años", "use": "binary.icon", "params": { "icon": "hourglass", "tag": "PASAN LOS AÑOS", "caption": "la máquina no aparecía" } },
-
-    { "at": "Entonces llegó", "use": "binary.word", "params": { "text": "EL FRÍO", "kicker": "ENTONCES LLEGÓ" } },
-    { "at": "los años 70", "use": "binary.timeline", "params": { "items": [ { "year": "1956", "label": "NACE LA IA" }, { "year": "1974", "label": "PRIMER INVIERNO" }, { "year": "1987", "label": "SEGUNDO INVIERNO" } ], "active": 1 } },
-    { "at": "Lo llamaron", "use": "common.flash", "dur": 0.4, "layer": "overlay" },
-    { "at": "Lo llamaron", "use": "common.lyric", "params": { "accent": ["invierno"] }, "until": "Llegó uno" },
-    { "at": "Llegó uno", "use": "binary.grid", "params": { "icon": "moon", "count": 2, "label": "DOS INVIERNOS", "revealSec": 1.6 } },
-
-    { "at": "La vieja idea", "use": "binary.icon", "params": { "icon": "bulb", "outline": true, "tag": "LA VIEJA IDEA", "caption": "no murió" } },
-    { "at": "Esperó a que", "use": "binary.word", "params": { "text": "TRES\nCOSAS", "kicker": "LA IDEA ESPERÓ" } },
-    { "at": "montañas de datos", "use": "binary.grid", "params": { "icon": "document", "count": 10, "label": "DATOS Y POTENCIA", "revealSec": 2.0 } },
-
-    { "at": "En 2012", "use": "binary.word", "params": { "text": "2012", "kicker": "POR FIN ENCAJÓ" } },
-    { "at": "Una red neuronal", "use": "binary.icon", "params": { "icon": "eye", "tag": "RED NEURONAL", "caption": "aprendió a reconocer" } },
-    { "at": "La vieja promesa", "use": "binary.word", "params": { "text": "PROMESA\nCUMPLIDA", "kicker": "DARTMOUTH, AL FIN" } },
-
-    { "at": "Hoy esa", "use": "common.lyric", "params": { "accent": ["bolsillo"] }, "until": "Decide" },
-    { "at": "Decide", "use": "binary.orbit", "params": { "icon": "phone", "labels": ["QUÉ VES", "QUÉ RUTA", "QUÉ ESCRIBES"], "tags": ["HOY"] } },
-    { "at": "La frase", "use": "binary.icon", "params": { "icon": "clock", "tag": "CADA HORA DEL DÍA", "caption": "la frase te acompaña" } },
-
-    { "at": "La inteligencia", "use": "binary.tunnel", "params": { "text": "NO FUE UN INVENTO" } },
-    { "at": "Empezó con una", "use": "common.lyric", "params": { "accent": ["apuesta"] }, "until": "Con el valor" },
-    { "at": "Con el valor", "use": "binary.title", "params": { "text": "EL VERANO\nQUE INVENTÓ\nLA IA", "textPortrait": "EL\nVERANO\nQUE INVENTÓ\nLA IA", "kicker": "DARTMOUTH · 1956" } }
+    {
+      "t": 0,
+      "use": "binary.introv1",
+      "params": {
+        "text": "NOMBRARON\nLA IA ANTES DE\nQUE EXISTIERA",
+        "kicker": "DARTMOUTH · 1956",
+        "textPortrait": "NOMBRARON\nLA IA ANTES DE\nQUE EXISTIERA",
+        "highlight": "ANTES"
+      },
+      "until": "Un grupo"
+    },
+    {
+      "at": "Un grupo",
+      "use": "binary.grid",
+      "params": {
+        "icon": "person",
+        "count": 6,
+        "label": "UN GRUPO",
+        "revealSec": 2.4
+      }
+    },
+    {
+      "at": "lograr algo",
+      "use": "binary.icon",
+      "params": {
+        "icon": "chip",
+        "tag": "¿PENSAR?",
+        "caption": "algo imposible"
+      }
+    },
+    {
+      "at": "una máquina",
+      "use": "binary.bubble",
+      "params": {}
+    },
+    {
+      "at": "empezado",
+      "use": "binary.frame",
+      "params": {
+        "src": "assets/media/dartmouth.jpg",
+        "title": "Dartmouth College",
+        "sub": "HANOVER · EEUU"
+      }
+    },
+    {
+      "at": "En 1955",
+      "use": "binary.word",
+      "params": {
+        "text": "1955",
+        "kicker": "UNA CARTA",
+        "note": "UNA PROPUESTA AUDAZ"
+      }
+    },
+    {
+      "at": "Prometen algo",
+      "use": "binary.rays",
+      "params": {
+        "mode": "burst",
+        "count": 12,
+        "label": "UNA PROMESA ENORME"
+      }
+    },
+    {
+      "at": "Dicen que",
+      "use": "binary.word",
+      "params": {
+        "text": "2 MESES\n10 PERSONAS",
+        "kicker": "LA PROMESA"
+      }
+    },
+    {
+      "at": "resolver cómo",
+      "use": "binary.orbit",
+      "params": {
+        "icon": "gear",
+        "labels": [
+          "APRENDER",
+          "RAZONAR"
+        ],
+        "tags": [
+          "LA META"
+        ]
+      }
+    },
+    {
+      "at": "Su apuesta",
+      "use": "binary.word",
+      "params": {
+        "text": "UNA SOLA\nFRASE",
+        "kicker": "LA CONJETURA"
+      }
+    },
+    {
+      "at": "cualquier rasgo",
+      "use": "binary.versus",
+      "params": {
+        "left": {
+          "icon": "book",
+          "label": "LA MENTE"
+        },
+        "right": {
+          "icon": "chip",
+          "label": "LA MÁQUINA"
+        },
+        "mid": "="
+      }
+    },
+    {
+      "at": "Los nombres",
+      "use": "binary.grid",
+      "params": {
+        "icon": "person",
+        "count": 4,
+        "label": "LOS FUNDADORES",
+        "revealSec": 3.4
+      }
+    },
+    {
+      "at": "Pidieron",
+      "use": "binary.counter",
+      "params": {
+        "value": "13.500",
+        "mode": "slot",
+        "label": "PIDIERON",
+        "note": "DÓLARES · ROCKEFELLER",
+        "dur": 1.8
+      }
+    },
+    {
+      "at": "Les dieron",
+      "use": "binary.word",
+      "params": {
+        "text": "7.500",
+        "kicker": "LES DIERON",
+        "note": "MENOS DE LA MITAD"
+      }
+    },
+    {
+      "at": "Con eso",
+      "use": "binary.floor",
+      "params": {
+        "text": "TODO UN CAMPO"
+      }
+    },
+    {
+      "at": "Pero había",
+      "use": "binary.icon",
+      "params": {
+        "icon": "cross",
+        "tag": "UN PROBLEMA"
+      }
+    },
+    {
+      "at": "No existía",
+      "use": "binary.tunnel",
+      "params": {
+        "text": "NO HABÍA NADA"
+      }
+    },
+    {
+      "at": "ni siquiera",
+      "use": "binary.word",
+      "params": {
+        "text": "SIN\nNOMBRE",
+        "kicker": "LO QUE FALTABA"
+      }
+    },
+    {
+      "at": "Ahí entra",
+      "use": "binary.portrait",
+      "params": {
+        "src": "assets/media/mccarthy.jpg",
+        "caption": "John McCarthy",
+        "sub": "DARTMOUTH · 1956",
+        "threshold": 0.12
+      }
+    },
+    {
+      "at": "matemáticas puras",
+      "use": "binary.rays",
+      "params": {
+        "mode": "fan",
+        "count": 8,
+        "highlight": 7,
+        "label": "UN CAMINO PROPIO"
+      }
+    },
+    {
+      "at": "Necesitaba",
+      "use": "binary.icon",
+      "params": {
+        "icon": "crown",
+        "tag": "SU BANDERA"
+      }
+    },
+    {
+      "at": "dos palabras",
+      "use": "binary.word",
+      "params": {
+        "text": "DOS\nPALABRAS",
+        "kicker": "ELIGIÓ"
+      }
+    },
+    {
+      "at": "Las escribió",
+      "use": "binary.icon",
+      "params": {
+        "icon": "document",
+        "tag": "LA PROPUESTA"
+      }
+    },
+    {
+      "at": "inteligencia",
+      "use": "common.flash",
+      "dur": 0.45,
+      "layer": "overlay"
+    },
+    {
+      "at": "inteligencia",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "artificial"
+        ]
+      },
+      "until": "Un nombre"
+    },
+    {
+      "at": "Un nombre",
+      "use": "binary.floor",
+      "params": {
+        "text": "UNA CIENCIA\nQUE NO EXISTÍA"
+      }
+    },
+    {
+      "at": "Y el nombre",
+      "use": "common.flash",
+      "dur": 0.4,
+      "layer": "overlay"
+    },
+    {
+      "at": "Y el nombre",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "creó"
+        ]
+      },
+      "until": "Ese verano"
+    },
+    {
+      "at": "Ese verano",
+      "use": "binary.word",
+      "params": {
+        "text": "UN CAMPO\nENTERO",
+        "kicker": "QUEDÓ BAUTIZADO"
+      }
+    },
+    {
+      "at": "Una idea",
+      "use": "binary.icon",
+      "params": {
+        "icon": "bulb",
+        "tag": "SIN MÁQUINA",
+        "caption": "ya tenía futuro"
+      }
+    },
+    {
+      "at": "La euforia",
+      "use": "binary.rays",
+      "params": {
+        "mode": "burst",
+        "count": 14,
+        "label": "EUFORIA"
+      }
+    },
+    {
+      "at": "programa llamado",
+      "use": "binary.icon",
+      "params": {
+        "icon": "gear",
+        "tag": "LOGIC THEORIST",
+        "caption": "el primer programa de IA"
+      }
+    },
+    {
+      "at": "demostró",
+      "use": "binary.counter",
+      "params": {
+        "value": "38",
+        "mode": "count",
+        "from": 0,
+        "label": "DEMOSTRÓ",
+        "note": "TEOREMAS DE LÓGICA",
+        "dur": 1.6
+      }
+    },
+    {
+      "at": "Una máquina",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "razonaba"
+        ]
+      },
+      "until": "Todos creyeron"
+    },
+    {
+      "at": "Todos creyeron",
+      "use": "binary.word",
+      "params": {
+        "text": "EL FUTURO\nLLEGÓ",
+        "kicker": "TODOS CREYERON"
+      }
+    },
+    {
+      "at": "Pero las promesas",
+      "use": "binary.chart",
+      "params": {
+        "curve": "growth",
+        "startLabel": "PROMESAS",
+        "endLabel": "¿?",
+        "axisX": "EXPECTATIVAS"
+      }
+    },
+    {
+      "at": "Pasaban los años",
+      "use": "binary.icon",
+      "params": {
+        "icon": "hourglass",
+        "tag": "PASAN LOS AÑOS",
+        "caption": "la máquina no aparecía"
+      }
+    },
+    {
+      "at": "Entonces llegó",
+      "use": "binary.word",
+      "params": {
+        "text": "EL FRÍO",
+        "kicker": "ENTONCES LLEGÓ"
+      }
+    },
+    {
+      "at": "los años 70",
+      "use": "binary.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "1956",
+            "label": "NACE LA IA"
+          },
+          {
+            "year": "1974",
+            "label": "PRIMER INVIERNO"
+          },
+          {
+            "year": "1987",
+            "label": "SEGUNDO INVIERNO"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Lo llamaron",
+      "use": "common.flash",
+      "dur": 0.4,
+      "layer": "overlay"
+    },
+    {
+      "at": "Lo llamaron",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "invierno"
+        ]
+      },
+      "until": "Llegó uno"
+    },
+    {
+      "at": "Llegó uno",
+      "use": "binary.grid",
+      "params": {
+        "icon": "moon",
+        "count": 2,
+        "label": "DOS INVIERNOS",
+        "revealSec": 1.6
+      }
+    },
+    {
+      "at": "La vieja idea",
+      "use": "binary.icon",
+      "params": {
+        "icon": "bulb",
+        "outline": true,
+        "tag": "LA VIEJA IDEA",
+        "caption": "no murió"
+      }
+    },
+    {
+      "at": "Esperó a que",
+      "use": "binary.word",
+      "params": {
+        "text": "TRES\nCOSAS",
+        "kicker": "LA IDEA ESPERÓ"
+      }
+    },
+    {
+      "at": "montañas de datos",
+      "use": "binary.grid",
+      "params": {
+        "icon": "document",
+        "count": 10,
+        "label": "DATOS Y POTENCIA",
+        "revealSec": 2.0
+      }
+    },
+    {
+      "at": "En 2012",
+      "use": "binary.word",
+      "params": {
+        "text": "2012",
+        "kicker": "POR FIN ENCAJÓ"
+      }
+    },
+    {
+      "at": "Una red neuronal",
+      "use": "binary.icon",
+      "params": {
+        "icon": "eye",
+        "tag": "RED NEURONAL",
+        "caption": "aprendió a reconocer"
+      }
+    },
+    {
+      "at": "La vieja promesa",
+      "use": "binary.word",
+      "params": {
+        "text": "PROMESA\nCUMPLIDA",
+        "kicker": "DARTMOUTH, AL FIN"
+      }
+    },
+    {
+      "at": "Hoy esa",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "bolsillo"
+        ]
+      },
+      "until": "Decide"
+    },
+    {
+      "at": "Decide",
+      "use": "binary.orbit",
+      "params": {
+        "icon": "phone",
+        "labels": [
+          "QUÉ VES",
+          "QUÉ RUTA",
+          "QUÉ ESCRIBES"
+        ],
+        "tags": [
+          "HOY"
+        ]
+      }
+    },
+    {
+      "at": "La frase",
+      "use": "binary.icon",
+      "params": {
+        "icon": "clock",
+        "tag": "CADA HORA DEL DÍA",
+        "caption": "la frase te acompaña"
+      }
+    },
+    {
+      "at": "La inteligencia",
+      "use": "binary.tunnel",
+      "params": {
+        "text": "NO FUE UN INVENTO"
+      }
+    },
+    {
+      "at": "Empezó con una",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "apuesta"
+        ]
+      },
+      "until": "Con el valor"
+    },
+    {
+      "at": "Con el valor",
+      "use": "binary.title",
+      "params": {
+        "text": "EL VERANO\nQUE INVENTÓ\nLA IA",
+        "textPortrait": "EL\nVERANO\nQUE INVENTÓ\nLA IA",
+        "kicker": "DARTMOUTH · 1956"
+      }
+    }
   ]
 }

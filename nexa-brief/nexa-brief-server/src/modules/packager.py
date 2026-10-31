@@ -22,7 +22,11 @@ logger = structlog.get_logger(__name__)
 def _required_files(niche_cfg: "NicheConfig") -> list[str]:
     """Archivos requeridos: los base + los definidos en video.formats del nicho."""
     extra = [fmt.output_filename for fmt in niche_cfg.video.formats]
-    base = ["index.html", niche_cfg.template.media_src_filename, "song.mp3"]
+    base = ["index.html", "song.mp3"]
+    # El fondo (bg.jpg / bg.mp4) solo existe si la plantilla lo pide: las de letras sin fondo
+    # propio (caution, mixtas…) no lo tienen y el empaquetado fallaba al final de la grabación.
+    if niche_cfg.template.requires_image or niche_cfg.template.requires_video:
+        base.append(niche_cfg.template.media_src_filename)
     if niche_cfg.pipeline_type == "config_driven_template":
         base.append("config.json")
         if niche_cfg.template.requires_lyrics:
@@ -83,6 +87,12 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
     if missing:
         raise PackagingError(f"Job {job.job_id}: missing output files: {missing}")
 
+    # Antes del manifest, para que "files" registre el peso final que se publica.
+    from src.modules.video_compressor import compress_for_publishing
+
+    for fmt in niche_cfg.video.formats:
+        await compress_for_publishing(output_dir / fmt.output_filename)
+
     # job.artifacts.visual_design es None en niches pipeline_type="config_driven_template"
     # (ese flujo produce vision_analysis/template_config en su lugar, no un VisualDesign).
     style = job.artifacts.visual_design.style if job.artifacts.visual_design else niche_cfg.template.template_id
@@ -115,6 +125,18 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
     (output_dir / "manifest.json").write_bytes(
         orjson.dumps(manifest, option=orjson.OPT_INDENT_2)
     )
+
+    # Miniatura: el final de la intro (cartel con el nombre de la canción) del video 16:9.
+    thumbnail = job.artifacts.thumbnail_path
+    landscape = niche_cfg.get_16x9_format()
+    if thumbnail is None and landscape is not None and (output_dir / landscape.output_filename).exists():
+        from src.modules.thumbnail_maker import capture_at, make_thumbnail
+
+        thumbnail = await make_thumbnail(
+            output_dir / landscape.output_filename, output_dir, capture_at(niche_cfg.template.template_id)
+        )
+        if thumbnail is not None:
+            job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"thumbnail_path": thumbnail})})
 
     elapsed = round(time.monotonic() - t_start, 2)
     logger.info(

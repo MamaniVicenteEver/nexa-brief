@@ -32,7 +32,7 @@ def serve(root):
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     return httpd
 
-async def worker(b, url, W, H, frames, fps, t0, outdir, tag):
+async def worker(b, url, W, H, frames, fps, t0, outdir, tag, progress, progress_lock, total_frames):
     pg = await b.new_page(viewport={"width": W, "height": H})
     await pg.goto(url)
     await pg.wait_for_function("window.__promo && window.__promo.scenes().length > 0", timeout=60000)
@@ -40,6 +40,12 @@ async def worker(b, url, W, H, frames, fps, t0, outdir, tag):
         t = t0 + i / fps
         await pg.evaluate(f"window.__promo.seek({t:.5f})")
         (outdir / f"{i:06d}.jpg").write_bytes(await pg.screenshot(type="jpeg", quality=92))
+        async with progress_lock:
+            progress["done"] += 1
+            now = asyncio.get_running_loop().time()
+            if now - progress["last_emit"] >= 1 or progress["done"] == total_frames:
+                print(f"@@progress {progress['done']} {total_frames}", flush=True)
+                progress["last_emit"] = now
         if n % (fps * 3) == 0: print(f"  [{tag}] {t:6.2f}s", flush=True)
     await pg.close()
 
@@ -66,13 +72,23 @@ async def render(args):
             n = int(round((t_end - args.frm) * args.fps))
             k = max(1, args.workers)
             chunks = [list(range(n))[j::k] for j in range(k)]   # intercalado: todos avanzan parejo
-            await asyncio.gather(*[worker(b, url, W, H, c, args.fps, args.frm, outdir, f"w{j}") for j, c in enumerate(chunks)])
+            progress = {"done": 0, "last_emit": 0.0}
+            progress_lock = asyncio.Lock()
+            await asyncio.gather(*[
+                worker(b, url, W, H, c, args.fps, args.frm, outdir, f"w{j}", progress, progress_lock, n)
+                for j, c in enumerate(chunks)
+            ])
             await b.close()
         httpd.shutdown()
+        print("@@phase encode", flush=True)
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-framerate", str(args.fps), "-i", str(outdir / "%06d.jpg"),
                         "-ss", str(args.frm), "-t", str(t_end - args.frm), "-i", str(folder / cfg["audio"]["src"]),
-                        "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-preset", args.preset, "-crf", "18", "-pix_fmt", "yuv420p",
-                        "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", args.out], check=True)
+                        "-map", "0:v", "-map", "1:a", "-vf", "scale=out_range=tv,format=yuv420p",
+                        # crf 23 + tope 6 Mbps: el 9:16 de un video largo entra en el límite de Reels (300 MB)
+                        "-c:v", "libx264", "-preset", args.preset, "-crf", "23", "-maxrate", "6M", "-bufsize", "12M",
+                        "-pix_fmt", "yuv420p", "-color_range", "tv",
+                        "-c:a", "aac", "-b:a", "128k", "-ar", "48000",   # Instagram: audio ≤ 128 kbps
+                        "-shortest", "-movflags", "+faststart", args.out], check=True)
     print("listo:", args.out)
 
 if __name__ == "__main__":

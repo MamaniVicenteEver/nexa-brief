@@ -4,12 +4,14 @@ const PLATFORM_CLASS: Record<PublicChannel["platform"], string> = {
   youtube: "nb-chan-icon-yt",
   tiktok: "nb-chan-icon-tt",
   facebook: "nb-chan-icon-fb",
+  instagram: "nb-chan-icon-ig",
 };
 
 const PLATFORM_SHORT: Record<PublicChannel["platform"], string> = {
   youtube: "YT",
   tiktok: "TT",
   facebook: "FB",
+  instagram: "IG",
 };
 
 /** Avatares superpuestos de los canales reales. Sin avatar (TikTok/Facebook no
@@ -27,7 +29,7 @@ export function ChannelAvatarStack({
     <div className="flex">
       {shown.map((channel) => (
         <span
-          key={`${channel.platform}:${channel.name}`}
+          key={channel.id}
           title={channel.name}
           className={`nb-chan-icon overflow-hidden ${PLATFORM_CLASS[channel.platform]}`}
         >

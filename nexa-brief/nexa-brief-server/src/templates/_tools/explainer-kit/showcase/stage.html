@@ -19,7 +19,7 @@
 <script>
 (function () {
   const QS = new URLSearchParams(location.search), c = QS.get("c") || "";
-  const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop"];
+  const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop", "memorias", "dinero", "atlas", "imperio"];
   const prefix = c.split(".")[0];
   const d = QS.get("d") || (ids.includes(prefix) ? prefix : "binary");
   const s = document.createElement("script"); s.src = "../engine/loader.js"; s.dataset.design = d; s.dataset.noboot = "1";
@@ -47,23 +47,29 @@
   const fam = D.family, name = QS.get("c") || fam + ".title", def = Kit.registry.get(name);
   const params = QS.get("p") ? JSON.parse(QS.get("p")) : JSON.parse(JSON.stringify(def?.example || {}));
   /* rutas de imágenes de ejemplo: relativas al kit (../showcase/samples/…) */
-  for (const [k, v] of Object.entries(params)) if (def?.params?.[k]?.type === "image" && typeof v === "string" && !v.startsWith("http") && !v.startsWith("../")) params[k] = "samples/" + v.split("/").pop();
+  for (const [k, v] of Object.entries(params)) if (def?.params?.[k]?.type === "image" && typeof v === "string" && v && !v.startsWith("http") && !v.startsWith("/") && !v.startsWith("../")) params[k] = "samples/" + v.split("/").pop();
   const dur = +(QS.get("dur") || 7);
+  const solo = QS.has("solo");
   const prevByFamily = { binary: "binary.icon", rough: "rough.icon", acuarela: "acuarela.title", carta: "carta.title", collage: "collage.intro", cronica: "cronica.title", enmienda: "enmienda.title", grunge: "grunge.title", pelicula: "pelicula.title", periodico: "periodico.title", pop: "pop.title" };
   const prevUse = QS.get("prev") || prevByFamily[fam] || "binary.icon";
   const prevDef = Kit.registry.get(prevUse), prevParams = JSON.parse(JSON.stringify(prevDef?.example || (fam === "rough" ? { icon: "spark" } : { icon: "question" })));
-  const beats = [{ t: 0, use: prevUse, params: prevParams, dur: 1.5 }];
-  if (def && def.layer === "overlay") beats.push({ t: 0, use: prevUse, params: prevParams, dur: dur + 1.5 });
-  beats.push({ t: 1.5, use: name, params, dur });
+  const componentAt = solo ? 0 : 1.5;
+  const beats = solo ? [] : [{ t: 0, use: prevUse, params: prevParams, dur: 1.5 }];
+  if (def && def.layer === "overlay") beats.push({ t: 0, use: prevUse, params: prevParams, dur: dur + componentAt });
+  beats.push({ t: componentAt, use: name, params, dur });
   let words = QS.get("words");
   if (!words && name === "common.lyric") words = "UNA FRASE QUE LA VOZ DICE EN GRANDE";
   await Kit.boot({
     design: D,
     config: { id: "stage", captions: { enabled: false }, outro: { enabled: false }, seed: 7 },
     storyboard: { beats },
-    lyrics: { segments: words ? [{ words: words.split(" ").map((w, i) => ({ word: " " + w, start: 1.6 + i * 0.38, end: 1.9 + i * 0.38 })) }] : [] },
-    total: 1.5 + dur,
+    lyrics: { segments: words ? [{ words: words.split(" ").map((w, i) => ({ word: " " + w, start: componentAt + 0.1 + i * 0.38, end: componentAt + 0.4 + i * 0.38 })) }] : [] },
+    total: componentAt + dur,
   });
+  if (QS.get("clock") === "synthetic") {
+    if (window.__nexaClock) window.__nexaClock.ready = true;
+    window.parent.postMessage({ type: "nexa-template-ready" }, "*");
+  }
 })();
 </script>
 </body>

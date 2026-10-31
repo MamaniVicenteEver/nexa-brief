@@ -1,0 +1,34 @@
+{
+  "defaults": { "opacity": 0.88, "w": 34, "margin": 4 },
+  "items": [
+    {
+      "id": "sat-test",
+      "at": "@eduardo abaroa",
+      "dur": 7,
+      "kind": "photo",
+      "src": "../_mapas/media/sat-sudamerica.jpg",
+      "aspect": "4:5",
+      "caption": "Imagen de prueba · vista satelital",
+      "credit": "NASA/GSFC · Blue Marble · Dominio Público",
+      "context": true,
+      "corner": "auto",
+      "x": null,
+      "y": null,
+      "w": null,
+      "h": null,
+      "focus": [0.5, 0.35],
+      "kenburns": 1.06
+    },
+    {
+      "id": "counter-test",
+      "at": "@construir un ferrocarril",
+      "dur": 12,
+      "kind": "video",
+      "src": "work/test-clip.mp4",
+      "start": 5,
+      "aspect": "16:9",
+      "caption": "Prueba de video con contador",
+      "credit": "Generado localmente con FFmpeg · testsrc2"
+    }
+  ]
+}

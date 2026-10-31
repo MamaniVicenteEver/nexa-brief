@@ -144,20 +144,17 @@ B.snow = (sc, X) => {
 B.intro = (sc, X) => {
   const { W, H } = X, L = div(X.root, "lay", { background: "#000" });
   footage(X, L, 0, "mist", { opacity: 0.6, from: 1.25, to: 1.0 }); cold(X, L); fog(X, L, 3, 0.15);
-  const [a, b] = sc.words;
-  if (a) { const t = word(X, L, U(a.text), { cls: thin, fs: 0.2 * H, x: W / 2, y: 0.47 * H, color: P.white, ls: 0.1 }); reveal(X, t.el, a.rt + 0.8, "blur", 2.4); X.T(t.el, "letterSpacing", "0.1em").to(0, X.dur + OV(), "0.4em"); leave(X, t.box, "blur"); }
-  if (b) { const t = word(X, L, U(b.text), { cls: sans, fs: 0.03 * H, x: W / 2, y: 0.62 * H, color: P.fog, ls: 0.6 }); reveal(X, t.el, b.rt + 1.4, "fade", 1.5); }
+  const [a] = sc.words;
+  if (a) {
+    const title = U(a.text), fs = Math.min(0.2 * H, fit(title, thin, 0.04, 0.94 * W, 0.2 * H));
+    const t = word(X, L, title, { cls: thin, fs, x: W / 2, y: 0.47 * H, color: P.white, ls: 0.1 });
+    t.el.style.whiteSpace = "nowrap";
+    reveal(X, t.el, 0.02, "blur", 0.65);
+    X.T(t.el, "letterSpacing", "0.1em").to(0, X.dur + OV(), "0.4em"); leave(X, t.box, "blur");
+  }
   enterFx(X, "fade", 1.5);
 };
-B.outro = (sc, X) => {
-  const { W, H } = X, L = div(X.root, "lay", { background: "#000" });
-  footage(X, L, 0, "mist", { opacity: 0.45 }); cold(X, L);
-  const [a, b, c] = sc.words;
-  if (a) { const t = lineNested(X, L, [{ ...a, text: U(a.text) }], { cls: heavy, fs: 0.2 * H, x: W / 2, y: 0.42 * H, color: P.white }, "blur"); crumble(X, t.chars, Math.max(a.rt + 1.8, X.dur - 1.3), 0.8); }
-  if (b) { const t = word(X, L, U(b.text), { cls: sans, fs: 0.033 * H, x: W / 2, y: 0.58 * H, color: P.fog, ls: 0.6 }); reveal(X, t.el, b.rt, "fade", 1); }
-  if (c) { const t = word(X, L, U(c.text), { cls: sans, fs: 0.024 * H, x: W / 2, y: 0.64 * H, color: P.fog, ls: 0.4 }); reveal(X, t.el, c.rt, "fade", 1); }
-  enterFx(X, "iris", OV() * 1.6);
-};
+B.outro = (sc, X) => window.NexaVacioOutro.render(sc, X, { P, thin, sans, div, footage, fog, word, fit, reveal, config: C.outro || {} });
 
 const FITS = {
   lonely: sc => J(sc.words).length <= 30,

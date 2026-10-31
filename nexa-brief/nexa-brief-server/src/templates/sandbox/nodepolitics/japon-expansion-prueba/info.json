@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "title": "La expansión del Imperio japonés · prueba Desktop",
+  "summary": "Vista horizontal de prueba para Sandbox que recorre la expansión japonesa de 1895 a 1942. Usa el diseño imperio, flechas carmesí y rótulos sincronizados con narración en español, sin representar China como conquistada.",
+  "engine": "explainer-kit:imperio",
+  "based_on": "imperio-demo",
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-10-31",
+  "libraries": [
+    {
+      "name": "d3-array",
+      "version": "3.2.4",
+      "purpose": "utilidades geográficas del motor"
+    },
+    {
+      "name": "d3-geo",
+      "version": "3.1.1",
+      "purpose": "proyección cartográfica del motor"
+    },
+    {
+      "name": "topojson-client",
+      "version": "3.1.0",
+      "purpose": "lectura de fronteras del atlas"
+    },
+    {
+      "name": "world-atlas countries-50m.js",
+      "version": "sin versión indicada",
+      "purpose": "geometría de países"
+    },
+    {
+      "name": "Google Fonts: Fjalla One, Montserrat, Noto Sans JP",
+      "version": "remota",
+      "purpose": "tipografía del diseño imperio"
+    }
+  ],
+  "inputs": [
+    "Guion original en español con cronología 1895–1942 y fuentes documentadas en PLAN.md.",
+    "Narración TTS Charon en assets/song.mp3 y transcripción Whisper en assets/lyrics.json (50,24 s; 67 palabras).",
+    "Componentes y atlas heredados de explainer-kit:imperio.",
+    "Banderas históricas en SVG local y una foto documental de dominio público sobre Manchuria, con crédito."
+  ],
+  "notes": [
+    "Los haces señalan campañas o direcciones aproximadas, no fronteras. China nunca aparece rayada como territorio conquistado.",
+    "Las tarjetas de banderas usan SVG históricos simplificados y siguen audio.currentTime; playback y seek se comprobaron en Sandbox.",
+    "kit.py check: OK. Avisos de calidad: título inicial de 11,8 s y cero componentes common.lyric, decisiones que conservan el estilo mapa del demo.",
+    "La pista incluye entrada y cola silenciosa; el cierre visual no tiene voz grabada. No se generó ni publicó video."
+  ],
+  "reference": "referencias/nodepolitics/japon-expansion"
+}

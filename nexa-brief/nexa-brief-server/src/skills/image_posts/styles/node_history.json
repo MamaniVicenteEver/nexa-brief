@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "style_id": "node_history_binary",
+  "category_id": "node_history",
+  "version": "1.0.0",
+  "design_id": "binary",
+  "palette": {
+    "bg": "#000000",
+    "bg2": "#151515",
+    "ink": "#f2f2f2",
+    "muted": "#8a8a8a",
+    "accent": "#ffffff",
+    "accentInk": "#000000"
+  },
+  "fonts": {
+    "headline": "Inter",
+    "body": "Inter",
+    "mono": "JetBrains Mono",
+    "decorative": "Playfair Display",
+    "font_assets": [
+      {
+        "family": "Inter",
+        "weight": 400,
+        "style": "normal",
+        "path": "fonts/inter-400.ttf",
+        "sha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      },
+      {
+        "family": "Inter",
+        "weight": 900,
+        "style": "normal",
+        "path": "fonts/inter-900.ttf",
+        "sha256": "5b717029a2c4cfca2167e97be1157edb24151591e5ec96eb484745c392817a7a",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      },
+      {
+        "family": "JetBrains Mono",
+        "weight": 600,
+        "style": "normal",
+        "path": "fonts/jetbrains-mono-600.ttf",
+        "sha256": "df54dbfafba61d4911eb3dab9bba2d20531fb009f01d64dd42fa96ab862584d8",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      },
+      {
+        "family": "Playfair Display",
+        "weight": 400,
+        "style": "italic",
+        "path": "fonts/playfair-italic-400.ttf",
+        "sha256": "6021680663c58b344d8404c289c755aadc662a02189ffe4f5ca79378f9e97840",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      }
+    ]
+  },
+  "textures": [],
+  "grid": {
+    "margin_px": 72,
+    "columns": 12,
+    "gutter_px": 24,
+    "safe_bottom_px": 110
+  },
+  "composition": {
+    "allowed_components": [
+      "image.binary.daily_fact",
+      "image.binary.five_slides"
+    ],
+    "photo_filter": "grayscale(1) contrast(1.4) brightness(0.95)",
+    "contrast_min": 4.5,
+    "headline_lines_max": 2,
+    "body_lines_max": 4
+  },
+  "tone": {
+    "language": "es",
+    "voice": "sobrio, preciso y respetuoso",
+    "rules": [
+      "No dramatizar un dato incierto.",
+      "Distinguir las fuentes contemporáneas de las retrospectivas.",
+      "No confundir lugar con población al contar la primera medianoche.",
+      "Mostrar un dato verificable y explicar su alcance."
+    ]
+  },
+  "brand": {
+    "name": "NodeHistory",
+    "handle": "@nodehistory"
+  }
+}

@@ -4,16 +4,42 @@ import { Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
+import { ACTIVE_JOB_STATES, type ExplainerJob } from "@/features/explainer/types";
+import { useExplainerRecordings } from "@/features/explainer/hooks/useExplainer";
 import { type QueueEntry, useQueueEntries } from "@/features/schedule";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useCategoryLabels } from "../hooks/useCategoryLabels";
 import { useJobs } from "../hooks/useJobs";
 import { deriveStatus, type LibraryStatus, type LibraryVideo } from "../library-status";
+import { ExplainerRecordingCard } from "./ExplainerRecordingCard";
 import { VideoCard } from "./VideoCard";
 
 type Tab = "todos" | "pendientes" | "publicados" | "proceso" | "fallidos";
 type Sort = "newest" | "oldest" | "longest" | "title";
+type LibraryItem =
+  | {
+      kind: "video";
+      key: string;
+      status: LibraryStatus;
+      category: string;
+      categoryLabel: string;
+      title: string;
+      updatedAt: string;
+      durationSeconds: number | null;
+      video: LibraryVideo;
+    }
+  | {
+      kind: "recording";
+      key: string;
+      status: "processing" | "failed";
+      category: string;
+      categoryLabel: string;
+      title: string;
+      updatedAt: string;
+      durationSeconds: null;
+      recording: ExplainerJob;
+    };
 
 const PAGE_SIZE = 24;
 
@@ -42,8 +68,10 @@ function groupByJob(entries: QueueEntry[] | undefined, statuses: QueueEntry["sta
 export function BibliotecaView() {
   const t = useTranslations("library");
   const { data: jobs, isLoading, isError } = useJobs();
+  const { data: recordingJobs, isLoading: recordingsLoading } = useExplainerRecordings();
   const { data: queueEntries } = useQueueEntries({ limit: 200 });
   const categoryLabel = useCategoryLabels();
+  const libraryLoading = isLoading || recordingsLoading;
 
   // `?tab=pendientes` (ej. desde el dashboard) abre directo esa pestaña.
   const tabParam = useSearchParams().get("tab");
@@ -71,26 +99,54 @@ export function BibliotecaView() {
     });
   }, [jobs, queueEntries, categoryLabel]);
 
+  const items = useMemo<LibraryItem[]>(() => {
+    const videoItems: LibraryItem[] = videos.map((video) => ({
+      kind: "video",
+      key: video.job.jobId,
+      status: video.status,
+      category: video.job.category,
+      categoryLabel: video.categoryLabel,
+      title: video.job.title,
+      updatedAt: video.job.updatedAt,
+      durationSeconds: video.job.durationSeconds,
+      video,
+    }));
+    const recordingItems: LibraryItem[] = (recordingJobs ?? [])
+      .filter((job) => job.state !== "done")
+      .map((recording) => ({
+        kind: "recording",
+        key: recording.jobId,
+        status: ACTIVE_JOB_STATES.includes(recording.state) ? "processing" : "failed",
+        category: recording.categoryPath,
+        categoryLabel: categoryLabel(recording.categoryPath),
+        title: recording.title || recording.videoId,
+        updatedAt: recording.startedAt || "",
+        durationSeconds: null,
+        recording,
+      }));
+    return [...videoItems, ...recordingItems];
+  }, [videos, recordingJobs, categoryLabel]);
+
   // Búsqueda + categoría se aplican antes de las pestañas, así los contadores
   // de cada pestaña reflejan lo que el usuario está filtrando.
   const searched = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return videos.filter((v) => {
-      if (category && v.job.category !== category) return false;
+    return items.filter((item) => {
+      if (category && item.category !== category) return false;
       if (!q) return true;
-      return [v.job.title, v.categoryLabel, v.job.category, v.job.jobId].some((field) =>
+      return [item.title, item.categoryLabel, item.category, item.key].some((field) =>
         field.toLowerCase().includes(q),
       );
     });
-  }, [videos, category, query]);
+  }, [items, category, query]);
 
   const categories = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const v of videos) counts.set(v.job.category, (counts.get(v.job.category) ?? 0) + 1);
+    for (const item of items) counts.set(item.category, (counts.get(item.category) ?? 0) + 1);
     return Array.from(counts, ([id, count]) => ({ id, count, label: categoryLabel(id) })).sort(
       (a, b) => a.label.localeCompare(b.label),
     );
-  }, [videos, categoryLabel]);
+  }, [items, categoryLabel]);
 
   const tabCounts = useMemo(() => {
     const counts = {} as Record<Tab, number>;
@@ -106,12 +162,12 @@ export function BibliotecaView() {
   const activeList = useMemo(() => {
     const statuses = TAB_STATUSES[activeTab];
     const list = statuses ? searched.filter((v) => statuses.includes(v.status)) : [...searched];
-    const byDate = (v: LibraryVideo) => new Date(v.job.updatedAt).getTime();
-    const compare: Record<Sort, (a: LibraryVideo, b: LibraryVideo) => number> = {
+    const byDate = (item: LibraryItem) => new Date(item.updatedAt).getTime() || 0;
+    const compare: Record<Sort, (a: LibraryItem, b: LibraryItem) => number> = {
       newest: (a, b) => byDate(b) - byDate(a),
       oldest: (a, b) => byDate(a) - byDate(b),
-      longest: (a, b) => (b.job.durationSeconds ?? -1) - (a.job.durationSeconds ?? -1),
-      title: (a, b) => a.job.title.localeCompare(b.job.title),
+      longest: (a, b) => (b.durationSeconds ?? -1) - (a.durationSeconds ?? -1),
+      title: (a, b) => a.title.localeCompare(b.title),
     };
     return list.sort(compare[sort]);
   }, [searched, activeTab, sort]);
@@ -203,7 +259,7 @@ export function BibliotecaView() {
           </span>
           <CategoryChip
             label={t("filters.allCategories")}
-            count={videos.length}
+            count={items.length}
             active={category === ""}
             onClick={() => selectCategory("")}
           />
@@ -248,13 +304,13 @@ export function BibliotecaView() {
                     "bg-nb-accent-gold text-nb-ink",
                 )}
               >
-                {isLoading ? "–" : tabCounts[tab]}
+                {libraryLoading ? "–" : tabCounts[tab]}
               </span>
             </button>
           ))}
         </div>
         <div className="flex items-center gap-3 pb-2 text-[12.5px] text-nb-mute">
-          {!isLoading && <span>{t("resultsCount", { count: activeList.length })}</span>}
+          {!libraryLoading && <span>{t("resultsCount", { count: activeList.length })}</span>}
           {filtersActive && (
             <button
               type="button"
@@ -269,7 +325,7 @@ export function BibliotecaView() {
       </div>
 
       <div className="mt-6">
-        {isLoading ? (
+        {libraryLoading ? (
           <CardGrid>
             {Array.from({ length: 8 }, (_, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: skeletons estáticos sin identidad
@@ -278,7 +334,7 @@ export function BibliotecaView() {
           </CardGrid>
         ) : isError ? (
           <EmptyState message={t("loadError")} />
-        ) : videos.length === 0 ? (
+        ) : items.length === 0 ? (
           <EmptyState
             message={t("emptyLibrary")}
             action={
@@ -307,9 +363,17 @@ export function BibliotecaView() {
           />
         ) : (
           <CardGrid>
-            {pageItems.map((video) => (
-              <VideoCard key={video.job.jobId} video={video} />
-            ))}
+            {pageItems.map((item) =>
+              item.kind === "video" ? (
+                <VideoCard key={item.key} video={item.video} />
+              ) : (
+                <ExplainerRecordingCard
+                  key={item.key}
+                  job={item.recording}
+                  categoryLabel={item.categoryLabel}
+                />
+              )
+            )}
           </CardGrid>
         )}
 

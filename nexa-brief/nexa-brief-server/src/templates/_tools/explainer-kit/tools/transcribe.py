@@ -29,6 +29,7 @@ def main(audio, script_path, out):
                               initial_prompt=f"Documental narrado en español. Nombres: {names}.", condition_on_previous_text=False)
     segments, dropped = [], 0
     for s in segs:
+        print(f"Whisper: procesados {s.end:.1f} / {info.duration:.1f} segundos de audio", flush=True)
         ws = [w for w in (s.words or [])]
         # huella de alucinación: palabras de duración ~0 (en racha); se descartan
         keep = [w for i, w in enumerate(ws) if not ((w.end - w.start) < 0.03 and any((x.end - x.start) < 0.03 for x in ws[max(0, i - 1):i + 2] if x is not w))]
@@ -38,12 +39,32 @@ def main(audio, script_path, out):
         if not keep: continue
         segments.append({"start": round(keep[0].start, 3), "end": round(keep[-1].end, 3), "text": "".join(w.word for w in keep),
                          "words": [{"word": w.word, "start": round(w.start, 3), "end": round(w.end, 3), "probability": round(w.probability, 3)} for w in keep]})
+    merge_split_numbers(segments)
     fixed, extra = clean_with_script(segments, ref_txt)
     doc = {"metadata": {"source": pathlib.Path(audio).name, "model": "faster-whisper large-v3", "language": "es",
                         "duration": round(info.duration, 3), "script_fixes": fixed, "dropped_zero_len": dropped, "dropped_not_in_script": extra}, "segments": segments}
     pathlib.Path(out).write_text(json.dumps(doc, ensure_ascii=False, indent=1))
     n = sum(len(s["words"]) for s in segments)
     print(f"✓ {out}: {len(segments)} segmentos, {n} palabras, {info.duration:.1f} s, {fixed} correcciones del guion, {dropped} palabras-fantasma, {extra} palabras fuera del guion descartadas")
+
+def merge_split_numbers(segments):
+    """Whisper parte las cifras con decimales o guion en dos palabras (" 2" ",2" · " STS" "-61"):
+    se unen en una ("2,2", "STS-61") con el inicio de la primera y el fin de la segunda. Si no, las
+    letras grandes muestran "2" y ",2" en renglones distintos y las anclas con la cifra no se encuentran."""
+    merged = 0
+    for s in segments:
+        out = []
+        for w in s["words"]:
+            tok, prev = w["word"].strip(), out[-1]["word"].strip() if out else ""
+            if out and ((re.match(r"^[.,]\d", tok) and re.search(r"\d$", prev)) or (re.match(r"^-\d", tok) and re.search(r"\w$", prev))):
+                out[-1] = {**out[-1], "word": out[-1]["word"] + tok, "end": w["end"]}
+                merged += 1
+            else:
+                out.append(w)
+        s["words"] = out
+        s["text"] = "".join(w["word"] for w in out)
+    return merged
+
 
 def clean_with_script(segments, ref_txt):
     """El guion es la verdad de lo que la voz debía decir. Alineando palabra por palabra:
@@ -82,6 +103,7 @@ def clean_with_script(segments, ref_txt):
 if __name__ == "__main__":
     if sys.argv[1] == "--clean":          # solo limpiar un lyrics.json existente contra el guion
         sc = json.loads(pathlib.Path(sys.argv[3]).read_text()); doc = json.loads(pathlib.Path(sys.argv[2]).read_text())
+        merge_split_numbers(doc["segments"])
         f, e = clean_with_script(doc["segments"], " ".join(x["text"] for x in sc["segments"]))
         doc.setdefault("metadata", {}).update(script_fixes=f, dropped_not_in_script=e)
         pathlib.Path(sys.argv[2]).write_text(json.dumps(doc, ensure_ascii=False, indent=1)); print(f"✓ limpiado: {f} correcciones, {e} palabras fuera del guion")

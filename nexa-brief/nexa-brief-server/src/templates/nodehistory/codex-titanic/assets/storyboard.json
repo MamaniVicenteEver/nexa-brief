@@ -2,49 +2,421 @@
   "version": 1,
   "family": "binary",
   "title": "37 SEGUNDOS",
-  "defaults": { "offset": -0.12 },
+  "defaults": {
+    "offset": -0.12
+  },
   "beats": [
-    { "t": 0, "use": "binary.title", "params": { "text": "37\nSEGUNDOS", "textPortrait": "37\nSEGUNDOS", "kicker": "TITANIC · 14 ABR 1912" }, "until": "vio un iceberg" },
-    { "at": "vio un iceberg", "use": "binary.frame", "params": { "src": "assets/media/iceberg.jpg", "title": "EL ICEBERG", "sub": "ATLÁNTICO NORTE · 1912" } },
-    { "at": "El Titanic avanzaba", "use": "binary.frame", "params": { "src": "assets/media/titanic.jpg", "title": "EL BARCO", "sub": "NAVEGACIÓN NOCTURNA" } },
-    { "at": "primer oficial William", "use": "binary.icon", "params": { "icon": "ship", "tag": "RUMBO", "caption": "MURDOCH ORDENA VIRAR" } },
-    { "at": "investigación británica", "use": "binary.rays", "params": { "mode": "fan", "count": 8, "label": "37 SEGUNDOS" } },
-    { "at": "En ese tiempo recorrió", "use": "binary.counter", "params": { "value": "500", "label": "YARDAS", "note": "DISTANCIA ESTIMADA", "mode": "count", "from": 0, "dur": 2.2 } },
-    { "at": "casco chocó por", "use": "binary.frame", "params": { "src": "assets/media/iceberg.jpg", "title": "EL CHOQUE", "sub": "BANDA DE ESTRIBOR" } },
-    { "at": "agua empezó a", "use": "binary.icon", "params": { "icon": "waves", "tag": "ENTRA AGUA", "caption": "BAJO LA LÍNEA DE FLOTACIÓN" } },
-    { "at": "barco no podía salvarse", "use": "binary.tunnel", "params": { "rings": 14, "text": "NO PODÍA SALVARSE" } },
-    { "at": "llevaba 20 botes", "use": "binary.word", "params": { "text": "20\nBOTES", "kicker": "CAPACIDAD LIMITADA", "note": "1.178 PLAZAS" } },
-    { "at": "Juntos podían llevar", "use": "binary.counter", "params": { "value": "1.178", "label": "PLAZAS", "note": "CAPACIDAD TOTAL", "mode": "count", "from": 0, "dur": 2.2 } },
-    { "at": "Ahí estaba la contradicción", "use": "common.lyric", "params": { "accent": ["contradicción"] }, "until": "cero" },
-    { "at": "cero", "use": "common.punch", "params": { "text": "NO ERA CERO\n^PERO NO ALCANZABA^", "size": 0.7 }, "dur": 1.8 },
-    { "at": "no se había hecho", "use": "binary.floor", "params": { "text": "SIN SIMULACRO" } },
-    { "at": "Parte de la tripulación", "use": "binary.icon", "params": { "icon": "person", "tag": "SIN PRÁCTICA", "caption": "EVACUACIÓN FRAGMENTADA" } },
-    { "at": "ordenaron descubrir", "use": "binary.timeline", "params": { "items": [ { "year": "11:40", "label": "CHOQUE" }, { "year": "12:05", "label": "DESCUBRIR BOTES" }, { "year": "12:45", "label": "PRIMER BOTE" }, { "year": "02:20", "label": "HUNDIMIENTO" } ], "active": 1 } },
-    { "at": "ruido del vapor", "use": "binary.icon", "params": { "icon": "waves", "tag": "RUIDO", "caption": "ÓRDENES CON LAS MANOS" } },
-    { "at": "mujeres y niños", "use": "binary.frame", "params": { "src": "assets/media/captain-smith.jpg", "title": "LA CUBIERTA", "sub": "SMITH Y MCELROY" } },
-    { "at": "Muchos todavía", "use": "binary.icon", "params": { "icon": "hourglass", "tag": "TIEMPO PERDIDO", "caption": "EL PELIGRO NO PARECÍA REAL" } },
-    { "at": "iba a hundirse", "use": "binary.bubble", "params": { "text": "¿YA?", "size": 0.5 } },
-    { "at": "Un bote vacío", "use": "binary.icon", "params": { "icon": "ship", "tag": "DUDA", "caption": "PARECÍA MÁS SEGURO" } },
-    { "at": "Por eso ocurrió lo decisivo", "use": "binary.frame", "params": { "src": "assets/media/lifeboat.jpg", "title": "BOTES VACÍOS", "sub": "CAPACIDAD QUE NO SE USÓ" } },
-    { "at": "lejos de llenarse", "use": "common.flash", "dur": 0.4, "layer": "overlay" },
-    { "at": "lejos de llenarse", "use": "common.lyric", "params": { "accent": ["llenarse"] }, "until": "personas salvadas" },
-    { "at": "personas salvadas", "use": "binary.counter", "params": { "value": "706", "label": "PERSONAS SALVADAS", "note": "2.223 A BORDO", "mode": "count", "from": 0, "dur": 2.2 } },
-    { "at": "Cuando el Titanic desapareció", "use": "common.punch", "params": { "text": "MÁS DE\n^1.500^", "size": 0.86 }, "dur": 2.4 },
-    { "at": "suma de poco margen", "use": "common.lyric", "params": { "accent": ["margen"] }, "until": "El resultado tampoco" },
-    { "at": "primera clase sobrevivió", "use": "binary.chart", "params": { "curve": "decay", "startLabel": "1A · 60%", "endLabel": "3A · 25%", "axisX": "PASAJEROS SALVADOS" } },
-    { "at": "En tercera", "use": "binary.versus", "params": { "left": { "icon": "person", "label": "1A · 60%" }, "right": { "icon": "person", "label": "3A · 25%" }, "mid": "ACCESO", "pick": "left", "pickAt": 2 } },
-    { "at": "Las rutas", "use": "binary.icon", "params": { "icon": "person", "tag": "ACCESO", "caption": "RUTAS A LA CUBIERTA" } },
-    { "at": "pudieron regresar por", "use": "binary.icon", "params": { "icon": "waves", "tag": "SIN RESCATE", "caption": "BOTES EN EL AGUA" } },
-    { "at": "cada decisión pesa", "use": "binary.floor", "params": { "text": "CADA DECISIÓN" } },
-    { "at": "El Titanic se hundió", "use": "binary.bubble", "params": { "text": "LEJOS DEL BARCO", "size": 0.6 } },
-    { "at": "En los botes", "use": "binary.icon", "params": { "icon": "ship", "tag": "ESPERA", "caption": "BOTES Y NOCHE ABIERTA" } },
-    { "at": "esperaban el rescate", "use": "binary.bubble", "params": { "text": "RESCATE", "size": 0.55 } },
-    { "at": "Carpathia recogería", "use": "binary.frame", "params": { "src": "assets/media/carpathia.jpg", "title": "CARPATHIA", "sub": "BOTES Y RESCATE" } },
-    { "at": "informe pidió simulacros", "use": "binary.icon", "params": { "icon": "gavel", "tag": "EL INFORME", "caption": "SIMULACROS" } },
-    { "at": "La lección no era", "use": "binary.timeline", "params": { "items": [ { "year": "01", "label": "PRACTICAR" }, { "year": "02", "label": "ORDENAR" }, { "year": "03", "label": "EVACUAR" } ], "active": 0 } },
-    { "at": "El iceberg inició", "use": "binary.word", "params": { "text": "37\nSEGUNDOS", "kicker": "EL CHOQUE", "note": "LA SEGURIDAD SE USA" } },
-    { "at": "Las muchas", "use": "common.lyric", "params": { "accent": ["muertes"] }, "until": "seguridad que parecía suficiente" },
-    { "at": "seguridad que parecía suficiente", "use": "common.lyric", "dur": 7.48, "params": { "accent": ["suficiente"] } },
+    {
+      "t": 0,
+      "use": "binary.introv1",
+      "params": {
+        "text": "BOTES A BORDO\nNO BASTARON\nPARA SALVAR",
+        "kicker": "ATLÁNTICO NORTE · 1912",
+        "textPortrait": "BOTES A BORDO\nNO BASTARON\nPARA SALVAR",
+        "highlight": "NO BASTARON"
+      },
+      "until": "vio un iceberg"
+    },
+    {
+      "at": "vio un iceberg",
+      "use": "binary.frame",
+      "params": {
+        "src": "assets/media/iceberg.jpg",
+        "title": "EL ICEBERG",
+        "sub": "ATLÁNTICO NORTE · 1912"
+      }
+    },
+    {
+      "at": "El Titanic avanzaba",
+      "use": "binary.frame",
+      "params": {
+        "src": "assets/media/titanic.jpg",
+        "title": "EL BARCO",
+        "sub": "NAVEGACIÓN NOCTURNA"
+      }
+    },
+    {
+      "at": "primer oficial William",
+      "use": "binary.icon",
+      "params": {
+        "icon": "ship",
+        "tag": "RUMBO",
+        "caption": "MURDOCH ORDENA VIRAR"
+      }
+    },
+    {
+      "at": "investigación británica",
+      "use": "binary.rays",
+      "params": {
+        "mode": "fan",
+        "count": 8,
+        "label": "37 SEGUNDOS"
+      }
+    },
+    {
+      "at": "En ese tiempo recorrió",
+      "use": "binary.counter",
+      "params": {
+        "value": "500",
+        "label": "YARDAS",
+        "note": "DISTANCIA ESTIMADA",
+        "mode": "count",
+        "from": 0,
+        "dur": 2.2
+      }
+    },
+    {
+      "at": "casco chocó por",
+      "use": "binary.frame",
+      "params": {
+        "src": "assets/media/iceberg.jpg",
+        "title": "EL CHOQUE",
+        "sub": "BANDA DE ESTRIBOR"
+      }
+    },
+    {
+      "at": "agua empezó a",
+      "use": "binary.icon",
+      "params": {
+        "icon": "waves",
+        "tag": "ENTRA AGUA",
+        "caption": "BAJO LA LÍNEA DE FLOTACIÓN"
+      }
+    },
+    {
+      "at": "barco no podía salvarse",
+      "use": "binary.tunnel",
+      "params": {
+        "rings": 14,
+        "text": "NO PODÍA SALVARSE"
+      }
+    },
+    {
+      "at": "llevaba 20 botes",
+      "use": "binary.word",
+      "params": {
+        "text": "20\nBOTES",
+        "kicker": "CAPACIDAD LIMITADA",
+        "note": "1.178 PLAZAS"
+      }
+    },
+    {
+      "at": "Juntos podían llevar",
+      "use": "binary.counter",
+      "params": {
+        "value": "1.178",
+        "label": "PLAZAS",
+        "note": "CAPACIDAD TOTAL",
+        "mode": "count",
+        "from": 0,
+        "dur": 2.2
+      }
+    },
+    {
+      "at": "Ahí estaba la contradicción",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "contradicción"
+        ]
+      },
+      "until": "cero"
+    },
+    {
+      "at": "cero",
+      "use": "common.punch",
+      "params": {
+        "text": "NO ERA CERO\n^PERO NO ALCANZABA^",
+        "size": 0.7
+      },
+      "dur": 1.8
+    },
+    {
+      "at": "no se había hecho",
+      "use": "binary.floor",
+      "params": {
+        "text": "SIN SIMULACRO"
+      }
+    },
+    {
+      "at": "Parte de la tripulación",
+      "use": "binary.icon",
+      "params": {
+        "icon": "person",
+        "tag": "SIN PRÁCTICA",
+        "caption": "EVACUACIÓN FRAGMENTADA"
+      }
+    },
+    {
+      "at": "ordenaron descubrir",
+      "use": "binary.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "11:40",
+            "label": "CHOQUE"
+          },
+          {
+            "year": "12:05",
+            "label": "DESCUBRIR BOTES"
+          },
+          {
+            "year": "12:45",
+            "label": "PRIMER BOTE"
+          },
+          {
+            "year": "02:20",
+            "label": "HUNDIMIENTO"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "ruido del vapor",
+      "use": "binary.icon",
+      "params": {
+        "icon": "waves",
+        "tag": "RUIDO",
+        "caption": "ÓRDENES CON LAS MANOS"
+      }
+    },
+    {
+      "at": "mujeres y niños",
+      "use": "binary.frame",
+      "params": {
+        "src": "assets/media/captain-smith.jpg",
+        "title": "LA CUBIERTA",
+        "sub": "SMITH Y MCELROY"
+      }
+    },
+    {
+      "at": "Muchos todavía",
+      "use": "binary.icon",
+      "params": {
+        "icon": "hourglass",
+        "tag": "TIEMPO PERDIDO",
+        "caption": "EL PELIGRO NO PARECÍA REAL"
+      }
+    },
+    {
+      "at": "iba a hundirse",
+      "use": "binary.bubble",
+      "params": {
+        "text": "¿YA?",
+        "size": 0.5
+      }
+    },
+    {
+      "at": "Un bote vacío",
+      "use": "binary.icon",
+      "params": {
+        "icon": "ship",
+        "tag": "DUDA",
+        "caption": "PARECÍA MÁS SEGURO"
+      }
+    },
+    {
+      "at": "Por eso ocurrió lo decisivo",
+      "use": "binary.frame",
+      "params": {
+        "src": "assets/media/lifeboat.jpg",
+        "title": "BOTES VACÍOS",
+        "sub": "CAPACIDAD QUE NO SE USÓ"
+      }
+    },
+    {
+      "at": "lejos de llenarse",
+      "use": "common.flash",
+      "dur": 0.4,
+      "layer": "overlay"
+    },
+    {
+      "at": "lejos de llenarse",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "llenarse"
+        ]
+      },
+      "until": "personas salvadas"
+    },
+    {
+      "at": "personas salvadas",
+      "use": "binary.counter",
+      "params": {
+        "value": "706",
+        "label": "PERSONAS SALVADAS",
+        "note": "2.223 A BORDO",
+        "mode": "count",
+        "from": 0,
+        "dur": 2.2
+      }
+    },
+    {
+      "at": "Cuando el Titanic desapareció",
+      "use": "common.punch",
+      "params": {
+        "text": "MÁS DE\n^1.500^",
+        "size": 0.86
+      },
+      "dur": 2.4
+    },
+    {
+      "at": "suma de poco margen",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "margen"
+        ]
+      },
+      "until": "El resultado tampoco"
+    },
+    {
+      "at": "primera clase sobrevivió",
+      "use": "binary.chart",
+      "params": {
+        "curve": "decay",
+        "startLabel": "1A · 60%",
+        "endLabel": "3A · 25%",
+        "axisX": "PASAJEROS SALVADOS"
+      }
+    },
+    {
+      "at": "En tercera",
+      "use": "binary.versus",
+      "params": {
+        "left": {
+          "icon": "person",
+          "label": "1A · 60%"
+        },
+        "right": {
+          "icon": "person",
+          "label": "3A · 25%"
+        },
+        "mid": "ACCESO",
+        "pick": "left",
+        "pickAt": 2
+      }
+    },
+    {
+      "at": "Las rutas",
+      "use": "binary.icon",
+      "params": {
+        "icon": "person",
+        "tag": "ACCESO",
+        "caption": "RUTAS A LA CUBIERTA"
+      }
+    },
+    {
+      "at": "pudieron regresar por",
+      "use": "binary.icon",
+      "params": {
+        "icon": "waves",
+        "tag": "SIN RESCATE",
+        "caption": "BOTES EN EL AGUA"
+      }
+    },
+    {
+      "at": "cada decisión pesa",
+      "use": "binary.floor",
+      "params": {
+        "text": "CADA DECISIÓN"
+      }
+    },
+    {
+      "at": "El Titanic se hundió",
+      "use": "binary.bubble",
+      "params": {
+        "text": "LEJOS DEL BARCO",
+        "size": 0.6
+      }
+    },
+    {
+      "at": "En los botes",
+      "use": "binary.icon",
+      "params": {
+        "icon": "ship",
+        "tag": "ESPERA",
+        "caption": "BOTES Y NOCHE ABIERTA"
+      }
+    },
+    {
+      "at": "esperaban el rescate",
+      "use": "binary.bubble",
+      "params": {
+        "text": "RESCATE",
+        "size": 0.55
+      }
+    },
+    {
+      "at": "Carpathia recogería",
+      "use": "binary.frame",
+      "params": {
+        "src": "assets/media/carpathia.jpg",
+        "title": "CARPATHIA",
+        "sub": "BOTES Y RESCATE"
+      }
+    },
+    {
+      "at": "informe pidió simulacros",
+      "use": "binary.icon",
+      "params": {
+        "icon": "gavel",
+        "tag": "EL INFORME",
+        "caption": "SIMULACROS"
+      }
+    },
+    {
+      "at": "La lección no era",
+      "use": "binary.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "01",
+            "label": "PRACTICAR"
+          },
+          {
+            "year": "02",
+            "label": "ORDENAR"
+          },
+          {
+            "year": "03",
+            "label": "EVACUAR"
+          }
+        ],
+        "active": 0
+      }
+    },
+    {
+      "at": "El iceberg inició",
+      "use": "binary.word",
+      "params": {
+        "text": "37\nSEGUNDOS",
+        "kicker": "EL CHOQUE",
+        "note": "LA SEGURIDAD SE USA"
+      }
+    },
+    {
+      "at": "Las muchas",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "muertes"
+        ]
+      },
+      "until": "seguridad que parecía suficiente"
+    },
+    {
+      "at": "seguridad que parecía suficiente",
+      "use": "common.lyric",
+      "dur": 7.48,
+      "params": {
+        "accent": [
+          "suficiente"
+        ]
+      }
+    },
     {
       "t": 248.084898,
       "offset": 0,

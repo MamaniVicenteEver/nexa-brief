@@ -1,5 +1,6 @@
 import { Globe, Mail } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { LegalFooterLinks } from "@/features/legal";
 
 const SOCIAL_LINKS = [
   { href: "https://everdev.space/", icon: "globe" },
@@ -21,14 +22,18 @@ export async function PublicFooter() {
   return (
     <footer className="nexa-public-footer nb-glass-nav relative z-5 border-t-0">
       <div className="nexa-public-footer__container mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 py-4.5 text-center lg:flex-row lg:flex-nowrap lg:items-center lg:justify-between lg:px-10 lg:text-left">
-        <div className="nexa-public-footer__brand flex flex-wrap items-center justify-center gap-3 text-[12.5px] text-nb-mute lg:justify-start">
-          <span className="nexa-public-footer__badge rounded-full bg-nb-mute/15 px-2.5 py-1 text-[10.5px] font-bold tracking-widest text-nb-mute uppercase">
-            {t("badge")}
-          </span>
-          <span className="nexa-public-footer__brand-name font-bold text-nb-ink">
-            {t("brandName")}
-          </span>
-          <span className="nexa-public-footer__tagline">{t("tagline")}</span>
+        <div className="nexa-public-footer__start flex flex-col items-center gap-3 lg:items-start">
+          <div className="nexa-public-footer__brand flex flex-wrap items-center justify-center gap-3 text-[12.5px] text-nb-mute lg:justify-start">
+            <span className="nexa-public-footer__badge rounded-full bg-nb-mute/15 px-2.5 py-1 text-[10.5px] font-bold tracking-widest text-nb-mute uppercase">
+              {t("badge")}
+            </span>
+            <span className="nexa-public-footer__brand-name font-bold text-nb-ink">
+              {t("brandName")}
+            </span>
+            <span className="nexa-public-footer__tagline">{t("tagline")}</span>
+          </div>
+          {/* Visibles sin abrir menús: Meta, Google y TikTok lo exigen en la home. */}
+          <LegalFooterLinks className="nexa-public-footer__legal" />
         </div>
 
         <div

@@ -18,7 +18,7 @@ export class JsonUserRepository implements UserRepository {
       email: input.email,
       name: input.name,
       passwordHash: input.passwordHash,
-      role: "admin",
+      role: "editor",
       createdAt: new Date().toISOString(),
     };
     users.push(user);

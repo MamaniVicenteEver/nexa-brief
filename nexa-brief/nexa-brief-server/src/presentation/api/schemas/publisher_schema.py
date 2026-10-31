@@ -14,6 +14,8 @@ from pydantic import BaseModel, Field
 class ManualPublishRequest(BaseModel):
     """Request body for POST /api/v1/publish — manual video publish."""
 
+    idempotency_key: str | None = Field(default=None, min_length=1, max_length=200)
+
     video_path: str = Field(
         ...,
         description=(
@@ -106,12 +108,34 @@ class AccountStatusResponse(BaseModel):
     status: str                     # 'ok' | 'requires_reauth'
     expires_in_seconds: float | None
     has_refresh_token: bool
+    mode: str = "api"               # 'api' | 'browser'
+    last_session_check: float | None = None
     avatar: str | None = None
+    handle: str | None = None
+    description: str = ""
+    custom_url: str | None = None
+    profile_synced_at: float | None = None
+    linked_page_name: str | None = None
+    linked_page_id: str | None = None
     published_count: int = 0        # Videos published to this channel (see data/canales/published_videos.json)
     label: str = ""                 # User-defined purpose, e.g. "Letras románticas"
     notes: str = ""
     connected_at: float | None = None
     last_published_at: float | None = None
+    # Sincronización de Canales: totales reales de la plataforma y cuándo se leyeron.
+    stats: ChannelStatsResponse | None = None
+    synced_at: float | None = None
+    can_sync: bool = False          # la red implementa ChannelCatalogPort
+
+
+class ChannelHealthResponse(BaseModel):
+    """Result of a live, read-only account check against its platform API."""
+
+    platform: str
+    alias: str
+    status: str  # 'ok' | 'requires_reauth' | 'attention'
+    reason: str
+    checked_at: float
 
 
 class UpdateAccountRequest(BaseModel):
@@ -119,6 +143,35 @@ class UpdateAccountRequest(BaseModel):
 
     label: str | None = Field(default=None, max_length=60)
     notes: str | None = Field(default=None, max_length=500)
+
+
+class VideoMetricsResponse(BaseModel):
+    """Números de un post según su plataforma, a la fecha de la última sincronización."""
+
+    views: int | None = None
+    likes: int | None = None
+    comments: int | None = None
+    synced_at: float | None = None
+
+
+class ChannelStatsResponse(BaseModel):
+    """Totales de la cuenta según su plataforma (None = la red no lo informa)."""
+
+    video_count: int | None = None
+    followers: int | None = None
+    views: int | None = None
+
+
+class ChannelSyncResponse(BaseModel):
+    """Resultado de POST /accounts/{platform}/{alias}/sync."""
+
+    platform: str
+    alias: str
+    remote_total: int
+    imported: int
+    updated: int
+    stats: ChannelStatsResponse
+    synced_at: float
 
 
 class PublishedVideoResponse(BaseModel):
@@ -131,6 +184,12 @@ class PublishedVideoResponse(BaseModel):
     title: str
     published_at: float
     job_id: str | None = None
+    origin: str = "nexa"            # 'nexa' (lo publicó Nexa) | 'imported' (sincronización de Canales)
+    privacy: str | None = None
+    kind: str | None = None         # 'video' | 'short' | 'reel'
+    duration_seconds: float | None = None
+    thumbnail_url: str | None = None
+    metrics: VideoMetricsResponse | None = None
 
 
 class DeleteResponse(BaseModel):

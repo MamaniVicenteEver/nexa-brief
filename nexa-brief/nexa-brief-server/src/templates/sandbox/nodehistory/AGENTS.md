@@ -101,3 +101,25 @@ K=src/templates/_tools/explainer-kit/tools/kit.py; M=src/templates/_tools/explai
 Checklist: `../EXPLAINER.md` §7, más: respeto en temas de muertes revisado en guion, fotos y textos.
 
 > Al terminar una prueba, sumá acá (§6) lo que funcionó y lo que no.
+
+## 8. Prototipo de mapas satelitales (2026-10-22)
+
+- `fronteras-demo/` + motor propio `_mapas/mapas.js` (réplica de `../referencias/nodehistory/mapas-con-banderas/`, 3 videos 9:16):
+  satélite NASA Blue Marble pasado a Mercator, países con color + borde neón, rayado, flechas, banderas,
+  año, subtítulos amarillos y cámara que viaja. Escena = solo datos (`assets/scene.json`); ver su `PLAN.md`.
+  Voz/texto reutilizados del Muro (0–58 s). Es prototipo: si se aprueba, pasarlo a diseño del explainer-kit
+  (componentes `mapa.*`) en vez de mantener un motor aparte.
+- Blue Marble de diciembre trae nieve en Europa: usar julio (`world.topo.bathy.200407`). El servidor de
+  NASA corta la descarga del tile de 90 MB: reanudar con `curl -r <bytes>-` en bucle.
+- Rellenos: `multiply` (color aclarado) + `screen` + `overlay` deja ver el relieve como la referencia.
+  En zoom muy cercano dentro de un país, sacar su relleno (si no, la pantalla queda de un solo color).
+- Polígonos propios (corte de un país, Berlín Oeste) se proyectan punto a punto y se recortan con el
+  clip del canvas: así no importa el sentido de giro (d3 invierte polígonos esféricos mal orientados).
+- Mismo reproductor que la pizarra: tiempo desde `audio.currentTime`, botón ▶ si el navegador bloquea el
+  autoplay (antes corría mudo y se quedaba en el último cuadro, Leipzig).
+- 2026-10-23 · **Motor de mapas modular** (`_mapas/`: geo, camera, layers, flags, places.json, mapas.js) sobre el
+  núcleo `../_proto/proto.js` (intro, cierre, subtítulos más abajo, reproductor). Formato: `_mapas/ESCENA.md`.
+  Video completo `bolivia-mar/` (8:01, Codex guion + storyboard, Claude revisión). Fábrica: `../_proto/FABRICA.md`.
+  Lugares por nombre (303 + 240 alias), 148 banderas, cámara con vuelo van Wijk (aleja y acerca sola),
+  regiones `poly` recortadas contra la tierra y `within` un país. Satélite: `_mapas/media/sat-{world,europa,sudamerica}.jpg`
+  (para otra región: `_mapas/tareas/sat.py` sobre un tile Blue Marble de julio).

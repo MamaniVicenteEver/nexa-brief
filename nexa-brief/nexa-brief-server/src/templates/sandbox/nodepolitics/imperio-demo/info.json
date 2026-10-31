@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "title": "El imperio que miró al sur · demo visual",
+  "summary": "Demo del diseño imperio: un atlas físico, el sol carmesí sobre Japón y rayos que se expanden hacia el sur antes de fundirse con archivo monocromo. Sirve para revisar el lenguaje visual, no para publicar el relato de Turing que aporta los medios de prueba.",
+  "engine": "explainer-kit:imperio",
+  "based_on": "turing-enigma",
+  "is_new_design": true,
+  "status": "lista para revisar",
+  "created_at": "2026-10-15",
+  "libraries": [
+    {
+      "name": "d3-array",
+      "version": "3.2.4",
+      "purpose": "utilidades de datos geográficos"
+    },
+    {
+      "name": "d3-geo",
+      "version": "3.1.1",
+      "purpose": "proyecciones y geometría de mapas"
+    },
+    {
+      "name": "topojson-client",
+      "version": "3.1.0",
+      "purpose": "lectura de topología de países"
+    },
+    {
+      "name": "world-atlas countries-50m.js",
+      "version": "sin versión indicada en el archivo",
+      "purpose": "datos de fronteras de países"
+    },
+    {
+      "name": "Google Fonts: Fjalla One, Montserrat, Noto Sans JP",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía del diseño imperio"
+    }
+  ],
+  "inputs": [
+    "Voz, letra y medios de nodehistory/turing-enigma, reutilizados para recorrer el pipeline.",
+    "Mapa de países y referencia visual Klickpin descrita en el PLAN y en el DESIGN del motor."
+  ],
+  "notes": [
+    "El PLAN aclara que el audio y la historia pertenecen a Turing; el demo prueba el diseño sobre material local, no el tema imperial japonés.",
+    "Manifest listo y renders cortos en render/preview; no equivalen a un video final aprobado."
+  ],
+  "usage_backfill": {
+    "estimated": true,
+    "source": "Estimación de ~/.codex/sessions/**/*.jsonl (Codex: 5 sesiones, 73 menciones de sandbox/nodepolitics/imperio-demo) y /home/alfred/codex/nexa-brief/claude-sessions-usage.json (Claude: 4 sesiones, 85 sandbox_mentions). Repartí los tokens de cada sesión que toca varias plantillas proporcionalmente a sus menciones de ruta; los modelos de Claude se asignaron según el recuento de modelos del resumen. El resumen Claude no trae reasoning_tokens (registrado como 0, no disponible por separado). Revisé sandbox/nodemotion/_codex/*.log: no tenían contadores numéricos de tokens (0 campos encontrados), así que no los sumé.",
+    "by_model": [
+      {
+        "provider": "claude",
+        "model": "claude-haiku-4-5-20251001",
+        "input_tokens": 0,
+        "cached_input_tokens": 7235,
+        "output_tokens": 46,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "claude",
+        "model": "claude-opus-5-5",
+        "input_tokens": 385,
+        "cached_input_tokens": 77785093,
+        "output_tokens": 171867,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "codex",
+        "model": "gpt-6-luna",
+        "input_tokens": 8719447,
+        "cached_input_tokens": 8557842,
+        "output_tokens": 50436,
+        "reasoning_tokens": 30624
+      }
+    ]
+  }
+}

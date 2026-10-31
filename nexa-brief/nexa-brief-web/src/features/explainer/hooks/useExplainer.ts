@@ -2,32 +2,41 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { httpClient } from "@/infrastructure/api/http-client";
 import {
+  captureThumbnails,
+  chooseThumbnail,
   createProduction,
   generateBrief,
   generatePublishTexts,
   getCategoryDesigns,
   getDesignGroups,
   getExplainerOptions,
+  getExplainerJobs,
   getExplainerVideos,
   getProduction,
   getProductions,
   recordExplainerVideo,
   resumeProduction,
 } from "../api/explainer-service";
+import { useRecordingTrayStore } from "../store/recording-tray-store";
 import {
   ACTIVE_JOB_STATES,
   ACTIVE_PRODUCTION_STATES,
   type BriefInput,
   type CreateProductionInput,
+  type ExplainerJob,
   type ExplainerVideo,
   type Production,
   type RecordExplainerInput,
   type TextProvider,
+  type ThumbnailOptionId,
 } from "../types";
 
 const POLL_MS = 5_000;
+const RECORDING_POLL_MS = 3_000;
 const VIDEOS_KEY = ["explainer-videos"] as const;
+export { VIDEOS_KEY as EXPLAINER_VIDEOS_QUERY_KEY };
 const PRODUCTIONS_KEY = ["explainer-productions"] as const;
+export const RECORDING_JOBS_QUERY_KEY = ["explainer-recordings"] as const;
 
 /** Sin `categoryPath` trae todos los videos; con él, solo los de esa categoría. */
 export function useExplainerVideos(categoryPath?: string) {
@@ -38,7 +47,7 @@ export function useExplainerVideos(categoryPath?: string) {
     refetchInterval: (query) => {
       const videos = (query.state.data ?? []) as ExplainerVideo[];
       const busy = videos.some((v) => v.lastJob && ACTIVE_JOB_STATES.includes(v.lastJob.state));
-      return busy ? POLL_MS : false;
+      return busy ? RECORDING_POLL_MS : false;
     },
     refetchOnWindowFocus: false,
   });
@@ -48,6 +57,68 @@ export function useRecordExplainerVideo() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: RecordExplainerInput) => recordExplainerVideo(input),
+    onSuccess: (job, input) => {
+      const cached = queryClient.getQueriesData<ExplainerVideo[]>({ queryKey: VIDEOS_KEY });
+      const video = cached
+        .flatMap(([, videos]) => videos ?? [])
+        .find((item) => item.videoId === input.videoId);
+      useRecordingTrayStore.getState().addRecording({
+        jobId: job.jobId,
+        videoId: job.videoId,
+        title: video?.youtubeTitle || video?.title || input.videoId,
+      });
+      queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
+      queryClient.invalidateQueries({ queryKey: RECORDING_JOBS_QUERY_KEY });
+    },
+  });
+}
+
+/** Sondea grabaciones mientras haya alguna activa y se detiene al terminar. */
+export function useExplainerRecordings() {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: RECORDING_JOBS_QUERY_KEY,
+    queryFn: ({ signal }) => getExplainerJobs(signal),
+    refetchInterval: (query) => {
+      const jobs = query.state.data ?? [];
+      return jobs.some((job) => ACTIVE_JOB_STATES.includes(job.state)) ? RECORDING_POLL_MS : false;
+    },
+    refetchOnWindowFocus: false,
+  });
+  const previous = useRef<Map<string, ExplainerJob["state"]>>(new Map());
+  useEffect(() => {
+    const jobs = query.data;
+    if (!jobs) return;
+    const finished = jobs.some((job) => {
+      const before = previous.current.get(job.jobId);
+      return (
+        before !== undefined &&
+        ACTIVE_JOB_STATES.includes(before) &&
+        !ACTIVE_JOB_STATES.includes(job.state)
+      );
+    });
+    previous.current = new Map(jobs.map((job) => [job.jobId, job.state]));
+    if (finished) {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
+    }
+  }, [query.data, queryClient]);
+  return query;
+}
+
+export function useCaptureThumbnails() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (videoId: string) => captureThumbnails(videoId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: VIDEOS_KEY }),
+  });
+}
+
+export function useChooseThumbnail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { videoId: string; option: ThumbnailOptionId }) =>
+      chooseThumbnail(input.videoId, input.option),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: VIDEOS_KEY }),
   });
 }
@@ -61,10 +132,10 @@ export function useGeneratePublishTexts() {
   });
 }
 
-export function useExplainerOptions() {
+export function useExplainerOptions(categoryPath?: string) {
   return useQuery({
-    queryKey: ["explainer-options"],
-    queryFn: ({ signal }) => getExplainerOptions(signal),
+    queryKey: ["explainer-options", categoryPath ?? "default"],
+    queryFn: ({ signal }) => getExplainerOptions(categoryPath, signal),
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
   });
@@ -163,15 +234,18 @@ export function useResumeProduction() {
 export interface PublishAccount {
   selector: string;
   label: string;
+  platform: string;
+  group: string;
 }
 
 interface AccountDto {
   platform: string;
   alias: string;
   name: string;
+  label?: string;
 }
 
-const PUBLISHABLE = ["youtube", "tiktok", "facebook"];
+const PUBLISHABLE = ["youtube", "tiktok", "facebook", "instagram"];
 
 export function usePublishAccounts() {
   return useQuery({
@@ -181,8 +255,10 @@ export function usePublishAccounts() {
       return dtos
         .filter((dto) => PUBLISHABLE.includes(dto.platform))
         .map((dto) => ({
-          selector: `${dto.platform}:${dto.alias}`,
-          label: `${dto.platform} · ${dto.name || dto.alias}`,
+          selector: dto.platform + ":" + dto.alias,
+          label: dto.platform + " · " + (dto.name || dto.alias),
+          platform: dto.platform,
+          group: dto.name?.trim() || dto.label?.trim() || dto.alias,
         }));
     },
     staleTime: 60_000,

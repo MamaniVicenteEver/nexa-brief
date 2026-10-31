@@ -10,7 +10,10 @@
       "song": "Canción",
       "media": "Medios",
       "texts": "Textos",
-      "render": "Grabar"
+      "render": "Grabar",
+      "original": "Video original",
+      "sandbox": "Sandbox",
+      "record": "Grabar"
     },
     "actions": {
       "preview": "Previsualizar",
@@ -44,7 +47,9 @@
         "publishing": "publicando",
         "published": "publicado",
         "failed": "falló"
-      }
+      },
+      "preparing": "Preparando los textos de publicación…",
+      "prepared": "Preparado: revisá los Detalles o grabalo."
     },
     "song": {
       "title": "Canción",
@@ -112,6 +117,127 @@
       "publishHint": "Opcional: elegí cuentas conectadas. Si no elegís ninguna, el video queda en la Biblioteca.",
       "loadingAccounts": "Cargando cuentas…",
       "noAccounts": "No hay cuentas conectadas."
+    },
+    "original": {
+      "hint": "Así se ve la plantilla tal cual. Para hacer tu versión, creá un prototipo en el Sandbox.",
+      "needs": "Qué pide",
+      "song": "Canción",
+      "songLyrics": "la letra se transcribe sola",
+      "songOnly": "sin letra en pantalla",
+      "kind": {
+        "image": "imagen",
+        "video": "video",
+        "any": "imagen o video"
+      },
+      "count": "{min, plural, =0 {hasta {max}} other {de {min} a {max}}}",
+      "texts": "Textos",
+      "textsCount": "{n, plural, one {# texto editable} other {# textos editables}}",
+      "records": "Cómo graba",
+      "default": "por defecto: {engine}",
+      "formats": "16:9 siempre; 9:16 opcional al grabar.",
+      "flowTitle": "Cómo se hace un video",
+      "flow1": "Sandbox: creá un prototipo con tu canción y tus medios.",
+      "flow2": "Previsualizá para verlo en el reproductor.",
+      "flow3": "Prepará: se generan el nombre de la canción, títulos, descripciones y etiquetas de cada red (editables en Detalles).",
+      "flow4": "Grabar: elegí el prototipo, el motor, los formatos y los canales.",
+      "newPrototype": "Nuevo prototipo",
+      "openSandbox": "Ver prototipos ({n})",
+      "sectionDetails": "Detalles",
+      "sectionPublication": "Publicación",
+      "recordOriginal": "Grabar el original",
+      "publicationHint": "Lo que se publicaría en cada red si grabás la plantilla tal cual, con su canción y su fondo.",
+      "editPublication": "Editar textos",
+      "preparing": "Preparando (previsualiza y escribe los textos)…",
+      "preparePublication": "Preparar la publicación",
+      "prepareAgain": "Volver a preparar con esta información"
+    },
+    "sandbox": {
+      "title": "Prototipos",
+      "count": "{n, plural, =0 {ninguno} one {# prototipo} other {# prototipos}}",
+      "hint": "Cada prototipo es una versión de esta plantilla con su canción, video o imagen de fondo y textos.",
+      "loading": "Cargando prototipos…",
+      "empty": "Todavía no hay prototipos. Creá el primero con tu canción.",
+      "new": "Nuevo prototipo",
+      "defaultName": "Prototipo {n}",
+      "noSongName": "Sin preparar",
+      "delete": "Borrar prototipo",
+      "deleteConfirm": "¿Borrar este prototipo? Si ya se grabó, el video sigue en Biblioteca.",
+      "back": "Volver a la lista",
+      "name": "Nombre del prototipo",
+      "status": {
+        "new": "Sin preparar",
+        "previewing": "Previsualizando",
+        "preview_ready": "Para preparar",
+        "preparing": "Preparando",
+        "prepared": "Preparado",
+        "rendering": "Grabando",
+        "rendered": "Grabado",
+        "failed": "Falló"
+      },
+      "actions": {
+        "preview": "Previsualizar",
+        "previewAgain": "Previsualizar de nuevo",
+        "working": "Trabajando…",
+        "preparing": "Preparando textos…",
+        "prepare": "Preparar",
+        "prepareHint": "Preparar genera el nombre de la canción y los títulos, descripciones y etiquetas para YouTube, Facebook, Instagram y TikTok.",
+        "details": "Detalles",
+        "hideDetails": "Ver medios",
+        "goRecord": "Ir a grabar",
+        "prepareAgain": "Volver a preparar los textos",
+        "prepareAgainConfirm": "Editaste los detalles: volver a preparar los reemplaza. ¿Seguir?",
+        "missingSong": "Elegí una canción para previsualizar.",
+        "missingMedia": "Completá los medios marcados para previsualizar."
+      }
+    },
+    "details": {
+      "title": "Detalles",
+      "edited": "Editado",
+      "song": "Canción",
+      "songName": "Nombre de la canción",
+      "artist": "Artista",
+      "noSong": "Sin nombre de canción",
+      "platforms": "Textos por red",
+      "platformsHint": "Se publican tal cual. Revisalos y cambiá lo que quieras.",
+      "postTitle": "Título",
+      "description": "Descripción",
+      "tags": "Etiquetas",
+      "tagsPlaceholder": "separadas por coma",
+      "close": "Cerrar",
+      "save": "Guardar cambios",
+      "pinned": "Comentario fijado",
+      "research": "Investigación previa",
+      "songHint": "También es lo que muestra la tarjeta de intro del video."
+    },
+    "record": {
+      "empty": "No hay prototipos preparados. En el Sandbox, previsualizá uno y tocá «Preparar».",
+      "goSandbox": "Crear un prototipo en el Sandbox",
+      "prototype": "Prototipo",
+      "prototypeHint": "El video original o uno de tus prototipos preparados.",
+      "formats": "Formatos",
+      "formatsHint": "16:9 se graba siempre. Sumá 9:16 para Reels, TikTok o Shorts.",
+      "publish": "Publicar al terminar",
+      "publishHint": "Opcional. Cada cuenta publica en un solo formato. Si no elegís ninguna, el video queda en Biblioteca.",
+      "record": "Grabar",
+      "recording": "Grabando…",
+      "recordAndPublish": "{count, plural, one {Grabar y publicar en # canal} other {Grabar y publicar en # canales}}",
+      "original": "Video original",
+      "originalHint": "La plantilla tal cual: su canción y su fondo",
+      "originalNotPrepared": "El original todavía no tiene sus textos de publicación. Preparalo (tarda unos segundos) y después grabalo.",
+      "prepareOriginal": "Preparar el video original"
+    },
+    "songNotes": {
+      "label": "Información de la canción",
+      "optional": "Opcional",
+      "placeholder": "Nombre, artista, de qué trata, a quién le habla, en qué momento se escucha…",
+      "hint": "Si la escribes, la IA investiga con esto antes de escribir los textos. Si no, identifica la canción por su nombre o su letra."
+    },
+    "introSong": {
+      "title": "Canción en la intro",
+      "hint": "Es lo que dice la tarjeta del inicio del video. Cámbiala antes de grabar si hace falta.",
+      "song": "Nombre de la canción",
+      "artist": "Artista",
+      "save": "Guardar"
     }
   }
 }

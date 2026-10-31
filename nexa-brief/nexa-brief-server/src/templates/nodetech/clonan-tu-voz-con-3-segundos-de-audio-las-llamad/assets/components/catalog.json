@@ -1,0 +1,144 @@
+{
+  "comps": [
+    {
+      "name": "rough.incomingCall",
+      "summary": "Un teléfono dibujado a mano con pantalla de llamada entrante: nombre aparente, botón de responder y de rechazar. Sirve para mostrar el momento en que suena una llamada de un supuesto familiar.",
+      "tags": [
+        "teléfono",
+        "llamada",
+        "estafa",
+        "emergencia"
+      ],
+      "layer": "main",
+      "params": {
+        "callerName": {
+          "type": "string",
+          "default": "MAMÁ",
+          "doc": "Nombre que aparece en la pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subtitle": {
+          "type": "string",
+          "default": "LLAMADA ENTRANTE",
+          "doc": "Texto chico arriba del nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "acceptLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo del botón verde (accent).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "declineLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo del botón de colgar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota al pie.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "callerName": "MAMÁ",
+        "subtitle": "LLAMADA ENTRANTE",
+        "acceptLabel": "",
+        "declineLabel": "",
+        "note": ""
+      }
+    },
+    {
+      "name": "rough.paymentRequest",
+      "summary": "Una orden de transferencia ilustrada: tarjeta grande con importe, botón ENVIAR tachado y flecha de urgencia. Sirve para el momento en que la narración muestra la exigencia de dinero.",
+      "tags": [
+        "pago",
+        "urgencia",
+        "transferencia",
+        "estafa"
+      ],
+      "layer": "main",
+      "params": {
+        "amount": {
+          "type": "string",
+          "default": "$5.400",
+          "doc": "Importe grande en la tarjeta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "TRANSFERENCIA URGENTE",
+          "doc": "Título de la tarjeta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subtitle": {
+          "type": "string",
+          "default": "SOLICITUD DE PAGO",
+          "doc": "Rótulo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "ENVIAR",
+          "doc": "Texto del botón (se dibuja tachado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita al pie.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "urgency": {
+          "type": "string",
+          "default": "AHORA",
+          "doc": "Rótulo de la flecha de urgencia.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "amount": "$5.400",
+        "title": "TRANSFERENCIA URGENTE",
+        "subtitle": "SOLICITUD DE PAGO",
+        "cta": "ENVIAR",
+        "note": "",
+        "urgency": "AHORA"
+      }
+    }
+  ]
+}

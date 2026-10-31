@@ -1,0 +1,27 @@
+{
+  "id": "thumb_two_modes_v2",
+  "piece": "thumbnail",
+  "name": "Dos modos: solo texto y texto + imagen (texto ampliado)",
+  "description": "A: la frase nombra el tema y deja una tensión. B: la imagen dice el tema y el texto la tensión. Cada opción forma pareja con un título y no lo repite. Permite hasta siete palabras en texto con imagen cuando la frase lo necesita.",
+  "text_only": {
+    "words": [5, 9],
+    "lines": [2, 3],
+    "max_chars_per_line": 18
+  },
+  "with_image": {
+    "words": [2, 7]
+  },
+  "min_shared_word_length": 4,
+  "image_criteria": [
+    "Fiel al video: la persona, el objeto o el lugar aparece en el video o es exactamente lo que el video cuenta.",
+    "Reconocible a 210 px: un solo sujeto que ocupe 40 % o más del cuadro.",
+    "Dice el tema sin texto: un ícono conocido le gana a un objeto técnico desconocido.",
+    "Rostro o emoción, si existe.",
+    "Imagen y texto se reparten el trabajo: la imagen dice DE QUÉ trata, el texto QUÉ PASÓ.",
+    "Espacio limpio para el texto: un tercio libre.",
+    "Tratamiento de la plantilla (binary: blanco y negro de alto contraste; rough: trazo a mano y verde lima).",
+    "Limpia y con licencia: sin logos ni textos ajenos; crédito en la descripción.",
+    "Respeto: nada de víctimas ni de muerte.",
+    "Mejor del momento que de después."
+  ]
+}

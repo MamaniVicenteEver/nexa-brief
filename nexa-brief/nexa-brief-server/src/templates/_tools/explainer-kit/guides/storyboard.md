@@ -42,12 +42,16 @@ Prompt listo para un modelo: `prompts/director.md`.
      de acción (convoy, descent, choice, tally, counter);
    - 0.5–0.85: objetos y diagramas (icon, flow, rotors, compare, stack, timeline, cipher, network);
    - < 0.4: planos lentos y vacíos (floor, portrait, icon simple), sin flash.
-5. **Letras grandes**: 4–6 `common.lyric` + como mucho 1–2 `common.punch` por video (máximo 7 en total), en
-   las frases del PLAN §6. Si todo es texto gigante, nada es importante.
+5. **Letras grandes**: las de PLAN §6, en la cantidad de su duración (`check` avisa: 4–6 en el formato
+   corto, 6–10 en 10 min…) + como mucho 1–2 `common.punch`. Si todo es texto gigante, nada es importante.
 6. **Variedad**: nunca el mismo componente dos veces seguidas; ninguna foto dos veces (salvo el callback
    final); ningún icono más de 2 veces. Leé el `summary` del icono/boceto: `waves`/`radio` = ondas de
    radio, `water` = agua; si el nombre no deja claro qué es, miralo en la galería.
 7. **Fotos**: la primera vez que se nombra a una persona/lugar; máximo una cada ~25 s.
+8. **Objetos del tema**: los planos donde la voz nombra un objeto del inventario visual (PLAN §7a)
+   usan su componente propio (`assets/components/`), no un icono genérico. En videos largos el
+   componente propio vuelve en varios capítulos con params distintos (otra jugada, otra parte del
+   motor): es el hilo visual del video.
 8. **Acento**: un solo resaltado por plano (`active`, `pick`, `accent`).
 9. **Callback**: el último beat narrativo repite el retrato o el título del comienzo.
 10. **Textos en params**: ≤ 22 caracteres por rótulo, MAYÚSCULAS en tags/labels; nada que la voz no diga.
@@ -82,6 +86,12 @@ Prompt listo para un modelo: `prompts/director.md`.
 | vacío / pausa | `binary.floor`, `binary.tunnel` | `rough.icon` simple |
 
 (La lista completa con parámetros está en `CATALOG.md`.)
+
+Plano preferido para los giros: `rough.introv2` o `binary.introv2`, con `text` grande a un lado y
+foto `src` grande al otro. `highlight` destaca una frase; `focus` (rough) o `focusX`/`focusY`
+(binary) protegen el sujeto. En rough produjo «UNA LLAMADA URGENTE» y «3 SEGUNDOS DE MUESTRA».
+Usalo unas 3–5 veces por 10 min, con medios distintos. Cada beat con video dura ≥ 8 s; `common.clip` recomienda 12–18 s y los videos de ≥ 8 min necesitan dos tramos de ≥ 12 s. El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta: agregá `logo` y `logoName` al beat del medio. Distribuí fotos y clips por acto y reservá
+`common.question` para el final hablado, hasta el inicio del outro.
 
 ## 5. Validar y revisar
 
