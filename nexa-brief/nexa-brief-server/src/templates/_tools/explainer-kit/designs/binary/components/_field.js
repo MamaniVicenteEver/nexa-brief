@@ -80,8 +80,8 @@
       const prev = prevList[prevList.length - 1] || null;
       const prevVisible = prev && curMain && (curMain === prev || prev.t1 >= curMain.t0 - 0.01) ? prev : null;
 
-      const A = cur ? pointsFor(ctx, F, cur) : null;
-      const P = prevVisible ? pointsFor(ctx, F, prevVisible) : null;
+      const A = cur ? pointsFor(ctx, F, cur, t) : null;
+      const P = prevVisible ? pointsFor(ctx, F, prevVisible, t) : null;
       const morph = cur ? (cur.params?.morph ?? C.binary?.morph ?? 1.1) : 0.9;
       const p = curMain ? clamp((t - curMain.t0) / morph) : 1;
       const tfA = cur ? transformFor(cur, t - cur.t0) : null;
@@ -95,7 +95,16 @@
     },
   });
 
-  function pointsFor(ctx, F, b) {
+  function pointsFor(ctx, F, b, t) {
+    const def = K.registry.get(b.use);
+    if (def.dynamicPoints && b.params?.video) {
+      const params = K.resolveParams(def, b.params, ctx.C);
+      try {
+        const pts = def.points({ ...ctx, beat: b, rng: rng(hash(b.i + b.use)) }, params, Math.max(0, t - b.t0));
+        if (pts && pts.n) pts.params = params;
+        return pts && pts.n ? pts : { n: 0 };
+      } catch (e) { console.error("[binary] points", b.use, e); return { n: 0 }; }
+    }
     const key = b.i + ":" + ctx.stage.W + "x" + ctx.stage.H;
     if (!F.cache.has(key)) {
       const def = K.registry.get(b.use), params = K.resolveParams(def, b.params, ctx.C);
@@ -225,6 +234,13 @@
   function portraitCrop(img, zoom, fx, fy) {
     if (zoom <= 1) return img;
     const key = `${img.src || img.width + "x" + img.height}|${zoom}|${fx}|${fy}`;
+    if (img.tagName === "VIDEO") {
+      const w = img.width / zoom, h = img.height / zoom;
+      const x = clamp(img.width * fx - w / 2, 0, img.width - w), y = clamp(img.height * fy - h / 2, 0, img.height - h);
+      const cv = document.createElement("canvas"); cv.width = Math.round(w); cv.height = Math.round(h);
+      cv.getContext("2d").drawImage(img, x, y, w, h, 0, 0, cv.width, cv.height);
+      return cv;
+    }
     if (!portraitCrops.has(key)) {
       const w = img.width / zoom, h = img.height / zoom;
       const x = clamp(img.width * fx - w / 2, 0, img.width - w), y = clamp(img.height * fy - h / 2, 0, img.height - h);

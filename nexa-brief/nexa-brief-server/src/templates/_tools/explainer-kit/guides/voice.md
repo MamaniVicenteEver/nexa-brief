@@ -37,9 +37,10 @@ en 3 y los une con 0,35 s. Cada intento cuenta para la cuota: no relanzar sin mo
 
 ### Ritmo
 
-En la primera tanda (2026-10-07) las voces salieron a 138–143 ppm, más rápido que el objetivo del
-diseño (115–138). El estilo base de cada diseño ahora pide explícitamente el ritmo; si el control
-marca `wpm` muy alto en un video importante, regenerar ese video.
+El objetivo por defecto del kit para todas las narrativas es 130 ppm, con pausas naturales entre
+oraciones e ideas; `delivery_note` por segmento puede precisar el tono. El estilo de Gemini y el
+prompt de fallback reciben esa perilla. `kit.py check` avisa cuando `work/narration.qc.json → wpm`
+supera 138 ppm. Las instrucciones de TTS orientan, pero el ritmo real se mide después de generar la voz.
 
 ## 3. Transcripción y tiempos
 

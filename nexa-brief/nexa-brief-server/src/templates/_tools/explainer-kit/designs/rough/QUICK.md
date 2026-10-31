@@ -9,13 +9,13 @@
   `{"use": "rough.title", "params": {"text": "1202", "kicker": "APOLO 11 · 20 JUL 1969", "sub": "EL ERROR QUE LLEVÓ A LA HUMANIDAD A LA LUNA", "accent": true, "blink": 3}}`
 - **`rough.icon`** — Boceto de un objeto (diccionario rough/sketches.js) que se dibuja trazo a trazo; relleno rayado lima opcional, etiqueta arriba y nota manuscrita abajo. Parámetros: icon*, size, tag, caption, accent, color(ink|accent), drawSec
   `{"use": "rough.icon", "params": {"icon": "rocket", "tag": "APOLO 11", "caption": "julio de 1969", "accent": true}}`
-- **`rough.photo`** — Foto real en blanco y negro (o virada a lima) que se revela con un barrido dentro de un marco dibujado a mano con cintas; nombre manuscrito y ficha mono debajo. Parámetros: src*, caption, sub, tone(mono|lime), size, ar, tilt, focus
+- **`rough.photo`** — Foto real en blanco y negro (o virada a lima) que se revela con un barrido dentro de un marco dibujado a mano con cintas; nombre manuscrito y ficha mono debajo. Parámetros: src*, caption, sub, tone(mono|lime), size, ar, tilt, focus, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
   `{"use": "rough.photo", "params": {"src": "assets/media/hamilton.jpg", "caption": "Margaret Hamilton", "sub": "DIRECTORA DE SOFTWARE · MIT · 32 AÑOS"}}`
 - **`rough.annotate`** — Marca a mano ENCIMA de lo que hay en pantalla: círculo, subrayado, flecha, caja o tachado, en lima, sobre una zona del cuadro de contenido; texto manuscrito opcional al lado. Parámetros: kind(circle|underline|arrow|box|cross), x, y, w, h, note, drawSec
   `{"use": "rough.annotate", "params": {"kind": "circle", "x": 0.2, "y": 0.3, "w": 0.6, "h": 0.3, "note": "¡aquí!"}}`
 - **`rough.introv1`** — Miniatura de solo texto con el tratamiento a mano de rough: título enorme, línea lima y antetítulo opcional. Parámetros: text*, textPortrait, highlight, kicker, sub, fill
   `{"use": "rough.introv1", "params": {"text": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ", "highlight": "SE RINDIÓ", "kicker": "APOLO 11 · 1969"}}`
-- **`rough.introv2`** — Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto grande a color que se funde con el fondo (en 9:16 la foto va arriba). Parámetros: text*, textPortrait, highlight, kicker, sub, src, saturate, focus
+- **`rough.introv2`** — Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto o video grande a color que se funde con el fondo (en 9:16 va arriba). Parámetros: text*, textPortrait, highlight, kicker, sub, src, video, poster, start, rate, loop, saturate, focus, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
   `{"use": "rough.introv2", "params": {"text": "¿SE ACABÓ\nLA PC\nBARATA?", "highlight": "BARATA?", "kicker": "MEMORIA RAM · 2026", "src": "assets/media/hamilton.jpg"}}`
 - **`rough.flow`** — Cadena de 2-5 pasos (boceto + rótulo) unidos por flechas a mano que aparecen en orden: causa → efecto, un proceso, un sistema. Parámetros: nodes*, active, stepSec, title
   `{"use": "rough.flow", "params": {"nodes": [{"icon": "radar", "label": "RADAR"}, {"icon": "chip", "label": "COMPUTADORA"}, {"icon": "alarm", "label": "1202"}], "active": 2}}`
@@ -62,9 +62,24 @@
   `{"use": "common.flash", "params": {"color": "palette.ink", "dur": 0.5}}`
 - **`common.endcard`** — Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse). Parámetros: line, brand, cta
   `{"use": "common.endcard", "params": {"line": "SEGUIMOS\nPREGUNTANDO", "brand": "NEXA BRIEF", "cta": "SUSCRÍBETE"}}`
-- **`common.lyric`** — Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. Parámetros: accent, size, maxChars, dimPast, y
+- **`common.lyric`** — Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. Parámetros: text, accent, size, maxChars, dimPast, y
   `{"use": "common.lyric", "params": {"accent": ["vidas"], "size": 0.9}}`
-- **`common.clip`** — Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Parámetros: src*, start, rate, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub
+- **`common.logo`** — Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual. Parámetros: src, name
+- **`common.clip`** — Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Parámetros: src*, start, rate, loop, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
   `{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}`
+- **`common.tabloid`** — Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio. Parámetros: text*, src, srcAfter, video, poster, start, rate, loop, muted, accent, bullet, bulletScale, beforeLabel, afterLabel, imageSide(auto|left|right), mode(impact|split), palette(brand|alert), strap, seal, tapeText, marker, focus, target, textIn(slam|slide|typewriter|none), stagger, accentIn(slam|slide|typewriter|none), bulletIn(slam|slide|typewriter|none), inDuration, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
+  `{"use": "common.tabloid", "params": {"text": "TÚ ERES EL SIGUIENTE", "accent": "SIGUIENTE", "strap": "AMAZON · IA"}}`
+- **`common.question`** — Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9. Parámetros: text*, y
+  `{"use": "common.question", "params": {"text": "¿La IA te quita trabajo?"}}`
 
 Bocetos (`icon`): understand · design · build · measure · ship · laptop · linux · work · spark · homelab · browser · database · terminal · waves · swipe · scribble · flight · cup · hook · star · bulb · pencil · question · up · ring · cube · notebook · tv · scales · car · gradcap · drop · megaphone · plate · dumbbell · calendar · bag · heart · pin · circle · underline · arrow · ai · camera · cloud · bot · mouse · lock · code · phone · server · eye · link · sun · plus · close · rocket · lm · moon · earth · alarm · chip · dsky · radar · flag · astronaut · woman · person · headset · papers · fuel · crater · rocks · footprint · switch · warning · check · clock · gear · target · keyboard · battery · loop · stopwatch · book · paper · cursor · coin · gift · nextcube
+
+## Plano preferido · texto grande + foto o video
+
+`rough.introv2` combina `text` grande a un lado y `src` o `video` grande al otro. Ajustá `highlight`, `kicker` y `focus`. El MP4 es siempre mudo; `poster` (o `src`) es el respaldo. Todo video visible dura al menos 8 s. En videos de ≥ 8 min, incluí al menos dos tramos de video de ≥ 12 s.
+
+`{"t": 42, "dur": 12, "use": "rough.introv2", "params": {"text": "LA VERDAD", "video": "assets/media/archivo.mp4", "poster": "assets/media/archivo.jpg", "start": 2, "rate": 1, "loop": true, "focus": "xMaxYMid", "logo": "assets/media/logos/marca.svg", "logoName": "Marca"}}`
+
+## Marcas e instituciones
+
+El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Usá `logo`, `logoName`, `logoPos` y `logoSize` en el beat visual (`rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`). `common.logo` está obsoleto. Preferí SVG; el PNG debe ser transparente.

@@ -50,6 +50,7 @@ class PublishPackageResponse(BaseModel):
     package: PublishPackage | None = None
     issues: list[PublishIssueResponse] = Field(default_factory=list)
     thumbnail_image_url: str | None = None
+    thumbnail_tabloid_image_url: str | None = None
     # Nombre de cada estrategia de gancho ("4" → "Casi no pasa"), de la estrategia de títulos activa.
     hook_strategy_names: dict[str, str] = Field(default_factory=dict)
     # Largo máximo de un título de YouTube según la estrategia activa.
@@ -57,8 +58,8 @@ class PublishPackageResponse(BaseModel):
 
 
 class ThumbnailOptionResponse(BaseModel):
-    option: Literal["A", "B"]
-    component: str                 # <diseño>.introv1 (A, solo texto) / <diseño>.introv2 (B, texto + foto)
+    option: Literal["A", "B", "C"]
+    component: str                 # intros A/B del diseño o common.tabloid (C)
     # params del componente tal como abren el video (mismos que la captura): la web los usa para la vista previa
     params: dict = Field(default_factory=dict)
     url: str | None = None         # captura render/thumbnail-<opción>.jpg (None = todavía no se capturó)
@@ -67,12 +68,12 @@ class ThumbnailOptionResponse(BaseModel):
 class ThumbnailsResponse(BaseModel):
     """Miniaturas de YouTube: capturas de la intro del diseño. Vacío si el diseño no tiene intros."""
 
-    chosen: Literal["A", "B"] | None = None
+    chosen: Literal["A", "B", "C"] | None = None
     options: list[ThumbnailOptionResponse] = Field(default_factory=list)
 
 
 class ThumbnailChoiceRequest(BaseModel):
-    option: Literal["A", "B"]
+    option: Literal["A", "B", "C"]
 
 
 class ExplainerVideoResponse(BaseModel):
@@ -97,6 +98,9 @@ class ExplainerVideoResponse(BaseModel):
     tiktok_hashtags: list[str] = Field(default_factory=list)
     design_name: str = ""
     demo: bool = False
+    narrative_id: str | None = None
+    narrative_label: str | None = None
+    quality_issues: list[str] = Field(default_factory=list)
     preview_url: str
     poster_url: str | None = None
     last_job: ExplainerJobResponse | None = None
@@ -210,9 +214,9 @@ class RecordExplainerRequest(BaseModel):
         None,
         description="Requerido si publish=true, p. ej. 'youtube:canal_1' o 'tiktok:alias'.",
     )
-    thumbnail: Literal["A", "B"] | None = Field(
+    thumbnail: Literal["A", "B", "C"] | None = Field(
         None,
-        description="Miniatura elegida: 'A' (introv1, solo texto) o 'B' (introv2, texto + foto). None = la guardada.",
+        description="Miniatura elegida: 'A' (introv1), 'B' (introv2) o 'C' (common.tabloid). None = la guardada.",
     )
 
 
@@ -262,12 +266,42 @@ class LengthOptionsResponse(BaseModel):
     max_minutes: int
 
 
+class NarrativeActResponse(BaseModel):
+    id: str
+    name: str
+    weight: str
+    intensity: str
+    spoken: bool
+
+
+class TitleLevelResponse(BaseModel):
+    id: Literal["basico", "medio", "alto", "negro"]
+    name: str
+    description: str
+
+
+class NarrativeOptionResponse(BaseModel):
+    """Una estrategia narrativa elegible (src/skills/explainer/strategies/narrative/)."""
+
+    id: str
+    label: str
+    name: str
+    description: str
+    status: str
+    acts: list[NarrativeActResponse]
+    title_levels: list[TitleLevelResponse] = Field(default_factory=list)
+    default_title_level: Literal["basico", "medio", "alto", "negro"] | None = None
+
+
 class ExplainerOptionsResponse(BaseModel):
     agents: list[ProviderStatus]
     text_providers: list[ProviderStatus]
     default_agent: str
     default_text_provider: str
     lengths: LengthOptionsResponse
+    # Vacío si las narrativas no cargan: la web oculta el selector y todo sigue como antes.
+    narratives: list[NarrativeOptionResponse] = Field(default_factory=list)
+    default_narrative: str | None = None
 
 
 class BriefRequest(BaseModel):
@@ -278,6 +312,8 @@ class BriefRequest(BaseModel):
     provider: str | None = Field(None, description="claude | codex | deepseek (default: settings)")
     media_names: list[str] = Field(default_factory=list)
     minutes: float | None = Field(None, ge=5, le=60, description="Duración objetivo (default: lengths.json)")
+    narrative_id: str | None = Field(None, max_length=100, description="Estrategia narrativa (default: la de la categoría)")
+    title_level: Literal["basico", "medio", "alto", "negro"] | None = Field(None, description="Nivel de los títulos (default: el de la narrativa)")
 
 
 class PublishTextsRequest(BaseModel):
@@ -303,6 +339,8 @@ class ProductionRequest(BaseModel):
     auto_record: bool = False
     plan_item_id: str | None = None
     minutes: float | None = Field(None, ge=5, le=60, description="Duración objetivo (default: lengths.json)")
+    narrative_id: str | None = Field(None, max_length=100, description="Estrategia narrativa (default: la de la categoría)")
+    title_level: Literal["basico", "medio", "alto", "negro"] | None = Field(None, description="Nivel de los títulos (default: el de la narrativa)")
 
 
 class ProductionResponse(BaseModel):
@@ -315,10 +353,13 @@ class ProductionResponse(BaseModel):
     agent: str
     auto_record: bool = False
     state: str
+    phase: str | None = None
     error: str | None = None
     video_status: str | None = None
     record_job_id: str | None = None
     media: list[str] = Field(default_factory=list)
+    narrative_id: str | None = None
+    title_level: Literal["basico", "medio", "alto", "negro"] | None = None
     brief: dict | None = None
     agent_report: str | None = None
     plan_item_id: str | None = None

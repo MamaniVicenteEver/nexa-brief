@@ -81,10 +81,22 @@ def quick(data, design_id):
         out.append("")
     if fam == "binary": out += ["Iconos (`icon`): " + " · ".join(data["icons"]), ""]
     if fam == "rough": out += ["Bocetos (`icon`): " + " · ".join(data["sketches"]), ""]
+    if fam in ("rough", "binary"):
+        focus = "`focus`" if fam == "rough" else "`focusX`, `focusY`"
+        video_focus = '"focus": "xMaxYMid"' if fam == "rough" else '"focusX": 0.7, "focusY": 0.5'
+        out += ["## Plano preferido · texto grande + foto o video", "",
+                f"`{fam}.introv2` combina `text` grande a un lado y `src` o `video` grande al otro. Ajustá `highlight`, `kicker` y {focus}. El MP4 es siempre mudo; `poster` (o `src`) es el respaldo. Todo video visible dura al menos 8 s. En videos de ≥ 8 min, incluí al menos dos tramos de video de ≥ 12 s.", "",
+                f'`{{"t": 42, "dur": 12, "use": "{fam}.introv2", "params": {{"text": "LA VERDAD", "video": "assets/media/archivo.mp4", "poster": "assets/media/archivo.jpg", "start": 2, "rate": 1, "loop": true, {video_focus}, "logo": "assets/media/logos/marca.svg", "logoName": "Marca"}}}}`', ""]
+    out += ["## Marcas e instituciones", "",
+            "El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Usá `logo`, `logoName`, `logoPos` y `logoSize` en el beat visual (`rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`). `common.logo` está obsoleto. Preferí SVG; el PNG debe ser transparente.", ""]
     return "\n".join(out)
 
 def main():
     data = asyncio.run(read())
+    # Los umbrales se mantienen al regenerar el catálogo de componentes.
+    existing = KIT / "catalog.json"
+    if existing.exists():
+        data["quality"] = json.loads(existing.read_text(encoding="utf-8")).get("quality", {})
     (KIT / "catalog.json").write_text(json.dumps(data, ensure_ascii=False, indent=1))
     (KIT / "CATALOG.md").write_text(md(data))
     for d in sorted(p.parent.name for p in (KIT / "designs").glob("*/design.json")):

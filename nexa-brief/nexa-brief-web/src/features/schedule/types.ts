@@ -86,6 +86,7 @@ export type VideoFormat = "16x9" | "9x16";
 
 export interface PublishNowInput {
   jobId: string;
+  idempotencyKey: string;
   platform: ChannelPlatform;
   accountAlias: string;
   /** Archivo a subir; sin valor, el que corresponde a la plataforma. */

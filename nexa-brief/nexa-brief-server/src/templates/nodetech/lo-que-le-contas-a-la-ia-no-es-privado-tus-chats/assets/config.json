@@ -1,0 +1,38 @@
+{
+  "activeId": "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats",
+  "configs": [
+    {
+      "id": "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats",
+      "design": "rough",
+      "title": "Lo que le contás a la IA no es privado: tus chats con ChatGPT y otros asistentes pueden terminar en un juicio",
+      "audio": {
+        "src": "assets/song-with-outro.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "storyboardUrl": "assets/storyboard.json",
+      "seed": 5421,
+      "narrative_id": "narrative_amarillista_v1",
+      "narrative_label": "Amarillista",
+      "title_level": "alto",
+      "components": [
+        "assets/components/escenas-datos.js",
+        "assets/components/registro-chat.js"
+      ],
+      "outro": {
+        "enabled": true,
+        "use": "rough.outrov1",
+        "start": 689.15,
+        "dur": 13.07,
+        "channel": "NODETECH",
+        "thanks": "GRACIAS POR VER",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades.",
+        "handle": "youtube.com/@nodetech",
+        "likeAt": 4.69,
+        "subscribeAt": 5.17,
+        "bellAt": 7.23,
+        "supportAt": 8.25
+      }
+    }
+  ]
+}

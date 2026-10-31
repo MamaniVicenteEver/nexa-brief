@@ -440,6 +440,8 @@ class ExplainerRecorder:
                 queue_entry = await queue_repository.start_direct(
                     job.scheduled_job_id, platform, alias, format=fmt
                 )
+                if platform == "tiktok":
+                    extra["idempotency_key"] = queue_entry.idempotency_key or f"schedule:{queue_entry.entry_id}"
                 try:
                     result = await facade.publish_video(
                         video_path=out_dir / f"{video.video_id}-{fmt}.mp4",

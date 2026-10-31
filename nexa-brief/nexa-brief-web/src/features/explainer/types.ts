@@ -51,10 +51,11 @@ export interface TitleOption {
   emotion: string;
 }
 
-/** Una de las dos composiciones de miniatura que se puede previsualizar en el reproductor. */
+/** Una de las composiciones de miniatura que se puede previsualizar en el reproductor. */
 export type ThumbnailPreview =
   | { option: "A"; lines: string[]; highlight: string; componentPreviewUrl?: string }
-  | { option: "B"; text: string; imageUrl: string | null; componentPreviewUrl?: string };
+  | { option: "B"; text: string; imageUrl: string | null; componentPreviewUrl?: string }
+  | { option: "C"; text: string; imageUrl: string | null; componentPreviewUrl?: string };
 
 export interface PublishIssue {
   level: "error" | "warning";
@@ -75,8 +76,20 @@ export interface PublishPackage {
       /** Lado de la foto en la intro 16:9; "auto" alterna entre videos. */
       imageSide: "auto" | "left" | "right";
     };
+    tabloid: {
+      text: string;
+      imageUrl: string | null;
+      imageSide: "auto" | "left" | "right";
+      mode: "impact" | "split";
+      strap: string;
+      seal: string;
+      tapeText: string;
+      marker: boolean;
+      target: [number, number];
+      pairTitle: TitleOptionId;
+    };
     /** La elegida es también la apertura del video (los primeros segundos). */
-    chosen: "text_only" | "with_image";
+    chosen: "text_only" | "with_image" | "tabloid";
   };
   titles: {
     youtube: TitleOption[];
@@ -117,6 +130,10 @@ export interface ExplainerVideo {
   designName: string;
   /** Demo de un diseño (mismo guion que otro video): ojo al publicar. */
   demo: boolean;
+  /** Narrativa guardada en la configuración del video. */
+  narrativeId: string | null;
+  narrativeLabel: string | null;
+  qualityIssues: string[];
   /** URL absoluta de la página HTML que reproduce el video (para un iframe). */
   previewUrl: string;
   /** Portada fija (render/poster.jpg); null si todavía no tiene. */
@@ -128,7 +145,7 @@ export interface ExplainerVideo {
   thumbnails: VideoThumbnails;
 }
 
-export type ThumbnailOptionId = "A" | "B";
+export type ThumbnailOptionId = "A" | "B" | "C";
 
 export interface VideoThumbnail {
   option: ThumbnailOptionId;
@@ -194,6 +211,39 @@ export interface ExplainerOptions {
   defaultAgent: AgentName;
   defaultTextProvider: TextProvider;
   lengths: LengthOptions;
+  /** Vacío si el servidor no pudo cargar narrativas: el modal oculta el selector. */
+  narratives: NarrativeOption[];
+  defaultNarrative: string | null;
+}
+
+export type TitleLevel = "basico" | "medio" | "alto" | "negro";
+
+/** Un acto de una narrativa: orden, peso relativo e intensidad (nunca segundos). */
+export interface NarrativeAct {
+  id: string;
+  name: string;
+  weight: string;
+  intensity: "baja" | "media" | "alta" | "maxima";
+  /** false: no va en el guion (título, outro con voz del canal). */
+  spoken: boolean;
+}
+
+export interface NarrativeTitleLevel {
+  id: TitleLevel;
+  name: string;
+  description: string;
+}
+
+/** Estrategia narrativa elegible al crear un video (src/skills/explainer/strategies/narrative/). */
+export interface NarrativeOption {
+  id: string;
+  label: string;
+  name: string;
+  description: string;
+  status: string;
+  acts: NarrativeAct[];
+  titleLevels: NarrativeTitleLevel[];
+  defaultTitleLevel: TitleLevel | null;
 }
 
 export interface ExplainerDesign {
@@ -229,6 +279,8 @@ export interface CategoryDesigns {
 /** Textos y ángulo de un video. Se envía tal cual (snake_case) al backend. */
 export interface ExplainerBrief {
   video_id: string;
+  narrative_id?: string | null;
+  title_level?: TitleLevel | null;
   working_title: string;
   hook: string;
   angle: string;
@@ -250,6 +302,8 @@ export interface BriefInput {
   mediaNames?: string[];
   /** Duración objetivo en minutos. */
   minutes?: number;
+  narrativeId?: string;
+  titleLevel?: TitleLevel;
 }
 
 export type ProductionState =
@@ -281,10 +335,13 @@ export interface Production {
   agent: string;
   autoRecord: boolean;
   state: ProductionState;
+  phase: string | null;
   error: string | null;
   videoStatus: string | null;
   recordJobId: string | null;
   media: string[];
+  narrativeId: string | null;
+  titleLevel: TitleLevel | null;
   brief: ExplainerBrief | null;
   agentReport: string | null;
   planItemId: string | null;
@@ -305,6 +362,8 @@ export interface CreateProductionInput {
   files?: File[];
   /** Duración objetivo en minutos. */
   minutes?: number;
+  narrativeId?: string;
+  titleLevel?: TitleLevel;
 }
 
 export interface PublishTextsResult {

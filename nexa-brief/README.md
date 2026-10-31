@@ -3,12 +3,39 @@
 Generación automática de videos (plantillas de letras, promos y documentales narrados) y publicación en
 YouTube, TikTok y Facebook.
 
-| Proyecto | Qué es | Puerto |
+| Proyecto | Qué es | Puerto de desarrollo |
 | --- | --- | --- |
 | `nexa-brief-server` | API FastAPI: pipeline, grabación (Playwright + ffmpeg), publicación | 8000 |
 | `nexa-brief-web` | Panel Next.js | 3000 |
 | `nexa-brief-remotion` | Motor de render Node que invoca la API | — |
 | `nexa-brief-hyperframes` | Composiciones HyperFrames (CLI) | — |
+
+## Arranque en el servidor
+
+Desde `~/Projects/Git-Projects/nexa-brief/nexa-brief`, elegí el entorno:
+
+```bash
+./scripts/start-docker.sh  # despierta la API y la web de producción
+./scripts/start-dev.sh     # inicia la API y la web de desarrollo
+```
+
+| Entorno | Dirección pública | Web en el servidor | API en el servidor |
+| --- | --- | --- | --- |
+| Docker | [nexa-brief.everdev.space](https://nexa-brief.everdev.space) | `127.0.0.1:3002` | `127.0.0.1:8002` |
+| Desarrollo | [dev-nexa-brief.everdev.space](https://dev-nexa-brief.everdev.space) | `0.0.0.0:3000` | `0.0.0.0:8000` |
+
+El script de Docker inicia los contenedores existentes y espera a que estén saludables; no reconstruye imágenes
+ni borra volúmenes. La primera instalación necesita crear los contenedores con `make docker-up`. El script de
+desarrollo corre en primer plano: `Ctrl+C` detiene ambos procesos. Si ya están activos, lo informa sin reiniciarlos.
+
+Para dormir Docker sin borrar sus datos, ejecutá `docker compose stop web api`. Mientras esté detenido, el
+dominio de producción no responderá; el desarrollo puede seguir funcionando. El túnel `nexa-brief-cloudflared`
+debe estar activo para acceder a cualquiera de los dos subdominios. No hay que usar `make public-up` para
+despertar Docker: ese comando prepara el desarrollo en el puerto 3000.
+
+En este servidor, `docker-compose.override.yml` configura los puertos locales 3002 y 8002, y `.dev-local.mk`
+configura la URL pública de desarrollo. Los datos y usuarios de Docker son independientes de los de desarrollo.
+La entrada directa de desarrollo está habilitada públicamente: cualquiera que conozca su enlace puede entrar.
 
 ## Inicio rápido (desarrollo local)
 
@@ -65,7 +92,8 @@ Docker starts with scheduled publishing disabled for safety. Manual publishing s
 background scheduler explicitly with `make docker-up NEXA_ENABLE_AUTO_PUBLISHING=true` after reviewing
 the saved schedule and queue.
 
-- Web: http://localhost:3000 · API: http://localhost:8000 · Salud: http://localhost:8000/health · OpenAPI: http://localhost:8000/docs
+- Por defecto, sin el override del servidor, Docker usa la web en `http://localhost:3000` y la API en `http://localhost:8000`.
+  En el servidor usa los puertos 3002 y 8002 indicados arriba.
 - En Docker, `NEXT_PUBLIC_API_URL` queda vacío: el navegador usa el mismo origen (`/api/v1`) y Next.js reenvía
   las peticiones a `INTERNAL_API_URL=http://api:8000` dentro de la red privada. Configurá solo `PUBLIC_APP_URL` con la URL HTTPS pública (por ejemplo, el túnel) para que OAuth, los accesos y
   las redirecciones usen el mismo origen; `AUTH_URL` se deriva de esa variable; `INTERNAL_API_URL` se fija también al construir la imagen web.
@@ -116,3 +144,7 @@ ALLOWED_DEV_ORIGINS=<ip-del-servidor>
 | La API usa mucha CPU sin hacer nada | `--reload` sin `--reload-dir src` vigila `output/` y `.venv/`. `make dev` ya lo limita. |
 
 Más detalle: `CONTRIBUTING.md` (flujo de trabajo) y `nexa-brief-server/README.md` (API y arquitectura).
+
+### Servicio TikTok local
+
+Instalá con `cd nexa-tiktok && uv sync --python 3.12` y `uv run playwright install chromium`; `uv.lock` fija Playwright 1.64.1 y Chromium, así que conservá esa versión mientras existan perfiles. Copiá `nexa-tiktok/.env.example` a `nexa-tiktok/.env` y configurá también `TIKTOK_SERVICE_KEY` en el `.env` raíz con el mismo valor que `NEXA_TIKTOK_KEY` del servicio. `make dev` inicia la API, la web y el servicio TikTok local en `127.0.0.1:8100`. Conectá la cuenta desde `/canales`: escaneá el QR con la aplicación de TikTok en el móvil y confirmá el acceso. No cierres sesión en TikTok. No expongas el servicio a Internet.

@@ -52,6 +52,21 @@ intensidad
 Reglas: **mínimo 2 bajadas reales** (sin bajadas no hay clímax). El clímax nunca en el primer
 tercio. La caída emocional hace que el cierre pegue.
 
+### Narrativa elegida en el video
+
+`assets/config.json → narrative_id` dice qué arco sigue el guion. Sin `narrative_id` (videos anteriores)
+o con `narrative_documental_v1`: este §3. Con otra (p. ej. `narrative_amarillista_v1`, la de por defecto):
+sus actos están en `src/skills/explainer/strategies/narrative/<narrative_id>.json` y **reemplazan este §3**;
+§4–7 (voz, script.json, duración) siguen igual. El prompt de producción ya trae el resumen.
+
+- Los actos tienen **orden, peso relativo e intensidad, nunca segundos**: tú decides cuánto dura cada uno
+  según `target_minutes` (en 5 min el miedo puede ser el primer minuto; en 30 min, varios minutos).
+- Cada segmento lleva `act` (id del acto). `intensity`: maxima ≥ 0.9 · alta ≥ 0.7 · media ≥ 0.4.
+- Tono `alarma` para el golpe y el miedo; `cercano` + `delivery_note` para la pregunta final.
+- La pregunta final lleva `on_screen_question` (corta, termina en «?») y un beat `common.question` en el
+  storyboard con `until` = primeras palabras del outro.
+- `kit.py check` valida la forma (tools/narrative_check.py): actos en orden, apertura, pregunta, comentario fijado.
+
 ## 4. Escribir para la voz (TTS)
 
 - **Oraciones de 6–18 palabras.** Una idea por oración. Sin paréntesis ni incisos largos.
@@ -121,12 +136,12 @@ Rangos exactos: `.venv/bin/python src/templates/_tools/explainer-kit/tools/lengt
 | duración | palabras | segmentos | capítulos | letras grandes | planos | fotos | componentes propios (mín.) |
 |---|---|---|---|---|---|---|---|
 | 5 min (corto, mínimo) | 546–702 | 15–23 | 2–4 | 3–5 | 55–85 | 4–8 | 1 |
-| 10 min (normal) | 1092–1404 | 30–45 | 4–8 | 6–10 | 110–170 | 8–16 | 2 |
-| 15 min (serio) | 1638–2106 | 45–68 | 6–12 | 9–15 | 165–255 | 12–24 | 3 |
+| 10 min (normal) | 1092–1404 | 30–45 | 4–8 | 6–10 | 110–170 | 8–16 | 4 |
+| 15 min (serio) | 1638–2106 | 45–68 | 6–12 | 9–15 | 165–255 | 12–24 | 4 |
 | 30 min (largo) | 3277–4212 | 90–135 | 12–24 | 18–30 | 330–510 | 24–48 | 4 |
 
-"Componentes propios" = los que el tema necesita y el catálogo no tiene (guides/components.md §6);
-si el tema no tiene objetos propios (p. ej. una idea abstracta), se justifica en PLAN §7.
+"Componentes propios" = objetos o mecanismos específicos del tema, revisados y usados
+(guides/components.md §6); desde 8 minutos el check exige al menos cuatro.
 
 ### Un video largo NO es un corto estirado
 

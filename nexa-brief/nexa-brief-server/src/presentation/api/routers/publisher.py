@@ -37,8 +37,9 @@ from pathlib import Path
 
 import httpx
 import structlog
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
+from pydantic import BaseModel, Field, ValidationError
 
 from src.config.settings import settings
 from src.presentation.api.oauth_pages import render_oauth_error, render_oauth_success
@@ -49,6 +50,10 @@ from src.adapters.publishing.instagram_media_url import (
     signed_media_mime,
 )
 from src.adapters.publishing.token_storage import TokenStorage
+from src.adapters.publishing.tiktok_service import pairing as tiktok_pairing
+from src.adapters.publishing.tiktok_service.client import TikTokServiceClient, TikTokServiceError
+from src.presentation.api.security import require_internal
+
 from src.adapters.publishing.youtube_adapter import YouTubeChannelProfile
 
 from src.config.exceptions import (
@@ -83,6 +88,40 @@ from src.presentation.api.schemas.publisher_schema import (
 router = APIRouter(prefix="/publish", tags=["publisher"])
 logger = structlog.get_logger(__name__)
 
+_TIKTOK_NEXA_ORIGINS = {
+    "https://dev-nexa-brief.everdev.space",
+    "https://nexa-brief.everdev.space",
+    "http://192.168.20.3:3000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+}
+_TIKTOK_IMPORT_MAX_BYTES = 256 * 1024
+
+
+def validate_alias(alias: str) -> None:
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,31}", alias):
+        raise ValueError("Alias inválido.")
+
+
+class TikTokBrowserAliasRequest(BaseModel):
+    alias: str = Field(min_length=1, max_length=32)
+
+
+class TikTokBrowserImportRequest(BaseModel):
+    cookies: list[dict]
+    expected_username: str = Field(min_length=1, max_length=64)
+
+
+def _tiktok_nexa_origin(request: Request) -> str:
+    origin = request.headers.get("origin", "").rstrip("/")
+    if origin in _TIKTOK_NEXA_ORIGINS:
+        return origin
+    configured = urllib.parse.urlsplit(settings.public_app_url.strip())
+    fallback = f"{configured.scheme}://{configured.netloc}" if configured.scheme and configured.netloc else ""
+    if fallback in _TIKTOK_NEXA_ORIGINS:
+        return fallback
+    raise HTTPException(status_code=400, detail="No se pudo determinar un origen Nexa permitido para la extensión.")
+
 
 def _get_facade():
     """Get the publisher facade; raises 500 if not configured."""
@@ -116,7 +155,7 @@ def _map_publisher_error(exc: PublisherError) -> HTTPException:
 
 # ── POST /publish/ — Manual publish ──────────────────────────────────────────
 
-@router.post("/", response_model=PublishResponse, status_code=201)
+@router.post("/", response_model=PublishResponse, status_code=201, dependencies=[Depends(require_internal)])
 async def manual_publish(request: ManualPublishRequest) -> PublishResponse:
     """Manually publish a video to a social-media platform.
 
@@ -146,10 +185,14 @@ async def manual_publish(request: ManualPublishRequest) -> PublishResponse:
         )
 
     extra_kwargs = {}
+    if request.idempotency_key:
+        extra_kwargs["idempotency_key"] = request.idempotency_key
     title = request.title
     selector = request.account_selector or settings.active_account
     if ":" in selector:
         platform, alias = selector.split(":", 1)
+        if platform == "tiktok" and not request.idempotency_key:
+            raise HTTPException(status_code=422, detail="Se requiere una clave de idempotencia para TikTok.")
         if platform == "facebook":
             extra_kwargs["publish_as_reel"] = request.facebook_publish_as_reel
         elif platform == "youtube":
@@ -209,6 +252,23 @@ async def manual_publish(request: ManualPublishRequest) -> PublishResponse:
 
 # ── GET /publish/accounts — List all configured accounts ─────────────────────
 
+async def _register_service_accounts() -> None:
+    facade = _get_facade()
+    try:
+        accounts = await TikTokServiceClient().request("GET", "/v1/accounts")
+    except PublisherError:
+        return
+    storage = facade._token_manager._storage
+    existing = {(a["platform"], a["alias"]): a for a in facade.list_accounts()}
+    for account in accounts:
+        alias = account["alias"]
+        previous = existing.get(("tiktok", alias))
+        if previous and previous.get("mode") == "api":
+            continue
+        if not previous or previous.get("mode") == "browser":
+            storage.save_browser_account("tiktok", alias, account.get("identity") or {}, "")
+
+
 @router.get("/accounts", response_model=list[AccountStatusResponse])
 async def list_accounts() -> list[AccountStatusResponse]:
     """List all configured social-media accounts and their token status.
@@ -221,6 +281,7 @@ async def list_accounts() -> list[AccountStatusResponse]:
     facade = _get_facade()
 
     try:
+        await _register_service_accounts()
         accounts = facade.list_accounts()
     except PublisherError as exc:
         raise _map_publisher_error(exc) from exc
@@ -330,6 +391,13 @@ async def verify_account_connection(platform: str, alias: str) -> ChannelHealthR
         raise HTTPException(status_code=404, detail=f"No account found for '{platform}:{alias}'.")
 
     storage = facade._token_manager._storage
+    if platform == "tiktok" and account.get("mode") in {"service", "browser"}:
+        try:
+            identity = (await TikTokServiceClient().request("POST", f"/v1/accounts/{alias}/check"))["identity"]
+            storage.save_browser_account("tiktok", alias, identity, "")
+            return _health_response(platform, alias, "ok", "connected")
+        except PublisherError:
+            return _health_response(platform, alias, "attention", "check_failed")
     try:
         token = await facade._token_manager.get_valid_token(platform, alias)
     except TokenExpiredError:
@@ -395,8 +463,132 @@ def _account_response(account: dict) -> AccountStatusResponse:
         last_published_at=max((v.get("published_at") or 0 for v in videos), default=None) or None,
         stats=channel.get("stats"),
         synced_at=channel.get("synced_at"),
-        can_sync=_get_facade().catalog_for(platform) is not None,
+        can_sync=account.get("mode") == "service" or _get_facade().catalog_for(platform) is not None,
     )
+
+
+@router.get("/browser/tiktok/health", dependencies=[Depends(require_internal)])
+async def tiktok_service_health():
+    client = TikTokServiceClient()
+    try:
+        health = await client.request("GET", "/health")
+        health["review_jobs"] = await client.request("GET", "/v1/jobs")
+        return health
+    except PublisherError:
+        return {"status": "down", "last_backup_at": None, "needs_review": 0, "review_jobs": []}
+
+
+@router.post("/browser/tiktok/pair", dependencies=[Depends(require_internal)])
+async def create_tiktok_browser_pairing(body: TikTokBrowserAliasRequest, request: Request) -> dict[str, str]:
+    try:
+        validate_alias(body.alias)
+        origin = _tiktok_nexa_origin(request)
+        pairing_id, import_url = tiktok_pairing.create_pairing(body.alias, origin)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return {"pairing_id": pairing_id, "import_url": import_url}
+
+
+@router.post("/browser/tiktok/import/{pairing_id}")
+async def import_tiktok_browser_session(pairing_id: str, request: Request, k: str | None = None) -> dict:
+    content_length = request.headers.get("content-length")
+    if content_length:
+        try:
+            if int(content_length) > _TIKTOK_IMPORT_MAX_BYTES:
+                raise HTTPException(status_code=413, detail="La importación supera el límite de 256 KB.")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Content-Length inválido.") from None
+    raw = bytearray()
+    async for chunk in request.stream():
+        raw.extend(chunk)
+        if len(raw) > _TIKTOK_IMPORT_MAX_BYTES:
+            raise HTTPException(status_code=413, detail="La importación supera el límite de 256 KB.")
+    try:
+        body = TikTokBrowserImportRequest.model_validate_json(bytes(raw))
+    except ValidationError as exc:
+        raise HTTPException(status_code=422, detail="El body debe incluir cookies y expected_username válidos.") from exc
+
+    alias = tiktok_pairing.consume_pairing(pairing_id, k)
+    if alias is None:
+        raise HTTPException(status_code=401, detail="El enlace de importación es inválido, venció o ya fue usado.")
+    try:
+        identity = (await TikTokServiceClient().request("POST", "/v1/sessions/import", json={"alias": alias, "cookies": body.cookies, "expected_username": body.expected_username}))["identity"]
+        _get_facade()._token_manager._storage.save_browser_account("tiktok", alias, identity, "")
+    except Exception as exc:  # noqa: BLE001 - never include cookies in error diagnostics
+        logger.info("tiktok_browser_import_rejected", alias=alias, error_type=type(exc).__name__)
+        raise HTTPException(status_code=422, detail="No se pudo verificar la sesión importada.") from exc
+    return {
+        "status": "ok",
+        "account": {
+            "platform": "tiktok",
+            "alias": alias,
+            "mode": "service",
+            "status": "ok",
+            "username": identity.get("username"),
+            "name": identity.get("nickname"),
+            "avatar": identity.get("avatar_url"),
+        },
+    }
+
+
+@router.post("/browser/tiktok/qr/start", dependencies=[Depends(require_internal)])
+async def start_tiktok_browser_qr(body: TikTokBrowserAliasRequest) -> dict[str, str]:
+    try:
+        validate_alias(body.alias)
+        session_id = (await TikTokServiceClient().request("POST", "/v1/sessions/qr", json={"alias": body.alias}))["session_id"]
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except PublisherError as exc:
+        raise _map_publisher_error(exc) from exc
+    return {"session_id": session_id}
+
+
+@router.get("/browser/sessions/{session_id}", dependencies=[Depends(require_internal)])
+async def get_tiktok_browser_session(session_id: str) -> dict:
+    try:
+        result = await TikTokServiceClient().request("GET", f"/v1/sessions/{session_id}")
+    except PublisherError as exc:
+        raise _map_publisher_error(exc) from exc
+    if result.get("state") == "done":
+        await _register_service_accounts()
+    return result
+
+
+@router.post("/browser/sessions/{session_id}/cancel", dependencies=[Depends(require_internal)])
+async def cancel_tiktok_browser_session(session_id: str) -> dict[str, str]:
+    try:
+        return await TikTokServiceClient().request("POST", f"/v1/sessions/{session_id}/cancel")
+    except PublisherError as exc:
+        raise _map_publisher_error(exc) from exc
+
+
+@router.post("/accounts/tiktok/{alias}/check-session", response_model=AccountStatusResponse,
+             dependencies=[Depends(require_internal)])
+async def check_tiktok_browser_session(alias: str) -> AccountStatusResponse:
+    try:
+        validate_alias(alias)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    facade = _get_facade()
+    account = next(
+        (item for item in facade.list_accounts() if item["platform"] == "tiktok" and item["alias"] == alias),
+        None,
+    )
+    if account is None or account.get("mode") not in {"browser", "service"}:
+        raise HTTPException(status_code=404, detail="No existe una cuenta TikTok conectada por navegador con ese alias.")
+    try:
+        identity = (await TikTokServiceClient().request("POST", f"/v1/accounts/{alias}/check"))["identity"]
+        facade._token_manager._storage.save_browser_account("tiktok", alias, identity, "")
+    except TikTokServiceError as exc:
+        if exc.code != "requires_reauth":
+            raise _map_publisher_error(exc) from exc
+        await facade._token_manager._storage.mark_requires_reauth("tiktok", alias, "service_session_expired")
+    except PublisherError as exc:
+        raise _map_publisher_error(exc) from exc
+    refreshed = next(item for item in facade.list_accounts() if item["platform"] == "tiktok" and item["alias"] == alias)
+    return _account_response(refreshed)
 
 
 # ── POST /publish/accounts/{platform}/{alias}/sync — Sincronizar con la plataforma ──
@@ -443,7 +635,7 @@ def _spawn_channel_sync(platform: str, alias: str) -> None:
 
 # ── PATCH /publish/accounts/{platform}/{alias} — Edit label/notes ────────────
 
-@router.patch("/accounts/{platform}/{alias}", response_model=AccountStatusResponse)
+@router.patch("/accounts/{platform}/{alias}", response_model=AccountStatusResponse, dependencies=[Depends(require_internal)])
 async def update_account(platform: str, alias: str, body: UpdateAccountRequest) -> AccountStatusResponse:
     """Update the user-facing label and notes of a connected account (no tokens touched)."""
     facade = _get_facade()
@@ -578,7 +770,7 @@ async def refresh_account_profile(platform: str, alias: str) -> AccountStatusRes
 # ("/accounts/{platform}/{alias}" vs "/{platform}/{alias}/{video_id}"), so
 # route order decides which one a request matches first.
 
-@router.delete("/accounts/{platform}/{alias}", response_model=AccountDeleteResponse)
+@router.delete("/accounts/{platform}/{alias}", response_model=AccountDeleteResponse, dependencies=[Depends(require_internal)])
 async def disconnect_account(platform: str, alias: str) -> AccountDeleteResponse:
     """Disconnect a channel: deletes its stored tokens and removes it from the
     public channels listing. This does not revoke the token on the platform
@@ -588,6 +780,8 @@ async def disconnect_account(platform: str, alias: str) -> AccountDeleteResponse
     logger.info("api_disconnect_account_request", platform=platform, alias=alias)
 
     try:
+        if platform == "tiktok" and facade._token_manager._storage.get_mode(platform, alias) in {"browser", "service"}:
+            await TikTokServiceClient().request("DELETE", f"/v1/accounts/{alias}")
         removed = facade.remove_account(platform, alias)
     except PublisherError as exc:
         raise _map_publisher_error(exc) from exc
@@ -1463,7 +1657,7 @@ async def get_video(platform: str, alias: str, video_id: str) -> VideoMetadataRe
 
 # ── PUT /publish/{platform}/{alias}/{video_id} — Update video ─────────────────
 
-@router.put("/{platform}/{alias}/{video_id}", response_model=VideoMetadataResponse)
+@router.put("/{platform}/{alias}/{video_id}", response_model=VideoMetadataResponse, dependencies=[Depends(require_internal)])
 async def update_video(
     platform: str,
     alias: str,
@@ -1513,7 +1707,7 @@ async def update_video(
 
 # ── DELETE /publish/{platform}/{alias}/{video_id} — Delete video ──────────────
 
-@router.delete("/{platform}/{alias}/{video_id}", response_model=DeleteResponse)
+@router.delete("/{platform}/{alias}/{video_id}", response_model=DeleteResponse, dependencies=[Depends(require_internal)])
 async def delete_video(platform: str, alias: str, video_id: str) -> DeleteResponse:
     """Permanently delete a published video from the platform.
 

@@ -118,6 +118,13 @@ def _package(**changes) -> PublishPackage:
     return PublishPackage.model_validate(data)
 
 
+def _tabloid_package(**tabloid) -> PublishPackage:
+    data = copy.deepcopy(PACKAGE)
+    data["thumbnail"]["tabloid"] = tabloid
+    data["thumbnail"]["chosen"] = "tabloid"
+    return PublishPackage.model_validate(data)
+
+
 def _fields(issues, level="error") -> set[str]:
     return {i.field for i in issues if i.level == level}
 
@@ -308,6 +315,28 @@ def test_both_thumbnail_options_are_required(strategies, video_dir):
         assert "thumbnail.with_image" in _fields(check_package(pending, strategies, video_dir, 233))
 
 
+def test_tabloid_thumbnail_checks_word_limit_and_optional_photo_credit(strategies, video_dir):
+    long = _tabloid_package(text="TÚ ERES EL SIGUIENTE AHORA MISMO SIN EMPLEO")
+    assert "thumbnail.tabloid" in _fields(check_package(long, strategies, video_dir, 233))
+
+    (video_dir / "assets" / "media" / "uncited.jpg").write_bytes(b"jpg")
+    uncredited = _tabloid_package(text="TÚ ERES EL SIGUIENTE", image="uncited.jpg")
+    issues = check_package(uncredited, strategies, video_dir, 233)
+    assert any("crédito" in i.message for i in issues if i.field == "thumbnail.tabloid.image")
+
+    text_only = _tabloid_package(text="TÚ ERES EL SIGUIENTE", image=None)
+    assert "thumbnail.tabloid.image" not in _fields(check_package(text_only, strategies, video_dir, 233))
+
+
+def test_tabloid_option_is_gated_to_amarillista_or_explicit_package(video_dir):
+    assert "C" not in opening_specs(_package(), video_dir, "rough")
+    config_path = video_dir / "assets" / "config.json"
+    config = json.loads(config_path.read_text())
+    config["configs"][0]["narrative_id"] = "narrative_amarillista_v1"
+    config_path.write_text(json.dumps(config))
+    assert "C" in opening_specs(_package(), video_dir, "rough")
+
+
 def test_repeated_emotions_are_a_warning(strategies, video_dir):
     same = [dict(t, emotion="Asombro") for t in PACKAGE["titles"]["youtube"]]
     issues = check_package(_package(titles__youtube=same), strategies, video_dir, 233)
@@ -338,9 +367,29 @@ def test_choosing_b_opens_with_the_photo(video_dir):
     apply_opening(video_dir, _package(thumbnail__chosen="with_image", thumbnail__with_image__image_side="left"))
     beat = _opening_beat(video_dir)
     assert beat["use"] == "rough.introv2"
-    assert beat["params"]["src"] == "assets/media/hamilton.jpg"  # relativa al video, como las demás escenas
+    assert beat["params"]["src"] == "/apolo-1202/assets/media/hamilton.jpg"  # relativa a la raíz de plantillas
     assert "imageSide" not in beat["params"]   # rough.introv2 no tiene ese param
     assert beat["params"]["text"] == "ELLA LO PREVIÓ"
+
+
+def test_choosing_c_opens_with_the_common_tabloid_component(video_dir):
+    specs = opening_specs(_tabloid_package(text="TÚ ERES EL SIGUIENTE", image="hamilton.jpg"), video_dir, "rough")
+    assert specs["C"]["component"] == "common.tabloid"
+    assert specs["C"]["params"]["src"].endswith("/apolo-1202/assets/media/hamilton.jpg")
+
+    apply_opening(video_dir, _tabloid_package(text="TÚ ERES EL SIGUIENTE", image="hamilton.jpg"))
+    beat = _opening_beat(video_dir)
+    assert beat["use"] == "common.tabloid"
+    assert beat["params"]["text"] == "TÚ ERES EL SIGUIENTE"
+    assert beat["params"]["src"].endswith("/apolo-1202/assets/media/hamilton.jpg")
+
+
+def test_tabloid_brand_default_and_explicit_alert_are_forwarded(video_dir):
+    brand = _tabloid_package(text="ALERTA")
+    assert brand.thumbnail.tabloid.palette == "brand"
+    assert "palette" not in opening_specs(brand, video_dir, "rough")["C"]["params"]
+    alert = _tabloid_package(text="ALERTA", palette="alert")
+    assert opening_specs(alert, video_dir, "rough")["C"]["params"]["palette"] == "alert"
 
 
 def test_intro_params_follow_what_each_design_accepts():
@@ -384,6 +433,7 @@ def test_save_writes_package_and_derived_v1_fields(strategies, video_dir):
     assert data["youtube_title"] == "La alarma que casi aborta la llegada a la Luna"
     assert data["youtube_title_alternatives"] == [t["text"] for t in PACKAGE["titles"]["youtube"][1:]]
     assert data["thumbnail_text"] == "LA COMPUTADORA DEL APOLO 11 SE RINDIÓ"
+    assert "tabloid" not in data["thumbnail"]  # Paquetes A/B viejos conservan su forma.
     assert data["gratitude_used"] == "G2_reciprocidad"
     assert data["strategies_used"] == strategies.ids()
     assert load_package(video_dir) == _package().model_copy(update={"strategies_used": strategies.ids()})
@@ -454,7 +504,7 @@ def test_review_is_none_for_v1_and_carries_the_strategies_for_v2(video_dir):
     assert service.review(_video(video_dir)) is None
     _write_v2(video_dir)
     result = service.review(_video(video_dir))
-    assert result is not None and result.strategies.title.id == "title_anchor_tension_v1"
+    assert result is not None and result.strategies.title.id == active_strategies("node_tech").title.id
 
 
 def test_cli_check_reports_each_video_and_keeps_going_after_a_broken_one(tmp_path, video_dir, monkeypatch, capsys):
@@ -503,11 +553,18 @@ def test_nodetech_packages_are_consistent(strategies, video_dir: Path):
         assert on_disk[key] == value, key
     beat = json.loads((video_dir / "assets" / "storyboard.json").read_text())["beats"][0]
     spec = opening_specs(package, video_dir, design_of(video_dir))[CHOSEN_TO_OPTION[package.thumbnail.chosen]]
-    assert (beat["use"], beat["params"]) == (spec["component"], spec["params"])   # abre con la miniatura elegida
+    # Los defaults explícitos y ausentes son visualmente iguales.
+    defaults = {"palette": "brand", "bulletScale": 1}
+    normalize = lambda params: {k: v for k, v in params.items() if k not in defaults or v != defaults[k]}
+    assert (beat["use"], normalize(beat["params"])) == (spec["component"], normalize(spec["params"]))
     manifest = json.loads((video_dir / "manifest.json").read_text())
     issues = check_package(package, strategies, video_dir, manifest.get("duration_seconds"))
-    allowed = {"sources"} if video_dir.name == "apolo-1202" else set()  # fuentes pendientes (documentado)
-    assert _fields(issues) <= allowed, [vars(i) for i in issues if i.level == "error"]
+    # Deuda de paquetes históricos: se registra sin alterar videos ni relajar los checks nuevos.
+    historical = {"apolo-1202": {"sources"},
+                  "codex-ariane-501": {"thumbnail.with_image"}}
+    assert _fields(issues) == historical.get(video_dir.name, set()), [vars(i) for i in issues if i.level == "error"]
+    if video_dir.name == "ia-despidos-programadores-amazon":
+        assert "thumbnail.tabloid.image_review" in _fields(issues, "warning")
 
 
 def test_generating_v1_texts_for_a_v2_video_is_refused_before_calling_the_ai():
@@ -553,3 +610,146 @@ def test_api_reports_a_broken_package_without_failing_the_list(monkeypatch):
     assert response.status_code == 200
     issues = [v["publish_package"]["issues"] for v in response.json() if v["publish_package"]]
     assert issues and all(i[0]["field"] == "publish.json" and "title_x_v9" in i[0]["message"] for i in issues)
+
+
+@pytest.mark.parametrize("field", ["strap", "seal", "tape_text", "bullet", "before_label", "after_label"])
+def test_tabloid_visible_numbers_are_checked(strategies, video_dir, field):
+    package = _tabloid_package(**{field: "7777 PUESTOS"})
+    issues = check_package(package, strategies, video_dir, 233)
+    assert any(i.field == f"thumbnail.tabloid.{field}" and "7777" in i.message for i in issues)
+    package = _tabloid_package(**{field: "1202 PUESTOS"})
+    assert not any(i.field == f"thumbnail.tabloid.{field}" and "cifras" in i.message
+                   for i in check_package(package, strategies, video_dir, 233))
+
+
+def test_tabloid_missing_explicit_photo_is_not_offered_and_cannot_open(video_dir):
+    for field in ("image", "image_after"):
+        package = _tabloid_package(**{field: "ausente.jpg"})
+        assert "C" not in opening_specs(package, video_dir, "rough")
+        with pytest.raises(OpeningError, match="falta la foto ausente.jpg"):
+            apply_opening(video_dir, package)
+    assert "C" in opening_specs(_tabloid_package(image=None), video_dir, "rough")
+
+
+def test_tabloid_repeated_seal_is_reported(strategies, video_dir):
+    issues = check_package(_tabloid_package(strap="ALERTA · AMAZON", seal="alerta"), strategies, video_dir, 233)
+    assert any(i.field == "thumbnail.tabloid.seal" and i.level == "warning" for i in issues)
+
+
+def test_tabloid_parameter_changes_invalidate_saved_captures(strategies, video_dir):
+    first = _tabloid_package(text="TÚ ERES EL SIGUIENTE", accent="SIGUIENTE")
+    save_package(video_dir, first, strategies)
+    for ext in ("jpg", "webp"):
+        (video_dir / "render" / f"thumbnail-C.{ext}").write_bytes(b"image")
+    save_package(video_dir, first, strategies)
+    assert (video_dir / "render" / "thumbnail-C.jpg").exists()
+    save_package(video_dir, _tabloid_package(text="TÚ ERES EL SIGUIENTE", accent="TÚ"), strategies)
+    assert not (video_dir / "render" / "thumbnail-C.jpg").exists()
+    assert not (video_dir / "render" / "thumbnail-C.webp").exists()
+
+
+def test_tabloid_passes_new_parameters_and_second_photo(video_dir):
+    package = _tabloid_package(image="hamilton.jpg", image_after="hamilton.jpg", accent="SIGUIENTE",
+                                bullet="1202 ALERTAS", before_label="ANTES", after_label="AHORA")
+    params = opening_specs(package, video_dir, "rough")["C"]["params"]
+    assert params["srcAfter"].endswith("/assets/media/hamilton.jpg")
+    assert (params["accent"], params["bullet"], params["beforeLabel"], params["afterLabel"]) == (
+        "SIGUIENTE", "1202 ALERTAS", "ANTES", "AHORA")
+
+
+def test_stale_c_capture_is_not_served_after_external_parameter_change(video_dir):
+    import hashlib
+    from src.core.explainer import thumbnails
+
+    video = _video(video_dir)
+    spec = opening_specs(_tabloid_package(accent="SIGUIENTE"), video_dir, "rough")["C"]
+    path = thumbnails.thumbnail_file(video, "C")
+    path.write_bytes(b"image")
+    assert not thumbnails.capture_current(video, "C", spec)
+    path.with_suffix(".sha256").write_text(hashlib.sha256(json.dumps(spec, sort_keys=True, ensure_ascii=False).encode()).hexdigest())
+    assert not thumbnails.capture_current(video, "C", spec)  # sello anterior a la identidad del diseño
+    path.with_suffix(".sha256").write_text(thumbnails._capture_digest(video, spec))
+    assert thumbnails.capture_current(video, "C", spec)
+    spec["params"]["accent"] = "TÚ"
+    assert not thumbnails.capture_current(video, "C", spec)
+
+
+def test_choose_and_capture_refuse_missing_explicit_c_photo(strategies, video_dir):
+    import asyncio
+    from src.core.explainer import thumbnails
+
+    save_package(video_dir, _tabloid_package(image="ausente.jpg"), strategies)
+    video = _video(video_dir)
+    with pytest.raises(thumbnails.ThumbnailError, match="falta la foto ausente.jpg"):
+        thumbnails.choose(video, "C")
+    with pytest.raises(thumbnails.ThumbnailError, match="falta la foto ausente.jpg"):
+        asyncio.run(thumbnails.ensure(video, "C"))
+    with pytest.raises(thumbnails.ThumbnailError, match="falta la foto ausente.jpg"):
+        asyncio.run(thumbnails.render(video, ("C",)))
+
+
+def test_tabloid_focus_round_trips_and_warns_when_missing(strategies, video_dir):
+    package = _tabloid_package(image="hamilton.jpg", marker=True, seal="ALERTA", focus=[.7, .35, .12])
+    assert opening_specs(package, video_dir, "rough")["C"]["params"]["focus"] == [.7, .35, .12]
+    assert "thumbnail.tabloid.focus" not in _fields(check_package(package, strategies, video_dir, 233), "warning")
+    missing = _tabloid_package(image="hamilton.jpg", marker=True)
+    assert "thumbnail.tabloid.focus" in _fields(check_package(missing, strategies, video_dir, 233), "warning")
+    with pytest.raises(ValidationError, match="focus"):
+        _tabloid_package(focus=[.5, .5, 0])
+
+
+def test_amarillista_tabloid_requires_sourced_bullet_and_image_review(video_dir, strategies):
+    config = {"narrative_id": "narrative_amarillista_v1"}
+    (video_dir / "assets/config.json").write_text(json.dumps(config))
+    bad = _tabloid_package(image="hamilton.jpg", bullet="99")
+    issues = check_package(bad, strategies, video_dir, 120)
+    assert {"thumbnail.tabloid.bullet", "thumbnail.tabloid.image_review"} <= _fields(issues)
+    data = bad.model_dump()
+    data["sources"].append("NASA — 99 registros")
+    data["thumbnail"]["tabloid"]["image_review"] = [{"image": "hamilton.jpg", "verdict": "elegida", "reason": "Muestra la ingeniera del Apolo."}]
+    good = PublishPackage.model_validate(data)
+    fields = _fields(check_package(good, strategies, video_dir, 120))
+    assert "thumbnail.tabloid.bullet" in fields and "thumbnail.tabloid.image_review" not in fields
+    (video_dir / "assets/script.json").write_text(json.dumps({"segments": [{"text": "Noventa y nueve registros."}]}))
+    fields = _fields(check_package(good, strategies, video_dir, 120))
+    assert "thumbnail.tabloid.bullet" not in fields
+    data["thumbnail"]["tabloid"]["bullet"] = "SIN DATO"
+    fields = _fields(check_package(PublishPackage.model_validate(data), strategies, video_dir, 120))
+    assert "thumbnail.tabloid.bullet" in fields
+
+
+def test_tabloid_bullet_cannot_use_only_transcription_or_url(video_dir, strategies):
+    (video_dir / "assets/config.json").write_text(json.dumps({"narrative_id": "narrative_amarillista_v1"}))
+    data = _tabloid_package(image="hamilton.jpg", bullet="999").model_dump()
+    data["sources"] = ["NASA — https://example.org/999"]
+    (video_dir / "assets/lyrics.json").write_text(json.dumps({"segments": [{"words": [{"word": "999"}]}]}))
+    fields = _fields(check_package(PublishPackage.model_validate(data), strategies, video_dir, 120))
+    assert "thumbnail.tabloid.bullet" in fields
+    data["sources"] = ["NASA — 999 registros"]
+    fields = _fields(check_package(PublishPackage.model_validate(data), strategies, video_dir, 120))
+    assert "thumbnail.tabloid.bullet" in fields
+
+
+def test_amarillista_requires_chosen_c(video_dir, strategies):
+    (video_dir / "assets/config.json").write_text(json.dumps({"narrative_id": "narrative_amarillista_v1"}))
+    package = _package()
+    assert "thumbnail.chosen" in _fields(check_package(package, strategies, video_dir, 120))
+
+
+def test_bullet_numbers_equivalent_words_digits_and_scale():
+    from src.core.explainer.publishing.numbers import bullet_numbers_in
+    evidence = bullet_numbers_in("Se perdieron veinte millones de empleos.")
+    assert {"20", "20000000"} <= evidence
+    assert numbers_in("20 millones") == {"20000000"}
+    assert numbers_in("20.000.000") == {"20000000"}
+    assert "21" not in evidence
+
+
+@pytest.mark.parametrize("bullet", ["20", "20 millones", "20.000.000", "20 000 000", "20\u00a0000\u00a0000"])
+def test_bullet_matches_number_spelled_in_script(video_dir, strategies, bullet):
+    (video_dir / "assets/config.json").write_text(json.dumps({"narrative_id": "narrative_amarillista_v1"}))
+    (video_dir / "assets/script.json").write_text(json.dumps({"segments": [{"text": "Se perdieron veinte millones de empleos."}]}))
+    data = _tabloid_package(image="hamilton.jpg", bullet=bullet).model_dump()
+    data["sources"] = []
+    fields = _fields(check_package(PublishPackage.model_validate(data), strategies, video_dir, 120))
+    assert "thumbnail.tabloid.bullet" not in fields

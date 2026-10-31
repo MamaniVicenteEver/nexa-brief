@@ -238,6 +238,11 @@
       "noMatches": "No account matches your search."
     },
     "card": {
+      "serviceUnavailable": "The TikTok service is unavailable or degraded; your accounts and sessions are stored for recovery.",
+      "lastBackup": "Last backup",
+      "reviewJobs": "There are {count} jobs awaiting review.",
+      "reviewInStudio": "Review in TikTok Studio",
+
       "actions": "Account actions",
       "viewDetails": "View details",
       "editUsage": "Edit purpose and notes",
@@ -262,6 +267,12 @@
       "refreshError": "Couldn't update profile information.",
       "verify": "Check",
       "verifying": "Checking…",
+      "browserMode": "Browser session",
+      "lastSessionCheck": "Last check",
+      "checkSession": "Check session",
+      "checkingSession": "Checking…",
+      "sessionCheckOk": "TikTok session is active.",
+      "sessionCheckFailed": "The TikTok session expired. Reconnect the account.",
       "health": {
         "connected": "Connection checked. The platform recognized this account.",
         "reauth_required": "The platform rejected authorization. Reconnect this account.",
@@ -314,6 +325,51 @@
     "connect": {
       "title": "Connect an account",
       "description": "Authorize Nexa Brief to publish on your behalf. You can connect several accounts per platform.",
+      "tiktokMethods": {
+        "browser": "From my browser (recommended)",
+        "qr": "With QR (TikTok app)",
+        "api": "Official API"
+      },
+      "browserGuideStep1": "Install Nexa Connect: download the ZIP, unzip it, and open <strong>chrome://extensions → Developer mode → Load unpacked</strong>.",
+      "browserGuideStep2": "In this same browser, open <strong>tiktok.com</strong> and sign in with the account you want to connect.",
+      "browserGuideStep3": "Come back here and click <strong>Detect again</strong>. To use another account, choose <strong>Profile → Switch account</strong> on tiktok.com (don’t <em>Log out</em>).",
+      "extensionChecking": "Looking for Nexa Connect…",
+      "extensionMissing": "Install Nexa Connect to share the TikTok session from this browser.",
+      "installSteps": "Download the ZIP, unzip it, then at chrome://extensions enable Developer mode → Load unpacked.",
+      "installExtension": "Download Nexa Connect",
+      "extensionDetected": "Nexa Connect extension detected.",
+      "accountOpen": "Account open in this browser",
+      "noTikTokSession": "No TikTok session. Open tiktok.com and sign in in this browser.",
+      "openTikTok": "Open TikTok",
+      "detectAgain": "Detect again",
+      "multipleAccountsTip": "To use another account, choose Switch account on tiktok.com and detect again.",
+      "sharedSessionWarning": "Do not use Log out on TikTok: it would also close the server session.",
+      "connectBrowser": "Connect account",
+      "connectingBrowser": "Connecting session…",
+      "connectedBrowser": "TikTok account connected.",
+      "qrStart": "Show QR",
+      "qrStarting": "Preparing QR…",
+      "qrGenerateAnother": "Generate another code",
+      "qrAppRoute": "Profile → ☰ → QR code → Scan",
+      "qrPreparing": "Preparing the code…",
+      "qrNoCodeWarning": "The code has not appeared yet. You can generate another one to try again.",
+      "qrQueued": "Another browser connection is in progress; waiting for a turn…",
+      "qrScanHint": "Scan this code with the TikTok app. The QR refreshes automatically.",
+      "qrGuideStep1": "Open the TikTok app on the phone with the account you want to connect.",
+      "qrGuideStep2": "You can also use <strong>Search (magnifier) → scanner icon</strong>.",
+      "qrGuideStep3": "Point the phone at the code on this screen and tap <strong>Log in</strong> on the phone.",
+      "qrGuideStep4": "Note: The code renews automatically; if it expires, click Cancel and start again.",
+      "qrRouteNote": "If you can’t find the option, routes may vary depending on the app version.",
+      "qrWaiting": "Waiting for you to scan the QR…",
+      "qrScanned": "QR scanned. Confirm the login on your phone.",
+      "qrLoggedIn": "Session accepted. Reading account…",
+      "serverRestarting": "The server is restarting. Please try again in a few seconds.",
+      "qrFailed": "Couldn't start the QR connection.",
+      "qrCancel": "Cancel connection",
+      "qrCancelled": "Connection cancelled.",
+      "apiPrivateNote": "This takes you to TikTok to authorize; videos stay private until the app is audited.",
+      "apiOfficial": "Connect with the official API",
+      "browserError": "Couldn't connect the TikTok account.",
       "platformLabel": "Platform",
       "aliasLabel": "Nexa internal identifier",
       "aliasHint": "Used to pick this account when publishing. Lowercase letters, numbers, dash and underscore only.",
@@ -323,6 +379,7 @@
       "aliasExists": "“{alias}” already exists: it will be reconnected and its authorization replaced.",
       "securityNote": "We'll take you to {platform} to approve access. Tokens are stored encrypted and you can disconnect the account anytime.",
       "cancel": "Cancel",
+      "close": "Close",
       "continue": "Continue to {platform}",
       "redirecting": "Redirecting…"
     },
@@ -631,6 +688,7 @@
       "statusReady": "Ready to record",
       "statusRendered": "Already rendered",
       "statusPreparing": "In preparation",
+      "qualityIssues": "Needs review",
       "record": "Record",
       "recording": "Recording…",
       "account": "Publishing account",
@@ -928,7 +986,12 @@
         "newest": "Newest",
         "oldest": "Oldest"
       },
-      "kind": { "image": "Image", "carousel": "Carousel", "story": "Story", "reel": "Reel" },
+      "kind": {
+        "image": "Image",
+        "carousel": "Carousel",
+        "story": "Story",
+        "reel": "Reel"
+      },
       "status": {
         "removed_api": "Removed by API",
         "removed_manually": "Removed manually",
@@ -1711,6 +1774,14 @@
       "resume": "Resume",
       "resuming": "Resuming…"
     },
+    "productionPhase": {
+      "guion": "Script",
+      "voice": "Voice",
+      "transcribe": "Transcription",
+      "storyboard": "Storyboard",
+      "finishing": "Final checks",
+      "ready": "Ready"
+    },
     "productionState": {
       "queued": "Queued",
       "creating": "Creating",
@@ -1759,6 +1830,14 @@
       "designsOwn": "{name} templates",
       "designsOther": "{name} templates (you can use them too)"
     },
+    "narratives": {
+      "title": "Narrative strategy",
+      "hint": "The arc the script follows. The AI decides how long each act lasts based on the video length.",
+      "default": "Default",
+      "draft": "Draft",
+      "titleLevel": "Title intensity",
+      "used": "Narrative: {label}"
+    },
     "brief": {
       "idea": "Idea",
       "hook": "Hook",
@@ -1804,6 +1883,7 @@
         "thumbnails": "Thumbnail and video opening",
         "textOnly": "A · Text only",
         "withImage": "B · Text + image",
+        "tabloid": "C · Tabloid",
         "pair": "Pair: title {option}",
         "imagePending": "Image pending",
         "previewOption": "Preview thumbnail {option}",
@@ -1819,7 +1899,8 @@
         "notCaptured": "Not captured",
         "option": {
           "A": "A · text only",
-          "B": "B · text and image"
+          "B": "B · text and image",
+          "C": "C · tabloid"
         }
       },
       "autoVerticalNotice": "Instagram or TikTok requires 9:16. It will be recorded in addition to your selected format.",

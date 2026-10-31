@@ -47,7 +47,7 @@
   const fam = D.family, name = QS.get("c") || fam + ".title", def = Kit.registry.get(name);
   const params = QS.get("p") ? JSON.parse(QS.get("p")) : JSON.parse(JSON.stringify(def?.example || {}));
   /* rutas de imágenes de ejemplo: relativas al kit (../showcase/samples/…) */
-  for (const [k, v] of Object.entries(params)) if (def?.params?.[k]?.type === "image" && typeof v === "string" && !v.startsWith("http") && !v.startsWith("/") && !v.startsWith("../")) params[k] = "samples/" + v.split("/").pop();
+  for (const [k, v] of Object.entries(params)) if (def?.params?.[k]?.type === "image" && typeof v === "string" && v && !v.startsWith("http") && !v.startsWith("/") && !v.startsWith("../")) params[k] = "samples/" + v.split("/").pop();
   const dur = +(QS.get("dur") || 7);
   const solo = QS.has("solo");
   const prevByFamily = { binary: "binary.icon", rough: "rough.icon", acuarela: "acuarela.title", carta: "carta.title", collage: "collage.intro", cronica: "cronica.title", enmienda: "enmienda.title", grunge: "grunge.title", pelicula: "pelicula.title", periodico: "periodico.title", pop: "pop.title" };

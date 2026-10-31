@@ -76,6 +76,8 @@ class TokenManager:
         Raises:
             TokenExpiredError: Account is marked requires_reauth or refresh exhausted.
         """
+        if self._storage.get_mode(platform, alias) in {"browser", "service"}:
+            raise TokenExpiredError(f"Account {platform}:{alias} uses a browser session and has no OAuth token.")
         lock = self._locks[self._lock_key(platform, alias)]
         async with lock:
             state = self._storage.get_state(platform, alias)
@@ -117,6 +119,8 @@ class TokenManager:
 
         Idempotent: does nothing if token is still fresh.
         """
+        if self._storage.get_mode(platform, alias) in {"browser", "service"}:
+            return
         try:
             await self.get_valid_token(platform, alias)
         except TokenExpiredError:

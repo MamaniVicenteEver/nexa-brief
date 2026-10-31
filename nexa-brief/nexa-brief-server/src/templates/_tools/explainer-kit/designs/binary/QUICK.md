@@ -23,7 +23,7 @@
   `{"use": "binary.tunnel", "params": {"rings": 14, "text": ""}}`
 - **`binary.rays`** — Haz de líneas de glifos que salen de un punto: abanico de caminos posibles, 'X' de contradicción o estallido radial; se dibujan del centro hacia afuera. Parámetros: mode(fan|x|burst), count, highlight, label, drawSec, morph
   `{"use": "binary.rays", "params": {"mode": "fan", "count": 10, "label": "10 CAMINOS"}}`
-- **`binary.frame`** — Foto real (blanco y negro) dentro de un marco de glifos punteado, con título en serif y ficha mono: documento histórico, lugar, objeto real. Parámetros: src*, title, sub, ar, size, tilt, morph
+- **`binary.frame`** — Foto real (blanco y negro) dentro de un marco de glifos punteado, con título en serif y ficha mono: documento histórico, lugar, objeto real. Parámetros: src*, title, sub, ar, size, tilt, morph, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
   `{"use": "binary.frame", "params": {"src": "assets/media/bletchley.jpg", "title": "Bletchley Park", "sub": "INGLATERRA · 1939–1945"}}`
 - **`binary.bubble`** — Globo de diálogo de contorno con tres puntos que 'escriben' (esperar una respuesta, una pregunta en el aire). Parámetros: text, size, morph
   `{"use": "binary.bubble", "params": {"text": ""}}`
@@ -31,7 +31,7 @@
   `{"use": "binary.floor", "params": {"text": "¿Y AHORA?"}}`
 - **`binary.introv1`** — Miniatura de solo texto en el estilo monocromo de binary: el título hecho de partículas 0/1, en blanco puro, con la fecha en letras blancas encima. Parámetros: text*, textPortrait, kicker, fit(lines|block), font, fill, morph, highlight, sub, glow
   `{"use": "binary.introv1", "params": {"text": "EL HOMBRE\nQUE ROMPIÓ\nENIGMA", "kicker": "ALAN TURING · 1940", "highlight": "ENIGMA"}}`
-- **`binary.introv2`** — Miniatura de texto e imagen: la frase (como en introv1, más chica) en una mitad y el retrato en glifos 0/1 en la otra; el lado de la foto se elige con imageSide. Parámetros: text*, textPortrait, kicker, highlight, sub, src, imageSide(auto|left|right), zoom, focusX, focusY, imageCell, contrast, gamma, threshold, glow, morph
+- **`binary.introv2`** — Miniatura de texto e imagen: la frase (como en introv1, más chica) en una mitad y el retrato en glifos 0/1 en la otra; el lado de la foto se elige con imageSide. Parámetros: text*, textPortrait, kicker, highlight, sub, src, video, poster, start, rate, loop, imageSide(auto|left|right), zoom, focusX, focusY, imageCell, contrast, gamma, threshold, glow, morph, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
   `{"use": "binary.introv2", "params": {"text": "ELLA LO\nPREVIÓ", "kicker": "APOLO 11 · 1969", "src": "assets/media/hamilton.jpg", "imageSide": "right"}}`
 - **`binary.counter`** — Número que se arma dígito a dígito como una tragamonedas (slot) o que cuenta hasta su valor (count), entre dos reglas de glifos: cifras enormes, años, cantidades. Parámetros: value*, mode(slot|count), from, dur, label, note, size, morph
   `{"use": "binary.counter", "params": {"value": "159.000.000.000.000.000.000", "label": "COMBINACIONES", "note": "21 CIFRAS", "mode": "slot"}}`
@@ -70,9 +70,24 @@
   `{"use": "common.flash", "params": {"color": "palette.ink", "dur": 0.5}}`
 - **`common.endcard`** — Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse). Parámetros: line, brand, cta
   `{"use": "common.endcard", "params": {"line": "SEGUIMOS\nPREGUNTANDO", "brand": "NEXA BRIEF", "cta": "SUSCRÍBETE"}}`
-- **`common.lyric`** — Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. Parámetros: accent, size, maxChars, dimPast, y
+- **`common.lyric`** — Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. Parámetros: text, accent, size, maxChars, dimPast, y
   `{"use": "common.lyric", "params": {"accent": ["vidas"], "size": 0.9}}`
-- **`common.clip`** — Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Parámetros: src*, start, rate, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub
+- **`common.logo`** — Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual. Parámetros: src, name
+- **`common.clip`** — Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Parámetros: src*, start, rate, loop, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
   `{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}`
+- **`common.tabloid`** — Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio. Parámetros: text*, src, srcAfter, video, poster, start, rate, loop, muted, accent, bullet, bulletScale, beforeLabel, afterLabel, imageSide(auto|left|right), mode(impact|split), palette(brand|alert), strap, seal, tapeText, marker, focus, target, textIn(slam|slide|typewriter|none), stagger, accentIn(slam|slide|typewriter|none), bulletIn(slam|slide|typewriter|none), inDuration, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
+  `{"use": "common.tabloid", "params": {"text": "TÚ ERES EL SIGUIENTE", "accent": "SIGUIENTE", "strap": "AMAZON · IA"}}`
+- **`common.question`** — Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9. Parámetros: text*, y
+  `{"use": "common.question", "params": {"text": "¿La IA te quita trabajo?"}}`
 
 Iconos (`icon`): bulb · question · key · lock · ship · submarine · apple · gear · envelope · clock · globe · phone · gavel · heart · bell · chip · waves · check · cross · hourglass · eye · person · house · book · moon · radar · keyboard · banknote · flask · crown · bombe · soldier · wheat · fuel · microphone · document · tv · barrier · hammer · water · radio
+
+## Plano preferido · texto grande + foto o video
+
+`binary.introv2` combina `text` grande a un lado y `src` o `video` grande al otro. Ajustá `highlight`, `kicker` y `focusX`, `focusY`. El MP4 es siempre mudo; `poster` (o `src`) es el respaldo. Todo video visible dura al menos 8 s. En videos de ≥ 8 min, incluí al menos dos tramos de video de ≥ 12 s.
+
+`{"t": 42, "dur": 12, "use": "binary.introv2", "params": {"text": "LA VERDAD", "video": "assets/media/archivo.mp4", "poster": "assets/media/archivo.jpg", "start": 2, "rate": 1, "loop": true, "focusX": 0.7, "focusY": 0.5, "logo": "assets/media/logos/marca.svg", "logoName": "Marca"}}`
+
+## Marcas e instituciones
+
+El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Usá `logo`, `logoName`, `logoPos` y `logoSize` en el beat visual (`rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`). `common.logo` está obsoleto. Preferí SVG; el PNG debe ser transparente.

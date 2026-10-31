@@ -16,6 +16,8 @@ strategies/<pieza>/<id>.json
   gratitude/    las variantes de agradecimiento que rotan
   tags/         cantidades de tags y hashtags por plataforma
   pinned/       comentario fijado: dato extra + 2 preguntas (tema y próximo video), tono natural
+  narrative/    arco del guion (amarillista por defecto, documental): módulo aparte, ver
+                src/core/explainer/narrative/README.md
 ```
 
 Los fundamentos están en `docs/investigaciones/`: `titulos-gancho-categorias-node-2026-10.md`,

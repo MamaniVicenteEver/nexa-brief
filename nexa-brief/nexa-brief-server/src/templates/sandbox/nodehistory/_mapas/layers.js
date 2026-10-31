@@ -12,32 +12,58 @@
   const { clamp, lerp, back, rgba, mixW, ease } = Proto.U;
   const FONT = "Montserrat, 'Arial Black', sans-serif";
   const L = {};
+  const pathCaches = new WeakMap();
+
+  function cachePath(c, kind, key, make) {
+    let frame = pathCaches.get(c.P);
+    if (!frame) { frame = { region: new WeakMap(), geo: new WeakMap(), poly: new WeakMap() }; pathCaches.set(c.P, frame); }
+    const cache = frame[kind];
+    if (!cache.has(key)) cache.set(key, make());
+    return cache.get(key);
+  }
+  function geoPath2d(c, key, features) {
+    return cachePath(c, "geo", key, () => {
+      const path = new Path2D();
+      const ctx = new Proxy(path, { get(target, prop) {
+        if (prop === "beginPath") return () => {};
+        const value = Reflect.get(target, prop, target);
+        return typeof value === "function" ? value.bind(target) : value;
+      } });
+      const gp = d3.geoPath(c.P, ctx);
+      for (const f of [].concat(features)) gp(f);
+      return path;
+    });
+  }
+  function makePolyPath(pts) {
+    const path = new Path2D();
+    pts.forEach((p, i) => (i ? path.lineTo(p[0], p[1]) : path.moveTo(p[0], p[1])));
+    path.closePath();
+    return path;
+  }
+  function clipPoly(c, key, pts) { return cachePath(c, "poly", key, () => makePolyPath(pts)); }
 
   /* ---------- trazado de regiones ---------- */
-  function polyPath(g, pts) { g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); g.closePath(); }
   function pathRegion(c, R) {
-    const { g, P } = c;
-    if (R.poly) return polyPath(g, R.poly.map(P));
-    g.beginPath(); const gp = d3.geoPath(P, g); for (const f of R.feats) gp(f);
+    return cachePath(c, "region", R, () => R.poly ? makePolyPath(R.poly.map(c.P)) : geoPath2d(c, R.feats, R.feats));
   }
   /** recorte "dentro de": los países de `within` o, si no hay, toda la tierra firme */
-  function clipLand(c, R) { const gp = d3.geoPath(c.P, c.g); c.g.beginPath(); if (R && R.within) R.within.forEach(f => gp(f)); else gp(c.geo.land); c.g.clip(); }
-  function strokeLand(c, R) { const gp = d3.geoPath(c.P, c.g); c.g.beginPath(); if (R.within) R.within.forEach(f => gp(f)); else gp(c.geo.coast); c.g.stroke(); }
+  function clipLand(c, R) { const source = R && R.within ? R.within : c.geo.land; c.g.clip(geoPath2d(c, source, source)); }
+  function strokeLand(c, R) { const source = R.within || c.geo.coast; c.g.stroke(geoPath2d(c, source, source)); }
   function clipRegion(c, R) {
     if (R.land) clipLand(c, R);
-    pathRegion(c, R); c.g.clip();
-    for (const cut of R.clips) { polyPath(c.g, cut.map(c.P)); c.g.clip(); }
+    c.g.clip(pathRegion(c, R));
+    for (const cut of R.clips) c.g.clip(clipPoly(c, cut, cut.map(c.P)));
   }
   /** contorno = borde del país dentro del recorte + línea de recorte dentro del país */
   function strokeRegion(c, R) {
     const g = c.g;
     if (R.land) { // borde = lados del polígono sobre tierra + la costa dentro del polígono
-      g.save(); clipLand(c, R); pathRegion(c, R); g.stroke(); g.restore();
-      g.save(); pathRegion(c, R); g.clip(); strokeLand(c, R); g.restore();
+      g.save(); clipLand(c, R); g.stroke(pathRegion(c, R)); g.restore();
+      g.save(); g.clip(pathRegion(c, R)); strokeLand(c, R); g.restore();
       return;
     }
-    g.save(); for (const cut of R.clips) { polyPath(g, cut.map(c.P)); g.clip(); } pathRegion(c, R); g.stroke(); g.restore();
-    for (const cut of R.clips) { g.save(); pathRegion(c, R); g.clip(); polyPath(g, cut.map(c.P)); g.stroke(); g.restore(); }
+    g.save(); for (const cut of R.clips) g.clip(clipPoly(c, cut, cut.map(c.P))); g.stroke(pathRegion(c, R)); g.restore();
+    for (const cut of R.clips) { g.save(); g.clip(pathRegion(c, R)); g.stroke(clipPoly(c, cut, cut.map(c.P))); g.restore(); }
   }
   function hatch(c, col, t, a, angle = 1) {
     const { g, st } = c, U = st.U;

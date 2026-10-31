@@ -13,8 +13,7 @@
    ├─ 3  escribe el guion ......... script.json (tonos e intensidades por segmento)
    ├─ 3b busca fotos .............. media.py → Wikimedia / Pexels (solo licencias libres) + créditos
    ├─ 3c (si falta) crea un componente nuevo
-   ├─ 4  kit.py voice ............. GEMINI TTS (automático: 7 claves, 3 modelos, control con Whisper)
-   ├─ 5  kit.py transcribe ........ WHISPER local: segundo exacto de cada palabra
+   ├─ 4–5 HOST del pipeline ....... voice y transcribe con cierre, entre las dos corridas del agente
    ├─ 6  escribe el storyboard .... qué se dibuja en cada frase (componentes del catálogo)
    ├─ 7  kit.py check ............. valida anclas, ritmo, repeticiones, imágenes
    ├─ 8  kit.py sheet ............. hoja de capturas → revisión con ojos
@@ -27,6 +26,11 @@
   10 kit.py render ── mp4 9:16 y 16:9 (cuadro a cuadro, ~15–20 min por formato)
 ```
 
+En el pipeline el agente termina la fase de guion con `work/phase.json` en `script_ready`;
+el host ejecuta voz y transcripción, y luego el agente continúa con storyboard. Si cambia
+el guion, deja el mismo marcador y termina para pedir otra pasada al host. Los comandos
+de voz y transcripción quedan disponibles para uso manual fuera del pipeline.
+
 ## 2. Quién hace qué
 
 | tarea | quién | dónde |
@@ -38,7 +42,7 @@
 | Fotos | **Wikimedia Commons** (historia) y **Pexels** (genéricas) | `tools/media.py` |
 | Dibujo y render | **motor propio + Chromium** (Playwright) | `engine/`, `designs/`, `kit.py render` |
 | Componentes nuevos (opcional) | el agente principal, o **DeepSeek Flash** con reparación automática (borradores que después revisa alguien con ojos) | `tools/ai_loop.py` |
-| Borradores delegados (componentes, segunda lectura del guion, opciones de títulos) | **DeepSeek** (`kit.py delegate`, roles en `src/skills/models/roles.json`) | `guides/orquestacion.md §3` |
+| Borradores delegados (componentes, segunda lectura, títulos, textos y diálogos) | **DeepSeek** o **Codex/Terra** (`kit.py delegate`, roles en `src/skills/models/roles.json`) | `guides/orquestacion.md §3` |
 | Registro de tokens e iteraciones | automático: backend + kit | `<video>/work/usage.jsonl` → `kit.py usage` → `usage.json` |
 
 Quién hace cada rol está en datos (`src/skills/models/roles.json`): hoy el productor es **Codex**

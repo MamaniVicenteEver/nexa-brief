@@ -17,8 +17,9 @@ import {
   useExplainerOptions,
   useGenerateBrief,
 } from "../hooks/useExplainer";
-import type { AgentName, ExplainerBrief, TextProvider } from "../types";
+import type { AgentName, ExplainerBrief, TextProvider, TitleLevel } from "../types";
 import { BriefEditor } from "./BriefEditor";
+import { NarrativePicker } from "./NarrativePicker";
 import { PreviewFrame } from "./PreviewFrameModal";
 
 const MEDIA_ACCEPT = "image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm";
@@ -46,7 +47,7 @@ export function CreateExplainerVideoModal({
   const t = useTranslations("explainer");
   // Todas las plantillas del kit: primero las de esta categoría, debajo las de las demás.
   const { data: designGroups = [] } = useDesignGroups(categoryPath);
-  const { data: options } = useExplainerOptions();
+  const { data: options } = useExplainerOptions(categoryPath);
   const briefMutation = useGenerateBrief();
   const productionMutation = useCreateProduction();
 
@@ -62,6 +63,9 @@ export function CreateExplainerVideoModal({
   // duración: un preset (5 · 10 · 15 · 30) o "custom" con minutos a mano (lengths.json)
   const [lengthChoice, setLengthChoice] = useState<string>("");
   const [customMinutes, setCustomMinutes] = useState(45);
+  // narrativa y nivel de título: vacío = la default de la categoría (la manda el servidor)
+  const [narrativeId, setNarrativeId] = useState("");
+  const [titleLevel, setTitleLevel] = useState<TitleLevel | null>(null);
 
   const designs = designGroups.flatMap((g) => g.designs);
   const selectedDesign = designs.find((d) => d.designId === design) ?? designs[0] ?? null;
@@ -77,6 +81,12 @@ export function CreateExplainerVideoModal({
     lengthValue === "custom"
       ? Math.min(lengths?.maxMinutes ?? 60, Math.max(lengths?.minMinutes ?? 5, customMinutes))
       : Number(lengthValue);
+  const narratives = options?.narratives ?? [];
+  const selectedNarrativeId = narrativeId || options?.defaultNarrative || "";
+  const selectedNarrative = narratives.find((n) => n.id === selectedNarrativeId) ?? null;
+  const selectedTitleLevel = selectedNarrative?.titleLevels.length
+    ? (titleLevel ?? selectedNarrative.defaultTitleLevel ?? undefined)
+    : undefined;
 
   const busy = briefMutation.isPending || productionMutation.isPending;
   const topicOk = topic.trim().length >= 3;
@@ -102,6 +112,8 @@ export function CreateExplainerVideoModal({
         provider: selectedProvider,
         mediaNames: files.map((f) => f.name),
         minutes,
+        narrativeId: selectedNarrativeId || undefined,
+        titleLevel: selectedTitleLevel,
       },
       { onSuccess: (result) => setBrief(result) },
     );
@@ -117,6 +129,8 @@ export function CreateExplainerVideoModal({
         description: description.trim(),
         agent: selectedAgent,
         brief,
+        narrativeId: selectedNarrativeId || undefined,
+        titleLevel: selectedTitleLevel,
         autoRecord,
         files,
         minutes,
@@ -232,6 +246,23 @@ export function CreateExplainerVideoModal({
                 {selectedDesign.tagline && ` · ${selectedDesign.tagline}`}
               </p>
             )}
+
+            <NarrativePicker
+              narratives={narratives}
+              defaultId={options?.defaultNarrative ?? null}
+              value={selectedNarrativeId}
+              onChange={(id) => {
+                setNarrativeId(id);
+                setTitleLevel(null);
+                setBrief(null);
+              }}
+              titleLevel={selectedTitleLevel ?? null}
+              onTitleLevelChange={(level) => {
+                setTitleLevel(level);
+                setBrief(null);
+              }}
+              disabled={busy}
+            />
 
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="flex flex-col gap-1.5">

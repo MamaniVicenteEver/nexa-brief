@@ -16,11 +16,12 @@ from __future__ import annotations
 import asyncio
 
 import structlog
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from src.adapters.publishing.factory import get_publisher_facade
 from src.core.schedule import engine, queue_repository, slot_repository
-from src.core.schedule.models import QueueEntry, QueueSource, ScheduleSlot
+from src.core.schedule.models import QueueEntry, QueueSource, QueueStatus, ScheduleSlot
+from src.presentation.api.security import require_internal
 from src.presentation.api.schemas.schedule_schema import (
     AssignVideoRequest,
     PublishNowRequest,
@@ -32,7 +33,7 @@ from src.presentation.api.schemas.schedule_schema import (
     ScheduleSlotUpdateRequest,
 )
 
-router = APIRouter(prefix="/schedule", tags=["schedule"])
+router = APIRouter(prefix="/schedule", tags=["schedule"], dependencies=[Depends(require_internal)])
 logger = structlog.get_logger(__name__)
 
 
@@ -231,17 +232,18 @@ async def publish_now(body: PublishNowRequest) -> QueueEntryResponse:
     `queue_entry_changed` (y GET /schedule/queue).
     """
     facade = _get_facade()
-    entry = await queue_repository.create(
-        job_id=body.job_id,
-        platform=body.platform,
-        account_alias=body.account_alias,
-        scheduled_at=None,
-        source=QueueSource.IMMEDIATE,
-        format=body.format,
-    )
-    task = asyncio.create_task(engine.publish_entry(facade, entry))
-    _publish_tasks.add(task)
-    task.add_done_callback(_on_publish_done)
+    try:
+        entry, _ = await queue_repository.create_immediate_once(
+            body.job_id, body.platform, body.account_alias, body.format, body.idempotency_key,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    # A crash may occur after persistence but before the task starts. The
+    # engine atomically claims queued work, so concurrent retries are safe.
+    if entry.status == QueueStatus.QUEUED:
+        task = asyncio.create_task(engine.publish_entry(facade, entry))
+        _publish_tasks.add(task)
+        task.add_done_callback(_on_publish_done)
     return _queue_response(entry)
 
 

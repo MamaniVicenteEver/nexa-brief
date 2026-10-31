@@ -15,6 +15,8 @@ interface AccountStatusResponseDto {
   name: string;
   target_id: string;
   status: string;
+  mode?: "api" | "service";
+  last_session_check?: number | null;
   expires_in_seconds: number | null;
   has_refresh_token: boolean;
   avatar: string | null;
@@ -100,6 +102,8 @@ function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
     name: dto.name,
     targetId: dto.target_id,
     status: dto.status === "requires_reauth" ? "requires_reauth" : "ok",
+    mode: dto.mode === "service" ? "service" : "api",
+    lastSessionCheck: dto.last_session_check ?? null,
     expiresInSeconds: dto.expires_in_seconds,
     hasRefreshToken: dto.has_refresh_token,
     avatar: dto.avatar,
@@ -230,6 +234,63 @@ export async function verifyChannelConnection(
     method: "POST",
     timeoutMs: 30_000,
   });
+}
+
+export interface TikTokPairingResponse {
+  pairing_id: string;
+  import_url: string;
+}
+
+export interface BrowserSessionStatus {
+  state:
+    | "starting"
+    | "queued"
+    | "waiting_qr"
+    | "scanned"
+    | "logged_in"
+    | "done"
+    | "failed"
+    | "expired"
+    | "cancelled";
+  qr_png_b64?: string;
+  identity?: { username?: string | null; nickname?: string | null; avatar_url?: string | null };
+  error?: string;
+}
+
+export async function createTikTokPairing(alias: string): Promise<TikTokPairingResponse> {
+  return httpClient<TikTokPairingResponse>("/api/v1/publish/browser/tiktok/pair", {
+    method: "POST",
+    body: { alias },
+  });
+}
+
+export async function startTikTokQr(alias: string): Promise<{ session_id: string }> {
+  return httpClient<{ session_id: string }>("/api/v1/publish/browser/tiktok/qr/start", {
+    method: "POST",
+    body: { alias },
+    timeoutMs: 30_000,
+  });
+}
+
+export async function getBrowserSession(sessionId: string): Promise<BrowserSessionStatus> {
+  return httpClient<BrowserSessionStatus>(
+    `/api/v1/publish/browser/sessions/${encodeURIComponent(sessionId)}`,
+    { timeoutMs: 15_000 },
+  );
+}
+
+export async function cancelBrowserSession(sessionId: string): Promise<void> {
+  await httpClient(`/api/v1/publish/browser/sessions/${encodeURIComponent(sessionId)}/cancel`, {
+    method: "POST",
+  });
+}
+
+export async function checkTikTokBrowserSession(alias: string): Promise<ChannelAccount> {
+  const dto = await httpClient<AccountStatusResponseDto>(
+    `/api/v1/publish/accounts/tiktok/${encodeURIComponent(alias)}/check-session`,
+    { method: "POST", timeoutMs: 120_000 },
+  );
+  return mapChannelAccount(dto);
 }
 
 export async function disconnectChannel(platform: ChannelPlatform, alias: string): Promise<void> {

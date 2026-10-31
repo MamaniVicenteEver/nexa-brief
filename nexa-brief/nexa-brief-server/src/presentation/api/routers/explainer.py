@@ -40,7 +40,7 @@ from src.config.exceptions import NexaBriefError
 from src.config.settings import settings
 from src.core.categories import explainer_folders, get_category, list_categories
 from src.core.explainer.briefs import ExplainerBrief, generate_brief, generate_publish_texts, write_publish_json
-from src.core.explainer import lengths, thumbnails
+from src.core.explainer import lengths, narrative, thumbnails
 from src.core.explainer.publishing import review as review_package
 from src.core.explainer.publishing.store import is_package, read_publish
 from src.core.explainer.catalog import TEMPLATES_DIR, ExplainerVideo, get_video, list_videos
@@ -62,6 +62,9 @@ from src.presentation.api.schemas.explainer_schema import (
     ExplainerVideoResponse,
     LengthOptionsResponse,
     LengthPresetResponse,
+    NarrativeActResponse,
+    NarrativeOptionResponse,
+    TitleLevelResponse,
     ProductionRequest,
     ProductionResponse,
     ProviderStatus,
@@ -173,9 +176,9 @@ def _thumbnails(video: ExplainerVideo) -> ThumbnailsResponse:
     options = []
     for option, spec in specs.items():
         path = thumbnails.thumbnail_file(video, option)
-        url = f"{base}/{path.name}?v={int(path.stat().st_mtime)}" if path.exists() else None
+        url = f"{base}/{path.name}?v={int(path.stat().st_mtime)}" if thumbnails.capture_current(video, option, spec) else None
         # la foto va con ruta desde src/templates/ ("/nodehistory/…"): para el navegador, por la API de archivos
-        params = {k: (f"{FILES_PREFIX}{v}" if k == "src" and isinstance(v, str) and v.startswith("/") else v)
+        params = {k: (f"{FILES_PREFIX}{v}" if k in ("src", "srcAfter") and isinstance(v, str) and v.startswith("/") else v)
                   for k, v in spec["params"].items()}
         options.append(ThumbnailOptionResponse(option=option, component=spec["component"], params=params, url=url))
     return ThumbnailsResponse(chosen=thumbnails.chosen_option(video), options=options)
@@ -220,6 +223,8 @@ def _publish_package(video: ExplainerVideo) -> PublishPackageResponse | None:
     if result is None:
         return None
     image = result.package.thumbnail.with_image.image
+    tabloid = result.package.thumbnail.tabloid
+    tabloid_image = tabloid.image if tabloid is not None else image
     title_rules = result.strategies.title
     return PublishPackageResponse(
         package=result.package,
@@ -228,6 +233,9 @@ def _publish_package(video: ExplainerVideo) -> PublishPackageResponse | None:
         issues=[PublishIssueResponse(level=i.level, field=i.field, message=i.message) for i in result.issues],
         thumbnail_image_url=(
             _video_preview_url(video).replace("/index.html", f"/assets/media/{image}") if image else None
+        ),
+        thumbnail_tabloid_image_url=(
+            _video_preview_url(video).replace("/index.html", f"/assets/media/{tabloid_image}") if tabloid_image else None
         ),
     )
 
@@ -258,6 +266,9 @@ def _video_response(video: ExplainerVideo) -> ExplainerVideoResponse:
         tiktok_hashtags=video.tiktok_hashtags,
         design_name=(design.name if (design := load_design(video.design)) else video.design),
         demo=video.demo,
+        narrative_id=video.narrative_id,
+        narrative_label=video.narrative_label,
+        quality_issues=video.quality_issues,
         preview_url=_video_preview_url(video),
         poster_url=_poster_url(video),
         last_job=_job_response(last) if last else None,
@@ -330,7 +341,7 @@ def _video_or_404(video_id: str) -> ExplainerVideo:
 
 @router.post("/explainer/videos/{video_id}/thumbnails", response_model=ThumbnailsResponse)
 async def capture_thumbnails(video_id: str) -> ThumbnailsResponse:
-    """Captura las miniaturas A (introv1) y B (introv2) con los textos actuales del paquete."""
+    """Captura las miniaturas A/B del diseño y C (common.tabloid), si están disponibles."""
     video = _video_or_404(video_id)
     if not thumbnails.intro_specs(video):
         raise HTTPException(status_code=409, detail=f"el diseño {video.design} no tiene intros para miniaturas")
@@ -394,11 +405,40 @@ async def create_publish_texts(video_id: str, body: PublishTextsRequest) -> Publ
 
 # ── Crear: opciones, diseños, textos, producción ─────────────────────────────
 
+def _narrative_option(story: narrative.NarrativeStrategy) -> NarrativeOptionResponse:
+    levels = story.title.levels.items() if story.title else []
+    return NarrativeOptionResponse(
+        id=story.id,
+        label=story.label,
+        name=story.name,
+        description=story.description,
+        status=story.status,
+        acts=[NarrativeActResponse(id=a.id, name=a.name, weight=a.weight, intensity=a.intensity, spoken=a.spoken) for a in story.acts],
+        title_levels=[TitleLevelResponse(id=k, name=v.name, description=v.description) for k, v in levels],
+        default_title_level=story.title.default_level if story.title else None,
+    )
+
+
+def _narrative_options(category: str | None) -> tuple[list[NarrativeOptionResponse], str | None]:
+    """Las narrativas y la default de la categoría; si el módulo falla, nada (el modal sigue sin selector)."""
+    service = narrative.get_service()
+    options = [_narrative_option(s) for s in service.list()]
+    try:
+        default = service.default_id((category or "_default").split("/", 1)[0])
+    except narrative.NarrativeError as exc:
+        logger.error("narrative_default_unavailable", **exc.context())
+        default = None
+    if default not in {o.id for o in options}:
+        default = None
+    return options, default
+
+
 @router.get("/explainer/options", response_model=ExplainerOptionsResponse)
-async def explainer_options() -> ExplainerOptionsResponse:
+async def explainer_options(category: str | None = None) -> ExplainerOptionsResponse:
     agents = [ProviderStatus(**a) for a in agents_status()]
     available = {a.name: a.available for a in agents}
     text = [ProviderStatus(name=n, available=available.get(n, bool(settings.deepseek_api_key))) for n in TEXT_PROVIDERS]
+    narratives, default_narrative = _narrative_options(category)
     return ExplainerOptionsResponse(
         agents=agents,
         text_providers=text,
@@ -410,6 +450,8 @@ async def explainer_options() -> ExplainerOptionsResponse:
             min_minutes=lengths.min_minutes(),
             max_minutes=lengths.max_minutes(),
         ),
+        narratives=narratives,
+        default_narrative=default_narrative,
     )
 
 
@@ -460,6 +502,8 @@ async def create_brief(body: BriefRequest) -> dict:
             design=design,
             media_names=body.media_names,
             minutes=body.minutes,
+            narrative_id=body.narrative_id,
+            title_level=body.title_level,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -505,6 +549,8 @@ async def create_production(
                 auto_record=req.auto_record,
                 plan_item_id=req.plan_item_id,
                 minutes=req.minutes,
+                narrative_id=req.narrative_id,
+                title_level=req.title_level,
             )
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc

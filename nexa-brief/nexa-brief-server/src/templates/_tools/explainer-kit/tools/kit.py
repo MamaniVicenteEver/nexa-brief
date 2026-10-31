@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """kit.py · la ÚNICA puerta de entrada a las herramientas del explainer-kit.
 
-Cualquier agente (Claude, Codex, DeepSeek…) produce un video corriendo estos pasos en orden.
+Cualquier agente (Claude, Codex, DeepSeek…) sigue estos pasos en orden. En el pipeline,
+el host ejecuta voice y transcribe entre las dos corridas del agente; los ejemplos
+de estos comandos son para uso manual fuera del pipeline.
 Correr siempre desde nexa-brief-server/ con el Python del proyecto:
 
   K=src/templates/_tools/explainer-kit/tools/kit.py
   .venv/bin/python $K new <diseño> <video-id> --title "Título" [--minutes 10]  # 1. carpeta del video (duración objetivo: lengths.json)
   .venv/bin/python $K status <video-id>                             #    qué falta (en cualquier momento)
   .venv/bin/python $K components <video-id>                         # 3c. control de los componentes propios (assets/components/)
-  .venv/bin/python $K voice <video-id>                              # 4. narración (Gemini, rotando claves/modelos) + control
-  .venv/bin/python $K transcribe <video-id>                         # 5. lyrics.json con tiempos por palabra (+ cierre con voz del canal)
+  .venv/bin/python $K voice <video-id> --background                 # 4. narración (Gemini, rotando claves/modelos) + control
+  .venv/bin/python $K voice <video-id> --wait [--timeout 20]     #    consultar hasta terminar
+  .venv/bin/python $K transcribe <video-id> --background            # 5. iniciar Whisper desacoplado
+  .venv/bin/python $K transcribe <video-id> --wait [--timeout 20]  #    consultar hasta terminar (+ cierre)
   .venv/bin/python $K outro <video-id>                              #    vuelve a pegar el cierre con voz del canal (outro/)
   .venv/bin/python $K check <video-id>                              # 7. valida el storyboard contra la transcripción
   .venv/bin/python $K sheet <video-id> [--orient 9x16|16x9|both]    # 8. hoja de capturas (1 por plano) para revisar
@@ -21,8 +25,11 @@ Correr siempre desde nexa-brief-server/ con el Python del proyecto:
   .venv/bin/python $K poster <video-id>                             #    portada render/poster.jpg (la tarjeta de la app)
   .venv/bin/python $K catalog                                        #    regenera CATALOG.md (después de crear componentes)
   .venv/bin/python $K delegate <video-id> <rol> --prompt-file work/x.md [--out …] [--context PLAN.md]
-                                                                    #    trabajo acotado a DeepSeek (roles: src/skills/models/roles.json)
+                                                                    #    borradores DeepSeek/Codex (roles: src/skills/models/roles.json)
   .venv/bin/python $K usage <video-id>                              #    usage.json: modelos, tokens e iteraciones del video
+
+Los comandos voice, transcribe, sheet, render, components y delegate aceptan --background
+y --wait [--timeout 20] para tareas largas; salida 2 significa que siguen en curso.
 
 Cada comando con <video-id> queda anotado en <video>/work/usage.jsonl (tools/usage.py): así se
 cuentan las vueltas (check, components, sheet…) y los tokens de la voz y lo delegado.
@@ -39,6 +46,9 @@ from src.core.explainer.promote import PromoteError, promote  # noqa: E402
 from lengths import of_script  # noqa: E402
 import outro as outro_tool  # noqa: E402
 import usage  # noqa: E402
+import transcribe_job  # noqa: E402
+import job  # noqa: E402
+import kit_job  # noqa: E402
 PY = sys.executable
 TOOLS = KIT / "tools"
 
@@ -52,6 +62,8 @@ def jload(p, default=None):
 def jsave(p, data): pathlib.Path(p).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
 def run(cmd, **kw):
     print("$", " ".join(str(c) for c in cmd)[:300], flush=True)
+    if os.environ.get("NEXA_KIT_JOB_FD"):
+        kw.setdefault("pass_fds", (int(os.environ["NEXA_KIT_JOB_FD"]),))
     return subprocess.run([str(c) for c in cmd], **kw)
 def design_of(d): return (jload(d / "assets" / "config.json", {}) or {}).get("design") or (jload(d / "manifest.json", {}) or {}).get("design", "binary")
 
@@ -74,7 +86,7 @@ def cmd_new(a):
     put("PLAN.md", (T / "PLAN.md").read_text().replace("{{TITLE}}", title).replace("{{DESIGN}}", f"{a.design} ({D['name']})"))
     put("assets/media/CREDITS.md", f"# Créditos de medios · {title}\n\narchivo — título — autor — licencia — URL de la fuente\n")
     if not (d / "assets/config.json").exists():
-        jsave(d / "assets/config.json", {"activeId": a.id, "configs": [{"id": a.id, "design": a.design, "title": title,
+        jsave(d / "assets/config.json", {"activeId": a.id, "configs": [{"id": a.id, "design": a.design, "title": title, "quality_policy_version": 3,
               "audio": {"src": "assets/song.mp3"}, "lyricsUrl": "assets/lyrics.json", "storyboardUrl": "assets/storyboard.json", "seed": int(hashlib.sha1(a.id.encode()).hexdigest()[:6], 16) % 9999}]})
     if not (d / "assets/script.json").exists():
         script = {"id": a.id, "design": a.design, "title": title.upper(), "kicker": "", "language": "es-419",
@@ -102,13 +114,18 @@ def cmd_status(a):
     T = of_script(sc, design_of(d))
     words = sum(len(s.get("text", "").split()) for s in sc.get("segments", []))
     local = (jload(A / "components" / "catalog.json", {}) or {}).get("comps", [])
+    quality = jload(KIT / "catalog.json", {}).get("quality", {})
+    quality.update(jload(KIT / "designs" / design_of(d) / "quality.json", {}) or {})
+    quality_min = quality.get("custom_min", 0) if sc.get("target_minutes", 0) >= quality.get("custom_min_minutes", float("inf")) else 0
+    component_min = max(T["domain_components"], quality_min)
     facts = 8 if T["legacy"] else max(8, int(T["minutes"] * 2))
     steps = [
         (f"2 PLAN.md completo (≥ {facts} hechos con fuente)", bool(plan) and "{{" not in plan and len(re.findall(r"^\|\s*\d+\s*\|.*https?://", plan, re.M)) >= facts),
         (f"3 guion (script.json): {words} palabras, objetivo {T['words'][0]}–{T['words'][1]}", len(sc.get("segments", [])) >= T["segments"][0] and "…" not in json.dumps(sc) and T["words"][0] <= words),
         (f"3b medios + CREDITS.md (≥ {T['photos'][0]} fotos)", len(media) >= T["photos"][0] and len((A / "media/CREDITS.md").read_text().splitlines()) > 3 if (A / "media/CREDITS.md").exists() else False),
-        (f"3c componentes propios: {len(local)} registrados (mínimo {T['domain_components']} si el tema tiene objetos que el catálogo no dibuja; si no, justificar en PLAN §7a)",
-         len(local) >= T["domain_components"] or bool(re.search(r"sin componentes propios:\s*(?!<motivo>)\w", plan, re.I))),
+        (f"3c componentes propios: {len(local)} registrados (mínimo {component_min}; check exige usarlos)" if quality_min else
+         f"3c componentes propios: {len(local)} registrados (objetivo orientativo {component_min}; si no, justificar en PLAN §7a)",
+         len(local) >= component_min or (not quality_min and bool(re.search(r"sin componentes propios:\s*(?!<motivo>)\w", plan, re.I)))),
         ("4 voz (song.mp3)", (A / "song.mp3").exists() and not (ly.get("metadata") or {}).get("fake")),
         ("5 transcripción (lyrics.json)", bool(ly.get("segments")) and not (ly.get("metadata") or {}).get("fake")),
         ("5b cierre con voz del canal (kit.py outro)", outro_tool.spec_for(d) is None or bool((ly.get("metadata") or {}).get("outro"))),
@@ -136,8 +153,9 @@ def cmd_voice(a):
 
 def cmd_transcribe(a):
     d = vdir(a.id)
-    if run([PY, TOOLS / "transcribe.py", d / "assets/song.mp3", d / "assets/script.json", d / "assets/lyrics.json"]).returncode: sys.exit(1)
-    outro_tool.apply(d)   # cierre con voz del canal (siempre igual, no se genera con TTS)
+    if a.wait:
+        sys.exit(transcribe_job.wait(d, a.timeout))
+    sys.exit(transcribe_job.launch(d, a.background))
 
 def cmd_outro(a):
     outro_tool.apply(vdir(a.id))
@@ -146,6 +164,7 @@ def cmd_preview(a):
     d = vdir(a.id)
     if (d / "assets/song.mp3").exists() and not a.force: sys.exit("ya hay voz real; preview pisaría song.mp3/lyrics.json (usar --force)")
     run([PY, TOOLS / "fake_timing.py", d / "assets/script.json", d / "assets/lyrics.json", d / "assets/song.mp3"])
+    outro_tool.apply(d)
 
 # ---------------------------------------------------------------- check / sheet
 def cmd_components(a):
@@ -161,7 +180,8 @@ def cmd_sheet(a):
     d = vdir(a.id)
     for o in (["9x16", "16x9"] if a.orient == "both" else [a.orient]):
         out = d / "work" / f"sheet-{o}.png"
-        run([PY, TOOLS / "shoot.py", out, a.id, "--page", os.path.relpath(d / "index.html", KIT), "--times", "beats", "--orient", o, "--thumb", "330" if o == "9x16" else "220"])
+        result = run([PY, TOOLS / "shoot.py", out, a.id, "--page", os.path.relpath(d / "index.html", KIT), "--times", "beats", "--orient", o, "--thumb", "330" if o == "9x16" else "220"])
+        if result.returncode: sys.exit(result.returncode)
         print(f"✓ {out.relative_to(TEMPLATES)} — MIRARLA: un cuadro por plano (AGENTS.md, paso 8)")
 
 # ---------------------------------------------------------------- manifest
@@ -182,7 +202,9 @@ def cmd_manifest(a):
     uses = {}
     for b in sb.get("beats", []): uses[b["use"]] = uses.get(b["use"], 0) + 1
     files = {str(p.relative_to(d)): p.stat().st_size for p in sorted(d.rglob("*")) if p.is_file() and "work" not in p.parts and p.name != ".gitignore"}
-    dur = audio_dur(A / "song.mp3") if (A / "song.mp3").exists() else None
+    audio_src = (C.get("audio") or {}).get("src", "assets/song.mp3")
+    audio_path = d / audio_src
+    dur = audio_dur(audio_path) if audio_path.is_file() else None
     M.update({
         "video_id": a.id, "design": C.get("design"), "design_name": D.get("name"), "channel": (C.get("outro") or {}).get("channel") or D.get("channel", {}).get("name"),
         "pipeline_type": "explainer_kit", "title": sc.get("title") or C.get("title"), "kicker": sc.get("kicker"),
@@ -207,7 +229,19 @@ def cmd_manifest(a):
     has_outro = outro_tool.spec_for(d) is None or bool((ly.get("metadata") or {}).get("outro"))
     ok = all([M["duration_seconds"], M["transcript"]["words"], M["storyboard"]["beats"] >= 15, not M["transcript"]["fake"], has_outro])
     if not has_outro: print("⚠ falta el cierre con voz del canal: correr kit.py outro " + a.id)
-    M["status"] = "renderizado" if any((d / "render").glob("*.mp4")) else ("listo" if ok else "en progreso")
+    # No declarar listo un storyboard que incumple los checks; check también actualiza quality.
+    check_inputs = [A / "config.json", A / "lyrics.json", A / "storyboard.json"]
+    quality_ok = False
+    if all(path.exists() for path in check_inputs):
+        result = run([PY, TOOLS / "check_storyboard.py", d], capture_output=True, text=True)
+        quality_ok = result.returncode == 0
+        M["quality"] = (jload(d / "manifest.json", {}) or {}).get("quality", {})
+        if not quality_ok:
+            print("⚠ el check tiene errores; el manifest no queda listo:")
+            for line in result.stdout.splitlines():
+                if "✗" in line: print(line)
+            if result.stderr: print(result.stderr.strip())
+    M["status"] = ("renderizado" if any((d / "render").glob("*.mp4")) else "listo") if ok and quality_ok else "en progreso"
     jsave(d / "manifest.json", M)
     print(f"✓ manifest.json · estado: {M['status']} · {M['duration_seconds']} s · {M['storyboard']['beats']} beats · {len(credits)} medios")
 
@@ -302,7 +336,10 @@ def main():
     p = sp.add_parser("new"); p.add_argument("design"); p.add_argument("id"); p.add_argument("--title", default=""); p.add_argument("--folder", default="", help="carpeta de categoría (nodetech, nodehistory…)"); p.add_argument("--force", action="store_true")
     p.add_argument("--minutes", type=float, default=0, help="duración objetivo (lengths.json: 5 corto, 10 normal, 15 serio, 30 largo)")
     p = sp.add_parser("components"); p.add_argument("id"); p.add_argument("--only", default="", help="un solo componente")
-    for name in ("status", "transcribe", "check", "manifest", "outro"): sp.add_parser(name).add_argument("id")
+    for name in ("status", "check", "manifest", "outro"): sp.add_parser(name).add_argument("id")
+    p = sp.add_parser("transcribe"); p.add_argument("id")
+    mode = p.add_mutually_exclusive_group(); mode.add_argument("--background", action="store_true"); mode.add_argument("--wait", action="store_true")
+    p.add_argument("--timeout", type=float, default=20, help="segundos de espera por consulta (0–30; solo con --wait)")
     p = sp.add_parser("voice"); p.add_argument("id"); p.add_argument("--voice", default=""); p.add_argument("--model", default=""); p.add_argument("--parts", type=int, default=0); p.add_argument("--dry", action="store_true")
     p = sp.add_parser("preview"); p.add_argument("id"); p.add_argument("--force", action="store_true")
     p = sp.add_parser("sheet"); p.add_argument("id"); p.add_argument("--orient", default="9x16")
@@ -310,10 +347,29 @@ def main():
     p = sp.add_parser("poster"); p.add_argument("id")
     p = sp.add_parser("promote"); p.add_argument("id"); p.add_argument("--force", action="store_true")
     sp.add_parser("catalog")
-    p = sp.add_parser("delegate"); p.add_argument("id"); p.add_argument("role"); p.add_argument("--prompt-file", required=True)
+    p = sp.add_parser("delegate", help="delegar un borrador a DeepSeek o Codex según roles.json"); p.add_argument("id"); p.add_argument("role", nargs="?"); p.add_argument("--prompt-file")
     p.add_argument("--out", default=""); p.add_argument("--context", action="append", default=[])
     sp.add_parser("usage").add_argument("id")
+    for name in ("voice", "sheet", "render", "components", "delegate"):
+        p = sp.choices[name]
+        mode = p.add_mutually_exclusive_group(); mode.add_argument("--background", action="store_true"); mode.add_argument("--wait", action="store_true")
+        p.add_argument("--timeout", type=float, default=20, help="segundos de espera por consulta (0–30; solo con --wait)")
     a = ap.parse_args()
+    if os.environ.get("NEXA_EXPLAINER_PIPELINE_AGENT") == "1" and a.cmd in ("voice", "transcribe", "outro", "preview"):
+        ap.error(f"{a.cmd} corresponde al host en el pipeline; termina la fase para solicitarlo")
+    if a.cmd == "delegate" and not a.wait and (not a.role or not a.prompt_file):
+        ap.error("delegate requiere rol y --prompt-file para iniciar")
+    if a.cmd in ("voice", "transcribe", "sheet", "render", "components", "delegate") and (not 0 <= a.timeout <= 30 or (a.timeout != 20 and not a.wait)):
+        ap.error("--timeout requiere --wait y debe estar entre 0 y 30 segundos")
+    if a.cmd in ("voice", "sheet", "render", "components", "delegate") and not os.environ.get("NEXA_KIT_JOB_FD"):
+        d = vdir(a.id)
+        if a.wait:
+            sys.exit(job.wait(d, a.cmd, a.timeout))
+        args = [arg for arg in sys.argv[1:] if arg != "--background"]
+        sys.exit(kit_job.launch(d, a.cmd, a.background, args))
+    if a.cmd == "transcribe":
+        cmd_transcribe(a)  # el worker registra una sola llamada real a Whisper
+        return
     if a.cmd not in LOGGED or find_video(getattr(a, "id", "")) is None:
         globals()["cmd_" + a.cmd](a)
         return

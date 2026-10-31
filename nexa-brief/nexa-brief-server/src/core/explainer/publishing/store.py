@@ -20,6 +20,7 @@ from src.core.explainer.publishing.description import (
 )
 from src.core.explainer.publishing.package import SCHEMA_VERSION, PublishPackage
 from src.core.explainer.publishing.strategies import ActiveStrategies
+from src.core.explainer import narrative
 
 PUBLISH_FILE = "publish.json"
 # Campos planos de v1 que save_package deriva del paquete (compat_fields).
@@ -78,7 +79,15 @@ def compat_fields(video_id: str, package: PublishPackage, strategies: ActiveStra
 
 def save_package(video_dir: Path, package: PublishPackage, strategies: ActiveStrategies) -> dict[str, Any]:
     """Escribe el paquete v2 con sus campos derivados; devuelve lo escrito."""
-    package = package.model_copy(update={"strategies_used": strategies.ids()})
-    data = {**package.model_dump(mode="json"), **compat_fields(video_dir.name, package, strategies)}
+    previous = load_package(video_dir)
+    package = package.model_copy(update={"strategies_used": narrative.stamp_publish(video_dir, strategies.ids())})
+    package_data = package.model_dump(mode="json")
+    if package.thumbnail.tabloid is None:
+        package_data["thumbnail"].pop("tabloid", None)  # Los paquetes viejos conservan su forma A/B.
+    data = {**package_data, **compat_fields(video_dir.name, package, strategies)}
+    if previous is not None and previous.thumbnail != package.thumbnail:
+        for option in ("A", "B", "C"):
+            for suffix in ("jpg", "webp", "sha256"):
+                (video_dir / "render" / f"thumbnail-{option}.{suffix}").unlink(missing_ok=True)
     (video_dir / PUBLISH_FILE).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return data

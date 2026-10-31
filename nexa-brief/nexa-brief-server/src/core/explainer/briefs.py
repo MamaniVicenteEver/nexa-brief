@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field, ValidationError, field_validator, model_v
 
 from src.config.exceptions import AIValidationError
 from src.core.categories import get_category, strategy_for
+from src.core.explainer import narrative
 from src.core.explainer.catalog import video_roots
 from src.core.explainer.designs import KitDesign
 from src.core.explainer.lengths import chapters_range, clamp_minutes
@@ -77,6 +78,9 @@ class TikTokCopy(BaseModel):
 
 class ExplainerBrief(BaseModel):
     video_id: str
+    # Los completa el servidor (no el modelo): la narrativa y el nivel de título con que se escribió.
+    narrative_id: str | None = None
+    title_level: str | None = None
     working_title: str
     hook: str
     angle: str
@@ -209,9 +213,14 @@ async def generate_brief(
     design: KitDesign | None = None,
     media_names: list[str] | None = None,
     minutes: float | None = None,
+    narrative_id: str | None = None,
+    title_level: str | None = None,
 ) -> ExplainerBrief:
     if not topic.strip():
         raise ValueError("el tema es obligatorio")
+    category_id = category_path.split("/", 1)[0]
+    story = narrative.get_service().resolve(category_id, narrative_id)   # NarrativeError (400) si no existe
+    level = story.title_level(title_level) if story else None
     target = clamp_minutes(minutes)
     lo, hi = chapters_range(target)
     payload = {
@@ -224,8 +233,12 @@ async def generate_brief(
             "capitulos": f"{lo} a {hi}",
         },
     }
+    if (ctx := narrative.brief_context(story, category_id, level)) is not None:
+        payload["narrativa"] = ctx
     brief = await _ask(ai, payload)
     brief.video_id = slugify(brief.video_id or topic)
+    brief.narrative_id = story.id if story else None
+    brief.title_level = level
     return brief
 
 
@@ -249,8 +262,20 @@ async def generate_publish_texts(ai: AIPort, video_dir: Path, *, category_path: 
         },
         "instruccion": "El video ya está hecho: los textos deben describir ESTE guion, sin prometer nada que no diga.",
     }
+    recorded = narrative.recorded(video_dir)
+    story = None
+    if recorded.narrative_id:
+        try:
+            story = narrative.get_service().get(recorded.narrative_id)
+        except narrative.NarrativeError:
+            story = None   # narrativa borrada: textos con las reglas generales
+    category_id = category_path.split("/", 1)[0]
+    if (ctx := narrative.brief_context(story, category_id, recorded.title_level)) is not None:
+        payload["narrativa"] = ctx
     brief = await _ask(ai, payload)
     brief.video_id = video_dir.name
+    brief.narrative_id = story.id if story else recorded.narrative_id
+    brief.title_level = recorded.title_level
     return brief
 
 

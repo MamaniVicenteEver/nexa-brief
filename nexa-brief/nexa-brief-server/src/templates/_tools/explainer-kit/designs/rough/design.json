@@ -23,6 +23,7 @@
   "scripts": [
     "vendor/rough.js",
     "designs/common/text.js",
+    "designs/common/logo.js",
     "designs/common/clip.js",
     "designs/rough/components/_rough.js",
     "designs/rough/components/sketches.js",
@@ -31,7 +32,9 @@
     "designs/rough/components/ui.js",
     "designs/rough/components/extra.js",
     "designs/rough/components/outrov1.js",
-    "designs/rough/components/outro.js"
+    "designs/rough/components/outro.js",
+    "designs/common/tabloid.js",
+    "designs/common/question.js"
   ],
   "defaults": {
     "family": "rough",
@@ -84,7 +87,7 @@
       "size": 0.92
     },
     "minDur": {
-      "common.clip": 6
+      "common.clip": 8
     },
     "overlay": {
       "endWithScene": true,

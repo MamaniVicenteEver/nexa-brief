@@ -8,12 +8,29 @@
   "beats": [
     {
       "t": 0,
-      "use": "rough.introv1",
+      "use": "common.tabloid",
       "params": {
-        "text": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ",
-        "kicker": "APOLO 11 · 20 JUL 1969",
-        "textPortrait": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ",
-        "highlight": "SE RINDIÓ"
+        "text": "CASI ABORTAN LA LUNA",
+        "mode": "impact",
+        "accent": "LUNA",
+        "bullet": "1202",
+        "beforeLabel": "",
+        "afterLabel": "",
+        "strap": "",
+        "seal": "",
+        "tapeText": "",
+        "marker": false,
+        "target": [
+          0.72,
+          0.52
+        ],
+        "focus": [
+          0.49,
+          0.34,
+          0.15
+        ],
+        "src": "/nodetech/apolo-1202/assets/media/hamilton-rostro.jpg",
+        "imageSide": "right"
       },
       "until": "A 10 kilómetros"
     },
@@ -549,18 +566,6 @@
         "sub": "EL ERROR QUE LLEVÓ A LA HUMANIDAD A LA LUNA",
         "accent": true,
         "underline": true
-      }
-    },
-    {
-      "t": 230.896327,
-      "offset": 0,
-      "dur": 12.32,
-      "use": "rough.outrov1",
-      "params": {
-        "likeAt": 4.54,
-        "subscribeAt": 5.02,
-        "bellAt": 7.08,
-        "supportAt": 8.1
       }
     }
   ]

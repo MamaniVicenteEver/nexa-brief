@@ -11,6 +11,7 @@
 | `common.flash` | overlay | Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido. |
 | `common.endcard` | main | Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse). |
 | `common.lyric` | main | Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. |
+| `common.logo` | main | Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual. |
 | `common.clip` | main | Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo. |
 | `binary.title` | main | Título de apertura GIGANTE hecho de 0 y 1 (~80% del cuadro, estilo cartel: cada renglón ocupa todo el ancho) con antetítulo y línea; las partículas convergen desde el polvo. |
 | `binary.word` | main | Palabra o número grande hecho de glifos (momentos de alto impacto: '159 TRILLONES', '1952'), con rótulo arriba y nota abajo. |
@@ -39,12 +40,14 @@
 | `binary.searchtree` | main | Árbol esquemático de jugadas posibles con una ruta destacada; sirve para explicar búsqueda y evaluación sin afirmar que sea un registro literal del cálculo. |
 | `binary.outrov1` | main | Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa. |
 | `binary.outro` | main | Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa. Alias compatible para binary.outro. |
+| `common.tabloid` | main | Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio. |
+| `common.question` | overlay | Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9. |
 | `rough.title` | main | Título de apertura GIGANTE (cartel: cada renglón al ancho total, ~80% del cuadro): las letras se dibujan en contorno y se rellenan; antetítulo en etiqueta lima, subtítulo debajo y subrayado a mano. Puede parpadear como alarma. |
 | `rough.icon` | main | Boceto de un objeto (diccionario rough/sketches.js) que se dibuja trazo a trazo; relleno rayado lima opcional, etiqueta arriba y nota manuscrita abajo. |
 | `rough.photo` | main | Foto real en blanco y negro (o virada a lima) que se revela con un barrido dentro de un marco dibujado a mano con cintas; nombre manuscrito y ficha mono debajo. Zoom lento (Ken Burns). |
 | `rough.annotate` | overlay | Marca a mano ENCIMA de lo que hay en pantalla: círculo, subrayado, flecha, caja o tachado, en lima, sobre una zona del cuadro de contenido; texto manuscrito opcional al lado. |
 | `rough.introv1` | main | Miniatura de solo texto con el tratamiento a mano de rough: título enorme, línea lima y antetítulo opcional. |
-| `rough.introv2` | main | Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto grande a color que se funde con el fondo (en 9:16 la foto va arriba). |
+| `rough.introv2` | main | Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto o video grande a color que se funde con el fondo (en 9:16 va arriba). |
 | `rough.flow` | main | Cadena de 2-5 pasos (boceto + rótulo) unidos por flechas a mano que aparecen en orden: causa → efecto, un proceso, un sistema. `active` resalta un paso en lima. |
 | `rough.compare` | main | Comparación de escala por ÁREA: un cuadrado diminuto (lo chico, en lima) dentro de uno enorme (lo grande). Para 'millones de veces más': el chico queda casi un punto. Con valores y flecha manuscrita. |
 | `rough.stack` | main | Pila de tareas en cajas a mano; en `dropAt` las que no se conservan se tachan y caen, y las importantes suben y se pintan de lima. Para prioridades, triage, 'soltar lo secundario'. |
@@ -308,6 +311,7 @@ Etiquetas: impacto, letra, frase, clímax · capa: main
 
 | parámetro | tipo | por defecto | qué hace |
 |---|---|---|---|
+| `text` | string | `""` | Frase explícita breve; vacía usa la ventana de narración. |
 | `accent` | array | `[]` | Palabras (sin tildes ni mayúsculas importa) que van en color de acento. |
 | `size` | number [0.3–1] | `0.82` | Fracción del ancho que ocupa el renglón más largo. |
 | `maxChars` | number | `0` | Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9). |
@@ -317,6 +321,17 @@ Etiquetas: impacto, letra, frase, clímax · capa: main
 ```json
 {"use": "common.lyric", "params": {"accent": ["vidas"], "size": 0.9}}
 ```
+
+### `common.logo`
+
+Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.
+
+Etiquetas: logo, obsoleto · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `src` | image | `""` |  |
+| `name` | string | `""` |  |
 
 ### `common.clip`
 
@@ -329,6 +344,7 @@ Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
 | `src` | video · obligatorio | `null` | Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4). |
 | `start` | number [0–None] | `0` | Segundo del clip desde el que arranca. |
 | `rate` | number [0.25–2] | `1` | Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate. |
+| `loop` | bool | `true` | Repite el clip si es más corto que el beat; evita congelar el último cuadro. |
 | `layout` | enum (auto / full / frame) | `"auto"` | auto = el del diseño (defaults.clip.layout; si no hay, full); full = pantalla completa; frame = dentro de un marco centrado. Dejarlo en auto. |
 | `size` | number [0–1] | `0` | layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84). |
 | `ar` | number | `0` | layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8). |
@@ -338,9 +354,75 @@ Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
 | `dim` | number [-1–1] | `-1` | Oscurecido (para leer los subtítulos); -1 = el del diseño. |
 | `caption` | string | `""` | Rótulo (qué se ve); vacío = sin rótulo. |
 | `sub` | string | `""` | Línea chica bajo el rótulo (fuente, lugar, año). |
+| `logo` | image | `""` | SVG o PNG transparente en assets/media/logos/. |
+| `logoName` | string | `""` | Marca; fallback tipográfico si no carga el archivo. |
+| `logoPos` | enum (auto / top-left / top-right / bottom-left / bottom-right) | `"auto"` | Esquina de la foto/video; auto evita el foco declarado. |
+| `logoSize` | number [0.12–0.35] | `0.22` | Ancho relativo al medio; el logo conserva proporciones. |
+| `logoInvert` | bool | `false` | Versión blanca para un logo oscuro sobre medio oscuro. |
 
 ```json
 {"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}
+```
+
+### `common.tabloid`
+
+Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.
+
+Etiquetas: miniatura, intro, alerta, tabloide, gancho · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Titular corto; máximo 6 palabras recomendado. |
+| `src` | image | `""` | Foto opcional; también sirve de respaldo del video. |
+| `srcAfter` | image | `""` | Segunda foto del split. |
+| `video` | video | `""` | Clip .mp4 local de assets/media; ocupa el lugar de src. |
+| `poster` | image | `""` | Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src. |
+| `start` | number [0–None] | `0` | Segundo inicial del clip. |
+| `rate` | number [0.25–2] | `1` | Velocidad del clip. |
+| `loop` | bool | `true` | Repite el clip si termina antes que el beat; evita congelar. |
+| `muted` | bool | `true` | El clip siempre se reproduce mudo; false se ignora por el contrato del motor. |
+| `accent` | string | `""` | Frase destacada con el acento del diseño (rojo en alert). |
+| `bullet` | string | `""` | Cifra y leyenda. |
+| `bulletScale` | number [0.5–1.5] | `1` | Escala de la cifra y su recuadro. |
+| `beforeLabel` | string | `""` | Etiqueta del antes. |
+| `afterLabel` | string | `""` | Etiqueta del después. |
+| `imageSide` | enum (auto / left / right) | `"auto"` | Lado de foto horizontal. |
+| `mode` | enum (impact / split) | `"impact"` | Foto única o split. |
+| `palette` | enum (brand / alert) | `"brand"` | Identidad del diseño o estilo clásico de alerta. |
+| `strap` | string | `""` | Cintillo superior. |
+| `seal` | string | `""` | Sello opcional. |
+| `tapeText` | string | `""` | Texto de cinta opcional. |
+| `marker` | bool | `false` | Marca alrededor del foco. |
+| `focus` | array | `null` | [x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto. |
+| `target` | array | `[0.72, 0.52]` | Obsoleto: usar focus con radio. |
+| `textIn` | enum (slam / slide / typewriter / none) | `"slam"` | Entrada de cada renglón del titular. |
+| `stagger` | number [0–1] | `0.16` | Separación en segundos entre renglones. |
+| `accentIn` | enum (slam / slide / typewriter / none) | `"slide"` | Entrada del acento después de su renglón. |
+| `bulletIn` | enum (slam / slide / typewriter / none) | `"slam"` | Entrada de la cifra después del titular. |
+| `inDuration` | number [0.05–2] | `0.42` | Duración en segundos de cada entrada. |
+| `logo` | image | `""` | SVG o PNG transparente en assets/media/logos/. |
+| `logoName` | string | `""` | Marca; fallback tipográfico si no carga el archivo. |
+| `logoPos` | enum (auto / top-left / top-right / bottom-left / bottom-right) | `"auto"` | Esquina de la foto/video; auto evita el foco declarado. |
+| `logoSize` | number [0.12–0.35] | `0.22` | Ancho relativo al medio; el logo conserva proporciones. |
+| `logoInvert` | bool | `false` | Versión blanca para un logo oscuro sobre medio oscuro. |
+
+```json
+{"use": "common.tabloid", "params": {"text": "TÚ ERES EL SIGUIENTE", "accent": "SIGUIENTE", "strap": "AMAZON · IA"}}
+```
+
+### `common.question`
+
+Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.
+
+Etiquetas: pregunta, comentarios, cierre, texto · capa: overlay
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `text` | string · obligatorio | `null` | Pregunta exacta del guion (máximo 8 palabras). |
+| `y` | number [0.2–0.8] | `0.5` | Centro vertical de la tarjeta (fracción del cuadro). |
+
+```json
+{"use": "common.question", "params": {"text": "¿La IA te quita trabajo?"}}
 ```
 
 ## binary · NODEHISTORY
@@ -534,6 +616,11 @@ Etiquetas: foto, documento, evidencia · capa: main
 | `size` | number [0.3–1] | `0.82` | Fracción del contenido. |
 | `tilt` | number | `0` | Inclinación del marco en grados. |
 | `morph` | number | `1` | Segundos de armado del marco. |
+| `logo` | image | `""` | SVG o PNG transparente en assets/media/logos/. |
+| `logoName` | string | `""` | Marca; fallback tipográfico si no carga el archivo. |
+| `logoPos` | enum (auto / top-left / top-right / bottom-left / bottom-right) | `"auto"` | Esquina de la foto/video; auto evita el foco declarado. |
+| `logoSize` | number [0.12–0.35] | `0.22` | Ancho relativo al medio; el logo conserva proporciones. |
+| `logoInvert` | bool | `false` | Versión blanca para un logo oscuro sobre medio oscuro. |
 
 ```json
 {"use": "binary.frame", "params": {"src": "assets/media/bletchley.jpg", "title": "Bletchley Park", "sub": "INGLATERRA · 1939–1945"}}
@@ -608,6 +695,11 @@ Etiquetas: intro, miniatura, texto e imagen · capa: main
 | `highlight` | string | `""` | Frase opcional que se destaca en una etiqueta invertida debajo del texto. |
 | `sub` | string | `""` | Línea mono opcional debajo del texto. |
 | `src` | image | `""` | Retrato o foto del tema (archivo de assets/media/ o URL). Vacío = cartel «IMAGEN PENDIENTE». |
+| `video` | video | `""` | Clip .mp4 local, siempre mudo, convertido a glifos. |
+| `poster` | image | `""` | Imagen inicial y respaldo; si falta, usa src. |
+| `start` | number [0–None] | `0` | Segundo inicial del clip. |
+| `rate` | number [0.25–2] | `1` | Velocidad del clip. |
+| `loop` | bool | `true` | Repite el clip si termina antes del beat; evita congelar. |
 | `imageSide` | enum (auto / left / right) | `"auto"` | Lado de la foto en 16:9 (el texto va en el otro). auto = alterna entre videos según el texto, así las intros no se ven siempre iguales; left/right lo fija (p. ej. para que el rostro mire hacia el texto). En 9:16 la foto va siempre arriba. |
 | `zoom` | number [1–3] | `1.2` | Ampliación de la foto (1 = entera): un retrato más grande se reconoce mejor. |
 | `focusX` | number [0–1] | `0.5` | Centro del recorte en la foto, horizontal (0 = izquierda). Moverlo hacia el rostro si queda cortado. |
@@ -618,6 +710,11 @@ Etiquetas: intro, miniatura, texto e imagen · capa: main
 | `threshold` | number [0–0.8] | `0.14` | Brillo mínimo para formar la imagen (lo que queda debajo es negro). |
 | `glow` | number [0–0.6] | `0.3` | Opacidad extra de los glifos del texto (más = blanco más luminoso). |
 | `morph` | number | `1.1` | Segundos para armar texto e imagen. |
+| `logo` | image | `""` | SVG o PNG transparente en assets/media/logos/. |
+| `logoName` | string | `""` | Marca; fallback tipográfico si no carga el archivo. |
+| `logoPos` | enum (auto / top-left / top-right / bottom-left / bottom-right) | `"auto"` | Esquina de la foto/video; auto evita el foco declarado. |
+| `logoSize` | number [0.12–0.35] | `0.22` | Ancho relativo al medio; el logo conserva proporciones. |
+| `logoInvert` | bool | `false` | Versión blanca para un logo oscuro sobre medio oscuro. |
 
 ```json
 {"use": "binary.introv2", "params": {"text": "ELLA LO\nPREVIÓ", "kicker": "APOLO 11 · 1969", "src": "assets/media/hamilton.jpg", "imageSide": "right"}}
@@ -944,6 +1041,11 @@ Etiquetas: foto, persona, lugar, documento · capa: main
 | `ar` | number | `0` | Proporción del recorte (0 = la de la foto; en 9:16 conviene 0.8). |
 | `tilt` | number | `-1.5` | Inclinación del marco en grados. |
 | `focus` | array | `[0.5, 0.4]` | Punto [x,y] 0..1 hacia donde se acerca el zoom. |
+| `logo` | image | `""` | SVG o PNG transparente en assets/media/logos/. |
+| `logoName` | string | `""` | Marca; fallback tipográfico si no carga el archivo. |
+| `logoPos` | enum (auto / top-left / top-right / bottom-left / bottom-right) | `"auto"` | Esquina de la foto/video; auto evita el foco declarado. |
+| `logoSize` | number [0.12–0.35] | `0.22` | Ancho relativo al medio; el logo conserva proporciones. |
+| `logoInvert` | bool | `false` | Versión blanca para un logo oscuro sobre medio oscuro. |
 
 ```json
 {"use": "rough.photo", "params": {"src": "assets/media/hamilton.jpg", "caption": "Margaret Hamilton", "sub": "DIRECTORA DE SOFTWARE · MIT · 32 AÑOS"}}
@@ -990,7 +1092,7 @@ Etiquetas: intro, miniatura, solo texto · capa: main
 
 ### `rough.introv2`
 
-Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto grande a color que se funde con el fondo (en 9:16 la foto va arriba).
+Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto o video grande a color que se funde con el fondo (en 9:16 va arriba).
 
 Etiquetas: intro, miniatura, texto e imagen · capa: main
 
@@ -1002,8 +1104,18 @@ Etiquetas: intro, miniatura, texto e imagen · capa: main
 | `kicker` | string | `""` | Antetítulo en etiqueta lima. |
 | `sub` | string | `""` | Línea chica opcional bajo el título. |
 | `src` | image | `""` | Foto o render del objeto del tema (a color). |
+| `video` | video | `""` | Clip .mp4 local, siempre mudo; reemplaza la foto. |
+| `poster` | image | `""` | Imagen inicial y respaldo del video; si falta, usa src. |
+| `start` | number [0–None] | `0` | Segundo inicial del clip. |
+| `rate` | number [0.25–2] | `1` | Velocidad del clip. |
+| `loop` | bool | `true` | Repite el clip si termina antes del beat; evita congelar. |
 | `saturate` | number [0–1.4] | `1` | Color de la foto (0 = blanco y negro). |
 | `focus` | string | `"xMidYMid"` | Encuadre de la foto (preserveAspectRatio: xMinYMid, xMaxYMid…). |
+| `logo` | image | `""` | SVG o PNG transparente en assets/media/logos/. |
+| `logoName` | string | `""` | Marca; fallback tipográfico si no carga el archivo. |
+| `logoPos` | enum (auto / top-left / top-right / bottom-left / bottom-right) | `"auto"` | Esquina de la foto/video; auto evita el foco declarado. |
+| `logoSize` | number [0.12–0.35] | `0.22` | Ancho relativo al medio; el logo conserva proporciones. |
+| `logoInvert` | bool | `false` | Versión blanca para un logo oscuro sobre medio oscuro. |
 
 ```json
 {"use": "rough.introv2", "params": {"text": "¿SE ACABÓ\nLA PC\nBARATA?", "highlight": "BARATA?", "kicker": "MEMORIA RAM · 2026", "src": "assets/media/hamilton.jpg"}}

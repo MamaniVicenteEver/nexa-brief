@@ -177,7 +177,8 @@ def _register_channel_sync(
         logger.info("scheduler_channel_sync_tick")
         try:
             results = asyncio.run_coroutine_threadsafe(facade.sync_all_channels(), loop).result(timeout=900)
-            logger.info("scheduler_channel_sync_done", results=results)
+            browser_results = asyncio.run_coroutine_threadsafe(facade.check_browser_sessions(), loop).result(timeout=900)
+            logger.info("scheduler_channel_sync_done", results=results, browser_sessions=browser_results)
         except Exception as exc:
             logger.error("scheduler_channel_sync_error", error=str(exc), error_type=type(exc).__name__)
 

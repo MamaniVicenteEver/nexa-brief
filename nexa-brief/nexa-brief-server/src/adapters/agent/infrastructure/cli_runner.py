@@ -34,8 +34,7 @@ _STRIP_ENV = ("CLAUDECODE", "CLAUDE_CODE_ENTRYPOINT", "CLAUDE_CODE_SSE_PORT")
 CODEX_API_ENV = ("OPENAI_API_KEY", "CODEX_API_KEY", "OPENAI_BASE_URL")
 
 CLAUDE_READ_TOOLS = ["Read", "Glob", "Grep", "WebSearch", "WebFetch"]
-# La voz y la transcripción (Whisper large-v3 en CPU) tardan varios minutos:
-# el límite por defecto de la herramienta Bash de Claude Code (2 min) las cortaría.
+# Las hojas y otras herramientas del kit pueden tardar más que el límite de Bash.
 # El agente nunca lee claves ni cuentas: el kit las lee solo cuando las necesita.
 CLAUDE_SECRET_DENY = ["Read(**/.env)", "Read(**/.env.*)", "Read(**/accounts.json)", "Read(**/client_secret.json)"]
 LONG_COMMAND_ENV = {"BASH_DEFAULT_TIMEOUT_MS": "1800000", "BASH_MAX_TIMEOUT_MS": "3600000"}
@@ -221,7 +220,7 @@ class ClaudeCodeRunner(AgentRunnerPort):
                 log_path=log_path,
                 timeout_seconds=timeout_seconds,
                 stdin_text=prompt,
-                extra_env=LONG_COMMAND_ENV,
+                extra_env=LONG_COMMAND_ENV | scope.extra_env,
             )
             last = _stream_json_result(log_path)
             usage, model = claude_usage(log_path)
@@ -295,8 +294,13 @@ class CodexRunner(AgentRunnerPort):
         cmd.append("-")  # prompt por stdin
         code, timed_out, secs = await run_cli(
             cmd, cwd=cwd, log_path=log_path, timeout_seconds=timeout_seconds, stdin_text=prompt,
-            strip_env=CODEX_API_ENV,
+            strip_env=CODEX_API_ENV, extra_env=scope.extra_env if scope else None,
         )
-        last = _tail(last_path, 20000) or _tail(log_path, 4000)
+        # El resultado final solo viene de -o. En caso de fallo conservamos
+        # el log como diagnóstico, pero un log JSON de progreso nunca cuenta
+        # como respuesta exitosa del agente.
+        last = _tail(last_path, 20000)
+        if code != 0 or timed_out:
+            last = last or _tail(log_path, 4000)
         return AgentRunResult(exit_code=code, last_message=last.strip(), duration_seconds=secs, timed_out=timed_out,
                               usage=codex_usage(log_path), model=model or "codex (modelo por defecto)")

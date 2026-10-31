@@ -33,6 +33,7 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
   const t = useTranslations("templates");
   const tx = useTranslations("explainer");
   const playerText = useTranslations("mediaPlayer");
+  const narrativeLabel = video.narrativeLabel;
   const [open, setOpen] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState<ThumbnailPreview | null>(null);
   const recorded = video.rendered.length > 0;
@@ -87,6 +88,11 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
               {t("prep.demo")}
             </span>
           )}
+          {video.qualityIssues.length > 0 && (
+            <span className="rounded-full bg-amber-400/90 px-2 py-0.5 text-[9.5px] font-bold text-black uppercase">
+              {t("prep.qualityIssues")}
+            </span>
+          )}
         </div>
         {video.durationSeconds !== null && (
           <span className="absolute right-2 bottom-2 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white">
@@ -103,6 +109,11 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
           <h4 className="truncate text-[12px] font-bold tracking-[-0.015em] text-nb-ink">
             {video.youtubeTitle || video.title}
           </h4>
+          {video.qualityIssues.length > 0 && (
+            <ul className="mt-1 list-inside list-disc text-xs text-amber-800">
+              {[...new Set(video.qualityIssues)].map((issue) => <li key={issue}>{issue}</li>)}
+            </ul>
+          )}
         </div>
         <div className="flex shrink-0 gap-1">
           {video.publishReady && (
@@ -129,7 +140,7 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
       title={
         thumbnailPreview ? `${video.title} · Miniatura ${thumbnailPreview.option}` : video.title
       }
-      description={`${video.designName || video.design} · ${video.categoryName}${video.demo ? ` · ${t("prep.demoNote")}` : ""}`}
+      description={`${video.designName || video.design} · ${video.categoryName}${narrativeLabel ? ` · ${tx("narratives.used", { label: narrativeLabel })}` : ""}${video.demo ? ` · ${t("prep.demoNote")}` : ""}`}
       source={{
         kind: "iframe",
         url: thumbnailPreview?.componentPreviewUrl

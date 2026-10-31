@@ -15,6 +15,7 @@ import base64
 import binascii
 import json
 import os
+import shutil
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -144,6 +145,8 @@ class TokenStorage:
                 f"Account '{alias}' not found in platform '{platform}'. "
                 f"Check accounts.json and ACTIVE_ACCOUNT setting."
             )
+        if entry.get("mode", "api") in {"browser", "service"}:
+            raise TokenError(f"Account '{platform}:{alias}' uses a browser session, not an OAuth token.")
         return TokenState(
             name=entry.get("name", alias),
             target_id=entry.get("target_id", ""),
@@ -176,6 +179,7 @@ class TokenStorage:
                     "name": entry.get("name", alias),
                     "target_id": entry.get("target_id", ""),
                     "status": entry.get("status", "ok"),
+                    "mode": entry.get("mode", "api"),
                     "expires_in_seconds": expires_in,
                     "has_refresh_token": bool(entry.get("encrypted_refresh_token")),
                     "avatar": entry.get("avatar"),
@@ -188,8 +192,46 @@ class TokenStorage:
                     "label": entry.get("label", ""),
                     "notes": entry.get("notes", ""),
                     "connected_at": entry.get("connected_at"),
+                    "last_session_check": entry.get("last_session_check"),
                 })
         return result
+
+    def get_mode(self, platform: str, alias: str) -> str | None:
+        """Return the account credential mode (`api` by default)."""
+        self._data = self._load()
+        entry = self._data.get(platform, {}).get(alias)
+        return str(entry.get("mode", "api")) if entry is not None else None
+
+    def save_browser_account(
+        self,
+        platform: str,
+        alias: str,
+        identity: dict[str, Any],
+        profile_dir: str,
+    ) -> None:
+        """Persist browser identity metadata without storing any cookies or tokens."""
+        self._data = self._load()
+        entry = self._data.setdefault(platform, {}).setdefault(alias, {})
+        username = str(identity.get("username") or "").strip().lstrip("@")
+        nickname = str(identity.get("nickname") or username or alias).strip()
+        entry.pop("encrypted_access_token", None)
+        entry.pop("encrypted_refresh_token", None)
+        entry.pop("expires_at", None)
+        entry.pop("refresh_expires_at", None)
+        entry.update({
+            "mode": "service",
+            "name": nickname or f"@{username}",
+            "target_id": username,
+            "username": username,
+            "handle": username,
+            "avatar": identity.get("avatar_url"),
+            "profile_dir": profile_dir,
+            "status": "ok",
+            "last_session_check": time.time(),
+            "connected_at": entry.get("connected_at", time.time()),
+        })
+        self._save()
+        logger.info("browser_account_saved", platform=platform, account=alias)
 
     def update_metadata(self, platform: str, alias: str, *, label: str | None = None, notes: str | None = None) -> bool:
         """Update user-editable, non-secret fields of an account. Returns False if it doesn't exist."""
@@ -253,6 +295,7 @@ class TokenStorage:
 
         entry = self._data[platform][alias]
         entry["encrypted_access_token"] = self.encrypt(access_token)
+        entry["mode"] = "api"
         entry["status"] = "ok"
         entry.setdefault("connected_at", time.time())
 
@@ -299,6 +342,8 @@ class TokenStorage:
             self._data[platform][alias] = {}
 
         self._data[platform][alias]["status"] = "requires_reauth"
+        if self._data[platform][alias].get("mode") == "browser":
+            self._data[platform][alias]["last_session_check"] = time.time()
         self._save()
         logger.error(
             "token_reauth_required",
@@ -319,6 +364,7 @@ class TokenStorage:
         if not accounts or alias not in accounts:
             return False
 
+        entry = accounts[alias]
         del accounts[alias]
         if not accounts:
             del self._data[platform]

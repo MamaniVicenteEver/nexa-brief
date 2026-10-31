@@ -23,7 +23,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import tts  # noqa: E402
 
 BASE = ("Narrador de documental, voz humana madura y cercana, español latinoamericano neutro "
-        "(sin ceceo ni acento de España). No imitar a ninguna persona real. Dicción clara, respiración natural.")
+        "(sin ceceo ni acento de España). No imitar a ninguna persona real. Dicción clara, respiración natural. "
+        "Ritmo objetivo de 130 palabras por minuto; deja pausas naturales entre ideas y respirar al final de cada oración.")
 STYLE = {
     "intriga": "Empieza bajo y cercano, con intriga contenida, como quien cuenta un secreto. Ritmo moderado.",
     "suspenso": "Suspenso: voz contenida, casi susurrada al principio, frases cortas con aire entre ellas.",
@@ -47,23 +48,23 @@ STYLE = {
     "alivio": "Alivio: suelta el aire, voz emocionada y cálida, más lenta, sonrisa.",
     "reflexivo": "Reflexivo, sereno, ritmo medio-lento.",
     "cercano": "Cercano, como hablándole a una sola persona; cálido.",
+    "alarma": "Alarma: firme y apurada, como un aviso urgente de noticiero; cada cifra golpeada, sin gritar.",
     "admiración": "Con admiración y respeto; el nombre propio dicho con claridad y una mínima pausa antes.",
 }
-SLOW = {"intriga", "suspenso", "asombro", "peso", "silencio", "dolor contenido", "duelo", "cierre", "reflexivo", "alivio"}
 BEFORE_LONG = {"silencio", "dolor contenido", "duelo"}
-BEFORE_BREATH = {"clímax", "urgencia", "tensión creciente"}
+BEFORE_BREATH = {"clímax", "urgencia", "tensión creciente", "alarma"}
 
 def mark(seg: dict, prev: dict | None) -> str:
     """inserta etiquetas de ritmo según el tono (y el del segmento anterior)."""
     t = seg["text"].strip()
-    if seg["tone"] in SLOW:          # pausa corta entre oraciones
-        t = re.sub(r"([.?!])\s+(?=[¿¡A-ZÁÉÍÓÚÑ])", r"\1 <short pause> ", t)
+    t = re.sub(r"([.?!])\s+(?=[¿¡A-ZÁÉÍÓÚÑ])", r"\1 <short pause> ", t)
     if prev is not None and seg["tone"] in BEFORE_LONG: t = "<long pause> " + t
     elif seg["tone"] in BEFORE_BREATH: t = "<breath> " + t
     return t
 
 def chunks(script: dict, base: str = None) -> list[dict]:
-    base = base or BASE
+    base = re.sub(r"alrededor de \d+ palabras por minuto", "alrededor de 130 palabras por minuto", base or BASE, flags=re.I)
+    base += " Objetivo de 130 palabras por minuto para este relato: sin apuro, con pausas naturales entre ideas."
     out, prev = [], None
     for s in script["segments"]:
         inten = s.get("intensity", 0.5)

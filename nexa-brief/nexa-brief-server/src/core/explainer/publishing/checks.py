@@ -15,6 +15,7 @@ millones»): una cifra escrita con palabras en el título no se controla.
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -25,9 +26,10 @@ from src.core.explainer.publishing.description import (
     gratitude_variant,
     render_youtube,
 )
-from src.core.explainer.publishing.numbers import digit_numbers, numbers_in
+from src.core.explainer.publishing.numbers import bullet_numbers_in, digit_numbers, numbers_in
 from src.core.explainer.publishing.package import PublishPackage, words_of
 from src.core.explainer.publishing.strategies import ActiveStrategies
+from src.core.explainer import narrative
 from src.core.metadata.sanitize import has_emoji, youtube_tags_length
 
 Level = Literal["error", "warning"]
@@ -72,6 +74,15 @@ def _video_numbers(video_dir: Path) -> set[str]:
         )
         found |= numbers_in(text)
     return found
+
+
+def _bullet_evidence_numbers(video_dir: Path, sources: list[str]) -> set[str]:
+    """El dato del bullet debe estar en el guion o texto de fuentes, no solo en Whisper o una URL."""
+    script_path = video_dir / "assets" / "script.json"
+    script = json.loads(script_path.read_text(encoding="utf-8")) if script_path.exists() else {}
+    text = " ".join(s.get("text", "") for s in script.get("segments", []))
+    source_text = re.sub(r"https?://\S+", " ", " ".join(sources))
+    return bullet_numbers_in(text) | bullet_numbers_in(source_text)
 
 
 def _credited_files(video_dir: Path) -> str:
@@ -132,10 +143,64 @@ def check_package(
             error("thumbnail.with_image", f"la imagen {with_image.image} no está en assets/media/")
         elif with_image.image not in _credited_files(video_dir):
             error("thumbnail.with_image", f"la imagen {with_image.image} no tiene crédito en assets/media/CREDITS.md")
-    for field, text, pair in (
+    tabloid = package.thumbnail.tabloid
+    tabloid_text = (tabloid.text.strip() if tabloid else "") or text_only.text
+    tabloid_active = tabloid is not None or package.thumbnail.chosen == "tabloid"
+    if tabloid_active:
+        tabloid_words = len(words_of(tabloid_text))
+        if tabloid_words > 6:
+            error("thumbnail.tabloid", f"{tabloid_words} palabras (máximo 6)")
+    if tabloid:
+        if tabloid.image and (tabloid.marker or tabloid.seal) and not tabloid.focus:
+            warning("thumbnail.tabloid.focus", "marcador y sello requieren focus [x, y, r] sobre el recorte visible; se omitirán")
+        for name in ("image", "image_after"):
+            image_name = getattr(tabloid, name)
+            if image_name and not (video_dir / "assets" / "media" / image_name).is_file():
+                error(f"thumbnail.tabloid.{name}", f"la imagen {image_name} no está en assets/media/")
+            elif image_name and image_name not in _credited_files(video_dir):
+                error(f"thumbnail.tabloid.{name}", f"la imagen {image_name} no tiene crédito en assets/media/CREDITS.md")
+        if tabloid.seal and tabloid.seal.casefold() in tabloid.strap.casefold():
+            warning("thumbnail.tabloid.seal", "el sello repite el cintillo")
+    recorded_story = narrative.recorded(video_dir).narrative_id
+    story = None
+    if recorded_story:
+        try:
+            story = narrative.get_service().get(recorded_story)
+        except narrative.NarrativeError as exc:
+            error("thumbnail.tabloid", f"no se pudo cargar la narrativa: {exc}")
+    thumb_policy = story.thumbnail if story else None
+    try:
+        saved_config = json.loads((video_dir / "assets" / "config.json").read_text(encoding="utf-8"))
+        saved_config = saved_config["configs"][0] if "configs" in saved_config else saved_config
+        saved_manifest = json.loads((video_dir / "manifest.json").read_text(encoding="utf-8"))
+        legacy_ready = (saved_config.get("quality_policy_version", 1) < 2
+                        and saved_manifest.get("status") in ("listo", "renderizado"))
+    except (OSError, ValueError, KeyError, TypeError):
+        legacy_ready = False
+    if thumb_policy and thumb_policy.preferred_option == "C" and package.thumbnail.chosen != "tabloid":
+        error("thumbnail.chosen", "la narrativa amarillista exige la opción C: common.tabloid con dato rojo/amarillo")
+    if thumb_policy and tabloid_active:
+        if thumb_policy.require_bullet:
+            bullet = tabloid.bullet if tabloid else ""
+            nums = numbers_in(bullet)
+            evidence = _bullet_evidence_numbers(video_dir, [])
+            if not nums or (not digit_numbers(bullet) and nums <= {"1"} and "uno" not in bullet.casefold().split()):
+                error("thumbnail.tabloid.bullet", "falta el 20 % rojo/amarillo: agrega un dato real del guion (ejemplo: «250 PUESTOS»)")
+            elif nums - evidence:
+                error("thumbnail.tabloid.bullet", f"cifra {sorted(nums - evidence)} ausente del guion; usa una cifra documentada")
+        if thumb_policy.require_image_review:
+            image_name = (tabloid.image if tabloid else None) or with_image.image
+            reviews = tabloid.image_review if tabloid else []
+            if not image_name or not any(r.image == image_name and r.verdict == "elegida" and r.reason.strip() for r in reviews):
+                report = warning if legacy_ready else error
+                report("thumbnail.tabloid.image_review", "revisa la foto elegida: indica image, verdict elegida y por qué comunica el tema de un vistazo")
+    pairs = [
         ("thumbnail.text_only", text_only.text, text_only.pair_title),
         ("thumbnail.with_image", with_image.text, with_image.pair_title),
-    ):
+    ]
+    if tabloid_active:
+        pairs.append(("thumbnail.tabloid", tabloid_text, tabloid.pair_title if tabloid else "C"))
+    for field, text, pair in pairs:
         pair_title = titles.option(pair)
         if pair_title is None:
             error(field, f"el título de pareja «{pair}» no existe")
@@ -224,6 +289,8 @@ def check_package(
     questions = pinned.count("?")
     if questions != pinned_rules.questions or not pinned.endswith("?"):
         error("pinned_comment", f"termina con {pinned_rules.questions} preguntas (una sobre el tema, otra sobre qué quieren ver); tiene {questions}")
+    if (issue := narrative.pinned_question_issue(video_dir, pinned)) is not None:
+        error("pinned_comment", issue)   # la narrativa del video pide repetir su pregunta final
 
     # ── sin emojis (regla de los canales) ─────────────────────────────────────
     d = package.description
@@ -237,6 +304,8 @@ def check_package(
         ("tags", " ".join([*tags.youtube, *tags.youtube_hashtags, *tags.tiktok, *tags.facebook])),
         ("pinned_comment", package.pinned_comment),
     ]
+    if tabloid_active:
+        texts.append(("thumbnail.tabloid", f"{tabloid_text} {tabloid.strap if tabloid else ''} {tabloid.seal if tabloid else ''} {tabloid.tape_text if tabloid else ''} {tabloid.bullet if tabloid else ''} {tabloid.before_label if tabloid else ''} {tabloid.after_label if tabloid else ''}"))
     for field, text in texts:
         if has_emoji(text):
             error(field, "tiene emojis: los canales no los usan (en ningún texto)")
@@ -252,8 +321,16 @@ def check_package(
         ("thumbnail.kicker", package.thumbnail.kicker),
         ("pinned_comment", package.pinned_comment),
     ]
+    if tabloid_active:
+        promised.append(("thumbnail.tabloid", tabloid_text))
+        if tabloid:
+            promised.extend((f"thumbnail.tabloid.{name}", getattr(tabloid, name)) for name in
+                            ("strap", "seal", "tape_text", "bullet", "before_label", "after_label"))
     for field, text in promised:
-        missing = sorted(digit_numbers(text) - said)
+        evidence = (_bullet_evidence_numbers(video_dir, package.sources)
+                    if field == "thumbnail.tabloid.bullet" and thumb_policy and thumb_policy.require_bullet
+                    else said)
+        missing = sorted(digit_numbers(text) - evidence)
         if missing:
             error(field, f"cifras que el video no dice: {missing}")
 

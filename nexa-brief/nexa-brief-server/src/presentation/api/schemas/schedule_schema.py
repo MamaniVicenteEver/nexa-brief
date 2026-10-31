@@ -102,6 +102,7 @@ class PublishNowRequest(BaseModel):
     account_alias: str
     # Archivo a subir; None = el que corresponde a la plataforma (ver engine.publish_entry).
     format: Literal["16x9", "9x16"] | None = None
+    idempotency_key: str = Field(min_length=1, max_length=180)
 
 
 class QueueEntryResponse(BaseModel):

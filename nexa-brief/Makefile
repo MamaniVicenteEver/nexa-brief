@@ -8,9 +8,35 @@ export APP_UID ?= $(shell id -u)
 export APP_GID ?= $(shell id -g)
 # Docker scheduled publishing is opt-in; API publishing endpoints remain available.
 export NEXA_ENABLE_AUTO_PUBLISHING ?= false
-# One root .env value feeds both local dev processes and Docker Compose.
+# One root .env value feeds local dev processes and Docker Compose.
 export PUBLIC_APP_URL := $(shell sed -n 's/^PUBLIC_APP_URL=//p' .env 2>/dev/null | tail -n1)
-export AUTH_URL := $(PUBLIC_APP_URL)
+
+# Optional development login settings live in the ignored root .env on the
+# server. If absent, nexa-brief-web/.env.local remains authoritative locally.
+root-dev-login := $(shell sed -n 's/^DEV_LOGIN=//p' .env 2>/dev/null | tail -n1)
+root-dev-login-public := $(shell sed -n 's/^DEV_LOGIN_PUBLIC=//p' .env 2>/dev/null | tail -n1)
+root-dev-login-public-key := $(shell sed -n 's/^DEV_LOGIN_PUBLIC_KEY=//p' .env 2>/dev/null | tail -n1)
+root-dev-login-email := $(shell sed -n 's/^DEV_LOGIN_EMAIL=//p' .env 2>/dev/null | tail -n1)
+root-dev-login-password := $(shell sed -n 's/^DEV_LOGIN_PASSWORD=//p' .env 2>/dev/null | tail -n1)
+root-dev-allowed-origins := $(shell sed -n 's/^DEV_ALLOWED_ORIGINS=//p' .env 2>/dev/null | tail -n1)
+ifeq ($(root-dev-login),true)
+export DEV_LOGIN := true
+endif
+ifeq ($(root-dev-login-public),true)
+export DEV_LOGIN_PUBLIC := true
+endif
+ifneq ($(strip $(root-dev-login-public-key)),)
+export DEV_LOGIN_PUBLIC_KEY := $(root-dev-login-public-key)
+endif
+ifneq ($(strip $(root-dev-login-email)),)
+export DEV_LOGIN_EMAIL := $(root-dev-login-email)
+endif
+ifneq ($(strip $(root-dev-login-password)),)
+export DEV_LOGIN_PASSWORD := $(root-dev-login-password)
+endif
+ifneq ($(strip $(root-dev-allowed-origins)),)
+export DEV_ALLOWED_ORIGINS := $(root-dev-allowed-origins)
+endif
 
 .DEFAULT_GOAL := help
 .PHONY: help setup dev api web test lint format check seed-admin media-pull media-push media-status preview-media template-posters \
@@ -22,10 +48,16 @@ help: ## Lista los comandos
 setup: ## Instala todo y crea .env, claves y usuario admin (se puede repetir)
 	./scripts/setup.sh
 
-dev: ## API (:8000, con recarga) + web (:3000); Ctrl+C corta las dos
+# Optional host-specific development origin; production keeps PUBLIC_APP_URL.
+-include .dev-local.mk
+DEV_PUBLIC_APP_URL ?= $(PUBLIC_APP_URL)
+dev: export PUBLIC_APP_URL := $(DEV_PUBLIC_APP_URL)
+dev: export AUTH_URL := $(DEV_PUBLIC_APP_URL)
+dev: ## API (:8000), web (:3000) y TikTok (:8100); Ctrl+C detiene los servicios
 	@trap 'kill 0' INT TERM EXIT; \
 	(cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --host 0.0.0.0 --port 8000) & \
 	(cd $(WEB) && pnpm dev --hostname 0.0.0.0 --port 3000) & \
+	(cd nexa-tiktok && uv run uvicorn nexa_tiktok.main:app --host 127.0.0.1 --port 8100) & \
 	wait
 
 api: ## Solo la API

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El imperio que miró al sur</title>
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}#stage{position:fixed;inset:0}
+#flag-overlay{position:fixed;inset:0;z-index:40;pointer-events:none;box-sizing:border-box;padding:10vh 0 0 4.5vw;opacity:0;transition:opacity .22s ease;font-family:Montserrat,Arial,sans-serif}
+#flag-overlay[data-active="true"]{opacity:1}
+#flag-panel{width:min(500px,48vw);box-sizing:border-box;padding:15px 18px 14px;background:rgba(8,20,29,.88);border:1px solid rgba(255,255,255,.46);border-left:5px solid #b3122f;border-radius:3px;color:#f6f6f8;box-shadow:0 12px 35px rgba(0,0,0,.28);backdrop-filter:blur(3px)}
+#flag-title{margin:0 0 4px;font-size:clamp(15px,1.3vw,21px);line-height:1.12;letter-spacing:.04em;font-weight:700}
+#flag-subtitle{margin:0;color:#d7dde1;font-size:clamp(11px,.86vw,14px);line-height:1.3}
+#flag-row{display:flex;align-items:flex-start;gap:9px;margin-top:12px}
+.flag-chip{width:76px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
+.flag-chip img{width:56px;height:37px;object-fit:cover;border:1px solid rgba(255,255,255,.74);box-shadow:0 2px 7px rgba(0,0,0,.28);background:#fff}
+.flag-chip span{font-size:9px;line-height:1.1;letter-spacing:.04em;font-weight:700;color:#fff;white-space:normal}
+.flag-flow{font-size:21px;line-height:37px;color:#ef5369;font-weight:700;padding:0 1px}
+@media(max-width:800px){#flag-overlay{padding:8vh 0 0 4vw}#flag-panel{width:min(460px,90vw);padding:12px 13px}#flag-row{gap:4px}.flag-chip{width:64px}.flag-chip img{width:48px;height:32px}.flag-chip span{font-size:8px}.flag-flow{line-height:32px;font-size:18px}}
+@media(prefers-reduced-motion:reduce){#flag-overlay{transition:none}}
+</style>
+</head>
+<body>
+<audio id="audio" preload="auto"></audio>
+<div id="stage"></div>
+<script src="../../../_tools/explainer-kit/engine/loader.js" data-design="imperio"></script>
+<div id="flag-overlay" aria-hidden="true"><div id="flag-panel"><h2 id="flag-title"></h2><p id="flag-subtitle"></p><div id="flag-row"></div></div></div>
+<script>
+(() => {
+  const audio = document.getElementById('audio');
+  const overlay = document.getElementById('flag-overlay');
+  const title = document.getElementById('flag-title');
+  const subtitle = document.getElementById('flag-subtitle');
+  const row = document.getElementById('flag-row');
+  const scenes = [
+    {key:'taiwan',start:8.09,end:14.01,title:'TAIWÁN · 1895',subtitle:'Cesión del Tratado de Shimonoseki',flow:'→',flags:[['qing.svg','CHINA QING'],['japan.svg','JAPÓN']]},
+    {key:'korea',start:14.01,end:17.43,title:'COREA · 1910',subtitle:'Anexión formal al Imperio japonés',flow:'→',flags:[['korean-empire.svg','COREA'],['japan.svg','JAPÓN']]},
+    {key:'manchuria',start:17.43,end:21.35,title:'MANCHURIA · 1931',subtitle:'El ejército japonés ocupa la región',flow:'→',flags:[['japan.svg','JAPÓN'],['manchukuo.svg','MANCHUKUO']]},
+    {key:'manchukuo',start:21.35,end:27.45,title:'MANCHUKUO · 1932',subtitle:'Estado bajo control japonés',flow:'→',flags:[['japan.svg','JAPÓN'],['manchukuo.svg','MANCHUKUO']]},
+    {key:'china',start:27.45,end:34.61,title:'CHINA · DESDE 1937',subtitle:'Guerra a gran escala; sin conquista total',flow:'↔',flags:[['japan.svg','JAPÓN'],['roc.svg','REPÚBLICA DE CHINA']]},
+    {key:'southeast',start:34.61,end:44.35,title:'SUD-ESTE ASIÁTICO · 1941–42',subtitle:'Campañas sobre territorios bajo dominio británico, filipino y neerlandés',flow:'→',flags:[['japan.svg','JAPÓN'],['union-jack.svg','MALAYA'],['philippines-commonwealth.svg','FILIPINAS'],['netherlands.svg','INDIAS NEERL.']]}
+  ];
+  let active = '';
+  function show(scene) {
+    if (!scene) {
+      active = '';
+      overlay.dataset.active = 'false';
+      overlay.setAttribute('aria-hidden','true');
+      return;
+    }
+    if (scene.key === active) return;
+    active = scene.key;
+    title.textContent = scene.title;
+    subtitle.textContent = scene.subtitle;
+    row.replaceChildren();
+    scene.flags.forEach((flag, index) => {
+      if (index) {
+        const connector = document.createElement('span');
+        connector.className = 'flag-flow';
+        connector.textContent = scene.flow;
+        row.appendChild(connector);
+      }
+      const chip = document.createElement('div');
+      chip.className = 'flag-chip';
+      const image = document.createElement('img');
+      image.src = 'assets/flags/' + flag[0];
+      image.alt = 'Bandera histórica: ' + flag[1];
+      const label = document.createElement('span');
+      label.textContent = flag[1];
+      chip.append(image,label);
+      row.appendChild(chip);
+    });
+    overlay.dataset.active = 'true';
+    overlay.setAttribute('aria-hidden','false');
+  }
+  function tick() {
+    const t = audio ? audio.currentTime : 0;
+    show(scenes.find(scene => t >= scene.start && t < scene.end));
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

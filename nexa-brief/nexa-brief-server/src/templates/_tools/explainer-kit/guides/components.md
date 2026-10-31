@@ -6,6 +6,7 @@
 designs/
 ├── index.json                 lista de diseños disponibles
 ├── common/text.js             componentes de TODOS los diseños: common.lyric, common.punch, common.tag, common.flash, common.endcard
+├── common/logo.js             helper de logo acompañado; common.logo obsoleto
 ├── binary/                    diseño "UNO CERO" (historia)
 │   ├── design.json            identidad: nombre/canal, paleta, fuentes, voz, cierre, scripts que carga
 │   ├── DESIGN.md              estilo y criterios del diseño
@@ -25,6 +26,8 @@ dispositivos, texto…). Cuando un archivo pasa ~600 líneas, se parte por líne
 (p. ej. `ui-data.js`, `ui-devices.js`) y se suma a `scripts` del `design.json`.
 
 ## 2. Ver los componentes
+
+El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. `common.logo` está obsoleto y el check lo rechaza. En el beat de `rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`, usá `logo` (SVG/PNG transparente), `logoName` (fallback de texto), y si hace falta `logoPos`, `logoSize` o `logoInvert` para una versión clara sobre fondo oscuro. El helper común conserva proporciones y evita el foco declarado. No dibujes un logo de memoria.
 
 - `showcase/index.html` (servir `src/templates/` por HTTP): elegir diseño, ver cada componente animado
   con su nombre, para qué sirve, parámetros y ejemplo.
@@ -96,14 +99,14 @@ iceberg en el Titanic; la computadora, la alarma y el módulo lunar en el Apolo 
 |---|---|---|---|---|
 | tablero con piezas que se mueven | 7 | sí | ninguno (binary.grid no es un tablero) | **crear** `binary.chessboard` |
 
-Regla: se **crea** todo objeto que aparece en ≥ 2 planos o en el clímax y que el catálogo no dibuja
-de forma reconocible. Mínimo por duración (lengths.json → `domain_components`): 1 en 5 min, 2 en
-10, 3 en 15, 4 en 30+. Si el tema no tiene objetos propios (una idea abstracta), escribir en PLAN §7
-"sin componentes propios: …" con el motivo.
+Regla: para videos de 8 minutos o más, crea y usa al menos 4 componentes propios del tema,
+priorizando objetos o mecanismos que aparecen en ≥ 2 planos o en el clímax, aunque exista un
+icono genérico en el catálogo. Revisalos en su hoja PNG. Para videos más cortos, el mínimo
+orientativo de `lengths.json → domain_components` depende de la duración. Todo archivo de
+componente propio debe usarse o eliminarse.
 
-En `binary` y `rough` el criterio es ALTO: son los diseños dibujados (glifos y trazo a mano) y
-todo se puede dibujar. En los diseños de presentación (acuarela, carta, collage, crónica…) se crea
-solo lo imprescindible.
+En todos los diseños el mínimo del check aplica desde 8 minutos; los componentes deben representar
+el tema de forma reconocible y no duplicar innecesariamente componentes existentes.
 
 ### 6.2 Escribir el componente
 
@@ -149,10 +152,51 @@ solo lo imprescindible.
    | narrativa | dibuja lo que la voz dice en ese plano y sirve para varios | decorativo |
 
 3. **Aprobado** si todos los criterios tienen ≥ 4 y el control no tiene errores. Si no: anotar qué
-   cambiar, corregir y volver a 1. **Máximo 3 rondas** por componente (`kit.py components` las
-   cuenta): a la tercera sin aprobar, se deja de iterar, sus planos se hacen con componentes del
+   cambiar, corregir y volver a 1. **Máximo 2 rondas** por componente (`kit.py components` las
+   cuenta): tras la segunda sin aprobar, se deja de iterar, sus planos se hacen con componentes del
    catálogo y se anota en PLAN §10. Así nunca se entra en un bucle.
 4. Recién con los componentes aprobados se escribe el storyboard (paso 6) y se corre `kit.py check`.
 
 El reporte final (AGENTS.md §6) dice qué componentes propios se crearon, en cuántas rondas y con
 qué notas; y cuáles se descartaron y por qué.
+
+## 7. Intro tabloide con video (`common.tabloid`)
+
+`common.tabloid` conserva la composición de la miniatura C y permite sustituir la foto por un
+`video` MP4 local en `assets/media/`. El video recibe el mismo filtro, fundido de bordes y protección
+del foco `[x,y,r]` que la foto. `poster` es un fotograma elegido para la miniatura estática; `src`
+puede servir de respaldo. La captura de miniatura con video usa el poster en t=0. El clip permanece
+mudo y `ctx.clip` lo sincroniza con el tiempo del beat al reproducir, pausar o buscar. `loop` repite
+el clip cuando termina; si el archivo es corto, activalo o bajá `rate` para no congelar. Todo beat con video dura al menos 8 s.
+
+El titular entra por renglones con `textIn` (`slam`, `slide`, `typewriter`, `none`), separados por
+`stagger` segundos. `accentIn` y `bulletIn` aceptan los mismos modos; `inDuration` controla la
+duración de cada entrada. Los valores por defecto son `slam`, `slide`, `slam`, `0.16` s y `0.42` s.
+Todos se escriben en el JSON del storyboard:
+
+```json
+{"t": 0, "dur": 5, "use": "common.tabloid", "params": {
+  "text": "RUMBO A LA LUNA", "accent": "LUNA", "strap": "NASA",
+  "video": "assets/media/artemis-camera.mp4", "poster": "assets/media/artemis-poster.jpg",
+  "start": 0, "rate": 1, "loop": true, "muted": true, "focus": [0.35, 0.45, 0.12],
+  "palette": "alert", "textIn": "slam", "stagger": 0.16,
+  "accentIn": "slide", "inDuration": 0.42
+}}
+```
+
+Si `publish.json` elige la miniatura C, `thumbnail.tabloid.image` debe apuntar al mismo poster.
+Al actualizar la apertura desde el paquete, conservar los parámetros de video del beat 0.
+
+## Split con título y video (`rough.introv2` y `binary.introv2`)
+
+El mismo plano de título a un lado y medio al otro acepta MP4 local mudo. En 9:16 el medio va arriba. `poster` es la imagen inicial y el respaldo si el video no carga; si no se indica, se usa `src`. `start` es el segundo inicial, `rate` la velocidad y `loop` repite el clip completo. El reloj del beat controla la búsqueda.
+
+```json
+{"t": 42, "dur": 8, "use": "rough.introv2", "params": {
+  "text": "UNA LLAMADA\nURGENTE", "highlight": "URGENTE",
+  "video": "assets/media/llamada.mp4", "poster": "assets/media/llamada.jpg",
+  "start": 2, "rate": 1, "loop": true, "focus": "xMaxYMid"
+}}
+```
+
+`rough` usa el mismo `focus` SVG que para fotos (`xMinYMid`, `xMidYMid`, `xMaxYMid`, etc.); `binary.introv2` convierte el video a glifos y usa `focusX`/`focusY` (0–1), `zoom` e `imageSide`. Cada split con video dura ≥ 8 s; en videos de ≥ 8 min incluí al menos dos tramos de video de ≥ 12 s contando clips y splits.

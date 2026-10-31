@@ -1,6 +1,6 @@
 """`publish.json` versión 2: el paquete de publicación de un video explainer.
 
-Guarda las piezas que se escriben (a mano o con IA): las dos miniaturas (la elegida
+Guarda las piezas que se escriben (a mano o con IA): las miniaturas A/B/C (la elegida
 también abre el video: opening.py), los 3 títulos de YouTube y los de Facebook/TikTok, los bloques de la
 descripción, las fuentes, los créditos, los tags y el comentario fijado. Lo que
 se puede calcular (la descripción armada, el agradecimiento, los campos planos
@@ -10,6 +10,7 @@ queda desincronizado. Formato: integracion-estrategias-explainer-2026-10.md §4.
 
 from __future__ import annotations
 
+import math
 import re
 from typing import Literal
 
@@ -67,18 +68,56 @@ class ThumbnailWithImage(_Piece):
     image_review: list[ImageReview] = Field(default_factory=list)
 
 
+class ThumbnailTabloid(_Piece):
+    """Ajustes opcionales de la miniatura de alerta; vacíos = valores derivados de A y B."""
+
+    text: str = ""
+    image: str | None = None
+    image_side: ImageSide = "auto"
+    image_after: str | None = None
+    accent: str = ""
+    bullet: str = ""
+    bullet_scale: float = Field(default=1, ge=0.5, le=1.5)
+    image_review: list[ImageReview] = Field(default_factory=list)
+    before_label: str = ""
+    after_label: str = ""
+    mode: Literal["impact", "split"] = "impact"
+    palette: Literal["brand", "alert"] = "brand"
+    strap: str = ""
+    seal: str = ""
+    tape_text: str = ""
+    marker: bool = False
+    target: tuple[float, float] = (0.72, 0.52)
+    # Coordenadas normalizadas sobre el recorte visible de la foto, no sobre el original.
+    focus: tuple[float, float, float] | None = None
+    pair_title: OptionId = "C"
+
+    @model_validator(mode="after")
+    def _focus_in_visible_photo(self) -> ThumbnailTabloid:
+        if self.focus is not None:
+            x, y, r = self.focus
+            if not all(math.isfinite(v) for v in self.focus) or not (0 <= x <= 1 and 0 <= y <= 1 and 0 < r <= .5):
+                raise ValueError("focus debe ser [x, y, r] normalizado, con 0 < r <= 0.5")
+        return self
+
+
 class Thumbnail(_Piece):
-    """Las dos miniaturas. La elegida (`chosen`) es también la apertura del video (opening.py)."""
+    """Las miniaturas. La elegida (`chosen`) es también la apertura del video (opening.py)."""
 
     text_only: ThumbnailTextOnly
     with_image: ThumbnailWithImage
-    chosen: Literal["text_only", "with_image"] = "text_only"
+    tabloid: ThumbnailTabloid | None = None
+    chosen: Literal["text_only", "with_image", "tabloid"] = "text_only"
     # Antetítulo de las dos (lugar · fecha), p. ej. "APOLO 11 · 20 JUL 1969".
     kicker: str = ""
 
     @property
     def chosen_text(self) -> str:
-        return self.text_only.text if self.chosen == "text_only" else self.with_image.text
+        if self.chosen == "with_image":
+            return self.with_image.text
+        if self.chosen == "tabloid" and self.tabloid and self.tabloid.text.strip():
+            return self.tabloid.text
+        return self.text_only.text
 
 
 class TitleOption(_Piece):

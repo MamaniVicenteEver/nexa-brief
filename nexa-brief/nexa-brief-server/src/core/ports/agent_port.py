@@ -38,6 +38,8 @@ class AgentScope:
     # cada runner conserva su configuración habitual.
     model: str | None = None
     reasoning_effort: str | None = None
+    # Variables heredadas por las herramientas que ejecuta este agente.
+    extra_env: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass

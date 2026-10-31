@@ -158,7 +158,7 @@ TAG_BY_TONE = {
     "curiosidad": "thoughtful", "revelación": "revealing, emphatic", "dolor contenido": "with contained sorrow, slow",
     "duelo": "very quietly, grieving, long pauses", "reparación": "measured, a little hope", "cierre": "firm and warm",
     "urgencia": "urgent, fast but clear", "alivio": "relieved, breath out", "reflexivo": "reflectively",
-    "cercano": "warmly, close", "admiración": "with admiration",
+    "cercano": "warmly, close", "alarma": "urgently, like a breaking-news alert", "admiración": "with admiration",
 }
 
 def director_prompt(script: dict, segs: list[dict]) -> str:
@@ -167,6 +167,7 @@ def director_prompt(script: dict, segs: list[dict]) -> str:
             "AUDIO PROFILE\nOne mature, close, natural Latin American Spanish documentary narrator. Neutral Latin American accent "
             "(no Castilian ceceo). Do not imitate a real person.\n\n"
             f"SCENE\nA short documentary for social media: {script['title'].title()}.\n\n"
-            f"DIRECTOR'S NOTES\n{script['voice_direction']} Natural human breathing, clear diction, let short pauses breathe "
-            "between sentences. Numbers read naturally in Spanish.\n\n"
+            f"DIRECTOR'S NOTES\n{script['voice_direction']} Aim for 130 Spanish words per minute, unhurried. "
+            "Natural human breathing, clear diction, let short pauses breathe between sentences and ideas. "
+            "Numbers read naturally in Spanish.\n\n"
             f"TRANSCRIPT BEGINS\n{lines}\nTRANSCRIPT ENDS")

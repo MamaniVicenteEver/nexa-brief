@@ -18,6 +18,9 @@ def test_roles_point_to_known_providers():
     assert hub.provider_for("producer") == "codex"
     assert hub.provider_for("component_draft") == "deepseek"
     assert hub.model_for("component_draft") == "deepseek-v4-flash"
+    assert hub.provider_for("text_draft") == "codex"
+    assert hub.model_for("text_draft") == "gpt-6.1-terra"
+    assert hub.model_for("dialogue_draft") == "gpt-6.1-terra"
     with pytest.raises(ValueError):
         hub.provider_for("no-existe")
     with pytest.raises(ValueError):
@@ -83,4 +86,5 @@ def test_agent_prompt_explains_delegation_and_usage(tmp_path):
               "target_minutes": 12}
     prompt = build_agent_prompt(record, tmp_path / "ram-ia")
     assert "delegate ram-ia <rol> --prompt-file" in prompt
+    assert "text_draft" in prompt and "dialogue_draft" in prompt and "Terra" in prompt
     assert "orquestacion.md" in prompt and "usage ram-ia" in prompt and "Fecha de hoy:" in prompt

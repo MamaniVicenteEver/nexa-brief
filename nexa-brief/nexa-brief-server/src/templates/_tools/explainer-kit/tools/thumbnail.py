@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
-"""thumbnail.py · miniatura de YouTube a partir de la intro del diseño (<diseño>.introv1 / introv2).
+"""thumbnail.py · miniatura a partir de la intro del diseño o common.tabloid.
 
 La miniatura es una captura del componente de intro armado (no una imagen aparte): así lo que se
-ve en el feed y lo que abre el video son lo mismo. Captura 1280×720 (lo que pide YouTube), JPEG.
+ve en el feed y lo que abre el video son lo mismo. Captura 1280×720 o 720×1280, JPEG.
 
 Uso (desde nexa-brief-server/; lo llama el backend, src/core/explainer/thumbnails.py):
   .venv/bin/python src/templates/_tools/explainer-kit/tools/thumbnail.py OUT.jpg \
-      --design binary --component binary.introv2 --params '{"text": "…", "src": "/nodetech/<id>/assets/media/x.jpg"}' [--t 3]
+      --design binary --component common.tabloid --params '{"text": "…", "src": "/nodetech/<id>/assets/media/x.jpg"}' [--orientation 9x16] [--t 3]
 Las imágenes del componente van con ruta absoluta desde src/templates/ ("/<carpeta>/<id>/assets/media/…").
 """
 from __future__ import annotations
 
-import argparse, asyncio, io, json, pathlib, sys, urllib.parse
+import argparse
+import asyncio
+import io
+import json
+import pathlib
+import sys
+import urllib.parse
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import shoot  # noqa: E402
 from PIL import Image  # noqa: E402
 
 KIT = pathlib.Path(__file__).resolve().parents[1]
-W, H = 1280, 720
 DUR = 6.0
 
 
@@ -55,25 +60,54 @@ async def stable_moment(page, t: float) -> float:
     return best
 
 
-async def capture(out: pathlib.Path, design: str, component: str, params: dict, t: float) -> list[str]:
+async def capture(out: pathlib.Path, design: str, component: str, params: dict, t: float, orientation: str) -> list[str]:
     from playwright.async_api import async_playwright
+    width, height = (1280, 720) if orientation == "16x9" else (720, 1280)
+    still_video = component == "common.tabloid" and bool(params.get("video"))
+    if still_video and not (params.get("poster") or params.get("src")):
+        raise ValueError("common.tabloid con video necesita poster (o src) para la miniatura C")
+    if still_video:
+        # La miniatura usa el poster en t=0, sin esperar a decodificar el clip.
+        params = {**params, "video": ""}
+        t = 0.0
     srv = shoot.serve(shoot.SANDBOX)
     q = {"d": design, "c": component, "p": json.dumps(params, ensure_ascii=False), "paused": "1", "dur": str(DUR), "solo": "1"}
+    if still_video:
+        q["tabloidStill"] = "1"
     url = f"http://127.0.0.1:{srv.server_port}/{KIT.relative_to(shoot.SANDBOX).as_posix()}/showcase/stage.html?" + urllib.parse.urlencode(q)
     errors: list[str] = []
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(executable_path=shoot.CHROMIUM)
-        page = await browser.new_page(viewport={"width": W, "height": H})
-        page.on("pageerror", lambda e: errors.append(str(e)))
-        await page.goto(url, wait_until="domcontentloaded", timeout=120000)
-        await page.wait_for_function("window.__promo", timeout=60000)
-        await page.evaluate("document.fonts.ready")
-        chosen = await stable_moment(page, t)
-        await page.evaluate(f"window.__promo.seek({chosen})")
-        png = await page.screenshot(type="png")
-        await browser.close()
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(executable_path=shoot.CHROMIUM)
+            page = await browser.new_page(viewport={"width": width, "height": height})
+            page.on("pageerror", lambda e: errors.append(str(e)))
+            if component == "common.tabloid":
+                async def local_only(route):
+                    if urllib.parse.urlparse(route.request.url).hostname in {"127.0.0.1", "localhost"}:
+                        await route.continue_()
+                    else:
+                        await route.abort()
+                await page.route("**/*", local_only)
+            await page.goto(url, wait_until="domcontentloaded", timeout=120000)
+            await page.wait_for_function("window.__promo", timeout=60000)
+            await page.evaluate(f"window.__promo.seek({t})")
+            await page.evaluate("window.__tabloidFontReady || Promise.resolve()")
+            await page.evaluate("document.fonts.ready")
+            await page.evaluate("""async () => {
+                await Promise.all(Array.from(document.images, async image => {
+                    if (!image.src) return;
+                    await image.decode();
+                    if (!image.naturalWidth) throw new Error(`No se pudo decodificar la foto: ${image.src}`);
+                }));
+            }""")
+            chosen = await stable_moment(page, t)
+            await page.evaluate(f"window.__promo.seek({chosen})")
+            png = await page.screenshot(type="png")
+            await browser.close()
+    finally:
+        srv.shutdown()
+        srv.server_close()
     print(f"· cuadro elegido: {chosen:.2f} s (pedido {t:.2f} s)")
-    srv.shutdown()
     out.parent.mkdir(parents=True, exist_ok=True)
     image = Image.open(io.BytesIO(png)).convert("RGB")
     image.save(out, "JPEG", quality=90, optimize=True)   # YouTube: ≤ 2 MB
@@ -87,13 +121,16 @@ def main() -> int:
     ap.add_argument("--design", required=True)
     ap.add_argument("--component", required=True)
     ap.add_argument("--params", default="{}")
+    ap.add_argument("--orientation", choices=("16x9", "9x16"), default="16x9",
+                    help="captura horizontal (por defecto) o vertical")
     # 4,5 s: las intros con sello o texto tipeado (acuarela, periódico…) terminan de revelarse después de los 3 s
     ap.add_argument("--t", type=float, default=4.5, help="segundo del componente (ya armado)")
     a = ap.parse_args()
-    errors = asyncio.run(capture(a.out, a.design, a.component, json.loads(a.params), a.t))
+    width, height = (1280, 720) if a.orientation == "16x9" else (720, 1280)
+    errors = asyncio.run(capture(a.out, a.design, a.component, json.loads(a.params), a.t, a.orientation))
     for e in errors:
         print(f"⚠ {e[:300]}", file=sys.stderr)
-    print(f"✓ {a.out} ({W}×{H})")
+    print(f"✓ {a.out} ({width}×{height})")
     return 1 if errors else 0
 
 

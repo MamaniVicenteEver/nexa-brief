@@ -14,6 +14,8 @@ from pydantic import BaseModel, Field
 class ManualPublishRequest(BaseModel):
     """Request body for POST /api/v1/publish — manual video publish."""
 
+    idempotency_key: str | None = Field(default=None, min_length=1, max_length=200)
+
     video_path: str = Field(
         ...,
         description=(
@@ -106,6 +108,8 @@ class AccountStatusResponse(BaseModel):
     status: str                     # 'ok' | 'requires_reauth'
     expires_in_seconds: float | None
     has_refresh_token: bool
+    mode: str = "api"               # 'api' | 'browser'
+    last_session_check: float | None = None
     avatar: str | None = None
     handle: str | None = None
     description: str = ""

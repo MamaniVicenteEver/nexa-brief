@@ -51,12 +51,16 @@ ahí (una vez, para todos los videos y los futuros), no en el storyboard de un v
 | Qué | Dónde se configura | binary / rough |
 |---|---|---|
 | Clips (`common.clip`) centrados en marco, rótulo debajo | `defaults.clip.layout` / `size` | `frame`, 0.92 |
-| Duración mínima de un componente (el motor corre los beats siguientes) | `defaults.minDur` | `{"common.clip": 6}` |
+| Duración mínima de un componente (el motor corre los beats siguientes) | `defaults.minDur` | `{"common.clip": 8}` |
 | Overlays sin `dur`/`until` (marcas a mano, rótulos) se van con la escena de debajo | `defaults.overlay` | `endWithScene`, 2,5–8 s |
 | Un solo cierre: el `outro`/`outrovN` del storyboard reemplaza al automático | `engine/kit.js` | siempre |
 | Bordes del fondo en negro puro (YouTube/Reels rellenan con #000 en pantallas anchas) | `frame()` del fondo del diseño | rough: degradado a #000; binary: fondo #000 |
 
 Un diseño oscuro nuevo debe terminar sus bordes en `#000` y declarar estos `defaults`.
+
+Desde `quality_policy_version: 2` en `assets/config.json`, `kit.py check` bloquea huecos de más de 75 s sin foto/clip y fotos visibles menos de 5 s. La versión 3 exige video visible ≥ 8 s por beat y, en videos ≥ 8 min, dos tramos de video de ≥ 12 s; `common.clip` recomienda 12–18 s. Si el archivo es corto, usá `loop` o `rate < 1`. El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta: `logo` y `logoName` van en el beat visual; `common.logo` está obsoleto. El plano preferido de NodeTech es `rough.introv2` (`text` + `src`/`video`, `highlight`, `kicker`, `focus`): texto grande a un lado y medio grande al otro, unas 3–5 veces en 10 min. `binary.introv2` es el equivalente de NodeHistory.
+
+La narración apunta a 130 ppm con pausas naturales; `kit.py check` avisa si el QC supera 138 ppm. El cierre requiere `song-with-outro.mp3`, duración de transcripción igual al audio, `common.question` antes del outro en las producciones nuevas y un último plano que llegue al cierre. En amarillista, la miniatura C `common.tabloid` exige el 20 % rojo/amarillo mediante bullet con cifra del guion (referencia «250 PUESTOS»); `publishing check` lo bloquea si falta.
 
 ## 2. Roles (un solo agente puede cumplirlos todos, en este orden)
 
@@ -72,7 +76,11 @@ Un diseño oscuro nuevo debe terminar sus bordes en `#000` y declarar estos `def
 | Componentista | dibuja los objetos propios del tema que el catálogo no tiene y los revisa con ojos | `assets/components/` + rúbrica aprobada |
 | QA | valida y mira la hoja de revisión | correcciones |
 | Publicador | textos de YouTube/TikTok + manifest | `publish.json` + `manifest.json` |
-| Delegados (DeepSeek, opcional) | borradores de componentes, segunda lectura del guion, opciones de títulos | `kit.py delegate` → `work/delegate/` (lo revisa el productor) |
+| Delegados (DeepSeek o Codex/Terra, opcional) | borradores de componentes, textos y diálogos; segunda lectura del guion y opciones de títulos | `kit.py delegate` → `work/delegate/` (lo revisa el productor) |
+
+Para borradores de texto o diálogo, el productor puede elegir `text_draft` o `dialogue_draft` (Codex
+`gpt-6.1-terra`, esfuerzo `medium`) cuando una primera versión ayude. Son delegaciones optativas: no
+cambian el modelo habitual del productor, la voz Gemini ni los roles DeepSeek.
 
 Qué modelo cumple cada rol: `src/skills/models/roles.json`. Todo uso de modelos (tokens, vueltas) queda
 en `work/usage.jsonl` solo; `kit.py usage <id>` arma `usage.json` (ver `guides/orquestacion.md §4`).
@@ -116,7 +124,7 @@ K=src/templates/_tools/explainer-kit/tools/kit.py      # y: M=…/tools/media.py
   `.venv/bin/python $M get <video-id> "File:…" nombre.jpg` (anota el crédito solo).
 - Fotos según la duración (`kit.py status`): protagonista, lugar/objeto del punto crítico, contraparte, legado.
 - **Clips de video** (`guides/media.md §6`): en los momentos donde el movimiento cuenta algo (un
-  lanzamiento, una multitud, máquinas trabajando, una ciudad de noche) va un clip de 4–8 s en vez de la
+  lanzamiento, una multitud, máquinas trabajando, una ciudad de noche) va un clip de 12–18 s en vez de la
   foto: `.venv/bin/python $M search "<consulta>" --type video --source pixabay|commons`, después
   `get <video-id> pixabay-video:<id> nombre.mp4 --start S --dur D`, y en el storyboard `common.clip`.
   Cantidad según la duración (`kit.py check`: 2–8 en 13 min).
@@ -125,21 +133,17 @@ K=src/templates/_tools/explainer-kit/tools/kit.py      # y: M=…/tools/media.py
 ### Paso 3c · Componentes propios del tema (PLAN §7a)
 - `guides/components.md §6` + `prompts/component-author.md`. Se escriben en `assets/components/`.
 - `.venv/bin/python $K components <video-id>` → 0 errores; **mirar** `work/components/<nombre>.png`
-  y completar la rúbrica de `work/components/review.md`. Máximo 3 rondas por componente.
+  y completar la rúbrica de `work/components/review.md`. Máximo 2 rondas por componente.
 - **Hecho cuando**: cada componente decidido en 7a está aprobado (o descartado con motivo en PLAN §10)
   y registrado (`kit.py status` paso 3c en ✓).
 
-### Paso 4 · Voz → `assets/song.mp3`
-- `.venv/bin/python $K voice <video-id>` (todo automático: voz del diseño, estilos por tono,
-  rotación de claves y modelos). Ver `guides/voice.md`.
-- **Hecho cuando**: `work/narration.qc.json` sin `faltan`/`sobran` reales (ver cómo distinguir
-  alucinaciones de Whisper en `voice.md §2`).
+### Pasos 4 y 5 · Voz y transcripción
 
-### Paso 5 · Transcripción → `assets/lyrics.json` (+ cierre con voz)
-- `.venv/bin/python $K transcribe <video-id>`. Al terminar pega solo el **cierre con voz del canal**
-  (gracias · like · suscríbete · campana · apoyo) desde `explainer-kit/outro/`: el audio final es
-  `assets/song-with-outro.mp3`. El cierre NO se escribe en el guion ni se genera con TTS, y el
-  storyboard no lleva el beat de cierre (lo pone el motor). Si se cambia la voz: `kit.py outro <id>`.
+**En el pipeline:** el agente NUNCA ejecuta `voice`, `transcribe`, `outro` ni `preview`. Al terminar guion, PLAN, medios, componentes y paquete preliminar deja `work/phase.json` con `{"phase":"script_ready"}` y termina la corrida. El host valida el guion y ejecuta voz y transcripción con cierre. En la continuación usa `song.mp3`, `lyrics.json` y la QC existentes. Si cambia el guion, vuelve a dejar el marcador y termina para que el host regenere voz y transcripción.
+
+Un componente que no aprueba tras dos rondas se descarta y se reemplaza con el catálogo; una foto que no sirve se reemplaza. No detenerse por un elemento o check. Guardar lo hecho y detenerse solo por infraestructura (red, cuota, disco). El host aplica el presupuesto de `production-policy.json`, puede pedir un rescate de storyboard vacío y una reparación corta; los errores restantes quedan para revisión humana.
+
+**Uso manual fuera del pipeline:** `.venv/bin/python $K voice <id>` y luego `.venv/bin/python $K transcribe <id>` funcionan en primer plano; también se puede usar `--background` y consultar con `--wait --timeout 20` (2 en curso, 0 éxito, 1 fallo). Consultar `work/narration.qc.json`; la transcripción incorpora el cierre con voz del canal y produce `song-with-outro.mp3`. El cierre no se escribe en el guion ni en el storyboard. Ver `guides/voice.md`.
 
 ### Paso 6 · Storyboard → `assets/storyboard.json`
 - `guides/storyboard.md` (reglas de dirección, transiciones, tabla idea → componente) y
@@ -150,8 +154,8 @@ K=src/templates/_tools/explainer-kit/tools/kit.py      # y: M=…/tools/media.py
 - `.venv/bin/python $K check <video-id>` → **0 errores**. Avisos: corregir o justificar en PLAN §10.
 
 ### Paso 8 · Revisar con ojos
-- `.venv/bin/python $K sheet <video-id> --orient both` → mirar `work/sheet-9x16.png` y `sheet-16x9.png`
-  con el checklist de `guides/qa.md`. Corregir y repetir 6–8 hasta que esté limpio.
+- `.venv/bin/python $K sheet <video-id> --orient both` en primer plano → mirar `work/sheet-9x16.png` y `sheet-16x9.png`
+  con el checklist de `guides/qa.md`. Corregir dentro del presupuesto; si quedan errores, guardarlos para revisión.
 - Si no podés ver imágenes: dejalo dicho en el reporte (`revisión visual pendiente`).
 
 ### Paso 9 · Publicación y manifest
@@ -168,12 +172,12 @@ con 0 errores. Las demás categorías:
 - `.venv/bin/python $K usage <video-id>` → `usage.json` (modelos, tokens e iteraciones del video).
 
 ### Paso 10 · Render (solo si te lo piden)
-- `.venv/bin/python $K render <video-id> --formats 9x16,16x9` (cuadro a cuadro, ~15–20 min por formato).
+- `.venv/bin/python $K render <video-id> --formats 9x16,16x9 --background`, luego repetí `kit.py render <video-id> --wait --timeout 20` hasta éxito (cuadro a cuadro, ~15–20 min por formato).
 
 ## 4. Atajos útiles
 
 - `kit.py status <id>`: qué pasos están hechos.
-- `kit.py preview <id>`: tiempos sintéticos para armar y mirar el storyboard ANTES de tener voz.
+- `kit.py preview <id>`: tiempos sintéticos para uso manual fuera del pipeline.
 - Galería de componentes: servir `src/templates/` (`python3 -m http.server -d src/templates 8800`)
   y abrir `http://127.0.0.1:8800/_tools/explainer-kit/showcase/`.
 
@@ -181,7 +185,7 @@ con 0 errores. Las demás categorías:
 
 | problema | qué hacer |
 |---|---|
-| cuota de voz agotada en todas las claves/modelos | `kit.py preview` para avanzar el storyboard; dejar `voz pendiente` en el reporte |
+| cuota de voz agotada en todas las claves/modelos | En el pipeline, el host marca el fallo y se retoma cuando haya cuota. Fuera del pipeline se puede usar `kit.py preview` y dejar `voz pendiente` en el reporte. |
 | no hay foto libre de algo | usar un componente (icono/boceto) en vez de foto; anotarlo en PLAN §8 |
 | un concepto no tiene componente | crear uno (paso 3c) o reformular el plano con los existentes |
 | `check` da anclas no encontradas | copiar las palabras EXACTAS de lyrics.json (números en cifras) |

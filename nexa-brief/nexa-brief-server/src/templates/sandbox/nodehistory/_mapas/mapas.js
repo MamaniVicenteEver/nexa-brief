@@ -43,6 +43,25 @@
       c.camera = Mapas.camera.create(scene.camera || [{ t: 0, c: [0, 20], span: 120 }], c.geo, T);
     },
     shots: c => c.camera.keys.map(k => k._t),
+    avoid(c, t, W, H) {
+      const cam = c.camera.at(t, W, H), P = c.camera.projection(cam, W, H);
+      const points = [[W / 2, H / 2]];
+      const positioned = new Set(["pin", "icon", "label", "flag", "photo", "dot"]);
+      const outOf = Ly => Math.min(Ly._out, c.outroAt ?? Infinity);
+      for (const Ly of c.layers) {
+        if (!positioned.has(Ly.type) || Ly.at == null || t < Ly._t || t >= outOf(Ly) + (Ly.fadeOut ?? 0.35)) continue;
+        const p = P(c.geo.place(Ly.at));
+        if (!Number.isFinite(p[0]) || !Number.isFinite(p[1])) continue;
+        points.push(p);
+        // el texto de pins/íconos/rótulos ocupa más que su punto: se evita también su extensión
+        const txt = Ly.text || Ly.name; if (!txt) continue;
+        const len = String(txt).length * (Ly.size || 24) * 0.62 * Math.min(W, H) / 1080, side = Ly.side || (Ly.type === "pin" ? "right" : "center");
+        if (side === "left") points.push([p[0] - len, p[1]], [p[0] - len / 2, p[1]]);
+        else if (side === "center" || side === "top" || side === "bottom") points.push([p[0] - len / 2, p[1]], [p[0] + len / 2, p[1]]);
+        else points.push([p[0] + len, p[1]], [p[0] + len / 2, p[1]]);
+      }
+      return points;
+    },
     render(c, t) {
       const { g, st, scene } = c, { W, H } = st;
       g.fillStyle = "#0b1622"; g.fillRect(0, 0, W, H);

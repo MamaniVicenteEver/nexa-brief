@@ -2,14 +2,15 @@
 
 import { ExternalLink, RotateCcw, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useJobStatus } from "@/features/create-video/hooks/useJobStatus";
 import { STAGE_LABEL_KEY } from "@/features/create-video/stage";
 import { PublishNowDialog, type QueueEntry, useQueueEntries } from "@/features/schedule";
 import { usePublishNowMutation } from "@/features/schedule/hooks/usePublishNowMutation";
-import { useJobPublications } from "../hooks/useJobDeletion";
+import { finishPublishAttempt, publishAttempt } from "@/features/schedule/lib/publish-attempt";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useJobPublications } from "../hooks/useJobDeletion";
 import { DeleteVideoDialog } from "./DeleteVideoDialog";
 import { GenerationTimeCard } from "./GenerationTimeCard";
 
@@ -52,6 +53,7 @@ export function VideoDetailView({ jobId }: { jobId: string }) {
   const [format, setFormat] = useState<"youtube" | "reels">("youtube");
   const [retryError, setRetryError] = useState("");
   const retry = usePublishNowMutation();
+  const retryKeys = useRef(new Map<string, string>());
 
   if (isLoading) {
     return (
@@ -377,12 +379,24 @@ export function VideoDetailView({ jobId }: { jobId: string }) {
                         disabled={retry.isPending}
                         onClick={async () => {
                           setRetryError("");
+                          const attemptScope = `retry:${entry.entryId}`;
+                          let idempotencyKey = retryKeys.current.get(entry.entryId);
+                          if (!idempotencyKey) {
+                            idempotencyKey = publishAttempt(attemptScope);
+                            retryKeys.current.set(entry.entryId, idempotencyKey);
+                          }
                           try {
                             await retry.mutateAsync({
                               jobId,
+                              idempotencyKey,
                               platform: entry.platform,
                               accountAlias: entry.accountAlias,
+                              format:
+                                entry.format === "16x9" || entry.format === "9x16"
+                                  ? entry.format
+                                  : undefined,
                             });
+                            finishPublishAttempt(attemptScope);
                           } catch (error) {
                             setRetryError(error instanceof Error ? error.message : String(error));
                           }

@@ -11,6 +11,11 @@ B (`<diseño>.introv2`, texto + foto). `build` la pone como beat 0 del storyboar
 `until`), y su captura es la miniatura de YouTube. En TikTok/Reels ese primer cuadro hace de título.
 No hay un texto de intro aparte.
 
+Con narrativa amarillista, la opción C (`common.tabloid`) es obligatoria. Conservá la identidad del
+diseño en el 80 % y poné el 20 % de alerta rojo/amarillo en el bullet: cifra real dicha en el guion,
+por ejemplo «250 PUESTOS». El componente dibuja el bullet rojo con borde amarillo. `publishing check`
+bloquea una C ausente o un bullet sin cifra respaldada por el guion.
+
 Las demás categorías siguen con
 `guides/manifest.md` (v1) hasta tener perfil.
 

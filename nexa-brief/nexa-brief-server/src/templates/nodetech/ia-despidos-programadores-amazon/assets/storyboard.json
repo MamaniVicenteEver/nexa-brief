@@ -1,0 +1,1463 @@
+{
+  "version": 1,
+  "family": "rough",
+  "title": "LA IA CONTRA LOS PROGRAMADORES",
+  "defaults": {
+    "offset": -0.12
+  },
+  "beats": [
+    {
+      "t": 0,
+      "use": "common.tabloid",
+      "params": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "mode": "impact",
+        "accent": "SIGUIENTE",
+        "bullet": "250 PUESTOS",
+        "beforeLabel": "",
+        "afterLabel": "",
+        "strap": "",
+        "seal": "",
+        "tapeText": "",
+        "marker": false,
+        "target": [
+          0.72,
+          0.52
+        ],
+        "focus": [
+          0.7,
+          0.43,
+          0.07
+        ],
+        "src": "/nodetech/ia-despidos-programadores-amazon/assets/media/oficina-estres.jpg",
+        "imageSide": "right"
+      },
+      "until": "Amazon les pidió"
+    },
+    {
+      "at": "Amazon les pidió",
+      "use": "rough.icon",
+      "params": {
+        "icon": "ai",
+        "tag": "AMAZON · MEMO",
+        "caption": "usen más inteligencia artificial",
+        "accent": true
+      }
+    },
+    {
+      "at": "Al día siguiente",
+      "use": "common.punch",
+      "params": {
+        "text": "^250^\nDESPIDOS"
+      }
+    },
+    {
+      "at": "La mayoría escribía",
+      "use": "rough.icon",
+      "params": {
+        "icon": "code",
+        "tag": "DEVICES & SERVICES",
+        "caption": "la mayoría escribía software"
+      }
+    },
+    {
+      "at": "Pasó esta misma",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "MARTES 27",
+            "label": "el memo"
+          },
+          {
+            "year": "MIÉRCOLES 28",
+            "label": "los despidos"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "El miércoles de",
+      "use": "rough.layoffMail",
+      "params": {
+        "time": "28 OCT",
+        "from": "RR. HH.",
+        "subject": "Aviso sobre tu puesto",
+        "stamp": "PUESTO ELIMINADO",
+        "stampAt": 2.6,
+        "label": "AMAZON · DE MADRUGADA",
+        "badge": "×250"
+      }
+    },
+    {
+      "at": "se encendieron con",
+      "use": "common.tag",
+      "params": {
+        "text": "UN MENSAJE · UN CORREO",
+        "pos": "top"
+      },
+      "dur": 3
+    },
+    {
+      "at": "El memo tenía",
+      "use": "rough.note",
+      "params": {
+        "title": "THE ROLE OF THE DEVELOPER IN THE AGE OF AI",
+        "note": "¿ciencia ficción?",
+        "noteAt": 1.6,
+        "caption": "AMAZON · 27 OCT 2026"
+      }
+    },
+    {
+      "at": "el papel del",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "desarrollador",
+          "artificial"
+        ]
+      },
+      "until": "Y traía una"
+    },
+    {
+      "at": "Y traía una",
+      "use": "rough.icon",
+      "params": {
+        "icon": "papers",
+        "caption": "una frase que hoy suena distinta"
+      }
+    },
+    {
+      "at": "Decía así",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "atrás"
+        ]
+      },
+      "until": "Veinticuatro horas después"
+    },
+    {
+      "at": "Veinticuatro horas después",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 24,
+        "label": "HORAS DESPUÉS",
+        "unit": "a algunos los dejaron atrás",
+        "dur": 1.2
+      }
+    },
+    {
+      "at": "Y Amazon no",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "cube",
+            "label": "AMAZON"
+          },
+          {
+            "icon": "coin",
+            "label": "BARCLAYS"
+          },
+          {
+            "icon": "phone",
+            "label": "APPLE"
+          },
+          {
+            "icon": "laptop",
+            "label": "MICROSOFT"
+          }
+        ],
+        "active": 0,
+        "title": "NO ESTÁ SOLA"
+      }
+    },
+    {
+      "at": "Después, Barclays",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/barclays.jpg",
+        "caption": "Barclays",
+        "sub": "LONDRES · UNO DE LOS MAYORES BANCOS DE INGLATERRA"
+      }
+    },
+    {
+      "at": "Hace una semana",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 5000,
+        "label": "BARCLAYS · 22 OCT 2026",
+        "unit": "empleos menos este año",
+        "dur": 2
+      }
+    },
+    {
+      "at": "Su directora financiera",
+      "use": "rough.note",
+      "params": {
+        "title": "BARCLAYS · RESULTADOS DEL TERCER TRIMESTRE",
+        "note": "«fewer developers»",
+        "noteAt": 2.2,
+        "caption": "ANNA CROSS · DIRECTORA FINANCIERA"
+      }
+    },
+    {
+      "at": "habrá menos desarrolladores",
+      "use": "rough.layoffMail",
+      "params": {
+        "time": "22 OCT",
+        "from": "BARCLAYS",
+        "subject": "Menos desarrolladores",
+        "stamp": "RECORTE",
+        "stampAt": 1.2,
+        "label": "BARCLAYS · LONDRES",
+        "badge": "×5000"
+      }
+    },
+    {
+      "at": "porque la inteligencia",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "ai",
+            "label": "IA"
+          },
+          {
+            "icon": "up",
+            "label": "MÁS PRODUCTIVOS"
+          },
+          {
+            "icon": "close",
+            "label": "MENOS PUESTOS"
+          }
+        ],
+        "active": 2
+      }
+    },
+    {
+      "at": "En agosto, Apple",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/apple-park.jpg",
+        "caption": "Apple Park",
+        "sub": "CUPERTINO · AGOSTO 2026"
+      }
+    },
+    {
+      "at": "de los equipos",
+      "use": "rough.layoffMail",
+      "params": {
+        "time": "AGO",
+        "from": "APPLE",
+        "subject": "Cambios en tu equipo",
+        "stamp": "SIRI · VISION PRO",
+        "stampAt": 1.8,
+        "label": "APPLE · AGOSTO 2026",
+        "badge": "×200"
+      }
+    },
+    {
+      "at": "Microsoft anunció",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 4800,
+        "label": "MICROSOFT · 6 JUL 2026",
+        "unit": "recortes",
+        "dur": 1.6
+      }
+    },
+    {
+      "at": "Y lo peor",
+      "use": "rough.icon",
+      "params": {
+        "icon": "warning",
+        "caption": "y lo peor",
+        "accent": true
+      }
+    },
+    {
+      "at": "una consultora que",
+      "use": "rough.icon",
+      "params": {
+        "icon": "papers",
+        "tag": "CHALLENGER, GRAY & CHRISTMAS",
+        "caption": "cuenta despidos en EE. UU."
+      }
+    },
+    {
+      "at": "razón citada",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 101743,
+        "label": "RECORTES QUE CITAN A LA IA",
+        "unit": "EE. UU. · ENERO–JUNIO 2026",
+        "dur": 2.2
+      }
+    },
+    {
+      "at": "Es casi el",
+      "use": "rough.compare",
+      "params": {
+        "small": {
+          "label": "TODO 2025",
+          "value": "54.836"
+        },
+        "big": {
+          "label": "ENERO–JUNIO 2026",
+          "value": "101.743"
+        },
+        "ratio": 1.86
+      }
+    },
+    {
+      "at": "recortes anunciados en",
+      "use": "rough.tally",
+      "params": {
+        "icon": "person",
+        "count": 4,
+        "interval": 0.35,
+        "label": "1 DE CADA 4 RECORTES"
+      }
+    },
+    {
+      "at": "lleva el mismo",
+      "use": "rough.icon",
+      "params": {
+        "icon": "ai",
+        "caption": "el mismo nombre",
+        "accent": true
+      }
+    },
+    {
+      "at": "Así que la",
+      "use": "common.clip",
+      "params": {
+        "src": "assets/media/codigo.mp4",
+        "caption": "La pregunta que da miedo",
+        "sub": "PIXABAY"
+      }
+    },
+    {
+      "at": "Si una máquina",
+      "use": "rough.codeReview",
+      "params": {
+        "mode": "ai",
+        "header": "tu_trabajo.js",
+        "who": "IA ESCRIBIENDO…",
+        "lines": [
+          "function tuTrabajo() {",
+          "  leer(pedido)",
+          "  escribir(codigo)",
+          "  probar()",
+          "}"
+        ],
+        "note": ""
+      }
+    },
+    {
+      "at": "para qué te",
+      "use": "common.punch",
+      "params": {
+        "text": "¿PARA QUÉ\nTE VAN A NECESITAR\nA ^TI^?"
+      }
+    },
+    {
+      "at": "Pero en esta",
+      "use": "rough.icon",
+      "params": {
+        "icon": "eye",
+        "caption": "un detalle que casi nadie leyó",
+        "accent": true
+      }
+    },
+    {
+      "at": "Para entenderlo hay",
+      "use": "rough.careerLadder",
+      "params": {
+        "rungs": [
+          "PRIMER EMPLEO",
+          "SEMI-SENIOR",
+          "SENIOR",
+          "LÍDER"
+        ],
+        "dropAt": -1,
+        "title": "LOS MÁS JÓVENES",
+        "who": "22–25 AÑOS"
+      }
+    },
+    {
+      "at": "En la Universidad",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/stanford.jpg",
+        "caption": "Universidad de Stanford",
+        "sub": "DIGITAL ECONOMY LAB"
+      }
+    },
+    {
+      "at": "revisaron millones",
+      "use": "rough.network",
+      "params": {
+        "center": "ADP",
+        "labels": [
+          "SUELDO",
+          "EDAD",
+          "OFICIO",
+          "EMPRESA"
+        ],
+        "count": 30,
+        "growSec": 3
+      }
+    },
+    {
+      "at": "En agosto publicaron",
+      "use": "rough.note",
+      "params": {
+        "title": "CANARIES IN THE COAL MINE?",
+        "note": "agosto de 2026",
+        "noteAt": 1.5,
+        "caption": "STANFORD · BRYNJOLFSSON, CHANDAR, CHEN"
+      }
+    },
+    {
+      "at": "Los trabajadores de",
+      "use": "rough.icon",
+      "params": {
+        "icon": "person",
+        "tag": "22–25 AÑOS",
+        "caption": "oficios más expuestos a la IA"
+      }
+    },
+    {
+      "at": "menos empleo del",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 19,
+        "suffix": " %",
+        "label": "MENOS EMPLEO DEL ESPERADO",
+        "unit": "22–25 años · oficios expuestos",
+        "dur": 1.4
+      }
+    },
+    {
+      "at": "Un año antes",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "JUL 2025",
+            "label": "brecha de 15 %"
+          },
+          {
+            "year": "AGO 2026",
+            "label": "brecha de 19 %"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Y entre los",
+      "use": "rough.careerLadder",
+      "params": {
+        "rungs": [
+          "PRIMER EMPLEO",
+          "SEMI-SENIOR",
+          "SENIOR",
+          "LÍDER"
+        ],
+        "dropAt": 2.2,
+        "title": "DESARROLLADORES DE 22–25 AÑOS",
+        "who": "22–25 años"
+      }
+    },
+    {
+      "at": "el empleo ya",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 20,
+        "prefix": "−",
+        "suffix": " %",
+        "label": "DESARROLLADORES DE 22–25 AÑOS",
+        "unit": "casi · a mediados de 2025",
+        "dur": 1.4
+      }
+    },
+    {
+      "at": "Ponle cara",
+      "use": "rough.icon",
+      "params": {
+        "icon": "person",
+        "tag": "IMAGINA",
+        "caption": "23 años, recién egresado"
+      }
+    },
+    {
+      "at": "solicitudes para su",
+      "use": "rough.tally",
+      "params": {
+        "icon": "paper",
+        "count": 100,
+        "interval": 0.03,
+        "label": "SOLICITUDES"
+      }
+    },
+    {
+      "at": "Nadie lo despidió",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "DESPEDIDO",
+          "NO CONTRATADO"
+        ],
+        "pick": 1,
+        "pickAt": 1.6,
+        "question": "¿qué le pasó?"
+      }
+    },
+    {
+      "at": "Simplemente, nadie",
+      "use": "common.punch",
+      "params": {
+        "text": "^NADIE^\nLO CONTRATA"
+      }
+    },
+    {
+      "at": "Esa es la",
+      "use": "rough.careerLadder",
+      "params": {
+        "rungs": [
+          "PRIMER EMPLEO",
+          "SEMI-SENIOR",
+          "SENIOR",
+          "LÍDER"
+        ],
+        "dropAt": 0.9,
+        "title": "LA CARA DEL 19 %",
+        "who": "23 años"
+      }
+    },
+    {
+      "at": "Ahora, la parte",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/amazon-hq.jpg",
+        "caption": "lo que los titulares no cuentan",
+        "sub": "AMAZON · LO QUE DIJO LA EMPRESA",
+        "tone": "lime"
+      }
+    },
+    {
+      "at": "La empresa nunca",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "«LA IA LOS REEMPLAZÓ»",
+          "«REVISAMOS LA ESTRUCTURA»"
+        ],
+        "pick": 1,
+        "pickAt": 2.6,
+        "question": "¿qué dijo Amazon?"
+      }
+    },
+    {
+      "at": "Habló de revisar",
+      "use": "rough.note",
+      "params": {
+        "title": "AMAZON · DEVICES & SERVICES",
+        "note": "«a thorough review of our structure»",
+        "noteAt": 1.2,
+        "caption": "CHERIE ROBINSON · RECURSOS HUMANOS"
+      }
+    },
+    {
+      "at": "Y el memo",
+      "use": "rough.note",
+      "params": {
+        "title": "THE ROLE OF THE DEVELOPER IN THE AGE OF AI",
+        "note": "dice casi lo contrario",
+        "noteAt": 2,
+        "caption": "EL MEMO COMPLETO"
+      }
+    },
+    {
+      "at": "Que usar mucha",
+      "use": "rough.stack",
+      "params": {
+        "title": "NO ES PRODUCTIVIDAD",
+        "items": [
+          {
+            "label": "TOKENS"
+          },
+          {
+            "label": "ADOPCIÓN DE IA"
+          },
+          {
+            "label": "LÍNEAS CAMBIADAS"
+          },
+          {
+            "label": "RESULTADO",
+            "keep": true
+          }
+        ],
+        "dropAt": 2.4
+      }
+    },
+    {
+      "at": "Que importa el",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "LA HERRAMIENTA",
+          "EL RESULTADO"
+        ],
+        "pick": 1,
+        "pickAt": 1.2,
+        "question": "¿qué importa?"
+      }
+    },
+    {
+      "at": "Microsoft fue todavía",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/microsoft.jpg",
+        "caption": "Microsoft",
+        "sub": "JULIO 2026 · ~4800 RECORTES"
+      }
+    },
+    {
+      "at": "Su jefa de",
+      "use": "rough.note",
+      "params": {
+        "title": "MICROSOFT · 6 JUL 2026",
+        "note": "«not being replaced by AI»",
+        "noteAt": 2.4,
+        "caption": "AMY COLEMAN · CHIEF PEOPLE OFFICER"
+      }
+    },
+    {
+      "at": "puestos no los",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "REEMPLAZADOS POR IA",
+          "NO REEMPLAZADOS"
+        ],
+        "pick": 1,
+        "pickAt": 1.2,
+        "question": "¿qué dijo Microsoft?"
+      }
+    },
+    {
+      "at": "Aunque admitió",
+      "use": "rough.icon",
+      "params": {
+        "icon": "work",
+        "caption": "la IA sí cambia la forma de trabajar"
+      }
+    },
+    {
+      "at": "En Barclays, el",
+      "use": "rough.note",
+      "params": {
+        "title": "BARCLAYS · RESULTADOS",
+        "note": "«the icing on the cake, not the cake»",
+        "noteAt": 1.6,
+        "caption": "C. S. VENKATAKRISHNAN · DIRECTOR EJECUTIVO"
+      }
+    },
+    {
+      "at": "la cobertura del",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "pastel"
+        ]
+      },
+      "until": "Y aclaró que"
+    },
+    {
+      "at": "Y aclaró que",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "TODOS POR LA IA",
+          "NO TODOS"
+        ],
+        "pick": 1,
+        "pickAt": 1.4,
+        "question": "¿los recortes son por la IA?"
+      }
+    },
+    {
+      "at": "Y Apple",
+      "use": "rough.icon",
+      "params": {
+        "icon": "close",
+        "tag": "APPLE",
+        "caption": "proyectos que no funcionaban"
+      }
+    },
+    {
+      "at": "como los lentes",
+      "use": "rough.icon",
+      "params": {
+        "icon": "headset",
+        "tag": "VISION PRO",
+        "caption": "un producto que no despegó"
+      }
+    },
+    {
+      "at": "en una empresa",
+      "use": "rough.compare",
+      "params": {
+        "small": {
+          "label": "RECORTES",
+          "value": "~200"
+        },
+        "big": {
+          "label": "APPLE",
+          "value": "+166.000 EMPLEADOS"
+        },
+        "ratio": 830
+      }
+    },
+    {
+      "at": "de Challenger son",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "ANUNCIOS",
+          "DESPIDOS CONFIRMADOS"
+        ],
+        "pick": 0,
+        "pickAt": 1.4,
+        "question": "¿qué cuenta Challenger?"
+      }
+    },
+    {
+      "at": "y basta con",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "megaphone",
+            "label": "LA EMPRESA DICE «IA»"
+          },
+          {
+            "icon": "papers",
+            "label": "SE CUENTA"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Un sindicato inglés",
+      "use": "rough.note",
+      "params": {
+        "title": "UNITE · SHARON GRAHAM",
+        "note": "«la IA como excusa»",
+        "noteAt": 1.4,
+        "caption": "SINDICATO · REINO UNIDO"
+      }
+    },
+    {
+      "at": "Y Stanford aclara",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "MÁS DESPIDOS",
+          "MENOS CONTRATACIONES"
+        ],
+        "pick": 1,
+        "pickAt": 2.2,
+        "question": "¿de dónde viene la brecha?"
+      }
+    },
+    {
+      "at": "Ahora sí, el",
+      "use": "rough.icon",
+      "params": {
+        "icon": "eye",
+        "caption": "el dato incómodo",
+        "accent": true
+      }
+    },
+    {
+      "at": "En marzo del",
+      "use": "rough.browser",
+      "params": {
+        "url": "washingtonpost.com",
+        "title": "The Washington Post",
+        "link": "empleo en EE. UU.",
+        "clickAt": 2.4,
+        "caption": "MARZO 2025 · DATOS OFICIALES"
+      }
+    },
+    {
+      "at": "Y encontró algo",
+      "use": "rough.icon",
+      "params": {
+        "icon": "warning",
+        "caption": "parece una sentencia",
+        "accent": true
+      }
+    },
+    {
+      "at": "el empleo de programadores",
+      "use": "rough.icon",
+      "params": {
+        "icon": "close",
+        "tag": "PROGRAMADORES · EE. UU.",
+        "caption": "−27,5 % en unos dos años",
+        "accent": true
+      }
+    },
+    {
+      "at": "Quedaban menos que",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "1980",
+            "label": "+300.000"
+          },
+          {
+            "year": "2000",
+            "label": "+700.000"
+          },
+          {
+            "year": "2025",
+            "label": "menos que en 1980"
+          }
+        ],
+        "active": 2
+      }
+    },
+    {
+      "at": "cuando casi nadie",
+      "use": "rough.icon",
+      "params": {
+        "icon": "laptop",
+        "caption": "casi nadie tenía computadora en casa"
+      }
+    },
+    {
+      "at": "Pero en la",
+      "use": "rough.note",
+      "params": {
+        "title": "EMPLEO EN EE. UU. · ENCUESTA OFICIAL",
+        "note": "otra fila…",
+        "noteAt": 1.6,
+        "caption": "WASHINGTON POST · MARZO 2025"
+      }
+    },
+    {
+      "at": "ese empleo bajó",
+      "use": "common.punch",
+      "params": {
+        "text": "DESARROLLADORES\n^−0,3 %^"
+      }
+    },
+    {
+      "at": "Cuál es la",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "PROGRAMADOR",
+          "DESARROLLADOR"
+        ],
+        "pick": 1,
+        "pickAt": 99,
+        "question": "¿cuál es la diferencia?"
+      }
+    },
+    {
+      "at": "el programador es",
+      "use": "rough.codeReview",
+      "params": {
+        "mode": "ai",
+        "header": "traducir.js",
+        "who": "PROGRAMADOR: TRADUCE",
+        "lines": [
+          "// lo que decidió otro",
+          "si pago > 0:",
+          "  enviar(pedido)"
+        ],
+        "note": "instrucciones de otro"
+      }
+    },
+    {
+      "at": "El desarrollador decide",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "understand",
+            "label": "QUÉ"
+          },
+          {
+            "icon": "design",
+            "label": "CÓMO"
+          },
+          {
+            "icon": "person",
+            "label": "PARA QUIÉN"
+          }
+        ],
+        "active": 0,
+        "title": "DESARROLLADOR: DECIDE"
+      }
+    },
+    {
+      "at": "en esos años también",
+      "use": "common.clip",
+      "params": {
+        "src": "assets/media/oficina.mp4",
+        "caption": "Tasas altas: el sector frenó",
+        "sub": "PIXABAY"
+      }
+    },
+    {
+      "at": "Pero una máquina",
+      "use": "rough.stack",
+      "params": {
+        "title": "TAREAS",
+        "items": [
+          {
+            "label": "COMPLETAR CÓDIGO"
+          },
+          {
+            "label": "REPETIR PATRONES"
+          },
+          {
+            "label": "DECIDIR QUÉ HACER",
+            "keep": true
+          },
+          {
+            "label": "ENTENDER AL USUARIO",
+            "keep": true
+          }
+        ],
+        "dropAt": 2.2
+      }
+    },
+    {
+      "at": "No está borrando",
+      "use": "common.punch",
+      "params": {
+        "text": "NO BORRA\nLA ^PROFESIÓN^"
+      }
+    },
+    {
+      "at": "Por eso el",
+      "use": "rough.icon",
+      "params": {
+        "icon": "gradcap",
+        "caption": "el golpe cae sobre los jóvenes"
+      }
+    },
+    {
+      "at": "El primer escalón",
+      "use": "rough.careerLadder",
+      "params": {
+        "rungs": [
+          "TRABAJO MECÁNICO",
+          "SEGUNDO ESCALÓN",
+          "SENIOR",
+          "LÍDER"
+        ],
+        "dropAt": 2.6,
+        "title": "EL PRIMER ESCALÓN",
+        "who": "recién egresado"
+      }
+    },
+    {
+      "at": "cuesta mucho más",
+      "use": "rough.icon",
+      "params": {
+        "icon": "up",
+        "caption": "cuesta más llegar al segundo"
+      }
+    },
+    {
+      "at": "Pero la escalera",
+      "use": "rough.careerLadder",
+      "params": {
+        "rungs": [
+          "PRIMER EMPLEO",
+          "SEMI-SENIOR",
+          "SENIOR",
+          "LÍDER"
+        ],
+        "dropAt": -1,
+        "title": "LA ESCALERA SIGUE AHÍ"
+      }
+    },
+    {
+      "at": "En abril, la",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/graduation.jpg",
+        "caption": "Promoción 2026",
+        "sub": "NACE · ABRIL 2026"
+      }
+    },
+    {
+      "at": "planean contratar",
+      "use": "rough.icon",
+      "params": {
+        "icon": "gradcap",
+        "tag": "NACE · 2026",
+        "caption": "+5,6 % recién egresados",
+        "accent": true
+      }
+    },
+    {
+      "at": "En otoño esa",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "OTOÑO 2025",
+            "label": "+1,6 %"
+          },
+          {
+            "year": "ABRIL 2026",
+            "label": "+5,6 %"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Pero tampoco es",
+      "use": "rough.icon",
+      "params": {
+        "icon": "check",
+        "caption": "tampoco es el fin",
+        "accent": true
+      }
+    },
+    {
+      "at": "Y esta película",
+      "use": "rough.icon",
+      "params": {
+        "icon": "tv",
+        "caption": "esta película ya la vimos"
+      }
+    },
+    {
+      "at": "Noviembre de",
+      "use": "common.punch",
+      "params": {
+        "text": "NOVIEMBRE\n^1954^"
+      }
+    },
+    {
+      "at": "Un equipo de",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/ibm704.jpg",
+        "caption": "IBM 704",
+        "sub": "LA COMPUTADORA DE FORTRAN"
+      }
+    },
+    {
+      "at": "dirigido por",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/backus.jpg",
+        "caption": "John Backus",
+        "sub": "IBM · FORTRAN"
+      }
+    },
+    {
+      "at": "para sus computadoras",
+      "use": "rough.codeReview",
+      "params": {
+        "mode": "ai",
+        "header": "programa.f",
+        "who": "FORTRAN · 1954",
+        "lines": [
+          "DO 10 I = 1, N",
+          "  X = X + A(I)",
+          "10 CONTINUE"
+        ],
+        "note": ""
+      }
+    },
+    {
+      "at": "Su informe prometía",
+      "use": "rough.note",
+      "params": {
+        "title": "PRELIMINARY REPORT · FORTRAN",
+        "note": "«virtually eliminate coding and debugging»",
+        "noteAt": 2.2,
+        "caption": "IBM · 10 NOV 1954"
+      }
+    },
+    {
+      "at": "eliminaría prácticamente",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "eliminaría"
+        ]
+      },
+      "until": "Es casi el mismo"
+    },
+    {
+      "at": "Es casi el mismo",
+      "use": "rough.timeline",
+      "params": {
+        "items": [
+          {
+            "year": "1954",
+            "label": "FORTRAN"
+          },
+          {
+            "year": "2026",
+            "label": "IA"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Que programar se",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "code",
+            "label": "MÁS FÁCIL"
+          },
+          {
+            "icon": "earth",
+            "label": "TODOS QUIEREN PROGRAMAS"
+          }
+        ],
+        "active": 1
+      }
+    },
+    {
+      "at": "Hoy hay más",
+      "use": "rough.counter",
+      "params": {
+        "from": 0,
+        "to": 48000000,
+        "label": "DESARROLLADORES EN EL MUNDO",
+        "unit": "SlashData · 2025",
+        "dur": 2.4
+      }
+    },
+    {
+      "at": "en el planeta",
+      "use": "rough.network",
+      "params": {
+        "center": "48 M",
+        "labels": [
+          "WEB",
+          "APPS",
+          "DATOS",
+          "JUEGOS"
+        ],
+        "count": 40,
+        "growSec": 2.5
+      }
+    },
+    {
+      "at": "lo admitió años",
+      "use": "rough.note",
+      "params": {
+        "title": "JOHN BACKUS · 1979",
+        "note": "«hopelessly optimistic»",
+        "noteAt": "@desesperadamente",
+        "caption": "SOBRE CORREGIR ERRORES"
+      }
+    },
+    {
+      "at": "Las máquinas cambiaron",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "ELIMINAR LA TAREA",
+          "CAMBIAR LA TAREA"
+        ],
+        "pick": 1,
+        "pickAt": 1,
+        "question": "¿qué hicieron las máquinas?"
+      }
+    },
+    {
+      "at": "Con los bancos",
+      "use": "rough.photo",
+      "params": {
+        "src": "assets/media/atm.jpg",
+        "caption": "Cajero automático",
+        "sub": "EE. UU."
+      }
+    },
+    {
+      "at": "una sucursal típica",
+      "use": "rough.counter",
+      "params": {
+        "from": 21,
+        "to": 13,
+        "label": "CAJEROS POR SUCURSAL",
+        "unit": "con cajeros automáticos",
+        "dur": 2
+      }
+    },
+    {
+      "at": "Parecía el principio",
+      "use": "rough.icon",
+      "params": {
+        "icon": "clock",
+        "caption": "¿el fin del oficio?"
+      }
+    },
+    {
+      "at": "Con lo que",
+      "use": "rough.network",
+      "params": {
+        "center": "BANCO",
+        "labels": [
+          "SUCURSAL",
+          "SUCURSAL",
+          "SUCURSAL",
+          "SUCURSAL"
+        ],
+        "count": 16,
+        "growSec": 3
+      }
+    },
+    {
+      "at": "Según el economista",
+      "use": "rough.counter",
+      "params": {
+        "from": 250000,
+        "to": 500000,
+        "label": "CAJEROS DE BANCO EN EE. UU.",
+        "unit": "según James Bessen",
+        "dur": 2.4
+      }
+    },
+    {
+      "at": "se duplicaron",
+      "use": "rough.compare",
+      "params": {
+        "small": {
+          "label": "ANTES",
+          "value": "~250.000"
+        },
+        "big": {
+          "label": "DESPUÉS",
+          "value": "~500.000"
+        },
+        "ratio": 2
+      }
+    },
+    {
+      "at": "Eso no quiere",
+      "use": "common.clip",
+      "params": {
+        "src": "assets/media/teclado.mp4",
+        "caption": "Alguien sí pierde",
+        "sub": "PIXABAY"
+      }
+    },
+    {
+      "at": "Pero el trabajo",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "keyboard",
+            "label": "ESCRIBIR"
+          },
+          {
+            "icon": "eye",
+            "label": "REVISAR"
+          },
+          {
+            "icon": "target",
+            "label": "DECIDIR"
+          }
+        ],
+        "active": 2,
+        "title": "EL TRABAJO SE MUEVE"
+      }
+    },
+    {
+      "at": "qué haces tú",
+      "use": "rough.icon",
+      "params": {
+        "icon": "question",
+        "caption": "¿y qué haces tú?",
+        "accent": true
+      }
+    },
+    {
+      "at": "Primero: aprende",
+      "use": "rough.codeReview",
+      "params": {
+        "mode": "review",
+        "header": "de_la_ia.js",
+        "who": "1 · REVISAR",
+        "lines": [
+          "function cobrar(p) {",
+          "  total = sumar(p)",
+          "  if (total < 0) borrar()",
+          "  return enviar(total)",
+          "}"
+        ],
+        "bad": 2,
+        "reviewAt": 2.6,
+        "note": "lo revisa una persona"
+      }
+    },
+    {
+      "at": "El memo de",
+      "use": "rough.choice",
+      "params": {
+        "options": [
+          "CANTIDAD DE LÍNEAS",
+          "CRITERIO"
+        ],
+        "pick": 1,
+        "pickAt": 2.4,
+        "question": "¿qué pide el memo?"
+      }
+    },
+    {
+      "at": "Segundo: aprende",
+      "use": "rough.icon",
+      "params": {
+        "icon": "target",
+        "tag": "SEGUNDO",
+        "caption": "aprende a dirigir",
+        "accent": true
+      }
+    },
+    {
+      "at": "Explicar el problema",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "megaphone",
+            "label": "EXPLICAR"
+          },
+          {
+            "icon": "cube",
+            "label": "PARTIR EN PIEZAS"
+          },
+          {
+            "icon": "check",
+            "label": "DECIDIR"
+          }
+        ],
+        "active": 2
+      }
+    },
+    {
+      "at": "Eso todavía no",
+      "use": "rough.icon",
+      "params": {
+        "icon": "bot",
+        "caption": "ninguna máquina lo hace sola"
+      }
+    },
+    {
+      "at": "Y tercero",
+      "use": "rough.icon",
+      "params": {
+        "icon": "coin",
+        "tag": "TERCERO",
+        "caption": "entiende el negocio",
+        "accent": true
+      }
+    },
+    {
+      "at": "Quién usa lo",
+      "use": "rough.flow",
+      "params": {
+        "nodes": [
+          {
+            "icon": "person",
+            "label": "QUIÉN LO USA"
+          },
+          {
+            "icon": "coin",
+            "label": "CUÁNTO CUESTA"
+          },
+          {
+            "icon": "heart",
+            "label": "POR QUÉ IMPORTA"
+          }
+        ],
+        "active": 2
+      }
+    },
+    {
+      "at": "lo aprendes hablando",
+      "use": "rough.icon",
+      "params": {
+        "icon": "megaphone",
+        "caption": "hablando con la gente"
+      }
+    },
+    {
+      "at": "Y a esa",
+      "use": "rough.careerLadder",
+      "params": {
+        "rungs": [
+          "REVISAR",
+          "DIRIGIR",
+          "ENTENDER EL NEGOCIO"
+        ],
+        "dropAt": -1,
+        "title": "LA VAN A SEGUIR NECESITANDO",
+        "who": "tú"
+      }
+    },
+    {
+      "at": "Ahora te pregunto",
+      "use": "common.lyric",
+      "params": {
+        "accent": [
+          "ti"
+        ]
+      },
+      "until": "Sientes que la"
+    },
+    {
+      "at": "Sientes que la",
+      "use": "common.question",
+      "params": {
+        "text": "¿Te quita trabajo o te lo ahorra?"
+      },
+      "until": "Gracias por llegar"
+    },
+    {
+      "at": "Los voy a",
+      "use": "rough.icon",
+      "params": {
+        "icon": "pencil",
+        "caption": "los voy a leer"
+      }
+    }
+  ]
+}

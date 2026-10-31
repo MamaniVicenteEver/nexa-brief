@@ -2,7 +2,7 @@
 
 import { AlertCircle, ArrowUpRight, Check, Loader2, RotateCcw, Send } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PLATFORM_META, PlatformIcon } from "@/features/channels";
 import { useChannels } from "@/features/channels/hooks/useChannels";
 import { useJobStatus } from "@/features/create-video/hooks/useJobStatus";
@@ -21,6 +21,7 @@ import {
 } from "@/shared/components/ui/dialog";
 import { usePublishNowMutation } from "../hooks/usePublishNowMutation";
 import { useQueueEntries } from "../hooks/useQueueEntries";
+import { finishPublishAttempt, publishAttempt } from "../lib/publish-attempt";
 import type { ChannelPlatform, QueueEntry, VideoFormat } from "../types";
 import { canPickFormat, DEFAULT_FORMAT } from "./PublishFormatPicker";
 
@@ -90,6 +91,7 @@ function PublishBody({
     formats.get(key) ?? DEFAULT_FORMAT[platform];
   /** target → entryId de lo que se envió desde esta ventana. */
   const [sent, setSent] = useState<Map<TargetKey, string | null>>(new Map());
+  const attemptKeys = useRef(new Map<TargetKey, string>());
 
   const entries = jobEntries ?? [];
   const entryById = new Map(entries.map((e) => [e.entryId, e]));
@@ -109,10 +111,17 @@ function PublishBody({
       const [rawPlatform, ...rest] = key.split(":");
       const platform = rawPlatform as ChannelPlatform;
       const accountAlias = rest.join(":");
+      const attemptScope = `dialog:${jobId}:${key}`;
+      let idempotencyKey = attemptKeys.current.get(key);
+      if (!idempotencyKey) {
+        idempotencyKey = publishAttempt(attemptScope);
+        attemptKeys.current.set(key, idempotencyKey);
+      }
       setSent((prev) => new Map(prev).set(key, null));
       try {
         const entry = await publishMutation.mutateAsync({
           jobId,
+          idempotencyKey,
           platform,
           accountAlias,
           // sin 9:16 grabado va el 16:9 en todas las redes
@@ -122,6 +131,7 @@ function PublishBody({
               ? "16x9"
               : undefined,
         });
+        finishPublishAttempt(attemptScope);
         setSent((prev) => new Map(prev).set(key, entry.entryId));
       } catch {
         setSent((prev) => new Map(prev).set(key, "request-failed"));

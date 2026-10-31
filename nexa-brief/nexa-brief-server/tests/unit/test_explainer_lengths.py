@@ -84,11 +84,12 @@ def test_codex_prompt_reads_with_the_shell_and_reviews_components(tmp_path: Path
            "agent": "codex", "target_minutes": 10}
     prompt = build_agent_prompt(rec, tmp_path / "v1")
     assert "cat, sed -n" in prompt and "herramienta de lectura (Read)" not in prompt
-    assert "kit.py components v1" in prompt and "inventario visual" in prompt and "Máximo 3 rondas" in prompt
+    assert "kit.py components v1" in prompt and "inventario visual" in prompt and "Máximo 2 rondas" in prompt
+    assert "descártalo y usa el catálogo" in prompt
     assert "Duración objetivo: 10 minutos" in prompt
     assert "Sin emojis" in prompt
     assert "PAQUETE v2" in prompt and "publishing build v1" in prompt   # NodeTech: paquete de publicación
-    assert "kit.py outro v1" in prompt and "cierre con voz" in prompt
+    assert "NUNCA ejecutes voice, transcribe, outro" in prompt and "cierre con voz" in prompt
 
 
 def test_claude_prompt_keeps_the_read_tool_and_old_productions_have_no_target(tmp_path: Path):

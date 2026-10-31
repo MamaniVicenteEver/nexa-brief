@@ -296,6 +296,8 @@ class Settings(BaseSettings):
     accounts_json_b64: str = Field(default="", alias="ACCOUNTS_JSON_B64")
 
     # ── Social Publisher — TikTok OAuth 2.0 ──────────────────────────────────
+    tiktok_service_url: str = Field(default="http://127.0.0.1:8100", alias="TIKTOK_SERVICE_URL")
+    tiktok_service_key: str = Field(default="", alias="TIKTOK_SERVICE_KEY")
     tiktok_client_id: str = Field(default="", alias="TIKTOK_CLIENT_ID")
     # Mientras TikTok no audite la app (Content Posting API), solo permite
     # publicar en cuentas PRIVADAS y con privacy_level=SELF_ONLY — cualquier

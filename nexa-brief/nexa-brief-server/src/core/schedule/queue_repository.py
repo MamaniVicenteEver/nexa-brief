@@ -15,6 +15,7 @@ import json
 import hashlib
 import fcntl
 import uuid
+import asyncio
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -55,6 +56,7 @@ async def _publish_event(entry: QueueEntry) -> None:
 # `publishing` no prueba que el proceso murió: solo se recuperan las que nadie está atendiendo.
 # Tras un reinicio el set arranca vacío y la recuperación por crash sigue funcionando igual.
 _in_flight: set[str] = set()
+_immediate_lock = asyncio.Lock()
 
 
 def _now_iso() -> str:
@@ -76,6 +78,32 @@ def _queue_claim_lock():
 
 
 # ── Create ───────────────────────────────────────────────────────────────────
+
+async def create_immediate_once(
+    job_id: str, platform: str, account_alias: str, format: str | None, key: str,
+) -> tuple[QueueEntry, bool]:
+    """Persist the client attempt before scheduling any remote operation."""
+    async with _immediate_lock:
+        with _queue_claim_lock():
+            existing = _entries().first({"idempotency_key": key})
+            if existing:
+                entry = QueueEntry(**existing)
+                if (entry.job_id, entry.platform, entry.account_alias, entry.format) != (
+                    job_id, platform, account_alias, format,
+                ):
+                    raise ValueError("La clave ya corresponde a otra publicación.")
+                return entry, False
+            now = _now_iso()
+            entry = QueueEntry(
+                entry_id=uuid.uuid4().hex, job_id=job_id, platform=platform,
+                account_alias=account_alias, format=format, source=QueueSource.IMMEDIATE,
+                status=QueueStatus.QUEUED, created_at=now, updated_at=now,
+                idempotency_key=key,
+            )
+            await _entries().insert(_dump(entry))
+    await _publish_event(entry)
+    return entry, True
+
 
 async def create(
     job_id: str | None,

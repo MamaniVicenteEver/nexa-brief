@@ -1983,6 +1983,171 @@
         "sandbox/nodeaction/pizarra-demo",
         "sandbox/nodeaction/pizarra-olvido"
       ]
+    },
+    {
+      "name": "pizarra.character.estudianteReferencia",
+      "summary": "Estudiante 2D articulado con sudadera, cabello y auriculares; colores configurables.",
+      "tags": [
+        "personaje",
+        "pizarra",
+        "avatar"
+      ],
+      "layer": "main",
+      "params": {
+        "look.colors": {
+          "type": "object",
+          "default": null,
+          "doc": "shirt, hair, skin y accent",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/characters/estudiante-referencia.js",
+      "demo": "sandbox/nodeaction/prueba-avatar-comparacion/index.html",
+      "used_by": [
+        "sandbox/nodeaction/prueba-avatar-comparacion"
+      ]
+    },
+    {
+      "name": "pizarra.prop.imagen",
+      "summary": "Imagen local o recorte de hoja, precargada antes de iniciar pizarra.",
+      "tags": [
+        "imagen",
+        "pizarra"
+      ],
+      "layer": "main",
+      "params": {
+        "src": {
+          "type": "string",
+          "default": null,
+          "doc": "Ruta de imagen local",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "crop": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,ancho,alto] normalizados",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/imagenes.js",
+      "demo": "sandbox/nodeaction/prueba-avatar-comparacion/index.html",
+      "used_by": [
+        "sandbox/nodeaction/prueba-avatar-comparacion",
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    },
+    {
+      "name": "pizarra.prop.panel",
+      "summary": "Panel editorial con fondo y acento configurables.",
+      "tags": [
+        "pizarra",
+        "editorial",
+        "componente"
+      ],
+      "layer": "main",
+      "params": {
+        "s": {
+          "type": "number",
+          "default": 200,
+          "doc": "Ancho o tamaño en unidades del lienzo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/contexto.js",
+      "demo": "sandbox/nodeaction/adicciones-juan/index.html",
+      "used_by": [
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    },
+    {
+      "name": "pizarra.prop.redApoyo",
+      "summary": "Red de apoyo con nodos y líneas animados determinísticamente.",
+      "tags": [
+        "pizarra",
+        "editorial",
+        "componente"
+      ],
+      "layer": "main",
+      "params": {
+        "s": {
+          "type": "number",
+          "default": 200,
+          "doc": "Ancho o tamaño en unidades del lienzo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/contexto.js",
+      "demo": "sandbox/nodeaction/adicciones-juan/index.html",
+      "used_by": [
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    },
+    {
+      "name": "pizarra.prop.ruta",
+      "summary": "Camino de pasos animado a partir del tiempo de escena.",
+      "tags": [
+        "pizarra",
+        "editorial",
+        "componente"
+      ],
+      "layer": "main",
+      "params": {
+        "s": {
+          "type": "number",
+          "default": 200,
+          "doc": "Ancho o tamaño en unidades del lienzo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/contexto.js",
+      "demo": "sandbox/nodeaction/adicciones-juan/index.html",
+      "used_by": [
+        "sandbox/nodeaction/adicciones-juan"
+      ]
+    },
+    {
+      "name": "pizarra.prop.puerta",
+      "summary": "Puerta estilizada con apertura animada para indicar acceso y apoyo.",
+      "tags": [
+        "pizarra",
+        "apoyo",
+        "editorial"
+      ],
+      "layer": "main",
+      "params": {
+        "s": {
+          "type": "number",
+          "default": 200,
+          "doc": "Tamaño del dibujo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/props/contexto.js",
+      "demo": "sandbox/nodeaction/adicciones-juan/index.html",
+      "used_by": [
+        "sandbox/nodeaction/adicciones-juan"
+      ]
     }
   ]
 }

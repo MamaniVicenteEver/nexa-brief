@@ -87,6 +87,12 @@ Prompt listo para un modelo: `prompts/director.md`.
 
 (La lista completa con parámetros está en `CATALOG.md`.)
 
+Plano preferido para los giros: `rough.introv2` o `binary.introv2`, con `text` grande a un lado y
+foto `src` grande al otro. `highlight` destaca una frase; `focus` (rough) o `focusX`/`focusY`
+(binary) protegen el sujeto. En rough produjo «UNA LLAMADA URGENTE» y «3 SEGUNDOS DE MUESTRA».
+Usalo unas 3–5 veces por 10 min, con medios distintos. Cada beat con video dura ≥ 8 s; `common.clip` recomienda 12–18 s y los videos de ≥ 8 min necesitan dos tramos de ≥ 12 s. El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta: agregá `logo` y `logoName` al beat del medio. Distribuí fotos y clips por acto y reservá
+`common.question` para el final hablado, hasta el inicio del outro.
+
 ## 5. Validar y revisar
 
 ```bash

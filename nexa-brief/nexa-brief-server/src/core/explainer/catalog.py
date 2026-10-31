@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from src.config.settings import BASE_DIR
+from src.core.explainer import narrative
 from src.core.categories import category_for_design, explainer_folders, get_category
 
 TEMPLATES_DIR: Path = BASE_DIR / "src" / "templates"
@@ -61,8 +62,11 @@ class ExplainerVideo:
     tiktok_hashtags: list[str] = field(default_factory=list)
     thumbnail_variants: list[ThumbnailVariant] = field(default_factory=list)
     topic: str = ""
+    narrative_id: str | None = None      # estrategia narrativa del guion (None = videos anteriores)
+    narrative_label: str | None = None
     has_poster: bool = False
     demo: bool = False      # demo de un diseño (mismo guion que otro video): ojo al publicar
+    quality_issues: list[str] = field(default_factory=list)
 
     @property
     def ready(self) -> bool:
@@ -84,6 +88,7 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
     if not manifest:
         return None
     publish = _read_json(video_dir / "publish.json")
+    story = narrative.recorded(video_dir)
     thumbnail_variants = [
         ThumbnailVariant(
             option=str(item.get("option", "")),
@@ -124,7 +129,10 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         tiktok_hashtags=list(publish.get("tiktok_hashtags", []) or []),
         thumbnail_variants=thumbnail_variants,
         topic=manifest.get("topic", "") or "",
+        narrative_id=story.narrative_id,
+        narrative_label=story.label,
         demo=bool(manifest.get("demo")),
+        quality_issues=[str(issue) for issue in manifest.get("quality_issues", []) if isinstance(issue, str)],
         has_poster=(video_dir / "render" / "poster.jpg").exists(),
     )
 

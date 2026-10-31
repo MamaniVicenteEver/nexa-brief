@@ -45,8 +45,17 @@ function isPublicPreviewFile(pathname: string): boolean {
 }
 
 function isPublicApiRequest(request: NextRequest): boolean {
-  if (request.method !== "GET") return false;
   const { pathname } = request.nextUrl;
+
+  if (
+    request.method === "POST" &&
+    /^\/api\/v1\/publish\/browser\/tiktok\/import\/[^/]+$/.test(pathname) &&
+    request.nextUrl.searchParams.has("k")
+  ) {
+    // The API consumes and verifies the one-use HMAC before accepting cookies.
+    return true;
+  }
+  if (request.method !== "GET") return false;
 
   if (OAUTH_CALLBACKS.has(pathname)) return true;
   if (pathname === "/api/v1/agent/prototipo") return true;
@@ -99,26 +108,29 @@ function proxyApiRequest(request: NextRequest, includeInternalToken = true): Nex
 // Auth.js reescribe la URL de la request con AUTH_URL: solo se aplica a /api/v1.
 // Envolver también las páginas confunde a next-intl (bucle /login → /login).
 const apiProxy = auth((request) => {
-  const signedPrototypeRead =
-    request.method === "GET" &&
-    /^\/api\/v1\/agent\/prototipo\/[^/]+\/[^/]+$/.test(request.nextUrl.pathname) &&
-    request.nextUrl.searchParams.has("k");
+  const signedLinkRequest =
+    (request.method === "GET" &&
+      /^\/api\/v1\/agent\/prototipo\/[^/]+\/[^/]+$/.test(request.nextUrl.pathname) &&
+      request.nextUrl.searchParams.has("k")) ||
+    (request.method === "POST" &&
+      /^\/api\/v1\/publish\/browser\/tiktok\/import\/[^/]+$/.test(request.nextUrl.pathname) &&
+      request.nextUrl.searchParams.has("k"));
   if (!isPublicApiRequest(request)) {
     if (!request.auth?.user) {
       return NextResponse.json({ detail: "Autenticación requerida." }, { status: 401 });
     }
   }
-  return proxyApiRequest(request, !signedPrototypeRead || Boolean(request.auth?.user));
+  return proxyApiRequest(request, !signedLinkRequest || Boolean(request.auth?.user));
 });
 
 function isApiPath(pathname: string): boolean {
   return pathname === "/api/v1" || pathname.startsWith("/api/v1/");
 }
 
-export function proxy(request: NextRequest, event: NextFetchEvent) {
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
   if (isApiPath(request.nextUrl.pathname)) {
     // biome-ignore lint/suspicious/noExplicitAny: firma de middleware de Auth.js
-    return (apiProxy as any)(request, event);
+    return ((await apiProxy) as any)(request, event);
   }
 
   // Quick Tunnel permite HTTP y HTTPS. Compara el host reenviado por el túnel
@@ -135,6 +147,10 @@ export function proxy(request: NextRequest, event: NextFetchEvent) {
     const secureUrl = new URL(`${request.nextUrl.pathname}${request.nextUrl.search}`, publicUrl);
     return NextResponse.redirect(secureUrl, 308);
   }
+
+  // This route accepts the device secret in its query string. Let the route
+  // handler read it directly instead of rewriting it through next-intl.
+  if (request.nextUrl.pathname === "/dev-access") return NextResponse.next();
 
   return intlMiddleware(request);
 }

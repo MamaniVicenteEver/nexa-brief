@@ -41,10 +41,12 @@ def model_for(role: str) -> str:
     cfg = roles_config()
     spec = cfg["roles"][role]
     provider = spec["provider"]
+    if spec.get("model"):
+        alias = spec["model"]
+        return (cfg["providers"].get(provider, {}).get("models") or {}).get(alias, alias)
     if provider == "codex":
         return settings.agent_codex_model
-    alias = spec.get("model", "")
-    return (cfg["providers"].get(provider, {}).get("models") or {}).get(alias, alias)
+    return ""
 
 
 def agent_for(role: str) -> AgentRunnerPort:

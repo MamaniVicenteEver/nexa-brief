@@ -132,10 +132,10 @@ export function useGeneratePublishTexts() {
   });
 }
 
-export function useExplainerOptions() {
+export function useExplainerOptions(categoryPath?: string) {
   return useQuery({
-    queryKey: ["explainer-options"],
-    queryFn: ({ signal }) => getExplainerOptions(signal),
+    queryKey: ["explainer-options", categoryPath ?? "default"],
+    queryFn: ({ signal }) => getExplainerOptions(categoryPath, signal),
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
   });

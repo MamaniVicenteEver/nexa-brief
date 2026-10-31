@@ -6,6 +6,7 @@
  *   - tiempos: número o "@palabra" ("@dos palabras", "#2", ":end", "+0.3")
  *   - reproductor: el tiempo SIEMPRE sale del audio; ▶ si el navegador bloquea el autoplay
  *   - contrato de grabación window.__promo (seek(t) puro → render cuadro a cuadro)
+ *   - ventanas de medio sincronizadas con la voz, incluso en capturas congeladas
  *   - subtítulos (grupos de N palabras, estilo y altura por motor/escena)
  *   - INTRO (v1 golpe · v2 pregunta + revelación) y CIERRE de canal con el orden de producción:
  *     gracias → canal → LIKE → flecha → SUSCRÍBETE + campana → apoyo → dirección (sin recuadro).
@@ -225,6 +226,238 @@
     imgCache.set(src, p); return p;
   }
 
+  function parseAspect(value) {
+    const m = String(value || "4:5").match(/^(\d+(?:\.\d+)?):(\d+(?:\.\d+)?)$/);
+    return m ? +m[1] / +m[2] : 4 / 5;
+  }
+  function waitForMediaEvent(el, event, timeout = 1500) {
+    return new Promise(resolve => {
+      let done = false;
+      const finish = () => { if (done) return; done = true; clearTimeout(timer); el.removeEventListener(event, finish); resolve(); };
+      const timer = setTimeout(finish, timeout);
+      el.addEventListener(event, finish, { once: true });
+    });
+  }
+  function waitForVideoFrame(video) {
+    if (!video.requestVideoFrameCallback) return Promise.resolve();
+    return new Promise(resolve => {
+      let done = false;
+      const finish = () => { if (!done) { done = true; clearTimeout(timer); resolve(); } };
+      const timer = setTimeout(finish, 1500);
+      video.requestVideoFrameCallback(finish);
+    });
+  }
+  function loadOverlayVideo(item) {
+    const video = document.createElement("video");
+    video.muted = true; video.playsInline = true; video.preload = "auto"; video.autoplay = false;
+    video.style.cssText = "position:fixed;left:-99999px;top:-99999px;width:1px;height:1px;opacity:0;pointer-events:none";
+    document.body.appendChild(video);
+    const ready = (async () => {
+      try {
+        const response = await fetch(new URL(item.src, location.href));
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const blobUrl = URL.createObjectURL(await response.blob());
+        const metadata = waitForMediaEvent(video, "loadedmetadata", 10000);
+        video.src = blobUrl; video.load();
+        await Promise.race([metadata, waitForMediaEvent(video, "error", 10000)]);
+        if (!Number.isFinite(video.duration)) throw new Error("metadatos de video no disponibles");
+        return blobUrl;
+      } catch (error) {
+        console.warn("[proto] video de ventana no disponible", item.src, error);
+        return null;
+      }
+    })();
+    return { video, ready, readyDone: false };
+  }
+  function wrapLines(g, text, maxWidth, maxLines = 2) {
+    const words = String(text || "").split(/\s+/).filter(Boolean), lines = [];
+    let line = "";
+    for (const word of words) {
+      const next = line ? `${line} ${word}` : word;
+      if (line && g.measureText(next).width > maxWidth) { lines.push(line); line = word; }
+      else line = next;
+    }
+    if (line) lines.push(line);
+    if (lines.length > maxLines) {
+      lines.length = maxLines;
+      let last = lines[maxLines - 1];
+      while (last && g.measureText(`${last}…`).width > maxWidth) last = last.slice(0, -1);
+      lines[maxLines - 1] = `${last.trimEnd()}…`;
+    }
+    return lines;
+  }
+  function drawCover(g, source, x, y, w, h, focus, scale = 1) {
+    const sw = source.videoWidth || source.naturalWidth, sh = source.videoHeight || source.naturalHeight;
+    if (!sw || !sh) return false;
+    const targetAspect = w / h;
+    let cropW = sw, cropH = sh;
+    if (sw / sh > targetAspect) cropW = sh * targetAspect; else cropH = sw / targetAspect;
+    cropW /= scale; cropH /= scale;
+    const fx = clamp(Number(focus?.[0] ?? 0.5)), fy = clamp(Number(focus?.[1] ?? 0.5));
+    const sx = clamp(fx * sw - cropW / 2, 0, sw - cropW), sy = clamp(fy * sh - cropH / 2, 0, sh - cropH);
+    g.drawImage(source, sx, sy, cropW, cropH, x, y, w, h);
+    return true;
+  }
+
+  async function setupMediaWindows(C, T, ctx, avoid) {
+    const url = QS.get("overlays") || C.overlaysUrl || "assets/overlays.json";
+    const media = { items: [], videos: new Map(), cornerCache: new Map(), avoid, prepareGeneration: 0 };
+    if (!url) return media;
+    try {
+      const data = await getJSON([url]);
+      const defaults = data?.defaults || {};
+      media.items = (data?.items || []).map((raw, index) => {
+        const item = {
+          ...raw, _index: index, _at: T(raw.at, NaN), _dur: Number(raw.dur),
+          _opacity: clamp(Number(raw.opacity ?? defaults.opacity ?? 0.88)),
+          _width: clamp(Number(raw.w ?? defaults.w ?? 34), 1, 100),
+          _margin: Math.max(0, Number(raw.margin ?? defaults.margin ?? 4)),
+          _kind: raw.kind === "video" ? "video" : "photo", _aspect: parseAspect(raw.aspect),
+        };
+        if (item.src && item._kind === "photo") {
+          item._src = new URL(item.src, location.href).href;
+          loadImg(item._src);
+        }
+        return item;
+      }).filter(item => Number.isFinite(item._at) && Number.isFinite(item._dur) && item._dur > 0);
+      for (const item of media.items) if (item._kind === "video" && item.src) {
+        const entry = loadOverlayVideo(item);
+        entry.ready.then(url => { entry.readyDone = !!url; if (url) entry.blobUrl = url; });
+        media.videos.set(item, entry);
+      }
+    } catch (error) {
+      console.warn("[proto] no se pudieron cargar las ventanas de medio", error);
+    }
+    return media;
+  }
+
+  function mediaWindowRect(ctx, media, item) {
+    const { W, H } = ctx.st, aspect = item._aspect, margin = item._margin / 100 * Math.min(W, H);
+    let w = W * item._width / 100, h = w / aspect;
+    if (h > H * 0.46) { h = H * 0.46; w = h * aspect; }
+    if (item.h != null && Number.isFinite(Number(item.h))) {
+      h = Math.min(H * 0.46, Math.max(1, H * Number(item.h) / 100));
+    }
+    const hasX = item.x != null && Number.isFinite(Number(item.x));
+    const hasY = item.y != null && Number.isFinite(Number(item.y));
+    const explicit = hasX || hasY;
+    let corner = item.corner || "auto";
+    if (corner === "auto") {
+      if (!media.cornerCache.has(item)) {
+        const sampleAt = item._at + 0.5;
+        const points = typeof media.avoid === "function" ? media.avoid(ctx, sampleAt, W, H) || [] : [];
+        const candidates = ["tr", "tl"];
+        if (H - margin - h <= H * 0.80) candidates.push("bl", "br");
+        const boxes = {
+          tr: [W - margin - w - margin, margin - margin, W - margin + margin, margin + h + margin],
+          tl: [margin - margin, margin - margin, margin + w + margin, margin + h + margin],
+          bl: [margin - margin, H - margin - h - margin, margin + w + margin, H - margin + margin],
+          br: [W - margin - w - margin, H - margin - h - margin, W - margin + margin, H - margin + margin],
+        };
+        let best = "tr", score = Infinity;
+        for (const key of candidates) {
+          const b = boxes[key], count = points.filter(p => p[0] >= b[0] && p[0] <= b[2] && p[1] >= b[1] && p[1] <= b[3]).length;
+          if (count < score) { best = key; score = count; }
+        }
+        media.cornerCache.set(item, best);
+      }
+      corner = media.cornerCache.get(item);
+    }
+    const anchors = {
+      tr: [W - margin - w, margin], tl: [margin, margin],
+      bl: [margin, H - margin - h], br: [W - margin - w, H - margin - h],
+    };
+    const pos = anchors[corner] || anchors.tr;
+    const x = hasX ? W * Number(item.x) / 100 : pos[0], y = hasY ? H * Number(item.y) / 100 : pos[1];
+    return { x, y, w, h, margin };
+  }
+
+  function drawMediaWindows(ctx, media, t, frozen, audioPlaying) {
+    const { g, st } = ctx, { W, H } = st;
+    if (t >= ctx.outroAt) { for (const entry of media.videos.values()) entry.video.pause(); return; }
+    for (const item of media.items) {
+      const end = item._at + item._dur;
+      if (t < item._at || t >= end) continue;
+      const frame = mediaWindowRect(ctx, media, item);
+      const enter = easeOut((t - item._at) / 0.35), leave = easeOut((end - t) / 0.3);
+      const alpha = item._opacity * Math.min(enter, leave), scale = (0.94 + 0.06 * enter) * (0.94 + 0.06 * leave);
+      const cx = frame.x + frame.w / 2, cy = frame.y + frame.h / 2;
+      const x = cx - frame.w * scale / 2, y = cy - frame.h * scale / 2, w = frame.w * scale, h = frame.h * scale;
+      const radius = Math.min(w, h) * 0.02, videoEntry = media.videos.get(item), video = videoEntry?.video;
+      const live = !frozen && audioPlaying;
+      if (video) {
+        const clipStart = Math.max(0, Number(item.start) || 0);
+        const expected = Math.min(clipStart + item._dur, clipStart + t - item._at);
+        if (live && videoEntry.readyDone && !video.error) {
+          if (Math.abs(video.currentTime - expected) > 0.25) video.currentTime = expected;
+          if (video.paused) video.play().catch(() => {});
+        } else video.pause();
+      }
+      g.save(); g.globalAlpha = alpha; g.shadowColor = "rgba(0,0,0,.48)"; g.shadowBlur = Math.min(W, H) * 0.025; g.shadowOffsetY = Math.min(W, H) * 0.008;
+      g.beginPath(); g.roundRect(x, y, w, h, radius); g.fillStyle = "#10151d"; g.fill(); g.shadowBlur = 0; g.shadowOffsetY = 0; g.clip();
+      const source = item._kind === "video" ? video : imgCache.get(item._src);
+      const ready = item._kind === "video" ? !!(video && video.readyState >= 2 && !video.error) : !!source;
+      const kb = item._kind === "photo" ? 1 + (Math.max(1, Number(item.kenburns ?? 1.06) || 1) - 1) * clamp((t - item._at) / item._dur) : 1;
+      if (ready) drawCover(g, source, x, y, w, h, item.focus, kb);
+      else { g.fillStyle = "#111923"; g.fillRect(x, y, w, h); }
+      const bandH = item.caption ? Math.min(h * 0.28, Math.max(38 * st.U, h * 0.17)) : 0;
+      if (bandH) {
+        const grad = g.createLinearGradient(0, y + h - bandH * 1.6, 0, y + h);
+        grad.addColorStop(0, "rgba(0,0,0,0)"); grad.addColorStop(1, "rgba(0,0,0,.88)");
+        g.fillStyle = grad; g.fillRect(x, y + h - bandH * 1.6, w, bandH * 1.6);
+        let fs = Math.max(12 * st.U, Math.min(28 * st.U, w * 0.055)), lines;
+        do { g.font = `800 ${fs}px Montserrat, sans-serif`; lines = wrapLines(g, item.caption, w * 0.88, 2); fs -= st.U; }
+        while (fs > 11 * st.U && lines.some(line => g.measureText(line).width > w * 0.88));
+        fs += st.U; g.font = `800 ${fs}px Montserrat, sans-serif`; g.fillStyle = "#fff"; g.textAlign = "left"; g.textBaseline = "middle";
+        lines.forEach((line, index) => g.fillText(line, x + w * 0.06, y + h - bandH * 0.56 + (index - (lines.length - 1) / 2) * fs * 1.12, w * 0.88));
+      }
+      if (item.context) {
+        const fs = Math.max(10 * st.U, Math.min(15 * st.U, w * 0.035));
+        g.font = `800 ${fs}px Montserrat, sans-serif`; g.textAlign = "left"; g.textBaseline = "middle";
+        const label = "IMAGEN DE CONTEXTO", lw = g.measureText(label).width + fs;
+        g.fillStyle = "rgba(0,0,0,.7)"; g.fillRect(x + w * 0.04, y + h * 0.04, lw, fs * 1.8);
+        g.fillStyle = "#fff"; g.fillText(label, x + w * 0.04 + fs / 2, y + h * 0.04 + fs * 0.9);
+      }
+      g.restore();
+      g.save(); g.globalAlpha = alpha; g.strokeStyle = "rgba(255,255,255,.15)"; g.lineWidth = Math.max(1, 1.5 * st.U);
+      g.beginPath(); g.roundRect(x + g.lineWidth / 2, y + g.lineWidth / 2, w - g.lineWidth, h - g.lineWidth, radius); g.stroke(); g.restore();
+      if (item.credit) {
+        let fs = 14 * st.U; g.save(); g.globalAlpha = alpha / item._opacity; g.font = `600 ${fs}px Montserrat, sans-serif`;
+        let lines = wrapLines(g, item.credit, frame.w, 2);
+        while (fs > 9 * st.U && lines.some(line => g.measureText(line).width > frame.w)) { fs -= st.U; g.font = `600 ${fs}px Montserrat, sans-serif`; lines = wrapLines(g, item.credit, frame.w, 2); }
+        const creditY = frame.y + frame.h + fs * 0.9, pad = fs * 0.45; g.textAlign = "left"; g.textBaseline = "top";
+        const cw = Math.max(...lines.map(line => Math.min(frame.w, g.measureText(line).width)));
+        g.fillStyle = "rgba(0,0,0,.62)"; g.beginPath(); g.roundRect(frame.x - pad, creditY - pad * 0.7, cw + pad * 2, lines.length * fs * 1.18 + pad * 1.1, fs * 0.4); g.fill();
+        g.fillStyle = "rgba(255,255,255,.92)";
+        lines.forEach((line, index) => g.fillText(line, frame.x, creditY + index * fs * 1.18, frame.w));
+        g.restore();
+      }
+    }
+    for (const [item, entry] of media.videos) {
+      const active = t >= item._at && t < item._at + item._dur && t < ctx.outroAt;
+      if (!active || !audioPlaying || frozen) entry.video.pause();
+    }
+  }
+
+  async function prepareMediaWindows(ctx, media, t) {
+    const generation = ++media.prepareGeneration;
+    for (const entry of media.videos.values()) entry.video.pause();
+    const active = media.items.filter(item => item._kind === "video" && t >= item._at && t < item._at + item._dur && t < ctx.outroAt);
+    await Promise.all(active.map(async item => {
+      const entry = media.videos.get(item), video = entry?.video;
+      if (!entry || !video || !await entry.ready) return;
+      entry.readyDone = true;
+      const start = Math.max(0, Number(item.start) || 0), expected = clamp(start + (t - item._at), start, start + item._dur);
+      if (Math.abs(video.currentTime - expected) > 0.015) {
+        const seeked = waitForMediaEvent(video, "seeked");
+        try { video.currentTime = expected; } catch (_) { return; }
+        await seeked;
+      }
+      await waitForVideoFrame(video);
+    }));
+    return generation === media.prepareGeneration;
+  }
+
   async function run(E) {
     const stage = document.getElementById("stage"), audio = document.getElementById("audio");
     const cfgAll = await getJSON(["config.json", "assets/config.json"]);
@@ -243,6 +476,7 @@
     size();
     const ctx = { g, st, T, words, scene, C, U, img: src => imgCache.get(src), loadImg, theme: E.theme };
     await E.setup(ctx);
+    const media = await setupMediaWindows(C, T, ctx, E.avoid);
     await Promise.all([...imgCache.values()]);
     for (const [k, p] of imgCache) imgCache.set(k, await p);
 
@@ -260,6 +494,7 @@
       g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = "source-over"; g.filter = "none";
       E.render(ctx, Math.min(t, END - 0.001));
       g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1;
+      drawMediaWindows(ctx, media, t, forced != null, hasAudio && !audio.paused);
       const inIntro = I && t < I.dur + 0.4, inOutro = t >= O_T0;
       if (I) drawIntro(g, st, I, t, E.theme);
       if (O.enabled && inOutro) drawOutro(g, st, O, O_T0, O.dur, Math.min(t, END), E.theme);
@@ -272,7 +507,7 @@
     const hasAudio = !!(audio && C.audio?.src);
     const clock = now => forced != null ? forced : hasAudio ? audio.currentTime : CONTROLLED ? controlledTime : (t0wall == null ? ((t0wall = now), 0) : ((now - t0wall) / 1000) % END);
     function frame(now) { if (forced == null) render(clock(now)); requestAnimationFrame(frame); }
-    addEventListener("resize", () => { size(); E.resize && E.resize(ctx); render(forced ?? clock(performance.now())); });
+    addEventListener("resize", () => { size(); media.cornerCache.clear(); E.resize && E.resize(ctx); render(forced ?? clock(performance.now())); });
     const btn = document.createElement("div");
     btn.textContent = "▶";
     btn.style.cssText = "position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:110px;height:110px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font:48px/110px sans-serif;text-align:center;cursor:pointer;display:none;z-index:9";
@@ -294,15 +529,17 @@
     window.__promo = {
       scenes: () => cuts.map((t0, i) => ({ t0, t1: cuts[i + 1] ?? END, type: "shot", seg: { text: "" } })).concat([{ t0: END, t1: END, type: "end", seg: { text: "" } }]),
       total: END,
-      async seek(t) { forced = t; render(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
+      async prepare(t) { return prepareMediaWindows(ctx, media, t); },
+      async seek(t) { forced = t; if (await window.__promo.prepare(t)) render(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
       release() { forced = null; if (!window.__loop) { window.__loop = 1; requestAnimationFrame(frame); } },
       missingAnchors: () => [...T.missing],
     };
     window.__nexaProtoControl = {
-      setTime(t, freeze = true) {
+      async setTime(t, freeze = true) {
         controlledTime = clamp(Number(t) || 0, 0, END);
         forced = freeze ? controlledTime : null;
-        render(controlledTime);
+        if (!freeze) return render(controlledTime);
+        if (await window.__promo.prepare(controlledTime)) render(controlledTime);
       },
       release() {
         forced = null;
@@ -383,8 +620,8 @@
         },
       });
     });
-    if (QS.has("headless")) { forced = 0; render(0); return; }
-    if (FROZEN != null) { render(FROZEN); return; }
+    if (QS.has("headless")) { forced = 0; await window.__promo.prepare(0); render(0); return; }
+    if (FROZEN != null) { if (audio) audio.pause(); await window.__promo.prepare(FROZEN); render(FROZEN); return; }
     render(0); window.__loop = 1; requestAnimationFrame(frame);
     if (hasAudio && !QS.has("paused") && !CONTROLLED) audio.play().then(() => showBtn(false), () => showBtn(true)); else if (hasAudio) showBtn(!CONTROLLED);
   }

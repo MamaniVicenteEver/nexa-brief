@@ -208,6 +208,15 @@
    ],
    "layer": "main",
    "params": {
+    "text": {
+     "type": "string",
+     "default": "",
+     "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
     "accent": {
      "type": "array",
      "default": [],
@@ -262,6 +271,36 @@
    }
   },
   {
+   "name": "common.logo",
+   "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+   "tags": [
+    "logo",
+    "obsoleto"
+   ],
+   "layer": "main",
+   "params": {
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": null,
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "name": {
+     "type": "string",
+     "default": "",
+     "doc": null,
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {}
+  },
+  {
    "name": "common.clip",
    "summary": "Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo.",
    "tags": [
@@ -300,6 +339,15 @@
      "options": null,
      "min": 0.25,
      "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
     },
     "layout": {
      "type": "enum",
@@ -387,6 +435,57 @@
      "type": "string",
      "default": "",
      "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
      "required": false,
      "options": null,
      "min": null,
@@ -1165,6 +1264,57 @@
      "options": null,
      "min": null,
      "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
     }
    },
    "example": {
@@ -1431,6 +1581,51 @@
      "min": null,
      "max": null
     },
+    "video": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip .mp4 local, siempre mudo, convertido a glifos.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "poster": {
+     "type": "image",
+     "default": "",
+     "doc": "Imagen inicial y respaldo; si falta, usa src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo inicial del clip.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad del clip.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip si termina antes del beat; evita congelar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
     "imageSide": {
      "type": "enum",
      "default": "auto",
@@ -1520,6 +1715,57 @@
      "type": "number",
      "default": 1.1,
      "doc": "Segundos para armar texto e imagen.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
      "required": false,
      "options": null,
      "min": null,
@@ -2702,6 +2948,390 @@
    }
   },
   {
+   "name": "common.tabloid",
+   "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+   "tags": [
+    "miniatura",
+    "intro",
+    "alerta",
+    "tabloide",
+    "gancho"
+   ],
+   "layer": "main",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Titular corto; máximo 6 palabras recomendado.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto opcional; también sirve de respaldo del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "srcAfter": {
+     "type": "image",
+     "default": "",
+     "doc": "Segunda foto del split.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "video": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "poster": {
+     "type": "image",
+     "default": "",
+     "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo inicial del clip.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad del clip.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "muted": {
+     "type": "bool",
+     "default": true,
+     "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "accent": {
+     "type": "string",
+     "default": "",
+     "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bullet": {
+     "type": "string",
+     "default": "",
+     "doc": "Cifra y leyenda.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bulletScale": {
+     "type": "number",
+     "default": 1,
+     "doc": "Escala de la cifra y su recuadro.",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": 1.5
+    },
+    "beforeLabel": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta del antes.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "afterLabel": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta del después.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "imageSide": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Lado de foto horizontal.",
+     "required": false,
+     "options": [
+      "auto",
+      "left",
+      "right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "mode": {
+     "type": "enum",
+     "default": "impact",
+     "doc": "Foto única o split.",
+     "required": false,
+     "options": [
+      "impact",
+      "split"
+     ],
+     "min": null,
+     "max": null
+    },
+    "palette": {
+     "type": "enum",
+     "default": "brand",
+     "doc": "Identidad del diseño o estilo clásico de alerta.",
+     "required": false,
+     "options": [
+      "brand",
+      "alert"
+     ],
+     "min": null,
+     "max": null
+    },
+    "strap": {
+     "type": "string",
+     "default": "",
+     "doc": "Cintillo superior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "seal": {
+     "type": "string",
+     "default": "",
+     "doc": "Sello opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "tapeText": {
+     "type": "string",
+     "default": "",
+     "doc": "Texto de cinta opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "marker": {
+     "type": "bool",
+     "default": false,
+     "doc": "Marca alrededor del foco.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": null,
+     "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "target": {
+     "type": "array",
+     "default": [
+      0.72,
+      0.52
+     ],
+     "doc": "Obsoleto: usar focus con radio.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textIn": {
+     "type": "enum",
+     "default": "slam",
+     "doc": "Entrada de cada renglón del titular.",
+     "required": false,
+     "options": [
+      "slam",
+      "slide",
+      "typewriter",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.16,
+     "doc": "Separación en segundos entre renglones.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "accentIn": {
+     "type": "enum",
+     "default": "slide",
+     "doc": "Entrada del acento después de su renglón.",
+     "required": false,
+     "options": [
+      "slam",
+      "slide",
+      "typewriter",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "bulletIn": {
+     "type": "enum",
+     "default": "slam",
+     "doc": "Entrada de la cifra después del titular.",
+     "required": false,
+     "options": [
+      "slam",
+      "slide",
+      "typewriter",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "inDuration": {
+     "type": "number",
+     "default": 0.42,
+     "doc": "Duración en segundos de cada entrada.",
+     "required": false,
+     "options": null,
+     "min": 0.05,
+     "max": 2
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "TÚ ERES EL SIGUIENTE",
+    "accent": "SIGUIENTE",
+    "strap": "AMAZON · IA"
+   }
+  },
+  {
+   "name": "common.question",
+   "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+   "tags": [
+    "pregunta",
+    "comentarios",
+    "cierre",
+    "texto"
+   ],
+   "layer": "overlay",
+   "params": {
+    "text": {
+     "type": "string",
+     "default": null,
+     "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "y": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 0.8
+    }
+   },
+   "example": {
+    "text": "¿La IA te quita trabajo?"
+   }
+  },
+  {
    "name": "rough.title",
    "summary": "Título de apertura GIGANTE (cartel: cada renglón al ancho total, ~80% del cuadro): las letras se dibujan en contorno y se rellenan; antetítulo en etiqueta lima, subtítulo debajo y subrayado a mano. Puede parpadear como alarma.",
    "tags": [
@@ -2964,6 +3594,57 @@
      "options": null,
      "min": null,
      "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
     }
    },
    "example": {
@@ -3134,7 +3815,7 @@
   },
   {
    "name": "rough.introv2",
-   "summary": "Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto grande a color que se funde con el fondo (en 9:16 la foto va arriba).",
+   "summary": "Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto o video grande a color que se funde con el fondo (en 9:16 va arriba).",
    "tags": [
     "intro",
     "miniatura",
@@ -3196,6 +3877,51 @@
      "min": null,
      "max": null
     },
+    "video": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip .mp4 local, siempre mudo; reemplaza la foto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "poster": {
+     "type": "image",
+     "default": "",
+     "doc": "Imagen inicial y respaldo del video; si falta, usa src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo inicial del clip.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad del clip.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip si termina antes del beat; evita congelar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
     "saturate": {
      "type": "number",
      "default": 1,
@@ -3209,6 +3935,57 @@
      "type": "string",
      "default": "xMidYMid",
      "doc": "Encuadre de la foto (preserveAspectRatio: xMinYMid, xMaxYMid…).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logo": {
+     "type": "image",
+     "default": "",
+     "doc": "SVG o PNG transparente en assets/media/logos/.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoName": {
+     "type": "string",
+     "default": "",
+     "doc": "Marca; fallback tipográfico si no carga el archivo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "logoPos": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+     "required": false,
+     "options": [
+      "auto",
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "logoSize": {
+     "type": "number",
+     "default": 0.22,
+     "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+     "required": false,
+     "options": null,
+     "min": 0.12,
+     "max": 0.35
+    },
+    "logoInvert": {
+     "type": "bool",
+     "default": false,
+     "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
      "required": false,
      "options": null,
      "min": null,
@@ -24729,5 +25506,34 @@
   "coin",
   "gift",
   "nextcube"
- ]
+ ],
+ "quality": {
+  "icon_component": "rough.icon",
+  "icon_max_share": 0.25,
+  "short_minutes": 8,
+  "short_icon_max_share": 0.32,
+  "icon_max_consecutive": 2,
+  "repeat_max_uses": 6,
+  "repeat_max_share": 0.15,
+  "media_min_per_minute": 0.65,
+  "max_media_gap_seconds": 75,
+  "min_photo_seconds": 5,
+  "long_video_minutes": 8,
+  "video_min_seconds": 8,
+  "long_video_min_spans": 2,
+  "long_video_span_seconds": 12,
+  "clip_min_seconds": 12,
+  "clip_max_seconds": 18,
+  "voice_target_ppm": 130,
+  "voice_warn_ppm": 138,
+  "distinct_min_minutes": 8,
+  "distinct_min": 10,
+  "custom_min_minutes": 8,
+  "custom_min": 4,
+  "explicit_text_max_words": 7,
+  "check_opening_acts": [
+   "golpe",
+   "miedo"
+  ]
+ }
 }

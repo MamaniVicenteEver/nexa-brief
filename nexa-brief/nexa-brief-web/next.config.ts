@@ -11,16 +11,26 @@ const publicAppHost = (() => {
     return "";
   }
 })();
-const extraDevOrigins = (process.env.ALLOWED_DEV_ORIGINS ?? "")
+const extraDevOrigins = (process.env.DEV_ALLOWED_ORIGINS ?? "")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
 
 const nextConfig: NextConfig = {
+  // The device link carries the secret in its query string; keep Next's dev
+  // request logger from copying that URL into the terminal log.
+  logging: {
+    incomingRequests: {
+      ignore: [/\/dev-access/],
+    },
+  },
   // Las ideas admiten adjuntos de hasta 300 MB por archivo; el límite por
   // defecto de Proxy (10 MB) truncaría los multipart antes de llegar a FastAPI.
+  // proxyTimeout: el proxy corta a los 30 s por defecto y los textos de un explainer
+  // (brief con Claude/Codex) tardan más; el cliente ya espera hasta 5 min.
   experimental: {
     proxyClientMaxBodySize: "1gb",
+    proxyTimeout: 300_000,
   },
   // Mantiene /api/v1 en el origen público y reenvía HTTP + WebSocket al API local.
   async rewrites() {
@@ -54,14 +64,15 @@ const nextConfig: NextConfig = {
   },
   output: "standalone",
   reactCompiler: true,
-  // `next dev` abierto desde otra máquina (IP de LAN/Tailscale): ALLOWED_DEV_ORIGINS=100.x.x.x,otra
-  // The public tunnel host follows PUBLIC_APP_URL; optional extra local hosts remain supported.
+  // Extra LAN/Tailscale hosts can be listed in DEV_ALLOWED_ORIGINS. The default
+  // includes localhost and the user's 192.168.20.x LAN.
   allowedDevOrigins: [
     ...new Set([
+      "localhost",
+      "127.0.0.1",
+      "192.168.20.*",
       ...extraDevOrigins,
       ...(publicAppHost ? [publicAppHost] : []),
-      "192.168.20.23",
-      "127.0.0.1",
     ]),
   ],
 };

@@ -29,6 +29,7 @@ def main(audio, script_path, out):
                               initial_prompt=f"Documental narrado en español. Nombres: {names}.", condition_on_previous_text=False)
     segments, dropped = [], 0
     for s in segs:
+        print(f"Whisper: procesados {s.end:.1f} / {info.duration:.1f} segundos de audio", flush=True)
         ws = [w for w in (s.words or [])]
         # huella de alucinación: palabras de duración ~0 (en racha); se descartan
         keep = [w for i, w in enumerate(ws) if not ((w.end - w.start) < 0.03 and any((x.end - x.start) < 0.03 for x in ws[max(0, i - 1):i + 2] if x is not w))]

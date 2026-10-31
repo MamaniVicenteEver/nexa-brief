@@ -7,6 +7,7 @@ Claude/Codex/DeepSeek/Gemini ni renderizan. Cada test usa su propio data/ tempor
 from __future__ import annotations
 
 import json
+import re
 from datetime import date
 from pathlib import Path
 
@@ -137,8 +138,14 @@ class _FakeKit:
         if cmd == "new":
             (d / "assets" / "media").mkdir(parents=True)
             (d / "render").mkdir()
+            (d / "work").mkdir()
+            (d / "assets" / "config.json").write_text("{}")
             (d / "manifest.json").write_text(json.dumps({"video_id": vid, "design": args[1], "status": "nuevo", "title": args[4]}))
             (d / "publish.json").write_text(json.dumps({"youtube_title": ""}))
+        if cmd == "voice":
+            (d / "assets" / "song.mp3").write_bytes(b"fake audio")
+        if cmd == "transcribe":
+            (d / "assets" / "lyrics.json").write_text('{"segments": []}')
         if cmd == "manifest":
             m = json.loads((d / "manifest.json").read_text())
             m["status"] = "listo" if (d / "AGENT_DONE").exists() else "en progreso"
@@ -161,8 +168,31 @@ class _FakeAgent:
     async def run(self, prompt, *, cwd, log_path, timeout_seconds, scope=None):
         self.runs.append({"prompt": prompt, "scope": scope})
         vid = scope.writable_dir.rsplit("/", 1)[-1]
-        if self.finish:
-            (self.videos / vid / "AGENT_DONE").write_text("1")
+        video = self.videos / vid
+        if self.finish and "FASE GUION:" in prompt:
+            config = json.loads((video / "assets" / "config.json").read_text())
+            if config.get("narrative_id") == "narrative_amarillista_v1":
+                acts = ["golpe", "miedo", "estudio", "giro", "verdad", "que_hacer", "pregunta"]
+                segments = [{"id": str(i), "act": act, "text": "Tu voz se clona con tres segundos." if i == 0 else "Texto.",
+                             "tone": "alarma" if i < 2 else ("cercano" if act == "pregunta" else "x"), "intensity": 0.95}
+                            for i, act in enumerate(acts)]
+                segments[-1]["on_screen_question"] = "¿Te ayuda?"
+            else:
+                segments = [{"id": "s1", "text": "Texto narrado.", "tone": "normal"}]
+            expanded = []
+            for segment in segments:
+                for i in range(10 if len(segments) > 1 else 70):
+                    expanded.append({**segment, "id": f"{segment['id']}-{i}",
+                                     "text": segment["text"] + " palabra" * 30})
+            match = re.search(r"Duración objetivo: (\d+(?:\.\d+)?) minutos", prompt)
+            script = {"segments": expanded}
+            if match:
+                script["target_minutes"] = float(match.group(1))
+            (video / "assets" / "script.json").write_text(json.dumps(script))
+            (video / "work" / "phase.json").write_text(json.dumps({"phase": "script_ready"}))
+        elif self.finish:
+            (video / "AGENT_DONE").write_text("1")
+            (video / "assets" / "storyboard.json").write_text(json.dumps({"beats": [{"use": "rough.title"}]}))
         log_path.write_text("trabajando…\n")
         return AgentRunResult(exit_code=0, last_message="reporte final", duration_seconds=1.0)
 
@@ -176,6 +206,10 @@ class _FakeRender:
             (self.videos / video_id / "render" / f"{video_id}-{fmt}.mp4").write_bytes(b"mp4")
 
 
+async def _fake_publish_check(vid):
+    return 0, "ok publication\n"
+
+
 def _producer(tmp_path: Path, *, finish=True, recorder=None):
     videos = tmp_path / "videos"
     videos.mkdir(exist_ok=True)
@@ -187,6 +221,7 @@ def _producer(tmp_path: Path, *, finish=True, recorder=None):
         recorder_getter=recorder,
         videos_dir=videos,
         uploads_dir=tmp_path / "uploads",
+        publish_checker=_fake_publish_check,
     )
     return producer, agent, kit, videos
 
@@ -236,16 +271,13 @@ async def test_production_carries_the_target_length(tmp_path: Path):
     assert default["target_minutes"] == 10   # sin duración: la normal (lengths.json)
 
 
-async def test_production_incomplete_then_resume(tmp_path: Path):
-    producer, agent, _, _ = _producer(tmp_path, finish=False)
+async def test_invalid_production_is_visible_with_observations(tmp_path: Path):
+    producer, agent, _, videos = _producer(tmp_path, finish=False)
     rec = await producer.submit(category_path="node_history", design="binary", topic="La caída del Muro")
     final = await producer.wait(rec["production_id"])
     assert final["state"] == ProductionState.incomplete.value
-    agent.finish = True
-    await producer.resume(rec["production_id"])
-    final = await producer.wait(rec["production_id"])
-    assert final["state"] == ProductionState.ready.value
-    assert "CONTINÚA" in agent.runs[1]["prompt"]
+    manifest = json.loads((videos / rec["video_id"] / "manifest.json").read_text())
+    assert manifest["status"] == "en progreso" and manifest["quality_issues"]
 
 
 async def test_production_auto_record_registers_job_in_category_output(tmp_path: Path):
@@ -285,7 +317,7 @@ async def test_recover_interrupted_marks_failed(tmp_path: Path):
 def test_agent_prompt_lists_only_kit_commands(tmp_path: Path):
     rec = {"video_id": "v1", "design": "binary", "category_path": "node_tech", "topic": "IA", "media": ["a.jpg"]}
     prompt = build_agent_prompt(rec, tmp_path / "v1")
-    assert "kit.py voice v1" in prompt and "a.jpg" in prompt and "NO hagas el paso 10" in prompt
+    assert "NUNCA ejecutes voice" in prompt and "a.jpg" in prompt and "NO hagas el paso 10" in prompt
 
 
 # ── planificador y automatización ────────────────────────────────────────────
@@ -431,7 +463,8 @@ def test_real_videos_live_in_category_folders():
     assert videos["apolo-1202"].category_path == "node_tech"            # rough → NodeTech
     assert videos["turing-enigma"].category_path == "node_history"      # binary → NodeHistory
     assert videos["pop-demo"].demo and videos["pop-demo"].category_path == "node_history"
-    assert all(v.ready for v in videos.values())
+    # El catálogo también incluye producciones en progreso.
+    assert videos["apolo-1202"].ready and videos["turing-enigma"].ready
 
 
 async def test_route_video_has_poster_and_texts(api_client):

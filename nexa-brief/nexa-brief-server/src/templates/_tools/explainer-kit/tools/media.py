@@ -5,6 +5,8 @@
   .venv/bin/python $K search "Berlin Wall 1989 crowd"            # Wikimedia Commons: candidatos con licencia, tamaño y autor
   .venv/bin/python $K search "server room" --source pexels        # Pexels (fotos genéricas modernas)
   .venv/bin/python $K get <video-id> "File:Berlinermauer.jpg" muro.jpg   # baja, recodifica y anota en CREDITS.md
+  .venv/bin/python $K logo-search "OpenAI logo"                 # SVG/PNG de Commons
+  .venv/bin/python $K logo-get <video-id> "File:OpenAI Logo.svg" openai.png
   .venv/bin/python $K get <video-id> pexels:123456 servidores.jpg
   .venv/bin/python $K list <video-id>                             # lo que ya hay + tamaños
 
@@ -56,7 +58,7 @@ def commons_info(titles):
         lic = strip(md.get("LicenseShortName", {}).get("value", "")) or strip(md.get("UsageTerms", {}).get("value", ""))
         out.append({"title": p.get("title"), "w": ii.get("width"), "h": ii.get("height"), "mime": ii.get("mime"), "license": lic,
                     "author": strip(md.get("Artist", {}).get("value", ""))[:80], "desc": re.sub(r"\s+", " ", strip(md.get("ImageDescription", {}).get("value", "")))[:120],
-                    "url": ii.get("thumburl") or ii.get("url"), "page": ii.get("descriptionurl"), "ok": bool(OK.search(lic))})
+                    "url": ii.get("thumburl") or ii.get("url"), "original_url": ii.get("url"), "page": ii.get("descriptionurl"), "ok": bool(OK.search(lic))})
     return out
 
 def env_key(name):
@@ -114,6 +116,70 @@ def add_credit(d, name, credit):
     lines = [l for l in (cr.read_text().splitlines() if cr.exists() else []) if not l.startswith(name + " — ")]
     cr.write_text("\n".join(lines + [credit]) + "\n")
 
+def cmd_logo_search(a):
+    brand = a.query.split()[0]
+    q = urllib.parse.urlencode({"action": "query", "list": "search", "srsearch": f"intitle:{brand} {a.query}",
+                                "srnamespace": 6, "srlimit": min(50, max(24, a.n * 6)), "format": "json"})
+    titles = [r["title"] for r in http_json("https://commons.wikimedia.org/w/api.php?" + q).get("query", {}).get("search", [])]
+    found = [c for c in commons_info(titles) if c["mime"] in ("image/svg+xml", "image/png") and brand.casefold() in c["title"].casefold()]
+    found.sort(key=lambda c: (c["mime"] != "image/svg+xml", not c["ok"], c["title"]))
+    for c in found[:a.n]:
+        print(f"{'✓' if c['ok'] else '✗'} {c['title']} · {c['mime']} · {c['license']} · {c['author']}\n    {c['page']}")
+    if not found: print("sin logos SVG/PNG; usar texto de la marca")
+    else: print("Preferir SVG; si usás PNG, logo-get exige transparencia y recorta márgenes vacíos.")
+
+def cmd_logo_get(a):
+    """Guarda la imagen sin recolorear y acredita licencia y aviso de marca."""
+    d = pathlib.Path(a.out) if a.out else (find_video(a.id) or sys.exit(f"no existe el video {a.id}")) / "assets" / "media" / "logos"
+    d.mkdir(parents=True, exist_ok=True)
+    name = a.name.lower()
+    if not re.fullmatch(r"[a-z0-9][a-z0-9.-]*\.(png|svg)", name): sys.exit("nombre de logo: minúsculas, .png o .svg")
+    title = a.ref if a.ref.startswith("File:") else "File:" + a.ref
+    matches = commons_info([title])
+    c = matches[0] if matches else {}
+    if not c.get("original_url") or c.get("mime") not in ("image/svg+xml", "image/png"):
+        sys.exit("archivo inexistente o no es SVG/PNG de Commons; usar texto de la marca")
+    if not c["ok"]: sys.exit(f"licencia no aceptada: {c['license']}; usar texto de la marca")
+    if name.endswith(".svg") and c["mime"] != "image/svg+xml": sys.exit("la extensión .svg requiere un original SVG")
+    if name.endswith(".png") and c["mime"] == "image/svg+xml" and not c["url"].lower().split("?", 1)[0].endswith(".png"):
+        sys.exit("Commons no ofrece miniatura PNG de este SVG; usar .svg o texto")
+    url = c["original_url"] if name.endswith(".svg") or c["mime"] == "image/png" else c["url"]
+    raw = fetch(url, timeout=120)
+    if name.endswith(".png"):
+        from PIL import Image
+        im = Image.open(io.BytesIO(raw))
+        if im.format != "PNG": sys.exit("la descarga no es PNG")
+        im.load()
+        if im.width * im.height > 25_000_000: sys.exit("logo demasiado grande")
+        alpha = im.convert("RGBA").getchannel("A")
+        if alpha.getextrema()[0] == 255:
+            sys.exit("PNG opaco: usá SVG o PNG transparente sin fondo rectangular")
+        bounds = alpha.getbbox()
+        if not bounds: sys.exit("PNG totalmente transparente: elegí otro logo")
+        cropped = im.convert("RGBA").crop(bounds)
+        corners = [cropped.getpixel((x, y)) for x in (0, cropped.width - 1) for y in (0, cropped.height - 1)]
+        if all(a >= 250 and min(r, g, b) >= 245 for r, g, b, a in corners):
+            sys.exit("PNG con fondo blanco rectangular: usá SVG o PNG transparente")
+        cropped.save(d / name, "PNG", optimize=True)
+    else:
+        import xml.etree.ElementTree as ET
+        if b"<!DOCTYPE" in raw.upper() or b"<!ENTITY" in raw.upper(): sys.exit("SVG con entidades: usar PNG")
+        root = ET.fromstring(raw)
+        if root.tag != "{http://www.w3.org/2000/svg}svg": sys.exit("el archivo no es SVG")
+        for el in root.iter():
+            tag = el.tag.rsplit("}", 1)[-1].lower()
+            if tag in ("script", "foreignobject", "image", "use", "iframe"):
+                sys.exit("SVG con contenido externo: usar PNG")
+            for key, val in el.attrib.items():
+                attr = key.rsplit("}", 1)[-1].lower()
+                if attr.startswith("on") or attr in ("href", "style") and (attr == "href" and not val.startswith("#") or "url(" in val.lower()):
+                    sys.exit("SVG con referencia externa o script: usar PNG")
+        (d / name).write_bytes(raw)
+    credit_dir = d.parent if d.name == "logos" else d
+    credit = f"logos/{name} — {c['title'][5:]} — {c['author'] or 'desconocido'} — {c['license']} — {c['page']} — Logo/marca: uso editorial nominativo; la licencia del archivo no concede derechos de marca"
+    add_credit(credit_dir, f"logos/{name}", credit)
+    print(f"✓ {d / name} · crédito y aviso de marca anotados")
+
 MAX_CLIP = 20.0
 
 def get_clip(a, d, name):
@@ -140,7 +206,7 @@ def get_clip(a, d, name):
         info = http_json("https://commons.wikimedia.org/w/api.php?" + urllib.parse.urlencode({"action": "query", "titles": c["title"], "prop": "imageinfo", "iiprop": "url", "format": "json"}))
         url = next(iter(info["query"]["pages"].values()))["imageinfo"][0]["url"]
         credit = f"{name} — {c['title'][5:]} — {c['author'] or 'desconocido'} — {c['license']} — {c['page']}"
-    dur = min(a.dur or 8.0, MAX_CLIP)
+    dur = min(a.dur or 15.0, MAX_CLIP)
     # descarga = dato no confiable: solo lo lee ffmpeg, en una carpeta temporal propia
     with tempfile.TemporaryDirectory(prefix="kit-clip-") as tmp:
         src = pathlib.Path(tmp) / "source"
@@ -193,7 +259,10 @@ def main():
     p = sp.add_parser("get"); p.add_argument("id"); p.add_argument("ref"); p.add_argument("name"); p.add_argument("--force", action="store_true")
     p.add_argument("--start", type=float, default=0.0, help="clip: segundo del original donde empieza"); p.add_argument("--dur", type=float, default=8.0, help="clip: duración (máx. 20 s)")
     p = sp.add_parser("list"); p.add_argument("id")
-    a = ap.parse_args(); globals()["cmd_" + a.cmd](a)
+    p = sp.add_parser("logo-search"); p.add_argument("query"); p.add_argument("--n", type=int, default=8)
+    p = sp.add_parser("logo-get"); p.add_argument("id"); p.add_argument("ref"); p.add_argument("name")
+    p.add_argument("--out", default="", help="directorio de logos alternativo para demos aisladas")
+    a = ap.parse_args(); globals()["cmd_" + a.cmd.replace("-", "_")](a)
 
 if __name__ == "__main__":
     main()

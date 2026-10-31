@@ -116,7 +116,8 @@ function Thumbnails({
   onPreview: (preview: ThumbnailPreview) => void;
 }) {
   const t = useTranslations("explainer.studio.package");
-  const { textOnly, withImage, chosen } = pkg.thumbnail;
+  const { textOnly, withImage, tabloid, chosen } = pkg.thumbnail;
+  const hasTabloid = thumbnails.options.some((o) => o.option === "C");
   const pair = (option: TitleOptionId) => t("pair", { option });
   const [componentPreviewUrls, setComponentPreviewUrls] = useState<Record<string, string>>({});
   const captured = (option: TitleOptionId) =>
@@ -174,6 +175,12 @@ function Thumbnails({
     imageUrl: withImage.imageUrl,
     componentPreviewUrl: componentPreviewUrls.B,
   };
+  const optionC: ThumbnailPreview = {
+    option: "C",
+    text: tabloid.text,
+    imageUrl: tabloid.imageUrl,
+    componentPreviewUrl: componentPreviewUrls.C,
+  };
   return (
     <Section label={t("thumbnails")}>
       <button
@@ -214,6 +221,33 @@ function Thumbnails({
         <Chip active={chosen === "with_image"}>{t("withImage")}</Chip>
         <Chip>{pair(withImage.pairTitle)}</Chip>
       </div>
+      {hasTabloid && (
+        <>
+          <button
+            type="button"
+            aria-label={t("previewOption", { option: "C" })}
+            aria-pressed={preview?.option === "C"}
+            onClick={() => onPreview(optionC)}
+            className={cn(
+              "mt-1 block w-full overflow-hidden rounded-lg border-2 text-left transition-colors",
+              preview?.option === "C"
+                ? "border-nb-green"
+                : "border-transparent hover:border-nb-line",
+            )}
+          >
+            <Captured
+              url={captured("C")}
+              fallback={
+                <ThumbnailArtwork preview={optionC} imagePendingLabel={t("imagePending")} />
+              }
+            />
+          </button>
+          <div className="flex flex-wrap gap-1">
+            <Chip active={chosen === "tabloid"}>{t("tabloid")}</Chip>
+            <Chip>{pair(tabloid.pairTitle)}</Chip>
+          </div>
+        </>
+      )}
       <p className="text-[11.5px] text-nb-mute">{t("thumbnailsHint")}</p>
       <p className="text-[11.5px] text-nb-mute">{t("previewHint")}</p>
     </Section>

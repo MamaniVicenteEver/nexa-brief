@@ -1,39 +1,29 @@
-import { Fraunces, Inter, JetBrains_Mono, Outfit, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 
-/**
- * Nexa Brief (Monax) type system — DESIGN-SYSTEM.md §3.
- * Self-hosted via next/font/google: no external <link> request at
- * runtime (the prototype loaded these from a Google Fonts CDN link tag).
- */
-
-export const nbSans = Inter({
+// Keep the Latin variable fonts local so Docker builds do not depend on Google Fonts.
+export const nbSans = localFont({
+  src: "./font-assets/inter.woff2",
   variable: "--font-nb-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: "300 900",
 });
-
-export const nbTech = Space_Grotesk({
+export const nbTech = localFont({
+  src: "./font-assets/space.woff2",
   variable: "--font-nb-tech",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: "500 700",
 });
-
-export const nbEditorial = Fraunces({
+export const nbEditorial = localFont({
+  src: "./font-assets/fraunces.woff2",
   variable: "--font-nb-editorial",
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  style: ["italic"],
+  weight: "500 600",
+  style: "italic",
 });
-
-/** Wordmark «Nexa Brief»: sans geométrica, la más cercana a la del logotipo. */
-export const nbBrand = Outfit({
+export const nbBrand = localFont({
+  src: "./font-assets/outfit.woff2",
   variable: "--font-nb-brand",
-  subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: "600 700",
 });
-
-export const nbCode = JetBrains_Mono({
+export const nbCode = localFont({
+  src: "./font-assets/jetbrains.woff2",
   variable: "--font-nb-code",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: "500 700",
 });

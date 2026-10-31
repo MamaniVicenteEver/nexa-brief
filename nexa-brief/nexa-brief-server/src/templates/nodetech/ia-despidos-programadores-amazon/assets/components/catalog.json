@@ -1,0 +1,266 @@
+{
+ "comps": [
+  {
+   "name": "rough.careerLadder",
+   "summary": "La escalera de una carrera dibujada a mano, con un rótulo por peldaño. Al pie, una persona espera. En `dropAt` el primer peldaño se pinta de lima, se tacha y cae: queda el hueco y el segundo escalón lejos. Con `dropAt: -1` la escalera queda entera (la escalera sigue ahí).",
+   "tags": [
+    "carrera",
+    "escalera",
+    "empleo",
+    "jóvenes",
+    "primer trabajo"
+   ],
+   "layer": "main",
+   "params": {
+    "rungs": {
+     "type": "array",
+     "default": [
+      "PRIMER EMPLEO",
+      "SEMI-SENIOR",
+      "SENIOR",
+      "LÍDER"
+     ],
+     "doc": "Rótulos de los peldaños, de abajo hacia arriba (3–5).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dropAt": {
+     "type": "number",
+     "default": 1.8,
+     "doc": "Segundo del beat en que cae el primer peldaño; -1 = no cae.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo arriba (mono); vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "who": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo manuscrito junto a la persona del pie; vacío = sin rótulo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota manuscrita al pie; vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "rungs": [
+     "PRIMER EMPLEO",
+     "SEMI-SENIOR",
+     "SENIOR",
+     "LÍDER"
+    ],
+    "dropAt": 1.8,
+    "title": "LA CARRERA",
+    "who": "22–25 AÑOS",
+    "note": ""
+   }
+  },
+  {
+   "name": "rough.codeReview",
+   "summary": "Un editor de código dibujado a mano: las líneas se escriben solas, rápido, en gris (las escribe la máquina). En modo `review` una persona revisa: en `reviewAt` tacha en lima la línea mala y firma con un ✓ lima. En modo `ai` solo escribe la máquina, con cursor y rótulo de quién teclea.",
+   "tags": [
+    "código",
+    "editor",
+    "ia",
+    "revisión",
+    "programador"
+   ],
+   "layer": "main",
+   "params": {
+    "mode": {
+     "type": "string",
+     "default": "review",
+     "doc": "ai = solo escribe la máquina · review = además una persona tacha y aprueba.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "header": {
+     "type": "string",
+     "default": "pedido.js",
+     "doc": "Nombre del archivo en la barra del editor (mono).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "lines": {
+     "type": "array",
+     "default": [
+      "function cobrar(pedido) {",
+      "  const total = sumar(pedido)",
+      "  if (total < 0) borrar()",
+      "  return enviar(total)",
+      "}"
+     ],
+     "doc": "Líneas de código (hasta 6, ~26 caracteres).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "who": {
+     "type": "string",
+     "default": "IA ESCRIBIENDO…",
+     "doc": "Rótulo arriba del editor (quién escribe); vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bad": {
+     "type": "number",
+     "default": 2,
+     "doc": "Índice de la línea que la persona tacha en modo review; -1 = ninguna.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "reviewAt": {
+     "type": "number",
+     "default": 2.2,
+     "doc": "Segundo del beat en que llegan las marcas humanas (modo review).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota manuscrita al pie (modo review sale en lima junto al ✓); vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "mode": "review",
+    "header": "pedido.js",
+    "who": "IA ESCRIBIENDO…",
+    "bad": 2,
+    "reviewAt": 2.2,
+    "note": "revisado por una persona"
+   }
+  },
+  {
+   "name": "rough.layoffMail",
+   "summary": "Un teléfono dibujado a mano se enciende de madrugada: llega una notificación con remitente y asunto, el teléfono vibra y en `stampAt` cae un sello lima (PUESTO ELIMINADO). Para el momento en que alguien se entera de un despido por correo o mensaje.",
+   "tags": [
+    "despido",
+    "correo",
+    "teléfono",
+    "notificación",
+    "trabajo"
+   ],
+   "layer": "main",
+   "params": {
+    "time": {
+     "type": "string",
+     "default": "6:04",
+     "doc": "Hora grande en la pantalla bloqueada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "from": {
+     "type": "string",
+     "default": "RECURSOS HUMANOS",
+     "doc": "Remitente de la notificación (mono).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "subject": {
+     "type": "string",
+     "default": "Tu puesto ha sido eliminado",
+     "doc": "Asunto del correo (hasta 3 renglones).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stamp": {
+     "type": "string",
+     "default": "PUESTO ELIMINADO",
+     "doc": "Texto del sello lima; vacío = sin sello.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stampAt": {
+     "type": "number",
+     "default": 2,
+     "doc": "Segundo del beat en que cae el sello.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta de contexto arriba (fecha, empresa).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "badge": {
+     "type": "string",
+     "default": "",
+     "doc": "Cifra manuscrita al costado del teléfono (p. ej. ×250); vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota manuscrita al pie; vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "time": "6:04",
+    "from": "RECURSOS HUMANOS",
+    "subject": "Tu puesto ha sido eliminado",
+    "stamp": "PUESTO ELIMINADO",
+    "stampAt": 2,
+    "label": "MIÉRCOLES 28 OCT",
+    "badge": "×250"
+   }
+  }
+ ]
+}

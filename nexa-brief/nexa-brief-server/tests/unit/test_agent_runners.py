@@ -20,7 +20,7 @@ FAKE = """#!{py}
 import json, os, sys, time
 args = sys.argv[1:]
 prompt = sys.stdin.read()
-open(os.environ.get("FAKE_ARGS", "/dev/null"), "w").write(json.dumps({{"args": args, "prompt": prompt, "cwd": os.getcwd(), "claudecode": os.environ.get("CLAUDECODE")}}))
+open(os.environ.get("FAKE_ARGS", "/dev/null"), "w").write(json.dumps({{"args": args, "prompt": prompt, "cwd": os.getcwd(), "claudecode": os.environ.get("CLAUDECODE"), "pipeline_agent": os.environ.get("NEXA_EXPLAINER_PIPELINE_AGENT")}}))
 if "SLEEP" in prompt:
     time.sleep(30)
 reply = os.environ.get("FAKE_REPLY", "hola")
@@ -48,6 +48,15 @@ def fake_cli(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
 
 def _args(args_file: Path) -> dict:
     return json.loads(args_file.read_text())
+
+
+@pytest.mark.parametrize("runner", [ClaudeCodeRunner, CodexRunner])
+async def test_pipeline_scope_environment_reaches_both_agents(fake_cli, tmp_path, runner):
+    binary, args_file = fake_cli
+    scope = AgentScope(writable_dir=str(tmp_path), extra_env={"NEXA_EXPLAINER_PIPELINE_AGENT": "1"})
+    result = await runner(str(binary)).run("test", cwd=tmp_path, log_path=tmp_path / "a.log",
+                                           timeout_seconds=20, scope=scope)
+    assert result.ok and _args(args_file)["pipeline_agent"] == "1"
 
 
 async def test_claude_read_only_mode_disallows_writes(fake_cli, tmp_path: Path, monkeypatch):

@@ -32,7 +32,7 @@ _SCALES = {"mil": 1_000, "millón": 1_000_000, "millones": 1_000_000, "mil millo
 
 # 1.178 · 13.500 · 2012 · 0,048, opcionalmente seguido de su escala: «6.000 millones», «7 mil millones»
 _DIGITS = re.compile(
-    r"(\d{1,3}(?:\.\d{3})+(?!\d)|\d+(?:,\d+)?)(?:\s+(mil\s+millones|millones|millón|mil)\b)?",
+    r"(\d{1,3}(?:[.\u00a0\u202f ]\d{3})+(?!\d)|\d+(?:,\d+)?)(?:\s+(mil\s+millones|millones|millón|mil)\b)?",
     re.IGNORECASE,
 )
 # Palabras y signos que cortan un número («sesenta y nueve. Mil novecientos setenta» son dos).
@@ -49,7 +49,7 @@ def digit_numbers(text: str) -> set[str]:
     """Cifras escritas con dígitos (y su escala, si la tienen), en forma canónica."""
     found: set[str] = set()
     for digits, scale in _DIGITS.findall(text):
-        value = Decimal(digits.replace(".", "").replace(",", "."))
+        value = Decimal(re.sub(r"[.\u00a0\u202f ]", "", digits).replace(",", "."))
         if scale:
             value *= _SCALES[" ".join(scale.lower().split())]
         found.add(_canonical(value))
@@ -69,7 +69,7 @@ def word_numbers(text: str) -> set[str]:
         total = current = last = 0
         in_number = after_tens_and = False
 
-    for token in _TOKENS.findall(text.lower()):
+    for token in _TOKENS.findall(_DIGITS.sub(" ", text.lower())):
         if token in _UNITS:
             value = _UNITS[token]
             # Empieza otro número: dos menores que 100 seguidos sin «y» («dos tres»)
@@ -100,3 +100,11 @@ def word_numbers(text: str) -> set[str]:
 
 def numbers_in(text: str) -> set[str]:
     return digit_numbers(text) | word_numbers(text)
+
+
+def bullet_numbers_in(text: str) -> set[str]:
+    """También admite el coeficiente visible de una cifra escalada: 20 de veinte millones."""
+    found = numbers_in(text)
+    for match in re.finditer(r"\b([\wÀ-ÿ]+(?:\s+y\s+[\wÀ-ÿ]+)?)\s+(?:mil(?:\s+millones)?|millones|millón)\b", text, re.IGNORECASE):
+        found |= numbers_in(match.group(1))
+    return found

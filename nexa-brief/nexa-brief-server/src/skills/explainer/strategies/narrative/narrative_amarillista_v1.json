@@ -1,0 +1,489 @@
+{
+  "id": "narrative_amarillista_v1",
+  "label": "Amarillista",
+  "name": "AMARILLISTA · alarma, verdad y pregunta",
+  "description": "Abre con la versión más alarmante (y real) de un tema actual, sostiene el miedo, cuenta la verdad con un antes/ahora y cierra preguntándole al espectador.",
+  "status": "active",
+  "acts": [
+    {
+      "id": "titulo",
+      "name": "Título errático",
+      "weight": "apertura",
+      "intensity": "maxima",
+      "spoken": false,
+      "function": "Miedo e incomodidad antes de dar play; se entiende sin saber del tema.",
+      "rules": [
+        "Ver 'title' (niveles básico, medio, alto y negro)."
+      ]
+    },
+    {
+      "id": "golpe",
+      "name": "Golpe",
+      "weight": "apertura",
+      "intensity": "maxima",
+      "function": "Una frase que da miedo, con número y con «tú».",
+      "rules": [
+        "Una o dos oraciones.",
+        "La cifra o el hecho más fuerte va aquí.",
+        "Nada de fechas, contexto ni presentación del canal."
+      ]
+    },
+    {
+      "id": "miedo",
+      "name": "Miedo",
+      "weight": "primer_tramo",
+      "intensity": "maxima",
+      "function": "Apilar datos reales que empeoran, sin ningún alivio.",
+      "rules": [
+        "Patrón «Primero… después… y lo peor…».",
+        "Hablarle al espectador: su trabajo, su familia, su país.",
+        "Ni una frase tranquilizadora.",
+        "Termina con un bucle abierto: «Pero hay un detalle que casi nadie leyó»."
+      ]
+    },
+    {
+      "id": "estudio",
+      "name": "El estudio",
+      "weight": "corto",
+      "intensity": "alta",
+      "function": "La prueba más fuerte, con detalle, y un caso humano.",
+      "rules": [
+        "Nombra la fuente (quién, cuándo).",
+        "Es el punto de máximo miedo «con pruebas»."
+      ]
+    },
+    {
+      "id": "giro",
+      "name": "El giro",
+      "weight": "corto",
+      "intensity": "media",
+      "function": "«Ahora, la parte que los titulares no cuentan».",
+      "rules": [
+        "Devuelve el contexto que se calló en el gancho.",
+        "Nunca dice «te mentí» ni se burla del espectador."
+      ]
+    },
+    {
+      "id": "verdad",
+      "name": "La verdad",
+      "weight": "mayor_parte",
+      "intensity": "media",
+      "function": "El cuadro completo, con datos, y por qué el miedo no es todo.",
+      "rules": [
+        "Obligatorio: al menos un ejemplo histórico con cifra de antes y de ahora (p. ej. «hace 200 años moría el 43 % de los niños antes de los 5 años; hoy menos del 4 %»).",
+        "Resuelve explícitamente cada alarma del gancho.",
+        "Puede tener subidas chicas; en videos largos, varias rondas «miedo → verdad»."
+      ]
+    },
+    {
+      "id": "que_hacer",
+      "name": "Qué hacer",
+      "weight": "corto",
+      "intensity": "media",
+      "function": "Qué cambia para el espectador, concreto.",
+      "rules": [
+        "Dos o tres acciones o señales.",
+        "Sin sermón."
+      ]
+    },
+    {
+      "id": "pregunta",
+      "name": "La pregunta",
+      "weight": "cierre",
+      "intensity": "media",
+      "function": "Pregunta directa, en voz cercana, con la pregunta en pantalla.",
+      "rules": [
+        "Ver 'question'."
+      ]
+    },
+    {
+      "id": "outro",
+      "name": "Outro",
+      "weight": "cierre",
+      "intensity": "baja",
+      "spoken": false,
+      "function": "El cierre con voz del canal (explainer-kit/outro/); no va en el guion."
+    }
+  ],
+  "hook": {
+    "rules": [
+      "Empieza con la versión MÁS alarmante que los hechos permiten, sobre algo que afecta al espectador hoy.",
+      "El miedo se sostiene todo el primer tramo; el alivio llega recién en el giro.",
+      "Cada alarma del gancho se resuelve explícitamente más adelante en el mismo video."
+    ],
+    "allowed_techniques": [
+      "El peor escenario dicho por una fuente con nombre: «Según la Comisión Federal de Comercio, las estafas con voces clonadas ya ocurren». Conserva el alcance de la fuente.",
+      "Atribuir a una fuente nombrada en la misma oración, conservando el alcance de lo que dijo",
+      "Juntar hechos reales sin explicar su relación (se explica en el giro)",
+      "La pregunta que da miedo («¿para qué te van a necesitar a ti?»)",
+      "Callar el contexto que tranquiliza y devolverlo en el giro",
+      "Amenazas y predicciones en segunda persona («te vas a quedar sin empleo»): son la tesis que el video pone a prueba"
+    ],
+    "prohibited": [
+      "Cifras inventadas o redondeadas hacia arriba",
+      "Atribuir a una persona real algo que no dijo",
+      "Hechos concretos falsos (empresa, cifra, fecha) aunque se desmientan después",
+      "Consejos de salud o de voto falsos",
+      "Una alarma que el giro no resuelve"
+    ],
+    "hedge_words": [
+      "puede",
+      "puede que",
+      "podría",
+      "quizás",
+      "tal vez",
+      "¿y si",
+      "no necesariamente",
+      "posiblemente",
+      "en algunos casos",
+      "a veces"
+    ]
+  },
+  "retention": [
+    {
+      "id": "revelacion_postergada",
+      "name": "Revelación postergada",
+      "act": "miedo",
+      "how": "El primer tramo nunca responde lo que promete el título: amplía el drama y cierra con un puente como «lo que viene después es peor».",
+      "example": "Amazon publicó un memo sobre IA y al día siguiente recortó unos 250 puestos; todavía falta ver qué encontró Stanford sobre los más jóvenes."
+    },
+    {
+      "id": "lista_de_peligro",
+      "name": "Lista de peligro",
+      "act": "miedo",
+      "how": "Encadena señales cotidianas y verificables: «si en tu trabajo pasa esto, esto y esto, ya te está tocando».",
+      "example": "Si ves menos vacantes junior y más tareas de entrada automatizadas, investiga qué cambió: esas señales no prueban que la IA causó cada recorte."
+    },
+    {
+      "id": "micro_bucles",
+      "name": "Microbucles",
+      "act": "todo_video",
+      "how": "Cada uno o dos minutos resuelve una duda y abre otra; nunca guardes todas las respuestas para el final.",
+      "example": "Resuelve por qué el memo de Amazon no prueba reemplazo por IA y abre la pregunta de qué muestran los datos de empleo juvenil."
+    },
+    {
+      "id": "pregunta_tramposa",
+      "name": "Pregunta tramposa",
+      "act": "golpe/título",
+      "how": "Afirma el miedo en forma de pregunta directa al espectador, sin convertir la pregunta en una cifra o hecho inventado.",
+      "example": "¿Eres tú el siguiente?"
+    },
+    {
+      "id": "conexion_oculta",
+      "name": "Conexión oculta",
+      "act": "estudio",
+      "how": "Da pistas parciales para que el espectador una los puntos; luego revela el vínculo y sus límites.",
+      "example": "A primera vista, el memo de Amazon y los 250 recortes parecen ligados; el guion aclara que Amazon no dijo que la IA reemplazó esos puestos."
+    }
+  ],
+  "title": {
+    "image_criteria": [
+      "Prioriza un rostro humano con emoción reconocible, una persona con su caja, escritorios vacíos o un objeto icónico del tema.",
+      "La imagen debe representar el tema sin insinuar que una foto de stock documenta a una persona o un despido real.",
+      "Elige una foto legible a tamaño pequeño, con un sujeto claro y espacio para superponer el titular."
+    ],
+    "default_level": "negro",
+    "levels": {
+      "basico": {
+        "name": "Básico",
+        "description": "Alarma con explicación.",
+        "rules": [
+          "Se entiende sin saber del tema.",
+          "Puede llevar contexto («la IA ya está…»)."
+        ],
+        "examples": {
+          "node_tech": [
+            "La IA ya está dejando sin trabajo a los programadores",
+            "¿Para qué te van a necesitar si la IA programa?"
+          ],
+          "node_history": [
+            "La noche en que Japón casi no se rinde",
+            "La caída de Japón que no te contaron en la escuela"
+          ],
+          "node_politics": [
+            "La próxima elección se puede ganar con un audio falso",
+            "¿Le creerías a este audio de tu candidato?"
+          ]
+        }
+      },
+      "medio": {
+        "name": "Medio",
+        "description": "Amenaza directa con «tú».",
+        "rules": [
+          "Segunda persona.",
+          "Una consecuencia que le toca al espectador."
+        ],
+        "examples": {
+          "node_tech": [
+            "La IA te va a reemplazar (y ya empezó)"
+          ],
+          "node_history": [
+            "Japón iba a pelear hasta el último hombre"
+          ],
+          "node_politics": [
+            "Una voz falsa intenta influir en tu voto"
+          ]
+        }
+      },
+      "alto": {
+        "name": "Alto",
+        "description": "Sentencia corta, sin salida, que causa miedo e incomodidad; con una cifra o una empresa real cuando la hay.",
+        "rules": [
+          "Frases cortas y secas; nada de «¿sabías que…?» ni «descubre…».",
+          "Amenazas y predicciones en «tú» permitidas («te vas a quedar sin empleo», «tú eres el siguiente»).",
+          "Los hechos concretos (empresa, cifra, fecha) son reales: el más duro que exista, nunca uno inventado.",
+          "Máximo 60 caracteres (title_alarmista_v1)."
+        ],
+        "examples": {
+          "node_tech": [
+            "Te vas a quedar sin empleo",
+            "Miles de despidos. Tú eres el siguiente",
+            "Amazon despidió programadores. ¿Y la IA?"
+          ],
+          "node_history": [
+            "Casi medio millón de medallas sin entregar",
+            "Japón casi no se rinde. Nadie te lo contó"
+          ],
+          "node_politics": [
+            "Una voz falsa apareció antes de la elección",
+            "Te van a hacer votar con una mentira"
+          ]
+        }
+      },
+      "negro": {
+        "name": "Negro",
+        "description": "Golpe visceral con brecha de curiosidad; usa hechos comprobables y no pasa de 60 caracteres.",
+        "rules": [
+          "Usa MAYÚSCULAS solo en la palabra clave o fórmula clave («Los están DESPIDIENDO», «LO HICIERON: …»).",
+          "Elige léxico visceral y concreto: fin, despedidos, borrados, trampa.",
+          "No uses condicionales.",
+          "Abre una brecha de curiosidad ocultando quién o qué («¿Quién lo hizo?», «LO HICIERON: …»).",
+          "Usa una pregunta tramposa que exprese el miedo sin presentar una conjetura como hecho.",
+          "Conecta un caso real con una inquietud general sin afirmar que el resultado afecta a todos ni insinuar una causa que no está probada.",
+          "Empresas, cifras, fechas y citas deben estar verificadas y conservar su alcance y atribución; no inventes hechos ni sugieras causalidad sin pruebas.",
+          "Máximo 60 caracteres, incluidos espacios."
+        ],
+        "examples": {
+          "node_tech": [
+            "Amazon DESPIDIÓ a unos 250. ¿Eres el siguiente?",
+            "¿Qué AMENAZA el primer empleo de programador?",
+            "Programador: ¿ya empezó el FIN?"
+          ],
+          "node_history": [
+            "La grabación OCULTA que buscaron en palacio",
+            "¿Quién intentó FRENAR la rendición de Japón?",
+            "Japón: buscaron el disco para FRENAR la rendición"
+          ],
+          "node_politics": [
+            "Un audio FALSO apareció antes de votar en Eslovaquia",
+            "¿Un audio FALSO puede cambiar tu voto?",
+            "¿Quién puso esa voz FALSA a llamar antes de votar?"
+          ]
+        }
+      }
+    }
+  },
+  "thumbnail": {
+    "preferred_option": "C",
+    "max_words": 6,
+    "rules": [
+      "Usa palette brand por defecto: conserva la paleta, fuente y textura del diseño; rojo y amarillo solo en puntos de alerta, nunca en todo el titular. Palette alert es una alternativa explícita.",
+      "El titular de la opción C sigue el nivel de título elegido para este video, condensado a seis palabras como máximo.",
+      "Usa accent en la palabra clave exacta del titular.",
+      "La opción C exige el 20 % de alerta rojo/amarillo: incluye un bullet rojo con borde amarillo y dato real dicho en el guion, como «250 PUESTOS»; respeta su alcance y atribución.",
+      "Elige image según title.image_criteria; si hay un rostro, ubica focus [x, y, r] sobre ese rostro en el recorte visible.",
+      "No escribas EXCLUSIVO en strap, seal ni tape_text salvo que la exclusividad sea cierta y comprobable.",
+      "Las opciones A y B siguen disponibles como alternativas para Test & Compare.",
+      "Completa image_review con la imagen elegida y por qué comunica el tema de un vistazo."
+    ],
+    "require_bullet": true,
+    "require_image_review": true
+  },
+  "question": {
+    "act": "pregunta",
+    "screen_max_words": 8,
+    "tone": "cercano",
+    "delivery_note": "Más lenta y más baja, como hablándole a una sola persona; una pausa breve antes de la pregunta.",
+    "do": [
+      "Abrir con algo como «Ahora te pregunto a ti, en serio».",
+      "Una sola pregunta con dos lados para elegir («¿te quita trabajo o te lo ahorra?»).",
+      "Algo personal: «Yo tengo mi opinión, pero quiero leer la tuya» o «Cuéntame qué te pasó a ti».",
+      "Cerrar con «Los voy a leer» o «me interesa de verdad»."
+    ],
+    "dont": [
+      "Fórmulas de YouTuber: «¡Déjanos tu opinión en los comentarios!», like, suscripción (eso ya lo hace el outro).",
+      "Preguntas vagas («¿qué opinas de este fascinante tema?»).",
+      "Palabras de IA: «fascinante», «en conclusión», «sumergirnos», «en este video exploramos».",
+      "Emojis."
+    ]
+  },
+  "checks": {
+    "opening_intensity": "maxima",
+    "required_acts": [
+      "golpe",
+      "miedo",
+      "giro",
+      "verdad",
+      "pregunta"
+    ],
+    "order": [
+      "golpe",
+      "miedo",
+      "estudio",
+      "giro",
+      "verdad",
+      "que_hacer",
+      "pregunta"
+    ],
+    "question_on_screen": true,
+    "pinned_repeats_question": true,
+    "script": {
+      "hedge_acts": [
+        "golpe",
+        "miedo"
+      ],
+      "concrete_act": "golpe",
+      "second_person_act": "golpe",
+      "second_person_words": [
+        "tú",
+        "tu",
+        "tus",
+        "te",
+        "ti",
+        "contigo",
+        "eres",
+        "programas",
+        "tienes",
+        "tuya",
+        "tuyo",
+        "ustedes"
+      ],
+      "number_words": [
+        "cero",
+        "dos",
+        "tres",
+        "cuatro",
+        "cinco",
+        "seis",
+        "siete",
+        "ocho",
+        "nueve",
+        "diez",
+        "once",
+        "doce",
+        "trece",
+        "catorce",
+        "quince",
+        "dieciséis",
+        "diecisiete",
+        "dieciocho",
+        "diecinueve",
+        "veinte",
+        "treinta",
+        "cuarenta",
+        "cincuenta",
+        "sesenta",
+        "setenta",
+        "ochenta",
+        "noventa",
+        "cien",
+        "ciento",
+        "doscientos",
+        "doscientas",
+        "trescientos",
+        "trescientas",
+        "cuatrocientos",
+        "cuatrocientas",
+        "quinientos",
+        "quinientas",
+        "mil",
+        "millón",
+        "millones",
+        "veintiuno",
+        "veintiuna",
+        "veintidós",
+        "veintitrés",
+        "veinticuatro",
+        "veinticinco",
+        "veintiséis",
+        "veintisiete",
+        "veintiocho",
+        "veintinueve",
+        "seiscientos",
+        "seiscientas",
+        "setecientos",
+        "setecientas",
+        "ochocientos",
+        "ochocientas",
+        "novecientos",
+        "novecientas"
+      ]
+    }
+  },
+  "examples": {
+    "node_tech": {
+      "thumbnail": [
+        "YA EMPEZÓ",
+        "SIN TRABAJO"
+      ],
+      "hook": "Con tres segundos de audio, una máquina clona tu voz.",
+      "turn": [
+        "El estudio relaciona la exposición a IA con una caída del empleo juvenil; no demuestra que todos los puestos de entrada hayan desaparecido.",
+        "Antes/ahora: los cajeros automáticos iban a acabar con los cajeros de banco y su número creció durante décadas."
+      ],
+      "question": "Ahora te pregunto a ti, en serio. ¿Sientes que la IA te está quitando trabajo… o te lo está ahorrando? Cuéntame qué te ha pasado a ti. Los voy a leer.",
+      "screen_question": "¿Te quita trabajo o te lo ahorra?",
+      "hook_correct": "Con tres segundos de audio, una máquina clona tu voz.",
+      "hook_incorrect": "Quizás tu voz podría clonarse.",
+      "fear_correct": "Primero grabas un audio; después una copia habla con tu voz.",
+      "fear_incorrect": "A veces podría pasar algo malo."
+    },
+    "node_history": {
+      "thumbnail": [
+        "CASI NO SE RINDE",
+        "GOLPE EN PALACIO"
+      ],
+      "hook": "En 1969 tu mundo vio llegar al ser humano a la Luna.",
+      "turn": [
+        "El golpe tenía muy pocas posibilidades y lo aplastaron antes del amanecer.",
+        "Puente al presente: las medallas sobrantes se entregaron durante décadas."
+      ],
+      "question": "¿Tú crees que Japón se habría rendido sin las bombas atómicas? Yo tengo mi respuesta, pero quiero leer la tuya.",
+      "screen_question": "¿Se habría rendido sin las bombas?",
+      "hook_correct": "En 1969 tu mundo vio llegar al ser humano a la Luna.",
+      "hook_incorrect": "Quizás ocurrió algo importante en la Luna.",
+      "fear_correct": "Primero sonó la alarma; después la nave siguió descendiendo.",
+      "fear_incorrect": "Tal vez la nave podía caer."
+    },
+    "node_politics": {
+      "thumbnail": [
+        "NUNCA LO DIJO",
+        "AUDIO FALSO"
+      ],
+      "hook": "Dos días antes de la elección circuló un audio falso que llegó a tu país.",
+      "turn": [
+        "Nadie pudo demostrar que el audio cambiara el resultado.",
+        "El peligro real: el dividendo del mentiroso, dejar de creer lo verdadero."
+      ],
+      "question": "Si mañana sale un audio de tu candidato diciendo algo terrible… ¿le creerías? Dímelo en los comentarios, que me interesa de verdad.",
+      "screen_question": "¿Le creerías a ese audio?",
+      "hook_correct": "Dos días antes de la elección circuló un audio falso que llegó a tu país.",
+      "hook_incorrect": "Quizás un audio podría alterar tu voto.",
+      "fear_correct": "Primero apareció la grabación; después se difundió antes de votar.",
+      "fear_incorrect": "A veces una elección puede ser afectada."
+    }
+  },
+  "voice": {
+    "allowed_tones": {
+      "golpe": [
+        "alarma"
+      ],
+      "miedo": [
+        "alarma"
+      ],
+      "pregunta": [
+        "cercano"
+      ]
+    }
+  }
+}

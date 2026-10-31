@@ -59,3 +59,9 @@ def agent_timeout_seconds(minutes: float | None) -> int:
     """Tiempo máximo del agente que produce el video (investigar, voz, Whisper en CPU, storyboard)."""
     a = _spec()["agent_minutes"]
     return int((a["base"] + a["per_video_minute"] * clamp_minutes(minutes)) * 60)
+
+
+def host_timeout_seconds(minutes: float | None) -> int:
+    """Tiempo máximo por paso de voz o transcripción ejecutado por el host."""
+    host = _spec()["host_minutes"]
+    return int((host["base"] + host["per_video_minute"] * clamp_minutes(minutes)) * 60)

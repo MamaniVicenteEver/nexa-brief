@@ -187,6 +187,10 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         video_path_str = file_paths.get("youtube")
     copy = copy_for_platform(summary, entry.platform)
     extra_kwargs = {"language": copy.language} if entry.platform == "youtube" and copy.language else {}
+    if entry.platform == "tiktok":
+        # Retrying/recovering this queue entry must consult the original
+        # service job, including when the HTTP response was lost after a click.
+        extra_kwargs["idempotency_key"] = entry.idempotency_key or f"schedule:{entry.entry_id}"
     # miniatura propia (explainer: la intro elegida; NodeMotion: el final de la intro); solo YouTube por API
     # (si el video se grabó sin ella, se saca ahora del final de su intro; thumbnails.set: solo JPEG/PNG)
     if entry.platform == "youtube":

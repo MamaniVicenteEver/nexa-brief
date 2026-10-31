@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "doc": "Qué modelo hace cada trabajo. Lo leen el backend (src/adapters/models/hub.py) y el kit (tools/delegate.py). Cambiar un proveedor acá cambia a quién se le pide, sin tocar código. Guía: src/templates/_tools/explainer-kit/guides/orquestacion.md",
+  "doc": "Qué modelo hace cada trabajo. Lo leen el backend (src/adapters/models/hub.py) y el kit (tools/delegate.py). Cambiar un proveedor acá cambia a quién se le pide; delegatable habilita kit.py delegate. Guía: src/templates/_tools/explainer-kit/guides/orquestacion.md",
   "providers": {
     "codex": {
       "kind": "agent_cli",
@@ -62,6 +62,7 @@
     "component_draft": {
       "provider": "deepseek",
       "model": "flash",
+      "delegatable": true,
       "prompt": "prompts/component-author.md",
       "output": "js",
       "does": "Primer borrador de un componente propio del tema. El productor lo valida con kit.py components y lo mira."
@@ -69,6 +70,7 @@
     "copy_draft": {
       "provider": "deepseek",
       "model": "flash",
+      "delegatable": true,
       "prompt": "prompts/delegate-copy.md",
       "output": "json",
       "does": "Borradores de títulos, miniaturas y comentario fijado según las estrategias activas; el productor elige y ajusta."
@@ -76,9 +78,28 @@
     "fact_check": {
       "provider": "deepseek",
       "model": "flash",
+      "delegatable": true,
       "prompt": "prompts/delegate-fact-check.md",
       "output": "md",
       "does": "Segunda lectura del guion contra PLAN §3: marca cifras sin fuente, fechas dudosas y jerga sin explicar."
+    },
+    "text_draft": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "medium",
+      "delegatable": true,
+      "prompt": "prompts/delegate-text.md",
+      "output": "md",
+      "does": "Borradores reutilizables de textos basados en una instrucción y contexto del video; entrega Markdown para que el productor revise y edite."
+    },
+    "dialogue_draft": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "medium",
+      "delegatable": true,
+      "prompt": "prompts/delegate-dialogue.md",
+      "output": "md",
+      "does": "Borradores de diálogos y voces de personajes basados en instrucciones y contexto; entrega Markdown para que el productor revise y edite."
     },
     "voice": {
       "provider": "gemini_tts",

@@ -7,7 +7,7 @@ import { useCaptureThumbnails, useChooseThumbnail } from "../hooks/useExplainer"
 import type { ExplainerVideo, ThumbnailOptionId } from "../types";
 
 /**
- * Miniatura y apertura: A = introv1 (solo texto, por defecto), B = introv2 (texto + foto).
+ * Miniatura y apertura: A = introv1, B = introv2 y C = common.tabloid cuando está disponible.
  * La elegida abre el video (primeros segundos), su captura es la miniatura de YouTube y queda
  * guardada en el video; cambiarla obliga a grabar de nuevo con la nueva apertura.
  */

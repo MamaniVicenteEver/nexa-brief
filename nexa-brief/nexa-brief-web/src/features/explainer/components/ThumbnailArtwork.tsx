@@ -51,6 +51,31 @@ export function ThumbnailArtwork({
     );
   }
 
+  if (preview.option === "C") {
+    return (
+      <div className="@container relative aspect-video w-full overflow-hidden bg-[#080808]">
+        <div className="absolute inset-y-0 right-0 w-[44%] overflow-hidden">
+          {preview.imageUrl ? (
+            // biome-ignore lint/performance/noImgElement: imagen de miniatura servida por la API
+            <img
+              src={preview.imageUrl}
+              alt=""
+              className="size-full object-cover contrast-125 saturate-75"
+            />
+          ) : null}
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,8,8,.6),transparent_65%),radial-gradient(ellipse,transparent_35%,rgba(0,0,0,.55))]" />
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#080808_0%,rgba(8,8,8,.94)_48%,transparent_75%)]" />
+        <div className="absolute inset-y-[15%] left-[3%] z-10 flex w-[62%] flex-col justify-center text-[clamp(17px,10cqw,44px)] leading-[0.84] font-black tracking-[-0.045em] text-[#FFD400] uppercase [text-shadow:2px_3px_0_#080808,4px_5px_0_#E10600]">
+          {preview.text}
+        </div>
+        <span className="absolute top-[5%] right-[3%] z-20 rounded-full bg-[#E10600] px-2 py-0.5 text-[10px] font-bold text-white">
+          C · Aproximación
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="@container relative aspect-video w-full overflow-hidden bg-black">
       <div className="absolute inset-y-0 right-0 w-[58%] overflow-hidden">

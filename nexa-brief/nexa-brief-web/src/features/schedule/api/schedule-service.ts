@@ -215,6 +215,7 @@ export async function publishNow(input: PublishNowInput): Promise<QueueEntry> {
     method: "POST",
     body: {
       job_id: input.jobId,
+      idempotency_key: input.idempotencyKey,
       platform: input.platform,
       account_alias: input.accountAlias,
       format: input.format ?? null,

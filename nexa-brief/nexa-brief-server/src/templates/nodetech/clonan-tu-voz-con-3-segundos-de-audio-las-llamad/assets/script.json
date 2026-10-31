@@ -1,0 +1,300 @@
+{
+  "id": "clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+  "design": "rough",
+  "title": "TU VOZ, SU ESTAFA",
+  "kicker": "VOZ SINTÉTICA",
+  "language": "es-419",
+  "voice_direction": "Alarma contenida al comienzo; clara y cercana al explicar, sin caricaturizar a las víctimas.",
+  "target_minutes": 10,
+  "segments": [
+    {
+      "id": "s01",
+      "act": "golpe",
+      "tone": "alarma",
+      "intensity": 1,
+      "chapter": "La llamada",
+      "text": "Microsoft Research demostró que tres segundos de una voz sirven para generar una copia. Tu familia escucha esa voz."
+    },
+    {
+      "id": "s02",
+      "act": "miedo",
+      "tone": "alarma",
+      "intensity": 0.95,
+      "text": "Primero publicas un audio. Después alguien escucha una voz parecida a la tuya. La Comisión Federal de Comercio advierte que los estafadores usan grabaciones breves para imitar familiares."
+    },
+    {
+      "id": "s03",
+      "act": "miedo",
+      "tone": "alarma",
+      "intensity": 0.95,
+      "text": "La misma agencia describe llamadas que anuncian accidentes, detenciones y pedidos de dinero. Tu madre escucha una emergencia; quien llama exige que el dinero salga ahora."
+    },
+    {
+      "id": "s04",
+      "act": "miedo",
+      "tone": "alarma",
+      "intensity": 0.95,
+      "text": "Y lo peor: el FBI advirtió sobre mensajes de voz generados con inteligencia artificial que imitan a altos funcionarios. La confianza también se convierte en una puerta para entrar en cuentas."
+    },
+    {
+      "id": "s05",
+      "act": "miedo",
+      "tone": "alarma",
+      "intensity": 0.95,
+      "text": "En el trabajo, el FBI describe fraudes empresariales con inteligencia artificial y pedidos de transferencias. En tu familia, una voz conocida y una urgencia llegan por el mismo teléfono."
+    },
+    {
+      "id": "s06",
+      "act": "miedo",
+      "tone": "alarma",
+      "intensity": 0.95,
+      "text": "Según el FBI, las víctimas denunciaron más de cinco millones de dólares en estafas de emergencia durante dos mil veinticinco. Pero hay un detalle que casi nadie leyó."
+    },
+    {
+      "id": "s07",
+      "act": "estudio",
+      "tone": "tensión",
+      "intensity": 0.8,
+      "chapter": "La prueba y la llamada",
+      "text": "En enero de dos mil veintitrés, investigadores de Microsoft presentaron un sistema llamado Val E. En sus pruebas, utilizó tres segundos de voz de referencia para generar habla personalizada."
+    },
+    {
+      "id": "s08",
+      "act": "estudio",
+      "tone": "peso",
+      "intensity": 0.8,
+      "text": "En mayo de dos mil veintiséis, Deborah Del Mastro contó a ABC News que había recibido una llamada aterradora. Dijo que creyó escuchar a su hija Sarah llorando."
+    },
+    {
+      "id": "s09",
+      "act": "estudio",
+      "tone": "tensión",
+      "intensity": 0.8,
+      "text": "La persona que llamó afirmó tener a su hija y exigió cinco mil cuatrocientos dólares. Deborah contó que perdió dinero. Su testimonio muestra el costo humano de esa presión."
+    },
+    {
+      "id": "s10",
+      "act": "giro",
+      "tone": "revelación",
+      "intensity": 0.55,
+      "text": "Ahora, la parte que los titulares no cuentan. La investigación de Microsoft demuestra una capacidad bajo condiciones de prueba. No garantiza una copia perfecta a partir de cualquier audio."
+    },
+    {
+      "id": "s11",
+      "act": "giro",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Y en el caso de Deborah, ella sospecha que imitaron la voz con inteligencia artificial. La noticia no verifica técnicamente el audio ni identifica la herramienta usada."
+    },
+    {
+      "id": "s12",
+      "act": "giro",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Los más de cinco millones del FBI corresponden a denuncias de estafas de emergencia. El informe no dice que todas esas pérdidas fueran causadas por voces clonadas."
+    },
+    {
+      "id": "s13",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "chapter": "Qué hace la tecnología",
+      "text": "Una copia de voz no necesita entender quién eres como persona. Un sistema aprende patrones del sonido y utiliza una muestra para generar palabras que conservan rasgos de esa voz."
+    },
+    {
+      "id": "s14",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "La grabación original aporta pistas de timbre y forma de hablar. El texto aporta el mensaje nuevo. El resultado intenta unirlos en un audio que nunca grabaste. Una cosa es reconocer los rasgos de una persona y otra demostrar que esa persona pronunció la frase o que lo narrado sucedió."
+    },
+    {
+      "id": "s15",
+      "act": "verdad",
+      "tone": "curiosidad",
+      "intensity": 0.55,
+      "text": "Pero una muestra corta no es una llave mágica. El ruido, el idioma, el modelo y el material disponible influyen. Tampoco cada imitación necesita mantener una conversación larga."
+    },
+    {
+      "id": "s16",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Microsoft informó que su sistema había sido entrenado con sesenta mil horas de habla inglesa. Sus resultados no prueban el mismo rendimiento en todas las voces ni en todos los idiomas."
+    },
+    {
+      "id": "s17",
+      "act": "verdad",
+      "tone": "tensión",
+      "intensity": 0.6,
+      "text": "Una frase breve y angustiada ya tiene una función: hacerte reconocer a alguien. Después otra persona entra en la llamada y se presenta como abogado, policía o secuestrador. El cambio de interlocutor desplaza tu atención hacia la amenaza y hacia quien da instrucciones. La llamada deja poco espacio para revisar la historia."
+    },
+    {
+      "id": "s18",
+      "act": "verdad",
+      "tone": "revelación",
+      "intensity": 0.55,
+      "text": "Ese relevo no nació con la inteligencia artificial. El FBI ya describía ese guion en dos mil doce. La llamada necesitaba convencer a la familia, no demostrar una tecnología."
+    },
+    {
+      "id": "s19",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "chapter": "La estafa anterior a la IA",
+      "text": "La agencia dijo entonces que recibía denuncias de la llamada estafa del abuelo desde dos mil ocho. Alguien fingía ser un nieto detenido y pedía una fianza urgente."
+    },
+    {
+      "id": "s20",
+      "act": "verdad",
+      "tone": "peso",
+      "intensity": 0.55,
+      "text": "La historia venía acompañada de una orden: no avises a mamá ni a papá. El secreto impedía que otra persona comprobara lo que estaba pasando. El falso nieto podía afirmar que estaba avergonzado o temía preocupar a la familia. La explicación emocional hacía parecer razonable guardar silencio."
+    },
+    {
+      "id": "s21",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "En diciembre de dos mil dieciocho, la Comisión Federal de Comercio informó cuarenta y un millones de dólares denunciados por suplantación de familiares y amigos durante los doce meses anteriores."
+    },
+    {
+      "id": "s22",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "En el período previo habían sido veintiséis millones. Las dos cifras describen esa categoría de denuncias, no dinero robado mediante clonación de voz. La estafa ya existía. Además, son pérdidas comunicadas a la agencia. No cuentan necesariamente todos los engaños ni permiten saber cuántas personas recibieron una llamada sin perder dinero."
+    },
+    {
+      "id": "s23",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Ahora tenemos otra medición, con un alcance distinto. En su informe de dos mil veinticinco, el centro de denuncias del FBI registró más de cinco millones en pérdidas por estafas de emergencia."
+    },
+    {
+      "id": "s24",
+      "act": "verdad",
+      "tone": "revelación",
+      "intensity": 0.55,
+      "text": "No se deben comparar esas cifras como una misma serie. Provienen de organismos y categorías diferentes. El contraste sí muestra que las emergencias inventadas tienen una historia anterior a la voz sintética."
+    },
+    {
+      "id": "s25",
+      "act": "verdad",
+      "tone": "tensión",
+      "intensity": 0.6,
+      "chapter": "La trampa de la urgencia",
+      "text": "La novedad es que la voz añade una señal emocional muy poderosa. Escuchar a alguien querido en peligro puede hacer que toda tu atención se concentre en resolverlo de inmediato. No hace falta que una persona sea ingenua para sentir miedo cuando cree que un familiar necesita ayuda. Esa reacción es humana, no una falla moral."
+    },
+    {
+      "id": "s26",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Entonces llega la siguiente pieza: no cuelgues. No preguntes. No cuentes nada. La prisa y el secreto cierran las puertas por las que entraría una verificación independiente."
+    },
+    {
+      "id": "s27",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Los detalles personales también ayudan a construir la escena. Un nombre o un viaje publicado en redes puede aparecer en la historia. Eso no demuestra que quien llama sea quien dice ser. El FBI ya explicaba en dos mil doce que la información compartida en internet podía hacer más creíble la identidad fingida. Es una pista, no una contraseña."
+    },
+    {
+      "id": "s28",
+      "act": "verdad",
+      "tone": "curiosidad",
+      "intensity": 0.55,
+      "text": "Y un número reconocible tampoco basta por sí solo. El FBI advierte que los mensajes pueden aparentar proceder de un contacto de confianza. Lo decisivo es iniciar la comprobación por otro canal."
+    },
+    {
+      "id": "s29",
+      "act": "verdad",
+      "tone": "tensión",
+      "intensity": 0.6,
+      "text": "En una empresa cambia el personaje, no la presión. Alguien se hace pasar por un directivo y pide mover dinero. Un mensaje convincente pretende saltarse el procedimiento normal. Un empleado no tiene que resolver solo una solicitud extraordinaria. La cadena de autorización existe precisamente para comprobar una orden antes de que salga el dinero."
+    },
+    {
+      "id": "s30",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "El informe del FBI para dos mil veinticinco registró más de treinta millones de dólares en pérdidas empresariales denunciadas en fraudes de correo con inteligencia artificial. No todas fueron llamadas."
+    },
+    {
+      "id": "s31",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "El mismo informe reunió más de veintidós mil denuncias con información relacionada con inteligencia artificial. Abarca distintos delitos y usos de esa tecnología, no solo copias de voz."
+    },
+    {
+      "id": "s32",
+      "act": "verdad",
+      "tone": "revelación",
+      "intensity": 0.55,
+      "text": "La Comisión Federal de Comercio informó que las pérdidas denunciadas por suplantación en general llegaron a tres mil quinientos millones de dólares en dos mil veinticinco, en Estados Unidos."
+    },
+    {
+      "id": "s33",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Esa cifra incluye suplantaciones de empresas, autoridades y otras personas por distintos medios. No mide cuánto se perdió por la voz clonada. No conocemos esa proporción a partir de esos datos. Convertir la cifra entera en pérdidas por inteligencia artificial haría parecer preciso algo que el informe no desglosa. La diferencia cambia lo que realmente sabemos."
+    },
+    {
+      "id": "s34",
+      "act": "verdad",
+      "tone": "peso",
+      "intensity": 0.55,
+      "chapter": "Recuperar el control",
+      "text": "Una emergencia real merece atención. Justamente por eso hay que comprobarla sin depender de la voz ni del teléfono que acaba de llamar. Verificar protege tanto a la familia como al dinero. Si una persona no contesta de inmediato, otra persona cercana puede aportar información. Y si hay una amenaza inmediata, los servicios de emergencia son una vía independiente."
+    },
+    {
+      "id": "s35",
+      "act": "verdad",
+      "tone": "explicativo",
+      "intensity": 0.55,
+      "text": "Una voz sintética también tiene usos legítimos, como dar una voz personalizada a una aplicación. La misma capacidad que permite crear audio útil puede emplearse para engañar."
+    },
+    {
+      "id": "s36",
+      "act": "verdad",
+      "tone": "revelación",
+      "intensity": 0.55,
+      "text": "Los tres segundos del gancho son una prueba de laboratorio, no una garantía universal. La amenaza real es una petición que usa una voz convincente para impedirte confirmar los hechos."
+    },
+    {
+      "id": "s37",
+      "act": "que_hacer",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "text": "Primero, acuerden una palabra o frase familiar para emergencias. Guárdenla fuera de publicaciones y conversaciones públicas. Es una ayuda, no una prueba infalible si alguien llega a conocerla."
+    },
+    {
+      "id": "s38",
+      "act": "que_hacer",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "text": "Segundo, cuelga y llama a tu familiar al número que ya conoces. Si no responde, contacta a otra persona de confianza o a los servicios de emergencia cuando corresponda."
+    },
+    {
+      "id": "s39",
+      "act": "que_hacer",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "text": "Tercero, no envíes dinero ni códigos bajo presión. En el trabajo, confirma el pedido mediante el procedimiento habitual. Si ya pagaste, contacta de inmediato a tu banco y denuncia ante las autoridades."
+    },
+    {
+      "id": "s40",
+      "act": "pregunta",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "delivery_note": "Más lenta y más baja, como hablándole a una sola persona; una pausa breve antes de la pregunta.",
+      "on_screen_question": "¿Tu familia tiene una palabra clave?",
+      "text": "Ahora te pregunto a ti, en serio. ¿Tu familia tiene una palabra clave? Cuéntame qué harías ante esa llamada. Los voy a leer."
+    }
+  ],
+  "subtitle": ""
+}

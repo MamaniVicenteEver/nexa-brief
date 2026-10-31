@@ -14,7 +14,8 @@
   const { clamp, lerp, ease, back } = Proto.U;
   const { POSES, mixPose, joints, line } = Pizarra.rig;
   const DW = 1920, DH = 1080;
-  const INK = "#151515", BG = "#efefef";
+  const INK = "#151515", DEFAULT_BG = "#efefef";
+  let BG = DEFAULT_BG;
   const FONT = "'DM Sans', 'Inter', sans-serif", SERIF = "'Fraunces', Georgia, serif";
   const seen = new Set();
   const warnOnce = m => { if (!seen.has(m)) { seen.add(m); console.warn("[pizarra]", m); } };
@@ -150,6 +151,7 @@
     },
     async setup(c) {
       const { scene, T } = c;
+      BG = typeof scene.background === "string" ? scene.background : DEFAULT_BG;
       CAST = scene.cast || {}; SCENE_CHAR = scene.character || "palito"; SCENE_LOOK = scene.look || {};
       c.S = compile(scene, T);
       c.ctx = { hands: new Map() };

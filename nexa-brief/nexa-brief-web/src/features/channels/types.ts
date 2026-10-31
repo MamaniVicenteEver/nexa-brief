@@ -1,6 +1,7 @@
 export type ChannelPlatform = "youtube" | "tiktok" | "facebook" | "instagram";
 
 export type ChannelStatus = "ok" | "requires_reauth";
+export type ChannelMode = "api" | "service";
 
 export interface ChannelStats {
   videoCount: number | null;
@@ -21,6 +22,8 @@ export interface ChannelAccount {
   name: string;
   targetId: string;
   status: ChannelStatus;
+  mode: ChannelMode;
+  lastSessionCheck: number | null;
   expiresInSeconds: number | null;
   hasRefreshToken: boolean;
   avatar: string | null;

@@ -2,7 +2,8 @@
  *
  * Cada key de scene.camera es un DESTINO; la cámara vuela de donde está (aunque esté a mitad de otro
  * vuelo) hasta ahí con el vuelo "zoom + paneo" de van Wijk y Nuij (se aleja y se acerca sola cuando el
- * salto es largo, como Google Earth), con aceleración suave. Entre vuelos nunca queda quieta: deriva
+ * salto es largo, como Google Earth), con aceleración suave. Los relevos conservan la velocidad
+ * entrante. Entre vuelos nunca queda quieta: deriva
  * con un zoom lento (drift) y, si se pide, un paneo (pan).
  *
  * Key: { t, dur?, ease? ("inOut"|"out"|"linear"),
@@ -42,6 +43,30 @@
   function create(keys, geo, T) {
     const K = keys.map(k => ({ ...k, _t: T(k.t, 0) })).sort((a, b) => a._t - b._t);
     let cacheFor = "", plan = [];
+    const VELOCITY_EPS = 0.001;
+
+    function velocity(a, b, dt) {
+      return [(b.x - a.x) / dt, (b.y - a.y) / dt, (Math.log(b.w) - Math.log(a.w)) / dt];
+    }
+    function segmentPose(s, lt, correctVelocity = true) {
+      let x, y, w;
+      if (!s.fly || lt >= s.dur) { x = s.tg.x; y = s.tg.y; w = s.tg.w; }
+      else {
+        [x, y, w] = s.fly((EASE[s.k.ease] || EASE.inOut)(lt / s.dur));
+        if (correctVelocity && s.kick && lt < s.blend) {
+          const u = clamp(lt / s.blend), shape = u * (1 - u) * (1 - u);
+          x += s.kick[0] * s.blend * shape;
+          y += s.kick[1] * s.blend * shape;
+          w *= Math.exp(s.kick[2] * s.blend * shape);
+        }
+      }
+      // La deriva empieza tarde en el vuelo y continúa suavemente entre claves.
+      const drift = s.k.drift ?? 0.012, dlt = Math.max(0, lt - (s.fly ? s.dur * 0.6 : 0));
+      const dk = dlt * dlt / (dlt + 1.2);
+      w *= Math.exp(-drift * dk);
+      if (s.k.pan) { x += s.k.pan[0] * w * dk; y += s.k.pan[1] * w * dk; }
+      return { x, y, w };
+    }
 
     function target(k, W, H) {
       const port = H > W, o = { ...k, ...((port ? k.portrait : k.landscape) || {}) };
@@ -71,6 +96,13 @@
           seg.from = [p.x, p.y, p.w];
           seg.fly = flight(seg.from, [tg.x, tg.y, tg.w]);
           seg.dur = tg.k.dur ?? clamp(0.9 + seg.fly.len * 0.55, 1.2, 4.2);
+          if (seg.dur > 0) {
+            const before = poseIn(plan, seg.t0 - VELOCITY_EPS), atKey = poseIn(plan, seg.t0);
+            const raw0 = segmentPose(seg, 0, false), raw1 = segmentPose(seg, VELOCITY_EPS, false);
+            const incoming = velocity(before, atKey, VELOCITY_EPS), initial = velocity(raw0, raw1, VELOCITY_EPS);
+            seg.kick = incoming.map((v, d) => v - initial[d]);
+            seg.blend = Math.min(0.45, seg.dur * 0.3);
+          }
         }
         plan.push(seg);
       }
@@ -79,15 +111,7 @@
       let i = 0; while (i + 1 < P.length && P[i + 1].t0 <= t) i++;
       const s = P[i]; if (!s) return { x: 0, y: 0, w: 1 };
       const lt = Math.max(0, t - s.t0);
-      let x, y, w;
-      if (!s.fly || lt >= s.dur) { x = s.tg.x; y = s.tg.y; w = s.tg.w; }
-      else { [x, y, w] = s.fly((EASE[s.k.ease] || EASE.inOut)(lt / s.dur)); }
-      // deriva continua (la referencia nunca está quieta): entra suave para no dar tirón
-      const drift = s.k.drift ?? 0.012, dlt = Math.max(0, lt - (s.fly ? s.dur * 0.6 : 0));
-      const dk = dlt * dlt / (dlt + 1.2);
-      w *= Math.exp(-drift * dk);
-      if (s.k.pan) { x += s.k.pan[0] * w * dk; y += s.k.pan[1] * w * dk; }
-      return { x, y, w };
+      return segmentPose(s, lt);
     }
     function at(t, W, H) {
       const key = W + "x" + H; if (key !== cacheFor) { cacheFor = key; build(W, H); }

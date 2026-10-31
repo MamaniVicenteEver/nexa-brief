@@ -642,6 +642,11 @@ def test_publish_to_several_channels_with_own_texts(videos_root: Path, make_reco
     by = {c["account_selector"]: c for c in calls}
     assert by["youtube:a"]["video_path"].name == "tech-1-16x9.mp4" and by["youtube:a"]["privacy"] == "public"
     assert by["tiktok:b"]["video_path"].name == "tech-1-9x16.mp4" and by["tiktok:b"]["title"] == "Caption TT"
+    tiktok_entry = next(
+        entry for entry in collection("queue_entries").list()
+        if entry["job_id"] == job.scheduled_job_id and entry["platform"] == "tiktok"
+    )
+    assert by["tiktok:b"]["idempotency_key"] == f"schedule:{tiktok_entry['entry_id']}"
     assert by["facebook:c"]["title"] == "Título FB"
     assert [r.get("post_id") for r in job.publish_results] == ["p-youtube", "p-tiktok", None]
     assert "facebook:c" in job.error

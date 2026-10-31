@@ -38,6 +38,7 @@ from src.core.ports.publisher_port import PublisherPort, PublishVideoResult, Vid
 from src.adapters.publishing.token_storage import TokenStorage
 from src.adapters.publishing.token_manager import TokenManager
 from src.adapters.publishing.tiktok_adapter import TikTokAdapter
+from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
 from src.adapters.publishing.youtube_adapter import YouTubeAdapter, YouTubeChannelProfile
 from src.adapters.publishing.facebook_adapter import FacebookAdapter
 from src.adapters.publishing.instagram_adapter import InstagramAdapter
@@ -96,7 +97,10 @@ class PublisherFacade:
             raise PublisherError(
                 f"Unknown platform '{platform}'. Supported: {_SUPPORTED_PLATFORMS}"
             )
-        adapter = self._adapters[platform]
+        if platform == "tiktok" and self._token_manager._storage.get_mode(platform, alias) in {"browser", "service"}:
+            adapter = TikTokServiceAdapter()
+        else:
+            adapter = self._adapters[platform]
         return platform, alias, adapter
 
     # ── CREATE ────────────────────────────────────────────────────────────────
@@ -309,7 +313,7 @@ class PublisherFacade:
 
     async def sync_channel(self, platform: str, alias: str) -> channel_sync.SyncSummary:
         """Trae de la plataforma los videos y totales de la cuenta (ver core/channel_sync.py)."""
-        catalog = self.catalog_for(platform)
+        catalog = TikTokServiceAdapter() if platform == "tiktok" and self._token_manager._storage.get_mode(platform, alias) in {"browser", "service"} else self.catalog_for(platform)
         if catalog is None:
             raise UnsupportedOperationError(f"La sincronización de canales todavía no está disponible para {platform}.")
         if not any(a["platform"] == platform and a["alias"] == alias for a in self.list_accounts()):
@@ -321,7 +325,7 @@ class PublisherFacade:
         results: dict[str, str] = {}
         for account in self.list_accounts():
             platform, alias = account["platform"], account["alias"]
-            if self.catalog_for(platform) is None or account.get("status") == "requires_reauth":
+            if self.catalog_for(platform) is None and account.get("mode") not in {"browser", "service"} or account.get("status") == "requires_reauth":
                 continue
             key = f"{platform}:{alias}"
             try:
@@ -344,6 +348,8 @@ class PublisherFacade:
         for account_info in self.list_accounts():
             platform = account_info["platform"]
             alias = account_info["alias"]
+            if account_info.get("mode") in {"browser", "service"}:
+                continue
             key = f"{platform}:{alias}"
             try:
                 await self._token_manager.refresh_account_if_needed(platform, alias)
@@ -356,4 +362,20 @@ class PublisherFacade:
                     account=alias,
                     error=str(exc),
                 )
+        return results
+
+    async def check_browser_sessions(self) -> dict[str, str]:
+        """Check browser sessions as part of the configured channel-sync cycle."""
+        from src.adapters.publishing.tiktok_service.client import TikTokServiceClient
+
+        results: dict[str, str] = {}
+        for account in self.list_accounts():
+            if account["platform"] != "tiktok" or account.get("mode") not in {"browser", "service"}:
+                continue
+            alias = account["alias"]
+            try:
+                await TikTokServiceClient().request("POST", f"/v1/accounts/{alias}/check")
+                results[f"tiktok:{alias}"] = "ok"
+            except PublisherError:
+                results[f"tiktok:{alias}"] = "requires_reauth"
         return results

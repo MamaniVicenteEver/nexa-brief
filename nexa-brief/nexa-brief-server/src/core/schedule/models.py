@@ -81,3 +81,4 @@ class QueueEntry(BaseModel):
     content_kind: Literal["video", "image", "carousel", "reel"] = "video"
     content_id: str | None = None
     delivery_id: str | None = None
+    idempotency_key: str | None = None

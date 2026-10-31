@@ -1,7 +1,7 @@
 /* =============================================================================
    rough · intros para miniaturas del paquete de publicación
    ----------------------------------------------------------------------------
-   V1 usa solo texto; V2 combina texto con una foto. Los dos conservan la
+   V1 usa solo texto; V2 combina texto con una foto o un video. Los dos conservan la
    paleta y los trazos hechos a mano del diseño rough.
    ========================================================================== */
 (function () {
@@ -108,7 +108,7 @@
 
   K.register({
     name: "rough.introv2", tags: ["intro", "miniatura", "texto e imagen"], layer: "main",
-    summary: "Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto grande a color que se funde con el fondo (en 9:16 la foto va arriba).",
+    summary: "Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto o video grande a color que se funde con el fondo (en 9:16 va arriba).",
     example: { text: "¿SE ACABÓ\nLA PC\nBARATA?", highlight: "BARATA?", kicker: "MEMORIA RAM · 2026", src: "assets/media/hamilton.jpg" },
     params: {
       text: { type: "string", required: true, doc: "Título; '\\n' separa renglones (2 a 4 renglones cortos)." },
@@ -117,8 +117,14 @@
       kicker: { type: "string", default: "", doc: "Antetítulo en etiqueta lima." },
       sub: { type: "string", default: "", doc: "Línea chica opcional bajo el título." },
       src: { type: "image", default: "", doc: "Foto o render del objeto del tema (a color)." },
+      video: { type: "video", default: "", doc: "Clip .mp4 local, siempre mudo; reemplaza la foto." },
+      poster: { type: "image", default: "", doc: "Imagen inicial y respaldo del video; si falta, usa src." },
+      start: { type: "number", default: 0, min: 0, doc: "Segundo inicial del clip." },
+      rate: { type: "number", default: 1, min: 0.25, max: 2, doc: "Velocidad del clip." },
+      loop: { type: "bool", default: true, doc: "Repite el clip si termina antes del beat; evita congelar." },
       saturate: { type: "number", default: 1, min: 0, max: 1.4, doc: "Color de la foto (0 = blanco y negro)." },
       focus: { type: "string", default: "xMidYMid", doc: "Encuadre de la foto (preserveAspectRatio: xMinYMid, xMaxYMid…)." },
+      ...K.brandLogo.params,
     },
     create(ctx, p) {
       ctx.beat.hideCaptions = true;
@@ -126,6 +132,7 @@
       const imageBox = portrait
         ? { x: 0, y: 0, w: W, h: H * 0.55 }
         : { x: W * 0.4, y: 0, w: W * 0.6, h: H };
+      const logo = K.brandLogo.attach(ctx, p, imageBox, [p.focus?.includes("xMin") ? 0.2 : p.focus?.includes("xMax") ? 0.8 : 0.5, p.focus?.includes("YMin") ? 0.2 : p.focus?.includes("YMax") ? 0.8 : 0.5]);
       const textBox = portrait
         ? { x: W * 0.07, y: H * 0.53, w: W * 0.86, h: H * 0.34 }
         : { x: W * 0.045, y: H * 0.14, w: W * 0.5, h: H * 0.72 };
@@ -142,9 +149,10 @@
       const mask = R.svg("mask", { id: `${id}-mask`, maskUnits: "userSpaceOnUse", x: imageBox.x, y: imageBox.y, width: imageBox.w, height: imageBox.h }, defs);
       R.svg("rect", { x: imageBox.x, y: imageBox.y, width: imageBox.w, height: imageBox.h, fill: `url(#${id}-fade)` }, mask);
       const photo = R.svg("g", { opacity: 0, mask: `url(#${id}-mask)` }, g);
-      if (p.src) {
+      const stillSrc = p.video ? (p.poster || p.src) : p.src;
+      if (stillSrc) {
         R.svg("image", {
-          href: p.src, x: imageBox.x, y: imageBox.y, width: imageBox.w, height: imageBox.h,
+          href: stillSrc, x: imageBox.x, y: imageBox.y, width: imageBox.w, height: imageBox.h,
           preserveAspectRatio: `${p.focus} slice`, filter: `url(#${id}-tone)`,
         }, photo);
       } else {
@@ -155,6 +163,10 @@
         });
         pending._pending = true;
       }
+      let videoFrame = null, activeVideo = null;
+      if (p.video) {
+        videoFrame = R.svg("foreignObject", { x: imageBox.x, y: imageBox.y, width: imageBox.w, height: imageBox.h }, photo);
+      }
       const title = textBlock(ctx, g, portrait && p.textPortrait ? p.textPortrait : p.text, textBox, p.highlight, "left");
       const tag = p.kicker
         ? R.label(ctx, g, String(p.kicker).toUpperCase(), { x: textBox.x, y: title.top - u * (portrait ? 4.6 : 4), size: portrait ? 2.3 : 1.9, anchor: "start" })
@@ -164,13 +176,31 @@
         : null;
       return {
         render(lt, beat, t) {
+          if (p.video) {
+            const time = p.start + Math.max(0, lt) * p.rate;
+            const v = ctx.clip(p.video, time);
+            if (v) {
+              if (p.loop && Number.isFinite(v.duration) && v.duration > 0) ctx.clip(p.video, time % v.duration);
+              if (activeVideo !== v) {
+                activeVideo = v;
+                const focus = String(p.focus || "xMidYMid");
+                const x = focus.includes("xMin") ? "left" : focus.includes("xMax") ? "right" : "center";
+                const y = focus.includes("YMin") ? "top" : focus.includes("YMax") ? "bottom" : "center";
+                Object.assign(v.style, { width: "100%", height: "100%", objectFit: "cover", objectPosition: `${x} ${y}`, filter: `saturate(${p.saturate})` });
+                v.muted = true; v.playbackRate = p.rate;
+                videoFrame.appendChild(v);
+              }
+              v.style.visibility = lt <= 0 && stillSrc ? "hidden" : "visible";
+            }
+          }
           photo.setAttribute("opacity", prog(lt, 0.05, 0.5));
           title.render(lt, t);
           if (tag) tag.setAttribute("opacity", prog(lt, 0.05, 0.35));
           showSmallLine(sub, lt, 1.45);
+          if (logo) logo.render(lt);
           if (lt > beat.dur) R.exitFx(g, ctx, lt, beat);
         },
-        dispose() { g.remove(); },
+        dispose() { if (activeVideo) { activeVideo.playbackRate = 1; activeVideo.remove(); } if (logo) logo.dispose(); g.remove(); },
       };
     },
   });

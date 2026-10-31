@@ -135,6 +135,11 @@
       highlight: { type: "string", default: "", doc: "Frase opcional que se destaca en una etiqueta invertida debajo del texto." },
       sub: { type: "string", default: "", doc: "Línea mono opcional debajo del texto." },
       src: { type: "image", default: "", doc: "Retrato o foto del tema (archivo de assets/media/ o URL). Vacío = cartel «IMAGEN PENDIENTE»." },
+      video: { type: "video", default: "", doc: "Clip .mp4 local, siempre mudo, convertido a glifos." },
+      poster: { type: "image", default: "", doc: "Imagen inicial y respaldo; si falta, usa src." },
+      start: { type: "number", default: 0, min: 0, doc: "Segundo inicial del clip." },
+      rate: { type: "number", default: 1, min: 0.25, max: 2, doc: "Velocidad del clip." },
+      loop: { type: "bool", default: true, doc: "Repite el clip si termina antes del beat; evita congelar." },
       imageSide: { type: "enum", options: ["auto", "left", "right"], default: "auto", doc: "Lado de la foto en 16:9 (el texto va en el otro). auto = alterna entre videos según el texto, así las intros no se ven siempre iguales; left/right lo fija (p. ej. para que el rostro mire hacia el texto). En 9:16 la foto va siempre arriba." },
       zoom: { type: "number", default: 1.2, min: 1, max: 3, doc: "Ampliación de la foto (1 = entera): un retrato más grande se reconoce mejor." },
       focusX: { type: "number", default: 0.5, min: 0, max: 1, doc: "Centro del recorte en la foto, horizontal (0 = izquierda). Moverlo hacia el rostro si queda cortado." },
@@ -145,14 +150,26 @@
       threshold: { type: "number", default: 0.14, min: 0, max: 0.8, doc: "Brillo mínimo para formar la imagen (lo que queda debajo es negro)." },
       glow: { type: "number", default: 0.3, min: 0, max: 0.6, doc: "Opacidad extra de los glifos del texto (más = blanco más luminoso)." },
       morph: { type: "number", default: 1.1, doc: "Segundos para armar texto e imagen." },
+      ...K.brandLogo.params,
     },
-    points(ctx, p) {
+    dynamicPoints: true,
+    points(ctx, p, lt = 0) {
       const L = layout(ctx, p), N = ctx.family.binary.N;
+      let media = ctx.img(p.video ? (p.poster || p.src) : p.src);
+      if (p.video) {
+        const time = p.start + Math.max(0, lt) * p.rate;
+        const v = ctx.clip(p.video, time);
+        if (v) {
+          if (p.loop && Number.isFinite(v.duration) && v.duration > 0) ctx.clip(p.video, time % v.duration);
+          v.muted = true; v.playbackRate = p.rate;
+          if (lt > 0 || !media) media = v;
+        }
+      }
       const phrase = brightText(B.sampleText(L.lines, L.text, {
         font: FONT, fit: "block", lead: LEAD, cell: B.cellOf(ctx, 0.55), jitter: 0.12, alpha: 0.95, edge: true,
       }), p.glow);
       /* el texto nunca se submuestrea: la foto se ajusta al resto del presupuesto */
-      const photo = B.samplePortrait(ctx.img(p.src), L.image, {
+      const photo = B.samplePortrait(media, L.image, {
         zoom: p.zoom, focusX: p.focusX, focusY: p.focusY, cell: B.cellOf(ctx, p.imageCell),
         contrast: p.contrast, gamma: p.gamma, threshold: p.threshold, max: N - phrase.length,
       });
@@ -162,6 +179,7 @@
     create(ctx, p) {
       ctx.beat.hideCaptions = true;
       const L = layout(ctx, p), { u, portrait, content: c } = ctx.stage, G = ctx.g.top, C = ctx.C.palette;
+      const logo = K.brandLogo.attach(ctx, p, L.image, [p.focusX, p.focusY]);
       const textX = L.text.x + L.text.w / 2, imageX = L.image.x + L.image.w / 2;
       return {
         render(lt, beat) {
@@ -181,8 +199,10 @@
           if (p.kicker) B.tag(G, String(p.kicker).toUpperCase(), textX, L.text.y - L.kickerGap / 2 - u * 2, { u, size: 1.55, alpha: a, bg: "#ffffff", color: "#000000" });
           if (p.highlight) B.tag(G, String(p.highlight).toUpperCase(), textX, L.text.y + L.text.h + u * 3, { u, size: 1.25, alpha: a, bg: C.accent, color: C.bg });
           if (p.sub) B.mono(G, String(p.sub).toUpperCase(), textX, L.text.y + L.text.h + u * 7, { u, size: 1.15, alpha: a * 0.8, color: C.accent });
-          if (!p.src) B.tag(G, "IMAGEN PENDIENTE", imageX, L.image.y + L.image.h / 2, { u, size: 1.2, alpha: a, bg: C.accent, color: C.bg });
+          if (!ctx.img(p.video ? (p.poster || p.src) : p.src) && (!p.video || !K.loadedVideos.has(p.video))) B.tag(G, "IMAGEN PENDIENTE", imageX, L.image.y + L.image.h / 2, { u, size: 1.2, alpha: a, bg: C.accent, color: C.bg });
+          if (logo) logo.render(lt);
         },
+        dispose() { const v = p.video && K.loadedVideos.get(p.video); if (v) v.playbackRate = 1; if (logo) logo.dispose(); },
       };
     },
   });
