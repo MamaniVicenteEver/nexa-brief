@@ -5,6 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from src.adapters.data.json_publication_repository import JsonPublicationRepository
+from src.adapters.data.provider_registry import build_provider
+from src.config.settings import settings
+from src.core.ports.publication_repository import PublicationRepository
 from src.adapters.data.local_image_media_cache import LocalImageMediaCache
 from src.adapters.data.local_image_post_resources import LocalImagePostResources
 from src.adapters.data.local_publication_media import LocalPublicationMedia
@@ -16,7 +19,7 @@ from src.core.image_posts.service import ImagePostService
 
 @dataclass(frozen=True)
 class PublicationComponents:
-    port: JsonPublicationRepository
+    port: PublicationRepository
     media: LocalPublicationMedia
     image_cache: LocalImageMediaCache
     resources: LocalImagePostResources
@@ -30,8 +33,10 @@ _components: PublicationComponents | None = None
 def build_publication_components(
     *, data_dir=None, plan_builder=None, renderer=None, publisher=None, account_provider=None
 ) -> PublicationComponents:
-    port = JsonPublicationRepository(data_dir=data_dir)
-    media = LocalPublicationMedia(data_dir=data_dir)
+    port = (JsonPublicationRepository(data_dir=data_dir) if settings.publication_backend == "json"
+            else build_provider("publications", settings.publication_backend, data_dir=data_dir))
+    media = (LocalPublicationMedia(data_dir=data_dir) if settings.media_backend == "filesystem"
+             else build_provider("media", settings.media_backend, data_dir=data_dir))
     image_cache = LocalImageMediaCache(data_dir=data_dir)
     music_catalog = LicensedReelMusic(data_dir=data_dir)
     resources = LocalImagePostResources(data_dir=data_dir)

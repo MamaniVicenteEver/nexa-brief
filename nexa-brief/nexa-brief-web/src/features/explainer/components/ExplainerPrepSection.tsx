@@ -10,7 +10,13 @@ import { ExplainerVideoCard } from "./ExplainerVideoCard";
 type ExplainerView = "preparation" | "rendered";
 
 /** Videos completos listos para grabar y videos que ya tienen un render final. */
-export function ExplainerPrepSection({ categoryPath }: { categoryPath?: string } = {}) {
+export function ExplainerPrepSection({
+  categoryPath,
+  embedded = false,
+}: {
+  categoryPath?: string;
+  embedded?: boolean;
+} = {}) {
   const t = useTranslations("templates");
   const { data: videos = [], isLoading } = useExplainerVideos(categoryPath);
   const [view, setView] = useState<ExplainerView>("preparation");
@@ -59,17 +65,22 @@ export function ExplainerPrepSection({ categoryPath }: { categoryPath?: string }
   };
 
   return (
-    <section aria-labelledby="explainer-prep-heading" className="mb-12">
-      <div className="mb-2 flex items-baseline justify-between gap-3">
-        <h2
-          id="explainer-prep-heading"
-          className="font-nb-sans text-[20px] font-extrabold tracking-[-0.02em] text-nb-ink"
-        >
-          {view === "preparation" ? t("prep.heading") : t("prep.renderedHeading")}
-        </h2>
-        <span className="text-xs text-nb-mute">{currentVideos.length}</span>
-      </div>
-
+    <section
+      aria-label={embedded ? t("prep.videosTab") : undefined}
+      aria-labelledby={embedded ? undefined : "explainer-prep-heading"}
+      className="mb-12"
+    >
+      {!embedded && (
+        <div className="mb-2 flex items-baseline justify-between gap-3">
+          <h2
+            id="explainer-prep-heading"
+            className="font-nb-sans text-[20px] font-extrabold tracking-[-0.02em] text-nb-ink"
+          >
+            {view === "preparation" ? t("prep.heading") : t("prep.renderedHeading")}
+          </h2>
+          <span className="text-xs text-nb-mute">{currentVideos.length}</span>
+        </div>
+      )}
       <div
         role="tablist"
         aria-label={t("prep.viewTabsLabel")}
@@ -128,7 +139,7 @@ export function ExplainerPrepSection({ categoryPath }: { categoryPath?: string }
           </p>
         )}
 
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-2">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-2">
           {visible.map((video) => (
             <ExplainerVideoCard key={video.videoId} video={video} />
           ))}

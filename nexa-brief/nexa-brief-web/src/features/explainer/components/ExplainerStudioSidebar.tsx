@@ -108,6 +108,7 @@ function TextsTab({
 
 function JobStatus({ job }: { job: ExplainerJob }) {
   const t = useTranslations("templates");
+  const ty = useTranslations("channels.youtube");
   const busy = ACTIVE_JOB_STATES.includes(job.state);
   return (
     <div
@@ -136,6 +137,7 @@ function JobStatus({ job }: { job: ExplainerJob }) {
             className="inline-flex items-center gap-1 text-nb-ink underline underline-offset-2"
           >
             {r.accountSelector}
+            {r.thumbnail && r.thumbnail.status !== "not_requested" && <span> · {ty(r.thumbnail.status === "applied" ? "appliedShort" : "failedShort")}</span>}
             {r.format
               ? " · " + t(r.format === "16x9" ? "prep.format.16x9" : "prep.format.9x16")
               : ""}{" "}

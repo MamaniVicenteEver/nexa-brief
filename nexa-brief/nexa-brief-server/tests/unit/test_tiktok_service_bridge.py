@@ -206,3 +206,84 @@ async def test_signed_import_stays_public_and_one_use(api_client, monkeypatch):
     finally:
         with pairing._lock:
             pairing._pairings.pop(pairing_id, None)
+
+
+async def test_photo_bridge_posts_payload_and_waits(tmp_path, monkeypatch):
+    import json
+    calls = []
+    async def no_wait(_):
+        pass
+    monkeypatch.setattr('src.adapters.publishing.tiktok_service.client.asyncio.sleep', no_wait)
+    def handler(request):
+        calls.append(request)
+        if request.method == 'POST':
+            assert request.url.raw_path == b'/v1/accounts/a%2Fb/photos'
+            assert json.loads(request.content) == {
+                'image_paths': [str((tmp_path / 'one.jpg').resolve()), str((tmp_path / 'two.png').resolve())],
+                'caption': 'Descripcion', 'privacy': 'public', 'idempotency_key': 'stable',
+                'first_comment': 'Comentario',
+            }
+            return httpx.Response(202, json={'id': 'job1', 'state': 'queued'})
+        return httpx.Response(200, json={'id': 'job1', 'state': 'done', 'result': {'post_id': '123', 'url': 'https://example.test/123'}})
+    adapter = TikTokServiceAdapter(TikTokServiceClient('http://test', 'key', httpx.MockTransport(handler)))
+    result = await adapter.publish_images([tmp_path / 'one.jpg', tmp_path / 'two.png'], 'Descripcion', 'a/b', idempotency_key='stable', first_comment='Comentario')
+    assert (result.post_id, result.url) == ('123', 'https://example.test/123')
+    assert [request.method for request in calls] == ['POST', 'GET']
+
+
+async def test_photo_bridge_requires_idempotency_before_request(tmp_path):
+    calls = []
+    adapter = TikTokServiceAdapter(TikTokServiceClient('http://test', 'key', httpx.MockTransport(lambda request: calls.append(request))))
+    with pytest.raises(PublisherError, match='clave estable'):
+        await adapter.publish_images([tmp_path / 'one.jpg'], 'Descripcion', 'alice')
+    assert not calls
+
+
+@pytest.mark.parametrize('result', [{'url': 'https://example.test/123'}, {'post_id': '123'}, {}])
+async def test_photo_bridge_rejects_unconfirmed_result(tmp_path, result):
+    client = TikTokServiceClient('http://test', 'key', httpx.MockTransport(
+        lambda request: httpx.Response(202, json={'id': 'job1', 'state': 'done', 'result': result})))
+    with pytest.raises(PublisherError, match='identificación verificable'):
+        await TikTokServiceAdapter(client).publish_images([tmp_path / 'one.jpg'], 'Descripcion', 'alice', idempotency_key='stable')
+
+
+async def test_image_delivery_dispatches_tiktok_with_approved_media(tmp_path, monkeypatch):
+    import hashlib
+    from types import SimpleNamespace
+    from unittest.mock import AsyncMock
+    from src.core.image_posts.models import DeliverySpec
+    from src.core.image_posts.service import ImagePostService
+    path = tmp_path / 'image.jpg'
+    path.write_bytes(b'approved')
+    publish = AsyncMock(return_value=SimpleNamespace(post_id='123', url='https://example.test/123'))
+    monkeypatch.setattr(TikTokServiceAdapter, 'publish_images', publish)
+    service = object.__new__(ImagePostService)
+    service.media = SimpleNamespace(_path=lambda key: path)
+    spec = DeliverySpec(publication_id='p', delivery_id='d', revision=1, platform='tiktok',
+                        account_alias='alice', target_id='alice', placement='image', idempotency_key='stable',
+                        caption='Descripcion', hashtags=['tag'], first_comment='Comentario', comment_allowed=True,
+                        media_keys=['image.jpg'], media_sha256=[hashlib.sha256(b'approved').hexdigest()], alt_text=[])
+    result = await service._publish_tiktok_images(spec)
+    assert (result.post_id, result.permalink) == ('123', 'https://example.test/123')
+    publish.assert_awaited_once_with([path], 'Descripcion\n\n#tag', 'alice', idempotency_key='stable', first_comment='Comentario')
+    path.write_bytes(b'changed')
+    with pytest.raises(ValueError, match='hash'):
+        await service._publish_tiktok_images(spec)
+    assert publish.await_count == 1
+
+
+async def test_photo_bridge_persists_job_before_polling(tmp_path):
+    events = []
+    def handler(request):
+        events.append((request.method, request.url.path))
+        if request.method == 'POST':
+            return httpx.Response(202, json={'id': 'job1', 'state': 'queued'})
+        return httpx.Response(200, json={'id': 'job1', 'state': 'done',
+            'result': {'post_id': '123', 'url': 'https://example.test/123'}})
+    async def save(job_id):
+        events.append(('saved', job_id))
+    client = TikTokServiceClient('http://test', 'key', httpx.MockTransport(handler))
+    result = await TikTokServiceAdapter(client).publish_images(
+        [tmp_path / 'one.jpg'], 'Texto', 'test', idempotency_key='key', on_job=save)
+    assert result.post_id == '123'
+    assert events == [('POST', '/v1/accounts/test/photos'), ('saved', 'job1'), ('GET', '/v1/jobs/job1')]

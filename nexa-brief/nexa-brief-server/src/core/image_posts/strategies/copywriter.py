@@ -81,6 +81,9 @@ def _piece(raw: dict[str, Any], fact: Fact, strategy: Strategy) -> Copy:
 async def write(strategy: Strategy, facts: list[Fact], ctx: StrategyContext,
                 ai: Any = None, usage_out: list[dict[str, Any]] | None = None) -> tuple[dict[str, Copy], str, dict[str, str]]:
     """Textos por claim_id + tema sugerido + extras (búsqueda de foto). Sin modelo → reglas."""
+    if strategy.id == "amarillista":
+        from .amarillista_copy import write as write_amarillista
+        return await write_amarillista(strategy, facts, ctx, ai, usage_out)
     if ai is None and os.environ.get("NEXA_IMAGE_COPY_MODEL", "").lower() == "off":
         return {fact.claim_id: fallback_copy(fact, strategy.headline_max, strategy.body_max, "modelo apagado")
                 for fact in facts}, "", {}

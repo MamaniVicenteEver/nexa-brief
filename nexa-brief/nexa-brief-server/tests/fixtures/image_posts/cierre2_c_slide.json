@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "plan_id": "plan_ee808ea21e195dcf8404",
+  "category_id": "node_tech",
+  "source_video_id": "entrada",
+  "source_revision": "8b139f3db014d5643a022e1ce030d2923805982a51a1ec9a716775331dc28175",
+  "style_id": "node_tech_rough",
+  "style_version": "1.0.0",
+  "template_id": "five_slides",
+  "format": "4:5",
+  "slides": [
+    {
+      "slide_id": "slide_04",
+      "order": 4,
+      "layout": "amarillista:am_negro_reflexion_visual",
+      "elements": [
+        {
+          "type": "diagram",
+          "value": "{\"kind\": \"timeline\", \"label\": \"El límite y el seguimiento del ensayo\", \"items\": [{\"label\": \"Uso inicial\", \"detail\": \"Estudiantes usaban al menos 3 horas al día\"}, {\"label\": \"Tres semanas\", \"detail\": \"Intervención redujo el uso a un máximo de 2 horas al día\"}, {\"label\": \"Seis semanas después\", \"detail\": \"El tiempo de pantalla volvió rápidamente cerca del nivel inicial\"}], \"claim_ids\": [\"claim_4\"]}"
+        }
+      ],
+      "texts": [
+        {
+          "role": "kicker",
+          "value": "REFLEXIÓN",
+          "claim_refs": []
+        },
+        {
+          "role": "body",
+          "value": "Si ignoras el rebote del uso, puedes confundir mejoras breves con cambios duraderos.",
+          "claim_refs": [
+            "claim_4"
+          ]
+        },
+        {
+          "role": "source",
+          "value": "Fuente: BMC Medicine, ensayo aleatorizado",
+          "claim_refs": [
+            "claim_4"
+          ]
+        },
+        {
+          "role": "handle",
+          "value": "@nodetech_es",
+          "claim_refs": []
+        }
+      ],
+      "media": [],
+      "claim_refs": [
+        {
+          "id": "claim_4",
+          "source_id": "source_4",
+          "locator": "PLAN.md §3, hecho 4; Sí; rol=reflexion; Abstract, Methods, Results y Discussion. N=111 aleatorizados, estudiantes sanos y muestra de una universidad; resultados de corto plazo en cuestionarios, con rebote del uso. No prueba tratamiento de adicción, beneficio individual ni efecto duradero generalizable.",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11846175/"
+        }
+      ]
+    }
+  ],
+  "seed": 0,
+  "renderer_version": "image-stage-1.0.0"
+}

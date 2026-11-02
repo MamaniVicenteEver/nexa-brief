@@ -3,7 +3,11 @@
 import { Loader2, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { useCaptureThumbnails, useChooseThumbnail } from "../hooks/useExplainer";
+import {
+  useCaptureThumbnails,
+  useChooseThumbnail,
+  usePrepareThumbnails,
+} from "../hooks/useExplainer";
 import type { ExplainerVideo, ThumbnailOptionId } from "../types";
 
 /**
@@ -15,10 +19,12 @@ export function ThumbnailPicker({ video }: { video: ExplainerVideo }) {
   const t = useTranslations("explainer.studio.thumbnail");
   const capture = useCaptureThumbnails();
   const choose = useChooseThumbnail();
+  const preparation = usePrepareThumbnails(video);
   const { chosen, options } = video.thumbnails;
   if (options.length === 0) return null;
-  const busy = capture.isPending || choose.isPending;
+  const busy = capture.isPending || choose.isPending || preparation.isFetching;
   const missing = options.some((o) => !o.url);
+  const error = capture.error ?? choose.error ?? (missing ? preparation.error : null);
   const pick = (option: ThumbnailOptionId) => {
     if (option !== chosen) choose.mutate({ videoId: video.videoId, option });
   };
@@ -33,12 +39,12 @@ export function ThumbnailPicker({ video }: { video: ExplainerVideo }) {
           onClick={() => capture.mutate(video.videoId)}
           className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-nb-ink-soft disabled:opacity-50"
         >
-          {capture.isPending ? (
+          {capture.isPending || preparation.isFetching ? (
             <Loader2 className="size-3.5 animate-spin" />
           ) : (
             <RefreshCw className="size-3.5" />
           )}
-          {missing ? t("capture") : t("recapture")}
+          {preparation.isFetching ? t("preparing") : missing ? t("capture") : t("recapture")}
         </button>
       </div>
       <p className="text-[11.5px] text-nb-mute">{t("hint")}</p>
@@ -64,7 +70,7 @@ export function ThumbnailPicker({ video }: { video: ExplainerVideo }) {
               />
             ) : (
               <span className="flex aspect-video w-full items-center justify-center rounded-lg border border-dashed border-nb-line text-[10.5px] text-nb-mute">
-                {t("notCaptured")}
+                {busy ? t("preparing") : t("notCaptured")}
               </span>
             )}
             <span className="text-[11.5px] font-semibold text-nb-ink">
@@ -73,9 +79,7 @@ export function ThumbnailPicker({ video }: { video: ExplainerVideo }) {
           </button>
         ))}
       </div>
-      {(capture.error || choose.error) && (
-        <p className="text-[12px] text-red-600">{(capture.error ?? choose.error)?.message}</p>
-      )}
+      {error && <p className="text-[12px] text-red-600">{error.message}</p>}
     </section>
   );
 }

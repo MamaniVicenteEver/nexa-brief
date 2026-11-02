@@ -33,12 +33,6 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}#stage{position:f
   const subtitle = document.getElementById('flag-subtitle');
   const row = document.getElementById('flag-row');
   const scenes = [
-    {key:'taiwan',start:8.09,end:14.01,title:'TAIWÁN · 1895',subtitle:'Cesión del Tratado de Shimonoseki',flow:'→',flags:[['qing.svg','CHINA QING'],['japan.svg','JAPÓN']]},
-    {key:'korea',start:14.01,end:17.43,title:'COREA · 1910',subtitle:'Anexión formal al Imperio japonés',flow:'→',flags:[['korean-empire.svg','COREA'],['japan.svg','JAPÓN']]},
-    {key:'manchuria',start:17.43,end:21.35,title:'MANCHURIA · 1931',subtitle:'El ejército japonés ocupa la región',flow:'→',flags:[['japan.svg','JAPÓN'],['manchukuo.svg','MANCHUKUO']]},
-    {key:'manchukuo',start:21.35,end:27.45,title:'MANCHUKUO · 1932',subtitle:'Estado bajo control japonés',flow:'→',flags:[['japan.svg','JAPÓN'],['manchukuo.svg','MANCHUKUO']]},
-    {key:'china',start:27.45,end:34.61,title:'CHINA · DESDE 1937',subtitle:'Guerra a gran escala; sin conquista total',flow:'↔',flags:[['japan.svg','JAPÓN'],['roc.svg','REPÚBLICA DE CHINA']]},
-    {key:'southeast',start:34.61,end:44.35,title:'SUD-ESTE ASIÁTICO · 1941–42',subtitle:'Campañas sobre territorios bajo dominio británico, filipino y neerlandés',flow:'→',flags:[['japan.svg','JAPÓN'],['union-jack.svg','MALAYA'],['philippines-commonwealth.svg','FILIPINAS'],['netherlands.svg','INDIAS NEERL.']]}
   ];
   let active = '';
   function show(scene) {

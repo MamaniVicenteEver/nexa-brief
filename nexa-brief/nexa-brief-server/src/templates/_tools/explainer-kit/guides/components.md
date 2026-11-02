@@ -29,6 +29,10 @@ dispositivos, texto…). Cuando un archivo pasa ~600 líneas, se parte por líne
 
 El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. `common.logo` está obsoleto y el check lo rechaza. En el beat de `rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`, usá `logo` (SVG/PNG transparente), `logoName` (fallback de texto), y si hace falta `logoPos`, `logoSize` o `logoInvert` para una versión clara sobre fondo oscuro. El helper común conserva proporciones y evita el foco declarado. No dibujes un logo de memoria.
 
+## Biblioteca entre videos
+
+Antes de dibujar un componente propio, corré `kit.py library`. Lee `component-library.json`, que `kit.py check` y `kit.py manifest` actualizan con los catálogos aprobados de cada producción: nombre, descripción, parámetros, hoja PNG y video origen. Las hojas aprobadas se copian a `component-library/sheets/` para conservarlas fuera de `work/`. Si el componente sirve y comparte familia de diseño, copiá el JS indicado a `assets/components/` del video nuevo, junto a cualquier dependencia local; corré `kit.py components <id>`, revisá la nueva hoja PNG, completá la rúbrica y usalo en `storyboard.json`. El check avisa si un componente nuevo se parece mucho a otro de la biblioteca; una copia idéntica cuenta como reuso válido. Para usarlo en otra familia, promovelo a `designs/common/` y registralo en cada diseño, con parámetros por JSON y pruebas visuales. Creá uno nuevo solo si la biblioteca no cubre la idea; sin emojis, con hoja PNG aprobada y uso en el storyboard.
+
 - `showcase/index.html` (servir `src/templates/` por HTTP): elegir diseño, ver cada componente animado
   con su nombre, para qué sirve, parámetros y ejemplo.
 - `CATALOG.md`: lo mismo en texto (generado: `kit.py catalog`).

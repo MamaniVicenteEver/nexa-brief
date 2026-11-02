@@ -31,16 +31,22 @@
         ],
         "src": "/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/assets/media/chat-juicio.png",
         "imageSide": "right"
-      }
+      },
+      "shows": "Ilustración conceptual de chat en pantalla y mazo judicial, sin representar un juicio real.",
+      "query": "Imagen conceptual generada para la intro existente; sin búsqueda de stock.",
+      "media_review": "La hoja conserva la ilustración conceptual de una pantalla de chat y un mazo; no es un juicio real."
     },
     {
       "at": "legal. Primero le cuentas a",
       "use": "rough.photo",
       "params": {
-        "src": "assets/media/telefono.jpg",
+        "src": "assets/media/mensajes-en-pantalla.jpg",
         "caption": "Una conversación personal",
-        "sub": "TRABAJO · FAMILIA · SALUD"
-      }
+        "sub": "IMAGEN ILUSTRATIVA"
+      },
+      "shows": "Teléfono en manos con conversación de mensajes visible; ilustra conversaciones personales.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra una mano con teléfono y burbujas de mensajes; es una conversación ilustrativa."
     },
     {
       "at": "orden obligó a conservar conversaciones,",
@@ -53,13 +59,18 @@
       "at": "director de OpenAI advirtió que",
       "use": "rough.photo",
       "params": {
-        "src": "assets/media/datos.jpg",
+        "src": "assets/media/juez-firma.jpg",
         "caption": "ChatGPT · protección legal",
         "sub": "IMAGEN ILUSTRATIVA",
         "logo": "assets/media/logos/openai-transparent.svg",
         "logoName": "OpenAI",
-        "logoInvert": true
-      }
+        "logoInvert": true,
+        "logoSize": 0.35,
+        "logoPos": "top-left"
+      },
+      "shows": "Mano firma un documento junto a mazo; ilustra el contexto judicial de la advertencia de OpenAI.",
+      "query": "judge courtroom hearing; judge gavel court",
+      "media_review": "La hoja muestra mazo y documento con una persona al fondo; el logo OpenAI acompaña la imagen."
     },
     {
       "at": "o un terapeuta. Tu trabajo,",
@@ -72,13 +83,17 @@
       "at": "guardada en sistemas de una",
       "use": "common.clip",
       "params": {
-        "src": "assets/media/escribiendo.mp4",
+        "src": "assets/media/mensajes-pantalla.mp4",
         "layout": "full",
-        "caption": "Una conversación digital",
-        "sub": "IMAGEN ILUSTRATIVA",
+        "caption": "UNA ^CONVERSACIÓN^ DIGITAL",
         "tone": "color",
-        "rate": 0.9
-      }
+        "textColor": "mix",
+        "textSide": "left",
+        "loop": true
+      },
+      "shows": "Manos usan teléfono con conversación de mensajes visible; ilustra el contenido enviado a una empresa.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra manos con teléfono y mensajes; la captura no identifica una conversación real con IA."
     },
     {
       "at": "búsquedas. El enlace llevaba información",
@@ -93,18 +108,24 @@
       "params": {
         "text": "UN ENLACE\nCOMPARTIDO",
         "highlight": "COMPARTIDO",
-        "src": "assets/media/telefono.jpg",
-        "video": "assets/media/telefono-video.mp4"
-      }
+        "src": "assets/media/mensajes-personales.jpg"
+      },
+      "shows": "Teléfono con aplicación de mensajes y un texto preparado; ilustra una conversación compartida, no el enlace real.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra el teléfono con un mensaje preparado; no se muestra el enlace real."
     },
     {
       "at": "En un tribunal de Nueva York",
       "use": "rough.introv2",
       "params": {
         "text": "UNA DISPUTA\nPOR PRUEBAS",
-        "highlight": "PRUEBAS",
-        "src": "assets/media/tribunal.jpg"
-      }
+        "highlight": "POR PRUEBAS",
+        "video": "assets/media/palacio-justicia.mp4",
+        "loop": true
+      },
+      "shows": "Fachada del Palacio de Justicia; tribunal ilustrativo, no el de Nueva York.",
+      "query": "courthouse exterior justice building; court building facade",
+      "media_review": "La hoja muestra fachada de un palacio de justicia; no representa el tribunal neoyorquino del caso."
     },
     {
       "at": "leyó. El 13 de mayo",
@@ -115,17 +136,20 @@
     },
     {
       "at": "La demanda enfrentaba a medios, entre ellos The New York Times",
-      "use": "rough.photo",
+      "use": "rough.introv2",
       "params": {
+        "text": "UNA DEMANDA\nPOR DERECHOS",
+        "highlight": "DERECHOS",
         "src": "assets/media/tribunal.jpg",
-        "caption": "Demanda por derechos de autor",
-        "sub": "IMAGEN ILUSTRATIVA",
         "logo": "assets/media/logos/new-york-times.png",
         "logoName": "The New York Times",
         "logoInvert": true,
-        "logoPos": "bottom-right",
-        "logoSize": 0.32
-      }
+        "logoSize": 0.35,
+        "logoPos": "top-right"
+      },
+      "shows": "Fachada del tribunal de apelaciones de Nueva York; contexto judicial ilustrativo de la demanda.",
+      "query": "courthouse exterior justice building; court building facade",
+      "media_review": "La hoja muestra la fachada judicial de Nueva York junto al logo del New York Times; es contexto ilustrativo."
     },
     {
       "at": "La orden alcanzó información que",
@@ -175,13 +199,18 @@
       "at": "Bradley Heppner preparó documentos con Claude",
       "use": "rough.photo",
       "params": {
-        "src": "assets/media/portatil.jpg",
+        "src": "assets/media/revision-juridica.jpg",
         "caption": "Caso Heppner",
         "sub": "IMAGEN ILUSTRATIVA",
         "logo": "assets/media/logos/claude.png",
         "logoName": "Claude",
-        "logoInvert": true
-      }
+        "logoInvert": true,
+        "logoSize": 0.35,
+        "logoPos": "top-left"
+      },
+      "shows": "Persona revisa papeles en oficina con figura de justicia; ilustra documentos legales, no representa a Heppner.",
+      "query": "lawyer legal documents consultation; attorney reading legal documents",
+      "media_review": "La hoja muestra una persona con papeles y una figura de justicia; no es Heppner ni su expediente."
     },
     {
       "at": "En febrero de 2026, el",
@@ -217,9 +246,12 @@
       "params": {
         "text": "NO ES LO\nMISMO",
         "highlight": "MISMO",
-        "src": "assets/media/datos.jpg",
-        "video": "assets/media/servidores-video.mp4"
-      }
+        "video": "assets/media/juez-mazo.mp4",
+        "loop": true
+      },
+      "shows": "Persona con toga y mazo en primer plano; ilustra la distinción jurídica.",
+      "query": "judge courtroom hearing; judge gavel court",
+      "media_review": "La hoja muestra un mazo ante una persona con toga; es una escena judicial ilustrativa."
     },
     {
       "at": "la obligación general de retener",
@@ -266,10 +298,13 @@
       "at": "reducido de sus áreas legal",
       "use": "rough.photo",
       "params": {
-        "src": "assets/media/servidores.jpg",
+        "src": "assets/media/asesoria-juridica.jpg",
         "caption": "Acceso restringido",
-        "sub": "LEGAL Y SEGURIDAD · SEGÚN OPENAI"
-      }
+        "sub": "IMAGEN ILUSTRATIVA"
+      },
+      "shows": "Personas reunidas ante documentos en una oficina jurídica; ilustra el acceso legal, no a personal de OpenAI.",
+      "query": "lawyer legal documents consultation; attorney reading legal documents",
+      "media_review": "La hoja muestra una reunión con documentos en una oficina jurídica, no al equipo legal de OpenAI."
     },
     {
       "at": "Los medios pidieron una muestra",
@@ -350,9 +385,11 @@
       "params": {
         "text": "UNA MUESTRA\nLIMITADA",
         "highlight": "LIMITADA",
-        "src": "assets/media/datos.jpg",
-        "video": "assets/media/escribiendo.mp4"
-      }
+        "src": "assets/media/chat-en-movil.jpg"
+      },
+      "shows": "Teléfono con mensajes visibles; ilustra conversaciones de la muestra, sin mostrar los registros reales.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra un teléfono con burbujas de mensajes; no son los registros de la muestra judicial."
     },
     {
       "at": "no demuestra que tu conversación",
@@ -377,14 +414,19 @@
     },
     {
       "at": "marzo de 2026, la jueza",
-      "use": "rough.counter",
+      "use": "common.clip",
       "params": {
-        "to": 78000000,
-        "label": "OTRO LOTE ORDENADO",
-        "unit": "MÁS 10 MILLONES",
-        "dur": 2.5,
-        "from": 0
-      }
+        "src": "assets/media/magistrada-estrado.mp4",
+        "layout": "full",
+        "caption": "OTRO ^LOTE^ ORDENADO",
+        "tone": "color",
+        "textColor": "mix",
+        "textSide": "left",
+        "loop": true
+      },
+      "shows": "Persona con toga y peluca en estrado; ilustra la decisión judicial sin identificar a la jueza real.",
+      "query": "judge courtroom hearing; judge gavel court",
+      "media_review": "La hoja muestra una persona con toga y peluca; la imagen no identifica a la jueza real."
     },
     {
       "at": "no demuestra por sí sola",
@@ -463,10 +505,15 @@
     },
     {
       "at": "Cuando eliminas un chat, desaparece",
-      "use": "rough.retentionCalendar",
+      "use": "rough.photo",
       "params": {
-        "title": "HASTA 30 DÍAS"
-      }
+        "src": "assets/media/conversacion-movil.jpg",
+        "caption": "Eliminar un chat",
+        "sub": "IMAGEN ILUSTRATIVA"
+      },
+      "shows": "Teléfono sobre mesa con conversación visible; ilustra el chat que puede eliminarse.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra un teléfono con mensajes sobre una mesa; ilustra una conversación que se puede eliminar."
     },
     {
       "at": "Hay excepciones, entre ellas obligaciones",
@@ -530,10 +577,13 @@
       "at": "del destinatario y puede conservarse",
       "use": "rough.photo",
       "params": {
-        "src": "assets/media/teclado.jpg",
+        "src": "assets/media/mensajeria-movil.jpg",
         "caption": "Herramientas conectadas",
-        "sub": "LA POLÍTICA DEL DESTINATARIO PUEDE SER DIFERENTE"
-      }
+        "sub": "IMAGEN ILUSTRATIVA"
+      },
+      "shows": "Persona sostiene teléfono con conversación visible; ilustra datos de una conversación enviados a otra herramienta.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra un teléfono con aplicación de mensajes; no identifica una herramienta conectada específica."
     },
     {
       "at": "entrenamiento de retención. Usar contenido",
@@ -541,9 +591,11 @@
       "params": {
         "text": "DOS CONTROLES\nDISTINTOS",
         "highlight": "DISTINTOS",
-        "src": "assets/media/servidores.jpg",
-        "video": "assets/media/servidores-video.mp4"
-      }
+        "src": "assets/media/mensajes-personales.jpg"
+      },
+      "shows": "Teléfono con aplicación de mensajes; ilustra el contenido al distinguir entrenamiento y retención.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra un teléfono con un mensaje preparado; ilustra contenido de una conversación."
     },
     {
       "at": "aparezca en tu historial o",
@@ -605,24 +657,31 @@
     },
     {
       "at": "dice que no entrena con",
-      "use": "rough.photo",
+      "use": "rough.introv2",
       "params": {
-        "src": "assets/media/oficina.jpg",
-        "caption": "Espacios de trabajo",
-        "sub": "ADMINISTRACIÓN · RETENCIÓN · ACCESO"
-      }
+        "text": "ESPACIOS DE\nTRABAJO",
+        "highlight": "TRABAJO",
+        "src": "assets/media/mensajes-en-pantalla.jpg"
+      },
+      "shows": "Teléfono con conversación visible; ilustra contenidos de conversaciones en espacios de trabajo.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra una conversación de mensajes en un teléfono; no representa una cuenta empresarial real."
     },
     {
       "at": "aquí hablamos de los servidores",
       "use": "common.clip",
       "params": {
-        "src": "assets/media/telefono-video.mp4",
+        "src": "assets/media/documentos-legales.mp4",
         "layout": "full",
+        "caption": "DATOS Y ^ACCESO^",
         "tone": "color",
-        "caption": "Información que sale del dispositivo",
-        "sub": "IMAGEN ILUSTRATIVA",
-        "rate": 0.85
-      }
+        "textColor": "mix",
+        "textSide": "left",
+        "loop": true
+      },
+      "shows": "Personas revisan papeles junto a mazo y balanza; ilustra el acceso legal a información, no servidores reales.",
+      "query": "lawyer legal documents consultation; attorney reading legal documents",
+      "media_review": "La hoja muestra personas con documentos, mazo y balanza; ilustra el acceso jurídico a información."
     },
     {
       "at": "algunas conversaciones compartidas de",
@@ -652,14 +711,23 @@
     },
     {
       "at": "Eso no significa que Google indexara",
-      "use": "rough.photo",
+      "use": "common.clip",
       "params": {
-        "src": "assets/media/telefono.jpg",
-        "caption": "Enlaces compartidos y buscadores",
-        "sub": "IMAGEN ILUSTRATIVA",
+        "src": "assets/media/mensajes-pantalla.mp4",
+        "layout": "full",
+        "caption": "ENLACES ^COMPARTIDOS^",
+        "tone": "color",
+        "textColor": "mix",
+        "textSide": "left",
+        "loop": true,
         "logo": "assets/media/logos/google.png",
-        "logoName": "Google"
-      }
+        "logoName": "Google",
+        "logoSize": 0.35,
+        "logoPos": "top-right"
+      },
+      "shows": "Manos usan teléfono con mensajes visibles; ilustra conversaciones compartidas, no una página indexada.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra un teléfono con conversación visible junto al logo de Google; no muestra una indexación real."
     },
     {
       "at": "buscadores, quien tenga un enlace",
@@ -718,14 +786,19 @@
     },
     {
       "at": "correo sobre la gestión de Enron",
-      "use": "rough.photo",
+      "use": "rough.introv2",
       "params": {
-        "src": "assets/media/teclado.jpg",
-        "caption": "Correo de 2001 · prueba en 2006",
-        "sub": "IMAGEN ILUSTRATIVA",
+        "text": "EL CORREO\nDE ENRON",
+        "highlight": "ENRON",
+        "src": "assets/media/correo-electronico.jpg",
         "logo": "assets/media/logos/enron.png",
-        "logoName": "Enron"
-      }
+        "logoName": "Enron",
+        "logoSize": 0.35,
+        "logoPos": "bottom-right"
+      },
+      "shows": "Teléfono con aplicación de correo abierta; ilustra el medio, no el mensaje real de Enron.",
+      "query": "email inbox message computer screen; email app smartphone",
+      "media_review": "La hoja muestra una aplicación de correo abierta y el logo Enron; no muestra el correo histórico."
     },
     {
       "at": "juicio de Jeffrey Skilling. Antes,",
@@ -733,8 +806,11 @@
       "params": {
         "src": "assets/media/tribunal.jpg",
         "caption": "Tribunal de apelaciones de Nueva York",
-        "sub": "IMAGEN ILUSTRATIVA · OTRO TRIBUNAL"
-      }
+        "sub": "IMAGEN ILUSTRATIVA"
+      },
+      "shows": "Fachada del tribunal de apelaciones de Nueva York; ilustra el tribunal mencionado.",
+      "query": "courthouse exterior justice building; court building facade",
+      "media_review": "La hoja muestra la fachada del tribunal de apelaciones de Nueva York."
     },
     {
       "at": "de 2025 trató una muestra",
@@ -789,13 +865,19 @@
     },
     {
       "at": "documentos fueron obtenidos de sus",
-      "use": "rough.introv2",
+      "use": "common.clip",
       "params": {
-        "text": "EL CASO\nHEPPNER",
-        "highlight": "HEPPNER",
-        "src": "assets/media/portatil.jpg",
-        "video": "assets/media/laptop-video.mp4"
-      }
+        "src": "assets/media/justicia-legal.mp4",
+        "layout": "full",
+        "caption": "EL CASO ^HEPPNER^",
+        "tone": "color",
+        "textColor": "mix",
+        "textSide": "left",
+        "loop": true
+      },
+      "shows": "Persona con vestimenta jurídica en sala; ilustra una instancia judicial, no identifica al caso Heppner.",
+      "query": "lawyer legal documents consultation; attorney reading legal documents",
+      "media_review": "La hoja muestra una persona con vestimenta jurídica en una sala; no identifica a alguien del caso Heppner."
     },
     {
       "at": "análisis. No debemos presumir que",
@@ -836,12 +918,15 @@
     },
     {
       "at": "datos. Desactiva la mejora del",
-      "use": "rough.browser",
+      "use": "rough.introv2",
       "params": {
-        "title": "Configuración",
-        "link": "CONTROLES DE DATOS",
-        "caption": "REVISA ENTRENAMIENTO"
-      }
+        "text": "REVISÁ TUS\nDATOS",
+        "highlight": "DATOS",
+        "src": "assets/media/conversacion-movil.jpg"
+      },
+      "shows": "Teléfono con una conversación visible; ilustra los controles sobre datos conversacionales.",
+      "query": "smartphone chat messages screen; phone text message conversation screen",
+      "media_review": "La hoja muestra un teléfono con mensajes visibles; ilustra los datos conversacionales."
     },
     {
       "at": "los que ya no necesites.",
@@ -893,7 +978,7 @@
       "params": {
         "title": "SUSTITUYE DATOS IDENTIFICATORIOS"
       },
-      "until": "concreto, consulta a un profesional."
+      "until": "Gracias por llegar hasta aquí"
     },
     {
       "at": "concreto, consulta a un profesional.",

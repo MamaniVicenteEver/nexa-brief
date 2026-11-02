@@ -329,9 +329,9 @@
     /* En la reproducción en vivo se esperan solo las imágenes visibles al abrir.
        Las demás se precargan después del primer cuadro; las capturas mantienen la carga completa. */
     const wait = (pr, ms) => Promise.race([pr, new Promise(r => setTimeout(r, ms))]);
-    /* La vista en vivo no debe quedarse esperando fuentes remotas: usa el fallback
-       en el primer cuadro y el bucle vuelve a dibujar cuando la fuente termine de cargar. */
-    const fontWaitMs = PREVIEW_FIRST_FRAME ? 700 : 10000;
+    /* La tipografía debe estar lista antes de medir textos y arrancar el audio:
+       un fallback que cambia en pleno plano produce un salto de tamaño y de glifos. */
+    const fontWaitMs = 10000;
     const fontLoads = [...new Set([...(C.fonts?.load || []), ...fonts])].map(f => wait(doc.fonts.load(f).catch(() => {}), fontWaitMs));
     const imgs = new Set();
     const firstFrameImgs = new Set();
@@ -397,6 +397,10 @@
       family: {},
     };
     for (const [name, rt] of families) if (rt.setup) ctx.family[name] = rt.setup(ctx) || {};
+    /* Preparación adicional solo en vivo; las capturas conservan la ruta original. */
+    if (FROZEN == null && !QS.has("paused")) {
+      await Promise.all([...families.values()].map(rt => rt.prepare ? wait(rt.prepare(ctx), 10000) : null));
+    }
 
     /* instancias de beats: se crean al entrar a su ventana y se destruyen al salir */
     const live = new Map();
@@ -447,7 +451,9 @@
           if (!v.paused) v.pause();
           if (Math.abs(v.currentTime - want) > 0.5 / 30) { v.currentTime = want; seeking.add(v); }
         } else {
-          if (Math.abs(v.currentTime - want) > 0.3) v.currentTime = want;
+          /* Reasignar durante una búsqueda lenta cancela el cuadro pendiente y
+             puede mantener el clip congelado aunque ya esté descargado. */
+          if (!v.seeking && Math.abs(v.currentTime - want) > 0.3) v.currentTime = want;
           if (v.paused) v.play().catch(() => {});
         }
       }
@@ -465,8 +471,10 @@
       seeking.clear();
     }
 
+    let lastDrawTime = INITIAL_TIME;
     function render(t) {
       t = clamp(t, 0, total);
+      lastDrawTime = t;
       for (const k of ["bg", "main", "top"]) { const g = ctx.g[k]; g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, stage.W, stage.H); }
       for (const [name, rt] of families) if (rt.frame) rt.frame(t, ctx, ctx.family[name]);
       const active = beats.filter(b => t >= b.t0 - PRE && t < b.t1 + (registry.get(b.use)?.post ?? POST));
@@ -489,17 +497,54 @@
     const LOOP = QS.has("loop");          /* galería: repetir en bucle sin audio */
     /* ?controls=1 (modal de la app, ver engine/player.js): el audio es el único reloj,
        así pausa/adelantar/retroceder muestran el cuadro exacto y se sigue dibujando en pausa */
+    /* Reloj de reproducción suavizado.
+       audio.currentTime NO avanza de forma continua: se actualiza a escalones irregulares (10–60 ms según el
+       navegador y el buffer de audio) mientras requestAnimationFrame llega cada 16 o 33 ms. Usarlo tal cual hace que
+       la cámara avance a ratos el doble y a ratos nada (tirones en los zooms y vuelos lentos).
+       Con el audio sonando se interpola con el reloj de pared (rAF) y se engancha al audio con un filtro de
+       ~0,4 s: sin escalones, y sin perder la sincronía con la voz. Si el audio salta (adelantar, retroceder,
+       buffering, pestaña oculta) se resincroniza de golpe. En pausa, y en capturas/seek, se usa el valor exacto. */
+    const SM = { on: false, est: 0, now: 0 };
+    const SMOOTH_TAU = 0.4, SMOOTH_JUMP = 0.25;
+    function mediaClock(now) {
+      const raw = audio.currentTime || 0;
+      if (audio.paused || audio.ended) { SM.on = false; return raw; }
+      const dtw = now - SM.now;
+      if (!SM.on || dtw < 0 || dtw > 250 || Math.abs(raw - SM.est) > SMOOTH_JUMP) SM.est = raw;
+      else {
+        const dt = dtw / 1000;
+        SM.est += dt * (audio.playbackRate || 1);
+        SM.est += (raw - SM.est) * (1 - Math.exp(-dt / SMOOTH_TAU));
+      }
+      SM.on = true; SM.now = now;
+      return SM.est;
+    }
     const clock = now => forced != null ? forced
-      : CONTROLLED ? (SYNTHETIC_CLOCK ? (window.__nexaClock?.currentTime || 0) : (audio.currentTime || 0))
-      : (!audio.paused && audio.currentTime > 0) ? audio.currentTime
+      : CONTROLLED ? (SYNTHETIC_CLOCK ? (window.__nexaClock?.currentTime || 0) : mediaClock(now))
+      : (!audio.paused && audio.currentTime > 0) ? mediaClock(now)
       : (t0wall == null ? (t0wall = now, START_AT) : LOOP ? START_AT + ((now - t0wall) / 1000) % Math.max(total - START_AT, 0.001) : START_AT + (now - t0wall) / 1000);
     function frame(now) {
+      /* La marca rAF puede preceder al callback cientos de ms si el hilo está
+         ocupado. Muestrear audio y reloj aquí evita falsas aceleraciones y
+         mantiene también los clips en la misma referencia temporal. */
+      now = performance.now();
       const t = clock(now);
-      render(t);
+      if (window.__kitTrace) window.__kitTrace.push([now, t, audio.currentTime || 0]);   /* solo si un perfilador lo pide */
+      /* Tras el fin no borrar el último cuadro pintado: el outro ya salió de su
+         ventana. El seek explícito conserva su dibujo exacto, también en total. */
+      if (forced != null || LOOP || t < total) render(t);
+      else syncClips();                 /* pausar los medios que ya no se dibujan */
       /* Al llegar al final se conserva el último cuadro; solo ?loop habilita otro ciclo. */
       if (forced == null && (LOOP || CONTROLLED || t < total)) requestAnimationFrame(frame);
     }
-    addEventListener("resize", () => { size(); for (const inst of live.values()) inst.dispose && inst.dispose(); live.clear(); for (const [name, rt] of families) if (rt.resize) rt.resize(ctx, ctx.family[name]); });
+    addEventListener("resize", () => {
+      size(); for (const inst of live.values()) inst.dispose && inst.dispose(); live.clear();
+      for (const [name, rt] of families) if (rt.resize) rt.resize(ctx, ctx.family[name]);
+      if (forced == null && !LOOP && clock(performance.now()) >= total) {
+        render(lastDrawTime);          /* recomponer el cuadro retenido en el nuevo formato */
+        void settleClips(lastDrawTime);
+      }
+    });
 
     window.__promo = {
       scenes: () => beats.map(b => ({ t0: b.t0, t1: b.t1, type: b.use, seg: { text: b.at || "" } })).concat([{ t0: total, t1: total, type: "end", seg: { text: "" } }]),
@@ -507,13 +552,18 @@
       release() { forced = null; requestAnimationFrame(frame); },
       beats, total, words,
     };
-    if (FROZEN == null && !QS.has("paused") && !CONTROLLED) audio.play().catch(() => {});
     /* Dibuja antes de anunciar que el reproductor está listo: el audio no debe revelar
        un canvas todavía vacío. Esperamos dos frames para que el navegador pinte el inicial. */
     render(clock(performance.now()));
     if (forced != null) await settleClips(forced);
     requestAnimationFrame(frame);
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    /* También fuera del modal: la primera rasterización puede tardar cientos de ms.
+       El audio empieza después de que ese cuadro ya llegó a pantalla. */
+    if (FROZEN == null && !QS.has("paused") && !CONTROLLED) {
+      t0wall = null;
+      audio.play().catch(() => {});
+    }
     if (deferredImgs.length) setTimeout(() => {
       let next = 0;
       const worker = async () => {

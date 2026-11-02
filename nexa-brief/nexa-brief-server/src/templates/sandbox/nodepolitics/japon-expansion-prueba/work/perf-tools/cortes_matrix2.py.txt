@@ -1,0 +1,87 @@
+import asyncio, argparse, json, math, statistics, time, re
+from pathlib import Path
+from playwright.async_api import async_playwright
+ROOT=Path('/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server')
+TPL=ROOT/'src/templates/sandbox/nodepolitics/japon-expansion-prueba'
+URL='http://127.0.0.1:8000/api/v1/explainer/files/sandbox/nodepolitics/japon-expansion-prueba/index.html'
+BACK=TPL/'work/engine-backup/pre-sol'
+FILES={'/imperio/components/intros.js':'intros.js','/imperio/components/outro.js':'outro.js','/engine/kit.js':'kit.js','/engine/loader.js':'loader.js','/components/_imperio.js':'_imperio.js','/imperio/components/scenes.js':'scenes.js','/assets/components/japon.js':'japon.js','/_tools/player/bridge.js':'bridge.js'}
+INIT=r'''(() => {
+ window.__kitTrace=[]; window.__probe={frames:[],events:[],blits:[],messages:[],longtasks:[],keys:[]};
+ const P=window.__probe, raf=window.requestAnimationFrame.bind(window), seen=new WeakMap();
+ window.requestAnimationFrame=cb=>raf(ts=>{const a=performance.now();cb(ts);const d=performance.now()-a;const au=document.getElementById('audio');if(au && window.__promo && cb.name==='frame')P.frames.push([a,d,au.currentTime,au.paused?1:0,ts]);});
+ const od=CanvasRenderingContext2D.prototype.drawImage;
+ CanvasRenderingContext2D.prototype.drawImage=function(src,...a){const t=performance.now();const v=od.call(this,src,...a),d=performance.now()-t,n=(seen.get(src)||0)+1;seen.set(src,n);if(d>25)P.blits.push([document.getElementById('audio')?.currentTime||0,d,src.tagName,src.width,src.height,n,this.canvas.width,this.canvas.height]);return v;};
+ const create=document.createElement.bind(document);document.createElement=function(tag,...args){const el=create(tag,...args);if(tag.toLowerCase()==='video')for(const ev of ['loadeddata','waiting','stalled','seeking','seeked','playing','pause','error'])el.addEventListener(ev,()=>P.events.push([performance.now(),ev,'VIDEO',(el.currentSrc||el.src).split('/').pop(),el.currentTime,el.readyState,el.seeking]));return el;};
+ for(const ev of ['loadstart','loadedmetadata','loadeddata','canplay','canplaythrough','waiting','stalled','seeking','seeked','playing','pause','ended','error'])document.addEventListener(ev,e=>{const v=e.target;if(v instanceof HTMLMediaElement)P.events.push([performance.now(),ev,v.tagName,(v.currentSrc||v.src).split('/').pop(),v.currentTime,v.readyState,v.seeking]);},true);
+ window.addEventListener('message',e=>{if((e.data?.type||'').startsWith('nexa-template-'))P.messages.push([performance.now(),e.data.type,e.data.currentTime]);});
+ try{new PerformanceObserver(list=>{for(const e of list.getEntries())P.longtasks.push([e.startTime,e.duration]);}).observe({type:'longtask',buffered:true});}catch(e){}
+ setInterval(()=>{if(window.Kit?.imperio && window.__promo)P.keys.push([document.getElementById('audio').currentTime,Kit.imperio.keyStats()]);},1000);
+})();'''
+def summarize(data):
+ f=[r for r in data['frames'] if not r[3] and .5<r[2]<119.95]
+ tr=[x for x in data['trace'] if .5<x[1]<119.95]
+ v=[(b[1]-a[1])*1000/(b[0]-a[0]) for a,b in zip(tr,tr[1:]) if 8<b[0]-a[0]<100]
+ gaps=[(b[2], b[4]-a[4]) for a,b in zip(f,f[1:]) if b[4]-a[4]>50]
+ stalls=[(r[2],r[1]) for r in f if r[1]>50]
+ return {'frames':len(f),'desv_tiempo':round(statistics.pstdev(v),4) if v else None,'draw_gt50':len(stalls),'draw_gt100':sum(d>100 for _,d in stalls),'draw_max_ms':round(max([r[1] for r in f] or [0]),1),'gaps_gt50':len(gaps),'gaps_gt100':sum(d>100 for _,d in gaps),'gap_max_ms':round(max([b[4]-a[4] for a,b in zip(f,f[1:])] or [0]),1),'draw_stalls':[[round(t,2),round(d,1)] for t,d in stalls],'gap_stalls':[[round(t,2),round(d,1)] for t,d in gaps]}
+async def run(p,args,env,cond):
+ b=await p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
+ ctx=await b.new_context(viewport={'width':1440 if env=='app' else 1280,'height':1000 if env=='app' else 720})
+ await ctx.add_init_script(INIT)
+ page=await ctx.new_page(); errors=[]
+ page.on('pageerror',lambda e:errors.append(str(e)))
+ if env=='app':
+  await page.goto('http://127.0.0.1:3000/login')
+  await page.locator('input[type=email]').fill('admin@nexabrief.com');await page.locator('input[type=password]').fill('admin123')
+  await page.get_by_role('button',name='Entrar al panel').click();await page.wait_for_url('**/dashboard')
+  await page.goto('http://127.0.0.1:3000/es/plantillas?cat=sandbox')
+  await page.get_by_role('button',name=re.compile('LA EXPANSIÓN DEL IMPERIO JAPONÉS')).wait_for(timeout=60000)
+ async def route(r):
+  name=next((v for k,v in FILES.items() if r.request.url.split('?')[0].endswith(k)),None)
+  if not name:return await r.continue_()
+  if args.version=='before':path=BACK/name
+  else:
+   paths={'japon.js':TPL/'assets/components/japon.js','bridge.js':ROOT/'src/templates/_tools/player/bridge.js','_imperio.js':ROOT/'src/templates/_tools/explainer-kit/designs/imperio/components/_imperio.js','intros.js':ROOT/'src/templates/_tools/explainer-kit/designs/imperio/components/intros.js','outro.js':ROOT/'src/templates/_tools/explainer-kit/designs/imperio/components/outro.js','scenes.js':ROOT/'src/templates/_tools/explainer-kit/designs/imperio/components/scenes.js'}
+   path=paths.get(name,ROOT/'src/templates/_tools/explainer-kit/engine'/name)
+  await r.fulfill(status=200,content_type='application/javascript',body=path.read_text())
+ await ctx.route('**/*.js*',route)
+ cdp=await ctx.new_cdp_session(page)
+ if cond=='cpu4':await cdp.send('Emulation.setCPUThrottlingRate',{'rate':4})
+ if cond=='network':await cdp.send('Network.enable');await cdp.send('Network.emulateNetworkConditions',{'offline':False,'latency':80,'downloadThroughput':10_000_000/8,'uploadThroughput':2_000_000/8})
+ start=time.monotonic()
+ if env=='app':
+  await page.get_by_role('button',name=re.compile('LA EXPANSIÓN DEL IMPERIO JAPONÉS')).click()
+  await page.locator('[role=dialog] iframe').wait_for(timeout=60000)
+  # Selección del formato que el usuario pide en desktop; esperar el tamaño final antes de medir.
+  await page.get_by_role('button',name='Desktop',exact=True).click()
+  frame=await (await page.locator('[role=dialog] iframe').element_handle()).content_frame()
+ else:
+  await page.goto(URL)
+  frame=page.main_frame
+ await frame.wait_for_function('window.__promo && window.__promo.beats',timeout=180000)
+ print('READY',env,cond,round(time.monotonic()-start,2),await frame.evaluate('({w:innerWidth,h:innerHeight,t:document.getElementById("audio").currentTime,paused:document.getElementById("audio").paused})'),flush=True)
+ if env=='app':await frame.evaluate("parent.postMessage({type:'nexa-template-time',currentTime:0,duration:__promo.total},'*')")
+ last=0
+ while True:
+  await page.wait_for_timeout(1000)
+  at=await frame.evaluate('document.getElementById("audio").currentTime')
+  elapsed=time.monotonic()-start
+  if int(elapsed/20)>last:
+   last=int(elapsed/20);print('PROGRESS',env,cond,round(at,2),flush=True)
+  if at>=args.secs or elapsed>args.secs+110:break
+ data=await frame.evaluate('({...__probe,trace:__kitTrace,resources:performance.getEntriesByType("resource").map(x=>({name:x.name.split("?")[0],start:x.startTime,end:x.responseEnd,bytes:x.transferSize,duration:x.duration})),end:document.getElementById("audio").currentTime,total:__promo.total,beats:__promo.beats.map(b=>[b.use,b.t0,b.t1]),viewport:[innerWidth,innerHeight],url:location.href})')
+ data.update({'environment':env,'condition':cond,'version':args.version,'elapsed':time.monotonic()-start,'errors':errors})
+ if env=='app':data['parent']=await page.evaluate('({messages:__probe.messages,longtasks:__probe.longtasks})')
+ data['summary']=summarize(data)
+ out=TPL/'work/results/cortes-data';out.mkdir(parents=True,exist_ok=True)
+ (out/f'{args.version}-{env}-{cond}.json').write_text(json.dumps(data))
+ print('RESULT',env,cond,json.dumps({k:v for k,v in data['summary'].items() if not k.endswith('stalls')}),flush=True)
+ await b.close()
+async def main(args):
+ async with async_playwright() as p:
+  for env in args.env.split(','):
+   for cond in args.condition.split(','):
+    await run(p,args,env,cond)
+if __name__=='__main__':
+ a=argparse.ArgumentParser();a.add_argument('--version',choices=['before','after'],required=True);a.add_argument('--env',default='standalone,app');a.add_argument('--condition',default='normal,cpu4,network');a.add_argument('--secs',type=float,default=120);args=a.parse_args();asyncio.run(main(args))

@@ -1,7 +1,7 @@
 import { ApiError, parseErrorBody } from "@/infrastructure/api/api-error";
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
 
-export type LibraryAssetKind = "images" | "music" | "videos";
+export type LibraryAssetKind = "images" | "music" | "videos" | "sounds";
 
 export type TranscriptionStatus = "none" | "pending" | "running" | "done" | "failed";
 
@@ -39,6 +39,14 @@ interface MusicAssetDto extends BaseAssetDto {
   lyrics_url?: string | null;
 }
 
+interface SoundAssetDto extends BaseAssetDto {
+  title: string;
+  duration_seconds: number;
+  recommended_uses?: string[];
+  approval_status?: "pending" | "approved" | "rejected";
+  license_url?: string;
+}
+
 interface VideoAssetDto extends BaseAssetDto {
   label: string;
   width?: number;
@@ -70,6 +78,11 @@ export interface LibraryAsset {
   transcriptionStatus: TranscriptionStatus | null;
   transcriptionError: string;
   hasLyrics: boolean;
+  recommendedUses: string[];
+  approvalStatus: "pending" | "approved" | "rejected" | null;
+  provider: string;
+  licenseNote: string;
+  licenseUrl: string;
 }
 
 function baseFields(kind: LibraryAssetKind, dto: BaseAssetDto) {
@@ -94,6 +107,11 @@ function baseFields(kind: LibraryAssetKind, dto: BaseAssetDto) {
     transcriptionStatus: null,
     transcriptionError: "",
     hasLyrics: false,
+    recommendedUses: [] as string[],
+    approvalStatus: null as "pending" | "approved" | "rejected" | null,
+    provider: dto.provider ?? "",
+    licenseNote: dto.license_note ?? "unknown",
+    licenseUrl: "",
   };
 }
 
@@ -136,9 +154,24 @@ function mapVideoAsset(dto: VideoAssetDto): LibraryAsset {
   };
 }
 
+function mapSoundAsset(dto: SoundAssetDto): LibraryAsset {
+  return {
+    ...baseFields("sounds", dto),
+    title: dto.title || dto.asset_id,
+    name: dto.title ?? "",
+    width: null,
+    height: null,
+    durationSeconds: dto.duration_seconds || null,
+    recommendedUses: dto.recommended_uses ?? [],
+    approvalStatus: dto.approval_status ?? "pending",
+    licenseUrl: dto.license_url ?? "",
+  };
+}
+
 function mapAsset(kind: LibraryAssetKind, dto: unknown): LibraryAsset {
   if (kind === "images") return mapImageAsset(dto as ImageAssetDto);
   if (kind === "music") return mapMusicAsset(dto as MusicAssetDto);
+  if (kind === "sounds") return mapSoundAsset(dto as SoundAssetDto);
   return mapVideoAsset(dto as VideoAssetDto);
 }
 
@@ -214,7 +247,11 @@ export function uploadLibraryAsset(
   const form = new FormData();
   form.append("file", input.file);
   form.append("category", input.category || "uploads");
-  if (input.name) form.append(kind === "music" ? "track_name" : "label", input.name);
+  if (input.name)
+    form.append(
+      kind === "music" ? "track_name" : kind === "sounds" ? "title" : "label",
+      input.name,
+    );
   if (input.description) form.append("description", input.description);
   if (input.tags) form.append("tags", input.tags);
   if (kind === "music") {
@@ -251,6 +288,8 @@ export function uploadLibraryAsset(
 
 export interface AssetPatch {
   category?: string;
+  recommended_uses?: string[];
+  approval_status?: "pending" | "approved" | "rejected";
   /** label (imagen/video) o track_name (música). */
   name?: string;
   artist?: string;
@@ -267,7 +306,8 @@ export async function updateLibraryAsset(
 ): Promise<LibraryAsset> {
   const { name, ...rest } = patch;
   const body: Record<string, unknown> = { ...rest };
-  if (name !== undefined) body[kind === "music" ? "track_name" : "label"] = name;
+  if (name !== undefined)
+    body[kind === "music" ? "track_name" : kind === "sounds" ? "title" : "label"] = name;
   const dto = await httpClient<unknown>(`/api/v1/library/${kind}/${assetId}`, {
     method: "PATCH",
     body,

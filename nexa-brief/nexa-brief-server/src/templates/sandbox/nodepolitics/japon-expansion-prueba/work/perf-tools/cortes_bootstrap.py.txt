@@ -1,0 +1,38 @@
+import asyncio,json,sys,statistics
+from pathlib import Path
+from playwright.async_api import async_playwright
+sys.path.insert(0,'/tmp')
+from cortes_matrix2 import INIT,ROOT,TPL,BACK,URL
+async def main():
+ results=[]
+ async with async_playwright() as p:
+  for variant in ['before','bootstrap24','adaptive24']:
+   b=await p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
+   page=await b.new_page(viewport={'width':1280,'height':720});await page.add_init_script(INIT)
+   async def imp(r):
+    s=(BACK/'_imperio.js').read_text()
+    if variant in ['bootstrap24','adaptive24']:
+     s=s.replace('STRIPS = 8','STRIPS = 24').replace('strip(e, e.done++); if (e.done >= STRIPS) prime(e);\n      if (performance.now() - t0 > 12)', 'const workStart = performance.now(); strip(e, e.done++); if (e.done >= STRIPS) prime(e); STRIP_MS = STRIP_MS * 0.7 + (performance.now() - workStart) * 0.3;\n      if (performance.now() - t0 > 12)')
+    if variant=='adaptive24':s=s.replace('if (!QUEUE.length || !IM.live()) return;\n    while (QUEUE.length)', 'if (!QUEUE.length || !IM.live()) return;\n    if (performance.now() - FRAME_T0 >= budget) budget = 38;\n    while (QUEUE.length)')
+    if variant in ['strips32','budget32']:s=s.replace('STRIPS = 8','STRIPS = 32')
+    if variant=='budget24':s=s.replace('STRIPS = 8','STRIPS = 24')
+    if variant in ['budget32','budget24']:s=s.replace('IM.sliceWork = (budget = 13)','IM.sliceWork = (budget = 38)')
+    if variant=='read':s=s.replace('const c = canvas(ctx.stage.W * ctx.dpr, ctx.stage.H * ctx.dpr), g = c.getContext("2d");','const c = canvas(ctx.stage.W * ctx.dpr, ctx.stage.H * ctx.dpr), g = c.getContext("2d", { willReadFrequently: true });')
+    if variant=='flush':s=s.replace('G.save(); G.globalAlpha = a; G.drawImage(c, 0, 0, ctx.stage.W, ctx.stage.H);','g.getImageData(0, 0, 1, 1); G.save(); G.globalAlpha = a; G.drawImage(c, 0, 0, ctx.stage.W, ctx.stage.H);')
+    if variant=='bitmap':s=s.replace('const c = canvas(ctx.stage.W * ctx.dpr, ctx.stage.H * ctx.dpr), g = c.getContext("2d");','const c = new OffscreenCanvas(Math.round(ctx.stage.W * ctx.dpr), Math.round(ctx.stage.H * ctx.dpr)), g = c.getContext("2d");').replace('G.save(); G.globalAlpha = a; G.drawImage(c, 0, 0, ctx.stage.W, ctx.stage.H);','const bm=c.transferToImageBitmap(); G.save(); G.globalAlpha = a; G.drawImage(bm, 0, 0, ctx.stage.W, ctx.stage.H); bm.close();')
+    await r.fulfill(status=200,content_type='application/javascript',body=s)
+   await page.route('**/components/_imperio.js*',imp)
+   await page.route('**/engine/kit.js*',lambda r:r.fulfill(status=200,content_type='application/javascript',body=(BACK/'kit.js').read_text()))
+   await page.goto(URL+'?controls=1');await page.wait_for_function('window.__promo && window.__promo.beats',timeout=120000)
+   await page.evaluate("postMessage({type:'nexa-template-playback',playing:true},'*')")
+   await page.wait_for_function('document.getElementById("audio").currentTime>0',timeout=20000)
+   await page.evaluate("postMessage({type:'nexa-template-seek',time:92},'*')")
+   await page.wait_for_timeout(18000)
+   d=await page.evaluate('({...__probe,trace:__kitTrace})')
+   fs=[f for f in d['frames'] if 94<f[2]<108]
+   out={'variant':variant,'frames':len(fs),'mean':statistics.mean([f[1] for f in fs]),'p95':sorted(f[1] for f in fs)[int(len(fs)*.95)],'max':max(f[1] for f in fs),'over50':sum(f[1]>50 for f in fs),'gap_mean':statistics.mean([bb[4]-aa[4] for aa,bb in zip(fs,fs[1:])]),'gap_max':max(bb[4]-aa[4] for aa,bb in zip(fs,fs[1:]))}
+   results.append(out);print(out,flush=True)
+   (TPL/f'work/results/cortes-data/bootstrap-{variant}.json').write_text(json.dumps(d))
+   await b.close()
+ (TPL/'work/results/cortes-data/bootstrap.json').write_text(json.dumps(results,indent=2))
+asyncio.run(main())

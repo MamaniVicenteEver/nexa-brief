@@ -14,6 +14,8 @@ import re
 import uuid
 from datetime import date, datetime, timedelta, timezone
 from typing import Any, Protocol
+from pathlib import Path
+from .trace import Trace, current_trace, emit, read as read_trace, save as save_trace
 from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo
 
@@ -28,6 +30,7 @@ from src.core.image_posts.models import (
 )
 from src.core.image_posts.plan import ImagePlan as EngineImagePlan
 from src.core.image_posts.plan import parse_image_plan, plan_hash as engine_plan_hash
+from src.core.image_posts.errors import ImagePostError
 from src.core.image_posts.repository import ImagePostRepository
 from src.core.image_posts.security import redact_persisted_text
 from src.core.image_posts.schedule import (
@@ -57,11 +60,6 @@ class ImagePublisher(Protocol):
     def reconcile_image_delivery(self, spec: DeliverySpec, remote: dict[str, Any]) -> Any: ...
 
 
-class ImagePostError(ValueError):
-    def __init__(self, code: str, message: str | None = None, status_code: int = 422):
-        super().__init__(message or code)
-        self.code = code
-        self.status_code = status_code
 
 
 @dataclasses.dataclass(frozen=True)
@@ -70,6 +68,8 @@ class _BuiltImagePlan:
     strategy_id: str
     copy_sources: dict[str, str]
     ai_usage: list[dict[str, Any]] = dataclasses.field(default_factory=list)
+    cover_titles: dict[str, str] = dataclasses.field(default_factory=dict)
+    media_decisions: list[dict[str, Any]] = dataclasses.field(default_factory=list)
 
 
 def _now() -> datetime:
@@ -166,7 +166,7 @@ def _copy_source_for_record(source: str) -> str:
     return f"reglas: {source}"
 
 
-def _complete_photo_attribution(slides: list[dict[str, Any]], images: list[Any]) -> None:
+def _complete_photo_attribution(slides: list[dict[str, Any]], images: list[Any], changes: str = _PHOTO_CHANGES) -> None:
     """Guarda licencia y cambios en el plan y en el crédito visible de la lámina."""
     by_hash = {str(image.sha256): image for image in images}
     for slide in slides:
@@ -175,14 +175,14 @@ def _complete_photo_attribution(slides: list[dict[str, Any]], images: list[Any])
             if image is None:
                 continue
             license_url = str(getattr(image, "license_url", "") or "")
+            from src.core.image_posts.media_sources import normalize_license_url
+            license_url = normalize_license_url(license_url)
             source_url = str(getattr(image, "source_url", "") or media.get("url", ""))
             author = str(getattr(image, "author", "") or "Autor desconocido")
             license_id = str(getattr(image, "license", "") or media.get("license_id", ""))
-            media.update({"license_url": license_url or None, "changes": _PHOTO_CHANGES})
-            visible = (
-                f"{author} ({license_id}) · {license_url} · {source_url} · "
-                f"Cambios: {_PHOTO_CHANGES}"
-            )
+            media.update({"license_url": license_url or None, "changes": changes})
+            visible = (f"Foto: {author} · {license_id}" if slide.get("layout", "").startswith("amarillista:") else
+                       f"{author} ({license_id}) · {license_url} · {source_url} · Cambios: {changes}")
             for item in slide.get("texts", []):
                 if item.get("role") == "credit":
                     item["value"] = visible
@@ -202,10 +202,15 @@ def _verified_fact_texts(plan_text: str) -> dict[str, str]:
     return facts
 
 
-def _caption_factual_text(caption: str) -> str:
+def _caption_factual_text(caption: str, *, slide_count: int | None = None) -> str:
     paragraphs = []
     for paragraph in caption.splitlines():
         clean = paragraph.strip()
+        # Solo la línea del sistema con el número real de láminas es metadato.
+        if slide_count is not None and clean == (
+            f"Desliza las {slide_count} láminas y revisa el contexto y las fuentes de cada dato."
+        ):
+            continue
         if clean.casefold().startswith(("fuentes:", "créditos visuales:")):
             continue
         paragraphs.append(clean)
@@ -381,27 +386,67 @@ class ImagePostService:
             handle=str(brand.get("handle", "")),
             brand=str(brand.get("name", "")),
             voice=str(style.tone.get("voice", "")),
+            level=str(request.get("level") or "alto"),
         )
         usage_by_claim = {claim_id: usage for claim_id, _fact, _url, _source, usage in selected}
-        facts = strategy.pick([strategies.Fact(claim_id, fact, url, source_name)
-                               for claim_id, fact, url, source_name, _usage in selected])
+        narrative = str(request.get("narrative") or "hilo")
+        if strategy.id == "amarillista" and narrative == "hilo":
+            from .web_hilo import prepare_facts
+            try:
+                facts = prepare_facts(selected if focus else [row for row in facts if row[0] in usage_by_claim])
+            except ValueError as exc:
+                raise ImagePostError("SOURCE_NOT_VERIFIED", str(exc), 422) from None
+        elif strategy.id == "amarillista":
+            from .strategies.amarillista import CONFIG
+            def approved_role(usage):
+                match = re.search(r'rol=([a-z_]+[0-9]*)\b', usage)
+                return match.group(1) if match else ''
+            try:
+                facts = strategy.pick([strategies.Fact(claim_id, fact, url, source_name, approved_role(usage))
+                    for claim_id, fact, url, source_name, usage in selected])
+            except ValueError as exc:
+                raise ImagePostError("SOURCE_NOT_VERIFIED", str(exc), 422) from None
+        else:
+            facts = strategy.pick([strategies.Fact(claim_id, fact, url, source_name)
+                                   for claim_id, fact, url, source_name, _usage in selected])
+        if len(facts) < (4 if strategy.id == "amarillista" and narrative == "hilo" else strategy.facts_needed):
+            raise ImagePostError("SOURCE_NOT_VERIFIED", "No hay suficientes hechos breves sin perder contexto; requiere edición editorial", 422)
         ai_usage: list[dict[str, Any]] = []
-        copy, topic, extras = await strategies.copywriter.write(strategy, facts, context, usage_out=ai_usage)
+        hilo_slides = None
+        hilo_photos = {}
+        if strategy.id == "amarillista" and narrative == "hilo":
+            from .web_hilo import build as build_hilo
+            context = dataclasses.replace(context, topic=str(material.topic or material.video_title))
+            hilo_slides, copy, ai_usage, hilo_photos = await build_hilo(facts, context, self.image_cache)
+            topic, extras = context.topic, {}
+        else:
+            copy, topic, extras = await strategies.copywriter.write(strategy, facts, context, usage_out=ai_usage)
         for claim_id, piece in copy.items():  # de dónde salió cada texto: modelo o reglas (y por qué)
             logger.info("image_post_copy", claim_id=claim_id, strategy=strategy.id, source=piece.source)
         copy_sources = {
-            claim_id: _copy_source_for_record(piece.source)
+            claim_id: (piece.source if strategy.id == "amarillista" else _copy_source_for_record(piece.source))
             for claim_id, piece in copy.items()
         }
         topic = topic or strategies.trim_words(str(material.topic or ""), 28)
         context = dataclasses.replace(context, topic=topic)
         sourced_images = []
-        if not strategy.needs_media:
+        if hilo_slides is not None:
+            slides, sourced_images = hilo_slides, hilo_photos
+            _complete_photo_attribution(slides, list(hilo_photos.values()), "recortada y ajustada")
+        elif not strategy.needs_media:
             slides = strategy.build(facts, context, copy)
         else:
-            sourced_images = await self._licensed_images(strategy, facts, context, extras)
+            from src.core.ports.stock_media_port import StockProviderError
+            import httpx
+            try:
+                sourced_images = await self._licensed_images(strategy, facts, context, {**extras, "_usage_out": ai_usage})
+            except (ImagePostError, StockProviderError, httpx.HTTPError, OSError):
+                if strategy.id != "amarillista":
+                    raise
+                sourced_images = []
             slides = strategy.build(facts, context, copy, sourced_images)
-            _complete_photo_attribution(slides, sourced_images)
+            _complete_photo_attribution(slides, list(sourced_images.values()) if isinstance(sourced_images, dict) else sourced_images,
+                _PHOTO_CHANGES if "grayscale" in style.composition.get("photo_filter", "") else "recortada y ajustada")
         for slide in slides:
             for claim in slide.get("claim_refs", []):
                 usage = usage_by_claim.get(str(claim.get("id", "")))
@@ -413,11 +458,23 @@ class ImagePostService:
             source_revision=material.source_revision, template_id=str(request["template_id"]),
             slides=slides, style=style, seed=int(request.get("seed") or 0),
         )
-        return _BuiltImagePlan(plan=plan, strategy_id=strategy.id, copy_sources=copy_sources, ai_usage=ai_usage)
+        first_copy = copy.get(facts[0].claim_id)
+        images = list(sourced_images.values()) if isinstance(sourced_images, dict) else sourced_images
+        trace = current_trace.get()
+        if trace:
+            trace.identity.update(topic=topic, brand=context.brand, slides=len(slides),
+                primary_source=facts[0].url, support_sources=list(dict.fromkeys(f.url for f in facts if f.url != facts[0].url)))
+        return _BuiltImagePlan(plan=plan, strategy_id=strategy.id, copy_sources=copy_sources, ai_usage=ai_usage,
+            cover_titles=first_copy.headlines or {} if first_copy else {},
+            media_decisions=[{"title": image.title, "url": image.source_url, "origin": image.why,
+                "sha256": image.sha256, "provider": image.provider, "license": image.license} for image in images])
 
     async def _licensed_images(self, strategy: Any, facts: list[Any], context: Any, extras: dict[str, str]) -> list[Any]:
         """Fotos con licencia (Wikimedia) para estrategias con imagen; la primera es la elegida."""
         from src.core.image_posts.media_sources import find_images
+        if strategy.id == "amarillista":
+            from src.core.image_posts.media_sources import find_relevant_images
+            return await find_relevant_images(facts, context, self.image_cache, extras, usage_out=extras.get("_usage_out"))
         query, article = strategy.media_query(facts, context, extras)
         images = await find_images(query, self.image_cache, article=article, lang="es", n=3)
         logger.info("image_post_media", strategy=strategy.id, query=query, article=article,
@@ -444,9 +501,82 @@ class ImagePostService:
         except (ImportError, AttributeError):
             raise ImagePostError("META_ADAPTER_UNAVAILABLE", "El publicador de imágenes todavía no está configurado.", 503) from None
 
+    def trace_folder(self, record: PublicationRecord) -> Path:
+        root = Path(getattr(self.media, "root", settings.data_dir / "publicaciones"))
+        return root / record.editorial.category_id / record.created_at.strftime("%Y/%m") / record.publication_id
+
+    def get_trace(self, record: PublicationRecord) -> dict[str, Any] | None:
+        return read_trace(self.trace_folder(record) / "trace.json")
+
     async def create_plan(self, request: dict[str, Any], idempotency_key: str | None = None) -> tuple[EngineImagePlan, PublicationRecord]:
+        from src.adapters.models.hub import call_log_dir
+        from .profiles import DEFAULT_IMAGE_FORMAT, get_image_profile
+        request = {"template_id": "five_slides", "level": "alto", "narrative": "hilo", "format": DEFAULT_IMAGE_FORMAT, **request}
+        try:
+            get_image_profile(request["format"])
+        except ValueError as exc:
+            raise ImagePostError("INVALID_IMAGE_FORMAT", str(exc)) from exc
+        from .strategies.amarillista import LEVELS
+        if request["level"] not in LEVELS:
+            raise ImagePostError("INVALID_LEVEL", "Nivel desconocido")
+        if request["narrative"] not in {"hilo", "factual"}:
+            raise ImagePostError("INVALID_NARRATIVE", "Narrativa desconocida")
+        category = str(request.get("category_id", ""))
+        if not self.material_source.category_exists(category):
+            raise ImagePostError("INVALID_CATEGORY", f"Categoría desconocida: {category}")
+        from . import strategies
+        strategy = strategies.resolve(request.get("strategy_id"), request["template_id"])
+        request["strategy_id"] = strategy.id
+        if idempotency_key:
+            request_hash = hashlib.sha256(json.dumps(request, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
+            previous = self.repository.get_idempotent(f"plans:{idempotency_key}", request_hash)
+            if previous:
+                if previous.status == PostStatus.FAILED:
+                    raise ImagePostError("PLAN_BUILDER_FAILED", f"El intento falló; consulta el recorrido de {previous.post_id}")
+                return _parse_plan(previous.technical.composition_plan), previous
+        created = _now()
+        publication_id, post_id = _id("pub"), _id("img")
+        root = Path(getattr(self.media, "root", settings.data_dir / "publicaciones"))
+        trace = Trace(root/category/created.strftime("%Y/%m")/publication_id, {
+            "publication_id": publication_id, "post_id": post_id, "category": category,
+            "strategy": strategy.id, "narrative": request["narrative"] if strategy.id == "amarillista" else None,
+            "level": request["level"] if strategy.id == "amarillista" else None,
+            "template": request["template_id"], "topic": request.get("topic") or request.get("source_video_id"),
+            "slides": 0, "primary_source": None, "support_sources": []})
+        token = current_trace.set(trace)
+        log_token = call_log_dir.set(trace.folder/"model-calls")
+        status, failure = "draft", None
+        try:
+            result = await self._create_plan(request, idempotency_key)
+            return result
+        except BaseException as exc:
+            status, failure = "failed", str(exc)
+            emit("failure", label="Generación fallida", status="failed", reason=failure)
+            save_trace(trace.folder/"failure.json", {"error": failure})
+            # Incluso si falla el redactor existe un post consultable con su traza.
+            style = self._style(category, request.get("style_id"))
+            from .plan import build_image_plan
+            empty = build_image_plan(category_id=category, source_video_id=str(request.get("source_video_id", "")),
+                source_revision="failed", template_id=request["template_id"], slides=[], style=style, seed=0, format=request["format"])
+            data = empty.to_dict(); data["plan_hash"] = engine_plan_hash(empty, style)
+            record = PublicationRecord(publication_id=publication_id, post_id=post_id, revision=1, created_at=created, updated_at=_now(),
+                status=PostStatus.FAILED, technical=TechnicalRecord(kind="carousel" if request["template_id"] == "five_slides" else "image",
+                    template_id=request["template_id"], composition_plan=data),
+                editorial=EditorialRecord(category_id=category, source_video_id=str(request.get("source_video_id", "")),
+                    strategy_id=strategy.id, narrative=trace.identity["narrative"], level=trace.identity["level"], title="Generación fallida"))
+            await self.repository.create(record, f"plans:{idempotency_key}" if idempotency_key else None,
+                idempotency_request_hash=request_hash if idempotency_key else None)
+            raise
+        finally:
+            try: trace.consolidate(status, failure)
+            finally:
+                call_log_dir.reset(log_token)
+                current_trace.reset(token)
+
+    async def _create_plan(self, request: dict[str, Any], idempotency_key: str | None = None) -> tuple[EngineImagePlan, PublicationRecord]:
         from src.core.image_posts import strategies
 
+        request = {"template_id": "five_slides", "level": "alto", **request}
         category_id = str(request.get("category_id", ""))
         if not self.material_source.category_exists(category_id):
             raise ImagePostError("INVALID_CATEGORY", f"Categoría desconocida: {category_id}")
@@ -475,11 +605,20 @@ class ImagePostService:
             raw_plan = built.plan
             strategy_id = built.strategy_id
             copy_sources = dict(built.copy_sources)
-            ai_usage = [AIUsage.model_validate(usage) for usage in built.ai_usage]
+            ai_usage = [AIUsage.model_validate({k: v for k, v in usage.items() if k in AIUsage.model_fields}) for usage in built.ai_usage]
+            trace = current_trace.get()
+            if trace:
+                save_trace(trace.folder/"usage.json", built.ai_usage)
+                emit("copy_result", label="Origen de los textos", copy_sources=copy_sources)
+                if built.media_decisions and not (trace.folder/"photo-decisions.json").exists():
+                    save_trace(trace.folder/"photo-decisions.json", built.media_decisions)
         else:
             raw_plan = built
             strategy_id = strategy.id
         plan = _parse_plan(raw_plan)
+        if request.get("format"):
+            from .profiles import get_image_profile
+            plan = dataclasses.replace(plan, format=get_image_profile(request["format"]).format)
         if plan.category_id != category_id:
             raise ImagePostError("INVALID_PLAN", "El motor devolvió un plan de otra categoría")
         style = self._style(category_id, plan.style_id)
@@ -492,7 +631,10 @@ class ImagePostService:
         plan_data = plan.to_dict()
         plan_data["plan_hash"] = engine_plan_hash(plan, style)
         now = _now()
-        publication_id, post_id = _id("pub"), _id("img")
+        trace = current_trace.get()
+        publication_id = trace.identity["publication_id"] if trace else _id("pub")
+        post_id = trace.identity["post_id"] if trace else _id("img")
+        if trace: now = datetime.fromisoformat(trace.started_at.replace("Z", "+00:00"))
         is_carousel = plan.template_id == "five_slides"
         title = str(request.get("topic") or "")
         topic = title
@@ -514,7 +656,16 @@ class ImagePostService:
                 raise ImagePostError("SOURCE_NOT_VERIFIED", status_code=422)
             from src.core.image_posts.copy import CopyError, build_copy
             try:
-                generated_copy = build_copy(plan, material.publish)
+                overrides = {}
+                if strategy_id == "amarillista":
+                    first = plan.slides[0]
+                    overrides["title_override"] = next((text.value for text in first.texts if text.role == "headline"), None)
+                    trace = current_trace.get()
+                    audit = read_trace(trace.folder/"audit.json", {}) if trace else {}
+                    draft = audit.get("draft", {})
+                    question = draft.get("levels", {}).get(request.get("level"), {}).get("question")
+                    if question: overrides["question_override"] = question
+                generated_copy = build_copy(plan, material.publish, **overrides)
             except CopyError as exc:
                 raise ImagePostError("SOURCE_NOT_VERIFIED", str(exc), 422) from exc
             topic = material.topic or material.video_title
@@ -553,6 +704,8 @@ class ImagePostService:
             ),
             editorial=EditorialRecord(
                 category_id=category_id, strategy_id=strategy_id, source_video_id=plan.source_video_id,
+                level=request.get("level") if strategy_id == "amarillista" else None,
+                narrative=request.get("narrative") if strategy_id == "amarillista" else None,
                 topic=topic, title=title,
                 source_video_url=plan_data.get("source_video_url"), sources=_source_references(plan_data),
                 hashtags=hashtags,
@@ -603,7 +756,12 @@ class ImagePostService:
                 "can_insights": bool(row.get("can_insights")),
                 "ig_account_subtype": row.get("ig_account_subtype"),
             })
-        return {"accounts": results, "review_required": True}
+        from .profiles import DEFAULT_IMAGE_FORMAT, IMAGE_FORMAT_PROFILES
+        for account in results:
+            account["supported_formats"] = ["4:5"] if account["platform"] == "instagram" else list(IMAGE_FORMAT_PROFILES)
+        return {"accounts": results, "review_required": True,
+                "default_format": DEFAULT_IMAGE_FORMAT,
+                "formats": [profile.to_dict() for profile in IMAGE_FORMAT_PROFILES.values()]}
 
     async def save_plan(self, plan: EngineImagePlan | dict[str, Any], expected_revision: int | None = None) -> PublicationRecord:
         plan = _parse_plan(plan)
@@ -734,6 +892,31 @@ class ImagePostService:
         return max(matches, key=lambda item: (item.revision, item.created_at)) if matches else None
 
     async def render_plan(self, plan_id: str) -> PublicationRecord:
+        from src.adapters.models.hub import call_log_dir
+        record = self._record_for_plan(plan_id)
+        if record is None: raise ImagePostError("PLAN_NOT_FOUND", status_code=404)
+        trace = Trace(self.trace_folder(record))
+        token = current_trace.set(trace)
+        log_token = call_log_dir.set(trace.folder/"model-calls")
+        state, failure = "ready_for_review", None
+        try:
+            result = await self._render_plan(plan_id)
+            state = result.status.value
+            return result
+        except BaseException as exc:
+            state, failure = "failed", str(exc)
+            emit("failure", label="Render fallido", status="failed", reason=failure)
+            current = self.repository.get(record.publication_id)
+            if current:
+                await self.repository.update(current.publication_id, {"status": "failed", "updated_at": _now().isoformat()}, current.record_version)
+            raise
+        finally:
+            try: trace.consolidate(state, failure)
+            finally:
+                call_log_dir.reset(log_token)
+                current_trace.reset(token)
+
+    async def _render_plan(self, plan_id: str) -> PublicationRecord:
         record = self._record_for_plan(plan_id)
         if record is None:
             raise ImagePostError("PLAN_NOT_FOUND", status_code=404)
@@ -749,12 +932,21 @@ class ImagePostService:
         if not report.passed:
             raise ImagePostError("INVALID_PLAN", "; ".join(report.errors))
         media_bytes = _cached_media(plan, self.image_cache)
-        result = await self._invoke(renderer.render if hasattr(renderer, "render") else renderer, plan, style, media_bytes)
+        while True:
+            try:
+                result = await self._invoke(renderer.render if hasattr(renderer, "render") else renderer, plan, style, media_bytes)
+                break
+            except Exception as exc:
+                if record.editorial.strategy_id != "amarillista" or record.editorial.narrative != "hilo": raise
+                from .web_hilo import repair_composition
+                plan = await repair_composition(plan, exc)
         manifest = result.to_record(plan) if hasattr(result, "to_record") else _jsonable(result)
         technical_manifest = manifest.get("technical", {}) if isinstance(manifest, dict) else {}
         assets = _field(result, "assets") or manifest.get("assets") or manifest.get("slides") or []
-        if len(assets) != (5 if plan.template_id == "five_slides" else 1):
+        if len(assets) != len(plan.slides):
             raise ImagePostError("INVALID_IMAGE", "El render debe devolver el número exacto de JPEG")
+        from .profiles import get_image_profile
+        profile = get_image_profile(plan.format)
         created = record.created_at.astimezone(timezone.utc)
         prefix = f"{record.editorial.category_id}/{created:%Y/%m}/{record.publication_id}"
         stored_slides = []
@@ -774,8 +966,8 @@ class ImagePostService:
             media_object = self.media.put(key, content, "image/jpeg", digest, if_absent=True)
             stored_slides.append(RenderedSlide(
                 slide_id=slide_id, order=index, asset_id=asset_id, storage_key=media_object.key,
-                width=int(_field(asset, "width", 1080)), height=int(_field(asset, "height", 1350)),
-                aspect_ratio="4:5", bytes=media_object.bytes, sha256=media_object.sha256,
+                width=int(_field(asset, "width", profile.width)), height=int(_field(asset, "height", profile.height)),
+                aspect_ratio=profile.format, bytes=media_object.bytes, sha256=media_object.sha256,
                 rendered_at=now,
             ))
         validations_data = technical_manifest.get("validations", manifest.get("validations", []))
@@ -783,7 +975,13 @@ class ImagePostService:
         if not validations or any(not item.passed for item in validations):
             raise ImagePostError("INVALID_IMAGE", "El renderer no presentó validaciones obligatorias aprobadas")
         status = PostStatus.READY_FOR_REVIEW if record.editorial.review.required else PostStatus.APPROVED
+        trace = current_trace.get()
+        plan_data = plan.to_dict(); plan_data["plan_hash"] = engine_plan_hash(plan, style)
+        if trace:
+            save_trace(trace.folder/"qc.json", {"validations": validations_data, "slides": [getattr(asset, "qc", {}) for asset in assets]})
         updated_technical = record.technical.model_copy(update={
+            "composition_plan": type(record.technical.composition_plan).model_validate(plan_data),
+            "ai_usage": [AIUsage.model_validate({k: v for k, v in call.items() if k in AIUsage.model_fields}) for call in trace.calls] if trace and trace.calls else record.technical.ai_usage,
             "slides": stored_slides, "validations": validations,
             "render": technical_manifest.get("render", manifest.get("render", {})),
         })
@@ -841,8 +1039,9 @@ class ImagePostService:
                 for slide in body["slides"]
             ]
         title = editorial_data.get("title", "")
-        if len(title) > 60:
-            raise ImagePostError("COPY_LIMIT", "El título editorial no puede superar 60 caracteres")
+        title_limit = 120 if record.editorial.narrative == "hilo" else 60
+        if len(title) > title_limit:
+            raise ImagePostError("COPY_LIMIT", f"El título editorial no puede superar {title_limit} caracteres")
         copy = editorial_data.get("copy", {})
         facebook = copy.get("facebook", {})
         instagram = copy.get("instagram", {})
@@ -980,12 +1179,19 @@ class ImagePostService:
         music = record.technical.music
         if music.mode == "convert_to_reel":
             raise ImagePostError("MUSIC_COMING_SOON", "La música estará disponible próximamente", 409)
+        from .artwork import latest_post_revision, validate_target_format
+        if latest_post_revision(self, record).publication_id != record.publication_id:
+            raise ImagePostError("REVISION_CONFLICT", "Hay una revisión más reciente del post", 409)
+        for target in targets:
+            validate_target_format(record, target["platform"])
         for target in targets:
             platform, alias = target["platform"], target["account_alias"]
             mapping = self.account_mapping.resolve_account(record.editorial.category_id, platform, alias)
             live = next((row for row in live_accounts if row.get("platform") == platform and row.get("alias") == alias), None)
-            if not live or live.get("status") != "ok" or not live.get("target_id"):
+            if not live or live.get("status") != "ok" or (platform != "tiktok" and not live.get("target_id")):
                 raise ImagePostError("ACCOUNT_NOT_LINKED", status_code=403)
+            if platform == "tiktok" and live.get("mode") not in {"browser", "service"}:
+                raise ImagePostError("ACCOUNT_NOT_LINKED", "TikTok requiere una cuenta del servicio", 403)
             if not mapping.get("active"):
                 raise ImagePostError("ACCOUNT_NOT_LINKED", status_code=403)
             requested_placement = target.get("placement")
@@ -1017,6 +1223,8 @@ class ImagePostService:
                     raise ImagePostError("INVALID_PLAN", f"Zona horaria inválida: {timezone_name}") from exc
                 await self._enforce_daily_ramp(record, platform, alias, expected_placement,
                                                target.get("slot_id"), local_date, scheduled)
+            # TikTok comparte deliberadamente el copy editable de Instagram: el
+            # editor existente prepara caption y primer comentario para ambos.
             destination = "facebook" if platform == "facebook" else "instagram"
             copy_model = getattr(record.editorial.copy_data, destination)
             copy = copy_model.model_dump(mode="json")
@@ -1024,7 +1232,7 @@ class ImagePostService:
             comment_status = "pending" if comment and mapping.get("can_comment") else "skipped_permission" if comment else "not_requested"
             new_deliveries.append(Delivery(
                 delivery_id=_id("del"), revision=revision, platform=platform, account_alias=alias,
-                target_id=str(live["target_id"]), placement=expected_placement, scheduled_at=scheduled,
+                target_id=str(live.get("target_id") or alias), placement=expected_placement, scheduled_at=scheduled,
                 timezone=target.get("timezone", "UTC"), slot_id=target.get("slot_id"), idempotency_key=idem_key,
                 status=DeliveryStatus.QUEUED, caption=copy.get("caption", ""), hashtags=record.editorial.hashtags,
                 first_comment=comment, comment_status=comment_status,
@@ -1235,8 +1443,13 @@ class ImagePostService:
         )
         heartbeat = asyncio.create_task(self._delivery_heartbeat(delivery_id))
         try:
-            publisher = self._publisher()
-            result = await self._invoke(publisher.publish_image_delivery if hasattr(publisher, "publish_image_delivery") else publisher, spec)
+            if spec.platform == "tiktok":
+                async def save_job(job_id: str) -> None:
+                    await self._set_delivery(record, delivery, {"remote": {**delivery.remote.model_dump(mode="json"), "job_id": job_id}})
+                result = await self._publish_tiktok_images(spec, on_job=save_job)
+            else:
+                publisher = self._publisher()
+                result = await self._invoke(publisher.publish_image_delivery if hasattr(publisher, "publish_image_delivery") else publisher, spec)
             remote = RemoteResult.model_validate(_jsonable(result))
         except Exception as exc:
             if isinstance(exc, ImagePostError) and exc.code == "META_ADAPTER_UNAVAILABLE":
@@ -1287,6 +1500,33 @@ class ImagePostService:
         await self._emit("image_delivery_changed", {"delivery_id": delivery_id, "status": final_status.value,
                                                        "post_id": remote.post_id, "permalink": remote.permalink})
         return published
+
+    async def _publish_tiktok_images(self, spec: DeliverySpec, *, on_job=None) -> RemoteResult:
+        """Entrega archivos archivados al servicio de navegador con la clave de la entrega."""
+        from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
+
+        if spec.placement not in {"image", "carousel"}:
+            raise ValueError("TikTok solo admite imágenes en este flujo")
+        path_for_key = getattr(self.media, "_path", None)
+        if path_for_key is None or len(spec.media_keys) != len(spec.media_sha256):
+            raise ValueError("TikTok requiere medios locales con hash aprobado")
+        paths = []
+        for key, expected in zip(spec.media_keys, spec.media_sha256, strict=True):
+            path = Path(path_for_key(key))
+            if not hmac.compare_digest(hashlib.sha256(path.read_bytes()).hexdigest(), expected.lower()):
+                raise ValueError("El hash de la imagen no coincide con el aprobado")
+            paths.append(path)
+        tags = [f"#{tag.lstrip('#')}" for tag in spec.hashtags if tag.strip('#')]
+        present = set(spec.caption.split())
+        caption = "\n\n".join(part for part in (spec.caption, " ".join(tag for tag in tags if tag not in present)) if part)
+        job_callback = {"on_job": on_job} if on_job is not None else {}
+        result = await TikTokServiceAdapter().publish_images(
+            paths, caption, spec.account_alias, idempotency_key=spec.idempotency_key,
+            first_comment=spec.first_comment if spec.comment_allowed else None, **job_callback,
+        )
+        return RemoteResult(post_id=result.post_id, permalink=result.url,
+                            comment_status="pending" if spec.first_comment and spec.comment_allowed else
+                            "skipped_permission" if spec.first_comment else "not_requested")
 
     async def _delivery_heartbeat(self, delivery_id: str) -> None:
         """Renueva la lease del registro y de la cola mientras Graph siga trabajando."""
@@ -1382,7 +1622,7 @@ class ImagePostService:
     async def reconcile_delivery(
         self, delivery_id: str, *, manual: bool = False, remote_post_id: str | None = None,
     ) -> Delivery:
-        """Consulta Meta con los IDs archivados; nunca ejecuta un POST de publicación."""
+        """Consulta el servicio correspondiente sin reenviar la publicación."""
         record, delivery = self._find_delivery(delivery_id)
         if record is None or delivery is None:
             raise ImagePostError("DELIVERY_NOT_FOUND", status_code=404)
@@ -1438,16 +1678,23 @@ class ImagePostService:
             ),
         )
         try:
-            result = await self._invoke(self._publisher().reconcile_image_delivery, spec, lookup_remote)
+            if delivery.platform == "tiktok":
+                from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
+                tiktok = await TikTokServiceAdapter().reconcile_images(delivery.remote.job_id, delivery.account_alias)
+                result = RemoteResult(post_id=tiktok.post_id, permalink=tiktok.url,
+                                      comment_status=delivery.comment_status)
+            else:
+                result = await self._invoke(self._publisher().reconcile_image_delivery, spec, lookup_remote)
             confirmed = RemoteResult.model_validate(_jsonable(result))
         except Exception as exc:
             failure_kind = getattr(exc, "status", None)
             details = getattr(exc, "details", None)
             confirmed = None
             error = {"code": str(details.get("code") if isinstance(details, dict) and details.get("code") else
+                                 "TIKTOK_MANUAL_REVIEW" if delivery.platform == "tiktok" and not delivery.remote.job_id else
                                  "RECONCILIATION_PENDING"), "message": _safe_error(exc)}
             status = (DeliveryStatus.FAILED_PERMANENT if failure_kind == "failed_permanent"
-                      else DeliveryStatus.OUTCOME_UNKNOWN)
+                      and delivery.platform != "tiktok" else DeliveryStatus.OUTCOME_UNKNOWN)
             if remote_post_id and not delivery.remote.post_id:
                 status = DeliveryStatus.OUTCOME_UNKNOWN
             else:
@@ -1543,6 +1790,7 @@ class ImagePostService:
     async def fill_due_image_slots(self, now: datetime) -> int:
         """Rellena solo slots de imagen ya vencidos y con piezas aprobadas."""
         from src.core.schedule import queue_repository, slot_repository
+        from .artwork import latest_post_revision, validate_target_format
 
         filled = 0
         slots = slot_repository.list_slots(enabled=True)
@@ -1575,6 +1823,15 @@ class ImagePostService:
                         continue
                     if slot.content_kind == "reel" and record.technical.music.mode != "convert_to_reel":
                         continue
+                    if latest_post_revision(self, record).publication_id != record.publication_id:
+                        continue
+                    if slot.content_kind != "reel":
+                        try:
+                            validate_target_format(record, slot.platform)
+                        except ImagePostError as exc:
+                            logger.debug("image_slot_candidate_skipped", slot_id=slot.slot_id,
+                                         publication_id=record.publication_id, code=exc.code)
+                            continue
                     if any(delivery.platform == slot.platform and delivery.account_alias == slot.account_alias
                            and delivery.status in {DeliveryStatus.QUEUED, DeliveryStatus.PUBLISHING, DeliveryStatus.PUBLISHED}
                            for delivery in record.deliveries):
@@ -1591,13 +1848,18 @@ class ImagePostService:
                                                        local_now.date(), occurrence)
                     except ImagePostError:
                         continue
-                await self.schedule_deliveries(
-                    candidate.publication_id, candidate.revision,
-                    [{"platform": slot.platform, "account_alias": slot.account_alias,
-                      "placement": slot.content_kind, "scheduled_at": scheduled_iso,
-                      "slot_id": slot.slot_id, "timezone": slot.timezone}],
-                    client_request_id=occurrence_key(slot.slot_id, occurrence), immediate=False,
-                )
+                try:
+                    await self.schedule_deliveries(
+                        candidate.publication_id, candidate.revision,
+                        [{"platform": slot.platform, "account_alias": slot.account_alias,
+                          "placement": slot.content_kind, "scheduled_at": scheduled_iso,
+                          "slot_id": slot.slot_id, "timezone": slot.timezone}],
+                        client_request_id=occurrence_key(slot.slot_id, occurrence), immediate=False,
+                    )
+                except ImagePostError as exc:
+                    logger.warning("image_slot_candidate_rejected", slot_id=slot.slot_id,
+                                   publication_id=candidate.publication_id, code=exc.code)
+                    continue
                 filled += 1
         return filled
 
@@ -1669,7 +1931,8 @@ class ImagePostService:
                         "UNLICENSED_MEDIA", "Cada caption debe incluir URL de licencia y cambios de la foto", 422
                     )
                 if requires_attribution:
-                    required = (item.author, item.license_id, item.license_url or "", item.changes or "")
+                    required = ((item.author, item.license_id) if slide.layout.startswith("amarillista:") else
+                                (item.author, item.license_id, item.license_url or "", item.changes or ""))
                     if not any(all(part in credit for part in required) for credit in visible_credits):
                         raise ImagePostError(
                             "UNLICENSED_MEDIA", "La lámina debe mostrar autor, licencia, enlace y cambios CC BY", 422
@@ -1704,7 +1967,9 @@ class ImagePostService:
                 ("caption", network.caption, network.caption_claim_refs),
                 ("primer comentario", network.first_comment or "", network.first_comment_claim_refs),
             ):
-                content_numbers = _number_values(_caption_factual_text(content))
+                content_numbers = _number_values(_caption_factual_text(
+                    content, slide_count=len(record.technical.composition_plan.slides)
+                ))
                 if not content_numbers:
                     continue
                 fact_numbers = set()

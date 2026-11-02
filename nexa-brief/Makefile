@@ -53,13 +53,28 @@ setup: ## Instala todo y crea .env, claves y usuario admin (se puede repetir)
 DEV_PUBLIC_APP_URL ?= $(PUBLIC_APP_URL)
 dev: export PUBLIC_APP_URL := $(DEV_PUBLIC_APP_URL)
 dev: export AUTH_URL := $(DEV_PUBLIC_APP_URL)
-dev: ## API (:8000), web (:3000) y TikTok (:8100); Ctrl+C detiene los servicios
-	@trap 'kill 0' INT TERM EXIT; \
+export NEXA_PROJECT_ROOT := $(CURDIR)
+export NEXA_DATA_HOME ?= $(HOME)/.local/share/nexa-brief
+export NEXA_DATA_PROFILE ?= profesional
+export NEXA_PROFILE_DIR ?= $(NEXA_DATA_HOME)/profiles/$(NEXA_DATA_PROFILE)
+export NEXA_WEB_DATA_DIR ?= $(NEXA_PROFILE_DIR)/web-data
+SHARED_CONNECTIONS_DIR ?= $(NEXA_PROFILE_DIR)/connections
+dev api: export SHARED_CONNECTIONS_DIR := $(SHARED_CONNECTIONS_DIR)
+dev api: export ACCOUNTS_JSON_PATH := $(SHARED_CONNECTIONS_DIR)/accounts.json
+dev api: export TIKTOK_SERVICE_UPLOAD_MEDIA := true
+dev api: export TIKTOK_IDEMPOTENCY_NAMESPACE := development
+dev api: export ENABLE_AUTO_PUBLISHING := false
+connections-up: ## Inicia el servicio TikTok compartido, independiente del desarrollo
+	./scripts/start-connections.sh
+
+dev: connections-up
+dev: ## API (:8000) y web (:3000); TikTok compartido sigue activo al detener desarrollo
+	@trap 'trap - INT TERM EXIT; kill 0' INT TERM EXIT; \
 	(cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --host 0.0.0.0 --port 8000) & \
 	(cd $(WEB) && pnpm dev --hostname 0.0.0.0 --port 3000) & \
-	(cd nexa-tiktok && uv run uvicorn nexa_tiktok.main:app --host 127.0.0.1 --port 8100) & \
 	wait
 
+api: connections-up
 api: ## Solo la API
 	cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --host 0.0.0.0 --port 8000
 
@@ -100,6 +115,7 @@ template-posters: ## Capturas WebP de las intros renderizadas de NodeMotion
 docker-build: ## Construye las imágenes api + web
 	docker compose build
 
+docker-up: connections-up
 docker-up: ## Levanta api + web en segundo plano
 	docker compose up -d
 

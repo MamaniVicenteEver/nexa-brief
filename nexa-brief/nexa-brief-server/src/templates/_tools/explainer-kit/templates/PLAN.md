@@ -57,6 +57,8 @@
 
 ### 7a. Inventario visual (guides/components.md §6.1)
 
+Antes de decidir crear un componente, consultar `kit.py library` y anotar si uno aprobado en otra producción se puede reutilizar. Al crear uno nuevo, justificar la necesidad, usar parámetros JSON, revisar la hoja PNG y colocarlo en el storyboard.
+
 Objetos y mecanismos del tema que alguien que sabe del tema esperaría VER.
 
 | objeto / mecanismo | planos que lo necesitan | ¿en el clímax? | componente del catálogo que lo dibuja | decisión (usar / crear `<familia>.<nombre>`) |
@@ -77,9 +79,12 @@ Objetos y mecanismos del tema que alguien que sabe del tema esperaría VER.
 
 ## 8. Medios necesarios
 
-| archivo (nombre corto) | qué tiene que mostrar | búsqueda sugerida | escena |
-|---|---|---|---|
-| | | | |
+Antes de buscar, completá una fila por cada foto o clip. Copiá `frase ancla`, `shows` y `query`
+al beat del storyboard; después de mirar la hoja, agregá `media_review`.
+
+| frase ancla (`at`) | archivo (nombre corto) | sujeto concreto (`shows`) | consultas (`query`, dos o más) | escena |
+|---|---|---|---|---|
+| | | | | |
 
 ## 9. Publicación (se copia a `publish.json`)
 

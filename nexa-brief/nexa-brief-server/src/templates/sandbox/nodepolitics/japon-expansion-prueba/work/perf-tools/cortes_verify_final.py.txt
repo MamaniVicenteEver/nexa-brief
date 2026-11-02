@@ -1,0 +1,40 @@
+import asyncio,json,hashlib,sys
+from pathlib import Path
+from playwright.async_api import async_playwright
+sys.path.insert(0,'/tmp')
+from cortes_matrix3 import TPL,ROOT,BACK,FILES
+OUT=TPL/'work/results/cortes-regression';OUT.mkdir(exist_ok=True)
+CASES={'japon-expansion-prueba':[0,3,6,9,10.23,10.4,11,14,19.79,20,22,25,30,43,52,53,55,60,63,66,75,90,94,96,108.8,115.12,116,118,120], 'imperio-demo':[3,10.1,11.9,12.7,14,19,27.7,31,48.2,48.5,70,105,140,230]}
+async def shots(p,mode,run):
+ hashes={};b=await p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
+ for tpl,times in CASES.items():
+  for orient,(w,h) in [('16x9',(1280,720)),('9x16',(720,1280))]:
+   ctx=await b.new_context(viewport={'width':w,'height':h});page=await ctx.new_page()
+   async def route(r):
+    name=next((v for k,v in FILES.items() if r.request.url.split('?')[0].endswith(k)),None)
+    if name=='kit.js':
+     body=(BACK/name).read_text() if mode=='before' else (ROOT/'src/templates/_tools/explainer-kit/engine/kit.js').read_text()
+     body+=""";(()=>{const boot=Kit.boot;Kit.boot=async o=>{const fs=[...new Set([...(o.design?.defaults?.fonts?.load||[]),...Kit.fonts])];await Promise.all(fs.map(f=>document.fonts.load(f).catch(()=>{})));const txt=(JSON.stringify(o.storyboard||{}).match(/[\u3000-\u9fff]/g)||[]).join('');if(txt)await document.fonts.load(Kit.imperio.nativeFont(40),txt).catch(()=>{});return boot(o);};})();"""
+     await r.fulfill(status=200,content_type='application/javascript',body=body)
+    elif name and mode=='before':await r.fulfill(status=200,content_type='application/javascript',body=(BACK/name).read_text())
+    else:await r.continue_()
+   await page.route('**/*.js*',route)
+   await page.goto('http://127.0.0.1:8000/api/v1/explainer/files/sandbox/nodepolitics/'+tpl+'/index.html?paused&t=0')
+   await page.wait_for_function('window.__promo && window.__promo.beats',timeout=120000)
+   await page.evaluate('window.KitReady')
+   await page.evaluate("document.fonts.ready")
+   for t in times:
+    await page.evaluate('(t)=>__promo.seek(t)',t);png=await page.screenshot()
+    key=f'{tpl}/{orient}/{t}'
+    hashes[key]=hashlib.sha256(png).hexdigest()
+    if run==1:(OUT/f'{mode}-{tpl}-{orient}-{t}.png').write_bytes(png)
+   print('SHOTS',mode,run,tpl,orient,flush=True);await ctx.close()
+ await b.close();(OUT/f'{mode}-{run}.json').write_text(json.dumps(hashes,indent=2));return hashes
+async def main():
+ async with async_playwright() as p:
+  c=await shots(p,'after',1);d=await shots(p,'after',2)
+  a=json.loads((OUT/'before-1.json').read_text());b=json.loads((OUT/'before-2.json').read_text())
+  diff=lambda x,y:[k for k in x if x[k]!=y[k]]
+  out={'before_before':diff(a,b),'after_after':diff(c,d),'before_after':diff(a,c),'before_after_2':diff(b,d),'shots_each':len(a)}
+  print(json.dumps(out,indent=2),flush=True);(OUT/'summary.json').write_text(json.dumps(out,indent=2))
+asyncio.run(main())

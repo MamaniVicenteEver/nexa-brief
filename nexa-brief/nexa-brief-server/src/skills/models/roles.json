@@ -133,6 +133,57 @@
       "model": "gpt-6-luna",
       "reasoning_effort": "xhigh",
       "does": "Ejecuta tareas acotadas del prototipo y entrega resultados."
+    },
+    "image_copy": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "structured_agent": true,
+      "timeout_seconds": 180,
+      "invalid_json_retries": 1,
+      "fallback": {
+        "provider": "deepseek",
+        "timeout_seconds": 100,
+        "invalid_json_retries": 1
+      },
+      "does": "Redacta los cuatro niveles y repara solo campos rechazados de imágenes."
+    },
+    "image_fact_check": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "structured_agent": true,
+      "timeout_seconds": 180,
+      "invalid_json_retries": 1,
+      "fallback": {
+        "provider": "deepseek",
+        "timeout_seconds": 100,
+        "invalid_json_retries": 1
+      },
+      "does": "Coteja fidelidad de los campos visibles y visuales con los hechos del PLAN."
+    },
+    "image_photo_judge": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "structured_agent": true,
+      "timeout_seconds": 180,
+      "invalid_json_retries": 1,
+      "fallback": {
+        "provider": "deepseek",
+        "timeout_seconds": 100,
+        "invalid_json_retries": 1
+      },
+      "does": "Juzga relevancia de fotografías por título, descripción y rol."
+    },
+    "sound_curator": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "medium",
+      "structured_agent": true,
+      "timeout_seconds": 120,
+      "invalid_json_retries": 1,
+      "does": "Cataloga sonidos externos nuevos: título, descripción, usos sugeridos y etiquetas; sin herramientas, mediciones ni aprobación editorial."
     }
   }
 }

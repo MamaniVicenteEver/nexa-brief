@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 import random
 import re
 from dataclasses import dataclass
@@ -48,7 +49,7 @@ _PUBLICATION_PATH_RE = re.compile(r"/(?:api/)?(?:post|creator|video|item)[^/?]*(
 class TikTokUploadError(RuntimeError):
     """Upload error with a stable machine-readable code."""
 
-    def __init__(self, message: str, *, code: str = "upload_failed", after_publish_click: bool = False) -> None:
+    def __init__(self, message: str, *, code: str, after_publish_click: bool = False) -> None:
         super().__init__(message)
         self.code = code
         self.after_publish_click = after_publish_click
@@ -148,20 +149,39 @@ def _secure_shots_dir(shots_dir: Path) -> None:
     shots_dir.chmod(0o700)
 
 
+async def _screenshot(page: Page, path: Path, *, challenge: bool = False) -> None:
+    # Never capture sensitive form values or verification screens.
+    try:
+        masks = [page.locator("body")] if challenge else [page.locator(
+            'input:not([type=checkbox]):not([type=radio]), textarea, [autocomplete="current-password"], [data-e2e*="token"], [data-e2e*="cookie"]'
+        )]
+        await page.screenshot(path=str(path), mask=masks, timeout=5000)
+        path.chmod(0o600)
+    except Exception:
+        pass
+
+
+async def _requires_full_mask(page: Page) -> bool:
+    try:
+        if "/login" in page.url.casefold():
+            return True
+        await _detect_manual_intervention(page)
+    except Exception:
+        return True
+    return False
+
+
 async def capture_step(page: Page, shots_dir: Path, number: int, label: str) -> Path:
-    # Routine screenshots are omitted; screenshot failures cannot block an operation.
-    return shots_dir / "omitted"
+    _secure_shots_dir(shots_dir)
+    path = shots_dir / f"{number:02d}-{label}.png"
+    await _screenshot(page, path, challenge=await _requires_full_mask(page))
+    return path
 
 
 async def capture_failure(page: Page, shots_dir: Path, error: Exception, *, after_publish_click: bool) -> Path:
     _secure_shots_dir(shots_dir)
-    path = shots_dir / "challenge.png"
-    if getattr(error, "code", "") == "challenge_required":
-        try:
-            await page.screenshot(path=str(path), mask=[page.locator("body")], timeout=5000)
-            path.chmod(0o600)
-        except Exception:
-            pass
+    challenge = getattr(error, "code", "") in {"challenge_required", "requires_reauth"}
+    await _screenshot(page, shots_dir / "failure.png", challenge=challenge or await _requires_full_mask(page))
     return shots_dir / "failure.txt"
 
 
@@ -169,11 +189,11 @@ async def _human_pause() -> None:
     await asyncio.sleep(random.uniform(0.8, 3.0))
 
 
-async def _move_and_click(page: Page, locator: Locator) -> None:
-    await locator.scroll_into_view_if_needed(timeout=3_000)
+async def _move_and_click(page: Page, locator: Locator, *, scroll_timeout: int = 3_000) -> None:
+    await locator.scroll_into_view_if_needed(timeout=scroll_timeout)
     box = await locator.bounding_box()
     if not box:
-        raise TikTokUploadError("No se pudo localizar el control visible para pulsarlo.")
+        raise TikTokUploadError("No se pudo localizar el control visible para pulsarlo.", code="control_position_unavailable")
     x = box["x"] + box["width"] * random.uniform(0.35, 0.65)
     y = box["y"] + box["height"] * random.uniform(0.35, 0.65)
     await page.mouse.move(x, y, steps=random.randint(10, 22))
@@ -182,18 +202,12 @@ async def _move_and_click(page: Page, locator: Locator) -> None:
 
 
 async def _type_human(page: Page, text: str) -> None:
-    pieces = re.split(r"(#[\wáéíóúüñÁÉÍÓÚÜÑ]+)", text, flags=re.UNICODE)
-    for piece in pieces:
-        if not piece:
-            continue
-        delay = random.randint(40, 110)
-        if piece.startswith("#"):
-            await page.keyboard.type("#", delay=delay)
-            await page.keyboard.type(piece[1:], delay=random.randint(40, 110))
-            await asyncio.sleep(random.uniform(0.8, 3.0))
-            await page.keyboard.press("Space")
-        else:
-            await page.keyboard.type(piece, delay=delay)
+    # Studio can restore an old caret position after an editor rerender.
+    # Put it back at the end before each keystroke and allow rerenders to settle.
+    for character in text:
+        await page.keyboard.press("Control+End")
+        await page.keyboard.type(character, delay=random.randint(40, 110))
+        await asyncio.sleep(0.15)
 
 
 async def _page_text(page: Page) -> str:
@@ -203,7 +217,9 @@ async def _page_text(page: Page) -> str:
         return ""
 
 
-async def _detect_manual_intervention(page: Page, text: str | None = None) -> None:
+async def _detect_manual_intervention_once(page: Page, text: str | None = None) -> None:
+    if "/login" in page.url.casefold():
+        raise RequiresReauthError()
     body = (text if text is not None else await _page_text(page)).casefold()
     if any(marker in body for marker in UNKNOWN_MODAL_MARKERS):
         raise ManualInterventionRequired("TikTok mostró una verificación/captcha; se detuvo sin resolverla.")
@@ -219,6 +235,18 @@ async def _detect_manual_intervention(page: Page, text: str | None = None) -> No
         raise
     except Exception:
         pass
+
+
+async def _detect_manual_intervention(page: Page, text: str | None = None) -> None:
+    """Recheck the current page twice; never replay a click or submit an operation."""
+    for attempt in range(3):
+        try:
+            await _detect_manual_intervention_once(page, text if attempt == 0 else None)
+            return
+        except (ManualInterventionRequired, RequiresReauthError):
+            if attempt == 2 or getattr(page, '_nexa_publish_clicked', False):
+                raise
+            await asyncio.sleep(0.5)
 
 
 async def _is_visible_text(page: Page, texts: tuple[str, ...]) -> bool:
@@ -241,10 +269,8 @@ async def _wait_for_editor(page: Page, timeout_seconds: int = UPLOAD_TIMEOUT_SEC
             complete_visible = await _is_visible_text(page, UPLOAD_COMPLETE_TEXTS)
             if not progress_visible and (complete_visible or await editor.is_visible(timeout=100)):
                 return
-        if "/login" in page.url.casefold():
-            raise RequiresReauthError()
         await asyncio.sleep(1.2)
-    raise TikTokUploadError("TikTok no terminó la carga ni mostró el editor dentro del tiempo esperado.")
+    raise TikTokUploadError("TikTok no terminó la carga ni mostró el editor dentro del tiempo esperado.", code="editor_timeout")
 
 
 async def _wait_for_file_control(page: Page, timeout_seconds: int = 60) -> Locator | None:
@@ -252,8 +278,6 @@ async def _wait_for_file_control(page: Page, timeout_seconds: int = 60) -> Locat
     deadline = asyncio.get_running_loop().time() + timeout_seconds
     while asyncio.get_running_loop().time() < deadline:
         await _detect_manual_intervention(page)
-        if "/login" in page.url.casefold():
-            raise RequiresReauthError()
         file_input = locator_for(page, FILE_INPUTS[0]).first
         if await file_input.count() > 0:
             return file_input
@@ -298,32 +322,65 @@ async def _dismiss_unsaved_edit_prompt(page: Page, shots_dir: Path, step: int) -
 
 
 async def _enter_caption(page: Page, caption: str) -> Locator:
+    if len(caption) > MAX_CAPTION_LENGTH:
+        raise TikTokUploadError("La descripción excede el límite de 2200 caracteres.", code="caption_too_long")
     locator = await first_visible(page, CAPTION_INPUTS, timeout_ms=500)
     if locator is None:
-        raise TikTokUploadError("No se encontró el campo de descripción en el editor.")
+        raise TikTokUploadError("No se encontró el campo de descripción en el editor.", code="caption_input_missing")
     await _move_and_click(page, locator)
     await locator.focus()
     focused = await locator.evaluate("element => element === document.activeElement || element.contains(document.activeElement)")
     if not focused:
-        raise TikTokUploadError("El campo de descripción no recibió el foco; se detuvo antes de continuar.")
-    await page.keyboard.press("Control+A")
-    await page.keyboard.press("Backspace")
-    await _type_human(page, caption)
-    if len(caption) > MAX_CAPTION_LENGTH:
-        raise TikTokUploadError("La descripción excede el límite de 2200 caracteres.")
-    entered = " ".join((await locator.inner_text()).split()).casefold()
-    if " ".join(caption.split()).casefold() not in entered:
-        raise TikTokUploadError("La descripción escrita no coincide con el texto previsto.")
-    return locator
+        raise TikTokUploadError("El campo de descripción no recibió el foco; se detuvo antes de continuar.", code="caption_focus_failed")
+    for attempt in range(3):
+        await locator.focus()
+        await page.keyboard.press("Control+A")
+        await page.keyboard.press("Backspace")
+        await _wait_caption_state(locator, "", require_counter=False)
+        await _type_human(page, caption)
+        try:
+            await _wait_caption_state(locator, caption, require_counter=True)
+            return locator
+        except TikTokUploadError as exc:
+            if exc.code != "caption_mismatch" or attempt == 2:
+                raise
+    raise AssertionError("unreachable")
+
+
+async def _wait_caption_state(locator: Locator, expected: str, *, require_counter: bool) -> None:
+    """Wait for the editor and its nearby character counter to agree."""
+    expected_count = len(expected.encode("utf-16-le")) // 2
+    deadline = asyncio.get_running_loop().time() + 10
+    while asyncio.get_running_loop().time() < deadline:
+        state = await locator.evaluate("""element => {
+            let node = element;
+            let counters = [];
+            while (node && !counters.length && node !== document.body) {
+                counters = Array.from(node.querySelectorAll('*')).filter(e =>
+                    /^\\s*\\d+\\s*\\/\\s*\\d+\\s*$/.test(e.textContent || '')
+                ).map(e => e.textContent.trim());
+                node = node.parentElement;
+            }
+            return {text: element.innerText, counters};
+        }""", timeout=3000)
+        text_matches = " ".join(state["text"].split()) == " ".join(expected.split())
+        count_matches = any(int(re.match(r"\s*(\d+)", value).group(1)) == expected_count
+                            for value in state["counters"])
+        if text_matches and (not require_counter or count_matches):
+            return
+        await asyncio.sleep(0.25)
+    if not expected:
+        raise TikTokUploadError("No se pudo confirmar que la descripción anterior se haya borrado.", code="caption_clear_failed")
+    raise TikTokUploadError("La descripción escrita o su contador no coincide con el texto previsto.", code="caption_mismatch")
 
 
 async def _set_privacy(page: Page, privacy: str) -> str:
     privacy = privacy.casefold()
     if privacy not in PRIVACY_VALUES:
-        raise TikTokUploadError(f"Privacidad no admitida: {privacy}.")
+        raise TikTokUploadError("Privacidad no admitida.", code="invalid_privacy")
     control = await first_visible(page, PRIVACY_CONTROLS)
     if control is None:
-        raise TikTokUploadError("No se encontró el control de visibilidad de la publicación.")
+        raise TikTokUploadError("No se encontró el control de visibilidad de la publicación.", code="privacy_control_missing")
     await _move_and_click(page, control)
     await _human_pause()
     chosen: str | None = None
@@ -335,10 +392,37 @@ async def _set_privacy(page: Page, privacy: str) -> str:
             Candidate("role", label, role="button", exact=True),
             Candidate("text", label, exact=True),
         )
-        option = await first_visible(page, candidates, timeout_ms=500)
-        if option:
-            await _move_and_click(page, option)
-            chosen = label
+        control_element = await control.element_handle()
+        for candidate in candidates:
+            matches = locator_for(page, candidate)
+            for index in range(min(await matches.count(), 20)):
+                option = matches.nth(index)
+                if not await option.is_visible() or await option.evaluate(
+                    '(e, control) => e === control || control.contains(e)', control_element
+                ):
+                    continue
+                # Resolve the container before selection and re-query it afterwards.
+                menu_info = await option.evaluate("""e => {
+                    const menu = e.closest('[role="listbox"], [role="menu"], [role="radiogroup"]');
+                    if (menu) return {role: menu.getAttribute('role')};
+                    const parent = e.parentElement;
+                    if (!parent || parent === document.body || parent === document.documentElement) return null;
+                    const marker = `privacy-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+                    parent.setAttribute('data-nexa-privacy-menu', marker);
+                    return {marker};
+                }""")
+                if not menu_info:
+                    raise TikTokUploadError("No se pudo identificar el menú de visibilidad; se detuvo.", code="privacy_selection_unconfirmed")
+                if "role" in menu_info:
+                    menu = page.locator(f'[role="{menu_info["role"]}"]')
+                else:
+                    menu = page.locator(f'[data-nexa-privacy-menu="{menu_info["marker"]}"]')
+                await _move_and_click(page, option, scroll_timeout=15_000)
+                chosen = label
+                break
+            if chosen:
+                break
+        if chosen:
             break
     if chosen is None:
         body = await _page_text(page)
@@ -347,12 +431,30 @@ async def _set_privacy(page: Page, privacy: str) -> str:
                 "TikTok solo ofrece Seguidores, Amigos y Solo tú; la cuenta parece privada. No se cambió la privacidad global.",
                 code="public_visibility_unavailable",
             )
-        raise TikTokUploadError("TikTok abrió el menú de visibilidad, pero no apareció una opción reconocida.")
-    await _human_pause()
-    selected_text = " ".join((await control.inner_text()).split())
-    if chosen.casefold() not in selected_text.casefold():
-        raise TikTokUploadError("TikTok no confirmó la visibilidad seleccionada; se detuvo.", code="privacy_selection_unconfirmed")
-    return chosen
+        raise TikTokUploadError("TikTok abrió el menú de visibilidad, pero no apareció una opción reconocida.", code="privacy_option_missing")
+    # A fresh locator observes the current menu even if its options were replaced.
+    async def menu_visible() -> bool:
+        count = await menu.count()
+        if not count and "marker" in menu_info:
+            # An unidentifiable replacement of the fallback container is ambiguous.
+            raise TikTokUploadError("No se pudo confirmar el cierre del menú de visibilidad; se detuvo.", code="privacy_selection_unconfirmed")
+        return any([await menu.nth(index).is_visible() for index in range(count)])
+
+    if await menu_visible():
+        await page.keyboard.press("Escape")
+    deadline = asyncio.get_running_loop().time() + 5
+    while await menu_visible():
+        if asyncio.get_running_loop().time() >= deadline:
+            raise TikTokUploadError("TikTok no cerró el menú de visibilidad; se detuvo.", code="privacy_selection_unconfirmed")
+        await asyncio.sleep(0.1)
+    deadline = asyncio.get_running_loop().time() + 5
+    while asyncio.get_running_loop().time() < deadline:
+        current = await first_visible(page, PRIVACY_CONTROLS, timeout_ms=250)
+        if (current and " ".join((await current.inner_text(timeout=1000)).split()).casefold() == chosen.casefold()
+                and not await menu_visible()):
+            return chosen
+        await asyncio.sleep(0.1)
+    raise TikTokUploadError("TikTok no confirmó la visibilidad seleccionada; se detuvo.", code="privacy_selection_unconfirmed")
 
 
 async def _set_comments_enabled(page: Page) -> bool:
@@ -360,8 +462,8 @@ async def _set_comments_enabled(page: Page) -> bool:
     if toggle is None:
         body = await _page_text(page)
         if not any(label.casefold() in body.casefold() for label in COMMENT_SETTING_LABELS):
-            raise TikTokUploadError("No se pudo confirmar el ajuste de comentarios.")
-        raise TikTokUploadError("TikTok muestra los comentarios, pero no se encontró un control verificable.")
+            raise TikTokUploadError("No se pudo confirmar el ajuste de comentarios.", code="comments_setting_missing")
+        raise TikTokUploadError("TikTok muestra los comentarios, pero no se encontró un control verificable.", code="comments_control_missing")
     checked: bool | None = None
     try:
         value = await toggle.get_attribute("aria-checked")
@@ -380,7 +482,7 @@ async def _set_comments_enabled(page: Page) -> bool:
         else:
             checked = await toggle.is_checked()
     if checked is not True:
-        raise TikTokUploadError("No se pudo verificar que los comentarios estén activados.")
+        raise TikTokUploadError("No se pudo verificar que los comentarios estén activados.", code="comments_unconfirmed")
     return True
 
 
@@ -546,7 +648,7 @@ async def _find_content_row(page: Page, caption: str) -> tuple[str, str | None, 
     row_text = str(data.get("text") or "")
     post_id = None
     for href in data.get("links", []):
-        match = re.search(r"/video/(\d+)", str(href))
+        match = re.search(r"/(?:video|photo)/(\d+)", str(href))
         if match:
             post_id = match.group(1)
             break
@@ -597,10 +699,10 @@ async def _discard_draft(page: Page, shots_dir: Path, number: int) -> bool:
     if dialog is not None:
         lowered = text.casefold()
         if not any(marker in lowered for marker in ("descartar", "discard", "borrador", "draft", "cambios", "changes")):
-            raise TikTokUploadError("El modal de descarte no fue reconocido; no se confirmó.")
+            raise TikTokUploadError("El modal de descarte no fue reconocido; no se confirmó.", code="discard_dialog_unknown")
         confirm = await _dialog_discard_button(dialog)
         if confirm is None:
-            raise TikTokUploadError("TikTok pidió confirmar el descarte con un control no reconocido.")
+            raise TikTokUploadError("TikTok pidió confirmar el descarte con un control no reconocido.", code="discard_confirmation_missing")
         await capture_step(page, shots_dir, number + 1, "confirmacion-descarte")
         await _move_and_click(page, confirm)
         await _human_pause()
@@ -622,7 +724,7 @@ async def upload_video(
     """Upload one video, optionally stopping before the single publish click."""
     video_path = Path(video_path)
     if not video_path.is_file():
-        raise TikTokUploadError(f"No existe el archivo de video: {video_path}.", code="video_missing")
+        raise TikTokUploadError("No existe el archivo de video.", code="video_missing")
     caption = caption.strip()
     if not caption or len(caption) > MAX_CAPTION_LENGTH:
         raise TikTokUploadError("La descripción debe tener entre 1 y 2200 caracteres.", code="invalid_caption")
@@ -632,15 +734,13 @@ async def upload_video(
     try:
         await capture_step(page, shots_dir, 1, "sesion-verificada")
         await page.goto(UPLOAD_URL, wait_until="domcontentloaded", timeout=45_000)
-        if "/login" in page.url.casefold():
-            raise RequiresReauthError()
         await _detect_manual_intervention(page)
         await _dismiss_unsaved_edit_prompt(page, shots_dir, 2)
         file_input = await _wait_for_file_control(page)
         if file_input is None:
             select_button = await first_visible(page, SELECT_VIDEO_BUTTONS, timeout_ms=700)
             if select_button is None:
-                raise TikTokUploadError("No se encontró el selector de archivo de TikTok Studio.")
+                raise TikTokUploadError("No se encontró el selector de archivo de TikTok Studio.", code="file_selector_missing")
             await _human_pause()
             await capture_step(page, shots_dir, 2, "selector-video")
             async with page.expect_file_chooser(timeout=5_000) as chooser_info:
@@ -660,7 +760,7 @@ async def upload_video(
         await _human_pause()
         chosen_privacy = await _set_privacy(page, privacy)
         if privacy.casefold() == "public" and chosen_privacy not in PRIVACY_VALUES["public"]:
-            raise TikTokUploadError("La visibilidad no quedó en público.")
+            raise TikTokUploadError("La visibilidad no quedó en público.", code="public_privacy_unconfirmed")
         await _ensure_no_dialog(page, "el ajuste de visibilidad")
         next_step += 1
         await capture_step(page, shots_dir, next_step, "visibilidad")
@@ -680,12 +780,14 @@ async def upload_video(
         await _human_pause()
         publish_button = await first_visible(page, PUBLISH_BUTTONS, timeout_ms=700)
         if publish_button is None:
-            raise TikTokUploadError("No se encontró el botón principal Publicar; no se hizo ningún intento.")
+            raise TikTokUploadError("No se encontró el botón principal Publicar; no se hizo ningún intento.", code="publish_button_missing")
         event, response_data, response_listener = await _capture_publication_response(page)
         await capture_step(page, shots_dir, next_step + 2, "antes-de-publicar")
+        await _detect_manual_intervention(page)
         # This is the only click on the primary Publicar button. Nothing below retries it.
         await before_click()
         publish_clicked = True
+        page._nexa_publish_clicked = True
         await _move_and_click(page, publish_button)
         await capture_step(page, shots_dir, next_step + 3, "publicar-pulsado-una-vez")
         await _handle_known_modals(page, shots_dir, next_step + 4)
@@ -725,7 +827,8 @@ async def upload_video(
             except Exception as cleanup_error:
                 cleanup_result = f"fallido:{type(cleanup_error).__name__}"
             try:
-                with error_path.open("a", encoding="utf-8") as error_file:
+                fd = os.open(error_path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+                with os.fdopen(fd, "a", encoding="utf-8") as error_file:
                     error_file.write(f"dry_run_cleanup={cleanup_result}\n")
             except Exception:
                 pass

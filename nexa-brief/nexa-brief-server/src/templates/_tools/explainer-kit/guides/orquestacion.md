@@ -1,5 +1,7 @@
 # Orquestación · quién hace qué al producir un video explicativo
 
+> **Diseño imperio:** leer [imperio-production.md](imperio-production.md) antes de planificar: video visible 8–16 s, fotografía 6–12 s y sonido de biblioteca en una capa sobre la voz continua. Es una política específica del estilo; los mapas/rótulos no son medios documentales y las demás familias conservan sus reglas.
+
 > Para **cualquier IA** (Claude Code, Codex, otra) que reciba un pedido como
 > *"quiero un video de este tipo en tech, hacé todo el estudio, delegá en DeepSeek, que dure 9 a 14 min,
 > solo preparación"*. Leé esto primero: dice por dónde empezar, qué delegar, qué queda anotado y qué

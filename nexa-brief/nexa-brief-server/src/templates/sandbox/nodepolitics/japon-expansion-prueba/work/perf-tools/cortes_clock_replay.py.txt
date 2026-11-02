@@ -1,0 +1,27 @@
+import json,math,statistics
+from pathlib import Path
+P=Path('work/results/cortes-data')
+for path in list(P.glob('before-*.json')):
+ d=json.loads(path.read_text());fs={round(f[4],3):f for f in d['frames']};res=[]
+ for mode in ['original','normalized','actual_callback']:
+  on=False;est=0;last=0;tr=[];errors=[];lags=[]
+  for stamp,actual,raw in d['trace']:
+   now=stamp
+   f=fs.get(round(stamp,3))
+   if not f:continue
+   if mode=='actual_callback':now=f[0]
+   if f[3]:on=False;value=raw
+   else:
+    lag=max(0,f[0]-now)/1000;lags.append(lag)
+    sample=max(0,raw-lag) if mode=='normalized' else raw
+    dtw=now-last
+    if not on or dtw<0 or dtw>250 or abs(sample-est)>.25:est=sample
+    else:
+     dt=dtw/1000;est+=dt;est+=(sample-est)*(1-math.exp(-dt/.4))
+    on=True;last=now;value=est
+    if mode=='original' and raw>.5:errors.append(abs(value-actual))
+   tr.append([now,value,raw])
+  tr=[t for t in tr if .5<t[1]<119.95]
+  v=[(b[1]-a[1])*1000/(b[0]-a[0]) for a,b in zip(tr,tr[1:]) if 8<b[0]-a[0]<100]
+  res.append({'mode':mode,'std':statistics.pstdev(v),'max_replay_error':max(errors or [0]),'max_lag':max(lags or [0])})
+ print(path.name,res)

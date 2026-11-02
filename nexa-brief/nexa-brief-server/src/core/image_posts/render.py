@@ -14,6 +14,9 @@ sys.path.insert(0, str(EXPORT_TOOLS))
 
 from image_export import (  # noqa: E402
     ImageExportError,
+    build_preview_html,
+    renderer_source_hash,
+    RENDERER_VERSION,
     ReelFrame,
     ReelFrameSet,
     RenderManifest,
@@ -39,7 +42,19 @@ async def render_async(
     media_bytes: Mapping[str, bytes] | None = None,
 ) -> RenderManifest:
     """Versión no bloqueante para el trabajo asíncrono del backend."""
-    return await render_images_async(plan, style, media_bytes)
+    import time
+    from .trace import emit
+    started = time.monotonic()
+    emit("render", label="Inicio de render", status="running")
+    try:
+        result = await render_images_async(plan, style, media_bytes)
+    except Exception as exc:
+        emit("render_qc", label="Render rechazado", status="failed", reason=str(exc),
+             qc=getattr(exc, "qc", {}), slide_id=getattr(exc, "slide_id", None), seconds=round(time.monotonic()-started, 3))
+        raise
+    emit("render_qc", label="Render y QC aprobados", status="ok", seconds=round(time.monotonic()-started, 3),
+         slides=[{"slide_id": asset.slide_id, "qc": asset.qc} for asset in result.assets])
+    return result
 
 
 async def render_reel(
@@ -69,5 +84,8 @@ __all__ = [
     "reel_frame_manifest",
     "render",
     "render_async",
+    "build_preview_html",
+    "renderer_source_hash",
+    "RENDERER_VERSION",
     "render_reel",
 ]

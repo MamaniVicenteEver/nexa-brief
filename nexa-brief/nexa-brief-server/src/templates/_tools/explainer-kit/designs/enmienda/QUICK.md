@@ -67,8 +67,8 @@
 - **`common.lyric`** — Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. Parámetros: text, accent, size, maxChars, dimPast, y
   `{"use": "common.lyric", "params": {"accent": ["vidas"], "size": 0.9}}`
 - **`common.logo`** — Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual. Parámetros: src, name
-- **`common.clip`** — Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Parámetros: src*, start, rate, loop, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
-  `{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}`
+- **`common.clip`** — Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Parámetros: src*, start, rate, loop, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub, textColor(ink|accent|mix), accentWords, textSide(left|right|bottom), textIn(slide|fade|none), logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
+  `{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "layout": "full", "caption": "Una ^conversación^ digital", "textColor": "mix", "textSide": "left", "sub": "Una historia real"}}`
 - **`common.tabloid`** — Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio. Parámetros: text*, src, srcAfter, video, poster, start, rate, loop, muted, accent, bullet, bulletScale, beforeLabel, afterLabel, imageSide(auto|left|right), mode(impact|split), palette(brand|alert), strap, seal, tapeText, marker, focus, target, textIn(slam|slide|typewriter|none), stagger, accentIn(slam|slide|typewriter|none), bulletIn(slam|slide|typewriter|none), inDuration, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
   `{"use": "common.tabloid", "params": {"text": "TÚ ERES EL SIGUIENTE", "accent": "SIGUIENTE", "strap": "AMAZON · IA"}}`
 - **`common.question`** — Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9. Parámetros: text*, y
@@ -77,3 +77,9 @@
 ## Marcas e instituciones
 
 El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Usá `logo`, `logoName`, `logoPos` y `logoSize` en el beat visual (`rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`). `common.logo` está obsoleto. Preferí SVG; el PNG debe ser transparente.
+
+## Apoyos visuales preferidos (política v5)
+
+Repartí por todo el video y sin orden fijo: (1) miniatura `rough.introv2` o `binary.introv2` con foto/video y texto grande, (2) `common.clip` con `layout: full` y `caption` grande (`textColor: ink|accent|mix`, `accentWords`, `textSide: left|right|bottom`, `textIn`, `sub` y `logo` opcionales), (3) foto en cuadro como tercera opción. Cada apoyo muestra la frase narrada. Imagen visible 5–10 s; video 8–16 s; cada archivo como máximo dos usos. Cada tercio necesita una miniatura o un video completo. Consultá `kit.py library` antes de crear componentes propios.
+
+`{"use":"common.clip","dur":12,"params":{"src":"assets/media/archivo.mp4","layout":"full","caption":"Una ^conversación^ digital","textColor":"mix","textSide":"left","textIn":"slide"}}`

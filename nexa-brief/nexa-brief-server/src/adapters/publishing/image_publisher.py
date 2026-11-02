@@ -129,6 +129,128 @@ def delivery_assets(spec: Any) -> list[Any]:
     return assets
 
 
+
+# API references (verified 2026-11-01):
+# https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media/
+# https://developers.facebook.com/docs/graph-api/reference/page/photos/
+# Facebook's 20-photo cap below is a product limit, not an asserted Graph limit.
+_IMAGE_BYTE_LIMITS = {"facebook": 4_000_000, "instagram": 8_000_000}
+_CAROUSEL_LIMITS = {"facebook": 20, "instagram": 20}
+
+
+class ImageDeliveryValidationError(ValueError):
+    """Permanent local media rejection, before credentials or remote side effects."""
+
+    def __init__(self, code: str, message: str) -> None:
+        self.code = code
+        super().__init__(message)
+
+
+def _validate_image_dimensions(platform: str, width: Any, height: Any) -> None:
+    if not all(isinstance(side, int) and not isinstance(side, bool) and side > 0 for side in (width, height)):
+        raise ImageDeliveryValidationError("INVALID_IMAGE", "JPEG dimensions must be positive integers")
+    if platform == "instagram":
+        # Integer arithmetic avoids floating-point rejection at the 4:5 boundary.
+        if 5 * width < 4 * height or 100 * width > 191 * height:
+            raise ImageDeliveryValidationError(
+                "UNSUPPORTED_IMAGE_RATIO",
+                "Instagram feed images require a ratio from 4:5 to 1.91:1. Select 4:5 to publish this post.",
+            )
+        if not 320 <= width <= 1440:
+            raise ImageDeliveryValidationError("INVALID_IMAGE", "Instagram JPEG width must be between 320 and 1440 pixels")
+
+
+def validate_image_delivery(spec: Any) -> None:
+    """Validate a delivery's count and available metadata without remote access.
+
+    Legacy DeliverySpec records only contain storage keys and hashes. Call
+    validate_image_delivery_assets as well to check their actual JPEG bytes.
+    """
+    platform = str(value(spec, "platform", ""))
+    if platform not in _IMAGE_BYTE_LIMITS:
+        raise ImageDeliveryValidationError("UNSUPPORTED_PLATFORM", "Unsupported image platform")
+    placement = str(value(spec, "placement", "image"))
+    assets = delivery_assets(spec)
+    valid_count = (placement == "image" and len(assets) == 1) or (
+        placement == "carousel" and 2 <= len(assets) <= _CAROUSEL_LIMITS[platform]
+    )
+    if not valid_count:
+        raise ImageDeliveryValidationError("INVALID_IMAGE_COUNT", "Expected one JPEG or a carousel of 2 to 20 JPEGs")
+    sizes: set[tuple[int, int]] = set()
+    for asset in assets:
+        if value(asset, "mime", "image/jpeg") != "image/jpeg":
+            raise ImageDeliveryValidationError("INVALID_IMAGE", "Image deliveries require JPEG assets")
+        if value(asset, "color_profile", "sRGB") != "sRGB":
+            raise ImageDeliveryValidationError("INVALID_IMAGE", "JPEG assets must use the sRGB color profile")
+        size = value(asset, "bytes")
+        if size is not None and (
+            not isinstance(size, int) or isinstance(size, bool) or not 0 < size <= _IMAGE_BYTE_LIMITS[platform]
+        ):
+            raise ImageDeliveryValidationError("INVALID_IMAGE", f"JPEG exceeds the {platform} image size limit")
+        width, height = value(asset, "width"), value(asset, "height")
+        if width is not None or height is not None:
+            _validate_image_dimensions(platform, width, height)
+            sizes.add((width, height))
+    if len(sizes) > 1:
+        raise ImageDeliveryValidationError("INVALID_IMAGE", "Carousel JPEGs must have matching dimensions")
+
+
+def validate_image_content(content: bytes, *, platform: str) -> tuple[int, int]:
+    """Verify final bytes without resizing, recompressing or changing approval hashes."""
+    from io import BytesIO
+    from PIL import Image, ImageCms
+
+    if platform not in _IMAGE_BYTE_LIMITS:
+        raise ImageDeliveryValidationError("UNSUPPORTED_PLATFORM", "Unsupported image platform")
+    if not isinstance(content, bytes) or not 0 < len(content) <= _IMAGE_BYTE_LIMITS[platform]:
+        raise ImageDeliveryValidationError("INVALID_IMAGE", f"JPEG exceeds the {platform} image size limit")
+    try:
+        with Image.open(BytesIO(content)) as image:
+            if image.format != "JPEG" or image.mode != "RGB":
+                raise ImageDeliveryValidationError("INVALID_IMAGE", "Final images must be RGB JPEG files")
+            _validate_image_dimensions(platform, *image.size)
+            icc = image.info.get("icc_profile")
+            if not icc or "srgb" not in ImageCms.getProfileName(ImageCms.ImageCmsProfile(BytesIO(icc))).casefold():
+                raise ImageDeliveryValidationError("INVALID_IMAGE", "JPEG must include an sRGB color profile")
+            image.load()
+            return image.size
+    except ImageDeliveryValidationError:
+        raise
+    except (OSError, ValueError, TypeError) as exc:
+        raise ImageDeliveryValidationError("INVALID_IMAGE", "Stored asset is not a valid sRGB JPEG") from exc
+
+
+async def validate_image_delivery_assets(spec: Any, media_storage: Any) -> None:
+    """Preflight every immutable JPEG before the first upload/container request."""
+    validate_image_delivery(spec)
+    platform = str(value(spec, "platform", ""))
+    sizes: set[tuple[int, int]] = set()
+    for asset in delivery_assets(spec):
+        key = storage_key(asset)
+        getter = getattr(media_storage, "get", None)
+        if getter is not None:
+            content = getter(key)
+            if inspect.isawaitable(content):
+                content = await content
+            if hasattr(content, "read"):
+                content = content.read()
+                if inspect.isawaitable(content):
+                    content = await content
+        else:
+            local_path = getattr(media_storage, "local_path", None)
+            if local_path is None:
+                raise ImageDeliveryValidationError("INVALID_IMAGE", "Publishing requires readable approved JPEG assets")
+            content = local_path(key).read_bytes()
+        if isinstance(content, bytearray):
+            content = bytes(content)
+        sizes.add(validate_image_content(content, platform=platform))
+        expected = value(asset, "sha256")
+        if expected and not hmac.compare_digest(hashlib.sha256(content).hexdigest(), str(expected).lower()):
+            raise ImageDeliveryValidationError("INVALID_IMAGE", "Stored JPEG hash does not match the approved asset")
+    if len(sizes) > 1:
+        raise ImageDeliveryValidationError("INVALID_IMAGE", "Carousel JPEGs must have matching dimensions")
+
+
 def storage_key(asset: Any) -> str:
     key = value(asset, "storage_key") or value(asset, "relative_path") or value(asset, "key")
     if not isinstance(key, str) or not key or key.startswith("/") or ".." in key.split("/"):

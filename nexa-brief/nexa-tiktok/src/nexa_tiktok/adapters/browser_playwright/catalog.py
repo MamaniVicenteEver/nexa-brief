@@ -5,6 +5,7 @@ from urllib.parse import urlsplit, urlunsplit
 from playwright.async_api import BrowserContext
 
 from nexa_tiktok.adapters.browser_playwright.selectors import CONTENT_URL
+from nexa_tiktok.adapters.browser_playwright.privacy import privacy_from_label
 from nexa_tiktok.adapters.browser_playwright.uploader import _detect_manual_intervention
 
 
@@ -26,7 +27,9 @@ def parse_catalog(payload: Any) -> list[dict[str, Any]] | None:
                 url = None
                 if parts.scheme == 'https' and (host == 'tiktok.com' or host.endswith('.tiktok.com')):
                     url = urlunsplit((parts.scheme, parts.netloc, parts.path, '', ''))
-                result.append({'id': str(video_id), 'caption': str(item.get('desc') or item.get('description') or ''),
+                media_type = ('photo' if item.get('image_post_info') or '/photo/' in parts.path
+                              else 'video' if '/video/' in parts.path else 'unknown')
+                result.append({'media_type': media_type, 'id': str(video_id), 'caption': str(item.get('desc') or item.get('description') or ''),
                                'status': str(item.get('status') or ''), 'url': url})
             return result
         if isinstance(value, dict):
@@ -70,7 +73,18 @@ async def list_studio(context: BrowserContext) -> list[dict[str, Any]]:
             await asyncio.gather(*pending, return_exceptions=True)
         if not batches:
             raise RuntimeError('No se reconoció la respuesta JSON de contenido de TikTok Studio.')
-        return list({item['id']: item for batch in batches for item in batch}.values())
+        items = {item['id']: {**item, 'privacy': None} for batch in batches for item in batch}
+        rows = page.locator('[data-tt="components_RowLayout_FlexRow"]')
+        for i in range(await rows.count()):
+            row = rows.nth(i)
+            links = row.locator('a[href*="/video/"]')
+            controls = row.locator('button[data-tt="components_PrivacyCell_TUXButton"]')
+            if await links.count() == 1 and await controls.count() == 1:
+                href = await links.first.get_attribute('href') or ''
+                video_id = href.split('/video/')[-1].split('?')[0].strip('/')
+                if video_id in items:
+                    items[video_id]['privacy'] = privacy_from_label(await controls.first.inner_text())
+        return list(items.values())
     finally:
         page.remove_listener('response', on_response)
         for task in pending:

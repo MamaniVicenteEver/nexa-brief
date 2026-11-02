@@ -35,14 +35,14 @@
 
   K.register({
     name: "common.clip", tags: ["video", "clip", "metraje", "foto", "lugar", "máquina"], layer: "main",
-    summary: "Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo.",
-    example: { src: "assets/media/servidores.mp4", caption: "Un centro de datos", sub: "PEXELS · 2026" },
+    summary: "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+    example: { src: "assets/media/servidores.mp4", layout: "full", caption: "Una ^conversación^ digital", textColor: "mix", textSide: "left", sub: "Una historia real" },
     params: {
       src: { type: "video", required: true, doc: "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4)." },
       start: { type: "number", default: 0, min: 0, doc: "Segundo del clip desde el que arranca." },
       rate: { type: "number", default: 1, min: 0.25, max: 2, doc: "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate." },
       loop: { type: "bool", default: true, doc: "Repite el clip si es más corto que el beat; evita congelar el último cuadro." },
-      layout: { type: "enum", options: ["auto", "full", "frame"], default: "auto", doc: "auto = el del diseño (defaults.clip.layout; si no hay, full); full = pantalla completa; frame = dentro de un marco centrado. Dejarlo en auto." },
+      layout: { type: "enum", options: ["auto", "full", "frame"], default: "auto", doc: "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full)." },
       size: { type: "number", default: 0, min: 0, max: 1, doc: "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84)." },
       ar: { type: "number", default: 0, doc: "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8)." },
       focus: { type: "array", default: [0.5, 0.5], doc: "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar." },
@@ -51,6 +51,10 @@
       dim: { type: "number", default: -1, min: -1, max: 1, doc: "Oscurecido (para leer los subtítulos); -1 = el del diseño." },
       caption: { type: "string", default: "", doc: "Rótulo (qué se ve); vacío = sin rótulo." },
       sub: { type: "string", default: "", doc: "Línea chica bajo el rótulo (fuente, lugar, año)." },
+      textColor: { type: "enum", options: ["ink", "accent", "mix"], default: "ink", doc: "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords." },
+      accentWords: { type: "array", default: [], doc: "Palabras o frases del rótulo que van en color de acento cuando textColor=mix." },
+      textSide: { type: "enum", options: ["left", "right", "bottom"], default: "left", doc: "Ubicación del texto grande en layout full." },
+      textIn: { type: "enum", options: ["slide", "fade", "none"], default: "slide", doc: "Entrada del texto grande, controlada por el reloj del beat." },
       ...K.brandLogo.params,
     },
     create(ctx, p) {
@@ -58,7 +62,7 @@
       const filter = p.tone === "design" ? (T.filter || "none") : "none";
       const color = v => (typeof v === "string" && v.startsWith("palette.") ? pal[v.slice(8)] : v) || pal.ink;
       const frameColor = color(T.frame || "palette.ink");
-      const font = C.fonts?.main || "Inter";
+      const font = `"${C.fonts?.main || "Inter"}"`;
       /* auto = lo que dice el diseño: así un cambio de criterio se hace en design.json, no en cada video */
       p = { ...p, layout: p.layout === "auto" || !p.layout ? (T.layout || "full") : p.layout, size: p.size || T.size || 0.84 };
       let logo = null;
@@ -93,7 +97,44 @@
             frameBottom = y + h;
             if (!logo) logo = K.brandLogo.attach(ctx, p, { x, y, w, h }, p.focus);
           }
-          if (p.caption) {
+          if (p.caption && p.layout === "full") {
+            const dark = hex => { const h = String(hex || "").replace("#", ""); if (!/^[0-9a-f]{6}$/i.test(h)) return false; return (parseInt(h.slice(0, 2), 16) * .2126 + parseInt(h.slice(2, 4), 16) * .7152 + parseInt(h.slice(4, 6), 16) * .0722) < 128; };
+            const side = ["left", "right", "bottom"].includes(p.textSide) ? p.textSide : "left";
+            const edge = side === "bottom" ? H * 0.64 : side === "right" ? W * 0.46 : 0;
+            const grad = side === "bottom" ? G.createLinearGradient(0, H * 0.45, 0, H) : G.createLinearGradient(edge, 0, edge + W * 0.6, 0);
+            const shade = dark(p.textColor === "accent" ? pal.accent : pal.ink) ? "255,255,255" : "0,0,0";
+            if (side === "right" || side === "bottom") { grad.addColorStop(0, `rgba(${shade},0)`); grad.addColorStop(1, `rgba(${shade},.82)`); }
+            else { grad.addColorStop(0, `rgba(${shade},.82)`); grad.addColorStop(1, `rgba(${shade},0)`); }
+            G.fillStyle = grad; G.fillRect(0, 0, W, H);
+            const raw = p.caption.replace(/\^([^\^]+)\^/g, "$1");
+            const marked = new Set([...(Array.isArray(p.accentWords) ? p.accentWords : []), ...Array.from(p.caption.matchAll(/\^([^\^]+)\^/g), m => m[1])].flatMap(s => String(s).split(/\s+/).map(w => w.replace(/[^\p{L}\p{N}]/gu, "").toLocaleLowerCase())));
+            let size = u * (portrait ? 8.8 : 8.0);
+            const maxW = W * (side === "bottom" ? 0.86 : portrait ? 0.79 : 0.54);
+            G.font = `900 ${size}px ${font}`;
+            const words = raw.split(/\s+/).filter(Boolean);
+            const wrap = () => { const lines = [[]]; for (const word of words) { const line = lines[lines.length - 1]; if (line.length && G.measureText([...line, word].join(" ")).width > maxW) lines.push([]); lines[lines.length - 1].push(word); } return lines; };
+            let lines = wrap();
+            while (size > u * 4.2 && (lines.length > (portrait ? 4 : 3) || lines.some(line => G.measureText(line.join(" ")).width > maxW))) { size *= 0.92; G.font = `900 ${size}px ${font}`; lines = wrap(); }
+            const lineH = size * 1.12, subH = p.sub ? u * 3.2 : 0;
+            const blockH = lines.length * lineH + subH;
+            const centerY = side === "bottom" ? H - st.caption.h - u * (portrait ? 16 : 11) - blockH / 2 : H * (portrait ? 0.43 : 0.47);
+            const x = side === "right" ? W - u * 6 : u * 6;
+            const align = side === "right" ? "right" : "left";
+            const enter = p.textIn === "none" ? 1 : prog(lt, 0.25, 0.65, "out");
+            G.save(); G.globalAlpha *= p.textIn === "fade" ? enter : 1;
+            G.translate(p.textIn === "slide" ? (side === "right" ? 1 : -1) * (1 - enter) * u * 8 : 0, 0);
+            G.textAlign = align; G.textBaseline = "alphabetic";
+            G.shadowColor = "rgba(0,0,0,.92)"; G.shadowBlur = u * 1.6; G.shadowOffsetY = u * 0.35;
+            lines.forEach((line, i) => {
+              const y = centerY - blockH / 2 + (i + 1) * lineH;
+              let cursor = x;
+              const widths = line.map((word, j) => G.measureText(word + (j < line.length - 1 ? " " : "")).width);
+              if (align === "right") cursor -= widths.reduce((a, b) => a + b, 0);
+              line.forEach((word, j) => { G.textAlign = "left"; G.fillStyle = p.textColor === "accent" || (p.textColor === "mix" && marked.has(word.replace(/[^\p{L}\p{N}]/gu, "").toLocaleLowerCase())) ? pal.accent : pal.ink; G.lineWidth = Math.max(1, u * .14); G.strokeStyle = dark(G.fillStyle) ? "rgba(255,255,255,.7)" : "rgba(0,0,0,.8)"; G.strokeText(word, cursor, y); G.fillText(word, cursor, y); cursor += widths[j]; });
+            });
+            if (p.sub) { G.fillStyle = pal.ink; G.font = `600 ${u * (portrait ? 2.2 : 1.8)}px ${font}`; G.textAlign = align; G.fillText(p.sub, x, centerY + blockH / 2); }
+            G.restore();
+          } else if (p.caption) {
             const ty = p.layout === "full" ? H - st.caption.h - u * (portrait ? 14 : 10) : frameBottom + u * (portrait ? 6 : 5);
             const tx = p.layout === "full" ? u * 6 : W / 2, align = p.layout === "full" ? "left" : "center";
             const ca = prog(lt, 0.5, 0.5);

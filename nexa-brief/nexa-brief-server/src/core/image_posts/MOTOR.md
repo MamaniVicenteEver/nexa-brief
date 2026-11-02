@@ -66,3 +66,25 @@ Fotos: `src/core/image_posts/media_sources.py` (Wikimedia Commons + imagen princ
 catálogo de estilos, el mapeo de cuentas y la caché de fotos. `adapters/data/local_image_post_resources.py`
 y `local_image_media_cache.py` implementan esas lecturas para el backend local. El servicio recibe
 objetos validados, IDs lógicos y bytes con hash; no conoce rutas ni abre JSON.
+
+## Amarillista (propuesta aislada, ronda 4)
+
+Es la estrategia predeterminada del carrusel, nivel negro. `daily_fact` explícito conserva su imagen única y las otras estrategias siguen disponibles por ID. Objetivo propio: alcance, comentarios y nuevos seguidores.
+
+Entrada para cualquier agente: `src/skills/image_posts/strategies/AMARILLISTA.md`. Contrato ejecutable: `image_amarillista_v1.json` en el mismo directorio. Define roles, orden, rango 5–8, fuentes/visuales, reflexión obligatoria, límites, niveles, ejemplos, esquemas nativos y juicio de fotos.
+
+Desde el servidor: `python -m src.core.image_posts.render_post <carpeta-con-PLAN-y-post.json> --out <salida> --strategy amarillista --level negro`, con `with-env.sh` y `nice -n 10` en esta instalación. `--levels negro alto` compara carruseles completos. El wrapper de la copia es `render_post.py`.
+
+- PLAN §3 usa roles explícitos y aprobación con fuente HTTPS. Sin giro o reflexión documentados se detiene; no se inventan ni se sustituyen por reglas.
+- Gemini redacta los cuatro titulares/reflexiones con esquema JSON nativo; DeepSeek repara una sola vez los campos rechazados y realiza cotejo independiente. Rechazos, campos conservados y tokens se archivan.
+- Búsquedas por concepto/rol con pausa, licencias, dimensiones, motivo del modelo y deduplicación por identidad/hash. Las fotos aprobadas se conservan al cambiar de nivel. Un gráfico informativo puede reemplazar una foto; una tarjeta de texto no cuenta como gráfico. Una variación porcentual no se representa como partes de 100.
+- Reflexión: frase con significado personal, fuente visible y visual, negro directo en segunda persona y alto sereno; no exageración médica. Prueba, giro y cierre conservan sus funciones. La API acepta `level` y predetermina el carrusel.
+- El comando valida plan/JPEG/QC y entrega JPEG, captions, auditoría y hojas. Falla de manera explícita y sin publicar. `--recheck-approved` exige nuevo cotejo y admite una sola reparación antes de reutilizar un borrador anterior ante cambios de contrato/entrada.
+
+La suite y las pruebas propias están en `tests-r4-estandar-final.txt`, `out-pruebas/` y `BITACORA.md`. **Sueño/actividad quedaron rechazados; IA completó la ejecución técnica pero su recotejo también rechazó copy. No hay piezas editoriales finales aprobadas ni equivalencia de calidad demostrada con cualquier modelo.** El resultado de ronda 4 documenta proveedores 503, rechazos y pendientes. El parche no está aplicado.
+
+### Entregas de fotos en TikTok
+
+TikTok usa de forma deliberada el caption y el primer comentario editables de Instagram. Es aceptable para este puente porque ambos destinos comparten el texto aprobado y así se evita crear un campo que el editor actual no permite revisar; no permite variantes por red. Si se necesita texto distinto para TikTok, hay que ampliar juntos el modelo y el editor antes de usarlo. Los hashtags se añaden al caption y el comentario solo se solicita con permiso; queda pendiente hasta recibir confirmación específica.
+
+Al recibir el ID del job de fotos, se guarda en la entrega antes de esperar su resultado. La conciliación consulta ese job sin volver a publicar y solo confirma con `post_id` y URL. Si aún no está confirmado, conserva `outcome_unknown`; si no se recibió o guardó el ID (por ejemplo, se perdió la respuesta al POST), marca `TIKTOK_MANUAL_REVIEW` y requiere revisión humana. No se debe reenviar automáticamente una entrega incierta.

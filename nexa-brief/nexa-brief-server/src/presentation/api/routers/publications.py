@@ -135,7 +135,7 @@ async def get_publication(
             identity, record.editorial.category_id, delivery.platform, delivery.account_alias
         )
     response.headers["ETag"] = f'"{record.record_version}"'
-    return _safe_record(record)
+    return {**_safe_record(record), "trace": get_publication_components().service.get_trace(record)}
 
 
 @router.get("/{publication_id}/assets/{asset_id}/url", response_model=SignedAssetResponse)

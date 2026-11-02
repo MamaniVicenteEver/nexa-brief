@@ -13,12 +13,13 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { fetchLicensedMusic, type LicensedMusicTrack } from "../api/image-posts-api";
 import { useImagePostActions } from "../hooks/useImagePosts";
-import { getImagePost } from "../image-posts-service";
+import { DEFAULT_IMAGE_FORMAT, type ImagePostFormat } from "../image-formats";
+import { getImagePost, setImagePostFormat } from "../image-posts-service";
 import type {
   AccountCapability,
   Capabilities,
@@ -29,6 +30,8 @@ import type {
   Platform,
   StyleOption,
 } from "../types";
+import { ImageFormatSelector } from "./ImageFormatSelector";
+import { PostTrace } from "./PostTrace";
 import { SlidePreview } from "./SlidePreview";
 
 interface TargetChoice {
@@ -168,17 +171,25 @@ export function ImagePostEditor({
   const t = useTranslations("imagePosts");
   const actions = useImagePostActions();
   const [localPost, setLocalPost] = useState<ImagePost | null>(post);
+  const formatExportRef = useRef<ImagePost | null>(null);
   const [sourceVideoId, setSourceVideoId] = useState(
     post?.sourceVideoId ?? sources[0]?.videoId ?? "",
   );
-  const [templateId, setTemplateId] = useState<ImageTemplateId>(post?.templateId ?? "daily_fact");
+  const [templateId, setTemplateId] = useState<ImageTemplateId>(post?.templateId ?? "five_slides");
   const [strategyId, setStrategyId] = useState(
     post?.strategyId ??
-      strategies.find((strategy) => strategy.templateId === (post?.templateId ?? "daily_fact"))
+      strategies.find((strategy) => strategy.id === "amarillista")?.id ??
+      strategies.find((strategy) => strategy.templateId === (post?.templateId ?? "five_slides"))
         ?.id ??
       "",
   );
+  const [level, setLevel] = useState<import("../types").ImageLevel>(post?.level ?? "alto");
+  const [narrative, setNarrative] = useState<"hilo" | "factual">(post?.narrative ?? "hilo");
   const [styleId, setStyleId] = useState(post?.styleId ?? styles[0]?.styleId ?? "");
+  const [format, setFormat] = useState<ImagePostFormat>(
+    post ? (post.format ?? "4:5") : DEFAULT_IMAGE_FORMAT,
+  );
+  const [formatSaving, setFormatSaving] = useState(false);
   const [title, setTitle] = useState(post?.title ?? "");
   const [facebookCaption, setFacebookCaption] = useState(post?.copy.facebook.caption ?? "");
   const [instagramCaption, setInstagramCaption] = useState(post?.copy.instagram.caption ?? "");
@@ -227,18 +238,24 @@ export function ImagePostEditor({
   const previewSlide = previewSlides[Math.min(activeSlide, previewSlides.length - 1)] ?? null;
   const activeSource = sources.find((source) => source.videoId === sourceVideoId);
   const usesReel = musicMode === "convert_to_reel";
+  const formatLocked = Boolean(
+    currentPost?.deliveries.some(
+      (delivery) => delivery.status === "published" || delivery.publishedAt,
+    ),
+  );
   const selectedAccountRows = targets.filter(
     (target) => selectedTargets[target.key] && target.canPublish,
   );
   const isSaving =
     actions.createPlanMutation.isPending ||
     actions.renderPlanMutation.isPending ||
-    actions.saveMutation.isPending;
+    actions.saveMutation.isPending ||
+    formatSaving;
   const reviewAllowed =
     currentPost?.status === "draft" ||
     currentPost?.status === "ready_for_review" ||
     currentPost?.status === "rendered";
-  const approved = currentPost?.status === "approved";
+  const approved = currentPost?.status === "approved" && (currentPost.format ?? "4:5") === format;
   const defaultTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const selectedTimezones = [
     ...new Set(
@@ -259,6 +276,11 @@ export function ImagePostEditor({
 
   useEffect(() => {
     if (currentPost) {
+      // Export advances the revision before saving copy. Keep in-progress fields if that save fails.
+      if (formatExportRef.current === currentPost) {
+        formatExportRef.current = null;
+        return;
+      }
       setTitle(currentPost.title);
       setFacebookCaption(currentPost.copy.facebook.caption);
       setInstagramCaption(currentPost.copy.instagram.caption);
@@ -269,12 +291,15 @@ export function ImagePostEditor({
       setAltInstagram(currentPost.slides.map((slide) => slide.altTextInstagram));
       setSourceVideoId(currentPost.sourceVideoId);
       setTemplateId(currentPost.templateId);
+      setLevel(currentPost.level ?? "alto");
+      setNarrative(currentPost.narrative ?? "hilo");
       setStrategyId(
         currentPost.strategyId ??
           strategies.find((strategy) => strategy.templateId === currentPost.templateId)?.id ??
           "",
       );
       setStyleId(currentPost.styleId);
+      setFormat(currentPost.format ?? "4:5");
       setMusicMode("none");
       setDirty(false);
     }
@@ -324,7 +349,7 @@ export function ImagePostEditor({
   }
 
   function buildPatch(base: ImagePost) {
-    const count = templateId === "five_slides" ? 5 : 1;
+    const count = base.slides.length || (templateId === "five_slides" ? 5 : 1);
     const sourceSlides = base.slides.length
       ? base.slides
       : slidesForPreview(null, templateId, title);
@@ -332,8 +357,14 @@ export function ImagePostEditor({
       revision: base.revision,
       title: title.trim(),
       copy: {
-        facebook: { caption: facebookCaption.trim(), firstComment: facebookComment.trim() },
-        instagram: { caption: instagramCaption.trim(), firstComment: instagramComment.trim() },
+        facebook: {
+          caption: facebookCaption.trim(),
+          firstComment: facebookComment.trim(),
+        },
+        instagram: {
+          caption: instagramCaption.trim(),
+          firstComment: instagramComment.trim(),
+        },
         hashtags: hashtags
           .split(/[\s,]+/)
           .map((tag) => tag.trim())
@@ -394,7 +425,10 @@ export function ImagePostEditor({
       source_video_id: sourceVideoId,
       template_id: templateId,
       strategy_id: selectedStrategyId,
+      level,
+      narrative,
       style_id: styleId,
+      format,
     });
     if (planResult.validation.errors.length)
       throw new Error(
@@ -420,7 +454,17 @@ export function ImagePostEditor({
   async function saveChanges(base = currentPost): Promise<ImagePost> {
     const validationError = validateEditor();
     if (validationError) throw new Error(validationError);
-    const targetPost = base ?? (await createAndRender());
+    let targetPost = base ?? (await createAndRender());
+    if (targetPost.format !== format) {
+      setFormatSaving(true);
+      try {
+        targetPost = await setImagePostFormat(targetPost.postId, targetPost.revision, format);
+        formatExportRef.current = targetPost;
+        setLocalPost(targetPost);
+      } finally {
+        setFormatSaving(false);
+      }
+    }
     const saved = await actions.saveMutation.mutateAsync({
       postId: targetPost.postId,
       patch: buildPatch(targetPost),
@@ -624,7 +668,10 @@ export function ImagePostEditor({
                 const nextTemplateId = event.target.value as ImageTemplateId;
                 setTemplateId(nextTemplateId);
                 setStrategyId(
-                  strategies.find((strategy) => strategy.templateId === nextTemplateId)?.id ?? "",
+                  (nextTemplateId === "five_slides"
+                    ? "amarillista"
+                    : strategies.find((strategy) => strategy.templateId === nextTemplateId)?.id) ??
+                    "",
                 );
                 setActiveSlide(0);
                 markDirty();
@@ -632,9 +679,45 @@ export function ImagePostEditor({
               className="nb-input min-h-10 rounded-xl border border-nb-line bg-white px-3 text-sm text-nb-ink"
             >
               <option value="daily_fact">{t("editor.dailyFact")}</option>
-              <option value="five_slides">{t("editor.fiveSlides")}</option>
+              <option value="five_slides">Carrusel editorial</option>
             </select>
           </label>
+          {selectedStrategyId === "amarillista" && (
+            <>
+              <label className="flex flex-col gap-1.5 text-xs font-semibold text-nb-ink-soft">
+                Nivel editorial
+                <select
+                  value={level}
+                  disabled={Boolean(currentPost)}
+                  onChange={(event) => {
+                    setLevel(event.target.value as import("../types").ImageLevel);
+                    markDirty();
+                  }}
+                  className="nb-input min-h-10 rounded-xl border border-nb-line bg-white px-3 text-sm text-nb-ink"
+                >
+                  <option value="basico">Básico</option>
+                  <option value="medio">Medio</option>
+                  <option value="alto">Alto</option>
+                  <option value="negro">Negro</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1.5 text-xs font-semibold text-nb-ink-soft">
+                Narrativa
+                <select
+                  value={narrative}
+                  disabled={Boolean(currentPost)}
+                  onChange={(event) => {
+                    setNarrative(event.target.value as "hilo" | "factual");
+                    markDirty();
+                  }}
+                  className="nb-input min-h-10 rounded-xl border border-nb-line bg-white px-3 text-sm text-nb-ink"
+                >
+                  <option value="hilo">Hilo</option>
+                  <option value="factual">Hechos por rol</option>
+                </select>
+              </label>
+            </>
+          )}
           <fieldset className="flex flex-col gap-2 sm:col-span-2">
             <legend className="mb-1 text-xs font-semibold text-nb-ink-soft">
               {t("editor.strategy")}
@@ -1338,6 +1421,16 @@ export function ImagePostEditor({
             ))}
           </div>
         </div>
+        {!usesReel && (
+          <ImageFormatSelector
+            value={format}
+            onChange={(next) => {
+              setFormat(next);
+              markDirty();
+            }}
+            disabled={isSaving || formatLocked}
+          />
+        )}
         <div className="relative flex min-h-[360px] flex-1 items-center justify-center rounded-2xl bg-[#20242b] p-4">
           <SlidePreview
             slide={previewSlide}
@@ -1349,6 +1442,9 @@ export function ImagePostEditor({
             total={previewSlides.length}
             reel={usesReel}
             demo={isDemoData || Boolean(currentPost?.isDemo)}
+            format={format}
+            sourcePostId={formatLocked ? undefined : currentPost?.postId}
+            revision={currentPost?.revision}
           />
           {previewSlides.length > 1 && (
             <>
@@ -1403,11 +1499,23 @@ export function ImagePostEditor({
         {currentPost && (
           <p className="text-center text-[11px] text-nb-mute">
             {currentPost.renderSeconds !== null
-              ? t("editor.renderSeconds", { seconds: currentPost.renderSeconds.toFixed(1) })
+              ? t("editor.renderSeconds", {
+                  seconds: currentPost.renderSeconds.toFixed(1),
+                })
               : t("editor.editorialPreview")}
           </p>
         )}
       </aside>
+      {currentPost?.trace && (
+        <details className="mt-5 rounded-2xl border border-nb-line bg-white p-5">
+          <summary className="cursor-pointer text-sm font-bold text-nb-ink">
+            Recorrido de producción
+          </summary>
+          <div className="mt-4">
+            <PostTrace trace={currentPost.trace} />
+          </div>
+        </details>
+      )}
     </div>
   );
 }

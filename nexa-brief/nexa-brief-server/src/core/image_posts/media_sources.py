@@ -264,11 +264,13 @@ async def find_images(
     """Find, license-filter, rank, download, and cache Commons images."""
     if n <= 0:
         return []
+    from .trace import emit
     registry = get_stock_providers()
     provider = registry.get("wikimedia")
     if not provider:
         raise StockProviderError("wikimedia", "unavailable", "Wikimedia no está registrada en la fábrica de stock")
     items = await provider.search(query, "image", per_page=min(50, max(n * 6, 12)))
+    emit("photos", label="Búsqueda de fotos", provider="wikimedia", query=query, count=len(items), article=article)
     candidates = list(items)
     preferred_article: StockItem | None = None
     if article and isinstance(provider, ArticleImagePort):
@@ -283,6 +285,9 @@ async def find_images(
                 candidates.append(article_item)
                 preferred_article = article_item
 
+    for item in candidates:
+        emit("photos", label="Candidato de foto", candidate_id=item.provider_id, title=item.title,
+             license=item.license, accepted=accepted_license(item.license), reason="Licencia admitida" if accepted_license(item.license) else "Licencia rechazada")
     candidates = [item for item in candidates if accepted_license(item.license)]
     chosen_images: list[SourcedImage] = []
     if preferred_article in candidates and preferred_article is not None:
@@ -305,6 +310,22 @@ async def find_images(
             continue
         source: Literal["search", "article"] = "article" if chosen.article_url else "search"
         chosen_images.append(_as_sourced_image(chosen, why, cached, source))
+    emit("photos", label="Descargas de fotos", images=[{"id": im.provider_id, "title": im.title, "sha256": im.sha256, "reason": im.why} for im in chosen_images])
     return chosen_images
 
 
+
+
+def normalize_license_url(url: str) -> str:
+    """Commons sometimes emits legacy HTTP links for known license hosts."""
+    from urllib.parse import urlsplit, urlunsplit
+    parts = urlsplit(url)
+    hosts = {'creativecommons.org', 'www.creativecommons.org', 'creativecommons.net', 'www.gnu.org', 'gnu.org'}
+    if parts.scheme == 'http' and parts.hostname in hosts and not parts.username and not parts.password and not parts.port:
+        return urlunsplit(('https', parts.netloc, parts.path, parts.query, parts.fragment))
+    return url
+
+
+async def find_relevant_images(facts, ctx, cache, extras=None, ai=None, usage_out=None):
+    from .amarillista_media import find_relevant_images as find
+    return await find(facts, ctx, cache, extras, ai, usage_out)

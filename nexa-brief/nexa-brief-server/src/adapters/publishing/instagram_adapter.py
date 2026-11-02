@@ -13,7 +13,7 @@ import structlog
 
 from src.adapters.publishing.base_platform import BasePlatformAdapter, with_retry
 from src.adapters.publishing.instagram_media import probe, reels_safe_video
-from src.adapters.publishing.instagram_media_url import create_signed_media_token
+from src.adapters.publishing.instagram_media_url import create_signed_media_token, create_signed_media_url
 from src.config.exceptions import PlatformAPIError, UnsupportedOperationError
 from src.config.settings import settings
 from src.core.ports.channel_catalog_port import ChannelCatalogPort, ChannelStats, RemoteVideo
@@ -77,6 +77,31 @@ class InstagramAdapter(BasePlatformAdapter, ChannelCatalogPort):
     """Instagram Reels adapter using a linked Facebook Page access token."""
 
     PLATFORM = "instagram"
+
+    @with_retry(max_retries=3)
+    async def get_channel_profile(
+        self, account_alias: str, *, expected_user_id: str
+    ) -> dict[str, Any]:
+        """Read the connected profile by its immutable ID, never by its name."""
+        if not expected_user_id:
+            raise PlatformAPIError(
+                "Instagram account has no professional-account ID. Reconnect it from Canales.",
+                platform=self.PLATFORM,
+                status_code=400,
+            )
+        profile = await self._catalog_get_json(
+            quote(expected_user_id, safe=""),
+            {"fields": "id,username,name,profile_picture_url,biography,website"},
+            account_alias,
+            "account_profile",
+        )
+        if str(profile.get("id") or "") != expected_user_id:
+            raise PlatformAPIError(
+                "Instagram returned a different account ID. The saved profile was not changed.",
+                platform=self.PLATFORM,
+                status_code=409,
+            )
+        return profile
 
     async def _catalog_get_json(
         self, path: str, params: dict[str, Any], account_alias: str, purpose: str
@@ -214,6 +239,11 @@ class InstagramAdapter(BasePlatformAdapter, ChannelCatalogPort):
 
         public_origin = settings.public_app_url.rstrip("/")
         video_url = f"{public_origin}/api/v1/publish/instagram/media/{signed_token}"
+        cover_path = kwargs.get("thumbnail_path")
+        cover_params = (
+            {"cover_url": create_signed_media_url(Path(cover_path), ttl_seconds=3600)}
+            if cover_path else {"thumb_offset": "1000"}
+        )
         hashtag_caption = " ".join(f"#{tag.lstrip('#')}" for tag in tags if tag.strip("#"))
         caption = "\n\n".join(part for part in (title.strip(), description.strip(), hashtag_caption) if part)
         caption = caption[:2200]
@@ -237,6 +267,7 @@ class InstagramAdapter(BasePlatformAdapter, ChannelCatalogPort):
                     "video_url": video_url,
                     "caption": caption,
                     "share_to_feed": "true",
+                    **cover_params,
                     "access_token": token,
                 },
             )
@@ -258,7 +289,10 @@ class InstagramAdapter(BasePlatformAdapter, ChannelCatalogPort):
             url=final_url,
             platform=self.PLATFORM,
             account_alias=account_alias,
-            raw_response={"id": str(media_id), "container_id": str(container_id), "permalink": permalink},
+            raw_response={
+                "id": str(media_id), "container_id": str(container_id), "permalink": permalink,
+                "thumbnail": {"status": "set", "reason": "cover_image" if cover_path else "video_frame"},
+            },
         )
 
     @with_retry(max_retries=3)

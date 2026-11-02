@@ -30,8 +30,9 @@ async def test_challenge_keeps_uncertain_click_in_review(tmp_path, kind, after_c
     job = jobs.create('test', kind, {}, 'key')
     await jobs.run(job['id'])
     result = store.get_job(job['id'])
-    assert result['state'] == ('needs_review' if after_click else 'failed')
-    assert result['error']['code'] == 'challenge_required'
+    requires_human = kind in {'publish', 'comment'} and not after_click
+    assert result['state'] == ('needs_review' if after_click or requires_human else 'failed')
+    assert result['error']['code'] == ('human_verification_required' if requires_human else 'challenge_required')
     # A second invocation cannot replay an uncertain/failed operation.
     await jobs.run(job['id'])
     assert store.get_job(job['id']) == result

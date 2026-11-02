@@ -45,3 +45,12 @@ client_secret*.json
 /nexa-brief-web/public/ejemplos-posts/**/*.[iI][cC][oO]
 /nexa-brief-web/public/ejemplos-posts/**/*.[tT][iI][fF]
 /nexa-brief-web/public/ejemplos-posts/**/*.[tT][iI][fF][fF]
+
+# Shared encrypted connections, private migration backups and local service logs
+.runtime/
+
+# External profile compatibility links (symlinks also stay outside Git)
+/nexa-brief-server/data
+/nexa-brief-server/output
+/nexa-brief-web/data
+/nexa-tiktok/data

@@ -10,6 +10,7 @@ Correr siempre desde nexa-brief-server/ con el Python del proyecto:
   .venv/bin/python $K new <diseño> <video-id> --title "Título" [--minutes 10]  # 1. carpeta del video (duración objetivo: lengths.json)
   .venv/bin/python $K status <video-id>                             #    qué falta (en cualquier momento)
   .venv/bin/python $K components <video-id>                         # 3c. control de los componentes propios (assets/components/)
+  .venv/bin/python $K library                                       # biblioteca de componentes propios entre videos
   .venv/bin/python $K voice <video-id> --background                 # 4. narración (Gemini, rotando claves/modelos) + control
   .venv/bin/python $K voice <video-id> --wait [--timeout 20]     #    consultar hasta terminar
   .venv/bin/python $K transcribe <video-id> --background            # 5. iniciar Whisper desacoplado
@@ -49,6 +50,7 @@ import usage  # noqa: E402
 import transcribe_job  # noqa: E402
 import job  # noqa: E402
 import kit_job  # noqa: E402
+import component_library  # noqa: E402
 PY = sys.executable
 TOOLS = KIT / "tools"
 
@@ -86,7 +88,7 @@ def cmd_new(a):
     put("PLAN.md", (T / "PLAN.md").read_text().replace("{{TITLE}}", title).replace("{{DESIGN}}", f"{a.design} ({D['name']})"))
     put("assets/media/CREDITS.md", f"# Créditos de medios · {title}\n\narchivo — título — autor — licencia — URL de la fuente\n")
     if not (d / "assets/config.json").exists():
-        jsave(d / "assets/config.json", {"activeId": a.id, "configs": [{"id": a.id, "design": a.design, "title": title, "quality_policy_version": 3,
+        jsave(d / "assets/config.json", {"activeId": a.id, "configs": [{"id": a.id, "design": a.design, "title": title, "quality_policy_version": 5,
               "audio": {"src": "assets/song.mp3"}, "lyricsUrl": "assets/lyrics.json", "storyboardUrl": "assets/storyboard.json", "seed": int(hashlib.sha1(a.id.encode()).hexdigest()[:6], 16) % 9999}]})
     if not (d / "assets/script.json").exists():
         script = {"id": a.id, "design": a.design, "title": title.upper(), "kicker": "", "language": "es-419",
@@ -173,6 +175,12 @@ def cmd_components(a):
     if a.only: cmd += ["--only", a.only]
     sys.exit(run(cmd).returncode)
 
+def cmd_library(a):
+    for item in component_library.refresh():
+        params = ", ".join(item["params"])
+        sheet = item["sheet"] if item["sheet_exists"] else item["sheet"] + " (pendiente)"
+        print(f"{item['name']} · {item['summary']}\n  params: {params}\n  hoja: {sheet}\n  origen: {item['video']} · JS: {item['source']}")
+
 def cmd_check(a):
     sys.exit(run([PY, TOOLS / "check_storyboard.py", vdir(a.id)]).returncode)
 
@@ -191,6 +199,7 @@ def audio_dur(p):
 
 def cmd_manifest(a):
     d = vdir(a.id); A = d / "assets"
+    component_library.refresh(d)
     M = jload(d / "manifest.json", {}) or {}
     cfg = jload(A / "config.json", {}); C = cfg["configs"][0] if "configs" in cfg else cfg
     D = jload(KIT / "designs" / C.get("design", "binary") / "design.json", {})
@@ -236,6 +245,7 @@ def cmd_manifest(a):
         result = run([PY, TOOLS / "check_storyboard.py", d], capture_output=True, text=True)
         quality_ok = result.returncode == 0
         M["quality"] = (jload(d / "manifest.json", {}) or {}).get("quality", {})
+        M["media_review"] = (jload(d / "manifest.json", {}) or {}).get("media_review", [])
         if not quality_ok:
             print("⚠ el check tiene errores; el manifest no queda listo:")
             for line in result.stdout.splitlines():
@@ -347,6 +357,7 @@ def main():
     p = sp.add_parser("poster"); p.add_argument("id")
     p = sp.add_parser("promote"); p.add_argument("id"); p.add_argument("--force", action="store_true")
     sp.add_parser("catalog")
+    sp.add_parser("library")
     p = sp.add_parser("delegate", help="delegar un borrador a DeepSeek o Codex según roles.json"); p.add_argument("id"); p.add_argument("role", nargs="?"); p.add_argument("--prompt-file")
     p.add_argument("--out", default=""); p.add_argument("--context", action="append", default=[])
     sp.add_parser("usage").add_argument("id")

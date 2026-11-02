@@ -35,6 +35,7 @@ from pydantic import BaseModel, Field, model_validator
 from src.config.exceptions import AssetDownloadError, AssetNotFoundError
 from src.config.settings import settings
 from src.core.data import collection, documents, files
+from src.core.library.sound_library import SoundLibraryEntry
 from src.core.realtime.event_bus import get_event_bus
 from src.core.realtime.events import RealtimeEvent
 
@@ -165,6 +166,7 @@ _KINDS: dict[str, tuple[str, str]] = {
     "image": ("image_assets", "images"),
     "music": ("music_assets", "music"),
     "video": ("video_assets", "videos"),
+    "sound": ("sound_assets", "sounds"),
 }
 
 
@@ -545,15 +547,16 @@ def get_template_config(job_id: str) -> dict[str, Any]:
 # y uno que trajo resource_fetcher son indistinguibles para el resto del sistema.
 
 # Nombre en la API (plural, como las rutas /library/images…) → kind interno.
-API_KINDS: dict[str, str] = {"images": "image", "music": "music", "videos": "video"}
+API_KINDS: dict[str, str] = {"images": "image", "music": "music", "videos": "video", "sounds": "sound"}
 _API_NAME = {kind: api for api, kind in API_KINDS.items()}
 
-LibraryEntry = ImageLibraryEntry | MusicLibraryEntry | VideoLibraryEntry
+LibraryEntry = ImageLibraryEntry | MusicLibraryEntry | VideoLibraryEntry | SoundLibraryEntry
 
 _MODELS: dict[str, type[BaseModel]] = {
     "image": ImageLibraryEntry,
     "music": MusicLibraryEntry,
     "video": VideoLibraryEntry,
+    "sound": SoundLibraryEntry,
 }
 
 # Campos que el usuario puede editar por PATCH. El resto (relative_path, hash,
@@ -564,12 +567,14 @@ EDITABLE_FIELDS: dict[str, frozenset[str]] = {
         "track_name", "artist", "genre", "description", "tags", "language", "category", "license_note",
     }),
     "video": frozenset({"label", "description", "tags", "category", "license_note"}),
+    "sound": frozenset({"title", "description", "tags", "category", "recommended_uses", "approval_status"}),
 }
 
 _SEARCH_FIELDS: dict[str, tuple[str, ...]] = {
     "image": ("label", "tags", "original_filename", "description", "photographer", "category"),
     "music": ("track_name", "artist", "genre", "tags", "original_filename", "description", "category"),
     "video": ("label", "tags", "original_filename", "description", "category"),
+    "sound": ("title", "description", "recommended_uses", "tags", "provider", "original_filename", "category"),
 }
 
 # Cachés por asset que hay que limpiar al borrarlo (si no, quedan huérfanos y
@@ -578,6 +583,7 @@ _CACHE_STORES: dict[str, tuple[str, ...]] = {
     "image": ("image_vision",),
     "music": ("lyrics",),
     "video": ("video_vision",),
+    "sound": (),
 }
 
 

@@ -2,6 +2,7 @@ import type {
   CreatePlanInput,
   DeliveryTargetInput,
   GalleryFilters,
+  ImagePostFormat,
   ImagePostPatch,
   ImageTemplateId,
   MusicOption,
@@ -94,6 +95,19 @@ export function renderImagePlan(planId: string) {
     body: {},
     idempotencyKey: randomRequestId(),
   });
+}
+
+export function exportImagePostFormat(
+  postId: string,
+  input: { revision: number; format: ImagePostFormat },
+) {
+  return withActionIdempotency("export-format", { postId, ...input }, (key) =>
+    requestJson<unknown>(`/api/image-posts/${encodeURIComponent(postId)}/format`, {
+      method: "POST",
+      body: input,
+      idempotencyKey: key,
+    }),
+  );
 }
 
 export function patchImagePost(postId: string, patch: ImagePostPatch) {

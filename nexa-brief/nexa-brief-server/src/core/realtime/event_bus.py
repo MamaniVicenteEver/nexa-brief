@@ -6,10 +6,8 @@ infrastructure. The one real subscriber (a WebSocket connection manager)
 lives in `src/adapters/realtime/` and is wired up via
 `src/adapters/realtime/factory.py::wire_realtime()`.
 
-Single-process only: this holds subscribers in memory, which is safe today
-because uvicorn runs with a single worker (see Dockerfile CMD, no
-`--workers` flag). If the app ever scales to multiple workers, this would
-need to move to a shared broker (Redis pub/sub) instead — not needed yet.
+The storage profile may attach a shared event relay. Dispatching a relayed
+event does not publish it again, preventing broadcast loops.
 """
 
 from __future__ import annotations
@@ -29,6 +27,7 @@ Subscriber = Callable[[RealtimeEvent], Awaitable[None]]
 class EventBus:
     def __init__(self) -> None:
         self._subscribers: list[Subscriber] = []
+        self.bridge: Subscriber | None = None
 
     def subscribe(self, callback: Subscriber) -> Callable[[], None]:
         """Register a callback; returns a function that unsubscribes it."""
@@ -41,6 +40,14 @@ class EventBus:
         return unsubscribe
 
     async def publish(self, event: RealtimeEvent) -> None:
+        if self.bridge is not None:
+            try:
+                await self.bridge(event)
+            except Exception as exc:
+                logger.warning("realtime_bridge_failed", error_type=type(exc).__name__)
+        await self.dispatch(event)
+
+    async def dispatch(self, event: RealtimeEvent) -> None:
         """Fan out `event` to every subscriber. Never raises — a broken
         subscriber must not break whatever business logic just published."""
         if not self._subscribers:

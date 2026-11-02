@@ -12,10 +12,12 @@ Architecture:
 from __future__ import annotations
 
 import base64
+import copy
+import hashlib
+import tempfile
 import binascii
 import json
 import os
-import shutil
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -25,6 +27,7 @@ import structlog
 from cryptography.fernet import Fernet, InvalidToken
 
 from src.config.exceptions import TokenError
+from src.adapters.data.file_locks import AsyncFileLock, file_lock
 from src.core.realtime.event_bus import get_event_bus
 from src.core.realtime.events import RealtimeEvent
 
@@ -82,26 +85,37 @@ class TokenStorage:
             platforms=list(self._data.keys()),
         )
 
-    def _load(self) -> dict[str, Any]:
-        """Load and parse accounts.json. Returns empty dict if missing."""
-        if not self._path.exists() and not self._seed_from_env():
-            logger.warning("token_storage_file_missing", path=str(self._path))
+    def _read_disk(self) -> dict[str, Any]:
+        if not self._path.exists():
             return {}
         try:
             raw = self._path.read_text(encoding="utf-8").strip()
-            if not raw:
-                return {}
-            data = json.loads(raw)
+            data = json.loads(raw) if raw else {}
+            if not isinstance(data, dict):
+                raise ValueError("Connection store must be an object")
             return data
-        except (json.JSONDecodeError, OSError) as exc:
-            logger.error("token_storage_load_error", path=str(self._path), error=str(exc))
-            raise TokenError(f"Cannot load accounts.json: {exc}") from exc
+        except (ValueError, OSError) as exc:
+            raise TokenError("Cannot read the connection store") from exc
+
+    def _load(self) -> dict[str, Any]:
+        if not self._path.exists():
+            self._path.parent.mkdir(parents=True, exist_ok=True)
+            self._seed_from_env()
+        data = self._read_disk()
+        self._snapshot = copy.deepcopy(data)
+        return data
+
+    def refresh_lock(self, platform: str, alias: str) -> AsyncFileLock:
+        account = hashlib.sha256(f"{platform}:{alias}".encode()).hexdigest()[:24]
+        return AsyncFileLock(self._path.parent / f".connection-{account}.lock")
 
     def _seed_from_env(self) -> bool:
         """Crea accounts.json desde ACCOUNTS_JSON_B64 (máquina nueva sin copiar archivos)."""
         from src.config.settings import settings
 
         # Solo el accounts.json de la app (ACCOUNTS_JSON_PATH), nunca otra ruta (tests, scripts).
+        if settings.storage_profile_dir is not None:
+            return False  # Empty profiles never auto-import another dataset
         if not settings.accounts_json_b64 or self._path.resolve() != Path(settings.accounts_json_path).resolve():
             return False
         try:
@@ -109,21 +123,67 @@ class TokenStorage:
             json.loads(raw)
         except (binascii.Error, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise TokenError(f"ACCOUNTS_JSON_B64 no es un accounts.json válido en base64: {exc}") from exc
-        fd = os.open(self._path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        try:
+            fd = os.open(self._path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        except FileExistsError:
+            return True
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
             fh.write(raw)
         logger.info("token_storage_seeded_from_env", path=str(self._path))
         return True
 
-    def _save(self) -> None:
-        """Atomically write self._data back to accounts.json."""
-        tmp = self._path.with_suffix(".tmp")
+    @staticmethod
+    def _merge_changes(current: dict, before: dict, after: dict, depth: int = 0) -> dict:
+        result = copy.deepcopy(current)
+        for key in before.keys() | after.keys():
+            if key not in after:
+                # Deleting a platform removes its known aliases, preserving aliases
+                # another process just added. Deleting an alias removes its credentials.
+                if depth == 0 and isinstance(before[key], dict) and isinstance(result.get(key), dict):
+                    remaining = TokenStorage._merge_changes(result[key], before[key], {}, depth + 1)
+                    if remaining:
+                        result[key] = remaining
+                    else:
+                        result.pop(key, None)
+                else:
+                    result.pop(key, None)
+            elif key not in before or before[key] != after[key]:
+                if isinstance(after[key], dict) and isinstance(result.get(key, {}), dict):
+                    old = before.get(key) if isinstance(before.get(key), dict) else {}
+                    result[key] = TokenStorage._merge_changes(result.get(key, {}), old, after[key], depth + 1)
+                else:
+                    result[key] = copy.deepcopy(after[key])
+        return result
+
+    def _save(self, *, expected_identity: tuple[str, str, str] | None = None) -> bool:
+        """Merge only this writer's changes while holding an inter-process lock."""
+        self._path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = None
         try:
-            tmp.write_text(json.dumps(self._data, indent=2, ensure_ascii=False), encoding="utf-8")
-            tmp.replace(self._path)
+            with file_lock(self._path.with_suffix(".lock")):
+                current = self._read_disk()
+                if expected_identity is not None:
+                    platform, alias, target_id = expected_identity
+                    if current.get(platform, {}).get(alias, {}).get("target_id") != target_id:
+                        # A reconnect/removal in the other environment won the race.
+                        self._data = current
+                        self._snapshot = copy.deepcopy(current)
+                        return False
+                merged = self._merge_changes(current, self._snapshot, self._data)
+                fd, temporary = tempfile.mkstemp(prefix=".accounts-", suffix=".tmp", dir=self._path.parent)
+                with os.fdopen(fd, "w", encoding="utf-8") as file:
+                    json.dump(merged, file, indent=2, ensure_ascii=False)
+                    file.flush()
+                    os.fsync(file.fileno())
+                os.replace(temporary, self._path)
+                self._data = merged
+                self._snapshot = copy.deepcopy(merged)
+                return True
         except OSError as exc:
-            logger.error("token_storage_save_error", path=str(self._path), error=str(exc))
-            raise TokenError(f"Cannot save accounts.json: {exc}") from exc
+            raise TokenError("Cannot save the connection store") from exc
+        finally:
+            if temporary and os.path.exists(temporary):
+                os.unlink(temporary)
 
     def encrypt(self, plain_text: str) -> str:
         """Encrypt a plain-text token string; returns a base64 Fernet token."""
@@ -139,6 +199,7 @@ class TokenStorage:
 
     def get_state(self, platform: str, alias: str) -> TokenState:
         """Return the TokenState for the given account. Raises TokenError if missing."""
+        self._data = self._load()
         entry = self._data.get(platform, {}).get(alias)
         if entry is None:
             raise TokenError(
@@ -195,6 +256,11 @@ class TokenStorage:
                     "last_session_check": entry.get("last_session_check"),
                 })
         return result
+
+    def get_client_credentials(self, platform: str, alias: str) -> tuple[str, str]:
+        self._data = self._load()
+        entry = self._data.get(platform, {}).get(alias, {})
+        return entry.get("client_id", ""), entry.get("client_secret", "")
 
     def get_mode(self, platform: str, alias: str) -> str | None:
         """Return the account credential mode (`api` by default)."""
@@ -274,8 +340,11 @@ class TokenStorage:
             "avatar": avatar,
             "profile_synced_at": profile_synced_at,
         })
-        self._save()
-        return True
+        # Profile refreshes cannot reassign an Instagram alias, even if another
+        # process reconnects it while the remote profile request is in flight.
+        return self._save(
+            expected_identity=(platform, alias, target_id) if platform == "instagram" else None
+        )
 
     def save_tokens(
         self,
@@ -364,7 +433,6 @@ class TokenStorage:
         if not accounts or alias not in accounts:
             return False
 
-        entry = accounts[alias]
         del accounts[alias]
         if not accounts:
             del self._data[platform]

@@ -1,8 +1,10 @@
 "use client";
 
+import { Images, Video } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import type { CategoryNode } from "@/features/categories";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { useCategoryDesigns } from "../hooks/useExplainer";
 import { CreateExplainerVideoModal } from "./CreateExplainerVideoModal";
 import { ExplainerPrepSection } from "./ExplainerPrepSection";
@@ -11,10 +13,18 @@ import { ProductionsList } from "./ProductionsList";
 const HEADING_CLASS = "font-nb-sans text-[20px] font-extrabold tracking-[-0.02em] text-nb-ink";
 
 /** Ventana de una categoría con motor explainer-kit en /plantillas. */
-export function ExplainerCategoryWindow({ category }: { category: CategoryNode }) {
+export function ExplainerCategoryWindow({
+  category,
+  posts,
+}: {
+  category: CategoryNode;
+  posts?: ReactNode;
+}) {
   const t = useTranslations("explainer");
+  const prep = useTranslations("templates.prep");
   const { data: designsData } = useCategoryDesigns(category.path);
   const [createOpen, setCreateOpen] = useState(false);
+  const [contentType, setContentType] = useState("videos");
   const [prefill, setPrefill] = useState("");
   // Cambiar la key reinicia el formulario del modal en cada apertura.
   const [modalKey, setModalKey] = useState(0);
@@ -77,8 +87,43 @@ export function ExplainerCategoryWindow({ category }: { category: CategoryNode }
         )}
       </header>
 
-      <ExplainerPrepSection categoryPath={category.path} />
-      <ProductionsList categoryPath={category.path} />
+      <section aria-labelledby={`preparation-${category.id}`}>
+        <h2 id={`preparation-${category.id}`} className={HEADING_CLASS}>
+          {prep("heading")}
+        </h2>
+        <Tabs value={contentType} onValueChange={setContentType} className="mt-3 gap-5">
+          <TabsList
+            aria-label={prep("contentTabsLabel")}
+            className="h-auto rounded-full border border-nb-line bg-white/60 p-1"
+          >
+            <TabsTrigger
+              value="videos"
+              className="rounded-full px-5 py-2 font-bold data-[state=active]:bg-nb-ink data-[state=active]:text-white"
+            >
+              <Video aria-hidden />
+              {prep("videosTab")}
+            </TabsTrigger>
+            {posts && (
+              <TabsTrigger
+                value="posts"
+                className="rounded-full px-5 py-2 font-bold data-[state=active]:bg-nb-ink data-[state=active]:text-white"
+              >
+                <Images aria-hidden />
+                {prep("postsTab")}
+              </TabsTrigger>
+            )}
+          </TabsList>
+          <TabsContent value="videos" forceMount hidden={contentType !== "videos"}>
+            <ExplainerPrepSection categoryPath={category.path} embedded />
+            <ProductionsList categoryPath={category.path} />
+          </TabsContent>
+          {posts && (
+            <TabsContent value="posts" forceMount hidden={contentType !== "posts"}>
+              {posts}
+            </TabsContent>
+          )}
+        </Tabs>
+      </section>
 
       <CreateExplainerVideoModal
         key={modalKey}

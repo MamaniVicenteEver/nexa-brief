@@ -171,3 +171,22 @@ Fotos ilustrativas requeridas: persona con teléfono, teclado, servidores, tribu
 - La miniatura C usa imagen fotográfica conceptual generada por IA: chat y mazo; no documenta un juicio real. La banda roja muestra la cifra de 20 millones, relativa a la muestra judicial, explicada en el video y la descripción.
 - En la captura, el 404 informado corresponde al primer intento de `config.json`; la carga alternativa `assets/config.json` responde 200. Ambos clips y la imagen cargan con 200.
 - QC existente de la voz regenerada: 147 ppm y WER aproximado 0,011. La transcripción incluye anomalías («2020 CELS», «120 veinte millones»); conviene escuchar esos pasajes antes de publicar. No se regeneró ni alteró la voz.
+
+### Revisión de apoyos · política v5
+
+Plan de búsqueda previo: imágenes ilustrativas, no identificación de personas ni hechos reales salvo que el recurso lo demuestre. Cada consulta se contrastará con la hoja antes de declarar `media_review`.
+
+| Frase ancla / tramo | shows | query |
+|---|---|---|
+| conversaciones personales y enlaces compartidos | celular con conversación de chat visible | smartphone chat messages screen; person texting chat smartphone |
+| tribunal de Nueva York y demanda | exterior de tribunal o documentos judiciales | courthouse exterior justice building; court legal documents lawsuit |
+| orden, jueza y prueba | juez o jueza en estrado | judge courtroom hearing; judge court bench justice |
+| documentos de Heppner y acceso legal | personas revisando documentos jurídicos | lawyer legal documents consultation; legal documents attorney review |
+| correo de Enron como prueba | correo electrónico visible en pantalla | email inbox message computer; email correspondence laptop screen |
+| controles, historial y chat temporal | pantalla de teléfono con chat o ajustes | smartphone chat messages screen; phone privacy settings screen |
+
+Se reutilizan `rough.introv2`, `common.clip` y `rough.photo`; fotos 5–10 s, clips 8–16 s, máximo dos usos. Los logos acompañan los medios y se ajustan al revisar ambos formatos.
+
+### Resultado de la revisión v5
+
+Hojas parciales revisadas: `work/apoyos-final-16x9.png`, `work/apoyos-final-9x16.png` y el ajuste de Enron en `work/apoyos-enron-{16x9,9x16}.png`. Los beats con medio tienen `shows`, `query` y `media_review`; los medios son ilustrativos salvo identificación expresa. Se incorporaron planos de jueces, tribunal, documentación jurídica, mensajes y correo; la tabla completa está en `~/codex/nexa-brief/RESULT-chats-apoyos.md`. Política v5: 22 apoyos revisados, cada archivo como máximo dos usos, 0 errores de storyboard y publicación.

@@ -120,10 +120,12 @@ async def stable_time(video: Path, at: float) -> float:
 
 # ── archivos ─────────────────────────────────────────────────────────────────
 
-async def _ffmpeg_frame(video: Path, at: float, dest: Path, quality: int) -> bool:
+async def _ffmpeg_frame(
+    video: Path, at: float, dest: Path, quality: int, width: int = WIDTH, height: int = HEIGHT,
+) -> bool:
     proc = await asyncio.create_subprocess_exec(
         "ffmpeg", "-y", "-v", "error", "-ss", f"{at:.3f}", "-i", str(video), "-frames:v", "1",
-        "-vf", f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=decrease,pad={WIDTH}:{HEIGHT}:(ow-iw)/2:(oh-ih)/2",
+        "-vf", f"scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2",
         "-q:v", str(quality), str(dest),
         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
     )
@@ -147,12 +149,17 @@ def write_webp(jpg: Path) -> Path | None:
         return None
 
 
-async def make_thumbnail(video: Path, out_dir: Path, at: float) -> Path | None:
+async def make_thumbnail(
+    video: Path, out_dir: Path, at: float, *, orientation: str = "16x9", filename: str = "thumbnail.jpg",
+) -> Path | None:
     """thumbnail.jpg (+ .webp) en `out_dir` desde el cuadro estable cerca de `at`. None si no se pudo."""
     chosen = await stable_time(video, at)
-    jpg = out_dir / "thumbnail.jpg"
+    if orientation not in ("16x9", "9x16"):
+        raise ValueError(f"Invalid thumbnail orientation: {orientation}")
+    width, height = (WIDTH, HEIGHT) if orientation == "16x9" else (HEIGHT, WIDTH)
+    jpg = out_dir / filename
     for quality in (2, 4, 7):   # baja la calidad solo si pasa los 2 MB de YouTube
-        if not await _ffmpeg_frame(video, chosen, jpg, quality):
+        if not await _ffmpeg_frame(video, chosen, jpg, quality, width, height):
             return None
         if jpg.stat().st_size <= _MAX_BYTES:
             break

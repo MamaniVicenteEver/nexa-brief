@@ -1,7 +1,6 @@
 from pathlib import Path
-from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # ── Project root (3 levels up: settings.py → config → src → root) ───────────
@@ -16,6 +15,21 @@ class Settings(BaseSettings):
         case_sensitive=False,
         extra="ignore",
     )
+
+    storage_profile_dir: Path | None = Field(default=None, alias="NEXA_PROFILE_DIR")
+    storage_profile_id: str = "legacy"
+    storage_profile_label: str = "Local"
+    publication_backend: str = Field(default="json", alias="PUBLICATION_BACKEND")
+    credentials_backend: str = Field(default="encrypted_json", alias="CREDENTIALS_BACKEND")
+    media_backend: str = Field(default="filesystem", alias="MEDIA_BACKEND")
+    niches_path: Path = BASE_DIR / "niches.json"
+    image_styles_dir: Path | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def configure_storage_profile(cls, values):
+        from src.config.storage_profile import apply_profile
+        return apply_profile(values)
 
     # ── API boundary secrets ─────────────────────────────────────────────────
     app_env: str = Field(default="development", alias="APP_ENV")
@@ -230,7 +244,7 @@ class Settings(BaseSettings):
     # DATA_BACKEND=json vive en data_dir; la estructura interna la define
     # src/adapters/data/layout.py — ningún otro módulo arma rutas de data/.
     data_dir: Path = Field(default=BASE_DIR / "data", alias="DATA_DIR")
-    data_backend: Literal["json"] = Field(default="json", alias="DATA_BACKEND")
+    data_backend: str = Field(default="json", alias="DATA_BACKEND")
     skills_dir: Path = BASE_DIR / "src" / "skills"
     templates_dir: Path = BASE_DIR / "src" / "templates"
 
@@ -290,6 +304,9 @@ class Settings(BaseSettings):
         default=BASE_DIR / "accounts.json",
         alias="ACCOUNTS_JSON_PATH",
     )
+    shared_connections_dir: Path | None = Field(default=None, alias="SHARED_CONNECTIONS_DIR")
+    tiktok_service_upload_media: bool = Field(default=False, alias="TIKTOK_SERVICE_UPLOAD_MEDIA")
+    tiktok_idempotency_namespace: str = Field(default="", alias="TIKTOK_IDEMPOTENCY_NAMESPACE", pattern=r"^[a-z0-9_-]{0,32}$")
     # Copia de accounts.json en base64 para levantar una máquina nueva solo con el .env:
     # si accounts.json no existe, TokenStorage lo crea desde acá. Generar con
     #   base64 -w0 accounts.json

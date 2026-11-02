@@ -79,7 +79,9 @@
     "biblioteca": "Biblioteca",
     "historial": "Historial",
     "notificaciones": "Notificaciones",
-    "salir": "Salir"
+    "salir": "Salir",
+    "developmentEnvironment": "Desarrollo · cuentas reales",
+    "storageProfile": "Datos: {name}"
   },
   "dashboard": {
     "eyebrow": "Panel de control",
@@ -196,6 +198,36 @@
     }
   },
   "channels": {
+    "categoryManager": {
+      "create": "Crear categoría",
+      "selectAccounts": "Seleccionar cuentas",
+      "editTitle": "Cuentas de {name}",
+      "description": "Elige las cuentas que quieres ver juntas. Puedes incluir una cuenta en varias categorías.",
+      "name": "Nombre de la categoría",
+      "placeholder": "Por ejemplo, NodeAtlas",
+      "search": "Buscar cuentas por nombre o red social…",
+      "selected": "{count, plural, one {# cuenta seleccionada} other {# cuentas seleccionadas}}",
+      "selectVisible": "Seleccionar visibles",
+      "deselectVisible": "Desmarcar visibles",
+      "noAccounts": "No hay cuentas que coincidan con la búsqueda.",
+      "cancel": "Cancelar",
+      "save": "Guardar cuentas",
+      "saving": "Guardando…",
+      "saved": "Categoría guardada",
+      "error": "No se pudo guardar la categoría. Inténtalo de nuevo."
+    },
+    "categoryView": {
+      "filter": "Filtrar por categoría",
+      "platforms": "Por red social (predeterminado)",
+      "all": "Todas las categorías",
+      "categoryLabel": "Categorías",
+      "unassigned": "Sin categoría",
+      "accountCount": "{count, plural, one {# cuenta conectada} other {# cuentas conectadas}}",
+      "emptyCategory": "Todavía no hay cuentas asociadas a esta categoría.",
+      "loadError": "No se pudieron cargar las asociaciones de categorías. Reintenta para mostrar las cuentas correctamente.",
+      "retry": "Reintentar",
+      "noMatches": "No hay cuentas que coincidan con esta categoría y los filtros seleccionados."
+    },
     "title": "Canales",
     "subtitle": "Administra las cuentas donde Nexa Brief publica tus videos. Asigna a cada una un uso para saber cuál elegir en cada caso.",
     "updating": "Actualizando…",
@@ -235,14 +267,20 @@
       "connectFirst": "Conecta tu primera cuenta de {platform}",
       "connectAnother": "Conectar otra cuenta",
       "connectHint": "Usa varias cuentas para separar nichos, clientes o idiomas.",
-      "noMatches": "Ninguna cuenta coincide con la búsqueda."
+      "noMatches": "Ninguna cuenta coincide con la búsqueda.",
+      "connectInstagram": "Conectar Instagram",
+      "connectAnotherInstagram": "Conectar otra cuenta de Instagram",
+      "connectInstagramShort": "Agregar Instagram",
+      "instagramConnectHint": "Conecta las cuentas profesionales vinculadas a tus páginas de Facebook.",
+      "instagramHint": "Autoriza las páginas de Facebook para detectar sus cuentas profesionales de Instagram vinculadas."
     },
     "card": {
       "serviceUnavailable": "El servicio de TikTok no responde o está degradado; tus cuentas y sesiones están guardadas para recuperarse.",
       "lastBackup": "Último respaldo",
       "reviewJobs": "Hay {count} trabajos pendientes de revisión.",
       "reviewInStudio": "Revisar en TikTok Studio",
-
+      "openChannel": "Abrir {name} en una pestaña nueva",
+      "profileUnavailable": "El perfil público no está disponible; actualiza la información de la cuenta.",
       "actions": "Acciones de la cuenta",
       "viewDetails": "Ver detalles",
       "editUsage": "Editar uso y notas",
@@ -280,7 +318,8 @@
         "permissions": "La cuenta respondió, pero faltan permisos para consultar el canal.",
         "unavailable": "La plataforma no respondió correctamente. Inténtalo de nuevo.",
         "check_failed": "No se pudo completar la comprobación. Inténtalo de nuevo."
-      }
+      },
+      "posts": "Publicaciones"
     },
     "details": {
       "reconnect": "Reconectar cuenta",
@@ -320,7 +359,21 @@
       "viewsCount": "{count} vistas",
       "likesCount": "{count} Me gusta",
       "commentsCount": "{count} comentarios",
-      "disconnect": "Desconectar cuenta"
+      "disconnect": "Desconectar cuenta",
+      "publishedPosts": "Publicaciones",
+      "recentPosts": "Últimas publicaciones",
+      "noPosts": "Todavía no hay publicaciones en esta página.",
+      "videosLoadError": "No se pudieron cargar los videos.",
+      "postsLoadError": "No se pudieron cargar las publicaciones de Facebook.",
+      "retryPosts": "Reintentar",
+      "mediaType": {
+        "video": "Video",
+        "reel": "Reel",
+        "short": "Short",
+        "photo": "Imagen",
+        "carousel": "Carrusel",
+        "text": "Texto"
+      }
     },
     "connect": {
       "title": "Conectar una cuenta",
@@ -415,6 +468,79 @@
       "pending": "Eliminando…",
       "done": "Video eliminado de {platform}",
       "error": "No se pudo eliminar el video."
+    },
+    "youtube": {
+      "inventoryHint": "{count, plural, one {# canal conectado} other {# canales conectados}}. Puedes añadir más con el mismo correo de Google. Autoriza cada canal de marca por separado; Google no facilita el total de canales de ese correo a esta conexión.",
+      "capabilities": "Miniaturas de este canal",
+      "state": {
+        "unknown": "Sin comprobar: se intentará al publicar",
+        "enabled": "Miniaturas habilitadas: subida confirmada",
+        "unavailable": "YouTube rechazó la subida: revisar permisos"
+      },
+      "capabilityHint": "El permiso se comprueba por canal al subir una miniatura. Si acabas de habilitarlo en YouTube, reconecta este canal o vuelve a subir la imagen. Las pruebas A/B requieren funciones avanzadas adicionales.",
+      "openStudio": "Abrir YouTube Studio",
+      "upload": "Subir miniatura",
+      "file": "Imagen de miniatura",
+      "uploadHint": "JPEG o PNG, hasta 2 MB. Se cambia solo la miniatura de este video. Cambiarla detiene una prueba A/B que esté activa en YouTube Studio.",
+      "uploading": "Subiendo…",
+      "tooLarge": "La imagen debe pesar hasta 2 MB.",
+      "applied": "Miniatura aplicada. YouTube puede tardar en mostrar el cambio.",
+      "failed": "Miniatura pendiente: {reason}. Puedes reintentar sin volver a publicar el video.",
+      "error": "No se pudo subir la miniatura.",
+      "appliedShort": "Miniatura aplicada",
+      "failedShort": "Miniatura pendiente",
+      "reason": {
+        "permissions": "revisa la verificación del canal y sus permisos",
+        "oauth_scope": "reconecta el canal para conceder permisos",
+        "reauth_required": "reconecta el canal",
+        "quota": "se agotó la cuota del proyecto; reintenta más tarde",
+        "rate_limit": "se alcanzó el límite temporal; reintenta más tarde",
+        "network": "no se pudo contactar con YouTube",
+        "invalid_image": "la imagen no es válida",
+        "video_not_found": "no se encontró el video en este canal",
+        "file_unavailable": "no se encontró el archivo de imagen",
+        "provider_unavailable": "YouTube no está disponible"
+      }
+    },
+    "youtubeAccess": {
+      "title": "YT Acceso+",
+      "subtitle": "Funciones del canal",
+      "state": {
+        "enabled": "Habilitado",
+        "verification_required": "Verificar teléfono",
+        "restricted": "Restringido",
+        "unknown": "Sin comprobar",
+        "stale": "Actualizar comprobación"
+      },
+      "reason": {
+        "enabled": "YouTube habilita los videos de más de 15 minutos en este canal.",
+        "verification_required": "Este canal necesita completar la verificación por teléfono en YouTube.",
+        "restricted": "YouTube restringe los videos largos en este canal. Revisa su estado en Studio.",
+        "unknown": "Todavía no se pudo confirmar el acceso ampliado de este canal.",
+        "stale": "La comprobación anterior necesita actualizarse."
+      },
+      "longVideos": "Videos >15 min",
+      "long": {
+        "allowed": "Habilitados",
+        "eligible": "Verificar teléfono",
+        "disallowed": "Restringidos",
+        "unknown": "Sin dato"
+      },
+      "thumbnails": "Miniaturas",
+      "thumbnail": {
+        "enabled": "Subida comprobada",
+        "unavailable": "Revisar permisos",
+        "unknown": "Sin prueba de subida"
+      },
+      "checked": "Comprobado {time}",
+      "never": "Comprobación automática pendiente",
+      "refresh": "Comprobar Acceso+",
+      "refreshing": "Comprobando…",
+      "refreshFailed": "No se pudo comprobar el acceso. Revisa la conexión del canal.",
+      "hint": "El acceso a videos largos se consulta automáticamente. Las miniaturas se confirman al subir una imagen; no modificamos un video para comprobarlas.",
+      "phoneHint": "YouTube no expone un indicador general de teléfono verificado. «Habilitado» confirma el acceso a videos largos; no certifica todas las funciones del canal.",
+      "advancedHint": "Las pruebas A/B y otras funciones avanzadas se revisan por separado en Studio.",
+      "openStudio": "Ver canal en Studio"
     }
   },
   "library": {
@@ -565,7 +691,8 @@
       "title": {
         "images": "Elegir imagen de la biblioteca",
         "music": "Elegir canción de la biblioteca",
-        "videos": "Elegir video de la biblioteca"
+        "videos": "Elegir video de la biblioteca",
+        "sounds": "Elegir efecto de sonido"
       },
       "loading": "Cargando...",
       "empty": "Todavía no hay nada archivado.",
@@ -729,7 +856,10 @@
       "format": {
         "16x9": "Desktop 16:9",
         "9x16": "Móvil 9:16"
-      }
+      },
+      "contentTabsLabel": "Tipo de contenido en preparación",
+      "videosTab": "Videos",
+      "postsTab": "Posts"
     },
     "windows": {
       "label": "Categorías principales",
@@ -780,7 +910,9 @@
       "editPost": "Editar {title}",
       "emptyTitle": "Todavía no hay publicaciones de imagen",
       "emptyDescription": "Genera una imagen o carrusel desde un video verificado. Puedes guardar el borrador y revisar sus dos captions antes de programarlo.",
-      "createFirst": "Crear publicación"
+      "createFirst": "Crear publicación",
+      "viewPost": "Ver detalle de {title}",
+      "noCover": "Portada no disponible"
     },
     "common": {
       "noData": "Sin dato",
@@ -1120,7 +1252,99 @@
         "metric": "Métrica",
         "metricWindow": "{window}",
         "noPermissionData": "Sin permiso o sin suficientes datos para el gráfico."
-      }
+      },
+      "publishingTab": "Publicar"
+    },
+    "publishing": {
+      "heading": "Publicación y resultados",
+      "format": "{count} láminas · {kind}",
+      "carousel": "Carrusel",
+      "image": "Imagen",
+      "refresh": "Actualizar estado y métricas disponibles",
+      "noDate": "Sin fecha de publicación",
+      "publishedCount": "Publicados",
+      "pendingCount": "En proceso",
+      "failedCount": "Con errores",
+      "loadFailed": "No se pudo comprobar el estado actual. Actualiza antes de publicar.",
+      "destinations": "Publicar en",
+      "loadingAccounts": "Consultando cuentas…",
+      "accountsFailed": "No se pudieron consultar las cuentas. Inténtalo de nuevo.",
+      "tiktokUnavailable": "La conexión actual de TikTok admite videos. La publicación de fotos y carruseles todavía no está habilitada.",
+      "noAccount": "Sin una cuenta vinculada a esta categoría.",
+      "accountUnavailable": "Requiere conexión o permisos",
+      "reviewCopy": "Revisar el texto de la publicación",
+      "publish": "Publicar en {count, plural, one {# canal} other {# canales}}",
+      "approvePublish": "Aprobar y publicar en {count, plural, one {# canal} other {# canales}}",
+      "sending": "Publicando…",
+      "selectionHint": "Elige los destinos. Al publicar se aprueba esta revisión y se envían las imágenes limpias, sin los tags del visor.",
+      "history": "Historial por canal",
+      "metricsWindow": "Ventana de métricas",
+      "noHistory": "Este post aún no tiene envíos. Aquí verás dónde se publicó y sus resultados.",
+      "publishedAt": "Publicado el {date}",
+      "scheduledAt": "Programado para {date}",
+      "observedAt": "Medición: {date}",
+      "metricsPermission": "La conexión no tiene habilitado el acceso a estadísticas. Las cifras no disponibles se muestran con —.",
+      "noMetrics": "La red todavía no ha entregado métricas para esta ventana.",
+      "metricsHint": "Cada cifra pertenece a este post y a la ventana elegida. — significa dato no disponible; 0 significa cero registrado. Impresiones y alcance no equivalen a reproducciones.",
+      "openPost": "Ver publicación",
+      "retry": "Reintentar envío",
+      "reconcile": "Verificar estado sin reenviar",
+      "requestFailed": "No se pudo completar la solicitud.",
+      "sent": "Publicado correctamente en {count, plural, one {# canal} other {# canales}}.",
+      "demoUnavailable": "Los datos de demostración no permiten publicar.",
+      "alreadySent": "Los destinos seleccionados ya tienen un envío registrado. Actualiza el estado.",
+      "notReady": "Para publicar, el post debe tener imágenes validadas y estar pendiente de revisión o aprobado.",
+      "metrics": {
+        "impressions": "Impresiones",
+        "plays": "Reproducciones",
+        "likes": "Me gusta",
+        "comments": "Comentarios",
+        "reach": "Alcance",
+        "shares": "Compartidos",
+        "saves": "Guardados"
+      },
+      "status": {
+        "draft": "Borrador",
+        "queued": "En cola",
+        "publishing": "Publicando",
+        "published": "Publicado",
+        "failed_retryable": "Error recuperable",
+        "failed_permanent": "No se pudo publicar",
+        "outcome_unknown": "Pendiente de verificar",
+        "cancelled": "Cancelado",
+        "removed_api": "Retirado",
+        "removed_manually": "Retirado manualmente",
+        "removed": "Retirado",
+        "removal_pending_manual": "Retiro manual pendiente"
+      },
+      "started": "Envío iniciado en {count, plural, one {# canal} other {# canales}}. El estado se actualiza automáticamente."
+    },
+    "formats": {
+      "label": "Tamaño de publicación",
+      "option": "Formato {ratio}, {width} por {height} píxeles",
+      "quality": "JPEG de alta calidad",
+      "previewError": "No se pudo cargar esta composición. La imagen original se conserva.",
+      "retry": "Reintentar",
+      "loading": "Cargando composición",
+      "archived": "Versión publicada · JPEG original",
+      "editable": "Vista editable · el JPEG final se genera al preparar la publicación.",
+      "legacy": "Archivo JPEG · composición original",
+      "finalReady": "JPEG final · archivo listo para revisar antes de publicar.",
+      "editableMode": "Diseño editable",
+      "jpegMode": "JPEG final"
+    },
+    "artwork": {
+      "selectedFormat": "Formato seleccionado: {format}",
+      "prepareHint": "Genera el JPEG final y revísalo antes de aprobar el envío. El diseño editable y los archivos anteriores se conservan.",
+      "prepare": "Preparar JPEG en {format}",
+      "preparing": "Preparando JPEG…",
+      "preparedButton": "Actualizar JPEG final",
+      "prepared": "JPEG en {format} preparado. Revisa el archivo final antes de publicar.",
+      "readyToApprove": "JPEG final preparado para esta revisión.",
+      "prepareAgain": "El post cambió. Prepara de nuevo el JPEG y revisa la versión actual antes de publicar.",
+      "prepareFirst": "Primero prepara y revisa el JPEG final. Después podrás aprobar y publicar en los canales seleccionados.",
+      "instagramRestriction": "El feed de Instagram requiere 4:5 en esta integración. Elige ese formato y revisa su composición antes de publicar.",
+      "useInstagramFormat": "Ver 4:5 para Instagram"
     }
   },
   "sandbox": {
@@ -1431,14 +1655,7 @@
       "clearFinished": "Limpiar terminados",
       "running": "{count, plural, one {# en curso} other {# en curso}}",
       "queued": "{count, plural, one {# en cola} other {# en cola}}",
-      "done": "{count, plural, one {# listo} other {# listos}}",
-      "failed": "{count, plural, one {# falló} other {# fallaron}}"
-    }
-  },
-  "schedule": {
-    "title": "Programación",
-    "tabs": {
-      "slots": "Horarios",
+      "done": "Horarios",
       "queue": "Cola"
     },
     "common": {
@@ -1896,6 +2113,7 @@
         "hint": "La elegida abre el video y es la miniatura de YouTube. Si la cambias, el video se vuelve a grabar con la nueva apertura.",
         "capture": "Capturar",
         "recapture": "Capturar de nuevo",
+        "preparing": "Preparando miniaturas…",
         "notCaptured": "Sin capturar",
         "option": {
           "A": "A · solo texto",
@@ -1907,7 +2125,23 @@
       "autoVerticalResult": "9:16 se añadió para Instagram o TikTok.",
       "otherChannels": "Otros",
       "noFormatForAccount": "Esta cuenta no publica en los formatos marcados en «Grabar».",
-      "perFormatHint": "Cada cuenta publica en un solo formato. Solo aparecen los formatos marcados en «Grabar»."
+      "perFormatHint": "Cada cuenta publica en un solo formato. Solo aparecen los formatos marcados en «Grabar».",
+      "ab": {
+        "title": "Preparar pruebas A/B de YouTube",
+        "hint": "Prepara hasta tres variantes aquí y establece la prueba en YouTube Studio. Nexa no inicia ni consulta el experimento por API.",
+        "mode": "Probar",
+        "titles": "Solo títulos",
+        "thumbnails": "Solo miniaturas",
+        "both": "Título y miniatura",
+        "download": "Abrir miniatura {option}",
+        "eligibility": "Comprueba en Studio las funciones avanzadas y que el video sea apto. No se admite en Shorts ni en videos privados. Usa la misma miniatura para aislar el efecto del título; en modo combinado, empareja cada variante en Studio.",
+        "copy": "Copiar títulos A/B/C",
+        "copied": "Títulos copiados",
+        "openStudio": "Establecer prueba en Studio",
+        "copyError": "No se pudo copiar. Puedes seleccionar los títulos manualmente.",
+        "invalidTitles": "Prepara dos o tres títulos distintos, de hasta 100 caracteres cada uno.",
+        "missingImages": "Necesitas al menos dos capturas. Genéralas desde el selector de miniaturas antes de preparar la prueba."
+      }
     },
     "tray": {
       "starting": "Iniciando grabación…",

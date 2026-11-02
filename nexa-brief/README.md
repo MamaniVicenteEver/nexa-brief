@@ -34,7 +34,11 @@ debe estar activo para acceder a cualquiera de los dos subdominios. No hay que u
 despertar Docker: ese comando prepara el desarrollo en el puerto 3000.
 
 En este servidor, `docker-compose.override.yml` configura los puertos locales 3002 y 8002, y `.dev-local.mk`
-configura la URL pública de desarrollo. Los datos y usuarios de Docker son independientes de los de desarrollo.
+configura la URL pública de desarrollo. Los trabajos, colas, archivos de salida y usuarios de Docker son independientes de los de desarrollo.
+Las conexiones de redes y los metadatos de canales se comparten mediante `.runtime/connections`.
+TikTok corre como un servicio del usuario independiente de ambos entornos; detener desarrollo no lo detiene.
+El desarrollo muestra «Desarrollo · cuentas reales» y mantiene la publicación automática desactivada.
+Ver [configuración, validación y recuperación](nexa-brief-server/docs/investigaciones/conexiones-compartidas-dev-docker-2026-11.md).
 La entrada directa de desarrollo está habilitada públicamente: cualquiera que conozca su enlace puede entrar.
 
 ## Inicio rápido (desarrollo local)
@@ -61,7 +65,7 @@ Entrá a la web con **admin@nexabrief.com / admin123**. Cambiala con
 | --- | --- | --- |
 | Claves de servicios (Gemini, Pexels, YouTube…) | `nexa-brief-server/.env` | Pedilas al equipo. La API arranca sin ellas; cada función avisa qué clave falta. |
 | Audios y videos de las plantillas (~3,6 GB) | `nexa-brief-server/src/templates/**` | `make media-pull` con `MEDIA_REMOTE` en `.env` (acceso SSH al servidor del equipo). |
-| Cuentas conectadas (tokens cifrados) | `nexa-brief-server/accounts.json` | Se crean al conectar una red desde la web (**Canales**), o desde `ACCOUNTS_JSON_B64` en el `.env`. |
+| Cuentas conectadas (tokens cifrados) | `.runtime/connections/accounts.json` | Se crean al conectar una red desde la web (**Canales**), o desde `ACCOUNTS_JSON_B64` en el `.env`. |
 | Datos de la app (jobs, cola, biblioteca) | `nexa-brief-server/data/` | Se crean solos. Cada máquina tiene los suyos. |
 | Usuarios de la web | `nexa-brief-web/data/users.json` | `make setup` / `make seed-admin`. |
 
@@ -148,3 +152,7 @@ Más detalle: `CONTRIBUTING.md` (flujo de trabajo) y `nexa-brief-server/README.m
 ### Servicio TikTok local
 
 Instalá con `cd nexa-tiktok && uv sync --python 3.12` y `uv run playwright install chromium`; `uv.lock` fija Playwright 1.64.1 y Chromium, así que conservá esa versión mientras existan perfiles. Copiá `nexa-tiktok/.env.example` a `nexa-tiktok/.env` y configurá también `TIKTOK_SERVICE_KEY` en el `.env` raíz con el mismo valor que `NEXA_TIKTOK_KEY` del servicio. `make dev` inicia la API, la web y el servicio TikTok local en `127.0.0.1:8100`. Conectá la cuenta desde `/canales`: escaneá el QR con la aplicación de TikTok en el móvil y confirmá el acceso. No cierres sesión en TikTok. No expongas el servicio a Internet.
+
+### Perfil de datos compartido en alfred-server
+
+Desarrollo y Docker usan el perfil Profesional externo al repositorio. Consultar [ubicación, arranque, perfiles independientes, preparación para Supabase y verificación](nexa-brief-server/docs/investigaciones/perfil-profesional-compartido-2026-11.md).

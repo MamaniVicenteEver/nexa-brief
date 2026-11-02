@@ -61,7 +61,10 @@ def brief_context(narrative: NarrativeStrategy | None, category_id: str, title_l
             "títulos y de estructura del sistema: hook = la frase del primer acto; angle = el miedo concreto y el "
             "giro que lo desarma; thesis = la verdad completa; outline = los actos hablados en orden (sin duraciones); "
             "la descripción de YouTube y la de Facebook terminan con la pregunta del video. "
-            "El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta."
+            "El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. "
+            "Cada foto o clip muestra el sujeto concreto de lo narrado en ese momento; reutiliza solo cuando ayuda "
+            "y busca en todas las APIs de recursos disponibles. Reparte apoyos visuales por todo el video: "
+            "miniatura con foto/video y texto grande, video completo con texto, y foto en cuadro como tercera opción."
         ),
         "id": narrative.id,
         "descripcion": narrative.description,
@@ -88,6 +91,12 @@ def production_lines(narrative: NarrativeStrategy | None, category_id: str, titl
         f"{a.id} ({WEIGHT_TEXT[a.weight]}, intensidad {a.intensity})" for a in narrative.spoken_acts
     )
     lines = [
+        "Apoyos visuales sin patrón fijo y ligados a la voz: primero miniatura rough.introv2/binary.introv2 "
+        "con foto/video, segundo common.clip layout full con texto grande y colores por JSON, tercero foto en cuadro. "
+        "Imagen 5–10 s, video 8–16 s, cada archivo máximo dos usos; un apoyo preferido en cada tercio. "
+        "Consulta kit.py library y reusa componentes propios antes de crear uno nuevo.",
+        "Cada foto/clip muestra lo que se explica en ese momento. Escribe frase ancla, shows y query antes de buscar; "
+        "consulta todas las APIs de recursos, reutiliza solo si ayuda y confirma visualmente cada medio en media_review.",
         f"NARRATIVA DEL GUION: «{narrative.label}» (`{narrative.id}`). Reemplaza el arco de storytelling.md §3; "
         f"todo lo demás de la guía (§4–7: voz, script.json, duración) sigue igual. Detalle completo: "
         f"src/skills/explainer/strategies/narrative/{narrative.id}.json.",

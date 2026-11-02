@@ -12,7 +12,7 @@
 | `common.endcard` | main | Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse). |
 | `common.lyric` | main | Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. |
 | `common.logo` | main | Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual. |
-| `common.clip` | main | Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo. |
+| `common.clip` | main | Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON. |
 | `binary.title` | main | Título de apertura GIGANTE hecho de 0 y 1 (~80% del cuadro, estilo cartel: cada renglón ocupa todo el ancho) con antetítulo y línea; las partículas convergen desde el polvo. |
 | `binary.word` | main | Palabra o número grande hecho de glifos (momentos de alto impacto: '159 TRILLONES', '1952'), con rótulo arriba y nota abajo. |
 | `binary.portrait` | main | Retrato (o cualquier foto) reconstruido como grilla de 0 y 1: el brillo de la imagen define la opacidad de cada dígito. Pie de foto y contador de años opcionales. |
@@ -63,6 +63,7 @@
 | `rough.network` | main | Red que crece: un nodo central y nodos que aparecen en anillos, unidos por enlaces a mano (documentos que se enlazan, la web, una comunidad). Los primeros nodos pueden llevar rótulo; el central va en lima. |
 | `rough.browser` | main | Ventana de navegador dibujada a mano: la dirección se escribe letra a letra en la barra, aparece la página (título + renglones) y un cursor hace clic en un enlace lima en `clickAt`. |
 | `rough.counter` | main | Cifra GIGANTE que cuenta de `from` a `to` (con separador de miles) y queda subrayada a mano; etiqueta lima arriba y unidad manuscrita abajo. Para cifras de escala: usuarios, sitios, años, dinero. |
+| `rough.notemark` | main | Hoja manuscrita con conceptos destacados por separado en el margen o como sellos. Para ver sellos en stage.html agrega &p={"title":"ACCESO AUTORIZADO","marks":["seguridad","soporte","asuntos legales"],"style":"stamps"}. |
 | `rough.outrov1` | main | Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. |
 | `rough.outro` | main | Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. Alias compatible para rough.outro. |
 | `acuarela.title` | main | Apertura 'THE HISTORY': título condensado en rojo ladrillo con rayas finas a ambos lados y subtítulo, sobre una gran mancha de acuarela que es una foto lavada (florece desde varios focos) y bloques manuscritos. |
@@ -335,7 +336,7 @@ Etiquetas: logo, obsoleto · capa: main
 
 ### `common.clip`
 
-Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo.
+Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.
 
 Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
 
@@ -345,7 +346,7 @@ Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
 | `start` | number [0–None] | `0` | Segundo del clip desde el que arranca. |
 | `rate` | number [0.25–2] | `1` | Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate. |
 | `loop` | bool | `true` | Repite el clip si es más corto que el beat; evita congelar el último cuadro. |
-| `layout` | enum (auto / full / frame) | `"auto"` | auto = el del diseño (defaults.clip.layout; si no hay, full); full = pantalla completa; frame = dentro de un marco centrado. Dejarlo en auto. |
+| `layout` | enum (auto / full / frame) | `"auto"` | full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full). |
 | `size` | number [0–1] | `0` | layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84). |
 | `ar` | number | `0` | layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8). |
 | `focus` | array | `[0.5, 0.5]` | Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar. |
@@ -354,6 +355,10 @@ Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
 | `dim` | number [-1–1] | `-1` | Oscurecido (para leer los subtítulos); -1 = el del diseño. |
 | `caption` | string | `""` | Rótulo (qué se ve); vacío = sin rótulo. |
 | `sub` | string | `""` | Línea chica bajo el rótulo (fuente, lugar, año). |
+| `textColor` | enum (ink / accent / mix) | `"ink"` | Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords. |
+| `accentWords` | array | `[]` | Palabras o frases del rótulo que van en color de acento cuando textColor=mix. |
+| `textSide` | enum (left / right / bottom) | `"left"` | Ubicación del texto grande en layout full. |
+| `textIn` | enum (slide / fade / none) | `"slide"` | Entrada del texto grande, controlada por el reloj del beat. |
 | `logo` | image | `""` | SVG o PNG transparente en assets/media/logos/. |
 | `logoName` | string | `""` | Marca; fallback tipográfico si no carga el archivo. |
 | `logoPos` | enum (auto / top-left / top-right / bottom-left / bottom-right) | `"auto"` | Esquina de la foto/video; auto evita el foco declarado. |
@@ -361,7 +366,7 @@ Etiquetas: video, clip, metraje, foto, lugar, máquina · capa: main
 | `logoInvert` | bool | `false` | Versión blanca para un logo oscuro sobre medio oscuro. |
 
 ```json
-{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}
+{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "layout": "full", "caption": "Una ^conversación^ digital", "textColor": "mix", "textSide": "left", "sub": "Una historia real"}}
 ```
 
 ### `common.tabloid`
@@ -1344,7 +1349,10 @@ Etiquetas: red, enlaces, web, conexiones, crecimiento · capa: main
 | `center` | string | `""` | Rótulo del nodo central (lima). |
 | `labels` | array | `[]` | Rótulos de los primeros nodos del anillo. |
 | `count` | number [4–70] | `24` | Cantidad de nodos. |
-| `growSec` | number | `3` | Segundos hasta mostrar todos los nodos. |
+| `growSec` | number | `3` | Segundos hasta mostrar los nodos principales. |
+| `scale` | number [0.5–2] | `1.15` | Escala de nodos, rótulos y red. |
+| `keepGrowing` | boolean | `true` | Agrega nodos exteriores durante el resto del beat. |
+| `extra` | number [0–20] | `8` | Cantidad de nodos exteriores sin rótulo. |
 
 ```json
 {"use": "rough.network", "params": {"center": "WWW", "labels": ["DOC", "FOTO", "VIDEO", "MAPA"], "count": 28, "growSec": 3}}
@@ -1386,6 +1394,27 @@ Etiquetas: número, cifra, escala, crecimiento, impacto · capa: main
 
 ```json
 {"use": "rough.counter", "params": {"from": 0, "to": 6000000000, "label": "PERSONAS EN INTERNET", "unit": "y contando…", "dur": 2.5}}
+```
+
+### `rough.notemark`
+
+Hoja manuscrita con conceptos destacados por separado en el margen o como sellos. Para ver sellos en stage.html agrega &p={"title":"ACCESO AUTORIZADO","marks":["seguridad","soporte","asuntos legales"],"style":"stamps"}.
+
+Etiquetas: documento, nota, marcador, sello · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `title` | string | `""` | Título de la hoja. |
+| `marks` | array | `[]` | 1–5 textos u objetos {text, at}; at es segundo local o ancla @palabras. |
+| `note` | string | `""` | Alternativa a marks: conceptos separados por ·. |
+| `style` | string (marker / stamps) | `"marker"` | Marcador en renglón o sellos sobre el papel. |
+| `side` | string (auto / left / right) | `"auto"` | Margen de las etiquetas marker; auto elige derecha. |
+| `seed` | string | `""` | Variante determinista; vacío deriva del contenido y del beat. |
+| `arrowLen` | number [1–1.4] | `1` | Multiplicador del largo de las flechas; la semilla suma entre 15 % y 25 %. |
+| `stagger` | number [0–None] | `0.7` | Segundos entre marcas desde 0,8; cada at lo reemplaza. |
+
+```json
+{"use": "rough.notemark", "params": {"title": "ACCESO AUTORIZADO", "marks": ["seguridad", "soporte", "asuntos legales"]}}
 ```
 
 ### `rough.outrov1`

@@ -1,0 +1,561 @@
+{
+  "version": 1,
+  "family": "imperio",
+  "title": "LA EXPANSIÓN DEL IMPERIO JAPONÉS",
+  "defaults": {
+    "offset": -0.12
+  },
+  "beats": [
+    {
+      "t": 0,
+      "use": "imperio.title",
+      "dur": 11.8,
+      "params": {
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "from": [
+          140,
+          32,
+          58,
+          0
+        ],
+        "to": [
+          132,
+          29,
+          96,
+          0
+        ],
+        "sunAt": [
+          139,
+          36
+        ],
+        "sunSize": 2.1,
+        "flag": "auto",
+        "native": "日本帝国",
+        "nativeSub": "IMPERIO JAPONÉS",
+        "nativeAt": 4.2,
+        "nativeOut": 8.1,
+        "text": "EXPANSIÓN\nJAPONESA",
+        "textPortrait": "EXPANSIÓN\nJAPONESA",
+        "textAt": 6.6,
+        "rays": 26,
+        "raysAt": 3.5,
+        "dir": 185,
+        "spread": 0.84,
+        "rayLen": 0.43,
+        "rayAlpha": 0.62,
+        "ships": 2,
+        "labels": [
+          {
+            "t": "🇯🇵 JAPÓN",
+            "at": [
+              140,
+              37
+            ]
+          },
+          {
+            "t": "MAR DEL JAPÓN",
+            "at": [
+              135,
+              40
+            ]
+          },
+          {
+            "t": "PACÍFICO",
+            "at": [
+              151,
+              28
+            ]
+          }
+        ],
+        "ease": "inOut",
+        "rayFloor": 0.02
+      }
+    },
+    {
+      "at": "1895 el tratado",
+      "use": "imperio.expansion",
+      "dur": 5.5,
+      "params": {
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "from": [
+          132,
+          29,
+          96,
+          0
+        ],
+        "to": [
+          128,
+          28,
+          78,
+          0
+        ],
+        "sunAt": [
+          139,
+          36
+        ],
+        "sunSize": 1.1,
+        "flag": "auto",
+        "targets": [
+          {
+            "at": [
+              121,
+              24
+            ],
+            "t": "TAIWÁN · 1895"
+          }
+        ],
+        "at": 0.25,
+        "stagger": 0.35,
+        "conquer": false,
+        "ships": 1,
+        "beam": 0.9,
+        "labels": [
+          {
+            "t": "🇯🇵 JAPÓN",
+            "at": [
+              140,
+              37
+            ]
+          },
+          {
+            "t": "TAIWÁN · 1895",
+            "at": [
+              121,
+              24
+            ]
+          },
+          {
+            "t": "COREA",
+            "at": [
+              127,
+              37
+            ]
+          }
+        ],
+        "enter": 0.35
+      }
+    },
+    {
+      "at": "1910 Japón anexó",
+      "use": "imperio.map",
+      "dur": 3.5,
+      "params": {
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "from": [
+          128,
+          28,
+          78,
+          0
+        ],
+        "to": [
+          130,
+          35,
+          72,
+          0
+        ],
+        "sunAt": [
+          139,
+          36
+        ],
+        "sunSize": 0.95,
+        "flag": "auto",
+        "pins": [
+          {
+            "t": "COREA · 1910",
+            "at": [
+              127.5,
+              36.5
+            ]
+          }
+        ],
+        "pinAt": 0.25,
+        "labels": [
+          {
+            "t": "🇯🇵 JAPÓN",
+            "at": [
+              140,
+              37
+            ]
+          },
+          {
+            "t": "TAIWÁN · 1895",
+            "at": [
+              121,
+              24
+            ]
+          },
+          {
+            "t": "COREA · 1910",
+            "at": [
+              127.5,
+              36.5
+            ]
+          }
+        ],
+        "rays": 10,
+        "raysAt": 0.1,
+        "dir": 350,
+        "spread": 0.8,
+        "rayLen": 0.32,
+        "enter": 0.3
+      }
+    },
+    {
+      "at": "1931 su ejército",
+      "use": "imperio.expansion",
+      "dur": 3.8,
+      "params": {
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "from": [
+          130,
+          35,
+          72,
+          0
+        ],
+        "to": [
+          122,
+          38,
+          96,
+          0
+        ],
+        "sunAt": [
+          139,
+          36
+        ],
+        "sunSize": 0.9,
+        "flag": "auto",
+        "targets": [
+          {
+            "at": [
+              125,
+              44.5
+            ],
+            "t": "MANCHURIA · 1931"
+          }
+        ],
+        "at": 0.25,
+        "stagger": 0.4,
+        "conquer": false,
+        "ships": 1,
+        "beam": 0.95,
+        "labels": [
+          {
+            "t": "🇯🇵 JAPÓN",
+            "at": [
+              140,
+              37
+            ]
+          },
+          {
+            "t": "TAIWÁN · 1895",
+            "at": [
+              121,
+              24
+            ]
+          },
+          {
+            "t": "COREA · 1910",
+            "at": [
+              127.5,
+              36.5
+            ]
+          },
+          {
+            "t": "MANCHURIA · 1931",
+            "at": [
+              125,
+              44.5
+            ]
+          },
+          {
+            "t": "MANCHUKUO · 1932",
+            "at": [
+              127,
+              43
+            ]
+          }
+        ],
+        "enter": 0.35
+      }
+    },
+    {
+      "at": "al año siguiente",
+      "use": "imperio.archive",
+      "dur": 6.0,
+      "params": {
+        "src": "assets/media/manchuria-1931.jpg",
+        "photoFocus": [
+          0.5,
+          0.46
+        ],
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "from": [
+          122,
+          38,
+          96,
+          0
+        ],
+        "to": [
+          124,
+          40,
+          92,
+          0
+        ],
+        "sunAt": [
+          139,
+          36
+        ],
+        "sunSize": 0.85,
+        "flag": "auto",
+        "photoAt": 0.15,
+        "photoDur": 0.8,
+        "grayDur": 0.8,
+        "photo": 0.88,
+        "smoke": 0.62,
+        "rays": 0,
+        "ships": 0,
+        "compass": true,
+        "labels": [
+          {
+            "t": "🇯🇵 JAPÓN",
+            "at": [
+              140,
+              37
+            ]
+          },
+          {
+            "t": "MANCHUKUO · 1932",
+            "at": [
+              127,
+              43
+            ]
+          },
+          {
+            "t": "COREA",
+            "at": [
+              127.5,
+              36.5
+            ]
+          }
+        ],
+        "caption": "MANCHURIA · 1931",
+        "enter": 0.3
+      }
+    },
+    {
+      "at": "1937 la guerra",
+      "use": "imperio.expansion",
+      "dur": 3.5,
+      "params": {
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "from": [
+          122,
+          38,
+          96,
+          0
+        ],
+        "to": [
+          119,
+          32,
+          104,
+          0
+        ],
+        "sunAt": [
+          139,
+          36
+        ],
+        "sunSize": 0.82,
+        "flag": "auto",
+        "targets": [
+          {
+            "at": [
+              116.4,
+              39.9
+            ],
+            "t": "NORTE DE CHINA"
+          },
+          {
+            "at": [
+              121.5,
+              31.2
+            ],
+            "t": "SHANGHAI"
+          }
+        ],
+        "at": 0.3,
+        "stagger": 0.55,
+        "conquer": false,
+        "ships": 1,
+        "beam": 0.88,
+        "labels": [
+          {
+            "t": "🇯🇵 JAPÓN",
+            "at": [
+              140,
+              37
+            ]
+          },
+          {
+            "t": "MANCHURIA · 1931",
+            "at": [
+              125,
+              44.5
+            ]
+          },
+          {
+            "t": "GUERRA EN CHINA · 1937",
+            "at": [
+              119,
+              35
+            ]
+          },
+          {
+            "t": "TAIWÁN",
+            "at": [
+              121,
+              24
+            ]
+          },
+          {
+            "t": "COREA",
+            "at": [
+              127.5,
+              36.5
+            ]
+          }
+        ],
+        "enter": 0.35
+      }
+    },
+    {
+      "at": "pero Japón nunca conquistó",
+      "use": "imperio.word",
+      "dur": 3.2,
+      "params": {
+        "text": "CHINA NO\nCONQUISTADA",
+        "textPortrait": "CHINA NO\nCONQUISTADA",
+        "at": 0.1,
+        "shrinkAt": 2.1,
+        "shrinkTo": 0.35,
+        "tau": 1.8,
+        "y": 0.72,
+        "size": 0.48,
+        "rise": 0.08,
+        "spin": 0
+      }
+    },
+    {
+      "at": "1941 y 42",
+      "use": "imperio.expansion",
+      "dur": 11.5,
+      "params": {
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "from": [
+          124,
+          24,
+          102,
+          0
+        ],
+        "to": [
+          116,
+          13,
+          112,
+          0
+        ],
+        "sunAt": [
+          139,
+          36
+        ],
+        "sunSize": 0.75,
+        "flag": "auto",
+        "targets": [
+          {
+            "at": [
+              102,
+              4
+            ],
+            "t": "MALAYA · 1941–42"
+          },
+          {
+            "at": [
+              122,
+              12
+            ],
+            "t": "FILIPINAS"
+          },
+          {
+            "at": [
+              115,
+              -2
+            ],
+            "t": "INDIAS ORIENTALES"
+          }
+        ],
+        "at": 0.2,
+        "stagger": 0.55,
+        "conquer": false,
+        "ships": 1,
+        "beam": 0.9,
+        "labels": [
+          {
+            "t": "🇯🇵 JAPÓN",
+            "at": [
+              140,
+              37
+            ]
+          },
+          {
+            "t": "MALAYA · 1941–42",
+            "at": [
+              102,
+              4
+            ]
+          },
+          {
+            "t": "FILIPINAS",
+            "at": [
+              122,
+              12
+            ]
+          },
+          {
+            "t": "INDIAS ORIENTALES",
+            "at": [
+              115,
+              -2
+            ]
+          },
+          {
+            "t": "CHINA",
+            "at": [
+              116,
+              35
+            ]
+          }
+        ],
+        "enter": 0.4
+      }
+    }
+  ]
+}

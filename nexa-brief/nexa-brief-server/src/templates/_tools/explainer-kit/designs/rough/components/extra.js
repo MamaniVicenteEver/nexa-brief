@@ -240,33 +240,84 @@
       center: { type: "string", default: "", doc: "Rótulo del nodo central (lima)." },
       labels: { type: "array", default: [], doc: "Rótulos de los primeros nodos del anillo." },
       count: { type: "number", default: 24, min: 4, max: 70, doc: "Cantidad de nodos." },
-      growSec: { type: "number", default: 3, doc: "Segundos hasta mostrar todos los nodos." },
+      growSec: { type: "number", default: 3, doc: "Segundos hasta mostrar los nodos principales." },
+      scale: { type: "number", default: 1.15, min: 0.5, max: 2, doc: "Escala de nodos, rótulos y red." },
+      keepGrowing: { type: "boolean", default: true, doc: "Agrega nodos exteriores durante el resto del beat." },
+      extra: { type: "number", default: 8, min: 0, max: 20, doc: "Cantidad de nodos exteriores sin rótulo." },
     },
     create(ctx, p) {
-      const P = ctx.C.palette, g = R.root(ctx), { u, cx, cy } = ctx.stage, c = ctx.stage.content, r = K.rng(1990);
-      const Rm = Math.min(c.w, c.h) * 0.46, nodes = [{ x: cx, y: cy, r: u * 4.5, ring: 0 }];
-      for (let k = 1; k < p.count; k++) {
-        const ring = k < 7 ? 1 : k < 19 ? 2 : 3, rr = Rm * [0, 0.38, 0.7, 0.98][ring] * (0.9 + 0.2 * r()), th = r() * P_ * 2;
-        nodes.push({ x: cx + Math.cos(th) * rr * (c.w > c.h ? 1.25 : 1), y: cy + Math.sin(th) * rr * (c.w > c.h ? 0.82 : 1), r: u * (ring === 1 ? 2.6 : 1.7), ring });
+      const P = ctx.C.palette, g = R.root(ctx), { u, cx, cy } = ctx.stage, c = ctx.stage.content, rng = K.rng(1990);
+      const scale = p.scale ?? 1.15, count = Math.max(1, Math.floor(p.count)), extra = p.keepGrowing ? Math.max(0, Math.floor(p.extra)) : 0;
+      const rx = Math.min(c.w * 0.44, u * 42) * scale, ry = Math.min(c.h * 0.43, u * 29) * scale;
+      const nodes = [{ x: cx, y: cy, r: u * 4.5 * scale, ring: 0 }], boxes = [];
+      const boxFor = (text, x, y, size) => {
+        const w = R.measure(String(text), `600 ${size * u}px 'JetBrains Mono', monospace`) + String(text).length * u * 0.25 + u * 1.5;
+        return { x1: x - w / 2, x2: x + w / 2, y1: y - size * u * 0.8, y2: y + size * u * 0.8, x, y, size };
+      };
+      const overlap = (a, b) => a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1;
+      const hitsNode = (box, n, pad = u) => Math.hypot(Math.max(box.x1 - n.x, 0, n.x - box.x2), Math.max(box.y1 - n.y, 0, n.y - box.y2)) < n.r + pad;
+      const centerBox = p.center ? boxFor(p.center, cx, cy + nodes[0].r + u * 3.3 * scale, 2.2 * scale) : null;
+      if (centerBox) boxes.push(centerBox);
+      const labels = Array.isArray(p.labels) ? p.labels : [];
+      // Los rótulos reservan espacio antes de ubicar el resto de la red.
+      for (let k = 1; k < count + extra; k++) {
+        const isExtra = k >= count, label = !isExtra && labels[k - 1] ? String(labels[k - 1]) : "";
+        const ring = k <= 6 ? 1 : k < 19 ? 2 : 3, radius = u * (ring === 1 ? 2.6 : 1.7) * scale;
+        let chosen = null;
+        for (let attempt = 0; attempt < 900 && !chosen; attempt++) {
+          const th = k <= 6 && attempt < 80 ? -P_ / 2 + (k - 1) * P_ * 2 / 6 + (rng() - 0.5) * 0.22 : rng() * P_ * 2;
+          const fraction = isExtra ? 0.68 + rng() * 0.3 : ring === 1 ? 0.48 + rng() * 0.08 : ring === 2 ? 0.62 + rng() * 0.28 : 0.72 + rng() * 0.26;
+          const n = { x: cx + Math.cos(th) * rx * fraction, y: cy + Math.sin(th) * ry * fraction, r: radius, ring, isExtra, label };
+          if (n.x - radius < c.x || n.x + radius > c.x + c.w || n.y - radius < c.y || n.y + radius > c.y + c.h) continue;
+          if (nodes.some(m => Math.hypot(m.x - n.x, m.y - n.y) < m.r + n.r + u * 2) || boxes.some(b => hitsNode(b, n))) continue;
+          let box = null;
+          if (label) {
+            const dx = Math.cos(th), dy = Math.sin(th), size = 1.6 * scale;
+            const w = R.measure(label, `600 ${size * u}px 'JetBrains Mono', monospace`) + label.length * u * 0.25;
+            const distance = radius + u * 2 + Math.abs(dx) * w / 2 + Math.abs(dy) * size * u * 0.8;
+            box = boxFor(label, n.x + dx * distance, n.y + dy * distance, size);
+            if (box.x1 < c.x || box.x2 > c.x + c.w || box.y1 < c.y || box.y2 > c.y + c.h || boxes.some(b => overlap(b, box)) || nodes.some(m => hitsNode(box, m)) || hitsNode(box, n, 0)) continue;
+          }
+          chosen = n; if (box) { n.box = box; boxes.push(box); }
+        }
+        if (chosen) nodes.push(chosen);
       }
-      const edges = nodes.slice(1).map((n, k) => {
-        let best = 0, bd = 1e9;   // se engancha al nodo más cercano de un anillo interior
-        nodes.forEach((m, j) => { if (m.ring < n.ring) { const d = Math.hypot(m.x - n.x, m.y - n.y); if (d < bd) { bd = d; best = j; } } });
-        return { a: best, b: k + 1 };
+      // Un enlace solo se admite si evita textos y nodos ajenos.
+      const clearLine = (a, b, ai, bi) => {
+        for (let step = 1; step < 80; step++) {
+          const q = step / 80, x = lerp(a.x, b.x, q), y = lerp(a.y, b.y, q);
+          if (boxes.some(box => x >= box.x1 - u * 0.5 && x <= box.x2 + u * 0.5 && y >= box.y1 - u * 0.5 && y <= box.y2 + u * 0.5)) return false;
+          if (nodes.some((n, i) => i !== ai && i !== bi && Math.hypot(n.x - x, n.y - y) < n.r + u)) return false;
+        }
+        return true;
+      };
+      const edges = [];
+      nodes.slice(1).forEach((n, k) => {
+        const b = k + 1, candidates = nodes.slice(0, b).map((m, a) => ({ a, d: Math.hypot(m.x - n.x, m.y - n.y) })).sort((a, b) => a.d - b.d);
+        const parent = (n.ring === 1 && clearLine(nodes[0], n, 0, b) ? { a: 0 } : null) || candidates.find(v => clearLine(nodes[v.a], n, v.a, b));
+        if (parent) edges.push({ a: parent.a, b });
       });
-      for (let k = 0; k < p.count / 3; k++) { const a = 1 + Math.floor(r() * (p.count - 1)), b = 1 + Math.floor(r() * (p.count - 1)); if (a !== b && Math.abs(nodes[a].ring - nodes[b].ring) <= 1) edges.push({ a, b, extra: true }); }
-      const eEls = edges.map((e, k) => R.shape(ctx, g, (G, o) => [G.line(nodes[e.a].x, nodes[e.a].y, nodes[e.b].x, nodes[e.b].y, { ...o, roughness: 0.9 })], { color: e.extra ? P.muted : P.ink, width: e.extra ? 0.7 : 1, seed: 1100 + k }));
+      const eEls = edges.map((e, k) => R.shape(ctx, g, (G, o) => [G.line(nodes[e.a].x, nodes[e.a].y, nodes[e.b].x, nodes[e.b].y, { ...o, roughness: 0.9 })], { color: P.ink, width: 1, seed: 1100 + k }));
       const nEls = nodes.map((n, k) => R.shape(ctx, g, (G, o) => [G.circle(n.x, n.y, n.r * 2, k === 0 ? { ...o, fill: "F", fillStyle: "solid" } : o)], { color: k === 0 ? P.accent : P.ink, fillColor: P.accent, width: k === 0 ? 1.4 : 1, seed: 1200 + k }));
       const tEls = nodes.map((n, k) => {
-        const lab = k === 0 ? p.center : p.labels[k - 1];
-        return lab ? R.mono(ctx, g, lab, { x: n.x, y: k === 0 ? n.y + n.r + u * 3.2 : n.y - n.r - u * 2.4, size: k === 0 ? 2.2 : 1.6, color: k === 0 ? P.accent : P.ink, opacity: 0 }) : null;
+        const lab = k === 0 ? p.center : n.label, box = k === 0 ? centerBox : n.box;
+        return lab && box ? R.mono(ctx, g, lab, { x: box.x, y: box.y, size: box.size, color: k === 0 ? P.accent : P.ink, opacity: 0 }) : null;
       });
-      const order = nodes.map((n, k) => k).sort((a, b) => nodes[a].ring - nodes[b].ring || a - b);
-      const when = new Map(order.map((k, i) => [k, 0.2 + i / order.length * p.growSec]));
+      const mainCount = nodes.filter(n => !n.isExtra).length, extraCount = nodes.length - mainCount;
       return {
         render(lt, b, t) {
-          nodes.forEach((n, k) => { R.draw(nEls[k], lt, { start: when.get(k), dur: 0.3, t }); if (tEls[k]) tEls[k].setAttribute("opacity", prog(lt, when.get(k) + 0.2, 0.3)); });
-          edges.forEach((e, k) => R.draw(eEls[k], lt, { start: Math.max(when.get(e.a), when.get(e.b)) - 0.1, dur: 0.35, t }));
+          // Restablece también los trazos a medio dibujar al retroceder en el tiempo.
+          const fps = ctx.C.rough?.boil === false ? 0 : (ctx.C.rough?.boilFps ?? 6);
+          const variant = fps ? Math.floor(t * fps) % 3 : 0;
+          [...nEls, ...eEls].forEach(paths => paths.forEach(el => {
+            if (el._v[variant]) { el.setAttribute("d", el._v[variant]); el._cur = variant; }
+          }));
+          const mainEnd = Math.max(0.3, Math.min(p.growSec, b.dur * 0.55));
+          const when = nodes.map((n, k) => n.isExtra
+            ? mainEnd + (k - mainCount + 1) / Math.max(1, extraCount) * Math.max(0, b.dur - mainEnd - 0.4)
+            : 0.1 + k / Math.max(1, mainCount - 1) * Math.max(0, mainEnd - 0.1));
+          nodes.forEach((n, k) => { R.draw(nEls[k], lt, { start: when[k], dur: 0.3, t }); if (tEls[k]) tEls[k].setAttribute("opacity", prog(lt, when[k] + 0.2, 0.3)); });
+          edges.forEach((e, k) => R.draw(eEls[k], lt, { start: Math.max(when[e.a], when[e.b]) - 0.1, dur: 0.35, t }));
           const z = 1 + lt * 0.008; g.setAttribute("transform", `translate(${cx} ${cy}) scale(${z}) translate(${-cx} ${-cy})`);
           if (lt > b.dur) R.exitFx(g, ctx, lt, b);
         },

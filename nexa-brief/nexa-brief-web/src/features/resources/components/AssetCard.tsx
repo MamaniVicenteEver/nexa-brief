@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Pencil, Trash2 } from "lucide-react";
+import { FileText, Pencil, Trash2, Volume2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { LibraryAsset } from "@/features/library/api/library-assets-service";
 import { cn } from "@/lib/utils";
@@ -23,14 +23,15 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
   const t = useTranslations("resources.card");
   const retry = useRetranscribe();
   const isMusic = asset.kind === "music";
+  const isSound = asset.kind === "sounds";
   const meta = [
     asset.width && asset.height ? `${asset.width}×${asset.height}` : "",
     formatDuration(asset.durationSeconds),
-    asset.category,
+    asset.category === "sound_effects" ? t("soundCategory") : asset.category,
   ].filter(Boolean);
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-nb-xs border border-nb-line bg-nb-surface">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-nb-line bg-nb-surface shadow-[0_3px_16px_-10px_rgba(0,0,0,0.18)] transition-shadow hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.22)]">
       {asset.kind === "images" && (
         // biome-ignore lint/performance/noImgElement: URL del backend, no un asset estático de Next
         <img
@@ -50,10 +51,31 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
           className="aspect-video w-full bg-black object-cover"
         />
       )}
-      <div className="flex flex-1 flex-col gap-2 p-3.5">
+      <div className="flex flex-1 flex-col gap-3 p-5">
+        {isSound && (
+          <div className="flex items-center justify-between gap-2">
+            <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-nb-green-dark">
+              <Volume2 className="size-4" />
+              {t("sound")}
+            </span>
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-1 text-[11px] font-semibold",
+                asset.approvalStatus === "approved"
+                  ? "bg-nb-green/20 text-nb-green-dark"
+                  : "bg-nb-bg-2 text-nb-mute",
+              )}
+            >
+              {t(`status.${asset.approvalStatus ?? "pending"}`)}
+            </span>
+          </div>
+        )}
         <div className="flex items-start gap-2">
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-[13.5px] font-semibold text-nb-ink" title={asset.title}>
+            <h3
+              className="break-words text-[16px] leading-snug font-semibold text-nb-ink"
+              title={asset.title}
+            >
               {asset.title}
             </h3>
             <p className="truncate text-[11.5px] text-nb-mute" title={asset.originalFilename}>
@@ -81,6 +103,23 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
             </button>
           </div>
         </div>
+        {asset.description && (
+          <p className="whitespace-pre-line break-words text-[13px] leading-relaxed text-nb-ink-soft">
+            {asset.description}
+          </p>
+        )}
+        {isSound && asset.recommendedUses.length > 0 && (
+          <div className="rounded-xl bg-nb-bg/70 px-3 py-2.5">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-nb-mute">
+              {t("recommendedUses")}
+            </p>
+            <ul className="mt-1 list-disc space-y-1 pl-4 text-[12px] leading-relaxed text-nb-ink-soft">
+              {asset.recommendedUses.map((use) => (
+                <li key={use}>{use}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         {meta.length > 0 && <p className="text-[11.5px] text-nb-mute">{meta.join(" · ")}</p>}
         {asset.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
@@ -92,6 +131,27 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
                 {tag}
               </span>
             ))}
+          </div>
+        )}
+        {isSound && (
+          <div className="mt-auto border-t border-nb-line pt-3">
+            {/* biome-ignore lint/a11y/useMediaCaption: la descripción del efecto aparece completa en esta ficha */}
+            <audio
+              aria-label={asset.title}
+              src={asset.fileUrl}
+              controls
+              preload="metadata"
+              className="h-10 w-full"
+            />
+            <p className="mt-2 text-[11px] text-nb-mute">
+              {[
+                asset.provider,
+                asset.licenseNote !== "unknown" ? asset.licenseNote : "",
+                t("usageCount", { count: asset.usageCount }),
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
           </div>
         )}
         {isMusic && (

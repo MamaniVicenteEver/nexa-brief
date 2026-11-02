@@ -3,6 +3,7 @@ import {
   cancelImageDelivery,
   createImageDeliveries,
   createImagePlan,
+  exportImagePostFormat,
   fetchImageCapabilities,
   fetchImageDelivery,
   fetchImagePost,
@@ -24,6 +25,8 @@ import {
   removePublication,
 } from "./api/publications-api";
 import { publicationFormat } from "./gallery-utils";
+import { isImageFormat } from "./image-formats";
+import { slideRoleTag } from "./slide-role-tag";
 import type {
   AccountCapability,
   Capabilities,
@@ -33,6 +36,7 @@ import type {
   ImageDelivery,
   ImagePlan,
   ImagePost,
+  ImagePostFormat,
   ImagePostPatch,
   ImagePostStatus,
   ImageStrategy,
@@ -255,6 +259,7 @@ function mapImagePost(value: unknown): ImagePost {
     );
     return {
       slideId,
+      roleTag: slideRoleTag(plan, slideId),
       order: number(get(item, "order")) ?? index + 1,
       assetId,
       altTextFacebook: text(
@@ -291,9 +296,15 @@ function mapImagePost(value: unknown): ImagePost {
       nullableText(get(raw, "source_title", "sourceTitle") ?? get(editorial, "topic")) ?? undefined,
     planId: text(get(raw, "plan_id", "planId"), text(get(plan, "plan_id", "planId"))),
     planHash: text(get(raw, "plan_hash", "planHash") ?? get(plan, "plan_hash")),
+    format: isImageFormat(get(raw, "format") ?? get(plan, "format"))
+      ? ((get(raw, "format") ?? get(plan, "format")) as ImagePostFormat)
+      : "4:5",
     kind: (get(raw, "kind") ?? get(technical, "kind")) === "carousel" ? "carousel" : "image",
     templateId,
     strategyId: nullableText(get(editorial, "strategy_id", "strategyId")),
+    level: get(editorial, "level") as import("./types").ImageLevel | null,
+    narrative: get(editorial, "narrative") as "hilo" | "factual" | null,
+    trace: get(raw, "trace") as import("./types").ImagePostTrace | null,
     styleId: text(get(raw, "style_id", "styleId"), text(get(plan, "style_id", "styleId"))),
     title: text(get(raw, "title") ?? get(editorial, "title")),
     copy: mapCopy(get(raw, "copy") ?? get(editorial, "copy")),
@@ -393,6 +404,10 @@ function mapPublicationDelivery(
 function mapPublicationSummary(value: unknown, filters?: GalleryFilters): PublicationSummary {
   const editorial = get(value, "editorial");
   const technical = get(value, "technical");
+  const format =
+    get(value, "format") ??
+    get(get(technical, "composition_plan"), "format") ??
+    get(get(value, "plan"), "format");
   const kind = get(value, "kind") ?? get(technical, "kind");
   const slideSource = list(get(value, "slides") ?? get(technical, "slides"));
   const slides = slideSource.map((item, index) => ({
@@ -421,6 +436,7 @@ function mapPublicationSummary(value: unknown, filters?: GalleryFilters): Public
     ),
     topic: text(get(value, "topic"), text(get(editorial, "topic"))),
     title: text(get(value, "title"), text(get(editorial, "title"))),
+    format: isImageFormat(format) ? format : "4:5",
     kind: publicationFormat(baseKind, deliveries),
     templateId: text(
       get(value, "template_id", "templateId"),
@@ -484,6 +500,7 @@ function mapPublicationDetail(value: unknown, filters?: GalleryFilters): Publica
     );
     return {
       ...slide,
+      roleTag: slideRoleTag(get(technical, "composition_plan"), slide.slideId),
       altTextFacebook: text(
         get(editorialSlide, "alt_text_fb", "altTextFacebook"),
         slide.altTextFacebook,
@@ -500,6 +517,9 @@ function mapPublicationDetail(value: unknown, filters?: GalleryFilters): Publica
   const deliveryRows = list(get(raw, "deliveries"));
   return {
     ...summary,
+    postId: nullableText(get(raw, "post_id", "postId")),
+    revision: number(get(raw, "revision")) ?? undefined,
+    trace: get(raw, "trace") as import("./types").ImagePostTrace | null,
     slides: slidesWithAlt,
     deliveries: deliveryRows.length
       ? deliveryRows.map((delivery) => mapPublicationDelivery(delivery, filters))
@@ -655,14 +675,41 @@ export async function getImagePost(postId: string, signal?: AbortSignal): Promis
   return mapImagePost(await fetchImagePost(postId, signal));
 }
 
+export async function getImagePostDetail(
+  postId: string,
+  signal?: AbortSignal,
+): Promise<PublicationDetail> {
+  const raw = await fetchImagePost(postId, signal);
+  const post = mapImagePost(raw);
+  const detail = mapPublicationDetail(raw);
+  return {
+    ...detail,
+    format: post.format,
+    slides: post.slides,
+    coverAssetId: post.slides[0]?.assetId ?? null,
+    coverUrl: post.slides[0]?.previewUrl ?? null,
+  };
+}
+
 export async function createPlan(input: {
   category_id: string;
   source_video_id: string;
   template_id: "daily_fact" | "five_slides";
   style_id: string;
   strategy_id?: string;
+  level?: import("./types").ImageLevel;
+  narrative?: "hilo" | "factual";
+  format?: ImagePostFormat;
 }) {
   return mapPlanResponse(await createImagePlan(input));
+}
+
+export async function setImagePostFormat(
+  postId: string,
+  revision: number,
+  format: ImagePostFormat,
+): Promise<ImagePost> {
+  return mapImagePost(await exportImagePostFormat(postId, { revision, format }));
 }
 
 export async function renderPlan(planId: string) {
@@ -684,7 +731,11 @@ export async function reviewImagePost(
   note?: string,
 ): Promise<ImagePost> {
   return mapImagePost(
-    await requestImagePostReview(postId, { revision, decision, ...(note ? { note } : {}) }),
+    await requestImagePostReview(postId, {
+      revision,
+      decision,
+      ...(note ? { note } : {}),
+    }),
   );
 }
 
@@ -746,7 +797,11 @@ export async function getPublications(
   filters: GalleryFilters,
   signal?: AbortSignal,
   cursor?: string | null,
-): Promise<{ items: PublicationSummary[]; nextCursor: string | null; asOf: string }> {
+): Promise<{
+  items: PublicationSummary[];
+  nextCursor: string | null;
+  asOf: string;
+}> {
   const payload = await fetchPublications(filters, signal, cursor);
   const initialItems = list(get(payload, "items")).map((item) =>
     mapPublicationSummary(item, filters),
@@ -804,9 +859,16 @@ export async function getPublicationDetail(
   );
   let reel = detail.technical.reel;
   if (reel && !reel.previewUrl && reel.assetId) {
-    reel = { ...reel, previewUrl: await resolveGalleryAsset(publicationId, reel.assetId, signal) };
+    reel = {
+      ...reel,
+      previewUrl: await resolveGalleryAsset(publicationId, reel.assetId, signal),
+    };
   }
-  return { ...detail, slides: slidesWithUrls, technical: { ...detail.technical, reel } };
+  return {
+    ...detail,
+    slides: slidesWithUrls,
+    technical: { ...detail.technical, reel },
+  };
 }
 
 export async function removePublishedPublication(

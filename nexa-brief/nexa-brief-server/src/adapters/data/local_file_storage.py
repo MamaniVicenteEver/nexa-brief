@@ -15,6 +15,7 @@ import unicodedata
 from pathlib import Path
 
 from src.config.settings import settings
+from src.adapters.data.file_locks import file_lock
 
 # Caracteres prohibidos en Windows/macOS/S3-keys + controles. Se preservan
 # espacios, acentos, ñ, paréntesis, guiones, etc.
@@ -51,15 +52,16 @@ class LocalFileStorage:
     def save(self, source: Path, *, folder: str, filename: str) -> str:
         dest_dir = self._root / sanitize_folder(folder)
         dest_dir.mkdir(parents=True, exist_ok=True)
-        clean = sanitize_filename(filename)
-        stem, suffix = Path(clean).stem, Path(clean).suffix
-        dest = dest_dir / clean
-        counter = 2
-        while dest.exists():
-            dest = dest_dir / f"{stem} ({counter}){suffix}"
-            counter += 1
-        shutil.copy2(source, dest)
-        return dest.relative_to(self._root).as_posix()
+        with file_lock(dest_dir / ".files.lock"):
+            clean = sanitize_filename(filename)
+            stem, suffix = Path(clean).stem, Path(clean).suffix
+            dest = dest_dir / clean
+            counter = 2
+            while dest.exists():
+                dest = dest_dir / f"{stem} ({counter}){suffix}"
+                counter += 1
+            shutil.copy2(source, dest)
+            return dest.relative_to(self._root).as_posix()
 
     def local_path(self, key: str) -> Path:
         path = (self._root / key).resolve()
@@ -74,7 +76,7 @@ class LocalFileStorage:
         return sorted(
             p.relative_to(self._root).as_posix()
             for p in directory.iterdir()
-            if p.is_file() and (suffix is None or p.suffix.lower() == suffix.lower())
+            if p.is_file() and not p.name.startswith(".") and (suffix is None or p.suffix.lower() == suffix.lower())
         )
 
     def delete(self, key: str) -> bool:

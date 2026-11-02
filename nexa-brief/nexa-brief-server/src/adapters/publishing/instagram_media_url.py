@@ -64,8 +64,6 @@ def _resolve_media(media: str | Path) -> tuple[Path, str, str]:
     suffix = candidate.suffix.lower()
     if suffix in {".jpg", ".jpeg"}:
         mime = "image/jpeg"
-        if root != publication_root:
-            raise ValueError("JPEG media must be in the publication store")
         with candidate.open("rb") as stream:
             if stream.read(3) != b"\xff\xd8\xff":
                 raise ValueError("Media is not a JPEG")
@@ -95,7 +93,7 @@ def create_signed_media_token(
     ttl_seconds: int = 3600,
     expected_sha256: str | None = None,
 ) -> str:
-    """Firma un key final de publicación o un MP4 temporal del pipeline."""
+    """Firma medios de publicación o un MP4/JPEG temporal del pipeline (incluye portadas)."""
     if ttl_seconds < 1 or ttl_seconds > _MAX_TTL_SECONDS:
         raise ValueError("Media URL TTL must be between 1 and 3600 seconds")
     path, mime, digest = _resolve_media(media)

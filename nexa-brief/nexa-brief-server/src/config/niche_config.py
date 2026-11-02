@@ -23,10 +23,11 @@ from pydantic import BaseModel, Field, model_validator
 from src.config.settings import BASE_DIR, settings
 
 # ── Ruta al archivo de configuración ────────────────────────────────────────
-_NICHES_PATH: Path = BASE_DIR / "niches.json"
+_NICHES_PATH: Path = settings.niches_path
 
 # ── Cache en memoria (se carga una sola vez por proceso) ─────────────────────
 _cache: dict[str, "NicheConfig"] | None = None
+_cache_signature = None
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -276,9 +277,11 @@ class NicheConfig(BaseModel):
 
 def _load_all() -> dict[str, NicheConfig]:
     """Carga niches.json una vez y cachea en memoria."""
-    global _cache
-    if _cache is not None:
+    global _cache, _cache_signature
+    signature = (_NICHES_PATH, _NICHES_PATH.stat().st_mtime_ns if _NICHES_PATH.exists() else None)
+    if _cache is not None and signature == _cache_signature:
         return _cache
+    _cache_signature = signature
 
     if not _NICHES_PATH.exists():
         _cache = {}

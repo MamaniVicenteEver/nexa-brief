@@ -29,7 +29,7 @@ class LocalImagePostResources:
         self.server_dir = Path(__file__).resolve().parents[3]
 
     def category_exists(self, category_id: str) -> bool:
-        path = self.server_dir / "niches.json"
+        path = settings.niches_path
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
             return category_id in data.get("categories", {})
@@ -118,7 +118,7 @@ class LocalImagePostResources:
     def get_style(self, category_id: str, style_id: str | None = None) -> StyleSystem:
         if not category_id or Path(category_id).name != category_id:
             raise ValueError(f"No hay estilo vigente para {category_id}")
-        path = self.skills_dir / "image_posts" / "styles" / f"{category_id}.json"
+        path = (settings.image_styles_dir or self.skills_dir / "image_posts" / "styles") / f"{category_id}.json"
         raw = json.loads(path.read_text(encoding="utf-8"))
         style = self._style_with_fonts(raw, path.parent)
         if style.category_id != category_id or style_id and style.style_id != style_id:
@@ -128,7 +128,7 @@ class LocalImagePostResources:
     def list_styles(self, category_id: str) -> list[dict[str, Any]]:
         if not category_id or Path(category_id).name != category_id:
             return []
-        path = self.skills_dir / "image_posts" / "styles" / f"{category_id}.json"
+        path = (settings.image_styles_dir or self.skills_dir / "image_posts" / "styles") / f"{category_id}.json"
         if not path.is_file():
             return []
         raw = json.loads(path.read_text(encoding="utf-8"))

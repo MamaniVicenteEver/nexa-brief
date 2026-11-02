@@ -19,6 +19,8 @@ se inyectan para poder probar sin correr nada real.
 
 from __future__ import annotations
 
+from src.core.task_ownership import start_owned_task, task_can_recover
+
 import asyncio
 import hashlib
 import importlib.util
@@ -40,7 +42,7 @@ from src.config.settings import BASE_DIR, settings
 from src.core.categories import get_category, top_level_of
 from src.core.data import collection
 from src.core.explainer.briefs import ExplainerBrief, unique_video_id, write_publish_json
-from src.core.explainer.catalog import READY_STATUSES, TEMPLATES_DIR, load_video
+from src.core.explainer.catalog import TEMPLATES_DIR, load_video
 from src.core.explainer.designs import KIT_DIR, available_design_ids
 from src.core.explainer.lengths import agent_timeout_seconds, clamp_minutes, host_timeout_seconds
 from src.core.explainer import narrative
@@ -348,7 +350,7 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
     else:
         lines.append("El usuario no subió medios: búscalos tú con media.py (licencias libres, con crédito).")
     lines += [
-        "Paso 3c: completa el inventario visual de PLAN §7a (guides/components.md §6). Para videos de",
+        "Paso 3c: consulta `kit.py library` y completa el inventario visual de PLAN §7a (guides/components.md §6). Reusa componentes propios aprobados antes de crear otros. Para videos de",
         "8 min o más crea y usa al menos 4 componentes propios del tema: objetos o mecanismos que vuelven",
         "en 2 o más planos o en el clímax. rough.icon es relleno, no protagonista: el check bloquea el exceso,",
         "las rachas y, en la narrativa amarillista, los iconos en golpe/miedo. Usa fotos, clips y componentes propios. Después de",
@@ -368,7 +370,9 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
         ),
         "El cierre con voz del canal lo pega `kit.py transcribe` (outro/): no lo escribas en el guion ni en el storyboard.",
         "Ritmo objetivo: alrededor de 130 ppm, con pausas naturales entre oraciones; usa delivery_note por segmento si hace falta. El QC avisa por encima de 138 ppm.",
-        "Visuales: distribuye fotos/clips por todos los actos; máximo 75 s sin recurso real y al menos 5 s visibles por foto. Cada beat con video dura al menos 8 s; common.clip recomienda 12–18 s. En videos de 8 min o más incluye dos tramos de video de al menos 12 s. Si el archivo es corto, usa loop o rate menor a 1, sin congelar.",
+        "Apoyos visuales preferidos: reparte por todo el video y sin patrón fijo (1) rough.introv2/binary.introv2 con foto o video y texto grande, (2) common.clip layout full con caption grande y textColor ink|accent|mix, accentWords, textSide y textIn por JSON, (3) foto en cuadro. Cada apoyo acompaña la frase narrada. Imagen 5–10 s; video 8–16 s; cada archivo máximo dos usos. Cada tercio necesita una miniatura o un video completo. Si el archivo es corto, usa loop o rate menor a 1.",
+        "Antes de crear un componente propio consulta `kit.py library`: lista componentes de todas las producciones, qué dibujan, parámetros y hoja PNG. Si uno sirve, cópialo al video y validalo con `kit.py components`; crea uno nuevo solo cuando sea necesario, con hoja PNG revisada, sin emojis, parámetros JSON y uso en el storyboard.",
+        "Cada foto/clip debe mostrar el sujeto concreto de la frase narrada. Antes de buscar escribe en PLAN §8 la frase, `shows` (qué se verá) y `query` (consulta concreta); cópialos al beat visual junto a `at` en fase storyboard. Busca varias consultas con media.py search-concept en Pexels, Pixabay y los demás bancos configurados. Reusa solo si ayuda a visualizar esa frase. Si no hay clip pertinente, usa foto pertinente con movimiento lento; nunca clip genérico de relleno. Mira la hoja y completa `media_review` en cada beat con foto/clip: confirma por escrito qué muestra. El check guarda una línea por medio en manifest.media_review y el resultado en manifest.quality.media_relevance.",
         "Plano preferido: texto grande a un lado y foto grande al otro (rough.introv2 o binary.introv2 con text, src, highlight y focus); úsalo unas 3–5 veces en 10 min con imágenes distintas.",
         "El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Usa logo, logoName, logoPos y logoSize en el componente visual; common.logo está obsoleto.",
         "Narrativa amarillista: miniatura C obligatoria con bullet rojo/amarillo que cite un dato dicho en el guion, como «250 PUESTOS».",
@@ -390,6 +394,7 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
         f"  {py} -m src.core.explainer.publishing build {vid}",
         f"  {py} -m src.core.explainer.publishing check {vid}",
         f"  {py} {MEDIA_CLI} search \"<consulta en inglés>\"",
+        f"  {py} {MEDIA_CLI} search-concept \"<sujeto concreto>\" --query \"<consulta inglesa 1>\" --query \"<consulta inglesa 2>\"",
         f"  {py} {MEDIA_CLI} get {vid} \"File:…\" nombre.jpg",
         READING.get(record.get("agent") or "", READING["claude"]),
         "NUNCA ejecutes voice, transcribe, outro ni preview en una producción del pipeline; el host genera voz, transcripción y cierre.",
@@ -489,7 +494,7 @@ class ExplainerProducer:
         self._recovered = True
         fixed = 0
         for rec in self._col().list():
-            if rec.get("state") in {s.value for s in ACTIVE_STATES} and rec["production_id"] not in self._tasks:
+            if rec.get("state") in {s.value for s in ACTIVE_STATES} and rec["production_id"] not in self._tasks and task_can_recover("explainer", rec["production_id"], queued=rec.get("state") == "queued", updated_at=rec.get("updated_at")):
                 agent_log = Path(rec["agent_log_path"]) if rec.get("agent_log_path") else None
                 if agent_log and agent_log.exists() and rec.get("log_path"):
                     with Path(rec["log_path"]).open("a", encoding="utf-8") as log:
@@ -620,7 +625,9 @@ class ExplainerProducer:
         return self.get(production_id)
 
     def _start(self, production_id: str, resume: bool = False) -> None:
-        task = asyncio.create_task(self._run(production_id, resume))
+        task = start_owned_task("explainer", production_id, lambda: self._run(production_id, resume))
+        if task is None:
+            return
         self._tasks[production_id] = task
         task.add_done_callback(lambda _t: self._tasks.pop(production_id, None))
 

@@ -1,43 +1,94 @@
-# Expansión del Imperio japonés · prueba Desktop
+# Expansión del Imperio japonés · prueba de 2 minutos (Desktop)
 
 ## 1. Alcance
 
-Prototipo horizontal para Sandbox, basado en los primeros treinta segundos del lenguaje visual de `nodepolitics/imperio-demo`: atlas físico azul grisáceo, foco carmesí en Japón, haces direccionales, rótulos breves y título condensado. El mapa avanza en sincronía con una narración española breve. No se graba ni publica un video.
+Prototipo para Sandbox, basado en el lenguaje visual de los primeros 30 s de `nodepolitics/imperio-demo` (atlas azul grisáceo,
+sol carmesí sobre Japón, rayos, título condensado), con **video en vez de fotos** de archivo. Del par de referencias
+(*¿Por qué existe un conflicto entre Rusia y Japón?* y *¿Por qué Japón atacó Pearl Harbor?*) se tomó: flechas que muestran hacia
+dónde va cada avance, banderas redondas sobre el país afectado y la coordinación de la voz con el mapa (cada flecha llega en la
+palabra exacta). Cuenta **solo cómo se expandió el Imperio japonés** (1868–1942). Duración: 120,1 s. No se grabó ni se publicó video.
 
-## 2. Punto y enfoque
+## 2. Enfoque
 
-La expansión se cuenta como una secuencia concreta de anexiones, ocupaciones y campañas: Taiwán (1895), Corea (1910), Manchuria (1931–32), guerra en China (desde 1937) y avance por el Sudeste Asiático (1941–42). Los haces indican dirección de las campañas; no equivalen a fronteras ni ocupación completa. En especial, China no se muestra como conquistada.
+Una cronología de anexiones, ocupaciones y campañas. Las flechas indican dirección, no fronteras. **China no se muestra conquistada**:
+solo la costa y ciudades con flechas, y la bandera de la República de China como Estado que resistió. Termina en 1942, en la máxima
+extensión; no cuenta la derrota. Tono neutral: verbos de hechos (anexó, ocupó, atacó), sin adjetivar.
 
 ## 3. Hechos y fuentes
 
-- El Tratado de Shimonoseki, firmado en 1895 tras la guerra sino-japonesa, cedió Taiwán y las islas Pescadores a Japón. Fuente: [Taiwan Archives Online, Academia Sinica](https://archives.ith.sinica.edu.tw/collections_con2_en.php?no=175).
-- Japón formalizó la anexión de Corea en 1910. Fuente primaria: [FRUS 1910, tratado de anexión de Corea](https://history.state.gov/historicaldocuments/frus1910/d705).
-- El incidente de Mukden, el 18 de septiembre de 1931, precedió a la invasión japonesa de Manchuria; en 1932 se declaró Manchukuo, controlado por el ejército japonés. Fuente: [U.S. Office of the Historian, Mukden Incident](https://history.state.gov/milestones/1921-1936/mukden-incident).
-- Los choques del puente Marco Polo en julio de 1937 dieron paso a una guerra a gran escala entre China y Japón. Fuente: [U.S. Office of the Historian, Japan, China, the United States and the Road to Pearl Harbor](https://history.state.gov/milestones/1937-1945/pearl-harbor).
-- Japón lanzó una serie de ataques por el Pacífico y el Sudeste Asiático en 1941–42. Fuente: [Imperial War Museums, War and the British Commonwealth](https://www.iwm.org.uk/file-download/download/public/3421).
+Verificado en la fuente durante esta sesión (texto leído):
 
-## 4. Guion
+- Tratado de Portsmouth, 1905: Rusia cede el sur de Sajalín y se afirma la presencia japonesa en Corea y el sur de Manchuria. [Office of the Historian, Portsmouth Treaty](https://history.state.gov/milestones/1899-1913/portsmouth-treaty)
+- 1940–41: acuerdo con la Francia de Vichy que permite a Japón entrar en Indochina y empezar su avance al sur; EE. UU. responde con embargo. [Office of the Historian, Road to Pearl Harbor](https://history.state.gov/milestones/1937-1945/pearl-harbor)
 
-La expansión japonesa avanzó mediante anexiones, ocupaciones y guerras. En mil ochocientos noventa y cinco, el tratado de Shimonoseki cedió Taiwán a Japón. En mil novecientos diez, Japón anexó Corea. En mil novecientos treinta y uno, su ejército ocupó Manchuria; al año siguiente, instauró Manchukuo bajo control japonés. Desde mil novecientos treinta y siete, la guerra se extendió por China, pero Japón nunca conquistó todo el país. En mil novecientos cuarenta y uno y cuarenta y dos, sus fuerzas avanzaron por Malaya, Filipinas e Indias Orientales Neerlandesas.
+Heredados del plan anterior (fuentes comprobadas en línea, contenido no releído hoy):
+
+- Shimonoseki, 1895: cesión de Taiwán y las Pescadores. [Taiwan Archives Online](https://archives.ith.sinica.edu.tw/collections_con2_en.php?no=175)
+- Anexión de Corea, 1910. [FRUS 1910, tratado](https://history.state.gov/historicaldocuments/frus1910/d705)
+- Incidente de Mukden (1931) y Manchukuo (1932). [Office of the Historian, Mukden Incident](https://history.state.gov/milestones/1921-1936/mukden-incident)
+- Puente Marco Polo (1937) y guerra a gran escala con China: misma página «Road to Pearl Harbor».
+- Avances de 1941–42 por el Pacífico y el Sudeste Asiático. [Imperial War Museums](https://www.iwm.org.uk/file-download/download/public/3421) (el sitio bloquea descargas automáticas: **releer a mano**).
+
+**Por verificar con fuente antes de producción** (hechos del guion que se dan por conocidos pero sin cita en esta sesión):
+restauración Meiji en 1868 y modernización militar; victoria sobre China en 1894–95; ocupación de las islas alemanas del Pacífico en
+la Primera Guerra Mundial y mandato de la Sociedad de Naciones; caída de Guam y Wake en diciembre de 1941; Singapur, Indias Orientales
+Neerlandesas y Birmania «en pocos meses» de 1942; el petróleo, el caucho y el estaño como objetivo del avance al sur; máxima extensión
+a mediados de 1942, «de las islas Aleutianas a Nueva Guinea».
+
+## 4. Guion (assets/script.json)
+
+13 segmentos, 254 palabras, voz Charon, 135 ppm, WER ≈ 0,008. La voz tarda 112,9 s; con la entrada y la cola de cierre el audio dura 120,1 s.
 
 ## 5. Dirección visual
 
-- Inicio: plano general hacia Japón y sol carmesí; una marca `🇯🇵 Japón` prueba si la vista del navegador representa correctamente la bandera emoji.
-- 1895–1910: haces desde Japón a Taiwán y Corea, revelados al nombrar cada región.
-- 1931–37: haces a Manchuria y al norte de China; las zonas se rotulan como campañas, sin rayar la silueta completa de China.
-- 1941–42: abanico de rutas hacia Malaya, Filipinas e Indias Orientales Neerlandesas.
-- Se reutilizan `imperio.title`, `imperio.map`, `imperio.expansion` e `imperio.word`. No se añade ni modifica código del motor.
+**Cámara (2026-11-01):** conserva sus movimientos (alejamiento de la apertura, empuje del plano de archivo, vuelos entre destinos). Lo que se
+corrigió fueron los **tirones y pausas** que tenían: causas en el motor, corregidas en `engine/kit.js` y `designs/imperio/components/_imperio.js`
+(ver `designs/imperio/DESIGN.md` § «Fluidez de la reproducción»).
 
-## 6. Medios
+- **0–10 s · `imperio.title`**: atlas que se aleja, sol, rayos al sur, kanji 日本帝国 con «IMPERIO JAPONÉS», título «EXPANSIÓN JAPONESA».
+- **10–20 s · `imperio.footage`**: atlas en gris y **video de la bandera de Japón** fundido en multiplicar; sobre él `imperio.word` «RESTAURACIÓN MEIJI · 1868».
+- **20–120 s · `imperio.campaign`** (un solo plano continuo): la cámara vuela entre encuadres (`cameras`); del sol salen flechas gruesas
+  que llegan en la palabra de la voz (`time: "@palabra"`); al llegar, el territorio se marca en carmesí y aparece su **bandera en un círculo**
+  con nombre; el año queda de sello arriba a la izquierda. Tres tramos de video de archivo (`plates`, con empuje lento, recortados sin franjas negras y a 1280 px) se funden con el atlas.
+- Cierre con `imperio.word` «MÁXIMA EXTENSIÓN · 1942» y el cierre automático del diseño.
 
-- Una foto de dominio público muestra soldados del Ejército Imperial japonés saliendo de la estación de Okayama hacia el frente de Manchuria tras el Incidente de Mukden. El crédito y la fuente están anotados en `assets/media/CREDITS.md`; el plano se integra con `imperio.archive`.
+Banderas (SVG locales, simplificadas, del Estado de cada etapa): Qing (Taiwán 1895), Rusia (Sajalín 1905), Imperio de Corea (1910),
+Imperio alemán (islas 1914), República de China (Manchuria 1931 y China 1937), Manchukuo (1932), Francia (Indochina), EE. UU. (Pearl Harbor, Guam),
+Reino Unido (Malaya, Birmania), Mancomunidad de Filipinas (Filipinas) y Países Bajos (Indias Orientales).
 
-## 7. Verificación
+## 6. Componentes propios (assets/components/japon.js)
 
-- `kit.py voice`: narración Charon; 121 ppm, WER aproximado 0,023, sin palabras faltantes. La diferencia detectada es solo normalización de “mil novecientos” frente a las fechas en cifra.
-- `kit.py transcribe`: 67 palabras con tiempos reales, 50,24 s de pista total. El cierre del canal es visual/silencioso; no hay una toma vocal de outro disponible.
-- `kit.py check`: OK, sin errores. Avisos conservados: título inicial de 11,8 s (para seguir la apertura del demo) y cero componentes `common.lyric` (las fechas y regiones se muestran en el atlas).
-- Sandbox: comprobados playback y seek; a los 16 s se ven las banderas locales de Corea y Japón junto al subtítulo.
-- No se renderizó ni publicó video.
+| componente | usos | qué hace |
+|---|---|---|
+| `imperio.campaign` | 1 | plano continuo de mapa: cámara con vuelos, flechas sincronizadas, territorios, banderas, sello de año, tramos de video |
+| `imperio.footage` | 1 | como `imperio.archive` pero con video mudo en blanco y negro |
 
-Las banderas son SVG locales, fechadas para el actor o administración de cada etapa: bandera Qing y japonesa (1895), coreana imperial y japonesa (1910), Manchukuo (1932), República de China (1937), y británica, de la Mancomunidad Filipina y neerlandesa (1941–42). La tarjeta aparece según `audio.currentTime`, con tiempos tomados de `lyrics.json`; comprobar legibilidad y sincronía en Sandbox. El diseño `imperio` no tiene componente gráfico de banderas; su parámetro `flag` solo define colores del sol y los rayos.
+## 7. Medios
+
+4 clips en `assets/media` (ver `work/results/clips.md` y `CREDITS.md`) y 11 banderas en `assets/flags`.
+**Faltan** clips de la Armada Imperial, de Pearl Harbor y de Malaya en 1941–42 con licencia libre. Los de Java (1942–43) se rotulan como tales.
+
+## 8. Verificación
+
+- `kit.py voice`: Charon, 135 ppm, sin palabras faltantes. `kit.py transcribe`: 220 palabras con tiempos reales, 120,1 s.
+- `kit.py check`: OK, 0 errores. Avisos: título inicial de 10,2 s (sigue el demo), 0 `common.lyric` (el mapa lleva la información) y el ancla «máxima» salta 170 palabras (es el cierre).
+- `kit.py components`: 2 componentes registrados, 0 errores.
+- Revisión visual en 16:9 y 9:16 con capturas en cada llegada de flecha (`shoot.py`, `kit.py sheet`): banderas correctas, etiquetas dentro del cuadro.
+- No se renderizó ni publicó video. No se probó la reproducción en vivo en un navegador de escritorio (solo capturas con seek).
+
+## 9. Qué falta para producción
+
+Verificar los hechos de §3 «por verificar»; conseguir metraje de la Armada y de 1941–42; decidir si `imperio.campaign` se promueve al diseño
+`imperio` (`designs/imperio/components/extra.js`); revisar la cola de cierre con voz del canal (`kit.py outro`); render opcional.
+
+## 10. Decisiones y límites
+
+- `imperio.campaign` pasó por 4 pasadas del control (la guía pide máximo 2): se rediseñó de un beat por destino a un plano continuo por la política de repetición.
+- Polígonos de Manchuria, Sajalín sur e islas del Pacífico son aproximaciones de trabajo, no catastrales.
+- El video de la bandera es un stock moderno (Pixabay), no metraje histórico.
+- La versión anterior (47 s) quedó en `work/v1/`. Los clips originales sin recortar, en `work/media-orig/`.
+- Fluidez: se midió en reproducción real (`tools/perf_check.py` y perfiles de CPU). En esta plantilla, 62 s de reproducción pasaron de 3 pausas
+  (342, 408 y 568 ms) a 1 de 132 ms, y la irregularidad del tiempo de 0,40 a 0,01–0,06. Medido en un servidor sin GPU.
+- Codex `gpt-6.1-sol` midió el movimiento de la cámara en una versión intermedia con cámara fija (SIFT + RANSAC): `work/archivo-camara-fija/`.
+- Los clips de archivo se redujeron (≤ 1280 px) y se recortaron sin franjas negras; los originales están en `work/media-orig/`. Copias del motor
+  anterior en `work/engine-backup/` (`kit.js.orig`, `_imperio.js.orig`).

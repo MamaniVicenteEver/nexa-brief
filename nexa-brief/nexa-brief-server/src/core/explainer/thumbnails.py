@@ -18,9 +18,12 @@ import hashlib
 import json
 import sys
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from urllib.parse import unquote, urlsplit
 
+from src.adapters.data.file_locks import AsyncFileLock
 from src.config.settings import BASE_DIR
-from src.core.explainer.catalog import KIT_DIR, ExplainerVideo
+from src.core.explainer.catalog import KIT_DIR, TEMPLATES_DIR, ExplainerVideo
 from src.core.explainer.publishing import service
 from src.core.explainer.publishing.opening import (
     CHOSEN_TO_OPTION,
@@ -44,15 +47,36 @@ class ThumbnailError(ValueError):
     """La miniatura no se puede generar o elegir para este video."""
 
 
-def thumbnail_file(video: ExplainerVideo, option: Option | None = None) -> Path:
-    return video.path / "render" / f"thumbnail-{option or chosen_option(video)}.jpg"
+def thumbnail_file(video: ExplainerVideo, option: Option | None = None, orientation: str = "16x9") -> Path:
+    if orientation not in ("16x9", "9x16"):
+        raise ThumbnailError(f"orientación inválida: {orientation}")
+    suffix = "-9x16" if orientation == "9x16" else ""
+    return video.path / "render" / f"thumbnail-{option or chosen_option(video)}{suffix}.jpg"
 
 
 def _capture_digest(video: ExplainerVideo, spec: dict) -> str:
-    """Invalida capturas C cuando cambia el componente o la identidad del diseño."""
+    """Invalidate captures when their text, local media or component changes."""
     digest = hashlib.sha256(json.dumps(spec, sort_keys=True, ensure_ascii=False).encode())
-    for path in (KIT_DIR / "designs/common/tabloid.js", KIT_DIR / "designs" / video.design / "design.json"):
-        digest.update(path.read_bytes())
+    design_file = KIT_DIR / "designs" / video.design / "design.json"
+    design = json.loads(design_file.read_text(encoding="utf-8"))
+    paths = [KIT_DIR / "designs/common/tabloid.js", design_file, TOOL,
+             KIT_DIR / "engine/kit.js", KIT_DIR / "showcase/stage.html"]
+    paths.extend(KIT_DIR / script for script in design.get("scripts", []))
+    for path in paths:
+        if path.is_file() and path.resolve().is_relative_to(KIT_DIR.resolve()):
+            digest.update(path.read_bytes())
+    for key in ("src", "srcAfter", "poster"):
+        source = spec.get("params", {}).get(key)
+        if not isinstance(source, str) or not source:
+            continue
+        parsed = urlsplit(source)
+        if parsed.scheme or parsed.netloc:
+            continue
+        relative = unquote(parsed.path)
+        path = TEMPLATES_DIR / relative.lstrip("/") if relative.startswith("/") else video.path / relative
+        if path.resolve().is_relative_to(TEMPLATES_DIR.resolve()) and path.is_file():
+            stat = path.stat()
+            digest.update(f"{source}:{stat.st_mtime_ns}:{stat.st_size}".encode())
     return digest.hexdigest()
 
 
@@ -60,8 +84,6 @@ def capture_current(video: ExplainerVideo, option: Option, spec: dict) -> bool:
     path = thumbnail_file(video, option)
     if not path.is_file():
         return False
-    if option != "C":
-        return True
     stamp = path.with_suffix(".sha256")
     digest = _capture_digest(video, spec)
     return stamp.is_file() and stamp.read_text(encoding="utf-8").strip() == digest
@@ -127,30 +149,45 @@ def choose(video: ExplainerVideo, option: Option) -> None:
     (video.path / PUBLISH_FILE).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-async def render(video: ExplainerVideo, options: tuple[Option, ...] = OPTIONS) -> dict[str, Path]:
+async def render(
+    video: ExplainerVideo, options: tuple[Option, ...] = OPTIONS, *, orientation: str = "16x9",
+    only_missing: bool = False,
+) -> dict[str, Path]:
     """Captura las miniaturas pedidas (las que el video puede tener) → {opción: archivo}."""
-    if "C" in options:
-        _validate_c(video)
-    specs = intro_specs(video)
-    done: dict[str, Path] = {}
-    for option in options:
-        spec = specs.get(option)
-        if spec is None:
-            continue
-        out = thumbnail_file(video, option)
-        proc = await asyncio.create_subprocess_exec(
-            sys.executable, str(TOOL), str(out), "--design", video.design, "--component", spec["component"],
-            "--params", json.dumps(spec["params"], ensure_ascii=False),
-            cwd=str(BASE_DIR), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT,
-        )
-        log, _ = await proc.communicate()
-        if proc.returncode or not out.exists():
-            raise ThumbnailError(f"no se pudo capturar la miniatura {option}: {log.decode('utf-8', 'replace')[-400:]}")
-        if option == "C":
+    async with AsyncFileLock(video.path / "render" / ".thumbnails.lock"):
+        if "C" in options:
+            _validate_c(video)
+        specs = intro_specs(video)
+        done: dict[str, Path] = {}
+        for option in options:
+            spec = specs.get(option)
+            if spec is None:
+                continue
+            out = thumbnail_file(video, option, orientation)
             digest = _capture_digest(video, spec)
-            out.with_suffix(".sha256").write_text(digest, encoding="utf-8")
-        done[option] = out
-    return done
+            stamp = out.with_suffix(".sha256")
+            if only_missing and out.is_file() and stamp.is_file() and stamp.read_text().strip() == digest:
+                done[option] = out
+                continue
+            with TemporaryDirectory(prefix=".thumbnail-", dir=out.parent) as temporary:
+                pending = Path(temporary) / out.name
+                proc = await asyncio.create_subprocess_exec(
+                    sys.executable, str(TOOL), str(pending), "--design", video.design, "--component", spec["component"],
+                    "--params", json.dumps(spec["params"], ensure_ascii=False),
+                    "--orientation", orientation,
+                    cwd=str(BASE_DIR), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT,
+                )
+                log, _ = await proc.communicate()
+                if proc.returncode or not pending.is_file() or pending.stat().st_size == 0:
+                    raise ThumbnailError(f"no se pudo capturar la miniatura {option}: {log.decode('utf-8', 'replace')[-400:]}")
+                pending.replace(out)
+                if pending.with_suffix(".webp").is_file():
+                    pending.with_suffix(".webp").replace(out.with_suffix(".webp"))
+                pending_stamp = Path(temporary) / stamp.name
+                pending_stamp.write_text(digest, encoding="utf-8")
+                pending_stamp.replace(stamp)
+            done[option] = out
+        return done
 
 
 async def ensure(video: ExplainerVideo, option: Option) -> Path:

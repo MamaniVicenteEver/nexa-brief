@@ -1,3 +1,8 @@
+import type { ImagePostFormat } from "./image-formats";
+
+export type { ImagePostFormat } from "./image-formats";
+
+export type ImageLevel = "basico" | "medio" | "alto" | "negro";
 export type ImageTemplateId = "daily_fact" | "five_slides";
 export type ImagePostKind = "image" | "carousel";
 export type ImagePostStatus =
@@ -88,6 +93,7 @@ export interface ImageCopy {
 
 export interface ImageSlide {
   slideId: string;
+  roleTag?: string | null;
   order: number;
   assetId: string;
   altTextFacebook: string;
@@ -147,9 +153,13 @@ export interface ImagePost {
   sourceVideoId: string;
   planId: string;
   planHash: string;
+  format?: ImagePostFormat;
   kind: ImagePostKind;
   templateId: ImageTemplateId;
   strategyId: string | null;
+  level?: ImageLevel | null;
+  narrative?: "hilo" | "factual" | null;
+  trace?: ImagePostTrace | null;
   styleId: string;
   title: string;
   copy: ImageCopy;
@@ -186,7 +196,7 @@ export interface ImagePlan {
   style_id: string;
   style_version: string;
   template_id: ImageTemplateId;
-  format: "4:5";
+  format: ImagePostFormat;
   slides: PlanSlide[];
   seed: number;
   renderer_version: string;
@@ -229,6 +239,7 @@ export interface PublicationSummary {
   categoryName: string;
   topic: string;
   title: string;
+  format?: ImagePostFormat;
   kind: GalleryKind;
   templateId: string;
   strategyId: string | null;
@@ -239,6 +250,7 @@ export interface PublicationSummary {
   coverUrl: string | null;
   slides: Array<{
     slideId: string;
+    roleTag?: string | null;
     assetId: string;
     order: number;
     previewUrl: string | null;
@@ -304,6 +316,9 @@ export interface PublicationTechnical {
 }
 
 export interface PublicationDetail extends PublicationSummary {
+  postId?: string | null;
+  revision?: number;
+  trace?: ImagePostTrace | null;
   sourceVideoId: string | null;
   sourceVideoUrl: string | null;
   sources: Array<{ title: string; url: string; locator: string }>;
@@ -340,7 +355,10 @@ export interface CreatePlanInput {
   source_video_id: string;
   template_id: ImageTemplateId;
   strategy_id?: string;
+  level?: ImageLevel;
+  narrative?: "hilo" | "factual";
   style_id: string;
+  format?: ImagePostFormat;
   seed?: number;
 }
 
@@ -349,4 +367,69 @@ export interface DeliveryTargetInput {
   account_alias: string;
   placement: Placement;
   scheduled_at?: string;
+}
+
+export interface TraceTimelineEntry {
+  at: string;
+  step: string;
+  label: string;
+  kind: string;
+  status?: string;
+  reason?: string;
+  model?: string;
+  provider?: string;
+  seconds?: number | null;
+  attempt?: number;
+  fallback?: boolean;
+  checker?: string;
+  rejected_fields?: Record<string, string>;
+  applied_changes?: Array<{ path: string; before: string; after: string; reason: string }>;
+  review?: { reason?: string; approved?: boolean };
+  searches?: Array<{ provider: string; query: string; count: number; error?: string }>;
+  judgments?: Array<{ id?: string; yes?: boolean; reason?: string; error?: string }>;
+  downloads?: Array<{ id: string; reason: string }>;
+  [key: string]: unknown;
+}
+
+export interface ImagePostTrace {
+  schema_version: number;
+  identity: {
+    post_id: string;
+    strategy: string;
+    narrative?: string | null;
+    level: ImageLevel | ImageLevel[] | null;
+    slides: number;
+    brand?: string;
+    primary_source?: string | null;
+    support_sources?: string[];
+  };
+  status: string;
+  started_at: string;
+  finished_at: string;
+  duration_seconds: number;
+  error: string | null;
+  model_calls: Array<Record<string, unknown>>;
+  timeline: TraceTimelineEntry[];
+  totals: {
+    calls: number;
+    writer_rounds: number;
+    repairs: number;
+    corrections: number;
+    tokens: {
+      input_tokens: number;
+      cached_input_tokens: number;
+      output_tokens: number;
+      total_tokens: number;
+    };
+    unknown_usage_calls: number;
+    by_model: Array<{
+      provider: string;
+      model: string;
+      calls: number;
+      total_tokens: number;
+      cost_usd: number;
+      cost_label: string;
+    }>;
+    cost: { usd: number; currency: string; complete: boolean; label: string };
+  };
 }

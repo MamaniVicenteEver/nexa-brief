@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
+from pathlib import Path
 import re
 import time
 from typing import Any
@@ -34,7 +36,7 @@ class TikTokServiceClient:
             # Browser checks and Studio refresh can exceed 30 seconds. Bound
             # every phase, including the wait for the single browser worker.
             async with httpx.AsyncClient(
-                base_url=self.url, headers={'X-Nexa-Tiktok-Key': self.key},
+                base_url=self.url, headers={'X-Nexa-Tiktok-Key': self.key, **({'X-Nexa-Profile': settings.storage_profile_id} if settings.storage_profile_dir else {})},
                 timeout=httpx.Timeout(120, connect=5, pool=5), transport=self.transport,
             ) as client:
                 response = await client.request(method, path, **kwargs)
@@ -57,6 +59,33 @@ class TikTokServiceClient:
         if not isinstance(data, (dict, list)):
             raise TikTokServiceError('invalid_response')
         return data
+
+    async def stage_media(self, path: Path) -> str:
+        """Transfer files to the single browser service instead of sharing host paths."""
+        path = Path(path).resolve()
+        if not settings.tiktok_service_upload_media:
+            return str(path)
+        if path.suffix.lower() not in {".mp4", ".mov", ".webm", ".jpg", ".jpeg", ".png"}:
+            raise PublisherError("Formato de archivo no admitido por el servicio TikTok.")
+        def digest():
+            checksum = hashlib.sha256()
+            with path.open("rb") as source:
+                for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                    checksum.update(chunk)
+            return checksum.hexdigest()
+        try:
+            checksum = await asyncio.to_thread(digest)
+            async def chunks():
+                with path.open("rb") as source:
+                    while chunk := await asyncio.to_thread(source.read, 1024 * 1024):
+                        yield chunk
+            result = await self.request("PUT", f"/v1/media/{checksum}", params={"suffix": path.suffix.lower()}, content=chunks())
+        except OSError as exc:
+            raise PublisherError("No se pudo leer el archivo para TikTok.") from exc
+        destination = result.get("path") if isinstance(result, dict) else None
+        if not isinstance(destination, str) or not Path(destination).is_absolute():
+            raise TikTokServiceError("invalid_media_response")
+        return destination
 
     async def wait_job(self, job: dict[str, Any], timeout: float = 900) -> dict[str, Any]:
         deadline = time.monotonic() + timeout

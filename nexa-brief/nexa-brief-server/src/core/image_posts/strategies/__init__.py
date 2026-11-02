@@ -6,13 +6,14 @@ sumarla a `_REGISTRY`. Nada más cambia: el servicio, la API y la web leen este 
 from __future__ import annotations
 
 from . import copywriter
+from .amarillista import STRATEGY as AMARILLISTA
 from .base import Copy, Fact, Strategy, StrategyContext, extract_stat, trim_words
 from .cifra_que_frena import STRATEGY as CIFRA_QUE_FRENA
 from .hilo_guardable import STRATEGY as HILO_GUARDABLE
 from .prueba_a_la_vista import STRATEGY as PRUEBA_A_LA_VISTA
 
-_REGISTRY: dict[str, Strategy] = {s.id: s for s in (CIFRA_QUE_FRENA, HILO_GUARDABLE, PRUEBA_A_LA_VISTA)}
-DEFAULT_BY_TEMPLATE = {"daily_fact": CIFRA_QUE_FRENA.id, "five_slides": HILO_GUARDABLE.id}
+_REGISTRY: dict[str, Strategy] = {s.id: s for s in (CIFRA_QUE_FRENA, HILO_GUARDABLE, PRUEBA_A_LA_VISTA, AMARILLISTA)}
+DEFAULT_BY_TEMPLATE = {"daily_fact": CIFRA_QUE_FRENA.id, "five_slides": AMARILLISTA.id}
 
 
 class UnknownStrategy(ValueError):
@@ -23,7 +24,7 @@ def list_strategies() -> list[Strategy]:
     return list(_REGISTRY.values())
 
 
-def resolve(strategy_id: str | None, template_id: str) -> Strategy:
+def resolve(strategy_id: str | None = None, template_id: str = "five_slides") -> Strategy:
     """Estrategia pedida, o la predeterminada del formato."""
     chosen = _REGISTRY.get(strategy_id or DEFAULT_BY_TEMPLATE.get(template_id, ""))
     if chosen is None:

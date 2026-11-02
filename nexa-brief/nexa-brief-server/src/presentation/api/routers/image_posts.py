@@ -15,7 +15,7 @@ from src.adapters.data.licensed_reel_music import LicensedReelMusic
 from src.core.image_posts.models import PublicationRecord
 from src.core.image_posts.service import ImagePostError, ImagePostService
 from src.presentation.api.schemas.image_posts_schema import (
-    CreateDeliveriesRequest, ImagePostPatchRequest, PlanCreateRequest,
+    CreateDeliveriesRequest, ImagePostPatchRequest, ImageFormatExportRequest, PlanCreateRequest,
     PlanUpdateRequest, ReconcileRequest, RenderRequest, ReviewRequest,
 )
 from src.presentation.api.image_post_access import (
@@ -65,11 +65,12 @@ def _record(service: ImagePostService, identifier: str) -> PublicationRecord | N
     direct = service.get(identifier)
     if direct:
         return direct
+    matches = []
     for item in service._all_summaries():
         record = service.get(item["publication_id"])
         if record and (record.post_id == identifier or record.technical.composition_plan.plan_id == identifier):
-            return record
-    return None
+            matches.append(record)
+    return max(matches, key=lambda row: (row.revision, row.created_at)) if matches else None
 
 
 def _post_json(record: PublicationRecord) -> dict[str, Any]:
@@ -80,7 +81,7 @@ def _post_json(record: PublicationRecord) -> dict[str, Any]:
     for slide in result.get("technical", {}).get("slides", []):
         asset_id = slide.get("asset_id")
         slide.pop("storage_key", None)
-        slide["preview_url"] = f"/api/v1/image-posts/{record.post_id}/assets/{asset_id}"
+        slide["preview_url"] = f"/api/v1/image-posts/{record.publication_id}/assets/{asset_id}"
     return result
 
 
@@ -242,9 +243,12 @@ async def list_image_posts(
             limit=limit, cursor=cursor,
         )
         items = []
+        from src.core.image_posts.artwork import latest_post_revision
         for summary in page.items:
             record = get_image_post_service().get(summary["publication_id"])
             if record:
+                if latest_post_revision(get_image_post_service(), record).publication_id != record.publication_id:
+                    continue
                 try:
                     _authorize_record(identity, record)
                 except HTTPException as exc:
@@ -265,7 +269,44 @@ async def get_image_post(
     if record is None:
         raise HTTPException(status_code=404, detail="Image post not found")
     _authorize_record(identity, record)
-    return _post_json(record)
+    return {**_post_json(record), "trace": get_image_post_service().get_trace(record)}
+
+
+@router.get("/{post_id}/preview")
+async def preview_image_post(
+    post_id: str,
+    format: str = "9:16",
+    slide_id: str | None = None,
+    identity: ImageSession = Depends(require_image_session),
+) -> dict[str, Any]:
+    service = get_image_post_service()
+    record = _record(service, post_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Image post not found")
+    _authorize_record(identity, record)
+    try:
+        from src.core.image_posts.artwork import ImagePostArtwork
+        return await ImagePostArtwork(service).preview(record, format, slide_id)
+    except Exception as exc:
+        _raise(exc)
+
+
+@router.post("/{post_id}/format")
+async def export_image_post_format(
+    post_id: str, body: ImageFormatExportRequest,
+    identity: ImageSession = Depends(require_image_session),
+) -> dict[str, Any]:
+    service = get_image_post_service()
+    record = _record(service, post_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Image post not found")
+    _authorize_record(identity, record)
+    try:
+        from src.core.image_posts.artwork import ImagePostArtwork
+        saved = await ImagePostArtwork(service).export(record, body.revision, body.format)
+        return _post_json(saved)
+    except Exception as exc:
+        _raise(exc)
 
 
 @router.patch("/{post_id}")

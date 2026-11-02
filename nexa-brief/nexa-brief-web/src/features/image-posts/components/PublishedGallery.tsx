@@ -128,9 +128,11 @@ function GalleryCard({
 export function PublishedGallery({
   categories,
   initialCategoryId,
+  onOpenEditor,
 }: {
   categories: CategoryNode[];
   initialCategoryId: string;
+  onOpenEditor?: () => void;
 }) {
   const t = useTranslations("imagePosts");
   const [filters, setFilters] = useState<GalleryFilters>({
@@ -344,6 +346,18 @@ export function PublishedGallery({
           <Image className="mx-auto size-7 text-nb-mute/50" aria-hidden />
           <p className="mt-3 text-sm font-bold text-nb-ink">{t("gallery.emptyTitle")}</p>
           <p className="mt-1 text-xs text-nb-mute">{t("gallery.emptyDescription")}</p>
+          <p className="mt-2 text-xs text-nb-ink-soft">
+            Los posts pendientes de revisión están en {t("section.postsTab")}.
+          </p>
+          {onOpenEditor && (
+            <button
+              type="button"
+              onClick={onOpenEditor}
+              className="nb-btn-secondary mt-4 rounded-full px-4 py-2 text-xs font-bold"
+            >
+              {t("section.postsTab")}
+            </button>
+          )}
         </div>
       )}
 

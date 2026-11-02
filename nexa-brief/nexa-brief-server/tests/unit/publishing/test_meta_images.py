@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from functools import lru_cache
 from datetime import datetime, timezone
 from io import BytesIO
 from pathlib import Path
@@ -9,7 +10,7 @@ from urllib.parse import parse_qs, parse_qsl, urlparse
 
 import httpx
 import pytest
-from PIL import Image, ImageDraw
+from PIL import Image, ImageCms, ImageDraw
 
 from src.adapters.publishing.facebook_image_adapter import FacebookImageAdapter
 from src.adapters.publishing.image_reel_adapter import ImageReelAdapter
@@ -42,8 +43,13 @@ class FakeMediaStorage:
         return f"https://media.example/{key}?expires={ttl}"
 
 
+@lru_cache
 def _jpeg() -> bytes:
-    return b"\xff\xd8\xff" + b"synthetic-jpeg"
+    image = Image.new("RGB", (1080, 1350), "#181818")
+    output = BytesIO()
+    profile = ImageCms.ImageCmsProfile(ImageCms.createProfile("sRGB")).tobytes()
+    image.save(output, format="JPEG", quality=92, icc_profile=profile)
+    return output.getvalue()
 
 
 def _pattern_jpeg(*, inverted: bool = False) -> bytes:
@@ -222,8 +228,9 @@ async def test_instagram_manual_reconciliation_confirms_account_feed_and_exact_m
     assert result.remote["post_id"] == "media-1"
 
 
+@pytest.mark.parametrize("slide_count", [2, 5, 6, 8, 20])
 @pytest.mark.asyncio
-async def test_facebook_five_photos_caption_permalink_and_comment_permission() -> None:
+async def test_facebook_five_photos_caption_permalink_and_comment_permission(slide_count: int) -> None:
     requests: list[tuple[str, str, bytes]] = []
     photo_counter = 0
 
@@ -236,7 +243,7 @@ async def test_facebook_five_photos_caption_permalink_and_comment_permission() -
             return httpx.Response(200, json={"id": f"photo-{photo_counter}"})
         if request.method == "POST" and request.url.path.endswith("/page-1/feed"):
             assert b"attached_media%5B0%5D" in body
-            assert b"photo-1" in body and b"photo-5" in body
+            assert b"photo-1" in body and f"photo-{slide_count}".encode() in body
             return httpx.Response(200, json={"id": "post-1"})
         if request.method == "GET" and request.url.path.endswith("/post-1"):
             return httpx.Response(200, json={"id": "post-1", "permalink_url": "https://facebook.test/posts/1"})
@@ -244,7 +251,7 @@ async def test_facebook_five_photos_caption_permalink_and_comment_permission() -
             return httpx.Response(400, json={"error": {"code": 200, "message": "Permission denied"}})
         raise AssertionError(f"Unexpected Graph request: {request.method} {request.url.path}")
 
-    media = FakeMediaStorage({f"slide-{index}.jpg": _jpeg() for index in range(1, 6)})
+    media = FakeMediaStorage({f"slide-{index}.jpg": _jpeg() for index in range(1, slide_count + 1)})
     adapter = FacebookImageAdapter(
         FakeTokens(),
         media,
@@ -257,7 +264,7 @@ async def test_facebook_five_photos_caption_permalink_and_comment_permission() -
         "placement": "carousel",
         "caption": "Cinco láminas verificadas",
         "first_comment": "¿Qué te pareció?",
-        "slides": [_asset(index, platform="facebook") for index in range(1, 6)],
+        "slides": [_asset(index, platform="facebook") for index in range(1, slide_count + 1)],
     }
     saved: list[dict] = []
 
@@ -267,17 +274,18 @@ async def test_facebook_five_photos_caption_permalink_and_comment_permission() -
     result = await adapter.publish_image_delivery(spec, on_remote_update=persist)
 
     assert result.status == "published", result.last_error
-    assert result.remote["photo_ids"] == [f"photo-{i}" for i in range(1, 6)]
+    assert result.remote["photo_ids"] == [f"photo-{i}" for i in range(1, slide_count + 1)]
     assert result.remote["post_id"] == "post-1"
     assert result.remote["permalink"] == "https://facebook.test/posts/1"
     assert result.comment_status == "skipped_permission"
     assert result.comment_message == "permiso pendiente"
-    assert len(saved) >= 6
+    assert len(saved) >= slide_count + 1
     assert all(b"alt_text_custom" in body for method, path, body in requests if path.endswith("/photos"))
 
 
+@pytest.mark.parametrize("slide_count", [2, 5, 6, 8, 20])
 @pytest.mark.asyncio
-async def test_instagram_carousel_persists_containers_before_publish_and_reads_quota() -> None:
+async def test_instagram_carousel_persists_containers_before_publish_and_reads_quota(slide_count: int) -> None:
     requests: list[tuple[str, str, bytes]] = []
     child_counter = 0
 
@@ -288,13 +296,13 @@ async def test_instagram_carousel_persists_containers_before_publish_and_reads_q
         if request.method == "POST" and request.url.path.endswith("/ig-1/media"):
             form = parse_qs(body.decode())
             if form.get("media_type") == ["CAROUSEL"]:
-                assert form.get("children") == ["child-1,child-2,child-3,child-4,child-5"]
+                assert form.get("children") == [",".join(f"child-{i}" for i in range(1, slide_count + 1))]
                 return httpx.Response(200, json={"id": "parent-1"})
             child_counter += 1
             assert form.get("is_carousel_item") == ["true"]
             assert form.get("alt_text_custom") == [f"Lámina {child_counter}"]
             return httpx.Response(200, json={"id": f"child-{child_counter}"})
-        if request.method == "GET" and any(request.url.path.endswith(f"/child-{i}") for i in range(1, 6)):
+        if request.method == "GET" and any(request.url.path.endswith(f"/child-{i}") for i in range(1, slide_count + 1)):
             return httpx.Response(200, json={"status_code": "FINISHED"})
         if request.method == "GET" and request.url.path.endswith("/parent-1"):
             return httpx.Response(200, json={"status_code": "FINISHED"})
@@ -312,7 +320,7 @@ async def test_instagram_carousel_persists_containers_before_publish_and_reads_q
 
     adapter = InstagramImageAdapter(
         FakeTokens(),
-        FakeMediaStorage({f"slide-{index}.jpg": _jpeg() for index in range(1, 6)}),
+        FakeMediaStorage({f"slide-{index}.jpg": _jpeg() for index in range(1, slide_count + 1)}),
         client_factory=lambda **kwargs: httpx.AsyncClient(transport=httpx.MockTransport(handler), **kwargs),
         poll_interval_seconds=0,
     )
@@ -323,7 +331,7 @@ async def test_instagram_carousel_persists_containers_before_publish_and_reads_q
         "placement": "carousel",
         "caption": "Carrusel con fuentes",
         "first_comment": "¿Lo sabías?",
-        "slides": [_asset(index) for index in range(1, 6)],
+        "slides": [_asset(index) for index in range(1, slide_count + 1)],
     }
     saved: list[dict] = []
 
@@ -332,7 +340,7 @@ async def test_instagram_carousel_persists_containers_before_publish_and_reads_q
 
     result = await adapter.publish_image_delivery(spec, on_remote_update=persist)
     assert result.status == "published"
-    assert result.remote["child_container_ids"] == [f"child-{i}" for i in range(1, 6)]
+    assert result.remote["child_container_ids"] == [f"child-{i}" for i in range(1, slide_count + 1)]
     assert result.remote["parent_container_id"] == "parent-1"
     assert result.remote["post_id"] == "media-1"
     assert result.remote["permalink"] == "https://instagram.test/p/abc/"
@@ -723,4 +731,5 @@ async def test_oauth_requests_optional_image_comment_and_insight_scopes(monkeypa
     assert "instagram_manage_contents" in instagram_query["scope"].split(",")
     assert instagram_query["config_id"] == "test-business-config"
     assert "pages_manage_engagement" in facebook_query["scope"].split(",")
-    assert "pages_read_user_engagement" in facebook_query["scope"].split(",")
+    assert "pages_read_user_content" in facebook_query["scope"].split(",")
+    assert "pages_read_user_engagement" not in facebook_query["scope"].split(",")

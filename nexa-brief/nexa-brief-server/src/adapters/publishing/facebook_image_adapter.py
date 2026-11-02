@@ -17,6 +17,9 @@ from src.adapters.publishing.image_publisher import (
     ProgressCallback,
     ProgressPersistenceError,
     ImageAdapterResult,
+    ImageDeliveryValidationError,
+    validate_image_delivery,
+    validate_image_delivery_assets,
     caption_for,
     classify_graph_error,
     copy_validation_error,
@@ -107,10 +110,11 @@ class FacebookImageAdapter:
                 status="failed_permanent",
                 last_error={"code": "COPY_LIMIT", "message": copy_error},
             )
-        if (placement == "carousel" and len(assets) != 5) or (placement == "image" and len(assets) != 1):
+        try:
+            validate_image_delivery(delivery_spec)
+        except ImageDeliveryValidationError as exc:
             return ImageAdapterResult(
-                status="failed_permanent",
-                last_error={"code": "INVALID_IMAGE_COUNT", "message": "Expected one JPEG or five carousel JPEGs"},
+                status="failed_permanent", last_error={"code": exc.code, "message": str(exc)},
             )
         previous = remote_state(delivery_spec)
         if value(delivery_spec, "status") == "outcome_unknown" or previous.get("post_id"):
@@ -122,6 +126,7 @@ class FacebookImageAdapter:
             await report_remote(on_remote_update, working_remote)
 
         try:
+            await validate_image_delivery_assets(delivery_spec, self._media_storage)
             token = await self._token_manager.get_valid_token(self.PLATFORM, alias)
             async with self._client_factory(timeout=settings.publisher_upload_timeout_seconds) as client:
                 if placement == "carousel":
@@ -167,7 +172,7 @@ class FacebookImageAdapter:
             return ImageAdapterResult(
                 status="failed_permanent",
                 remote=working_remote,
-                last_error={"code": "INVALID_IMAGE", "message": str(exc)[:300]},
+                last_error={"code": getattr(exc, "code", "INVALID_IMAGE"), "message": str(exc)[:300]},
             )
 
     async def _upload_photo(

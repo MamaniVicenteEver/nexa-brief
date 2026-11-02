@@ -25,6 +25,7 @@ export interface ExplainerJob {
   /** Un resultado por cuenta y formato: URL si se publicó, error si falló. */
   publishResults: {
     accountSelector: string;
+    thumbnail?: { status: string; reason: string } | null;
     format?: RecordFormat;
     url: string | null;
     error: string | null;

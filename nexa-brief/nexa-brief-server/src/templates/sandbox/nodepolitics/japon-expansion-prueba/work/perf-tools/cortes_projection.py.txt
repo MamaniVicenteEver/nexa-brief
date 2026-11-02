@@ -1,0 +1,31 @@
+import asyncio,json,sys,difflib
+from pathlib import Path
+import numpy as np
+from playwright.async_api import async_playwright
+sys.path.insert(0,'/tmp');from cortes_matrix4 import TPL,ROOT,URL
+FILE=ROOT/'src/templates/_tools/explainer-kit/designs/imperio/components/_imperio.js'
+OLD='const T = new DOMMatrix(V.m).multiply(e.M);'
+NEW='const T = new DOMMatrix(IM.view(st, cam, IM.atlas(e.kc.lon)).m).multiply(e.M);'
+a=FILE.read_text();b=a.replace(OLD,NEW,1);assert a!=b
+(TPL/'work/proposals/imperio-projection.patch').write_text(''.join(difflib.unified_diff(a.splitlines(True),b.splitlines(True),fromfile='a/src/templates/_tools/explainer-kit/designs/imperio/components/_imperio.js',tofile='b/src/templates/_tools/explainer-kit/designs/imperio/components/_imperio.js')))
+async def main():
+ results=[]
+ async with async_playwright() as p:
+  browser=await p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
+  for mode in ['current','proposed']:
+   for orient,(w,h) in [('16x9',(1280,720)),('9x16',(720,1280))]:
+    page=await browser.new_page(viewport={'width':w,'height':h})
+    if mode=='proposed':await page.route('**/components/_imperio.js*',lambda r:r.fulfill(status=200,content_type='application/javascript',body=b))
+    await page.goto(URL+'?paused&t=0');await page.wait_for_function('window.__promo && window.__promo.beats',timeout=120000);await page.evaluate('window.KitReady')
+    for lo,hi in [(5.933333333333333,5.966666666666667),(20.066666666666666,20.1)]:
+     imgs=[]
+     for t in [lo,hi]:
+      await page.evaluate('(t)=>__promo.seek(t)',t)
+      rgb=await page.evaluate("() => {const c=document.createElement('canvas');c.width=160;c.height=90;const g=c.getContext('2d');g.drawImage(document.querySelector('.k-main'),0,0,160,90);return Array.from(g.getImageData(0,0,160,90).data)}")
+      imgs.append(np.asarray(rgb,dtype=np.int16).reshape(90,160,4)[:,:,:3])
+      await page.screenshot(path=str(TPL/f'work/results/cortes-visual/{mode}-{orient}-{t:.4f}.png'))
+     delta=np.abs(imgs[1]-imgs[0]);r={'mode':mode,'orient':orient,'pair':[lo,hi],'mae':float(delta.mean()),'pixels_gt25':float(np.mean(delta.max(axis=2)>25))};results.append(r);print(r,flush=True)
+    await page.close()
+  await browser.close()
+ (TPL/'work/results/cortes-projection.json').write_text(json.dumps(results,indent=2))
+asyncio.run(main())

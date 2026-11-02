@@ -1,6 +1,18 @@
 "use client";
 
-import { ArrowUpRight, Check, Copy, Film, Pencil, RefreshCw, Trash2, Unplug } from "lucide-react";
+import {
+  ArrowUpRight,
+  Check,
+  Copy,
+  FileText,
+  Film,
+  ImageIcon,
+  Images,
+  Pencil,
+  RefreshCw,
+  Trash2,
+  Unplug,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { formatCompact } from "@/features/stats/format";
@@ -22,6 +34,8 @@ import { AccountAvatar } from "./AccountAvatar";
 import { DeletePublishedVideoDialog } from "./DeletePublishedVideoDialog";
 import { StatusBadge } from "./StatusBadge";
 import { secondaryButton, sectionEyebrow } from "./styles";
+import { YouTubeAccessPanel } from "./YouTubeAccessPanel";
+import { YouTubeThumbnailUpload } from "./YouTubeThumbnailUpload";
 
 function Section({
   title,
@@ -77,7 +91,28 @@ function CopyValue({ value }: { value: string }) {
 
 function RecentVideos({ account, enabled }: { account: ChannelAccount; enabled: boolean }) {
   const t = useTranslations("channels.details");
-  const { data: videos, isLoading } = useChannelVideos(account.platform, account.alias, enabled);
+  const {
+    data: videos,
+    isLoading,
+    isError,
+    refetch,
+  } = useChannelVideos(account.platform, account.alias, enabled);
+  if (isError)
+    return (
+      <div
+        role="alert"
+        className="rounded-xl border border-amber-500/30 p-3 text-[12px] text-amber-900"
+      >
+        <p>{t(account.platform === "facebook" ? "postsLoadError" : "videosLoadError")}</p>
+        <button
+          type="button"
+          className="mt-2 font-semibold underline"
+          onClick={() => void refetch()}
+        >
+          {t("retryPosts")}
+        </button>
+      </div>
+    );
 
   if (isLoading) {
     return (
@@ -91,7 +126,7 @@ function RecentVideos({ account, enabled }: { account: ChannelAccount; enabled: 
   if (!videos?.length) {
     return (
       <p className="rounded-2xl border border-dashed border-nb-line px-4 py-6 text-center text-[12.5px] text-nb-mute">
-        {t("noVideos")}
+        {t(account.platform === "facebook" ? "noPosts" : "noVideos")}
       </p>
     );
   }
@@ -112,7 +147,16 @@ function RecentVideoRow({ video }: { video: PublishedVideo }) {
   const detailsT = useTranslations("channels.details");
   const locale = useLocale();
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const canDelete = REMOTE_DELETE_PLATFORMS.has(video.platform);
+  const isImagePost = video.kind === "photo" || video.kind === "carousel" || video.kind === "text";
+  const MediaIcon =
+    video.kind === "carousel"
+      ? Images
+      : video.kind === "photo"
+        ? ImageIcon
+        : video.kind === "text"
+          ? FileText
+          : Film;
+  const canDelete = !isImagePost && REMOTE_DELETE_PLATFORMS.has(video.platform);
   const platform = PLATFORM_META[video.platform].label;
   const metrics = [
     video.metrics?.views != null
@@ -142,7 +186,7 @@ function RecentVideoRow({ video }: { video: PublishedVideo }) {
           />
         ) : (
           <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-nb-ink/[0.05] text-nb-mute">
-            <Film className="size-4" />
+            <MediaIcon className="size-4" />
           </span>
         )}
         <span className="min-w-0 flex-1">
@@ -151,6 +195,10 @@ function RecentVideoRow({ video }: { video: PublishedVideo }) {
           </span>
           <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[10.5px] text-nb-mute">
             <span>{formatDate(video.publishedAt, locale)}</span>
+            <span>
+              {detailsT(`mediaType.${video.kind ?? "video"}`)}
+              {video.imageCount && video.imageCount > 1 ? ` · ${video.imageCount}` : ""}
+            </span>
             <span className="rounded-full bg-nb-ink/[0.06] px-1.5 py-0.5 font-medium text-nb-ink-soft">
               {video.origin === "imported" ? detailsT("originImported") : detailsT("originNexa")}
             </span>
@@ -163,16 +211,21 @@ function RecentVideoRow({ video }: { video: PublishedVideo }) {
         </span>
         <ArrowUpRight className="size-4 shrink-0 text-nb-mute transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-nb-ink" />
       </a>
-      <button
-        type="button"
-        disabled={!canDelete}
-        onClick={() => setConfirmOpen(true)}
-        aria-label={t("trigger")}
-        title={canDelete ? t("trigger") : t("unsupported", { platform })}
-        className="mr-1.5 grid size-8 shrink-0 place-items-center rounded-full text-nb-mute transition-colors hover:bg-red-500/10 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-nb-mute"
-      >
-        <Trash2 className="size-4" />
-      </button>
+      {video.platform === "youtube" && (
+        <YouTubeThumbnailUpload alias={video.alias} videoId={video.postId} />
+      )}
+      {!isImagePost && (
+        <button
+          type="button"
+          disabled={!canDelete}
+          onClick={() => setConfirmOpen(true)}
+          aria-label={t("trigger")}
+          title={canDelete ? t("trigger") : t("unsupported", { platform })}
+          className="mr-1.5 grid size-8 shrink-0 place-items-center rounded-full text-nb-mute transition-colors hover:bg-red-500/10 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-nb-mute"
+        >
+          <Trash2 className="size-4" />
+        </button>
+      )}
       {canDelete && (
         <DeletePublishedVideoDialog
           video={video}
@@ -277,6 +330,8 @@ export function ChannelDetailsSheet({
             </Section>
           )}
 
+          {account.platform === "youtube" && <YouTubeAccessPanel account={account} />}
+
           <Section
             title={t("usage")}
             action={
@@ -309,9 +364,13 @@ export function ChannelDetailsSheet({
             <div className="grid grid-cols-2 gap-2.5">
               <div className="rounded-2xl border border-nb-line p-3.5">
                 <p className="text-[22px] font-extrabold tracking-[-0.02em]">
-                  {account.stats?.videoCount ?? account.publishedCount}
+                  {(account.platform === "facebook" ? account.publicationCount : null) ??
+                    account.stats?.videoCount ??
+                    account.publishedCount}
                 </p>
-                <p className="text-[11.5px] text-nb-mute">{t("publishedVideos")}</p>
+                <p className="text-[11.5px] text-nb-mute">
+                  {t(account.platform === "facebook" ? "publishedPosts" : "publishedVideos")}
+                </p>
               </div>
               <div className="rounded-2xl border border-nb-line p-3.5">
                 <p className="truncate text-[15px] leading-[33px] font-bold">
@@ -341,7 +400,7 @@ export function ChannelDetailsSheet({
             </div>
           </Section>
 
-          <Section title={t("recentVideos")}>
+          <Section title={t(account.platform === "facebook" ? "recentPosts" : "recentVideos")}>
             <RecentVideos account={account} enabled={open} />
           </Section>
 

@@ -13,7 +13,7 @@ from src.core.explainer import producer
 KIT_TOOLS = Path(producer.KIT_DIR) / "tools"
 
 
-@pytest.mark.parametrize("video_id", ["apolo-1202", "ia-despidos-programadores-amazon"])
+@pytest.mark.parametrize("video_id", ["apolo-1202", "ia-despidos-programadores-amazon", "clonan-tu-voz-con-3-segundos-de-audio-las-llamad"])
 def test_approved_legacy_storyboard_has_no_new_blockers(tmp_path, monkeypatch, capsys, video_id):
     monkeypatch.syspath_prepend(str(KIT_TOOLS))
     import check_storyboard as checker
@@ -77,7 +77,7 @@ def test_audio_end_requires_full_outro_and_question(tmp_path, monkeypatch):
     assert any("final completo" in error for error in errors)
 
 
-def test_poster_alone_does_not_satisfy_media_coverage(tmp_path, monkeypatch):
+def test_tabloid_poster_satisfies_media_coverage(tmp_path, monkeypatch):
     monkeypatch.syspath_prepend(str(KIT_TOOLS))
     import check_storyboard as checker
 
@@ -87,7 +87,7 @@ def test_poster_alone_does_not_satisfy_media_coverage(tmp_path, monkeypatch):
     errors = []
     checker.quality_check(tmp_path, {"quality_policy_version": 2, "outro": {"start": 180}}, {},
                           [beat], [], 190, errors, catalog)
-    assert any("sin foto/clip" in error for error in errors)
+    assert not any("sin foto/clip" in error for error in errors)
 
 
 def test_new_quality_policy_blocks_late_media_gap_and_short_photo(tmp_path, monkeypatch):

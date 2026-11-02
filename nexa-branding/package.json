@@ -1,0 +1,33 @@
+{
+  "name": "nexa-branding",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0 --port 4321",
+    "check": "astro check",
+    "validate": "node scripts/validate-content.mjs",
+    "build": "npm run validate && astro build",
+    "preview": "astro preview --host 0.0.0.0 --port 4321",
+    "start": "sirv dist --host 0.0.0.0 --port 4321",
+    "test": "node --test tests/*.test.mjs",
+    "format": "prettier --write \"src/**/*.{astro,ts,css,json}\" \"scripts/*.mjs\" \"tests/*.mjs\" \"docs/*.md\" \"*.{json,mjs,md}\"",
+    "format:check": "prettier --check \"src/**/*.{astro,ts,css,json}\" \"scripts/*.mjs\" \"tests/*.mjs\" \"docs/*.md\" \"*.{json,mjs,md}\""
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "5.3.0",
+    "@fontsource-variable/newsreader": "5.3.0",
+    "@lucide/astro": "1.66.0",
+    "astro": "7.4.5",
+    "sirv-cli": "3.0.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.2",
+    "typescript": "~5.9.3"
+  }
+}

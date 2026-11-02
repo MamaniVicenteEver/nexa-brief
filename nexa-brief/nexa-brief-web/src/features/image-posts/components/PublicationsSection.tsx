@@ -3,6 +3,7 @@
 import {
   CalendarClock,
   CirclePlus,
+  Eye,
   Images,
   LoaderCircle,
   PencilLine,
@@ -27,19 +28,11 @@ import {
   useImagePosts,
   useImageStrategies,
 } from "../hooks/useImagePosts";
-import type { ImagePost } from "../types";
 import { ImagePostEditor, type ImageSourceOption } from "./ImagePostEditor";
 import { PublishedGallery } from "./PublishedGallery";
+import { PublishedPostModal } from "./PublishedPostModal";
 
 type SectionTab = "posts" | "gallery";
-
-function statusTone(status: ImagePost["status"]) {
-  if (["approved", "completed"].includes(status)) return "bg-nb-green/50 text-[#31583d]";
-  if (["failed", "partial", "outcome_unknown"].includes(status)) return "bg-red-100 text-red-800";
-  if (["scheduled", "ready_for_review", "rendered"].includes(status))
-    return "bg-[#fff0c6] text-[#755a17]";
-  return "bg-nb-bg-2 text-nb-ink-soft";
-}
 
 function localDateTime(value: string) {
   if (!value) return "—";
@@ -50,14 +43,17 @@ function localDateTime(value: string) {
 export function PublicationsSection({
   category,
   categories,
+  embedded = false,
 }: {
   category: CategoryNode;
   categories: CategoryNode[];
+  embedded?: boolean;
 }) {
   const t = useTranslations("imagePosts");
   const [tab, setTab] = useState<SectionTab>("posts");
   const [editorOpen, setEditorOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const [previewPostId, setPreviewPostId] = useState<string | null>(null);
   const [editorSession, setEditorSession] = useState(0);
   const postsQuery = useImagePosts(category.id);
   const { styles, capabilities } = useImageEditorOptions(category.id);
@@ -97,11 +93,14 @@ export function PublicationsSection({
 
   return (
     <section
-      className="mt-14 flex flex-col gap-6 border-t border-nb-line pt-8"
+      className={cn(
+        "flex min-w-0 flex-col gap-5",
+        !embedded && "mt-14 border-t border-nb-line pt-8",
+      )}
       aria-labelledby={`publications-heading-${category.id}`}
     >
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
+      <div className={embedded ? "sr-only" : "flex flex-wrap items-end justify-between gap-4"}>
+        <div className={embedded ? "sr-only" : undefined}>
           <p className="text-[10px] font-bold tracking-[0.18em] text-nb-mute uppercase">
             {category.displayName}
           </p>
@@ -113,7 +112,7 @@ export function PublicationsSection({
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-nb-ink-soft">{t("section.description")}</p>
         </div>
-        {tab === "posts" && (
+        {!embedded && tab === "posts" && (
           <button
             type="button"
             onClick={() => openEditor(null)}
@@ -159,24 +158,41 @@ export function PublicationsSection({
             {t("section.galleryTab")}
           </button>
         </div>
-        {tab === "posts" && (
-          <button
-            type="button"
-            onClick={() => void postsQuery.refetch()}
-            disabled={postsQuery.isFetching}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-nb-mute hover:text-nb-ink disabled:opacity-50"
-          >
-            <RefreshCw
-              className={cn("size-3.5", postsQuery.isFetching && "animate-spin")}
-              aria-hidden
-            />
-            {t("section.refresh")}
-          </button>
-        )}
+        <div className="flex flex-wrap items-center gap-4">
+          {embedded && tab === "posts" && (
+            <button
+              type="button"
+              onClick={() => openEditor(null)}
+              disabled={!ready || !sources.length}
+              className="nb-btn-pill inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-xs font-bold disabled:opacity-50"
+            >
+              <CirclePlus className="size-4" aria-hidden />
+              {t("section.newPost")}
+            </button>
+          )}
+          {tab === "posts" && (
+            <button
+              type="button"
+              onClick={() => void postsQuery.refetch()}
+              disabled={postsQuery.isFetching}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-nb-mute hover:text-nb-ink disabled:opacity-50"
+            >
+              <RefreshCw
+                className={cn("size-3.5", postsQuery.isFetching && "animate-spin")}
+                aria-hidden
+              />
+              {t("section.refresh")}
+            </button>
+          )}
+        </div>
       </div>
 
       {tab === "gallery" ? (
-        <PublishedGallery categories={categories} initialCategoryId={category.id} />
+        <PublishedGallery
+          categories={categories}
+          initialCategoryId={category.id}
+          onOpenEditor={() => setTab("posts")}
+        />
       ) : (
         <div className="flex flex-col gap-4">
           {reconcileError && (
@@ -212,22 +228,52 @@ export function PublicationsSection({
               {t("section.loadError")}
             </div>
           ) : posts.length ? (
-            <div className="grid gap-3 lg:grid-cols-2">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,220px),1fr))] items-start gap-3">
               {posts.map((post) => (
                 <article
                   key={post.postId}
-                  className="flex flex-col gap-3 rounded-2xl border border-nb-line bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
+                  className="group flex min-w-0 flex-col overflow-hidden rounded-[10px] border border-black/5 bg-nb-surface shadow-[0_8px_20px_-16px_rgba(40,30,10,0.16)] transition-transform hover:-translate-y-0.5"
                 >
-                  <div className="min-w-0">
-                    <div className="mb-1 flex flex-wrap items-center gap-2 text-[10px] font-semibold text-nb-mute">
-                      <span
-                        className={cn(
-                          "rounded-full px-2.5 py-1 capitalize",
-                          statusTone(post.status),
-                        )}
-                      >
-                        {t(`status.${post.status}`)}
+                  <button
+                    type="button"
+                    onClick={() => setPreviewPostId(post.postId)}
+                    aria-label={t("section.viewPost", {
+                      title: post.title || t("editor.untitled"),
+                    })}
+                    className="relative flex aspect-[4/5] w-full cursor-pointer items-center justify-center overflow-hidden bg-[#131313] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-nb-green"
+                  >
+                    {post.slides[0]?.previewUrl ? (
+                      // biome-ignore lint/performance/noImgElement: authenticated previews use the image-posts proxy.
+                      <img
+                        src={post.slides[0].previewUrl}
+                        alt={post.slides[0].altTextInstagram || post.title}
+                        loading="lazy"
+                        className="size-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                      />
+                    ) : (
+                      <span className="flex flex-col items-center gap-2 text-xs text-white/60">
+                        <Images className="size-8" aria-hidden />
+                        {t("section.noCover")}
                       </span>
+                    )}
+                    <span className="absolute top-2 left-2 rounded-full bg-black/65 px-2 py-0.5 text-[9.5px] font-bold text-white">
+                      {t(`status.${post.status}`)}
+                    </span>
+                    {post.slides.length > 0 && (
+                      <span className="absolute right-2 bottom-2 inline-flex items-center gap-1 rounded bg-black/65 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                        <Images className="size-3" aria-hidden />
+                        {post.slides.length}
+                      </span>
+                    )}
+                    <span className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+                      <Eye
+                        className="size-10 rounded-full bg-black/60 p-2 text-white"
+                        aria-hidden
+                      />
+                    </span>
+                  </button>
+                  <div className="min-w-0 flex-1 px-3 pt-3">
+                    <div className="mb-1 flex flex-wrap items-center gap-2 text-[10px] font-semibold text-nb-mute">
                       <span>
                         {post.templateId === "five_slides"
                           ? t("gallery.kind.carousel")
@@ -241,7 +287,7 @@ export function PublicationsSection({
                         </span>
                       )}
                     </div>
-                    <h3 className="truncate text-sm font-extrabold text-nb-ink">
+                    <h3 className="line-clamp-2 text-[13px] leading-snug font-extrabold text-nb-ink">
                       {post.title || t("editor.untitled")}
                     </h3>
                     <p className="mt-1 flex gap-1 text-[11px] text-nb-ink-soft">
@@ -261,7 +307,7 @@ export function PublicationsSection({
                       {t("section.updated", { date: localDateTime(post.updatedAt) })}
                     </p>
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2 p-3">
                     {post.deliveries
                       .filter((delivery) => delivery.status === "outcome_unknown")
                       .map((delivery) => (
@@ -362,6 +408,15 @@ export function PublicationsSection({
           )}
         </div>
       )}
+
+      <PublishedPostModal
+        summary={null}
+        postId={previewPostId}
+        open={Boolean(previewPostId)}
+        onOpenChange={(open) => {
+          if (!open) setPreviewPostId(null);
+        }}
+      />
 
       <Dialog
         open={editorOpen}

@@ -1,0 +1,67 @@
+---
+import { Menu, Moon, Sun } from '@lucide/astro';
+import Wordmark from './Wordmark.astro';
+import { alternatePath, homePath, text, type Locale } from '@/shared/lib/locale';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const home = homePath(locale);
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand-link" href={home} aria-label={text(locale, 'NODE · Inicio', 'NODE · Home')}>
+      <Wordmark />
+    </a>
+    <nav class="desktop-nav" aria-label={text(locale, 'Navegación principal', 'Main navigation')}>
+      <a href={`${home}#red`}>{text(locale, 'La red', 'The network')}</a>
+      <a href={`${home}#canales`}>{text(locale, 'Nuestros canales', 'Our channels')}</a>
+      <a href={`${home}#mirada`}>{text(locale, 'Nuestra mirada', 'Our perspective')}</a>
+    </nav>
+    <div class="header-tools">
+      <a
+        class="language-switch"
+        href={alternatePath(Astro.url.pathname)}
+        lang={locale === 'es' ? 'en' : 'es'}
+        aria-label={locale === 'es' ? 'Switch to English' : 'Cambiar a español'}
+      >
+        {locale === 'es' ? 'EN' : 'ES'}
+      </a>
+      <button
+        type="button"
+        class="icon-button theme-toggle"
+        data-theme-toggle
+        aria-label={text(locale, 'Cambiar tema', 'Change theme')}
+        aria-pressed="false"
+      >
+        <Moon class="moon-icon" size={18} />
+        <Sun class="sun-icon" size={18} />
+      </button>
+      <button
+        type="button"
+        class="icon-button mobile-menu-button"
+        data-menu-toggle
+        aria-controls="mobile-navigation"
+        aria-expanded="false"
+        aria-label={text(locale, 'Abrir menú', 'Open menu')}
+      >
+        <Menu size={21} />
+      </button>
+    </div>
+  </div>
+  <nav
+    id="mobile-navigation"
+    class="mobile-nav container"
+    aria-label={text(locale, 'Navegación móvil', 'Mobile navigation')}
+    hidden
+  >
+    <a href={`${home}#red`}>{text(locale, 'La red', 'The network')}</a>
+    <a href={`${home}#canales`}>{text(locale, 'Nuestros canales', 'Our channels')}</a>
+    <a href={`${home}#mirada`}>{text(locale, 'Nuestra mirada', 'Our perspective')}</a>
+  </nav>
+</header>
+<script>
+  import { initializeSiteControls } from '@/shared/lib/site-controls';
+  initializeSiteControls();
+</script>

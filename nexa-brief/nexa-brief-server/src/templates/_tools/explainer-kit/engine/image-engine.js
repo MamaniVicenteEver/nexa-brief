@@ -1,5 +1,5 @@
 /* =============================================================================
-   Motor de imágenes estáticas (posts 4:5 y cuadros de Reel)
+   Motor de imágenes estáticas (posts por perfil y cuadros de Reel)
    -----------------------------------------------------------------------------
    Separación de responsabilidades (para cambiar una cosa sin tocar las demás):
      · QUÉ se dice y en qué orden  → estrategias Python (src/core/image_posts/strategies/)
@@ -21,6 +21,11 @@
   const LAYOUTS = {
     hero:       {blocks: ["topbar", "spacer", "stat", "headline", "body?", "spacer", "footer"]},
     hero_text:  {blocks: ["topbar", "spacer", "headline_xl", "body?", "spacer", "footer"]},
+    am_visual:  {blocks: ["topbar", "spacer", "headline?", "diagram", "body?", "label?", "spacer", "footer"]},
+    am_photo:   {blocks: ["topbar", "spacer", "stat?", "headline?", "diagram?", "body?", "label?", "swipebar"], photo: "full", band: ["credits"]},
+    am_reflexion_photo: {blocks: ["topbar", "spacer", "body", "spacer", "swipebar"], photo: "full", band: ["credits"]},
+    am_reflexion_visual: {blocks: ["topbar", "spacer", "body", "diagram", "spacer", "footer"]},
+    am_close:   {blocks: ["brandmark", "spacer", "question", "spacer", "cta", "footer"]},
     cover:      {blocks: ["topbar", "spacer", "headline_xl", "tagline?", "spacer", "swipebar"]},
     point:      {blocks: ["stepbar", "spacer", "stat?", "headline", "body?", "spacer", "footer"]},
     close:      {blocks: ["topbar", "spacer", "recap", "spacer", "cta", "footer"]},
@@ -68,14 +73,54 @@
     return row;
   };
 
+  const questionText = (node, value, slide) => {
+    if (slide.layout.startsWith("amarillista:am_negro_") && /[A-ZÁÉÍÓÚÑ]{3,}/.test(value)) {
+      const match = value.match(/[A-ZÁÉÍÓÚÑ]{3,}/);
+      node.append(document.createTextNode(value.slice(0, match.index)), make("span", "ie-mark", match[0]),
+                  document.createTextNode(value.slice(match.index + match[0].length)));
+    } else node.textContent = value;
+  };
+
   // Cada bloque devuelve un nodo o null (null = no hay contenido: no ocupa lugar).
   const BLOCKS = {
+    brandmark(slide, ctx) {
+      return make("div", "ie-brandmark", ctx.brand);
+    },
+    question(slide, ctx) {
+      const value = textOf(slide, "question");
+      if (!value) return null;
+      const node = make("div", "ie-headline");
+      questionText(node, value, slide);
+      fit(node, "headline", ctx.scale);
+      // El cierre narrativo incluye también la invitación a comentar.
+      // Conserva la tipografía y su mínimo; permite ajustar el texto más largo.
+      if (slide.layout.startsWith("amarillista:") && value.split(/\s+/).length > 8) {
+        node.style.maxHeight = Math.round(540 * ctx.scale) + "px";
+      }
+      if (recipeFor(slide).name === "am_close") {
+        node.classList.add("ie-closing-panel");
+        // Final slide only: a smaller box makes the fitted question ~10% smaller.
+        node.style.maxHeight = Math.round(600 * ctx.scale) + "px";
+        node.style.fontSize = Math.round(TYPE.headline.size * 0.9 * ctx.scale) + "px";
+        node.dataset.minSize = String(Math.round(TYPE.headline.min * 0.8 * ctx.scale));
+        // Layout only: keep editorial wording intact and give the comment prompt its own paragraph.
+        const paragraphs = value.split(/(?:\r?\n){2,}|\s+(?=Comenta\b)/iu).filter(part => part.trim());
+        node.replaceChildren(...paragraphs.map(value => {
+          const paragraph = make("p", "ie-closing-paragraph");
+          questionText(paragraph, value.trim(), slide);
+          return paragraph;
+        }));
+      }
+      return node;
+    },
     topbar(slide, ctx) {
-      const kicker = textOf(slide, "kicker");
+      // Los roles editoriales quedan en el plan para los tags de la app, fuera del JPG.
+      const kicker = slide.layout.startsWith("amarillista:") ? "" : textOf(slide, "kicker");
       if (!kicker && !ctx.brand) return null;
       const bar = make("div", "ie-row ie-topbar");
-      bar.appendChild(label("ie-kicker", kicker));
-      bar.appendChild(make("div", "ie-brand", ctx.brand));
+      if (kicker) bar.appendChild(label("ie-kicker", kicker));
+      else bar.style.justifyContent = "flex-end";
+      if (ctx.brand) bar.appendChild(make("div", "ie-brand", ctx.brand));
       return bar;
     },
     stepbar(slide, ctx) {
@@ -100,7 +145,22 @@
     },
     headline(slide, ctx) {
       const value = textOf(slide, "headline");
-      return value ? fit(make("div", "ie-headline", value), "headline", ctx.scale) : null;
+      if (!value) return null;
+      const node = make("div", "ie-headline");
+      if (/^amarillista:am_(negro|alto)_/.test(slide.layout)) {
+        const words = [...value.matchAll(/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]{5,}/g)];
+        const match = words.find(m => m[0] === m[0].toLocaleUpperCase("es")) || words.find(m => /^(melaza|excesivo|organizaciones|celular|recortó|riesgo|tiempo)$/i.test(m[0])) || words.find(m => !/^(alerta|atención|estadounidenses|adultos|reportó|reportan)$/i.test(m[0])) || words[0];
+        if (match) node.append(document.createTextNode(value.slice(0, match.index)), make("span", "ie-mark", match[0]), document.createTextNode(value.slice(match.index + match[0].length)));
+        else node.textContent = value;
+      } else node.textContent = value;
+      if (slide.layout.startsWith("amarillista:")) {
+        node.dataset.minSize = String(Math.round(72 * ctx.scale));
+        node.style.fontSize = Math.round(100 * ctx.scale) + "px";
+        node.style.maxHeight = Math.round(400 * ctx.scale) + "px";
+        node.classList.add("fit-text");
+        return node;
+      }
+      return fit(node, "headline", ctx.scale);
     },
     headline_xl(slide, ctx) {
       const value = textOf(slide, "headline");
@@ -108,7 +168,87 @@
     },
     body(slide, ctx) {
       const value = textOf(slide, "body");
-      return value ? fit(make("div", "ie-body", value), "body", ctx.scale) : null;
+      if (!value) return null;
+      const node = fit(make("div", "ie-body", value), "body", ctx.scale);
+      if (slide.layout.startsWith("amarillista:")) {
+        node.style.maxHeight = Math.round(340 * ctx.scale) + "px";
+        node.style.fontSize = Math.round(62 * ctx.scale) + "px";
+        node.dataset.minSize = String(Math.round(48 * ctx.scale));
+        // El hilo admite hasta 60 palabras (50 en resolución); mismo cuerpo y suelo tipográfico,
+        // más altura disponible antes del ajuste medido de la columna.
+        if (["DESARROLLO", "QUÉ HACER"].includes(textOf(slide, "kicker"))) {
+          node.style.maxHeight = Math.round(760 * ctx.scale) + "px";
+        }
+        if (slide.layout.includes("_reflexion_")) {
+          node.classList.add("ie-reflection-line");
+          node.style.fontSize = Math.round(88 * ctx.scale) + "px";
+          node.style.maxHeight = Math.round(490 * ctx.scale) + "px";
+          node.dataset.minSize = String(Math.round(66 * ctx.scale));
+        }
+        if (ctx.style.category_id === "node_history") {
+          node.replaceChildren();
+          const parts = value.split(/(\b(?:\d{1,2} de [a-z]+ de )?\d{4}\b)/gi);
+          for (const part of parts) node.appendChild(/\d{4}/.test(part) ? make("span", "ie-date", part) : document.createTextNode(part));
+        }
+      }
+      return node;
+    },
+    label(slide) {
+      const value = textOf(slide, "label");
+      if (!value) return null;
+      const node = make("div", "ie-scope");
+      if (textOf(slide, "kicker") === "PORTADA" && value.startsWith("¿")) {
+        node.appendChild(make("span", "ie-mark", value));
+      } else node.textContent = value;
+      return node;
+    },
+    diagram(slide) {
+      const element = slide.elements.find(e => e.type === "diagram");
+      if (!element) return null;
+      const data = JSON.parse(element.value);
+      const box = make("figure", "ie-infographic ie-infographic-" + data.kind);
+      const editorialLabel = slide.layout.startsWith("amarillista:") && data.label === textOf(slide, "kicker");
+      if (!editorialLabel) box.appendChild(make("figcaption", "ie-chart-label", data.label || "Los datos"));
+      if (data.kind === "percent") {
+        const dots = make("div", "ie-waffle");
+        for (let i = 0; i < 100; i++) dots.appendChild(make("i", i < data.value ? "on" : ""));
+        const row = make("div", "ie-chart-row");
+        row.append(make("strong", "ie-chart-number", String(data.value).replace(".", ",") + " %"), dots);
+        box.appendChild(row);
+      } else if (data.kind === "quantity") {
+        box.appendChild(make("strong", "ie-quantity-value", data.value));
+        box.appendChild(make("div", "ie-quantity-unit", data.unit));
+        const isVolume = /galones|litros|volumen/i.test(data.unit || "");
+        const vessel = make("div", isVolume ? "ie-volume-vessel" : "ie-quantity-reference");
+        vessel.appendChild(make("span", "", isVolume ? "Volumen total" : "Dato documentado"));
+        box.appendChild(vessel);
+      } else if (data.kind === "fraction") {
+        box.appendChild(make("strong", "ie-fraction-value", "Casi " + data.numerator + " de cada " + data.denominator));
+        const units = make("div", "ie-fraction-units");
+        for (let i=0; i<data.denominator; i++) units.appendChild(make("i", i<data.numerator ? "on" : ""));
+        box.appendChild(units);
+      } else if (data.kind === "comparison") {
+        for (const item of data.items) {
+          const row = make("div", "ie-comparison-row");
+          row.appendChild(make("div", "ie-chart-row", item.label));
+          const track = make("div", "ie-track");
+          const fill = make("div", "ie-fill"); fill.style.width = String(item.value / (data.scale || 100) * 100) + "%";
+          track.appendChild(fill);
+          row.append(track, make("strong", "ie-chart-value", String(item.value).replace(".", ",") + (data.unit || " %")));
+          box.appendChild(row);
+        }
+      } else {
+        const list = make("ol", "ie-evidence-list");
+        for (const item of data.items) {
+          const li = make("li");
+          if (typeof item === "string") li.textContent = item;
+          else li.append(make("strong", "ie-timeline-date", item.label), make("span", "", item.detail));
+          list.appendChild(li);
+        }
+        box.appendChild(list);
+      }
+      box.dataset.visual = "informative";
+      return box;
     },
     tagline(slide) {
       const value = textOf(slide, "tagline");
@@ -118,6 +258,7 @@
       const lines = textOf(slide, "body").split("\n").filter(Boolean);
       if (!lines.length) return null;
       const list = fit(make("ol", "ie-recap"), "recap", ctx.scale);
+      if (recipeFor(slide).name === "close") list.classList.add("ie-closing-panel");
       for (const line of lines) list.appendChild(make("li", "", line.replace(/^\d+\.\s*/, "")));
       return list;
     },
@@ -154,7 +295,7 @@
         if (value) lines.appendChild(make("div", "ie-" + role, value));
       }
       box.appendChild(lines);
-      box.appendChild(make("div", "ie-handle", textOf(slide, "handle")));
+      if (!String(slide.layout).startsWith("amarillista:")) box.appendChild(make("div", "ie-handle", textOf(slide, "handle")));
       return box;
     },
   };
@@ -177,7 +318,10 @@
 
   function recipeFor(slide) {
     const name = String(slide.layout || "").split(":").pop();
-    return {name: LAYOUTS[name] ? name : FALLBACK_LAYOUT, ...(LAYOUTS[name] || LAYOUTS[FALLBACK_LAYOUT])};
+    const reflection = /^am_(negro|alto|medio|basico)_reflexion_(photo|visual)$/.test(name);
+    const actual = reflection ? "am_reflexion_" + name.split("_").pop() : /^am_(negro|alto|medio|basico)_(photo|visual|close)$/.test(name)
+      ? "am_" + name.split("_").pop() : name;
+    return {name: LAYOUTS[actual] ? actual : FALLBACK_LAYOUT, ...(LAYOUTS[actual] || LAYOUTS[FALLBACK_LAYOUT])};
   }
 
   function applyTheme(root, style, scale) {
@@ -212,9 +356,29 @@
     root.style.height = context.height + "px";
     applyTheme(root, context.style, scale);
     root.dataset.layout = recipe.name;
+    root.dataset.mode = context.mode || "image";
+    // Width fixes the type scale; extra height becomes breathing room, never a stretch.
+    // The bottom safe area keeps references clear of mobile platform controls.
+    const extraHeight = Math.max(0, context.height - 1350 * scale);
+    if (root.dataset.mode === "image") {
+      root.style.setProperty("--safe-top", Math.round(context.style.grid.margin_px * scale + extraHeight * .12) + "px");
+      root.style.setProperty("--safe-bottom", Math.round(context.style.grid.margin_px * scale + extraHeight * .2) + "px");
+    }
+    if (String(slide.layout).startsWith("amarillista:")) {
+      const level = slide.layout.split(":")[1].split("_")[1];
+      root.classList.add("ie-amarillista", "alarm-" + level);
+      root.style.setProperty("--alarm-red", context.style.alarm?.red || "#B74A42");
+      root.style.setProperty("--alarm-yellow", context.style.alarm?.yellow || "#D3B35A");
+      root.style.setProperty("--alarm-opacity", String(context.style.alarm?.levels?.[level]?.opacity ?? .8));
+    }
     root.dataset.slideIndex = String(context.slideIndex);
     root.dataset.template = context.plan.template_id;
-    if (!recipe.photo) skin.background?.(root, ctx);
+    if (!recipe.photo) {
+      const color = context.style.palette.bg;
+      const isDark = /^#[0-9a-f]{6}$/i.test(color) && [1, 3, 5].every(index => parseInt(color.slice(index, index + 2), 16) <= 32);
+      if (root.dataset.mode === "image" && isDark) root.classList.add("has-editorial-grid");
+      skin.background?.(root, ctx);
+    }
     if (recipe.photo) {
       const figure = photo(slide, ctx, recipe.photo);
       if (figure) root.appendChild(figure);

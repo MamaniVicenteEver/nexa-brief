@@ -6,13 +6,14 @@ import argparse
 import os
 import asyncio
 import base64
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 import hashlib
 import io
 import json
 from pathlib import Path
 import sys
+import secrets
 import time
 from typing import Any, AsyncIterator, Mapping
 import urllib.parse
@@ -26,17 +27,25 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import shoot  # noqa: E402
 from src.core.image_posts.plan import ImagePlan, parse_image_plan, plan_hash  # noqa: E402
+from src.core.image_posts.profiles import get_image_profile, IMAGE_FORMATS  # noqa: E402
 from src.core.image_posts.style import StyleSystem, parse_style  # noqa: E402
 from src.core.image_posts.validate import validate_jpeg, validate_plan  # noqa: E402
 
 
-RENDERER_VERSION = "image-stage-1.0.0"
-STAGE_SIZE = (1080, 1350)
+RENDERER_VERSION = "image-stage-1.1.1"
+SUPPORTED_RENDERER_VERSIONS = frozenset({"image-stage-1.0.0", "image-stage-1.1.0", RENDERER_VERSION})
+STAGE_SIZE = (1080, 1350)  # Legacy constant; static exports resolve the plan profile.
+JPEG_QUALITY = 95
 REEL_SIZE = (1080, 1920)
 REEL_FPS = 30
 REEL_DURATION_SECONDS = 15
 KIT = Path(__file__).resolve().parents[1]
 TEMPLATES = KIT.parents[1]
+IMAGE_SKIN_SCRIPTS = {
+    "rough": ("vendor/rough.js", "designs/rough/image-components.js"),
+    "binary": ("designs/binary/image-components.js",),
+}
+PREVIEW_FONTS = SERVER_ROOT / "src/skills/image_posts/styles/fonts/preview"
 
 
 class ImageExportError(RuntimeError):
@@ -98,6 +107,7 @@ class RenderManifest:
     engine: str
     engine_version: str
     renderer_version: str
+    source_hash: str = ""
 
     def to_record(self, plan: ImagePlan) -> dict[str, Any]:
         return {
@@ -116,6 +126,8 @@ class RenderManifest:
                     "duration_seconds": self.duration_seconds,
                     "engine": self.engine,
                     "engine_version": self.engine_version,
+                    "renderer_version": self.renderer_version,
+                    **({"source_hash": self.source_hash} if self.source_hash else {}),
                 },
                 "music": {"mode": "none"},
                 "ai_usage": [],
@@ -123,9 +135,9 @@ class RenderManifest:
                     {
                         "name": "jpeg_srgb_dimensions",
                         "version": "1",
-                        "passed": all(asset.width == 1080 and asset.height == 1350 for asset in self.assets),
+                        "passed": all((asset.width, asset.height) == get_image_profile(plan.format).size for asset in self.assets),
                         "checked_at": self.finished_at,
-                        "details": {"max_bytes": 3_984_588},
+                        "details": {"max_bytes": 3_984_588, "format": plan.format, "jpeg_quality": JPEG_QUALITY, "chroma_subsampling": "4:4:4"},
                     },
                     {
                         "name": "readability_contrast",
@@ -179,6 +191,162 @@ def _font_payload(style: StyleSystem) -> dict[str, bytes]:
         raise ImageExportError(str(exc)) from exc
 
 
+def _preview_font_payload(style: StyleSystem) -> tuple[dict[str, bytes], dict[str, str]]:
+    """Use verified, lossless WOFF2 copies; export/video TTF assets stay intact."""
+    fonts = _font_payload(style)
+    formats = {path: "truetype" for path in fonts}
+    manifest_path = PREVIEW_FONTS / "manifest.json"
+    if not manifest_path.is_file():
+        return fonts, formats
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if manifest.get("schema_version") != 1 or manifest.get("format") != "woff2":
+            raise ValueError("versión de manifiesto no admitida")
+        by_source = {row["source_sha256"]: row for row in manifest["fonts"]}
+        for asset in style.font_assets:
+            row = by_source.get(asset.sha256)
+            if row is None:
+                continue  # A newly registered font still has its verified TTF fallback.
+            name = row["preview_path"]
+            if not isinstance(name, str) or Path(name).name != name or not name.endswith(".woff2"):
+                raise ValueError("ruta de fuente de vista previa inválida")
+            content = (PREVIEW_FONTS / name).read_bytes()
+            if hashlib.sha256(content).hexdigest() != row["sha256"]:
+                raise ValueError("hash de fuente WOFF2 incorrecto")
+            fonts[asset.path] = content
+            formats[asset.path] = "woff2"
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise ImageExportError("No se pudo verificar la fuente de vista previa") from exc
+    return fonts, formats
+
+
+def renderer_source_hash(
+    plan: ImagePlan | Mapping[str, Any],
+    style: StyleSystem | Mapping[str, Any],
+) -> str:
+    """Fingerprint the application-owned sources behind a preview/export.
+
+    Plan/style hashes identify editable data and licensed media. This separate
+    hash identifies the code and prevents stale previews after an engine update.
+    Versions still need to be bumped for intentional renderer changes.
+    """
+    image_plan = parse_image_plan(plan)
+    style_system = _parse_style(style)
+    get_image_profile(image_plan.format)
+    if style_system.design_id not in IMAGE_SKIN_SCRIPTS:
+        raise ImageExportError("El diseño no tiene una piel de imágenes registrada")
+    files = (
+        "tools/image_export.py", "engine/image-engine.js", "engine/image-stage-runtime.js",
+        "engine/image-engine.css", "engine/image-skins.css", *IMAGE_SKIN_SCRIPTS[style_system.design_id],
+    )
+    digest = hashlib.sha256()
+    for relative in files:
+        digest.update(relative.encode("utf-8") + b"\x00" + (KIT / relative).read_bytes())
+    digest.update((SERVER_ROOT / "src/core/image_posts/profiles.py").read_bytes())
+    preview_manifest = PREVIEW_FONTS / "manifest.json"
+    if preview_manifest.is_file():
+        digest.update(preview_manifest.read_bytes())
+    return digest.hexdigest()
+
+
+def build_preview_html(
+    plan: ImagePlan | Mapping[str, Any],
+    style: StyleSystem | Mapping[str, Any],
+    media_bytes: Mapping[str, bytes] | None = None,
+    *,
+    slide_id: str,
+    format: str | None = None,
+) -> str:
+    """Return an offline, isolated HTML view of the editable composition.
+
+    The same engine, skin, font bytes and layout/QC runtime render the final JPEG.
+    No browser process or JPEG conversion is needed for this responsive preview.
+    Embed with an iframe sandbox containing only ``allow-scripts``.
+    """
+    image_plan = parse_image_plan(plan)
+    if format is not None:
+        image_plan = replace(image_plan, format=get_image_profile(format).format)
+    profile = get_image_profile(image_plan.format)
+    style_system = _parse_style(style)
+    media = dict(media_bytes or {})
+    validate_plan(image_plan, style_system, media_bytes=media).require()
+    if image_plan.renderer_version not in SUPPORTED_RENDERER_VERSIONS:
+        raise ImageExportError(f"renderer_version debe ser {RENDERER_VERSION}")
+    slide_index = next((index for index, slide in enumerate(image_plan.slides) if slide.slide_id == slide_id), None)
+    if slide_index is None:
+        raise ImageExportError("La lámina no pertenece al plan")
+    if style_system.design_id not in IMAGE_SKIN_SCRIPTS:
+        raise ImageExportError("El diseño no tiene una piel de imágenes registrada")
+    # All local files are application-owned and explicitly registered above.
+    scripts = ["engine/image-engine.js", "engine/image-stage-runtime.js", *IMAGE_SKIN_SCRIPTS[style_system.design_id]]
+    script_source = "\n".join((KIT / path).read_text(encoding="utf-8") for path in scripts)
+    styles = "\n".join((KIT / path).read_text(encoding="utf-8") for path in ("engine/image-engine.css", "engine/image-skins.css"))
+    selected_media = {ref.asset_id for ref in image_plan.slides[slide_index].media}
+    preview_fonts, font_formats = _preview_font_payload(style_system)
+    payload = {
+        "plan": image_plan.to_dict(),
+        "style": style_system.to_dict(),
+        "media": {key: "data:image/jpeg;base64," + base64.b64encode(value).decode("ascii") for key, value in media.items() if key in selected_media},
+        "fonts": _base64_items(preview_fonts),
+        "font_formats": font_formats,
+        "slide_index": slide_index,
+        "width": profile.width,
+        "height": profile.height,
+        "progress": 0,
+        "mode": "image",
+    }
+    # Inert JSON avoids a second base64 layer around large fonts/photos. Escaping
+    # HTML delimiters and JS separators prevents script-closing text injection.
+    encoded = (json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+               .replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
+               .replace("\u2028", "\\u2028").replace("\u2029", "\\u2029"))
+    nonce = secrets.token_urlsafe(24)
+    bootstrap = """
+    (async () => {
+      const status = document.getElementById('preview-status');
+      const stage = document.getElementById('stage');
+      const fit = () => {
+        const scale = Math.min(innerWidth / payload.width, innerHeight / payload.height);
+        stage.style.transform = 'scale(' + scale + ')';
+        stage.style.left = ((innerWidth - payload.width * scale) / 2) + 'px';
+        stage.style.top = ((innerHeight - payload.height * scale) / 2) + 'px';
+      };
+      let payload;
+      try {
+        payload = JSON.parse(document.getElementById('preview-payload').textContent);
+        window.ImageStage = window.createImageStage();
+        const qc = await window.ImageStage.render(payload);
+        if (qc.overflow || !qc.contrast || !qc.readability) throw new Error('Revisar la composición: el contenido no supera el control de calidad.');
+        window.__imagePreviewQc = qc;
+        window.__imagePreviewReady = true;
+        document.documentElement.dataset.renderState = 'ready';
+        fit();
+        addEventListener('resize', fit);
+        status.hidden = true;
+        stage.style.visibility = 'visible';
+        document.body.setAttribute('aria-busy', 'false');
+      } catch (error) {
+        document.documentElement.dataset.renderState = 'failed';
+        status.textContent = error.message || 'No se pudo mostrar la composición.';
+        document.body.setAttribute('aria-busy', 'false');
+      }
+    })();
+    """
+    safe_source = (script_source + "\n" + bootstrap).replace("</script", "<\\/script")
+    return f'''<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-{nonce}'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Vista previa del post</title><style>
+*{{box-sizing:border-box}}html,body{{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}}
+#stage{{position:absolute;transform-origin:top left;overflow:hidden;visibility:hidden}}
+#preview-status{{margin:0;position:absolute;inset:0;display:grid;place-items:center;padding:24px;color:#d5d5d5;background:#0b0b0b;font:14px/1.4 sans-serif;text-align:center}}
+#preview-status[hidden]{{display:none}}
+{styles}
+</style></head><body aria-busy="true"><p id="preview-status" role="status">Preparando vista previa…</p><div id="stage" aria-label="Composición editable del post"></div>
+<script id="preview-payload" type="application/json" nonce="{nonce}">{encoded}</script>
+<script nonce="{nonce}">{safe_source}</script></body></html>'''
+
+
 async def _render_pngs(
     plan: ImagePlan,
     style: StyleSystem,
@@ -190,7 +358,7 @@ async def _render_pngs(
     report = validate_plan(plan, style, media_bytes=media_bytes)
     if not report.passed:
         raise ImageExportError("; ".join(report.errors))
-    if plan.renderer_version != RENDERER_VERSION:
+    if plan.renderer_version not in SUPPORTED_RENDERER_VERSIONS:
         raise ImageExportError(f"renderer_version debe ser {RENDERER_VERSION}")
     font_bytes = _font_payload(style)
     media_ids = {media.asset_id for slide in plan.slides for media in slide.media}
@@ -250,7 +418,9 @@ async def _render_pngs(
                     debug_dir = os.environ.get("IMAGE_QC_DEBUG_DIR")
                     if debug_dir:  # ver la lámina que falló sin abrir el navegador
                         await page.screenshot(path=str(Path(debug_dir) / f"qc-fail-{slide.slide_id}.png"))
-                    raise ImageExportError(f"Control de composición fallido en {slide.slide_id}: {qc}")
+                    error = ImageExportError(f"Control de composición fallido en {slide.slide_id}: {qc}")
+                    error.slide_id, error.qc = slide.slide_id, qc
+                    raise error
                 png = await page.screenshot(type="png", animations="disabled")
                 outputs.append((png, qc))
             await browser.close()
@@ -271,7 +441,7 @@ def _jpeg(png: bytes) -> bytes:
     image.save(
         output,
         format="JPEG",
-        quality=90,
+        quality=JPEG_QUALITY,
         optimize=False,
         progressive=False,
         subsampling=0,
@@ -286,18 +456,19 @@ async def render_images_async(
     style: StyleSystem | Mapping[str, Any],
     media_bytes: Mapping[str, bytes] | None = None,
 ) -> RenderManifest:
-    """Renderiza todas las láminas a JPEG sRGB 1080×1350, sin escribir rutas."""
+    """Renderiza el código a JPEG sRGB en el perfil del plan, sin escribir rutas."""
     image_plan = parse_image_plan(plan)
     style_system = _parse_style(style)
     media = dict(media_bytes or {})
+    profile = get_image_profile(image_plan.format)
     started = time.perf_counter()
     started_at = _timestamp()
-    outputs, _, engine_version = await _render_pngs(image_plan, style_system, media, size=STAGE_SIZE)
+    outputs, _, engine_version = await _render_pngs(image_plan, style_system, media, size=profile.size)
     digest = plan_hash(image_plan, style_system)
     assets: list[RenderedAsset] = []
     for slide, (png, qc) in zip(image_plan.slides, outputs, strict=True):
         jpeg = _jpeg(png)
-        validation = validate_jpeg(jpeg, style_system, qc=qc)
+        validation = validate_jpeg(jpeg, style_system, expected_size=profile.size, qc=qc)
         validation.require()
         assets.append(
             RenderedAsset(
@@ -307,9 +478,9 @@ async def render_images_async(
                 sha256=hashlib.sha256(jpeg).hexdigest(),
                 mime="image/jpeg",
                 format="JPEG",
-                width=1080,
-                height=1350,
-                aspect_ratio="4:5",
+                width=profile.width,
+                height=profile.height,
+                aspect_ratio=profile.format,
                 bytes=len(jpeg),
                 color_profile="sRGB",
                 rendered_at=_timestamp(),
@@ -330,6 +501,7 @@ async def render_images_async(
         engine="Playwright + Pillow",
         engine_version=engine_version,
         renderer_version=RENDERER_VERSION,
+        source_hash=renderer_source_hash(image_plan, style_system),
     )
 
 
@@ -447,8 +619,11 @@ def main() -> int:
     parser.add_argument("--style", required=True, choices=("node_tech", "node_history"))
     parser.add_argument("--media", action="append", default=[], metavar="ASSET_ID=PATH")
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--format", choices=IMAGE_FORMATS, help="Perfil de exportación; conserva el plan si no se indica")
     args = parser.parse_args()
     plan = parse_image_plan(json.loads(args.plan.read_text(encoding="utf-8")))
+    if args.format is not None:
+        plan = replace(plan, format=args.format)
     from src.adapters.data.local_image_post_resources import LocalImagePostResources
 
     media = {}

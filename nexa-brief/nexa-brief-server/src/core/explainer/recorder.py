@@ -112,7 +112,7 @@ def _consume_render_line(job: "RecordJob", line: str, render_started: float) -> 
 
 
 # Captura la miniatura de un video (thumbnails.render): (video, opciones) → {opción: archivo}
-ThumbnailRenderer = Callable[[ExplainerVideo, tuple[str, ...]], Awaitable[dict[str, Path]]]
+ThumbnailRenderer = Callable[..., Awaitable[dict[str, Path]]]
 
 
 def resolve_formats(formats: list[str] | tuple[str, ...] | None, selectors: list[str]) -> tuple[str, ...]:
@@ -415,7 +415,7 @@ class ExplainerRecorder:
             await compress_for_publishing(Path(output), keep_master=False)
         job.render_seconds = round(time.monotonic() - started, 1)
 
-        thumbnail = await self._thumbnail(video, out_dir)
+        thumbnail = await self._thumbnail(video, out_dir, job.formats)
         job.scheduled_job_id = await self._register_for_scheduling(
             video, out_dir, job.formats, job.render_seconds, thumbnail, recording_id=recording_id
         )
@@ -468,6 +468,8 @@ class ExplainerRecorder:
                     "post_id": result.post_id, "url": result.url,
                     "platform": result.platform, "account_alias": result.account_alias,
                 }
+                if platform in ("youtube", "instagram", "facebook"):
+                    entry["thumbnail"] = (getattr(result, "raw_response", None) or {}).get("thumbnail")
                 published_count += 1
                 job.publish_results.append(entry)
                 job.publish_result = job.publish_result or entry
@@ -491,7 +493,9 @@ class ExplainerRecorder:
         job.error = "; ".join(failures) or None
         job.state = RecordState.done
 
-    async def _thumbnail(self, video: ExplainerVideo, out_dir: Path) -> Path | None:
+    async def _thumbnail(
+        self, video: ExplainerVideo, out_dir: Path, formats: tuple[str, ...] = ("16x9",),
+    ) -> Path | None:
         """Captura de nuevo la miniatura elegida (los textos pueden haber cambiado) y la copia a la salida.
 
         Si el diseño no tiene intros o la captura falla, el video se graba igual, sin miniatura propia.
@@ -506,6 +510,16 @@ class ExplainerRecorder:
             return None
         dest = out_dir / "thumbnail.jpg"
         shutil.copy2(thumbnails.thumbnail_file(video, option), dest)
+        shutil.copy2(dest, out_dir / "thumbnail-16x9.jpg")
+        if "9x16" in formats and "orientation" in inspect.signature(self._render_thumbnail).parameters:
+            try:
+                await self._render_thumbnail(video, (option,), orientation="9x16")
+                shutil.copy2(
+                    thumbnails.thumbnail_file(video, option, "9x16"), out_dir / "thumbnail-9x16.jpg",
+                )
+            except thumbnails.ThumbnailError as exc:
+                # La publicación obtiene un cuadro de la intro del MP4 si falla esta captura.
+                logger.warning("explainer_portrait_thumbnail_failed", video_id=video.video_id, error=str(exc))
         return dest
 
     async def _register_for_scheduling(

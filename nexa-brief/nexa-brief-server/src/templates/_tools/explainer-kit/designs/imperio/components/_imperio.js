@@ -197,14 +197,24 @@
       },
       /** anillos de tierra ya proyectados (una vez por proyección) con su caja → recortar es solo aritmética */
       rings: null,
-      projRings() {
-        if (this.rings) return this.rings;
-        const out = []; let cur = null;
-        const sink = { moveTo(x, y) { cur = [x, y]; out.push(cur); }, lineTo(x, y) { cur.push(x, y); }, closePath() {}, arc() {}, rect() {} };
-        d3.geoPath(proj, sink)(W.land);
-        return (this.rings = out.map(r => { let a = Infinity, b = Infinity, c = -Infinity, d = -Infinity;
+      projRings() { this._ringsWork(Infinity); return this.rings; },
+      /** proyecta la tierra polígono a polígono: en vivo se reparte en ratos libres (cada banda de longitud nueva costaba ~50 ms
+          de golpe = un tirón); pedida de golpe (projRings) termina lo que falte. El resultado es el mismo que de una vez. */
+      _ringsWork(budget) {
+        if (this.rings) return true;
+        const t0 = performance.now(), L = W.land;
+        const w = this._rw || (this._rw = { polys: !L ? [] : L.type === "MultiPolygon" ? L.coordinates : [L.coordinates], i: 0, out: [] });
+        let cur = null; const sink = { moveTo(x, y) { cur = [x, y]; w.out.push(cur); }, lineTo(x, y) { cur.push(x, y); }, closePath() {}, arc() {}, rect() {} };
+        const gp = d3.geoPath(proj, sink);
+        while (w.i < w.polys.length) {
+          gp({ type: "Polygon", coordinates: w.polys[w.i++] });
+          if (performance.now() - t0 > budget) break;
+        }
+        if (w.i < w.polys.length) return false;
+        this.rings = w.out.map(r => { let a = Infinity, b = Infinity, c = -Infinity, d = -Infinity;
           for (let k = 0; k < r.length; k += 2) { const x = r[k], y = r[k + 1]; if (x < a) a = x; if (x > c) c = x; if (y < b) b = y; if (y > d) d = y; }
-          return { r, b: [a, b, c, d] }; }));
+          return { r, b: [a, b, c, d] }; });
+        this._rw = null; return true;
       },
       _clip(x0, y0, x1, y1) {
         /* Sutherland–Hodgman contra el rectángulo (con margen: las aristas del recorte quedan fuera del cuadro) */
@@ -412,11 +422,12 @@
    * resolución) y los cuadros cercanos solo lo transforman (la cámara es afín en el plano Mercator).
    * La llave es función pura de la cámara cuantizada → mismo cuadro en cualquier orden de seek.
    */
-  const KM = 1.3, KR = 1.1, STRIPS = 8, CAP = 12;
+  const KM = 1.3, KR = 1.1, STRIPS = 8, CAP = 16;
   /* ¿reproducción en vivo (navegador, modal) o render cuadro a cuadro (seek)? En el render todo se dibuja
      en el momento y entero (determinista); en vivo las llaves se arman por franjas en los ratos libres. */
   let SEEKING = false;
   const QS0 = new URLSearchParams(location.search), STILL = QS0.has("t") || QS0.has("paused");
+  const CONTROLLED_AUDIO = QS0.get("controls") === "1" && QS0.get("clock") !== "synthetic";
   IM.live = () => {
     const P = window.__promo;
     if (P && !P.__imWrapped) {
@@ -425,7 +436,8 @@
       P.release = () => { SEEKING = false; return rl(); };
       P.__imWrapped = true;
     }
-    return !SEEKING && !STILL;
+    /* Una búsqueda en pausa también es una captura exacta: no mostrar reservas. */
+    return !SEEKING && !STILL && !(CONTROLLED_AUDIO && document.getElementById("audio")?.paused);
   };
   /* almacén ÚNICO de llaves (compartido por todos los planos): la llave es función pura de
      (cuadro, cámara, rayado, gris) → el plano siguiente reusa lo que ya se armó */
@@ -438,12 +450,28 @@
     if (e) { STORE.delete(id); STORE.set(id, e); return e; }          /* LRU */
     const r = dpr * KR, sk = { ...st, W: st.W * KM, H: st.H * KM }, kc = { ...cam, span: cam.span * KM };
     const c = canvas(sk.W * r, sk.H * r);
-    e = { id, ls: lookSig(st, dpr, look), c, g: c.getContext("2d"), r, sk, kc, look, M: new DOMMatrix(IM.view(sk, kc).m).inverse(), w: sk.W, h: sk.H, done: 0, used: 0 };
+    e = { id, ls: lookSig(st, dpr, look), c, g: c.getContext("2d"), r, sk, kc, look, bk: IM.atlas(kc.lon).key, M: new DOMMatrix(IM.view(sk, kc).m).inverse(), w: sk.W, h: sk.H, done: 0, used: 0 };
     STORE.set(id, e);
-    while (STORE.size > CAP) { const [oid, o] = STORE.entries().next().value; o.c.width = o.c.height = 1; STORE.delete(oid); const qi = QUEUE.indexOf(o); if (qi >= 0) QUEUE.splice(qi, 1); }
+    while (STORE.size > CAP) {
+      /* Conservar una reserva completa por aspecto hasta tener su reemplazo.
+         Sin ella, volver al gris obliga a terminar una llave dentro del cuadro. */
+      let victim = STORE.entries().next().value;
+      if (IM.live()) {
+        const ready = new Map();
+        for (const k of STORE.values()) if (k.done >= STRIPS) ready.set(k.ls, (ready.get(k.ls) || 0) + 1);
+        victim = [...STORE].find(([oid, k]) => oid !== id && (k.done < STRIPS || ready.get(k.ls) > 1)) || victim;
+      }
+      const [oid, o] = victim;
+      o.c.width = o.c.height = 1; STORE.delete(oid);
+      const qi = QUEUE.indexOf(o); if (qi >= 0) QUEUE.splice(qi, 1);
+    }
     return e;
   }
   /** dibuja la franja n de la llave (recorte en píxeles enteros: mismo resultado que de una vez) */
+  /** estrenar una llave terminada: el PRIMER drawImage desde un lienzo recién armado cuesta ~100 ms (medido); un dibujado de 1 px
+      lo paga aquí, en el trabajo de fondo, y no en el cuadro que la muestra por primera vez */
+  const PRIME = canvas(1, 1), PRIMEG = PRIME.getContext("2d");
+  function prime(e) { if (!e.primed) { e.primed = true; try { PRIMEG.drawImage(e.c, 0, 0, 1, 1, 0, 0, 1, 1); } catch (x) {} } }
   function strip(e, n) {
     const g = e.g, H = e.c.height, y0 = Math.floor(H * n / STRIPS), y1 = Math.floor(H * (n + 1) / STRIPS);
     g.setTransform(1, 0, 0, 1, 0, 0); g.save(); g.beginPath(); g.rect(0, y0, e.c.width, y1 - y0); g.clip();
@@ -459,7 +487,12 @@
     e.done = STRIPS; const qi = QUEUE.indexOf(e); if (qi >= 0) QUEUE.splice(qi, 1);
     return e;
   }
-  const idle = window.requestIdleCallback || (f => setTimeout(() => f({ timeRemaining: () => 8 }), 16));
+  /* Trabajo de fondo (armar llaves del atlas por franjas). OJO: mientras la animación corre a cada cuadro, el navegador
+     puede NO estar nunca ocioso y requestIdleCallback no se ejecuta jamás (medido: 0 llamadas en 6 s) → la cola no avanza,
+     ninguna llave llega lista y cada cambio de plano arma el atlas de golpe (tirones de 300–570 ms). Con `timeout` el
+     navegador lo ejecuta de todos modos pasado ese plazo (didTimeout, timeRemaining 0): una franja chica cada ~60 ms
+     en vez de un bloque enorme en el peor momento. Sin requestIdleCallback (Safari) se usa un temporizador. */
+  const idle = window.requestIdleCallback ? f => window.requestIdleCallback(f, { timeout: 60 }) : (f => setTimeout(() => f({ timeRemaining: () => 8 }), 16));
   let pumping = false;
   function pump(dl) {
     pumping = false;
@@ -467,11 +500,28 @@
     while (QUEUE.length && (dl.timeRemaining() > 2 || performance.now() - t0 < 2)) {
       const e = QUEUE[0];
       if (e.done >= STRIPS || !STORE.has(e.id)) { QUEUE.shift(); continue; }
-      strip(e, e.done++);
+      strip(e, e.done++); if (e.done >= STRIPS) prime(e);
       if (performance.now() - t0 > 12) break;                          /* una franja por cuadro como mucho si se pasa */
     }
     if (QUEUE.length) { pumping = true; idle(pump); }
   }
+  /**
+   * Reparto por fotograma: después de dibujar, si todavía sobra presupuesto del cuadro (≈13 ms), se avanzan franjas de la cola con
+   * el coste medio REAL de una franja (EMA). Es determinista respecto del reloj de pantalla, no depende de que el navegador tenga
+   * tiempo ocioso: en equipos rápidos (franja de 3–6 ms) una llave queda lista en pocos cuadros; en lentos, donde una franja
+   * no cabe, no se mete en el cuadro y sigue el camino de requestIdleCallback con plazo.
+   */
+  let FRAME_T0 = 0, STRIP_MS = 14;
+  IM.frameStart = () => { FRAME_T0 = performance.now(); };
+  IM.sliceWork = (budget = 13) => {
+    if (!QUEUE.length || !IM.live()) return;
+    while (QUEUE.length) {
+      if (performance.now() - FRAME_T0 + STRIP_MS > budget) break;
+      const e = QUEUE[0];
+      if (e.done >= STRIPS || !STORE.has(e.id)) { QUEUE.shift(); continue; }
+      const t0 = performance.now(); strip(e, e.done++); if (e.done >= STRIPS) prime(e); STRIP_MS = STRIP_MS * 0.7 + (performance.now() - t0) * 0.3;
+    }
+  };
   function want(e, urgent = false) {
     if (e.done >= STRIPS) return;
     const qi = QUEUE.indexOf(e);
@@ -479,8 +529,30 @@
     else urgent ? QUEUE.unshift(e) : QUEUE.push(e);
     if (!pumping) { pumping = true; idle(pump); }
   }
+  /** precalentar la proyección de una banda de longitud (y los países del rayado) en ratos libres, por trozos de ~3 ms */
+  IM.warmAtlas = (lon, hatch) => {
+    if (!IM.live() || !IM.world().ok) return;
+    const A = IM.atlas(lon);
+    if (A.rings || A._warming) return;
+    A._warming = true;
+    const step = dl => {
+      const room = dl && dl.timeRemaining ? Math.max(4, Math.min(8, dl.timeRemaining() - 1)) : 4;
+      if (A._ringsWork(room)) { for (const n of hatch || []) A.country(n); A._warming = false; } else idle(step);
+    };
+    idle(step);
+  };
   /** precalentar la llave de una cámara (lo usan los planos que vienen) */
-  IM.warmKey = (ctx, cam, look) => { if (IM.live()) want(entry(ctx.stage, ctx.dpr, cam, { hatch: look.hatch, gray: look.gray || 0 })); };
+  /* Como mucho WARM_MAX llaves pendientes: quien pide va en orden de necesidad y vuelve a pedir cada 0,25 s. Encolar todo de golpe
+     llenaba el almacén (CAP) y las llaves se desalojaban unas a otras antes de usarse (medido: cola de 15, 16 de 16 llaves). */
+  const WARM_MAX = 4;
+  IM.warmKey = (ctx, cam, look, urgent = false) => {
+    if (!IM.live()) return;
+    const lk = { hatch: look.hatch, gray: look.gray || 0 };
+    if (!urgent && !STORE.has(sig(ctx.stage, ctx.dpr, cam, lk)) && QUEUE.length >= WARM_MAX) return;
+    want(entry(ctx.stage, ctx.dpr, cam, lk), urgent);
+  };
+  /** diagnóstico: estado del almacén de llaves (cuántas franjas de 8 lleva cada una) y la cola pendiente */
+  IM.keyStats = () => ({ cap: CAP, queue: QUEUE.length, keys: [...STORE.values()].map(e => ({ id: e.id.split("|").slice(1).join("|"), done: e.done })) });
   IM.clearKeys = () => { for (const e of STORE.values()) e.c.width = e.c.height = 1; STORE.clear(); QUEUE.length = 0; };
 
   IM.mapCache = (ctx) => {
@@ -493,9 +565,15 @@
       draw(G, cam, kcam, id, look = {}, more = null) {
         const st = ctx.stage, V = IM.view(st, cam), g = look.gray || 0, base = { hatch: look.hatch }, live = IM.live();
         const blit = (e, a) => {
-          const T = new DOMMatrix(V.m).multiply(e.M);
+          /* La llave se dibujó en la proyección de SU banda de longitud (múltiplo de 10°) y la vista actual puede estar en otra: las
+             coordenadas de atlas difieren en (banda_llave − banda_vista)·UPD en x. Sin esta traslación el mapa sale corrido 10°
+             (85–213 px según el zoom) mientras la cámara cruza una frontera de banda, y salta al cambiar de llave. */
+          const dl = ((e.bk - V.A.key + 540) % 360) - 180, T = new DOMMatrix(V.m).translate(dl * UPD, 0).multiply(e.M);
           G.save(); G.globalAlpha = a; G.transform(T.a, T.b, T.c, T.d, T.e, T.f); G.drawImage(e.c, 0, 0, e.w, e.h); G.restore();
           e.used = performance.now();
+          /* La reserva también se usa: si no se toca el LRU, la cola desaloja la
+             última llave completa y el próximo cuadro tiene que armar una entera. */
+          if (live && STORE.get(e.id) === e) { STORE.delete(e.id); STORE.set(e.id, e); }
         };
         const fallback = ls => { let best = null; for (const e of STORE.values()) if (e.ls === ls && e.done >= STRIPS && (!best || e.used > best.used)) best = e; return best; };
         const put = (gl, a) => {
@@ -884,16 +962,48 @@
     if (!IM.live() || Math.abs(t - LA) < 0.25) return; LA = t;
     for (const b of ctx.beats || []) {
       if ((b.layer || "main") !== "main" || b.t0 <= t || b.t0 > t + 3.5) continue;
-      const def = K.registry.get(b.use); if (!def?.mapCam || !def.mapLook) continue;
-      const p = K.resolveParams(def, b.params || {}, ctx.C), cam = IM.camOf(ctx, b), lk = def.mapLook(p) || {};
+      const def = K.registry.get(b.use); if ((!def?.mapCam && !def?.mapWarm) || !def.mapLook) continue;
+      const p = K.resolveParams(def, b.params || {}, ctx.C), cam = def.mapCam ? IM.camOf(ctx, b) : null, lk = def.mapLook(p) || {};
       if (p.src) IM.warmBw(ctx, p.src);
-      for (const c of [cam.from, cam.to]) { const A = IM.atlas(c.lon); if (!A.rings && !A._warm) { A._warm = 1; idle(() => A.projRings()); } }
-      const kk = IM.keyOf(cam, 0), grays = new Set([lk.gray >= 0.995 ? 1 : 0]); if (/archive/.test(b.use)) { grays.add(0); grays.add(1); }
-      for (const gl of grays) { IM.warmKey(ctx, kk.cam, { hatch: lk.hatch, gray: gl }); if (kk.N > 0) IM.warmKey(ctx, kk.cam1, { hatch: lk.hatch, gray: gl }); }
+      const kk = cam ? IM.keyOf(cam, 0) : null, grays = new Set(Array.isArray(lk.grays) && lk.grays.length ? lk.grays : [lk.gray >= 0.995 ? 1 : 0]);
+      if (/archive/.test(b.use)) { grays.add(0); grays.add(1); }
+      /* componentes con recorrido de cámara propio (varios vuelos): mapWarm(p, ctx, beat) → [{ cam, hatch? }] */
+      const own = def.mapWarm ? (def.mapWarm(p, ctx, b) || []) : null;     /* lista propia: reemplaza al recorrido simple from→to */
+      for (const c of own ? own.map(w => w.cam) : [cam.from, cam.to]) IM.warmAtlas(c.lon, lk.hatch);
+      /* las llaves con las que ARRANCA el plano siguiente son prioritarias: se van a pedir sí o sí en pocos segundos */
+      /* La cola urgente inserta por delante: recorrer al revés conserva el orden de uso. */
+      const pending = [];
+      const warm = (c, hatch) => { for (const gl of grays) pending.push({ cam: c, hatch, gray: gl }); };
+      if (own) for (const w of own) warm(w.cam, w.hatch || lk.hatch);
+      else { warm(kk.cam, lk.hatch); if (kk.N > 0) warm(kk.cam1, lk.hatch); }
+      for (const w of pending.reverse()) IM.warmKey(ctx, w.cam, { hatch: w.hatch, gray: w.gray }, true);
+    }
+  }
+  /**
+   * Planos ACTIVOS con recorrido simple from→to: una llave por delante (lo que hacía MC.draw con `warm`) no alcanza en un zoom
+   * largo (≈12 llaves en 3 s: la cámara gasta una cada 0,3 s y armar una cuesta ~0,5 s) → el cuadro se quedaba sin llave y se
+   * armaba de golpe. Se muestrea la cámara en los próximos ~3,5 s y se encolan, en orden de uso, las llaves que va a pedir.
+   */
+  let LB = -1;
+  function lookBeats(t, ctx) {
+    if (!IM.live() || Math.abs(t - LB) < 0.25) return; LB = t;
+    for (const b of ctx.beats || []) {
+      if ((b.layer || "main") !== "main" || t < b.t0 || t >= b.t1) continue;
+      const def = K.registry.get(b.use); if (!def?.mapCam || !def.mapLook || def.mapWarm) continue;
+      const p = K.resolveParams(def, b.params || {}, ctx.C), cam = IM.camOf(ctx, b), lk = def.mapLook(p) || {}, lt = t - b.t0, seen = new Set();
+      const grays = Array.isArray(lk.grays) && lk.grays.length ? lk.grays : [lk.gray >= 0.995 ? 1 : 0];
+      for (let tau = 0.3; tau <= 3.6; tau += 0.3) {
+        if (lt + tau > b.dur) break;
+        const kk = IM.keyOf(cam, IM.camQ(cam, lt + tau, b.dur));
+        for (const c of [kk.cam, kk.f > 0 ? kk.cam1 : null]) {
+          if (!c) continue; const id = `${c.lon.toFixed(3)},${c.lat.toFixed(3)},${c.span.toFixed(3)},${c.rot.toFixed(2)}`; if (seen.has(id)) continue; seen.add(id);
+          IM.warmAtlas(c.lon, lk.hatch); for (const gl of grays) IM.warmKey(ctx, c, { hatch: lk.hatch, gray: gl });
+        }
+      }
     }
   }
   function post(t, ctx) {
-    lookAhead(t, ctx);
+    lookAhead(t, ctx); lookBeats(t, ctx); IM.sliceWork();
     const G = ctx.g.top, st = ctx.stage, { W, H } = st, T = IM.tex(), f = IM.fi(t), r = K.rng(f * 7919 + 13);
     G.save();
     /* banda suave detrás de los subtítulos (el atlas es claro) */
@@ -937,11 +1047,19 @@
     for (const b of ctx.beats || []) for (const k of ["native", "text", "nativeText"]) { const v = b.params?.[k]; if (typeof v === "string" && /[^\u0000-ɏ]/.test(v)) txt.add(v); }
     for (const s of txt) document.fonts.load(IM.nativeFont(40), s).catch(() => {});
   }
+  function prepareNative(ctx) {
+    const txt = new Set();
+    for (const b of ctx.beats || []) for (const k of ["native", "text", "nativeText"]) {
+      const v = b.params?.[k]; if (typeof v === "string" && /[^\u0000-ɏ]/.test(v)) txt.add(v);
+    }
+    return Promise.all([...txt].map(s => document.fonts.load(IM.nativeFont(40), s).catch(() => {})));
+  }
 
   IM.fx = { grain: 0.1, vignette: 1, dust: 0, fade: 0, noCapBand: false };
   K.family("imperio", {
     setup(ctx) { IM.tex(); IM.world(); injectCss(); preloadNative(ctx); return {}; },
-    frame(t, ctx) { IM.fx = { grain: 0.08, vignette: 0.4, dust: 0, fade: 0, noCapBand: false }; backdrop(t, ctx); },
+    prepare: prepareNative,
+    frame(t, ctx) { IM.frameStart(); IM.fx = { grain: 0.08, vignette: 0.4, dust: 0, fade: 0, noCapBand: false }; backdrop(t, ctx); },
     post(t, ctx) { post(t, ctx); },
     resize() { VG = null; if (BD) BD.free(); BD = null; IM.clearKeys(); },
   });

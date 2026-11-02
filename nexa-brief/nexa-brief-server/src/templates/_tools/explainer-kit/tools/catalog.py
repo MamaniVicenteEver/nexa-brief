@@ -89,6 +89,9 @@ def quick(data, design_id):
                 f'`{{"t": 42, "dur": 12, "use": "{fam}.introv2", "params": {{"text": "LA VERDAD", "video": "assets/media/archivo.mp4", "poster": "assets/media/archivo.jpg", "start": 2, "rate": 1, "loop": true, {video_focus}, "logo": "assets/media/logos/marca.svg", "logoName": "Marca"}}}}`', ""]
     out += ["## Marcas e instituciones", "",
             "El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Usá `logo`, `logoName`, `logoPos` y `logoSize` en el beat visual (`rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`). `common.logo` está obsoleto. Preferí SVG; el PNG debe ser transparente.", ""]
+    out += ["## Apoyos visuales preferidos (política v5)", "",
+            "Repartí por todo el video y sin orden fijo: (1) miniatura `rough.introv2` o `binary.introv2` con foto/video y texto grande, (2) `common.clip` con `layout: full` y `caption` grande (`textColor: ink|accent|mix`, `accentWords`, `textSide: left|right|bottom`, `textIn`, `sub` y `logo` opcionales), (3) foto en cuadro como tercera opción. Cada apoyo muestra la frase narrada. Imagen visible 5–10 s; video 8–16 s; cada archivo como máximo dos usos. Cada tercio necesita una miniatura o un video completo. Consultá `kit.py library` antes de crear componentes propios.", "",
+            '`{"use":"common.clip","dur":12,"params":{"src":"assets/media/archivo.mp4","layout":"full","caption":"Una ^conversación^ digital","textColor":"mix","textSide":"left","textIn":"slide"}}`', ""]
     return "\n".join(out)
 
 def main():

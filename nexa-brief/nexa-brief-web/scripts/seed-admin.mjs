@@ -7,7 +7,7 @@ import path from "node:path";
 // email. Uso: node scripts/seed-admin.mjs [email] [password]
 import bcrypt from "bcryptjs";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = process.env.NEXA_WEB_DATA_DIR || (process.env.NEXA_PROFILE_DIR ? path.join(process.env.NEXA_PROFILE_DIR, "web-data") : path.join(process.cwd(), "data"));
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 
 const email = process.argv[2] ?? "admin@nexabrief.com";
@@ -44,4 +44,4 @@ if (existingIndex >= 0) {
 await mkdir(DATA_DIR, { recursive: true });
 await writeFile(USERS_FILE, JSON.stringify(users, null, 2), "utf-8");
 
-console.log(`Usuario admin listo: ${email} / ${password}`);
+console.log("Usuario admin actualizado.");

@@ -19,6 +19,9 @@ from src.adapters.publishing.image_publisher import (
     ProgressCallback,
     ProgressPersistenceError,
     ImageAdapterResult,
+    ImageDeliveryValidationError,
+    validate_image_delivery,
+    validate_image_delivery_assets,
     caption_for,
     classify_graph_error,
     copy_validation_error,
@@ -37,7 +40,6 @@ from src.adapters.publishing.instagram_media_url import create_signed_media_url
 from src.config.settings import settings
 
 _GRAPH_BASE = f"https://graph.facebook.com/{settings.meta_graph_api_version}"
-_MAX_CAROUSEL_SLIDES = 5
 
 
 class InstagramImageAdapter:
@@ -169,11 +171,11 @@ class InstagramImageAdapter:
                 status="failed_permanent",
                 last_error={"code": "COPY_LIMIT", "message": copy_error},
             )
-        expected_count = _MAX_CAROUSEL_SLIDES if placement == "carousel" else 1
-        if placement not in {"image", "carousel"} or len(assets) != expected_count:
+        try:
+            validate_image_delivery(delivery_spec)
+        except ImageDeliveryValidationError as exc:
             return ImageAdapterResult(
-                status="failed_permanent",
-                last_error={"code": "INVALID_IMAGE_COUNT", "message": "Instagram expects one JPEG or five carousel JPEGs"},
+                status="failed_permanent", last_error={"code": exc.code, "message": str(exc)},
             )
         if not alias or not instagram_id:
             return ImageAdapterResult(
@@ -183,6 +185,13 @@ class InstagramImageAdapter:
         previous = remote_state(delivery_spec)
         if value(delivery_spec, "status") == "outcome_unknown" or previous.get("parent_container_id") or previous.get("post_id"):
             return await self.reconcile_image_delivery(delivery_spec)
+        try:
+            await validate_image_delivery_assets(delivery_spec, self._media_storage)
+        except (ValueError, OSError) as exc:
+            return ImageAdapterResult(
+                status="failed_permanent",
+                last_error={"code": getattr(exc, "code", "INVALID_IMAGE"), "message": str(exc)[:300]},
+            )
         quota = await self.get_content_publishing_limit(alias)
         if quota.get("status") != "ok":
             code = "PERMISSION_MISSING" if quota.get("status") == "permission_missing" else "META_QUOTA_UNAVAILABLE"

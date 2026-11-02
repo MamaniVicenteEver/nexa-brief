@@ -312,7 +312,7 @@ class JsonStore:
                 raise RuntimeError('No se pueden crear trabajos hasta recuperar los datos de trabajos.')
             if key:
                 for existing in existing_jobs:
-                    if existing.get('idempotency_key') == key:
+                    if existing.get('idempotency_key') == key and existing.get('alias') == job.get('alias'):
                         return existing, False
             self._write(self._job_path(job['id']), job)
             return job, True

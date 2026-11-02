@@ -142,6 +142,60 @@
    "offset": 0
   },
   {
+   "t": 23.2,
+   "offset": 0,
+   "use": "imperio.map",
+   "params": {
+    "country": "Japan",
+    "hatch": [
+     "Japan"
+    ],
+    "from": [
+     119.76219295,
+     19.04129583,
+     98.71840513,
+     5.83980064
+    ],
+    "to": [
+     118,
+     18,
+     100,
+     6
+    ],
+    "sunSize": 0.3,
+    "rays": 28,
+    "raysAt": -11.4,
+    "dir": 180,
+    "spread": 0.72,
+    "rayLen": 0.46,
+    "ships": 2,
+    "compass": true,
+    "labels": [
+     {
+      "t": "Mar del\nJapón",
+      "at": [
+       135,
+       40
+      ]
+     },
+     {
+      "t": "Océano\nPacífico",
+      "at": [
+       151,
+       23
+      ]
+     }
+    ],
+    "sun": false,
+    "gray": 1,
+    "enter": 0.5,
+    "ease": "out",
+    "rayFloor": 0.02,
+    "rayAlpha": 0.56,
+    "rayColor": "#b3122f"
+   }
+  },
+  {
    "t": 27.7,
    "use": "imperio.archive",
    "params": {
@@ -335,7 +389,8 @@
     "ships": 1,
     "compass": true,
     "caption": "BLETCHLEY PARK"
-   }
+   },
+   "dur": 6.4
   },
   {
    "at": "tuvo una idea",
@@ -356,7 +411,8 @@
     "ships": 0,
     "labels": [],
     "enter": 0.4
-   }
+   },
+   "offset": 2.46
   },
   {
    "at": "Si una persona",
@@ -399,7 +455,8 @@
      }
     ],
     "enter": 0.4
-   }
+   },
+   "offset": 1.48
   },
   {
    "at": "sí podía",
@@ -465,7 +522,8 @@
     "ships": 1,
     "compass": true,
     "caption": "LA BOMBA"
-   }
+   },
+   "dur": 6.4
   },
   {
    "at": "tambores girando",
@@ -486,7 +544,8 @@
     "ships": 0,
     "labels": [],
     "enter": 0.4
-   }
+   },
+   "offset": 2.5
   },
   {
    "at": "buscando contradicciones",
@@ -506,7 +565,8 @@
      "Germany"
     ],
     "enter": 0.45
-   }
+   },
+   "offset": 2.0
   },
   {
    "at": "Su secreto era",
@@ -527,7 +587,8 @@
     "ships": 0,
     "labels": [],
     "enter": 0.4
-   }
+   },
+   "offset": 1.22
   },
   {
    "at": "Los alemanes repetían",
@@ -1257,5 +1318,5 @@
    }
   }
  ],
- "notes": "Los dos primeros planos siguen el ritmo de la referencia; la narración y los medios restantes son una copia de Turing-Enigma para probar el kit."
+ "notes": "Los dos primeros planos siguen el ritmo de la referencia; la narración y los medios restantes son una copia de Turing-Enigma para probar el kit. Ajuste sandbox 2026-11-01: archivo fotográfico visible 6–12 s; un puente del mismo mapa a 23,2 s limita la primera foto a 11,4 s sin alterar su cámara ni la voz; Bletchley y Bomba duran 6,4 s con los planos siguientes desplazados. Esta demo no contiene clips de video."
 }

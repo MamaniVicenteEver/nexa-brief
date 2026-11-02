@@ -7,6 +7,8 @@ import json
 import re
 from typing import Any, Mapping
 
+from .profiles import DEFAULT_IMAGE_FORMAT, get_image_profile
+
 
 class ImagePlanError(ValueError):
     """El plan no cumple el contrato de imagen."""
@@ -345,13 +347,15 @@ def build_image_plan(
     slides: list[Mapping[str, Any]],
     style: Any,
     seed: int = 0,
-    renderer_version: str = "image-stage-1.0.0",
+    renderer_version: str = "image-stage-1.1.1",
+    format: str = DEFAULT_IMAGE_FORMAT,
 ) -> ImagePlan:
     """Crea un plan estable desde láminas editoriales ya ligadas a sus fuentes."""
     style_data = style.to_dict() if hasattr(style, "to_dict") else style
     style_category = style_data.get("category_id")
     if category_id != style_category:
         raise ImagePlanError("La categoría del estilo y del plan deben coincidir")
+    get_image_profile(format)
     draft = {
         "schema_version": 1,
         "category_id": category_id,
@@ -360,7 +364,7 @@ def build_image_plan(
         "style_id": style_data["style_id"],
         "style_version": style_data["version"],
         "template_id": template_id,
-        "format": "4:5",
+        "format": format,
         "slides": list(slides),
         "seed": seed,
         "renderer_version": renderer_version,

@@ -21,6 +21,10 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from lengths import of_script  # noqa: E402
 import outro as outro_tool  # noqa: E402
 import narrative_check  # noqa: E402
+import media_relevance  # noqa: E402
+import visual_support  # noqa: E402
+import component_library  # noqa: E402
+import style_media_policy  # noqa: E402
 
 LOCAL_CATALOG = "assets/components/catalog.json"
 
@@ -155,7 +159,7 @@ def find(words, anchor, frm=0):
         if all(i + k < len(words) and words[i + k]["n"] == t for k, t in enumerate(toks)): return i
     return -1
 
-def quality_check(proto, config, script, beats, words, total, errs, catalog=None):
+def quality_check(proto, config, script, beats, words, total, errs, catalog=None, warns=None):
     """Piso configurable por diseño y métricas; los tiempos son los resueltos por el storyboard."""
     if config.get("quality_policy_version", 1) >= 3:
         beats = resolved_video_beats(config, beats, total)
@@ -196,7 +200,8 @@ def quality_check(proto, config, script, beats, words, total, errs, catalog=None
         paths = {str(params[name]).split("assets/media/", 1)[-1] for name, rule in spec.items()
                  if name != "logo" and rule.get("type") == "image" and isinstance(params.get(name), str) and params[name]}
         photos.update(paths)
-    for kind, counts in (("componente propio", custom_counts), ("foto", photos)):
+    legacy_counts = (("componente propio", custom_counts),) if config.get("quality_policy_version", 1) >= 5 else (("componente propio", custom_counts), ("foto", photos))
+    for kind, counts in legacy_counts:
         for name, n in counts.items():
             if count and (n > settings["repeat_max_uses"] or (n > 1 and n / count > settings["repeat_max_share"])):
                 errs.append(f"{kind} {name}: {n}/{count} usos ({n/count:.1%}); máximo {settings['repeat_max_uses']} usos o {settings['repeat_max_share']:.0%} de beats")
@@ -233,7 +238,7 @@ def quality_check(proto, config, script, beats, words, total, errs, catalog=None
                 errs.append(f"storyboard: {x['t0'] - cursor:.1f}s sin foto/clip antes del beat #{x['i']} (máximo {max_gap}s)")
             cursor = max(cursor, min(x["t1"], visual_end))
             has_photo, _ = media_kinds(x)
-            if has_photo and x["t1"] - x["t0"] < settings["min_photo_seconds"]:
+            if config.get("quality_policy_version", 1) < 5 and has_photo and x["t1"] - x["t0"] < settings["min_photo_seconds"]:
                 errs.append(f"beat #{x['i']} {x['use']}: foto visible {x['t1'] - x['t0']:.1f}s (mínimo {settings['min_photo_seconds']}s)")
         if visual_end - cursor > max_gap:
             errs.append(f"storyboard: {visual_end - cursor:.1f}s sin foto/clip antes del outro (máximo {max_gap}s)")
@@ -243,7 +248,7 @@ def quality_check(proto, config, script, beats, words, total, errs, catalog=None
                 duration = visible_video_seconds(config, x, total)
                 if duration < settings["video_min_seconds"]:
                     errs.append(f"beat #{x['i']} {x['use']}: video visible {duration:.1f}s; mínimo {settings['video_min_seconds']}s")
-                if x["use"] == "common.clip" and not settings["clip_min_seconds"] <= duration <= settings["clip_max_seconds"]:
+                if config.get("quality_policy_version", 1) < 5 and x["use"] == "common.clip" and not settings["clip_min_seconds"] <= duration <= settings["clip_max_seconds"]:
                     print(f"  aviso: beat #{x['i']} common.clip visible {duration:.1f}s; recomendado {settings['clip_min_seconds']}–{settings['clip_max_seconds']}s")
             if total / 60 >= settings["long_video_minutes"]:
                 long_spans = [x for x in video_beats if visible_video_seconds(config, x, total) >= settings["long_video_span_seconds"]]
@@ -302,8 +307,18 @@ def quality_check(proto, config, script, beats, words, total, errs, catalog=None
             if any(s.get("act") in settings["check_opening_acts"] for s in script.get("segments", [])):
                 errs.append("golpe/miedo: no se pudo ubicar su final en la transcripción; corrige las anclas del guion para validar el primer tramo")
     hedge_count = len(narrative_check.hedge_hits(n, script)) if n else 0
-    return {"icon_share": round(share, 4), "distinct_components": len(used), "custom_components_used": len(custom_names),
+    support = None
+    if config.get("quality_policy_version", 1) >= 5:
+        design_path = KIT / "designs" / str(config.get("design", "")) / "design.json"
+        design = json.loads(design_path.read_text(encoding="utf-8")) if design_path.exists() else {}
+        layout = ((design.get("defaults") or {}).get("clip") or {}).get("layout", "full")
+        support = visual_support.check(config, beats, catalog, total, settings["visual_support_v5"], errs,
+                                       warns if warns is not None else [], layout)
+    result = {"icon_share": round(share, 4), "distinct_components": len(used), "custom_components_used": len(custom_names),
             "media_per_min": round(media_rate, 3), "hedge_hits_hook": hedge_count, "lyric_cuts": cuts}
+    if support is not None:
+        result["visual_support"] = support
+    return result
 
 
 def check_audio_end(proto, config, lyrics, beats, total, errs):
@@ -458,10 +473,18 @@ def main(proto):
     legacy_ready = C.get("quality_policy_version", 1) < 2 and data.get("status") in ("listo", "renderizado")
     policy_errors = [] if legacy_ready else errs
     narrative_check.check(proto, C, script, sb, policy_errors)
-    quality = quality_check(proto, C, script, beats, words, total, policy_errors, cat)
+    quality = quality_check(proto, C, script, beats, words, total, policy_errors, cat, warns)
+    # A requested style contract applies even to an older approved sandbox demo.
+    style_media = style_media_policy.check(C, playback_beats, cat, words, total, errs, proto=proto)
+    if style_media is not None:
+        quality["style_media"] = style_media
+    review, relevance = media_relevance.check(proto, C, playback_beats, cat, policy_errors, warns)
+    quality["media_relevance"] = relevance
+    warns.extend(component_library.similar(proto))
     if legacy_ready:
         warns.extend(f"legado aprobado: {message}" for message in policy_errors)
     check_brand_logos(script, beats, cat, proto, errs, warns)
+    data["media_review"] = review
     data["quality"] = quality
     manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("quality:", json.dumps(quality, ensure_ascii=False))

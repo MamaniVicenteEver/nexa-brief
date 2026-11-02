@@ -52,8 +52,9 @@ from urllib.parse import urlparse
 
 import structlog
 
-from src.config.exceptions import PlatformAPIError, QuotaExceededError, VideoNotFoundError
+from src.config.exceptions import PublisherError, PlatformAPIError, QuotaExceededError, VideoNotFoundError
 from src.config.settings import settings
+from src.core.youtube_capabilities import record_thumbnail_result
 from src.core.ports.channel_catalog_port import ChannelCatalogPort, ChannelStats, RemoteVideo
 from src.core.ports.publisher_port import PublishVideoResult, VideoMetadata
 from src.adapters.publishing.base_platform import BasePlatformAdapter, with_retry, CHUNK_SIZE_BYTES
@@ -87,6 +88,7 @@ class YouTubeChannelProfile:
     description: str
     custom_url: str | None
     avatar: str | None
+    long_uploads_status: str | None = None
 
     @classmethod
     def from_resource(cls, resource: dict[str, Any]) -> "YouTubeChannelProfile":
@@ -108,6 +110,7 @@ class YouTubeChannelProfile:
             description=snippet.get("description") or "",
             custom_url=custom_url,
             avatar=avatar,
+            long_uploads_status=(resource.get("status") or {}).get("longUploadsStatus"),
         )
 
 
@@ -238,8 +241,10 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
 
         # ── Step 4: Custom thumbnail (optional) ───────────────────────────────
         thumbnail_path = kwargs.get("thumbnail_path")
+        thumbnail_result = {"status": "not_requested", "reason": "no_image"}
         if thumbnail_path:
-            await self._set_thumbnail(token, video_id, Path(thumbnail_path))
+            thumbnail_result = await self._upload_thumbnail(token, video_id, Path(thumbnail_path))
+            await self._remember_thumbnail(account_alias, thumbnail_result)
 
         if hold_until_hd:
             await self._make_public(token, video_id, account_alias)
@@ -266,7 +271,7 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
             url=f"https://www.youtube.com/watch?v={video_id}",
             platform=self.PLATFORM,
             account_alias=account_alias,
-            raw_response={"video_id": video_id, "comment_posted": comment_posted, "hd_ready": hd_ready},
+            raw_response={"video_id": video_id, "comment_posted": comment_posted, "hd_ready": hd_ready, "thumbnail": thumbnail_result},
         )
 
     async def _wait_for_hd(self, video_id: str, account_alias: str) -> bool:
@@ -382,26 +387,68 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
             logger.warning("youtube_comment_failed", video_id=video_id, error=str(exc)[:300])
             return False
 
+    async def _remember_thumbnail(self, alias: str, result: dict) -> None:
+        try:
+            channel_id = self._token_manager._storage.get_state("youtube", alias).target_id
+            await record_thumbnail_result(alias, channel_id, result)
+        except Exception as exc:  # persistence must not re-upload a completed video
+            logger.warning("youtube_thumbnail_evidence_failed", error_type=type(exc).__name__)
+
     async def _set_thumbnail(self, token: str, video_id: str, path: Path) -> bool:
-        """POST /upload/youtube/v3/thumbnails/set. Never raises: `publish` retries on errors and
-        would upload the whole video again; a missing thumbnail is only logged."""
+        return (await self._upload_thumbnail(token, video_id, path))["status"] == "applied"
+
+    async def _upload_thumbnail(self, token: str, video_id: str, path: Path) -> dict:
+        """Upload once; report partial failure without retrying the video upload."""
         url = f"{_UPLOAD_BASE}/thumbnails/set?videoId={video_id}"
         content_type = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
         try:
             data = path.read_bytes()
-            self._log_request("POST", url, file_size_bytes=len(data))
-            t = time.monotonic()
             async with self._make_client() as client:
                 resp = await client.post(url, headers={"Authorization": f"Bearer {token}", "Content-Type": content_type}, content=data)
-            self._log_response("POST", url, resp.status_code, time.monotonic() - t)
-        except Exception as exc:  # noqa: BLE001 - see docstring
-            logger.warning("youtube_thumbnail_failed", video_id=video_id, error=str(exc)[:300])
-            return False
-        if resp.status_code not in (200, 201):
-            logger.warning("youtube_thumbnail_failed", video_id=video_id, status=resp.status_code, body=resp.text[:300])
-            return False
-        logger.info("youtube_thumbnail_set", video_id=video_id, file=path.name)
-        return True
+        except OSError:
+            return {"status": "failed", "reason": "file_unavailable"}
+        except Exception:
+            return {"status": "failed", "reason": "network"}
+        if resp.status_code in (200, 201):
+            logger.info("youtube_thumbnail_set", video_id=video_id, file=path.name)
+            return {"status": "applied", "reason": "accepted"}
+        try:
+            error = resp.json().get("error") or {}
+            codes = {e.get("reason") for e in error.get("errors", [])}
+        except (ValueError, TypeError, AttributeError):
+            codes = set()
+        if resp.status_code == 401:
+            reason = "reauth_required"
+        elif "quotaExceeded" in codes or "dailyLimitExceeded" in codes:
+            reason = "quota"
+        elif resp.status_code == 429 or "uploadRateLimitExceeded" in codes:
+            reason = "rate_limit"
+        elif "insufficientPermissions" in codes:
+            reason = "oauth_scope"
+        elif "videoNotFound" in codes or resp.status_code == 404:
+            reason = "video_not_found"
+        elif resp.status_code == 403:
+            reason = "permissions"
+        elif resp.status_code == 400:
+            reason = "invalid_image"
+        else:
+            reason = "provider_unavailable"
+        logger.warning("youtube_thumbnail_failed", video_id=video_id, status=resp.status_code, reason=reason)
+        return {"status": "failed", "reason": reason}
+
+    async def upload_thumbnail(self, video_id: str, account_alias: str, path: Path) -> dict:
+        """Update only a thumbnail, with explicit channel and video ownership checks."""
+        expected = self._token_manager._storage.get_state("youtube", account_alias).target_id
+        profile = await self.get_channel_profile(account_alias, expected_channel_id=expected)
+        if not expected or profile is None:
+            raise PlatformAPIError(message="No se pudo confirmar la identidad del canal.", platform="youtube", status_code=403)
+        video = await self.get_video(video_id, account_alias)
+        if video.raw_response.get("snippet", {}).get("channelId") != expected:
+            raise PlatformAPIError(message="El video pertenece a otro canal.", platform="youtube", status_code=403)
+        token = await self._token_manager.get_valid_token("youtube", account_alias)
+        result = await self._upload_thumbnail(token, video_id, path)
+        await self._remember_thumbnail(account_alias, result)
+        return result
 
     async def _init_resumable_session(
         self,
@@ -600,7 +647,7 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
         """Read the connected channel's public profile using its stored OAuth token."""
         token = await self._token_manager.get_valid_token(self.PLATFORM, account_alias)
         url = f"{_YT_BASE}/channels"
-        params = {"part": "snippet", "mine": "true", "maxResults": 50}
+        params = {"part": "snippet,status", "mine": "true", "maxResults": 50}
         headers = {"Authorization": f"Bearer {token}"}
         self._log_request("GET", url, account=account_alias, purpose="channel_profile")
         started = time.monotonic()
@@ -631,7 +678,11 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
             return None
         resource = resource or items[0]
         profile = YouTubeChannelProfile.from_resource(resource)
-        return profile if profile.channel_id and profile.title else None
+        if not profile.channel_id or not profile.title:
+            return None
+        from src.core.youtube_capabilities import record_feature_access
+        await record_feature_access(account_alias, profile.channel_id, profile.long_uploads_status)
+        return profile
 
     # ── CHANNEL CATALOG (sincronización de Canales) ─────────────────────────────
 
@@ -650,14 +701,19 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
     async def _own_channel(self, account_alias: str) -> dict:
         """El recurso `channels` de la cuenta (estadísticas + playlist de subidas). Cuesta 1 unidad."""
         data = await self._get_json(
-            "channels", {"part": "statistics,contentDetails", "mine": "true", "maxResults": 50},
+            "channels", {"part": "statistics,contentDetails,status", "mine": "true", "maxResults": 50},
             account_alias, "channel_catalog",
         )
         items = data.get("items") or []
         if not items:
             raise VideoNotFoundError(f"La cuenta {account_alias} no tiene un canal de YouTube.")
         target = self._token_manager.target_id(self.PLATFORM, account_alias)
-        return next((i for i in items if i.get("id") == target), items[0])
+        resource = next((i for i in items if i.get("id") == target), None)
+        if resource is None:
+            raise PublisherError("La autorización no corresponde al canal de YouTube guardado.")
+        from src.core.youtube_capabilities import record_feature_access
+        await record_feature_access(account_alias, resource["id"], (resource.get("status") or {}).get("longUploadsStatus"))
+        return resource
 
     @with_retry(max_retries=3)
     async def get_channel_stats(self, account_alias: str) -> ChannelStats:
@@ -778,7 +834,9 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
             "title": title if title is not None else current.title,
             "description": description if description is not None else current.description,
             "tags": tags if tags is not None else current.tags,
-            "categoryId": "10",
+            "categoryId": current.raw_response.get("snippet", {}).get("categoryId", "10"),
+            **{k: v for k, v in current.raw_response.get("snippet", {}).items()
+               if k == "defaultLanguage"},
         }
         body: dict = {"id": video_id, "snippet": snippet}
         part = "snippet"

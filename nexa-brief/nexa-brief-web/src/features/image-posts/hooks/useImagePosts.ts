@@ -4,6 +4,7 @@ import {
   createPlan,
   getImageCapabilities,
   getImagePost,
+  getImagePostDetail,
   getImagePosts,
   getImageStrategies,
   getImageStyles,
@@ -94,11 +95,16 @@ export function usePublications(filters: GalleryFilters) {
   });
 }
 
-export function usePublicationDetail(publicationId: string | null) {
+export function usePublicationDetail(publicationId: string | null, postId?: string | null) {
   return useQuery({
-    queryKey: [...PUBLICATIONS_QUERY_KEY, "detail", publicationId],
-    queryFn: ({ signal }) => getPublicationDetail(publicationId ?? "", signal),
-    enabled: Boolean(publicationId),
+    queryKey: postId
+      ? [...IMAGE_POSTS_QUERY_KEY, "preview", postId]
+      : [...PUBLICATIONS_QUERY_KEY, "detail", publicationId],
+    queryFn: ({ signal }) =>
+      postId
+        ? getImagePostDetail(postId, signal)
+        : getPublicationDetail(publicationId ?? "", signal),
+    enabled: Boolean(publicationId || postId),
     staleTime: 20_000,
     refetchOnWindowFocus: false,
   });

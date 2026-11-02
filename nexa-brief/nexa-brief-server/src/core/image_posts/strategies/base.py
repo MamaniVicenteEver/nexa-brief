@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 import re
 from typing import Any, Callable
 
-_UNITS = (r"(?:\s?(?:%|mil millones|millones|millón|mil|años|año|meses|días|horas|h|minutos|min|segundos|seg"
+_UNITS = (r"(?:\s?(?:%|puntos porcentuales|mil millones|millones|millón|mil|años|año|meses|días|horas|h|minutos|min|segundos|seg"
           r"|veces|personas|habitantes|muertos|víctimas|soldados|barcos|botes|km|kilómetros|metros|m|millas"
           r"|yardas|toneladas|kg|°C|dólares|euros|USD)(?![\wáéíóú]))?")
 _NUMBER = re.compile(r"(?<![\w.,])(\d{1,3}(?:[.,\s]\d{3})+(?!\d)|\d+)(?:[.,](\d{1,2})(?!\d))?" + _UNITS, re.IGNORECASE)
@@ -32,6 +32,7 @@ class Fact:
     text: str
     url: str
     source_name: str
+    role: str = ""  # amarillista: rol explícito de PLAN, no inferido por el agente
 
     def claim_ref(self) -> dict[str, str]:
         number = self.claim_id.removeprefix("claim_")
@@ -48,6 +49,15 @@ class Copy:
     body: str | None
     source: str = "reglas"   # "modelo" o "reglas: <motivo>": queda registrado para estudiar resultados
     short: str | None = None  # versión de ≤36 caracteres para resúmenes (cierre del carrusel)
+    headlines: dict[str, str] | None = None  # amarillista: cuatro tratamientos revisados juntos
+    qualifier: str = ""
+    image_query: str = ""
+    diagram: dict[str, Any] | None = None
+    question: str = ""
+    reflections: dict[str, str] | None = None
+    questions: dict[str, str] | None = None
+    hook_question: str = ""
+    narrative: str = ""  # hilo vigente; vacío para piezas históricas
 
 
 @dataclass(frozen=True)
@@ -60,6 +70,7 @@ class StrategyContext:
     handle: str          # @cuenta de la red principal
     brand: str           # nombre del canal
     voice: str = ""      # tono del StyleSystem (para el redactor)
+    level: str = "negro"
 
 
 @dataclass(frozen=True)

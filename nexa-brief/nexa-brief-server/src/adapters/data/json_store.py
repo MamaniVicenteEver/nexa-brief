@@ -5,8 +5,8 @@ job_tracker, notification_tracker, queue_repository, asset_library, etc.
 
 - Escritura atómica (`.tmp` + `replace`): un crash nunca deja un JSON a medias.
 - Un `asyncio.Lock` por archivo serializa cada read-modify-write dentro del
-  proceso (varios jobs del pipeline escriben a la vez). No protege entre
-  procesos distintos — para eso está el backend de base de datos.
+  proceso. Un flock asíncrono protege la transacción entre host y contenedores
+  que comparten el mismo perfil en este servidor.
 - Las rutas se resuelven en cada operación desde `settings.data_dir`, así los
   tests pueden redirigirlo a un directorio temporal.
 """
@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
+import tempfile
 from collections import defaultdict
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -22,6 +24,7 @@ from typing import Any
 
 import structlog
 
+from src.adapters.data.file_locks import AsyncFileLock, file_lock
 from src.adapters.data.layout import COLLECTIONS, DOCUMENTS, FILES
 from src.adapters.data.local_file_storage import LocalFileStorage
 from src.config.settings import settings
@@ -47,9 +50,16 @@ def _read_json(path: Path, default: Any) -> Any:
 
 def _write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(path)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            json.dump(data, stream, ensure_ascii=False, indent=2)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 def _matches(record: Record, where: Where | None) -> bool:
@@ -64,6 +74,8 @@ class JsonRecordCollection:
 
     @property
     def _path(self) -> Path:
+        if self.name == "channels" and settings.shared_connections_dir is not None:
+            return settings.shared_connections_dir / "channels.json"
         return settings.data_dir / self._relative_path
 
     def _read(self) -> list[Record]:
@@ -79,11 +91,12 @@ class JsonRecordCollection:
         """Read-modify-write bajo el lock del archivo. `fn` devuelve (nuevos datos, resultado)."""
         path = self._path
         async with _locks[path]:
-            data = self._read()
-            new_data, result = fn(data)
-            if new_data is not data or result is not None:
-                _write_json(path, new_data)
-            return result
+            async with AsyncFileLock(path.with_suffix(".lock")):
+                data = self._read()
+                new_data, result = fn(data)
+                if new_data is not data or result is not None:
+                    _write_json(path, new_data)
+                return result
 
     # ── Lecturas ─────────────────────────────────────────────────────────────
 
@@ -186,13 +199,18 @@ class JsonDocumentStore:
         return _read_json(self._path(key), None)
 
     def put(self, key: str, document: Any) -> None:
-        _write_json(self._path(key), document)
+        path = self._path(key)
+        with file_lock(path.with_suffix(".lock")):
+            _write_json(path, document)
 
     def delete(self, key: str) -> bool:
         path = self._path(key)
         if not path.exists():
             return False
-        path.unlink()
+        with file_lock(path.with_suffix(".lock")):
+            if not path.exists():
+                return False
+            path.unlink()
         return True
 
 

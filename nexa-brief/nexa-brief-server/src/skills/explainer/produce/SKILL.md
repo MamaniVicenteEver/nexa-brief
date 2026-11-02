@@ -25,6 +25,23 @@
 5. Solo si el paso lo pide: la sección puntual de la guía (`guides/storytelling.md §4–7` para el guion,
    `guides/media.md §6` para clips). Nunca guías enteras.
 
+### Si el diseño es imperio
+
+Leer `src/templates/_tools/explainer-kit/guides/imperio-production.md` antes de PLAN/medios.
+La política central `production-policy.json → style_policies.imperio` prevalece sobre los
+rangos generales de esta guía: **video visible 8–16 s, foto visible 6–12 s**. Mapas y rótulos
+no son clips/fotos. Planificar también el sonido: biblioteca local primero; si falta un
+recurso, importación SFXMint → agente de ficha → aprobación → cues → mezcla. Voz limpia en
+`audio.narrationSrc`, mezcla seleccionada en `audio.src` y trazabilidad en `soundDesign`;
+jamás mezclar sobre una mezcla anterior. Efectos ×1,155 respecto a la base, voz intacta.
+`kit.py check` verifica los intervalos realmente asignados, incluidas plates anidadas.
+Cada ambiente debe cubrir exactamente la entrada y salida de su imagen/video de apoyo.
+Guardar `soundDesign.supportWindows` con `asset_id`, `start` y `duration`, además del
+`planUrl` real; el checker rechaza cobertura parcial, huecos o sonidos fuera del apoyo.
+Si el archivo es corto, reutilizar fragmentos con uniones suaves o elegir otro más largo;
+no alterar la voz ni rellenar la duración con silencio.
+No renderizar. Esta excepción de diseño no cambia el resto de las familias.
+
 ### Estrategia narrativa
 
 `assets/config.json → narrative_id` (por defecto `narrative_amarillista_v1`). Si existe y no es
@@ -42,15 +59,17 @@ K=src/templates/_tools/explainer-kit/tools/kit.py; M=src/templates/_tools/explai
 ```
 1. **PLAN.md**: tema, ángulo, 1 punto crítico, hechos con URL + fecha (dos fuentes para cifras clave), mapa visual.
 2. **Guion** `assets/script.json` (formato del ejemplo): palabras según `kit.py status <id>`; números en palabras.
-3. **Medios**: `media.py search` / `get` (fotos .jpg; clips .mp4 con `--type video --source pixabay|commons`). Si el guion nombra una marca, empresa o institución relevante, buscá su logo con `media.py logo-search` / `logo-get` y revisá `guides/media.md §7`.
+3. **Medios**: `media.py search-concept` / `get` (fotos .jpg; clips .mp4; busca video en Pexels, Pixabay y Commons). Si el guion nombra una marca, empresa o institución relevante, buscá su logo con `media.py logo-search` / `logo-get` y revisá `guides/media.md §7`.
+   Antes de buscar, anotá para cada foto/clip en PLAN §8 la frase, el sujeto concreto que debe verse (`shows`) y la consulta (`query`); copialos al beat después de tener la transcripción. Usá `media.py search-concept "<sujeto>" --query "<inglés 1>" --query "<inglés 2>"` para consultar video en Pexels, Pixabay y Commons; si no hay clip pertinente, elegí una foto pertinente con movimiento lento. Reusá solo cuando el medio ayuda a visualizar la frase.
 4. **Voz y transcripción**: en producciones del pipeline el agente NUNCA corre `voice`, `transcribe`, `outro` ni `preview`. Al completar guion, PLAN, medios, componentes y paquete preliminar escribe `work/phase.json` con `{"phase":"script_ready"}` y termina la corrida. El host valida el guion y genera voz y transcripción con cierre. En la continuación, usa el audio y lyrics existentes. Si cambias el guion, escribe de nuevo ese marcador y termina inmediatamente para que el host regenere ambos.
    Fuera del pipeline, el uso manual conserva `kit.py voice <id>` y `kit.py transcribe <id>` tanto en primer plano como con `--background` / `--wait --timeout 20`.
 5. **Storyboard** `assets/storyboard.json`: anclas = palabras EXACTAS de `assets/lyrics.json`; un plano cada
    2,5–6 s; 1.º beat `<familia>.introv1|introv2` o la miniatura elegida `common.tabloid` en `t: 0`; 2–8 `common.clip` en 13 min, nunca seguidos.
    Para muchos planos, organizá las anclas con el mapa visual y respetá los comandos autorizados en el prompt.
-   Repartí fotos/clips por todos los actos: máximo 75 s sin medio real, foto visible al menos 5 s con movimiento. Cada beat con video visible dura ≥ 8 s; `common.clip` recomienda 12–18 s. En ≥ 8 min incluí al menos dos tramos de video de ≥ 12 s; si el archivo es más corto, usá `loop` o `rate < 1`, sin congelar. El plano preferido es `<diseño>.introv2` con texto grande y foto/video lado a lado (rough/binary: `text`, `src`/`video`, `highlight`, `focus` según diseño), unas 3–5 veces por 10 min. Cerrá con `common.question` hasta el inicio del outro; el audio configurado debe ser `song-with-outro.mp3`.
+   Repartí los apoyos por todo el video, sin orden fijo y ligados a la frase narrada: primero el estilo miniatura `rough.introv2`/`binary.introv2` con texto grande y foto/video; segundo `common.clip` con `layout: full`, `caption` grande y `textColor: ink|accent|mix`, `accentWords`, `textSide`, `textIn`, `sub` y `logo` por JSON; tercero la foto en cuadro. Cada tercio debe tener al menos una miniatura o video completo. Imagen visible 5–10 s; video 8–16 s; cada archivo máximo dos usos. Conservá el máximo de 75 s sin medio real y, en ≥ 8 min, dos tramos de video de ≥ 12 s. Si el archivo es corto, usá `loop` o `rate < 1`. Cerrá con `common.question` hasta el inicio del outro; el audio configurado debe ser `song-with-outro.mp3`.
    El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Poné `logo` y `logoName` en el beat visual (`rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`); `logoPos`/`logoSize` son opcionales. `common.logo` está obsoleto. Preferí SVG; PNG solo transparente. Nunca inventes un logo.
 6. **Validar**: `kit.py check <id>` → 0 errores · `kit.py sheet <id> --orient both` en primer plano → mirar las dos hojas.
+   En cada beat con foto/clip completá `shows`, `query` y `media_review` después de mirar la hoja: confirmá por escrito qué muestra según la narración. Si hay foto y video en un beat, escribí una revisión por ruta (`guides/media.md §6`). `manifest.media_review` guarda una línea por medio y `manifest.quality.media_relevance` resume el control. El check avisa si un recurso coincide con otra producción y bloquea el exceso configurable de clips genéricos.
 7. **Cierre**: `kit.py manifest <id>` · `kit.py usage <id>`.
 8. **Publicación v2** `publish.json` (copiar la forma de `nodetech/vago-pero-emocionante/publish.json`) →
    `.venv/bin/python -m src.core.explainer.publishing check <id>` en 0 errores (no `build` si hay `render/*.mp4`).
@@ -60,9 +79,10 @@ HTTP (la app lo muestra en `/plantillas?cat=<categoría>`). `kit.py render` solo
 
 ## 3. Componentes propios del tema
 
+- Antes de crear uno, corré `kit.py library`: muestra nombre, dibujo, parámetros, hoja PNG y video origen de los componentes aprobados en otras producciones. Si uno sirve en la misma familia, copiá su JS a `assets/components/`, validalo con `kit.py components <id>` y usalo en el storyboard. Si necesita otra familia, proponé promoverlo a `designs/common/` con registro en los diseños. Creá uno nuevo solo si la biblioteca no cubre el concepto; sus parámetros van por JSON, sin emojis y con hoja PNG revisada.
 - Para videos de 8 min o más, al menos 4 componentes propios del tema: objetos o mecanismos que vuelven en 2 o más planos o en el clímax. Revisalos en su hoja PNG y usalos en el storyboard.
 - `rough.icon` es relleno, no protagonista: el check bloquea el exceso y las rachas; en la narrativa amarillista también bloquea los iconos en golpe/miedo. Alterná fotos, clips y componentes propios.
-- Un componente propio o una foto no puede superar 6 usos ni el 15 % de los beats (desde la segunda aparición).
+- Un componente propio conserva el límite de 6 usos y 15 % de los beats (desde la segunda aparición). Con política v5, cada foto o clip tiene un máximo de 2 usos; los videos anteriores conservan sus límites.
 - `common.lyric` y `common.punch`: terminá la ventana en fin de oración o usá `params.text` de hasta 7 palabras.
 - Copiá la forma de un componente real del mismo diseño, sin leer el motor:
   `src/templates/nodetech/programadores-nueva-era/assets/components/rough-review-lens.js` (rough) ·
@@ -86,3 +106,5 @@ HTTP (la app lo muestra en `/plantillas?cat=<categoría>`). `kit.py render` solo
 Sin `git commit/push`; no publicar ni grabar salvo pedido explícito; no leer `.env`, `accounts.json`,
 `client_secret*.json`, `users.json` ni tokens; no editar `engine/` ni `designs/` (eso es trabajo de sandbox).
 Reporte final corto: pasos hechos, títulos A/B/C, primer comentario, clips usados, avisos de `check`.
+
+Nivel vigente de ambientes del diseño Imperio: ×1,155 de la base inicial (el +10 % anterior y un +5 % adicional, no 5 dB). Aplicarlo una sola vez al plan base. Voz y ventanas de apoyo sin cambios.

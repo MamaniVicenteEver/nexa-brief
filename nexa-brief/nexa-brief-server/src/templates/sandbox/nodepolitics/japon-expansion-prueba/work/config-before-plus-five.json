@@ -1,0 +1,62 @@
+{
+  "activeId": "japon-expansion-prueba",
+  "configs": [
+    {
+      "id": "japon-expansion-prueba",
+      "design": "imperio",
+      "title": "La expansión del Imperio japonés",
+      "audio": {
+        "src": "assets/sound-design/cc1e21991a6645a89735b86ce95b2cd1/mix.mp3",
+        "narrationSrc": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "storyboardUrl": "assets/storyboard.json",
+      "seed": 1895,
+      "captions": {
+        "enabled": true
+      },
+      "components": [
+        "assets/components/japon.js"
+      ],
+      "soundDesign": {
+        "planUrl": "assets/sound-design/cc1e21991a6645a89735b86ce95b2cd1/plan.json",
+        "effectsSrc": "assets/sound-design/cc1e21991a6645a89735b86ce95b2cd1/mix-effects.flac",
+        "effectsGainMultiplier": 1.1,
+        "voiceUnchanged": true,
+        "supportDurationMatched": true,
+        "supportWindows": [
+          {
+            "asset_id": "4d548e2e527a45acbb9f013555c3f881",
+            "start": 52.17,
+            "duration": 8.0,
+            "scene": "Archivo · ejército imperial japonés"
+          },
+          {
+            "asset_id": "6c8600a9bee845d7b93b4203ff5d0e83",
+            "start": 61.27,
+            "duration": 8.0,
+            "scene": "Archivo · bombardeos en China"
+          },
+          {
+            "asset_id": "4d548e2e527a45acbb9f013555c3f881",
+            "start": 70.0,
+            "duration": 7.0,
+            "scene": "Fotograma ilustrativo · camiones y tropas"
+          },
+          {
+            "asset_id": "52c9ba704dc94209af5874ea54b9b669",
+            "start": 92.37,
+            "duration": 9.0,
+            "scene": "Archivo · tropas japonesas en Java"
+          },
+          {
+            "asset_id": "52c9ba704dc94209af5874ea54b9b669",
+            "start": 103.5,
+            "duration": 8.0,
+            "scene": "Fotograma · formación de tropas en Java, 1942"
+          }
+        ]
+      }
+    }
+  ]
+}

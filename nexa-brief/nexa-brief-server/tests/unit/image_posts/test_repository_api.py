@@ -973,6 +973,7 @@ async def test_scheduler_recovers_archived_queued_delivery_missing_from_queue(tm
     set_publication_components(components)
     try:
         await components.repository.create(_record())
+        original_queue_deliveries = components.service._queue_deliveries
         monkeypatch.setattr(components.service, "_queue_deliveries", AsyncMock())
         deliveries = await components.service.schedule_deliveries(
             "pub_test", 1, [{"platform": "facebook", "account_alias": "pagina_3"}],
@@ -981,7 +982,8 @@ async def test_scheduler_recovers_archived_queued_delivery_missing_from_queue(tm
         delivery = deliveries[0]
         assert queue_repository.find_for_delivery(delivery.delivery_id) is None
 
-        monkeypatch.undo()
+        monkeypatch.setattr(components.service, "_queue_deliveries", original_queue_deliveries)
+        assert settings.data_dir == tmp_path
         assert await components.service.reconcile_queued_deliveries() == 1
         restored = queue_repository.find_for_delivery(delivery.delivery_id)
         assert restored is not None and restored.status.value == "queued"
@@ -1454,3 +1456,119 @@ async def test_plan_revision_cancels_pending_queue_and_gets_immutable_media_name
         settings.data_dir = old_data_dir
         set_publication_components(None)
         set_data_store(None)
+
+
+def test_tiktok_delivery_router_accepts_target(monkeypatch):
+    service = SimpleNamespace(get=lambda _: _record(), schedule_deliveries=AsyncMock(return_value=[]))
+    monkeypatch.setattr(image_posts, "get_image_post_service", lambda: service)
+    app = FastAPI()
+    app.include_router(image_posts.router, prefix="/api/v1")
+    app.dependency_overrides[image_posts.require_image_session] = lambda: image_posts.ImageSession(email="admin@example.org", role="admin")
+    with TestClient(app) as client:
+        response = client.post('/api/v1/image-posts/review/deliveries',
+            headers={'Idempotency-Key': '00000000-0000-4000-8000-000000000225'},
+            json={'revision': 1, 'client_request_id': 'test', 'targets': [{'platform': 'tiktok', 'account_alias': 'test'}]})
+    assert response.status_code == 201, response.text
+    assert service.schedule_deliveries.await_args.args[2][0]['platform'] == 'tiktok'
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('state,result,expected', [
+    ('done', {'post_id': '123', 'url': 'https://example.test/123'}, DeliveryStatus.PUBLISHED),
+    ('running', None, DeliveryStatus.OUTCOME_UNKNOWN),
+    ('done', {'post_id': '123'}, DeliveryStatus.OUTCOME_UNKNOWN),
+])
+async def test_tiktok_reconciliation_queries_job_without_republishing(tmp_path, monkeypatch, state, result, expected):
+    import httpx
+    from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
+    from src.adapters.publishing.tiktok_service.client import TikTokServiceClient
+    calls = []
+    def handler(request):
+        calls.append((request.method, request.url.path))
+        return httpx.Response(200, json={'id': 'job1', 'state': state, 'result': result})
+    client = TikTokServiceClient('http://test', 'synthetic', httpx.MockTransport(handler))
+    monkeypatch.setattr(TikTokServiceAdapter, '__init__', lambda self: setattr(self, 'client', client))
+    components = build_publication_components(data_dir=tmp_path)
+    delivery = Delivery(delivery_id='del_tt', revision=1, platform='tiktok', account_alias='test',
+        target_id='test', placement='image', idempotency_key='key', status=DeliveryStatus.OUTCOME_UNKNOWN,
+        remote={'job_id': 'job1'}, created_at=NOW, updated_at=NOW)
+    await components.repository.create(_record().model_copy(update={'deliveries': [delivery]}))
+    updated = await components.service.reconcile_delivery('del_tt')
+    assert updated.status == expected
+    assert calls == [('GET', '/v1/jobs/job1')]
+    if expected == DeliveryStatus.PUBLISHED:
+        assert updated.remote.post_id == '123'
+    else:
+        assert updated.remote.job_id == 'job1'
+
+
+@pytest.mark.asyncio
+async def test_tiktok_reconciliation_without_job_requires_manual_review(tmp_path):
+    components = build_publication_components(data_dir=tmp_path)
+    delivery = Delivery(delivery_id='del_tt', revision=1, platform='tiktok', account_alias='test',
+        target_id='test', placement='image', idempotency_key='key', status=DeliveryStatus.OUTCOME_UNKNOWN,
+        created_at=NOW, updated_at=NOW)
+    await components.repository.create(_record().model_copy(update={'deliveries': [delivery]}))
+    updated = await components.service.reconcile_delivery('del_tt')
+    assert updated.status == DeliveryStatus.OUTCOME_UNKNOWN
+    assert updated.last_error.code == 'TIKTOK_MANUAL_REVIEW'
+
+
+@pytest.mark.asyncio
+async def test_tiktok_job_id_survives_ambiguous_publish(tmp_path, monkeypatch):
+    from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
+    from src.config.exceptions import PublisherError
+    components = build_publication_components(data_dir=tmp_path)
+    path = tmp_path / 'approved.jpg'
+    path.write_bytes(b'approved')
+    monkeypatch.setattr(components.media, '_path', lambda _: path)
+    async def publish(_self, *args, on_job, **kwargs):
+        await on_job('job1')
+        raise PublisherError('Job en curso')
+    monkeypatch.setattr(TikTokServiceAdapter, 'publish_images', publish)
+    record = _record()
+    slide = record.technical.slides[0].model_copy(update={'sha256': hashlib.sha256(b'approved').hexdigest()})
+    record = record.model_copy(update={'technical': record.technical.model_copy(update={'slides': [slide]})})
+    delivery = Delivery(delivery_id='del_tt', revision=1, platform='tiktok', account_alias='test',
+        target_id='test', placement='image', idempotency_key='key', status=DeliveryStatus.QUEUED,
+        created_at=NOW, updated_at=NOW)
+    await components.repository.create(record.model_copy(update={'deliveries': [delivery]}))
+    with pytest.raises(ImagePostError):
+        await components.service.publish_delivery('del_tt')
+    stored = components.repository.get('pub_test').deliveries[0]
+    assert stored.status == DeliveryStatus.OUTCOME_UNKNOWN
+    assert stored.remote.job_id == 'job1'
+
+
+@pytest.mark.asyncio
+async def test_tiktok_router_delivery_reaches_adapter(tmp_path, monkeypatch):
+    import httpx
+    from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
+    components = build_publication_components(data_dir=tmp_path, account_provider=lambda: [
+        {'platform': 'tiktok', 'alias': 'test', 'status': 'ok', 'mode': 'service'}])
+    components.service.account_mapping = SimpleNamespace(resolve_account=lambda *args: {'active': True, 'can_comment': True})
+    monkeypatch.setattr(components.service, '_queue_deliveries', AsyncMock())
+    monkeypatch.setattr(image_posts, 'get_image_post_service', lambda: components.service)
+    path = tmp_path / 'approved.jpg'
+    path.write_bytes(b'approved')
+    monkeypatch.setattr(components.media, '_path', lambda _: path)
+    publish = AsyncMock(return_value=SimpleNamespace(post_id='123', url='https://example.test/123'))
+    monkeypatch.setattr(TikTokServiceAdapter, 'publish_images', publish)
+    record = _record()
+    slide = record.technical.slides[0].model_copy(update={'sha256': hashlib.sha256(b'approved').hexdigest()})
+    record = record.model_copy(update={'technical': record.technical.model_copy(update={'slides': [slide]})})
+    await components.repository.create(record)
+    app = FastAPI()
+    app.include_router(image_posts.router, prefix='/api/v1')
+    app.dependency_overrides[image_posts.require_image_session] = lambda: image_posts.ImageSession(email='admin@example.org', role='admin')
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as client:
+        response = await client.post('/api/v1/image-posts/pub_test/deliveries',
+            headers={'Idempotency-Key': '00000000-0000-4000-8000-000000000225'},
+            json={'revision': 1, 'client_request_id': 'test', 'targets': [{'platform': 'tiktok', 'account_alias': 'test'}]})
+    assert response.status_code == 201, response.text
+    delivery = response.json()['deliveries'][0]
+    assert delivery['caption'] == 'Texto IG'
+    result = await components.service.publish_delivery(delivery['delivery_id'])
+    assert result.status == DeliveryStatus.PUBLISHED
+    publish.assert_awaited_once()
+    assert publish.await_args.args[:3] == ([path], 'Texto IG', 'test')

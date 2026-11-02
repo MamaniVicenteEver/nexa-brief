@@ -19,6 +19,9 @@
 <script>
 (function () {
   const QS = new URLSearchParams(location.search), c = QS.get("c") || "";
+  if (QS.has("gallery") && QS.get("clock") === "synthetic") document.addEventListener("keydown", event => {
+    if (event.key === "Escape") window.parent.postMessage({ type: "kit-stage-close" }, location.origin);
+  });
   const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop", "memorias", "dinero", "atlas", "imperio"];
   const prefix = c.split(".")[0];
   const d = QS.get("d") || (ids.includes(prefix) ? prefix : "binary");
@@ -32,6 +35,10 @@
   const D = await window.KitReady, QS = new URLSearchParams(location.search);
   const load = src => new Promise(res => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => { console.error("no carga", src); res(); }; document.body.appendChild(s); });
   for (const src of QS.getAll("js")) await load(src);
+  if (QS.has("catalog")) {
+    window.parent.postMessage({ type: "kit-design-catalog", design: D.id, components: Kit.catalog() }, location.origin);
+    return;
+  }
   if (QS.get("list")) {                       /* catálogo de todos los diseños */
     const all = (await (await fetch("designs.json")).json()).designs;
     for (const other of all) if (other !== D.id) {
@@ -46,6 +53,10 @@
   }
   const fam = D.family, name = QS.get("c") || fam + ".title", def = Kit.registry.get(name);
   const params = QS.get("p") ? JSON.parse(QS.get("p")) : JSON.parse(JSON.stringify(def?.example || {}));
+  if (QS.has("gallery") && !QS.has("p")) {
+    if (name === "common.clip") params.src = "samples/demo.mp4";
+    if (name === "rough.introv2") params.video = "samples/demo.mp4";
+  }
   /* rutas de imágenes de ejemplo: relativas al kit (../showcase/samples/…) */
   for (const [k, v] of Object.entries(params)) if (def?.params?.[k]?.type === "image" && typeof v === "string" && v && !v.startsWith("http") && !v.startsWith("/") && !v.startsWith("../")) params[k] = "samples/" + v.split("/").pop();
   const dur = +(QS.get("dur") || 7);
@@ -55,7 +66,7 @@
   const prevDef = Kit.registry.get(prevUse), prevParams = JSON.parse(JSON.stringify(prevDef?.example || (fam === "rough" ? { icon: "spark" } : { icon: "question" })));
   const componentAt = solo ? 0 : 1.5;
   const beats = solo ? [] : [{ t: 0, use: prevUse, params: prevParams, dur: 1.5 }];
-  if (def && def.layer === "overlay") beats.push({ t: 0, use: prevUse, params: prevParams, dur: dur + componentAt });
+  if (def && def.layer === "overlay" && !QS.has("gallery")) beats.push({ t: 0, use: prevUse, params: prevParams, dur: dur + componentAt });
   beats.push({ t: componentAt, use: name, params, dur });
   let words = QS.get("words");
   if (!words && name === "common.lyric") words = "UNA FRASE QUE LA VOZ DICE EN GRANDE";
@@ -66,8 +77,17 @@
     lyrics: { segments: words ? [{ words: words.split(" ").map((w, i) => ({ word: " " + w, start: componentAt + 0.1 + i * 0.38, end: componentAt + 0.4 + i * 0.38 })) }] : [] },
     total: componentAt + dur,
   });
+  if (QS.has("gallery") && QS.get("clock") !== "synthetic") {
+    // Congelar también los videos embebidos, conservando el último cuadro del beat.
+    setTimeout(async () => {
+      await window.__promo.seek(Math.max(0, dur - 0.04));
+      document.querySelectorAll("video").forEach(video => video.pause());
+      document.documentElement.dataset.galleryState = "ended";
+    }, dur * 1000);
+  }
   if (QS.get("clock") === "synthetic") {
     if (window.__nexaClock) window.__nexaClock.ready = true;
+    window.parent.postMessage({ type: "kit-stage-component", component: Kit.catalog().find(item => item.name === name) }, location.origin);
     window.parent.postMessage({ type: "nexa-template-ready" }, "*");
   }
 })();

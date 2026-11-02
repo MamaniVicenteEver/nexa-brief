@@ -268,7 +268,7 @@ class CodexRunner(AgentRunnerPort):
             raise AgentUnavailableError("No se encontró el CLI `codex` (definir AGENT_CODEX_BIN).")
         last_path = log_path.with_suffix(".last.txt")
         last_path.unlink(missing_ok=True)
-        if scope is not None:
+        if scope is not None and not scope.read_only:
             # Sandbox de Codex: solo escribe en scope.writable_dir. La red queda
             # habilitada porque el kit investiga y pide la voz a Gemini.
             # Codex escribe en su directorio de trabajo: se lo ubica en la carpeta
@@ -285,6 +285,8 @@ class CodexRunner(AgentRunnerPort):
         else:
             cmd = [self._binary, "exec", "--json", "--skip-git-repo-check", "-C", str(cwd), "-o", str(last_path), "-s", "read-only"]
         cmd += ["-c", 'forced_login_method="chatgpt"']
+        if scope is not None and scope.output_schema is not None:
+            cmd += ["--output-schema", str(scope.output_schema), "--ephemeral"]
         model = (scope.model if scope is not None else None) or settings.agent_codex_model
         effort = (scope.reasoning_effort if scope is not None else None) or settings.agent_codex_reasoning_effort
         if model:
@@ -299,7 +301,10 @@ class CodexRunner(AgentRunnerPort):
         # El resultado final solo viene de -o. En caso de fallo conservamos
         # el log como diagnóstico, pero un log JSON de progreso nunca cuenta
         # como respuesta exitosa del agente.
-        last = _tail(last_path, 20000)
+        if scope is not None and scope.output_schema is not None:
+            last = last_path.read_text(encoding="utf-8") if last_path.exists() else ""
+        else:
+            last = _tail(last_path, 20000)
         if code != 0 or timed_out:
             last = last or _tail(log_path, 4000)
         return AgentRunResult(exit_code=code, last_message=last.strip(), duration_seconds=secs, timed_out=timed_out,

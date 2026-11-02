@@ -79,7 +79,9 @@
     "biblioteca": "Library",
     "historial": "History",
     "notificaciones": "Notifications",
-    "salir": "Log out"
+    "salir": "Log out",
+    "developmentEnvironment": "Development · real accounts",
+    "storageProfile": "Data: {name}"
   },
   "dashboard": {
     "eyebrow": "Control panel",
@@ -196,6 +198,36 @@
     }
   },
   "channels": {
+    "categoryManager": {
+      "create": "Create category",
+      "selectAccounts": "Select accounts",
+      "editTitle": "Accounts in {name}",
+      "description": "Choose the accounts you want to see together. An account can belong to multiple categories.",
+      "name": "Category name",
+      "placeholder": "For example, NodeAtlas",
+      "search": "Search accounts by name or social network…",
+      "selected": "{count, plural, one {# account selected} other {# accounts selected}}",
+      "selectVisible": "Select visible",
+      "deselectVisible": "Deselect visible",
+      "noAccounts": "No accounts match your search.",
+      "cancel": "Cancel",
+      "save": "Save accounts",
+      "saving": "Saving…",
+      "saved": "Category saved",
+      "error": "Could not save the category. Please try again."
+    },
+    "categoryView": {
+      "filter": "Filter by category",
+      "platforms": "By social network (default)",
+      "all": "All categories",
+      "categoryLabel": "Categories",
+      "unassigned": "Uncategorized",
+      "accountCount": "{count, plural, one {# connected account} other {# connected accounts}}",
+      "emptyCategory": "No accounts are associated with this category yet.",
+      "loadError": "Category associations could not be loaded. Retry to display the accounts correctly.",
+      "retry": "Retry",
+      "noMatches": "No accounts match this category and the selected filters."
+    },
     "title": "Channels",
     "subtitle": "Manage the accounts Nexa Brief publishes your videos to. Give each one a purpose so you know which to pick for every case.",
     "updating": "Updating…",
@@ -235,14 +267,20 @@
       "connectFirst": "Connect your first {platform} account",
       "connectAnother": "Connect another account",
       "connectHint": "Use several accounts to separate niches, clients or languages.",
-      "noMatches": "No account matches your search."
+      "noMatches": "No account matches your search.",
+      "connectInstagram": "Connect Instagram",
+      "connectAnotherInstagram": "Connect another Instagram account",
+      "connectInstagramShort": "Add Instagram",
+      "instagramConnectHint": "Connect professional accounts linked to your Facebook Pages.",
+      "instagramHint": "Authorize your Facebook Pages to discover their linked Instagram professional accounts."
     },
     "card": {
       "serviceUnavailable": "The TikTok service is unavailable or degraded; your accounts and sessions are stored for recovery.",
       "lastBackup": "Last backup",
       "reviewJobs": "There are {count} jobs awaiting review.",
       "reviewInStudio": "Review in TikTok Studio",
-
+      "openChannel": "Open {name} in a new tab",
+      "profileUnavailable": "The public profile is unavailable; refresh the account information.",
       "actions": "Account actions",
       "viewDetails": "View details",
       "editUsage": "Edit purpose and notes",
@@ -280,7 +318,8 @@
         "permissions": "The account responded, but channel lookup permissions are missing.",
         "unavailable": "The platform didn't respond correctly. Try again.",
         "check_failed": "The check couldn't be completed. Try again."
-      }
+      },
+      "posts": "Posts"
     },
     "details": {
       "reconnect": "Reconnect account",
@@ -320,7 +359,21 @@
       "viewsCount": "{count} views",
       "likesCount": "{count} likes",
       "commentsCount": "{count} comments",
-      "disconnect": "Disconnect account"
+      "disconnect": "Disconnect account",
+      "publishedPosts": "Published posts",
+      "recentPosts": "Latest posts",
+      "noPosts": "There are no posts on this Page yet.",
+      "videosLoadError": "Videos could not be loaded.",
+      "postsLoadError": "Facebook posts could not be loaded.",
+      "retryPosts": "Retry",
+      "mediaType": {
+        "video": "Video",
+        "reel": "Reel",
+        "short": "Short",
+        "photo": "Image",
+        "carousel": "Carousel",
+        "text": "Text"
+      }
     },
     "connect": {
       "title": "Connect an account",
@@ -415,6 +468,79 @@
       "pending": "Deleting…",
       "done": "Video deleted from {platform}",
       "error": "The video couldn't be deleted."
+    },
+    "youtube": {
+      "inventoryHint": "{count, plural, one {# connected channel} other {# connected channels}}. Add more using the same Google login. Authorize each Brand channel separately; this connection cannot retrieve the login’s full channel inventory.",
+      "capabilities": "Thumbnails for this channel",
+      "state": {
+        "unknown": "Not checked: will try when publishing",
+        "enabled": "Thumbnails enabled: upload confirmed",
+        "unavailable": "YouTube rejected the upload: check permissions"
+      },
+      "capabilityHint": "Thumbnail access is checked for each channel when uploading. If you just enabled it in YouTube, reconnect this channel or retry the image. A/B testing needs additional advanced features.",
+      "openStudio": "Open YouTube Studio",
+      "upload": "Upload thumbnail",
+      "file": "Thumbnail image",
+      "uploadHint": "JPEG or PNG, up to 2 MB. Only this video’s thumbnail changes. Changing it stops any active A/B test in YouTube Studio.",
+      "uploading": "Uploading…",
+      "tooLarge": "The image must be up to 2 MB.",
+      "applied": "Thumbnail applied. YouTube may take time to show the change.",
+      "failed": "Thumbnail pending: {reason}. Retry without publishing the video again.",
+      "error": "Could not upload the thumbnail.",
+      "appliedShort": "Thumbnail applied",
+      "failedShort": "Thumbnail pending",
+      "reason": {
+        "permissions": "check channel verification and permissions",
+        "oauth_scope": "reconnect the channel to grant permissions",
+        "reauth_required": "reconnect the channel",
+        "quota": "project quota exhausted; try again later",
+        "rate_limit": "temporary limit reached; try again later",
+        "network": "could not contact YouTube",
+        "invalid_image": "invalid image",
+        "video_not_found": "video not found in this channel",
+        "file_unavailable": "image file not found",
+        "provider_unavailable": "YouTube is unavailable"
+      }
+    },
+    "youtubeAccess": {
+      "title": "YT Access+",
+      "subtitle": "Channel features",
+      "state": {
+        "enabled": "Enabled",
+        "verification_required": "Verify phone",
+        "restricted": "Restricted",
+        "unknown": "Not checked",
+        "stale": "Check needs updating"
+      },
+      "reason": {
+        "enabled": "YouTube enables videos longer than 15 minutes on this channel.",
+        "verification_required": "This channel needs to complete phone verification on YouTube.",
+        "restricted": "YouTube restricts longer videos on this channel. Review its status in Studio.",
+        "unknown": "Extended access has not been confirmed for this channel yet.",
+        "stale": "The previous check needs updating."
+      },
+      "longVideos": "Videos >15 min",
+      "long": {
+        "allowed": "Enabled",
+        "eligible": "Verify phone",
+        "disallowed": "Restricted",
+        "unknown": "No data"
+      },
+      "thumbnails": "Thumbnails",
+      "thumbnail": {
+        "enabled": "Upload confirmed",
+        "unavailable": "Review permissions",
+        "unknown": "No upload evidence"
+      },
+      "checked": "Checked {time}",
+      "never": "Automatic check pending",
+      "refresh": "Check Access+",
+      "refreshing": "Checking…",
+      "refreshFailed": "Could not check access. Review the channel connection.",
+      "hint": "Long-video access is checked automatically. Thumbnails are confirmed when an image is uploaded; checking does not modify an existing video.",
+      "phoneHint": "YouTube does not expose a general phone-verified flag. “Enabled” confirms access to longer videos, not every channel feature.",
+      "advancedHint": "A/B tests and other advanced features are reviewed separately in Studio.",
+      "openStudio": "View channel in Studio"
     }
   },
   "library": {
@@ -565,7 +691,8 @@
       "title": {
         "images": "Choose image from library",
         "music": "Choose song from library",
-        "videos": "Choose video from library"
+        "videos": "Choose video from library",
+        "sounds": "Choose a sound effect"
       },
       "loading": "Loading...",
       "empty": "Nothing archived yet.",
@@ -729,7 +856,10 @@
       "format": {
         "16x9": "Desktop 16:9",
         "9x16": "Mobile 9:16"
-      }
+      },
+      "contentTabsLabel": "Content type in preparation",
+      "videosTab": "Videos",
+      "postsTab": "Posts"
     },
     "windows": {
       "label": "Main categories",
@@ -780,7 +910,9 @@
       "editPost": "Edit {title}",
       "emptyTitle": "No image publications yet",
       "emptyDescription": "Generate an image or carousel from a verified video. Save a draft and review both captions before scheduling.",
-      "createFirst": "Create publication"
+      "createFirst": "Create publication",
+      "viewPost": "View details of {title}",
+      "noCover": "Cover unavailable"
     },
     "common": {
       "noData": "No data",
@@ -1120,7 +1252,99 @@
         "metric": "Metric",
         "metricWindow": "{window}",
         "noPermissionData": "No permission or not enough points to chart."
-      }
+      },
+      "publishingTab": "Publish"
+    },
+    "publishing": {
+      "heading": "Publishing and results",
+      "format": "{count} slides · {kind}",
+      "carousel": "Carousel",
+      "image": "Image",
+      "refresh": "Refresh status and available metrics",
+      "noDate": "No publication date",
+      "publishedCount": "Published",
+      "pendingCount": "In progress",
+      "failedCount": "With errors",
+      "loadFailed": "The current status could not be checked. Refresh before publishing.",
+      "destinations": "Publish to",
+      "loadingAccounts": "Loading accounts…",
+      "accountsFailed": "Accounts could not be loaded. Please try again.",
+      "tiktokUnavailable": "The current TikTok connection supports videos. Photo and carousel publishing is not enabled yet.",
+      "noAccount": "No account linked to this category.",
+      "accountUnavailable": "Connection or permissions required",
+      "reviewCopy": "Review the publication text",
+      "publish": "Publish to {count, plural, one {# channel} other {# channels}}",
+      "approvePublish": "Approve and publish to {count, plural, one {# channel} other {# channels}}",
+      "sending": "Publishing…",
+      "selectionHint": "Choose the destinations. Publishing approves this revision and sends the clean images without viewer tags.",
+      "history": "Channel history",
+      "metricsWindow": "Metrics window",
+      "noHistory": "This post has no deliveries yet. Its published destinations and results will appear here.",
+      "publishedAt": "Published on {date}",
+      "scheduledAt": "Scheduled for {date}",
+      "observedAt": "Measured: {date}",
+      "metricsPermission": "This connection does not have access to insights. Unavailable figures are shown as —.",
+      "noMetrics": "The network has not provided metrics for this window yet.",
+      "metricsHint": "Each figure refers to this post and the selected window. — means unavailable; 0 means a recorded zero. Impressions and reach are different from plays.",
+      "openPost": "View publication",
+      "retry": "Retry delivery",
+      "reconcile": "Check status without resending",
+      "requestFailed": "The request could not be completed.",
+      "sent": "Successfully published to {count, plural, one {# channel} other {# channels}}.",
+      "demoUnavailable": "Demo data cannot be published.",
+      "alreadySent": "The selected destinations already have a recorded delivery. Refresh the status.",
+      "notReady": "Publishing requires validated images and a post awaiting review or already approved.",
+      "metrics": {
+        "impressions": "Impressions",
+        "plays": "Plays",
+        "likes": "Likes",
+        "comments": "Comments",
+        "reach": "Reach",
+        "shares": "Shares",
+        "saves": "Saves"
+      },
+      "status": {
+        "draft": "Draft",
+        "queued": "Queued",
+        "publishing": "Publishing",
+        "published": "Published",
+        "failed_retryable": "Recoverable error",
+        "failed_permanent": "Could not publish",
+        "outcome_unknown": "Verification pending",
+        "cancelled": "Cancelled",
+        "removed_api": "Removed",
+        "removed_manually": "Removed manually",
+        "removed": "Removed",
+        "removal_pending_manual": "Manual removal pending"
+      },
+      "started": "Delivery started for {count, plural, one {# channel} other {# channels}}. Status updates automatically."
+    },
+    "formats": {
+      "label": "Publication size",
+      "option": "{ratio} format, {width} by {height} pixels",
+      "quality": "High quality JPEG",
+      "previewError": "This layout could not be loaded. The original image is preserved.",
+      "retry": "Retry",
+      "loading": "Loading layout",
+      "archived": "Published version · original JPEG",
+      "editable": "Editable preview · the final JPEG is generated when preparing publication.",
+      "legacy": "JPEG archive · original layout",
+      "finalReady": "Final JPEG · file ready to review before publishing.",
+      "editableMode": "Editable design",
+      "jpegMode": "Final JPEG"
+    },
+    "artwork": {
+      "selectedFormat": "Selected format: {format}",
+      "prepareHint": "Generate and review the final JPEG before approving delivery. Editable artwork and previous files are preserved.",
+      "prepare": "Prepare JPEG in {format}",
+      "preparing": "Preparing JPEG…",
+      "preparedButton": "Refresh final JPEG",
+      "prepared": "JPEG in {format} prepared. Review the final file before publishing.",
+      "readyToApprove": "Final JPEG prepared for this revision.",
+      "prepareAgain": "The post changed. Prepare the JPEG again and review the current version before publishing.",
+      "prepareFirst": "Prepare and review the final JPEG first. You can then approve and publish to the selected channels.",
+      "instagramRestriction": "Instagram feed requires 4:5 with this integration. Choose that format and review its composition before publishing.",
+      "useInstagramFormat": "Preview 4:5 for Instagram"
     }
   },
   "sandbox": {
@@ -1896,6 +2120,7 @@
         "hint": "The chosen one opens the video and is the YouTube thumbnail. Changing it re-records the video with the new opening.",
         "capture": "Capture",
         "recapture": "Capture again",
+        "preparing": "Preparing thumbnails…",
         "notCaptured": "Not captured",
         "option": {
           "A": "A · text only",
@@ -1907,7 +2132,23 @@
       "autoVerticalResult": "9:16 was added for Instagram or TikTok.",
       "otherChannels": "Others",
       "noFormatForAccount": "This account doesn't publish in the formats checked under \"Record\".",
-      "perFormatHint": "Each account publishes in one format. Only the formats checked under \"Record\" are shown."
+      "perFormatHint": "Each account publishes in one format. Only the formats checked under \"Record\" are shown.",
+      "ab": {
+        "title": "Prepare YouTube A/B tests",
+        "hint": "Prepare up to three variants here, then set up the test in YouTube Studio. Nexa cannot start or query the experiment through the API.",
+        "mode": "Test",
+        "titles": "Titles only",
+        "thumbnails": "Thumbnails only",
+        "both": "Title and thumbnail",
+        "download": "Open thumbnail {option}",
+        "eligibility": "Check advanced features and video eligibility in Studio. Shorts and private videos are not eligible. Keep the thumbnail fixed to isolate title changes; pair each variant in Studio for combined tests.",
+        "copy": "Copy titles A/B/C",
+        "copied": "Titles copied",
+        "openStudio": "Set up test in Studio",
+        "copyError": "Could not copy. Select the titles manually.",
+        "invalidTitles": "Prepare two or three different titles, up to 100 characters each.",
+        "missingImages": "You need at least two captures. Generate them from the thumbnail selector before preparing the test."
+      }
     },
     "tray": {
       "starting": "Starting recording…",

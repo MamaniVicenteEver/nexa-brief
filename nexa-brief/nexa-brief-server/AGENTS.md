@@ -23,3 +23,9 @@ Qué modelo hace cada rol: `src/skills/models/roles.json` (el backend lo lee con
 - El servidor corre `uvicorn --reload` sobre `src/`: editar cualquier `.py` bajo `src/` (también las
   herramientas del kit) lo reinicia y corta producciones, previsualizaciones y grabaciones en curso.
   Revisá que no haya nada corriendo antes de tocar código.
+
+## Resultados temporales de validación
+
+- Guardá capturas y comparaciones temporales en `work/results/` del proyecto (ignorado por Git) o en `/tmp/`. No uses `git add -f` para incluirlas.
+- Al terminar la revisión, eliminá las capturas generadas que ya no hagan falta. Evitá acumular tandas de antes/después.
+- Si un resultado debe conservarse como documentación, guardá un resumen breve fuera de `work/results/` y solo las imágenes necesarias, elegidas explícitamente.

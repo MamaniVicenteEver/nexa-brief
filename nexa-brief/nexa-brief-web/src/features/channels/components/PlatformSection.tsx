@@ -27,6 +27,7 @@ export function PlatformSection({
 }) {
   const t = useTranslations("channels.section");
   const label = PLATFORM_META[platform].label;
+  const ty = useTranslations("channels.youtube");
   const reauth = accounts.filter((a) => a.status === "requires_reauth").length;
 
   const addTile = (
@@ -57,7 +58,10 @@ export function PlatformSection({
   );
 
   return (
-    <section aria-labelledby={`section-${platform}`} className={cn(surfaceCard, "p-5 sm:p-6")}>
+    <section
+      aria-labelledby={`section-${platform}`}
+      className={cn(surfaceCard, "min-w-0 p-3 sm:p-6")}
+    >
       <header className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <PlatformIcon platform={platform} className="size-10" />
@@ -90,6 +94,11 @@ export function PlatformSection({
         </ConnectAccountDialog>
       </header>
 
+      {platform === "youtube" && (
+        <p className="mb-4 rounded-xl border border-nb-line bg-white/35 px-4 py-3 text-[12.5px] text-nb-mute">
+          {ty("inventoryHint", { count: totalAccounts })}
+        </p>
+      )}
       {platform === "instagram" && (
         <p className="mb-4 max-w-3xl rounded-xl border border-nb-line bg-white/35 px-4 py-3 text-[12.5px] leading-[1.55] text-nb-mute">
           {t("instagramHint")}
@@ -101,7 +110,7 @@ export function PlatformSection({
           {t("noMatches")}
         </p>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-3.5">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,240px),1fr))] gap-3.5">
           {accounts.map((account) => (
             <AccountCard key={account.alias} account={account} />
           ))}

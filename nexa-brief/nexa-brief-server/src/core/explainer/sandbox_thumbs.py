@@ -11,9 +11,9 @@ from urllib.parse import quote
 
 from playwright.async_api import async_playwright
 
-from src.config.settings import BASE_DIR, settings
+from src.config.settings import settings
 
-THUMB_CACHE_DIR = BASE_DIR / "data" / "sandbox-thumbs"
+THUMB_CACHE_DIR = settings.data_dir / "sandbox-thumbs"
 _GENERATION_LOCK = threading.Lock()
 
 

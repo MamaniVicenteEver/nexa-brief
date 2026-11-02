@@ -1,10 +1,433 @@
 {
   "quality": {
     "icon_share": 0.0,
-    "distinct_components": 5,
-    "custom_components_used": 0,
-    "media_per_min": 1.194,
+    "distinct_components": 4,
+    "custom_components_used": 2,
+    "media_per_min": 0.999,
     "hedge_hits_hook": 0,
-    "lyric_cuts": 0
-  }
+    "lyric_cuts": 0,
+    "style_media": {
+      "version": 1,
+      "design": "imperio",
+      "media": [
+        {
+          "beat": 1,
+          "component": "imperio.footage",
+          "slot": "video",
+          "kind": "video",
+          "src": "assets/media/plate-bandera.mp4",
+          "start": 10.23,
+          "end": 19.79,
+          "duration": 9.56
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[0]",
+          "kind": "video",
+          "src": "assets/media/plate-ejercito.mp4",
+          "start": 52.17,
+          "end": 60.17,
+          "duration": 8.0
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[1]",
+          "kind": "video",
+          "src": "assets/media/plate-china.mp4",
+          "start": 61.27,
+          "end": 69.27,
+          "duration": 8.0
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[2]",
+          "kind": "photo",
+          "src": "assets/media/foto-camiones-ejercito.jpg",
+          "start": 70.0,
+          "end": 77.0,
+          "duration": 7.0
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[3]",
+          "kind": "video",
+          "src": "assets/media/plate-java.mp4",
+          "start": 92.37,
+          "end": 101.37,
+          "duration": 9.0
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[4]",
+          "kind": "photo",
+          "src": "assets/media/foto-tropas-java-1942.jpg",
+          "start": 103.5,
+          "end": 111.5,
+          "duration": 8.0
+        }
+      ],
+      "coverage": "main media and imperio.campaign plates; graphics excluded",
+      "audio": {
+        "supports": [
+          {
+            "asset_id": "4d548e2e527a45acbb9f013555c3f881",
+            "start": 52.17,
+            "end": 60.17,
+            "duration": 8.0,
+            "complete": true
+          },
+          {
+            "asset_id": "6c8600a9bee845d7b93b4203ff5d0e83",
+            "start": 61.27,
+            "end": 69.27000000000001,
+            "duration": 8.000000000000007,
+            "complete": true
+          },
+          {
+            "asset_id": "4d548e2e527a45acbb9f013555c3f881",
+            "start": 70.0,
+            "end": 77.0,
+            "duration": 7.0,
+            "complete": true
+          },
+          {
+            "asset_id": "52c9ba704dc94209af5874ea54b9b669",
+            "start": 92.37,
+            "end": 101.37,
+            "duration": 9.0,
+            "complete": true
+          },
+          {
+            "asset_id": "52c9ba704dc94209af5874ea54b9b669",
+            "start": 103.5,
+            "end": 111.5,
+            "duration": 8.0,
+            "complete": true
+          }
+        ],
+        "status": "checked"
+      }
+    },
+    "media_relevance": {
+      "policy_version": 4,
+      "required": false,
+      "media_beats": 2,
+      "reviewed": 0,
+      "generic_beats": 0,
+      "reused_sources": 0,
+      "status": "legacy"
+    }
+  },
+  "video_id": "japon-expansion-prueba",
+  "design": "imperio",
+  "design_name": "NODEPOLITICS",
+  "channel": "NODEPOLITICS",
+  "pipeline_type": "explainer_kit",
+  "title": "LA EXPANSIÓN DEL IMPERIO JAPONÉS",
+  "kicker": "ASIA Y EL PACÍFICO · 1868–1942",
+  "language": "es-419",
+  "duration_seconds": 120.12,
+  "script": {
+    "segments": 13,
+    "words": 254,
+    "arc": [
+      {
+        "id": "s01",
+        "tone": "intriga",
+        "intensity": 0.6
+      },
+      {
+        "id": "s02",
+        "tone": "explicativo",
+        "intensity": 0.55
+      },
+      {
+        "id": "s03",
+        "tone": "explicativo",
+        "intensity": 0.58
+      },
+      {
+        "id": "s04",
+        "tone": "explicativo",
+        "intensity": 0.62
+      },
+      {
+        "id": "s05",
+        "tone": "explicativo",
+        "intensity": 0.6
+      },
+      {
+        "id": "s06",
+        "tone": "explicativo",
+        "intensity": 0.55
+      },
+      {
+        "id": "s07",
+        "tone": "tensión",
+        "intensity": 0.72
+      },
+      {
+        "id": "s08",
+        "tone": "tensión",
+        "intensity": 0.75
+      },
+      {
+        "id": "s09",
+        "tone": "tensión",
+        "intensity": 0.76
+      },
+      {
+        "id": "s10",
+        "tone": "clímax",
+        "intensity": 0.9
+      },
+      {
+        "id": "s11",
+        "tone": "tensión",
+        "intensity": 0.85
+      },
+      {
+        "id": "s12",
+        "tone": "tensión",
+        "intensity": 0.85
+      },
+      {
+        "id": "s13",
+        "tone": "conclusión",
+        "intensity": 0.7
+      }
+    ]
+  },
+  "voice": {
+    "voice": "Charon",
+    "provenance": [
+      {
+        "part": 0,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Charon",
+        "dur": 112.92
+      }
+    ],
+    "wpm": 135,
+    "wer_aprox": 0.008,
+    "faltan": [
+      "sajalin"
+    ],
+    "sobran": [
+      "sahalin"
+    ]
+  },
+  "transcript": {
+    "words": 220,
+    "fake": false
+  },
+  "storyboard": {
+    "beats": 5,
+    "components": {
+      "imperio.title": 1,
+      "imperio.footage": 1,
+      "imperio.word": 2,
+      "imperio.campaign": 1
+    },
+    "lyrics_moments": 0
+  },
+  "media": [
+    "plate-bandera.mp4 — Video — doktorkleinmusic (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-373890/",
+    "plate-ejercito.mp4 — Djawa Baharoe (6).webm — Djawa Eiga Kosha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Djawa_Baharoe_(6).webm",
+    "plate-china.mp4 — Why We Fight- The Battle of China.webm — US National Archives — Public domain — https://commons.wikimedia.org/wiki/File:Why_We_Fight-_The_Battle_of_China.webm",
+    "plate-java.mp4 — Chabar Dai Toa (31).webm — Nippon Eigasha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Chabar_Dai_Toa_(31).webm"
+  ],
+  "video_formats": [
+    {
+      "id": "reels",
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "output_filename": "render/japon-expansion-prueba-9x16.mp4"
+    },
+    {
+      "id": "youtube",
+      "aspect_ratio": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "output_filename": "render/japon-expansion-prueba-16x9.mp4"
+    }
+  ],
+  "files": {
+    "PLAN.md": 4798,
+    "assets/components/catalog.json": 19249,
+    "assets/components/japon.js": 32888,
+    "assets/config.json": 482,
+    "assets/flags/france.svg": 225,
+    "assets/flags/germany-empire.svg": 221,
+    "assets/flags/japan.svg": 161,
+    "assets/flags/korean-empire.svg": 1031,
+    "assets/flags/manchukuo.svg": 361,
+    "assets/flags/netherlands.svg": 233,
+    "assets/flags/philippines-commonwealth.svg": 703,
+    "assets/flags/qing.svg": 807,
+    "assets/flags/roc.svg": 483,
+    "assets/flags/russia.svg": 221,
+    "assets/flags/thailand.svg": 222,
+    "assets/flags/union-jack.svg": 479,
+    "assets/flags/usa.svg": 8118,
+    "assets/lyrics.json": 24863,
+    "assets/media/CREDITS.md": 638,
+    "assets/media/plate-bandera.mp4": 3607460,
+    "assets/media/plate-china.mp4": 4100318,
+    "assets/media/plate-ejercito.mp4": 3166387,
+    "assets/media/plate-java.mp4": 2725689,
+    "assets/script.json": 3494,
+    "assets/song.mp3": 2884588,
+    "assets/storyboard.json": 13014,
+    "index.html": 5082,
+    "info.json": 2198,
+    "manifest.json": 183
+  },
+  "updated": "2026-10-31T15:29:17",
+  "target_minutes": null,
+  "status": "en progreso",
+  "media_review": [
+    {
+      "beat": 1,
+      "anchor": "Todo empezó",
+      "source": "assets/media/plate-bandera.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/qing.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/russia.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/korean-empire.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/germany-empire.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/roc.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/manchukuo.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/france.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/usa.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/union-jack.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/philippines-commonwealth.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/netherlands.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/plate-ejercito.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/plate-china.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/plate-java.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/foto-camiones-ejercito.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/foto-tropas-java-1942.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    }
+  ]
 }

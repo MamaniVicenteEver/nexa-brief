@@ -302,7 +302,7 @@
   },
   {
    "name": "common.clip",
-   "summary": "Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Toma el tratamiento de color del diseño (design.json → defaults.clip); rótulo opcional abajo.",
+   "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
    "tags": [
     "video",
     "clip",
@@ -352,7 +352,7 @@
     "layout": {
      "type": "enum",
      "default": "auto",
-     "doc": "auto = el del diseño (defaults.clip.layout; si no hay, full); full = pantalla completa; frame = dentro de un marco centrado. Dejarlo en auto.",
+     "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
      "required": false,
      "options": [
       "auto",
@@ -440,6 +440,54 @@
      "min": null,
      "max": null
     },
+    "textColor": {
+     "type": "enum",
+     "default": "ink",
+     "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+     "required": false,
+     "options": [
+      "ink",
+      "accent",
+      "mix"
+     ],
+     "min": null,
+     "max": null
+    },
+    "accentWords": {
+     "type": "array",
+     "default": [],
+     "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textSide": {
+     "type": "enum",
+     "default": "left",
+     "doc": "Ubicación del texto grande en layout full.",
+     "required": false,
+     "options": [
+      "left",
+      "right",
+      "bottom"
+     ],
+     "min": null,
+     "max": null
+    },
+    "textIn": {
+     "type": "enum",
+     "default": "slide",
+     "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+     "required": false,
+     "options": [
+      "slide",
+      "fade",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
     "logo": {
      "type": "image",
      "default": "",
@@ -494,8 +542,11 @@
    },
    "example": {
     "src": "assets/media/servidores.mp4",
-    "caption": "Un centro de datos",
-    "sub": "PEXELS · 2026"
+    "layout": "full",
+    "caption": "Una ^conversación^ digital",
+    "textColor": "mix",
+    "textSide": "left",
+    "sub": "Una historia real"
    }
   },
   {
@@ -4831,11 +4882,38 @@
     "growSec": {
      "type": "number",
      "default": 3,
-     "doc": "Segundos hasta mostrar todos los nodos.",
+     "doc": "Segundos hasta mostrar los nodos principales.",
      "required": false,
      "options": null,
      "min": null,
      "max": null
+    },
+    "scale": {
+     "type": "number",
+     "default": 1.15,
+     "doc": "Escala de nodos, rótulos y red.",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": 2
+    },
+    "keepGrowing": {
+     "type": "boolean",
+     "default": true,
+     "doc": "Agrega nodos exteriores durante el resto del beat.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "extra": {
+     "type": "number",
+     "default": 8,
+     "doc": "Cantidad de nodos exteriores sin rótulo.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 20
     }
    },
    "example": {
@@ -4997,6 +5075,106 @@
     "label": "PERSONAS EN INTERNET",
     "unit": "y contando…",
     "dur": 2.5
+   }
+  },
+  {
+   "name": "rough.notemark",
+   "summary": "Hoja manuscrita con conceptos destacados por separado en el margen o como sellos. Para ver sellos en stage.html agrega &p={\"title\":\"ACCESO AUTORIZADO\",\"marks\":[\"seguridad\",\"soporte\",\"asuntos legales\"],\"style\":\"stamps\"}.",
+   "tags": [
+    "documento",
+    "nota",
+    "marcador",
+    "sello"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Título de la hoja.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "marks": {
+     "type": "array",
+     "default": [],
+     "doc": "1–5 textos u objetos {text, at}; at es segundo local o ancla @palabras.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Alternativa a marks: conceptos separados por ·.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "style": {
+     "type": "string",
+     "default": "marker",
+     "doc": "Marcador en renglón o sellos sobre el papel.",
+     "required": false,
+     "options": [
+      "marker",
+      "stamps"
+     ],
+     "min": null,
+     "max": null
+    },
+    "side": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Margen de las etiquetas marker; auto elige derecha.",
+     "required": false,
+     "options": [
+      "auto",
+      "left",
+      "right"
+     ],
+     "min": null,
+     "max": null
+    },
+    "seed": {
+     "type": "string",
+     "default": "",
+     "doc": "Variante determinista; vacío deriva del contenido y del beat.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "arrowLen": {
+     "type": "number",
+     "default": 1,
+     "doc": "Multiplicador del largo de las flechas; la semilla suma entre 15 % y 25 %.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 1.4
+    },
+    "stagger": {
+     "type": "number",
+     "default": 0.7,
+     "doc": "Segundos entre marcas desde 0,8; cada at lo reemplaza.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "ACCESO AUTORIZADO",
+    "marks": [
+     "seguridad",
+     "soporte",
+     "asuntos legales"
+    ]
    }
   },
   {
@@ -25524,6 +25702,18 @@
   "long_video_span_seconds": 12,
   "clip_min_seconds": 12,
   "clip_max_seconds": 18,
+  "visual_support_v5": {
+   "photo_target_min": 5,
+   "photo_target_max": 10,
+   "photo_error_min": 4,
+   "photo_error_max": 12,
+   "video_target_min": 8,
+   "video_target_max": 16,
+   "video_error_min": 8,
+   "video_error_max": 18,
+   "max_uses_per_asset": 2,
+   "dominance_warn_share": 0.6
+  },
   "voice_target_ppm": 130,
   "voice_warn_ppm": 138,
   "distinct_min_minutes": 8,

@@ -1,0 +1,156 @@
+---
+import { X, Download, Copy, ArrowUpRight, ArrowRight } from '@lucide/astro';
+import { channels } from '@/features/channels/model/registry';
+import { platforms } from '@/features/channels/model/types';
+import { text, type Locale } from '@/shared/lib/locale';
+import SocialIcon from '@/shared/ui/SocialIcon.astro';
+import ProfilePreview from './ProfilePreview.astro';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels = {
+  youtube: 'YouTube',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  tiktok: 'TikTok',
+};
+---
+
+<dialog
+  class="preview-dialog"
+  id="channel-preview"
+  aria-labelledby="preview-title"
+  data-locale={locale}
+>
+  <div class="preview-dialog__top">
+    <div>
+      <span class="eyebrow">NODE / {text(locale, 'IDENTIDAD DE CANAL', 'CHANNEL IDENTITY')}</span>
+      <h2 id="preview-title">NODE</h2>
+    </div>
+    <div class="preview-dialog__top-actions">
+      <button
+        type="button"
+        class="icon-button"
+        data-copy-name
+        aria-label={text(locale, 'Copiar nombre del canal', 'Copy channel name')}
+        title={text(locale, 'Copiar nombre', 'Copy name')}
+      >
+        <Copy size={17} />
+      </button>
+      <button
+        type="button"
+        class="icon-button"
+        data-close-preview
+        aria-label={text(locale, 'Cerrar vista previa', 'Close preview')}
+      >
+        <X size={22} />
+      </button>
+    </div>
+  </div>
+  <div
+    class="platform-tabs"
+    role="tablist"
+    aria-label={text(locale, 'Red social', 'Social platform')}
+  >
+    {platforms.map((platform, i) => (
+      <button
+        id={`tab-${platform}`}
+        type="button"
+        role="tab"
+        data-platform={platform}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        aria-controls={`panel-${platform}`}
+        tabindex={i === 0 ? 0 : -1}
+      >
+        <SocialIcon platform={platform} size={18} />
+        <span>{labels[platform]}</span>
+      </button>
+    ))}
+  </div>
+  <div class="preview-dialog__content">
+    {platforms.map((platform, i) => (
+      <section
+        id={`panel-${platform}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${platform}`}
+        hidden={i !== 0}
+        tabindex="0"
+      >
+        {channels.map((channel) => (
+          <div data-profile-channel={channel.id} hidden>
+            <ProfilePreview channel={channel} platform={platform} locale={locale} />
+          </div>
+        ))}
+      </section>
+    ))}
+  </div>
+  <details class="outro-guide">
+    <summary>{text(locale, 'Cierre de video', 'Video end card')}</summary>
+    {channels.map((channel) => (
+      <div
+        data-outro-channel={channel.id}
+        hidden
+        class="outro-preview"
+        style={`--channel-accent:${channel.accent}`}
+      >
+        <span>{text(locale, 'Gracias por acompañarnos', 'Thanks for joining us')}</span>
+        <strong>{channel.name}</strong>
+        <p>
+          {text(
+            locale,
+            'Comparte · Suscríbete · Sigue explorando',
+            'Share · Subscribe · Keep exploring',
+          )}
+        </p>
+        <small>
+          {text(
+            locale,
+            'Tu apoyo hace posible la próxima historia.',
+            'Your support makes the next story possible.',
+          )}
+        </small>
+      </div>
+    ))}
+  </details>
+  <div class="preview-dialog__tools">
+    <div class="preview-dialog__downloads">
+      <button type="button" class="button button--secondary button--small" data-copy-description>
+        <Copy size={16} />
+        {text(locale, 'Copiar descripción', 'Copy description')}
+      </button>
+      <button type="button" class="button button--secondary button--small" data-download-logo>
+        <Download size={16} />
+        {text(locale, 'Logo', 'Logo')}
+      </button>
+      <button type="button" class="button button--secondary button--small" data-download-symbol>
+        <Download size={16} />
+        {text(locale, 'Sin fondo', 'Transparent')}
+      </button>
+      <button type="button" class="button button--secondary button--small" data-download-cover>
+        <Download size={16} />
+        {text(locale, 'Portada', 'Cover')}
+      </button>
+    </div>
+    <a
+      class="button button--primary button--small"
+      data-visit-profile
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {text(locale, 'Abrir canal', 'Open channel')}
+      <ArrowUpRight size={16} />
+    </a>
+  </div>
+  <div class="preview-dialog__bottom">
+    <a class="text-button" data-channel-detail>
+      {text(locale, 'Propósito y recursos del canal', 'Channel purpose & resources')}
+      <ArrowRight size={15} />
+    </a>
+    <p data-preview-status role="status" aria-live="polite"></p>
+  </div>
+</dialog>
+<script>
+  import { initializePreview } from '../lib/preview';
+  initializePreview();
+</script>

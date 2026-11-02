@@ -1,0 +1,11 @@
+--- a/src/templates/_tools/explainer-kit/designs/imperio/components/_imperio.js
++++ b/src/templates/_tools/explainer-kit/designs/imperio/components/_imperio.js
+@@ -562,7 +562,7 @@
+       draw(G, cam, kcam, id, look = {}, more = null) {
+         const st = ctx.stage, V = IM.view(st, cam), g = look.gray || 0, base = { hatch: look.hatch }, live = IM.live();
+         const blit = (e, a) => {
+-          const T = new DOMMatrix(V.m).multiply(e.M);
++          const T = new DOMMatrix(IM.view(st, cam, IM.atlas(e.kc.lon)).m).multiply(e.M);
+           G.save(); G.globalAlpha = a; G.transform(T.a, T.b, T.c, T.d, T.e, T.f); G.drawImage(e.c, 0, 0, e.w, e.h); G.restore();
+           e.used = performance.now();
+           /* La reserva también se usa: si no se toca el LRU, la cola desaloja la

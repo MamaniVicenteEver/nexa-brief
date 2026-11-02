@@ -7,6 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
     app_env: str = 'development'
+    nexa_tiktok_profile_id: str = 'legacy'
     nexa_tiktok_host: str = '127.0.0.1'
     nexa_tiktok_port: int = 8100
     nexa_tiktok_key: str = ''

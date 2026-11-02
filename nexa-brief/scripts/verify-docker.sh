@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
+source "./scripts/profile-env.sh"
 WEB_URL="http://localhost:${WEB_PORT:-3000}"
 API_URL="http://localhost:${API_PORT:-8000}"
 

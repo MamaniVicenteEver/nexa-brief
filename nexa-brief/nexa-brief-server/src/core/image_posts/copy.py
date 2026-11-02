@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from typing import Any, Mapping, Sequence
 
 from .plan import ImagePlan, parse_image_plan
@@ -86,6 +87,23 @@ def _alt_text(slide: Any) -> str:
         value = _role(slide, role)
         if value:
             parts.append(value.strip())
+    if slide.layout.startswith("amarillista:"):
+        for role in ("question", "cta"):
+            value = _role(slide, role)
+            if value:
+                parts.append(value.strip())
+        for element in slide.elements:
+            if element.type == "diagram" and element.value:
+                data = json.loads(element.value)
+                if data.get("kind") == "percent":
+                    parts.append(str(data["value"]).replace(".", ",") + " %")
+                elif data.get("kind") == "fraction":
+                    parts.append(f'Casi {data["numerator"]} de cada {data["denominator"]}')
+                elif data.get("kind") == "quantity":
+                    parts.append(f'{data["value"]} {data["unit"]}')
+                elif data.get("kind") == "timeline" and not _role(slide, "body"):
+                    # El hilo sin foto pone el cuerpo en el visual, una sola vez.
+                    parts.extend(str(item['detail']) for item in data.get('items', []) if item.get('detail'))
     photo = next((item.value for item in slide.elements if item.type == "photo" and item.value), None)
     if photo:
         parts.append(photo.strip())
@@ -132,7 +150,7 @@ def build_copy(
     question = question.strip() if isinstance(question, str) else ""
     title = title.strip()
     if image_plan.template_id == "five_slides":
-        editorial_line = "Desliza las cinco láminas y revisa el contexto y las fuentes de cada dato."
+        editorial_line = f"Desliza las {len(image_plan.slides)} láminas y revisa el contexto y las fuentes de cada dato."
     else:
         editorial_line = next(
             (value for slide in image_plan.slides for value in [_role(slide, "body")] if value),
@@ -142,10 +160,10 @@ def build_copy(
     seen_sources = set()
     for slide in image_plan.slides:
         for claim in slide.claim_refs:
-            if claim.id not in requested_claims or claim.source_id in seen_sources:
+            if claim.id not in requested_claims or claim.url in seen_sources:
                 continue
             sources.append(claim.url)
-            seen_sources.add(claim.source_id)
+            seen_sources.add(claim.url)
     if not sources:
         raise CopyError("Las afirmaciones del copy no tienen URL")
     source_line = "Fuentes: " + " · ".join(sources)

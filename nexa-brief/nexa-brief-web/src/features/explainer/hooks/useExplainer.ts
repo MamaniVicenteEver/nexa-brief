@@ -9,8 +9,8 @@ import {
   generatePublishTexts,
   getCategoryDesigns,
   getDesignGroups,
-  getExplainerOptions,
   getExplainerJobs,
+  getExplainerOptions,
   getExplainerVideos,
   getProduction,
   getProductions,
@@ -34,7 +34,9 @@ import {
 const POLL_MS = 5_000;
 const RECORDING_POLL_MS = 3_000;
 const VIDEOS_KEY = ["explainer-videos"] as const;
+
 export { VIDEOS_KEY as EXPLAINER_VIDEOS_QUERY_KEY };
+
 const PRODUCTIONS_KEY = ["explainer-productions"] as const;
 export const RECORDING_JOBS_QUERY_KEY = ["explainer-recordings"] as const;
 
@@ -111,6 +113,34 @@ export function useCaptureThumbnails() {
   return useMutation({
     mutationFn: (videoId: string) => captureThumbnails(videoId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: VIDEOS_KEY }),
+  });
+}
+
+/** Prepare only the open video's missing or outdated captures; concurrent
+ * panels share one request and the API also serializes work across processes. */
+export function usePrepareThumbnails(video: ExplainerVideo) {
+  const queryClient = useQueryClient();
+  return useQuery({
+    queryKey: [
+      "explainer-thumbnails",
+      video.videoId,
+      video.thumbnails.options.map(({ option, component, params }) => ({
+        option,
+        component,
+        params,
+      })),
+    ],
+    queryFn: async () => {
+      const thumbnails = await captureThumbnails(video.videoId, true);
+      queryClient.setQueriesData<ExplainerVideo[]>({ queryKey: VIDEOS_KEY }, (current) =>
+        current?.map((item) => (item.videoId === video.videoId ? { ...item, thumbnails } : item)),
+      );
+      return thumbnails;
+    },
+    enabled: video.ready && video.thumbnails.options.some((option) => !option.url),
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 }
 

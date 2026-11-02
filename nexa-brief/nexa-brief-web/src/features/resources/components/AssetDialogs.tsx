@@ -45,6 +45,9 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
   const t = useTranslations("resources.edit");
   const update = useUpdateAsset(asset.kind);
   const isMusic = asset.kind === "music";
+  const isSound = asset.kind === "sounds";
+  const [recommendedUses, setRecommendedUses] = useState(asset.recommendedUses.join("\n"));
+  const [approvalStatus, setApprovalStatus] = useState(asset.approvalStatus ?? "pending");
   const [name, setName] = useState(asset.name);
   const [artist, setArtist] = useState(asset.artist);
   const [description, setDescription] = useState(asset.description);
@@ -66,6 +69,15 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
             .filter(Boolean),
           category: category.trim() || asset.category,
           ...(isMusic ? { artist: artist.trim(), language: language.trim() } : {}),
+          ...(isSound
+            ? {
+                recommended_uses: recommendedUses
+                  .split("\n")
+                  .map((s) => s.trim())
+                  .filter(Boolean),
+                approval_status: approvalStatus,
+              }
+            : {}),
         },
       },
       {
@@ -116,6 +128,31 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
           className={fieldClass}
         />
       </Field>
+      {isSound && (
+        <>
+          <Field label={t("recommendedUses")} hint={t("recommendedUsesHint")}>
+            <textarea
+              value={recommendedUses}
+              onChange={(e) => setRecommendedUses(e.target.value)}
+              rows={3}
+              className={fieldClass}
+            />
+          </Field>
+          <Field label={t("approvalStatus")}>
+            <select
+              value={approvalStatus}
+              onChange={(e) =>
+                setApprovalStatus(e.target.value as "pending" | "approved" | "rejected")
+              }
+              className={fieldClass}
+            >
+              <option value="pending">{t("pending")}</option>
+              <option value="approved">{t("approved")}</option>
+              <option value="rejected">{t("rejected")}</option>
+            </select>
+          </Field>
+        </>
+      )}
       <Field label={t("tags")} hint={t("tagsHint")}>
         <input value={tags} onChange={(e) => setTags(e.target.value)} className={fieldClass} />
       </Field>

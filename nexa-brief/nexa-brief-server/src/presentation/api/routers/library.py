@@ -35,13 +35,14 @@ from starlette.responses import Response
 
 from src.adapters.lyrics.factory import get_lyrics_transcriber
 from src.config.exceptions import AssetNotFoundError
-from src.core.library import asset_library, transcription
+from src.core.library import asset_library, transcription, sound_library
 from src.presentation.api.file_streaming import serve_file_with_range
 from src.presentation.api.schemas.library_schema import (
     ImageLibraryEntryResponse,
     LibraryAssetPatch,
     LibraryDeleteResponse,
     MusicLibraryEntryResponse,
+    SoundLibraryEntryResponse,
     TemplateConfigDetailResponse,
     TemplateConfigEntryResponse,
     VideoLibraryEntryResponse,
@@ -51,7 +52,7 @@ from src.presentation.api.upload_helpers import clean_filename_label, save_uploa
 router = APIRouter(prefix="/library", tags=["library"])
 logger = structlog.get_logger(__name__)
 
-ApiKind = Literal["images", "music", "videos"]
+ApiKind = Literal["images", "music", "videos", "sounds"]
 
 # Categoría por defecto de lo que se sube desde Recursos. Separada de las que
 # usa el pipeline ("songs_with_lyrics", "lyrics_backgrounds"…) para que una
@@ -107,6 +108,8 @@ def _response(kind: str, entry: Any) -> BaseModel:
         return _image_response(entry)
     if kind == "music":
         return _music_response(entry)
+    if kind == "sound":
+        return _sound_response(entry)
     return _video_response(entry)
 
 
@@ -240,6 +243,47 @@ async def get_video(asset_id: str) -> VideoLibraryEntryResponse:
 async def get_video_file(asset_id: str, request: Request) -> Response:
     """Sirve el binario real de un video de fondo archivado (para <video src> en el admin)."""
     return _serve_asset_file("video", asset_id, request)
+
+
+def _sound_response(entry: sound_library.SoundLibraryEntry) -> SoundLibraryEntryResponse:
+    return SoundLibraryEntryResponse(**entry.model_dump(), tag_list=asset_library.tag_list(entry.tags), file_url=_file_url("sound", entry.asset_id))
+
+
+@router.get("/sounds", response_model=list[SoundLibraryEntryResponse])
+async def list_sounds(category: str | None = None, q: str | None = None) -> list[SoundLibraryEntryResponse]:
+    return [_sound_response(e) for e in asset_library.search_assets("sound", q=q, category=category)]
+
+
+@router.get("/sounds/{asset_id}", response_model=SoundLibraryEntryResponse)
+async def get_sound(asset_id: str) -> SoundLibraryEntryResponse:
+    return _sound_response(_get_or_404("sound", asset_id))
+
+
+@router.get("/sounds/{asset_id}/file")
+async def get_sound_file(asset_id: str, request: Request) -> Response:
+    return _serve_asset_file("sound", asset_id, request)
+
+
+@router.post("/sounds", response_model=SoundLibraryEntryResponse, status_code=201)
+async def upload_sound(response: FastAPIResponse, file: UploadFile = File(...), category: str = Form("sound_effects"),
+                       title: str | None = Form(None), label: str | None = Form(None), description: str = Form(""),
+                       tags: str = Form(""), recommended_uses: str = Form("")) -> SoundLibraryEntryResponse:
+    """Subir un efecto nunca inicia Whisper ni modifica una canción."""
+    _check_media_type("music", file)
+    tmp = await save_upload_to_temp(file, ".wav")
+    try:
+        digest = asset_library.hash_file(tmp)
+        existing = sound_library.find_sound_by_hash(digest)
+        entry = await sound_library.register_sound(tmp, title=title or label or clean_filename_label(file.filename),
+            description=description, tags=tags, category=category.strip() or "sound_effects", source="upload", provider="user_upload", filename=file.filename,
+            recommended_uses=[s.strip() for s in recommended_uses.split("\n") if s.strip()])
+        if existing:
+            response.status_code = 200
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    finally:
+        shutil.rmtree(tmp.parent, ignore_errors=True)
+    return _sound_response(entry)
 
 
 # ── Subida suelta ────────────────────────────────────────────────────────────
@@ -380,7 +424,7 @@ async def upload_video(
 
 @router.patch(
     "/{kind}/{asset_id}",
-    response_model=ImageLibraryEntryResponse | MusicLibraryEntryResponse | VideoLibraryEntryResponse,
+    response_model=SoundLibraryEntryResponse | ImageLibraryEntryResponse | MusicLibraryEntryResponse | VideoLibraryEntryResponse,
 )
 async def update_asset(kind: ApiKind, asset_id: str, body: LibraryAssetPatch) -> BaseModel:
     """Edita la metadata (nombre, artista, descripción, tags, idioma, categoría…).
@@ -417,7 +461,7 @@ async def delete_asset(kind: ApiKind, asset_id: str) -> LibraryDeleteResponse:
 async def list_categories(kind: str = "images") -> list[str]:
     """List distinct categories present in the library ("images" | "music" | "videos")."""
     if kind not in asset_library.API_KINDS:
-        raise HTTPException(status_code=400, detail="kind must be 'images', 'music' or 'videos'")
+        raise HTTPException(status_code=400, detail="kind must be 'images', 'music', 'videos' or 'sounds'")
     return sorted({e.category for e in asset_library.search_assets(asset_library.API_KINDS[kind])})
 
 

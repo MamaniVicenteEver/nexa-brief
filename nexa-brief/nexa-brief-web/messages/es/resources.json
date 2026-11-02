@@ -2,12 +2,18 @@
   "resources": {
     "navLabel": "Recursos",
     "title": "Recursos",
-    "subtitle": "Tus canciones, imágenes y videos para usar en las plantillas. Las canciones se transcriben solas al subirlas.",
-    "tabs": { "music": "Canciones", "images": "Imágenes", "videos": "Videos" },
+    "subtitle": "Tus canciones, imágenes, videos y efectos de sonido para reutilizar en las plantillas.",
+    "tabs": {
+      "music": "Canciones",
+      "images": "Imágenes",
+      "videos": "Videos",
+      "sounds": "Efectos de sonido"
+    },
     "searchPlaceholder": {
       "music": "Buscá por nombre, artista o etiqueta…",
       "images": "Buscá por nombre, descripción o etiqueta…",
-      "videos": "Buscá por nombre, descripción o etiqueta…"
+      "videos": "Buscá por nombre, descripción o etiqueta…",
+      "sounds": "Buscá por sonido, descripción, uso o etiqueta…"
     },
     "clearSearch": "Limpiar búsqueda",
     "categoryLabel": "Categoría",
@@ -16,12 +22,18 @@
     "empty": {
       "music": "Todavía no subiste canciones",
       "images": "Todavía no subiste imágenes",
-      "videos": "Todavía no subiste videos"
+      "videos": "Todavía no subiste videos",
+      "sounds": "Todavía no guardaste efectos de sonido"
     },
     "emptyFiltered": "No hay resultados con esos filtros",
     "emptyHint": "Arrastrá archivos a la zona de subida para sumarlos.",
     "upload": {
-      "title": { "music": "Subí canciones", "images": "Subí imágenes", "videos": "Subí videos" },
+      "title": {
+        "music": "Subí canciones",
+        "images": "Subí imágenes",
+        "videos": "Subí videos",
+        "sounds": "Subí efectos de sonido"
+      },
       "hint": "Arrastrá y soltá, o hacé clic para elegir",
       "state": {
         "queued": "En cola",
@@ -30,7 +42,20 @@
         "error": "Falló"
       }
     },
-    "card": { "edit": "Editar", "delete": "Eliminar", "lyrics": "Ver letra" },
+    "card": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "lyrics": "Ver letra",
+      "sound": "Efecto de sonido",
+      "recommendedUses": "Cuándo usarlo",
+      "usageCount": "{count, plural, one {# uso} other {# usos}}",
+      "status": {
+        "pending": "Por revisar",
+        "approved": "Aprobado",
+        "rejected": "Descartado"
+      },
+      "soundCategory": "Efectos de sonido"
+    },
     "transcription": {
       "pending": "Pendiente",
       "running": "Transcribiendo",
@@ -57,7 +82,13 @@
       "category": "Categoría",
       "cancel": "Cancelar",
       "save": "Guardar",
-      "saved": "Cambios guardados"
+      "saved": "Cambios guardados",
+      "recommendedUses": "Usos recomendados",
+      "recommendedUsesHint": "Un consejo por línea.",
+      "approvalStatus": "Revisión",
+      "pending": "Por revisar",
+      "approved": "Aprobado",
+      "rejected": "Descartado"
     },
     "delete": {
       "title": "¿Eliminar este recurso?",

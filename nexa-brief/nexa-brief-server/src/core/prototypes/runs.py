@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from src.core.task_ownership import start_owned_task, task_is_owned
+
 import asyncio
 import json
 import re
@@ -112,7 +114,7 @@ class PrototypeRunService:
         self._recovered = True
         fixed = 0
         for rec in self._col().list():
-            if rec.get("state") == PrototypeRunState.running.value:
+            if rec.get("state") == PrototypeRunState.running.value and not task_is_owned("prototype", rec["run_id"]):
                 await self._update(
                     rec["run_id"],
                     state=PrototypeRunState.failed.value,
@@ -239,8 +241,10 @@ class PrototypeRunService:
             return
         queued.sort(key=lambda row: row.get("created_at", ""))
         run_id = queued[0]["run_id"]
+        task = start_owned_task("prototype", run_id, lambda: self._run(run_id))
+        if task is None:
+            return
         self._active_run_id = run_id
-        task = asyncio.create_task(self._run(run_id))
         self._tasks[run_id] = task
         task.add_done_callback(lambda _task, key=run_id: self._tasks.pop(key, None))
 

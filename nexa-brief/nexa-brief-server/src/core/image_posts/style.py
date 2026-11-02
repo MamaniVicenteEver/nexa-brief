@@ -61,6 +61,7 @@ class StyleSystem:
     tone: dict[str, Any]
     font_data: dict[str, bytes] = field(default_factory=dict, repr=False, compare=False)
     brand: dict[str, str] = field(default_factory=dict)  # nombre del canal y @cuenta
+    alarm: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -76,6 +77,7 @@ class StyleSystem:
             "composition": self.composition,
             "tone": self.tone,
             **({"brand": self.brand} if self.brand else {}),
+            **({"alarm": self.alarm} if self.alarm else {}),
         }
 
     @property
@@ -118,6 +120,7 @@ def parse_style(raw: Mapping[str, Any], font_data: Mapping[str, bytes] | None = 
             "composition",
             "tone",
             "brand",
+            "alarm",
         },
         {
             "schema_version",
@@ -191,6 +194,7 @@ def parse_style(raw: Mapping[str, Any], font_data: Mapping[str, bytes] | None = 
         composition=dict(composition),
         tone=dict(tone),
         brand=_brand(data.get("brand")),
+        alarm=dict(data.get("alarm") or {}),
         font_data=dict(font_data or {}),
     )
 

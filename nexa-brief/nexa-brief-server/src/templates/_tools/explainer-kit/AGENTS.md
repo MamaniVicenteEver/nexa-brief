@@ -1,5 +1,7 @@
 # AGENTS.md · explainer-kit — cómo producir un video explicativo narrado
 
+> **Diseño imperio:** leer [guides/imperio-production.md](guides/imperio-production.md) antes de planificar: video visible 8–16 s, fotografía 6–12 s y sonido de biblioteca en una capa sobre la voz continua. Es una política específica del estilo; los mapas/rótulos no son medios documentales y las demás familias conservan sus reglas.
+
 > **Vía rápida (diseño existente, el caso normal): `src/skills/explainer/produce/SKILL.md`.** Este
 > manual completo es la referencia; no hace falta leerlo entero para armar un video.
 
@@ -39,7 +41,7 @@ fotos). Referencias terminadas para imitar el nivel: `nodehistory/turing-enigma`
 2. **Claves**: las herramientas las leen solas de los `.env`. Nunca las imprimas, copies ni pegues.
 3. **Verdad**: toda cifra, fecha o nombre del guion tiene fuente en `PLAN.md §3`. Nada de citas
    inventadas. Temas sensibles (muertes, delitos, salud) se cuentan con respeto y sin morbo.
-4. **Licencias**: solo imágenes PD / CC0 / CC BY / CC BY-SA / Pexels, con crédito en `CREDITS.md`.
+4. **Licencias**: PD / CC0 / CC BY / CC BY-SA / Pexels / Pixabay / Unsplash, con crédito en `CREDITS.md`.
 5. **No edites** `index.html` del video ni el motor (`engine/`). Todo se configura con JSON.
 6. **Cuota de voz**: cada pedido de TTS cuesta. Generá la voz UNA vez, cuando el guion esté final.
 
@@ -58,7 +60,9 @@ ahí (una vez, para todos los videos y los futuros), no en el storyboard de un v
 
 Un diseño oscuro nuevo debe terminar sus bordes en `#000` y declarar estos `defaults`.
 
-Desde `quality_policy_version: 2` en `assets/config.json`, `kit.py check` bloquea huecos de más de 75 s sin foto/clip y fotos visibles menos de 5 s. La versión 3 exige video visible ≥ 8 s por beat y, en videos ≥ 8 min, dos tramos de video de ≥ 12 s; `common.clip` recomienda 12–18 s. Si el archivo es corto, usá `loop` o `rate < 1`. El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta: `logo` y `logoName` van en el beat visual; `common.logo` está obsoleto. El plano preferido de NodeTech es `rough.introv2` (`text` + `src`/`video`, `highlight`, `kicker`, `focus`): texto grande a un lado y medio grande al otro, unas 3–5 veces en 10 min. `binary.introv2` es el equivalente de NodeHistory.
+Desde `quality_policy_version: 2` en `assets/config.json`, `kit.py check` bloquea huecos de más de 75 s sin foto/clip. En políticas v2–v4 también bloquea fotos visibles menos de 5 s; la v5 usa sus umbrales propios. La versión 3 exige video visible ≥ 8 s por beat y, en videos ≥ 8 min, dos tramos de video de ≥ 12 s; la recomendación de 12–18 s para `common.clip` corresponde a políticas anteriores a v5. Si el archivo es corto, usá `loop` o `rate < 1`. El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta: `logo` y `logoName` van en el beat visual; `common.logo` está obsoleto. El plano preferido de NodeTech es `rough.introv2` (`text` + `src`/`video`, `highlight`, `kicker`, `focus`): texto grande a un lado y medio grande al otro, unas 3–5 veces en 10 min. `binary.introv2` es el equivalente de NodeHistory.
+
+La política v5 de los videos nuevos prefiere apoyos ligados a la frase narrada, repartidos sin orden fijo: (1) `rough.introv2`/`binary.introv2` con foto o video, (2) `common.clip` con `layout: full`, texto grande y acento por JSON, (3) foto en cuadro. Imagen 5–10 s, video 8–16 s, cada archivo máximo dos usos; cada tercio contiene una miniatura o video completo. Consultá `kit.py library` antes de crear componentes propios de otra producción; reutilizá y revisá su hoja PNG. Los umbrales de error y aviso están en `catalog.json → quality.visual_support_v5`; las políticas anteriores conservan sus checks.
 
 La narración apunta a 130 ppm con pausas naturales; `kit.py check` avisa si el QC supera 138 ppm. El cierre requiere `song-with-outro.mp3`, duración de transcripción igual al audio, `common.question` antes del outro en las producciones nuevas y un último plano que llegue al cierre. En amarillista, la miniatura C `common.tabloid` exige el 20 % rojo/amarillo mediante bullet con cifra del guion (referencia «250 PUESTOS»); `publishing check` lo bloquea si falta.
 
@@ -120,17 +124,19 @@ K=src/templates/_tools/explainer-kit/tools/kit.py      # y: M=…/tools/media.py
 - **Hecho cuando**: pasa el checklist de `storytelling.md §6`.
 
 ### Paso 3b · Medios → `assets/media/` + `CREDITS.md`
+- Cada foto/clip muestra el sujeto concreto de la frase narrada. Antes de buscar, escribí en el plan visual la frase ancla, `shows` y `query`; usá `media.py search-concept` con al menos dos consultas para buscar en Pexels, Pixabay, Commons y los bancos configurados. Reusá solo si ayuda. Si no hay clip pertinente, elegí foto pertinente con movimiento lento, nunca metraje genérico de relleno.
 - `guides/media.md`. Buscar: `.venv/bin/python $M search "<consulta en inglés>"`; bajar:
   `.venv/bin/python $M get <video-id> "File:…" nombre.jpg` (anota el crédito solo).
 - Fotos según la duración (`kit.py status`): protagonista, lugar/objeto del punto crítico, contraparte, legado.
 - **Clips de video** (`guides/media.md §6`): en los momentos donde el movimiento cuenta algo (un
-  lanzamiento, una multitud, máquinas trabajando, una ciudad de noche) va un clip de 12–18 s en vez de la
-  foto: `.venv/bin/python $M search "<consulta>" --type video --source pixabay|commons`, después
+  lanzamiento, una multitud, máquinas trabajando, una ciudad de noche) va un clip de 8–16 s con política v5 en vez de la
+  foto: `.venv/bin/python $M search-concept "<sujeto>" --query "<inglés 1>" --query "<inglés 2>"`, después
   `get <video-id> pixabay-video:<id> nombre.mp4 --start S --dur D`, y en el storyboard `common.clip`.
   Cantidad según la duración (`kit.py check`: 2–8 en 13 min).
 - **Hecho cuando**: cada foto y clip del mapa visual existe, tiene crédito y (si podés ver imágenes) lo miraste.
 
 ### Paso 3c · Componentes propios del tema (PLAN §7a)
+- Primero `.venv/bin/python $K library`: revisar nombre, dibujo, parámetros, hoja y origen de componentes de todas las producciones. Copiar uno compatible y validarlo en el video; solo crear uno nuevo si hace falta.
 - `guides/components.md §6` + `prompts/component-author.md`. Se escriben en `assets/components/`.
 - `.venv/bin/python $K components <video-id>` → 0 errores; **mirar** `work/components/<nombre>.png`
   y completar la rúbrica de `work/components/review.md`. Máximo 2 rondas por componente.
@@ -154,6 +160,7 @@ Un componente que no aprueba tras dos rondas se descarta y se reemplaza con el c
 - `.venv/bin/python $K check <video-id>` → **0 errores**. Avisos: corregir o justificar en PLAN §10.
 
 ### Paso 8 · Revisar con ojos
+- Confirmá por escrito en `media_review` de cada beat con foto/clip lo que muestra en relación con la frase narrada. Si un beat combina foto y video, usá un objeto con una revisión por ruta (ver `guides/media.md §6`). El check lo copia a `manifest.media_review` y resume `manifest.quality.media_relevance`.
 - `.venv/bin/python $K sheet <video-id> --orient both` en primer plano → mirar `work/sheet-9x16.png` y `sheet-16x9.png`
   con el checklist de `guides/qa.md`. Corregir dentro del presupuesto; si quedan errores, guardarlos para revisión.
 - Si no podés ver imágenes: dejalo dicho en el reporte (`revisión visual pendiente`).
@@ -214,7 +221,7 @@ explainer-kit/
 ├── designs/             ← diseños: index.json, common/, binary/, rough/ (design.json + DESIGN.md + components/)
 ├── engine/              ← motor (kit.js, loader.js, kit.css) — no se edita para hacer un video
 ├── templates/           ← plantillas de un video nuevo (index.html, PLAN.md)
-├── tools/               ← kit.py (entrada única), media.py, narrate/tts, transcribe, check, shoot, catalog, delegate, usage…
+├── tools/               ← kit.py (entrada única), media.py, narrate/tts, transcribe, check, shoot, catalog, delegate, usage, perf_check (mide tirones y pausas de la reproducción)…
 ├── showcase/            ← galería de componentes (index.html) + escenario (stage.html)
 ├── vendor/              ← rough.js local
 └── lab/                 ← estudios e historial (voz, DeepSeek): no se usa para producir

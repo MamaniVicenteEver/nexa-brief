@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Activity,
   ArrowRight,
+  ArrowUpRight,
   Clock,
   Ellipsis,
   Eye,
@@ -36,22 +37,30 @@ import { useRefreshChannelProfileMutation } from "../hooks/useRefreshChannelProf
 import { useSyncChannelMutation } from "../hooks/useSyncChannelMutation";
 import { useVerifyChannelMutation } from "../hooks/useVerifyChannelMutation";
 import { formatRelativeTime } from "../lib/channels";
+import { getChannelProfileUrl } from "../lib/profile-url";
 import type { ChannelAccount, ChannelPlatform } from "../types";
 import { AccountAvatar } from "./AccountAvatar";
+import { ActionHint } from "./ActionHint";
 import { ChannelDetailsSheet } from "./ChannelDetailsSheet";
 import { ConnectAccountDialog } from "./ConnectAccountDialog";
 import { DisconnectAccountDialog } from "./DisconnectAccountDialog";
 import { EditAccountDialog } from "./EditAccountDialog";
 import { StatusBadge } from "./StatusBadge";
+import { YouTubeAccessPanel } from "./YouTubeAccessPanel";
+
+const iconAction =
+  "inline-flex size-9 shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-wait disabled:opacity-60";
 
 type OpenPanel = "details" | "edit" | "disconnect" | null;
 
 function Stat({ icon: Icon, label, value }: { icon: typeof Film; label: string; value: string }) {
   return (
     <div className="flex min-w-0 flex-col gap-0.5">
-      <span className="flex items-center gap-1 text-[10.5px] font-semibold tracking-wide text-nb-mute uppercase">
-        <Icon className="size-3" />
-        {label}
+      <span className="flex min-w-0 items-center gap-1 text-[10px] font-semibold tracking-wide text-nb-mute uppercase">
+        <Icon className="size-3 shrink-0" />
+        <span className="truncate" title={label}>
+          {label}
+        </span>
       </span>
       <span className="truncate text-[13px] font-bold text-nb-ink">{value}</span>
     </div>
@@ -70,7 +79,20 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
   const [reconnectOpen, setReconnectOpen] = useState(false);
   const [health, setHealth] = useState<ChannelHealthResult | null>(null);
   const needsReauth = account.status === "requires_reauth";
-  const videoCount = account.stats?.videoCount ?? account.publishedCount;
+  const profileUrl = getChannelProfileUrl(account);
+  const syncLabel = syncChannel.isPending ? t("syncing") : t("sync");
+  const sessionLabel = checkBrowserSession.isPending ? t("checkingSession") : t("checkSession");
+  const verifyLabel = verifyConnection.isPending ? t("verifying") : t("verify");
+  const verifyTone =
+    needsReauth || health?.status === "requires_reauth"
+      ? "border-red-500/30 bg-red-500/10 text-red-600 hover:bg-red-500/20"
+      : health?.status === "attention"
+        ? "border-amber-500/30 bg-amber-500/10 text-amber-700 hover:bg-amber-500/20"
+        : "border-nb-line text-nb-ink-soft hover:border-nb-mute hover:text-nb-ink";
+  const videoCount =
+    (account.platform === "facebook" ? account.publicationCount : null) ??
+    account.stats?.videoCount ??
+    account.publishedCount;
   const isBrowserTikTok = account.platform === "tiktok" && account.mode === "service";
   const serviceHealth = useQuery({
     queryKey: ["tiktok-service-health"],
@@ -99,7 +121,7 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
   return (
     <article
       className={cn(
-        "group flex flex-col rounded-[18px] border bg-white/45 transition-all hover:-translate-y-0.5 hover:bg-white/70 hover:shadow-[0_14px_28px_-14px_rgba(40,30,10,0.25)]",
+        "group flex min-w-0 flex-col rounded-[18px] border bg-white/45 transition-all hover:-translate-y-0.5 hover:bg-white/70 hover:shadow-[0_14px_28px_-14px_rgba(40,30,10,0.25)]",
         needsReauth ? "border-red-500/35" : "border-nb-line",
       )}
     >
@@ -183,6 +205,11 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      {account.platform === "youtube" && (
+        <div className="px-4 pb-3">
+          <YouTubeAccessPanel account={account} compact />
+        </div>
+      )}
 
       <div className="flex min-h-[52px] flex-col gap-1 px-4">
         {account.label ? (
@@ -200,15 +227,19 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
           </button>
         )}
         {account.notes && (
-          <p className="line-clamp-2 text-[12px] leading-[1.45] text-nb-ink-soft">
+          <p className="line-clamp-2 wrap-anywhere text-[12px] leading-[1.45] text-nb-ink-soft">
             {account.notes}
           </p>
         )}
       </div>
 
       <div className="mx-4 mt-3 border-t border-nb-line pt-3">
-        <div className="grid grid-cols-3 gap-3">
-          <Stat icon={Film} label={t("videos")} value={String(videoCount)} />
+        <div className="grid grid-cols-3 gap-2">
+          <Stat
+            icon={Film}
+            label={t(account.platform === "facebook" ? "posts" : "videos")}
+            value={String(videoCount)}
+          />
           {account.stats?.followers != null && (
             <Stat
               icon={Users}
@@ -237,7 +268,7 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
       </div>
 
       {account.syncedAt != null && (
-        <p className="px-4 pt-2 text-[11px] text-nb-mute">
+        <p className="wrap-anywhere px-4 pt-2 text-[11px] text-nb-mute">
           {t("syncedAgo", { time: formatRelativeTime(account.syncedAt, locale) })}
         </p>
       )}
@@ -246,18 +277,18 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
         (serviceHealth.isError || (serviceHealth.data && serviceHealth.data.status !== "ok")) && (
           <p
             role="alert"
-            className="mx-4 mt-2 rounded-lg bg-amber-500/10 p-2 text-[11px] text-amber-900"
+            className="mx-4 mt-2 wrap-anywhere rounded-lg bg-amber-500/10 p-2 text-[11px] text-amber-900"
           >
             {t("serviceUnavailable")}
           </p>
         )}
       {isBrowserTikTok && serviceHealth.data?.last_backup_at && (
-        <p className="px-4 pt-2 text-[11px] text-nb-mute">
+        <p className="wrap-anywhere px-4 pt-2 text-[11px] text-nb-mute">
           {t("lastBackup")}: {serviceHealth.data.last_backup_at}
         </p>
       )}
       {reviewJobs.length > 0 && (
-        <div className="mx-4 mt-2 rounded-lg bg-amber-500/10 p-2 text-[11px] text-amber-900">
+        <div className="mx-4 mt-2 wrap-anywhere rounded-lg bg-amber-500/10 p-2 text-[11px] text-amber-900">
           <p>{t("reviewJobs", { count: reviewJobs.length })}</p>
           <ul>
             {reviewJobs.map((job) => (
@@ -277,85 +308,134 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
         </div>
       )}
       {isBrowserTikTok && (
-        <p className="px-4 pt-2 text-[11px] text-nb-mute">
+        <p className="wrap-anywhere px-4 pt-2 text-[11px] text-nb-mute">
           {t("lastSessionCheck")}:{" "}
           {account.lastSessionCheck ? formatRelativeTime(account.lastSessionCheck, locale) : "—"}
         </p>
       )}
 
-      <div className="mt-auto flex items-center justify-between gap-2 p-4 pt-3.5">
-        <StatusBadge status={account.status} />
-        <div className="flex shrink-0 items-center gap-1.5">
+      <div
+        data-channel-actions
+        className="mt-auto flex flex-wrap items-center justify-between gap-2 p-4 pt-3.5"
+      >
+        <StatusBadge status={account.status} compact />
+        <div className="flex flex-wrap items-center justify-end gap-1.5">
           {account.canSync && (
-            <button
-              type="button"
-              disabled={syncChannel.isPending}
-              onClick={() =>
-                syncChannel.mutate(
-                  { platform: account.platform, alias: account.alias },
-                  {
-                    onSuccess: (result) =>
-                      toast.success(
-                        t("syncSuccess", { imported: result.imported, updated: result.updated }),
-                      ),
-                    onError: () => toast.error(t("syncError")),
-                  },
-                )
-              }
-              className="inline-flex items-center gap-1 rounded-full border border-nb-line px-2 py-1.5 text-[11px] font-semibold text-nb-ink-soft transition-colors hover:border-nb-mute hover:text-nb-ink disabled:cursor-wait disabled:opacity-60"
-            >
-              <RefreshCw className={syncChannel.isPending ? "size-3 animate-spin" : "size-3"} />
-              {syncChannel.isPending ? t("syncing") : t("sync")}
-            </button>
+            <ActionHint label={syncLabel}>
+              <button
+                aria-label={syncLabel}
+                type="button"
+                disabled={syncChannel.isPending}
+                onClick={() =>
+                  syncChannel.mutate(
+                    { platform: account.platform, alias: account.alias },
+                    {
+                      onSuccess: (result) =>
+                        toast.success(
+                          t("syncSuccess", { imported: result.imported, updated: result.updated }),
+                        ),
+                      onError: () => toast.error(t("syncError")),
+                    },
+                  )
+                }
+                className={cn(
+                  iconAction,
+                  "border-nb-line text-nb-ink-soft hover:border-nb-mute hover:text-nb-ink",
+                )}
+              >
+                <RefreshCw
+                  aria-hidden="true"
+                  className={syncChannel.isPending ? "size-4 animate-spin" : "size-4"}
+                />
+              </button>
+            </ActionHint>
           )}
           {isBrowserTikTok ? (
-            <button
-              type="button"
-              disabled={checkBrowserSession.isPending}
-              onClick={() =>
-                checkBrowserSession.mutate(account.alias, {
-                  onSuccess: (updated) =>
-                    toast[updated.status === "ok" ? "success" : "error"](
-                      t(updated.status === "ok" ? "sessionCheckOk" : "sessionCheckFailed"),
-                    ),
-                  onError: () => toast.error(t("sessionCheckFailed")),
-                })
-              }
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-nb-line px-2.5 py-1.5 text-[11px] font-semibold text-nb-ink-soft transition-colors hover:border-nb-mute hover:text-nb-ink disabled:cursor-wait disabled:opacity-60"
-            >
-              <Activity
-                className={checkBrowserSession.isPending ? "size-3 animate-pulse" : "size-3"}
-              />
-              {checkBrowserSession.isPending ? t("checkingSession") : t("checkSession")}
-            </button>
+            <ActionHint label={sessionLabel}>
+              <button
+                aria-label={sessionLabel}
+                type="button"
+                disabled={checkBrowserSession.isPending}
+                onClick={() =>
+                  checkBrowserSession.mutate(account.alias, {
+                    onSuccess: (updated) =>
+                      toast[updated.status === "ok" ? "success" : "error"](
+                        t(updated.status === "ok" ? "sessionCheckOk" : "sessionCheckFailed"),
+                      ),
+                    onError: () => toast.error(t("sessionCheckFailed")),
+                  })
+                }
+                className={cn(
+                  iconAction,
+                  needsReauth
+                    ? verifyTone
+                    : "border-amber-500/30 bg-amber-500/10 text-amber-700 hover:bg-amber-500/20",
+                )}
+              >
+                <Activity
+                  aria-hidden="true"
+                  className={checkBrowserSession.isPending ? "size-4 animate-pulse" : "size-4"}
+                />
+              </button>
+            </ActionHint>
           ) : (
-            <button
-              type="button"
-              disabled={verifyConnection.isPending}
-              onClick={() =>
-                verifyConnection.mutate(
-                  { platform: account.platform, alias: account.alias },
-                  {
-                    onSuccess: setHealth,
-                    onError: () =>
-                      setHealth({
-                        platform: account.platform,
-                        alias: account.alias,
-                        status: "attention",
-                        reason: "check_failed",
-                        checked_at: Date.now() / 1000,
-                      }),
-                  },
-                )
-              }
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-nb-line px-2.5 py-1.5 text-[11px] font-semibold text-nb-ink-soft transition-colors hover:border-nb-mute hover:text-nb-ink disabled:cursor-wait disabled:opacity-60"
-            >
-              <Activity
-                className={verifyConnection.isPending ? "size-3 animate-pulse" : "size-3"}
-              />
-              {verifyConnection.isPending ? t("verifying") : t("verify")}
-            </button>
+            <ActionHint label={verifyLabel}>
+              <button
+                aria-label={verifyLabel}
+                type="button"
+                disabled={verifyConnection.isPending}
+                onClick={() =>
+                  verifyConnection.mutate(
+                    { platform: account.platform, alias: account.alias },
+                    {
+                      onSuccess: setHealth,
+                      onError: () =>
+                        setHealth({
+                          platform: account.platform,
+                          alias: account.alias,
+                          status: "attention",
+                          reason: "check_failed",
+                          checked_at: Date.now() / 1000,
+                        }),
+                    },
+                  )
+                }
+                className={cn(iconAction, verifyTone)}
+              >
+                <Activity
+                  aria-hidden="true"
+                  className={verifyConnection.isPending ? "size-4 animate-pulse" : "size-4"}
+                />
+              </button>
+            </ActionHint>
           )}
+          <ActionHint
+            label={profileUrl ? t("openChannel", { name: account.name }) : t("profileUnavailable")}
+          >
+            {profileUrl ? (
+              <a
+                href={profileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t("openChannel", { name: account.name })}
+                className={cn(
+                  iconAction,
+                  "border-nb-line text-nb-ink-soft hover:border-nb-mute hover:text-nb-ink",
+                )}
+              >
+                <ArrowUpRight className="size-4" aria-hidden="true" />
+              </a>
+            ) : (
+              <button
+                type="button"
+                aria-disabled="true"
+                aria-label={t("profileUnavailable")}
+                className={cn(iconAction, "cursor-not-allowed border-nb-line text-nb-mute/50")}
+              >
+                <ArrowUpRight className="size-4" aria-hidden="true" />
+              </button>
+            )}
+          </ActionHint>
         </div>
       </div>
       {health && (

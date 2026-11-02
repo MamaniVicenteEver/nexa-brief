@@ -13,6 +13,7 @@ import type {
   TitleOptionId,
   VideoThumbnails,
 } from "../types";
+import { YouTubeABPreparation } from "./YouTubeABPreparation";
 import { ThumbnailArtwork } from "./ThumbnailArtwork";
 
 function Section({ label, children }: { label: string; children: ReactNode }) {
@@ -284,7 +285,9 @@ export function PublishPackagePanel({
             preview={preview}
             onPreview={onPreview}
           />
-          <Titles pkg={pkg} maxChars={review.titleMaxChars} />
+          <YouTubeABPreparation pkg={pkg} thumbnails={thumbnails}>
+            <Titles pkg={pkg} maxChars={review.titleMaxChars} />
+          </YouTubeABPreparation>
           <Section label={t("pinnedComment")}>
             <p className="text-[12px] text-nb-ink-soft">{pkg.pinnedComment}</p>
           </Section>

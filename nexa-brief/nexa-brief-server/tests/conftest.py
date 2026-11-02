@@ -21,6 +21,10 @@ from src.config.settings import settings
 def _isolated_data_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     data_dir = tmp_path / "data"
     monkeypatch.setattr(settings, "data_dir", data_dir)
+    monkeypatch.setattr(settings, "storage_profile_dir", None)
+    monkeypatch.setattr(settings, "shared_connections_dir", None)
+    monkeypatch.setattr(settings, "tiktok_service_upload_media", False)
+    monkeypatch.setattr(settings, "tiktok_idempotency_namespace", "")
     # Internal API authentication is disabled by default in tests; security
     # tests opt into production mode and provide explicit tokens.
     monkeypatch.setattr(settings, "app_env", "test")

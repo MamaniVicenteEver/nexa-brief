@@ -97,7 +97,7 @@ class JsonPublicationRepository:
         publication_id = str(record["publication_id"])
         if not _SAFE_ID.fullmatch(category) or not _SAFE_ID.fullmatch(publication_id):
             raise ValueError("ID de publicación o categoría inválido")
-        niches_path = Path(__file__).resolve().parents[3] / "niches.json"
+        niches_path = settings.niches_path
         categories = json.loads(niches_path.read_text(encoding="utf-8")).get("categories", {})
         if category not in categories:
             raise ValueError(f"Categoría inexistente: {category}")

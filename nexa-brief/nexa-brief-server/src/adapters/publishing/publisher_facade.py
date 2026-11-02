@@ -30,12 +30,13 @@ from typing import Any, cast
 
 import structlog
 
-from src.config.exceptions import PublisherError, UnsupportedOperationError, VideoNotFoundError
+from src.config.exceptions import PlatformAPIError, PublisherError, UnsupportedOperationError, VideoNotFoundError
 from src.config.settings import settings
 from src.core import channel_sync
 from src.core.ports.channel_catalog_port import ChannelCatalogPort
 from src.core.ports.publisher_port import PublisherPort, PublishVideoResult, VideoMetadata
 from src.adapters.publishing.token_storage import TokenStorage
+from src.adapters.publishing.credential_factory import build_credential_store
 from src.adapters.publishing.token_manager import TokenManager
 from src.adapters.publishing.tiktok_adapter import TikTokAdapter
 from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
@@ -64,7 +65,7 @@ class PublisherFacade:
     """
 
     def __init__(self) -> None:
-        storage = TokenStorage(
+        storage = build_credential_store(implementation=TokenStorage,
             path=settings.accounts_json_path,
             encryption_key=settings.publisher_encryption_key,
         )
@@ -133,6 +134,14 @@ class PublisherFacade:
         selector = account_selector or settings.active_account
         platform, alias, adapter = self._resolve(selector)
 
+        if platform in ("instagram", "facebook"):
+            from src.adapters.publishing.video_cover import ensure_video_cover
+
+            supplied = kwargs.get("thumbnail_path")
+            kwargs["thumbnail_path"] = await ensure_video_cover(
+                video_path, Path(supplied) if supplied else None,
+            )
+
         logger.info(
             "publisher_publish_start",
             platform=platform,
@@ -166,6 +175,20 @@ class PublisherFacade:
             raise
 
         elapsed = round(time.monotonic() - t_start, 2)
+        thumbnail = (result.raw_response or {}).get("thumbnail") or {}
+        if platform in ("facebook", "instagram") and thumbnail.get("status") == "failed":
+            from src.core import notification_tracker
+            from src.core.notification import Notification
+
+            try:
+                await notification_tracker.create(Notification(
+                    type="video_failed", severity="warning", title="Miniatura de video pendiente",
+                    message=(f"El video se publicó en {platform}, pero Meta no aceptó la miniatura. "
+                             f"Revisa la portada en Meta Business Suite: {result.url}"),
+                    account_alias=alias,
+                ))
+            except Exception:
+                logger.warning("publisher_thumbnail_notification_failed", platform=platform)
         logger.info(
             "publisher_publish_success",
             platform=platform,
@@ -297,6 +320,46 @@ class PublisherFacade:
             "profile_synced_at": synced_at,
         }
 
+    async def refresh_instagram_profile(self, alias: str) -> dict[str, Any] | None:
+        """Refresh display fields without changing account identity or usage notes."""
+        from src.core.data import collection
+
+        account = next(
+            (item for item in self.list_accounts() if item["platform"] == "instagram" and item["alias"] == alias),
+            None,
+        )
+        if account is None:
+            return None
+        target_id = str(account.get("target_id") or "")
+        adapter = cast(InstagramAdapter, self._adapters["instagram"])
+        remote = await adapter.get_channel_profile(alias, expected_user_id=target_id)
+        # Keep the application boundary safe even if another provider is used.
+        if not target_id or str(remote.get("id") or "") != target_id:
+            raise PlatformAPIError(
+                "Instagram returned a different account ID. The saved profile was not changed.",
+                platform="instagram", status_code=409,
+            )
+        handle = remote.get("username") or account.get("handle")
+        profile = {
+            "name": remote.get("name") or handle or account["name"],
+            "target_id": target_id,
+            "handle": handle,
+            "description": remote.get("biography") or "",
+            "custom_url": f"https://www.instagram.com/{handle}" if handle else account.get("custom_url"),
+            "avatar": remote.get("profile_picture_url") or account.get("avatar"),
+            "profile_synced_at": time.time(),
+        }
+        if not self._token_manager._storage.update_channel_profile("instagram", alias, **profile):
+            raise PlatformAPIError(
+                "The Instagram connection changed during profile refresh. Retry the operation.",
+                platform="instagram", status_code=409,
+            )
+        await collection("channels").update_where(
+            {"platform": "instagram", "alias": alias, "target_id": target_id},
+            profile,
+        )
+        return profile
+
     def remove_account(self, platform: str, alias: str) -> bool:
         """Delete a connected account's stored tokens. Returns True if it existed."""
         storage = self._token_manager._storage
@@ -318,7 +381,14 @@ class PublisherFacade:
             raise UnsupportedOperationError(f"La sincronización de canales todavía no está disponible para {platform}.")
         if not any(a["platform"] == platform and a["alias"] == alias for a in self.list_accounts()):
             raise VideoNotFoundError(f"No hay una cuenta conectada '{platform}:{alias}'.")
-        return await channel_sync.sync_channel(platform, alias, catalog)
+        if platform == "instagram":
+            await self.refresh_instagram_profile(alias)
+        summary = await channel_sync.sync_channel(platform, alias, catalog)
+        if platform == "facebook" and callable(getattr(catalog, "list_channel_posts", None)):
+            from src.core.channel_publications import sync_publications
+            target_id = self._token_manager.target_id(platform, alias)
+            await sync_publications(alias, target_id, catalog.list_channel_posts)
+        return summary
 
     async def sync_all_channels(self) -> dict[str, str]:
         """Sincroniza todas las cuentas que lo permiten; una que falla no frena a las demás."""

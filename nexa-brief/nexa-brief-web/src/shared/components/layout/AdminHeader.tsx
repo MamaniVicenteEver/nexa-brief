@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { ChevronDownIcon, LogOutIcon } from "lucide-react";
+import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { NotificationBell } from "@/features/notifications";
@@ -14,17 +14,20 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { StorageProfileIndicator } from "./StorageProfileIndicator";
 
 export function AdminHeader() {
   const t = useTranslations("adminNav");
   // "Recursos" vive en su propio archivo de mensajes (messages/*/resources.json).
   const tResources = useTranslations("resources");
+  const tShowcase = useTranslations("showcase");
   const pathname = usePathname();
 
   const MANAGEMENT_LINKS = [
     { href: "/programacion", label: t("programacion") },
     { href: "/biblioteca", label: t("biblioteca") },
     { href: "/recursos", label: tResources("navLabel") },
+    { href: "/showcase", label: tShowcase("navLabel") },
     { href: "/historial", label: t("historial") },
     { href: "/notificaciones", label: t("notificaciones") },
   ] as const;
@@ -45,7 +48,9 @@ export function AdminHeader() {
           height={56}
           className="size-12 shrink-0 object-contain md:size-14"
         />
-        <span className="-ml-1" aria-hidden="true">exa Brief</span>
+        <span className="-ml-1" aria-hidden="true">
+          exa Brief
+        </span>
       </Link>
 
       <ul className="absolute left-1/2 flex -translate-x-1/2 gap-3 text-[12px]">
@@ -125,6 +130,12 @@ export function AdminHeader() {
       </ul>
 
       <div className="flex items-center gap-2">
+        {process.env.NODE_ENV === "development" && (
+          <span className="rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold text-amber-900">
+            {t("developmentEnvironment")}
+          </span>
+        )}
+        <StorageProfileIndicator />
         <LocaleSwitcher />
         <NotificationBell />
         <button

@@ -34,14 +34,22 @@ import time
 import urllib.parse
 from dataclasses import asdict
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from io import BytesIO
+from PIL import Image, UnidentifiedImageError
 
 import httpx
 import structlog
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from pydantic import BaseModel, Field, ValidationError
 
 from src.config.settings import settings
+from src.core.youtube_capabilities import (
+    thumbnail_capability, reset_thumbnail_capability,
+    feature_access, feature_access_needs_refresh, record_feature_access,
+)
+from src.adapters.data.file_locks import AsyncFileLock
 from src.presentation.api.oauth_pages import render_oauth_error, render_oauth_success
 from src.presentation.api.oauth_urls import public_url
 from src.presentation.api.file_streaming import serve_file_with_range
@@ -50,11 +58,13 @@ from src.adapters.publishing.instagram_media_url import (
     signed_media_mime,
 )
 from src.adapters.publishing.token_storage import TokenStorage
+from src.adapters.publishing.credential_factory import build_credential_store
 from src.adapters.publishing.tiktok_service import pairing as tiktok_pairing
 from src.adapters.publishing.tiktok_service.client import TikTokServiceClient, TikTokServiceError
 from src.presentation.api.security import require_internal
+from src.presentation.api.routers.channel_categories import router as channel_categories_router
 
-from src.adapters.publishing.youtube_adapter import YouTubeChannelProfile
+from src.adapters.publishing.youtube_adapter import YouTubeAdapter, YouTubeChannelProfile
 
 from src.config.exceptions import (
     PlatformAPIError,
@@ -65,6 +75,8 @@ from src.config.exceptions import (
     VideoNotFoundError,
 )
 from src.adapters.publishing.factory import get_publisher_facade
+from src.core.meta_account_identity import assign_facebook_aliases
+from src.core.channel_publications import cached_publications, sync_publications, local_image_publications, merge_local_publications
 from src.core.publish_log import list_published_videos, record_published_video
 from src.core.realtime.event_bus import get_event_bus
 from src.core.data import collection
@@ -86,6 +98,7 @@ from src.presentation.api.schemas.publisher_schema import (
 )
 
 router = APIRouter(prefix="/publish", tags=["publisher"])
+router.include_router(channel_categories_router)
 logger = structlog.get_logger(__name__)
 
 _TIKTOK_NEXA_ORIGINS = {
@@ -286,8 +299,60 @@ async def list_accounts() -> list[AccountStatusResponse]:
     except PublisherError as exc:
         raise _map_publisher_error(exc) from exc
 
+    _schedule_youtube_access_checks(accounts, facade)
     logger.info("api_list_accounts", total=len(accounts))
     return [_account_response(a) for a in accounts]
+
+
+
+# A cold GET returns immediately, then owner-authorized checks update the shared
+# projection and notify the UI. The TTL and file lock prevent duplicate queries
+# when production and development request the same channel simultaneously.
+_youtube_access_tasks: dict[tuple[str, str], asyncio.Task] = {}
+_youtube_access_retry_at: dict[tuple[str, str], float] = {}
+_youtube_access_slots = asyncio.Semaphore(3)
+
+
+async def _refresh_youtube_access(account: dict, adapter: YouTubeAdapter) -> None:
+    alias, channel_id = account["alias"], account["target_id"]
+    key = (alias, channel_id)
+    lock_id = hashlib.sha256(f"youtube:{alias}".encode()).hexdigest()[:24]
+    try:
+        async with _youtube_access_slots:
+            async with AsyncFileLock(settings.accounts_json_path.parent / f".youtube-access-{lock_id}.lock", timeout=5):
+                if not feature_access_needs_refresh(alias, channel_id):
+                    return
+                profile = await adapter.get_channel_profile(alias, expected_channel_id=channel_id)
+                if profile is None:
+                    _youtube_access_retry_at[key] = time.monotonic() + 900
+                    return
+                await get_event_bus().publish(RealtimeEvent(
+                    type="channel_status_changed",
+                    data={"platform": "youtube", "alias": alias, "status": "access_checked"},
+                ))
+    except asyncio.CancelledError:
+        raise
+    except Exception as exc:
+        _youtube_access_retry_at[key] = time.monotonic() + 900
+        logger.warning("youtube_access_check_failed", account=alias, error_type=type(exc).__name__)
+
+
+def _schedule_youtube_access_checks(accounts: list[dict], facade) -> None:
+    adapter = facade._adapters.get("youtube")
+    if not isinstance(adapter, YouTubeAdapter):
+        return
+    for account in accounts:
+        if account.get("platform") != "youtube" or account.get("status") == "requires_reauth":
+            continue
+        alias, channel_id = account["alias"], account.get("target_id")
+        if not channel_id or channel_id == alias or not feature_access_needs_refresh(alias, channel_id):
+            continue
+        key = (alias, channel_id)
+        if key in _youtube_access_tasks or time.monotonic() < _youtube_access_retry_at.get(key, 0):
+            continue
+        task = asyncio.create_task(_refresh_youtube_access(dict(account), adapter))
+        _youtube_access_tasks[key] = task
+        task.add_done_callback(lambda finished, key=key: _youtube_access_tasks.pop(key, None))
 
 
 def _provider_error_code(response: httpx.Response) -> str | int | None:
@@ -459,8 +524,11 @@ def _account_response(account: dict) -> AccountStatusResponse:
     channel = collection("channels").first({"platform": platform, "alias": alias}) or {}
     return AccountStatusResponse(
         **account,
-        published_count=len(videos),
-        last_published_at=max((v.get("published_at") or 0 for v in videos), default=None) or None,
+        publication_count=channel.get("publication_count") if platform == "facebook" else None,
+        published_count=len({v.get("post_id") for v in videos}),
+        last_published_at=max([v.get("published_at") or 0 for v in videos] + [channel.get("last_post_at") or 0]) or None,
+        youtube_thumbnail_capability=(thumbnail_capability(alias, account.get("target_id") or "") if platform == "youtube" else None),
+        youtube_feature_access=(feature_access(alias, account.get("target_id") or "") if platform == "youtube" else None),
         stats=channel.get("stats"),
         synced_at=channel.get("synced_at"),
         can_sync=account.get("mode") == "service" or _get_facade().catalog_for(platform) is not None,
@@ -657,78 +725,29 @@ async def update_account(platform: str, alias: str, body: UpdateAccountRequest) 
 
 @router.post("/accounts/{platform}/{alias}/refresh-profile", response_model=AccountStatusResponse)
 async def refresh_account_profile(platform: str, alias: str) -> AccountStatusResponse:
-    """Refresh public YouTube profile fields; the Nexa alias and usage notes stay unchanged."""
+    """Refresh public YouTube/Instagram fields while preserving account identity and notes."""
     facade = _get_facade()
     if platform == "instagram":
-        account = next(
+        try:
+            profile = await facade.refresh_instagram_profile(alias)
+        except PublisherError as exc:
+            raise _map_publisher_error(exc) from exc
+        except Exception as exc:
+            logger.warning("instagram_profile_refresh_error", alias=alias, error_type=type(exc).__name__)
+            raise HTTPException(status_code=502, detail="No se pudo consultar el perfil de Instagram.") from exc
+        if profile is None:
+            raise HTTPException(status_code=404, detail=f"No account found for 'instagram:{alias}'.")
+        updated = next(
             (item for item in facade.list_accounts() if item["platform"] == "instagram" and item["alias"] == alias),
             None,
         )
-        if account is None:
+        if updated is None:
             raise HTTPException(status_code=404, detail=f"No account found for 'instagram:{alias}'.")
-        storage = facade._token_manager._storage
-        try:
-            token_state = storage.get_state("instagram", alias)
-            access_token = storage.decrypt(token_state.encrypted_access_token)
-            async with httpx.AsyncClient(timeout=20) as client:
-                response = await client.get(
-                    f"https://graph.facebook.com/v21.0/{urllib.parse.quote(account['target_id'], safe='')}",
-                    params={
-                        "fields": "id,username,name,profile_picture_url,biography,website",
-                        "access_token": access_token,
-                    },
-                )
-            if response.status_code != 200:
-                logger.warning("instagram_profile_refresh_failed", alias=alias, status=response.status_code)
-                raise HTTPException(
-                    status_code=502,
-                    detail="Meta no pudo actualizar el perfil. Revisa instagram_basic y el vínculo con la página.",
-                )
-            profile = response.json()
-            synced_at = time.time()
-            name = profile.get("name") or profile.get("username") or account["name"]
-            handle = profile.get("username") or account.get("handle")
-            profile_url = f"https://www.instagram.com/{handle}" if handle else account.get("custom_url")
-            avatar = profile.get("profile_picture_url") or account.get("avatar")
-            biography = profile.get("biography") or ""
-            saved = storage.update_channel_profile(
-                "instagram",
-                alias,
-                name=name,
-                target_id=profile.get("id") or account["target_id"],
-                handle=handle,
-                description=biography,
-                custom_url=profile_url,
-                avatar=avatar,
-                profile_synced_at=synced_at,
-            )
-            if not saved:
-                raise HTTPException(status_code=404, detail=f"No account found for 'instagram:{alias}'.")
-            await _update_channels_json(
-                "instagram",
-                alias,
-                name,
-                profile.get("id") or account["target_id"],
-                avatar=avatar or "",
-                handle=handle,
-                description=biography,
-                custom_url=profile_url,
-                profile_synced_at=synced_at,
-                linked_page_name=account.get("linked_page_name"),
-                linked_page_id=account.get("linked_page_id"),
-            )
-            updated = next(
-                (item for item in facade.list_accounts() if item["platform"] == "instagram" and item["alias"] == alias),
-                None,
-            )
-            if updated is None:
-                raise HTTPException(status_code=404, detail=f"No account found for 'instagram:{alias}'.")
-            return _account_response(updated)
-        except HTTPException:
-            raise
-        except Exception as exc:
-            logger.exception("instagram_profile_refresh_error", alias=alias, error=str(exc))
-            raise HTTPException(status_code=502, detail="No se pudo consultar el perfil de Instagram.") from exc
+        await get_event_bus().publish(
+            RealtimeEvent(type="channel_status_changed", data={"platform": platform, "alias": alias, "status": "updated"})
+        )
+        _spawn_channel_sync(platform, alias)
+        return _account_response(updated)
 
     if platform != "youtube":
         raise HTTPException(status_code=422, detail="Profile refresh is supported for YouTube and Instagram.")
@@ -813,6 +832,28 @@ async def list_channel_videos(platform: str, alias: str) -> list[PublishedVideoR
     videos = list_published_videos(platform, alias)
     videos.sort(key=lambda v: v.get("published_at", 0), reverse=True)
     return [PublishedVideoResponse(**v) for v in videos]
+
+
+@router.get("/accounts/facebook/{alias}/posts", response_model=list[PublishedVideoResponse])
+async def list_facebook_publications(alias: str) -> list[PublishedVideoResponse]:
+    facade = _get_facade()
+    account = next((a for a in facade.list_accounts() if a["platform"] == "facebook" and a["alias"] == alias), None)
+    if account is None:
+        raise HTTPException(status_code=404, detail="Página de Facebook no conectada.")
+    target_id = account["target_id"]
+    channel = collection("channels").first({"platform": "facebook", "alias": alias}) or {}
+    try:
+        if time.time() - (channel.get("posts_synced_at") or 0) > 60:
+            await sync_publications(alias, target_id, facade._adapters["facebook"].list_channel_posts)
+    except PublisherError as exc:
+        raise _map_publisher_error(exc) from exc
+    local = local_image_publications(target_id, alias)
+    rows = merge_local_publications(cached_publications(target_id, alias), local)
+    last_post_at = max((p.get("published_at") or 0 for p in rows), default=0)
+    if channel.get("publication_count") != len(rows) or channel.get("last_post_at") != last_post_at:
+        await collection("channels").update_where({"platform": "facebook", "alias": alias, "target_id": target_id}, {"publication_count": len(rows), "last_post_at": last_post_at})
+        await get_event_bus().publish(RealtimeEvent(type="channel_status_changed", data={"platform": "facebook", "alias": alias, "status": "synced"}))
+    return [PublishedVideoResponse(**p) for p in rows]
 
 
 # ── CHANNELS DIRECTORY ────────────────────────────────────────────────────────
@@ -969,7 +1010,7 @@ async def tiktok_oauth_callback(
             raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en .env")
 
         accounts_path = settings.accounts_json_path
-        storage = TokenStorage(path=accounts_path, encryption_key=encryption_key)
+        storage = build_credential_store(implementation=TokenStorage, path=accounts_path, encryption_key=encryption_key)
 
         storage.save_tokens(
             platform="tiktok",
@@ -1019,6 +1060,10 @@ async def youtube_oauth_start(
     alias: str = "canal_1",
 ) -> RedirectResponse:
     """Redirect the browser to Google's OAuth consent screen for YouTube."""
+    try:
+        validate_alias(alias)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     client_id, _ = _load_google_credentials()
     cb_url = public_url("/api/v1/publish/auth/youtube/callback")
 
@@ -1090,7 +1135,7 @@ async def youtube_oauth_callback(
         encryption_key = settings.publisher_encryption_key
         if not encryption_key:
             raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en el servidor")
-        storage = TokenStorage(path=settings.accounts_json_path, encryption_key=encryption_key)
+        storage = build_credential_store(implementation=TokenStorage, path=settings.accounts_json_path, encryption_key=encryption_key)
         existing = next(
             (
                 item
@@ -1120,11 +1165,34 @@ async def youtube_oauth_callback(
         async with httpx.AsyncClient(timeout=10) as client:
             ch_resp = await client.get(
                 "https://www.googleapis.com/youtube/v3/channels",
-                params={"part": "snippet", "mine": "true", "maxResults": 50},
+                params={"part": "snippet,status", "mine": "true", "maxResults": 50},
                 headers={"Authorization": f"Bearer {access_token}"},
             )
         if ch_resp.status_code == 200:
-            channel_items = ch_resp.json().get("items") or []
+            payload = ch_resp.json()
+            channel_items = payload.get("items") or []
+            seen_pages: set[str] = set()
+            while payload.get("nextPageToken"):
+                page = payload["nextPageToken"]
+                if page in seen_pages:
+                    raise ValueError("YouTube devolvió paginación repetida")
+                seen_pages.add(page)
+                async with httpx.AsyncClient(timeout=10) as page_client:
+                    page_resp = await page_client.get(
+                        "https://www.googleapis.com/youtube/v3/channels",
+                        params={"part": "snippet,status", "mine": "true", "maxResults": 50, "pageToken": page},
+                        headers={"Authorization": f"Bearer {access_token}"},
+                    )
+                page_resp.raise_for_status()
+                payload = page_resp.json()
+                channel_items.extend(payload.get("items") or [])
+            channel_items = list({item["id"]: item for item in channel_items if item.get("id")}.values())
+            if not expected_channel_id and len(channel_items) > 1:
+                return HTMLResponse(_html_error(
+                    "Elige un canal de YouTube",
+                    "Esta autorización devuelve varios canales. Conecta cada canal de marca por separado, eligiéndolo en Google. No se cambió ninguna conexión.",
+                    platform="youtube",
+                ), status_code=409)
             if channel_items:
                 channel = next(
                     (item for item in channel_items if item.get("id") == expected_channel_id),
@@ -1161,6 +1229,21 @@ async def youtube_oauth_callback(
             status_code=409,
         )
 
+    if profile is None:
+        return HTMLResponse(_html_error(
+            "No se pudo confirmar el canal",
+            "Selecciona un canal de YouTube al autorizar. Inténtalo de nuevo; no se guardó una conexión sin identidad.",
+            platform="youtube",
+        ), status_code=502 if profile_fetch_failed else 409)
+
+    # Re-authorizing an already connected channel updates it instead of duplicating it.
+    duplicate = next((item for item in storage.list_accounts()
+                      if item["platform"] == "youtube" and item.get("target_id") == profile.channel_id), None)
+    if duplicate and duplicate["alias"] != alias:
+        if existing:
+            return HTMLResponse(_html_error("El canal ya está conectado", "Usa el alias del canal conectado para actualizar su autorización.", platform="youtube"), status_code=409)
+        alias = duplicate["alias"]
+
     try:
         channel_name = profile.title if profile else existing.get("name", alias)
         channel_id = profile.channel_id if profile else existing.get("target_id", "")
@@ -1170,24 +1253,32 @@ async def youtube_oauth_callback(
         avatar_url = profile.avatar if profile else existing.get("avatar") or ""
         profile_synced_at = time.time() if profile else existing.get("profile_synced_at")
 
-        storage.save_tokens(
-            platform="youtube",
-            alias=alias,
-            access_token=access_token,
-            refresh_token=refresh_token,
-            expires_in=expires_in,
-        )
-        storage.update_channel_profile(
-            "youtube",
-            alias,
-            name=channel_name,
-            target_id=channel_id,
-            handle=handle,
-            description=description,
-            custom_url=custom_url,
-            avatar=avatar_url or None,
-            profile_synced_at=profile_synced_at,
-        )
+        async with storage.refresh_lock("youtube", alias):
+            latest = next((item for item in storage.list_accounts()
+                           if item["platform"] == "youtube" and item["alias"] == alias), {})
+            latest_id = latest.get("target_id")
+            if latest_id and latest_id != alias and latest_id != channel_id:
+                return HTMLResponse(_html_error(
+                    "El alias ya pertenece a otro canal", "Agrega este canal con otro alias; no se modificó la conexión existente.", platform="youtube",
+                ), status_code=409)
+            storage.save_tokens(
+                platform="youtube",
+                alias=alias,
+                access_token=access_token,
+                refresh_token=refresh_token,
+                expires_in=expires_in,
+            )
+            storage.update_channel_profile(
+                "youtube",
+                alias,
+                name=channel_name,
+                target_id=channel_id,
+                handle=handle,
+                description=description,
+                custom_url=custom_url,
+                avatar=avatar_url or None,
+                profile_synced_at=profile_synced_at,
+            )
 
         await _update_channels_json(
             "youtube",
@@ -1204,6 +1295,8 @@ async def youtube_oauth_callback(
         logger.error("youtube_oauth_save_failed", error=str(exc))
         return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)
 
+    await reset_thumbnail_capability(alias, channel_id)
+    await record_feature_access(alias, channel_id, profile.long_uploads_status if profile else None)
     return HTMLResponse(_html_success("youtube", alias, name=channel_name, avatar=avatar_url, expires_in=expires_in, has_refresh_token=bool(refresh_token)))
 
 
@@ -1272,7 +1365,7 @@ async def facebook_oauth_start(
         "redirect_uri": cb_url,
         "scope": (
             "pages_manage_posts,pages_show_list,pages_read_engagement,pages_manage_metadata,"
-            "pages_messaging,pages_manage_engagement,pages_read_user_engagement"
+            "pages_messaging,pages_manage_engagement,pages_read_user_content"
         ),
         "state": alias,
         "response_type": "code",
@@ -1393,7 +1486,7 @@ async def facebook_oauth_callback(
             user_token_expires_in = int(resp.json().get("expires_in") or 60 * 60 * 24 * 60)
 
             # Step C: Get Pages
-            pages_params = {"access_token": long_lived_user_token}
+            pages_params = {"access_token": long_lived_user_token, "fields": "id,name,access_token", "limit": 100}
             if is_instagram:
                 pages_params["fields"] = (
                     "id,name,access_token,instagram_business_account{"
@@ -1407,7 +1500,20 @@ async def facebook_oauth_callback(
                 logger.error("meta_oauth_pages_failed", platform=platform, status=resp.status_code, body=resp.text)
                 return HTMLResponse(_html_error("No pudimos leer tus páginas", "Meta no devolvió la lista de páginas que administras.", detail=resp.text[:400], platform=platform), status_code=400)
 
-            pages = resp.json().get("data", [])
+            payload = resp.json()
+            pages = payload.get("data", [])
+            seen_cursors: set[str] = set()
+            while (payload.get("paging") or {}).get("next"):
+                paging = payload["paging"]
+                after = (paging.get("cursors") or {}).get("after") or dict(urllib.parse.parse_qsl(urllib.parse.urlparse(paging["next"]).query)).get("after")
+                if not after or after in seen_cursors:
+                    raise ValueError("Meta devolvió una paginación de páginas inválida.")
+                seen_cursors.add(after)
+                resp = await client.get("https://graph.facebook.com/v21.0/me/accounts", params={**pages_params, "after": after})
+                if resp.status_code != 200:
+                    raise ValueError("No se pudo completar la lista de páginas de Meta.")
+                payload = resp.json()
+                pages.extend(payload.get("data", []))
             if not pages:
                 return HTMLResponse(
                     _html_error("No hay páginas para conectar", "La cuenta de Facebook autorizada no administra ninguna página. Asigna acceso a una página y vuelve a intentarlo.", platform=platform),
@@ -1432,7 +1538,7 @@ async def facebook_oauth_callback(
             encryption_key = settings.publisher_encryption_key
             if not encryption_key:
                 raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en .env")
-            storage = TokenStorage(path=settings.accounts_json_path, encryption_key=encryption_key)
+            storage = build_credential_store(implementation=TokenStorage, path=settings.accounts_json_path, encryption_key=encryption_key)
             existing_accounts = storage._data.get("instagram", {})
             used_aliases = set(existing_accounts)
             connected: list[tuple[dict, dict, str]] = []
@@ -1552,14 +1658,16 @@ async def facebook_oauth_callback(
             raise ValueError("PUBLISHER_ENCRYPTION_KEY no configurada en .env")
 
         accounts_path = settings.accounts_json_path
-        storage = TokenStorage(path=accounts_path, encryption_key=encryption_key)
+        storage = build_credential_store(implementation=TokenStorage, path=accounts_path, encryption_key=encryption_key)
 
-        # Save first page with requested alias, and all pages for complete CRUD listing
-        for idx, page in enumerate(pages):
+        existing = [a for a in storage.list_accounts() if a["platform"] == "facebook"]
+        connected = assign_facebook_aliases(pages, existing, alias)
+        if not connected:
+            raise ValueError("Meta no devolvió páginas con autorización utilizable.")
+        for page_alias, page in connected:
             page_name = page.get("name")
             page_id = page.get("id")
             page_token = page.get("access_token")
-            page_alias = alias if idx == 0 else f"pagina_{idx + 1}"
             avatar_url = f"https://graph.facebook.com/{page_id}/picture?type=large"
 
             storage.save_tokens(
@@ -1582,10 +1690,40 @@ async def facebook_oauth_callback(
         logger.error("facebook_oauth_save_failed", error=str(exc))
         return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)
 
-    return HTMLResponse(_html_success("facebook", alias, name=pages[0].get("name"), avatar=f"https://graph.facebook.com/{pages[0].get('id')}/picture?type=large", extra_accounts=len(pages) - 1))
+    return HTMLResponse(_html_success("facebook", connected[0][0], name=connected[0][1].get("name"), avatar=f"https://graph.facebook.com/{connected[0][1].get('id')}/picture?type=large", extra_accounts=len(connected) - 1))
 
 
 # ── YOUTUBE PLAYLISTS ENDPOINT ────────────────────────────────────────────────
+
+@router.post("/youtube/{alias}/{video_id}/thumbnail", dependencies=[Depends(require_internal)])
+async def upload_youtube_thumbnail(alias: str, video_id: str, file: UploadFile = File(...)) -> dict:
+    """Replace an existing video's image without uploading the video again."""
+    data = await file.read(2 * 1024 * 1024 + 1)
+    await file.close()
+    if len(data) > 2 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Usa una imagen JPEG o PNG de hasta 2 MB.")
+    try:
+        with Image.open(BytesIO(data)) as image:
+            fmt = image.format
+            image.verify()
+        if fmt not in {"JPEG", "PNG"}:
+            raise ValueError("unsupported image")
+    except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError):
+        raise HTTPException(status_code=422, detail="El archivo debe ser una imagen JPEG o PNG válida.") from None
+    facade = _get_facade()
+    account = next((a for a in facade.list_accounts() if a["platform"] == "youtube" and a["alias"] == alias), None)
+    if not account:
+        raise HTTPException(status_code=404, detail="Canal de YouTube no conectado.")
+    adapter = facade._adapters["youtube"]
+    with TemporaryDirectory(prefix="nexa-thumbnail-") as directory:
+        path = Path(directory) / ("thumbnail.png" if fmt == "PNG" else "thumbnail.jpg")
+        path.write_bytes(data)
+        try:
+            result = await adapter.upload_thumbnail(video_id, alias, path)
+        except PublisherError as exc:
+            raise _map_publisher_error(exc) from exc
+    return {"video_id": video_id, **result}
+
 
 @router.get("/youtube/{alias}/playlists", response_model=list[dict[str, str]], tags=["youtube"])
 async def list_youtube_playlists(alias: str) -> list[dict[str, str]]:
@@ -1725,6 +1863,9 @@ async def delete_video(platform: str, alias: str, video_id: str) -> DeleteRespon
     if result.status == "failed":
         raise HTTPException(status_code=502, detail=result.error)
 
+    if platform == "facebook":
+        await collection("channel_publications").update_where({"platform": platform, "alias": alias, "post_id": video_id}, {"visible": False})
+        await collection("channels").update_where({"platform": platform, "alias": alias}, {"posts_synced_at": 0})
     logger.info("api_delete_video_success", platform=platform, alias=alias, video_id=video_id, status=result.status)
     return DeleteResponse(
         video_id=video_id,

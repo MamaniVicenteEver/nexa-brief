@@ -1,0 +1,813 @@
+{
+ "comps": [
+  {
+   "name": "imperio.campaign",
+   "summary": "Campaña en UN plano continuo: la cámara vuela entre destinos (`cameras`); desde el sol de Japón salen flechas gruesas hacia cada destino y llegan justo cuando la voz lo nombra (`time: \"@palabra\"`). Al llegar, el territorio queda marcado en carmesí y aparece su bandera en un círculo con nombre y año (después se retira; el territorio sigue marcado). Tramos de video y fotos de archivo (`plates`) se funden en blanco y negro con el atlas. Para anexiones, ocupaciones y avances militares a lo largo del tiempo.",
+   "tags": [
+    "expansión",
+    "flechas",
+    "banderas",
+    "mapa",
+    "invasión",
+    "imperio",
+    "japón",
+    "video"
+   ],
+   "layer": "main",
+   "params": {
+    "country": {
+     "type": "string",
+     "default": "Japan",
+     "doc": "País foco: pone el sol y el rayado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "hatch": {
+     "type": "array",
+     "default": null,
+     "doc": "Países ya ocupados (rayado fijo). Va acumulando de plano en plano.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunAt": {
+     "type": "array",
+     "default": null,
+     "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunSize": {
+     "type": "number",
+     "default": 1.15,
+     "doc": "Radio del sol en grados de mapa.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "labels": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulos de mares: [{\"t\":\"Mar de\\nChina\", \"at\":[120,20]}].",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "compass": {
+     "type": "bool",
+     "default": false,
+     "doc": "Rosa de los vientos fina abajo a la derecha.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "gray": {
+     "type": "number",
+     "default": 0,
+     "doc": "Desaturación del atlas.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "enter": {
+     "type": "number",
+     "default": 0.6,
+     "doc": "Segundos de fundido de entrada sobre el plano anterior.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 2
+    },
+    "from": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "to": {
+     "type": "array",
+     "default": null,
+     "doc": "Solo para encuadrar planos vecinos: cámara final. Vacío = la de la última entrada de `cameras`.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1.08,
+     "doc": "Si no hay cámaras: cuánto se aleja.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 6
+    },
+    "tilt": {
+     "type": "number",
+     "default": 0,
+     "doc": "Giro de las cámaras automáticas.",
+     "required": false,
+     "options": null,
+     "min": -20,
+     "max": 20
+    },
+    "ease": {
+     "type": "enum",
+     "default": "linear",
+     "doc": "Solo para planos vecinos (la cámara de este plano la dan `cameras`).",
+     "required": false,
+     "options": [
+      "auto",
+      "out",
+      "in",
+      "inOut",
+      "linear",
+      "expo"
+     ],
+     "min": null,
+     "max": null
+    },
+    "fit": {
+     "type": "number",
+     "default": 1.9,
+     "doc": "Margen del encuadre automático de `cameras[].focus` (más alto = más mapa alrededor).",
+     "required": false,
+     "options": null,
+     "min": 1.1,
+     "max": 4
+    },
+    "cameras": {
+     "type": "array",
+     "default": [],
+     "doc": "Vuelos de cámara en orden: [{\"t\":\"@Sajalín-1.8\", \"focus\":[\"sun\", [142.8,48.5]], \"k\":1.9}] o {\"t\":..,\"to\":[lon,lat,span,giro]}. Opcional `dur`, `ease`, `tilt`. Cada vuelo parte de donde esté la cámara. Con `\"cut\": true` (o `dur: 0`) la cámara salta al encuadre sin moverse: así el plano no tiene movimientos de cámara.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "targets": {
+     "type": "array",
+     "default": [],
+     "doc": "Destinos: [{\"at\":\"Taiwan\", \"region\":\"Taiwan\"|[\"A\",\"B\"]|{\"poly\":[[lon,lat]…],\"within\":\"China\"}|{\"dots\":[[lon,lat]…]}|null, \"label\":\"TAIWÁN\", \"year\":\"1895\", \"flag\":\"f1\", \"time\":\"@Taiwán\", \"kind\":\"badge|city\", \"arrow\":true, \"from\":[lon,lat], \"badgeAt\":[lon,lat], \"bow\":0.16, \"size\":1, \"hold\":4.5, \"side\":\"left|right\", \"dy\":0}]. `time` = cuándo la voz lo nombra: la flecha llega en ese instante.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "plates": {
+     "type": "array",
+     "default": [],
+     "doc": "Tramos de archivo: video 8–16 s o imagen 6–12 s; para fotos usar image:p1/p2 en vez de video. Ejemplo: [{\"video\":\"v1\", \"at\":\"@Manchuria-1\", \"dur\":8, \"start\":0, \"rate\":1, \"strength\":0.9, \"focus\":[0.5,0.45], \"caption\":\"ARCHIVO · 1931\"}]. El atlas se pone gris y el clip se funde en multiplicar.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "held": {
+     "type": "array",
+     "default": [],
+     "doc": "Territorios ya ocupados al empezar, siempre marcados (mismas formas que `region`).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "travel": {
+     "type": "number",
+     "default": 1.1,
+     "doc": "Segundos que tarda cada flecha en cruzar el mar antes de llegar a su `time`.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 3
+    },
+    "hold": {
+     "type": "number",
+     "default": 4.5,
+     "doc": "Segundos que se queda la bandera con su rótulo tras llegar (el territorio sigue marcado).",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 20
+    },
+    "beam": {
+     "type": "number",
+     "default": 1,
+     "doc": "Grosor de las flechas (multiplicador).",
+     "required": false,
+     "options": null,
+     "min": 0.4,
+     "max": 2.5
+    },
+    "badge": {
+     "type": "number",
+     "default": 1,
+     "doc": "Tamaño de las banderas redondas (multiplicador).",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": 2
+    },
+    "stamp": {
+     "type": "bool",
+     "default": true,
+     "doc": "Sello grande con el año del último destino, arriba a la izquierda.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "smoke": {
+     "type": "number",
+     "default": 0.6,
+     "doc": "Humo oscuro sobre los tramos de archivo.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "f1": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f1 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f1\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f2": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f2 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f2\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f3": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f3 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f3\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f4": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f4 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f4\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f5": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f5 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f5\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f6": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f6 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f6\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f7": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f7 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f7\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f8": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f8 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f8\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f9": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f9 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f9\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f10": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f10 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f10\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f11": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f11 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f11\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "f12": {
+     "type": "image",
+     "default": "",
+     "doc": "Bandera f12 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f12\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "v1": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip mudo v1 (assets/media). Un tramo de archivo lo usa con \"video\": \"v1\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "v2": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip mudo v2 (assets/media). Un tramo de archivo lo usa con \"video\": \"v2\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "v3": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip mudo v3 (assets/media). Un tramo de archivo lo usa con \"video\": \"v3\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "v4": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip mudo v4 (assets/media). Un tramo de archivo lo usa con \"video\": \"v4\".",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "p1": {
+     "type": "image",
+     "default": "",
+     "doc": "Fotografía o fotograma p1 (assets/media). Un tramo ilustrativo lo usa con \"image\": \"p1\" durante 6–12 s.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "p2": {
+     "type": "image",
+     "default": "",
+     "doc": "Fotografía o fotograma p2 (assets/media). Un tramo ilustrativo lo usa con \"image\": \"p2\" durante 6–12 s.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "country": "Japan",
+    "hatch": [
+     "Japan"
+    ],
+    "sunSize": 1.4,
+    "cameras": [
+     {
+      "t": 0.2,
+      "focus": [
+       "sun",
+       [
+        121,
+        23.7
+       ]
+      ]
+     },
+     {
+      "t": 4.5,
+      "focus": [
+       "sun",
+       [
+        127.6,
+        36.6
+       ]
+      ]
+     }
+    ],
+    "targets": [
+     {
+      "at": "Taiwan",
+      "region": "Taiwan",
+      "label": "TAIWÁN",
+      "year": "1895",
+      "flag": "f1",
+      "time": 2
+     },
+     {
+      "at": [
+       127.8,
+       36.5
+      ],
+      "region": [
+       "South Korea",
+       "North Korea"
+      ],
+      "label": "COREA",
+      "year": "1910",
+      "flag": "f2",
+      "time": 6
+     }
+    ],
+    "labels": [
+     {
+      "t": "Mar de\nChina Oriental",
+      "at": [
+       124,
+       29
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "imperio.footage",
+   "summary": "Material de archivo en VIDEO (en vez de foto): el atlas se desatura a gris, baja humo oscuro y el clip mudo se funde en blanco y negro, en multiplicar, con el mapa; el sol y los rayos carmesí siguen encima. Como imperio.archive pero con movimiento real.",
+   "tags": [
+    "archivo",
+    "video",
+    "blanco y negro",
+    "mapa",
+    "guerra",
+    "imperio"
+   ],
+   "layer": "main",
+   "params": {
+    "video": {
+     "type": "video",
+     "default": "",
+     "doc": "Clip mudo de assets/media (se pasa a B/N contrastado). Vacío = solo atlas gris, humo y rayos.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo inicial del clip.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad del clip (bajar si es corto).",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 2
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repetir el clip si es más corto que el plano.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.45
+     ],
+     "doc": "Punto de interés del clip [x,y] 0..1.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "country": {
+     "type": "string",
+     "default": "Japan",
+     "doc": "País foco: pone el sol y el rayado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "hatch": {
+     "type": "array",
+     "default": null,
+     "doc": "Países ya ocupados (rayado fijo). Va acumulando de plano en plano.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunAt": {
+     "type": "array",
+     "default": null,
+     "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sunSize": {
+     "type": "number",
+     "default": 3,
+     "doc": "Radio del sol en grados de mapa.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": 6
+    },
+    "labels": {
+     "type": "array",
+     "default": [],
+     "doc": "Rótulos de mares: [{\"t\":\"Mar de\\nChina\", \"at\":[120,20]}].",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "compass": {
+     "type": "bool",
+     "default": true,
+     "doc": "Rosa de los vientos fina abajo a la derecha.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "gray": {
+     "type": "number",
+     "default": 0,
+     "doc": "Desaturación del atlas.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "enter": {
+     "type": "number",
+     "default": 0.7,
+     "doc": "Segundos de fundido de entrada sobre el plano anterior.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 2
+    },
+    "from": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "to": {
+     "type": "array",
+     "default": null,
+     "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 1.3,
+     "doc": "Si no hay `to`: cuánto se aleja la cámara.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 6
+    },
+    "tilt": {
+     "type": "number",
+     "default": 3,
+     "doc": "Si no hay `to`: grados que gira el mapa.",
+     "required": false,
+     "options": null,
+     "min": -20,
+     "max": 20
+    },
+    "ease": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+     "required": false,
+     "options": [
+      "auto",
+      "out",
+      "in",
+      "inOut",
+      "linear",
+      "expo"
+     ],
+     "min": null,
+     "max": null
+    },
+    "rays": {
+     "type": "number",
+     "default": 28,
+     "doc": "Rayos del sol.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 60
+    },
+    "dir": {
+     "type": "number",
+     "default": 180,
+     "doc": "Rumbo del abanico (0 = norte, 180 = sur).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "spread": {
+     "type": "number",
+     "default": 0.72,
+     "doc": "Cierre del abanico.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "rayFloor": {
+     "type": "number",
+     "default": 0.02,
+     "doc": "Largo residual de los rayos opuestos.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.4
+    },
+    "rayAlpha": {
+     "type": "number",
+     "default": 0.56,
+     "doc": "Opacidad de los rayos.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "rayLen": {
+     "type": "number",
+     "default": 0.46,
+     "doc": "Largo de los rayos (fracción del lado largo).",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 1
+    },
+    "raysAt": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo en que nacen los rayos.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "rayColor": {
+     "type": "string",
+     "default": "",
+     "doc": "Color hex de los rayos en multiplicar (el demo usa un carmesí vivo). Vacío = granate grisáceo del mapa.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ships": {
+     "type": "number",
+     "default": 2,
+     "doc": "Barquitos sobre los rayos.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 10
+    },
+    "grayDur": {
+     "type": "number",
+     "default": 0.9,
+     "doc": "Segundos en que el atlas pasa a gris.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "videoAt": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo en que empieza a aparecer el clip.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "videoDur": {
+     "type": "number",
+     "default": 1,
+     "doc": "Duración del fundido del clip.",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": null
+    },
+    "strength": {
+     "type": "number",
+     "default": 0.95,
+     "doc": "Intensidad del clip (multiplicar).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "smoke": {
+     "type": "number",
+     "default": 0.7,
+     "doc": "Humo oscuro desde arriba.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "caption": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo chico en itálica abajo a la izquierda (lugar · año del metraje).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "country": "Japan",
+    "from": [
+     145,
+     35,
+     125,
+     3
+    ],
+    "to": [
+     135,
+     32,
+     165,
+     6
+    ],
+    "rays": 28,
+    "dir": 180,
+    "spread": 0.72,
+    "rayFloor": 0.02,
+    "rayAlpha": 0.56,
+    "rayLen": 0.46,
+    "compass": true,
+    "caption": "ARCHIVO"
+   }
+  }
+ ]
+}

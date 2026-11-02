@@ -23,6 +23,7 @@ class Account(BaseModel):
 
 
 class Video(BaseModel):
+    media_type: Literal['video', 'photo', 'unknown'] = 'unknown'
     id: str
     caption: str = ''
     url: str | None = None
@@ -32,7 +33,7 @@ class Video(BaseModel):
 class Job(BaseModel):
     id: str
     alias: str
-    kind: Literal['publish', 'comment', 'delete']
+    kind: Literal['publish', 'photo', 'comment', 'delete', 'edit_privacy']
     state: Literal['queued', 'running', 'clicked', 'done', 'failed', 'needs_review'] = 'queued'
     idempotency_key: str | None = None
     payload: dict[str, Any] = Field(default_factory=dict)

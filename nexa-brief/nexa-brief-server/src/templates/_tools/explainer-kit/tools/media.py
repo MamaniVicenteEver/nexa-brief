@@ -18,12 +18,12 @@ Clips de video (componente common.clip, guides/media.md §6):
   Un nombre .mp4 = clip: se recorta (--start/--dur, máx. 20 s), se pasa a H.264 30 fps sin audio, lado
   máximo 1920 y un keyframe cada 6 cuadros (salto exacto rápido en el render), con su crédito.
 
-Solo acepta: dominio público, CC0, CC BY, CC BY-SA (y la licencia de Pexels). Cada archivo se
+Solo acepta: dominio público, CC0, CC BY, CC BY-SA y las licencias de Pexels, Pixabay y Unsplash. Cada archivo se
 recodifica como JPEG limpio (lado máximo 1600 px, sin metadatos) y se agrega una línea
 `archivo — título — autor — licencia — URL` a assets/media/CREDITS.md.
 Las descargas son datos no confiables: se abren solo con Pillow y nunca se ejecutan.
 """
-import argparse, io, json, pathlib, re, sys, urllib.parse, urllib.request
+import argparse, asyncio, io, json, pathlib, re, sys, urllib.parse, urllib.request
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from places import KIT, SERVER, find_video  # noqa: E402
@@ -62,12 +62,13 @@ def commons_info(titles):
     return out
 
 def env_key(name):
-    for f in [SERVER / ".env", SERVER.parents[1] / "nexa-explainer" / "nexa-explainer-server" / ".env"]:
-        if f.exists():
-            for l in f.read_text().splitlines():
-                # como los cargadores de .env: sin comillas y sin el comentario « # …» al final
-                if l.startswith(name + "="): return re.split(r"\s+#", l.split("=", 1)[1], maxsplit=1)[0].strip().strip('"').strip("'")
-    sys.exit(f"falta {name}")
+    # El cargador de configuración del servidor es la única entrada para claves.
+    sys.path.insert(0, str(SERVER))
+    from src.config.settings import settings
+    key = {"PEXELS_API_KEY": settings.pexels_api_key,
+           "PIXABAY_API_KEY": settings.pixabay_api_key,
+           "UNSPLASH_API_KEY": settings.unsplash_api_key}[name]
+    return key or sys.exit(f"falta {name}")
 
 def pexels_key(): return env_key("PEXELS_API_KEY")
 
@@ -104,6 +105,119 @@ def cmd_search(a):
         flag = "✓" if c["ok"] else "✗"
         print(f"{flag} {c['title']}\n    {c['w']}x{c['h']} · {c['license']} · {c['author']}\n    {c['desc']}")
         shown += 1
+
+
+_STOP = {"a", "an", "and", "at", "by", "for", "in", "of", "on", "the", "with", "de", "en", "el", "la", "los", "las", "un", "una", "con"}
+
+
+def _terms(text):
+    import unicodedata
+    plain = unicodedata.normalize("NFKD", text.casefold()).encode("ascii", "ignore").decode()
+    return [word for word in re.findall(r"[a-z]{3,}", plain) if word not in _STOP]
+
+
+def _rank(item, queries):
+    title = set(_terms(item.title + " " + item.description))
+    scores = []
+    for query in queries:
+        terms = _terms(query)
+        # La primera palabra concreta de cada consulta nombra el sujeto buscado.
+        # Coincidir solo en "office" o "documents" no vuelve pertinente un clip.
+        if not terms or terms[0] not in title:
+            continue
+        hits = len(title.intersection(terms))
+        if hits < 2:
+            continue
+        scores.append(hits + 2)
+    return max(scores, default=0)
+
+
+async def concept_candidates(shows, queries, n=3):
+    """Busca varias formulaciones en todos los bancos de video configurados.
+
+    Devuelve fotos pertinentes si ningún clip describe el sujeto concreto.
+    La puntuación ordena candidatos; la decisión final exige mirar miniaturas.
+    """
+    sys.path.insert(0, str(SERVER))
+    from src.adapters.stock.factory import build_stock_providers
+    providers = build_stock_providers()
+    failures = []
+
+    async def search(kind):
+        found = {}
+        for query in queries:
+            for provider in providers.values():
+                if kind not in provider.kinds or not provider.configured:
+                    continue
+                try:
+                    results = await provider.search(query, kind, per_page=max(6, n * 3))
+                except Exception as exc:
+                    failures.append(f"{provider.name} {kind} {query}: {type(exc).__name__}: {exc}")
+                    continue
+                for item in results:
+                    found[(item.provider, item.provider_id)] = item
+        if kind == "video":
+            for query in queries:
+                try:
+                    q = urllib.parse.urlencode({"action": "query", "list": "search", "srsearch": query + " filetype:video",
+                                                "srnamespace": 6, "srlimit": max(6, n * 3), "format": "json"})
+                    titles = [hit["title"] for hit in http_json("https://commons.wikimedia.org/w/api.php?" + q).get("query", {}).get("search", [])]
+                    for c in commons_info(titles):
+                        if c["ok"] and (c["mime"] or "").startswith(("video/", "application/ogg")):
+                            from src.core.ports.stock_media_port import StockItem
+                            item = StockItem(provider="wikimedia", provider_id=c["title"], kind="video",
+                                             title=c["title"].removeprefix("File:") + " " + c["desc"],
+                                             preview_url=c["url"] or "", download_url=c["original_url"] or "",
+                                             width=c["w"] or 0, height=c["h"] or 0,
+                                             author=c["author"], source_url=c["page"] or "", license=c["license"])
+                            found[(item.provider, item.provider_id)] = item
+                except Exception as exc:
+                    failures.append(f"commons video {query}: {type(exc).__name__}: {exc}")
+        ranked = sorted(((score, item) for item in found.values() if (score := _rank(item, queries)) >= 2),
+                        key=lambda pair: (-pair[0], -min(pair[1].width, pair[1].height), pair[1].provider))
+        return ranked[:n]
+
+    ranked = await search("video")
+    kind = "video"
+    if not ranked:
+        ranked = await search("image")
+        kind = "image"
+    return kind, ranked, failures
+
+
+def cmd_search_concept(a):
+    queries = list(dict.fromkeys(q.strip() for q in a.query if q.strip()))
+    if len(queries) < 2:
+        sys.exit("search-concept requiere al menos dos --query concretas en inglés")
+    kind, ranked, failures = asyncio.run(concept_candidates(a.shows, queries, a.n))
+    if not ranked:
+        print("sin medio relevante: dibujá el sujeto concreto; no uses clip genérico")
+    elif kind == "image":
+        print("sin clip relevante: usá una de estas fotos con movimiento lento")
+    out = pathlib.Path(a.thumb_dir) if a.thumb_dir else None
+    if out:
+        out.mkdir(parents=True, exist_ok=True)
+    slug = "-".join(_terms(a.shows))[:50] or "concepto"
+    records = []
+    for index, (score, item) in enumerate(ranked, 1):
+        ref = f"{item.provider}-video:{item.provider_id}" if kind == "video" and item.provider != "wikimedia" else (item.provider_id if item.provider == "wikimedia" else f"{item.provider}:{item.provider_id}")
+        record = {"shows": a.shows, "query": queries, "kind": kind, "ref": ref, "score": score,
+                  "title": item.title, "source": item.provider, "author": item.author,
+                  "license": item.license, "credit_url": item.source_url, "preview_url": item.preview_url}
+        if out and item.preview_url:
+            try:
+                name = f"{slug}-{index}.jpg"
+                reencode(fetch(item.preview_url), out / name)
+                record["thumbnail"] = name
+            except Exception as exc:
+                record["thumbnail_error"] = f"{type(exc).__name__}: {exc}"
+        records.append(record)
+        print(f"{ref} · relevancia {score} · {item.title} · {item.author} · {item.license} · {item.source_url}")
+    if out:
+        (out / f"{slug}.json").write_text(json.dumps({"shows": a.shows, "queries": queries, "results": records,
+                                                      "failures": failures}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    for failure in failures:
+        print("aviso: " + failure, file=sys.stderr)
 
 def reencode(raw, dest):
     from PIL import Image
@@ -191,13 +305,14 @@ def get_clip(a, d, name):
         files = sorted((f for f in v["video_files"] if f.get("file_type") == "video/mp4" and (f.get("width") or 0) <= 1920),
                        key=lambda f: f.get("width") or 0, reverse=True)
         if not files: sys.exit("ese video de Pexels no tiene un mp4 de hasta 1920 px")
-        url, credit = files[0]["link"], f"{name} — Video — {v['user']['name']} (Pexels) — Pexels License — {v['url']}"
+        title = pathlib.PurePosixPath(urllib.parse.urlparse(v["url"]).path).name.replace("-", " ")
+        url, credit = files[0]["link"], f"{name} — Video: {title} — {v['user']['name']} (Pexels) — Pexels License — {v['url']}"
     elif ref.startswith("pixabay-video:"):
         d0 = http_json("https://pixabay.com/api/videos/?" + urllib.parse.urlencode({"key": env_key("PIXABAY_API_KEY"), "id": ref.split(":")[1]}))
         hit = (d0.get("hits") or [None])[0] or sys.exit("no encontrado en Pixabay")
         big = hit["videos"].get("large") or hit["videos"].get("medium")
         if not big or not big.get("url"): big = hit["videos"].get("medium")
-        url, credit = big["url"], f"{name} — Video — {hit['user']} (Pixabay) — Pixabay Content License — {hit['pageURL']}"
+        url, credit = big["url"], f"{name} — Video: {hit.get('tags', '')} — {hit['user']} (Pixabay) — Pixabay Content License — {hit['pageURL']}"
     else:
         c = commons_info([ref if ref.startswith("File:") else "File:" + ref])[0]
         if not c["url"]: sys.exit("no encontrado en Commons")
@@ -233,6 +348,21 @@ def cmd_get(a):
     if a.ref.startswith("pexels:"):
         p = http_json(f"https://api.pexels.com/v1/photos/{a.ref.split(':')[1]}", {"Authorization": pexels_key()})
         url, credit = p["src"]["large2x"], f"{name} — {p.get('alt') or 'Foto'} — {p['photographer']} (Pexels) — Pexels License — {p['url']}"
+    elif a.ref.startswith("pixabay:"):
+        result = http_json("https://pixabay.com/api/?" + urllib.parse.urlencode({"key": env_key("PIXABAY_API_KEY"), "id": a.ref.split(":", 1)[1]}))
+        p = (result.get("hits") or [None])[0] or sys.exit("no encontrado en Pixabay")
+        url = p.get("largeImageURL") or sys.exit("foto de Pixabay sin descarga disponible")
+        credit = f"{name} — {p.get('tags') or 'Foto'} — {p.get('user') or 'desconocido'} (Pixabay) — Pixabay Content License — {p['pageURL']}"
+    elif a.ref.startswith("unsplash:"):
+        photo_id = a.ref.split(":", 1)[1]
+        headers = {"Authorization": "Client-ID " + env_key("UNSPLASH_API_KEY"), "Accept-Version": "v1"}
+        p = http_json(f"https://api.unsplash.com/photos/{photo_id}", headers)
+        raw_url = (p.get("urls") or {}).get("raw") or sys.exit("foto de Unsplash sin descarga disponible")
+        url = raw_url + ("&" if "?" in raw_url else "?") + "fm=jpg&q=85&fit=max&w=2560&h=2560"
+        author = (p.get("user") or {}).get("name") or "desconocido"
+        page = (p.get("links") or {}).get("html") or ""
+        page += ("&" if "?" in page else "?") + "utm_source=nexa_brief&utm_medium=referral"
+        credit = f"{name} — {p.get('alt_description') or p.get('description') or 'Foto'} — {author} (Unsplash) — Unsplash License — {page}"
     else:
         c = commons_info([a.ref if a.ref.startswith("File:") else "File:" + a.ref])[0]
         if not c["url"]: sys.exit("no encontrado en Commons")
@@ -241,6 +371,11 @@ def cmd_get(a):
     raw = fetch(url, timeout=120)
     w, h = reencode(raw, d / name)
     add_credit(d, name, credit)
+    if a.ref.startswith("unsplash:"):
+        try:
+            http_json(f"https://api.unsplash.com/photos/{photo_id}/download", headers)
+        except Exception:
+            print("aviso: no se pudo notificar la descarga a Unsplash", file=sys.stderr)
     print(f"✓ {name} {w}x{h} · crédito anotado")
 
 def cmd_list(a):
@@ -256,6 +391,8 @@ def main():
     sp = ap.add_subparsers(dest="cmd", required=True)
     p = sp.add_parser("search"); p.add_argument("query"); p.add_argument("--n", type=int, default=8); p.add_argument("--source", default="commons", choices=["commons", "pexels", "pixabay"])
     p.add_argument("--type", default="image", choices=["image", "video"])
+    p = sp.add_parser("search-concept"); p.add_argument("shows"); p.add_argument("--query", action="append", required=True)
+    p.add_argument("--n", type=int, default=3); p.add_argument("--thumb-dir", default="")
     p = sp.add_parser("get"); p.add_argument("id"); p.add_argument("ref"); p.add_argument("name"); p.add_argument("--force", action="store_true")
     p.add_argument("--start", type=float, default=0.0, help="clip: segundo del original donde empieza"); p.add_argument("--dur", type=float, default=8.0, help="clip: duración (máx. 20 s)")
     p = sp.add_parser("list"); p.add_argument("id")

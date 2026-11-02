@@ -36,12 +36,15 @@ Structured log events:
 
 from __future__ import annotations
 
+import asyncio
 import time
 from datetime import datetime
 from pathlib import Path
+from dataclasses import asdict
 from typing import Any
 from urllib.parse import quote
 
+import httpx
 import structlog
 
 from src.config.exceptions import PlatformAPIError, VideoNotFoundError
@@ -104,6 +107,26 @@ def _facebook_remote_video(item: dict[str, Any], *, kind: str = "video") -> Remo
         comments=None,
         kind=kind,
     )
+
+
+def _facebook_post(item: dict[str, Any]) -> dict[str, Any]:
+    attachments = (item.get("attachments") or {}).get("data") or []
+    main = attachments[0] if attachments else {}
+    children = (main.get("subattachments") or {}).get("data") or []
+    media_type = str(main.get("media_type") or main.get("type") or "").lower()
+    kind = ("carousel" if media_type == "album" or len(children) > 1 else
+            "photo" if media_type == "photo" else "video" if "video" in media_type else "text")
+    target = str((main.get("target") or {}).get("id") or "")
+    feed_id = str(item["id"])
+    media = main.get("media") or (children[0].get("media") if children else {}) or {}
+    message = str(item.get("message") or main.get("title") or "Publicación de Facebook").strip()
+    return {"post_id": target if kind == "video" and target else feed_id,
+            "feed_post_id": feed_id, "remote_object_id": target,
+            "url": item.get("permalink_url") or f"https://www.facebook.com/{feed_id}",
+            "title": message.splitlines()[0] if message else "Publicación de Facebook",
+            "published_at": _timestamp(item.get("created_time")), "kind": kind,
+            "privacy": "public", "thumbnail_url": (media.get("image") or {}).get("src"),
+            "image_count": len(children) if kind == "carousel" else 1 if kind == "photo" else None}
 
 
 class FacebookAdapter(BasePlatformAdapter, ChannelCatalogPort):
@@ -237,6 +260,34 @@ class FacebookAdapter(BasePlatformAdapter, ChannelCatalogPort):
             else _optional_int(data.get("fan_count")),
         )
 
+    async def list_channel_posts(self, account_alias: str) -> list[dict[str, Any]]:
+        page_id = self._token_manager.target_id(self.PLATFORM, account_alias)
+        data = await self._catalog_get_json(
+            f"{quote(page_id, safe='')}/published_posts",
+            {"fields": "id,message,created_time,permalink_url,attachments{media_type,type,url,title,media,target,subattachments{media_type,type,url,media,target}}", "limit": 100},
+            account_alias, "page_publications",
+        )
+        by_id: dict[str, dict[str, Any]] = {}
+        seen_pages: set[str] = set()
+        while True:
+            for item in data.get("data", []):
+                if item.get("id"):
+                    row = _facebook_post(item)
+                    by_id[row["post_id"]] = row
+            next_url = (data.get("paging") or {}).get("next")
+            if not next_url:
+                break
+            if next_url in seen_pages:
+                raise PlatformAPIError("Facebook returned a repeated publications cursor.", platform="facebook", status_code=502)
+            seen_pages.add(next_url)
+            data = await self._catalog_get_next(next_url, account_alias, "page_publications")
+        # Reels can be absent from the Page feed. Their object IDs also deduplicate feed videos.
+        for video in await self.list_channel_videos(account_alias):
+            row = asdict(video)
+            old = by_id.get(video.post_id, {})
+            by_id[video.post_id] = {**old, **row, "thumbnail_url": video.thumbnail_url or old.get("thumbnail_url"), "title": video.title or old.get("title", "")}
+        return sorted(by_id.values(), key=lambda p: p.get("published_at", 0), reverse=True)
+
     # ── CREATE ────────────────────────────────────────────────────────────────
 
     @with_retry(max_retries=3)
@@ -287,6 +338,7 @@ class FacebookAdapter(BasePlatformAdapter, ChannelCatalogPort):
             video_id, upload_url = await self._reel_phase_start(token, page_id, account_alias)
             await self._reel_phase_transfer(token, upload_url, video_path, file_size, account_alias)
             published_id = await self._reel_phase_finish(token, page_id, video_id, full_description, account_alias)
+            thumbnail_result = await self._upload_thumbnail(token, published_id, kwargs.get("thumbnail_path"))
 
             elapsed = round(time.monotonic() - t_start, 2)
             logger.info(
@@ -303,7 +355,9 @@ class FacebookAdapter(BasePlatformAdapter, ChannelCatalogPort):
                 url=f"https://www.facebook.com/{page_id}/reels/{published_id}",
                 platform=self.PLATFORM,
                 account_alias=account_alias,
-                raw_response={"video_id": published_id, "page_id": page_id, "format": "reel"},
+                raw_response={
+                    "video_id": published_id, "page_id": page_id, "format": "reel", "thumbnail": thumbnail_result,
+                },
             )
         else:
             full_description = f"{description}\n\n{hashtags}".strip()
@@ -342,6 +396,7 @@ class FacebookAdapter(BasePlatformAdapter, ChannelCatalogPort):
                 account_alias=account_alias,
                 fallback_video_id=start_video_id,
             )
+            thumbnail_result = await self._upload_thumbnail(token, video_id, kwargs.get("thumbnail_path"))
 
             elapsed = round(time.monotonic() - t_start, 2)
             logger.info(
@@ -358,8 +413,51 @@ class FacebookAdapter(BasePlatformAdapter, ChannelCatalogPort):
                 url=f"https://www.facebook.com/{page_id}/videos/{video_id}",
                 platform=self.PLATFORM,
                 account_alias=account_alias,
-                raw_response={"video_id": video_id, "page_id": page_id},
+                raw_response={"video_id": video_id, "page_id": page_id, "thumbnail": thumbnail_result},
             )
+
+    async def _upload_thumbnail(self, token: str, video_id: str, image: str | Path | None) -> dict[str, Any]:
+        """Una operación aparte: un fallo de portada nunca reintenta subir todo el video.
+
+        Meta puede tardar en habilitar el objeto recién publicado. Se reintenta
+        solo esta carga y se informa si la API no admite la portada de un Reel.
+        """
+        if not image:
+            return {"status": "not_requested", "reason": "no_image"}
+        path = Path(image)
+        if not path.is_file():
+            return {"status": "failed", "reason": "image_missing"}
+        reason, status = "meta_rejected", None
+        for attempt in range(6):
+            try:
+                async with self._make_client(upload=True) as client:
+                    response = await client.post(
+                        f"{_GRAPH_BASE}/{quote(video_id, safe='')}/thumbnails",
+                        data={"access_token": token, "is_preferred": "true"},
+                        files={"source": (path.name, path.read_bytes(), "image/jpeg")},
+                    )
+                status = response.status_code
+                try:
+                    payload = response.json()
+                except ValueError:
+                    payload = {}
+                if not isinstance(payload, dict):
+                    payload = {}
+                if response.is_success and (payload.get("success") is True or payload.get("id")):
+                    logger.info("facebook_thumbnail_set", video_id=video_id, file=path.name)
+                    return {"status": "set", "reason": "cover_image"}
+                error = payload.get("error") or {}
+                if not isinstance(error, dict):
+                    error = {}
+                retryable = status in (429, 500, 502, 503, 504) or error.get("is_transient") or error.get("code") in (100, 1363030)
+                if not retryable:
+                    break
+            except (httpx.HTTPError, OSError):
+                reason = "upload_error"
+            if attempt < 5:
+                await asyncio.sleep(min(3 * 2 ** attempt, 30))
+        logger.warning("facebook_thumbnail_failed", video_id=video_id, status=status, reason=reason)
+        return {"status": "failed", "reason": reason}
 
     async def _reel_phase_start(self, token: str, page_id: str, account_alias: str) -> tuple[str, str]:
         """Phase 1 for Reels: Initialize the Reel upload session."""

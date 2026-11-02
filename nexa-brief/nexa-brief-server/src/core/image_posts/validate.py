@@ -6,6 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import unicodedata
 from typing import Any, Mapping
 
 from PIL import Image, ImageCms
@@ -13,6 +14,7 @@ from PIL import Image, ImageCms
 from .copy import ImageCopy
 from .plan import ImagePlan, parse_image_plan
 from .style import StyleSystem
+from .profiles import get_image_profile
 
 
 MAX_JPEG_BYTES = 3_984_588
@@ -44,7 +46,7 @@ class ValidationReport:
 # Roles de texto de una lámina. Los factuales afirman algo y deben citar su hecho verificado;
 # los otros son navegación o marca (tema, paso, "Deslizá", @cuenta, llamada a la acción).
 FACTUAL_ROLES = frozenset({"headline", "stat", "body", "source", "label"})
-NON_FACTUAL_ROLES = frozenset({"kicker", "cta", "handle", "step", "swipe", "tagline", "credit"})
+NON_FACTUAL_ROLES = frozenset({"kicker", "cta", "handle", "step", "swipe", "tagline", "credit", "question"})
 
 def _niche_designs(category_id: str) -> set[str]:
     try:
@@ -67,15 +69,100 @@ def validate_plan(
         errors.append("La categoría del plan no coincide con el estilo")
     if image_plan.style_id != style.style_id or image_plan.style_version != style.version:
         errors.append("El plan referencia una versión de estilo distinta")
-    if style.design_id not in _niche_designs(image_plan.category_id):
+    if style.design_id not in _niche_designs(image_plan.category_id) and not (image_plan.category_id == "node_motion" and style.design_id == "motion"):
         errors.append("El diseño no está permitido para esta categoría en niches.json")
     if image_plan.template_id not in {"daily_fact", "five_slides"}:
         errors.append("template_id debe ser daily_fact o five_slides")
+    amar = any(s.layout.startswith("amarillista:") for s in image_plan.slides)
+    hilo = amar and any(any(t.role == 'kicker' and t.value == 'DESARROLLO' for t in s.texts) for s in image_plan.slides)
     expected_slides = 1 if image_plan.template_id == "daily_fact" else 5
-    if len(image_plan.slides) != expected_slides:
+    if amar:
+        from .strategies.amarillista import CONFIG
+        fmt = CONFIG['hilo'] if hilo else CONFIG['formato']
+        if image_plan.template_id != CONFIG['predeterminado']['template_id'] or not fmt['min_laminas'] <= len(image_plan.slides) <= fmt['max_laminas']:
+            errors.append(f"amarillista requiere de {fmt['min_laminas']} a {fmt['max_laminas']} láminas")
+    elif len(image_plan.slides) != expected_slides:
         errors.append(f"{image_plan.template_id} requiere {expected_slides} lámina(s)")
-    if image_plan.format != "4:5":
-        errors.append("Las plantillas iniciales usan formato 4:5")
+    if amar and hilo:
+        from .strategies.amarillista_hilo import plan_errors
+        errors.extend(plan_errors(image_plan))
+    if amar and not hilo:
+        from .strategies.amarillista import CONFIG, LEVELS
+        levels = [s.layout.split(":", 1)[1].split("_")[1] if len(s.layout.split(":", 1)[1].split("_")) >= 3 else "" for s in image_plan.slides]
+        if len(set(levels)) != 1 or levels[0] not in LEVELS:
+            errors.append("Nivel de amarillista inválido o inconsistente")
+        if not all(sl.layout.startswith('amarillista:') for sl in image_plan.slides):
+            errors.append('No mezclar estrategias en un carrusel amarillista')
+        from .strategies.amarillista_copy import validate_reflection
+        by_label = {r['etiqueta']: r['id'] for r in CONFIG['roles']}
+        actual_roles = []
+        for index, sl in enumerate(image_plan.slides):
+            label = next((t.value for t in sl.texts if t.role == 'kicker'), '')
+            role = 'portada' if index == 0 else ('cierre' if sl.layout.endswith('_close') else by_label.get(label,''))
+            actual_roles.append(role)
+            if role != 'cierre' and not any(t.role == 'source' and t.value.strip().removeprefix('Fuente:').strip() for t in sl.texts):
+                errors.append(f'{sl.slide_id}: falta fuente visible')
+            if role == 'reflexion':
+                if '_reflexion_' not in sl.layout:
+                    errors.append('reflexion requiere diseño destacado')
+                if not sl.claim_refs or not any(t.role == 'body' and t.claim_refs for t in sl.texts):
+                    errors.append('reflexion requiere evidencia y fuente con claim_refs')
+                value = next((t.value for t in sl.texts if t.role == 'body'), '')
+                try:
+                    validate_reflection(value, levels[0])
+                except (ValueError, KeyError) as exc:
+                    errors.append(f'reflexion inválida: {exc}')
+            for item in sl.texts:
+                if item.role == 'body' and len(item.value) > CONFIG['limites']['body_caracteres']:
+                    errors.append(f'{sl.slide_id}: body supera límite')
+        if actual_roles not in CONFIG['composiciones'].get(str(len(image_plan.slides)),[]):
+            errors.append('Roles y orden inválidos: portada, prueba, giro, reflexion y cierre obligatorios')
+        hashes = [m.sha256 for sl in image_plan.slides for m in sl.media]
+        if len(hashes) != len(set(hashes)):
+            errors.append("amarillista no permite fotos repetidas")
+        for sl in image_plan.slides[:-1]:
+            photos = [e for e in sl.elements if e.type == "photo" and any(m.asset_id == e.asset_id for m in sl.media)]
+            diagrams = [e for e in sl.elements if e.type == "diagram"]
+            if not photos and not diagrams:
+                errors.append(f"{sl.slide_id}: lámina factual sin visual informativo")
+            if photos and not sl.layout.endswith("_photo"):
+                errors.append(f"{sl.slide_id}: la receta no dibuja la foto")
+            if diagrams and not (sl.layout.endswith("_visual") or (photos and sl.layout.endswith("_photo") and '_reflexion_' not in sl.layout)):
+                errors.append(f"{sl.slide_id}: la receta no dibuja el gráfico")
+            from .strategies.amarillista_visuals import validate_diagram
+            for element in diagrams:
+                try:
+                    diagram = validate_diagram(json.loads(element.value or ""), {c.id for c in sl.claim_refs})
+                    if diagram['kind'] not in CONFIG['visuales']['fallback_permitidos']:
+                        errors.append(f'{sl.slide_id}: visual inválido; tarjeta de texto no sustituye gráfico, comparación o línea de tiempo')
+                except (ValueError, TypeError, KeyError) as exc:
+                    errors.append(f"{sl.slide_id}: visual inválido: {exc}")
+        cover = image_plan.slides[0]
+        headline = next((t.value for t in cover.texts if t.role == "headline"), "")
+        if not headline or len(unicodedata.normalize("NFC", headline)) > 60 or len(headline.split()) > 8:
+            errors.append("La portada requiere título de hasta 8 palabras y 60 caracteres")
+        if not any(t.role == "source" for t in cover.texts):
+            errors.append("La portada requiere fuente visible")
+        close = image_plan.slides[-1]
+        question = next((t.value for t in close.texts if t.role == "question"), "")
+        if not question.endswith("?") or len(question.split()) > 8:
+            errors.append("El cierre requiere pregunta de hasta 8 palabras")
+        if not all(any(t.role == role for t in close.texts) for role in ("kicker", "cta", "handle")):
+            errors.append("El cierre requiere marca, CTA y @")
+        for sl in image_plan.slides:
+            for item in sl.texts:
+                normalized = unicodedata.normalize("NFKD", item.value.casefold())
+                normalized = ''.join(ch for ch in normalized if not unicodedata.combining(ch))
+                for phrase in CONFIG["controles"]["frases_prohibidas"]:
+                    p = unicodedata.normalize("NFKD", phrase.casefold())
+                    p = ''.join(ch for ch in p if not unicodedata.combining(ch))
+                    if p in normalized:
+                        errors.append(f"{sl.slide_id}: frase de engagement bait prohibida")
+                        break
+    try:
+        get_image_profile(image_plan.format)
+    except ValueError as exc:
+        errors.append(str(exc))
     if [slide.order for slide in image_plan.slides] != list(range(1, len(image_plan.slides) + 1)):
         errors.append("El orden de las láminas debe ser consecutivo desde 1")
     if len({slide.slide_id for slide in image_plan.slides}) != len(image_plan.slides):
@@ -88,7 +175,7 @@ def validate_plan(
         errors.append("renderer_version es obligatorio")
     for slide in image_plan.slides:
         claim_ids = {claim.id for claim in slide.claim_refs}
-        if not claim_ids:
+        if not claim_ids and not (amar and slide is image_plan.slides[-1] and not any(t.role in FACTUAL_ROLES for t in slide.texts)):
             errors.append(f"{slide.slide_id}: falta una fuente con claim_ref")
         for item in slide.texts:
             if item.role not in FACTUAL_ROLES | NON_FACTUAL_ROLES:
@@ -184,7 +271,7 @@ def validate_jpeg(
             errors.append("No se pudo verificar el perfil de color")
     errors.extend(validate_palette(style).errors)
     if qc:
-        if qc.get("overflow") is not False:
+        if qc.get("overflow") is not False or qc.get("overflow_blocks"):
             errors.append("El stage informa desbordamiento de texto")
         if qc.get("contrast") is not True:
             errors.append("El stage informa contraste insuficiente")

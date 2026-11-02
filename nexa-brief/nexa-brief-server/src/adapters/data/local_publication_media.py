@@ -19,6 +19,7 @@ from PIL import Image
 
 from src.adapters.data.layout import PUBLICATIONS_ROOT
 from src.config.settings import settings
+from src.core.image_posts.profiles import IMAGE_FORMAT_PROFILES
 from src.core.ports.media_storage_port import MediaObject
 
 _SAFE_PART = re.compile(r"^[A-Za-z0-9_.-]{1,128}$")
@@ -63,8 +64,9 @@ class LocalPublicationMedia:
         if mime == "image/jpeg":
             try:
                 with Image.open(BytesIO(data)) as image:
-                    if image.format != "JPEG" or image.size != (1080, 1350) or image.mode != "RGB":
-                        raise ValueError("El JPEG debe ser RGB y medir 1080×1350")
+                    supported_sizes = {profile.size for profile in IMAGE_FORMAT_PROFILES.values()}
+                    if image.format != "JPEG" or image.size not in supported_sizes or image.mode != "RGB":
+                        raise ValueError("El JPEG debe ser RGB y tener un tamaño de publicación admitido")
                     image.verify()
             except (OSError, ValueError) as exc:
                 if isinstance(exc, ValueError) and str(exc).startswith("El JPEG"):

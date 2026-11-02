@@ -1,0 +1,27 @@
+import asyncio,json,sys
+from playwright.async_api import async_playwright
+sys.path.insert(0,'/tmp');from cortes_matrix3 import BACK,TPL,URL
+PROBE='''async () => {
+ await __promo.seek(0);Kit.imperio.live=()=>true;const I=Kit.imperio, ctx={stage:Kit.makeStage(1280,720),dpr:1}, c=I.canvas(1280,720), g=c.getContext('2d'), mc=I.mapCache(ctx), out=[];
+ for(let i=0;i<5;i++) {
+  const cam=I.cam([32+i*.12,32,105+i*3,0]),lk={hatch:[],gray:0};I.warmKey(ctx,cam,lk,true);
+  while(I.keyStats().keys.some(k=>k.done<8))await new Promise(r=>setTimeout(r,20));
+  const a=performance.now();mc.draw(g,cam,cam,'',lk);const b=performance.now();g.getImageData(0,0,1,1);const cc=performance.now();mc.draw(g,cam,cam,'',lk);const d=performance.now();out.push({first:b-a,flush:cc-b,second:d-cc});
+ }
+ return out;
+}'''
+async def main():
+ results=[]
+ async with async_playwright() as p:
+  for mode in ['before','fullread','fullprime','bitmap']:
+   b=await p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required']);page=await b.new_page(viewport={'width':1280,'height':720})
+   async def route(r):
+    s=(BACK/'_imperio.js').read_text()
+    if mode=='fullread':s=s.replace('g.getImageData(0, y0, 1, 1);','g.getImageData(0, y0, e.c.width, y1 - y0);')
+    if mode=='fullprime':s=s.replace('PRIMEG.drawImage(e.c, 0, 0, 1, 1, 0, 0, 1, 1);','PRIMEG.drawImage(e.c, 0, 0, 1, 1);')
+    if mode=='bitmap':s=s.replace('g.getImageData(0, y0, 1, 1);','g.getImageData(0, y0, e.c.width, y1 - y0);').replace('e.primed = true; try {','e.primed = true; createImageBitmap(e.c).then(b=>{e.bmp=b}); try {').replace('G.drawImage(e.c, 0, 0, e.w, e.h);','G.drawImage(e.bmp || e.c, 0, 0, e.w, e.h);')
+    await r.fulfill(status=200,content_type='application/javascript',body=s)
+   await page.route('**/components/_imperio.js*',route);await page.goto(URL+'?controls=1');await page.wait_for_function('window.__promo && window.__promo.beats',timeout=120000)
+   data=await page.evaluate(PROBE);results.append({'mode':mode,'draws':data});print(mode,data,flush=True);await b.close()
+ (TPL/'work/results/cortes-data/key-variants.json').write_text(json.dumps(results,indent=2))
+asyncio.run(main())

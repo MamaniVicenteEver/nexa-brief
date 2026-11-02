@@ -34,9 +34,21 @@ export interface ChannelAccount {
   linkedPageName: string | null;
   linkedPageId: string | null;
   publishedCount: number;
+  publicationCount?: number | null;
   stats: ChannelStats | null;
   syncedAt: number | null;
   canSync: boolean;
+  youtubeFeatureAccess?: {
+    state: "unknown" | "enabled" | "verification_required" | "restricted";
+    long_uploads_status: "allowed" | "eligible" | "disallowed" | null;
+    checked_at: number | null;
+    stale: boolean;
+  } | null;
+  youtubeThumbnailCapability?: {
+    state: "unknown" | "enabled" | "unavailable";
+    reason: string;
+    checked_at: number | null;
+  } | null;
   /** User-defined purpose ("Letras románticas", "Clientes"…); empty when unset. */
   label: string;
   notes: string;
@@ -60,7 +72,8 @@ export interface PublishedVideo {
   publishedAt: number;
   origin: "nexa" | "imported";
   privacy: string | null;
-  kind: "video" | "short" | "reel" | null;
+  kind: "video" | "short" | "reel" | "photo" | "carousel" | "text" | null;
+  imageCount?: number | null;
   durationSeconds: number | null;
   thumbnailUrl: string | null;
   metrics: VideoMetrics | null;

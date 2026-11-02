@@ -117,6 +117,7 @@ class AccountStatusResponse(BaseModel):
     profile_synced_at: float | None = None
     linked_page_name: str | None = None
     linked_page_id: str | None = None
+    publication_count: int | None = None
     published_count: int = 0        # Videos published to this channel (see data/canales/published_videos.json)
     label: str = ""                 # User-defined purpose, e.g. "Letras románticas"
     notes: str = ""
@@ -125,6 +126,8 @@ class AccountStatusResponse(BaseModel):
     # Sincronización de Canales: totales reales de la plataforma y cuándo se leyeron.
     stats: ChannelStatsResponse | None = None
     synced_at: float | None = None
+    youtube_thumbnail_capability: dict[str, Any] | None = None
+    youtube_feature_access: dict[str, Any] | None = None
     can_sync: bool = False          # la red implementa ChannelCatalogPort
 
 
@@ -189,6 +192,7 @@ class PublishedVideoResponse(BaseModel):
     kind: str | None = None         # 'video' | 'short' | 'reel'
     duration_seconds: float | None = None
     thumbnail_url: str | None = None
+    image_count: int | None = None
     metrics: VideoMetricsResponse | None = None
 
 

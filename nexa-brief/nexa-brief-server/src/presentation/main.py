@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.config.logging_config import setup_logging
 from src.config.settings import settings
+from src.presentation.api.routers import sound_design
 from src.presentation.api.routers import (
     categories,
     history,
@@ -64,39 +65,49 @@ async def lifespan(app: FastAPI):
     # a RealtimeEvent expects a subscriber to already be listening.
     from src.adapters.realtime.factory import wire_realtime
     wire_realtime()
+    relay = None
+    if settings.storage_profile_dir is not None:
+        from src.adapters.realtime.shared_events import SharedEventRelay
+        from src.core.realtime.event_bus import get_event_bus
+        relay = SharedEventRelay(settings.data_dir, get_event_bus())
+        relay.start()
 
-    # ── Token refresh can run without automatic publishing ────────────────────
-    global _scheduler
-    if settings.publisher_encryption_key:
-        try:
-            from src.adapters.publishing.factory import get_publisher_facade
-            from src.adapters.publishing.scheduler import (
-                start_publishing_scheduler,
-                start_token_refresh_scheduler,
-            )
-            facade = get_publisher_facade()
-            loop = asyncio.get_event_loop()
-            if settings.enable_auto_publishing:
-                _scheduler = start_publishing_scheduler(facade, loop)
-                logger.info("publisher_scheduler_active", active_account=settings.active_account)
-            else:
-                _scheduler = start_token_refresh_scheduler(facade, loop)
-        except Exception as exc:
-            # Scheduler failure must NOT prevent the app from starting
-            logger.warning("publisher_scheduler_start_failed", error=str(exc))
-    else:
-        logger.info(
-            "publisher_scheduler_skipped",
-            enable_auto_publishing=settings.enable_auto_publishing,
-            has_encryption_key=bool(settings.publisher_encryption_key),
-        )
+    # A profile has one scheduler owner even if both APIs are running.
+    from src.core.task_ownership import TaskLease
+    scheduler_lease = TaskLease("runtime", "scheduler")
+    async def scheduler_leader():
+        global _scheduler
+        while True:
+            if settings.publisher_encryption_key and scheduler_lease.acquire():
+                try:
+                    from src.adapters.publishing.factory import get_publisher_facade
+                    from src.adapters.publishing.scheduler import start_publishing_scheduler, start_token_refresh_scheduler
+                    facade = get_publisher_facade()
+                    loop = asyncio.get_running_loop()
+                    _scheduler = (start_publishing_scheduler(facade, loop) if settings.enable_auto_publishing
+                                  else start_token_refresh_scheduler(facade, loop))
+                    await asyncio.Event().wait()
+                except asyncio.CancelledError:
+                    raise
+                except Exception as exc:
+                    logger.warning("publisher_scheduler_start_failed", error_type=type(exc).__name__)
+                finally:
+                    if _scheduler is not None:
+                        _scheduler.shutdown(wait=False)
+                        _scheduler = None
+                    scheduler_lease.release()
+            await asyncio.sleep(5)
+    leader_task = asyncio.create_task(scheduler_leader())
 
     yield
 
-    # ── Graceful shutdown ──────────────────────────────────────────────────────
-    if _scheduler is not None:
-        _scheduler.shutdown(wait=False)
-        logger.info("publisher_scheduler_stopped")
+    leader_task.cancel()
+    try:
+        await leader_task
+    except asyncio.CancelledError:
+        pass
+    if relay is not None:
+        await relay.stop()
     logger.info("nexa_brief_shutdown")
 
 
@@ -176,6 +187,14 @@ app.add_middleware(
     allow_headers=["*"],  # necesario por el boundary variable de multipart/form-data
     allow_private_network=True,
 )
+@app.get("/api/v1/storage/profile")
+def current_storage_profile():
+    # Only non-sensitive profile metadata is returned.
+    return {"id": settings.storage_profile_id, "label": settings.storage_profile_label,
+            "providers": {"records": settings.data_backend, "publications": settings.publication_backend,
+                          "credentials": settings.credentials_backend, "media": settings.media_backend}}
+
+
 app.include_router(videos.router, prefix="/api/v1")
 app.include_router(niches.router, prefix="/api/v1")
 # Publisher router is always registered; auth is managed via accounts.json
@@ -195,6 +214,7 @@ app.include_router(sandbox.router, prefix="/api/v1")
 app.include_router(prototypes.router, prefix="/api/v1")
 app.include_router(image_posts.router, prefix="/api/v1")
 app.include_router(publications.router, prefix="/api/v1")
+app.include_router(sound_design.router, prefix="/api/v1")
 app.include_router(categories.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 # YouTube OAuth 2.0 server-side flow

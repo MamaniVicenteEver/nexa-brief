@@ -50,6 +50,7 @@ interface ExplainerJobDto {
   scheduled_job_id: string | null;
   publish_result: { post_id: string; url: string; platform: string; account_alias: string } | null;
   publish_results?: {
+    thumbnail?: { status: string; reason: string } | null;
     account_selector: string;
     format?: "16x9" | "9x16";
     url?: string;
@@ -236,6 +237,7 @@ function mapJob(dto: ExplainerJobDto): ExplainerJob {
     etaSeconds: dto.eta_seconds ?? null,
     publishResults: (dto.publish_results ?? []).map((r) => ({
       accountSelector: r.account_selector,
+      thumbnail: r.thumbnail,
       format: r.format,
       url: r.url ?? null,
       error: r.error ?? null,
@@ -335,11 +337,17 @@ export async function getExplainerJobs(signal?: AbortSignal): Promise<ExplainerJ
 }
 
 /** Captura de nuevo las miniaturas A (introv1) y B (introv2) con los textos actuales. */
-export async function captureThumbnails(videoId: string): Promise<VideoThumbnails> {
-  const dto = await httpClient<ThumbnailsDto>(`/api/v1/explainer/videos/${videoId}/thumbnails`, {
-    method: "POST",
-    timeoutMs: THUMBNAILS_TIMEOUT_MS,
-  });
+export async function captureThumbnails(
+  videoId: string,
+  onlyMissing = false,
+): Promise<VideoThumbnails> {
+  const dto = await httpClient<ThumbnailsDto>(
+    `/api/v1/explainer/videos/${encodeURIComponent(videoId)}/thumbnails${onlyMissing ? "?only_missing=true" : ""}`,
+    {
+      method: "POST",
+      timeoutMs: THUMBNAILS_TIMEOUT_MS,
+    },
+  );
   return mapThumbnails(dto);
 }
 

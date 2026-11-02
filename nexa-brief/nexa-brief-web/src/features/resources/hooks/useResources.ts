@@ -21,7 +21,7 @@ import { useRealtimeEvent } from "@/features/realtime";
 import { type ResourceKind, toApiKind } from "../kinds";
 
 interface LibraryAssetChangedEvent {
-  kind: "images" | "music" | "videos";
+  kind: "images" | "music" | "videos" | "sounds";
   asset_id: string;
   action: "created" | "updated" | "deleted" | "transcription";
   transcription_status: string | null;

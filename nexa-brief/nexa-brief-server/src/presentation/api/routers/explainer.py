@@ -22,11 +22,13 @@ Previsualizar:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import tempfile
 from functools import lru_cache
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import structlog
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
@@ -340,13 +342,16 @@ def _video_or_404(video_id: str) -> ExplainerVideo:
 
 
 @router.post("/explainer/videos/{video_id}/thumbnails", response_model=ThumbnailsResponse)
-async def capture_thumbnails(video_id: str) -> ThumbnailsResponse:
+async def capture_thumbnails(video_id: str, only_missing: bool = False) -> ThumbnailsResponse:
     """Captura las miniaturas A/B del diseño y C (common.tabloid), si están disponibles."""
     video = _video_or_404(video_id)
     if not thumbnails.intro_specs(video):
         raise HTTPException(status_code=409, detail=f"el diseño {video.design} no tiene intros para miniaturas")
     try:
-        await thumbnails.render(video)
+        if only_missing:
+            await thumbnails.render(video, only_missing=True)
+        else:
+            await thumbnails.render(video)
     except thumbnails.ThumbnailError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     return _thumbnails(video)
@@ -598,6 +603,23 @@ async def post_component_previews(body: ComponentPreviewBatchRequest) -> Compone
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
+def _preview_resource_urls(value):
+    """Translate template-root resources into this API's public file namespace.
+
+    The standalone recorder serves templates at `/`; the application serves
+    the same data under FILES_PREFIX. Keep the stored storyboard portable.
+    """
+    if isinstance(value, dict):
+        return {key: _preview_resource_urls(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_preview_resource_urls(item) for item in value]
+    if isinstance(value, str) and value.startswith("/") and not value.startswith("//"):
+        path = urlsplit(value).path
+        if is_servable(tuple(path.lstrip("/").split("/"))):
+            return FILES_PREFIX + value
+    return value
+
+
 @router.get("/explainer/files/{file_path:path}")
 async def get_explainer_file(file_path: str, request: Request) -> Response:
     """Sirve archivos del kit, categorías y sandbox para previews de solo lectura."""
@@ -617,6 +639,20 @@ async def get_explainer_file(file_path: str, request: Request) -> Response:
         stat_result=target.stat(),
         headers={"Cache-Control": "no-cache"},
     )
+    if target.suffix.lower() == ".json":
+        try:
+            original = json.loads(target.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            original = None  # Keep the file endpoint's ordinary behavior for unfinished JSON.
+        translated = _preview_resource_urls(original)
+        if translated != original:
+            body = json.dumps(translated, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+            # A transformed response needs a different ETag than the original
+            # FileResponse, including after upgrading an already cached preview.
+            response = Response(
+                body, media_type="application/json",
+                headers={"Cache-Control": "no-cache", "ETag": '"' + hashlib.sha256(body).hexdigest() + '"'},
+            )
     etag = response.headers.get("etag")
     if etag:
         candidates = {tag.strip() for tag in request.headers.get("if-none-match", "").split(",")}

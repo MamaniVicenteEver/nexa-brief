@@ -1,5 +1,37 @@
 {
   "max_agent_runs_per_phase": 2,
   "max_agent_runs_total": 4,
-  "max_tokens": 4000000
+  "max_tokens": 4000000,
+  "style_policies": {
+    "imperio": {
+      "version": 1,
+      "guide": "guides/imperio-production.md",
+      "media": {
+        "video_seconds": [
+          8,
+          16
+        ],
+        "photo_seconds": [
+          6,
+          12
+        ],
+        "scope": "documentary media, including campaign plates; graphics excluded",
+        "measure": "visible main window bounded by next main, outro and audio; nested plate bounded by parent",
+        "non_overlapping_plates": true
+      },
+      "audio": {
+        "continuous_narration": true,
+        "narration_source_field": "audio.narrationSrc",
+        "playback_source_field": "audio.src",
+        "reuse_library_first": true,
+        "image_effects": "optional, relevant to the visible or narrated subject",
+        "effects_gain_multiplier_from_base": 1.1550000000000002,
+        "effects_gain_db_from_base": 1.251639684563264,
+        "narration_gain_multiplier": 1.0,
+        "background_matches_support_window": true,
+        "require_support_mapping": true,
+        "window_tolerance_seconds": 0.01
+      }
+    }
+  }
 }

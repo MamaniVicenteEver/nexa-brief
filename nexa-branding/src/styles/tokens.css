@@ -1,0 +1,56 @@
+/* Primitive palette and semantic roles: see docs/design-system.md. */
+:root {
+  --color-forest: #172a22;
+  --color-forest-soft: #33483b;
+  --color-ivory: #f3f0e8;
+  --color-paper: #faf8f3;
+  --color-bronze: #80613d;
+  --color-sage: #6b7b64;
+  --color-ink: #202820;
+  --color-muted: #60675f;
+  --color-border: #d7d7cb;
+  --color-surface: var(--color-paper);
+  --color-page: var(--color-ivory);
+  --color-action: var(--color-forest);
+  --color-on-action: #faf8f3;
+  --color-focus: #526c9c;
+  --color-success: #345b3c;
+  --color-danger: #9a4036;
+  --font-display: 'Newsreader Variable', Georgia, serif;
+  --font-body: 'Manrope Variable', Arial, sans-serif;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --radius-button: 4px;
+  --radius-card: 7px;
+  --radius-dialog: 10px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --shadow-card: 0 8px 24px rgb(23 42 34 / 0.04);
+  --shadow-dialog: 0 25px 100px rgb(0 0 0 / 0.3);
+  --ease-standard: cubic-bezier(0.2, 0.6, 0.3, 1);
+  --duration-fast: 160ms;
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  --color-page: #101b16;
+  --color-surface: #18261e;
+  --color-ink: #eeeade;
+  --color-muted: #afb6a9;
+  --color-border: #37473b;
+  --color-action: #d9ddcd;
+  --color-on-action: #172a22;
+  --color-bronze: #c3a67e;
+  --color-focus: #a2bce9;
+  --color-success: #afc4a4;
+  --shadow-card: 0 8px 24px rgb(0 0 0 / 0.09);
+  color-scheme: dark;
+}

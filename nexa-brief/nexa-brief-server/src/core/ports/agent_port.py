@@ -40,6 +40,9 @@ class AgentScope:
     reasoning_effort: str | None = None
     # Variables heredadas por las herramientas que ejecuta este agente.
     extra_env: dict[str, str] = field(default_factory=dict)
+    # Opciones de respuesta estructurada; no alteran los agentes de producción.
+    read_only: bool = False
+    output_schema: Path | None = None
 
 
 @dataclass

@@ -46,24 +46,23 @@ class DeepSeekAdapter(AIPort):
         except json.JSONDecodeError as exc:
             raise AIValidationError(f"DeepSeek JSON parse error: {exc}") from exc
 
-    async def complete_json_with_usage(self, system_prompt: str, user_prompt: str) -> tuple[dict, dict]:
+    async def complete_json_with_usage(self, system_prompt: str, user_prompt: str, *, structured: bool = False) -> tuple[dict, dict]:
         """Devuelve el JSON y el consumo informado por la API para el redactor."""
         for attempt in range(1, self._max_retries + 1):
             started = time.monotonic()
             try:
+                options = {"response_format": {"type": "json_object"}, "extra_body": {"thinking": {"type": "disabled"}}} if structured else {}
                 response = await self._client.chat.completions.create(
                     model=self._model,
                     messages=[{"role": "system", "content": system_prompt},
                               {"role": "user", "content": user_prompt}],
                     max_tokens=settings.ai_max_output_tokens,
                     temperature=0.7,
+                    **options,
                 )
-                content = response.choices[0].message.content or ""
-                match = _JSON_FENCE.search(content)
-                result = json.loads(match.group(1) if match else content.strip())
                 usage = response.usage
                 details = getattr(usage, "completion_tokens_details", None)
-                return result, {
+                measured = {
                     "provider": "deepseek", "model": response.model or self._model,
                     "input_tokens": getattr(usage, "prompt_tokens", None),
                     "cached_input_tokens": getattr(usage, "prompt_cache_hit_tokens", None),
@@ -72,8 +71,17 @@ class DeepSeekAdapter(AIPort):
                     "reasoning_tokens": getattr(details, "reasoning_tokens", None),
                     "seconds": round(time.monotonic() - started, 2),
                 }
-            except (json.JSONDecodeError, IndexError) as exc:
-                raise AIValidationError(f"DeepSeek JSON parse error: {exc}") from exc
+                try:
+                    content = response.choices[0].message.content or ""
+                    match = _JSON_FENCE.search(content)
+                    result = json.loads(match.group(1) if match else content.strip())
+                except (json.JSONDecodeError, IndexError) as exc:
+                    error = AIValidationError(f"DeepSeek JSON parse error: {exc}")
+                    error.usage = measured
+                    raise error from exc
+                return result, measured
+            except AIValidationError:
+                raise
             except Exception as exc:
                 logger.warning("deepseek_retry", attempt=attempt, error=str(exc))
                 if attempt == self._max_retries:

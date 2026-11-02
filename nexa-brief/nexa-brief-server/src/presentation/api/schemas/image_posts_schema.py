@@ -17,9 +17,12 @@ class StrictSchema(BaseModel):
 class PlanCreateRequest(StrictSchema):
     category_id: str
     source_video_id: str
-    template_id: Literal["daily_fact", "five_slides"]
+    template_id: Literal["daily_fact", "five_slides"] = "five_slides"
     strategy_id: str | None = None
+    level: Literal["basico", "medio", "alto", "negro"] = "alto"
+    narrative: Literal["hilo", "factual"] = "hilo"
     style_id: str
+    format: Literal["4:5", "3:5", "9:16"] = "9:16"
     seed: int | None = None
     focus_claim_ids: list[str] | None = None
 
@@ -33,11 +36,16 @@ class PlanUpdateRequest(StrictSchema):
     style_id: str
     style_version: str
     template_id: Literal["daily_fact", "five_slides"]
-    format: Literal["4:5"] = "4:5"
+    format: Literal["4:5", "3:5", "9:16"] = "4:5"
     slides: list[PlanSlide]
     seed: int
     renderer_version: str
     plan_hash: str | None = None
+
+
+class ImageFormatExportRequest(StrictSchema):
+    revision: int = Field(ge=1)
+    format: Literal["4:5", "3:5", "9:16"]
 
 
 class RenderRequest(StrictSchema):
@@ -83,7 +91,7 @@ class ReviewRequest(StrictSchema):
 
 
 class DeliveryTarget(StrictSchema):
-    platform: Literal["facebook", "instagram"]
+    platform: Literal["facebook", "instagram", "tiktok"]
     account_alias: str
     placement: Literal["image", "carousel", "reel"] | None = None
     scheduled_at: datetime | None = None

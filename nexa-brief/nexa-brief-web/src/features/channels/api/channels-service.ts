@@ -27,6 +27,7 @@ interface AccountStatusResponseDto {
   linked_page_name?: string | null;
   linked_page_id?: string | null;
   published_count: number;
+  publication_count?: number | null;
   label?: string;
   notes?: string;
   connected_at?: number | null;
@@ -38,6 +39,8 @@ interface AccountStatusResponseDto {
   } | null;
   synced_at?: number | null;
   can_sync?: boolean;
+  youtube_feature_access?: ChannelAccount["youtubeFeatureAccess"];
+  youtube_thumbnail_capability?: ChannelAccount["youtubeThumbnailCapability"];
 }
 
 interface PublishedVideoResponseDto {
@@ -52,6 +55,7 @@ interface PublishedVideoResponseDto {
   kind?: "video" | "short" | "reel" | null;
   duration_seconds?: number | null;
   thumbnail_url?: string | null;
+  image_count?: number | null;
   metrics?: {
     views?: number | null;
     likes?: number | null;
@@ -114,9 +118,12 @@ function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
     linkedPageName: dto.linked_page_name ?? null,
     linkedPageId: dto.linked_page_id ?? null,
     publishedCount: dto.published_count,
+    publicationCount: dto.publication_count ?? null,
     stats,
     syncedAt: dto.synced_at ?? null,
     canSync: dto.can_sync ?? false,
+    youtubeThumbnailCapability: dto.youtube_thumbnail_capability ?? null,
+    youtubeFeatureAccess: dto.youtube_feature_access ?? null,
     label: dto.label ?? "",
     notes: dto.notes ?? "",
     connectedAt: dto.connected_at ?? null,
@@ -145,6 +152,7 @@ function mapPublishedVideo(dto: PublishedVideoResponseDto): PublishedVideo {
     kind: dto.kind ?? null,
     durationSeconds: dto.duration_seconds ?? null,
     thumbnailUrl: dto.thumbnail_url ?? null,
+    imageCount: dto.image_count ?? null,
     metrics,
   };
 }
@@ -178,7 +186,7 @@ export async function getChannelVideos(
   signal?: AbortSignal,
 ): Promise<PublishedVideo[]> {
   const dtos = await httpClient<PublishedVideoResponseDto[]>(
-    `${accountPath(platform, alias)}/videos`,
+    `${accountPath(platform, alias)}/${platform === "facebook" ? "posts" : "videos"}`,
     { signal },
   );
   // The publish log can hold the same post twice (e.g. a retried publish) — keep the first (newest).

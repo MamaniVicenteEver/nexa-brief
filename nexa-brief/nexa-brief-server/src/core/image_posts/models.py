@@ -46,6 +46,7 @@ class DeliveryStatus(str, Enum):
 
 
 class RemoteState(StrictModel):
+    job_id: str | None = None
     photo_ids: list[str] = Field(default_factory=list)
     child_container_ids: list[str] = Field(default_factory=list)
     parent_container_id: str | None = None
@@ -62,7 +63,7 @@ class DeliveryError(StrictModel):
 class Delivery(StrictModel):
     delivery_id: str
     revision: int = Field(ge=1)
-    platform: Literal["facebook", "instagram"]
+    platform: Literal["facebook", "instagram", "tiktok"]
     account_alias: str
     target_id: str
     placement: Literal["image", "carousel", "reel"]
@@ -135,6 +136,9 @@ class RenderedSlide(StrictModel):
 
 class ValidationDetails(StrictModel):
     max_bytes: int | None = Field(default=None, ge=0)
+    format: str | None = None
+    jpeg_quality: int | None = Field(default=None, ge=1, le=100)
+    chroma_subsampling: str | None = None
     overflow: bool | None = None
     contrast: bool | None = None
     readability: bool | None = None
@@ -228,7 +232,7 @@ class CompositionPlan(StrictModel):
     style_id: str
     style_version: str
     template_id: Literal["daily_fact", "five_slides"]
-    format: Literal["4:5"] = "4:5"
+    format: Literal["4:5", "3:5", "9:16"] = "4:5"
     slides: list[PlanSlide]
     seed: int
     renderer_version: str
@@ -242,6 +246,7 @@ class RenderInfo(StrictModel):
     engine: str | None = None
     engine_version: str | None = None
     renderer_version: str | None = None
+    source_hash: str | None = Field(default=None, pattern=r"^[a-fA-F0-9]{64}$")
 
 
 class MusicLicense(StrictModel):
@@ -303,6 +308,13 @@ class AIUsage(StrictModel):
     cost_usd: float | None = Field(default=None, ge=0)
     call_id: str | None = None
     used_at: datetime | None = None
+    step: str | None = None
+    reasoning_effort: str | None = None
+    attempt: int | None = None
+    fallback: bool = False
+    fallback_reason: str | None = None
+    status: str | None = None
+    error: str | None = None
 
 
 class TechnicalRecord(StrictModel):
@@ -369,6 +381,8 @@ class PostCopy(StrictModel):
 class EditorialRecord(StrictModel):
     category_id: str
     strategy_id: str | None = None
+    level: Literal["basico", "medio", "alto", "negro"] | None = None
+    narrative: Literal["hilo", "factual"] | None = None
     topic: str = ""
     title: str = ""
     source_video_id: str
@@ -422,7 +436,7 @@ class PublicationRecord(StrictModel):
 
 class DeliverySummary(StrictModel):
     delivery_id: str
-    platform: Literal["facebook", "instagram"]
+    platform: Literal["facebook", "instagram", "tiktok"]
     account_alias: str
     placement: Literal["image", "carousel", "reel"]
     status: str
@@ -469,7 +483,7 @@ class DeliverySpec(StrictModel):
     publication_id: str
     delivery_id: str
     revision: int
-    platform: Literal["facebook", "instagram"]
+    platform: Literal["facebook", "instagram", "tiktok"]
     account_alias: str
     target_id: str
     placement: Literal["image", "carousel", "reel"]

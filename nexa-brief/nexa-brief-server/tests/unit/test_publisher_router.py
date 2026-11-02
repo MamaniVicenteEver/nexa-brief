@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
@@ -17,7 +17,8 @@ def mock_facade():
         yield facade
 
 
-def test_list_accounts_api(mock_facade):
+@patch("src.presentation.api.routers.publisher._register_service_accounts", new_callable=AsyncMock)
+def test_list_accounts_api(mock_register, mock_facade):
     mock_facade.list_accounts.return_value = [
         {
             "platform": "youtube",
@@ -74,6 +75,14 @@ def test_facebook_oauth_start(mock_settings):
     assert "facebook.com" in location
     assert "fb_app_id_123" in location
     assert "pagina_test" in location
+
+    from urllib.parse import parse_qs, urlparse
+
+    scopes = parse_qs(urlparse(location).query)["scope"][0].split(",")
+    assert {"pages_manage_posts", "pages_show_list", "pages_read_engagement",
+            "pages_manage_engagement", "pages_read_user_content"} <= set(scopes)
+    assert "pages_read_user_engagement" not in scopes
+    assert len(scopes) == len(set(scopes))
 
 
 @patch("src.presentation.api.routers.publisher.settings")

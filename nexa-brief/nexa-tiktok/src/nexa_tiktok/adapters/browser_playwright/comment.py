@@ -52,7 +52,7 @@ async def _move_and_click(page: Page, locator: Locator) -> None:
     await locator.scroll_into_view_if_needed(timeout=3_000)
     box = await locator.bounding_box()
     if not box:
-        raise TikTokUploadError("No se pudo localizar el control visible del comentario.")
+        raise TikTokUploadError("No se pudo localizar el control visible del comentario.", code="comment_control_position_unavailable")
     x = box["x"] + box["width"] * random.uniform(0.35, 0.65)
     y = box["y"] + box["height"] * random.uniform(0.35, 0.65)
     await page.mouse.move(x, y, steps=random.randint(10, 22))
@@ -130,7 +130,18 @@ async def post_first_comment(
         if "/login" in page.url.casefold():
             raise TikTokUploadError("TikTok pidió iniciar sesión al abrir el video para comentar.", code="requires_reauth")
         await _detect_manual_intervention(page)
-        await page.wait_for_timeout(1_000)
+        # TikTok can initially render a black page and open recommendations instead
+        # of comments. Wait for the video UI and explicitly select its tab.
+        tab = page.get_by_text('Comentarios', exact=True).or_(page.get_by_text('Comments', exact=True)).last
+        try:
+            await tab.wait_for(state='visible', timeout=45_000)
+            await _detect_manual_intervention(page)
+            await tab.click(timeout=5_000)
+            await page.wait_for_timeout(1_000)
+        except Exception:
+            await _detect_manual_intervention(page)
+            raise TikTokUploadError('No se pudo abrir la pestaña de comentarios.', code='comment_unavailable')
+        await _detect_manual_intervention(page)
         await capture_step(page, shots_dir, 60, "video-abierto-para-comentar")
         await _wait_until_ready(page, shots_dir)
 
@@ -138,16 +149,25 @@ async def post_first_comment(
             await capture_step(page, shots_dir, 61, "comentario-ya-visible")
             return CommentOutcome(text, True, attempts, "ya visible")
 
-        input_box = await first_visible(page, COMMENT_INPUTS, timeout_ms=700)
+        input_box = None
+        deadline = asyncio.get_running_loop().time() + 20
+        while asyncio.get_running_loop().time() < deadline and input_box is None:
+            await _detect_manual_intervention(page)
+            input_box = await first_visible(page, COMMENT_INPUTS, timeout_ms=700)
+            if input_box is None:
+                await asyncio.sleep(1)
         if input_box is None:
             raise TikTokUploadError("No se encontró el campo de comentarios del video.", code="comment_unavailable")
         await _move_and_click(page, input_box)
         await page.keyboard.type(text, delay=random.randint(40, 110))
         await capture_step(page, shots_dir, 62, "comentario-escrito")
         await _human_pause()
+        await _detect_manual_intervention(page)
         send = await first_visible(page, COMMENT_SEND_BUTTONS, timeout_ms=500)
         if send is None:
+            await _detect_manual_intervention(page)
             raise TikTokUploadError("No se encontró el control para enviar el comentario.", code="comment_unavailable")
+        await _detect_manual_intervention(page)
         await before_click()
         await _move_and_click(page, send)
         attempts = 1

@@ -2,7 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { LibraryAsset, LibraryAssetKind } from "@/features/library/api/library-assets-service";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -12,7 +12,7 @@ import { DeleteAssetDialog, EditAssetDialog } from "./AssetDialogs";
 import { LyricsViewer } from "./LyricsViewer";
 import { UploadDropzone } from "./UploadDropzone";
 
-const TABS: LibraryAssetKind[] = ["music", "images", "videos"];
+const TABS: LibraryAssetKind[] = ["music", "images", "videos", "sounds"];
 
 /** Pantalla Recursos: la librería de canciones, imágenes y videos propios
  * que después se usan en las plantillas (por asset_id). */
@@ -27,13 +27,22 @@ export function ResourcesView() {
   const { data: assets, isLoading, isError } = useLibraryList(kind, query, category);
   const { data: categories } = useLibraryCategories(kind);
 
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("kind");
+    if (requested && TABS.includes(requested as LibraryAssetKind))
+      setKind(requested as LibraryAssetKind);
+  }, []);
+
   function selectKind(next: LibraryAssetKind) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("kind", next);
+    window.history.replaceState(null, "", url);
     setKind(next);
     setCategory("");
   }
 
   return (
-    <div className="mx-auto max-w-[1280px] px-4 pt-22 pb-25 sm:px-10">
+    <div className="mx-auto max-w-[1440px] px-4 pt-22 pb-25 sm:px-10">
       <header>
         <h1 className="font-nb-sans text-[clamp(22px,2.6vw,30px)] font-extrabold tracking-[-0.02em] text-nb-ink">
           {t("title")}
@@ -61,7 +70,7 @@ export function ResourcesView() {
         ))}
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[320px_1fr]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <UploadDropzone key={kind} kind={kind} />
         </aside>
@@ -98,14 +107,14 @@ export function ResourcesView() {
               <option value="">{t("allCategories")}</option>
               {categories?.map((c) => (
                 <option key={c} value={c}>
-                  {c}
+                  {c === "sound_effects" ? t("tabs.sounds") : c}
                 </option>
               ))}
             </select>
           </div>
 
           {isLoading && (
-            <div className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
+            <div className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-4">
               {Array.from({ length: 6 }, (_, i) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: placeholders estáticos
                 <div key={i} className="h-56 animate-pulse rounded-nb-xs bg-nb-bg-2" />
@@ -124,7 +133,7 @@ export function ResourcesView() {
             </div>
           )}
           {assets && assets.length > 0 && (
-            <div className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
+            <div className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-4">
               {assets.map((asset) => (
                 <AssetCard
                   key={asset.assetId}

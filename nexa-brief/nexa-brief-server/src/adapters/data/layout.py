@@ -18,6 +18,7 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "queue_entries": ("schedule/queue.json", "entry_id"),
     "image_assets": ("library/images.json", "asset_id"),
     "music_assets": ("library/music.json", "asset_id"),
+    "sound_assets": ("library/sounds.json", "asset_id"),
     "video_assets": ("library/videos.json", "asset_id"),
     "template_configs": ("library/template_configs.json", "job_id"),
     # Creación interactiva (ver docs/investigaciones/estudio-creacion-interactiva-2026-09.md)
@@ -31,6 +32,8 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "content_plan": ("schedule/content_plan.json", "item_id"),
     # canales/ ya tiene datos reales (cuentas conectadas): se conserva su ruta.
     "channels": ("canales/channels.json", None),
+    "channel_categories": ("canales/categories.json", "category_id"),
+    "channel_publications": ("canales/publications.json", None),
     "published_videos": ("canales/published_videos.json", None),
     # Archivo de publicaciones de imagen: esta lista es una proyección derivada.
     "publication_index": ("publicaciones/index.json", "publication_id"),
@@ -52,6 +55,7 @@ DOCUMENTS: dict[str, str] = {
 FILES: dict[str, str] = {
     "images": "library/files/images",
     "music": "library/files/music",
+    "sounds": "library/files/sounds",
     "videos": "library/files/videos",
     # Medios inmutables de publicaciones aprobadas.
     "publication_media": "publicaciones",

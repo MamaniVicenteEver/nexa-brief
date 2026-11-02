@@ -1,17 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  AlertCircle,
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  Clipboard,
-  LoaderCircle,
-  Music2,
-  Trash2,
-  X,
-} from "lucide-react";
+import { AlertCircle, Check, Clipboard, LoaderCircle, Music2, Trash2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { type KeyboardEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -24,14 +14,28 @@ import {
 } from "@/shared/components/ui/dialog";
 import { makeMetricPoints, metricChartPoints } from "../gallery-utils";
 import {
+  IMAGE_POSTS_QUERY_KEY,
   PUBLICATIONS_QUERY_KEY,
   useImageStrategies,
   usePublicationDetail,
 } from "../hooks/useImagePosts";
+import { DEFAULT_IMAGE_FORMAT, type ImagePostFormat } from "../image-formats";
 import { removePublishedPublication } from "../image-posts-service";
-import type { MetricName, Platform, PublicationDeliveryDetail, PublicationSummary } from "../types";
+import type {
+  ImagePost,
+  MetricName,
+  Platform,
+  PublicationDeliveryDetail,
+  PublicationSummary,
+} from "../types";
+import { ImageFormatSelector } from "./ImageFormatSelector";
+import { ImagePostCarousel } from "./ImagePostCarousel";
+import { ImagePostPublishingPanel } from "./ImagePostPublishingPanel";
+import { PostTrace } from "./PostTrace";
+import styles from "./PublishedPostModal.module.css";
 
-type SidebarTab = "technical" | "relevant";
+type SidebarTab = "relevant" | "trace" | "technical" | "publishing";
+const sidebarTabs: SidebarTab[] = ["relevant", "trace", "technical", "publishing"];
 
 function formatBytes(bytes: number | null) {
   if (bytes === null) return "—";
@@ -55,8 +59,8 @@ function downloadLabel(platform: Platform) {
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="border-b border-white/10 pb-3 last:border-0">
-      <h4 className="mb-2 text-[10px] font-bold tracking-[0.14em] text-white/45 uppercase">
+    <section className="min-w-0 border-b border-nb-line pb-3 last:border-0">
+      <h4 className="mb-2 text-[10px] font-bold tracking-[0.14em] text-nb-mute uppercase">
         {title}
       </h4>
       {children}
@@ -67,9 +71,9 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 function Definition({ label, value }: { label: string; value: ReactNode }) {
   const t = useTranslations("imagePosts.common");
   return (
-    <div className="grid grid-cols-[95px_1fr] gap-2 text-[11px] leading-relaxed">
-      <dt className="text-white/45">{label}</dt>
-      <dd className="min-w-0 break-words text-white/85">{value || t("noData")}</dd>
+    <div className="grid grid-cols-[95px_minmax(0,1fr)] gap-2 text-[11px] leading-relaxed">
+      <dt className="text-nb-mute">{label}</dt>
+      <dd className="min-w-0 break-words text-nb-ink">{value || t("noData")}</dd>
     </div>
   );
 }
@@ -83,7 +87,7 @@ function MiniMetricChart({
 }) {
   const t = useTranslations("imagePosts.modal");
   if (points.length < 2) {
-    return <p className="text-[11px] text-white/45">{t("relevant.noPermissionData")}</p>;
+    return <p className="text-[11px] text-nb-mute">{t("relevant.noPermissionData")}</p>;
   }
   const values = points.map((point) => point.value);
   const pointString = metricChartPoints(values);
@@ -108,7 +112,7 @@ function MiniMetricChart({
           return <circle key={point} cx={cx} cy={cy} r="3.5" fill="#e6b94f" />;
         })}
       </svg>
-      <div className="flex justify-between text-[10px] text-white/50">
+      <div className="flex justify-between text-[10px] text-nb-ink/50">
         <span>{points[0].value}</span>
         <span>{points.at(-1)?.value}</span>
       </div>
@@ -164,8 +168,8 @@ function TechnicalSidebar({
       <Section title={t("files")}>
         <div className="flex flex-col gap-3">
           {slideDetails.map((slide, index) => (
-            <div key={slide.assetId || slide.slideId} className="rounded-lg bg-white/5 p-2.5">
-              <p className="mb-1.5 text-[11px] font-bold text-white">
+            <div key={slide.assetId || slide.slideId} className="rounded-lg bg-nb-bg-2/50 p-2.5">
+              <p className="mb-1.5 text-[11px] font-bold text-nb-ink">
                 {t("jpegSlide", { number: index + 1 })}
               </p>
               <dl className="flex flex-col gap-1">
@@ -191,8 +195,8 @@ function TechnicalSidebar({
             </div>
           ))}
           {publication.technical.reel && (
-            <div className="rounded-lg bg-white/5 p-2.5">
-              <p className="mb-1.5 text-[11px] font-bold text-white">{t("mp4Reel")}</p>
+            <div className="rounded-lg bg-nb-bg-2/50 p-2.5">
+              <p className="mb-1.5 text-[11px] font-bold text-nb-ink">{t("mp4Reel")}</p>
               <dl className="flex flex-col gap-1">
                 <Definition
                   label={t("codec")}
@@ -269,7 +273,7 @@ function TechnicalSidebar({
             ))}
           </dl>
         ) : (
-          <p className="text-[11px] text-white/55">{common("noData")}</p>
+          <p className="text-[11px] text-nb-mute">{common("noData")}</p>
         )}
       </Section>
       <Section title={t("musicLicense")}>
@@ -319,9 +323,9 @@ function TechnicalSidebar({
             {publication.technical.aiUsage.map((usage) => (
               <div
                 key={`${usage.provider}-${usage.model}-${usage.role}-${usage.inputTokens}-${usage.outputTokens}`}
-                className="rounded-lg bg-white/5 p-2.5 text-[10px] leading-relaxed text-white/75"
+                className="rounded-lg bg-nb-bg-2/50 p-2.5 text-[10px] leading-relaxed text-nb-ink/75"
               >
-                <p className="font-bold text-white">
+                <p className="font-bold text-nb-ink">
                   {usage.provider} · {usage.model} · {usage.role}
                 </p>
                 <p>
@@ -336,23 +340,20 @@ function TechnicalSidebar({
               </div>
             ))}
             {hasTokenCount && (
-              <p className="text-[11px] font-bold text-white">
+              <p className="text-[11px] font-bold text-nb-ink">
                 {t("totalTokens", { count: totalTokens.toLocaleString() })}
               </p>
             )}
           </div>
         ) : (
-          <p className="text-[11px] text-white/45">{t("usageUnavailable")}</p>
+          <p className="text-[11px] text-nb-mute">{t("usageUnavailable")}</p>
         )}
       </Section>
       <Section title={t("validations")}>
         {publication.technical.validations.length ? (
           <div className="flex flex-col gap-1.5">
             {publication.technical.validations.map((validation) => (
-              <p
-                key={validation.name}
-                className="flex items-center gap-2 text-[11px] text-white/80"
-              >
+              <p key={validation.name} className="flex items-center gap-2 text-[11px] text-nb-ink">
                 <span
                   className={cn(
                     "size-1.5 rounded-full",
@@ -364,7 +365,7 @@ function TechnicalSidebar({
             ))}
           </div>
         ) : (
-          <p className="text-[11px] text-white/45">{t("validationUnavailable")}</p>
+          <p className="text-[11px] text-nb-mute">{t("validationUnavailable")}</p>
         )}
       </Section>
     </div>
@@ -380,7 +381,7 @@ function CopyHash({ hash }: { hash: string }) {
       <button
         type="button"
         aria-label={t("copyHash")}
-        className="shrink-0 text-white/65 hover:text-white"
+        className="shrink-0 text-nb-ink-soft hover:text-nb-ink"
         onClick={async () => {
           try {
             await navigator.clipboard.writeText(hash);
@@ -469,23 +470,23 @@ function RelevantSidebar({
       </Section>
       <Section
         title={t("copy", {
-          platform: delivery ? downloadLabel(delivery.platform) : common("noData"),
+          platform: downloadLabel(delivery?.platform ?? "instagram"),
         })}
       >
-        <p className="whitespace-pre-wrap text-[11px] leading-relaxed text-white/80">
+        <p className="whitespace-pre-wrap text-[11px] leading-relaxed text-nb-ink">
           {copy.caption || t("noData")}
         </p>
         {publication.copy.hashtags.length > 0 && (
-          <p className="mt-2 break-words text-[10px] text-white/60">
+          <p className="mt-2 break-words text-[10px] text-nb-ink-soft">
             <span className="font-semibold">{t("hashtags")}: </span>
             {publication.copy.hashtags.join(" ")}
           </p>
         )}
         {publication.kind !== "reel" && publication.slides.length > 0 && (
-          <p className="mt-2 text-[10px] text-white/50">
+          <p className="mt-2 text-[10px] text-nb-ink/50">
             {selectedSlide?.altTextFacebook && delivery?.platform === "facebook"
               ? selectedSlide.altTextFacebook
-              : selectedSlide?.altTextInstagram && delivery?.platform === "instagram"
+              : selectedSlide?.altTextInstagram && (!delivery || delivery.platform === "instagram")
                 ? selectedSlide.altTextInstagram
                 : t("altNoData")}
           </p>
@@ -495,13 +496,13 @@ function RelevantSidebar({
           <p className="mt-2 text-[10px] text-amber-200">{t("skippedComment")}</p>
         ) : (
           copy.firstComment && (
-            <p className="mt-2 text-[10px] text-white/60">
+            <p className="mt-2 text-[10px] text-nb-ink-soft">
               {t("firstComment", { text: copy.firstComment })}
             </p>
           )
         )}
         {publication.slides.length > 0 && (
-          <p className="mt-2 text-[10px] text-white/55">
+          <p className="mt-2 text-[10px] text-nb-mute">
             {t("slideCount", {
               count: publication.slides.length,
               kind: publication.kind === "carousel" ? t("carousel") : t("image"),
@@ -509,7 +510,7 @@ function RelevantSidebar({
           </p>
         )}
         {publication.deliveries.length > 0 && (
-          <p className="mt-1 break-words text-[10px] text-white/55">
+          <p className="mt-1 break-words text-[10px] text-nb-mute">
             {publication.deliveries[0].permalink ? (
               <a
                 className="underline"
@@ -579,16 +580,16 @@ function RelevantSidebar({
             )}
           </dl>
         ) : (
-          <p className="text-[11px] text-white/45">{t("noDeliveries")}</p>
+          <p className="text-[11px] text-nb-mute">{t("noDeliveries")}</p>
         )}
       </Section>
       <Section title={t("metrics")}>
-        <label className="mb-3 flex items-center gap-2 text-[10px] text-white/60">
+        <label className="mb-3 flex items-center gap-2 text-[10px] text-nb-ink-soft">
           {t("metric")}
           <select
             value={metric}
             onChange={(event) => onMetricChange(event.target.value as MetricName)}
-            className="rounded-md border border-white/15 bg-[#252a34] px-2 py-1 text-[10px] text-white"
+            className="rounded-md border border-nb-line bg-nb-bg-2 px-2 py-1 text-[10px] text-nb-ink"
           >
             {(
               ["reach", "impressions", "likes", "comments", "shares", "saves", "plays"] as const
@@ -601,12 +602,12 @@ function RelevantSidebar({
         </label>
         {(["48h", "7d"] as const).map((window) => (
           <div key={window} className="mb-3 last:mb-0">
-            <p className="mb-1 text-[10px] font-bold text-white/60">
+            <p className="mb-1 text-[10px] font-bold text-nb-ink-soft">
               {t("metricWindow", { window })}
             </p>
             {totals[window].length === 0 &&
             snapshots.some((snapshot) => snapshot.window === window && snapshot.status !== "ok") ? (
-              <p className="text-[11px] text-white/45">Sin permiso o sin dato.</p>
+              <p className="text-[11px] text-nb-mute">Sin permiso o sin dato.</p>
             ) : (
               <MiniMetricChart points={totals[window]} metric={metric} />
             )}
@@ -619,22 +620,28 @@ function RelevantSidebar({
 
 export function PublishedPostModal({
   summary,
+  postId,
   open,
   onOpenChange,
 }: {
   summary: PublicationSummary | null;
+  postId?: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
   const t = useTranslations("imagePosts.modal");
   const publicationId = summary?.publicationId ?? null;
+  const formatText = useTranslations("imagePosts.formats");
   const queryClient = useQueryClient();
-  const query = usePublicationDetail(publicationId);
+  const query = usePublicationDetail(publicationId, postId);
   const strategies = useImageStrategies();
   const publication = query.data;
   const strategyName =
     strategies.data?.find((strategy) => strategy.id === publication?.strategyId)?.name ?? null;
   const [activeSlide, setActiveSlide] = useState(0);
+  const [selectedFormat, setSelectedFormat] = useState<ImagePostFormat>(DEFAULT_IMAGE_FORMAT);
+  const [preparedPost, setPreparedPost] = useState<ImagePost | null>(null);
+  const [previewMode, setPreviewMode] = useState<"code" | "jpeg">("code");
   const [activeTab, setActiveTab] = useState<SidebarTab>("relevant");
   const [deliveryId, setDeliveryId] = useState<string | null>(
     summary?.deliveries[0]?.deliveryId ?? null,
@@ -656,17 +663,50 @@ export function PublishedPostModal({
   );
   const isReel = currentDelivery?.placement === "reel";
   const slideCount = publication?.slides.length ?? 0;
+  const archived = Boolean(
+    publication?.latestPublishedAt ||
+      publication?.deliveries.some(
+        (delivery) => delivery.status === "published" || delivery.publishedAt,
+      ),
+  );
+  const sourcePostId = archived ? null : (postId ?? publication?.postId ?? null);
+  const previewFormat = sourcePostId
+    ? selectedFormat
+    : (publication?.format ?? summary?.format ?? "4:5");
+  const finalAvailable = Boolean(
+    sourcePostId &&
+      preparedPost?.postId === sourcePostId &&
+      preparedPost.format === previewFormat &&
+      preparedPost.slides.length &&
+      (publication?.revision ?? 0) <= preparedPost.revision,
+  );
+  const showingFinal = previewMode === "jpeg" && finalAvailable;
+  const previewSlides = showingFinal ? (preparedPost?.slides ?? []) : (publication?.slides ?? []);
 
   useEffect(() => {
-    if (summary) setDeliveryId(summary.deliveries[0]?.deliveryId ?? null);
-  }, [summary]);
+    if (summary || postId) {
+      setDeliveryId(summary?.deliveries[0]?.deliveryId ?? null);
+      setActiveSlide(0);
+      setActiveTab("relevant");
+      setSelectedFormat(DEFAULT_IMAGE_FORMAT);
+      setPreparedPost(null);
+      setPreviewMode("code");
+    }
+  }, [summary, postId]);
 
   useEffect(() => {
     if (!open) return;
     void queryClient.invalidateQueries({
-      queryKey: [...PUBLICATIONS_QUERY_KEY, "detail", publicationId],
+      queryKey: postId
+        ? [...IMAGE_POSTS_QUERY_KEY, "preview", postId]
+        : [...PUBLICATIONS_QUERY_KEY, "detail", publicationId],
     });
-  }, [open, publicationId, queryClient]);
+  }, [open, postId, publicationId, queryClient]);
+
+  function changeFormat(format: ImagePostFormat) {
+    setSelectedFormat(format);
+    setPreviewMode("code");
+  }
 
   function handleModalKeys(event: KeyboardEvent<HTMLDivElement>) {
     const target = event.target as HTMLElement;
@@ -677,39 +717,37 @@ export function PublishedPostModal({
       return;
     if (event.key === "ArrowLeft" && !isReel && publication?.slides.length) {
       event.preventDefault();
-      setActiveSlide(
-        (value) => (value + publication.slides.length - 1) % publication.slides.length,
-      );
+      setActiveSlide((value) => Math.max(0, value - 1));
     }
     if (event.key === "ArrowRight" && !isReel && publication?.slides.length) {
       event.preventDefault();
-      setActiveSlide((value) => (value + 1) % publication.slides.length);
+      setActiveSlide((value) => Math.min(publication.slides.length - 1, value + 1));
     }
   }
 
   function changeTab(next: SidebarTab) {
     setActiveTab(next);
-    tabRefs.current[next === "technical" ? 0 : 1]?.focus();
+    tabRefs.current[sidebarTabs.indexOf(next)]?.focus();
   }
 
-  const imagePreviewUrl =
-    currentSlide?.previewUrl ??
-    (currentSlide?.assetId === publication?.coverAssetId ? publication?.coverUrl : null);
+  const imagePreviewUrl = showingFinal
+    ? (preparedPost?.slides[activeSlide]?.previewUrl ?? null)
+    : (currentSlide?.previewUrl ??
+      (currentSlide?.assetId === publication?.coverAssetId ? publication?.coverUrl : null));
   const activePlatform = currentDelivery?.platform ?? "instagram";
-  const activeAlt =
-    activePlatform === "facebook" ? currentSlide?.altTextFacebook : currentSlide?.altTextInstagram;
   const canRemove = publication?.deliveries.some((delivery) => delivery.status === "published");
   const pendingRemoval = publication?.deliveries.some(
     (delivery) => delivery.status === "removal_pending_manual",
   );
 
   async function handleRemoval(retryApi = false) {
-    if (!publicationId || !publication || (!canRemove && !pendingRemoval)) return;
+    const removalId = publication?.publicationId || publicationId;
+    if (!removalId || !publication || (!canRemove && !pendingRemoval)) return;
     if ((canRemove || retryApi) && !window.confirm(t("removeConfirm"))) return;
     setRemoving(true);
     setRemovalError("");
     try {
-      await removePublishedPublication(publicationId, t("removeReason"), retryApi);
+      await removePublishedPublication(removalId, t("removeReason"), retryApi);
       await queryClient.invalidateQueries({ queryKey: PUBLICATIONS_QUERY_KEY });
     } catch (error) {
       setRemovalError(error instanceof Error ? error.message : t("removeError"));
@@ -723,32 +761,85 @@ export function PublishedPostModal({
       <DialogContent
         onKeyDown={handleModalKeys}
         showCloseButton={false}
-        className="max-h-[92dvh] w-[calc(100vw-24px)] max-w-[1240px] gap-0 overflow-hidden rounded-[22px] border border-white/10 bg-[#171a20] p-0 text-white shadow-[0_30px_100px_rgba(0,0,0,0.45)] sm:max-w-[1240px]"
+        className={cn(
+          styles.modal,
+          "max-h-[82.72dvh] w-[calc(100vw-24px)] max-w-[1480px] gap-0 overflow-hidden rounded-[24px] border border-nb-line bg-nb-bg p-0 text-nb-ink shadow-[0_30px_100px_rgba(0,0,0,0.35)] sm:max-w-[1480px]",
+        )}
       >
-        <DialogTitle className="sr-only">{summary?.title ?? t("title")}</DialogTitle>
-        <DialogDescription className="sr-only">{t("description")}</DialogDescription>
-        <div className="flex h-[92dvh] flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_360px]">
-          <section className="flex min-h-0 flex-col bg-[#111317]">
-            <header className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-6">
+        <DialogTitle className="sr-only">
+          {publication?.title ?? summary?.title ?? t("title")}
+        </DialogTitle>
+        <DialogDescription className="sr-only">
+          {postId ? "Detalle de imagen y recorrido de producción." : t("description")}
+        </DialogDescription>
+        <div className="flex h-[82.72dvh] w-full min-w-0 flex-col lg:grid lg:h-[79.2dvh] lg:grid-cols-[minmax(0,1fr)_472px]">
+          <section className="flex h-[55dvh] min-h-0 min-w-0 shrink-0 flex-col bg-nb-bg-2/50 lg:h-auto">
+            <header className="flex shrink-0 items-center justify-between gap-3 border-b border-nb-line px-4 py-3 sm:px-6">
               <div className="min-w-0">
-                <p className="truncate text-[10px] font-bold tracking-[0.15em] text-white/45 uppercase">
-                  {summary?.categoryName} · {summary?.kind}
+                <p className="truncate text-[10px] font-bold tracking-[0.15em] text-nb-mute uppercase">
+                  {summary?.categoryName ?? publication?.categoryName} ·{" "}
+                  {(publication?.kind ?? summary?.kind) === "carousel"
+                    ? "Carrusel"
+                    : (publication?.kind ?? summary?.kind) === "image"
+                      ? "Imagen"
+                      : "Reel"}
                 </p>
-                <p className="truncate text-sm font-bold text-white">{summary?.title}</p>
+                <p className="truncate text-base font-extrabold tracking-[-0.02em] text-nb-ink">
+                  {publication?.title ?? summary?.title}
+                </p>
               </div>
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
                 aria-label={t("close")}
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/15"
+                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-nb-bg-2 text-nb-ink hover:bg-nb-bg-2"
               >
                 <X className="size-4" />
               </button>
             </header>
-            <div className="flex flex-1 items-center justify-center overflow-hidden p-4 sm:p-6">
+            {!isReel && publication && slideCount > 0 && (
+              <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-nb-line px-3 py-2 sm:items-end sm:px-6 sm:py-2.5">
+                <ImageFormatSelector
+                  value={previewFormat}
+                  onChange={changeFormat}
+                  disabled={!sourcePostId}
+                  compact
+                />
+                <p className="sr-only text-[10px] leading-relaxed text-nb-mute sm:not-sr-only sm:max-w-[240px]">
+                  {archived
+                    ? formatText("archived")
+                    : showingFinal
+                      ? formatText("finalReady")
+                      : sourcePostId
+                        ? formatText("editable")
+                        : formatText("legacy")}
+                </p>
+                {finalAvailable && (
+                  <div className="flex shrink-0 gap-1 rounded-full border border-nb-line bg-nb-bg p-0.5">
+                    {(["code", "jpeg"] as const).map((mode) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        aria-pressed={previewMode === mode}
+                        onClick={() => setPreviewMode(mode)}
+                        className={cn(
+                          "rounded-full px-2 py-1 text-[10px] font-semibold whitespace-nowrap sm:px-2.5",
+                          previewMode === mode
+                            ? "bg-nb-ink text-nb-bg"
+                            : "text-nb-mute hover:text-nb-ink",
+                        )}
+                      >
+                        {formatText(mode === "code" ? "editableMode" : "jpegMode")}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden p-2 lg:p-3">
               {query.isLoading ? (
                 <LoaderCircle
-                  className="size-8 animate-spin text-white/55"
+                  className="size-8 animate-spin text-nb-mute"
                   aria-label={t("loading")}
                 />
               ) : query.isError ? (
@@ -770,89 +861,57 @@ export function PublishedPostModal({
                   src={publication.technical.reel.previewUrl}
                   controls
                   playsInline
-                  className="max-h-[58dvh] max-w-full rounded-xl bg-black object-contain"
+                  className="max-h-full max-w-full rounded-xl bg-black object-contain"
                   onError={() => void query.refetch()}
                 />
               ) : isReel ? (
-                <div className="flex aspect-[9/16] max-h-[58dvh] max-w-[300px] flex-col items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-white/65">
+                <div className="flex aspect-[9/16] max-h-full max-w-[300px] flex-col items-center justify-center gap-3 rounded-2xl border border-nb-line bg-nb-bg-2/50 p-6 text-center text-nb-ink-soft">
                   <Music2 className="size-7" />
                   <p className="text-sm font-semibold">{t("reelUnavailable")}</p>
                   <p className="text-xs">{t("reelUnavailableHint")}</p>
                 </div>
-              ) : imagePreviewUrl ? (
-                // biome-ignore lint/performance/noImgElement: gallery images use short-lived signed URLs from the API.
-                <img
-                  src={imagePreviewUrl}
-                  alt={activeAlt || summary?.title || t("imageAlt")}
-                  onError={() => void query.refetch()}
-                  className="max-h-[58dvh] max-w-full rounded-xl object-contain"
+              ) : imagePreviewUrl || (sourcePostId && slideCount > 0) ? (
+                <ImagePostCarousel
+                  slides={previewSlides}
+                  activeIndex={activeSlide}
+                  onSelect={setActiveSlide}
+                  title={publication?.title || summary?.title || t("imageAlt")}
+                  platform={activePlatform}
+                  previewUrl={imagePreviewUrl ?? ""}
+                  onImageError={() => void query.refetch()}
+                  format={previewFormat}
+                  sourcePostId={showingFinal ? null : sourcePostId}
+                  revision={publication?.revision}
                 />
               ) : (
-                <div className="flex aspect-[4/5] max-h-[58dvh] max-w-[380px] items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 text-center text-sm text-white/55">
-                  {t("previewUnavailable")}
+                <div className="flex aspect-[4/5] max-h-full max-w-[380px] items-center justify-center rounded-2xl border border-nb-line bg-nb-bg-2/50 p-8 text-center text-sm text-nb-mute">
+                  {publication?.status === "failed" && !slideCount
+                    ? "La generación falló antes de guardar las láminas. Consulta Recorrido para ver el motivo."
+                    : t("previewUnavailable")}
                 </div>
               )}
             </div>
-            {!isReel && (publication?.slides.length ?? 0) > 1 && (
-              <footer className="flex items-center justify-center gap-3 border-t border-white/10 px-4 py-3">
-                <button
-                  type="button"
-                  aria-label={t("previousSlide")}
-                  onClick={() => setActiveSlide((value) => (value + slideCount - 1) % slideCount)}
-                  className="flex size-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/15"
-                >
-                  <ArrowLeft className="size-4" />
-                </button>
-                <span
-                  aria-live="polite"
-                  className="min-w-12 text-center text-xs font-semibold text-white/65"
-                >
-                  {activeSlide + 1} / {publication?.slides.length}
-                </span>
-                <button
-                  type="button"
-                  aria-label={t("nextSlide")}
-                  onClick={() => setActiveSlide((value) => (value + 1) % slideCount)}
-                  className="flex size-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/15"
-                >
-                  <ArrowRight className="size-4" />
-                </button>
-                <div className="ml-2 flex max-w-[48vw] gap-1.5 overflow-x-auto">
-                  {publication?.slides.map((slide, index) => (
-                    <button
-                      key={slide.assetId}
-                      type="button"
-                      aria-label={t("showSlide", { number: index + 1 })}
-                      aria-current={activeSlide === index}
-                      onClick={() => setActiveSlide(index)}
-                      className={cn(
-                        "flex size-8 shrink-0 items-center justify-center rounded-md border text-[10px] font-bold",
-                        activeSlide === index
-                          ? "border-[#e6b94f] bg-[#e6b94f]/20 text-[#f2ce77]"
-                          : "border-white/10 text-white/55",
-                      )}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-              </footer>
-            )}
           </section>
 
-          <aside className="flex min-h-0 flex-col border-t border-white/10 bg-[#1b1f27] lg:border-t-0 lg:border-l">
+          <aside className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden border-t border-nb-line bg-nb-bg lg:border-t-0 lg:border-l">
             <div
-              className="flex items-center gap-1 border-b border-white/10 px-3 pt-3"
+              className="flex items-center gap-1 border-b border-nb-line px-3 pt-3"
               role="tablist"
               aria-label={t("tabsLabel")}
               onKeyDown={(event) => {
                 if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
                   event.preventDefault();
-                  changeTab(activeTab === "technical" ? "relevant" : "technical");
+                  const direction = event.key === "ArrowRight" ? 1 : -1;
+                  changeTab(
+                    sidebarTabs[
+                      (sidebarTabs.indexOf(activeTab) + direction + sidebarTabs.length) %
+                        sidebarTabs.length
+                    ],
+                  );
                 }
               }}
             >
-              {(["technical", "relevant"] as const).map((tab, index) => (
+              {sidebarTabs.map((tab, index) => (
                 <button
                   key={tab}
                   ref={(element) => {
@@ -868,11 +927,17 @@ export function PublishedPostModal({
                   className={cn(
                     "flex-1 rounded-t-lg px-3 py-2.5 text-xs font-bold",
                     activeTab === tab
-                      ? "border-b-2 border-[#e6b94f] text-white"
-                      : "text-white/45 hover:text-white/80",
+                      ? "border-b-2 border-nb-ink text-nb-ink"
+                      : "text-nb-mute hover:text-nb-ink",
                   )}
                 >
-                  {tab === "technical" ? t("technicalTab") : t("relevantTab")}
+                  {tab === "publishing"
+                    ? t("publishingTab")
+                    : tab === "technical"
+                      ? t("technicalTab")
+                      : tab === "trace"
+                        ? "Recorrido"
+                        : t("relevantTab")}
                 </button>
               ))}
             </div>
@@ -880,16 +945,34 @@ export function PublishedPostModal({
               id="image-post-panel"
               role="tabpanel"
               aria-labelledby={`image-post-tab-${activeTab}`}
-              className="min-h-0 flex-1 overflow-y-auto p-4"
+              className={cn(
+                styles.scrollbar,
+                styles.sidebarPanel,
+                "min-h-0 w-full min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-5 py-5",
+              )}
             >
               {!publication ? (
-                <div className="flex h-full items-center justify-center text-white/45">
+                <div className="flex h-full items-center justify-center text-nb-mute">
                   {query.isLoading ? (
                     <LoaderCircle className="size-5 animate-spin" />
                   ) : (
                     t("noDetail")
                   )}
                 </div>
+              ) : activeTab === "publishing" ? (
+                <ImagePostPublishingPanel
+                  key={postId ?? publication.publicationId}
+                  publication={publication}
+                  postId={postId}
+                  format={previewFormat}
+                  onFormatChange={changeFormat}
+                  onPrepared={(post) => {
+                    setPreparedPost(post);
+                    setPreviewMode("jpeg");
+                  }}
+                />
+              ) : activeTab === "trace" ? (
+                <PostTrace trace={publication.trace} />
               ) : activeTab === "technical" ? (
                 <TechnicalSidebar publication={publication} />
               ) : (
@@ -906,8 +989,8 @@ export function PublishedPostModal({
                           className={cn(
                             "rounded-full px-2.5 py-1.5 text-[10px] font-semibold",
                             currentDelivery?.deliveryId === delivery.deliveryId
-                              ? "bg-white text-[#171a20]"
-                              : "bg-white/8 text-white/60 hover:text-white",
+                              ? "bg-nb-ink text-nb-bg"
+                              : "bg-nb-bg-2/60 text-nb-ink-soft hover:text-nb-ink",
                           )}
                         >
                           {downloadLabel(delivery.platform)} · {delivery.accountAlias}
@@ -927,7 +1010,7 @@ export function PublishedPostModal({
               )}
             </div>
             {(canRemove || pendingRemoval || publication?.status === "removed") && (
-              <div className="border-t border-white/10 p-4">
+              <div className="border-t border-nb-line p-4">
                 {pendingRemoval && (
                   <p className="mb-2 text-xs font-bold text-amber-200">
                     {t("pendingRemovalNotice")}

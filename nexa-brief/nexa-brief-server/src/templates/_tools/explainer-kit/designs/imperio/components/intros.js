@@ -54,12 +54,23 @@
   }
 
   /* ------------------------------------------------------------ fondos propios */
+  const atlasBase = p => p.country ? IM.countryCam(p.country, 3.2, 0) : { lon: 30, lat: 32, span: 110, rot: 0 };
+  const atlasKey = (base, n) => IM.zoomCam(base, 1 + 0.18 * (n + 0.5) / 3, 2 * (n + 0.5) / 3);
+  const mapLook = p => ({ hatch: p.country ? [p.country] : [], gray: p.bg === "archivo" ? 1 : 0 });
+  function mapWarm(p) {
+    if (p.bg && !["auto", "atlas", "archivo"].includes(p.bg)) return [];
+    const base = atlasBase(p);
+    return [0, 1].map(n => ({ cam: atlasKey(base, n) }));
+  }
   function presets(ctx, p) {
     const MC = IM.mapCache(ctx), st = ctx.stage;
-    const base = p.country ? IM.countryCam(p.country, 3.2, 0) : { lon: 30, lat: 32, span: 110, rot: 0 };
+    const base = atlasBase(p);
     const atlas = (gray, smoke) => (G, s, lt, b) => {
       const q = clamp(lt / Math.max(3, b.dur)), cam = IM.zoomCam(base, 1 + 0.18 * q, 2 * q), n = Math.floor(q * 3);
-      MC.draw(G, cam, IM.zoomCam(base, 1 + 0.18 * (n + 0.5) / 3, 2 * (n + 0.5) / 3), `${gray}:${n}`, { hatch: p.country ? [p.country] : [], gray });
+      const look = { hatch: p.country ? [p.country] : [], gray };
+      /* Los fondos de intros y cierres también necesitan su próxima llave antes de usarla. */
+      if (n < 3) IM.warmKey(ctx, atlasKey(base, n + 1), look);
+      MC.draw(G, cam, atlasKey(base, n), `${gray}:${n}`, look);
       if (smoke) { IM.smoke(G, s, lt + b.t0, 0.9, s.portrait ? 0.45 : 0.6); IM.fx.grain = Math.max(IM.fx.grain, 0.2); IM.fx.vignette = Math.max(IM.fx.vignette, 0.85); }
     };
     return {
@@ -86,7 +97,7 @@
     const BG = K.hook.bg(ctx, p, { auto: "atlas", presets: pr, tone: () => IM.bw(ctx, p.src) });
     return { ...BG, mode: BG.mode, render: BG.render, dispose() { BG.dispose(); free(); } };
   }
-  IM.hook = { words, layout, kicker, shake, presets, scrim, background, PRESETS, COL: { WHITE, CRIMSON, INK } };
+  IM.hook = { words, layout, kicker, shake, presets, scrim, background, PRESETS, mapLook, mapWarm, COL: { WHITE, CRIMSON, INK } };
 
   /* ============================================================ introv1 · golpe */
   K.register({
@@ -105,6 +116,7 @@
       ...K.hook.bgParams(PRESETS),
       dim: { type: "number", default: 0.35, min: 0, max: 1, doc: "Oscurecido del fondo foto/componente." },
     },
+    mapLook, mapWarm,
     create(ctx, p) {
       const st = ctx.stage, { W, H, u, portrait } = st, BG = background(ctx, p);
       const L = layout(words(p.text), W * (portrait ? 0.86 : 0.7), portrait ? H * 0.085 : H * 0.17);
@@ -175,6 +187,7 @@
       ...K.hook.bgParams(PRESETS),
       dim: { type: "number", default: 0.35, min: 0, max: 1, doc: "Oscurecido del fondo foto/componente." },
     },
+    mapLook, mapWarm,
     create(ctx, p) {
       const st = ctx.stage, { W, H, u, portrait } = st, BG = background(ctx, p);
       const Q = IM.wordLayout(p.text, W * (portrait ? 0.86 : 0.66), portrait ? H * 0.07 : H * 0.13);

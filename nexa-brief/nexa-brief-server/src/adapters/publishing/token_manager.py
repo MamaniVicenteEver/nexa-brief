@@ -79,7 +79,7 @@ class TokenManager:
         if self._storage.get_mode(platform, alias) in {"browser", "service"}:
             raise TokenExpiredError(f"Account {platform}:{alias} uses a browser session and has no OAuth token.")
         lock = self._locks[self._lock_key(platform, alias)]
-        async with lock:
+        async with lock, self._storage.refresh_lock(platform, alias):
             state = self._storage.get_state(platform, alias)
 
             if state.requires_reauth:
@@ -257,9 +257,9 @@ class TokenManager:
         client_id = settings.youtube_client_id
         client_secret = settings.youtube_client_secret
         if not client_id or not client_secret:
-            account_entry = self._storage._data.get("youtube", {}).get(alias, {})
-            client_id     = account_entry.get("client_id", client_id)
-            client_secret = account_entry.get("client_secret", client_secret)
+            saved_id, saved_secret = self._storage.get_client_credentials("youtube", alias)
+            client_id = saved_id or client_id
+            client_secret = saved_secret or client_secret
 
         if not client_id or not client_secret:
             raise TokenRefreshError(

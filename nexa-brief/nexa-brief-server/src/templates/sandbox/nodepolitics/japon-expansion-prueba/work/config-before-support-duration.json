@@ -1,0 +1,29 @@
+{
+  "activeId": "japon-expansion-prueba",
+  "configs": [
+    {
+      "id": "japon-expansion-prueba",
+      "design": "imperio",
+      "title": "La expansión del Imperio japonés",
+      "audio": {
+        "src": "assets/sound-design/17619e07e83b4d6cbc272a8c812e91a4/mix.mp3",
+        "narrationSrc": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "storyboardUrl": "assets/storyboard.json",
+      "seed": 1895,
+      "captions": {
+        "enabled": true
+      },
+      "components": [
+        "assets/components/japon.js"
+      ],
+      "soundDesign": {
+        "planUrl": "assets/sound-design/17619e07e83b4d6cbc272a8c812e91a4/plan.json",
+        "effectsSrc": "assets/sound-design/17619e07e83b4d6cbc272a8c812e91a4/mix-effects.flac",
+        "effectsGainMultiplier": 1.1,
+        "voiceUnchanged": true
+      }
+    }
+  ]
+}

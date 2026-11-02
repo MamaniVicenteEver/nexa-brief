@@ -61,7 +61,7 @@ class GeminiFlashAdapter(AIPort):
         self._client = genai.Client(api_key=settings.gemini_api_key)
         self._model = settings.gemini_model
 
-    async def complete_json_with_usage(self, system_prompt: str, user_prompt: str) -> tuple[dict, dict]:
+    async def complete_json_with_usage(self, system_prompt: str, user_prompt: str, *, response_json_schema: dict | None = None) -> tuple[dict, dict]:
         """Devuelve el uso que reporta Gemini junto con el JSON."""
         for attempt in range(1, settings.ai_max_retries + 1):
             started = time.monotonic()
@@ -73,6 +73,7 @@ class GeminiFlashAdapter(AIPort):
                         system_instruction=system_prompt,
                         response_mime_type="application/json",
                         max_output_tokens=settings.ai_max_output_tokens,
+                        response_json_schema=response_json_schema,
                     ),
                 )
                 result = _extract_json(response.text)

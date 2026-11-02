@@ -12,7 +12,7 @@ import { CategoryWindowTabs, SANDBOX_CATEGORY_ID } from "./CategoryWindowTabs";
 import { groupMotionTemplates, MotionCategoryWindow } from "./MotionCategoryWindow";
 
 const DEFAULT_CATEGORY = "node_tech";
-const CONTAINER_CLASS = "relative z-5 mx-auto w-full max-w-[1440px] px-10 pt-22 pb-25";
+const CONTAINER_CLASS = "relative z-5 mx-auto w-full max-w-[1440px] px-4 pt-22 sm:px-10 pb-25";
 
 /** /plantillas: una "ventana" por categoría principal; solo se muestra una a la vez.
  * La elegida vive en `?cat=` (se actualiza con history.replaceState, sin navegar). */
@@ -78,9 +78,13 @@ function CategoryWindows() {
         />
       )}
       {selected?.engine === "explainer_kit" && (
-        <ExplainerCategoryWindow key={selected.id} category={selected} />
+        <ExplainerCategoryWindow
+          key={selected.id}
+          category={selected}
+          posts={<PublicationsSection category={selected} categories={categories} embedded />}
+        />
       )}
-      {selected && selectedId !== SANDBOX_CATEGORY_ID && (
+      {selected && selectedId !== SANDBOX_CATEGORY_ID && selected.engine !== "explainer_kit" && (
         <PublicationsSection
           key={`publications-${selected.id}`}
           category={selected}

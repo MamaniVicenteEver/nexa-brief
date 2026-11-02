@@ -67,6 +67,7 @@ CategoryNode.model_rebuild()
 
 
 _cache: dict[str, CategoryNode] | None = None
+_cache_signature = None
 
 
 def _walk(
@@ -122,9 +123,11 @@ def load_categories(path: Path = _NICHES_PATH) -> dict[str, CategoryNode]:
 
 def list_categories() -> dict[str, CategoryNode]:
     """Árbol de categorías cacheado por proceso (igual que niche_config)."""
-    global _cache
-    if _cache is None:
+    global _cache, _cache_signature
+    signature = (_NICHES_PATH, _NICHES_PATH.stat().st_mtime_ns if _NICHES_PATH.exists() else None)
+    if _cache is None or signature != _cache_signature:
         _cache = load_categories()
+        _cache_signature = signature
     return _cache
 
 

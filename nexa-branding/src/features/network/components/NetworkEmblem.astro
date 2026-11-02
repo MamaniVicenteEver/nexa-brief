@@ -1,0 +1,78 @@
+---
+import { medallionUrl } from '@/shared/lib/images';
+import type { Channel } from '@/features/channels/model/types';
+import { text, type Locale } from '@/shared/lib/locale';
+interface Props {
+  locale: Locale;
+  channels: Channel[];
+}
+const { locale, channels } = Astro.props;
+---
+
+<div
+  class="network-emblem"
+  aria-label={text(
+    locale,
+    `Emblema de los ${channels.length} canales NODE`,
+    `Emblem of the ${channels.length} NODE channels`,
+  )}
+>
+  <svg class="network-emblem__geometry" viewBox="0 0 1000 1000" fill="none" aria-hidden="true">
+    <defs>
+      <pattern
+        id="fine-lines"
+        width="13"
+        height="13"
+        patternUnits="userSpaceOnUse"
+        patternTransform="rotate(35)"
+      >
+        <path d="M0 0v13" stroke="#b6c0b5" stroke-width="1" opacity=".19" />
+      </pattern>
+      <pattern id="rosettes" width="180" height="180" patternUnits="userSpaceOnUse">
+        <g stroke="#b6c0b5" stroke-width=".75" opacity=".22">
+          <circle cx="90" cy="90" r="75" />
+          <circle cx="90" cy="90" r="60" />
+          <circle cx="90" cy="90" r="44" />
+          <path d="M15 90h150M90 15v150M37 37l106 106M37 143 143 37" />
+        </g>
+      </pattern>
+    </defs>
+    <circle cx="500" cy="555" r="355" fill="#293d34" stroke="#abb4a4" stroke-width="2" />
+    <circle cx="500" cy="555" r="340" stroke="#d8cdb3" stroke-width="8" />
+    <circle cx="500" cy="555" r="321" fill="url(#fine-lines)" stroke="#778777" stroke-width="2" />
+    <path d="M62 225h876L500 944Z" fill="#b9b39f" stroke="#b6c0ac" stroke-width="3" />
+    <path d="M82 235h836L500 919Z" fill="#f0eadb" />
+    <path d="M109 249h782L500 886Z" fill="#6a7774" stroke="#b59c7b" stroke-width="7" />
+    <path d="M109 249h782L500 886Z" fill="url(#rosettes)" />
+    <path
+      d="M160 267q340-150 680 0M225 440q275-190 550 0M325 625q175-170 350 0"
+      stroke="#d7c7aa"
+      stroke-width="7"
+      opacity=".55"
+    />
+  </svg>
+  <div class="network-emblem__seal">
+    <span>WHERE IDEAS</span>
+    <strong>NODE</strong>
+    <span>CONNECT</span>
+  </div>
+  {channels.map((channel) => (
+    <button
+      type="button"
+      class="emblem-node"
+      style={`--node-x:${channel.position.x}%;--node-y:${channel.position.y}%`}
+      data-open-channel={channel.id}
+      aria-label={text(locale, `Ver identidad de ${channel.name}`, `View ${channel.name} identity`)}
+      title={channel.name}
+    >
+      <img src={medallionUrl(channel.id)} alt="" width="280" height="280" loading="eager" />
+      <span>{channel.name}</span>
+    </button>
+  ))}
+  <div class="emblem-caption">
+    <span>NODE / {text(locale, 'LA RED', 'THE NETWORK')}</span>
+    <span>
+      {String(channels.length).padStart(2, '0')} {text(locale, 'PERSPECTIVAS', 'PERSPECTIVES')}
+    </span>
+  </div>
+</div>

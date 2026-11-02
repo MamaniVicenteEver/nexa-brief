@@ -40,6 +40,7 @@
       ...K.hook.bgParams(HK.PRESETS),
       dim: { type: "number", default: 0.5, min: 0, max: 1, doc: "Oscurecido del fondo foto/componente." },
     },
+    mapLook: HK.mapLook, mapWarm: HK.mapWarm,
     create(ctx, p) {
       ctx.beat.hideCaptions = true;
       const st = ctx.stage, { W, H, u, portrait } = st, cx = W / 2, BG = HK.background(ctx, p);

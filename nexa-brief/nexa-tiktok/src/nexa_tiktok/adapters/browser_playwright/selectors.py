@@ -156,6 +156,8 @@ KNOWN_MODAL_MARKERS = (
 )
 UNKNOWN_MODAL_MARKERS = (
     "captcha",
+    "arrastra el deslizador para encajar en el puzle",
+    "drag the slider to fit the puzzle",
     "verifica tu identidad",
     "verificación de identidad",
     "verify your identity",
@@ -166,6 +168,7 @@ UNKNOWN_MODAL_MARKERS = (
 )
 
 COMMENT_INPUTS = (
+    Candidate("css", '[contenteditable="true"][role="textbox"]'),
     Candidate("role", "Añade un comentario", role="textbox"),
     Candidate("role", "Añade un comentario...", role="textbox"),
     Candidate("role", "Add a comment", role="textbox"),

@@ -41,12 +41,14 @@
   `{"use": "rough.load", "params": {"tasks": ["BOOT", "SCAN", "INDEX", "QUERY", "WRITE"], "capacity": 5, "stepSec": 0.55, "overflowAt": 3.6, "extra": ["RADAR", "RADAR"], "overflowLabel": "1202"}}`
 - **`rough.note`** — Hoja de papel dibujada a mano con un título mecanografiado y renglones de texto garabateado; en `noteAt` aparece una nota manuscrita en lima en el margen (un comentario, una firma, 'vago, pero emocionante'). Parámetros: title, note, noteAt, lines, caption
   `{"use": "rough.note", "params": {"title": "INFORMATION MANAGEMENT: A PROPOSAL", "note": "vague but exciting…", "noteAt": 2}}`
-- **`rough.network`** — Red que crece: un nodo central y nodos que aparecen en anillos, unidos por enlaces a mano (documentos que se enlazan, la web, una comunidad). Parámetros: center, labels, count, growSec
+- **`rough.network`** — Red que crece: un nodo central y nodos que aparecen en anillos, unidos por enlaces a mano (documentos que se enlazan, la web, una comunidad). Parámetros: center, labels, count, growSec, scale, keepGrowing, extra
   `{"use": "rough.network", "params": {"center": "WWW", "labels": ["DOC", "FOTO", "VIDEO", "MAPA"], "count": 28, "growSec": 3}}`
 - **`rough.browser`** — Ventana de navegador dibujada a mano: la dirección se escribe letra a letra en la barra, aparece la página (título + renglones) y un cursor hace clic en un enlace lima en `clickAt`. Parámetros: url, title, link, clickAt, caption
   `{"use": "rough.browser", "params": {"url": "info.cern.ch", "title": "World Wide Web", "link": "¿qué es esto?", "clickAt": 3}}`
 - **`rough.counter`** — Cifra GIGANTE que cuenta de `from` a `to` (con separador de miles) y queda subrayada a mano; etiqueta lima arriba y unidad manuscrita abajo. Parámetros: from, to, dur, label, unit, prefix, suffix
   `{"use": "rough.counter", "params": {"from": 0, "to": 6000000000, "label": "PERSONAS EN INTERNET", "unit": "y contando…", "dur": 2.5}}`
+- **`rough.notemark`** — Hoja manuscrita con conceptos destacados por separado en el margen o como sellos. Parámetros: title, marks, note, style(marker|stamps), side(auto|left|right), seed, arrowLen, stagger
+  `{"use": "rough.notemark", "params": {"title": "ACCESO AUTORIZADO", "marks": ["seguridad", "soporte", "asuntos legales"]}}`
 - **`rough.outrov1`** — Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. Parámetros: thanks, channel, cta, support, handle, likeAt, subscribeAt, bellAt, supportAt
   `{"use": "rough.outrov1", "params": {"thanks": "GRACIAS POR VER", "channel": "NODETECH", "cta": "SUSCRÍBETE", "support": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades."}}`
 - **`rough.outro`** — Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. Parámetros: thanks, channel, cta, support, handle, likeAt, subscribeAt, bellAt, supportAt
@@ -65,8 +67,8 @@
 - **`common.lyric`** — Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave. Parámetros: text, accent, size, maxChars, dimPast, y
   `{"use": "common.lyric", "params": {"accent": ["vidas"], "size": 0.9}}`
 - **`common.logo`** — Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual. Parámetros: src, name
-- **`common.clip`** — Clip de video real de unos segundos (mudo) en vez de una foto: a pantalla completa con empuje lento, o dentro de un marco. Parámetros: src*, start, rate, loop, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
-  `{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "caption": "Un centro de datos", "sub": "PEXELS · 2026"}}`
+- **`common.clip`** — Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Parámetros: src*, start, rate, loop, layout(auto|full|frame), size, ar, focus, zoom, tone(design|color), dim, caption, sub, textColor(ink|accent|mix), accentWords, textSide(left|right|bottom), textIn(slide|fade|none), logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
+  `{"use": "common.clip", "params": {"src": "assets/media/servidores.mp4", "layout": "full", "caption": "Una ^conversación^ digital", "textColor": "mix", "textSide": "left", "sub": "Una historia real"}}`
 - **`common.tabloid`** — Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio. Parámetros: text*, src, srcAfter, video, poster, start, rate, loop, muted, accent, bullet, bulletScale, beforeLabel, afterLabel, imageSide(auto|left|right), mode(impact|split), palette(brand|alert), strap, seal, tapeText, marker, focus, target, textIn(slam|slide|typewriter|none), stagger, accentIn(slam|slide|typewriter|none), bulletIn(slam|slide|typewriter|none), inDuration, logo, logoName, logoPos(auto|top-left|top-right|bottom-left|bottom-right), logoSize, logoInvert
   `{"use": "common.tabloid", "params": {"text": "TÚ ERES EL SIGUIENTE", "accent": "SIGUIENTE", "strap": "AMAZON · IA"}}`
 - **`common.question`** — Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9. Parámetros: text*, y
@@ -83,3 +85,9 @@ Bocetos (`icon`): understand · design · build · measure · ship · laptop · 
 ## Marcas e instituciones
 
 El logo aparece 1–2 veces por marca, siempre ACOMPAÑANDO una foto/video, nunca solo ni en tarjeta. Usá `logo`, `logoName`, `logoPos` y `logoSize` en el beat visual (`rough.photo`, `binary.frame`, `common.clip`, `rough.introv2`, `binary.introv2` o `common.tabloid`). `common.logo` está obsoleto. Preferí SVG; el PNG debe ser transparente.
+
+## Apoyos visuales preferidos (política v5)
+
+Repartí por todo el video y sin orden fijo: (1) miniatura `rough.introv2` o `binary.introv2` con foto/video y texto grande, (2) `common.clip` con `layout: full` y `caption` grande (`textColor: ink|accent|mix`, `accentWords`, `textSide: left|right|bottom`, `textIn`, `sub` y `logo` opcionales), (3) foto en cuadro como tercera opción. Cada apoyo muestra la frase narrada. Imagen visible 5–10 s; video 8–16 s; cada archivo como máximo dos usos. Cada tercio necesita una miniatura o un video completo. Consultá `kit.py library` antes de crear componentes propios.
+
+`{"use":"common.clip","dur":12,"params":{"src":"assets/media/archivo.mp4","layout":"full","caption":"Una ^conversación^ digital","textColor":"mix","textSide":"left","textIn":"slide"}}`
