@@ -1,0 +1,1050 @@
+{
+  "duration": 207,
+  "defs": {
+    "fonts": {
+      "label": "Arial, sans-serif",
+      "display": "Arial, sans-serif"
+    },
+    "palette": {
+      "background": "#081e2c",
+      "ink": "#e9e3ba",
+      "white": "#e9e3ba",
+      "gold": "#f6edb4",
+      "red": "#d1495b",
+      "green": "#399e58",
+      "cyan": "#66c6e3",
+      "steel": "#82949c",
+      "smoke": "#33424b",
+      "orange": "#e69b45"
+    }
+  },
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 9,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 18,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 27,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 36,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 45,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 54,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 63,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 72,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 81,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 90,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 99,
+      "center": [
+        54,
+        32
+      ],
+      "zoom": 5,
+      "dur": 0
+    },
+    {
+      "t": 108,
+      "center": [
+        54,
+        32
+      ],
+      "zoom": 4.5,
+      "dur": 0
+    },
+    {
+      "t": 117,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 126,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 135,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 144,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 153,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 162,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 171,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 180,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 189,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 198,
+      "center": [
+        58.18,
+        25.04
+      ],
+      "zoom": 8,
+      "dur": 0
+    }
+  ],
+  "items": [
+    {
+      "type": "naval.cargo",
+      "id": "gallery-0-naval-cargo",
+      "variant": "tanker",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "PETROLERO",
+      "t": 0,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 0.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 3,
+          "state": "detected"
+        },
+        {
+          "at": 5.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 7
+    },
+    {
+      "type": "naval.warship",
+      "id": "gallery-1-naval-warship",
+      "variant": "destroyer",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "DESTRUCTOR",
+      "t": 9,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 9.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 12,
+          "state": "detected"
+        },
+        {
+          "at": 14.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 16
+    },
+    {
+      "type": "naval.submarine",
+      "id": "gallery-2-naval-submarine",
+      "variant": "normal",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "SUBMARINO",
+      "t": 18,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 18.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 21,
+          "state": "detected"
+        },
+        {
+          "at": 23.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 25
+    },
+    {
+      "type": "naval.group",
+      "id": "gallery-3-naval-group",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "GRUPO NAVAL",
+      "t": 27,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 27.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 30,
+          "state": "detected"
+        },
+        {
+          "at": 32.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 34
+    },
+    {
+      "type": "naval.carrier",
+      "id": "gallery-4-naval-carrier",
+      "variant": "supercarrier",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "PORTAAVIONES",
+      "t": 36,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 36.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "deck": {
+        "aircraft": 12
+      },
+      "escorts": {
+        "formation": "diamond",
+        "units": [
+          "naval.warship:cg",
+          "naval.warship:ddg",
+          "naval.warship:ff"
+        ]
+      },
+      "states": [
+        {
+          "at": 39,
+          "state": "flightops"
+        },
+        {
+          "at": 41.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 43
+    },
+    {
+      "type": "naval.cargo",
+      "id": "gallery-5-naval-cargo",
+      "variant": "container",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": "auto",
+      "label": "PORTACONTENEDORES",
+      "t": 45,
+      "dur": 7,
+      "path": null,
+      "states": [
+        {
+          "at": 48,
+          "state": "detected"
+        },
+        {
+          "at": 50.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 52
+    },
+    {
+      "type": "naval.cargo",
+      "id": "gallery-6-naval-cargo",
+      "variant": "bulk",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": "auto",
+      "label": "GRANELERO",
+      "t": 54,
+      "dur": 7,
+      "path": null,
+      "states": [
+        {
+          "at": 57,
+          "state": "detected"
+        },
+        {
+          "at": 59.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 61
+    },
+    {
+      "type": "naval.warship",
+      "id": "gallery-7-naval-warship",
+      "variant": "frigate",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": "auto",
+      "label": "FRAGATA",
+      "t": 63,
+      "dur": 7,
+      "path": null,
+      "states": [
+        {
+          "at": 66,
+          "state": "detected"
+        },
+        {
+          "at": 68.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 70
+    },
+    {
+      "type": "naval.warship",
+      "id": "gallery-8-naval-warship",
+      "variant": "cruiser",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": "auto",
+      "label": "CRUCERO",
+      "t": 72,
+      "dur": 7,
+      "path": null,
+      "states": [
+        {
+          "at": 75,
+          "state": "detected"
+        },
+        {
+          "at": 77.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 79
+    },
+    {
+      "type": "naval.submarine",
+      "id": "gallery-9-naval-submarine",
+      "variant": "translucent",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": "auto",
+      "label": "SUBMARINO",
+      "t": 81,
+      "dur": 7,
+      "path": null,
+      "states": [
+        {
+          "at": 84,
+          "state": "detected"
+        },
+        {
+          "at": 86.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 88
+    },
+    {
+      "type": "naval.carrier",
+      "id": "gallery-10-naval-carrier",
+      "variant": "stovl",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": "auto",
+      "label": "CUBIERTA STOVL",
+      "t": 90,
+      "dur": 7,
+      "path": null,
+      "deck": {
+        "aircraft": 12
+      },
+      "escorts": null,
+      "states": [
+        {
+          "at": 93,
+          "state": "flightops"
+        },
+        {
+          "at": 95.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 97
+    },
+    {
+      "type": "naval.carrier",
+      "id": "gallery-11-naval-carrier",
+      "variant": "hero",
+      "at": [
+        54,
+        32
+      ],
+      "heading": 65,
+      "label": "PORTAAVIONES",
+      "t": 99,
+      "dur": 7,
+      "path": null,
+      "deck": {
+        "aircraft": 12
+      },
+      "escorts": null,
+      "states": [
+        {
+          "at": 102,
+          "state": "flightops"
+        },
+        {
+          "at": 104.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "out": 106
+    },
+    {
+      "type": "naval.carrier",
+      "id": "gallery-12-naval-carrier",
+      "variant": "inventory",
+      "at": [
+        54,
+        32
+      ],
+      "heading": "auto",
+      "label": "PORTAAVIONES",
+      "t": 108,
+      "dur": 7,
+      "path": null,
+      "deck": {
+        "aircraft": 0
+      },
+      "escorts": null,
+      "states": [
+        {
+          "at": 111,
+          "state": "flightops"
+        },
+        {
+          "at": 113.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "region": "IR",
+      "count": 8,
+      "out": 115
+    },
+    {
+      "id": "gallery-13-hull-detected",
+      "type": "naval.cargo",
+      "variant": "tanker",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": 35,
+      "t": 117,
+      "dur": 7,
+      "scale": 1.3,
+      "label": "DETECTED",
+      "states": [
+        {
+          "at": 118,
+          "state": "detected",
+          "dur": 0.65
+        }
+      ],
+      "sfx": false,
+      "out": 124
+    },
+    {
+      "id": "gallery-14-hull-targeted",
+      "type": "naval.cargo",
+      "variant": "tanker",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": 35,
+      "t": 126,
+      "dur": 7,
+      "scale": 1.3,
+      "label": "TARGETED",
+      "states": [
+        {
+          "at": 127,
+          "state": "targeted",
+          "dur": 0.65
+        }
+      ],
+      "sfx": false,
+      "out": 133
+    },
+    {
+      "id": "gallery-15-hull-hit",
+      "type": "naval.cargo",
+      "variant": "tanker",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": 35,
+      "t": 135,
+      "dur": 7,
+      "scale": 1.3,
+      "label": "HIT",
+      "states": [
+        {
+          "at": 136,
+          "state": "hit",
+          "dur": 0.65
+        }
+      ],
+      "sfx": false,
+      "out": 142
+    },
+    {
+      "id": "gallery-16-hull-burning",
+      "type": "naval.cargo",
+      "variant": "tanker",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": 35,
+      "t": 144,
+      "dur": 7,
+      "scale": 1.3,
+      "label": "BURNING",
+      "states": [
+        {
+          "at": 145,
+          "state": "burning",
+          "dur": 0.65
+        }
+      ],
+      "sfx": false,
+      "out": 151
+    },
+    {
+      "id": "gallery-17-hull-wrecked",
+      "type": "naval.cargo",
+      "variant": "tanker",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": 35,
+      "t": 153,
+      "dur": 7,
+      "scale": 1.3,
+      "label": "WRECKED",
+      "states": [
+        {
+          "at": 154,
+          "state": "wrecked",
+          "dur": 0.65
+        }
+      ],
+      "sfx": false,
+      "out": 160
+    },
+    {
+      "id": "gallery-18-hull-sunk",
+      "type": "naval.cargo",
+      "variant": "tanker",
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": 35,
+      "t": 162,
+      "dur": 7,
+      "scale": 1.3,
+      "label": "SUNK",
+      "states": [
+        {
+          "at": 163,
+          "state": "sunk",
+          "dur": 3
+        }
+      ],
+      "sfx": false,
+      "out": 169
+    },
+    {
+      "type": "naval.group",
+      "id": "gallery-19-naval-group",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "GRUPO NAVAL",
+      "t": 171,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 171.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 174,
+          "state": "detected"
+        },
+        {
+          "at": 176.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "formation": "line",
+      "out": 178
+    },
+    {
+      "type": "naval.group",
+      "id": "gallery-20-naval-group",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "GRUPO NAVAL",
+      "t": 180,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 180.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 183,
+          "state": "detected"
+        },
+        {
+          "at": 185.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "formation": "box",
+      "out": 187
+    },
+    {
+      "type": "naval.group",
+      "id": "gallery-21-naval-group",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "GRUPO NAVAL",
+      "t": 189,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 189.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 192,
+          "state": "detected"
+        },
+        {
+          "at": 194.5,
+          "state": "normal"
+        }
+      ],
+      "sfx": false,
+      "formation": "escort-ring",
+      "out": 196
+    },
+    {
+      "type": "naval.group",
+      "id": "gallery-22-naval-group",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "label": "GRUPO NAVAL",
+      "t": 198,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.18,
+            25.04
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 198.5,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "states": [],
+      "sfx": false,
+      "leader": "gallery-22-ref-carrier",
+      "units": [
+        "gallery-22-ref-destroyer",
+        "gallery-22-ref-frigate"
+      ],
+      "out": 205
+    },
+    {
+      "id": "gallery-22-ref-carrier",
+      "type": "naval.carrier",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "deck": {
+        "aircraft": 6
+      },
+      "t": 198,
+      "dur": 8,
+      "sfx": false,
+      "out": 205
+    },
+    {
+      "id": "gallery-22-ref-destroyer",
+      "type": "naval.warship",
+      "variant": "destroyer",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "states": [
+        {
+          "at": 199,
+          "state": "hit",
+          "dur": 2
+        },
+        {
+          "at": 200,
+          "state": "burning",
+          "dur": 1
+        }
+      ],
+      "t": 198,
+      "dur": 8,
+      "sfx": false,
+      "out": 205
+    },
+    {
+      "id": "gallery-22-ref-frigate",
+      "type": "naval.warship",
+      "variant": "frigate",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "t": 198,
+      "dur": 8,
+      "sfx": false,
+      "out": 205
+    }
+  ]
+}

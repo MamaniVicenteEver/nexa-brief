@@ -1,0 +1,72 @@
+{
+  "name": "range.ring",
+  "family": "range",
+  "description": "Anillo de alcance geodésico o simbólico en pantalla, pulso y guiones móviles. Úsala para señalar un radio de alcance.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 15,
+  "states": [],
+  "params": {
+    "radiusMode": {
+      "type": "enum",
+      "values": [
+        "geo",
+        "screen"
+      ],
+      "default": "geo",
+      "range": [
+        "geo",
+        "screen"
+      ],
+      "description": "Modo de interpretar el radio de alcance."
+    },
+    "radiusKm": {
+      "type": "number",
+      "default": 180,
+      "range": null,
+      "description": "Radio geográfico de alcance en kilómetros."
+    },
+    "radius": {
+      "type": "number",
+      "default": 160,
+      "range": null,
+      "description": "Radio del efecto o de la formación en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "danger",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "pulse": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa el pulso cíclico."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-range-ring",
+    "t": 0,
+    "type": "range.ring",
+    "at": [
+      53,
+      29
+    ],
+    "radiusKm": 180,
+    "color": "danger",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "work/tactico/items-routes.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/range.ring.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

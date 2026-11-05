@@ -67,7 +67,7 @@ def build(video: ExplainerVideo) -> BuildResult:
         raise ValueError(f"{video.video_id}: publish.json no es un paquete v{SCHEMA_VERSION}; no hay nada que construir")
     strategies = active_strategies(package.category)
     save_package(video.path, package, strategies)
-    opening = apply_opening(video.path, package)
+    opening = OpeningResult(changed=False) if package.preserve_opening else apply_opening(video.path, package)
     # manifest.json copia título y textos de publicación (kit.py manifest); la
     # portada de la web es un cuadro del cartel de apertura (kit.py poster).
     _kit("manifest", video.video_id)

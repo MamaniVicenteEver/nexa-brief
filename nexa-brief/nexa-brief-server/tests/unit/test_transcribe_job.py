@@ -1,11 +1,9 @@
 import importlib.util
-import json
 import os
 from pathlib import Path
 import shutil
 import subprocess
 import sys
-import time
 
 import pytest
 
@@ -101,3 +99,19 @@ def test_detached_worker_end_to_end(video, tmp_path, monkeypatch):
     assert (video / 'outro-done').exists()
     assert (video / 'usage-done').exists()
     assert 'simulated progress' in (video / 'work/transcribe.log').read_text()
+
+
+def test_foreground_transcription_owns_resource_budget(video, monkeypatch):
+    from contextlib import contextmanager
+    events = []
+    @contextmanager
+    def slot():
+        events.append('acquire')
+        yield
+        events.append('release')
+    monkeypatch.setattr(job, '_resource_slot', slot)
+    monkeypatch.setattr(job.subprocess, 'run', lambda *a, **k: events.append('transcribe') or subprocess.CompletedProcess(a, 0))
+    monkeypatch.setattr(job.outro, 'apply', lambda _: None)
+    monkeypatch.setattr(job.usage, 'record', lambda *a, **k: None)
+    assert job.launch(video, False) == 0
+    assert events == ['acquire', 'transcribe', 'release']

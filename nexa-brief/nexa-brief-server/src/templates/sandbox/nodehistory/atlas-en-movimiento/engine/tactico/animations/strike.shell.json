@@ -1,0 +1,126 @@
+{
+  "name": "strike.shell",
+  "family": "strike",
+  "description": "Proyectil rápido con trazadora corta e impacto programable. Úsala para representar un ataque desde su lanzamiento hasta el impacto.",
+  "duration": 2.5,
+  "loop": true,
+  "layer": 60,
+  "states": [],
+  "params": {
+    "from": {
+      "default": null,
+      "description": "[lon,lat], lugar o id; alternativo a path.via.",
+      "type": "place",
+      "range": null
+    },
+    "to": {
+      "default": null,
+      "description": "[lon,lat], lugar o id de destino.",
+      "type": "place",
+      "range": null
+    },
+    "dur": {
+      "type": "number",
+      "default": 2.15,
+      "description": "Vida completa incluyendo onHit; ampliarla si cambia el vuelo o el impacto.",
+      "range": null
+    },
+    "flightDur": {
+      "type": "number",
+      "default": 0.55,
+      "min": 0.05,
+      "range": {
+        "min": 0.05,
+        "max": null
+      },
+      "description": "Duración del vuelo del proyectil en segundos."
+    },
+    "width": {
+      "type": "number",
+      "default": 2.8,
+      "min": 0.5,
+      "max": 16,
+      "range": {
+        "min": 0.5,
+        "max": 16
+      },
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "bend": {
+      "type": "number",
+      "default": 0.08,
+      "min": -1,
+      "max": 1,
+      "range": {
+        "min": -1,
+        "max": 1
+      },
+      "description": "Curvatura de la trayectoria."
+    },
+    "particles": {
+      "type": "number",
+      "default": 32,
+      "min": 8,
+      "max": 300,
+      "description": "Presupuesto agregado de estelas y todos los impactos.",
+      "range": {
+        "min": 8,
+        "max": 300
+      }
+    },
+    "seed": {
+      "default": 1,
+      "description": "Semilla numérica o texto.",
+      "type": "number|string",
+      "range": null
+    },
+    "trailLife": {
+      "type": "number",
+      "default": 0.12,
+      "range": null,
+      "description": "Tiempo de persistencia de la estela en segundos."
+    },
+    "onHit": {
+      "default": {
+        "fx": "fx.impact"
+      },
+      "type": "object",
+      "range": null,
+      "description": "Efecto que se genera al alcanzar el objetivo."
+    }
+  },
+  "sfx": [
+    "bomb-whistle",
+    "explosion-far"
+  ],
+  "example": {
+    "id": "strike-shell",
+    "t": 0,
+    "type": "strike.shell",
+    "from": [
+      51.5,
+      27
+    ],
+    "to": [
+      55,
+      28.5
+    ],
+    "dur": 2.15,
+    "flightDur": 0.55,
+    "seed": 51,
+    "onHit": {
+      "fx": "fx.impact"
+    }
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/scene-fx.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/strike.shell.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

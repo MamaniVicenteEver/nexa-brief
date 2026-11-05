@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "title": "Atlas Cinemático · mapas 3D",
+  "summary": "Prototipo NodeHistory de mapas 3D cinematográficos con MapLibre GL JS: satélite con relieve real, países, estados y condados resaltados con geometría exacta, arcos, fichas con foto y nombres hasta calle. Réplica de los primeros 24 s de la referencia Earth Map Connections con dos cierres elegibles (outro v1: Tierra grande y giro rápido; outro v2: Tierra abajo con el título arriba y giro lento) y fichas con foto opcionales; el video es solo datos (scene.json). Incluye scene-zoom.json (EE. UU. a Texas, condado de Travis y centro de Austin) y scene-24s.json (réplica exacta de 24 s).",
+  "engine": "nodehistory/_atlas",
+  "based_on": "nodeaction/maps",
+  "is_new_design": true,
+  "status": "lista para revisar",
+  "created_at": "2026-11-03",
+  "libraries": [
+    {
+      "name": "maplibre-gl",
+      "version": "6.16.0",
+      "purpose": "mapa 3D, terreno y estilos"
+    },
+    {
+      "name": "pmtiles",
+      "version": "4.5.0",
+      "purpose": "teselas vectoriales locales"
+    },
+    {
+      "name": "@protomaps/basemaps",
+      "version": "5.7.2",
+      "purpose": "estilos y etiquetas de OpenStreetMap"
+    }
+  ],
+  "inputs": [
+    "Referencia en referencias/nodeaction/maps (SHA-256 63b21b65…c5c7), 0–24 s.",
+    "NASA GIBS Blue Marble y USGS Imagery; AWS Terrain Tiles; Protomaps/OpenStreetMap; Natural Earth; fotos de Wikimedia Commons (credits.json)."
+  ],
+  "notes": [
+    "Sin render ni grabación: solo previsualización. Preparar teselas con atlas.py plan <scene> --fetch.",
+    "PLAN.md sección 7: mediciones y diferencias con la referencia.",
+    "Escena alternativa: ?scene=assets/scene-zoom.json",
+    "Kit reutilizable: nodehistory/_atlas/SKILL.md; catálogo components.json; flujo production.json. No confundir este motor 3D con explainer-kit/designs/atlas (2D)."
+  ],
+  "components": [
+    {
+      "name": "atlas.outrov1",
+      "label": "Outro v1",
+      "summary": "Tierra grande, más alta que la pantalla; giro rápido; título sobre el globo.",
+      "group": "outro",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "atlas.outrov2",
+      "label": "Outro v2",
+      "summary": "La Tierra sube desde abajo; título en la franja superior; subida y giro lentos.",
+      "group": "outro",
+      "params": {}
+    },
+    {
+      "name": "atlas.fichas",
+      "label": "Fichas con foto",
+      "summary": "Fotos y paneles sobre el mapa durante el recorrido.",
+      "default": true,
+      "params": {}
+    }
+  ],
+  "catalog": {
+    "base": "sandbox/nodehistory/_atlas",
+    "components": "components.json",
+    "gallery": "showcase/index.html",
+    "production": "production.json",
+    "defaultTab": "library",
+    "previewReady": true,
+    "thumbs": "showcase/thumbs/thumbs.json",
+    "tabs": [
+      {
+        "id": "mapas",
+        "label": "Mapas y territorios",
+        "families": [
+          "mapas",
+          "territorios",
+          "mapa"
+        ]
+      },
+      {
+        "id": "rutas",
+        "label": "Flechas y rutas",
+        "families": [
+          "rutas"
+        ]
+      },
+      {
+        "id": "imagenes",
+        "label": "Imágenes y rótulos",
+        "families": [
+          "imagenes",
+          "rotulos"
+        ]
+      },
+      {
+        "id": "camara",
+        "label": "Cámara",
+        "families": [
+          "camara"
+        ]
+      },
+      {
+        "id": "aperturas-cierres",
+        "label": "Entradas y cierres",
+        "families": [
+          "aperturas",
+          "cierres"
+        ]
+      },
+      {
+        "id": "datos",
+        "label": "Datos y voz",
+        "families": [
+          "datos",
+          "voz",
+          "animacion"
+        ]
+      }
+    ]
+  }
+}

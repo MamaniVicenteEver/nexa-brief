@@ -10,8 +10,8 @@ import {
 import { createElement, useState } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { component, context, playerComponentMessage, videoItem } from "../__fixtures__/contracts";
-import { ShowcaseModal } from "../components/ShowcaseModal";
 import type { ShowcaseRepository } from "../api/showcase-repository";
+import { ShowcaseModal } from "../components/ShowcaseModal";
 import { useShowcaseModal } from "../hooks/useShowcaseModal";
 import { useStagePlayer } from "../hooks/useStagePlayer";
 import { copyText } from "../lib/clipboard";
@@ -90,6 +90,24 @@ describe("protocolo del reproductor", () => {
     dispatch({ type: "kit-stage-close" });
     expect(onClose).toHaveBeenCalledTimes(1);
     expect(vi.getTimerCount()).toBe(0);
+  });
+  it("permite abrir Imperio en pausa y comenzar con su botón sin reproducir al cargar", () => {
+    const ref = { current: frame };
+    const { result } = renderHook(() => useStagePlayer(ref, videoItem, () => {}, true));
+    dispatch(playerComponentMessage);
+    dispatch({ type: "nexa-template-ready" });
+    expect(result.current.status).toBe("paused");
+    expect(send).toHaveBeenCalledWith({ type: "nexa-template-playback", playing: false }, origin);
+    expect(send).not.toHaveBeenCalledWith(
+      { type: "nexa-template-playback", playing: true },
+      origin,
+    );
+    act(() => result.current.playPause());
+    expect(result.current.status).toBe("playing");
+    expect(send).toHaveBeenLastCalledWith(
+      { type: "nexa-template-playback", playing: true },
+      origin,
+    );
   });
   it("pausa al terminar, usa duración reportada y reinicia desde cero", () => {
     const ref = { current: frame };

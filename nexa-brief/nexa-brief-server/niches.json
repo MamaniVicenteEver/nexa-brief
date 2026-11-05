@@ -542,7 +542,9 @@
       "template": {
         "enabled": true,
         "template_id": "lyrics-neon",
-        "locked_config_keys": ["layout"],
+        "locked_config_keys": [
+          "layout"
+        ],
         "default_typography": "default",
         "default_anchor_preference": "bottom",
         "required_config_keys": [
@@ -3159,10 +3161,13 @@
     "node_politics": {
       "display_name": "NodePolitics",
       "topic": "política",
-      "status": "empty",
+      "status": "active",
       "engine": "explainer_kit",
       "folder": "nodepolitics",
-      "designs": ["atlas", "imperio"],
+      "designs": [
+        "atlas",
+        "imperio"
+      ],
       "niches": [],
       "children": {},
       "strategy": {
@@ -3205,7 +3210,9 @@
       "status": "planned",
       "engine": "explainer_kit",
       "folder": "nodeeconomy",
-      "designs": ["dinero"],
+      "designs": [
+        "dinero"
+      ],
       "niches": [
         "economy_finance"
       ],
@@ -3240,6 +3247,49 @@
           "Sin MAYÚSCULAS sostenidas. Sin emojis en ningún texto (títulos, descripciones, captions).",
           "Toda cifra o fecha del texto tiene que estar en el guion.",
           "Nunca dar consejos de inversión personalizados."
+        ],
+        "language": "es-419",
+        "default_cadence": "alternate"
+      }
+    },
+    "node_atlas": {
+      "display_name": "NodeAtlas",
+      "topic": "geografía e historia territorial",
+      "status": "active",
+      "engine": "explainer_kit",
+      "folder": "nodeatlas",
+      "designs": [],
+      "shared_designs": [
+        "imperio"
+      ],
+      "niches": [],
+      "strategy": {
+        "audience": "Público hispanohablante que quiere entender la historia y la geopolítica mediante mapas.",
+        "angle": "Explicar cómo y por qué cambian los territorios, las fronteras y las rutas, con cronologías y mapas documentados.",
+        "tone": "Documental, claro y neutral; distinguir anexión, ocupación militar, mandato y esfera de influencia.",
+        "title_formulas": [
+          "Cómo {país} cambió el mapa de {región}",
+          "Hasta dónde llegó {imperio}",
+          "El avance que transformó {región}"
+        ],
+        "title_examples": [
+          "Japón: el avance que cambió el Pacífico"
+        ],
+        "topic_ideas": [
+          "La expansión del Imperio japonés",
+          "Fronteras y rutas comerciales históricas"
+        ],
+        "hashtags": [
+          "#NodeAtlas",
+          "#historia",
+          "#geopolitica"
+        ],
+        "rules": [
+          "Títulos verdaderos: la tensión debe estar respaldada por el guion.",
+          "Fechas y territorios con fuentes; distinguir fronteras históricas de las actuales.",
+          "Mapas aproximados identificados; una flecha de avance no implica control de todo un país.",
+          "Sin glorificación de la guerra ni adjetivos partidistas.",
+          "Sin emojis en los textos de publicación."
         ],
         "language": "es-419",
         "default_cadence": "alternate"

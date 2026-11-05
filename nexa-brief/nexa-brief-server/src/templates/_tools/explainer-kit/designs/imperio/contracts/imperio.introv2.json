@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.introv2",
+  "description": "GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Pregunta gancho ('\\n' = renglón).",
+      "default": null
+    },
+    "kicker": {
+      "type": "string",
+      "description": "Rótulo chico arriba.",
+      "default": ""
+    },
+    "stamp": {
+      "type": "string",
+      "description": "Respuesta (1–3 palabras) que sube con el sol (vacío = sin revelación).",
+      "default": ""
+    },
+    "stampAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de la revelación (acepta '@palabra').",
+      "default": 2.6
+    },
+    "typeAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo en que empieza a escribirse la pregunta.",
+      "default": 0.35
+    },
+    "cps": {
+      "type": "number",
+      "minimum": 4,
+      "description": "Caracteres por segundo.",
+      "default": 18
+    },
+    "country": {
+      "type": "string",
+      "description": "País foco del fondo atlas/archivo.",
+      "default": ""
+    },
+    "bg": {
+      "enum": [
+        "auto",
+        "atlas",
+        "archivo",
+        "papel",
+        "image",
+        "component",
+        "none"
+      ],
+      "description": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+      "default": "auto"
+    },
+    "src": {
+      "type": "string",
+      "description": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+      "default": ""
+    },
+    "focus": {
+      "type": "array",
+      "description": "Punto de interés de la foto [x,y] (0..1).",
+      "default": [
+        0.5,
+        0.5
+      ]
+    },
+    "use": {
+      "type": "string",
+      "description": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+      "default": ""
+    },
+    "useParams": {
+      "type": "object",
+      "description": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+      "default": {}
+    },
+    "dim": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Oscurecido del fondo foto/componente.",
+      "default": 0.35
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "$defs": {},
+  "examples": [
+    {
+      "text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?",
+      "kicker": "Pacífico · 1940",
+      "stamp": "PETRÓLEO",
+      "stampAt": 2.6,
+      "country": "Japan",
+      "bg": "archivo"
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

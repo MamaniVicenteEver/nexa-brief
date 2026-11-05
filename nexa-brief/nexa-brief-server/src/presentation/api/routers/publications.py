@@ -28,8 +28,12 @@ def _safe_record(record: PublicationRecord) -> dict[str, Any]:
     reel = value.get("technical", {}).get("reel")
     if isinstance(reel, dict):
         reel.pop("storage_key", None)
-    for slide in value.get("technical", {}).get("slides", []):
+    slides = [*value.get("technical", {}).get("slides", []),
+              *(slide for artwork in value.get("technical", {}).get("format_exports", {}).values() for slide in artwork.get("slides", [])),
+              *(slide for delivery in value.get("deliveries", []) for slide in delivery.get("slides", []))]
+    for slide in slides:
         slide.pop("storage_key", None)
+        slide["preview_url"] = f"/api/v1/image-posts/{record.publication_id}/assets/{slide['asset_id']}"
     for delivery in value.get("deliveries", []):
         error = delivery.get("last_error")
         if isinstance(error, dict):
@@ -153,7 +157,10 @@ async def get_asset_url(
         require_account_access(
             identity, record.editorial.category_id, delivery.platform, delivery.account_alias
         )
-    slide = next((item for item in record.technical.slides if item.asset_id == asset_id), None)
+    candidates = [*record.technical.slides,
+                  *(slide for artwork in record.technical.format_exports.values() for slide in artwork.slides),
+                  *(slide for delivery in record.deliveries for slide in delivery.slides)]
+    slide = next((item for item in candidates if item.asset_id == asset_id), None)
     asset = slide or (record.technical.reel if record.technical.reel and record.technical.reel.asset_id == asset_id else None)
     if asset is None:
         raise HTTPException(status_code=404, detail="Asset not found")

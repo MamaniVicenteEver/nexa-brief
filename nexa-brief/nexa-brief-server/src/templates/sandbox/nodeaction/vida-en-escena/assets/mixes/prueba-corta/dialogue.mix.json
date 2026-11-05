@@ -1,0 +1,130 @@
+{
+  "duration": 14.5,
+  "decoded_samples": 696000,
+  "lufs": -16.49,
+  "true_peak_db": -2.45,
+  "lines": [
+    {
+      "id": "L01",
+      "t0": 1.35,
+      "t1": 4.95,
+      "audio_t1": 4.95,
+      "trimIn": 0,
+      "trimOut": 3.6,
+      "clip": "audio/lines/L01.wav",
+      "last_word": 3.28,
+      "connected_activity_end": 3.47,
+      "voice_start": 0.37,
+      "voice_regions": [
+        [
+          0.37,
+          1.115
+        ],
+        [
+          1.325,
+          2.195
+        ],
+        [
+          2.35,
+          2.42
+        ],
+        [
+          2.545,
+          3.47
+        ]
+      ],
+      "leading_energy_before_voice_db": -67.5215532789672,
+      "tail_db_after_last_word": -52.45414056109968,
+      "boundary_jump": 0.00009532974218018353,
+      "final_syllable_rms_delta_db": -0.2625462778378491
+    },
+    {
+      "id": "L02",
+      "t0": 4.95,
+      "t1": 8.3,
+      "audio_t1": 8.3,
+      "trimIn": 0,
+      "trimOut": 3.35,
+      "clip": "audio/lines/L02.wav",
+      "last_word": 3.03,
+      "connected_activity_end": 3.35,
+      "voice_start": 0.19,
+      "voice_regions": [
+        [
+          0.19,
+          3.41
+        ]
+      ],
+      "leading_energy_before_voice_db": -63.31324555359213,
+      "tail_db_after_last_word": -240,
+      "boundary_jump": 0.0012711941380985081,
+      "final_syllable_rms_delta_db": -0.26168256087567343
+    },
+    {
+      "id": "L05",
+      "t0": 8.3,
+      "t1": 11.700000000000001,
+      "audio_t1": 11.700000000000001,
+      "trimIn": 0,
+      "trimOut": 3.4,
+      "clip": "audio/lines/L05.wav",
+      "last_word": 3.06,
+      "connected_activity_end": 3.4,
+      "voice_start": 0.285,
+      "voice_regions": [
+        [
+          0.285,
+          1.19
+        ],
+        [
+          1.285,
+          2.19
+        ],
+        [
+          2.33,
+          3.48
+        ]
+      ],
+      "leading_energy_before_voice_db": -65.72977975431753,
+      "tail_db_after_last_word": -240,
+      "boundary_jump": 0.04482907988131046,
+      "final_syllable_rms_delta_db": -0.26401613400179613
+    },
+    {
+      "id": "L06",
+      "t0": 11.700000000000001,
+      "t1": 14.5,
+      "audio_t1": 14.5,
+      "trimIn": 0,
+      "trimOut": 2.8,
+      "clip": "audio/lines/L06.wav",
+      "last_word": 2.23,
+      "connected_activity_end": 2.65,
+      "voice_start": 0.415,
+      "voice_regions": [
+        [
+          0.415,
+          2.665
+        ]
+      ],
+      "leading_energy_before_voice_db": -72.90433074741772,
+      "tail_db_after_last_word": -48.86422994856265,
+      "boundary_jump": 0.04482907988131046,
+      "final_syllable_rms_delta_db": -0.2642181579887435
+    }
+  ],
+  "start_clicks": 0,
+  "start_click_details": [],
+  "non_speech_loud_windows": 0,
+  "non_speech_loud_window_details": [],
+  "metrics_definition": {
+    "leading": "RMS integral entre inicio de línea y primera región de voz en WAV fuente; 5 ms a -48 dBFS, >=60 ms activos acumulados, huecos <80 ms; sin Whisper",
+    "start_clicks": "ventanas de 4 ms, paso 1 muestra (48 kHz); energía media >30 veces los 30 ms previos; RMS >-48 dBFS y DFT rectangular con >40% de energía estrictamente sobre 4 kHz; fuera de regiones de voz con >=60 ms activos acumulados, 5 ms a -48 dBFS y huecos <80 ms (WAV fuente; sin Whisper para el inicio); contadas en MP3 decodificado",
+    "tail": "máxima RMS de ventanas de 20 ms desde fin de actividad conectada hasta siguiente línea o fin de mezcla; campo histórico tail_db_after_last_word",
+    "activity": "bloques de 10 ms > -48 dBFS, huecos <150 ms; región que contiene we-100 ms o primera que empieza después de we; medida en WAV fuente",
+    "boundary": "máximo |Δmuestra| en ±5 ms de t0, actividad+40 ms, audio_t1 y t1, MP3 final decodificado",
+    "non_speech": "ventanas de 20 ms después de actividad conectada y antes de la siguiente línea (también antes de la primera), RMS > -35 dBFS; Whisper puede adelantarse a la voz real",
+    "ambient_included": false
+  },
+  "normalization": "EBU R128, dos pasadas; -16 LUFS ±0,5; true peak verificado en MP3 ≤ -1,5 dBTP; sin ambiente, RMS de sílaba final preservado ±0,5 dB con ganancia local suave"
+}

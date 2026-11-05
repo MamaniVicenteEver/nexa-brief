@@ -10,3 +10,7 @@
 ## Prototipos nuevos (plantillas desde una referencia)
 
 Si te piden crear una plantilla NUEVA a partir de una referencia (o te pasan una URL `/api/v1/agent/prototipo/...`), leé y seguí `nexa-brief-server/src/templates/sandbox/PROTOTIPO.md`: es el único punto de entrada.
+
+## Preparación por lotes desde chat
+
+Para varios videos o preparación programada, lee `nexa-brief-server/src/skills/explainer/batch/SKILL.md`. Usa la cola persistente con máximo cinco productores y sin grabación automática.

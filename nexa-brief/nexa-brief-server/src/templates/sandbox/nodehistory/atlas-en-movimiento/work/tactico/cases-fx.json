@@ -1,0 +1,510 @@
+[
+  {
+    "id": "fx.explosion",
+    "item": {
+      "id": "fx-explosion",
+      "type": "fx.explosion",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 2.8,
+      "size": 100,
+      "particles": 84,
+      "variant": "ground",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      1.0639999999999998,
+      2.548
+    ]
+  },
+  {
+    "id": "fx.impact",
+    "item": {
+      "id": "fx-impact",
+      "type": "fx.impact",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 1.6,
+      "size": 75,
+      "particles": 52,
+      "variant": "ground",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      0.6080000000000001,
+      1.4560000000000002
+    ]
+  },
+  {
+    "id": "fx.shockwave",
+    "item": {
+      "id": "fx-shockwave",
+      "type": "fx.shockwave",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 2.4,
+      "size": 110,
+      "particles": 1,
+      "variant": "ground",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      0.9119999999999999,
+      2.184
+    ]
+  },
+  {
+    "id": "fx.smoke",
+    "item": {
+      "id": "fx-smoke",
+      "type": "fx.smoke",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 8,
+      "size": 85,
+      "particles": 36,
+      "variant": "column",
+      "seed": 73,
+      "fade": 0,
+      "emitFor": 5
+    },
+    "times": [
+      0.12,
+      3.04,
+      7.28
+    ]
+  },
+  {
+    "id": "fx.fire",
+    "item": {
+      "id": "fx-fire",
+      "type": "fx.fire",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 8,
+      "size": 70,
+      "particles": 32,
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      3.04,
+      7.28
+    ]
+  },
+  {
+    "id": "fx.ring",
+    "item": {
+      "id": "fx-ring",
+      "type": "fx.ring",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 6,
+      "size": 100,
+      "particles": 1,
+      "variant": "sonar",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      2.2800000000000002,
+      5.46
+    ]
+  },
+  {
+    "id": "fx.flash",
+    "item": {
+      "id": "fx-flash",
+      "type": "fx.flash",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 0.45,
+      "size": 80,
+      "particles": 1,
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      0.171,
+      0.40950000000000003
+    ]
+  },
+  {
+    "id": "strike.missile",
+    "item": {
+      "id": "strike-missile",
+      "type": "strike.missile",
+      "from": [
+        51.5,
+        27
+      ],
+      "to": [
+        55,
+        28.5
+      ],
+      "t": 0,
+      "dur": 4,
+      "flightDur": 2.4,
+      "seed": 51,
+      "onHit": {
+        "fx": "fx.impact"
+      },
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      1.68,
+      2.8
+    ]
+  },
+  {
+    "id": "strike.salvo",
+    "item": {
+      "id": "strike-salvo",
+      "type": "strike.salvo",
+      "from": [
+        51.5,
+        27
+      ],
+      "to": [
+        55,
+        28.5
+      ],
+      "t": 0,
+      "dur": 5,
+      "flightDur": 2.4,
+      "seed": 51,
+      "count": 6,
+      "stagger": 0.2,
+      "spread": 0.24,
+      "onHit": {
+        "fx": "fx.impact"
+      },
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      1.68,
+      3.2
+    ]
+  },
+  {
+    "id": "strike.torpedo",
+    "item": {
+      "id": "strike-torpedo",
+      "type": "strike.torpedo",
+      "from": [
+        51.5,
+        27
+      ],
+      "to": [
+        55,
+        28.5
+      ],
+      "t": 0,
+      "dur": 5.6,
+      "flightDur": 4,
+      "seed": 51,
+      "onHit": {
+        "fx": "fx.impact",
+        "variant": "water"
+      },
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      2.8,
+      4.4
+    ]
+  },
+  {
+    "id": "strike.shell",
+    "item": {
+      "id": "strike-shell",
+      "type": "strike.shell",
+      "from": [
+        51.5,
+        27
+      ],
+      "to": [
+        55,
+        28.5
+      ],
+      "t": 0,
+      "dur": 2.15,
+      "flightDur": 0.55,
+      "seed": 51,
+      "onHit": {
+        "fx": "fx.impact"
+      },
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      0.385,
+      0.9500000000000001
+    ]
+  },
+  {
+    "id": "trail.contrail",
+    "item": {
+      "id": "trail-contrail",
+      "type": "trail.contrail",
+      "follow": "fx-demo-aircraft",
+      "path": {
+        "via": [
+          [
+            51.5,
+            27
+          ],
+          [
+            53,
+            28.6
+          ],
+          [
+            55,
+            28.5
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "t": 0,
+      "dur": 8,
+      "width": 4,
+      "life": 2.6,
+      "fade": 0
+    },
+    "times": [
+      0.3,
+      3.8,
+      7.6
+    ],
+    "support": [
+      {
+        "id": "fx-demo-aircraft",
+        "type": "debug.dot",
+        "r": 7,
+        "at": [
+          51.5,
+          27
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0,
+        "path": {
+          "via": [
+            [
+              51.5,
+              27
+            ],
+            [
+              53,
+              28.6
+            ],
+            [
+              55,
+              28.5
+            ]
+          ],
+          "t": 0,
+          "dur": 6,
+          "curve": "smooth"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fx.explosion-air",
+    "item": {
+      "id": "fx-explosion-air",
+      "type": "fx.explosion",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 2.8,
+      "size": 100,
+      "particles": 84,
+      "variant": "air",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      1.0639999999999998,
+      2.548
+    ]
+  },
+  {
+    "id": "fx.explosion-naval",
+    "item": {
+      "id": "fx-explosion-naval",
+      "type": "fx.explosion",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 2.8,
+      "size": 100,
+      "particles": 84,
+      "variant": "naval",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      1.0639999999999998,
+      2.548
+    ]
+  },
+  {
+    "id": "fx.impact-water",
+    "item": {
+      "id": "fx-impact-water",
+      "type": "fx.impact",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 1.6,
+      "size": 75,
+      "particles": 52,
+      "variant": "water",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      0.6080000000000001,
+      1.4560000000000002
+    ]
+  },
+  {
+    "id": "fx.shockwave-water",
+    "item": {
+      "id": "fx-shockwave-water",
+      "type": "fx.shockwave",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 2.4,
+      "size": 110,
+      "particles": 1,
+      "variant": "water",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      0.9119999999999999,
+      2.184
+    ]
+  },
+  {
+    "id": "fx.smoke-trail",
+    "item": {
+      "id": "fx-smoke-trail",
+      "type": "fx.smoke",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 8,
+      "size": 85,
+      "particles": 36,
+      "variant": "trail",
+      "seed": 73,
+      "fade": 0,
+      "emitFor": 5
+    },
+    "times": [
+      0.12,
+      3.04,
+      7.28
+    ]
+  },
+  {
+    "id": "fx.ring-target",
+    "item": {
+      "id": "fx-ring-target",
+      "type": "fx.ring",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 6,
+      "size": 100,
+      "particles": 1,
+      "variant": "target",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      2.2800000000000002,
+      5.46
+    ]
+  },
+  {
+    "id": "fx.ring-detection",
+    "item": {
+      "id": "fx-ring-detection",
+      "type": "fx.ring",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 6,
+      "size": 100,
+      "particles": 1,
+      "variant": "detection",
+      "seed": 73,
+      "fade": 0
+    },
+    "times": [
+      0.12,
+      2.2800000000000002,
+      5.46
+    ]
+  }
+]

@@ -1,0 +1,254 @@
+{
+  "video_id": "el-primer-vuelo-de-los-hermanos-wright-los-doce",
+  "design": "binary",
+  "design_name": "NODEHISTORY",
+  "channel": "NODEHISTORY",
+  "status": "listo",
+  "created": "2026-11-02",
+  "title": "DOCE SEGUNDOS",
+  "category": "node_history",
+  "topic": "El primer vuelo de los hermanos Wright: los doce segundos del 17 de diciembre de 1903",
+  "description": "Prueba de preparación paralela. Un momento decisivo, hechos verificados en Smithsonian o National Park Service y fotografía de dominio público. Dos minutos, sin grabación ni publicación.",
+  "production_id": "1fd1bdaffb2a",
+  "narrative_id": "narrative_documental_v1",
+  "narrative_label": "Documental",
+  "pipeline_type": "explainer_kit",
+  "kicker": "KILL DEVIL HILLS · 1903",
+  "language": "es-419",
+  "duration_seconds": 133.69,
+  "script": {
+    "segments": 10,
+    "words": 231,
+    "arc": [
+      {
+        "id": "s01",
+        "tone": "intriga",
+        "intensity": 0.7
+      },
+      {
+        "id": "s02",
+        "tone": "explicativo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s03",
+        "tone": "descubrimiento",
+        "intensity": 0.65
+      },
+      {
+        "id": "s04",
+        "tone": "tensión",
+        "intensity": 0.4
+      },
+      {
+        "id": "s05",
+        "tone": "tensión creciente",
+        "intensity": 0.75
+      },
+      {
+        "id": "s06",
+        "tone": "clímax",
+        "intensity": 0.9
+      },
+      {
+        "id": "s07",
+        "tone": "asombro",
+        "intensity": 1.0
+      },
+      {
+        "id": "s08",
+        "tone": "revelación",
+        "intensity": 0.6
+      },
+      {
+        "id": "s09",
+        "tone": "peso",
+        "intensity": 0.3
+      },
+      {
+        "id": "s10",
+        "tone": "reflexivo",
+        "intensity": 0.65
+      }
+    ]
+  },
+  "voice": {
+    "voice": "Charon",
+    "provenance": [
+      {
+        "part": 0,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Charon",
+        "dur": 117.44
+      }
+    ],
+    "wpm": 118,
+    "wer_aprox": 0.009,
+    "faltan": [
+      "kill"
+    ],
+    "sobran": [
+      "keel"
+    ]
+  },
+  "transcript": {
+    "words": 253,
+    "fake": false
+  },
+  "storyboard": {
+    "beats": 25,
+    "moments": 25,
+    "components": {
+      "binary.introv2": 3,
+      "binary.word": 12,
+      "binary.title": 1,
+      "binary.frame": 1,
+      "binary.timeline": 1,
+      "binary.counter": 5,
+      "binary.floor": 1,
+      "common.question": 1
+    },
+    "lyrics_moments": 0
+  },
+  "media": [
+    "primer-vuelo.jpg — Wright brothers first successful flight Kill Devil Hills North Carolina December 1903.jpg — John T. Daniels — Public domain — https://commons.wikimedia.org/wiki/File:Wright_brothers_first_successful_flight_Kill_Devil_Hills_North_Carolina_December_1903.jpg",
+    "planeador.jpg — Glider ready to take flight, Dayton Aviation Heritage National Historical Park, 1902. (0eb9cc8d080e4fe3b528980b9830ce8c).jpg — Unknown authorUnknown author — Public domain — https://commons.wikimedia.org/wiki/File:Glider_ready_to_take_flight,_Dayton_Aviation_Heritage_National_Historical_Park,_1902._(0eb9cc8d080e4fe3b528980b9830ce8c).jpg",
+    "flyer-danado.jpg — 1903 Wright Flyer damaged on ground after final flight 17 December 1903.jpg — Attributed to Wilbur Wright (1867–1912) and/or Orville Wright (1871–1948). — Public domain — https://commons.wikimedia.org/wiki/File:1903_Wright_Flyer_damaged_on_ground_after_final_flight_17_December_1903.jpg",
+    "planeador-vuelo.jpg — 1902 Wright glider fly.jpg — User Willy Logan on en.wikipedia — Public domain — https://commons.wikimedia.org/wiki/File:1902_Wright_glider_fly.jpg"
+  ],
+  "video_formats": [
+    {
+      "id": "reels",
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "output_filename": "render/el-primer-vuelo-de-los-hermanos-wright-los-doce-9x16.mp4"
+    },
+    {
+      "id": "youtube",
+      "aspect_ratio": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "output_filename": "render/el-primer-vuelo-de-los-hermanos-wright-los-doce-16x9.mp4"
+    }
+  ],
+  "files": {
+    "BRIEF.md": 974,
+    "PLAN.md": 10730,
+    "assets/config.json": 1085,
+    "assets/lyrics.json": 34953,
+    "assets/media/CREDITS.md": 1317,
+    "assets/media/flyer-danado.jpg": 245335,
+    "assets/media/planeador-vuelo.jpg": 337882,
+    "assets/media/planeador.jpg": 65479,
+    "assets/media/primer-vuelo.jpg": 101250,
+    "assets/script.json": 3513,
+    "assets/song-with-outro.mp3": 3209969,
+    "assets/song.mp3": 2993048,
+    "assets/storyboard.json": 7031,
+    "index.html": 874,
+    "manifest.json": 11379,
+    "publish.json": 8317,
+    "render/poster.jpg": 47157,
+    "usage.json": 16319
+  },
+  "updated": "2026-11-02T22:50:05",
+  "target_minutes": 2.0,
+  "quality_issues": [],
+  "media_review": [
+    {
+      "beat": 0,
+      "anchor": "",
+      "source": "/nodehistory/el-primer-vuelo-de-los-hermanos-wright-los-doce/assets/media/primer-vuelo.jpg",
+      "shows": "Flyer saliendo del riel, Orville tumbado y Wilbur al lado",
+      "query": "Wright brothers first flight December 17 1903 John Daniels",
+      "review": "Fotografía del primer despegue: Flyer sobre el riel y Wilbur a la derecha. Mantener visibles ambas alas."
+    },
+    {
+      "beat": 4,
+      "anchor": "Antes probaron planeadores",
+      "source": "assets/media/planeador-vuelo.jpg",
+      "shows": "Planeador Wright de 1902 en vuelo con piloto",
+      "query": "1902 Wright glider flight",
+      "review": "Planeador de dos alas en vuelo sobre arena, con piloto tumbado. Ensayo de 1902, anterior al Flyer con motor."
+    },
+    {
+      "beat": 13,
+      "anchor": "El Flyer abandona el riel",
+      "source": "assets/media/primer-vuelo.jpg",
+      "shows": "Flyer suspendido al salir del riel con Orville a los mandos y Wilbur junto al ala",
+      "query": "First flight Wright Flyer 1903 John Daniels",
+      "review": "Fotografía del primer vuelo: avión, riel y Wilbur junto al ala. Segundo y último uso del archivo."
+    },
+    {
+      "beat": 22,
+      "anchor": "Ese Flyer no volvió",
+      "source": "assets/media/flyer-danado.jpg",
+      "shows": "Flyer dañado en tierra tras el cuarto vuelo",
+      "query": "1903 Wright Flyer damaged on ground after final flight",
+      "review": "Aparato en tierra con elevador dañado. La foto documenta su estado tras el cuarto vuelo; no muestra el vuelco ni atribuye los daños visibles a la ráfaga posterior."
+    }
+  ],
+  "quality": {
+    "icon_share": 0.0,
+    "distinct_components": 8,
+    "custom_components_used": 0,
+    "media_per_min": 1.795,
+    "hedge_hits_hook": 0,
+    "lyric_cuts": 0,
+    "visual_support": {
+      "kinds": {
+        "miniatura": 3,
+        "cuadro": 1
+      },
+      "assets": 4,
+      "preferred_thirds": [
+        true,
+        true,
+        true
+      ]
+    },
+    "media_relevance": {
+      "policy_version": 4,
+      "required": true,
+      "media_beats": 4,
+      "reviewed": 4,
+      "generic_beats": 0,
+      "reused_sources": 0,
+      "status": "reviewed"
+    }
+  },
+  "chapters": [
+    {
+      "at": "0:00",
+      "title": "La fotografía del despegue"
+    },
+    {
+      "at": "1:03",
+      "title": "Doce segundos en el aire"
+    }
+  ],
+  "youtube_title": "Los doce segundos que cambiaron el vuelo",
+  "youtube_description": "Un hombre corre junto a una máquina que acaba de abandonar el suelo. La fotografía conserva un momento decisivo.\n\nEl 17 de diciembre de 1903, Orville Wright pilotó el Flyer cerca de Kitty Hawk. Su primer vuelo duró doce segundos y recorrió unos treinta y seis metros. Reconstruimos el instante con fuentes del Smithsonian y del National Park Service, y fotografías de dominio público.\n\nCAPÍTULOS\n0:00 La fotografía del despegue\n1:05 Doce segundos en el aire\n1:48 Años de pruebas para un primer paso\n\nUn vuelo breve podía contener años de pruebas. La máquina todavía era frágil; el avance ya estaba demostrado.\n\nGracias por quedarte. Esta comunidad la forma gente curiosa como tú, que prefiere entender a solo enterarse. Si quieres que sigamos, suscríbete: así la próxima historia te encuentra primero.\n\n¿Qué hace decisivo un primer paso?\n\nFUENTES\n- https://airandspace.si.edu/collection-objects/1903-wright-flyer/nasm_A19610048000\n- https://www.nps.gov/articles/wrightflyer.htm\n- https://www.nps.gov/places/3-four-powered-flights.htm\n- https://www.nps.gov/articles/wright-brothers-national-memorial-site-of-the-first-controlled-powered-flight-teaching-with-historic-places.htm\n\nIMÁGENES (Wikimedia Commons)\n- primer-vuelo.jpg — John T. Daniels — dominio público — Wikimedia Commons, fotografía del primer vuelo de 1903.\n- planeador-vuelo.jpg — fotografía histórica del planeador Wright de 1902, fotógrafo no identificado en la ficha; subida por Willy Logan — dominio público — https://commons.wikimedia.org/wiki/File:1902_Wright_glider_fly.jpg\n- flyer-danado.jpg — atribuido a Wilbur y/o Orville Wright — dominio público — Wikimedia Commons, aparato en tierra después del cuarto vuelo.\n\n#HermanosWright #Aviación #NodeHistory",
+  "youtube_tags": [
+    "hermanos Wright",
+    "primer vuelo",
+    "Orville Wright",
+    "Wilbur Wright",
+    "Wright Flyer",
+    "Kitty Hawk",
+    "Kill Devil Hills",
+    "historia de la aviación",
+    "1903",
+    "documental corto",
+    "NodeHistory",
+    "John Daniels"
+  ],
+  "tiktok_caption": "Doce segundos en el aire, años de pruebas detrás. ¿Qué hizo decisivo el primer vuelo de los Wright?",
+  "tiktok_hashtags": [
+    "#historia",
+    "#aviacion",
+    "#hermanoswright"
+  ],
+  "thumbnail_text": "DOCE SEGUNDOS"
+}

@@ -7,6 +7,7 @@ export interface ChannelStats {
   videoCount: number | null;
   followers: number | null;
   views: number | null;
+  likes?: number | null;
 }
 
 export interface VideoMetrics {

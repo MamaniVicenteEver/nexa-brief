@@ -1,0 +1,208 @@
+{
+  "name": "naval.carrier",
+  "family": "naval",
+  "description": "Portaaviones con cubierta angulada, aviones, escoltas coordinadas y operaciones aéreas. Úsala para representar flotas, navegación y cambios de estado de embarcaciones.",
+  "duration": 8.35,
+  "loop": true,
+  "layer": 40,
+  "states": [
+    "normal",
+    "detected",
+    "targeted",
+    "hit",
+    "burning",
+    "wrecked",
+    "sunk",
+    "flightops"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "kmLength": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Longitud geográfica en kilómetros para scaleMode geo."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "flag": {
+      "type": "string",
+      "default": "US",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "variant": {
+      "type": "enum",
+      "values": [
+        "supercarrier",
+        "stovl",
+        "hero",
+        "inventory"
+      ],
+      "default": "supercarrier",
+      "range": [
+        "supercarrier",
+        "stovl",
+        "hero",
+        "inventory"
+      ],
+      "description": "Variante visual del componente."
+    },
+    "wake": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la estela naval."
+    },
+    "deck": {
+      "type": "object",
+      "default": {
+        "aircraft": 12
+      },
+      "range": null,
+      "description": "Configuración de aviones y actividad de cubierta."
+    },
+    "escorts": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Formación y unidades de escolta."
+    },
+    "actions": {
+      "type": "array",
+      "default": [],
+      "range": null,
+      "description": "Acciones fechadas de despegue, ataque o recuperación."
+    },
+    "region": {
+      "type": "string",
+      "default": null,
+      "range": null,
+      "description": "Código o nombre de la región geográfica."
+    },
+    "count": {
+      "type": "number",
+      "default": 8,
+      "range": null,
+      "description": "Cantidad de elementos."
+    },
+    "inventoryScale": {
+      "type": "number",
+      "default": 0.42,
+      "range": null,
+      "description": "Escala de las unidades dentro del inventario."
+    }
+  },
+  "sfx": [
+    "naval-engine-low"
+  ],
+  "example": {
+    "id": "naval-carrier",
+    "t": 0,
+    "type": "naval.carrier",
+    "variant": "supercarrier",
+    "at": [
+      58.4,
+      24.9
+    ],
+    "heading": "auto",
+    "label": "PORTAAVIONES",
+    "dur": 8,
+    "path": {
+      "via": [
+        [
+          58.4,
+          24.9
+        ],
+        [
+          58.18,
+          25.04
+        ],
+        [
+          57.95,
+          25.06
+        ]
+      ],
+      "t": 0.5,
+      "dur": 6,
+      "curve": "smooth"
+    },
+    "deck": {
+      "aircraft": 12
+    },
+    "escorts": {
+      "formation": "diamond",
+      "units": [
+        "naval.warship:cg",
+        "naval.warship:ddg",
+        "naval.warship:ff"
+      ]
+    },
+    "states": [
+      {
+        "at": 3,
+        "state": "flightops"
+      },
+      {
+        "at": 5.5,
+        "state": "normal"
+      }
+    ]
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-air.json",
+    "work/tactico/items-naval.json",
+    "work/tactico/scene-unidades-movimiento.json",
+    "work/tactico/scene-unidades.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/naval.carrier.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

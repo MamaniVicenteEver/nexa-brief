@@ -1,0 +1,50 @@
+{
+  "name": "fx.clash",
+  "family": "fx",
+  "description": "Choque entre dos grupos: destello y ondas en el punto medio móvil. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+  "duration": 2.35,
+  "loop": true,
+  "layer": 60,
+  "states": [],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "groups": {
+      "type": "array",
+      "default": [],
+      "range": null,
+      "description": "Grupos y cantidades de la composición."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Multiplicador del tamaño visual."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "clash",
+    "t": 0,
+    "type": "fx.clash",
+    "at": [
+      48.5,
+      30.6
+    ],
+    "dur": 2,
+    "scale": 1.6
+  },
+  "usedBy": [
+    "work/tactico/items-units.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/fx.clash.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

@@ -1,0 +1,22 @@
+import sys,json,hashlib,base64,io,time,fcntl
+from pathlib import Path
+from PIL import Image
+from playwright.sync_api import sync_playwright
+root=Path.cwd();out=root/'work/texto'; lock=open('/tmp/atlas-tactico-chromium.lock','w');fcntl.flock(lock,fcntl.LOCK_EX)
+base='http://127.0.0.1:8000/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/'
+mode=sys.argv[1] if len(sys.argv)>1 else 'before'
+report={'mode':mode,'errors':[],'hashes':{},'protected':{p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in ['assets/scene.json','assets/mix.mp3','index.html']}}
+with sync_playwright() as p:
+ browser=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2'])
+ try:
+  page=browser.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1);page.on('pageerror',lambda e:report['errors'].append(str(e)))
+  page.goto(base+'index.html?headless=1',wait_until='domcontentloaded');page.wait_for_function('window.__promo && window.__tactico',timeout=60000);page.evaluate('async()=>{await document.fonts.ready; await __atlas.ready;await __promo.prepare?.()}')
+  report['browser']=browser.version
+  for entry in json.load(open(root/'work/escena/qa.json'))['seeks']:
+   t=entry['t'];page.evaluate('t=>__promo.seek(t)',t);data=page.evaluate('document.querySelector("#stage canvas").toDataURL()');im=Image.open(io.BytesIO(base64.b64decode(data.split(',')[1]))).convert('RGBA');report['hashes'][str(t)]=hashlib.sha256(im.tobytes()).hexdigest()
+   print(mode,t,report['hashes'][str(t)],flush=True)
+  report['historicalMatches']={str(e['t']):report['hashes'][str(e['t'])]==e['sha256'] for e in json.load(open(root/'work/escena/qa.json'))['seeks']}
+  if mode=='after':
+   before=json.load(open(out/'before.json'));report['unchanged']={t:sha==before['hashes'][t] for t,sha in report['hashes'].items()};report['protectedUnchanged']=report['protected']==before['protected']
+  (out/f'{mode}.json').write_text(json.dumps(report,indent=2)+'\n')
+ finally:browser.close()

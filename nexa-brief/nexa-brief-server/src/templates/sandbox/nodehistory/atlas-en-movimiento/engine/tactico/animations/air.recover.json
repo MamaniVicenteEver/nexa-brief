@@ -1,0 +1,104 @@
+{
+  "name": "air.recover",
+  "family": "air",
+  "description": "Agregado: aproximación y recuperación sobre la cubierta de un portaaviones móvil. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 50,
+  "states": [],
+  "params": {
+    "carrier": {
+      "type": "string",
+      "default": null,
+      "range": null,
+      "description": "Id u objeto del portaaviones usado como referencia."
+    },
+    "to": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Punto o unidad de destino."
+    },
+    "from": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Punto o unidad de origen."
+    },
+    "unit": {
+      "type": "string",
+      "default": "air.jet:fighter",
+      "range": null,
+      "description": "Tipo y variante de la unidad que se despliega."
+    },
+    "count": {
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "max": 20,
+      "range": {
+        "min": 1,
+        "max": 20
+      },
+      "description": "Cantidad de elementos."
+    },
+    "interval": {
+      "type": "number",
+      "default": 0.65,
+      "range": null,
+      "description": "Separación temporal entre elementos en segundos."
+    },
+    "deckDur": {
+      "type": "number",
+      "default": 0.75,
+      "range": null,
+      "description": "Tiempo que permanece en cubierta en segundos."
+    },
+    "flightDur": {
+      "type": "number",
+      "default": 3.8,
+      "range": null,
+      "description": "Duración del vuelo del proyectil en segundos."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Multiplicador del tamaño visual."
+    }
+  },
+  "sfx": [
+    "air-jet-pass"
+  ],
+  "example": {
+    "id": "air-recover",
+    "t": 0,
+    "type": "air.recover",
+    "carrier": "demo-carrier",
+    "at": "demo-carrier",
+    "to": [
+      57.6,
+      25.6
+    ],
+    "from": [
+      57.6,
+      25.6
+    ],
+    "count": 2,
+    "dur": 7,
+    "unit": "air.jet:attack",
+    "note": "Agregado: no aparece en las referencias. Requiere el item demo-carrier."
+  },
+  "usedBy": [
+    "work/tactico/items-air.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/air.recover.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/animations/naval.carrier.json",
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

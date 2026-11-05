@@ -1,0 +1,239 @@
+{
+  "name": "caption.transcript",
+  "family": "caption",
+  "description": "Transcripción configurable: blanco con borde negro, reducción predeterminada 35,6 %, +10 U en horizontal y enabled true/false; entrada original de 0,18 s. Úsala para acompañar la narración con texto.",
+  "duration": 14,
+  "loop": true,
+  "layer": 100,
+  "states": [],
+  "params": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Valor de enabled para la composición de caption.transcript."
+    },
+    "reductionPercent": {
+      "type": "number",
+      "default": 35.6,
+      "min": 0,
+      "max": 95,
+      "range": {
+        "min": 0,
+        "max": 95
+      },
+      "description": "Valor de reductionPercent para la composición de caption.transcript."
+    },
+    "yOffsetLandscape": {
+      "type": "number",
+      "default": 10,
+      "min": -200,
+      "max": 200,
+      "range": {
+        "min": -200,
+        "max": 200
+      },
+      "description": "Valor de yOffsetLandscape para la composición de caption.transcript."
+    },
+    "lyricsUrl": {
+      "type": "string",
+      "default": "assets/lyrics.json",
+      "range": null,
+      "description": "Ruta del JSON de palabras y tiempos de transcripción."
+    },
+    "color": {
+      "type": "string",
+      "default": "#ffffff",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "activeColor": {
+      "type": "string",
+      "default": "#ffffff",
+      "range": null,
+      "description": "Color de las palabras activas."
+    },
+    "inactiveColor": {
+      "type": "string",
+      "default": "#ffffff",
+      "range": null,
+      "description": "Color de las palabras pendientes."
+    },
+    "stroke": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa el trazo de contorno del texto."
+    },
+    "strokeColor": {
+      "type": "string",
+      "default": "#000000",
+      "range": null,
+      "description": "Color del contorno del texto."
+    },
+    "strokeWidth": {
+      "type": "number",
+      "default": null,
+      "min": 0,
+      "max": 100,
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "description": "Grosor del contorno en píxeles de diseño."
+    },
+    "font": {
+      "type": "string",
+      "default": "AtlasDisplay, sans-serif",
+      "range": null,
+      "description": "Familia tipográfica declarada para el texto."
+    },
+    "weight": {
+      "type": "number",
+      "default": 800,
+      "min": 100,
+      "max": 1000,
+      "range": {
+        "min": 100,
+        "max": 1000
+      },
+      "description": "Peso tipográfico del texto."
+    },
+    "size": {
+      "type": "number",
+      "default": 45,
+      "min": 1,
+      "max": 200,
+      "range": {
+        "min": 1,
+        "max": 200
+      },
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "upper": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Convierte el texto a mayúsculas."
+    },
+    "y": {
+      "type": "number",
+      "default": 0.9,
+      "min": 0,
+      "max": 1,
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "description": "Posición vertical normalizada."
+    },
+    "yLandscape": {
+      "type": "number",
+      "default": 0.915,
+      "min": 0,
+      "max": 1,
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "description": "Posición vertical normalizada para formato horizontal."
+    },
+    "maxWords": {
+      "type": "number",
+      "default": 3,
+      "min": 1,
+      "max": 30,
+      "range": {
+        "min": 1,
+        "max": 30
+      },
+      "description": "Máximo de palabras por grupo."
+    },
+    "gap": {
+      "type": "number",
+      "default": 0.45,
+      "min": 0,
+      "max": 10,
+      "range": {
+        "min": 0,
+        "max": 10
+      },
+      "description": "Separación entre elementos en píxeles de diseño."
+    },
+    "highlight": {
+      "type": "enum",
+      "values": [
+        "none",
+        "word",
+        "progress"
+      ],
+      "default": "none",
+      "range": [
+        "none",
+        "word",
+        "progress"
+      ],
+      "description": "Estilo de resaltado del texto activo."
+    },
+    "background": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Activa o configura el panel de fondo del rótulo."
+    },
+    "padding": {
+      "type": "number",
+      "default": 12,
+      "min": 0,
+      "max": 100,
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "description": "Margen interior en píxeles de diseño."
+    },
+    "radius": {
+      "type": "number",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "description": "Radio del efecto o de la formación en píxeles de diseño."
+    },
+    "timeOffset": {
+      "type": "number",
+      "default": 0,
+      "range": null,
+      "description": "Desplazamiento de la transcripción en segundos."
+    },
+    "fade": {
+      "type": "number",
+      "default": 0,
+      "range": null,
+      "description": "Duración de entrada y salida en segundos."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-transcript",
+    "t": 0,
+    "type": "caption.transcript",
+    "dur": 14,
+    "fade": 0,
+    "lyricsUrl": "assets/lyrics.json"
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/caption.transcript.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/lyrics.json"
+  ]
+}

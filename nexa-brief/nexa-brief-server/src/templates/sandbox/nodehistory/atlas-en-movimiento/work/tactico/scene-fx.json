@@ -1,0 +1,395 @@
+{
+  "format": "atlas-v1",
+  "duration": 190,
+  "planoLook": "tactico",
+  "lang": "es",
+  "places": {
+    "Golfo": [
+      54,
+      27
+    ]
+  },
+  "defs": {
+    "palette": {
+      "background": "#081e2c",
+      "shadow": "#081e2c",
+      "smoke": "#18262d",
+      "smokeLight": "#e9e3ba",
+      "fire": "#ed7334",
+      "flash": "#f6edb4",
+      "foam": "#f4f5ea",
+      "text": "#f4f5ea",
+      "missile": "#d1495b",
+      "danger": "#d1495b",
+      "water": "#42bfd0"
+    }
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        53.5,
+        27.7
+      ],
+      "zoom": 6.3,
+      "bearing": 0
+    }
+  ],
+  "items": [
+    {
+      "id": "demo-0-fx-explosion",
+      "type": "fx.explosion",
+      "at": [
+        54,
+        27
+      ],
+      "t": 0,
+      "dur": 2.8,
+      "size": 100,
+      "particles": 84,
+      "variant": "ground",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-1-fx-impact",
+      "type": "fx.impact",
+      "at": [
+        54,
+        27
+      ],
+      "t": 10,
+      "dur": 1.6,
+      "size": 75,
+      "particles": 52,
+      "variant": "ground",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-2-fx-shockwave",
+      "type": "fx.shockwave",
+      "at": [
+        54,
+        27
+      ],
+      "t": 20,
+      "dur": 2.4,
+      "size": 110,
+      "particles": 1,
+      "variant": "ground",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-3-fx-smoke",
+      "type": "fx.smoke",
+      "at": [
+        54,
+        27
+      ],
+      "t": 30,
+      "dur": 8,
+      "size": 85,
+      "particles": 36,
+      "variant": "column",
+      "seed": 73,
+      "fade": 0,
+      "emitFor": 5
+    },
+    {
+      "id": "demo-4-fx-fire",
+      "type": "fx.fire",
+      "at": [
+        54,
+        27
+      ],
+      "t": 40,
+      "dur": 8,
+      "size": 70,
+      "particles": 32,
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-5-fx-ring",
+      "type": "fx.ring",
+      "at": [
+        54,
+        27
+      ],
+      "t": 50,
+      "dur": 6,
+      "size": 100,
+      "particles": 1,
+      "variant": "sonar",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-6-fx-flash",
+      "type": "fx.flash",
+      "at": [
+        54,
+        27
+      ],
+      "t": 60,
+      "dur": 0.45,
+      "size": 80,
+      "particles": 1,
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-7-strike-missile",
+      "type": "strike.missile",
+      "from": [
+        51.5,
+        27
+      ],
+      "to": [
+        55,
+        28.5
+      ],
+      "t": 70,
+      "dur": 4,
+      "flightDur": 2.4,
+      "seed": 51,
+      "onHit": {
+        "fx": "fx.impact"
+      },
+      "fade": 0
+    },
+    {
+      "id": "demo-8-strike-salvo",
+      "type": "strike.salvo",
+      "from": [
+        51.5,
+        27
+      ],
+      "to": [
+        55,
+        28.5
+      ],
+      "t": 80,
+      "dur": 5,
+      "flightDur": 2.4,
+      "seed": 51,
+      "count": 6,
+      "stagger": 0.2,
+      "spread": 0.24,
+      "onHit": {
+        "fx": "fx.impact"
+      },
+      "fade": 0
+    },
+    {
+      "id": "demo-9-strike-torpedo",
+      "type": "strike.torpedo",
+      "from": [
+        51.5,
+        27
+      ],
+      "to": [
+        55,
+        28.5
+      ],
+      "t": 90,
+      "dur": 5.6,
+      "flightDur": 4,
+      "seed": 51,
+      "onHit": {
+        "fx": "fx.impact",
+        "variant": "water"
+      },
+      "fade": 0
+    },
+    {
+      "id": "demo-10-strike-shell",
+      "type": "strike.shell",
+      "from": [
+        51.5,
+        27
+      ],
+      "to": [
+        55,
+        28.5
+      ],
+      "t": 100,
+      "dur": 2.15,
+      "flightDur": 0.55,
+      "seed": 51,
+      "onHit": {
+        "fx": "fx.impact"
+      },
+      "fade": 0
+    },
+    {
+      "id": "fx-demo-aircraft-11",
+      "type": "debug.dot",
+      "r": 7,
+      "at": [
+        51.5,
+        27
+      ],
+      "t": 110,
+      "dur": 8,
+      "fade": 0,
+      "path": {
+        "via": [
+          [
+            51.5,
+            27
+          ],
+          [
+            53,
+            28.6
+          ],
+          [
+            55,
+            28.5
+          ]
+        ],
+        "t": 110,
+        "dur": 6,
+        "curve": "smooth"
+      }
+    },
+    {
+      "id": "demo-11-trail-contrail",
+      "type": "trail.contrail",
+      "follow": "fx-demo-aircraft-11",
+      "path": {
+        "via": [
+          [
+            51.5,
+            27
+          ],
+          [
+            53,
+            28.6
+          ],
+          [
+            55,
+            28.5
+          ]
+        ],
+        "t": 110,
+        "dur": 6,
+        "curve": "smooth"
+      },
+      "t": 110,
+      "dur": 8,
+      "width": 4,
+      "life": 2.6,
+      "fade": 0
+    },
+    {
+      "id": "demo-12-fx-explosion-air",
+      "type": "fx.explosion",
+      "at": [
+        54,
+        27
+      ],
+      "t": 120,
+      "dur": 2.8,
+      "size": 100,
+      "particles": 84,
+      "variant": "air",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-13-fx-explosion-naval",
+      "type": "fx.explosion",
+      "at": [
+        54,
+        27
+      ],
+      "t": 130,
+      "dur": 2.8,
+      "size": 100,
+      "particles": 84,
+      "variant": "naval",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-14-fx-impact-water",
+      "type": "fx.impact",
+      "at": [
+        54,
+        27
+      ],
+      "t": 140,
+      "dur": 1.6,
+      "size": 75,
+      "particles": 52,
+      "variant": "water",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-15-fx-shockwave-water",
+      "type": "fx.shockwave",
+      "at": [
+        54,
+        27
+      ],
+      "t": 150,
+      "dur": 2.4,
+      "size": 110,
+      "particles": 1,
+      "variant": "water",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-16-fx-smoke-trail",
+      "type": "fx.smoke",
+      "at": [
+        54,
+        27
+      ],
+      "t": 160,
+      "dur": 8,
+      "size": 85,
+      "particles": 36,
+      "variant": "trail",
+      "seed": 73,
+      "fade": 0,
+      "emitFor": 5
+    },
+    {
+      "id": "demo-17-fx-ring-target",
+      "type": "fx.ring",
+      "at": [
+        54,
+        27
+      ],
+      "t": 170,
+      "dur": 6,
+      "size": 100,
+      "particles": 1,
+      "variant": "target",
+      "seed": 73,
+      "fade": 0
+    },
+    {
+      "id": "demo-18-fx-ring-detection",
+      "type": "fx.ring",
+      "at": [
+        54,
+        27
+      ],
+      "t": 180,
+      "dur": 6,
+      "size": 100,
+      "particles": 1,
+      "variant": "detection",
+      "seed": 73,
+      "fade": 0
+    }
+  ],
+  "note": "Galería E: cada caso ocupa diez segundos. El punto debug.dot es el soporte de path para follow; no requiere sprites externos."
+}

@@ -163,6 +163,7 @@ class ChannelStatsResponse(BaseModel):
     video_count: int | None = None
     followers: int | None = None
     views: int | None = None
+    likes: int | None = None
 
 
 class ChannelSyncResponse(BaseModel):

@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "tipo": "instrucciones-para-ia",
+  "titulo": "Crear expresiones adicionales para un personaje",
+  "objetivo": "Crear poses adicionales por lotes, conservar la identidad y agregarlas al Showcase y al motor para usarlas desde JSON.",
+  "entrada": "Esta guía se lee junto a assets/avatar/crear-personaje.json y la identidad del personaje en assets/avatar/identities/<id>.json o assets/avatar/characters/<id>/identity.json. Todas las rutas son relativas a sandbox/nodeaction/cara-a-cara/.",
+  "formato": {
+    "predeterminado": {
+      "filas": 2,
+      "columnas": 2,
+      "expresiones_maximas": 4,
+      "tamano_minimo": "1024×1024 para celdas de al menos 512×512"
+    },
+    "alternativa": {
+      "filas": 4,
+      "columnas": 4,
+      "expresiones_maximas": 16,
+      "tamano_minimo": "2048×2048 para celdas de al menos 512×512",
+      "condicion": "Usar 4×4 solo si el generador entrega resolución y calidad suficientes. Si no, dividir en láminas 2×2."
+    },
+    "reglas": [
+      "No generar un archivo por expresión ni ampliar artificialmente una imagen borrosa para cumplir la resolución.",
+      "Comprobar nitidez, cuerpo entero, cara, manos, márgenes, identidad y consistencia. El mínimo geométrico no garantiza calidad.",
+      "Usar fondo blanco uniforme y recortes por pose; no reutilizar recortes de otra lámina."
+    ]
+  },
+  "prompt_estandar": "A partir de la referencia autorizada de <personaje>, crear una lámina de <filas>×<columnas> con <numero> poses de cuerpo entero. Mantener exactamente rostro, cabello, tono de piel, vestuario, proporciones y estilo de Cara a Cara en todas las celdas. Dibujar contornos oscuros, expresión clara y cuerpo íntegro con margen blanco. Fondo blanco puro; sin texto, marcos, accesorios ni figuras cortadas. Poses en orden de lectura: <lista-de-expresiones>. No inventar gestos no solicitados. Resolución final suficiente para que cada celda mida al menos 512×512; no estirar una imagen de menor calidad.",
+  "modelo_de_pose": {
+    "poses": {
+      "nombre-expresion": {
+        "src": "../../cara-a-cara/assets/avatar/characters/<id>/expresiones/<lamina>.png",
+        "crop": [
+          "x_normalizado",
+          "y_normalizado",
+          "ancho_normalizado",
+          "alto_normalizado"
+        ]
+      }
+    }
+  },
+  "notas_de_integracion": [
+    "En el perfil compartido _pizarra/profiles/leo.json, avatar.characters.<id>.poses acepta tanto el recorte original [x,y,w,h] como un objeto {src,crop} para una lámina nueva. src se resuelve respecto a la carpeta del perfil.",
+    "No reemplazar poses ni cambiar voz, identidad visual o configuración de otros personajes. Si el id de pose ya existe, usar otro id salvo solicitud explícita de reemplazo.",
+    "Cada crop se mide sobre la lámina real: [x/W,y/H,ancho/W,alto/H]; números finitos, valores dentro de 0..1, ancho y alto positivos, sin exceder el límite. Revisar visualmente cada recorte.",
+    "Después de registrar las poses, sincronizar el catálogo y sus miniaturas con node showcase/sync-character-assets.mjs. Cada pose se muestra como imagen estática, sin Play.",
+    "Para usar una pose en un video, referenciar su id en shots[].pose o avatar.timeline[].pose y comprobar el personaje en shots[].character."
+  ],
+  "validacion": [
+    "Revisar cada expresión individualmente y sus cuatro bordes; verificar tamaño, nitidez y que no incluya otra celda.",
+    "Probar cada tarjeta en Showcase y al menos una pose nueva en 9:16 con seek.",
+    "Confirmar que Leo, Lía y las poses anteriores siguen funcionando y que la imagen se carga por la API.",
+    "Si falta el proveedor o falla la validación, registrar el bloqueo: no declarar terminado ni inventar archivos."
+  ],
+  "registro_por_lotes": {
+    "carpeta": "assets/avatar/characters/<id>/",
+    "manifiesto": "Un archivo como manifest-expresiones-01.json en assets/avatar/characters/<id>/ con id, sheets [{file,rows,columns}] y poses {nombre:{sheet,crop}}. file es el nombre PNG de la carpeta y crop son cuatro números normalizados.",
+    "comandos": [
+      "node showcase/register-character.mjs <id> --check --extend --manifest manifest-expresiones-01.json",
+      "node showcase/register-character.mjs <id> --apply --extend --manifest manifest-expresiones-01.json"
+    ],
+    "reglas": [
+      "El personaje debe existir. Solo se añaden poses con ids nuevos; la herramienta rechaza nombres repetidos.",
+      "La herramienta valida resolución y geometría, registra las poses y genera miniaturas recortadas sin generar una imagen por expresión. La revisión visual sigue siendo obligatoria.",
+      "El manifiesto del lote contiene únicamente las poses y láminas nuevas; usar --manifest para conservar el manifiesto base."
+    ]
+  }
+}

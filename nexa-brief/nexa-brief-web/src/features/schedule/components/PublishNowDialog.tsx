@@ -32,6 +32,7 @@ const keyOf = (platform: ChannelPlatform, alias: string): TargetKey => `${platfo
  * original queda disponible en "Ver detalle" para diagnosticar. */
 function friendlyErrorKey(error: string | null): string {
   const e = (error ?? "").toLowerCase();
+  if (e.includes("tiktok business rejected") && /code 40002\b/.test(e)) return "tiktokParameters";
   // Antes que tokenExpired: es un 403 con token válido (restricción de la app).
   if (/unaudited_client|private_account/.test(e)) return "tiktokUnaudited";
   if (/\b401\b|expired|invalid_grant|reauth|access_token_invalid|unauthori/.test(e))
@@ -165,6 +166,8 @@ function PublishBody({
         <ul className="flex flex-col gap-2">
           {rows.map(({ key, entry, requestFailed, pending }) => {
             const [platform, alias] = key.split(":") as [ChannelPlatform, string];
+            const account = channelOf(key);
+            const accountName = account?.name || account?.handle || alias;
             const failed = requestFailed || entry?.status === "failed";
             const done = entry?.status === "published";
             return (
@@ -173,7 +176,7 @@ function PublishBody({
                   <PlatformIcon platform={platform} className="size-7 shrink-0" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[13px] font-semibold">
-                      {PLATFORM_META[platform].label} · {alias}
+                      {PLATFORM_META[platform].label} · {accountName}
                     </p>
                     <p
                       className={cn(

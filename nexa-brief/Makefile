@@ -114,6 +114,7 @@ template-posters: ## Capturas WebP de las intros renderizadas de NodeMotion
 
 docker-build: ## Construye las imágenes api + web
 	docker compose build
+	bash ./scripts/docker-clean-images.sh
 
 docker-up: connections-up
 docker-up: ## Levanta api + web en segundo plano

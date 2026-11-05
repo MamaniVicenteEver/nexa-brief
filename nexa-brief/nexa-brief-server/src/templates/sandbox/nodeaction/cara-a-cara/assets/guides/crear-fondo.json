@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "tipo": "guia-para-ia",
+  "titulo": "Crear un escenario o fondo",
+  "objetivo": "Orientar a una IA sobre imágenes de apoyo y fondos de Cara a Cara sin presentar como existente una función que el motor todavía no tiene.",
+  "estado_actual": {
+    "soportado": "Fotos y videos dentro de las tarjetas: se configuran en assets/overlays.json con subject, kind, src y tiempos; se adaptan a los modos duo y single.",
+    "no_soportado": "Un fondo nuevo detrás del presentador y de toda la composición no se activa actualmente escribiendo scene.background: comparacion.js pinta video.background del perfil.",
+    "nota_personajes": "Las láminas originales tienen fondo blanco; un fondo global ilustrado podría quedar oculto por los rectángulos blancos de los recortes. Se necesitaría un tratamiento compatible de transparencia y comprobar sus bordes."
+  },
+  "si_solo_se_necesita_medio_en_tarjeta": [
+    "Preparar una imagen o video con procedencia y ruta local.",
+    "Asignar el recurso en overlays.items con subject, kind photo o video, src, at y dur o until; si es video, especificar start si corresponde y conservarlo mudo.",
+    "Comprobar que la tarjeta conserva el recurso al cambiar de duo a single, y que pausa y seek funcionan."
+  ],
+  "si_se_necesita_fondo_completo": {
+    "condicion": "Solicitar y ejecutar cambios al motor solo si el usuario pide expresamente un fondo global; esta guía no habilita esa capacidad.",
+    "propuesta_no_implementada": [
+      "Definir un contrato opt-in por escena con valores y rutas locales validadas, manteniendo el fondo del perfil como valor por defecto.",
+      "Cargar imagen y recursos antes de dibujar y usar tiempos compatibles con Proto; si hay video, mantenerlo mudo y sincronizado con el audio.",
+      "Dibujar el fondo detrás de tarjetas, subtítulos y personaje, y contemplar transparencia correcta de sus recortes sin alterar la lámina aprobada.",
+      "Verificar compatibilidad con 9:16, contraste de texto, márgenes seguros, pausa, seek, controles, recursos ausentes y las escenas existentes.",
+      "Documentar los campos realmente implementados y probarlos antes de indicar que se pueden configurar."
+    ],
+    "advertencia": "No registrar campos inventados como funcionales, no reemplazar el perfil compartido por un fondo de un video y no prometer integración sin pruebas."
+  },
+  "criterios_visuales": [
+    "Un escenario sirve al tema sin tapar ni reducir la legibilidad de tarjetas, subtítulos o personaje.",
+    "Usar imágenes de procedencia conocida, con derechos y créditos correspondientes.",
+    "Conservar el estilo y la identidad aprobados salvo que el usuario solicite otra cosa."
+  ],
+  "resultado_esperado": [
+    "Para medios en tarjetas: recursos, overlays.json, créditos y pruebas de vista previa.",
+    "Para un fondo global: contrato e implementación opt-in realmente probados, o explicar claramente que queda pendiente."
+  ]
+}

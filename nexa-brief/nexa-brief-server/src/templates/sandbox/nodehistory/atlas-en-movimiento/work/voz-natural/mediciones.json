@@ -1,0 +1,2700 @@
+{
+  "api_calls": 0,
+  "arguments": {
+    "pitch_suave": 0,
+    "pitch_media": -1.2,
+    "saturation_suave": 0.08,
+    "saturation_media": 0.16
+  },
+  "sample_words": 27,
+  "source_hashes": {
+    "work/voz/muestras/malvinas-algenib.mp3": "c8b24f65db51e17c25166b4ffa6292ecab86fd9ff59393b10ed5a25374cfafd5",
+    "work/voz/muestras/malvinas-algenib-fx.mp3": "f23273a30989d8c816f89b4aca1fa784344992bfe5800b304e2f508ab4fce7e7",
+    "work/voz/muestras/malvinas-orus.mp3": "8f2f826cb5a7a99de5494217f42a1c3f9696d74476b1b340c404e2ea7e38c195",
+    "work/voz/muestras/malvinas-orus-fx.mp3": "c61676141f25aac9e6ad15f94504a799ed0178e4c7ee186f30264848e2ea0985",
+    "work/voz/muestras/malvinas-algenib.wav": "42d785d1971c9be1f49e3850822d63485ab0c68c143a87e81208aba89e3107b3",
+    "work/voz/muestras/malvinas-orus.wav": "7dc73630009c661795da50bb658a50a907feb1dd7ab94c58a42782cfec2a44f1"
+  },
+  "originals": [
+    {
+      "file": "work/voz/muestras/malvinas-algenib.mp3",
+      "sha256": "c8b24f65db51e17c25166b4ffa6292ecab86fd9ff59393b10ed5a25374cfafd5",
+      "duration_s": 15.68,
+      "words": 27,
+      "ppm_file": 103.31632653061224,
+      "ppm_narration": 107.38525520901347,
+      "activity_start": 0.33093,
+      "activity_end": 15.4168,
+      "pauses": [
+        {
+          "start": 1.79542,
+          "end": 2.30612,
+          "seconds": 0.5106999999999999
+        },
+        {
+          "start": 5.24113,
+          "end": 6.12612,
+          "seconds": 0.8849900000000002
+        },
+        {
+          "start": 7.52091,
+          "end": 8.1556,
+          "seconds": 0.63469
+        },
+        {
+          "start": 10.0031,
+          "end": 10.5776,
+          "seconds": 0.5745000000000005
+        },
+        {
+          "start": 12.6502,
+          "end": 12.9411,
+          "seconds": 0.2909000000000006
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.5745000000000005,
+        "min": 0.2909000000000006,
+        "max": 0.8849900000000002,
+        "n": 5
+      },
+      "lufs": -17.12,
+      "true_peak_dbtp": -1.71,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 92.07724297294868,
+        "min": 60.90032276127414,
+        "max": 394.3709325056693,
+        "n": 604
+      },
+      "f0_p10_p90_hz": [
+        72.15491804947395,
+        116.59695530287202
+      ],
+      "pitch_disagreement_gt9st_percent": 4.6875,
+      "context_pauses": [
+        {
+          "start": 1.79542,
+          "end": 2.30612,
+          "seconds": 0.5106999999999999,
+          "after": "Ascensión,",
+          "before": "un",
+          "punctuation": "coma",
+          "asr_previous_end": 1.42,
+          "asr_next_start": 1.46,
+          "offset_from_asr_end_s": 0.3754200000000001,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 5.24113,
+          "end": 6.12612,
+          "seconds": 0.8849900000000002,
+          "after": "Stanley.",
+          "before": "Una",
+          "punctuation": "punto",
+          "asr_previous_end": 4.88,
+          "asr_next_start": 5.42,
+          "offset_from_asr_end_s": 0.3611300000000002,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 7.52091,
+          "end": 8.1556,
+          "seconds": 0.63469,
+          "after": "pista,",
+          "before": "sin",
+          "punctuation": "coma",
+          "asr_previous_end": 7.26,
+          "asr_next_start": 7.38,
+          "offset_from_asr_end_s": 0.26091,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 10.0031,
+          "end": 10.5776,
+          "seconds": 0.5745000000000005,
+          "after": "completo.",
+          "before": "Super",
+          "punctuation": "punto",
+          "asr_previous_end": 9.72,
+          "asr_next_start": 10.06,
+          "offset_from_asr_end_s": 0.28309999999999924,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 12.6502,
+          "end": 12.9411,
+          "seconds": 0.2909000000000006,
+          "after": "alcanzan",
+          "before": "",
+          "punctuation": "sin puntuación",
+          "alignment": "dentro del intervalo ASR; posible vacilación o consonante débil"
+        }
+      ],
+      "asr_gaps": [
+        {
+          "after": "Stanley.",
+          "before": "Una",
+          "start": 4.88,
+          "end": 5.42,
+          "seconds": 0.54
+        },
+        {
+          "after": "pista,",
+          "before": "sin",
+          "start": 7.26,
+          "end": 7.38,
+          "seconds": 0.12
+        },
+        {
+          "after": "completo.",
+          "before": "Super",
+          "start": 9.72,
+          "end": 10.06,
+          "seconds": 0.34
+        }
+      ]
+    },
+    {
+      "file": "work/voz/muestras/malvinas-algenib-fx.mp3",
+      "sha256": "f23273a30989d8c816f89b4aca1fa784344992bfe5800b304e2f508ab4fce7e7",
+      "duration_s": 15.66,
+      "words": 27,
+      "ppm_file": 103.44827586206897,
+      "ppm_narration": 107.34549305971629,
+      "activity_start": 0.330542,
+      "activity_end": 15.422,
+      "pauses": [
+        {
+          "start": 1.798,
+          "end": 2.306,
+          "seconds": 0.508
+        },
+        {
+          "start": 5.24231,
+          "end": 6.12598,
+          "seconds": 0.8836700000000004
+        },
+        {
+          "start": 7.53435,
+          "end": 8.15548,
+          "seconds": 0.6211300000000008
+        },
+        {
+          "start": 10.0038,
+          "end": 10.5755,
+          "seconds": 0.5716999999999999
+        },
+        {
+          "start": 12.655,
+          "end": 12.941,
+          "seconds": 0.28600000000000136
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.5716999999999999,
+        "min": 0.28600000000000136,
+        "max": 0.8836700000000004,
+        "n": 5
+      },
+      "lufs": -16.35,
+      "true_peak_dbtp": -1.76,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 91.90176525691643,
+        "min": 61.05687996927426,
+        "max": 394.1507655602016,
+        "n": 606
+      },
+      "f0_p10_p90_hz": [
+        72.61453316194306,
+        117.33764680712389
+      ],
+      "pitch_disagreement_gt9st_percent": 10.271317829457365,
+      "context_pauses": [
+        {
+          "start": 1.798,
+          "end": 2.306,
+          "seconds": 0.508,
+          "after": "Ascensión,",
+          "before": "un",
+          "punctuation": "coma",
+          "asr_previous_end": 1.42,
+          "asr_next_start": 1.46,
+          "offset_from_asr_end_s": 0.3780000000000001,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 5.24231,
+          "end": 6.12598,
+          "seconds": 0.8836700000000004,
+          "after": "Stanley.",
+          "before": "Una",
+          "punctuation": "punto",
+          "asr_previous_end": 4.88,
+          "asr_next_start": 5.42,
+          "offset_from_asr_end_s": 0.3623099999999999,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 7.53435,
+          "end": 8.15548,
+          "seconds": 0.6211300000000008,
+          "after": "pista,",
+          "before": "sin",
+          "punctuation": "coma",
+          "asr_previous_end": 7.26,
+          "asr_next_start": 7.38,
+          "offset_from_asr_end_s": 0.2743500000000001,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 10.0038,
+          "end": 10.5755,
+          "seconds": 0.5716999999999999,
+          "after": "completo.",
+          "before": "Super",
+          "punctuation": "punto",
+          "asr_previous_end": 9.72,
+          "asr_next_start": 10.06,
+          "offset_from_asr_end_s": 0.2837999999999994,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 12.655,
+          "end": 12.941,
+          "seconds": 0.28600000000000136,
+          "after": "alcanzan",
+          "before": "",
+          "punctuation": "sin puntuación",
+          "alignment": "dentro del intervalo ASR; posible vacilación o consonante débil"
+        }
+      ],
+      "asr_gaps": [
+        {
+          "after": "Stanley.",
+          "before": "Una",
+          "start": 4.88,
+          "end": 5.42,
+          "seconds": 0.54
+        },
+        {
+          "after": "pista,",
+          "before": "sin",
+          "start": 7.26,
+          "end": 7.38,
+          "seconds": 0.12
+        },
+        {
+          "after": "completo.",
+          "before": "Super",
+          "start": 9.72,
+          "end": 10.06,
+          "seconds": 0.34
+        }
+      ]
+    },
+    {
+      "file": "work/voz/muestras/malvinas-orus.mp3",
+      "sha256": "8f2f826cb5a7a99de5494217f42a1c3f9696d74476b1b340c404e2ea7e38c195",
+      "duration_s": 14.44,
+      "words": 27,
+      "ppm_file": 112.18836565096953,
+      "ppm_narration": 116.10097660271485,
+      "activity_start": 0.173129,
+      "activity_end": 14.1265,
+      "pauses": [
+        {
+          "start": 1.67084,
+          "end": 1.81726,
+          "seconds": 0.14642
+        },
+        {
+          "start": 4.49068,
+          "end": 5.43732,
+          "seconds": 0.9466399999999995
+        },
+        {
+          "start": 7.12995,
+          "end": 7.57172,
+          "seconds": 0.44177
+        },
+        {
+          "start": 9.43361,
+          "end": 10.0078,
+          "seconds": 0.5741899999999998
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.5079799999999999,
+        "min": 0.14642,
+        "max": 0.9466399999999995,
+        "n": 4
+      },
+      "lufs": -17.05,
+      "true_peak_dbtp": -1.75,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 115.12966059828672,
+        "min": 60.159116908011114,
+        "max": 213.20373990971672,
+        "n": 701
+      },
+      "f0_p10_p90_hz": [
+        83.00933567243938,
+        161.67570672299982
+      ],
+      "pitch_disagreement_gt9st_percent": 1.0294117647058822,
+      "context_pauses": [
+        {
+          "start": 1.67084,
+          "end": 1.81726,
+          "seconds": 0.14642,
+          "after": "Ascensión,",
+          "before": "un",
+          "punctuation": "coma",
+          "asr_previous_end": 1.46,
+          "asr_next_start": 1.5,
+          "offset_from_asr_end_s": 0.21084000000000014,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 4.49068,
+          "end": 5.43732,
+          "seconds": 0.9466399999999995,
+          "after": "Stanley.",
+          "before": "Una",
+          "punctuation": "punto",
+          "asr_previous_end": 4.14,
+          "asr_next_start": 4.64,
+          "offset_from_asr_end_s": 0.35068000000000055,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 7.12995,
+          "end": 7.57172,
+          "seconds": 0.44177,
+          "after": "pista,",
+          "before": "sin",
+          "punctuation": "coma",
+          "asr_previous_end": 6.78,
+          "asr_next_start": 6.98,
+          "offset_from_asr_end_s": 0.34994999999999976,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 9.43361,
+          "end": 10.0078,
+          "seconds": 0.5741899999999998,
+          "after": "completo.",
+          "before": "Super",
+          "punctuation": "punto",
+          "asr_previous_end": 9.08,
+          "asr_next_start": 9.6,
+          "offset_from_asr_end_s": 0.35360999999999976,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        }
+      ],
+      "asr_gaps": [
+        {
+          "after": "Stanley.",
+          "before": "Una",
+          "start": 4.14,
+          "end": 4.64,
+          "seconds": 0.5
+        },
+        {
+          "after": "pista,",
+          "before": "sin",
+          "start": 6.78,
+          "end": 6.98,
+          "seconds": 0.2
+        },
+        {
+          "after": "completo.",
+          "before": "Super",
+          "start": 9.08,
+          "end": 9.6,
+          "seconds": 0.52
+        }
+      ]
+    },
+    {
+      "file": "work/voz/muestras/malvinas-orus-fx.mp3",
+      "sha256": "c61676141f25aac9e6ad15f94504a799ed0178e4c7ee186f30264848e2ea0985",
+      "duration_s": 14.38,
+      "words": 27,
+      "ppm_file": 112.65646731571627,
+      "ppm_narration": 116.0997285201348,
+      "activity_start": 0.172979,
+      "activity_end": 14.1265,
+      "pauses": [
+        {
+          "start": 1.67085,
+          "end": 1.80354,
+          "seconds": 0.13268999999999997
+        },
+        {
+          "start": 4.49071,
+          "end": 5.43746,
+          "seconds": 0.9467499999999998
+        },
+        {
+          "start": 7.13062,
+          "end": 7.57167,
+          "seconds": 0.4410499999999997
+        },
+        {
+          "start": 9.43367,
+          "end": 10.0078,
+          "seconds": 0.5741300000000003
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.50759,
+        "min": 0.13268999999999997,
+        "max": 0.9467499999999998,
+        "n": 4
+      },
+      "lufs": -16.43,
+      "true_peak_dbtp": -1.75,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 114.84839418072711,
+        "min": 68.60876343532757,
+        "max": 379.253221474544,
+        "n": 712
+      },
+      "f0_p10_p90_hz": [
+        82.80311225787648,
+        162.19898163545864
+      ],
+      "pitch_disagreement_gt9st_percent": 5.202312138728324,
+      "context_pauses": [
+        {
+          "start": 1.67085,
+          "end": 1.80354,
+          "seconds": 0.13268999999999997,
+          "after": "Ascensión,",
+          "before": "un",
+          "punctuation": "coma",
+          "asr_previous_end": 1.46,
+          "asr_next_start": 1.5,
+          "offset_from_asr_end_s": 0.21084999999999998,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 4.49071,
+          "end": 5.43746,
+          "seconds": 0.9467499999999998,
+          "after": "Stanley.",
+          "before": "Una",
+          "punctuation": "punto",
+          "asr_previous_end": 4.14,
+          "asr_next_start": 4.64,
+          "offset_from_asr_end_s": 0.3507100000000003,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 7.13062,
+          "end": 7.57167,
+          "seconds": 0.4410499999999997,
+          "after": "pista,",
+          "before": "sin",
+          "punctuation": "coma",
+          "asr_previous_end": 6.78,
+          "asr_next_start": 6.98,
+          "offset_from_asr_end_s": 0.35062000000000015,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        },
+        {
+          "start": 9.43367,
+          "end": 10.0078,
+          "seconds": 0.5741300000000003,
+          "after": "completo.",
+          "before": "Super",
+          "punctuation": "punto",
+          "asr_previous_end": 9.08,
+          "asr_next_start": 9.6,
+          "offset_from_asr_end_s": 0.35366999999999926,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética"
+        }
+      ],
+      "asr_gaps": [
+        {
+          "after": "Stanley.",
+          "before": "Una",
+          "start": 4.14,
+          "end": 4.64,
+          "seconds": 0.5
+        },
+        {
+          "after": "pista,",
+          "before": "sin",
+          "start": 6.78,
+          "end": 6.98,
+          "seconds": 0.2
+        },
+        {
+          "after": "completo.",
+          "before": "Super",
+          "start": 9.08,
+          "end": 9.6,
+          "seconds": 0.52
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "file": "work/voz-natural/algenib-pausas-originales-madurez-suave.mp3",
+      "sha256": "c94f309ae1960f3283cb32183f81172acd09dfba1100c6146518590df7164a0b",
+      "duration_s": 15.68,
+      "words": 27,
+      "ppm_file": 103.31632653061224,
+      "ppm_narration": 107.34590561511854,
+      "activity_start": 0.3305,
+      "activity_end": 15.4219,
+      "pauses": [
+        {
+          "start": 1.80535,
+          "end": 2.30598,
+          "seconds": 0.5006299999999999
+        },
+        {
+          "start": 5.2424,
+          "end": 6.12594,
+          "seconds": 0.88354
+        },
+        {
+          "start": 7.53431,
+          "end": 8.15544,
+          "seconds": 0.6211300000000008
+        },
+        {
+          "start": 10.0031,
+          "end": 10.2566,
+          "seconds": 0.2535000000000007
+        },
+        {
+          "start": 10.3711,
+          "end": 10.5754,
+          "seconds": 0.20429999999999993
+        },
+        {
+          "start": 12.655,
+          "end": 12.9409,
+          "seconds": 0.2858999999999998
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.39326499999999986,
+        "min": 0.20429999999999993,
+        "max": 0.88354,
+        "n": 6
+      },
+      "lufs": -16.0,
+      "true_peak_dbtp": -1.81,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 92.04462791318515,
+        "min": 60.91484219523137,
+        "max": 394.36641067592575,
+        "n": 605
+      },
+      "f0_p10_p90_hz": [
+        72.18203111814208,
+        116.5715956038242
+      ],
+      "pitch_disagreement_gt9st_percent": 3.557312252964427,
+      "voice": "algenib",
+      "pause_mode": "originales",
+      "maturity": "suave"
+    },
+    {
+      "file": "work/voz-natural/algenib-pausas-originales-madurez-media.mp3",
+      "sha256": "f8a37cddb83d28ee89ccfaf872d805b4193514c39d0a1bc87dafac4d0e07ed50",
+      "duration_s": 15.68,
+      "words": 27,
+      "ppm_file": 103.31632653061224,
+      "ppm_narration": 107.36217562954165,
+      "activity_start": 0.334687,
+      "activity_end": 15.4238,
+      "pauses": [
+        {
+          "start": 1.9369,
+          "end": 2.30535,
+          "seconds": 0.3684499999999997
+        },
+        {
+          "start": 5.22879,
+          "end": 6.12725,
+          "seconds": 0.89846
+        },
+        {
+          "start": 7.53223,
+          "end": 8.15342,
+          "seconds": 0.6211900000000004
+        },
+        {
+          "start": 10.0089,
+          "end": 10.2591,
+          "seconds": 0.25019999999999953
+        },
+        {
+          "start": 10.3711,
+          "end": 10.5734,
+          "seconds": 0.20229999999999926
+        },
+        {
+          "start": 12.6602,
+          "end": 12.9422,
+          "seconds": 0.28200000000000003
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.3252249999999999,
+        "min": 0.20229999999999926,
+        "max": 0.89846,
+        "n": 6
+      },
+      "lufs": -15.99,
+      "true_peak_dbtp": -1.82,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 87.58744117194729,
+        "min": 59.92731201337729,
+        "max": 391.9384430139449,
+        "n": 593
+      },
+      "f0_p10_p90_hz": [
+        68.26244875599954,
+        111.70162905187546
+      ],
+      "pitch_disagreement_gt9st_percent": 6.170212765957447,
+      "voice": "algenib",
+      "pause_mode": "originales",
+      "maturity": "media"
+    },
+    {
+      "file": "work/voz-natural/algenib-pausas-humanizadas-madurez-suave.mp3",
+      "sha256": "dfe0926091e3a23debed36cb366c64db89ac1ad3c83f98669ab38a6d0a169c38",
+      "duration_s": 13.98225,
+      "words": 27,
+      "ppm_file": 115.8611811403744,
+      "ppm_narration": 120.93974662376542,
+      "activity_start": 0.3305,
+      "activity_end": 13.7256,
+      "pauses": [
+        {
+          "start": 1.80535,
+          "end": 1.93965,
+          "seconds": 0.13430000000000009
+        },
+        {
+          "start": 4.87606,
+          "end": 5.10792,
+          "seconds": 0.23186000000000018
+        },
+        {
+          "start": 6.51333,
+          "end": 6.64456,
+          "seconds": 0.1312300000000004
+        },
+        {
+          "start": 8.4929,
+          "end": 8.73156,
+          "seconds": 0.23865999999999943
+        },
+        {
+          "start": 8.84612,
+          "end": 9.03627,
+          "seconds": 0.19014999999999915
+        },
+        {
+          "start": 11.1158,
+          "end": 11.2432,
+          "seconds": 0.12739999999999974
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.16222499999999962,
+        "min": 0.12739999999999974,
+        "max": 0.23865999999999943,
+        "n": 6
+      },
+      "lufs": -16.0,
+      "true_peak_dbtp": -1.82,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 92.12959050274269,
+        "min": 60.80483885897835,
+        "max": 394.2167239898213,
+        "n": 601
+      },
+      "f0_p10_p90_hz": [
+        72.47963662715604,
+        117.50925333983133
+      ],
+      "pitch_disagreement_gt9st_percent": 11.132437619961612,
+      "voice": "algenib",
+      "pause_mode": "humanizadas",
+      "maturity": "suave"
+    },
+    {
+      "file": "work/voz-natural/algenib-pausas-humanizadas-madurez-media.mp3",
+      "sha256": "436307d1f16583c246eb10569ba2fecc312abda63be8a82357dc816368f7a3f5",
+      "duration_s": 13.98225,
+      "words": 27,
+      "ppm_file": 115.8611811403744,
+      "ppm_narration": 120.9145077704738,
+      "activity_start": 0.332104,
+      "activity_end": 13.73,
+      "pauses": [
+        {
+          "start": 1.79779,
+          "end": 1.93892,
+          "seconds": 0.14112999999999998
+        },
+        {
+          "start": 4.85225,
+          "end": 5.10567,
+          "seconds": 0.2534200000000002
+        },
+        {
+          "start": 6.48929,
+          "end": 6.6375,
+          "seconds": 0.14821000000000062
+        },
+        {
+          "start": 8.50081,
+          "end": 8.73252,
+          "seconds": 0.23170999999999964
+        },
+        {
+          "start": 8.84721,
+          "end": 9.03719,
+          "seconds": 0.18998000000000026
+        },
+        {
+          "start": 11.1209,
+          "end": 11.2435,
+          "seconds": 0.12259999999999849
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.16909500000000044,
+        "min": 0.12259999999999849,
+        "max": 0.2534200000000002,
+        "n": 6
+      },
+      "lufs": -16.0,
+      "true_peak_dbtp": -1.82,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 88.20111534133704,
+        "min": 61.83103114418612,
+        "max": 396.4628097554129,
+        "n": 605
+      },
+      "f0_p10_p90_hz": [
+        68.99952799741821,
+        112.61716849572323
+      ],
+      "pitch_disagreement_gt9st_percent": 14.60446247464503,
+      "voice": "algenib",
+      "pause_mode": "humanizadas",
+      "maturity": "media"
+    },
+    {
+      "file": "work/voz-natural/orus-pausas-originales-madurez-suave.mp3",
+      "sha256": "ab016296f268175dd4a6c297fdfa74c31b3dfe158246f2f38a2ce7d8750276d1",
+      "duration_s": 14.44,
+      "words": 27,
+      "ppm_file": 112.18836565096953,
+      "ppm_narration": 116.07657729438968,
+      "activity_start": 0.172896,
+      "activity_end": 14.1292,
+      "pauses": [
+        {
+          "start": 4.49069,
+          "end": 5.43698,
+          "seconds": 0.9462900000000003
+        },
+        {
+          "start": 7.22225,
+          "end": 7.57144,
+          "seconds": 0.3491900000000001
+        },
+        {
+          "start": 9.43365,
+          "end": 9.68248,
+          "seconds": 0.24882999999999988
+        },
+        {
+          "start": 9.79706,
+          "end": 10.002,
+          "seconds": 0.20494000000000057
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.29901,
+        "min": 0.20494000000000057,
+        "max": 0.9462900000000003,
+        "n": 4
+      },
+      "lufs": -16.0,
+      "true_peak_dbtp": -1.73,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 114.63522112591883,
+        "min": 66.10730894839486,
+        "max": 213.06334037066495,
+        "n": 709
+      },
+      "f0_p10_p90_hz": [
+        82.39546520412296,
+        161.6570411183623
+      ],
+      "pitch_disagreement_gt9st_percent": 0.7309941520467835,
+      "voice": "orus",
+      "pause_mode": "originales",
+      "maturity": "suave"
+    },
+    {
+      "file": "work/voz-natural/orus-pausas-originales-madurez-media.mp3",
+      "sha256": "bce5e4095c2f466df7e5d0a7f277e8acdf21615795c59665fdb911063b24fb82",
+      "duration_s": 14.44,
+      "words": 27,
+      "ppm_file": 112.18836565096953,
+      "ppm_narration": 116.02936345073618,
+      "activity_start": 0.174917,
+      "activity_end": 14.1369,
+      "pauses": [
+        {
+          "start": 4.49273,
+          "end": 5.43606,
+          "seconds": 0.9433300000000004
+        },
+        {
+          "start": 7.2144,
+          "end": 7.56854,
+          "seconds": 0.35413999999999923
+        },
+        {
+          "start": 9.43508,
+          "end": 9.68417,
+          "seconds": 0.2490900000000007
+        },
+        {
+          "start": 9.80106,
+          "end": 10.0044,
+          "seconds": 0.20334000000000074
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.30161499999999997,
+        "min": 0.20334000000000074,
+        "max": 0.9433300000000004,
+        "n": 4
+      },
+      "lufs": -16.01,
+      "true_peak_dbtp": -1.59,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 107.92471354682019,
+        "min": 61.45758261173469,
+        "max": 197.4981582280184,
+        "n": 698
+      },
+      "f0_p10_p90_hz": [
+        77.77721958252529,
+        150.8003571215571
+      ],
+      "pitch_disagreement_gt9st_percent": 1.8662519440124419,
+      "voice": "orus",
+      "pause_mode": "originales",
+      "maturity": "media"
+    },
+    {
+      "file": "work/voz-natural/orus-pausas-humanizadas-madurez-suave.mp3",
+      "sha256": "bf481b57587feb285cb90c2d431ae51269e0220794d0b895bf8b7bc181cc833b",
+      "duration_s": 13.474625,
+      "words": 27,
+      "ppm_file": 120.22598031485107,
+      "ppm_narration": 124.70207174017814,
+      "activity_start": 0.172937,
+      "activity_end": 13.1639,
+      "pauses": [
+        {
+          "start": 4.49327,
+          "end": 4.77052,
+          "seconds": 0.27725000000000044
+        },
+        {
+          "start": 8.50702,
+          "end": 8.73346,
+          "seconds": 0.22643999999999842
+        },
+        {
+          "start": 8.84804,
+          "end": 9.03665,
+          "seconds": 0.1886100000000006
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.22643999999999842,
+        "min": 0.1886100000000006,
+        "max": 0.27725000000000044,
+        "n": 3
+      },
+      "lufs": -15.95,
+      "true_peak_dbtp": -1.69,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 115.04309907704932,
+        "min": 68.34879217092556,
+        "max": 213.25645043159557,
+        "n": 705
+      },
+      "f0_p10_p90_hz": [
+        82.69990929964032,
+        162.31490605735303
+      ],
+      "pitch_disagreement_gt9st_percent": 6.104651162790697,
+      "voice": "orus",
+      "pause_mode": "humanizadas",
+      "maturity": "suave"
+    },
+    {
+      "file": "work/voz-natural/orus-pausas-humanizadas-madurez-media.mp3",
+      "sha256": "bbf7f59adb899dae5261a38f3786a93e79adcd124e9a7baeb23e97c3000ed555",
+      "duration_s": 13.474625,
+      "words": 27,
+      "ppm_file": 120.22598031485107,
+      "ppm_narration": 124.68416231753685,
+      "activity_start": 0.175271,
+      "activity_end": 13.1681,
+      "pauses": [
+        {
+          "start": 4.49315,
+          "end": 4.76896,
+          "seconds": 0.2758099999999999
+        },
+        {
+          "start": 8.5071,
+          "end": 8.73612,
+          "seconds": 0.22902000000000022
+        },
+        {
+          "start": 8.84685,
+          "end": 9.03842,
+          "seconds": 0.19157000000000046
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.22902000000000022,
+        "min": 0.19157000000000046,
+        "max": 0.2758099999999999,
+        "n": 3
+      },
+      "lufs": -15.99,
+      "true_peak_dbtp": -1.7,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 108.23669141538424,
+        "min": 61.07782767846663,
+        "max": 196.933797844708,
+        "n": 684
+      },
+      "f0_p10_p90_hz": [
+        77.78783760036669,
+        151.48648162000254
+      ],
+      "pitch_disagreement_gt9st_percent": 7.34375,
+      "voice": "orus",
+      "pause_mode": "humanizadas",
+      "maturity": "media"
+    }
+  ],
+  "edits": {
+    "algenib": {
+      "source": {
+        "file": "work/voz/muestras/malvinas-algenib.wav",
+        "sha256": "42d785d1971c9be1f49e3850822d63485ab0c68c143a87e81208aba89e3107b3",
+        "duration_s": 15.68,
+        "words": 27,
+        "ppm_file": 103.31632653061224,
+        "ppm_narration": 107.55793687942557,
+        "activity_start": 0.33425,
+        "activity_end": 15.3959,
+        "pauses": [
+          {
+            "start": 1.76125,
+            "end": 2.30758,
+            "seconds": 0.5463300000000002
+          },
+          {
+            "start": 5.19458,
+            "end": 6.12625,
+            "seconds": 0.9316699999999996
+          },
+          {
+            "start": 7.48275,
+            "end": 8.15563,
+            "seconds": 0.6728800000000001
+          },
+          {
+            "start": 10.0014,
+            "end": 10.5797,
+            "seconds": 0.5783000000000005
+          },
+          {
+            "start": 12.6425,
+            "end": 12.9411,
+            "seconds": 0.2986000000000004
+          }
+        ],
+        "pause_stats_s": {
+          "median": 0.5783000000000005,
+          "min": 0.2986000000000004,
+          "max": 0.9316699999999996,
+          "n": 5
+        },
+        "lufs": -19.97,
+        "true_peak_dbtp": -2.71,
+        "clipped_samples": 0,
+        "f0_hz": {
+          "median": 92.34343768483852,
+          "min": 60.89967360687526,
+          "max": 394.36683929214536,
+          "n": 601
+        },
+        "f0_p10_p90_hz": [
+          72.15030643274955,
+          116.59705540399665
+        ],
+        "pitch_disagreement_gt9st_percent": 4.705882352941177
+      },
+      "pauses": [
+        {
+          "start": 1.76125,
+          "end": 2.30758,
+          "seconds": 0.5463300000000002,
+          "after": "Ascensión,",
+          "before": "un",
+          "punctuation": "coma",
+          "asr_previous_end": 1.42,
+          "asr_next_start": 1.46,
+          "offset_from_asr_end_s": 0.34125000000000005,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "humanized_slot": {
+            "start": 1.76125,
+            "end": 2.30758,
+            "seconds": 0.5463300000000002,
+            "after": "Ascensión,",
+            "before": "un",
+            "punctuation": "coma",
+            "asr_previous_end": 1.42,
+            "asr_next_start": 1.46,
+            "offset_from_asr_end_s": 0.34125000000000005,
+            "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+            "target_s": 0.18,
+            "dramatic": false,
+            "output_start_s": 1.76125,
+            "output_end_s": 1.94125
+          }
+        },
+        {
+          "start": 5.19458,
+          "end": 6.12625,
+          "seconds": 0.9316699999999996,
+          "after": "Stanley.",
+          "before": "Una",
+          "punctuation": "punto",
+          "asr_previous_end": 4.88,
+          "asr_next_start": 5.42,
+          "offset_from_asr_end_s": 0.3145800000000003,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "humanized_slot": {
+            "start": 5.19458,
+            "end": 6.12625,
+            "seconds": 0.9316699999999996,
+            "after": "Stanley.",
+            "before": "Una",
+            "punctuation": "punto",
+            "asr_previous_end": 4.88,
+            "asr_next_start": 5.42,
+            "offset_from_asr_end_s": 0.3145800000000003,
+            "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+            "target_s": 0.28,
+            "dramatic": false,
+            "output_start_s": 4.828246666666667,
+            "output_end_s": 5.108246666666667
+          }
+        },
+        {
+          "start": 7.48275,
+          "end": 8.15563,
+          "seconds": 0.6728800000000001,
+          "after": "pista,",
+          "before": "sin",
+          "punctuation": "coma",
+          "asr_previous_end": 7.26,
+          "asr_next_start": 7.38,
+          "offset_from_asr_end_s": 0.22275000000000045,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "humanized_slot": {
+            "start": 7.48275,
+            "end": 8.15563,
+            "seconds": 0.6728800000000001,
+            "after": "pista,",
+            "before": "sin",
+            "punctuation": "coma",
+            "asr_previous_end": 7.26,
+            "asr_next_start": 7.38,
+            "offset_from_asr_end_s": 0.22275000000000045,
+            "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+            "target_s": 0.18,
+            "dramatic": false,
+            "output_start_s": 6.46475,
+            "output_end_s": 6.64475
+          }
+        },
+        {
+          "start": 10.0014,
+          "end": 10.5797,
+          "seconds": 0.5783000000000005,
+          "after": "completo.",
+          "before": "Super",
+          "punctuation": "punto",
+          "asr_previous_end": 9.72,
+          "asr_next_start": 10.06,
+          "offset_from_asr_end_s": 0.28139999999999965,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "humanized_slot": {
+            "start": 10.0014,
+            "end": 10.5797,
+            "seconds": 0.5783000000000005,
+            "after": "completo.",
+            "before": "Super",
+            "punctuation": "punto",
+            "asr_previous_end": 9.72,
+            "asr_next_start": 10.06,
+            "offset_from_asr_end_s": 0.28139999999999965,
+            "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+            "target_s": 0.55,
+            "dramatic": true,
+            "output_start_s": 8.490525,
+            "output_end_s": 9.040525
+          }
+        },
+        {
+          "start": 12.6425,
+          "end": 12.9411,
+          "seconds": 0.2986000000000004,
+          "after": "alcanzan",
+          "before": "",
+          "punctuation": "sin puntuación",
+          "alignment": "dentro del intervalo ASR; posible vacilación o consonante débil",
+          "humanized_slot": {
+            "start": 12.6425,
+            "end": 12.9411,
+            "seconds": 0.2986000000000004,
+            "after": "alcanzan",
+            "before": "",
+            "punctuation": "sin puntuación",
+            "alignment": "dentro del intervalo ASR; posible vacilación o consonante débil",
+            "target_s": 0.14,
+            "dramatic": false,
+            "output_start_s": 11.103333333333333,
+            "output_end_s": 11.243333333333334
+          }
+        }
+      ],
+      "splices": [
+        {
+          "start": 1.76125,
+          "end": 2.30758,
+          "seconds": 0.5463300000000002,
+          "after": "Ascensión,",
+          "before": "un",
+          "punctuation": "coma",
+          "asr_previous_end": 1.42,
+          "asr_next_start": 1.46,
+          "offset_from_asr_end_s": 0.34125000000000005,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "target_s": 0.18,
+          "dramatic": false,
+          "cut_left_s": 1.86125,
+          "cut_right_s": 2.2075833333333335,
+          "removed_s": 0.36633333333333334,
+          "fade_ms": 20,
+          "edge_guard_ms": 45,
+          "join_start_s": 1.84125,
+          "cut_zone_peak_dbfs": -48.72957950589546,
+          "splice_delta_peak_dbfs": -57.664780025459805
+        },
+        {
+          "start": 5.19458,
+          "end": 6.12625,
+          "seconds": 0.9316699999999996,
+          "after": "Stanley.",
+          "before": "Una",
+          "punctuation": "punto",
+          "asr_previous_end": 4.88,
+          "asr_next_start": 5.42,
+          "offset_from_asr_end_s": 0.3145800000000003,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "target_s": 0.28,
+          "dramatic": false,
+          "cut_left_s": 5.3445833333333335,
+          "cut_right_s": 5.97625,
+          "removed_s": 0.6516666666666666,
+          "fade_ms": 20,
+          "edge_guard_ms": 45,
+          "join_start_s": 4.95825,
+          "cut_zone_peak_dbfs": -60.162128813104346,
+          "splice_delta_peak_dbfs": -74.70310481673448
+        },
+        {
+          "start": 7.48275,
+          "end": 8.15563,
+          "seconds": 0.6728800000000001,
+          "after": "pista,",
+          "before": "sin",
+          "punctuation": "coma",
+          "asr_previous_end": 7.26,
+          "asr_next_start": 7.38,
+          "offset_from_asr_end_s": 0.22275000000000045,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "target_s": 0.18,
+          "dramatic": false,
+          "cut_left_s": 7.58275,
+          "cut_right_s": 8.055625,
+          "removed_s": 0.492875,
+          "fade_ms": 20,
+          "edge_guard_ms": 45,
+          "join_start_s": 6.5447500000000005,
+          "cut_zone_peak_dbfs": -46.22659904607587,
+          "splice_delta_peak_dbfs": -57.28128403237503
+        },
+        {
+          "start": 10.0014,
+          "end": 10.5797,
+          "seconds": 0.5783000000000005,
+          "after": "completo.",
+          "before": "Super",
+          "punctuation": "punto",
+          "asr_previous_end": 9.72,
+          "asr_next_start": 10.06,
+          "offset_from_asr_end_s": 0.28139999999999965,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "target_s": 0.55,
+          "dramatic": true,
+          "cut_left_s": 10.286395833333334,
+          "cut_right_s": 10.2946875,
+          "removed_s": 0.028291666666666666,
+          "fade_ms": 20,
+          "edge_guard_ms": 45,
+          "join_start_s": 8.755520833333334,
+          "cut_zone_peak_dbfs": -64.60010729978863,
+          "splice_delta_peak_dbfs": -83.00424307018687
+        },
+        {
+          "start": 12.6425,
+          "end": 12.9411,
+          "seconds": 0.2986000000000004,
+          "after": "alcanzan",
+          "before": "",
+          "punctuation": "sin puntuación",
+          "alignment": "dentro del intervalo ASR; posible vacilación o consonante débil",
+          "target_s": 0.14,
+          "dramatic": false,
+          "cut_left_s": 12.7225,
+          "cut_right_s": 12.861104166666667,
+          "removed_s": 0.15860416666666666,
+          "fade_ms": 20,
+          "edge_guard_ms": 45,
+          "join_start_s": 11.163333333333334,
+          "cut_zone_peak_dbfs": -63.86461280451598,
+          "splice_delta_peak_dbfs": -78.77443140698743
+        }
+      ],
+      "room_floor_dbfs": -68
+    },
+    "orus": {
+      "source": {
+        "file": "work/voz/muestras/malvinas-orus.wav",
+        "sha256": "7dc73630009c661795da50bb658a50a907feb1dd7ab94c58a42782cfec2a44f1",
+        "duration_s": 14.44,
+        "words": 27,
+        "ppm_file": 112.18836565096953,
+        "ppm_narration": 116.13180443662203,
+        "activity_start": 0.173333,
+        "activity_end": 14.123,
+        "pauses": [
+          {
+            "start": 1.67075,
+            "end": 1.83754,
+            "seconds": 0.16679
+          },
+          {
+            "start": 4.49067,
+            "end": 5.43746,
+            "seconds": 0.94679
+          },
+          {
+            "start": 7.12746,
+            "end": 7.57329,
+            "seconds": 0.44582999999999995
+          },
+          {
+            "start": 9.42504,
+            "end": 10.0078,
+            "seconds": 0.5827600000000004
+          }
+        ],
+        "pause_stats_s": {
+          "median": 0.5142950000000002,
+          "min": 0.16679,
+          "max": 0.94679,
+          "n": 4
+        },
+        "lufs": -19.22,
+        "true_peak_dbtp": -1.67,
+        "clipped_samples": 0,
+        "f0_hz": {
+          "median": 115.02476685711584,
+          "min": 60.1589089419267,
+          "max": 213.04137845984155,
+          "n": 696
+        },
+        "f0_p10_p90_hz": [
+          83.07563472008576,
+          162.53801261890703
+        ],
+        "pitch_disagreement_gt9st_percent": 0.741839762611276
+      },
+      "pauses": [
+        {
+          "start": 1.67075,
+          "end": 1.83754,
+          "seconds": 0.16679,
+          "after": "Ascensión,",
+          "before": "un",
+          "punctuation": "coma",
+          "asr_previous_end": 1.46,
+          "asr_next_start": 1.5,
+          "offset_from_asr_end_s": 0.21075,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "humanized_slot": {
+            "start": 1.67075,
+            "end": 1.83754,
+            "seconds": 0.16679,
+            "after": "Ascensión,",
+            "before": "un",
+            "punctuation": "coma",
+            "asr_previous_end": 1.46,
+            "asr_next_start": 1.5,
+            "offset_from_asr_end_s": 0.21075,
+            "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+            "target_s": 0.16679,
+            "dramatic": false,
+            "output_start_s": 1.67075,
+            "output_end_s": 1.83754
+          }
+        },
+        {
+          "start": 4.49067,
+          "end": 5.43746,
+          "seconds": 0.94679,
+          "after": "Stanley.",
+          "before": "Una",
+          "punctuation": "punto",
+          "asr_previous_end": 4.14,
+          "asr_next_start": 4.64,
+          "offset_from_asr_end_s": 0.35067000000000004,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "humanized_slot": {
+            "start": 4.49067,
+            "end": 5.43746,
+            "seconds": 0.94679,
+            "after": "Stanley.",
+            "before": "Una",
+            "punctuation": "punto",
+            "asr_previous_end": 4.14,
+            "asr_next_start": 4.64,
+            "offset_from_asr_end_s": 0.35067000000000004,
+            "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+            "target_s": 0.28,
+            "dramatic": false,
+            "output_start_s": 4.49067,
+            "output_end_s": 4.77067
+          }
+        },
+        {
+          "start": 7.12746,
+          "end": 7.57329,
+          "seconds": 0.44582999999999995,
+          "after": "pista,",
+          "before": "sin",
+          "punctuation": "coma",
+          "asr_previous_end": 6.78,
+          "asr_next_start": 6.98,
+          "offset_from_asr_end_s": 0.3474599999999999,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "humanized_slot": {
+            "start": 7.12746,
+            "end": 7.57329,
+            "seconds": 0.44582999999999995,
+            "after": "pista,",
+            "before": "sin",
+            "punctuation": "coma",
+            "asr_previous_end": 6.78,
+            "asr_next_start": 6.98,
+            "offset_from_asr_end_s": 0.3474599999999999,
+            "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+            "target_s": 0.18,
+            "dramatic": false,
+            "output_start_s": 6.4606683333333335,
+            "output_end_s": 6.640668333333333
+          }
+        },
+        {
+          "start": 9.42504,
+          "end": 10.0078,
+          "seconds": 0.5827600000000004,
+          "after": "completo.",
+          "before": "Super",
+          "punctuation": "punto",
+          "asr_previous_end": 9.08,
+          "asr_next_start": 9.6,
+          "offset_from_asr_end_s": 0.3450399999999991,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "humanized_slot": {
+            "start": 9.42504,
+            "end": 10.0078,
+            "seconds": 0.5827600000000004,
+            "after": "completo.",
+            "before": "Super",
+            "punctuation": "punto",
+            "asr_previous_end": 9.08,
+            "asr_next_start": 9.6,
+            "offset_from_asr_end_s": 0.3450399999999991,
+            "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+            "target_s": 0.55,
+            "dramatic": true,
+            "output_start_s": 8.492415,
+            "output_end_s": 9.042415
+          }
+        }
+      ],
+      "splices": [
+        {
+          "start": 4.49067,
+          "end": 5.43746,
+          "seconds": 0.94679,
+          "after": "Stanley.",
+          "before": "Una",
+          "punctuation": "punto",
+          "asr_previous_end": 4.14,
+          "asr_next_start": 4.64,
+          "offset_from_asr_end_s": 0.35067000000000004,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "target_s": 0.28,
+          "dramatic": false,
+          "cut_left_s": 4.640666666666666,
+          "cut_right_s": 5.287458333333333,
+          "removed_s": 0.6667916666666667,
+          "fade_ms": 20,
+          "edge_guard_ms": 45,
+          "join_start_s": 4.620666666666667,
+          "cut_zone_peak_dbfs": -48.27621633903681,
+          "splice_delta_peak_dbfs": -59.59432808433591
+        },
+        {
+          "start": 7.12746,
+          "end": 7.57329,
+          "seconds": 0.44582999999999995,
+          "after": "pista,",
+          "before": "sin",
+          "punctuation": "coma",
+          "asr_previous_end": 6.78,
+          "asr_next_start": 6.98,
+          "offset_from_asr_end_s": 0.3474599999999999,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "target_s": 0.18,
+          "dramatic": false,
+          "cut_left_s": 7.227458333333334,
+          "cut_right_s": 7.473291666666666,
+          "removed_s": 0.2658333333333333,
+          "fade_ms": 20,
+          "edge_guard_ms": 45,
+          "join_start_s": 6.540666666666667,
+          "cut_zone_peak_dbfs": -44.07392147807927,
+          "splice_delta_peak_dbfs": -60.9190764369571
+        },
+        {
+          "start": 9.42504,
+          "end": 10.0078,
+          "seconds": 0.5827600000000004,
+          "after": "completo.",
+          "before": "Super",
+          "punctuation": "punto",
+          "asr_previous_end": 9.08,
+          "asr_next_start": 9.6,
+          "offset_from_asr_end_s": 0.3450399999999991,
+          "alignment": "proximidad; ASR absorbe silencio, no alineación fonética",
+          "target_s": 0.55,
+          "dramatic": true,
+          "cut_left_s": 9.710041666666667,
+          "cut_right_s": 9.722791666666666,
+          "removed_s": 0.03275,
+          "fade_ms": 20,
+          "edge_guard_ms": 45,
+          "join_start_s": 8.757416666666668,
+          "cut_zone_peak_dbfs": -55.66112350273499,
+          "splice_delta_peak_dbfs": -67.79141124096724
+        }
+      ],
+      "room_floor_dbfs": -68
+    }
+  },
+  "breaths": {
+    "algenib-originales": {
+      "source": "work/voz-ref/sfx-cc0/exhale-02.wav",
+      "source_sha256": "8f54428cd31e5bad3a61492ee639e04286397b63f765a75ead88a93b4d28a0a5",
+      "license": "CC0 según ficha local de SFXMint",
+      "source_start_s": 0.9,
+      "start_s": 10.20055,
+      "duration_s": 0.18,
+      "rms_before_chain_dbfs": -46,
+      "fade_ms": 25,
+      "kind": "fragmento de exhalación; no inhalación añadida",
+      "note": "Un solo evento por archivo; pendiente de escucha, no certificación perceptual de ausencia de jadeo"
+    },
+    "algenib-humanizadas": {
+      "source": "work/voz-ref/sfx-cc0/exhale-02.wav",
+      "source_sha256": "8f54428cd31e5bad3a61492ee639e04286397b63f765a75ead88a93b4d28a0a5",
+      "license": "CC0 según ficha local de SFXMint",
+      "source_start_s": 0.9,
+      "start_s": 8.675525,
+      "duration_s": 0.18,
+      "rms_before_chain_dbfs": -46,
+      "fade_ms": 25,
+      "kind": "fragmento de exhalación; no inhalación añadida",
+      "note": "Un solo evento por archivo; pendiente de escucha, no certificación perceptual de ausencia de jadeo"
+    },
+    "orus-originales": {
+      "source": "work/voz-ref/sfx-cc0/exhale-02.wav",
+      "source_sha256": "8f54428cd31e5bad3a61492ee639e04286397b63f765a75ead88a93b4d28a0a5",
+      "license": "CC0 según ficha local de SFXMint",
+      "source_start_s": 0.9,
+      "start_s": 9.62642,
+      "duration_s": 0.18,
+      "rms_before_chain_dbfs": -46,
+      "fade_ms": 25,
+      "kind": "fragmento de exhalación; no inhalación añadida",
+      "note": "Un solo evento por archivo; pendiente de escucha, no certificación perceptual de ausencia de jadeo"
+    },
+    "orus-humanizadas": {
+      "source": "work/voz-ref/sfx-cc0/exhale-02.wav",
+      "source_sha256": "8f54428cd31e5bad3a61492ee639e04286397b63f765a75ead88a93b4d28a0a5",
+      "license": "CC0 según ficha local de SFXMint",
+      "source_start_s": 0.9,
+      "start_s": 8.677415,
+      "duration_s": 0.18,
+      "rms_before_chain_dbfs": -46,
+      "fade_ms": 25,
+      "kind": "fragmento de exhalación; no inhalación añadida",
+      "note": "Un solo evento por archivo; pendiente de escucha, no certificación perceptual de ausencia de jadeo"
+    }
+  },
+  "chains": {
+    "algenib-pausas-originales-madurez-suave": "rubberband=tempo=1:pitch=1.000000000:formant=preserved:pitchq=quality,highpass=f=65,bass=g=1:f=150:w=0.7,equalizer=f=3500:t=q:w=0.9:g=0.7,aeval=exprs='(1-0.08)*val(0)+0.08*tanh(1.7*val(0))/1.7',deesser=i=0.12:m=0.20:f=0.5,aecho=1:1:13|23:0.02|0.01",
+    "algenib-pausas-originales-madurez-media": "rubberband=tempo=1:pitch=0.933032992:formant=preserved:pitchq=quality,highpass=f=65,bass=g=2:f=150:w=0.7,equalizer=f=3500:t=q:w=0.9:g=1.1,aeval=exprs='(1-0.16)*val(0)+0.16*tanh(2.3*val(0))/2.3',deesser=i=0.2:m=0.20:f=0.5,aecho=1:1:13|23:0.035|0.018",
+    "algenib-pausas-humanizadas-madurez-suave": "rubberband=tempo=1:pitch=1.000000000:formant=preserved:pitchq=quality,highpass=f=65,bass=g=1:f=150:w=0.7,equalizer=f=3500:t=q:w=0.9:g=0.7,aeval=exprs='(1-0.08)*val(0)+0.08*tanh(1.7*val(0))/1.7',deesser=i=0.12:m=0.20:f=0.5,aecho=1:1:13|23:0.02|0.01",
+    "algenib-pausas-humanizadas-madurez-media": "rubberband=tempo=1:pitch=0.933032992:formant=preserved:pitchq=quality,highpass=f=65,bass=g=2:f=150:w=0.7,equalizer=f=3500:t=q:w=0.9:g=1.1,aeval=exprs='(1-0.16)*val(0)+0.16*tanh(2.3*val(0))/2.3',deesser=i=0.2:m=0.20:f=0.5,aecho=1:1:13|23:0.035|0.018",
+    "orus-pausas-originales-madurez-suave": "rubberband=tempo=1:pitch=1.000000000:formant=preserved:pitchq=quality,highpass=f=65,bass=g=1:f=150:w=0.7,equalizer=f=3500:t=q:w=0.9:g=0.7,aeval=exprs='(1-0.08)*val(0)+0.08*tanh(1.7*val(0))/1.7',deesser=i=0.12:m=0.20:f=0.5,aecho=1:1:13|23:0.02|0.01",
+    "orus-pausas-originales-madurez-media": "rubberband=tempo=1:pitch=0.933032992:formant=preserved:pitchq=quality,highpass=f=65,bass=g=2:f=150:w=0.7,equalizer=f=3500:t=q:w=0.9:g=1.1,aeval=exprs='(1-0.16)*val(0)+0.16*tanh(2.3*val(0))/2.3',deesser=i=0.2:m=0.20:f=0.5,aecho=1:1:13|23:0.035|0.018",
+    "orus-pausas-humanizadas-madurez-suave": "rubberband=tempo=1:pitch=1.000000000:formant=preserved:pitchq=quality,highpass=f=65,bass=g=1:f=150:w=0.7,equalizer=f=3500:t=q:w=0.9:g=0.7,aeval=exprs='(1-0.08)*val(0)+0.08*tanh(1.7*val(0))/1.7',deesser=i=0.12:m=0.20:f=0.5,aecho=1:1:13|23:0.02|0.01",
+    "orus-pausas-humanizadas-madurez-media": "rubberband=tempo=1:pitch=0.933032992:formant=preserved:pitchq=quality,highpass=f=65,bass=g=2:f=150:w=0.7,equalizer=f=3500:t=q:w=0.9:g=1.1,aeval=exprs='(1-0.16)*val(0)+0.16*tanh(2.3*val(0))/2.3',deesser=i=0.2:m=0.20:f=0.5,aecho=1:1:13|23:0.035|0.018"
+  },
+  "masters": {
+    "algenib-pausas-originales-madurez-suave": {
+      "filter": "loudnorm=I=-16:TP=-2.5:LRA=11:measured_I=-19.82:measured_TP=-2.86:measured_LRA=2.60:measured_thresh=-30.44:offset=0.81:linear=true",
+      "post_encode_gain_db": 0.8299999999999983,
+      "measured": {
+        "input_i": "-16.00",
+        "input_tp": "-1.81",
+        "input_lra": "2.10",
+        "input_thresh": "-26.62",
+        "output_i": "-16.41",
+        "output_tp": "-1.91",
+        "output_lra": "2.20",
+        "output_thresh": "-27.06",
+        "normalization_type": "dynamic",
+        "target_offset": "0.41"
+      }
+    },
+    "algenib-pausas-originales-madurez-media": {
+      "filter": "loudnorm=I=-16:TP=-2.5:LRA=11:measured_I=-20.93:measured_TP=-3.56:measured_LRA=3.20:measured_thresh=-31.58:offset=0.99:linear=true",
+      "post_encode_gain_db": 0.8099999999999987,
+      "measured": {
+        "input_i": "-15.99",
+        "input_tp": "-1.82",
+        "input_lra": "2.60",
+        "input_thresh": "-26.69",
+        "output_i": "-16.59",
+        "output_tp": "-1.91",
+        "output_lra": "2.20",
+        "output_thresh": "-27.27",
+        "normalization_type": "dynamic",
+        "target_offset": "0.59"
+      }
+    },
+    "algenib-pausas-humanizadas-madurez-suave": {
+      "filter": "loudnorm=I=-16:TP=-2.5:LRA=11:measured_I=-19.85:measured_TP=-2.86:measured_LRA=2.80:measured_thresh=-30.19:offset=0.87:linear=true",
+      "post_encode_gain_db": 0.8000000000000007,
+      "measured": {
+        "input_i": "-16.00",
+        "input_tp": "-1.82",
+        "input_lra": "2.20",
+        "input_thresh": "-26.29",
+        "output_i": "-16.47",
+        "output_tp": "-1.87",
+        "output_lra": "1.40",
+        "output_thresh": "-26.70",
+        "normalization_type": "dynamic",
+        "target_offset": "0.47"
+      }
+    },
+    "algenib-pausas-humanizadas-madurez-media": {
+      "filter": "loudnorm=I=-16:TP=-2.5:LRA=11:measured_I=-20.99:measured_TP=-3.50:measured_LRA=3.60:measured_thresh=-31.36:offset=1.05:linear=true",
+      "post_encode_gain_db": 0.8200000000000003,
+      "measured": {
+        "input_i": "-16.00",
+        "input_tp": "-1.82",
+        "input_lra": "2.50",
+        "input_thresh": "-26.37",
+        "output_i": "-16.66",
+        "output_tp": "-1.99",
+        "output_lra": "1.60",
+        "output_thresh": "-26.91",
+        "normalization_type": "dynamic",
+        "target_offset": "0.66"
+      }
+    },
+    "orus-pausas-originales-madurez-suave": {
+      "filter": "loudnorm=I=-16:TP=-2.5:LRA=11:measured_I=-19.06:measured_TP=-0.14:measured_LRA=3.40:measured_thresh=-29.86:offset=0.73:linear=true",
+      "post_encode_gain_db": 1.0100000000000016,
+      "measured": {
+        "input_i": "-16.00",
+        "input_tp": "-1.73",
+        "input_lra": "3.60",
+        "input_thresh": "-26.68",
+        "output_i": "-16.35",
+        "output_tp": "-1.61",
+        "output_lra": "3.00",
+        "output_thresh": "-27.08",
+        "normalization_type": "dynamic",
+        "target_offset": "0.35"
+      }
+    },
+    "orus-pausas-originales-madurez-media": {
+      "filter": "loudnorm=I=-16:TP=-2.5:LRA=11:measured_I=-19.93:measured_TP=-1.31:measured_LRA=3.60:measured_thresh=-30.73:offset=0.73:linear=true",
+      "post_encode_gain_db": 0.9699999999999989,
+      "measured": {
+        "input_i": "-16.01",
+        "input_tp": "-1.59",
+        "input_lra": "3.10",
+        "input_thresh": "-26.69",
+        "output_i": "-16.36",
+        "output_tp": "-1.91",
+        "output_lra": "2.60",
+        "output_thresh": "-27.12",
+        "normalization_type": "dynamic",
+        "target_offset": "0.36"
+      }
+    },
+    "orus-pausas-humanizadas-madurez-suave": {
+      "filter": "loudnorm=I=-16:TP=-2.5:LRA=11:measured_I=-19.00:measured_TP=-0.14:measured_LRA=2.30:measured_thresh=-29.59:offset=0.69:linear=true",
+      "post_encode_gain_db": 0.9800000000000004,
+      "measured": {
+        "input_i": "-15.95",
+        "input_tp": "-1.69",
+        "input_lra": "2.10",
+        "input_thresh": "-26.45",
+        "output_i": "-16.32",
+        "output_tp": "-1.57",
+        "output_lra": "2.90",
+        "output_thresh": "-26.80",
+        "normalization_type": "dynamic",
+        "target_offset": "0.32"
+      }
+    },
+    "orus-pausas-humanizadas-madurez-media": {
+      "filter": "loudnorm=I=-16:TP=-2.5:LRA=11:measured_I=-19.95:measured_TP=-1.21:measured_LRA=2.30:measured_thresh=-30.53:offset=0.65:linear=true",
+      "post_encode_gain_db": 0.9200000000000017,
+      "measured": {
+        "input_i": "-15.99",
+        "input_tp": "-1.70",
+        "input_lra": "2.00",
+        "input_thresh": "-26.52",
+        "output_i": "-16.35",
+        "output_tp": "-1.92",
+        "output_lra": "2.30",
+        "output_thresh": "-26.85",
+        "normalization_type": "dynamic",
+        "target_offset": "0.35"
+      }
+    }
+  },
+  "humanized_clean": [
+    {
+      "file": "work/voz-natural/algenib-humanizada-limpia.wav",
+      "sha256": "a71b4e0e9f7b21181fb6f3dc0e9d2913832e40f0350b6e7c0eb288da1f6c2067",
+      "duration_s": 13.98225,
+      "words": 27,
+      "ppm_file": 115.8611811403744,
+      "ppm_narration": 121.22255188437464,
+      "activity_start": 0.33425,
+      "activity_end": 13.6981,
+      "pauses": [
+        {
+          "start": 1.76267,
+          "end": 1.94006,
+          "seconds": 0.17738999999999994
+        },
+        {
+          "start": 4.82821,
+          "end": 5.10827,
+          "seconds": 0.28005999999999975
+        },
+        {
+          "start": 6.46227,
+          "end": 6.64475,
+          "seconds": 0.18247999999999998
+        },
+        {
+          "start": 8.49048,
+          "end": 9.04054,
+          "seconds": 0.5500600000000002
+        },
+        {
+          "start": 11.1034,
+          "end": 11.2434,
+          "seconds": 0.1399999999999988
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.18247999999999998,
+        "min": 0.1399999999999988,
+        "max": 0.5500600000000002,
+        "n": 5
+      },
+      "lufs": -20.0,
+      "true_peak_dbtp": -2.7,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 92.09131727501722,
+        "min": 60.356942015538486,
+        "max": 394.21030592354714,
+        "n": 603
+      },
+      "f0_p10_p90_hz": [
+        72.24803744654614,
+        117.4933768185802
+      ],
+      "pitch_disagreement_gt9st_percent": 13.11787072243346
+    },
+    {
+      "file": "work/voz-natural/orus-humanizada-limpia.wav",
+      "sha256": "86a9d26dd99d8b538ad9aa6874fbb71c9107a54dcdce83cb47633d3adb21a888",
+      "duration_s": 13.474625,
+      "words": 27,
+      "ppm_file": 120.22598031485107,
+      "ppm_narration": 124.76617893872962,
+      "activity_start": 0.173312,
+      "activity_end": 13.1576,
+      "pauses": [
+        {
+          "start": 1.67073,
+          "end": 1.83752,
+          "seconds": 0.16679
+        },
+        {
+          "start": 4.49065,
+          "end": 4.77065,
+          "seconds": 0.28000000000000025
+        },
+        {
+          "start": 6.46067,
+          "end": 6.64067,
+          "seconds": 0.17999999999999972
+        },
+        {
+          "start": 8.4924,
+          "end": 9.04242,
+          "seconds": 0.55002
+        }
+      ],
+      "pause_stats_s": {
+        "median": 0.22999999999999998,
+        "min": 0.16679,
+        "max": 0.55002,
+        "n": 4
+      },
+      "lufs": -19.11,
+      "true_peak_dbtp": -1.67,
+      "clipped_samples": 0,
+      "f0_hz": {
+        "median": 115.65205196847023,
+        "min": 68.86302270336695,
+        "max": 213.44219498044214,
+        "n": 693
+      },
+      "f0_p10_p90_hz": [
+        83.08022101785586,
+        162.05631507728364
+      ],
+      "pitch_disagreement_gt9st_percent": 6.149341142020498
+    }
+  ],
+  "reference_same_acoustic_method": {
+    "file": "work/voz-ref/Picker_Rickmansworth_88_mp3.mp3",
+    "sha256": "dd478a0faebab5b13cd28e34e66ab8be4e9b9c3a0da1e269f2222fcd34f8a4fd",
+    "duration_s": 211.409,
+    "words": 753,
+    "ppm_file": 213.70897170886767,
+    "ppm_narration": 213.70897170886767,
+    "activity_start": 0,
+    "activity_end": 211.409,
+    "pauses": [
+      {
+        "start": 113.495,
+        "end": 113.721,
+        "seconds": 0.2259999999999991
+      },
+      {
+        "start": 115.882,
+        "end": 116.14,
+        "seconds": 0.25799999999999557
+      },
+      {
+        "start": 120.75,
+        "end": 120.881,
+        "seconds": 0.13100000000000023
+      },
+      {
+        "start": 190.795,
+        "end": 190.979,
+        "seconds": 0.18400000000002592
+      },
+      {
+        "start": 192.087,
+        "end": 192.379,
+        "seconds": 0.2920000000000016
+      },
+      {
+        "start": 195.629,
+        "end": 195.954,
+        "seconds": 0.32500000000001705
+      },
+      {
+        "start": 197.551,
+        "end": 197.798,
+        "seconds": 0.2470000000000141
+      },
+      {
+        "start": 204.806,
+        "end": 205.064,
+        "seconds": 0.25799999999998136
+      },
+      {
+        "start": 207.925,
+        "end": 208.094,
+        "seconds": 0.16899999999998272
+      }
+    ],
+    "pause_stats_s": {
+      "median": 0.2470000000000141,
+      "min": 0.13100000000000023,
+      "max": 0.32500000000001705,
+      "n": 9
+    },
+    "lufs": -21.07,
+    "true_peak_dbtp": -0.6,
+    "clipped_samples": 1580
+  },
+  "reference_asr": {
+    "count": 65,
+    "per_minute": 18.44765360036706,
+    "total_s": 17.300000000000004,
+    "duration_s": {
+      "n": 65,
+      "p10": 0.14,
+      "median": 0.18,
+      "p90": 0.42,
+      "mean": 0.2661538461538462,
+      "min": 0.12,
+      "max": 2.84
+    },
+    "by_punctuation": {
+      "coma": {
+        "all_boundaries": {
+          "n": 32,
+          "p10": 0.02,
+          "median": 0.1,
+          "p90": 0.19800000000000006,
+          "mean": 0.10312500000000001,
+          "min": 0.0,
+          "max": 0.24
+        },
+        "pauses_ge120ms": {
+          "n": 15,
+          "p10": 0.128,
+          "median": 0.14,
+          "p90": 0.2,
+          "mean": 0.16133333333333338,
+          "min": 0.12,
+          "max": 0.24
+        }
+      },
+      "punto": {
+        "all_boundaries": {
+          "n": 70,
+          "p10": 0.058,
+          "median": 0.16,
+          "p90": 0.42,
+          "mean": 0.22857142857142854,
+          "min": 0.0,
+          "max": 2.84
+        },
+        "pauses_ge120ms": {
+          "n": 50,
+          "p10": 0.14,
+          "median": 0.2,
+          "p90": 0.44200000000000006,
+          "mean": 0.29760000000000003,
+          "min": 0.12,
+          "max": 2.84
+        }
+      },
+      "dos_puntos_o_punto_coma": {
+        "all_boundaries": {
+          "n": 0
+        },
+        "pauses_ge120ms": {
+          "n": 0
+        }
+      },
+      "sin_puntuacion": {
+        "all_boundaries": {
+          "n": 650,
+          "p10": 0.0,
+          "median": 0.0,
+          "p90": 0.0,
+          "mean": 3.076923076923077e-05,
+          "min": 0.0,
+          "max": 0.02
+        },
+        "pauses_ge120ms": {
+          "n": 0
+        }
+      }
+    },
+    "long_ge800ms_per_minute": 0.5676201107805249,
+    "longest": [
+      {
+        "start": 94.52,
+        "end": 97.36,
+        "duration": 2.84,
+        "after": " tuviera.",
+        "before": " Para",
+        "punctuation": "punto"
+      },
+      {
+        "start": 11.2,
+        "end": 12.060000000000002,
+        "duration": 0.86,
+        "after": " tele.",
+        "before": " Un",
+        "punctuation": "punto"
+      },
+      {
+        "start": 6.64,
+        "end": 7.240000000000002,
+        "duration": 0.6,
+        "after": " Can.",
+        "before": " El",
+        "punctuation": "punto"
+      },
+      {
+        "start": 207.7,
+        "end": 208.2,
+        "duration": 0.5,
+        "after": " cocina.",
+        "before": " Al",
+        "punctuation": "punto"
+      },
+      {
+        "start": 116.62,
+        "end": 117.08,
+        "duration": 0.46,
+        "after": " casan.",
+        "before": " En",
+        "punctuation": "punto"
+      },
+      {
+        "start": 197.32,
+        "end": 197.76,
+        "duration": 0.44,
+        "after": " gente.",
+        "before": " Intenta",
+        "punctuation": "punto"
+      },
+      {
+        "start": 26.4,
+        "end": 26.82,
+        "duration": 0.42,
+        "after": " antes.",
+        "before": " Pero",
+        "punctuation": "punto"
+      },
+      {
+        "start": 145.44,
+        "end": 145.85999999999999,
+        "duration": 0.42,
+        "after": " Indonesia.",
+        "before": " Allí",
+        "punctuation": "punto"
+      },
+      {
+        "start": 204.56,
+        "end": 204.94,
+        "duration": 0.38,
+        "after": " marihuana.",
+        "before": " En",
+        "punctuation": "punto"
+      },
+      {
+        "start": 183.1,
+        "end": 183.4,
+        "duration": 0.3,
+        "after": " explicar.",
+        "before": " Es",
+        "punctuation": "punto"
+      },
+      {
+        "start": 190.38,
+        "end": 190.68,
+        "duration": 0.3,
+        "after": " Indonesia.",
+        "before": " No",
+        "punctuation": "punto"
+      },
+      {
+        "start": 64.4,
+        "end": 64.68,
+        "duration": 0.28,
+        "after": " guerra.",
+        "before": " Empezó",
+        "punctuation": "punto"
+      },
+      {
+        "start": 157.12,
+        "end": 157.4,
+        "duration": 0.28,
+        "after": " fiesta.",
+        "before": " Con",
+        "punctuation": "punto"
+      },
+      {
+        "start": 198.84,
+        "end": 199.12,
+        "duration": 0.28,
+        "after": " pensar.",
+        "before": " Se",
+        "punctuation": "punto"
+      },
+      {
+        "start": 111.52,
+        "end": 111.78,
+        "duration": 0.26,
+        "after": " Hawaii.",
+        "before": " Allí",
+        "punctuation": "punto"
+      }
+    ],
+    "events": [
+      {
+        "start": 0.74,
+        "end": 0.92,
+        "duration": 0.18,
+        "after": " Obama,",
+        "before": " seguramente",
+        "punctuation": "coma"
+      },
+      {
+        "start": 5.48,
+        "end": 5.72,
+        "duration": 0.24,
+        "after": " Unidos,",
+        "before": " el",
+        "punctuation": "coma"
+      },
+      {
+        "start": 6.64,
+        "end": 7.240000000000002,
+        "duration": 0.6,
+        "after": " Can.",
+        "before": " El",
+        "punctuation": "punto"
+      },
+      {
+        "start": 11.2,
+        "end": 12.060000000000002,
+        "duration": 0.86,
+        "after": " tele.",
+        "before": " Un",
+        "punctuation": "punto"
+      },
+      {
+        "start": 14.92,
+        "end": 15.12,
+        "duration": 0.2,
+        "after": " política.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 16.48,
+        "end": 16.72,
+        "duration": 0.24,
+        "after": " igual.",
+        "before": " Nueve",
+        "punctuation": "punto"
+      },
+      {
+        "start": 22.26,
+        "end": 22.46,
+        "duration": 0.2,
+        "after": " creía.",
+        "before": " Dijo",
+        "punctuation": "punto"
+      },
+      {
+        "start": 26.4,
+        "end": 26.82,
+        "duration": 0.42,
+        "after": " antes.",
+        "before": " Pero",
+        "punctuation": "punto"
+      },
+      {
+        "start": 32.9,
+        "end": 33.12,
+        "duration": 0.22,
+        "after": " ataque.",
+        "before": " Fue",
+        "punctuation": "punto"
+      },
+      {
+        "start": 34.8,
+        "end": 35.0,
+        "duration": 0.2,
+        "after": " drones,",
+        "before": " donde",
+        "punctuation": "coma"
+      },
+      {
+        "start": 38.38,
+        "end": 38.54,
+        "duration": 0.16,
+        "after": " vez.",
+        "before": " Durante",
+        "punctuation": "punto"
+      },
+      {
+        "start": 42.9,
+        "end": 43.08,
+        "duration": 0.18,
+        "after": " Blanca.",
+        "before": " Delante",
+        "punctuation": "punto"
+      },
+      {
+        "start": 46.92,
+        "end": 47.06,
+        "duration": 0.14,
+        "after": " vida.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 48.62,
+        "end": 48.74,
+        "duration": 0.12,
+        "after": " mesa,",
+        "before": " decidía",
+        "punctuation": "coma"
+      },
+      {
+        "start": 50.64,
+        "end": 50.78,
+        "duration": 0.14,
+        "after": " no.",
+        "before": " Sus",
+        "punctuation": "punto"
+      },
+      {
+        "start": 55.2,
+        "end": 55.32,
+        "duration": 0.12,
+        "after": " béisbol.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 58.82,
+        "end": 58.96,
+        "duration": 0.14,
+        "after": " Nobel,",
+        "before": " cuando",
+        "punctuation": "coma"
+      },
+      {
+        "start": 60.16,
+        "end": 60.36,
+        "duration": 0.2,
+        "after": " nadie,",
+        "before": " Obama",
+        "punctuation": "coma"
+      },
+      {
+        "start": 64.4,
+        "end": 64.68,
+        "duration": 0.28,
+        "after": " guerra.",
+        "before": " Empezó",
+        "punctuation": "punto"
+      },
+      {
+        "start": 71.38,
+        "end": 71.54,
+        "duration": 0.16,
+        "after": " pensar.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 76.3,
+        "end": 76.5,
+        "duration": 0.2,
+        "after": " batalla.",
+        "before": " En",
+        "punctuation": "punto"
+      },
+      {
+        "start": 81.38,
+        "end": 81.56,
+        "duration": 0.18,
+        "after": " uno.",
+        "before": " Pero,",
+        "punctuation": "punto"
+      },
+      {
+        "start": 84.08,
+        "end": 84.26,
+        "duration": 0.18,
+        "after": " punto?",
+        "before": " ¿Lo",
+        "punctuation": "punto"
+      },
+      {
+        "start": 86.2,
+        "end": 86.38,
+        "duration": 0.18,
+        "after": " así?",
+        "before": " Pues",
+        "punctuation": "punto"
+      },
+      {
+        "start": 91.32,
+        "end": 91.54,
+        "duration": 0.22,
+        "after": " fue.",
+        "before": " Acabó",
+        "punctuation": "punto"
+      },
+      {
+        "start": 94.52,
+        "end": 97.36,
+        "duration": 2.84,
+        "after": " tuviera.",
+        "before": " Para",
+        "punctuation": "punto"
+      },
+      {
+        "start": 98.62,
+        "end": 98.82,
+        "duration": 0.2,
+        "after": " Obama,",
+        "before": " primero",
+        "punctuation": "coma"
+      },
+      {
+        "start": 102.06,
+        "end": 102.2,
+        "duration": 0.14,
+        "after": " vida.",
+        "before": " Su",
+        "punctuation": "punto"
+      },
+      {
+        "start": 102.96,
+        "end": 103.1,
+        "duration": 0.14,
+        "after": " padre.",
+        "before": " Se",
+        "punctuation": "punto"
+      },
+      {
+        "start": 104.5,
+        "end": 104.64,
+        "duration": 0.14,
+        "after": " él,",
+        "before": " Barack",
+        "punctuation": "coma"
+      },
+      {
+        "start": 105.2,
+        "end": 105.44,
+        "duration": 0.24,
+        "after": " Obama.",
+        "before": " Era",
+        "punctuation": "punto"
+      },
+      {
+        "start": 111.52,
+        "end": 111.78,
+        "duration": 0.26,
+        "after": " Hawaii.",
+        "before": " Allí",
+        "punctuation": "punto"
+      },
+      {
+        "start": 113.32,
+        "end": 113.44,
+        "duration": 0.12,
+        "after": " estudiante,",
+        "before": " Ann",
+        "punctuation": "coma"
+      },
+      {
+        "start": 115.58,
+        "end": 115.84,
+        "duration": 0.26,
+        "after": " Kansas.",
+        "before": " Se",
+        "punctuation": "punto"
+      },
+      {
+        "start": 116.62,
+        "end": 117.08,
+        "duration": 0.46,
+        "after": " casan.",
+        "before": " En",
+        "punctuation": "punto"
+      },
+      {
+        "start": 123.76,
+        "end": 123.9,
+        "duration": 0.14,
+        "after": " Unidos,",
+        "before": " que",
+        "punctuation": "coma"
+      },
+      {
+        "start": 127.68,
+        "end": 127.82,
+        "duration": 0.14,
+        "after": " visto,",
+        "before": " es",
+        "punctuation": "coma"
+      },
+      {
+        "start": 130.58,
+        "end": 130.72,
+        "duration": 0.14,
+        "after": " poco.",
+        "before": " Cuando",
+        "punctuation": "punto"
+      },
+      {
+        "start": 132.42,
+        "end": 132.56,
+        "duration": 0.14,
+        "after": " bebé,",
+        "before": " el",
+        "punctuation": "coma"
+      },
+      {
+        "start": 135.22,
+        "end": 135.38,
+        "duration": 0.16,
+        "after": " va.",
+        "before": " Después",
+        "punctuation": "punto"
+      },
+      {
+        "start": 138.02,
+        "end": 138.14,
+        "duration": 0.12,
+        "after": " divorcia.",
+        "before": " Su",
+        "punctuation": "punto"
+      },
+      {
+        "start": 144.36,
+        "end": 144.52,
+        "duration": 0.16,
+        "after": " Yakarta,",
+        "before": " la",
+        "punctuation": "coma"
+      },
+      {
+        "start": 145.44,
+        "end": 145.85999999999999,
+        "duration": 0.42,
+        "after": " Indonesia.",
+        "before": " Allí",
+        "punctuation": "punto"
+      },
+      {
+        "start": 147.26,
+        "end": 147.4,
+        "duration": 0.14,
+        "after": " dinero,",
+        "before": " y",
+        "punctuation": "coma"
+      },
+      {
+        "start": 149.3,
+        "end": 149.46,
+        "duration": 0.16,
+        "after": " inglés,",
+        "before": " así",
+        "punctuation": "coma"
+      },
+      {
+        "start": 157.12,
+        "end": 157.4,
+        "duration": 0.28,
+        "after": " fiesta.",
+        "before": " Con",
+        "punctuation": "punto"
+      },
+      {
+        "start": 164.88,
+        "end": 165.04,
+        "duration": 0.16,
+        "after": " isla.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 166.62,
+        "end": 166.76,
+        "duration": 0.14,
+        "after": " algo.",
+        "before": " Su",
+        "punctuation": "punto"
+      },
+      {
+        "start": 167.82,
+        "end": 167.98,
+        "duration": 0.16,
+        "after": " aparece.",
+        "before": " Se",
+        "punctuation": "punto"
+      },
+      {
+        "start": 169.16,
+        "end": 169.32,
+        "duration": 0.16,
+        "after": " más.",
+        "before": " Le",
+        "punctuation": "punto"
+      },
+      {
+        "start": 170.8,
+        "end": 170.96,
+        "duration": 0.16,
+        "after": " baloncesto.",
+        "before": " Va",
+        "punctuation": "punto"
+      },
+      {
+        "start": 173.68,
+        "end": 173.82,
+        "duration": 0.14,
+        "after": " clase.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 177.4,
+        "end": 177.66,
+        "duration": 0.26,
+        "after": " más.",
+        "before": " En",
+        "punctuation": "punto"
+      },
+      {
+        "start": 179.6,
+        "end": 179.78,
+        "duration": 0.18,
+        "after": " Barack.",
+        "before": " Lo",
+        "punctuation": "punto"
+      },
+      {
+        "start": 180.7,
+        "end": 180.88,
+        "duration": 0.18,
+        "after": " Barry.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 183.1,
+        "end": 183.4,
+        "duration": 0.3,
+        "after": " explicar.",
+        "before": " Es",
+        "punctuation": "punto"
+      },
+      {
+        "start": 190.38,
+        "end": 190.68,
+        "duration": 0.3,
+        "after": " Indonesia.",
+        "before": " No",
+        "punctuation": "punto"
+      },
+      {
+        "start": 191.86,
+        "end": 192.12,
+        "duration": 0.26,
+        "after": " sitio.",
+        "before": " Para",
+        "punctuation": "punto"
+      },
+      {
+        "start": 193.72,
+        "end": 193.88,
+        "duration": 0.16,
+        "after": " negro.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 195.46,
+        "end": 195.64,
+        "duration": 0.18,
+        "after": " blanco.",
+        "before": " Así",
+        "punctuation": "punto"
+      },
+      {
+        "start": 197.32,
+        "end": 197.76,
+        "duration": 0.44,
+        "after": " gente.",
+        "before": " Intenta",
+        "punctuation": "punto"
+      },
+      {
+        "start": 198.84,
+        "end": 199.12,
+        "duration": 0.28,
+        "after": " pensar.",
+        "before": " Se",
+        "punctuation": "punto"
+      },
+      {
+        "start": 201.0,
+        "end": 201.2,
+        "duration": 0.2,
+        "after": " baloncesto.",
+        "before": " Y",
+        "punctuation": "punto"
+      },
+      {
+        "start": 204.56,
+        "end": 204.94,
+        "duration": 0.38,
+        "after": " marihuana.",
+        "before": " En",
+        "punctuation": "punto"
+      },
+      {
+        "start": 207.7,
+        "end": 208.2,
+        "duration": 0.5,
+        "after": " cocina.",
+        "before": " Al",
+        "punctuation": "punto"
+      }
+    ],
+    "between_ideas_proxy": {
+      "definition": "Fin de oración ASR con hueco >=600 ms; no prueba semántica de cambio de idea",
+      "duration_s": {
+        "n": 3,
+        "p10": 0.652,
+        "median": 0.86,
+        "p90": 2.444,
+        "mean": 1.4333333333333333,
+        "min": 0.6,
+        "max": 2.84
+      },
+      "events": [
+        {
+          "start": 6.64,
+          "end": 7.240000000000002,
+          "duration": 0.6,
+          "after": " Can.",
+          "before": " El",
+          "punctuation": "punto"
+        },
+        {
+          "start": 11.2,
+          "end": 12.060000000000002,
+          "duration": 0.86,
+          "after": " tele.",
+          "before": " Un",
+          "punctuation": "punto"
+        },
+        {
+          "start": 94.52,
+          "end": 97.36,
+          "duration": 2.84,
+          "after": " tuviera.",
+          "before": " Para",
+          "punctuation": "punto"
+        }
+      ]
+    }
+  },
+  "validation": {
+    "lufs_spread": 0.060000000000002274,
+    "sources_unchanged": true,
+    "mp3_count": 8,
+    "zero_clipped_samples": true,
+    "humanized_ppm_in_110_140": true,
+    "max_splice_delta_dbfs": -57.28128403237503
+  }
+}

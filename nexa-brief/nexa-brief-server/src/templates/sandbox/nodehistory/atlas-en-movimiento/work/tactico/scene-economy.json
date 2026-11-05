@@ -1,0 +1,115 @@
+{
+  "format": "atlas-v1",
+  "duration": 104,
+  "lang": "es",
+  "intro": false,
+  "outro": false,
+  "captions": {
+    "enabled": false
+  },
+  "planoLook": "tactico",
+  "defs": {
+    "palette": {
+      "ink": "#081e2c",
+      "ground": "#399e58",
+      "roof": "#e9e3ba",
+      "paper": "#e9e3ba",
+      "wall": "#8b999b",
+      "side": "#47595c",
+      "metal": "#bac9ca",
+      "accent": "#f6edb4",
+      "fire": "#ef8138",
+      "smoke": "#47595c",
+      "water": "#084c68",
+      "money": "#399e58"
+    },
+    "fonts": {
+      "label": "AtlasEditorial",
+      "display": "AtlasEditorial"
+    }
+  },
+  "places": {
+    "Kharg": [
+      50.33,
+      29.25
+    ],
+    "Abadan": [
+      48.3,
+      30.35
+    ]
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        51.5,
+        28
+      ],
+      "zoom": 5,
+      "pitch": 0,
+      "bearing": 0
+    }
+  ],
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "motionBlur": {
+    "samples": 1
+  },
+  "layers": [],
+  "items": [
+    {
+      "id": "demo-money-stack",
+      "type": "money.stack",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "count": 12,
+      "t": 48,
+      "dur": 8,
+      "out": 55.6,
+      "fade": 0.35
+    },
+    {
+      "id": "demo-money-flow",
+      "type": "money.flow",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "via": [
+        [
+          50.33,
+          29.25
+        ],
+        [
+          51.8,
+          27.4
+        ],
+        [
+          54.5,
+          26.1
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          58,
+          24
+        ]
+      ],
+      "count": 7,
+      "period": 5,
+      "t": 56,
+      "dur": 8,
+      "out": 63.6,
+      "note": "Flujo simbólico; no representa una suma ni cargamentos específicos.",
+      "fade": 0.35,
+      "routeVisible": true
+    }
+  ],
+  "note": "Galería de capacidades D y F; no es el montaje histórico final. El inventario es una muestra de biblioteca."
+}

@@ -1,0 +1,552 @@
+{
+  "duration": 99,
+  "defs": {
+    "fonts": {
+      "label": "Arial, sans-serif",
+      "display": "Arial, sans-serif"
+    },
+    "palette": {
+      "background": "#081e2c",
+      "ink": "#e9e3ba",
+      "white": "#e9e3ba",
+      "gold": "#f6edb4",
+      "red": "#d1495b",
+      "green": "#399e58",
+      "cyan": "#66c6e3",
+      "steel": "#82949c",
+      "smoke": "#33424b",
+      "orange": "#e69b45"
+    }
+  },
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        58.14,
+        25.02
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 9,
+      "center": [
+        58.14,
+        25.02
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 18,
+      "center": [
+        58.14,
+        25.02
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 27,
+      "center": [
+        58.14,
+        25.02
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 36,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 45,
+      "center": [
+        58.2,
+        25.05
+      ],
+      "zoom": 8.4,
+      "dur": 0
+    },
+    {
+      "t": 54,
+      "center": [
+        58.2,
+        25.05
+      ],
+      "zoom": 8.4,
+      "dur": 0
+    },
+    {
+      "t": 63,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 72,
+      "center": [
+        58.2,
+        25
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 81,
+      "center": [
+        58.14,
+        25.02
+      ],
+      "zoom": 8,
+      "dur": 0
+    },
+    {
+      "t": 90,
+      "center": [
+        58.14,
+        25.02
+      ],
+      "zoom": 8,
+      "dur": 0
+    }
+  ],
+  "items": [
+    {
+      "id": "gallery-0-air-bomber",
+      "type": "air.bomber",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "variant": "wing",
+      "scale": 2.7,
+      "heading": "auto",
+      "altitude": 2,
+      "contrail": true,
+      "t": 0,
+      "dur": 8,
+      "label": "ALA VOLANTE",
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.14,
+            25.02
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 0.3,
+        "dur": 6.5,
+        "curve": "smooth"
+      },
+      "sfx": false,
+      "out": 7
+    },
+    {
+      "id": "gallery-1-air-jet",
+      "type": "air.jet",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "variant": "attack",
+      "scale": 4,
+      "heading": "auto",
+      "altitude": 2,
+      "contrail": true,
+      "t": 9,
+      "dur": 8,
+      "label": "CAZA",
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.14,
+            25.02
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 9.3,
+        "dur": 6.5,
+        "curve": "smooth"
+      },
+      "sfx": false,
+      "out": 16
+    },
+    {
+      "id": "gallery-2-air-helicopter",
+      "type": "air.helicopter",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "variant": "utility",
+      "scale": 4,
+      "heading": "auto",
+      "altitude": 2,
+      "contrail": true,
+      "t": 18,
+      "dur": 8,
+      "label": "HELICÓPTERO",
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.14,
+            25.02
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 18.3,
+        "dur": 6.5,
+        "curve": "smooth"
+      },
+      "sfx": false,
+      "out": 25
+    },
+    {
+      "id": "gallery-3-air-prop",
+      "type": "air.prop",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "variant": "transport",
+      "scale": 4,
+      "heading": "auto",
+      "altitude": 2,
+      "contrail": true,
+      "t": 27,
+      "dur": 8,
+      "label": "TRANSPORTE",
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.14,
+            25.02
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 27.3,
+        "dur": 6.5,
+        "curve": "smooth"
+      },
+      "sfx": false,
+      "out": 34
+    },
+    {
+      "id": "gallery-4-air-drop",
+      "type": "air.drop",
+      "at": [
+        58.2,
+        25
+      ],
+      "to": [
+        58.2,
+        25
+      ],
+      "count": 4,
+      "t": 36,
+      "dur": 4,
+      "note": "Caída agregada, no observada en las referencias.",
+      "sfx": false,
+      "out": 43
+    },
+    {
+      "id": "gallery-5-demo-carrier",
+      "type": "naval.carrier",
+      "variant": "supercarrier",
+      "label": "CUBIERTA ANGULADA",
+      "flag": "US",
+      "scale": 1,
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": "auto",
+      "t": 45,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.25,
+            24.95
+          ],
+          [
+            58.18,
+            25.05
+          ],
+          [
+            58.05,
+            25.12
+          ]
+        ],
+        "t": 45,
+        "dur": 7,
+        "curve": "smooth"
+      },
+      "escorts": null,
+      "deck": {
+        "aircraft": 12
+      },
+      "states": [
+        {
+          "at": 45,
+          "state": "flightops"
+        }
+      ],
+      "actions": [],
+      "sfx": false,
+      "out": 52
+    },
+    {
+      "id": "gallery-5-air-launch",
+      "type": "air.launch",
+      "carrier": "gallery-5-demo-carrier",
+      "at": "gallery-5-demo-carrier",
+      "to": [
+        57.8,
+        25.3
+      ],
+      "count": 2,
+      "t": 45,
+      "dur": 7,
+      "unit": "air.jet:attack",
+      "note": "Agregado: no aparece en las referencias. Requiere el item demo-carrier.",
+      "sfx": false,
+      "out": 52
+    },
+    {
+      "id": "gallery-6-demo-carrier",
+      "type": "naval.carrier",
+      "variant": "supercarrier",
+      "label": "CUBIERTA ANGULADA",
+      "flag": "US",
+      "scale": 1,
+      "at": [
+        58.2,
+        25
+      ],
+      "heading": "auto",
+      "t": 54,
+      "dur": 8,
+      "path": {
+        "via": [
+          [
+            58.25,
+            24.95
+          ],
+          [
+            58.18,
+            25.05
+          ],
+          [
+            58.05,
+            25.12
+          ]
+        ],
+        "t": 54,
+        "dur": 7,
+        "curve": "smooth"
+      },
+      "escorts": null,
+      "deck": {
+        "aircraft": 12
+      },
+      "states": [
+        {
+          "at": 54,
+          "state": "flightops"
+        }
+      ],
+      "actions": [],
+      "sfx": false,
+      "out": 61
+    },
+    {
+      "id": "gallery-6-air-recover",
+      "type": "air.recover",
+      "carrier": "gallery-6-demo-carrier",
+      "at": "gallery-6-demo-carrier",
+      "to": [
+        57.8,
+        25.3
+      ],
+      "from": [
+        57.8,
+        25.3
+      ],
+      "count": 2,
+      "t": 54,
+      "dur": 7,
+      "unit": "air.jet:attack",
+      "note": "Agregado: no aparece en las referencias. Requiere el item demo-carrier.",
+      "sfx": false,
+      "out": 61
+    },
+    {
+      "id": "gallery-7-air-bomber",
+      "type": "air.bomber",
+      "at": [
+        58.2,
+        25
+      ],
+      "variant": "swept",
+      "scale": 2.7,
+      "heading": "auto",
+      "altitude": 2,
+      "contrail": true,
+      "t": 63,
+      "dur": 7,
+      "label": "ALAS EN FLECHA",
+      "path": null,
+      "sfx": false,
+      "out": 70
+    },
+    {
+      "id": "gallery-8-air-jet",
+      "type": "air.jet",
+      "at": [
+        58.2,
+        25
+      ],
+      "variant": "attack",
+      "scale": 4,
+      "heading": "auto",
+      "altitude": 2,
+      "contrail": true,
+      "t": 72,
+      "dur": 7,
+      "label": "AVIÓN DE ATAQUE",
+      "path": null,
+      "sfx": false,
+      "out": 79
+    },
+    {
+      "id": "gallery-9-air-jet",
+      "type": "air.jet",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "variant": "attack",
+      "scale": 4,
+      "heading": "auto",
+      "altitude": 2,
+      "contrail": true,
+      "t": 81,
+      "dur": 8,
+      "label": "CAZA",
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.14,
+            25.02
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 81.3,
+        "dur": 6.5,
+        "curve": "smooth"
+      },
+      "sfx": false,
+      "states": [
+        {
+          "at": 82,
+          "state": "hit",
+          "dur": 0.6
+        }
+      ],
+      "out": 88
+    },
+    {
+      "id": "gallery-10-air-jet",
+      "type": "air.jet",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "variant": "attack",
+      "scale": 4,
+      "heading": "auto",
+      "altitude": 2,
+      "contrail": true,
+      "t": 90,
+      "dur": 8,
+      "label": "CAZA",
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            58.14,
+            25.02
+          ],
+          [
+            57.95,
+            25.06
+          ]
+        ],
+        "t": 90.3,
+        "dur": 6.5,
+        "curve": "smooth"
+      },
+      "sfx": false,
+      "states": [
+        {
+          "at": 91,
+          "state": "destroyed",
+          "dur": 0.6
+        }
+      ],
+      "out": 97
+    }
+  ]
+}

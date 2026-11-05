@@ -1,6 +1,6 @@
 """Producción de videos explicativos con un agente local (Claude Code / Codex).
 
-Flujo de una producción (una a la vez, en segundo plano):
+Flujo de una producción (presupuesto global configurable de 1–5, por defecto 1):
   1. creating   → `kit.py new <diseño> <id>`; se guardan en el video el brief
                   (BRIEF.md + brief.json), el tema, la categoría y los medios
                   que subió el usuario (assets/media/), con la duración objetivo
@@ -20,6 +20,7 @@ se inyectan para poder probar sin correr nada real.
 from __future__ import annotations
 
 from src.core.task_ownership import start_owned_task, task_can_recover
+from src.core.explainer import runtime
 
 import asyncio
 import hashlib
@@ -188,8 +189,15 @@ def _write_phase(video_dir: Path, phase: str, digest: str = "") -> None:
 
 def _script_hash(video_dir: Path) -> str:
     try:
-        return hashlib.sha256((video_dir / "assets" / "script.json").read_bytes()).hexdigest()
-    except OSError:
+        script = json.loads((video_dir / "assets" / "script.json").read_text())
+        # These fields affect narrated content/delivery (including the legacy director).
+        # Chapters, acts and visual subtitles must not cause paid TTS/Whisper repeats.
+        payload = {k: script.get(k) for k in ("title", "design", "voice", "voice_direction", "language", "target_minutes")}
+        payload["segments"] = [{k: segment.get(k) for k in
+            ("id", "text", "tone", "intensity", "delivery_note")} for segment in script.get("segments", [])]
+        raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        return "audio-v1:" + hashlib.sha256(raw.encode()).hexdigest()
+    except (OSError, ValueError, TypeError, AttributeError):
         return ""
 
 
@@ -320,6 +328,8 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
         " NO hagas el paso 10 (render).",
         f"El paso 1 ya está hecho: video `{vid}`, diseño `{record['design']}`, carpeta {video_dir}.",
     ]
+    if record.get("short_test"):
+        lines.append("PRUEBA CORTA autorizada de 1–2 minutos: conserva format=short_preparation en script.json. Usa los rangos de kit.py status; no extiendas a cinco minutos. Mantén investigación, medios, voz real y revisión visual.")
     if minutes:
         lines.append(
             f"Duración objetivo: {minutes:g} minutos (assets/script.json → target_minutes). Los rangos de palabras,"
@@ -342,6 +352,8 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
         # Elegida al crear: si su JSON ya no carga, la producción falla con el error claro del módulo.
         story = narrative.get_service().get(record["narrative_id"])
         lines += narrative.production_lines(story, record["category_path"].split("/", 1)[0], record.get("title_level"))
+        lines.append("Cada segmento de script.json necesita act, también en la narrativa documental. Valores válidos: "
+                     + ", ".join(act.id for act in story.spoken_acts) + ". Usa el acto correspondiente al contenido; no incluyas el outro en el guion.")
     if media:
         lines.append(
             "El usuario subió estos medios, ya copiados en assets/media/ (úsalos primero; busca más solo si faltan): "
@@ -400,6 +412,10 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
         "NUNCA ejecutes voice, transcribe, outro ni preview en una producción del pipeline; el host genera voz, transcripción y cierre.",
         "No detengas la producción por un elemento o check: degrada con el catálogo y guarda lo hecho. Para y reporta solo ante infraestructura sin red, cuota o disco.",
     ]
+    if record["category_path"].split("/", 1)[0] not in package_categories():
+        lines.append("Esta categoría no tiene perfil de paquete v2: no busques categories/<categoría>.json ni ejecutes publishing build/check. Conserva publish.json legacy con youtube_title, youtube_description, youtube_tags y los textos por red; usa el tono del brief/categoría.")
+    else:
+        lines.append("El paquete v2 rechaza claves desconocidas. No agregues production_phase, pending, intro ni thumbnail.tabloid.composition: usa los campos exactos del ejemplo y el esquema; corrige lo que indique publishing check.")
     if phase == "guion":
         lines += [
             "FASE GUION: investiga y completa PLAN, script.json, medios, componentes y paquete preliminar. No hagas storyboard ni checks que dependan del audio.",
@@ -408,8 +424,8 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
     else:
         lines += [
             "FASE STORYBOARD: continúa con el guion, audio y lyrics ya existentes. Completa storyboard, hojas, publish.json, manifest listo y usage; kit.py check y publishing check deben dar 0 errores.",
-            'Si necesitas cambiar script.json, cambia el guion, escribe work/phase.json con {"phase":"script_ready"} y termina inmediatamente para que el host regenere voz y transcripción.',
-            f"QC de narración del host (ver work/narration.qc.json y verifica las palabras faltantes): {qc or 'sin datos de QC'}",
+            'Si cambias texto, tono, intensidad o dirección de voz, cambia el guion, escribe work/phase.json con {"phase":"script_ready"} y termina inmediatamente para que el host regenere voz y transcripción.',
+            f"Los cambios de capítulos, act o subtítulos visuales no requieren regenerar voz. QC de narración del host (ver work/narration.qc.json y verifica las palabras faltantes): {qc or 'sin datos de QC'}",
         ]
         if phase == "reparacion":
             lines.append("REPARACIÓN ÚNICA Y CORTA: corrige estos errores exactos sin cambiar el guion; conserva lo demás:\n" + qc)
@@ -474,7 +490,6 @@ class ExplainerProducer:
         # una ruta fija se usa en tests.
         self._videos_dir = videos_dir
         self._uploads_dir = uploads_dir
-        self._lock = asyncio.Lock()
         self._tasks: dict[str, asyncio.Task] = {}
         self._recovered = False
 
@@ -487,6 +502,28 @@ class ExplainerProducer:
         return collection("explainer_productions")
 
     # ── consultas ────────────────────────────────────────────────────────────
+    async def dispatch_due(self, now: datetime | None = None) -> list[str]:
+        now = now or datetime.now(timezone.utc)
+        started = []
+        for rec in sorted(self._col().list(), key=lambda row: row.get("created_at", "")):
+            batch = collection("explainer_batches").get(rec["batch_id"]) if rec.get("batch_id") else None
+            if batch and batch.get("state") in {"creating", "deleting"}:
+                continue
+            if rec.get("state") != "queued" or not rec.get("managed_queue"):
+                continue
+            if rec.get("not_before") and datetime.fromisoformat(rec["not_before"]) > now:
+                continue
+            if rec["production_id"] not in self._tasks:
+                self._start(rec["production_id"], resume=bool(rec.get("resume_requested")))
+                started.append(rec["production_id"])
+        return started
+
+    async def shutdown(self) -> None:
+        tasks = list(self._tasks.values())
+        for task in tasks:
+            task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+
     async def recover_interrupted(self) -> int:
         """Producciones activas de un proceso anterior → failed (se pueden retomar)."""
         if self._recovered:
@@ -494,6 +531,8 @@ class ExplainerProducer:
         self._recovered = True
         fixed = 0
         for rec in self._col().list():
+            if rec.get("state") == "queued" and rec.get("managed_queue"):
+                continue
             if rec.get("state") in {s.value for s in ACTIVE_STATES} and rec["production_id"] not in self._tasks and task_can_recover("explainer", rec["production_id"], queued=rec.get("state") == "queued", updated_at=rec.get("updated_at")):
                 agent_log = Path(rec["agent_log_path"]) if rec.get("agent_log_path") else None
                 if agent_log and agent_log.exists() and rec.get("log_path"):
@@ -544,73 +583,99 @@ class ExplainerProducer:
         minutes: float | None = None,
         narrative_id: str | None = None,
         title_level: str | None = None,
+        batch_id: str | None = None,
+        batch_parallel: int = 1,
+        not_before: str | None = None,
+        short_test: bool = False,
     ) -> dict:
-        category = get_category(category_path)
-        if category is None:
-            raise ValueError(f"categoría desconocida: {category_path}")
-        if category.engine != "explainer_kit":
-            raise ValueError(f"{category.display_name} usa el pipeline de plantillas, no el motor explainer")
-        # Cualquier diseño del kit sirve en cualquier categoría explainer (p. ej. una plantilla
-        # de History en un video de Tech): el video pertenece a la categoría desde la que se crea.
-        if design not in available_design_ids():
-            raise ValueError(f"diseño desconocido: '{design}'")
-        if not topic.strip():
-            raise ValueError("el tema es obligatorio")
-        # La del pedido, o la del brief, o la default de la categoría (None si no carga ninguna).
-        story = narrative.get_service().resolve(
-            category_path.split("/", 1)[0], narrative_id or (brief.narrative_id if brief else None)
-        )
-        level = story.title_level(title_level or (brief.title_level if brief else None)) if story else None
-        if brief is not None:
-            brief.narrative_id, brief.title_level = (story.id if story else None), level
-        agent_name = agent or _default_agent()
-        if not self._agent_getter(agent_name).available():
-            raise ValueError(f"el agente local '{agent_name}' no está instalado en esta máquina")
+        async with runtime.named_lock("admission"):
+            runtime.validate_parallel(batch_parallel)
+            if not_before:
+                stamp = datetime.fromisoformat(not_before)
+                if stamp.tzinfo is None:
+                    raise ValueError("not_before requiere zona horaria")
+                not_before = stamp.astimezone(timezone.utc).isoformat()
+            if short_test and (minutes is None or not 1 <= minutes <= 2):
+                raise ValueError("short_test requiere entre 1 y 2 minutos")
+            if sum(r.get("state") in {s.value for s in ACTIVE_STATES} for r in self._col().list()) >= settings.explainer_max_pending_productions:
+                raise ValueError("cola de preparación llena; espera a que termine algún pedido")
+            category = get_category(category_path)
+            if category is None:
+                raise ValueError(f"categoría desconocida: {category_path}")
+            if category.engine != "explainer_kit":
+                raise ValueError(f"{category.display_name} usa el pipeline de plantillas, no el motor explainer")
+            # Cualquier diseño del kit sirve en cualquier categoría explainer (p. ej. una plantilla
+            # de History en un video de Tech): el video pertenece a la categoría desde la que se crea.
+            if design not in available_design_ids():
+                raise ValueError(f"diseño desconocido: '{design}'")
+            if not topic.strip():
+                raise ValueError("el tema es obligatorio")
+            # La del pedido, o la del brief, o la default de la categoría (None si no carga ninguna).
+            story = narrative.get_service().resolve(
+                category_path.split("/", 1)[0], narrative_id or (brief.narrative_id if brief else None)
+            )
+            level = story.title_level(title_level or (brief.title_level if brief else None)) if story else None
+            if brief is not None:
+                brief.narrative_id, brief.title_level = (story.id if story else None), level
+            agent_name = agent or _default_agent()
+            if not self._agent_getter(agent_name).available():
+                raise ValueError(f"el agente local '{agent_name}' no está instalado en esta máquina")
 
-        production_id = uuid.uuid4().hex[:12]
-        top = get_category(top_level_of(category_path))
-        folder = (top.folder if top else None) or "nodehistory"
-        video_id = unique_video_id(brief.video_id if brief else topic, self._videos_dir)
-        staged: list[str] = []
-        if media_files:
-            stage = self.uploads_dir / production_id
-            stage.mkdir(parents=True, exist_ok=True)
-            for src in media_files:
-                if src.suffix.lower() not in MEDIA_EXTENSIONS:
-                    raise ValueError(f"formato no soportado: {src.name}")
-                dst = stage / src.name
-                shutil.copy2(src, dst)
-                staged.append(dst.name)
+            production_id = uuid.uuid4().hex[:12]
+            top = get_category(top_level_of(category_path))
+            folder = (top.folder if top else None) or "nodehistory"
+            video_id = unique_video_id(brief.video_id if brief else topic, self._videos_dir)
+            reserved = {r["video_id"] for r in self._col().list() if r.get("video_id")}
+            base, suffix = video_id, 2
+            while video_id in reserved:
+                video_id = f"{base[:55]}-{suffix}"
+                suffix += 1
+            staged: list[str] = []
+            if media_files:
+                stage = self.uploads_dir / production_id
+                stage.mkdir(parents=True, exist_ok=True)
+                for src in media_files:
+                    if src.suffix.lower() not in MEDIA_EXTENSIONS:
+                        raise ValueError(f"formato no soportado: {src.name}")
+                    dst = stage / src.name
+                    shutil.copy2(src, dst)
+                    staged.append(dst.name)
 
-        record = {
-            "production_id": production_id,
-            "video_id": video_id,
-            "category_path": category_path,
-            "design": design,
-            "folder": folder,
-            "topic": topic.strip(),
-            "description": description.strip(),
-            "target_minutes": clamp_minutes(minutes),
-            "narrative_id": story.id if story else None,
-            "title_level": level,
-            "agent": agent_name,
-            "auto_record": auto_record,
-            "brief": brief.model_dump() if brief else None,
-            "media": staged,
-            "plan_item_id": plan_item_id,
-            "state": ProductionState.queued.value,
-            "phase": "guion",
-            "error": None,
-            "video_status": None,
-            "record_job_id": None,
-            "log_path": str(settings.data_dir / "explainer" / "logs" / f"{production_id}.log"),
-            "created_at": _now(),
-            "updated_at": _now(),
-        }
-        await self._col().insert(record)
-        self._start(production_id)
-        logger.info("explainer_production_submitted", production_id=production_id, video_id=video_id, agent=agent_name)
-        return record
+            record = {
+                "production_id": production_id,
+                "video_id": video_id,
+                "category_path": category_path,
+                "design": design,
+                "folder": folder,
+                "topic": topic.strip(),
+                "description": description.strip(),
+                "target_minutes": float(minutes) if short_test else clamp_minutes(minutes),
+                "short_test": short_test,
+                "batch_id": batch_id,
+                "batch_parallel": batch_parallel,
+                "not_before": not_before,
+                "managed_queue": True,
+                "narrative_id": story.id if story else None,
+                "title_level": level,
+                "agent": agent_name,
+                "auto_record": auto_record,
+                "brief": brief.model_dump() if brief else None,
+                "media": staged,
+                "plan_item_id": plan_item_id,
+                "state": ProductionState.queued.value,
+                "phase": "guion",
+                "error": None,
+                "video_status": None,
+                "record_job_id": None,
+                "log_path": str(settings.data_dir / "explainer" / "logs" / f"{production_id}.log"),
+                "created_at": _now(),
+                "updated_at": _now(),
+            }
+            await self._col().insert(record)
+            if not batch_id and (not not_before or datetime.fromisoformat(not_before) <= datetime.now(timezone.utc)):
+                self._start(production_id)
+            logger.info("explainer_production_submitted", production_id=production_id, video_id=video_id, agent=agent_name)
+            return record
 
     async def resume(self, production_id: str) -> dict:
         rec = self.get(production_id)
@@ -646,12 +711,20 @@ class ExplainerProducer:
 
     # ── ejecución ────────────────────────────────────────────────────────────
     async def _run(self, production_id: str, resume: bool) -> None:
-        async with self._lock:
+        rec = self.get(production_id)
+        async with runtime.production_slot(rec.get("batch_id"), rec.get("batch_parallel")):
+            await self._update(production_id, started_at=_now())
             try:
                 await self._run_locked(production_id, resume)
+            except asyncio.CancelledError:
+                await self._update(production_id, state=ProductionState.failed.value,
+                                   error="interrumpida; usa Retomar", finished_at=_now())
+                raise
             except Exception as exc:  # noqa: BLE001 - la producción guarda el error
                 logger.error("explainer_production_failed", production_id=production_id, error=str(exc))
                 await self._update(production_id, state=ProductionState.failed.value, error=str(exc)[-800:])
+            finally:
+                await self._update(production_id, finished_at=_now())
 
     async def _run_locked(self, production_id: str, resume: bool) -> None:
         rec = self.get(production_id)
@@ -673,13 +746,12 @@ class ExplainerProducer:
                 raise RuntimeError(f"kit.py new falló: {out[-400:]}")
             self._prepare_video(rec, video_dir)
 
-        agent = self._agent_getter(rec["agent"])
         kit_commands = ("status", "components", "check", "sheet", "manifest", "delegate", "usage")
         scope = AgentScope(
             writable_dir=_rel(video_dir),
             commands=tuple(f"{sys.executable} {KIT_CLI} {cmd}" for cmd in kit_commands)
             + (f"{sys.executable} {MEDIA_CLI}", f"{sys.executable} -m src.core.explainer.publishing"),
-            os_sandbox_dir=_rel(video_dir.parent), extra_writable=(str(KIT_DIR / ".state"),),
+            os_sandbox_dir=_rel(video_dir), extra_writable=(str(KIT_DIR / ".state"), str(settings.data_dir / "runtime" / "task-leases")),
             extra_env={"NEXA_EXPLAINER_PIPELINE_AGENT": "1"},
         )
         timeout = max(settings.agent_production_timeout_seconds, agent_timeout_seconds(rec.get("target_minutes")))
@@ -687,6 +759,13 @@ class ExplainerProducer:
         # Un marcador sin huella es una petición del agente; nunca prueba que el audio sea vigente.
         phase = marker.get("phase")
         current_hash = _script_hash(video_dir)
+        old_hash = marker.get("script_sha256") or ""
+        if phase in ("voice_ready", "storyboard") and old_hash and not old_hash.startswith("audio-v1:"):
+            # Upgrade an unchanged legacy marker without discarding its valid audio.
+            raw_hash = hashlib.sha256((video_dir / "assets" / "script.json").read_bytes()).hexdigest()
+            if old_hash == raw_hash:
+                _write_phase(video_dir, phase, current_hash)
+                marker["script_sha256"] = current_hash
         if phase in ("voice_ready", "storyboard") and (not current_hash or marker.get("script_sha256") != current_hash):
             phase = "script_ready"
         if phase in ("voice_ready", "storyboard") and not (video_dir / "assets" / "song.mp3").is_file():
@@ -735,6 +814,7 @@ class ExplainerProducer:
                     raise RuntimeError("el guion cambió durante la transcripción; usa Retomar")
                 _write_phase(video_dir, "storyboard", digest)
             digest = _read_phase(video_dir).get("script_sha256")
+            script_before = (video_dir / "assets" / "script.json").read_bytes()
             await self._update(production_id, state=ProductionState.producing.value, phase="storyboard")
             qc_path = video_dir / "work" / "narration.qc.json"
             qc = qc_path.read_text(encoding="utf-8") if qc_path.exists() else ""
@@ -754,6 +834,9 @@ class ExplainerProducer:
             if marker.get("phase") == "script_ready" or _script_hash(video_dir) != digest:
                 _write_phase(video_dir, "script_ready")
                 if _script_hash(video_dir) == digest:
+                    if (video_dir / "assets" / "script.json").read_bytes() != script_before:
+                        _write_phase(video_dir, "storyboard", digest)
+                        break  # metadata-only edits: finish validation with the existing audio
                     await self._finish(rec, video_dir, log_path, scope, timeout, ["el agente pidió otra pasada sin cambiar el guion"])
                     return
                 phase = "script_ready"
@@ -950,6 +1033,12 @@ class ExplainerProducer:
             "production_id": rec["production_id"],
         })
         manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+        if rec.get("short_test"):
+            script_path = video_dir / "assets" / "script.json"
+            script = json.loads(script_path.read_text())
+            script["format"] = "short_preparation"
+            script_path.write_text(json.dumps(script, ensure_ascii=False, indent=2) + "\n")
 
         if rec.get("narrative_id"):
             story = narrative.get_service().get(rec["narrative_id"])

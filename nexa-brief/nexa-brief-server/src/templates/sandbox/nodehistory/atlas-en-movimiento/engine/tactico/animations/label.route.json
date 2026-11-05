@@ -1,0 +1,67 @@
+{
+  "name": "label.route",
+  "family": "label",
+  "description": "Rótulo independiente idéntico al integrado en route.lanes. Úsala para identificar lugares y objetos.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "screen": {
+      "type": "array",
+      "default": [
+        0.5,
+        0.45
+      ],
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    },
+    "text": {
+      "type": "string",
+      "default": "ORMUZ",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "size": {
+      "type": "number",
+      "default": 24,
+      "range": null,
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "width": {
+      "type": "number",
+      "default": 430,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-label-route",
+    "t": 0,
+    "dur": 6,
+    "out": 5.5,
+    "screen": [
+      0.5,
+      0.45
+    ],
+    "type": "label.route",
+    "text": "ORMUZ",
+    "color": "text",
+    "size": 24,
+    "width": 430
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/label.route.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

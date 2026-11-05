@@ -36,7 +36,9 @@
     "designs/imperio/components/intros.js",
     "designs/imperio/components/outro.js",
     "designs/common/tabloid.js",
-    "designs/common/question.js"
+    "designs/common/question.js",
+    "designs/imperio/components/campaign.js",
+    "designs/imperio/components/elements.js"
   ],
   "defaults": {
     "family": "imperio",
@@ -117,5 +119,43 @@
       4,
       8
     ]
+  },
+  "showcase": {
+    "components": [
+      "imperio.title",
+      "imperio.map",
+      "imperio.expansion",
+      "imperio.archive",
+      "imperio.word",
+      "imperio.native",
+      "imperio.introv1",
+      "imperio.introv2",
+      "imperio.outro",
+      "imperio.outrov2",
+      "imperio.campaign",
+      "imperio.footage",
+      "imperio.date",
+      "imperio.country",
+      "imperio.flag",
+      "imperio.city",
+      "imperio.arrow",
+      "imperio.territory",
+      "imperio.caption",
+      "imperio.sun",
+      "imperio.rays",
+      "imperio.ships",
+      "imperio.compass",
+      "common.flash",
+      "common.lyric"
+    ],
+    "catalog": "designs/imperio/catalog.json",
+    "referenceVideo": "nodeatlas/japon-expansion-prueba",
+    "note": "Componentes del diseño y de los dos videos de referencia; los componentes propios nuevos se incorporan desde la biblioteca de videos.",
+    "backgrounds": {
+      "imperio.date": "#304653",
+      "imperio.caption": "#304653",
+      "imperio.compass": "#304653",
+      "imperio.word": "#304653"
+    }
   }
 }

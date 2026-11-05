@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.outrov2",
+  "description": "Outro v2: GRACIAS POR VER un 45 % más grande, letras en negrita y fondos rojo sangre oscuro en LIKE y SUSCRÍBETE. Conserva el sol naciente, los rayos, la flecha, la campana y los tiempos sincronizables del cierre original. Textos, fondo, tamaño, peso y color editables por JSON; funciona en 9:16 y 16:9.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "thanks": {
+      "type": "string",
+      "description": "Rótulo inicial.",
+      "default": "GRACIAS POR VER"
+    },
+    "channel": {
+      "type": "string",
+      "description": "Nombre del canal (grande).",
+      "default": "NODEPOLITICS"
+    },
+    "cta": {
+      "type": "string",
+      "description": "Texto del botón de suscripción.",
+      "default": "SUSCRÍBETE"
+    },
+    "support": {
+      "type": "string",
+      "description": "Mensaje de apoyo.",
+      "default": "Apoya el canal y comparte el video."
+    },
+    "handle": {
+      "type": "string",
+      "description": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+      "default": "youtube.com/@nodepolitics"
+    },
+    "arrow": {
+      "type": "boolean",
+      "description": "Flecha del LIKE a SUSCRÍBETE.",
+      "default": true
+    },
+    "likeAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo del LIKE.",
+      "default": 1
+    },
+    "subscribeAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de SUSCRÍBETE.",
+      "default": 2.5
+    },
+    "bellAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de la campana.",
+      "default": 3.25
+    },
+    "supportAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo del mensaje de apoyo y la dirección.",
+      "default": 3.65
+    },
+    "country": {
+      "type": "string",
+      "description": "País foco del fondo atlas (vacío = mundo).",
+      "default": ""
+    },
+    "bg": {
+      "enum": [
+        "auto",
+        "atlas",
+        "archivo",
+        "papel",
+        "image",
+        "component",
+        "none"
+      ],
+      "description": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+      "default": "auto"
+    },
+    "src": {
+      "type": "string",
+      "description": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+      "default": ""
+    },
+    "focus": {
+      "type": "array",
+      "description": "Punto de interés de la foto [x,y] (0..1).",
+      "default": [
+        0.5,
+        0.5
+      ]
+    },
+    "use": {
+      "type": "string",
+      "description": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+      "default": ""
+    },
+    "useParams": {
+      "type": "object",
+      "description": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+      "default": {}
+    },
+    "dim": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Oscurecido del fondo foto/componente.",
+      "default": 0.5
+    },
+    "thanksScale": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 2,
+      "description": "Escala de GRACIAS POR VER respecto al cierre original (1.45 = 45 % más grande).",
+      "default": 1.45
+    },
+    "textWeight": {
+      "type": "number",
+      "minimum": 400,
+      "maximum": 900,
+      "description": "Peso tipográfico del nombre del canal, SUSCRÍBETE y el apoyo. 800 = negrita gruesa; GRACIAS y LIKE usan Montserrat 800.",
+      "default": 800
+    },
+    "actionColor": {
+      "type": "string",
+      "description": "Color de relleno de LIKE y SUSCRÍBETE; por defecto rojo sangre oscuro. No cambia el sol ni los rayos.",
+      "default": "#700B1B"
+    }
+  },
+  "required": [],
+  "$defs": {},
+  "examples": [
+    {
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODEPOLITICS",
+      "cta": "SUSCRÍBETE",
+      "support": "Apoya el canal y comparte el video.",
+      "handle": "youtube.com/@nodepolitics",
+      "thanksScale": 1.45,
+      "textWeight": 800,
+      "actionColor": "#700B1B"
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

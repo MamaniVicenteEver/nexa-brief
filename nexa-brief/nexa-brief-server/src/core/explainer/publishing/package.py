@@ -195,6 +195,8 @@ class Tags(_Piece):
 class PublishPackage(_Piece):
     schema_version: Literal[2] = SCHEMA_VERSION
     category: str
+    # Los prototipos aprobados conservan su apertura nativa al preparar miniaturas.
+    preserve_opening: bool = False
     thumbnail: Thumbnail
     titles: Titles
     description: Description

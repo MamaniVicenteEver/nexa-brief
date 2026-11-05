@@ -357,6 +357,10 @@
     /* La vista en vivo no espera los clips (se agregan al cargar); capturas y renders sí. */
     const vidLoads = [...vids].map(src => PREVIEW_FIRST_FRAME ? (loadVideo(src), null) : wait(loadVideo(src), 20000));
     await Promise.all([...fontLoads, ...[...firstFrameImgs].map(loadImage), ...vidLoads.filter(Boolean)]);
+    if (!PREVIEW_FIRST_FRAME) {
+      const missingClips = [...vids].filter(src => !loadedVideos.has(src));
+      if (missingClips.length) throw new Error(`[kit] No se pudieron cargar los clips para capturar: ${missingClips.join(", ")}`);
+    }
     if (!PREVIEW_FIRST_FRAME) await wait(doc.fonts.ready, 10000);
     const deferredImgs = PREVIEW_FIRST_FRAME
       ? [...imgs].filter(src => !firstFrameImgs.has(src))
@@ -440,7 +444,7 @@
     }
 
     /* clips pedidos en este cuadro → segundo del clip; los no pedidos se pausan */
-    const wanted = new Map(), seeking = new Set();
+    const wanted = new Map(), seeking = new Map();
     function syncClips() {
       /* exacto (captura, render cuadro a cuadro, pausa en el modal) o en vivo (corre y se corrige) */
       const exact = forced != null || (CONTROLLED && audio.paused);
@@ -449,7 +453,8 @@
         if (want == null) { if (!v.paused) v.pause(); continue; }
         if (exact) {
           if (!v.paused) v.pause();
-          if (Math.abs(v.currentTime - want) > 0.5 / 30) { v.currentTime = want; seeking.add(v); }
+          if (Math.abs(v.currentTime - want) > 0.5 / 30) { v.currentTime = want; seeking.set(v, want); }
+          else if (v.seeking) seeking.set(v, want);
         } else {
           /* Reasignar durante una búsqueda lenta cancela el cuadro pendiente y
              puede mantener el clip congelado aunque ya esté descargado. */
@@ -463,9 +468,19 @@
     async function settleClips(t) {
       if (!seeking.size) return;
       const vs = [...seeking]; seeking.clear();
-      await Promise.all(vs.map(v => new Promise(r => {
-        if (!v.seeking && v.readyState >= 2) return r();
-        v.addEventListener("seeked", r, { once: true }); setTimeout(r, 3000);
+      await Promise.all(vs.map(([v, want]) => new Promise((resolve, reject) => {
+        const finish = () => {
+          clearTimeout(timer); v.removeEventListener("seeked", finish);
+          if (v.readyState < 2 || Math.abs(v.currentTime - want) > 0.075)
+            reject(new Error(`[kit] El clip no llegó al cuadro solicitado (${want.toFixed(3)}s): ${v.getAttribute("src")}`));
+          else resolve();
+        };
+        const timer = setTimeout(() => {
+          v.removeEventListener("seeked", finish);
+          reject(new Error(`[kit] Tiempo agotado buscando un cuadro del clip: ${v.getAttribute("src")}`));
+        }, 5000);
+        if (!v.seeking && v.readyState >= 2) finish();
+        else v.addEventListener("seeked", finish, { once: true });
       })));
       render(t);
       seeking.clear();

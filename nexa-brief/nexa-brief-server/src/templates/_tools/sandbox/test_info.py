@@ -188,3 +188,11 @@ def test_validate_reports_contract_errors():
     assert "version debe ser 1" in errors
     assert any(message.startswith("falta ") for message in errors)
     assert "engine debe ser una ruta relativa o explainer-kit:<diseño>" in errors
+
+
+def test_componentes_invalidos_son_aviso_no_error():
+    import pytest
+    import info as info_module
+    with pytest.warns(UserWarning, match="components"):
+        errors = info_module.validate_info({"components": [{"name": "inválido"}]})
+    assert not any("components" in error for error in errors)

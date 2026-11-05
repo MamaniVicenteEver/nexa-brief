@@ -117,3 +117,11 @@ entero dentro de la plantilla. Editar un `.sh` mientras se está ejecutando.
 
 Si el brief dice `mode: smoke`: hacé solo la fase 0 con id `zz-smoke-<idea>` y delegá una tarea
 trivial ("escribí work/results/smoke.md con OK"). Registrá tokens, reportá y **borrá la carpeta**.
+
+
+## Componentes elegibles en el visor del Sandbox
+Un prototipo que use _proto/proto.js puede declarar componentes en su info.json (por ejemplo outro v1 / v2, o un interruptor para mostrar u ocultar una parte) y el visor muestra la seccion Componentes. Contrato completo, sintaxis when/$by/$param y la API (POST /explainer/component-previews con scope sandbox) en _proto/COMPONENTES.md. Ejemplo real: nodehistory/atlas-cinematico (info.json y assets/scene.json).
+
+## Componentes para la biblioteca
+
+Todo prototipo nuevo con partes elegibles (variantes, cierres, fichas u otras partes intercambiables) debe declarar `components` en su `info.json` según `_proto/COMPONENTES.md`. Al entregar el resultado, informá la lista de componentes declarados.

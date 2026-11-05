@@ -1,0 +1,194 @@
+{
+  "date": "2026-11-02",
+  "timezone": "America/La_Paz",
+  "study_only": true,
+  "canonical_project": "/home/alfred/Projects/Git-Projects/nexa-brief",
+  "canonical_data": "/home/alfred/.local/share/nexa-brief/profiles/profesional",
+  "numbered_frame_files_all_six": 9654,
+  "frame_allocated_bytes_all_six": 8383438848,
+  "work_files_all_six": 9714,
+  "work_directory_count_all_six": 30,
+  "work_allocated_bytes_all_six": 8424800256,
+  "mp4_matrix": {
+    "backup_nov02_development_output": {
+      "mp4_files": 252,
+      "mp4_bytes": 6186373885,
+      "matched_files": 252,
+      "matched_bytes": 6186373885,
+      "unmatched_bytes": 0
+    },
+    "backup_nov02_production_output": {
+      "mp4_files": 250,
+      "mp4_bytes": 6080272067,
+      "matched_files": 250,
+      "matched_bytes": 6080272067,
+      "unmatched_bytes": 0
+    },
+    "backup_oct24_output": {
+      "mp4_files": 250,
+      "mp4_bytes": 6080272067,
+      "matched_files": 250,
+      "matched_bytes": 6080272067,
+      "unmatched_bytes": 0
+    },
+    "worktree_output": {
+      "mp4_files": 252,
+      "mp4_bytes": 6186373885,
+      "matched_files": 252,
+      "matched_bytes": 6186373885,
+      "unmatched_bytes": 0
+    }
+  },
+  "old_docker_volume_mp4": {
+    "files": 250,
+    "matches_active": 250,
+    "bytes": 6080272067
+  },
+  "historical_mp4_copy_count": 1254,
+  "historical_mp4_logical_bytes": 30613563971,
+  "worktree_src_mp4": {
+    "files": 228,
+    "matches_main_server": 228,
+    "bytes": 1854573266
+  },
+  "worktree_rescue": {
+    "study": "Read-only study; no deletion, movement, build, mount or service restart",
+    "remote_writes": [],
+    "local_evidence_root": "/tmp",
+    "docker_engine": "29.1.3",
+    "docker_driver_type": "io.containerd.snapshotter.v1",
+    "docker_snapshot_blob_explanation": "containerd keeps compressed OCI layer blobs plus extracted overlayfs snapshots; parent measured physical directories. Do not add docker system df image/cache totals to these directories.",
+    "docker_rollback_image_count": 19,
+    "docker_rollback_alias_count": 20,
+    "docker_reported_unique_sum_rounded_bytes": 33023800000,
+    "docker_reclaimable_images_reported": "38.27GB",
+    "docker_reclaimable_build_cache_reported": "21.63GB; overlaps image accounting, must remeasure after each operation",
+    "docker_current_images_to_keep": [
+      {
+        "repository": "nexa-brief-api",
+        "tag": "latest",
+        "id": "ebd1c47384c0",
+        "reported_size": "5.87GB",
+        "reported_shared_size": "2.314GB",
+        "reported_unique_size": "3.557GB",
+        "containers": 1
+      },
+      {
+        "repository": "nexa-brief-web",
+        "tag": "latest",
+        "id": "d0535c4962f7",
+        "reported_size": "541MB",
+        "reported_shared_size": "327.7MB",
+        "reported_unique_size": "213.1MB",
+        "containers": 1
+      },
+      {
+        "repository": "cloudflare/cloudflared",
+        "tag": "latest",
+        "id": "faa8e0a1475f",
+        "reported_size": "98.6MB",
+        "reported_shared_size": "0B",
+        "reported_unique_size": "98.55MB",
+        "containers": 1
+      },
+      {
+        "repository": "busybox",
+        "tag": "1.37.0",
+        "id": "bdf57e528e45",
+        "reported_size": "6.77MB",
+        "reported_shared_size": "0B",
+        "reported_unique_size": "6.77MB",
+        "containers": 1
+      }
+    ],
+    "worktree_path": "/home/alfred/codex/nexa-brief/wt-amarillista",
+    "worktree_allocated_bytes": 10974756864,
+    "worktree_output_allocated_bytes": 8094932992,
+    "git_state": "Not a valid Git worktree/repository: parent .git and server .git directories empty; principal git worktree list contains only principal checkout",
+    "provenance": "CAMBIOS.md describes isolated experimental amarillista/hilo motor round9 and an unapplied amarillista.patch; folder birth2026-10-30 14:39:47 Bolivia",
+    "runtime_references": {
+      "ts": "2026-11-02T18:46:04.780120-04:00",
+      "process_refs": [],
+      "service_refs": [],
+      "service_count": 224
+    },
+    "operational_script_literal_path_references": 0,
+    "source_hash_counts": {
+      "different": 171,
+      "same": 1023,
+      "missing_active": 26
+    },
+    "asset_hash_counts": {
+      "same": 481,
+      "mp4_delegated_parent": 228,
+      "missing_active": 13
+    },
+    "distinct_source_asset_differences_count": 208,
+    "distinct_source_asset_differences_logical_bytes": 29185979,
+    "additional_deliverables_to_keep": [
+      "amarillista.patch",
+      "CAMBIOS.md",
+      "BITACORA.md",
+      "root helper scripts and experiment fixtures/outputs pending owner review"
+    ],
+    "preserve_template": "src/templates/sandbox/nodepolitics/imperio-demo including original audio, images, config and worksheets",
+    "sensitive_scope": "No .env, accounts.json, users.json, token/client_secret/credential files, data/canales or browser_profiles content inspected; complete deduplication of protected state remains unverified",
+    "proposed_sequence": [
+      "Keep principal checkout, professional profile and currently referenced Docker image IDs as canonical versions.",
+      "Rescue old different/missing code and template resources into one reviewed recovery set without replacing current code; include experimental patch and notes.",
+      "After parent verifies MP4 hashes, deduplicate output copies and reconcile protected state without exposing credentials.",
+      "Remove only reviewed rollback image IDs/aliases, preserving current images; remeasure physical df and Docker accounting.",
+      "Prune unused build cache under an explicit modest retention budget, then remeasure; cache is rebuildable and not the original application data.",
+      "Retire wt-amarillista only after the recovery set and originals are verified; its entire 10.97GB is not disposable today.",
+      "For future builds, copy virtualenv once and separate code layers; set bounded rollback retention and BuildKit GC."
+    ],
+    "docs": [
+      "https://docs.docker.com/engine/storage/containerd/",
+      "https://docs.docker.com/build/cache/garbage-collection/",
+      "https://docs.docker.com/reference/cli/docker/builder/prune/",
+      "https://docs.docker.com/reference/cli/docker/image/prune/"
+    ]
+  },
+  "hdd": {
+    "model": "TOSHIBA DT01ACA1",
+    "disk": "/dev/sdb",
+    "disk_bytes": 1000204886016,
+    "mounted": false,
+    "read_method": "ntfsinfo -m through read-only device permission; no filesystem mount or writes",
+    "partitions": [
+      {
+        "device": "/dev/sdb2",
+        "label": "Documentos",
+        "uuid": "B214A08814A05161",
+        "volume_bytes": 503315427328,
+        "free_bytes": 495608131584,
+        "used_bytes": 7707295744
+      },
+      {
+        "device": "/dev/sdb3",
+        "label": "VideosImagenesOtros",
+        "uuid": "6E2621FB2621C4C5",
+        "volume_bytes": 496832081920,
+        "free_bytes": 485257699328,
+        "used_bytes": 11574382592
+      }
+    ]
+  },
+  "nonoverlapping_potential_ssd_bytes_after_rescue_and_verified_hdd_backup": 46056992768,
+  "potential_components_bytes": {
+    "nov02_backup": 17384345600,
+    "oct24_backup": 8146165760,
+    "worktree_after_rescue": 10974756864,
+    "old_docker_volumes_after_backup": 8147591168,
+    "active_failed_work": 1404133376
+  },
+  "last_df_used_bytes": 180994629632,
+  "last_df_at_utc": "2026-11-02T22:55:23+00:00",
+  "limitations": [
+    "Protected account/database content not inspected or declared duplicated.",
+    "Only MP4 contents were exhaustively compared across all historical output trees.",
+    "Potential SSD reclaim includes frames already inside retired trees; do not add the total frame bytes again.",
+    "Docker reclaim metrics overlap; measure after each future cleanup.",
+    "Files differing in old experiment are candidates for review, not automatic replacements for current code."
+  ]
+}

@@ -23,6 +23,7 @@ export interface SandboxItem {
   hasIndex: boolean;
   hasPoster: boolean;
   hasInfo: boolean;
+  hasComponents?: boolean;
   totalTokens: number | null;
   thumbnailUrl: string | null;
   player: SandboxPlayer;
@@ -43,7 +44,27 @@ export interface SandboxFolder {
 
 export type SandboxPreviewTarget = { type: "iframe" | "video"; url: string } | null;
 
+export interface SandboxComponentParam {
+  type: "string" | "number" | "boolean";
+  default?: string | number | boolean;
+  doc?: string;
+  required?: boolean;
+  options?: Array<string | number | boolean>;
+  min?: number;
+  max?: number;
+}
+
+export interface SandboxComponent {
+  name: string;
+  label: string;
+  summary: string;
+  group?: string;
+  default?: boolean;
+  params?: Record<string, SandboxComponentParam>;
+}
+
 export interface SandboxInfoDocument {
+  components?: SandboxComponent[];
   version?: number;
   title?: string;
   summary?: string;

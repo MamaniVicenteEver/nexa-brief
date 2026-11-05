@@ -26,3 +26,5 @@
 - No escribas fuera de `sandbox/<categoría>/<id>/`, excepto temporales en `/tmp` y cachés locales.
 - No edites `delegate.sh` ni otros lanzadores mientras estén corriendo.
 - No cambies plantillas publicadas ni herramientas compartidas fuera de los archivos autorizados.
+
+Todo prototipo con variantes, cierres, fichas u otras partes elegibles debe declarar `components` en `info.json` según `_proto/COMPONENTES.md` e informar la lista en el resultado.

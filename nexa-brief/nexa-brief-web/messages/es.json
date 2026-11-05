@@ -288,6 +288,7 @@
       "disconnect": "Desconectar",
       "addUsage": "Asignar uso",
       "videos": "Videos",
+      "likes": "Me gusta",
       "followers": "Seguidores",
       "views": "Vistas",
       "lastPublished": "Última",
@@ -420,8 +421,21 @@
       "qrFailed": "No se pudo iniciar la conexión QR.",
       "qrCancel": "Cancelar conexión",
       "qrCancelled": "Conexión cancelada.",
-      "apiPrivateNote": "Te lleva a TikTok para autorizar; los videos quedan privados hasta auditar la app.",
+      "apiPrivateNote": "Te lleva a TikTok para autorizar tu cuenta mediante TikTok for Business.",
       "apiOfficial": "Conectar con la API oficial",
+      "tiktokTitle": "Conecta tu cuenta de TikTok",
+      "tiktokDescription": "Reúne tu contenido y sus resultados en Nexa Brief.",
+      "tiktokAccountTitle": "Tu cuenta de TikTok",
+      "tiktokAccountHint": "Elige la cuenta con la que quieres trabajar.",
+      "tiktokAccessTitle": "Qué podrás hacer en Nexa",
+      "tiktokProfileTitle": "Identificar tu cuenta",
+      "tiktokProfileDetail": "Mostraremos tu nombre, usuario y foto de perfil.",
+      "tiktokVideosTitle": "Gestionar tus videos",
+      "tiktokVideosDetail": "Consulta tus publicaciones y envía videos que hayas aprobado.",
+      "tiktokStatsTitle": "Consultar resultados",
+      "tiktokStatsDetail": "Revisa seguidores, vistas y me gusta disponibles en TikTok.",
+      "tiktokConsent": "Continuarás en TikTok, donde podrás revisar los permisos y autorizar la conexión.",
+      "tiktokConnect": "Continuar con TikTok",
       "browserError": "No se pudo conectar la cuenta de TikTok.",
       "platformLabel": "Plataforma",
       "aliasLabel": "Identificador interno de Nexa",
@@ -884,6 +898,8 @@
   },
   "imagePosts": {
     "section": {
+      "publish": "Publicar",
+      "publishPost": "Publicar {title}",
       "title": "Publicaciones",
       "description": "Crea, revisa y programa imágenes o carruseles usando material verificado de cada categoría.",
       "newPost": "Nueva publicación",
@@ -1256,7 +1272,16 @@
       "publishingTab": "Publicar"
     },
     "publishing": {
+      "accountChanged": "La disponibilidad de {name} cambió. Actualiza los permisos de esa cuenta antes de publicar.",
+      "commentPermissionRequired": "Esta publicación necesita los créditos en un comentario. Falta autorizar ese permiso.",
+      "reconnectPermissions": "Reconectar y autorizar",
       "heading": "Publicación y resultados",
+      "progressHeading": "Progreso de publicación",
+      "progressSending": "Publicando en los canales…",
+      "progressReview": "Pendiente de revisión",
+      "progressFailed": "Proceso terminado con errores",
+      "progressComplete": "Publicación completada",
+      "progressCount": "{count} de {total} canales completados",
       "format": "{count} láminas · {kind}",
       "carousel": "Carrusel",
       "image": "Imagen",
@@ -1266,6 +1291,7 @@
       "pendingCount": "En proceso",
       "failedCount": "Con errores",
       "loadFailed": "No se pudo comprobar el estado actual. Actualiza antes de publicar.",
+      "selectAll": "Seleccionar todas",
       "destinations": "Publicar en",
       "loadingAccounts": "Consultando cuentas…",
       "accountsFailed": "No se pudieron consultar las cuentas. Inténtalo de nuevo.",
@@ -1276,7 +1302,9 @@
       "publish": "Publicar en {count, plural, one {# canal} other {# canales}}",
       "approvePublish": "Aprobar y publicar en {count, plural, one {# canal} other {# canales}}",
       "sending": "Publicando…",
-      "selectionHint": "Elige los destinos. Al publicar se aprueba esta revisión y se envían las imágenes limpias, sin los tags del visor.",
+      "preparing": "Preparando imágenes…",
+      "changedBeforePublish": "El post cambió en otra sesión. Revisa la versión actual antes de publicar.",
+      "selectionHint": "Al publicar, el sistema prepara las imágenes en el formato de cada cuenta y las envía automáticamente.",
       "history": "Historial por canal",
       "metricsWindow": "Ventana de métricas",
       "noHistory": "Este post aún no tiene envíos. Aquí verás dónde se publicó y sus resultados.",
@@ -1335,16 +1363,21 @@
     },
     "artwork": {
       "selectedFormat": "Formato seleccionado: {format}",
-      "prepareHint": "Genera el JPEG final y revísalo antes de aprobar el envío. El diseño editable y los archivos anteriores se conservan.",
+      "prepareHint": "Prepara los JPEG finales del modal y de los formatos elegidos para cada cuenta. Revisa las imágenes antes de aprobar.",
       "prepare": "Preparar JPEG en {format}",
       "preparing": "Preparando JPEG…",
       "preparedButton": "Actualizar JPEG final",
       "prepared": "JPEG en {format} preparado. Revisa el archivo final antes de publicar.",
       "readyToApprove": "JPEG final preparado para esta revisión.",
       "prepareAgain": "El post cambió. Prepara de nuevo el JPEG y revisa la versión actual antes de publicar.",
-      "prepareFirst": "Primero prepara y revisa el JPEG final. Después podrás aprobar y publicar en los canales seleccionados.",
+      "prepareFirst": "Prepara y revisa los JPEG finales para habilitar la publicación.",
       "instagramRestriction": "El feed de Instagram requiere 4:5 en esta integración. Elige ese formato y revisa su composición antes de publicar.",
-      "useInstagramFormat": "Ver 4:5 para Instagram"
+      "useInstagramFormat": "Ver 4:5 para Instagram",
+      "accountSettings": "Formato de {network} · {name}",
+      "accountFormat": "Formato para esta cuenta",
+      "inheritFormat": "Usar el del modal ({format})",
+      "reviewFormat": "Revisar JPEG final · {format}",
+      "slidePreview": "Lámina {number} en {format}"
     }
   },
   "sandbox": {
@@ -1655,7 +1688,14 @@
       "clearFinished": "Limpiar terminados",
       "running": "{count, plural, one {# en curso} other {# en curso}}",
       "queued": "{count, plural, one {# en cola} other {# en cola}}",
-      "done": "Horarios",
+      "done": "{count, plural, one {# listo} other {# listos}}",
+      "failed": "{count, plural, one {# falló} other {# fallaron}}"
+    }
+  },
+  "schedule": {
+    "title": "Programación",
+    "tabs": {
+      "slots": "Horarios",
       "queue": "Cola"
     },
     "common": {
@@ -1791,6 +1831,7 @@
         "network": "Se cortó la conexión con {platform}. Volvé a intentar en un momento.",
         "missingFile": "Este video no tiene el formato que necesita {platform}.",
         "rejectedFile": "{platform} no aceptó el archivo. Volvé a intentar; si se repite, revisá el detalle.",
+        "tiktokParameters": "TikTok rechazó un parámetro de la publicación. Revisa el detalle antes de reintentar.",
         "generic": "No se pudo publicar en {platform}. Podés reintentar.",
         "tiktokUnaudited": "TikTok todavía no aprobó tu app: mientras tanto solo permite publicar en cuentas privadas. Poné la cuenta en privado en la app de TikTok y reintentá (el video queda como \"Solo yo\")."
       }
@@ -2111,6 +2152,7 @@
       "thumbnail": {
         "heading": "Miniatura y apertura",
         "hint": "La elegida abre el video y es la miniatura de YouTube. Si la cambias, el video se vuelve a grabar con la nueva apertura.",
+        "nativeHint": "Este video conserva su apertura original. La opción elegida se usa como miniatura de YouTube.",
         "capture": "Capturar",
         "recapture": "Capturar de nuevo",
         "preparing": "Preparando miniaturas…",

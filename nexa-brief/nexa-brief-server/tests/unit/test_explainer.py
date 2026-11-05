@@ -132,6 +132,16 @@ def test_ready_follows_manifest_status(videos_root: Path):
     assert load_video(videos_root / "sin-titulo").publish_ready is False
 
 
+def test_demo_can_be_shared_without_changing_its_primary_category(videos_root):
+    path = videos_root / "hist-1" / "manifest.json"
+    data = json.loads(path.read_text())
+    data.update(category="node_politics", demo=True, shared_categories=["node_atlas", "unknown", "node_atlas"])
+    path.write_text(json.dumps(data))
+    video = load_video(path.parent)
+    assert video.category_paths == ["node_politics", "node_atlas"]
+    assert video.category_path == "node_politics"
+
+
 # ── validación al pedir una grabación ───────────────────────────────────────
 
 def test_record_rejects_video_not_ready(videos_root: Path, make_recorder):
@@ -185,13 +195,31 @@ def test_default_duration_is_ten_seconds(videos_root: Path, make_recorder):
 
 def test_existing_preview_is_reused(videos_root: Path, make_recorder):
     rec, render = make_recorder()
+    video = load_video(videos_root / "tech-1")
+    signature = recorder_mod.render_signature(video)
     preview = videos_root / "tech-1" / "render" / "preview"
     preview.mkdir(parents=True)
     for fmt in ("9x16", "16x9"):
-        (preview / f"tech-1-{fmt}-10s.mp4").write_bytes(b"old")
-    job = _record(rec, load_video(videos_root / "tech-1"), duration="10")
+        path = preview / f"tech-1-{fmt}-10s.mp4"
+        path.write_bytes(b"old")
+        recorder_mod.stamp_render(path, signature)
+    job = _record(rec, video, duration="10")
     assert job.state == RecordState.done
     assert render.calls == []
+
+
+def test_old_or_changed_preview_is_not_reused(videos_root: Path, make_recorder):
+    rec, render = make_recorder()
+    video = load_video(videos_root / "tech-1")
+    preview = video.path / "render/preview"
+    preview.mkdir()
+    (preview / "tech-1-16x9-10s.mp4").write_bytes(b"old frozen render")
+    assert _record(rec, video, duration="10").state == RecordState.done
+    assets = video.path / "assets"
+    assets.mkdir()
+    (assets / "storyboard.json").write_text('{"beats": []}')
+    assert _record(rec, video, duration="10").state == RecordState.done
+    assert len(render.calls) == 2
 
 
 def test_preview_does_not_reuse_full_render(videos_root: Path, make_recorder):
@@ -515,7 +543,8 @@ async def test_api_categories_tree(api_client):
     response = await api_client.get("/api/v1/categories")
     assert response.status_code == 200
     tree = {c["id"]: c for c in response.json()}
-    assert set(tree) == {"node_tech", "node_history", "node_motion", "node_politics", "node_economy"}
+    assert set(tree) == {"node_tech", "node_history", "node_motion", "node_politics", "node_economy", "node_atlas"}
+    assert tree["node_atlas"]["designs"] == ["imperio"]
     assert tree["node_tech"]["designs"] == ["rough"]
     assert [c["path"] for c in tree["node_motion"]["children"]] == [
         "node_motion/letras", "node_motion/promos", "node_motion/fondos", "node_motion/instrumental",
@@ -525,6 +554,29 @@ async def test_api_categories_tree(api_client):
 
 async def test_api_record_404_for_unknown_video(api_client):
     assert (await api_client.post("/api/v1/explainer/videos/no-existe/record", json={})).status_code == 404
+
+
+async def test_api_filters_shared_demo_and_atlas_only_video(api_client, monkeypatch, tmp_path):
+    from src.core.explainer.catalog import ExplainerVideo
+    from src.presentation.api.routers import explainer as routes
+    shared = ExplainerVideo(video_id="shared", path=tmp_path, design="imperio", category_path="node_politics",
+                            title="Demo", status="listo", duration_seconds=120, demo=True,
+                            shared_categories=["node_atlas"])
+    atlas = ExplainerVideo(video_id="atlas-only", path=tmp_path, design="imperio", category_path="node_atlas",
+                          title="Expansión", status="listo", duration_seconds=120)
+    monkeypatch.setattr(routes, "list_videos", lambda: [shared, atlas])
+    monkeypatch.setattr(routes, "_video_response", lambda video: {"video_id": video.video_id})
+    result = await routes.list_explainer_videos("node_politics")
+    assert [v["video_id"] for v in result] == ["shared"]
+    result = await routes.list_explainer_videos("node_atlas")
+    assert [v["video_id"] for v in result] == ["shared", "atlas-only"]
+
+
+async def test_design_picker_offers_imperio_in_both_categories(api_client):
+    groups = (await api_client.get("/api/v1/explainer/design-groups", params={"first": "node_atlas"})).json()
+    assert groups[0]["category_path"] == "node_atlas"
+    by_category = {g["category_path"]: {d["design_id"] for d in g["designs"]} for g in groups}
+    assert "imperio" in by_category["node_atlas"] & by_category["node_politics"]
 
 
 @pytest.mark.parametrize(
@@ -788,3 +840,48 @@ def test_full_recording_stores_generation_seconds_for_library(videos_root: Path,
     record = job_tracker.get(job.scheduled_job_id)
     assert record["generation_seconds"] == job.render_seconds
     assert job_tracker.generation_seconds(record) is not None
+
+
+def test_channel_uploads_use_three_workers_and_fill_first_free_slot(videos_root, make_recorder, monkeypatch):
+    monkeypatch.setattr(recorder_mod, "record_published_video", _noop_async)
+    monkeypatch.setattr(recorder_mod.settings, "publish_max_concurrent_uploads", 3)
+
+    async def scenario():
+        selectors = ["youtube:a", "facebook:b", "tiktok:c", "instagram:d"]
+        entered = {s: asyncio.Event() for s in selectors}
+        release = {s: asyncio.Event() for s in selectors}
+        running = 0
+        peak = 0
+
+        class Facade:
+            async def publish_video(self, **kw):
+                nonlocal running, peak
+                selector = kw["account_selector"]
+                running += 1
+                peak = max(peak, running)
+                entered[selector].set()
+                try:
+                    await release[selector].wait()
+                    platform, alias = selector.split(":")
+                    return SimpleNamespace(post_id=platform, url=f"https://x/{platform}",
+                                           platform=platform, account_alias=alias, raw_response={})
+                finally:
+                    running -= 1
+
+        rec, _ = make_recorder(Facade())
+        job = rec.submit(load_video(videos_root / "tech-1"), duration="full", publish=True,
+                         account_selectors=selectors)
+        try:
+            await asyncio.wait_for(asyncio.gather(*(entered[s].wait() for s in selectors[:3])), 5)
+            assert not entered[selectors[3]].is_set()
+            release["facebook:b"].set()
+            await asyncio.wait_for(entered["instagram:d"].wait(), 5)
+            assert not release["youtube:a"].is_set() and not release["tiktok:c"].is_set()
+            assert peak == 3
+        finally:
+            for event in release.values():
+                event.set()
+            await rec.wait(job.job_id)
+        assert job.state == RecordState.done and len(job.publish_results) == 4
+
+    asyncio.run(scenario())

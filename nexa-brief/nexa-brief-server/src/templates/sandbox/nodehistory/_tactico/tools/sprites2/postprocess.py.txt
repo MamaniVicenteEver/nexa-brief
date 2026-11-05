@@ -1,0 +1,97 @@
+"""Extiende el recorte, contorno, estados, máscara y hoja del sistema sprites original."""
+import argparse,json,time,math,sys,importlib.util
+from pathlib import Path
+from importlib.machinery import SourceFileLoader
+import numpy as np
+from PIL import Image,ImageChops,ImageDraw,ImageFilter,ImageFont,ImageOps
+HERE=Path(__file__).resolve().parent
+# Importación local sólo para PIL; los modelos de Blender nunca se ejecutan acá.
+def module(name,path):
+ loader=SourceFileLoader(name,str(path));spec=importlib.util.spec_from_loader(name,loader);m=importlib.util.module_from_spec(spec);sys.modules[name]=m;loader.exec_module(m);return m
+cat=module('catalog',HERE/'catalog.py.txt');SPECS=cat.SPECS;STATES=cat.STATES
+original=module('aem_original_post',HERE/'originals/postprocess.py.txt')
+save_png=original.save_png;damage=original.damage;detected=original.detected;shadow=original.shadow;font=original.font
+
+def prepare(raw,medical=False):
+ alpha=raw.getchannel('A');bbox=alpha.point(lambda v:255 if v>2 else 0).getbbox()
+ if not bbox:raise ValueError('Render vacío')
+ cx=raw.width//2;cy=raw.height//2;rx=max(cx-bbox[0],bbox[2]-cx)+12;ry=max(cy-bbox[1],bbox[3]-cy)+12
+ if rx>=cx or ry>=cy:raise ValueError('Modelo alcanza borde')
+ rect=(cx-rx,cy-ry,cx+rx,cy+ry);im=raw.crop(rect);factor=1024/max(im.size);size=tuple(max(2,round(d*factor/2)*2) for d in im.size);im=im.resize(size,Image.Resampling.LANCZOS)
+ ar=np.array(im);a=ar[:,:,3];red=(ar[:,:,0].astype(float)-ar[:,:,1]>22)&(ar[:,:,0]>ar[:,:,1]*1.6)&(a>0) if medical else np.zeros(a.shape,dtype=bool)
+ gray=np.asarray(ImageOps.grayscale(im));rgb=np.repeat(gray[:,:,None],3,axis=2);rgb[red]=ar[:,:,:3][red];ar[:,:,:3]=rgb
+ normal=Image.fromarray(ar);outer=normal.getchannel('A').filter(ImageFilter.MaxFilter(5));border=Image.new('RGBA',size,(15,15,15,0));border.putalpha(outer);border.alpha_composite(normal)
+ ar=np.array(border)
+ # Comprobar el color después de componer alfa: las transiciones del emblema no deben teñir el blanco.
+ red_final=(ar[:,:,0].astype(float)-ar[:,:,1]>22)&(ar[:,:,0]>ar[:,:,1]*1.6) if medical else np.zeros(ar.shape[:2],dtype=bool)
+ final_gray=np.asarray(ImageOps.grayscale(Image.fromarray(ar)))
+ ar[:,:,:3][~red_final]=np.repeat(final_gray[:,:,None],3,axis=2)[~red_final]
+ ar[ar[:,:,3]==0,:3]=0;normal=Image.fromarray(ar)
+ tint=normal.getchannel('A').copy();ta=np.array(tint)
+ # Blanco sanitario, emblemas y vidrio quedan fuera de la zona de tinte.
+ if medical:ta[:]=0
+ else:ta[(gray<45)|(gray>225)]=0
+ tint=Image.fromarray(ta)
+ return normal,tint,dict(crop=list(rect),resize_factor=size[1]/(2*ry),silhouette_bounds=list(bbox))
+
+def background(size,kind):
+ w,h=size;yy,xx=np.mgrid[:h,:w];v=(np.sin(xx*.013+np.sin(yy*.011))*np.cos(yy*.017)+np.sin(xx*.031+yy*.009))*.5
+ lo=np.array([9,27,39] if kind=='ocean' else [211,190,151]);spread=np.array([3,6,8] if kind=='ocean' else [7,6,5])
+ return Image.fromarray(np.clip(lo+v[:,:,None]*spread,0,255).astype('uint8')).convert('RGBA')
+
+def paste_asset(canvas,picture,mask,box):
+ x,y,w,h=box;factor=min(w/picture.width,h/picture.height);size=(max(1,round(picture.width*factor)),max(1,round(picture.height*factor)))
+ pic=picture.resize(size,Image.Resampling.LANCZOS);sh=mask.resize(size,Image.Resampling.LANCZOS);sh.putalpha(sh.getchannel('A').point(lambda v:round(v*.48)));sh=sh.filter(ImageFilter.GaussianBlur(2))
+ px=x+(w-size[0])//2;py=y+(h-size[1])//2;canvas.alpha_composite(sh,(px+4,py+5));canvas.alpha_composite(pic,(px,py))
+
+def sheets(root,manifest):
+ bases=manifest['base_sprites'];width=2560;head=180;row=184;height=head+len(bases)*row+40
+ im=Image.new('RGBA',(width,height));im.alpha_composite(background((width//2,height),'ocean'),(0,0));im.alpha_composite(background((width//2,height),'desert'),(width//2,0));d=ImageDraw.Draw(im)
+ d.rectangle((0,0,width,head-10),fill='#0b1720');d.text((30,22),'ATLAS / VEHÍCULOS, FLOTA Y AVIACIÓN',font=font(38,True),fill='#f1f3f3');d.text((30,77),'24 variantes · Blender MCP · cenital · estados alineados · comparación de contraste',font=font(22),fill='#acc2cd')
+ for half in range(2):
+  x0=half*width//2;d.text((x0+25,119),'OCÉANO OSCURO' if not half else 'DESIERTO CLARO',font=font(17,True),fill='#a8becb')
+  for j,state in enumerate(STATES):d.text((x0+260+j*245,140),state.upper(),font=font(17,True),fill='#f0f0ed')
+ for i,base in enumerate(bases):
+  y=head+i*row;m=manifest['sprites'][base]
+  for half in range(2):
+   x0=half*width//2;color='#c8d9e2' if not half else '#292a28';d.line((x0+20,y,x0+width//2-20,y),fill='#647c84' if not half else '#ac9472',width=1)
+   pieces=base.replace('artillery-','artillery-\n').replace('helicopter-','helicopter-\n').replace('truck-','truck-\n').replace('bomber-','bomber-\n').replace('tanker-','tanker-\n')
+   for k,part in enumerate(pieces.splitlines()):d.text((x0+24,y+22+k*23),part,font=font(17,True),fill=color)
+   d.text((x0+24,y+116),f"{m['length_m']:g} m / {m['length_relative']:.3f}×",font=font(14),fill=color)
+   mask=Image.open(root/m['mask']).convert('RGBA')
+   for j,state in enumerate(STATES):paste_asset(im,Image.open(root/manifest['sprites'][m['states'][state]]['file']).convert('RGBA'),mask,(x0+248+j*245,y+12,228,row-24))
+ save_png(im,root/'hoja2.png')
+ # Todas las variantes a tamaños de pantalla, en ambos fondos, sin reescalar la hoja.
+ width=2160;head=150;row=560;height=head+len(bases)*row
+ sc=Image.new('RGBA',(width,height));sc.alpha_composite(background((width//2,height),'ocean'),(0,0));sc.alpha_composite(background((width//2,height),'desert'),(width//2,0));d=ImageDraw.Draw(sc);d.rectangle((0,0,width,head-8),fill='#0b1720')
+ d.text((30,22),'TAMAÑO REAL EN PANTALLA',font=font(38,True),fill='#f1f3f3');d.text((30,79),'Cada variante a 120, 240 y 480 px de lado largo. Abrir al 100 % para juzgar el detalle.',font=font(22),fill='#b8cbd5')
+ for i,base in enumerate(bases):
+  y=head+i*row;m=manifest['sprites'][base];pic=Image.open(root/m['file']).convert('RGBA');mask=Image.open(root/m['mask']).convert('RGBA')
+  for half in range(2):
+   x0=half*width//2;col='#d7e2e9' if not half else '#282a28';d.text((x0+24,y+10),base,font=font(18,True),fill=col)
+   for x,n in [(28,120),(190,240),(490,480)]:
+    d.text((x0+x,y+38),f'{n} px',font=font(16),fill=col);paste_asset(sc,pic,mask,(x0+x,y+64,n,n))
+ save_png(sc,root/'hoja2-escalas.png')
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--raw',type=Path,default=Path('/tmp/aem-vehiculos-raw'));p.add_argument('--output',type=Path,default=HERE.parents[1]/'sprites2');p.add_argument('--partial',action='store_true');a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True);t=time.perf_counter()
+ bases=[s for s in SPECS if (a.raw/(s+'.json')).exists()] if a.partial else list(SPECS)
+ manifest=dict(version=2,base_sprites=bases,sprites={},rendering=dict(preview=bool(a.partial),engine='Cycles CPU',threads=1,samples=16,modeling='Blender MCP',source_size=[1280,1280],sun_from=[-75,100,145],freestyle=False,compositing=False),scale_notes=dict(ground='Escala editorial de lectura: tanque .10, camión .09, ambulancia .06, obús .10. physical_relative_length mantiene metros/332.',air='length_relative mide fuselaje/332; span_relative mide envergadura/332. Pesado: hero_scale_multiplier lleva su envergadura a .55 del portaaviones. Aplicar multiplicador sólo cuando se desee esa escala editorial.'))
+ timing=[]
+ for base in bases:
+  spec=SPECS[base];record=json.loads((a.raw/(base+'.json')).read_text());record['model_seconds']=None;record['model_timing_note']='Modelado MCP no cronometrado';timing.append(record)
+  im,tint,geo=prepare(Image.open(a.raw/(base+'.png')).convert('RGBA'),base.startswith('ambulance'))
+  mapping={s:base if s=='normal' else base+'-'+s for s in STATES};mask_name=base+'-shadow.png';tint_name=base+'-tint.png';save_png(shadow(im),a.output/mask_name);save_png(tint,a.output/tint_name)
+  bbox=im.getchannel('A').getbbox()
+  for state,key in mapping.items():
+   pic=im if state=='normal' else detected(im) if state=='detected' else damage(im,base,state)
+   save_png(pic,a.output/(key+'.png'))
+   m=dict(file=key+'.png',mask=mask_name,tint_mask=tint_name,anchor=[.5,.5],bow=[0,-1],length_relative=spec['relative_length'],length_m=spec['length_m'],length_pixels=bbox[3]-bbox[1],variant=spec['variant'],family=spec['family'],state=state,states=mapping,size=list(im.size),base=base,shadow_opacity=.5,physical_relative_length=spec['length_m']/332,scale_basis=spec['scale_basis'],model_file='blend/'+base+'.blend')
+   if spec.get('span_m'):m.update(span_m=spec['span_m'],span_relative=spec['span_m']/332)
+   if spec.get('hero_scale_multiplier'):m['hero_scale_multiplier']=spec['hero_scale_multiplier']
+   manifest['sprites'][key]=m
+  print('POST_DONE',base,flush=True)
+ (a.output/'sprites2.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n');sheets(a.output,manifest)
+ metrics=dict(render_total_seconds=round(sum(r['render_seconds'] for r in timing),3),preview_total_seconds=round(sum(r['preview_seconds'] for r in timing),3),postprocess_seconds=round(time.perf_counter()-t,3),renders=timing)
+ (a.output/'render-times.json').write_text(json.dumps(metrics,indent=2)+'\n');print(json.dumps({k:v for k,v in metrics.items() if k!='renders'}),flush=True)
+if __name__=='__main__':main()

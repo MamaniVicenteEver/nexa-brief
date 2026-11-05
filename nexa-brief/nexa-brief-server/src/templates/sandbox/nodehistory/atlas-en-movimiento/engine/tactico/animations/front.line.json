@@ -1,0 +1,134 @@
+{
+  "name": "front.line",
+  "family": "front",
+  "description": "Frente discontinuo rotulado «aproximado»; interpola posiciones fechadas de avance o retirada. Úsala para mostrar un frente y sus cambios en el tiempo.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 15,
+  "states": [
+    "advance",
+    "retreat",
+    "hold"
+  ],
+  "params": {
+    "via": {
+      "type": "array",
+      "default": [
+        [
+          49,
+          28
+        ],
+        [
+          56.3,
+          26.5
+        ],
+        [
+          59,
+          24
+        ]
+      ],
+      "range": null,
+      "description": "Waypoints de la trayectoria en orden."
+    },
+    "width": {
+      "type": "number",
+      "default": 4,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Duración del revelado progresivo en segundos."
+    },
+    "approximate": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Indica que la cifra representada es aproximada."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-front-line",
+    "t": 0,
+    "type": "front.line",
+    "via": [
+      [
+        47,
+        33
+      ],
+      [
+        48.5,
+        31.5
+      ],
+      [
+        49,
+        30
+      ]
+    ],
+    "states": [
+      {
+        "at": 1,
+        "state": "advance",
+        "via": [
+          [
+            48,
+            33
+          ],
+          [
+            49.5,
+            31.5
+          ],
+          [
+            50,
+            30
+          ]
+        ],
+        "dur": 1.5
+      },
+      {
+        "at": 3.5,
+        "state": "retreat",
+        "via": [
+          [
+            47.3,
+            33
+          ],
+          [
+            48.8,
+            31.5
+          ],
+          [
+            49.3,
+            30
+          ]
+        ],
+        "dur": 1
+      }
+    ],
+    "color": "danger",
+    "dur": 6,
+    "out": 5.5,
+    "note": "Frente esquemático sin valor histórico."
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-routes.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/front.line.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

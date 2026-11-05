@@ -156,6 +156,8 @@ async def prerecord_due(now: datetime, recorder: Any) -> list[str]:
         return []
     horizon = now + timedelta(hours=settings.schedule_prerecord_hours)
     recorded = _recorded_video_ids()
+    # Explicit preparation batches stay in human review, even with autopublishing on.
+    held = {r["video_id"] for r in _productions() if r.get("batch_id") or r.get("short_test")}
     busy = {j.video_id for j in getattr(recorder, "_jobs", {}).values() if j.state.value in ("queued", "rendering", "publishing")}
     launched: list[str] = []
     videos = sorted(list_videos(), key=lambda v: v.video_id)
@@ -171,7 +173,7 @@ async def prerecord_due(now: datetime, recorder: Any) -> list[str]:
             continue  # ya hay una grabación en curso para esta categoría
         candidate = next(
             (v for v in videos if top_level_of(v.category_path) == cat_id and v.ready
-             and v.video_id not in recorded and v.video_id not in busy),
+             and v.video_id not in recorded and v.video_id not in busy and v.video_id not in held),
             None,
         )
         if candidate is None:

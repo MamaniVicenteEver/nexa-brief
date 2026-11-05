@@ -73,6 +73,7 @@ interface TitleOptionDto {
 }
 
 interface PublishPackageDto {
+  preserve_opening?: boolean;
   thumbnail: {
     kicker: string;
     text_only: { lines: string[]; highlight: string; pair_title: TitleOption["option"] };
@@ -171,6 +172,7 @@ function mapPublishPackage(dto: PublishPackageReviewDto): PublishPackageReview {
     issues: dto.issues,
     titleMaxChars: dto.title_max_chars ?? 0,
     package: p && {
+      preserveOpening: p.preserve_opening ?? false,
       thumbnail: {
         kicker: p.thumbnail.kicker,
         textOnly: {
@@ -329,8 +331,11 @@ export async function getExplainerJob(jobId: string, signal?: AbortSignal): Prom
 }
 
 /** Jobs activos y grabaciones terminadas recientemente, para la Biblioteca. */
-export async function getExplainerJobs(signal?: AbortSignal): Promise<ExplainerJob[]> {
-  const dtos = await httpClient<ExplainerJobDto[]>("/api/v1/explainer/jobs?active=true", {
+export async function getExplainerJobs(
+  signal?: AbortSignal,
+  active = true,
+): Promise<ExplainerJob[]> {
+  const dtos = await httpClient<ExplainerJobDto[]>(`/api/v1/explainer/jobs?active=${active}`, {
     signal,
   });
   return dtos.map(mapJob);

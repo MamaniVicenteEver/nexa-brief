@@ -74,6 +74,8 @@ class Delivery(StrictModel):
     status: DeliveryStatus = DeliveryStatus.DRAFT
     attempt_count: int = Field(default=0, ge=0)
     next_attempt_at: datetime | None = None
+    format: Literal["4:5", "3:5", "9:16"] | None = None
+    slides: list[RenderedSlide] = Field(default_factory=list)
     caption: str = ""
     hashtags: list[str] = Field(default_factory=list)
     first_comment: str | None = None
@@ -317,10 +319,19 @@ class AIUsage(StrictModel):
     error: str | None = None
 
 
+class FormatArtwork(StrictModel):
+    revision: int = Field(ge=1)
+    source_hash: str
+    renderer_version: str
+    slides: list[RenderedSlide]
+    validations: list[ValidationResult]
+
+
 class TechnicalRecord(StrictModel):
     kind: Literal["image", "carousel", "story", "reel"]
     source_kind: Literal["image", "carousel"] | None = None
     template_id: str
+    format_exports: dict[str, FormatArtwork] = Field(default_factory=dict)
     copy_sources: dict[str, str] = Field(default_factory=dict)
     slides: list[RenderedSlide] = Field(default_factory=list)
     reel: ReelManifest | None = None
@@ -518,3 +529,6 @@ class Carousel(StrictModel):
     closing_slide_id: str
 
 
+
+
+Delivery.model_rebuild()

@@ -1,0 +1,16 @@
+✔ Mercator coincide con el mundo de 512px y rota alrededor del centro (1.567482ms)
+✔ mips: mezcla continua al cruzar enteros y saturación en maxzoom (0.895834ms)
+✔ cobertura de las cuatro esquinas con giro y límites polares (0.492631ms)
+✔ fallback usa el recorte correcto del ancestro más cercano (0.245839ms)
+✔ shutter puro; sin muestras extra en reposo y sin depender del orden (0.667906ms)
+✔ el bitmap del shutter cubre cada esquina incluso con giro y zoom combinados (1.705226ms)
+✔ la matriz afín conserva coordenadas geográficas y escala de los componentes (0.394066ms)
+✔ exact y affine usan las mismas muestras y el mismo umbral en píxeles (0.284889ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 106.961521

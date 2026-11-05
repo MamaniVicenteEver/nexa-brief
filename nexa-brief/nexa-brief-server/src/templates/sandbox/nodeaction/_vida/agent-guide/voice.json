@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "topic": "Voz y diálogo de Vida",
+  "path_base": "Todas las rutas son relativas a _vida/.",
+  "core_distinction": [
+    "characters/<id>.json.voice referencia un id de archivo en voices/; el compilador comprueba que exista.",
+    "tools/voice.mjs busca voices/<script.who>.json directamente. No sigue automáticamente character.voice ni el valor de cast. Para generar líneas de un hablante lucia, debe existir voices/lucia.json con id lucia. Si no coinciden, corregir el enlace de forma explícita y revisar el perfil usado; no asumir que se aplica el de la ficha.",
+    "En un mismo guion el generador exige un único modelo y valores voice distintos entre hablantes, comparados sin mayúsculas. Puck está prohibida por el esquema."
+  ],
+  "files": {
+    "schema": "schema/voice.schema.json",
+    "profiles": "voices/<speaker>.json",
+    "existing_example": "voices/nico.json",
+    "generator": "tools/voice.mjs",
+    "production": "docs/PRODUCCION.md",
+    "episode_contract": "docs/EPISODIO.md"
+  },
+  "existing_profiles": {
+    "mama": "Sulafat",
+    "narrador": "Gacrux",
+    "nico": "Fenrir",
+    "tomas": "Achird",
+    "valeria": "Leda"
+  },
+  "required_fields": {
+    "id": "identificador igual al nombre del archivo y al script.who",
+    "voice": "nombre de voz del proveedor, no vacío ni Puck",
+    "model": "modelo fijo; comprobar los perfiles existentes y la disponibilidad antes de elegir",
+    "language": "es-419",
+    "direction": "descripción vocal e interpretación de al menos 50 caracteres",
+    "pace": "60..240 palabras/minuto",
+    "postprocess": "tempo 0.5..2; pitch_preserved true; lufs -24..-12; true_peak_db -6..-1",
+    "lead": "0..0.5 segundos",
+    "tail": "0..0.8 segundos",
+    "approved": "false en el esquema actual"
+  },
+  "example_valid_profile": {
+    "id": "lucia",
+    "voice": "Leda",
+    "model": "gemini-3.8-flash-tts",
+    "language": "es-419",
+    "direction": "Lucía, joven de voz suave y luminosa, energía media expresiva. Hablar en español latinoamericano neutro; no imitar a personas reales.",
+    "pace": 150,
+    "postprocess": {
+      "tempo": 1.0,
+      "pitch_preserved": true,
+      "lufs": -16,
+      "true_peak_db": -1.5
+    },
+    "lead": 0.1,
+    "tail": 0.16,
+    "approved": false
+  },
+  "example_explanation": "Ejemplo basado en valeria; solo válido para un guion sin otro hablante que use Leda. Fijar characters/lucia.json.voice a lucia para que la ficha y el hablante señalen el mismo perfil. No equivale a audio generado.",
+  "steps": [
+    "Traducir el pedido a timbre, edad percibida, energía, acento, ritmo e intención; elegir una voz disponible y compatible con las otras del guion. Si se solicita una voz concreta que no puede verificarse, indicarlo y no inventarla.",
+    "Crear/editar voices/<speaker>.json y comprobar contra schema/voice.schema.json. Mantener id igual al archivo y script.who; verificar también la referencia voice de la ficha visual.",
+    "Al cambiar un perfil compartido, identificar episodios y líneas que lo usan. El cambio no reemplaza automáticamente los WAV existentes; el pipeline compara hashes al volver a ejecutarse.",
+    "Si el usuario pide generar voz y hay guion final, dependencias, credenciales y cuota, comprobar disponibilidad y posible costo del proveedor. Seguir docs/PRODUCCION.md: node tools/produce.mjs <episodio> --until voice --resume desde _vida/. No revelar credenciales ni cambiar voz/modelo silenciosamente si falla; informar la causa y las líneas pendientes.",
+    "Los clips y el timing reales se generan para cada línea; revisar QC, escuchar las muestras y validar/revisar el episodio. Sin audio ni timing reales no declarar la voz terminada; no inventar clips o tiempos."
+  ],
+  "character_alias_warning": "La misma voz puede servir para la ficha visual, pero el generador rechaza la misma voz para dos hablantes en el mismo script. Un cambio de alias o reparto debe comprobarse antes de generar.",
+  "verification": "Validar el perfil con JSON Schema draft 2020-12; la validación de personajes node tools/validate.mjs no valida perfiles de voz.",
+  "choices": {
+    "reutilizar_perfil": "Usar un perfil ya existente cuando el alias de script y las demás voces del guion sean compatibles. La referencia visual sola no hace que el generador use ese perfil.",
+    "crear_perfil": "Configurar voices/<script.who>.json con voz y modelo verificados del proveedor Gemini usado por tools/voice.mjs; un perfil no genera por sí mismo audio. Confirmar disponibilidad, cuota y posible costo antes de ejecutar llamadas.",
+    "voz_solicitada": "Describir el timbre e interpretación solicitados y comprobar que la voz seleccionada está realmente soportada. No prometer clonación ni imitación de una persona si el sistema no la soporta."
+  }
+}

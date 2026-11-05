@@ -66,6 +66,7 @@ export interface PublishIssue {
 
 /** publish.json v2: el paquete de publicación (src/core/explainer/publishing en el server). */
 export interface PublishPackage {
+  preserveOpening?: boolean;
   thumbnail: {
     /** Antetítulo de las dos miniaturas (lugar · fecha). */
     kicker: string;

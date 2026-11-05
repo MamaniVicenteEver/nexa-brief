@@ -1,0 +1,82 @@
+{
+  "name": "label.site",
+  "family": "label",
+  "description": "Nombre de instalación: mismo trazo 6 U, peso 800 y línea base alfabética de sites.js. Úsala para identificar lugares y objetos.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "screen": {
+      "type": "array",
+      "default": [
+        0.5,
+        0.45
+      ],
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    },
+    "text": {
+      "type": "string",
+      "default": "Kharg · terminal exportador",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "size": {
+      "type": "number",
+      "default": 24,
+      "range": null,
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "#e6e6e6",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "outlineColor": {
+      "type": "string",
+      "default": "#000000",
+      "range": null,
+      "description": "Color del contorno."
+    },
+    "outlineWidth": {
+      "type": "number",
+      "default": 6,
+      "range": null,
+      "description": "Grosor del contorno en píxeles de diseño."
+    },
+    "font": {
+      "type": "string",
+      "default": "AtlasDisplay, sans-serif",
+      "range": null,
+      "description": "Familia tipográfica declarada para el texto."
+    },
+    "weight": {
+      "type": "number",
+      "default": 800,
+      "range": null,
+      "description": "Peso tipográfico del texto."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-label-site",
+    "t": 0,
+    "dur": 6,
+    "out": 5.5,
+    "screen": [
+      0.5,
+      0.45
+    ],
+    "type": "label.site",
+    "text": "Kharg · terminal exportador"
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/label.site.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

@@ -36,6 +36,7 @@ class ChannelStats:
     video_count: int | None = None
     followers: int | None = None         # suscriptores (YouTube) / seguidores (Meta)
     views: int | None = None
+    likes: int | None = None
     extra: dict[str, Any] = field(default_factory=dict)
 
 

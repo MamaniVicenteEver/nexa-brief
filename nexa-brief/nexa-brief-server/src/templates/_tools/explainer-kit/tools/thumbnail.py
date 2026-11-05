@@ -2,7 +2,7 @@
 """thumbnail.py · miniatura a partir de la intro del diseño o common.tabloid.
 
 La miniatura es una captura del componente de intro armado (no una imagen aparte): así lo que se
-ve en el feed y lo que abre el video son lo mismo. Captura 1280×720 o 720×1280, JPEG.
+ve en el feed y lo que abre el video son lo mismo. Captura 1280×720 o una portada móvil dedicada de 1080×1920, JPEG.
 
 Uso (desde nexa-brief-server/; lo llama el backend, src/core/explainer/thumbnails.py):
   .venv/bin/python src/templates/_tools/explainer-kit/tools/thumbnail.py OUT.jpg \
@@ -62,7 +62,19 @@ async def stable_moment(page, t: float) -> float:
 
 async def capture(out: pathlib.Path, design: str, component: str, params: dict, t: float, orientation: str) -> list[str]:
     from playwright.async_api import async_playwright
-    width, height = (1280, 720) if orientation == "16x9" else (720, 1280)
+    width, height = (1280, 720) if orientation == "16x9" else (1080, 1920)
+    if orientation == "9x16" and component != "common.tabloid":
+        # A dedicated cover layout preserves the selected wording and photograph
+        # while keeping them readable inside feed/profile crops. The opening is unchanged.
+        title = params.get("textPortrait") or params.get("text") or params.get("title")
+        if title:
+            focus = params.get("focus")
+            if not isinstance(focus, list) or len(focus) != 3:
+                focus = [0.5, 0.4, 0.12]
+            params = {"text": title, "accent": params.get("highlight") or params.get("accent") or "",
+                      "src": params.get("poster") or params.get("src") or "", "focus": focus,
+                      "palette": "brand"}
+            component = "common.tabloid"
     still_video = component == "common.tabloid" and bool(params.get("video"))
     if still_video and not (params.get("poster") or params.get("src")):
         raise ValueError("common.tabloid con video necesita poster (o src) para la miniatura C")
@@ -72,6 +84,8 @@ async def capture(out: pathlib.Path, design: str, component: str, params: dict, 
         t = 0.0
     srv = shoot.serve(shoot.SANDBOX)
     q = {"d": design, "c": component, "p": json.dumps(params, ensure_ascii=False), "paused": "1", "dur": str(DUR), "solo": "1"}
+    if orientation == "9x16":
+        q["coverSafe"] = "1"
     if still_video:
         q["tabloidStill"] = "1"
     url = f"http://127.0.0.1:{srv.server_port}/{KIT.relative_to(shoot.SANDBOX).as_posix()}/showcase/stage.html?" + urllib.parse.urlencode(q)
@@ -110,6 +124,15 @@ async def capture(out: pathlib.Path, design: str, component: str, params: dict, 
     print(f"· cuadro elegido: {chosen:.2f} s (pedido {t:.2f} s)")
     out.parent.mkdir(parents=True, exist_ok=True)
     image = Image.open(io.BytesIO(png)).convert("RGB")
+    if orientation == "9x16" and component != "common.tabloid":
+        # Other design intros do not have a cover-specific layout. Preserve every
+        # element within the centered square instead of letting a feed crop cut it.
+        from PIL import ImageOps
+
+        content = ImageOps.contain(image, (round(width*.88), round(width*.88)))
+        canvas = Image.new("RGB", image.size, image.getpixel((0, height-1)))
+        canvas.paste(content, ((width-content.width)//2, (height-content.height)//2))
+        image = canvas
     image.save(out, "JPEG", quality=90, optimize=True)   # YouTube: ≤ 2 MB
     image.save(out.with_suffix(".webp"), "WEBP", quality=80, method=6)   # copia liviana para la web
     return errors
@@ -126,7 +149,7 @@ def main() -> int:
     # 4,5 s: las intros con sello o texto tipeado (acuarela, periódico…) terminan de revelarse después de los 3 s
     ap.add_argument("--t", type=float, default=4.5, help="segundo del componente (ya armado)")
     a = ap.parse_args()
-    width, height = (1280, 720) if a.orientation == "16x9" else (720, 1280)
+    width, height = (1280, 720) if a.orientation == "16x9" else (1080, 1920)
     errors = asyncio.run(capture(a.out, a.design, a.component, json.loads(a.params), a.t, a.orientation))
     for e in errors:
         print(f"⚠ {e[:300]}", file=sys.stderr)

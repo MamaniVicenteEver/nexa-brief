@@ -1,0 +1,334 @@
+{
+  "duration": 54,
+  "defs": {
+    "fonts": {
+      "label": "Arial, sans-serif",
+      "display": "Arial, sans-serif"
+    },
+    "palette": {
+      "background": "#081e2c",
+      "ink": "#e9e3ba",
+      "white": "#e9e3ba",
+      "gold": "#f6edb4",
+      "red": "#d1495b",
+      "green": "#399e58",
+      "cyan": "#66c6e3",
+      "steel": "#82949c",
+      "smoke": "#33424b",
+      "orange": "#e69b45"
+    }
+  },
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        48.4,
+        30.6
+      ],
+      "zoom": 8.5,
+      "dur": 0
+    },
+    {
+      "t": 9,
+      "center": [
+        48.4,
+        30.6
+      ],
+      "zoom": 8.5,
+      "dur": 0
+    },
+    {
+      "t": 18,
+      "center": [
+        48.6,
+        30.7
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 27,
+      "center": [
+        48.6,
+        30.7
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 36,
+      "center": [
+        48.6,
+        30.7
+      ],
+      "zoom": 7.8,
+      "dur": 0
+    },
+    {
+      "t": 45,
+      "center": [
+        48.5,
+        30.6
+      ],
+      "zoom": 8.5,
+      "dur": 0
+    }
+  ],
+  "items": [
+    {
+      "id": "gallery-0-unit-token",
+      "type": "unit.token",
+      "at": [
+        48.4,
+        30.6
+      ],
+      "flag": "IQ",
+      "label": "FRENTE",
+      "count": 1,
+      "t": 0,
+      "dur": 7,
+      "states": [
+        {
+          "at": 1,
+          "state": "active"
+        },
+        {
+          "at": 5.8,
+          "state": "idle"
+        }
+      ],
+      "sfx": false,
+      "out": 7
+    },
+    {
+      "id": "gallery-1-unit-group",
+      "type": "unit.group",
+      "at": [
+        48.4,
+        30.6
+      ],
+      "flag": "IQ",
+      "label": "FRENTE",
+      "count": 5,
+      "t": 9,
+      "dur": 7,
+      "states": [
+        {
+          "at": 10,
+          "state": "active"
+        },
+        {
+          "at": 14.8,
+          "state": "idle"
+        }
+      ],
+      "sfx": false,
+      "out": 16
+    },
+    {
+      "id": "gallery-2-unit-move",
+      "type": "unit.move",
+      "at": [
+        48.4,
+        30.6
+      ],
+      "flag": "IQ",
+      "label": "FRENTE",
+      "count": 5,
+      "t": 18,
+      "dur": 7,
+      "path": {
+        "via": [
+          [
+            48.2,
+            30.5
+          ],
+          [
+            48.6,
+            30.7
+          ],
+          [
+            48.9,
+            30.6
+          ]
+        ],
+        "t": 18.5,
+        "dur": 5,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 19,
+          "state": "active"
+        },
+        {
+          "at": 23.8,
+          "state": "idle"
+        }
+      ],
+      "sfx": false,
+      "out": 25
+    },
+    {
+      "id": "gallery-3-unit-advance",
+      "type": "unit.advance",
+      "at": [
+        48.4,
+        30.6
+      ],
+      "flag": "IQ",
+      "label": "FRENTE",
+      "count": 5,
+      "t": 27,
+      "dur": 7,
+      "path": {
+        "via": [
+          [
+            48.2,
+            30.5
+          ],
+          [
+            48.6,
+            30.7
+          ],
+          [
+            48.9,
+            30.6
+          ]
+        ],
+        "t": 27.5,
+        "dur": 5,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 28,
+          "state": "active"
+        },
+        {
+          "at": 32.8,
+          "state": "idle"
+        }
+      ],
+      "sfx": false,
+      "out": 34
+    },
+    {
+      "id": "gallery-4-unit-retreat",
+      "type": "unit.retreat",
+      "at": [
+        48.4,
+        30.6
+      ],
+      "flag": "IQ",
+      "label": "RETIRADA",
+      "count": 5,
+      "t": 36,
+      "dur": 7,
+      "path": {
+        "via": [
+          [
+            48.2,
+            30.5
+          ],
+          [
+            48.6,
+            30.7
+          ],
+          [
+            48.9,
+            30.6
+          ]
+        ],
+        "t": 36.5,
+        "dur": 5,
+        "curve": "smooth"
+      },
+      "states": [
+        {
+          "at": 37,
+          "state": "active"
+        },
+        {
+          "at": 41.8,
+          "state": "retreat"
+        }
+      ],
+      "sfx": false,
+      "out": 43
+    },
+    {
+      "type": "fx.clash",
+      "id": "gallery-5-clash",
+      "at": [
+        48.5,
+        30.6
+      ],
+      "t": 45,
+      "dur": 2,
+      "scale": 1.6,
+      "sfx": false,
+      "groups": [
+        "gallery-5-clash-west",
+        "gallery-5-clash-east"
+      ],
+      "out": 52
+    },
+    {
+      "id": "gallery-5-clash-west",
+      "type": "unit.move",
+      "flag": "IQ",
+      "count": 3,
+      "formation": "line",
+      "scale": 0.65,
+      "t": 45,
+      "dur": 2.35,
+      "sfx": false,
+      "path": {
+        "via": [
+          [
+            48.2,
+            30.6
+          ],
+          [
+            48.45,
+            30.6
+          ]
+        ],
+        "t": 45,
+        "dur": 1.2
+      },
+      "out": 52
+    },
+    {
+      "id": "gallery-5-clash-east",
+      "type": "unit.move",
+      "flag": "IR",
+      "count": 3,
+      "formation": "line",
+      "scale": 0.65,
+      "t": 45,
+      "dur": 2.35,
+      "sfx": false,
+      "path": {
+        "via": [
+          [
+            48.8,
+            30.6
+          ],
+          [
+            48.55,
+            30.6
+          ]
+        ],
+        "t": 45,
+        "dur": 1.2
+      },
+      "out": 52
+    }
+  ]
+}

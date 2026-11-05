@@ -1,15 +1,35 @@
 import { ShowcasePreviewError } from "../api/showcase-repository";
-import type { CatalogContext, Item } from "../types";
+import type { CatalogContext, Item, Source } from "../types";
 
 export const KIT_BASE = "/api/v1/explainer/files/_tools/explainer-kit";
 export const STAGE_URL = `${KIT_BASE}/showcase/stage.html`;
+export function isolatedPosterUrl(
+  designId: string | null,
+  componentName: string,
+  format: string,
+  source?: Source,
+): string | undefined {
+  if (designId !== "imperio" || !["9x16", "16x9"].includes(format)) return;
+  if (source) {
+    const path = format === "9x16" ? source.preview9x16 : source.preview16x9;
+    if (!path || !path.startsWith(`${source.video}/assets/components/previews/`)) return;
+    try { return `/api/v1/explainer/files/${encodeRelativePath(path)}`; } catch { return; }
+  }
+  return `${KIT_BASE}/showcase/imperio-thumbs/${encodeURIComponent(componentName)}-${format}.jpg`;
+}
 
 /** Acepta solo rutas relativas literales; cada segmento se codifica al usarlo. */
 export function encodeRelativePath(path: string): string {
   const parts = path.split("/");
   if (
     !path ||
-    parts.some((part) => !part || part.startsWith(".") || (/[%\\:?#]/.test(part) || [...part].some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)))
+    parts.some(
+      (part) =>
+        !part ||
+        part.startsWith(".") ||
+        /[%\\:?#]/.test(part) ||
+        [...part].some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127),
+    )
   ) {
     throw new Error("Ruta de archivo inválida");
   }
@@ -69,12 +89,18 @@ export function buildPreviewUrl(
       dur: "6",
       gallery: "",
     });
+    if (item.designId === "imperio") {
+      params.set("isolated", "1");
+      if (item.component.name === "imperio.title") params.set("dur", "13");
+      if (mode === "card") params.set("loop", "");
+    }
     for (const script of commonScripts(item.designId, context))
       params.append("js", `../${encodeRelativePath(script)}`);
     if (item.source) {
       if (!item.source.source || !validVideoSource(item.source.video, item.source.source))
         throw new Error("Fuente de video inválida o ausente");
       params.append("js", `../../../${encodeRelativePath(item.source.source)}`);
+      params.set("video", item.source.video);
     }
     if (mode === "modal") {
       params.set("controls", "1");

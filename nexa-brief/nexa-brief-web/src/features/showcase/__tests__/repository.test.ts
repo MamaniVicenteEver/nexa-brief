@@ -48,6 +48,21 @@ describe("repositorio del kit", () => {
     expect(items[2].unavailableReason).toBeTruthy();
     expect(warning).toHaveBeenCalled();
   });
+  it("agrega componentes válidos de videos de Imperio sin duplicar las piezas promovidas", async () => {
+    const imperio = { id: "imperio", family: "imperio", name: "Imperio", tagline: "", scripts: [] };
+    const sample = { name: "imperio.nuevo", params: { titulo: { type: "string" } }, example: { titulo: "Prueba" }, video: "nodepolitics/episodio", source: "nodepolitics/episodio/assets/components/nuevo.js", preview_9x16: "nodepolitics/episodio/assets/components/previews/imperio-nuevo-9x16.jpg" };
+    mockFetch([{ components: [sample, { ...sample, name: "imperio.campaign", video: "nodeatlas/japon-expansion-prueba", source: "nodeatlas/japon-expansion-prueba/assets/components/japon.js" }, { ...sample, name: "imperio.campaign" }] }]);
+    const promise = repo.getCatalog("imperio", { designs: [imperio] });
+    const frame = document.querySelector("iframe")!;
+    window.dispatchEvent(new MessageEvent("message", { origin: window.location.origin, source: frame.contentWindow, data: { type: "kit-design-catalog", design: "imperio", components: [{ name: "imperio.campaign", params: {} }] } }));
+    const items = await promise;
+    expect(items.map(item => item.component.name)).toEqual(["imperio.campaign", "imperio.nuevo", "imperio.campaign"]);
+    expect(items[1].component.example).toEqual({ titulo: "Prueba" });
+    expect(items[1].source?.preview9x16).toContain("imperio-nuevo-9x16.jpg");
+    const url = new URL(repo.previewUrl(items[1], { designs: [imperio] }, "card"), window.location.origin);
+    expect(url.searchParams.get("video")).toBe("nodepolitics/episodio");
+    expect(url.searchParams.get("isolated")).toBe("1");
+  });
   it("construye previews con comunes faltantes y rechaza rutas peligrosas", () => {
     const url = new URL(repo.previewUrl(videoItem, context, "modal"), window.location.origin);
     expect(url.searchParams.getAll("js")).toEqual([

@@ -1,7 +1,7 @@
 """Image-only output profiles shared by plans, previews and JPEG exports.
 
 The plan keeps its format as editable data. Existing 4:5 plans retain their
-dimensions; only newly built plans use the portrait default.
+dimensions; newly built plans default to the 4:5 feed format.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ class ImageFormatProfile:
         return {"format": self.format, "width": self.width, "height": self.height}
 
 
-DEFAULT_IMAGE_FORMAT = "9:16"
+DEFAULT_IMAGE_FORMAT = "4:5"
 IMAGE_FORMAT_PROFILES: Mapping[str, ImageFormatProfile] = MappingProxyType(
     {
         "4:5": ImageFormatProfile("4:5", 1080, 1350),

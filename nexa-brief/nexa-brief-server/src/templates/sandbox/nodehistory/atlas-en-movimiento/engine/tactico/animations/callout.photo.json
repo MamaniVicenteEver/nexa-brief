@@ -1,0 +1,105 @@
+{
+  "name": "callout.photo",
+  "family": "callout",
+  "description": "Foto/documento con pie y crédito visibles, haz hasta un punto del mapa. Úsala para vincular una imagen documentada con una posición.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 80,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "src": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Ruta del medio local relativa a la plantilla."
+    },
+    "credit": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Atribución visible del medio."
+    },
+    "date": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fecha documentada visible."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.2,
+      "max": 2,
+      "range": {
+        "min": 0.2,
+        "max": 2
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "offset": {
+      "type": "array",
+      "default": [
+        0,
+        -220
+      ],
+      "range": null,
+      "description": "Desplazamiento [x,y] en píxeles de diseño."
+    },
+    "appearance": {
+      "type": "object",
+      "default": {},
+      "doc": "Estilo 01 por defecto: tarjeta y marco #20252B, textos blancos neutros con contorno negro. Para oscurecer ambos usar appearance.cardColor (ejemplo #0F1216); appearance.photoBorderColor permite ajustar el borde de forma independiente. Conservar la jerarquía de letras salvo pedido explícito.",
+      "range": null,
+      "description": "Estilo 01 por defecto: tarjeta y marco #20252B, textos blancos neutros con contorno negro. Para oscurecer ambos usar appearance.cardColor (ejemplo #0F1216); appearance.photoBorderColor permite ajustar el borde de forma independiente. Conservar la jerarquía de letras salvo pedido explícito."
+    },
+    "caption": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Pie documental de la imagen."
+    },
+    "beam": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa el haz que une la imagen con su ancla."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-photo",
+    "t": 0,
+    "type": "callout.photo",
+    "at": [
+      51,
+      27
+    ],
+    "src": "assets/media/A04.png",
+    "caption": "Iran Ajr · tras la captura",
+    "date": "22 sep 1987",
+    "credit": "PH3 Henry Cleveland · U.S. Navy · PD",
+    "offset": [
+      0,
+      -390
+    ],
+    "dur": 8,
+    "out": 7
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/scene-editorial.json",
+    "work/tactico/scene-portraits.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/callout.photo.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/fonts/AtlasEditorial.ttf",
+    "assets/media/A04.png"
+  ]
+}

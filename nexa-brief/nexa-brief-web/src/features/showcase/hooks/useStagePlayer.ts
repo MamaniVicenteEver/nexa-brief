@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { decodeStageMessage, playbackCommand, seekCommand } from "../lib/messages";
 import type { Component, Item } from "../types";
 
@@ -9,6 +9,7 @@ export function useStagePlayer(
   frameRef: RefObject<HTMLIFrameElement | null>,
   item: Item,
   onClose: () => void,
+  startPaused = false,
 ) {
   const [status, setStatus] = useState<PlayerStatus>("loading");
   const [component, setComponent] = useState<Component>(item.component);
@@ -50,8 +51,8 @@ export function useStagePlayer(
     const start = () => {
       if (!ready.current || !metadata.current || state.current !== "loading") return;
       window.clearTimeout(timer);
-      update("playing");
-      send(playbackCommand(true));
+      update(startPaused ? "paused" : "playing");
+      send(playbackCommand(!startPaused));
     };
     const receive = (event: MessageEvent) => {
       if (
@@ -103,7 +104,7 @@ export function useStagePlayer(
       window.clearTimeout(timer);
       window.removeEventListener("message", receive);
     };
-  }, [frameKey, frameRef, item, send, update]);
+  }, [frameKey, frameRef, item, send, update, startPaused]);
 
   const playPause = useCallback(() => {
     if (state.current === "ended") {

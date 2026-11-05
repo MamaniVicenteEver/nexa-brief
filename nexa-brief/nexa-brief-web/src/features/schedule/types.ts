@@ -147,4 +147,7 @@ export interface SavedPlanItem extends PlanItem {
   productionState: string | null;
   videoId: string | null;
   createdAt: string;
+  generationAt?: string | null;
+  timezone?: string | null;
+  batchId?: string | null;
 }

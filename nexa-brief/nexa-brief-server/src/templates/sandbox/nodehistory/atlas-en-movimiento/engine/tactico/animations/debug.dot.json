@@ -1,0 +1,73 @@
+{
+  "name": "debug.dot",
+  "family": "debug",
+  "description": "Punto geográfico; sirve como unidad de prueba para trayectorias y estados. Úsala para comprobar posiciones, trayectorias y rótulos.",
+  "duration": 9.35,
+  "loop": true,
+  "layer": 40,
+  "states": [
+    "normal",
+    "hit"
+  ],
+  "params": {
+    "r": {
+      "type": "number",
+      "default": 18,
+      "min": 1,
+      "max": 200,
+      "range": {
+        "min": 1,
+        "max": 200
+      },
+      "description": "Radio del punto en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "core-dot",
+    "t": 0,
+    "type": "debug.dot",
+    "at": [
+      56.25,
+      26.65
+    ],
+    "dur": 9,
+    "path": {
+      "via": [
+        [
+          56.25,
+          26.65
+        ],
+        [
+          56.45,
+          26.5
+        ],
+        [
+          56.75,
+          26.35
+        ]
+      ],
+      "t": 1,
+      "dur": 6,
+      "curve": "smooth",
+      "ease": "inOut"
+    },
+    "states": [
+      {
+        "at": 5,
+        "state": "hit",
+        "dur": 0.8
+      }
+    ]
+  },
+  "usedBy": [
+    "work/tactico/scene-core.json",
+    "work/tactico/scene-fx.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/debug.dot.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

@@ -1,0 +1,15 @@
+{
+  "format": "atlas-v1", "duration": 30, "lang": "es",
+  "look": "satelite-etiquetado", "datasets": {"vector": "austin"},
+  "places": {"Austin centro": [-97.7431, 30.2672]},
+  "camera": [
+    {"t": 0, "focus": [-99, 38], "span": 55, "pitch": 35, "bearing": 0},
+    {"t": 4, "focus": "US-TX", "span": 14, "pitch": 40, "bearing": 0, "dur": 4},
+    {"t": 12, "focus": "US-48453", "span": 1.2, "pitch": 45, "bearing": 0, "dur": 4},
+    {"t": 21, "focus": "Austin centro", "span": 0.08, "pitch": 45, "bearing": 0, "dur": 5}
+  ],
+  "layers": [
+    {"type": "highlight", "region": "US-TX", "style": "olive", "t": 4, "out": 12, "border": true},
+    {"type": "highlight", "region": "US-48453", "style": "olive", "t": 12, "out": 22, "border": true}
+  ]
+}

@@ -2,6 +2,7 @@ from pathlib import Path
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from src.config.production_limits import MAX_CONTENT_PRODUCERS
 
 # ── Project root (3 levels up: settings.py → config → src → root) ───────────
 BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
@@ -123,6 +124,10 @@ class Settings(BaseSettings):
     max_concurrent_recordings: int = 1
     # Grabaciones del explainer a la vez. Benchmark 2026-10-11 (4 núcleos): 2 a la vez
     # rinden solo ~16% más que en serie y cada una tarda ~67% más → 1 por defecto.
+    explainer_max_concurrent_productions: int = Field(default=1, ge=1, le=MAX_CONTENT_PRODUCERS, alias="EXPLAINER_MAX_CONCURRENT_PRODUCTIONS")
+    explainer_audio_min_available_mib: int = Field(default=5120, ge=0, alias="EXPLAINER_AUDIO_MIN_AVAILABLE_MIB")
+    explainer_visual_min_available_mib: int = Field(default=1024, ge=0, alias="EXPLAINER_VISUAL_MIN_AVAILABLE_MIB")
+    explainer_max_pending_productions: int = Field(default=100, ge=1, alias="EXPLAINER_MAX_PENDING_PRODUCTIONS")
     explainer_max_concurrent_recordings: int = Field(default=1, alias="EXPLAINER_MAX_CONCURRENT_RECORDINGS")
     # "libx264" (software, comportamiento actual) | "h264_vaapi" (hardware,
     # vía /dev/dri — libera casi toda la CPU durante el encode, dejándola
@@ -289,6 +294,9 @@ class Settings(BaseSettings):
     # Set ENABLE_AUTO_PUBLISHING=true to activate Stage 9 in the pipeline.
     # When false (default) the pipeline ends at PACKAGED exactly as before.
     enable_auto_publishing: bool = Field(default=False, alias="ENABLE_AUTO_PUBLISHING")
+    publish_max_concurrent_uploads: int = Field(
+        default=3, ge=1, le=8, alias="PUBLISH_MAX_CONCURRENT_UPLOADS",
+    )
 
     # Active account selector: format "platform:alias" (e.g. "tiktok:cuenta_1")
     # Change this single variable to switch between all configured accounts.
@@ -316,6 +324,10 @@ class Settings(BaseSettings):
     tiktok_service_url: str = Field(default="http://127.0.0.1:8100", alias="TIKTOK_SERVICE_URL")
     tiktok_service_key: str = Field(default="", alias="TIKTOK_SERVICE_KEY")
     tiktok_client_id: str = Field(default="", alias="TIKTOK_CLIENT_ID")
+    tiktok_business_app_id: str = Field(default="", alias="TIKTOK_BUSINESS_APP_ID")
+    tiktok_business_secret: str = Field(default="", alias="TIKTOK_BUSINESS_SECRET")
+    tiktok_business_authorization_url: str = Field(default="", alias="TIKTOK_BUSINESS_AUTHORIZATION_URL")
+    tiktok_business_redirect_uri: str = Field(default="", alias="TIKTOK_BUSINESS_REDIRECT_URI")
     # Mientras TikTok no audite la app (Content Posting API), solo permite
     # publicar en cuentas PRIVADAS y con privacy_level=SELF_ONLY — cualquier
     # otro valor responde 403 unaudited_client_can_only_post_to_private_accounts.

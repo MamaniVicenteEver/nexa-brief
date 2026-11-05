@@ -27,6 +27,7 @@
       display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none",
       opacity: "0", filter: "drop-shadow(0 2px 5px rgba(0,0,0,.7))",
     }, parent);
+    el.dataset.brandLogo = String(p.logoName || "logo");
     const label = () => {
       el.textContent = String(p.logoName || "");
       Object.assign(el.style, { color: "#fff", font: `800 ${Math.max(12, height * 0.48)}px ${ctx.C.fonts?.main || "Inter"}`, textAlign: "center", textShadow: "0 1px 3px #000" });
@@ -38,7 +39,18 @@
       img.onerror = label;
       img.src = p.logo;
     } else label();
-    return { render(lt) { el.style.opacity = String(Math.min(1, Math.max(0, (lt - 0.18) / 0.48))); }, dispose() { el.remove(); } };
+    return {
+      render(lt) {
+        const enter = Math.min(1, Math.max(0, (lt - 0.18) / 0.48));
+        // A logo in the shared DOM layer must exit with its owning scene.
+        // Nested logos already inherit their component root's opacity.
+        const dur = ctx.beat?.dur;
+        const exit = parent === ctx.layers.dom && Number.isFinite(dur)
+          ? 1 - Math.min(1, Math.max(0, (lt - dur) / 0.45)) : 1;
+        el.style.opacity = String(enter * exit);
+      },
+      dispose() { el.remove(); },
+    };
   }
   K.brandLogo = { params: logoParams, attach };
   K.register({

@@ -1,0 +1,131 @@
+{
+  "name": "air.drop",
+  "family": "air",
+  "description": "Agregado: caída de bombas con sombra convergente y destello, ausente de las referencias. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+  "duration": 4.35,
+  "loop": true,
+  "layer": 50,
+  "states": [],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "kmLength": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Longitud geográfica en kilómetros para scaleMode geo."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "flag": {
+      "type": "string",
+      "default": "US",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "to": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Punto o unidad de destino."
+    },
+    "count": {
+      "type": "number",
+      "default": 3,
+      "min": 1,
+      "max": 20,
+      "range": {
+        "min": 1,
+        "max": 20
+      },
+      "description": "Cantidad de elementos."
+    },
+    "interval": {
+      "type": "number",
+      "default": 0.3,
+      "range": null,
+      "description": "Separación temporal entre elementos en segundos."
+    },
+    "fallDur": {
+      "type": "number",
+      "default": 1.4,
+      "range": null,
+      "description": "Duración de caída de la carga en segundos."
+    },
+    "height": {
+      "type": "number",
+      "default": 150,
+      "range": null,
+      "description": "Alto del elemento en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "air-drop",
+    "t": 0,
+    "type": "air.drop",
+    "at": [
+      58.2,
+      25
+    ],
+    "to": [
+      58.2,
+      25
+    ],
+    "count": 4,
+    "dur": 4,
+    "note": "Caída agregada, no observada en las referencias."
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-air.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/air.drop.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

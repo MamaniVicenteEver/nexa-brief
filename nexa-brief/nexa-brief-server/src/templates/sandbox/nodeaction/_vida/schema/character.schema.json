@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nexa.local/vida/character.schema.json",
+  "title": "Vida · Character", "type": "object", "additionalProperties": false,
+  "required": ["id", "name", "voice", "seed", "height", "skin", "head", "hair", "outfit", "shoes", "face"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "name": { "type": "string", "minLength": 1 }, "voice": { "type": "string", "minLength": 1 },
+    "seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+    "height": { "type": "number", "minimum": 0.7, "maximum": 1.3, "default": 1 },
+    "skin": { "$ref": "#/$defs/color" }, "skinShadow": { "$ref": "#/$defs/color" },
+    "ink": { "type": "object", "additionalProperties": false, "properties": {
+      "color": { "$ref": "#/$defs/color" }, "width": { "type": "number", "minimum": 0.006, "maximum": 0.025, "default": 0.012 }
+    } },
+    "head": { "type": "object", "additionalProperties": false, "required": ["radius"], "properties": {
+      "radius": { "type": "number", "minimum": 0.15, "maximum": 0.19, "default": 0.166 },
+      "roundness": { "type": "number", "minimum": 0.95, "maximum": 1.10, "default": 1 }
+    } },
+    "body": { "type": "object", "additionalProperties": false, "properties": {
+      "width": { "type": "number", "minimum": 0.8, "maximum": 1.25, "default": 1 }
+    } },
+    "hair": { "type": "object", "additionalProperties": false, "required": ["style", "color"], "properties": {
+      "style": { "enum": ["spiky", "ponytail", "curly", "buzz"] }, "color": { "$ref": "#/$defs/color" },
+      "shadow": { "$ref": "#/$defs/color" }, "highlight": { "$ref": "#/$defs/color" }, "tie": { "$ref": "#/$defs/color" }
+    } },
+    "accessories": { "type": "object", "additionalProperties": false, "properties": {
+      "cap": { "enum": ["forward", "backward"] }, "capColor": { "$ref": "#/$defs/color" },
+      "glasses": { "type": "boolean", "default": false }, "glassesColor": { "$ref": "#/$defs/color" }
+    } },
+    "outfit": { "type": "object", "additionalProperties": false, "required": ["style", "color", "shadow"], "properties": {
+      "style": { "enum": ["tshirt", "hoodie", "dress", "skirt", "pants", "apron"] }, "color": { "$ref": "#/$defs/color" },
+      "shadow": { "$ref": "#/$defs/color" }, "trim": { "$ref": "#/$defs/color" }, "apronColor": { "$ref": "#/$defs/color" },
+      "skirtColor": { "$ref": "#/$defs/color" }, "pantsColor": { "$ref": "#/$defs/color" }
+    } },
+    "shoes": { "type": "object", "additionalProperties": false, "required": ["style", "color"], "properties": {
+      "style": { "enum": ["oval", "sneaker"] }, "color": { "$ref": "#/$defs/color" }, "sole": { "$ref": "#/$defs/color" }
+    } },
+    "face": { "type": "object", "additionalProperties": false, "required": ["expression"], "properties": {
+      "expression": { "enum": ["neutral", "smile", "smirk", "grin", "laugh", "sad", "worry", "surprise", "shock", "annoyed", "skeptical", "shy", "love", "think"] },
+      "eyeScale": { "type": "number", "minimum": 0.7, "maximum": 1.4, "default": 1 }
+    } }
+  },
+  "$defs": { "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" } }
+}

@@ -1,7 +1,7 @@
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
 
 /** Una petición de render aislado; la API admite lotes para futuras cuadrículas. */
-export interface ComponentPreviewRequest {
+interface ComponentPreviewRequestBase {
   key: string;
   videoId: string;
   component: string;
@@ -9,6 +9,9 @@ export interface ComponentPreviewRequest {
   timeSeconds?: number;
   durationSeconds?: number;
 }
+
+export type ComponentPreviewRequest = ComponentPreviewRequestBase &
+  ({ scope?: "kit"; components?: never } | { scope: "sandbox"; components?: string[] });
 
 export interface ComponentPreviewResult {
   key: string;
@@ -43,6 +46,8 @@ export async function requestComponentPreviews(
         key: item.key,
         video_id: item.videoId,
         component: item.component,
+        ...(item.scope ? { scope: item.scope } : {}),
+        ...(item.components ? { components: item.components } : {}),
         params: item.params,
         time_seconds: item.timeSeconds ?? 3,
         duration_seconds: item.durationSeconds ?? 6,

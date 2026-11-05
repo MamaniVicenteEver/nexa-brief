@@ -1,0 +1,1690 @@
+{
+  "version": 1,
+  "id": "A",
+  "name": "Monocromo editorial",
+  "idea": "Regla horizontal, texto a la izquierda, márgenes amplios. Jerarquía por tamaño y espaciado; monocromo estricto.",
+  "paletteReason": "Blanco, negro y grises neutros. Sin acento cromático: la regla y el peso construyen la jerarquía.",
+  "units": "U = min(W,H) / 1080; una U a escala 1080 equivale a 1 px",
+  "preview": {
+    "magnification": 2.5,
+    "backgrounds": {
+      "oscuro": "#24282b",
+      "negro": "#000000",
+      "claro": "#f5f5f5"
+    },
+    "maxAnimated": 6
+  },
+  "palette": {
+    "ink": "#111111",
+    "surface": "#111111",
+    "text": "#ffffff",
+    "muted": "#d0d0d0",
+    "accent": "#ffffff",
+    "paper": "#f5f5f5"
+  },
+  "fonts": {
+    "display": "PropuestaBarlow",
+    "ui": "PropuestaBarlow",
+    "family": "Barlow",
+    "uiFamily": "Barlow",
+    "weight": 700,
+    "uiWeight": 700,
+    "files": [
+      "assets/fonts/propuestas/Barlow-700.ttf"
+    ]
+  },
+  "motion": {
+    "kind": "rise",
+    "in": 0.32,
+    "out": 0.24,
+    "hold": 3.9,
+    "travelU": 8,
+    "ease": "cubic-bezier(.2,.8,.2,1)"
+  },
+  "components": {
+    "caption.transcript": {
+      "type": "caption.transcript",
+      "params": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "size": 33.75,
+        "color": "#ffffff",
+        "activeColor": "#ffffff",
+        "inactiveColor": "#d0d0d0",
+        "stroke": false,
+        "strokeColor": "#111111",
+        "strokeWidth": 0,
+        "upper": false,
+        "y": 0.9,
+        "yLandscape": 0.915,
+        "maxWords": 3,
+        "gap": 0.45,
+        "highlight": "word",
+        "background": "#111111",
+        "padding": 10,
+        "radius": 0,
+        "fade": 0
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 33.75,
+        "lineHeight": 1.25,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "#111111",
+        "supportColor": "#111111",
+        "supportPaddingU": 10,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "label.chip": {
+      "type": "label.chip",
+      "params": {
+        "size": 30,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 30,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "label.callout": {
+      "type": "label.callout",
+      "params": {
+        "size": 34,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220,
+        "offset": [
+          110,
+          -100
+        ],
+        "reveal": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 34,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "label.neon": {
+      "type": "label.neon",
+      "params": {
+        "size": 74,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 74,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "text.year": {
+      "type": "text.year",
+      "params": {
+        "size": 140,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 140,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "label.figure": {
+      "type": "label.figure",
+      "params": {
+        "size": 96,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 96,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "label.front": {
+      "type": "label.front",
+      "params": {
+        "size": 24,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "label.route": {
+      "type": "label.route",
+      "params": {
+        "size": 24,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "label.unit": {
+      "type": "label.unit",
+      "params": {
+        "size": 22,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 22,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "label.site": {
+      "type": "label.site",
+      "params": {
+        "size": 24,
+        "color": "#ffffff",
+        "fade": 0.32,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "text.attribution": {
+      "type": "text.attribution",
+      "params": {
+        "size": 14,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 14,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "portrait.badge": {
+      "type": "portrait.badge",
+      "params": {
+        "size": 29,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 29,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "portrait.cutout": {
+      "type": "portrait.cutout",
+      "params": {
+        "size": 29,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 29,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "editorial.press": {
+      "type": "editorial.press",
+      "params": {
+        "size": 33,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 33,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#111111",
+        "secondaryFill": "#111111",
+        "background": "#f5f5f5",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#111111",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "callout.photo": {
+      "type": "callout.photo",
+      "params": {
+        "size": 28,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 28,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "intro.title": {
+      "type": "intro.title",
+      "params": {
+        "size": 80,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 80,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 80,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "outro.channel": {
+      "type": "outro.channel",
+      "params": {
+        "size": 76,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 76,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 76,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "badge.count": {
+      "type": "badge.count",
+      "params": {
+        "size": 66,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 66,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "inventory.units": {
+      "type": "inventory.units",
+      "params": {
+        "size": 28,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 28,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    },
+    "icon.badge": {
+      "type": "icon.badge",
+      "params": {
+        "size": 0,
+        "color": "#ffffff",
+        "fade": 0.32
+      },
+      "style": {
+        "font": "PropuestaBarlow",
+        "weight": 700,
+        "sizeU": 0,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.25,
+        "fill": "#ffffff",
+        "secondaryFill": "#d0d0d0",
+        "background": "transparent",
+        "supportColor": "#111111",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#111111",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#ffffff",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#ffffff",
+        "rule": {
+          "edge": "bottom",
+          "widthU": 1,
+          "lengthU": 72
+        },
+        "align": "left",
+        "structure": "rule",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "rise",
+          "in": 0.32,
+          "out": 0.24,
+          "hold": 3.9,
+          "travelU": 8,
+          "ease": "cubic-bezier(.2,.8,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaBarlow",
+          "metadata": "PropuestaBarlow"
+        }
+      }
+    }
+  },
+  "compatibility": {
+    "caption": "params se pueden mezclar directamente con scene.captions o un item caption.transcript; no se ha aplicado",
+    "labels": "params son campos existentes. Fuente mediante defs.fonts.display. style y motion son especificación de presentación pendiente; labels.js fija caja, borde, trazo y peso. No basta cargar JSON para estas estructuras en el motor actual.",
+    "presentation": "app.js interpreta style y motion para esta página aislada. No cambia el episodio."
+  }
+}

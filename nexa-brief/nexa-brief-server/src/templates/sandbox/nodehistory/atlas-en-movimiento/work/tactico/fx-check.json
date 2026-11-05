@@ -1,0 +1,774 @@
+{
+  "viewport": [
+    1080,
+    1920
+  ],
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--num-raster-threads=1",
+    "--renderer-process-limit=1",
+    "--disable-dev-shm-usage"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "determinism": [
+    {
+      "case": "fx.explosion",
+      "background": "dark",
+      "hashes": {
+        "0.12": "340dd517bdcd7d908f5f5c4d3f54b9fd79fae935f277f5cc3fb09e6dddae545a",
+        "1.0639999999999998": "71f897e83739f382a6e055602d37f800cd2d42f4bbf9c2339a139dea595c65c6",
+        "2.548": "96f15fccb2b0fa26a71aa6164388b75ebe20c94baa233cc13a80ff0dd8b39c35"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion",
+      "background": "light",
+      "hashes": {
+        "0.12": "1f231a60e4823e310f98b90e4ab2c1498ead22ff54c2a23ec3f63820343b4914",
+        "1.0639999999999998": "f4bd898a76ffe3832b120bc11f5c951d428111aeae0fd162689a32faa8e57111",
+        "2.548": "355d8d3773b5afae4b610b5e27f84d4bd4114d203b2b206c90b8c5970cc26f35"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.impact",
+      "background": "dark",
+      "hashes": {
+        "0.12": "8f146a6ec96e4fa574f4a94c51baf4abe73496234c1c00b8893af93b4c8818e7",
+        "0.6080000000000001": "382fa8032e621ec8abebb9c21cc972a69ccb0fc8b18d9b07044d28d6c2bda230",
+        "1.4560000000000002": "cdd83c1b4d6c6f47cc158033523ee865dd5e6f188c3a9aae7d2cb5a96fad9560"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.impact",
+      "background": "light",
+      "hashes": {
+        "0.12": "9a1f2d5de9ae4d5ba860d6452a1b8ef59a962f4f17d1d588f130657708559b9e",
+        "0.6080000000000001": "7df2600fabf02366fd475550386c92c3f5f0cd98a5c50ffc687d17b6b3f19ca5",
+        "1.4560000000000002": "744ef5088d4eca12ce5c3c85a6c2261022d13ce02a225afb776b381ed512c30b"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.shockwave",
+      "background": "dark",
+      "hashes": {
+        "0.12": "ae741c0b243595ab0f3c0ec4a797d2670ae9cce22bfd4bc46d91becab1a76604",
+        "0.9119999999999999": "64ec94010c4bf7ec54e83febe7b964b0d06e76319240437bc7129b1eb250d8bf",
+        "2.184": "88ea607691e7576f24cfe66ba7382f11e6ea72cf216fd0ac16ad711cfa088724"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.shockwave",
+      "background": "light",
+      "hashes": {
+        "0.12": "592dbeca7fe2dc0a87ccc68bffd49df42ea25def927dedafccf02f55fdf6423b",
+        "0.9119999999999999": "8f8dea378f814fc2d9e4d484f42931f1804e7eb4984b8a26b0d8334375f4c161",
+        "2.184": "1eac74e8c4437a8ea45d88e5607e24180603d964b229a69d5e28c166235bb84a"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.smoke",
+      "background": "dark",
+      "hashes": {
+        "0.12": "c9a533429e8f303ddf340ceeb88659d8ddd8ace3a0be1954e229d1211870b0c5",
+        "3.04": "88598a04d9bafb4c98361bbb818843c3c6842438d0496be83fdb6c2547cffd6d",
+        "7.28": "32507f2d9395cffdc27ed9b1633cb802d635a1f4fbf1f2687bf32f36c3cb73d6"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.smoke",
+      "background": "light",
+      "hashes": {
+        "0.12": "3551f73d218f03d53384fcd35927e47fc5549eb3dc4e4619df812883e314c338",
+        "3.04": "944a116ea998cdeeabb59724f6721aa627b3b9aaa599c8843bf209aba117566e",
+        "7.28": "0af91e00ec77577e1c126cad78c8ea47f836b8bb59087d303c9ec6b3684fe5e1"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.fire",
+      "background": "dark",
+      "hashes": {
+        "0.12": "01c03f65fe3c8d82e7efb688684ba0c6bd6c9a143fe5706944ae956975b9791a",
+        "3.04": "f2671c1cb20030f20396f17c5eba99c112ebb0615dc8bbe36661b878e0dfcb03",
+        "7.28": "94e546d4301dfffb5d8fcd53c92c5d0f69ca332c4d7596cec83de479a8b06441"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.fire",
+      "background": "light",
+      "hashes": {
+        "0.12": "927a53ab7520e8bb2b46452c39d14d01b66b12e572812ebf041edec130ce6fb1",
+        "3.04": "6d7257980b950ef73c04a326bc7b3ae56bfc4ebcc86e773d3107bcfd9671a37a",
+        "7.28": "a1065dfde8489f45afaf3c36cdd5eb52b95eb8016d9101c8d8f3c1b3310bd6a8"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring",
+      "background": "dark",
+      "hashes": {
+        "0.12": "f532938d144069336205bad204a77bc505e845bdbe60a4383df50db3caf63c5c",
+        "2.2800000000000002": "6be544ea202be572f47165310680bbed5185a191c3e0a9fb698e0982b668d59b",
+        "5.46": "2d0fcbe553fc134284c0ae67a07f4acf8aad4b1a22c7c1550bd8f04adc31e283"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring",
+      "background": "light",
+      "hashes": {
+        "0.12": "11830e5bcc9c75229bfaed946e9fe038c57ca2185a94d1a964f7bff25c2524f5",
+        "2.2800000000000002": "e768faa56343ee9dfc55d2257f3aca3fbb29cfd6b10eee05678bb0d097c5570b",
+        "5.46": "7c7aca37b7f8d4cf715521860f83b4f5e403f17a0d217b9f50279714375b44f4"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.flash",
+      "background": "dark",
+      "hashes": {
+        "0.12": "e5e2e80a9c01aedc5775c3cb43cd7ca7cc280a4e7347be83355b7f9ca8b5b383",
+        "0.171": "f273d9b7b24ea36baecc9377d1ff30a2653c1853bdb73eff294f7a3b63830479",
+        "0.40950000000000003": "bb4efa3d853707fa6d90097c661bee491226589b35969baeb347c0ce6dfac968"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.flash",
+      "background": "light",
+      "hashes": {
+        "0.12": "c146b27fbc9eccae8e1124458f4b7f2fcc7c71b3a2ec20942e8bcfd6f97fcef0",
+        "0.171": "29c15aa26bd53630c08ee5db87de9b8836820899d8586f63ad4447140039da7e",
+        "0.40950000000000003": "befe87bec4078ebafccb00ef6a2886b994aca006ad5e0876e3f99f030fb3ede0"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.missile",
+      "background": "dark",
+      "hashes": {
+        "0.12": "c33a8131380dd23c4d2de04ed5add7fab5d0eb89c11af652ef4649e3581da475",
+        "1.68": "2629c4c7ad4ed6273bcb392740efcd77e2c466ea2cf3fbf38f91a530809dada5",
+        "2.8": "f6cf56ea0d687f49f4b0504745d6d64bd9d8c9b7c55af7de7c0f615b9d7246ad"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.missile",
+      "background": "light",
+      "hashes": {
+        "0.12": "378d2ca2f4e7d2e201e1b343b7033a32f5dbea84c8160448ab74c9353ea65de8",
+        "1.68": "b6c58c8bec0118dc23be900e44a22d2b19feb0dbf9d65674a352332d92a7d1fc",
+        "2.8": "86253049610c4867560a586082b6ef391a142ad1a18cec734d96e2ecf1e7f47a"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.salvo",
+      "background": "dark",
+      "hashes": {
+        "0.12": "476a3dc91de68384005cbf16de8e08d05975584752c9064e30f0386da820c2ad",
+        "1.68": "e27218afeb70bbf132b49bcb36df3a38a55a5e423f05ec6c8023f4b4474a450c",
+        "3.2": "b186669c580a35359a3b9c50e7bcb55069a6e8cb7a8e8da446bdebaa0e2f8080"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.salvo",
+      "background": "light",
+      "hashes": {
+        "0.12": "c0a6e3ac7d31d1c04ec1d6c24877d427076a9b2e4167ca2110e0a2b0cfc529b2",
+        "1.68": "3d52360d30bb23e04959a6a58f0c29fc44f220913034f1179a7f977baf873c9b",
+        "3.2": "0671842affe87afd90154162f6ec33818dbac8d290e17b36279e41c7b7908a13"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.torpedo",
+      "background": "dark",
+      "hashes": {
+        "0.12": "101753b0bee67a8e139d57263de6fc1b57d139c30068e86ad4a27d5988579171",
+        "2.8": "b9164cc3e00a6ad5214aebf6731d9bf0872e6733d519d18ddc1c457f3948dbfa",
+        "4.4": "7ea472f7b162465b457e77bd2922eb7d1fb19688fd7d059137a8a09084e12c20"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.torpedo",
+      "background": "light",
+      "hashes": {
+        "0.12": "0088dd7ddb74cf276dce5028af8f780389a56aa104a5e5584f058fe50959fe4d",
+        "2.8": "1a35af088ebc3b2d9274014fb189a0a32c80ade49d986a7951033c402d4416f1",
+        "4.4": "fba0074b647c747874eb875ffbea7a635102370ce00c11c9e9896d420aaf8dc7"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.shell",
+      "background": "dark",
+      "hashes": {
+        "0.12": "4e3e4792b08faacc189c7a8c1d0de31e7ea392ba455d025bcd03b86a39393d0b",
+        "0.385": "b578b44d6c9f91b023f0310c6be63a11f82465dc74d7b89fea89c20af684377d",
+        "0.9500000000000001": "0cb999368473254ee9d81f09ddc817d6b880ec2e44051bba118dc15f474302d9"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.shell",
+      "background": "light",
+      "hashes": {
+        "0.12": "efeead6aa52f59d8c5fc967578ce8a3bda6625721a0e409b5c4d1dd23792eac2",
+        "0.385": "7d13dab929fef0d3f063dc38947751d60f2caa9dad24d0c27f4577855be127fc",
+        "0.9500000000000001": "6950c261c7c24358d973bbba6c78e08f071c4bc475aa7997c8724657154d86da"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "trail.contrail",
+      "background": "dark",
+      "hashes": {
+        "0.3": "fac271d86f312169560f1d28aaae0fa6ce8b783101519f3909124aa36133aea1",
+        "3.8": "2bc1398702c65531bd9f2fa0d97cf2f0cff4ae3c0f936f35db4357e8dca7c588",
+        "7.6": "f1f4c575106052a4ad35e44952207f526062d9dd0ceb6dd902e4103eefa78c79"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "trail.contrail",
+      "background": "light",
+      "hashes": {
+        "0.3": "6dfc639e1715e752a2fb67491bf2a2ef850196a062a7522830986c1009893be9",
+        "3.8": "f8c5b7841f0f889354da81b559da1a9f5c6855f36241370af64340c7e02627a7",
+        "7.6": "bfcced01b478374c6da4b9ce3df6eabae6a429bc2a784ce21c69601f40054065"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion-air",
+      "background": "dark",
+      "hashes": {
+        "0.12": "29567de4e06832dd5f75b2ded23da664387ee43130afbcfb1bba2612fb6ee0b1",
+        "1.0639999999999998": "33727743eb596f7ae93fd5d65bb80c853d58f9e3d953303ab1e0285804633e45",
+        "2.548": "770b15c85fcdccb7c31d7fcd4f3498bf7dfce6267999b3830d127a7b91e20efb"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion-air",
+      "background": "light",
+      "hashes": {
+        "0.12": "13170263e8cc23bb93f950e691e9bd01efc47e75a0b671d1681bfd60d593d702",
+        "1.0639999999999998": "64aa0f44aab94570ab36968a8b443cc07394cdd25bd10c0f4fd643693b063fff",
+        "2.548": "b2b50003f935595274fd6cb931e8d0137045d27afa54ccd2dde323ab6e656977"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion-naval",
+      "background": "dark",
+      "hashes": {
+        "0.12": "ab2e7b7139aa90c40e5518823185256bb67ea733abdb766c6d4960e4f4860fae",
+        "1.0639999999999998": "72928a338ca35f8f33ce7eeffb3309025a255030c2f1a5e60b36c5b53a0933e0",
+        "2.548": "87f4859fef9a75ed7ae3479a3191ee518adf258e2a0ab399872c35bf279cf7ba"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion-naval",
+      "background": "light",
+      "hashes": {
+        "0.12": "a43d2f585f8e9b670e727f1ec1a3d89c2a538bac78fd03661daa23fd19236be2",
+        "1.0639999999999998": "6ac83c1cc552ae45dc4986ee2f7a8453a3c297b3d0c16e191ae4486712317034",
+        "2.548": "caf1d8965774b4e4d6c9f8aefb1d1407ce82d2a60a9493904e26e29981f16131"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.impact-water",
+      "background": "dark",
+      "hashes": {
+        "0.12": "f6902f338ab7198b65a55c309913920941f523069673e17bfae3c15c6d732967",
+        "0.6080000000000001": "532621624471580639fa03af918304cd0e8498b9a22fae77a9ee14b4c223b4b0",
+        "1.4560000000000002": "f254d35830930021456a3d864e054f454fdd8e6e74161a8a2335051d01188928"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.impact-water",
+      "background": "light",
+      "hashes": {
+        "0.12": "06d7832092e19036f451b82ece541d5aeba61519c94974a9a98e8c52dc3749db",
+        "0.6080000000000001": "d031b05dc2919454813a90008303cdc68df516eb000a9515a7b454b47a3eb2a2",
+        "1.4560000000000002": "9548c23578bf273dff07a51bb7efefb7328bded5e34e788f92149fdf8ec0e5c6"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.shockwave-water",
+      "background": "dark",
+      "hashes": {
+        "0.12": "72bff808a233c588e25b3084521d2d89f20444454173dca08023f8ae77247219",
+        "0.9119999999999999": "ee7bb9f825587cd7629c338c735c9686060d27e46d6ce9e71d717f37b90e0a26",
+        "2.184": "f5c5133de9c360bb5cf0ec7e2ecffd694c5a28759b6501fa3e99839a8aa59296"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.shockwave-water",
+      "background": "light",
+      "hashes": {
+        "0.12": "d65e5864b56c17b5e5f5e20e97212b2bacba5a2e367be0354747f7a767f35d07",
+        "0.9119999999999999": "a2a38d4b55bcee7e023bf1f549a37fc1844af34960fa2dce2f0c11b1eccfd49d",
+        "2.184": "dcf23f5ff555725bfa4271d86f49b65937f47ec0a728cf8a2792889e96a903e0"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.smoke-trail",
+      "background": "dark",
+      "hashes": {
+        "0.12": "8632e87b3883fe1f286db181747aba732697ff63041f5f129d0f6f12e2eead04",
+        "3.04": "09ff3602c540bbb6ef6546f97dceb094833ca263a01a9a85069dc3054ccb2bfd",
+        "7.28": "a9e7bbdf04248a55c1f7ac617725f686cfd61ffa46f28a5d5724a3c42354994e"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.smoke-trail",
+      "background": "light",
+      "hashes": {
+        "0.12": "48f90504ec2f223a044633de9dbd7c4ff1aef7499c932e86306d294b706f93dd",
+        "3.04": "42ef3bb49ac838bae052270cd4654a1700e0f39ef26db1ac2f2b5c4da8bc16a8",
+        "7.28": "211d6cb6be08916dd04e75451c6133ff6be2784e4b2cc9a04b112677cf82de67"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring-target",
+      "background": "dark",
+      "hashes": {
+        "0.12": "28e6dc5309140e5a6c19ef086385336114a01e60af1292f699598f71f7e381e5",
+        "2.2800000000000002": "fc7919f5bd4fc73baaf3cd8a27b113d34f39575c5a27382050f5e7d7aa053948",
+        "5.46": "d7379a3ab8fd57f84276569c7be9c26ff6f53ee70d95455f05abaa3ad0d57ad8"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring-target",
+      "background": "light",
+      "hashes": {
+        "0.12": "e76e689a9e668277b60ac903b157ed0f245c9a8fdd224f2ace7ff62f25aacc93",
+        "2.2800000000000002": "ccb413c853b494d3cb5fdea49aeabf1dac2d34f83cb81a401a30046be8fb43c6",
+        "5.46": "bcab64ce695d2b447f6372d6fc2125b47682853e21af21786a206a85072a55d4"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring-detection",
+      "background": "dark",
+      "hashes": {
+        "0.12": "49eb0d0837026f9e0a9d8ab547363b531ea9b047f5989a3f1a84c1024c399422",
+        "2.2800000000000002": "1d18c0b97a380f53209932402a95dfcb18617fb444a80237bc887e084de373f2",
+        "5.46": "ee61da515310f90bccc70936fe4395504dd8cb93276ecaf8b160c7837eabcde0"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring-detection",
+      "background": "light",
+      "hashes": {
+        "0.12": "e7df511e81cbcc74915517d5feb9b3387b254bbc860c107456477d33550e9c37",
+        "2.2800000000000002": "8b7125d739775a3a3949340c7027275e9840635ece0e4607dcd454300e1bfd79",
+        "5.46": "fb7a13b39e9c4eb8f792061018f7ddd8af5d2230659aac64aac24e4a284b3bd7"
+      },
+      "reverseSeek": true
+    }
+  ],
+  "benchmarks": [
+    {
+      "id": "fx.explosion",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 81.87333333790302,
+        "p95": 132.5,
+        "max": 146.10000002384186
+      },
+      "emptyReadbackMs": {
+        "mean": 12.366666663686434,
+        "p95": 16.599999994039536,
+        "max": 17
+      },
+      "submitMs": {
+        "mean": 8.673333337903022,
+        "p95": 26.599999994039536,
+        "max": 41.70000001788139
+      },
+      "incrementalMs": 69.50666667421659
+    },
+    {
+      "id": "fx.impact",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 29.40333333313465,
+        "p95": 33.099999994039536,
+        "max": 35.099999994039536
+      },
+      "emptyReadbackMs": {
+        "mean": 10.680000001192093,
+        "p95": 12.099999994039536,
+        "max": 15
+      },
+      "submitMs": {
+        "mean": 4.613333332538605,
+        "p95": 7.399999976158142,
+        "max": 8.199999988079071
+      },
+      "incrementalMs": 18.723333331942555
+    },
+    {
+      "id": "fx.shockwave",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 32.69333333472411,
+        "p95": 35.599999994039536,
+        "max": 36.30000001192093
+      },
+      "emptyReadbackMs": {
+        "mean": 11.086666664481163,
+        "p95": 12.399999976158142,
+        "max": 15.599999994039536
+      },
+      "submitMs": {
+        "mean": 0.7300000001986822,
+        "p95": 1.2000000178813934,
+        "max": 3.2000000178813934
+      },
+      "incrementalMs": 21.606666670242944
+    },
+    {
+      "id": "fx.smoke",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 34.956666669249536,
+        "p95": 41.400000005960464,
+        "max": 41.89999997615814
+      },
+      "emptyReadbackMs": {
+        "mean": 11.336666664481163,
+        "p95": 14.199999988079071,
+        "max": 14.300000011920929
+      },
+      "submitMs": {
+        "mean": 3.0266666650772094,
+        "p95": 3.9000000059604645,
+        "max": 4.199999988079071
+      },
+      "incrementalMs": 23.62000000476837
+    },
+    {
+      "id": "fx.fire",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 23.916666666666668,
+        "p95": 26.5,
+        "max": 28.80000001192093
+      },
+      "emptyReadbackMs": {
+        "mean": 10.786666667461395,
+        "p95": 12,
+        "max": 12.300000011920929
+      },
+      "submitMs": {
+        "mean": 2.819999998807907,
+        "p95": 3.300000011920929,
+        "max": 3.4000000059604645
+      },
+      "incrementalMs": 13.129999999205273
+    },
+    {
+      "id": "fx.ring",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 21.39666666885217,
+        "p95": 26.5,
+        "max": 32
+      },
+      "emptyReadbackMs": {
+        "mean": 11.219999997814496,
+        "p95": 12.800000011920929,
+        "max": 13.5
+      },
+      "submitMs": {
+        "mean": 0.6666666656732559,
+        "p95": 0.9000000059604645,
+        "max": 3.2999999821186066
+      },
+      "incrementalMs": 10.176666671037674
+    },
+    {
+      "id": "fx.flash",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 33.28333333532016,
+        "p95": 51.30000001192093,
+        "max": 52.5
+      },
+      "emptyReadbackMs": {
+        "mean": 16.25666666428248,
+        "p95": 23.5,
+        "max": 24.099999994039536
+      },
+      "submitMs": {
+        "mean": 1.0866666704416275,
+        "p95": 1.7000000178813934,
+        "max": 2
+      },
+      "incrementalMs": 17.026666671037678
+    },
+    {
+      "id": "strike.missile",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 23.96666666766008,
+        "p95": 29.5,
+        "max": 31.80000001192093
+      },
+      "emptyReadbackMs": {
+        "mean": 11.309999998410543,
+        "p95": 13.900000005960464,
+        "max": 15.400000005960464
+      },
+      "submitMs": {
+        "mean": 3.2366666664679844,
+        "p95": 6.800000011920929,
+        "max": 9.600000023841858
+      },
+      "incrementalMs": 12.656666669249535
+    },
+    {
+      "id": "strike.missile",
+      "phase": "salida/impacto",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 39.42333333392938,
+        "p95": 55.599999994039536,
+        "max": 117.80000001192093
+      },
+      "emptyReadbackMs": {
+        "mean": 13.546666666865349,
+        "p95": 18.400000005960464,
+        "max": 18.599999994039536
+      },
+      "submitMs": {
+        "mean": 5.843333333730698,
+        "p95": 9,
+        "max": 9.199999988079071
+      },
+      "incrementalMs": 25.87666666706403
+    },
+    {
+      "id": "strike.salvo",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 118.83333333134651,
+        "p95": 161.59999999403954,
+        "max": 339.09999999403954
+      },
+      "emptyReadbackMs": {
+        "mean": 15.8,
+        "p95": 20,
+        "max": 29.299999982118607
+      },
+      "submitMs": {
+        "mean": 30.073333329955737,
+        "p95": 67.90000000596046,
+        "max": 221.30000001192093
+      },
+      "incrementalMs": 103.03333333134651
+    },
+    {
+      "id": "strike.salvo",
+      "phase": "salida/impacto",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 126.24666666885217,
+        "p95": 161.40000000596046,
+        "max": 200.90000000596046
+      },
+      "emptyReadbackMs": {
+        "mean": 16.086666665474574,
+        "p95": 23,
+        "max": 29.799999982118607
+      },
+      "submitMs": {
+        "mean": 24.093333334724107,
+        "p95": 54.30000001192093,
+        "max": 65.80000001192093
+      },
+      "incrementalMs": 110.1600000033776
+    },
+    {
+      "id": "strike.torpedo",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 40.483333336313564,
+        "p95": 51.70000001788139,
+        "max": 51.89999997615814
+      },
+      "emptyReadbackMs": {
+        "mean": 16.593333331743874,
+        "p95": 20.5,
+        "max": 21.69999998807907
+      },
+      "submitMs": {
+        "mean": 5.810000000397364,
+        "p95": 13.799999982118607,
+        "max": 14.5
+      },
+      "incrementalMs": 23.89000000456969
+    },
+    {
+      "id": "strike.torpedo",
+      "phase": "salida/impacto",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 46.21999999880791,
+        "p95": 68.69999998807907,
+        "max": 76.5
+      },
+      "emptyReadbackMs": {
+        "mean": 16.156666667262712,
+        "p95": 26.19999998807907,
+        "max": 45.70000001788139
+      },
+      "submitMs": {
+        "mean": 7.323333330949148,
+        "p95": 10.5,
+        "max": 13.599999994039536
+      },
+      "incrementalMs": 30.063333331545195
+    },
+    {
+      "id": "strike.shell",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 33.3733333359162,
+        "p95": 52.30000001192093,
+        "max": 57.19999998807907
+      },
+      "emptyReadbackMs": {
+        "mean": 17.363333332538605,
+        "p95": 24.30000001192093,
+        "max": 26.900000005960464
+      },
+      "submitMs": {
+        "mean": 4.260000001390775,
+        "p95": 5.5999999940395355,
+        "max": 5.800000011920929
+      },
+      "incrementalMs": 16.010000003377595
+    },
+    {
+      "id": "strike.shell",
+      "phase": "salida/impacto",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 30.686666666467985,
+        "p95": 70.09999999403954,
+        "max": 95.40000000596046
+      },
+      "emptyReadbackMs": {
+        "mean": 16.160000000397364,
+        "p95": 22.900000005960464,
+        "max": 33.89999997615814
+      },
+      "submitMs": {
+        "mean": 4.143333331743876,
+        "p95": 10.699999988079071,
+        "max": 29.69999998807907
+      },
+      "incrementalMs": 14.526666666070621
+    },
+    {
+      "id": "trail.contrail",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 62.82666666905085,
+        "p95": 105.5,
+        "max": 136.7000000178814
+      },
+      "emptyReadbackMs": {
+        "mean": 18.8566666662693,
+        "p95": 27.799999982118607,
+        "max": 55.79999998211861
+      },
+      "submitMs": {
+        "mean": 10.300000001986822,
+        "p95": 20.400000005960464,
+        "max": 39.599999994039536
+      },
+      "incrementalMs": 43.970000002781546
+    }
+  ],
+  "fontSubstitution": "Archivo-900.ttf missing in shared workspace; QA server serves local assets/fonts/AtlasEditorial.ttf for labels.js import only. FX draw no text.",
+  "chromium": "151.0.7922.34",
+  "sharedGallery": {
+    "url": "work/tactico/demo.html?items=scene-fx.json",
+    "title": "Biblioteca t\u00e1ctica \u00b7 galer\u00eda",
+    "body": "Escena n\u00facleo\nair.bomber\nair.drop\nair.helicopter\nair.jet\nair.launch\nair.prop\nair.recover\narrow.bolt\narrow.curve\narrow.flow\narrow.route\nbadge.count\ncallout.photo\ndebug.dot\ndebug.label\ndebug.path\neditorial.press\nflag.marker\nfront.line\nfx.clash\nfx.explosion\nfx.fire\nfx.flash\nfx.impact\nfx.ring\nfx.shockwave\nfx.smoke\nicon.badge\nintro.title\ninventory.units\nlabel.callout\nlabel.chip\nlabel.figure\nlabel.neon\nmoney.flow\nmoney.stack\nnaval.cargo\nnaval.carrier\nnaval.group\nnaval.submarine\nnaval.warship\noutro.channel\nportrait.badge\nportrait.cutout\nrange.ring\nroute.lanes\nroute.sea\nsite.base\nsite.oilfield\nsite.plant\nsite.platform\nsite.port\nsite.refinery\nstrike.missile\nstrike.salvo\nstrike.shell\nstrike.torpedo\nterritory.extrude\nterritory.fill\nterritory.flag\nterritory.glow\nterritory.hatch\nterritory.state\ntext.year\ntrail.contrail\nunit.advance\nunit.group\nunit.move\nunit.retreat\nunit.token\nReproducir\n0.00 s\n20 items \u00b7 70 componentes \u00b7 0 recursos t\u00e1cticos faltantes",
+    "items": 20,
+    "missing": []
+  },
+  "missing": {
+    "tiles": [],
+    "assets": []
+  },
+  "screenshots": 114,
+  "canvasBackend": "Canvas 2D willReadFrequently:true; Chromium with SwiftShader flags",
+  "batches": [
+    "fx-shots-base.json (13 cases)",
+    "fx-shots-variants.json (6 cases)",
+    "fx-bench-final.json",
+    "fx-gallery.json"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "idioma": "es",
+  "base_rutas": "Todas las rutas son relativas a sandbox/nodeaction/_vida salvo que se indique lo contrario.",
+  "objetivo": "Orientar al agente con lectura selectiva; las fuentes y validadores son la autoridad si cambian. No asumir que documentar una capacidad la implementa.",
+  "id": "componentes",
+  "titulo": "Crear un componente o rasgo reutilizable",
+  "resumen": "Distingue una combinación de datos existente de una nueva geometría o capacidad del motor.",
+  "decision": [
+    {
+      "si": "Pelo, ropa, calzado, accesorios, expresión o proporciones ya admitidas",
+      "leer": [
+        "schema/character.schema.json: propiedades, rangos y enums",
+        "characters/tomas.json y la ficha del personaje a modificar",
+        "catalog.json: hair, outfits, expressions, hands y visemes"
+      ],
+      "hacer": [
+        "Edita solo la ficha con valores admitidos por el schema; conserva id y voz si no se pidió cambiarlos.",
+        "Ejecuta validación y revisa la hoja visual. Un cambio de color o estilo existente no necesita un componente nuevo."
+      ]
+    },
+    {
+      "si": "Se solicita un rasgo visual que el schema o el motor no admiten",
+      "leer_condicional": {
+        "pelo": [
+          "engine/rig/hair.js: HAIR y la rama análoga",
+          "schema/character.schema.json: hair"
+        ],
+        "ropa": [
+          "engine/rig/draw.js: OUTFITS y rama análoga",
+          "schema/character.schema.json: outfit"
+        ],
+        "expresion": [
+          "engine/face/face.js: EXPRESSIONS y resolución",
+          "schema/character.schema.json: face.expression"
+        ],
+        "mano": [
+          "engine/rig/skeleton.js: HANDS",
+          "engine/rig/hands.js: dibujo",
+          "engine/act/index.js: uso de la forma si aplica"
+        ],
+        "boca": [
+          "engine/face/mouth.js: VISEMES y dibujo",
+          "engine/core/dialogue.js: solo si cambia sincronización de voz"
+        ],
+        "objeto": [
+          "engine/props/index.js: PROPS, grip y drawProp",
+          "engine/core/compile.js y engine/core/sample.js: solo si incorpora interacción nueva"
+        ],
+        "escenario": [
+          "docs/SETS.md",
+          "schema/set.schema.json",
+          "sets/heladeria/set.json",
+          "engine/sets/index.js: solo si el renderer debe ampliarse"
+        ],
+        "gorras": [
+          "engine/rig/hair.js: drawHairBack y drawHairFront",
+          "schema/character.schema.json: accessories.cap"
+        ],
+        "lentes": [
+          "engine/face/face.js: drawFace y glasses",
+          "schema/character.schema.json: accessories.glasses"
+        ],
+        "calzado": [
+          "engine/rig/draw.js: drawShoe",
+          "schema/character.schema.json: shoes"
+        ],
+        "cabeza": [
+          "engine/rig/draw.js: drawHead",
+          "engine/rig/skeleton.js: radio, giros y anclas",
+          "engine/face/face.js: solo si la silueta cambia la cara",
+          "engine/rig/hair.js: solo si la silueta cambia el pelo",
+          "schema/character.schema.json: head"
+        ],
+        "efecto_visual": [
+          "engine/fx/index.js: FX y drawFX",
+          "engine/act/index.js: acción fx si requiere parámetros nuevos",
+          "schema/episode.schema.json: solo si cambia el contrato de la acción"
+        ]
+      },
+      "leer_comun": [
+        "VIDA.md: sección «Rig y cara: referencia compatible de etapa 1» y «Para agregar un rasgo»",
+        "tools/catalog.mjs o tools/catalog-stage2.mjs: sección correspondiente",
+        "showcase.js y tools/showcase.mjs: solo sección afectada",
+        "test/rig.test.mjs y test/capabilities.test.mjs: ejemplos afines"
+      ],
+      "hacer": [
+        "Implementa el dibujo/capacidad en el banco correspondiente y agrega el valor al schema cuando ese dato forme parte de la ficha. No introduzcas propiedades desconocidas en un JSON existente.",
+        "Mantén geometría, rig, grip, topología y capas compatibles; considera las cinco vistas y movimiento, no solo un cuadro frontal.",
+        "Para un objeto declara tipo, dimensiones, grip y dibujo; las interacciones complejas requieren además la guía animations.json.",
+        "Actualiza descripciones/demos del generador de catálogo, comprueba que Showcase sabe presentar esa sección y regenera artefactos.",
+        "Añade pruebas de regresión y revisa visualmente el nuevo componente y personajes previos en ambas orientaciones."
+      ]
+    }
+  ],
+  "limites": [
+    "Los campos y enums del schema son el contrato ejecutable vigente; este archivo no crea capacidad nueva por sí solo.",
+    "La cabeza tiene variación acotada de radio y redondez, no una biblioteca arbitraria de siluetas; una forma distinta puede exigir ampliar rig, límites y validación.",
+    "El catálogo se genera: modificar solo catalog.json o showcase/components.json se pierde al regenerar.",
+    "Una entrada con archivo o demo no garantiza por sí misma que el visor de Showcase pueda reproducirla: verificar el recorrido real."
+  ],
+  "validacion": {
+    "directorio": "sandbox/nodeaction/_vida",
+    "comandos": [
+      "node tools/validate.mjs",
+      "node --test test/rig.test.mjs test/capabilities.test.mjs",
+      "node --test test/*.test.mjs",
+      "node tools/catalog.mjs",
+      "node tools/showcase.mjs",
+      "node tools/showcase-thumbs.mjs"
+    ],
+    "comprobar": [
+      "Ficha válida sin propiedades desconocidas y valor nuevo aceptado cuando corresponde; errores para opciones inválidas.",
+      "Ver el rasgo en las cinco vistas, distintas poses, manos ocupadas y encuadres cuando corresponda; comprobar que personajes anteriores no cambian involuntariamente.",
+      "Ver tarjeta, frame inicial y reproducción cuando sea animado; revisar ambos formatos."
+    ],
+    "efectos": "Los tres últimos comandos regeneran datos compartidos, sprites, posters y miniaturas. Revisar los cambios y evitar generación simultánea."
+  }
+}

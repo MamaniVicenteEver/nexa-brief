@@ -1,0 +1,94 @@
+"""Copiar a /tmp; ejecutar nice -n 15. Un Chromium, una página, seis capturas."""
+import sys
+sys.dont_write_bytecode=True
+import argparse, asyncio, fcntl, json, re
+from pathlib import Path
+from playwright.async_api import async_playwright
+
+ROOT=Path.cwd(); OUT=ROOT/'work/texto/capturas'; OUT.mkdir(parents=True,exist_ok=True)
+declaration=json.loads((ROOT/'info.json').read_text())['catalog']
+components=json.loads((ROOT/declaration['components']).read_text())['components']
+FLAGS=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=1','--disable-dev-shm-usage']
+parser=argparse.ArgumentParser();parser.add_argument('--retake',action='store_true');args=parser.parse_args()
+
+async def main():
+    lock=open('/tmp/atlas-tactico-chromium.lock','w');print('Esperando Chromium único',flush=True);fcntl.flock(lock,fcntl.LOCK_EX)
+    print('Iniciando Chromium',flush=True)
+    report=json.loads((OUT/'showcase-vistas-audit.json').read_text()) if args.retake else {'errors':[],'httpFailures':[],'tabs':[]}
+    async with async_playwright() as p:
+        browser=await p.chromium.launch(headless=True,args=FLAGS)
+        page=await browser.new_page(viewport={'width':1440,'height':1100},device_scale_factor=1)
+        page.set_default_timeout(60000)
+        page.on('pageerror',lambda e:report['errors'].append(str(e)))
+        page.on('response',lambda r:report['httpFailures'].append({'url':r.url,'status':r.status}) if r.status>=400 else None)
+        try:
+            await page.goto('http://127.0.0.1:3000/showcase',wait_until='domcontentloaded')
+            print('Showcase',page.url,flush=True)
+            login=page.get_by_role('button',name=re.compile('Entrar directo'))
+            if '/login' in page.url:
+                await login.wait_for(state='visible')
+                await login.click();await page.wait_for_url(lambda url:'/login' not in url)
+                await page.goto('http://127.0.0.1:3000/showcase',wait_until='domcontentloaded')
+            await page.wait_for_timeout(2500)
+            selector=page.get_by_role('combobox',name='Diseño',exact=True)
+            for attempt in range(3):
+                await selector.click()
+                try:
+                    await page.get_by_role('listbox').wait_for(timeout=5000)
+                    break
+                except Exception:
+                    if attempt==2: raise
+            print('Seleccionando Atlas',flush=True)
+            await page.get_by_role('option',name=re.compile('Atlas en Movimiento|atlas-en-movimiento')).click()
+            await page.get_by_role('tab',name='Biblioteca (92)',exact=True).wait_for()
+            print('Catálogo listo',flush=True)
+            for group in declaration['tabs']:
+                print('Abriendo',group['id'],flush=True)
+                expected=[c for c in components if c['name'].split('.')[0] in group['families'] or c['name'] in group.get('components',[])]
+                tab=page.get_by_role('tab',name=f"{group['label']} ({len(expected)})",exact=True)
+                await tab.click()
+                panel=page.get_by_role('tabpanel')
+                cards=panel.get_by_role('article');assert await cards.count()==len(expected)
+                images=panel.get_by_role('img',name=re.compile('Miniatura de'))
+                assert await images.count()==len(expected)
+                # Trigger native lazy loading throughout the group, then inspect all files.
+                for i in range(await images.count()):
+                    image=images.nth(i);await image.scroll_into_view_if_needed()
+                    await asyncio.wait_for(image.evaluate("img=>img.decode()"),timeout=20)
+                    print('Imagen',group['id'],i+1,flush=True)
+                dimensions=await images.evaluate_all('(images)=>images.map(i=>({name:i.alt,width:i.naturalWidth,height:i.naturalHeight}))')
+                assert all(i['width']==480 and i['height']==480 for i in dimensions)
+                assert await panel.locator('iframe').count()==0
+                assert await panel.get_by_text(re.compile('Miniatura no disponible')).count()==0
+                await tab.scroll_into_view_if_needed()
+                await page.get_by_role('tablist',name='Contenido del prototipo').evaluate("el=>window.scrollBy(0,el.getBoundingClientRect().top-96)")
+                await page.screenshot(path=str(OUT/f"showcase-{group['id']}.png"))
+                if args.retake:
+                    print('Captura final',group['id'],flush=True)
+                    continue
+                # Same existing modal, with the filtered group as its navigation source.
+                await images.first.click()
+                dialog=page.get_by_role('dialog',name=expected[0]['name'],exact=True)
+                await dialog.wait_for();assert await page.locator('iframe').count()==1
+                await page.keyboard.press('Escape');await dialog.wait_for(state='detached')
+                await page.set_viewport_size({'width':390,'height':844})
+                mobile=await panel.evaluate('(el)=>({width:el.getBoundingClientRect().width,overflow:document.documentElement.scrollWidth>innerWidth})')
+                assert mobile['width']<=390 and not mobile['overflow'],mobile
+                await page.set_viewport_size({'width':1440,'height':1100})
+                report['tabs'].append({'id':group['id'],'count':len(expected),'images':dimensions,'mobile':mobile,'modal':True,'capture':f"work/texto/capturas/showcase-{group['id']}.png"})
+                print(group['label'],len(expected),'OK',flush=True)
+            if not args.retake:
+                await page.get_by_role('tab',name='Biblioteca (92)',exact=True).click()
+                panel=page.get_by_role('tabpanel'); images=panel.get_by_role('img',name=re.compile('Miniatura de'))
+                assert await images.count()==92
+                for i in range(92):
+                    image=images.nth(i);await image.scroll_into_view_if_needed();await asyncio.wait_for(image.evaluate('img=>img.decode()'),timeout=20)
+                report['libraryImages']=await images.count()
+            report['spritesTab']=await page.get_by_role('tab',name=re.compile('Sprites')).inner_text()
+            report['ok']=not report['errors'] and not report['httpFailures']
+            assert report['ok'],report
+        finally:
+            (OUT/'showcase-vistas-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+            await browser.close();lock.close()
+
+asyncio.run(main())

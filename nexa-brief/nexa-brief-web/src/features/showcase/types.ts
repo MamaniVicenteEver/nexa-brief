@@ -27,6 +27,8 @@ export type Source = {
   sheetExists?: boolean;
   sourceSheet?: string;
   sourceSha256?: string | null;
+  preview9x16?: string;
+  preview16x9?: string;
 };
 export type Item = {
   key: string;

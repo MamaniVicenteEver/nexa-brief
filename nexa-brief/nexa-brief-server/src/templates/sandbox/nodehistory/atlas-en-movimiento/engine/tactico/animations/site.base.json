@@ -1,0 +1,82 @@
+{
+  "name": "site.base",
+  "family": "site",
+  "description": "Base con pista y hangares; extrusión, sombra y daño persistente. Úsala para localizar infraestructura y mostrar su estado.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 20,
+  "states": [
+    "normal",
+    "hit",
+    "burning",
+    "ruined"
+  ],
+  "params": {
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.15,
+      "max": 4,
+      "range": {
+        "min": 0.15,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "zoomScale": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Ajusta la escala visual con el zoom."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "labelSize": {
+      "type": "number",
+      "default": 24,
+      "range": null,
+      "description": "Tamaño del rótulo en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-site-base",
+    "t": 0,
+    "type": "site.base",
+    "at": [
+      50.33,
+      29.25
+    ],
+    "label": "base",
+    "dur": 8,
+    "out": 7,
+    "states": [
+      {
+        "at": 3,
+        "state": "hit"
+      },
+      {
+        "at": 3.4,
+        "state": "burning"
+      },
+      {
+        "at": 6,
+        "state": "ruined"
+      }
+    ]
+  },
+  "usedBy": [
+    "work/tactico/scene-editorial.json",
+    "work/tactico/scene-sites.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/site.base.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

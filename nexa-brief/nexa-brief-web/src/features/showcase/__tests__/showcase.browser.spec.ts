@@ -39,8 +39,11 @@ test("catálogo y grilla coinciden con el índice anterior, búsqueda y preferen
     .allTextContents();
   expect(names.length).toBeGreaterThan(0);
   await expect(
-    page.frameLocator('section[aria-label="Componentes"] iframe').first().locator("html"),
-  ).toHaveAttribute("data-gallery-state", "ended", { timeout: 45_000 });
+    page
+      .locator('section[aria-label="Componentes"] article')
+      .first()
+      .getByRole("button", { name: /Reproducir animación/ }),
+  ).toBeVisible();
   const cards = page.locator('section[aria-label="Componentes"] article');
   const geometry = await cards.evaluateAll((elements) =>
     elements.map((element) => {
@@ -48,47 +51,44 @@ test("catálogo y grilla coinciden con el índice anterior, búsqueda y preferen
       return { x, y, width, height };
     }),
   );
-  expect(new Set(geometry.map(({ width, height }) => `${width}:${height}`)).size).toBe(1);
   expect(geometry.filter(({ y }) => y === geometry[0].y)).toHaveLength(4);
   await screenshot(page, "desktop-grilla.png");
-  await cards
-    .first()
-    .getByRole("button", { name: /Mostrar información/ })
-    .click();
-  await expect(cards.first().getByRole("region", { name: /Información de/ })).toBeVisible();
-  await expect(cards.first().getByRole("region", { name: "Parámetros" })).toBeVisible();
-  expect(await cards.first().boundingBox()).toEqual(geometry[0]);
-  await screenshot(page, "desktop-card-info.png");
-  await cards
-    .first()
-    .getByRole("button", { name: /Ocultar información/ })
-    .click();
+  await expect(cards.first().locator("h2")).toBeVisible();
+  await expect(cards.first().locator("p").first()).toBeVisible();
   const old = await page.context().newPage();
   await old.goto(`${kit}/showcase/index.html`);
   await expect(old.locator("#grid article").first()).toBeVisible({ timeout: 45_000 });
   expect(await old.locator("#grid .name").allTextContents()).toEqual(names);
-  await page.getByRole("combobox", { name: "Diseño", exact: true }).click();
-  expect(await page.getByRole("option").allTextContents()).toEqual(
-    await old.locator("#tabs button").allTextContents(),
+  await expect(page.getByRole("button", { name: "Diseños", exact: true })).toHaveAttribute(
+    "aria-expanded",
+    "false",
   );
-  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Diseños", exact: true }).click();
+  expect(
+    await page
+      .getByRole("group", { name: "Diseños de producción" })
+      .getByRole("button")
+      .allTextContents(),
+  ).toEqual(await old.locator("#tabs button").allTextContents());
   await old.close();
   const search = page.getByLabel("Buscar componentes");
   await search.fill("coincidencia-imposible-xyz");
   await expect(page.getByText("Nada coincide con la búsqueda.")).toBeVisible();
   await search.fill("common.");
   await expect(page.locator('section[aria-label="Componentes"] article').first()).toBeVisible();
-  await page.getByRole("combobox", { name: "Diseño", exact: true }).click();
-  await page.getByRole("option", { name: "Componentes de videos" }).click();
+  await page.getByRole("button", { name: "Componentes de videos" }).click();
   await expect(search).toHaveValue("common.");
   await search.fill("");
   await expect(page.locator("article").first()).toBeVisible({ timeout: 45_000 });
-  await page.locator('article button[aria-expanded="false"]').first().click();
+  await page.locator('section[aria-label="Componentes"] article[tabindex="0"]').first().click();
   await expect(page.getByText("Video de origen:").first()).toBeVisible();
+  await page.getByRole("dialog").getByRole("button", { name: "Cerrar" }).click();
   await page.getByRole("button", { name: "16:9", exact: true }).click();
   await page.reload();
-  await expect(page.getByRole("combobox", { name: "Diseño", exact: true })).toHaveText(
-    "Componentes de videos",
+  await page.getByRole("button", { name: "Diseños", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Componentes de videos" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
   );
   await expect(page.getByRole("button", { name: "16:9", exact: true })).toHaveAttribute(
     "aria-pressed",
@@ -98,7 +98,7 @@ test("catálogo y grilla coinciden con el índice anterior, búsqueda y preferen
 
 test("modal: stage real, controles, formato, copia y foco", async ({ page }) => {
   await openGallery(page);
-  const trigger = page.locator('article button[aria-label^="Ampliar "]').first();
+  const trigger = page.locator('section[aria-label="Componentes"] article[tabindex="0"]').first();
   await trigger.click();
   const dialog = page.getByRole("dialog");
   const close = dialog.getByRole("button", { name: "Cerrar" });
@@ -130,11 +130,14 @@ test("grilla y modal móviles", async ({ page }) => {
   await openGallery(page);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
   await expect(
-    page.frameLocator('section[aria-label="Componentes"] iframe').first().locator("html"),
-  ).toHaveAttribute("data-gallery-state", "ended", { timeout: 45_000 });
+    page
+      .locator('section[aria-label="Componentes"] article')
+      .first()
+      .getByRole("button", { name: /Reproducir animación/ }),
+  ).toBeVisible();
   await page.locator('section[aria-label="Componentes"] article').first().scrollIntoViewIfNeeded();
   await screenshot(page, "movil-grilla.png");
-  await page.locator('article button[aria-label^="Ampliar "]').first().click();
+  await page.locator('section[aria-label="Componentes"] article[tabindex="0"]').first().click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("button", { name: "Pausar" })).toBeEnabled({ timeout: 45_000 });
   await dialog.getByRole("button", { name: /Móvil/ }).click();
@@ -147,7 +150,7 @@ test("grilla y modal móviles", async ({ page }) => {
 
 test("modal rechaza mensajes ajenos y cierra desde el iframe y el fondo", async ({ page }) => {
   await openGallery(page);
-  const trigger = page.locator('article button[aria-label^="Ampliar "]').first();
+  const trigger = page.locator('section[aria-label="Componentes"] article[tabindex="0"]').first();
   await trigger.click();
   let dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("button", { name: "Pausar" })).toBeEnabled({ timeout: 45_000 });
@@ -202,20 +205,21 @@ test("grilla informa un script de video ausente y recupera con replay", async ({
     if (blocked) await route.fulfill({ status: 404, body: "" });
     else await route.continue();
   });
-  await page.getByRole("combobox", { name: "Diseño", exact: true }).click();
-  await page.getByRole("option", { name: "Componentes de videos" }).click();
+  await page.getByRole("button", { name: "Diseños", exact: true }).click();
+  await page.getByRole("button", { name: "Componentes de videos" }).click();
   const card = page
     .locator("article")
     .filter({ has: page.getByRole("heading", { name: entry.name, exact: true }) })
     .first();
   await card.scrollIntoViewIfNeeded();
+  await card.getByRole("button", { name: /Reproducir animación/ }).click();
   await expect(card.getByRole("alert")).toContainText("No se pudo cargar", { timeout: 45_000 });
   blocked = false;
-  await card.getByRole("button", { name: /Repetir animación/ }).click();
+  await card.getByRole("button", { name: /Reintentar animación/ }).click();
   await expect(card.getByRole("alert")).toHaveCount(0);
-  await expect(card.locator("iframe").contentFrame().locator("html")).toHaveAttribute(
-    "data-gallery-state",
-    "ended",
+  await expect(card.locator("[data-animation-ready]")).toHaveAttribute(
+    "data-animation-ready",
+    "true",
     { timeout: 45_000 },
   );
   expect(

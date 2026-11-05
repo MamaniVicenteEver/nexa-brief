@@ -1,0 +1,916 @@
+{
+  "format": "atlas-v1",
+  "duration": 144,
+  "lang": "es",
+  "planoLook": "tactico",
+  "intro": false,
+  "outro": false,
+  "captions": {
+    "enabled": false
+  },
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "motionBlur": false,
+  "defs": {
+    "palette": {
+      "text": "#f4f1da",
+      "dark": "#081e2c",
+      "accent": "#f5d86f",
+      "success": "#399e58",
+      "cyan": "#5be1e8",
+      "danger": "#ee695d"
+    },
+    "fonts": {
+      "display": "AtlasDisplay"
+    }
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        52.5,
+        29
+      ],
+      "zoom": 5.1
+    }
+  ],
+  "places": {
+    "Ormuz": [
+      56.4,
+      26.5
+    ],
+    "Bagdad": [
+      44.36,
+      33.31
+    ],
+    "Teheran": [
+      51.39,
+      35.69
+    ],
+    "Mascate": [
+      58.41,
+      23.59
+    ]
+  },
+  "layers": [],
+  "items": [
+    {
+      "id": "iran-fill",
+      "type": "territory.flag",
+      "region": "IR",
+      "flag": "IR",
+      "flagMode": "fill",
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "iraq-marker",
+      "type": "territory.flag",
+      "region": "IQ",
+      "flag": "IQ",
+      "flagMode": "marker",
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "kuwait-both",
+      "type": "territory.flag",
+      "region": "KW",
+      "flag": "KW",
+      "flagMode": "both",
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "oman-none",
+      "type": "territory.flag",
+      "region": "OM",
+      "flag": "OM",
+      "flagMode": "none",
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "oman-base",
+      "type": "territory.fill",
+      "region": "OM",
+      "color": "cyan",
+      "opacity": 0.4,
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "modes-title",
+      "type": "label.chip",
+      "text": "BANDERAS · CUATRO MODOS",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 34,
+      "width": 900,
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "mode-label-0",
+      "type": "label.chip",
+      "text": "IRÁN · fill",
+      "at": [
+        55,
+        34
+      ],
+      "width": 400,
+      "size": 28,
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "mode-label-1",
+      "type": "label.chip",
+      "text": "IRAK · marker",
+      "at": [
+        45.2,
+        33
+      ],
+      "width": 400,
+      "size": 28,
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "mode-label-2",
+      "type": "label.chip",
+      "text": "KUWAIT · both",
+      "at": [
+        48,
+        28
+      ],
+      "width": 400,
+      "size": 28,
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "mode-label-3",
+      "type": "label.chip",
+      "text": "OMÁN · none",
+      "at": [
+        57,
+        21.2
+      ],
+      "width": 400,
+      "size": 28,
+      "t": 0,
+      "dur": 11.5,
+      "out": 11
+    },
+    {
+      "id": "demo-notice",
+      "type": "label.chip",
+      "text": "DEMOSTRACIÓN GRÁFICA · ESTADOS Y CONTADORES SINTÉTICOS",
+      "screen": [
+        0.5,
+        0.76
+      ],
+      "size": 22,
+      "width": 980,
+      "t": 0,
+      "dur": 144,
+      "out": 143.5
+    },
+    {
+      "region": "IR",
+      "t": 12,
+      "dur": 6,
+      "out": 17.5,
+      "type": "territory.fill",
+      "color": "success",
+      "id": "demo-territory-0"
+    },
+    {
+      "id": "title-territory-0",
+      "type": "label.chip",
+      "text": "territory.fill",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 12,
+      "dur": 6,
+      "out": 17.5
+    },
+    {
+      "region": "IR",
+      "t": 18,
+      "dur": 6,
+      "out": 23.5,
+      "type": "territory.flag",
+      "flag": "IR",
+      "flagMode": "both",
+      "id": "demo-territory-1"
+    },
+    {
+      "id": "title-territory-1",
+      "type": "label.chip",
+      "text": "territory.flag",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 18,
+      "dur": 6,
+      "out": 23.5
+    },
+    {
+      "type": "flag.marker",
+      "at": [
+        53,
+        27
+      ],
+      "flag": "US",
+      "t": 24,
+      "dur": 6,
+      "out": 29.5,
+      "id": "demo-territory-2"
+    },
+    {
+      "id": "title-territory-2",
+      "type": "label.chip",
+      "text": "flag.marker",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 24,
+      "dur": 6,
+      "out": 29.5
+    },
+    {
+      "region": "IR",
+      "t": 30,
+      "dur": 6,
+      "out": 35.5,
+      "type": "territory.hatch",
+      "color": "accent",
+      "id": "demo-territory-3"
+    },
+    {
+      "id": "title-territory-3",
+      "type": "label.chip",
+      "text": "territory.hatch",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 30,
+      "dur": 6,
+      "out": 35.5
+    },
+    {
+      "region": "IR",
+      "t": 36,
+      "dur": 6,
+      "out": 41.5,
+      "type": "territory.glow",
+      "color": "cyan",
+      "id": "demo-territory-4"
+    },
+    {
+      "id": "title-territory-4",
+      "type": "label.chip",
+      "text": "territory.glow",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 36,
+      "dur": 6,
+      "out": 41.5
+    },
+    {
+      "region": "IQ",
+      "t": 42,
+      "dur": 6,
+      "out": 47.5,
+      "type": "territory.extrude",
+      "color": "danger",
+      "id": "demo-territory-5"
+    },
+    {
+      "id": "title-territory-5",
+      "type": "label.chip",
+      "text": "territory.extrude",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 42,
+      "dur": 6,
+      "out": 47.5
+    },
+    {
+      "region": "IQ",
+      "t": 48,
+      "dur": 6,
+      "out": 53.5,
+      "type": "territory.state",
+      "states": [
+        {
+          "at": 49,
+          "state": "disputado",
+          "dur": 1
+        },
+        {
+          "at": 51,
+          "state": "ocupado",
+          "dur": 1
+        },
+        {
+          "at": 52.5,
+          "state": "liberado",
+          "dur": 0.8
+        }
+      ],
+      "transition": "wipe",
+      "note": "Estados sintéticos: no describen hechos históricos.",
+      "id": "demo-territory-6"
+    },
+    {
+      "id": "title-territory-6",
+      "type": "label.chip",
+      "text": "territory.state",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 48,
+      "dur": 6,
+      "out": 53.5
+    },
+    {
+      "via": [
+        [
+          50.5,
+          28.8
+        ],
+        [
+          53,
+          27
+        ],
+        [
+          56.4,
+          26.4
+        ],
+        [
+          58.5,
+          24.8
+        ]
+      ],
+      "t": 54,
+      "dur": 6,
+      "out": 59.5,
+      "type": "arrow.route",
+      "color": "accent",
+      "id": "demo-routes-0"
+    },
+    {
+      "id": "title-routes-0",
+      "type": "label.chip",
+      "text": "arrow.route",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 54,
+      "dur": 6,
+      "out": 59.5
+    },
+    {
+      "via": [
+        [
+          48,
+          33
+        ],
+        [
+          56,
+          27
+        ]
+      ],
+      "t": 60,
+      "dur": 6,
+      "out": 65.5,
+      "type": "arrow.curve",
+      "color": "text",
+      "width": 9,
+      "id": "demo-routes-1"
+    },
+    {
+      "id": "title-routes-1",
+      "type": "label.chip",
+      "text": "arrow.curve",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 60,
+      "dur": 6,
+      "out": 65.5
+    },
+    {
+      "via": [
+        [
+          48,
+          32
+        ],
+        [
+          58,
+          25
+        ]
+      ],
+      "t": 66,
+      "dur": 6,
+      "out": 71.5,
+      "type": "arrow.bolt",
+      "color": "accent",
+      "id": "demo-routes-2"
+    },
+    {
+      "id": "title-routes-2",
+      "type": "label.chip",
+      "text": "arrow.bolt",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 66,
+      "dur": 6,
+      "out": 71.5
+    },
+    {
+      "via": [
+        [
+          50.5,
+          28.8
+        ],
+        [
+          53,
+          27
+        ],
+        [
+          56.4,
+          26.4
+        ],
+        [
+          58.5,
+          24.8
+        ]
+      ],
+      "t": 72,
+      "dur": 6,
+      "out": 77.5,
+      "type": "arrow.flow",
+      "color": "accent",
+      "id": "demo-routes-3"
+    },
+    {
+      "id": "title-routes-3",
+      "type": "label.chip",
+      "text": "arrow.flow",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 72,
+      "dur": 6,
+      "out": 77.5
+    },
+    {
+      "via": [
+        [
+          50,
+          28
+        ],
+        [
+          52,
+          27
+        ],
+        [
+          54.5,
+          26
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          57.4,
+          25.3
+        ],
+        [
+          59,
+          24.5
+        ]
+      ],
+      "t": 78,
+      "dur": 6,
+      "out": 83.5,
+      "type": "route.sea",
+      "color": "text",
+      "id": "demo-routes-4"
+    },
+    {
+      "id": "title-routes-4",
+      "type": "label.chip",
+      "text": "route.sea",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 78,
+      "dur": 6,
+      "out": 83.5
+    },
+    {
+      "via": [
+        [
+          50.5,
+          28.8
+        ],
+        [
+          53,
+          27
+        ],
+        [
+          56.4,
+          26.4
+        ],
+        [
+          58.5,
+          24.8
+        ]
+      ],
+      "t": 84,
+      "dur": 6,
+      "out": 89.5,
+      "type": "route.lanes",
+      "text": "ESTRECHO DE ORMUZ",
+      "width": 1.5,
+      "id": "demo-routes-5"
+    },
+    {
+      "id": "title-routes-5",
+      "type": "label.chip",
+      "text": "route.lanes",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 84,
+      "dur": 6,
+      "out": 89.5
+    },
+    {
+      "type": "front.line",
+      "via": [
+        [
+          47,
+          33
+        ],
+        [
+          48.5,
+          31.5
+        ],
+        [
+          49,
+          30
+        ]
+      ],
+      "states": [
+        {
+          "at": 91,
+          "state": "advance",
+          "via": [
+            [
+              48,
+              33
+            ],
+            [
+              49.5,
+              31.5
+            ],
+            [
+              50,
+              30
+            ]
+          ],
+          "dur": 1.5
+        },
+        {
+          "at": 93.5,
+          "state": "retreat",
+          "via": [
+            [
+              47.3,
+              33
+            ],
+            [
+              48.8,
+              31.5
+            ],
+            [
+              49.3,
+              30
+            ]
+          ],
+          "dur": 1
+        }
+      ],
+      "color": "danger",
+      "t": 90,
+      "dur": 6,
+      "out": 95.5,
+      "note": "Frente esquemático sin valor histórico.",
+      "id": "demo-routes-6"
+    },
+    {
+      "id": "title-routes-6",
+      "type": "label.chip",
+      "text": "front.line",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 90,
+      "dur": 6,
+      "out": 95.5
+    },
+    {
+      "type": "range.ring",
+      "at": [
+        53,
+        29
+      ],
+      "radiusKm": 180,
+      "color": "danger",
+      "t": 96,
+      "dur": 6,
+      "out": 101.5,
+      "id": "demo-routes-7"
+    },
+    {
+      "id": "title-routes-7",
+      "type": "label.chip",
+      "text": "range.ring",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 96,
+      "dur": 6,
+      "out": 101.5
+    },
+    {
+      "type": "label.callout",
+      "at": [
+        53,
+        27
+      ],
+      "text": "Unidad de demostración",
+      "offset": [
+        100,
+        -120
+      ],
+      "t": 102,
+      "dur": 6,
+      "out": 107.5,
+      "id": "demo-labels-0"
+    },
+    {
+      "id": "title-labels-0",
+      "type": "label.chip",
+      "text": "label.callout",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 102,
+      "dur": 6,
+      "out": 107.5
+    },
+    {
+      "type": "label.neon",
+      "at": [
+        54,
+        32
+      ],
+      "text": "IRÁN",
+      "color": "cyan",
+      "size": 78,
+      "t": 108,
+      "dur": 6,
+      "out": 113.5,
+      "id": "demo-labels-1"
+    },
+    {
+      "id": "title-labels-1",
+      "type": "label.chip",
+      "text": "label.neon",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 108,
+      "dur": 6,
+      "out": 113.5
+    },
+    {
+      "type": "label.chip",
+      "at": [
+        56.4,
+        26.5
+      ],
+      "text": "ESTRECHO DE ORMUZ",
+      "t": 114,
+      "dur": 6,
+      "out": 119.5,
+      "id": "demo-labels-2"
+    },
+    {
+      "id": "title-labels-2",
+      "type": "label.chip",
+      "text": "label.chip",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 114,
+      "dur": 6,
+      "out": 119.5
+    },
+    {
+      "type": "label.figure",
+      "screen": [
+        0.5,
+        0.48
+      ],
+      "value": 4,
+      "unit": "países",
+      "source": "Los cuatro países de scene-territorios.json; dato de la demostración",
+      "t": 120,
+      "dur": 6,
+      "out": 125.5,
+      "id": "demo-labels-3"
+    },
+    {
+      "id": "title-labels-3",
+      "type": "label.chip",
+      "text": "label.figure",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 120,
+      "dur": 6,
+      "out": 125.5
+    },
+    {
+      "type": "text.year",
+      "screen": [
+        0.5,
+        0.24
+      ],
+      "text": "1987",
+      "size": 180,
+      "t": 126,
+      "dur": 6,
+      "out": 131.5,
+      "note": "Año ilustrativo; no representa un cambio territorial.",
+      "id": "demo-labels-4"
+    },
+    {
+      "id": "title-labels-4",
+      "type": "label.chip",
+      "text": "text.year",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 126,
+      "dur": 6,
+      "out": 131.5
+    },
+    {
+      "type": "badge.count",
+      "screen": [
+        0.5,
+        0.35
+      ],
+      "value": 2,
+      "states": [
+        {
+          "at": 134,
+          "state": "count",
+          "value": 3,
+          "dur": 0.8
+        }
+      ],
+      "t": 132,
+      "dur": 6,
+      "out": 137.5,
+      "note": "Contador sintético para demostrar la animación.",
+      "id": "demo-labels-5"
+    },
+    {
+      "id": "title-labels-5",
+      "type": "label.chip",
+      "text": "badge.count",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 132,
+      "dur": 6,
+      "out": 137.5
+    },
+    {
+      "type": "icon.badge",
+      "screen": [
+        0.5,
+        0.4
+      ],
+      "icon": "ship",
+      "t": 138,
+      "dur": 6,
+      "out": 143.5,
+      "id": "demo-labels-6"
+    },
+    {
+      "id": "title-labels-6",
+      "type": "label.chip",
+      "text": "icon.badge",
+      "screen": [
+        0.5,
+        0.12
+      ],
+      "size": 30,
+      "width": 900,
+      "t": 138,
+      "dur": 6,
+      "out": 143.5
+    }
+  ]
+}

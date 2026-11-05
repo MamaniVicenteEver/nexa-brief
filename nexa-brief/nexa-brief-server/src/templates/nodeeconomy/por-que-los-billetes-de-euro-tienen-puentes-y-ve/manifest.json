@@ -1,0 +1,239 @@
+{
+  "video_id": "por-que-los-billetes-de-euro-tienen-puentes-y-ve",
+  "design": "dinero",
+  "design_name": "NODECONOMY",
+  "channel": "NODEECONOMY",
+  "status": "listo",
+  "created": "2026-11-02",
+  "title": "PUENTES IMAGINARIOS",
+  "category": "node_economy",
+  "topic": "Por qué los billetes de euro tienen puentes y ventanas imaginarios",
+  "description": "Prueba de preparación paralela. Explica la decisión de diseño del euro con fuentes del Banco Central Europeo y medios con licencia documentada. Dos minutos; sin consejos financieros, grabación ni publicación.",
+  "production_id": "63426d689232",
+  "narrative_id": "narrative_documental_v1",
+  "narrative_label": "Documental",
+  "pipeline_type": "explainer_kit",
+  "kicker": "EURO · DISEÑO COMPARTIDO",
+  "language": "es-419",
+  "duration_seconds": 115.81,
+  "script": {
+    "segments": 8,
+    "words": 222,
+    "arc": [
+      {
+        "id": "s01",
+        "tone": "intriga",
+        "intensity": 0.7
+      },
+      {
+        "id": "s02",
+        "tone": "explicativo",
+        "intensity": 0.5
+      },
+      {
+        "id": "s03",
+        "tone": "tensión",
+        "intensity": 0.65
+      },
+      {
+        "id": "s04",
+        "tone": "curiosidad",
+        "intensity": 0.45
+      },
+      {
+        "id": "s05",
+        "tone": "descubrimiento",
+        "intensity": 0.75
+      },
+      {
+        "id": "s06",
+        "tone": "revelación",
+        "intensity": 1.0
+      },
+      {
+        "id": "s07",
+        "tone": "explicativo",
+        "intensity": 0.45
+      },
+      {
+        "id": "s08",
+        "tone": "reflexivo",
+        "intensity": 0.65
+      }
+    ]
+  },
+  "voice": {
+    "voice": "Charon",
+    "provenance": [
+      {
+        "part": 0,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Charon",
+        "dur": 99.4
+      }
+    ],
+    "wpm": 134,
+    "wer_aprox": 0.018,
+    "faltan": [
+      "evitar",
+      "banco"
+    ],
+    "sobran": [
+      "editar",
+      "balco"
+    ]
+  },
+  "transcript": {
+    "words": 250,
+    "fake": false
+  },
+  "storyboard": {
+    "beats": 23,
+    "moments": 23,
+    "components": {
+      "dinero.introv2": 6,
+      "dinero.note": 8,
+      "dinero.block": 5,
+      "dinero.serif": 2,
+      "dinero.introv1": 1,
+      "common.question": 1
+    },
+    "lyrics_moments": 0
+  },
+  "media": [
+    "euro-series.jpg — All Euro banknotes.png — Bericht — CC0 — https://commons.wikimedia.org/wiki/File:All_Euro_banknotes.png",
+    "euro-reverso.jpg — 20 Euro Back White.png — Clearmaker — CC0 — https://commons.wikimedia.org/wiki/File:20_Euro_Back_White.png",
+    "euro-veinte.jpg — 20 Euro banknotes.jpg — Lionel Allorge — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:20_Euro_banknotes.jpg"
+  ],
+  "video_formats": [
+    {
+      "id": "reels",
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "output_filename": "render/por-que-los-billetes-de-euro-tienen-puentes-y-ve-9x16.mp4"
+    },
+    {
+      "id": "youtube",
+      "aspect_ratio": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "output_filename": "render/por-que-los-billetes-de-euro-tienen-puentes-y-ve-16x9.mp4"
+    }
+  ],
+  "files": {
+    "BRIEF.md": 978,
+    "PLAN.md": 10081,
+    "assets/config.json": 1015,
+    "assets/lyrics.json": 35431,
+    "assets/media/CREDITS.md": 566,
+    "assets/media/euro-reverso.jpg": 107741,
+    "assets/media/euro-series.jpg": 341233,
+    "assets/media/euro-veinte.jpg": 465845,
+    "assets/script.json": 3094,
+    "assets/song-with-outro.mp3": 2781143,
+    "assets/song.mp3": 2559834,
+    "assets/storyboard.json": 4006,
+    "index.html": 856,
+    "manifest.json": 8304,
+    "publish.json": 2606,
+    "usage.json": 13616
+  },
+  "updated": "2026-11-02T22:52:51",
+  "target_minutes": 2.0,
+  "quality_issues": [],
+  "media_review": [
+    {
+      "beat": 3,
+      "anchor": "La respuesta está",
+      "source": "assets/media/euro-series.jpg",
+      "shows": "Anversos de billetes con ventanas y puertas impresas",
+      "query": "euro banknote front windows",
+      "review": "Aprobada: abanico de anversos; arquitectura impresa, no un edificio localizado."
+    },
+    {
+      "beat": 9,
+      "anchor": "Mira el frente",
+      "source": "assets/media/euro-series.jpg",
+      "shows": "Ventanas y puertas de los anversos",
+      "query": "euro banknote front windows",
+      "review": "Aprobada: ventanas y portales impresos, pertinentes a la frase; no ventanas de seguridad."
+    },
+    {
+      "beat": 11,
+      "anchor": "Ahora dale la vuelta",
+      "source": "assets/media/euro-reverso.jpg",
+      "shows": "Reverso de veinte euros con puente y mapa",
+      "query": "euro banknote reverse bridge",
+      "review": "Aprobada: puente de arcos apuntados impreso en veinte euros; conservar SPECIMEN."
+    },
+    {
+      "beat": 14,
+      "anchor": "Según el Banco Central Europeo",
+      "source": "assets/media/euro-reverso.jpg",
+      "shows": "Puente dibujado en veinte euros",
+      "query": "euro banknote reverse bridge",
+      "review": "Aprobada: reverso con puente dibujado; su carácter imaginario procede de la fuente BCE."
+    },
+    {
+      "beat": 20,
+      "anchor": "La próxima vez",
+      "source": "assets/media/euro-veinte.jpg",
+      "shows": "Billetes de veinte con puente impreso al reverso",
+      "query": "twenty euro banknote reverse bridge",
+      "review": "Aprobada: abanico de reversos sobre una mesa, puente visible en primer billete; no se presenta como anverso."
+    }
+  ],
+  "quality": {
+    "icon_share": 0.0,
+    "distinct_components": 6,
+    "custom_components_used": 0,
+    "media_per_min": 2.59,
+    "hedge_hits_hook": 0,
+    "lyric_cuts": 0,
+    "visual_support": {
+      "kinds": {
+        "miniatura": 5
+      },
+      "assets": 3,
+      "preferred_thirds": [
+        true,
+        true,
+        true
+      ]
+    },
+    "media_relevance": {
+      "policy_version": 4,
+      "required": true,
+      "media_beats": 5,
+      "reviewed": 5,
+      "generic_beats": 0,
+      "reused_sources": 0,
+      "status": "reviewed"
+    }
+  },
+  "chapters": [
+    {
+      "at": "0:00",
+      "title": "Arquitectura sin dirección"
+    }
+  ],
+  "youtube_title": "Por qué los puentes del euro son imaginarios",
+  "youtube_description": "Los puentes del euro parecen reales. Su diseño cuenta una historia compartida sin señalar un monumento nacional.\n\nEn el concurso de 1996 ganó Robert Kalina. Explicamos el significado de ventanas, puertas y puentes con documentación del Banco Central Europeo. Un objeto cotidiano también puede expresar una idea de convivencia.\n\n¿Qué historia compartida pondrías tú en un billete?\n\nFuentes:\nBCE, 10 julio 1997: https://www.ecb.europa.eu/press/pr/date/1997/html/pr970710_1.en.html\nBCE, 11 agosto 2004: https://www.ecb.europa.eu/press/key/date/2004/html/sp040811.es.html\nBCE, elementos de diseño: https://www.ecb.europa.eu/euro/banknotes/current/design/html/index.en.html\n\nCréditos de imágenes:\nAll Euro banknotes.png — Bericht — CC0 — https://commons.wikimedia.org/wiki/File:All_Euro_banknotes.png\n20 Euro Back White.png — Clearmaker — CC0 — https://commons.wikimedia.org/wiki/File:20_Euro_Back_White.png\n20 Euro banknotes.jpg — Lionel Allorge — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:20_Euro_banknotes.jpg — https://creativecommons.org/licenses/by-sa/3.0/ — encuadre y movimiento para el montaje.\n\n#Euro #Diseño #NodeEconomy",
+  "youtube_tags": [
+    "euro",
+    "billetes",
+    "puentes del euro",
+    "ventanas del euro",
+    "Robert Kalina",
+    "Banco Central Europeo",
+    "diseño de billetes",
+    "arquitectura",
+    "historia del euro",
+    "moneda común",
+    "Europa",
+    "NodeEconomy"
+  ],
+  "tiktok_caption": "Parecen lugares reales, pero representan estilos compartidos. ¿Qué pondrías tú en un billete? #Euro #Historia #Diseño",
+  "thumbnail_text": "PUENTES IMAGINARIOS"
+}

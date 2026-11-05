@@ -3,7 +3,7 @@
   "design": "rough",
   "design_name": "PROTOTIPO",
   "channel": "NODETECH",
-  "status": "listo",
+  "status": "renderizado",
   "created": "2026-10-30",
   "title": "TU VOZ, SU ESTAFA",
   "category": "node_tech",
@@ -16,7 +16,7 @@
   "pipeline_type": "explainer_kit",
   "kicker": "VOZ SINTÉTICA",
   "language": "es-419",
-  "duration_seconds": 583.64,
+  "duration_seconds": 583.68,
   "script": {
     "segments": 40,
     "words": 1369,
@@ -275,14 +275,14 @@
     "fake": false
   },
   "storyboard": {
-    "beats": 74,
+    "beats": 75,
     "components": {
       "common.tabloid": 2,
+      "rough.photo": 12,
       "rough.incomingCall": 4,
-      "rough.photo": 9,
-      "common.punch": 3,
       "rough.introv2": 11,
-      "rough.paymentRequest": 4,
+      "common.punch": 2,
+      "rough.paymentRequest": 3,
       "rough.choice": 4,
       "rough.note": 3,
       "rough.counter": 4,
@@ -314,7 +314,13 @@
     "oficina-video.mp4 — Video — Coverr-Free-Footage (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-3188/",
     "llamada-video.mp4 — Video — conte_public (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-204421/",
     "mensajes-video.mp4 — Video — Coverr-Free-Footage (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-3176/",
-    "servidores-video.mp4 — Video — FindingFootage (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-4000/"
+    "servidores-video.mp4 — Video — FindingFootage (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-4000/",
+    "logos/fbi.png — Seal of the FBI.svg — Federal Bureau of Investigation — Public domain — https://commons.wikimedia.org/wiki/File:Seal_of_the_FBI.svg — Uso editorial nominativo; el sello oficial tiene restricciones adicionales independientes del copyright y no implica afiliación.",
+    "logos/ftc.png — Seal of the United States Federal Trade Commission.svg — Tiffany &amp; Co. — Public domain — https://commons.wikimedia.org/wiki/File:Seal_of_the_United_States_Federal_Trade_Commission.svg — Logo/marca: uso editorial nominativo; la licencia del archivo no concede derechos de marca",
+    "logos/microsoft.png — Microsoft logo (2012).svg — Microsoft Corporation — Jason Wells — Public domain — https://commons.wikimedia.org/wiki/File:Microsoft_logo_(2012).svg — Logo/marca: uso editorial nominativo; la licencia del archivo no concede derechos de marca",
+    "logos/microsoft.svg — Microsoft logo (2012).svg — Microsoft Corporation — Jason Wells — Public domain — https://commons.wikimedia.org/wiki/File:Microsoft_logo_(2012).svg — Logo/marca: uso editorial nominativo; la licencia del archivo no concede derechos de marca",
+    "logos/fbi.svg — Seal of the Federal Bureau of Investigation.svg — Federal Bureau of Investigation — Public domain — https://commons.wikimedia.org/wiki/File:Seal_of_the_Federal_Bureau_of_Investigation.svg — Logo/marca: uso editorial nominativo; la licencia del archivo no concede derechos de marca",
+    "logos/ftc.svg — Seal of the United States Federal Trade Commission.svg — Tiffany &amp; Co. — Public domain — https://commons.wikimedia.org/wiki/File:Seal_of_the_United_States_Federal_Trade_Commission.svg — Logo/marca: uso editorial nominativo; la licencia del archivo no concede derechos de marca"
   ],
   "video_formats": [
     {
@@ -340,12 +346,18 @@
     "assets/components/payment-request.js": 7804,
     "assets/config.json": 1209,
     "assets/lyrics.json": 197087,
-    "assets/media/CREDITS.md": 2209,
+    "assets/media/CREDITS.md": 3971,
     "assets/media/celular.jpg": 185814,
     "assets/media/contactos.jpg": 255928,
     "assets/media/despacho.jpg": 313920,
     "assets/media/llamada-video.mp4": 11703716,
     "assets/media/llamada.jpg": 471268,
+    "assets/media/logos/fbi.png": 662778,
+    "assets/media/logos/fbi.svg": 471539,
+    "assets/media/logos/ftc.png": 842994,
+    "assets/media/logos/ftc.svg": 1125788,
+    "assets/media/logos/microsoft.png": 36770,
+    "assets/media/logos/microsoft.svg": 3163,
     "assets/media/manos.jpg": 189906,
     "assets/media/mensajes-video.mp4": 4923215,
     "assets/media/oficina-video.mp4": 6042343,
@@ -356,19 +368,28 @@
     "assets/script.json": 14360,
     "assets/song-with-outro.mp3": 14008990,
     "assets/song.mp3": 13823416,
-    "assets/storyboard.json": 19652,
+    "assets/storyboard.json": 20328,
     "index.html": 883,
-    "manifest.json": 14330,
+    "manifest.json": 15128,
     "publish.json": 11723,
+    "render/.thumbnails.lock": 0,
+    "render/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9.mp4": 46159772,
+    "render/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16.mp4": 50213392,
     "render/poster.jpg": 77889,
+    "render/thumbnail-A.jpg": 76951,
+    "render/thumbnail-A.sha256": 64,
+    "render/thumbnail-A.webp": 22832,
+    "render/thumbnail-B.jpg": 180072,
+    "render/thumbnail-B.sha256": 64,
+    "render/thumbnail-B.webp": 78958,
     "render/thumbnail-C-9x16.jpg": 154227,
     "render/thumbnail-C-9x16.webp": 58836,
-    "render/thumbnail-C.jpg": 155009,
+    "render/thumbnail-C.jpg": 154593,
     "render/thumbnail-C.sha256": 64,
-    "render/thumbnail-C.webp": 63406,
+    "render/thumbnail-C.webp": 63432,
     "usage.json": 29260
   },
-  "updated": "2026-10-30T23:00:08",
+  "updated": "2026-11-02T20:44:33",
   "target_minutes": 10,
   "youtube_title": "3 segundos de voz: ¿quién te está llamando?",
   "youtube_description": "Una voz conocida, una supuesta emergencia y una petición urgente de dinero. La voz sintética añade una nueva capa a una estafa antigua.\n\nMicrosoft investigó la generación de voz con una muestra de tres segundos. La FTC y el FBI describen estafas de emergencia y aconsejan verificar por un canal independiente. Revisamos el caso de Deborah Del Mastro, quien sospecha que imitaron la voz de su hija, y los límites de los datos disponibles.\n\nCAPÍTULOS\n0:00 La llamada y la amenaza\n1:02 La prueba y el caso de Deborah\n1:45 Los límites de la evidencia\n2:17 Cómo se genera una voz\n3:35 Una estafa anterior a la IA\n4:22 Qué dicen las denuncias\n5:25 La presión y el secreto\n6:36 El fraude en el trabajo\n7:56 Cómo verificar una emergencia\n8:44 Qué hacer ante una llamada\n9:21 La pregunta para tu familia\n\nReconocer una voz no demuestra que la emergencia sea real. Una llamada independiente ayuda a recuperar tiempo para comprobarla.\n\nSi llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.\n\n¿Tu familia tiene una palabra clave?\n\nFUENTES\n- https://www.microsoft.com/en-us/research/publication/neural-codec-language-models-are-zero-shot-text-to-speech-synthesizers/\n- https://consumer.ftc.gov/consumer-alerts/2023/03/scammers-use-ai-enhance-their-family-emergency-schemes\n- https://www.fbi.gov/news/stories/the-grandparent-scam\n- https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf\n- https://www.govinfo.gov/content/pkg/CHRG-119shrg64451/pdf/CHRG-119shrg64451.pdf\n- https://abcnews.com/amp/GMA/News/woman-loses-thousands-scammer-suspected-ai-mimic-daughters/story?id=133307515\n- https://www.ftc.gov/news-events/news/press-releases/2026/06/ftc-data-show-people-reported-losing-3-point-5-billion-imposter-scams-2025\n\nIMÁGENES (Wikimedia Commons)\n- Ehimetalor Unuabona — Concerned Phone Call — CC0 — Wikimedia Commons\n- Dennis Cortés — Black smartphone in hand — CC0 — Wikimedia Commons\n- Autor desconocido — Adolphe Bitard - Téléphone — dominio público — Wikimedia Commons\n- Autor desconocido — Hand-smartphone-technology-calling — CC0 — Wikimedia Commons\n- Pixel.la Free Stock Photos — Hands-coffee-smartphone-technology — CC0 — Wikimedia Commons\n- Patryk Sobczak — An office table and computers — CC0 — Wikimedia Commons\n- Santeri Viinamäki — Hand holding smartphone with blank white screen — CC BY-SA 4.0 — Wikimedia Commons\n- Roman Bozhko — Clean minimalist office — CC0 — Wikimedia Commons\n- Coverr-Free-Footage — Video de oficina — Pixabay Content License — https://pixabay.com/videos/id-3188/\n- conte_public — Video de llamada — Pixabay Content License — https://pixabay.com/videos/id-204421/\n- FindingFootage — Video de servidores — Pixabay Content License — https://pixabay.com/videos/id-4000/\n- Coverr-Free-Footage — Smartphone, iphone, typing — Pixabay Content License — https://pixabay.com/videos/id-3176/\n\n#InteligenciaArtificial #SeguridadDigital #NodeTech",
@@ -399,7 +420,16 @@
     "custom_components_used": 2,
     "media_per_min": 2.673,
     "hedge_hits_hook": 0,
-    "lyric_cuts": 0
+    "lyric_cuts": 0,
+    "media_relevance": {
+      "policy_version": 4,
+      "required": false,
+      "media_beats": 26,
+      "reviewed": 0,
+      "generic_beats": 3,
+      "reused_sources": 0,
+      "status": "legacy"
+    }
   },
   "chapters": [
     {
@@ -427,5 +457,255 @@
       "title": "Recuperar el control"
     }
   ],
-  "review_note": "Listo para revisión humana; el check exige cuatro componentes propios y solo dos fueron aprobados visualmente. Ver RESULT-voz-storyboard.md."
+  "review_note": "Listo para revisión humana; el check exige cuatro componentes propios y solo dos fueron aprobados visualmente. Ver RESULT-voz-storyboard.md.",
+  "media_review": [
+    {
+      "beat": 0,
+      "anchor": "",
+      "source": "/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets/media/llamada.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 1,
+      "anchor": "1.5",
+      "source": "assets/media/pantalla.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "Después alguien escucha una voz parecida a",
+      "source": "assets/media/celular.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 4,
+      "anchor": "La Comisión Federal de Comercio advierte que",
+      "source": "assets/media/contactos.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 5,
+      "anchor": "describe llamadas que anuncian accidentes, detenciones y",
+      "source": "assets/media/contactos.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 7,
+      "anchor": "Y lo peor: el FBI advirtió sobre",
+      "source": "assets/media/despacho.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 9,
+      "anchor": "puerta para entrar en cuentas. En el",
+      "source": "assets/media/pantalla.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 10,
+      "anchor": "de transferencias. En tu familia, una voz",
+      "source": "assets/media/oficina.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 11,
+      "anchor": "Según el FBI, las víctimas denunciaron más",
+      "source": "assets/media/despacho.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 11,
+      "anchor": "Según el FBI, las víctimas denunciaron más",
+      "source": "assets/media/llamada-video.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 12,
+      "anchor": "que casi nadie leyó. En enero de",
+      "source": "assets/media/manos.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 13,
+      "anchor": "En sus pruebas, utilizó tres segundos de",
+      "source": "assets/media/pantalla.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 14,
+      "anchor": "mayo de 2026, Débora Del Mastro contó",
+      "source": "assets/media/llamada.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 23,
+      "anchor": "grabación original aporta pistas de timbre y",
+      "source": "assets/media/manos.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 26,
+      "anchor": "ruido, el idioma, el modelo y el",
+      "source": "assets/media/celular.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 26,
+      "anchor": "ruido, el idioma, el modelo y el",
+      "source": "assets/media/oficina-video.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 32,
+      "anchor": "La llamada necesitaba convencer a la familia,",
+      "source": "assets/media/telefono-antiguo.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 36,
+      "anchor": "temía preocupar a la familia. La explicación",
+      "source": "assets/media/llamada.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 39,
+      "anchor": "esa categoría de denuncias, no dinero robado",
+      "source": "assets/media/telefono-antiguo.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 45,
+      "anchor": "Escuchar a alguien querido en peligro puede",
+      "source": "assets/media/contactos.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 45,
+      "anchor": "Escuchar a alguien querido en peligro puede",
+      "source": "assets/media/llamada-video.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 49,
+      "anchor": "a construir la escena. Un nombre o",
+      "source": "assets/media/pantalla.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 53,
+      "anchor": "otro canal. En una empresa cambia el",
+      "source": "assets/media/oficina-video.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 57,
+      "anchor": "artificial. No todas fueron llamadas. El mismo",
+      "source": "assets/media/despacho.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 57,
+      "anchor": "artificial. No todas fueron llamadas. El mismo",
+      "source": "assets/media/servidores-video.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 61,
+      "anchor": "No mide cuánto se perdió por la",
+      "source": "assets/media/oficina.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 62,
+      "anchor": "la cifra entera en pérdidas por inteligencia",
+      "source": "assets/media/pantalla.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 66,
+      "anchor": "una amenaza inmediata, los servicios de emergencia",
+      "source": "assets/media/celular.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 69,
+      "anchor": "petición que usa una voz convincente para",
+      "source": "assets/media/llamada.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 71,
+      "anchor": "a conocerla. Segundo, cuelga y llama a",
+      "source": "assets/media/manos.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 71,
+      "anchor": "a conocerla. Segundo, cuelga y llama a",
+      "source": "assets/media/mensajes-video.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    }
+  ]
 }

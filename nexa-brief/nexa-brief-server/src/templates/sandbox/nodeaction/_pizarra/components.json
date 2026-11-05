@@ -2148,6 +2148,48 @@
       "used_by": [
         "sandbox/nodeaction/adicciones-juan"
       ]
+    },
+    {
+      "name": "pizarra.comparacion",
+      "summary": "Comparación móvil de Leo con fotos o videos por sujeto en una/dos tarjetas, continuidad al ampliar, subtítulos y poses sobre Proto.",
+      "tags": [
+        "comparacion",
+        "vertical",
+        "avatar"
+      ],
+      "layer": "main",
+      "params": {
+        "subjects": {
+          "type": "array",
+          "default": [],
+          "doc": "Sujetos con id, title, src, fit y detail."
+        },
+        "shots": {
+          "type": "array",
+          "default": [],
+          "doc": "Cortes con t, mode, focus, headline, subjects, pose y character."
+        },
+        "avatar": {
+          "type": "object",
+          "default": null,
+          "doc": "Timeline de poses por video; hoja, recortes y personaje por defecto definidos en el perfil compartido."
+        },
+        "profile_id": {
+          "type": "string",
+          "default": "leo-comparaciones-v1",
+          "doc": "Identidad compartida en _pizarra/profiles/leo.json: voz, diseño y personajes."
+        },
+        "media": {
+          "type": "array",
+          "default": [],
+          "doc": "overlays.json.items: subject (id), kind photo/video, src, at y dur/until; start para clips. También slot left/right. Geometría automática y reloj compartido con la narración."
+        }
+      },
+      "file": "sandbox/nodeaction/_pizarra/comparacion.js",
+      "demo": "sandbox/nodeaction/cara-a-cara/index.html",
+      "used_by": [
+        "sandbox/nodeaction/cara-a-cara"
+      ]
     }
   ]
 }

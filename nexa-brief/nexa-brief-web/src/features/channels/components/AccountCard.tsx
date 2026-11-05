@@ -9,6 +9,7 @@ import {
   Ellipsis,
   Eye,
   Film,
+  Heart,
   KeyRound,
   Pencil,
   Plus,
@@ -138,7 +139,7 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
                 : account.platform === "youtube"
                   ? t("handleUnavailable")
                   : `@${account.alias}`
-              : `@${isBrowserTikTok ? account.handle || account.alias : account.alias}`}
+              : `@${account.platform === "tiktok" ? account.handle || account.alias : account.alias}`}
           </p>
           {isBrowserTikTok && (
             <span className="mt-1 inline-flex rounded-full bg-nb-green/10 px-2 py-0.5 text-[10px] font-semibold text-nb-green-dark">
@@ -238,13 +239,20 @@ export function AccountCard({ account }: { account: ChannelAccount }) {
           <Stat
             icon={Film}
             label={t(account.platform === "facebook" ? "posts" : "videos")}
-            value={String(videoCount)}
+            value={account.platform === "tiktok" && !account.stats ? "—" : String(videoCount)}
           />
           {account.stats?.followers != null && (
             <Stat
               icon={Users}
               label={t("followers")}
               value={formatCompact(account.stats.followers, locale)}
+            />
+          )}
+          {account.stats?.likes != null && (
+            <Stat
+              icon={Heart}
+              label={t("likes")}
+              value={formatCompact(account.stats.likes, locale)}
             />
           )}
           {account.stats?.views != null && (

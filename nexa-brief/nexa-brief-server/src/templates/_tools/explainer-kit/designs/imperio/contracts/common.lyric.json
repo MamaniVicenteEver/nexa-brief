@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "common.lyric",
+  "description": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "Frase explícita breve; vacía usa la ventana de narración.",
+      "default": ""
+    },
+    "accent": {
+      "type": "array",
+      "description": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+      "default": []
+    },
+    "size": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 1,
+      "description": "Fracción del ancho que ocupa el renglón más largo.",
+      "default": 0.82
+    },
+    "maxChars": {
+      "type": "number",
+      "description": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+      "default": 0
+    },
+    "dimPast": {
+      "type": "boolean",
+      "description": "Atenuar las palabras ya dichas (efecto karaoke).",
+      "default": true
+    },
+    "y": {
+      "type": "number",
+      "description": "Centro vertical (fracción del alto).",
+      "default": 0.46
+    }
+  },
+  "required": [],
+  "$defs": {},
+  "examples": [
+    {
+      "accent": [
+        "vidas"
+      ],
+      "size": 0.9
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

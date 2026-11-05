@@ -112,7 +112,8 @@ def apply(video: pathlib.Path) -> dict | None:
     raw = _json(A / "config.json")
     cfg = raw["configs"][0] if "configs" in raw else raw
     cfg["audio"] = {**(cfg.get("audio") or {}), "src": "assets/song-with-outro.mp3"}
-    cfg["outro"] = {"enabled": True, "use": spec["use"], "start": t0, "dur": round(meta["dur"] + TAIL, 3),
+    fade_out = (cfg.get("outro") or {}).get("fadeOut")
+    cfg["outro"] = {**({"fadeOut": fade_out} if fade_out is not None else {}), "enabled": True, "use": spec["use"], "start": t0, "dur": round(meta["dur"] + TAIL, 3),
                     **spec["texts"], **meta["timings"]}
     _save(A / "config.json", raw)
 

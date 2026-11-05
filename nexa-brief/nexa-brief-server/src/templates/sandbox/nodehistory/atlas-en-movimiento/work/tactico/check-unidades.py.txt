@@ -1,0 +1,59 @@
+import sys
+sys.dont_write_bytecode=True
+import fcntl,functools,importlib.util,json,threading,socketserver,time,io,hashlib
+from pathlib import Path
+from PIL import Image,ImageDraw
+from playwright.sync_api import sync_playwright
+ROOT=Path.cwd();TEMPLATES=ROOT.parents[2]
+spec=importlib.util.spec_from_file_location('smoke',ROOT.parent/'_atlas/test/smoke.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+class Handler(m.Handler):
+ def log_message(self,*args):pass
+class Server(socketserver.ThreadingTCPServer):daemon_threads=True;allow_reuse_address=True
+flags=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2']
+lock=open('/tmp/atlas-tactico-chromium.lock','w')
+print('Esperando el turno único de Chromium',flush=True);fcntl.flock(lock,fcntl.LOCK_EX)
+server=Server(('127.0.0.1',0),functools.partial(Handler,directory=str(TEMPLATES)));threading.Thread(target=server.serve_forever,daemon=True).start()
+out=ROOT/'work/tactico';(out/'sheets').mkdir(exist_ok=True);report={'cases':[],'errors':[],'benchmarks':[]}
+try:
+ with sync_playwright() as p:
+  browser=p.chromium.launch(headless=True,args=flags);report['browser']=browser.version
+  page=browser.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1)
+  page.on('pageerror',lambda e:report['errors'].append(str(e)))
+  page.route('**/*',lambda r:r.continue_() if r.request.url.startswith(('http://127.0.0.1:','data:','blob:')) else r.abort())
+  page.goto(f'http://127.0.0.1:{server.server_address[1]}/sandbox/nodehistory/atlas-en-movimiento/work/tactico/unidades.new.html?headless=1')
+  page.wait_for_function('window.__unitsReady',timeout=120000);initial=page.evaluate('__unitsReady');report['initial']=initial
+  cases=json.loads((out/'cases-unidades.json').read_text())['cases'];thumbs={k:[] for k in ['units','naval','air']}
+  for index,case in enumerate(cases):
+   state=page.evaluate('scene=>__unitsQA.setup(scene)',case['scene']);dest=out/'shots'/case['family'];dest.mkdir(exist_ok=True,parents=True)
+   row=Image.new('RGB',(540,344),'#081e2c');dr=ImageDraw.Draw(row);dr.text((8,5),case['id'],fill='#e9e3ba');hashes=[]
+   for j,t in enumerate(case['times']):
+    page.evaluate('({t,label})=>__unitsQA.draw(t,{label})',{'t':t,'label':case['id']});data=page.locator('canvas').screenshot();(dest/f'{case["id"]}-{j}.png').write_bytes(data)
+    hashes.append(page.evaluate('__unitsQA.hash()'));im=Image.open(io.BytesIO(data)).convert('RGB');im.thumbnail((180,320));row.paste(im,(j*180,24))
+   reverse=[]
+   for t in reversed(case['times']):page.evaluate('t=>__unitsQA.draw(t,{label:'+json.dumps(case['id'])+'})',t);reverse.append(page.evaluate('__unitsQA.hash()'))
+   report['cases'].append({'id':case['id'],'times':case['times'],'deterministic':hashes==list(reversed(reverse)),'hashes':hashes,'missing':state['missing'],'missingTiles':len(state['missingTiles'])});thumbs[case['family']].append(row)
+   print(f'Caso {index+1}/{len(cases)}: {case["id"]}',flush=True)
+  for family,rows in thumbs.items():
+   sheet=Image.new('RGB',(1620,((len(rows)+2)//3)*344),'#081e2c')
+   for i,row in enumerate(rows):sheet.paste(row,((i%3)*540,(i//3)*344))
+   sheet.save(out/'sheets'/f'{family}.jpg',quality=91)
+  motion=json.loads((out/'scene-unidades-movimiento.json').read_text());report['motion']=page.evaluate('scene=>__unitsQA.motionMetrics(scene)',motion)
+  frames=[]
+  for track,kind in enumerate(['convoy','carrier','launch']):
+   scene=json.loads(json.dumps(motion))
+   if kind=='convoy':scene['items']=[scene['items'][1]];scene['camera']=[{'t':0,'center':[60.5,21.6],'zoom':7.7},{'t':1,'follow':'convoy-turn','zoom':7.7,'dur':10}]
+   else:scene['items']=[scene['items'][0]];scene['camera']=[{'t':0,'center':[60.1,20.3],'zoom':7.6},{'t':1,'follow':'turning-carrier','zoom':7.6,'dur':10}]
+   if kind=='carrier':scene['items'][0]['actions']=[]
+   page.evaluate('scene=>__unitsQA.setup(scene)',scene)
+   for i in range(40):
+    t=3+i/10;page.evaluate('({t,label})=>__unitsQA.draw(t,{label})',{'t':t,'label':kind.upper()+' · 10 FPS'})
+    image=Image.open(io.BytesIO(page.locator('canvas').screenshot())).convert('RGB');image.thumbnail((180,320));frames.append(image)
+   print(f'Tira {kind} completa',flush=True)
+  sheet=Image.new('RGB',(1800,3840),'#081e2c')
+  for i,frame in enumerate(frames):sheet.paste(frame,((i%10)*180,(i//10)*320))
+  sheet.save(out/'sheets/unidades-tira-10fps.jpg',quality=90)
+  for family in ['units','naval','air']:
+   bench=page.evaluate('family=>__unitsQA.benchmark(family)',family);report['benchmarks'].append(bench);print(json.dumps(bench),flush=True)
+  report['errors']=list(dict.fromkeys(report['errors']));(out/'unidades-qa.json').write_text(json.dumps(report,indent=2)+'\n');browser.close()
+finally:server.shutdown();server.server_close();lock.close()
+print(json.dumps({'errors':report['errors'],'deterministic':all(x['deterministic'] for x in report['cases']),'benchmarks':report['benchmarks']},indent=2),flush=True)

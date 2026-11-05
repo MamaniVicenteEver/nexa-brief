@@ -107,6 +107,9 @@ NODETECH (ver `../EXPLAINER.md` §4). Pedile al usuario el nombre y el handle re
   diseño con mapa se traba en el navegador, medir con un perfil de Chrome antes de tocar nada; el costo real suele
   estar en el primer `drawImage` (el canvas difiere el dibujo) y en recorrer la tierra de todo el mundo.
 
+
+- 2026-11-02 · Imperio compartido: NodePolitics conserva la propiedad de `imperio`; NodeAtlas lo ofrece mediante `shared_designs`, sin duplicar el motor. `imperio-demo` vive en producción NodePolitics y usa `shared_categories: [node_atlas]`; sigue marcado como demo por su audio heredado de Turing. `japon-expansion-prueba` vive solo en `nodeatlas/`. La promoción respeta la categoría declarada en el manifest y ajusta las rutas al kit. Para campañas continuas se cuentan hitos distintos con anclas reales (`storyboard.moments`); el perfil `short_map` conserva el formato aprobado de dos minutos. Los paquetes v2 con `preserve_opening` generan miniaturas independientes sin sustituir la apertura nativa. El registro de categorías activo está en el perfil de datos: actualizarlo junto con el de referencia del repo. Conservar los miembros del grupo al incorporarlo como categoría de producción.
+
 ## 8. Promover
 
 `kit.py promote <id>` → crea `nodepolitics/<id>/` (la carpeta nace con el primer video), después

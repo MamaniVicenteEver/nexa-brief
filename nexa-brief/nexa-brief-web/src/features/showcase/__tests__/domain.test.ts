@@ -13,13 +13,15 @@ import {
 } from "../__fixtures__/contracts";
 import { ShowcasePreviewError, type ShowcaseRepository } from "../api/showcase-repository";
 import { ComponentDetails } from "../components/ComponentDetails";
-import { ShowcaseGrid, type GridProps } from "../components/ShowcaseGrid";
+import { type GridProps, ShowcaseGrid } from "../components/ShowcaseGrid";
 import { ShowcaseToolbar, type ToolbarProps } from "../components/ShowcaseToolbar";
-import { StagePreview } from "../components/StagePreview";
+import { ProductionLibraryControls } from "../components/ProductionLibraryControls";
+import { ItemPreview, StagePreview } from "../components/StagePreview";
 import { useLazyStage } from "../hooks/useLazyStage";
 import { useShowcaseState } from "../hooks/useShowcaseState";
 import { filterItems, resolveSelection } from "../lib/filters";
 import { DEFAULT_FORMAT, FORMATS, getFormat, isFormatId } from "../lib/formats";
+import { buildPreviewUrl, isolatedPosterUrl } from "../lib/kit-urls";
 import type { Design, Item } from "../types";
 
 afterEach(() => {
@@ -47,7 +49,16 @@ class TestObserver implements IntersectionObserver {
     TestObserver.instances.push(this);
   }
   enter(target: Element, isIntersecting = true) {
-    this.callback([{ target, isIntersecting } as IntersectionObserverEntry], this);
+    this.callback(
+      [
+        {
+          target,
+          isIntersecting,
+          intersectionRatio: isIntersecting ? 1 : 0,
+        } as IntersectionObserverEntry,
+      ],
+      this,
+    );
   }
 }
 
@@ -64,6 +75,93 @@ function fakeRepository(): ShowcaseRepository {
 }
 
 describe("selección, búsqueda y orden del dominio", () => {
+  it("limita el aislamiento al showcase de Imperio y conserva los parámetros geográficos", () => {
+    const item = {
+      ...designItem,
+      designId: "imperio",
+      component: {
+        ...component,
+        name: "imperio.map",
+        example: { from: [150, 36, 95, 0], pins: [{ at: [-0.74, 51.99] }] },
+      },
+    };
+    const ctx = {
+      designs: [...context.designs, { ...context.designs[0], id: "imperio", family: "imperio" }],
+    };
+    const before = JSON.stringify(item.component);
+    for (const mode of ["card", "modal"] as const) {
+      const url = new URL(buildPreviewUrl(item, ctx, mode), location.href);
+      expect(url.searchParams.get("isolated")).toBe("1");
+      expect(url.searchParams.get("c")).toBe("imperio.map");
+    }
+    expect(JSON.stringify(item.component)).toBe(before);
+    expect(
+      new URL(buildPreviewUrl(designItem, context, "card"), location.href).searchParams.has(
+        "isolated",
+      ),
+    ).toBe(false);
+    expect(isolatedPosterUrl("imperio", "imperio.map", "9x16")).toContain("imperio.map-9x16.jpg");
+    expect(isolatedPosterUrl("binary", "binary.icon", "9x16")).toBeUndefined();
+  });
+  it("muestra el fotograma de Imperio sin cargar un reproductor hasta pulsar reproducir", () => {
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    vi.stubGlobal("IntersectionObserver", TestObserver);
+    const item = {
+      ...designItem,
+      designId: "imperio",
+      component: { ...component, name: "imperio.map" },
+    };
+    render(createElement(ItemPreview, { item, context, repo: fakeRepository(), format: "9x16" }));
+    const image = screen.getByRole("img", { name: "Miniatura de imperio.map" });
+    expect(image.getAttribute("src")).toContain("imperio.map-9x16.jpg");
+    expect(document.querySelector("iframe")).toBeNull();
+    const host = image.closest("[data-animation-active]");
+    if (!host) throw Error("Sin contenedor");
+    act(() => TestObserver.instances[0].enter(host));
+    fireEvent.click(screen.getByRole("button", { name: "Reproducir animación de imperio.map" }));
+    const frame = screen.getByTitle("Vista previa de imperio.map") as HTMLIFrameElement;
+    fireEvent.load(frame);
+    expect(image.style.opacity).toBe("1");
+    act(() =>
+      window.dispatchEvent(
+        new MessageEvent("message", {
+          origin: location.origin,
+          source: frame.contentWindow,
+          data: { type: "nexa-animation-ready" },
+        }),
+      ),
+    );
+    expect(image.style.opacity).toBe("0");
+    fireEvent.click(screen.getByRole("button", { name: "Detener animación de imperio.map" }));
+    expect(document.querySelector("iframe")).toBeNull();
+    expect(image.style.opacity).toBe("1");
+  });
+  it("presenta un primer fotograma congelado y permite reproducir y detener diseños de producción", () => {
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    vi.stubGlobal("IntersectionObserver", TestObserver);
+    const result = render(
+      createElement(ItemPreview, {
+        item: designItem,
+        context,
+        repo: fakeRepository(),
+        format: "9x16",
+      }),
+    );
+    const host = result.container.querySelector("[data-animation-active]");
+    if (!host) throw Error("Sin contenedor");
+    act(() => TestObserver.instances[0].enter(host));
+    const still = result.container.querySelector('iframe[title^="Fotograma"]');
+    expect(still?.getAttribute("src")).toContain("t=0");
+    fireEvent.click(
+      screen.getByRole("button", { name: `Reproducir animación de ${designItem.component.name}` }),
+    );
+    expect(screen.getByTitle(`Vista previa de ${designItem.component.name}`)).toBeTruthy();
+    fireEvent.click(
+      screen.getByRole("button", { name: `Detener animación de ${designItem.component.name}` }),
+    );
+    expect(screen.queryByTitle(`Vista previa de ${designItem.component.name}`)).toBeNull();
+    expect(result.container.querySelector('iframe[title^="Fotograma"]')).toBeTruthy();
+  });
   it("descubre familias distintas del ID y mantiene propios antes de comunes sin mutar entradas", () => {
     const own: Item = {
       ...designItem,
@@ -291,19 +389,21 @@ describe("vistas presentacionales con repositorio fake", () => {
       onFormat: vi.fn(),
     };
     render(createElement(ShowcaseToolbar, props));
-    const selector = screen.getByRole("combobox", { name: "Diseño" });
-    expect(selector.textContent).toBe("Nuevo · nuevo");
-    HTMLElement.prototype.scrollIntoView = vi.fn();
-    fireEvent.keyDown(selector, { key: "ArrowDown" });
-    expect(screen.getAllByRole("option").map((option) => option.textContent)).toEqual([
-      "Prototipo · rough",
-      "Nuevo · nuevo",
-      "Componentes de videos",
-    ]);
-    fireEvent.click(screen.getByRole("option", { name: "Componentes de videos" }));
+    const toggle = screen.getByRole("button", { name: "Diseños" });
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(screen.getByRole("region", { name: "Información del diseño" }).textContent).toContain(
+      "Nuevo",
+    );
+    expect(screen.queryByRole("group", { name: "Diseños de producción" })).toBeNull();
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    expect(screen.getByRole("button", { name: "Nuevo · nuevo" }).getAttribute("aria-pressed")).toBe(
+      "true",
+    );
+    expect(screen.getByRole("group", { name: "Diseños de producción" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Componentes de videos" }));
     expect(props.onSelect).toHaveBeenCalledWith({ kind: "videos" });
-    fireEvent.keyDown(selector, { key: "ArrowDown" });
-    fireEvent.click(screen.getByRole("option", { name: "Prototipo · rough" }));
+    fireEvent.click(screen.getByRole("button", { name: "Prototipo · rough" }));
     expect(props.onSelect).toHaveBeenCalledWith({ kind: "design", id: "rough" });
     fireEvent.change(screen.getByRole("searchbox", { name: "Buscar componentes" }), {
       target: { value: "Ámbito " },
@@ -312,6 +412,42 @@ describe("vistas presentacionales con repositorio fake", () => {
     fireEvent.click(screen.getByRole("button", { name: "16:9" }));
     expect(props.onFormat).toHaveBeenCalledWith("16x9");
     expect(screen.getByRole("status").textContent).toBe("2 componentes");
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(screen.queryByRole("group", { name: "Diseños de producción" })).toBeNull();
+  });
+
+  it("ofrece búsqueda y filtros derivados de los componentes del diseño", () => {
+    const items = [
+      { ...designItem, component: { ...component, tags: ["mapa", "única"] } },
+      {
+        ...designItem,
+        key: "otra",
+        component: { ...component, name: "rough.otra", tags: ["mapa"] },
+      },
+    ];
+    const onQuery = vi.fn(),
+      onTag = vi.fn();
+    render(
+      createElement(ProductionLibraryControls, {
+        items,
+        query: "",
+        onQuery,
+        tag: "",
+        onTag,
+        visibleCount: 2,
+        panelId: "library-panel",
+      }),
+    );
+    expect(screen.getByRole("tab", { name: "Biblioteca (2)" })).toBeTruthy();
+    expect(screen.getByText("2 de 2 componentes")).toBeTruthy();
+    fireEvent.change(screen.getByRole("searchbox", { name: "Buscar en la biblioteca" }), {
+      target: { value: "mapa" },
+    });
+    expect(onQuery).toHaveBeenCalledWith("mapa");
+    fireEvent.click(screen.getByRole("button", { name: "mapa" }));
+    expect(onTag).toHaveBeenCalledWith("mapa");
+    expect(screen.queryByRole("button", { name: "única" })).toBeNull();
   });
 
   it("grilla muestra carga, error recuperable y vacío sin montar previews", () => {
@@ -354,25 +490,22 @@ describe("vistas presentacionales con repositorio fake", () => {
     expect(grid.container.querySelectorAll("iframe")).toHaveLength(3);
     expect(screen.getByRole("status").textContent).toContain(unavailableItem.unavailableReason);
     expect(screen.queryByText("sandbox/ejemplo")).toBeNull();
-    const info = screen.getByRole("button", { name: "Mostrar información de desconocido.tarjeta" });
-    fireEvent.click(info);
-    expect(info.getAttribute("aria-expanded")).toBe("true");
-    expect(screen.getByText("sandbox/ejemplo")).toBeDefined();
-    fireEvent.click(info);
-    expect(info.getAttribute("aria-expanded")).toBe("false");
-    expect(
-      screen.getByRole("button", { name: "Ampliar desconocido.tarjeta" }).hasAttribute("disabled"),
-    ).toBe(true);
-    fireEvent.click(screen.getAllByRole("button", { name: "Ampliar rough.tarjeta" })[1]);
+    expect(screen.getByText("Una tarjeta de ejemplo")).toBeTruthy();
+    expect(screen.getByText("ámbito")).toBeTruthy();
+    const unavailable = screen.getByRole("article", { name: "desconocido.tarjeta" });
+    fireEvent.click(unavailable);
+    expect(props.onOpen).not.toHaveBeenCalled();
+    const card = screen.getAllByRole("article", { name: "rough.tarjeta" })[1];
+    fireEvent.click(card);
     expect(props.onOpen).toHaveBeenCalledWith(videoItem);
+    fireEvent.keyDown(card, { key: "Enter" });
+    expect(props.onOpen).toHaveBeenCalledTimes(2);
     expect(repo.getCatalog).not.toHaveBeenCalled();
     expect(repo.getLibrary).not.toHaveBeenCalled();
     const frames = [...grid.container.querySelectorAll("iframe")];
     grid.rerender(createElement(ShowcaseGrid, { ...props, format: "16x9" }));
     expect([...grid.container.querySelectorAll("iframe")]).toEqual(frames);
-    fireEvent.click(
-      screen.getByRole("button", { name: "Repetir animación Vista previa de common.text" }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Reproducir animación de common.text" }));
     const replayed = [...grid.container.querySelectorAll("iframe")];
     expect(replayed[0]).toBe(frames[0]);
     expect(replayed[1]).not.toBe(frames[1]);

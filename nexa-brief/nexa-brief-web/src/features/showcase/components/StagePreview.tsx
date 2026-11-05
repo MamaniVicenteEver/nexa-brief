@@ -5,8 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import type { ShowcaseRepository } from "../api/showcase-repository";
 import { useLazyStage } from "../hooks/useLazyStage";
 import { getFormat } from "../lib/formats";
+import { isolatedPosterUrl } from "../lib/kit-urls";
 import type { CatalogContext, FormatId, Item } from "../types";
 import { IconAction } from "./IconAction";
+import type { PreviewFramePosition } from "./PreviewFrameSelector";
+import { SandboxAnimationPreview } from "./SandboxAnimationPreview";
 
 export type PreviewProps = { src: string; title: string; format: FormatId; componentName: string };
 
@@ -104,11 +107,15 @@ export function ItemPreview({
   context,
   repo,
   format,
+  suspended = false,
+  framePosition = "first",
 }: {
   item: Item;
   context: CatalogContext;
   repo: ShowcaseRepository;
   format: FormatId;
+  suspended?: boolean;
+  framePosition?: PreviewFramePosition;
 }) {
   let src: string;
   let error = item.unavailableReason;
@@ -125,12 +132,30 @@ export function ItemPreview({
       </div>
     );
   }
+  const poster =
+    framePosition === "first"
+      ? isolatedPosterUrl(item.designId, item.component.name, format, item.source)
+      : undefined;
+  const preset = getFormat(format);
+  const duration = Number(new URL(src, "http://localhost").searchParams.get("dur")) || 6;
+  const time =
+    framePosition === "first"
+      ? 0
+      : framePosition === "middle"
+        ? duration / 2
+        : Math.max(0, duration - 0.5);
+  const stillSrc = `${src}${src.includes("?") ? "&" : "?"}t=${time}`;
   return (
-    <StagePreview
+    <SandboxAnimationPreview
+      title={item.component.name}
+      frameTitle={`Vista previa de ${item.component.name}`}
       src={src}
-      title={`Vista previa de ${item.component.name}`}
-      format={format}
-      componentName={item.component.name}
+      poster={poster}
+      stillSrc={stillSrc}
+      bg="white"
+      waitForReady
+      suspended={suspended}
+      aspect={`${preset.width} / ${preset.height}`}
     />
   );
 }

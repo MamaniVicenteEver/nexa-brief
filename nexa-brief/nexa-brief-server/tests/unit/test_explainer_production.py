@@ -366,7 +366,7 @@ async def test_planner_chat_validates_items():
     assert reply.items[2].design is None  # NodeMotion no usa diseños del kit
     assert len(reply.warnings) == 3
     ctx = json.loads(ai.prompts[0][1])["contexto"]
-    assert ctx["semana"][0] == "2026-10-12" and len(ctx["categorias"]) == 5
+    assert ctx["semana"][0] == "2026-10-12" and len(ctx["categorias"]) == 6
 
 
 async def test_planner_requires_user_last():

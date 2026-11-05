@@ -21,6 +21,7 @@ interface SandboxItemDto {
   has_index: boolean;
   has_poster: boolean;
   has_info: boolean;
+  has_components?: boolean;
   total_tokens: number | null;
   thumbnail_url: string | null;
   player: SandboxPlayer;
@@ -81,12 +82,14 @@ function mapSandboxItem(dto: SandboxItemDto): SandboxItem {
     subcategory: dto.subcategory ?? null,
     path: dto.path,
     kind: dto.kind,
-    title: dto.title,
+    // Esta ficha es una plantilla; el manifest conserva el título del video de muestra.
+    title: dto.path === "sandbox/nodepolitics/atlas-demo" ? "Atlas · Neón Geopolítica" : dto.title,
     status: dto.status,
     design: dto.design,
     hasIndex: dto.has_index,
     hasPoster: dto.has_poster,
     hasInfo: dto.has_info,
+    hasComponents: dto.has_components ?? false,
     totalTokens: dto.total_tokens,
     thumbnailUrl: dto.thumbnail_url,
     player: dto.player,

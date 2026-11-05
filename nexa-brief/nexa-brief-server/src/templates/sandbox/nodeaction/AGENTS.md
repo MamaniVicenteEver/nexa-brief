@@ -1,8 +1,13 @@
 # AGENTS.md · NodeAction (casa de pruebas) — escenas de acción con personajes
 
-> Para cualquier agente de IA o persona que vaya a **crear una escena nueva** (una batalla, un
-> enfrentamiento, un disturbio, una persecución…) o a **extender el motor** (un estilo de personaje,
-> una pose, un arma, un modo del director). Leelo entero antes de tocar nada.
+> **Vida en Escena (`_vida/`):** para personajes, voces, animaciones y componentes empezá por
+> `_vida/agent-guide/index.json`. Desde `_vida/`, ejecutá `node tools/agent-guide.mjs list` y
+> `node tools/agent-guide.mjs show <tarea>`; seguí únicamente las rutas de esa tarea. No necesitás
+> leer el resto de este archivo si trabajás solo en `_vida/`, salvo para verificar reglas generales
+> aplicables o modificar el otro motor `_engine/`.
+>
+> Para crear escenas del motor `_engine/` (batallas, enfrentamientos, disturbios, persecuciones)
+> o extender ese motor (estilos, poses, armas, director), leé este archivo entero antes de tocarlo.
 > Estudio y decisiones: `nexa-brief-server/docs/investigaciones/nodeaction-escenas-de-accion-2026-10.md`.
 > Escrito el 2026-10-16, verificado contra `_engine/*.js` y `tools/*.py`.
 
@@ -403,3 +408,49 @@ de un storyboard del explainer-kit (videos de historia con batallas animadas).
 - 2026-10-23 · **Avatar desde una imagen** (`_avatar/`, personaje `chica`, demo `avatar-demo/` 49 s con voz): la
   imagen se corta en capas por las líneas de tinta y se anima con malla + huesos (WebGL2); en reposo es la imagen
   exacta. Gestos de brazos/manos, cara (parpadeo, cejas, giro), labios desde lyrics.json. Todo en `_avatar/AVATAR.md`.
+
+
+- 2026-11-03 · **Vida en Escena** (`_vida/` motor compartido, `vida-en-escena/` 2:08, `vida-en-escena-heladeria/` variante solo datos): historias cotidianas 9:16 con personajes de tinta. Producir: `_vida/SKILL.md`; ampliar: `_vida/VIDA.md`. Informe: `docs/investigaciones/vida-en-escena-2026-11.md`.
+- Caminar en vista frontal abre las rodillas (parece agachado): el andar gira a perfil y la rodilla siempre apunta hacia el avance. Sentado de frente: muslos en escorzo, rodillas juntas.
+- Un fade que funde forma por forma deja ver trazos internos: las transiciones componen cuadros completos.
+- La revisión automática dejó pasar planos pobres (sujeto chico, mostrador tapando el pecho) hasta medir tamaño del sujeto, suelo vacío y oclusión; aun así, mirar siempre la hoja.
+- `image_gen` falla dentro del sandbox de Codex (sistema de archivos de solo lectura): las láminas se generan desde ssh. Un worker bajó 739 MB de Chromium a `_vida/.cache`: prohibir descargas dentro del repo en cada brief.
+- `_vida` no figura en `SANDBOX_SHARED_DIRS` (explainer.py): la app no sirve el motor hasta agregarlo (recarga la API).
+
+### Lecciones 2026-11-03 (tarde) — Vida en Escena: audio y cámara
+- **Gemini TTS mete artefactos en CADA clip**: un chasquido de 5 ms (pico 0,6–0,85) en 0,100–0,105 s, la voz 100–400 ms después, y una ráfaga de ~150 ms (≈ −8 dBFS, ruido de banda ancha, planitud espectral ≈ 0,3, centroide ≈ 5,7 kHz) tras la voz. `loudnorm` y el recorte por energía los conservan; Whisper no los ve. Reparar con silencio digital sin cambiar la duración; `voice.mjs` ya los descarta y tiene QC `trailing_noise`/`leading_click`. Revisar siempre clics aislados extra (L16 tenía otro a 0,30 s).
+- **Los tiempos de palabra de Whisper van ADELANTADOS** (0,05–0,35 s al final, y `s=0,0` al inicio): nunca cortar el audio en ellos; usar actividad de energía conectada.
+- Nadie puede «escuchar» desde un agente: dejar pares ORIGINAL/reparado en `review/audio/escuchar/` para que el humano decida.
+- **Cámara**: el encuadre por cuadro desde los límites de los cuerpos hace «bombear» el zoom y `follow` tiembla; usar envolvente con anticipación + perfil de jerk mínimo con velocidad máxima (`_vida/docs/CAMARA.md`, bloque `camera` del episodio: `style` estable/cine/documental). Vistas: landscape 1920×1080 y portrait 1080×1920 por aspecto de ventana; MP4 `*-16x9.mp4` además.
+- Antes de editar un `.py` de `src/` en el servidor: comprobar que no haya producciones corriendo (uvicorn --reload las corta).
+
+### Lecciones 2026-11-03 — Vida en Escena en Showcase
+- Los episodios de un mismo diseño declaran `design: "vida-en-escena"` en `info.json`. Showcase los agrupa en una opción y conserva cada video en el selector Episodio; no agrupar por prefijo de nombre.
+- La biblioteca reutiliza `catalog.json` mediante `node _vida/tools/showcase.mjs` (desde nodeaction): genera `_vida/showcase/components.json`, cinco miniaturas transparentes y portadas de los dos episodios. Ambos `info.json` apuntan a la misma base `sandbox/nodeaction/_vida`.
+- `_vida/showcase.html?only=actions.walk&aspect=9x16` usa el motor real: acciones en bucle desde episodios existentes, rig/objetos/escenarios compartidos. No convertir `components` de `info.json` en interruptores ficticios: el catálogo completo va en `catalog`.
+- Las tarjetas con `?controls=1` esperan `nexa-template-ready`: enviar volumen silenciado y playback desde el iframe verificado. Cargar el iframe sin esa orden deja la vista detenida; los modales conservan sus controles y audio.
+- Validación de esta integración: 64 tests de Showcase, TypeScript sin errores, 125 componentes abiertos en Chromium sin fallos, muestras 16:9 y reproducción de ambos episodios. Esto no gradúa el motor a producción.
+
+
+### Lecciones 2026-11-04 — Frame inicial en las tarjetas de Vida
+- Después de actualizar `showcase/components.json`, ejecutar desde `_vida/`: `node tools/showcase-thumbs.mjs`. Usa Chromium ya instalado, captura los 125 ejemplos reales en modo `still=1` y publica `showcase/thumbs/thumbs.json` únicamente al completar todas las imágenes. No genera videos ni requiere una API nueva.
+- Ambos episodios declaran `catalog.thumbs: "showcase/thumbs/thumbs.json"` y `catalog.previewReady: true`. Reutilizan las tarjetas de Atlas: imagen estática, botón ▶, imagen conservada hasta `nexa-animation-ready` y restaurada al detener.
+- `showcase.js` dibuja el primer frame sin depender del reloj de pared y `still=1` lo congela. La galería confirma ready después de dibujar; las tarjetas inactivas no montan iframes. Comprobados 125 posters, reproducción/detención en navegador y 48 tests de miniaturas/biblioteca.
+
+### Cara a Cara en Showcase
+- `cara-a-cara/info.json` declara su biblioteca en `catalog`; `showcase/components.json` documenta las piezas y poses. `showcase.html` usa el motor real por medio de `showcase-preview.html`, con ajustes de escena solamente en memoria para las poses. Las miniaturas son capturas de esas vistas; el perfil de Leo, el audio y la escena aprobados no se modifican.
+- La guía maestra para crear personajes de Cara a Cara vive en `cara-a-cara/assets/avatar/crear-personaje.json`. Tras editarla, `node cara-a-cara/showcase/sync-character-guide.mjs` actualiza la tarjeta copiable del catálogo. Los recortes deben medirse en cada imagen nueva y comprobarse antes de registrar el personaje en el perfil compartido.
+
+
+### Lecciones 2026-11-04 — Guía selectiva para agentes Vida
+- Entrada compacta: `_vida/agent-guide/index.json`; desde `_vida/`, `node tools/agent-guide.mjs list`, `show <tarea>` y `check`. Se carga solo la guía seleccionada. Las tarjetas de Showcase están en `agent-guide/workflows.json`.
+- El generador de voz busca perfiles por `script.who`; la ficha `character.voice` sola no resuelve ese alias. Los clips reales y su QC son independientes de crear la ficha.
+- `tools/build-schema.mjs` quedó alineado con `engine/camera/config.js`. Antes de cambios futuros, ejecutar `node --test test/schema-generation.test.mjs`; acepta una salida temporal para comparar sin sobrescribir el schema real.
+- En Cara a Cara, las poses y demás vistas fijas declaran `preview.static: true`; así Showcase presenta la imagen sin play/stop. Los componentes con movimiento, como `comparacion.video`, conservan el reproductor.
+
+
+### Cara a Cara — personajes y expresiones
+- Entrada para una IA: `cara-a-cara/assets/avatar/crear-personaje.json`; para ampliar un personaje, `crear-expresiones.json`. Incluyen identidad, voz, manifiesto, comandos y validaciones sin leer todo el motor.
+- Usar láminas 2×2 por defecto; 4×4 solo con al menos 512×512 píxeles originales por celda y calidad visual suficiente. Medir cada recorte; nunca ampliar artificialmente para superar el mínimo.
+- Desde `cara-a-cara/`, validar y registrar con `node showcase/register-character.mjs <id> --check|--apply`. Para ampliar sin sobrescribir: añadir `--extend --manifest <archivo.json>`. `sync-character-assets.mjs` crea miniaturas y tarjetas de poses e identidades; `sync-character-guide.mjs` actualiza las guías. La validación automática es estructural: revisar los recortes y la voz con una persona.
+- Las poses antiguas siguen como arreglo sobre `character.src`; las nuevas pueden usar `{src,crop}` con `src` relativo al perfil `_pizarra/profiles/leo.json`. Las muestras de voz generadas no se consideran aprobadas sin escucha humana.

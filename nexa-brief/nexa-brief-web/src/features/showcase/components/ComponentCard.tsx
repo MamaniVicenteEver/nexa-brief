@@ -1,60 +1,99 @@
-import { ChevronDown, Maximize2 } from "lucide-react";
-import { type ReactNode, useId, useState } from "react";
-import type { Item } from "../types";
-import { ComponentDetails } from "./ComponentDetails";
-import { IconAction } from "./IconAction";
+// biome-ignore-all lint/a11y/noNoninteractiveTabindex: la tarjeta abre un diálogo con teclado y conserva su control de reproducción independiente.
+import { type ReactNode, useId } from "react";
+import { getFormat } from "../lib/formats";
+import type { FormatId, Item } from "../types";
 
-export type CardProps = { item: Item; preview: ReactNode; onOpen(): void };
+export type CardProps = { item: Item; format: FormatId; preview: ReactNode; onOpen(): void };
 
-export function ComponentCard({ item, preview, onOpen }: CardProps) {
+export function ComponentCard({ item, format, preview, onOpen }: CardProps) {
+  return (
+    <ComponentCardView
+      name={item.component.name}
+      summary={item.component.summary}
+      tags={item.component.tags}
+      available={!item.unavailableReason && item.designId !== null}
+      format={format}
+      preview={preview}
+      onOpen={onOpen}
+    />
+  );
+}
+
+export function ComponentCardView({
+  name,
+  summary,
+  tags,
+  available = true,
+  format,
+  preview,
+  onOpen,
+}: {
+  name: string;
+  summary?: string;
+  tags?: string[];
+  available?: boolean;
+  format: FormatId;
+  preview: ReactNode;
+  onOpen(): void;
+}) {
   const titleId = useId();
-  const detailsId = useId();
-  const [expanded, setExpanded] = useState(false);
+  const preset = getFormat(format);
+  const open = (element: HTMLElement) => {
+    if (!available) return;
+    element.focus();
+    onOpen();
+  };
   return (
     <article
       aria-labelledby={titleId}
-      className="flex h-[400px] min-w-0 flex-col overflow-hidden rounded-2xl border border-nb-line bg-nb-surface text-nb-ink shadow-sm"
+      aria-haspopup={available ? "dialog" : undefined}
+      tabIndex={available ? 0 : undefined}
+      className={`flex min-w-0 flex-col overflow-hidden rounded-2xl border border-nb-line bg-nb-surface text-nb-ink shadow-sm ${available ? "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2" : ""}`}
+      onClick={(event) => {
+        if (
+          (event.target as HTMLElement).closest(
+            "button,a,input,select,textarea,summary,details,iframe",
+          )
+        )
+          return;
+        open(event.currentTarget);
+      }}
+      onKeyDown={(event) => {
+        if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " "))
+          return;
+        event.preventDefault();
+        open(event.currentTarget);
+      }}
     >
-      <div className="relative min-h-0 flex-1 overflow-hidden bg-black">
-        {preview}
-        <IconAction
-          label={`Ampliar ${item.component.name}`}
-          onClick={onOpen}
-          disabled={Boolean(item.unavailableReason) || item.designId === null}
-          className="absolute left-3 top-3 z-10 bg-black/70 text-white hover:bg-black"
-        >
-          <Maximize2 />
-        </IconAction>
-        <section
-          id={detailsId}
-          hidden={!expanded}
-          aria-label={`Información de ${item.component.name}`}
-          className="absolute inset-x-0 bottom-0 top-14 z-10 overflow-y-auto overscroll-contain rounded-t-2xl border-t border-nb-line bg-nb-surface p-4 text-nb-ink shadow-lg"
-        >
-          {expanded && (
-            <ComponentDetails component={item.component} source={item.source} mode="card" />
-          )}
-        </section>
-      </div>
-      <button
-        type="button"
-        aria-expanded={expanded}
-        aria-controls={detailsId}
-        aria-label={`${expanded ? "Ocultar" : "Mostrar"} información de ${item.component.name}`}
-        onClick={() => setExpanded((value) => !value)}
-        className="flex h-14 shrink-0 items-center justify-between gap-3 border-t border-nb-line px-4 text-left transition-colors hover:bg-nb-bg-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+      <div
+        data-preview-frame
+        className="relative w-full overflow-hidden bg-black"
+        style={{ aspectRatio: `${preset.width} / ${preset.height}` }}
       >
-        <h2
-          id={titleId}
-          title={item.component.name}
-          className="truncate font-mono text-xs font-semibold"
-        >
-          {item.component.name}
+        {preview}
+      </div>
+      <div className="space-y-2 border-t border-nb-line p-4">
+        <h2 id={titleId} className="break-words font-mono text-xs font-semibold">
+          {name}
         </h2>
-        <ChevronDown
-          className={`size-4 shrink-0 transition-transform motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`}
-        />
-      </button>
+        <p className="text-sm leading-relaxed text-nb-ink-soft">
+          {summary || "Sin descripción disponible."}
+        </p>
+        {tags?.length ? (
+          <ul aria-label="Etiquetas" className="flex flex-wrap gap-1">
+            {[...new Set(tags)].map((tag) => (
+              <li
+                key={tag}
+                className="rounded-full border border-nb-line px-2 py-0.5 text-xs text-nb-ink-soft"
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs text-nb-ink-soft">Sin etiquetas</p>
+        )}
+      </div>
     </article>
   );
 }

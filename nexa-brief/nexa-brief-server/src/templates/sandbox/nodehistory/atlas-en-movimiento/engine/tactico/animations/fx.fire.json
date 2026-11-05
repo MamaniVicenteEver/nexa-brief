@@ -1,0 +1,107 @@
+{
+  "name": "fx.fire",
+  "family": "fx",
+  "description": "Llamas cíclicas sobre un punto o casco, con cierre suave de cada partícula. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+  "duration": 8.35,
+  "loop": true,
+  "layer": 60,
+  "states": [],
+  "params": {
+    "dur": {
+      "type": "number",
+      "default": 8,
+      "min": 0.05,
+      "range": {
+        "min": 0.05,
+        "max": null
+      },
+      "description": "Duración en segundos."
+    },
+    "size": {
+      "type": "number",
+      "default": 70,
+      "min": 4,
+      "max": 260,
+      "description": "Radio simbólico en px a U=1.",
+      "range": {
+        "min": 4,
+        "max": 260
+      }
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.1,
+      "max": 4,
+      "range": {
+        "min": 0.1,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "seed": {
+      "default": 1,
+      "description": "Semilla numérica o texto.",
+      "type": "number|string",
+      "range": null
+    },
+    "particles": {
+      "type": "number",
+      "default": 32,
+      "min": 1,
+      "max": 300,
+      "range": {
+        "min": 1,
+        "max": 300
+      },
+      "description": "Número de partículas del efecto."
+    },
+    "period": {
+      "type": "number",
+      "default": 1.3,
+      "min": 0.2,
+      "max": 8,
+      "range": {
+        "min": 0.2,
+        "max": 8
+      },
+      "description": "Período de repetición interna en segundos."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "fx-fire",
+    "t": 0,
+    "type": "fx.fire",
+    "at": [
+      54,
+      27
+    ],
+    "dur": 8,
+    "size": 70,
+    "particles": 32,
+    "seed": 73
+  },
+  "usedBy": [
+    "work/tactico/scene-fx.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/fx.fire.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

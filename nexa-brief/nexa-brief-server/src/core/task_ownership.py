@@ -15,6 +15,8 @@ class TaskLease:
         self.fd: int | None = None
 
     def acquire(self) -> bool:
+        if self.fd is not None:
+            return True
         self.path.parent.mkdir(parents=True, exist_ok=True)
         fd = os.open(self.path, os.O_CREAT | os.O_RDWR, 0o600)
         try:

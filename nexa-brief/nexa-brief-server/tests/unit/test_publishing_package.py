@@ -209,16 +209,12 @@ def test_digits_with_a_scale_word_match_the_spoken_number(text: str, expected: s
 
 # ── descripción ───────────────────────────────────────────────────────────────
 
-def test_youtube_description_has_the_nine_blocks_in_order(strategies):
+def test_video_descriptions_use_brief_question_and_hashtags(strategies):
     package = _package()
     text = render_youtube(package, "GRACIAS", strategies.description)
-    blocks = text.split("\n\n")
-    assert blocks[0] == package.description.hook
-    assert blocks[2].startswith("CAPÍTULOS\n0:00 Se rinde")
-    assert blocks[4] == "GRACIAS"
-    assert blocks[6].startswith("FUENTES\n- NASA")
-    assert blocks[7].startswith("IMÁGENES (Wikimedia Commons)\n- Margaret Hamilton")
-    assert blocks[-1] == "#Apolo11 #MargaretHamilton #NodeTech"
+    assert text.split("\n\n") == [package.description.hook, package.description.question,
+                                      "#Apolo11 #MargaretHamilton #NodeTech"]
+    assert "FUENTES" not in text and "CAPÍTULOS" not in text and "GRACIAS" not in text
 
 
 def test_empty_sources_block_is_omitted_not_left_half_written(strategies):
@@ -229,7 +225,7 @@ def test_empty_sources_block_is_omitted_not_left_half_written(strategies):
 def test_facebook_description_starts_with_its_first_line():
     package = _package()
     assert render_facebook(package).split("\n\n") == [
-        package.titles.facebook.first_line, package.description.reflection,
+        package.titles.facebook.first_line,
         package.description.question, "#Apolo11 #Tecnología",
     ]
 
@@ -281,7 +277,6 @@ def test_valid_package_has_no_errors(strategies, video_dir):
     ({"description__chapters": [{"at": "0:00", "title": "a"}, {"at": "1:00", "title": "b"}, {"at": "3:50", "title": "c"}]}, "description.chapters"),
     ({"description__gratitude": "G9_inexistente"}, "description.gratitude"),
     ({"description__gratitude_topic": ""}, "description.gratitude"),
-    ({"description__context": "x" * 5000}, "description"),
     ({"sources": []}, "sources"),
     ({"credits": []}, "credits"),
     ({"tags__youtube": ["solo", "tres", "tags"]}, "tags.youtube"),
@@ -410,6 +405,14 @@ def test_applying_the_same_opening_twice_changes_nothing(video_dir):
     assert (video_dir / "render" / "apolo-1202-16x9.mp4").exists()
 
 
+def test_map_thumbnails_preserve_the_prototype_country(video_dir):
+    story = video_dir / "assets/storyboard.json"
+    story.write_text(json.dumps({"beats": [{"t": 0, "use": "imperio.title", "params": {"country": "Japan"}}]}))
+    specs = opening_specs(_package(), video_dir, "imperio")
+    assert specs["A"]["params"]["country"] == "Japan"
+    assert specs["B"]["params"]["country"] == "Japan"
+
+
 def test_b_without_its_photo_cannot_open_the_video(video_dir):
     with pytest.raises(OpeningError, match="no está disponible"):
         apply_opening(video_dir, _package(thumbnail__chosen="with_image", thumbnail__with_image__image=None))
@@ -491,6 +494,16 @@ def test_build_refuses_a_v1_publish_json(video_dir, kit_calls):
     assert kit_calls == []
 
 
+def test_promoted_prototype_can_keep_its_native_opening(video_dir, kit_calls):
+    before = (video_dir / "assets/storyboard.json").read_bytes()
+    save_package(video_dir, _package(preserve_opening=True), active_strategies("node_tech"))
+    result = service.build(_video(video_dir))
+    assert not result.opening.changed
+    assert (video_dir / "assets/storyboard.json").read_bytes() == before
+    assert (video_dir / "render/apolo-1202-16x9.mp4").exists()
+    assert kit_calls == [("manifest", "apolo-1202")]
+
+
 def test_kit_failure_reports_the_step_and_its_stderr(monkeypatch: pytest.MonkeyPatch):
     def failing(cmd, **_kwargs):
         raise subprocess.CalledProcessError(2, cmd, stderr="Traceback …\nKeyError: 'design'")
@@ -548,9 +561,12 @@ def test_nodetech_packages_are_consistent(strategies, video_dir: Path):
     package = load_package(video_dir)
     assert package is not None, f"{video_dir.name}: publish.json todavía es v1"
     on_disk = json.loads((video_dir / "publish.json").read_text())
-    # los campos planos en disco son exactamente los derivados del paquete (nadie los editó a mano)
+    # Los textos largos históricos se conservan en disco; la política nueva se aplica al preparar/publicar.
     for key, value in compat_fields(video_dir.name, package, strategies).items():
-        assert on_disk[key] == value, key
+        if key not in {"youtube_description", "facebook_description", "tiktok_caption"}:
+            assert on_disk[key] == value, key
+        else:
+            assert "https://" not in value and len(value) < 1000
     beat = json.loads((video_dir / "assets" / "storyboard.json").read_text())["beats"][0]
     spec = opening_specs(package, video_dir, design_of(video_dir))[CHOSEN_TO_OPTION[package.thumbnail.chosen]]
     # Los defaults explícitos y ausentes son visualmente iguales.

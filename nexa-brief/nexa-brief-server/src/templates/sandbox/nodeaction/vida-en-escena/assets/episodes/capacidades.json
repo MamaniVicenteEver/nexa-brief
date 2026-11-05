@@ -1,0 +1,287 @@
+{
+  "version": 1,
+  "id": "capacidades",
+  "title": "Capacidades del motor",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "cast": {
+    "tomas": "tomas",
+    "nico": "nico",
+    "narrador": {
+      "voice": "narrador",
+      "offscreen": true
+    }
+  },
+  "resources": {
+    "timing": "../timing.json",
+    "audioBase": ".."
+  },
+  "scenes": [
+    {
+      "set": "escuela-entrada",
+      "actors": {
+        "tomas": {
+          "at": "arrive",
+          "start": {
+            "wearing": "mochila",
+            "holding": {
+              "right": "celular"
+            }
+          }
+        },
+        "nico": {
+          "at": "meet"
+        }
+      },
+      "objects": {
+        "mochila": {
+          "prop": "backpack"
+        },
+        "celular": {
+          "prop": "phone"
+        }
+      },
+      "steps": [
+        {
+          "say": "N01"
+        }
+      ],
+      "actions": [
+        {
+          "who": "tomas",
+          "action": "stow",
+          "object": "celular",
+          "at": 1,
+          "dur": 0.8
+        },
+        {
+          "who": "tomas",
+          "action": "unstow",
+          "object": "celular",
+          "at": 2,
+          "dur": 0.8
+        },
+        {
+          "who": "tomas",
+          "action": "unwear",
+          "object": "mochila",
+          "hand": "left",
+          "at": 3,
+          "dur": 0.8
+        },
+        {
+          "who": "tomas",
+          "action": "wear",
+          "object": "mochila",
+          "hand": "left",
+          "at": 4,
+          "dur": 0.8
+        }
+      ]
+    },
+    {
+      "set": "aula",
+      "transition": "wipe",
+      "dur": 0.5,
+      "actors": {
+        "tomas": {
+          "start": {
+            "seated": "seat-tomas",
+            "view": "front",
+            "expression": "smile"
+          }
+        },
+        "nico": {
+          "start": {
+            "seated": "seat-nico"
+          }
+        }
+      },
+      "steps": [
+        {
+          "do": {
+            "who": "tomas",
+            "action": "gesture",
+            "kind": "shrug",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "gesture",
+            "kind": "open-arms",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "gesture",
+            "kind": "facepalm",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "gesture",
+            "kind": "count-fingers",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "gesture",
+            "kind": "thumbs-up",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "gesture",
+            "kind": "nod",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "gesture",
+            "kind": "shake-head",
+            "dur": 1.2
+          }
+        }
+      ],
+      "actions": [
+        {
+          "who": "tomas",
+          "action": "fx",
+          "kind": "?",
+          "at": 0.0,
+          "dur": 0.8
+        },
+        {
+          "who": "tomas",
+          "action": "fx",
+          "kind": "!",
+          "at": 0.9,
+          "dur": 0.8
+        },
+        {
+          "who": "tomas",
+          "action": "fx",
+          "kind": "sweat",
+          "at": 1.8,
+          "dur": 0.8
+        },
+        {
+          "who": "tomas",
+          "action": "fx",
+          "kind": "hearts",
+          "at": 2.7,
+          "dur": 0.8
+        },
+        {
+          "who": "tomas",
+          "action": "fx",
+          "kind": "sparkle",
+          "at": 3.6,
+          "dur": 0.8
+        },
+        {
+          "who": "tomas",
+          "action": "fx",
+          "kind": "shock",
+          "at": 4.5,
+          "dur": 0.8
+        }
+      ]
+    },
+    {
+      "set": "parque",
+      "transition": "fade",
+      "dur": 0.6,
+      "actors": {
+        "tomas": {
+          "start": {
+            "seated": "bench-seat-left",
+            "holding": {
+              "right": "helado"
+            }
+          }
+        },
+        "nico": {
+          "start": {
+            "seated": "bench-seat-right"
+          }
+        }
+      },
+      "objects": {
+        "helado": {
+          "prop": "icecream"
+        }
+      },
+      "steps": [
+        {
+          "do": {
+            "who": "tomas",
+            "action": "eat",
+            "item": "helado",
+            "cycles": 3,
+            "dur": 3
+          }
+        }
+      ],
+      "camera": [
+        {
+          "type": "two",
+          "targets": [
+            "tomas",
+            "nico"
+          ],
+          "move": "dolly",
+          "zoomFrom": 1.05,
+          "zoomTo": 1,
+          "dur": 3,
+          "locked": true
+        }
+      ]
+    },
+    {
+      "set": "casa-comedor",
+      "transition": "dip-white",
+      "dur": 0.6,
+      "actors": {
+        "tomas": {
+          "start": {
+            "seated": "seat-tomas"
+          }
+        },
+        "nico": {
+          "start": {
+            "seated": "seat-mama"
+          }
+        }
+      },
+      "steps": [
+        {
+          "do": {
+            "who": "tomas",
+            "action": "react",
+            "kind": "shock",
+            "dur": 1.2
+          }
+        },
+        {
+          "wait": 0.8
+        }
+      ]
+    }
+  ]
+}

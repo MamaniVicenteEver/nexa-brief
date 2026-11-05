@@ -22,7 +22,7 @@ class PlanCreateRequest(StrictSchema):
     level: Literal["basico", "medio", "alto", "negro"] = "alto"
     narrative: Literal["hilo", "factual"] = "hilo"
     style_id: str
-    format: Literal["4:5", "3:5", "9:16"] = "9:16"
+    format: Literal["4:5", "3:5", "9:16"] = "4:5"
     seed: int | None = None
     focus_claim_ids: list[str] | None = None
 
@@ -91,6 +91,7 @@ class ReviewRequest(StrictSchema):
 
 
 class DeliveryTarget(StrictSchema):
+    format: Literal["4:5", "3:5", "9:16"] | None = None
     platform: Literal["facebook", "instagram", "tiktok"]
     account_alias: str
     placement: Literal["image", "carousel", "reel"] | None = None

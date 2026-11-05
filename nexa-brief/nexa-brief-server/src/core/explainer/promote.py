@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from src.core.explainer.catalog import READY_STATUSES, TEMPLATES_DIR
+from src.core.categories import get_category
 
 MESSAGE_NOT_FOUND = "No existe {path}"
 MESSAGE_NOT_SANDBOX = "{id} ya está en producción"
@@ -79,6 +80,12 @@ def plan_promotion(
         raise PromoteError("unsupported", MESSAGE_UNSUPPORTED)
 
     folder, video_id = relative_source.parts
+    category_id = manifest.get("category")
+    if category_id:
+        category = get_category(str(category_id).split("/", 1)[0])
+        if category is None or category.engine != "explainer_kit" or not category.folder:
+            raise PromoteError("invalid_category", f"Categoría de producción inválida: {category_id}")
+        folder = category.folder
     destination = templates_root / folder / video_id
     status = manifest.get("status")
     if status not in READY_STATUSES and not force:

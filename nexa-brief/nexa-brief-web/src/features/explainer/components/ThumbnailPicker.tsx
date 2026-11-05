@@ -47,7 +47,9 @@ export function ThumbnailPicker({ video }: { video: ExplainerVideo }) {
           {preparation.isFetching ? t("preparing") : missing ? t("capture") : t("recapture")}
         </button>
       </div>
-      <p className="text-[11.5px] text-nb-mute">{t("hint")}</p>
+      <p className="text-[11.5px] text-nb-mute">
+        {t(video.publishPackage?.package?.preserveOpening ? "nativeHint" : "hint")}
+      </p>
       <div className="grid grid-cols-2 gap-2">
         {options.map((o) => (
           <button

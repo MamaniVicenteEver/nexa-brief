@@ -1,0 +1,257 @@
+{
+  "version": 2,
+  "tipo": "instrucciones-para-crear-personaje",
+  "titulo": "Crear un personaje para Cara a Cara",
+  "objetivo": "Crear un personaje original compatible con Cara a Cara, con identidad editorial, personalidad, propuesta de voz, recursos visuales y poses reutilizables; no reescribir el motor.",
+  "alcance": {
+    "plantilla": "sandbox/nodeaction/cara-a-cara",
+    "raiz_rutas": "Todas las rutas siguientes son relativas a src/templates/ salvo que se indique otro origen.",
+    "modo": "Este documento es una guía de trabajo, no un archivo que el motor cargue automáticamente. Sustituir los marcadores <id> y <descripcion> por los valores reales.",
+    "necesita": [
+      "Nombre, tema, objetivo, personalidad, aspecto y voz; cuando el usuario no los especifique, elegir una propuesta coherente y registrarla como tal.",
+      "Un id nuevo y único en minúsculas; no usar leo ni lia.",
+      "Herramienta de imagen o láminas suministradas, y medios para medir y revisar los recortes."
+    ],
+    "si_falta_informacion": "Una petición como crear un personaje es suficiente: inventar una identidad original coherente, sin afirmar aprobación humana. Preguntar solo cuando exista una decisión imprescindible que no pueda inferirse. Si no hay proveedor o recurso necesario, informar el bloqueo y no simular resultados."
+  },
+  "referencias": {
+    "estilo_y_poses": "sandbox/nodeaction/cara-a-cara/assets/avatar/sheet-original.png",
+    "prompt_original": "sandbox/nodeaction/cara-a-cara/assets/avatar/generation-prompt.txt",
+    "ejemplo_recortes": "sandbox/nodeaction/cara-a-cara/assets/avatar/poses-index.json",
+    "perfil_que_lee_el_motor": "sandbox/nodeaction/_pizarra/profiles/leo.json",
+    "escena_de_ejemplo": "sandbox/nodeaction/cara-a-cara/assets/scene.json",
+    "nota": "La cuadrícula 4×4 de referencia contiene dos personajes, ocho poses por personaje. Sus coordenadas pertenecen exclusivamente a esa imagen: nunca copiarlas para una imagen nueva."
+  },
+  "principios_visuales": [
+    "Mantener el lenguaje visual de Cara a Cara: ilustración 2D de dibujo limpio, contornos oscuros expresivos, ojos legibles, proporciones sencillas y apariencia cercana, adecuada para un video educativo.",
+    "El personaje debe ser original y coherente con la descripción o referencia autorizada; conservar identidad, rostro, peinado, ropa, colores, proporciones y calzado entre todas las poses.",
+    "Cada pose debe mostrar el cuerpo entero, de pie, con cabeza, manos y zapatos completos; dejar margen limpio para evitar cortes, mantener escala, cámara y línea de suelo compatibles.",
+    "Usar fondo blanco uniforme como la referencia aprobada, sin textos, números, logotipos, marcos, objetos ni sombras. Evitar transparencias o halos en el interior del personaje.",
+    "Las expresiones y gestos deben ser reconocibles y las manos anatómicamente plausibles. No añadir partes de cuerpo duplicadas ni elementos que invadan otra celda."
+  ],
+  "poses_obligatorias": [
+    {
+      "id": "talk",
+      "indicacion": "habla de forma amistosa y relajada"
+    },
+    {
+      "id": "point-left",
+      "indicacion": "señala hacia la izquierda de la pantalla"
+    },
+    {
+      "id": "point-right",
+      "indicacion": "señala hacia la derecha de la pantalla"
+    },
+    {
+      "id": "think",
+      "indicacion": "piensa con un dedo en la barbilla"
+    },
+    {
+      "id": "explain",
+      "indicacion": "explica con manos abiertas"
+    },
+    {
+      "id": "surprise",
+      "indicacion": "expresa sorpresa amistosa"
+    },
+    {
+      "id": "celebrate",
+      "indicacion": "sonríe y celebra con un gesto pequeño"
+    },
+    {
+      "id": "question",
+      "indicacion": "pregunta con los brazos abiertos"
+    }
+  ],
+  "generacion_de_imagen": {
+    "formato_recomendado": "Lámina 2×2 con cuatro poses, preferida para calidad y costo: mínimo 1024×1024 si las cuatro celdas son cuadradas de al menos 512×512. Para 4×4 usar al menos 2048×2048 y validar que cada celda y rostro conservan calidad; si el generador no alcanza esa resolución, usar varias láminas 2×2. Los tamaños son mínimos geométricos, no garantía de calidad visual.",
+    "prompt_base": "Crear una lámina 2×2 con cuatro poses de <descripcion> para un video educativo vertical, en este orden: <lista-de-cuatro-poses>. Es el mismo personaje original en las cuatro celdas: conservar rostro, piel, cabello, ropa, colores y proporciones. Dibujo 2D limpio con contorno oscuro, ojos legibles y expresiones amistosas, coherente con la lámina de referencia de Cara a Cara. Cuerpo completo centrado y margen blanco alrededor de cabeza, manos y pies; fondo blanco puro, sin texto, logotipos, marcos, accesorios ni sombras. Ninguna figura invade otra celda. Resolución final mínima 1024×1024, con al menos 512×512 por celda, sin ampliar material borroso. Para ocho poses usar dos láminas, manteniendo idéntica la identidad.",
+    "revisar_antes_de_usar": "Un generador puede alterar la cuadrícula, los dedos, la ropa o las proporciones. Examinar las ocho celdas y corregir o regenerar lo que no cumpla; no asumir que una instrucción de texto garantiza el resultado.",
+    "nota_lotes": "Un personaje inicial necesita ocho poses: se pueden generar en dos láminas 2×2 y registrar cada pose con su archivo y recorte. No producir una solicitud de imagen por pose. Véase crear-expresiones.json."
+  },
+  "contrato_de_integracion": {
+    "archivo_del_personaje": "sandbox/nodeaction/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+    "registro": "Agregar el personaje al perfil compartido solo después de validar identidad, láminas y recortes. El comando de registro y sincronización de tarjetas se documenta en assets/avatar/crear-expresiones.json; no reemplazar entradas existentes.",
+    "ruta_src": "La propiedad src se resuelve relativa a la URL de _pizarra/profiles/leo.json, no relativa a scene.json. Para la ubicación propuesta usar ../../cara-a-cara/assets/avatar/characters/<id>/sheet.png; verificar que la URL resuelta carga desde la aplicación.",
+    "forma_registro": {
+      "src": "../../cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+      "poses": {
+        "talk": "<recorte medido>",
+        "point-left": "<recorte medido>",
+        "point-right": "<recorte medido>",
+        "think": "<recorte medido>",
+        "explain": "<recorte medido>",
+        "surprise": "<recorte medido>",
+        "celebrate": "<recorte medido>",
+        "question": "<recorte medido>"
+      }
+    },
+    "nota_forma_registro": "La estructura anterior es un esquema con marcadores, no datos válidos para copiar al perfil. Cada <recorte medido> debe reemplazarse por un arreglo de cuatro números reales.",
+    "recortes": {
+      "formato": "[x, y, ancho, alto], normalizados respecto al ancho y alto completos de la imagen; no son píxeles ni coordenadas de la celda.",
+      "formula": "Para una caja medida en píxeles [izquierda, arriba, ancho, alto] y lámina de W×H píxeles: [izquierda/W, arriba/H, ancho/W, alto/H].",
+      "restricciones": "Los cuatro valores deben ser números finitos entre 0 y 1; ancho y alto mayores que 0; x+ancho ≤ 1 e y+alto ≤ 1. Medir cada pose sobre la imagen real con suficiente margen, sin abarcar otra pose, y revisar cuerpo completo y bordes.",
+      "advertencia": "No reutilizar coordenadas de Leo ni Lía y no suponer que todas las celdas generadas son idénticas. Un recorte ausente puede hacer que el motor dibuje la lámina completa."
+    },
+    "seleccion": "Para previsualizar sin cambiar el personaje predeterminado usar index.html?character=<id>&t=0. En una escena que debe usarlo, asignar shots[].character al id; verificar todos los planos que deban mostrarlo. El parámetro character de la URL tiene prioridad sobre el personaje de cada plano.",
+    "poses_en_escena": "Usar shots[].pose o eventos avatar.timeline: [{\"at\":0,\"pose\":\"talk\"}]. at acepta segundos o anclas de voz que existan en lyrics.json. La línea de tiempo se conserva al cargar el perfil, pero las definiciones y el personaje predeterminado provienen del perfil compartido.",
+    "voz": "La identidad visual y la voz son decisiones separadas. El perfil de voz Puck y el audio aprobado de Leo no deben cambiarse ni regenerarse automáticamente para un personaje nuevo.",
+    "preservacion": [
+      "No sobrescribir sheet-original.png, Leo, Lía, sus recortes o su perfil de voz.",
+      "No cambiar la distribución aprobada, las tipografías, la escena NASA/URSS ni el motor para crear una variante de personaje.",
+      "No modificar el personaje predeterminado compartido. Usar una copia de escena de prueba o un video nuevo para los cambios de shots.",
+      "Registrar la procedencia de imágenes y créditos cuando corresponda. No publicar ni renderizar un video final salvo petición expresa."
+    ],
+    "poses_desde_otras_laminas": "Cada pose puede ser [x,y,ancho,alto] sobre el src principal, o {\"src\":\"ruta relativa al perfil\",\"crop\":[x,y,ancho,alto]} para usar otra lámina. El motor resuelve src desde _pizarra/profiles/leo.json."
+  },
+  "pasos": [
+    "1. Elegir nombre e id únicos, tema, objetivo, personalidad, público y dirección de voz. Guardar identity.json en assets/avatar/characters/<id>/.",
+    "2. Preparar ocho poses en lotes 2×2 o una lámina 4×4 de resolución suficiente; usar la referencia del estilo y una única identidad visual.",
+    "3. Medir los recortes de cada pose y preparar un manifest.json con la identidad, la lámina principal y los recortes reales.",
+    "4. Verificar las láminas y el manifiesto; registrar el personaje sin reemplazar otros y sincronizar la biblioteca siguiendo assets/avatar/crear-expresiones.json.",
+    "5. Si se solicitó una muestra de voz y el proveedor está disponible, generarla en la carpeta propia; registrar proveedor, modelo y resultado real. No cambiar la voz de Leo.",
+    "6. Revisar cada pose en el Showcase y el video de prueba, en 9:16, pausa y seek. No publicar ni exportar el video final salvo solicitud."
+  ],
+  "criterios_de_aceptacion": [
+    "Los ocho nombres están presentes exactamente y cada recorte contiene una sola figura completa.",
+    "El personaje conserva rasgos, vestuario, escala y estilo entre poses; las poses son distinguibles y los gestos izquierda/derecha corresponden a la pantalla.",
+    "El PNG y todos los recortes son válidos y se cargan desde la aplicación, no solo desde el sistema de archivos.",
+    "El personaje seleccionado aparece en cada pose al reproducir y al saltar en el tiempo, sin errores de consola ni imágenes cortadas.",
+    "Leo y Lía siguen funcionando y el perfil predeterminado, la voz y el audio aprobados permanecen intactos.",
+    "Si un criterio falla, no afirmar que el personaje está integrado; corregir y volver a verificar o describir el bloqueo."
+  ],
+  "entrada_unica": {
+    "directorio": "sandbox/nodeaction/cara-a-cara/",
+    "leer_primero": [
+      "assets/avatar/crear-personaje.json",
+      "assets/avatar/crear-expresiones.json"
+    ],
+    "referencias_visuales": [
+      "assets/avatar/sheet-original.png",
+      "assets/avatar/generation-prompt.txt"
+    ],
+    "ejemplos_de_identidad": [
+      "assets/avatar/identities/leo.json",
+      "assets/avatar/identities/lia.json"
+    ],
+    "reglas": "Para una solicitud mínima como crear un personaje, decidir detalles no especificados con criterio; solo solicitar datos que sean esenciales y no se puedan inferir. Si un recurso o proveedor falla, indicarlo, nunca simular un resultado."
+  },
+  "identidad_requerida": {
+    "ruta": "assets/avatar/characters/<id>/identity.json",
+    "campos": [
+      "id",
+      "nombre",
+      "tema",
+      "objetivo",
+      "publico",
+      "personalidad",
+      "estilo",
+      "voz"
+    ],
+    "voz": "Incluir proveedor, nombre de voz, modelo, dirección vocal y estado (propuesta, muestra generada o aprobada). Si hay muestra y transcripción, guardar sus rutas relativas a la raíz de Cara a Cara como voz.muestra y voz.subtitulos (WebVTT). No presentar una voz como escuchada o aprobada si no lo está. Si se solicita una muestra y el proveedor funciona, guardarla en la carpeta del personaje; si falla, registrar el error sin repetir ciegamente.",
+    "ejemplo": "Consultar assets/avatar/identities/leo.json y lia.json. La voz aprobada de Leo no se cambia."
+  },
+  "entrega_para_registro": {
+    "carpeta": "assets/avatar/characters/<id>/",
+    "archivos": [
+      "identity.json",
+      "manifest.json",
+      "una o más láminas PNG; en el manifiesto usar solo el nombre de archivo."
+    ],
+    "manifiesto_ejemplo": {
+      "id": "<id>",
+      "sheets": [
+        {
+          "file": "poses-01.png",
+          "rows": 2,
+          "columns": 2
+        },
+        {
+          "file": "poses-02.png",
+          "rows": 2,
+          "columns": 2
+        }
+      ],
+      "poses": {
+        "talk": {
+          "sheet": "poses-01.png",
+          "crop": [
+            "<x>",
+            "<y>",
+            "<ancho>",
+            "<alto>"
+          ]
+        },
+        "point-left": {
+          "sheet": "poses-01.png",
+          "crop": [
+            "<x>",
+            "<y>",
+            "<ancho>",
+            "<alto>"
+          ]
+        },
+        "point-right": {
+          "sheet": "poses-01.png",
+          "crop": [
+            "<x>",
+            "<y>",
+            "<ancho>",
+            "<alto>"
+          ]
+        },
+        "think": {
+          "sheet": "poses-01.png",
+          "crop": [
+            "<x>",
+            "<y>",
+            "<ancho>",
+            "<alto>"
+          ]
+        },
+        "explain": {
+          "sheet": "poses-02.png",
+          "crop": [
+            "<x>",
+            "<y>",
+            "<ancho>",
+            "<alto>"
+          ]
+        },
+        "surprise": {
+          "sheet": "poses-02.png",
+          "crop": [
+            "<x>",
+            "<y>",
+            "<ancho>",
+            "<alto>"
+          ]
+        },
+        "celebrate": {
+          "sheet": "poses-02.png",
+          "crop": [
+            "<x>",
+            "<y>",
+            "<ancho>",
+            "<alto>"
+          ]
+        },
+        "question": {
+          "sheet": "poses-02.png",
+          "crop": [
+            "<x>",
+            "<y>",
+            "<ancho>",
+            "<alto>"
+          ]
+        }
+      }
+    },
+    "advertencia": "El ejemplo contiene marcadores que deben reemplazarse por números reales medidos sobre cada imagen; no es válido como manifiesto final.",
+    "comandos": [
+      "node showcase/register-character.mjs <id> --check",
+      "node showcase/register-character.mjs <id> --apply"
+    ],
+    "condiciones": "El primer comando valida estructura, archivo PNG y resolución mínima de 512×512 por celda; no sustituye la revisión visual. El segundo registra el personaje y sincroniza sus tarjetas; no sobrescribe otro personaje."
+  }
+}

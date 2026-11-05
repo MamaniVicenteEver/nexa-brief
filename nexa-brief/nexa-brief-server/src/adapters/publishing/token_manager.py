@@ -199,6 +199,29 @@ class TokenManager:
 
         refresh_token = self._storage.decrypt(state.encrypted_refresh_token)
 
+        if self._storage.get_api_provider("tiktok", alias) == "tiktok_business":
+            from src.adapters.publishing.tiktok_business_client import TikTokBusinessClient, TikTokBusinessError
+
+            try:
+                async with httpx.AsyncClient(timeout=30) as client:
+                    data = await TikTokBusinessClient(client).refresh(
+                        app_id=settings.tiktok_business_app_id,
+                        secret=settings.tiktok_business_secret,
+                        refresh_token=refresh_token,
+                    )
+                new_access = data.get("access_token")
+                if not new_access:
+                    raise TokenRefreshError("TikTok Business did not return an access token")
+                self._storage.save_tokens(
+                    "tiktok", alias, access_token=new_access,
+                    refresh_token=data.get("refresh_token"), expires_in=data.get("expires_in", 86400),
+                    refresh_expires_in=data.get("refresh_token_expires_in"),
+                    api_provider="tiktok_business",
+                )
+                return
+            except TikTokBusinessError as exc:
+                raise TokenRefreshError("TikTok Business token refresh failed") from exc
+
         async with httpx.AsyncClient(timeout=30) as client:
             response = await client.post(
                 "https://open.tiktokapis.com/v2/oauth/token/",

@@ -7,12 +7,12 @@ export const IMAGE_FORMATS = [
 
 export type ImageFormat = (typeof IMAGE_FORMATS)[number]["id"];
 export type ImagePostFormat = ImageFormat;
-export const DEFAULT_IMAGE_FORMAT: ImageFormat = "9:16";
+export const DEFAULT_IMAGE_FORMAT: ImageFormat = "4:5";
 
 export function isImageFormat(value: unknown): value is ImageFormat {
   return IMAGE_FORMATS.some((format) => format.id === value);
 }
 
 export function imageFormatProfile(format: ImageFormat) {
-  return IMAGE_FORMATS.find((profile) => profile.id === format) ?? IMAGE_FORMATS[2];
+  return IMAGE_FORMATS.find((profile) => profile.id === format) ?? IMAGE_FORMATS[0];
 }

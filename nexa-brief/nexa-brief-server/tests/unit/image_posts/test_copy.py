@@ -28,15 +28,17 @@ def test_copy_uses_verified_plan_and_adds_platform_alt_text() -> None:
     plan = make_plan()
     copy = build_copy(plan, publish_v2(), title_override="Dos categorías")
     assert copy.title == "Dos categorías"
-    assert copy.facebook.first_comment == "¿Qué tarea revisarías siempre?"
+    assert copy.facebook.first_comment is None
     assert len(copy.facebook.alt_texts) == len(plan.slides)
-    assert "Fuentes:" in copy.facebook.caption
-    assert "BLS" in copy.instagram.caption
+    assert "Fuentes:" not in copy.facebook.caption
+    assert "https://" not in copy.instagram.caption
+    assert "Desliza" not in copy.instagram.caption
+    assert copy.instagram.caption == "Dos categorías\n\n¿Qué significa esta diferencia?\n\n#Tecnología #Programación"
     assert copy.instagram.caption.count("#") <= 5
     assert validate_copy(copy, plan).passed
 
 
-def test_copy_adds_complete_cc_by_credit_and_modification_notice_to_both_captions() -> None:
+def test_copy_keeps_public_caption_brief_without_generating_comments() -> None:
     plan = make_plan()
     photo = MediaRef(
         asset_id="photo-1", sha256="a" * 64, license_id="CC BY 2.0", author="Fotógrafa",
@@ -47,12 +49,11 @@ def test_copy_adds_complete_cc_by_credit_and_modification_notice_to_both_caption
     slides = (replace(plan.slides[0], media=(photo,)), *plan.slides[1:])
     copy = build_copy(replace(plan, slides=slides), publish_v2())
 
-    for caption in (copy.facebook.caption, copy.instagram.caption):
-        assert "Fotógrafa" in caption
-        assert "CC BY 2.0" in caption
-        assert "https://creativecommons.org/licenses/by/2.0/" in caption
-        assert "recortada y convertida a B/N" in caption
-        assert "https://commons.wikimedia.org/wiki/File:Photo.jpg" in caption
+    for network in (copy.facebook, copy.instagram):
+        assert network.first_comment is None
+        assert "https://" not in network.caption
+        assert "Créditos visuales" not in network.caption
+    assert slides[0].media[0] == photo
 
 
 def test_copy_rejects_missing_claim_evidence() -> None:
@@ -71,3 +72,13 @@ def test_copy_validates_caption_and_title_limits() -> None:
     assert not report.passed
     assert any("60 caracteres" in error for error in report.errors)
     assert any("2.200" in error for error in report.errors)
+
+
+def test_copy_removes_urls_and_case_duplicate_hashtags():
+    data = publish_v2()
+    data["titles"]["facebook"]["title"] = "Dos categorías https://example.org/info"
+    data["description"]["question"] = "¿Qué opinas? https://example.org"
+    data["tags"]["facebook"] = ["#Programadores", "#programadores", "#IA"]
+    result = build_copy(make_plan(), data)
+    assert result.facebook.caption == "Dos categorías\n\n¿Qué opinas?\n\n#Programadores #IA"
+    assert result.instagram.caption == result.facebook.caption

@@ -1,0 +1,37 @@
+--- a/sandbox/nodehistory/_atlas/style.js
++++ b/sandbox/nodehistory/_atlas/style.js
+@@ -39,7 +39,7 @@
+   for(const id of detailProviders) {const p=providers.find(p=>p.id===id);sources['sat-detail-'+id]={...source(id,p?.max_zoom||14),...(p?.coverage_bbox?{bounds:p.coverage_bbox}:{})};}
+   const layers=[{id:'background',type:'background',paint:{'background-color':look.background}}];
+   for(const id of ['sat-bm','sat-viirs',...detailProviders.map(id=>'sat-detail-'+id)]) layers.push({id,type:'raster',source:id,...(id.startsWith('sat-detail-')?{minzoom:8}:id==='sat-viirs'?{minzoom:7}:{}),layout:{visibility:look.sat.visible && (id==='sat-bm'||id==='sat-viirs'&&look.sat.viirs||id==='sat-detail-'+look.sat.detail)?'visible':'none'},paint:{'raster-fade-duration':0,'raster-opacity':id==='sat-bm'&&look.sat.visible?look.sat.opacity:0,'raster-saturation':look.sat.saturation,'raster-contrast':look.sat.contrast,'raster-brightness-min':Math.max(0,look.sat.brightness),'raster-brightness-max':look.sat.brightnessMax ?? 1,'raster-hue-rotate':look.sat.hue}});
+-  layers.push({id:'shade-terrain',type:'hillshade',source:'dem',paint:{'hillshade-exaggeration':look.shade.visible?look.shade.opacity:0}});
++  layers.push({id:'shade-terrain',type:'hillshade',source:'dem',layout:{visibility:look.shade.visible?'visible':'none'},paint:{'hillshade-exaggeration':look.shade.visible?look.shade.opacity:0}});
+   for (const flavor of ['light','dark','grayscale']) for(const layer of baseLayers('vec-world',namedFlavor(flavor))) if(layer.source && layer['source-layer']!=='boundaries' && layer['source-layer']!=='places' && layer.type!=='symbol') { layer.id=`base-${flavor}-${layer.id}`;layer.layout={...layer.layout,visibility:look.base.visible && look.base.flavor===flavor?'visible':'none'};layers.push(layer); }
+   layers.push({id:'base-political',type:'fill',source:'admin0',layout:{visibility:look.base.political?'visible':'none'},paint:{'fill-color':['match',['get','id'],'US','#d8bd9d','BR','#a9bf94','CN','#d0a89a','RU','#b9b1ca','#c9c39e'],'fill-opacity':0.75}});
+   for(let i=0;i<3;i++){const b=look.borders.levels[i];layers.push({id:`brd-${i}`,type:'line',source:`admin${i}`,minzoom:b.minzoom,maxzoom:b.maxzoom,paint:{'line-color':b.color,'line-width':b.width,'line-opacity':look.borders.visible?look.borders.opacity*(b.opacity ?? 1):0}});}
+@@ -48,5 +48,5 @@
+   for (const layer of baseLayers(detail?'vec-detail':'vec-world',namedFlavor('light'),{lang})) if (layer.type==='symbol' && /^roads_labels_/.test(layer.id)) {
+     layer.id='lbl-'+layer.id; layer.minzoom=12; layer.paint={...layer.paint,'text-color':'#ffffff','text-halo-color':'#222222','text-halo-width':1.2,'text-opacity':look.labels.visible?look.labels.opacity:0}; layers.push(layer);
+   }
+-  return {version:8,transition:{duration:0,delay:0},glyphs:`${base}cache/fonts/{fontstack}/{range}.pbf`,sprite:`${base}cache/sprites/light`,sources,layers,sky:look.sky,terrain:{source:'dem',exaggeration:look.terrain.exaggeration},projection:{type:look.projection}};
++  return {version:8,transition:{duration:0,delay:0},glyphs:`${base}cache/fonts/{fontstack}/{range}.pbf`,sprite:`${base}cache/sprites/light`,sources,layers,sky:look.sky,terrain:look.terrain.enabled===false?undefined:{source:'dem',exaggeration:look.terrain.exaggeration},projection:{type:look.projection}};
+ }
+--- a/sandbox/nodehistory/_atlas/update.js
++++ b/sandbox/nodehistory/_atlas/update.js
+@@ -8,7 +8,7 @@
+   const dem=look.dem==='raw'?'terrain-aws':'terrain-land', source=m.getSource('dem'), p=c.providers.find(p=>p.id===dem); const tiles=[c.online && dem==='terrain-aws'?p.url:`${c.base}cache/${dem}/{z}/{x}/{y}.png`]; if(!equal(source.tiles,tiles))source.setTiles(tiles);
+   const projection=look.projection || 'mercator';if(m.getProjection()?.type!==projection)m.setProjection({type:projection});
+   if(!equal(m.getSky(),look.sky))m.setSky(look.sky);
+-  const terrain=m.getTerrain();if(terrain?.source!=='dem' || terrain.exaggeration!==look.terrain.exaggeration)m.setTerrain({source:'dem',exaggeration:look.terrain.exaggeration});
++  const terrain=m.getTerrain();if(look.terrain.enabled===false){if(terrain)m.setTerrain(null);}else if(terrain?.source!=='dem' || terrain.exaggeration!==look.terrain.exaggeration)m.setTerrain({source:'dem',exaggeration:look.terrain.exaggeration});
+   m.jumpTo({center:[pose.lon,pose.lat],zoom:pose.zoom,pitch:pose.pitch,bearing:pose.bearing});
+   setPaint(c,'background','background-color',look.background);
+   for(const id of c.satIds){
+@@ -16,6 +16,7 @@
+     setLayout(c,id,'visibility',look.sat.visible&&chosen?'visible':'none');
+     for(const [key,value] of Object.entries({'raster-opacity':look.sat.visible&&chosen?look.sat.opacity:0,'raster-saturation':look.sat.saturation,'raster-contrast':look.sat.contrast,'raster-brightness-min':clamp(look.sat.brightness,0,1),'raster-brightness-max':look.sat.brightnessMax ?? 1,'raster-hue-rotate':look.sat.hue}))setPaint(c,id,key,value);
+   }
++  setLayout(c,'shade-terrain','visibility',look.shade.visible?'visible':'none');
+   setPaint(c,'shade-terrain','hillshade-exaggeration',look.shade.visible?look.shade.opacity:0);
+   for(const layer of c.baseLayers){const {id,type,paint}=layer,flavor=id.split('-')[1];setLayout(c,id,'visibility',look.base.visible && flavor===look.base.flavor?'visible':'none');const key=type==='fill'?'fill-opacity':type==='line'?'line-opacity':null;if(key)setPaint(c,id,key,look.base.opacity===1?(paint?.[key]??1):['*',paint?.[key]??1,look.base.opacity]);}
+   setLayout(c,'base-political','visibility',look.base.visible&&look.base.political?'visible':'none');

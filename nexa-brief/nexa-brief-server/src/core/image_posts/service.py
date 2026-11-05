@@ -763,6 +763,10 @@ class ImagePostService:
                 "default_format": DEFAULT_IMAGE_FORMAT,
                 "formats": [profile.to_dict() for profile in IMAGE_FORMAT_PROFILES.values()]}
 
+    async def verified_capabilities(self, category_id: str, record: PublicationRecord | None = None) -> dict[str, Any]:
+        # Image publishing does not create comments or require comment permissions.
+        return self.capabilities(category_id)
+
     async def save_plan(self, plan: EngineImagePlan | dict[str, Any], expected_revision: int | None = None) -> PublicationRecord:
         plan = _parse_plan(plan)
         style = self._style(plan.category_id, plan.style_id)
@@ -1179,11 +1183,11 @@ class ImagePostService:
         music = record.technical.music
         if music.mode == "convert_to_reel":
             raise ImagePostError("MUSIC_COMING_SOON", "La música estará disponible próximamente", 409)
-        from .artwork import latest_post_revision, validate_target_format
+        from .artwork import latest_post_revision, target_artwork
         if latest_post_revision(self, record).publication_id != record.publication_id:
             raise ImagePostError("REVISION_CONFLICT", "Hay una revisión más reciente del post", 409)
         for target in targets:
-            validate_target_format(record, target["platform"])
+            target_artwork(self, record, target["platform"], target.get("format"))
         for target in targets:
             platform, alias = target["platform"], target["account_alias"]
             mapping = self.account_mapping.resolve_account(record.editorial.category_id, platform, alias)
@@ -1228,14 +1232,17 @@ class ImagePostService:
             destination = "facebook" if platform == "facebook" else "instagram"
             copy_model = getattr(record.editorial.copy_data, destination)
             copy = copy_model.model_dump(mode="json")
-            comment = copy.get("first_comment")
-            comment_status = "pending" if comment and mapping.get("can_comment") else "skipped_permission" if comment else "not_requested"
+            # Ignore legacy generated comments as well as new records: only send the post.
+            comment = None
+            comment_status = "not_requested"
             new_deliveries.append(Delivery(
                 delivery_id=_id("del"), revision=revision, platform=platform, account_alias=alias,
                 target_id=str(live.get("target_id") or alias), placement=expected_placement, scheduled_at=scheduled,
                 timezone=target.get("timezone", "UTC"), slot_id=target.get("slot_id"), idempotency_key=idem_key,
                 status=DeliveryStatus.QUEUED, caption=copy.get("caption", ""), hashtags=record.editorial.hashtags,
                 first_comment=comment, comment_status=comment_status,
+                format=target.get("format") or record.technical.composition_plan.format,
+                slides=target_artwork(self, record, platform, target.get("format")),
                 alt_text_sent=[slide.alt_text_fb if platform == "facebook" else slide.alt_text_ig for slide in record.editorial.slides],
                 created_at=now, updated_at=now,
             ))
@@ -1300,7 +1307,9 @@ class ImagePostService:
         if any(delivery.status == DeliveryStatus.PUBLISHING for delivery in record.deliveries):
             raise ImagePostError("PURGE_IN_PROGRESS", "Hay una entrega publicándose", 409)
 
-        assets = [*record.technical.slides]
+        assets = [*record.technical.slides,
+                  *(slide for artwork in record.technical.format_exports.values() for slide in artwork.slides),
+                  *(slide for delivery in record.deliveries for slide in delivery.slides)]
         if record.technical.reel:
             assets.append(record.technical.reel)
         media = {asset.storage_key: asset.sha256 for asset in assets}
@@ -1428,13 +1437,13 @@ class ImagePostService:
             publication_id=record.publication_id, delivery_id=delivery.delivery_id,
             revision=delivery.revision, platform=delivery.platform, account_alias=delivery.account_alias,
             target_id=delivery.target_id, placement=delivery.placement, idempotency_key=delivery.idempotency_key,
-            caption=delivery.caption, hashtags=delivery.hashtags, first_comment=delivery.first_comment,
+            caption=delivery.caption, hashtags=delivery.hashtags, first_comment=None,
             media_keys=([record.technical.reel.storage_key] if delivery.placement == "reel" and record.technical.reel else
-                        [slide.storage_key for slide in record.technical.slides]),
+                        [slide.storage_key for slide in (delivery.slides or record.technical.slides)]),
             media_sha256=([record.technical.reel.sha256] if delivery.placement == "reel" and record.technical.reel and record.technical.reel.sha256 else
-                          [slide.sha256 for slide in record.technical.slides]),
+                          [slide.sha256 for slide in (delivery.slides or record.technical.slides)]),
             alt_text=[text or "" for text in delivery.alt_text_sent],
-            comment_allowed=delivery.comment_status == "pending",
+            comment_allowed=False,
             expected_at=delivery.scheduled_at or delivery.created_at,
             expected_duration_sec=(
                 record.technical.reel.duration_sec
@@ -1662,12 +1671,12 @@ class ImagePostService:
             media_keys=(
                 [record.technical.reel.storage_key]
                 if delivery.placement == "reel" and record.technical.reel
-                else [slide.storage_key for slide in record.technical.slides]
+                else [slide.storage_key for slide in (delivery.slides or record.technical.slides)]
             ),
             media_sha256=(
                 [record.technical.reel.sha256]
                 if delivery.placement == "reel" and record.technical.reel and record.technical.reel.sha256
-                else [slide.sha256 for slide in record.technical.slides]
+                else [slide.sha256 for slide in (delivery.slides or record.technical.slides)]
             ),
             alt_text=[text or "" for text in delivery.alt_text_sent],
             comment_allowed=False,
@@ -1905,15 +1914,6 @@ class ImagePostService:
         from src.core.image_posts.image_licensing import accepted_license
         if any(not accepted_license(item.license_id) or not item.author or not item.url for item in media):
             raise ImagePostError("UNLICENSED_MEDIA", status_code=422)
-        captions = (
-            editorial.copy_data.facebook.caption,
-            editorial.copy_data.instagram.caption,
-        )
-        if any(
-            any(part not in caption for part in (item.author, item.license_id, item.url))
-            for item in media for caption in captions
-        ):
-            raise ImagePostError("UNLICENSED_MEDIA", "Falta el crédito de la foto en un caption", 422)
         for slide in record.technical.composition_plan.slides:
             visible_credits = [text.value for text in slide.texts if text.role == "credit"]
             for item in slide.media:
@@ -1922,13 +1922,6 @@ class ImagePostService:
                 if requires_attribution and (not item.license_url or not item.changes):
                     raise ImagePostError(
                         "UNLICENSED_MEDIA", "Falta el enlace de licencia o la declaración de cambios CC BY", 422
-                    )
-                if requires_attribution and any(
-                    part not in caption for part in (item.license_url or "", item.changes or "")
-                    for caption in captions
-                ):
-                    raise ImagePostError(
-                        "UNLICENSED_MEDIA", "Cada caption debe incluir URL de licencia y cambios de la foto", 422
                     )
                 if requires_attribution:
                     required = ((item.author, item.license_id) if slide.layout.startswith("amarillista:") else

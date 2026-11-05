@@ -1,0 +1,95 @@
+{
+  "name": "arrow.bolt",
+  "family": "arrow",
+  "description": "Rayo angular determinista entre dos puntos con núcleo brillante y pulso. Úsala para dirigir la atención o representar un desplazamiento.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 15,
+  "states": [],
+  "params": {
+    "via": {
+      "type": "array",
+      "default": [
+        [
+          49,
+          28
+        ],
+        [
+          56.3,
+          26.5
+        ],
+        [
+          59,
+          24
+        ]
+      ],
+      "range": null,
+      "description": "Waypoints de la trayectoria en orden."
+    },
+    "width": {
+      "type": "number",
+      "default": 4,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Duración del revelado progresivo en segundos."
+    },
+    "teeth": {
+      "type": "number",
+      "default": 8,
+      "range": null,
+      "description": "Cantidad de quiebres del rayo."
+    },
+    "amplitude": {
+      "type": "number",
+      "default": 24,
+      "range": null,
+      "description": "Amplitud de la oscilación o del rayo."
+    },
+    "seed": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Semilla para que las partículas y variaciones sean reproducibles."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-arrow-bolt",
+    "t": 0,
+    "via": [
+      [
+        48,
+        32
+      ],
+      [
+        58,
+        25
+      ]
+    ],
+    "dur": 6,
+    "out": 5.5,
+    "type": "arrow.bolt",
+    "color": "accent"
+  },
+  "usedBy": [
+    "work/tactico/items-routes.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/arrow.bolt.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

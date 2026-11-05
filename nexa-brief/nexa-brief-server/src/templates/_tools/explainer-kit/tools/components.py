@@ -120,7 +120,7 @@ async def inspect(video: pathlib.Path, files: list[pathlib.Path], names: dict[st
     from playwright.async_api import async_playwright
     srv = shoot.serve(shoot.SANDBOX)
     base = f"http://127.0.0.1:{srv.server_port}/{KIT.relative_to(shoot.SANDBOX).as_posix()}/showcase/stage.html?"
-    catalog, shots = [], []
+    catalog, shots, previews = [], [], {}
     problems: dict[str, dict[str, list]] = {n: {"errors": [], "warnings": [], "metrics": {}} for n in names}
     async with async_playwright() as p:
         browser = await p.chromium.launch(executable_path=shoot.CHROMIUM)
@@ -157,14 +157,27 @@ async def inspect(video: pathlib.Path, files: list[pathlib.Path], names: dict[st
                 await page.evaluate("window.__promo.seek(3.0)")
                 again = Image.open(io.BytesIO(await page.screenshot(type="png"))).convert("RGB")
                 drift = sum(ImageStat.Stat(ImageChops.difference(frames[3.0], again)).mean) / 3
+                qa_console = list(console)
+                # La galería usa un fotograma aislado: no dibuja ni carga el mapa base.
+                # Es una captura adicional, no altera las mediciones del control de calidad.
+                if design == "imperio":
+                    try:
+                        relative_video = video.relative_to(shoot.SANDBOX).as_posix()
+                        preview_query = {**q, "gallery": "1", "isolated": "1", "video": relative_video}
+                        await page.goto(base + urllib.parse.urlencode(preview_query), wait_until="domcontentloaded", timeout=120000)
+                        await page.wait_for_function("window.__promo && window.__imperioShowcase", timeout=60000)
+                        await page.evaluate("window.__promo.seek(3.0)")
+                        previews[(name, orient)] = await page.screenshot(type="jpeg", quality=85)
+                    except Exception as exc:  # la falta de miniatura no cambia el resultado del componente
+                        problems[name]["warnings"].append(f"{orient}: no se pudo generar el fotograma aislado: {type(exc).__name__}")
                 await page.close()
                 m = problems[name]["metrics"]
                 cov = {t: round(coverage(im), 4) for t, im in frames.items()}
                 peak = max(cov.values()) or 1e-9
                 m[orient] = {"coverage": cov, "drift": round(drift, 3), "width": round(width_fraction(frames[3.0]), 3),
                              "height": round(height_fraction(frames[3.0]), 3)}
-                if console:
-                    problems[name]["errors"] += [f"{orient}: {c[:300]}" for c in dict.fromkeys(console) if "favicon" not in c and "config.json" not in c]
+                if qa_console:
+                    problems[name]["errors"] += [f"{orient}: {c[:300]}" for c in dict.fromkeys(qa_console) if "favicon" not in c and "config.json" not in c]
                 if drift > 1.0:
                     problems[name]["errors"].append(f"{orient}: no es determinista (seek(3) cambia según desde dónde se llega: diferencia {drift:.2f})")
                 first = VISIBLE_AT.get(family, 0.3)
@@ -182,7 +195,7 @@ async def inspect(video: pathlib.Path, files: list[pathlib.Path], names: dict[st
                     problems[name]["errors"].append(f"{orient}: casi no dibuja nada (cobertura máxima {peak:.2%})")
         await browser.close()
     srv.shutdown()
-    return catalog, shots, problems
+    return catalog, shots, problems, previews
 
 
 RUBRIC = """
@@ -233,7 +246,7 @@ def main() -> int:
             names[n] = f
             static[n] = (list(errs), list(warns))
     blocked = {n for n, (e, _) in static.items() if any("sintaxis" in x for x in e)}
-    catalog, shots, problems = asyncio.run(inspect(video, files, {n: f for n, f in names.items() if n not in blocked}, family))
+    catalog, shots, problems, previews = asyncio.run(inspect(video, files, {n: f for n, f in names.items() if n not in blocked}, family))
     for n in blocked:
         problems[n] = {"errors": [], "warnings": [], "metrics": {}}
 
@@ -273,6 +286,17 @@ def main() -> int:
     previous = json.loads(local_catalog.read_text())["comps"] if local_catalog.exists() else []
     keep = {c["name"]: c for c in previous if c["name"] not in names and any(c["name"] in f.read_text() for f in files)}
     keep.update({c["name"]: c for c in catalog if c["name"] in valid})
+    # Guardar solo miniaturas correspondientes a la revisión actual y a componentes válidos.
+    preview_dir = comp_dir / "previews"
+    for n in names:
+        for orient in shoot.ORIENT:
+            target = preview_dir / f"{n.replace('.', '-')}-{orient}.jpg"
+            image = previews.get((n, orient)) if n in valid else None
+            if image:
+                preview_dir.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(image)
+            elif target.exists():
+                target.unlink()
     local_catalog.write_text(json.dumps({"comps": sorted(keep.values(), key=lambda c: c["name"])}, ensure_ascii=False, indent=1) + "\n")
     cfg_path = video / "assets" / "config.json"
     raw = json.loads(cfg_path.read_text())
@@ -280,6 +304,10 @@ def main() -> int:
     # el motor carga los archivos que tienen al menos un componente válido
     cfg["components"] = sorted(str(f.relative_to(video)) for f in files if any(k in f.read_text() for k in keep))
     cfg_path.write_text(json.dumps(raw, ensure_ascii=False, indent=2) + "\n")
+
+    # Un video validado se incorpora a la biblioteca sin editar el showcase.
+    import component_library
+    component_library.refresh(video)
 
     review = out / "review.md"
     if not review.exists():

@@ -41,7 +41,7 @@ def check(config, beats, catalog, total, policy, errors, warnings, default_clip_
                 errors.append(f"beat #{beat['i']}: foto visible {duration:.1f}s; intervalo permitido {policy['photo_error_min']}–{policy['photo_error_max']}s")
             elif duration < policy["photo_target_min"] or duration > policy["photo_target_max"]:
                 warnings.append(f"beat #{beat['i']}: foto visible {duration:.1f}s; preferido {policy['photo_target_min']}–{policy['photo_target_max']}s")
-        if beat["use"] in ("rough.introv2", "binary.introv2"):
+        if beat["use"].endswith(".introv2") or beat["use"] == "common.tabloid":
             kind = "miniatura"
         elif beat["use"] == "common.clip" and has_caption and (params.get("layout") or "auto") == "full":
             kind = "video completo"

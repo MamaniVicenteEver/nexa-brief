@@ -25,6 +25,8 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "drafts": ("studio/drafts.json", "draft_id"),
     "media_plans": ("studio/media_plans.json", "plan_id"),
     # Explainer (NodeTech/History/Politics/Economy): producciones con agente local
+    "explainer_runtime": ("explainer/runtime.json", "id"),
+    "explainer_batches": ("explainer/batches.json", "batch_id"),
     "explainer_productions": ("explainer/productions.json", "production_id"),
     # Fábrica: ejecuciones del agente líder para prototipos del sandbox
     "prototype_runs": ("prototypes/runs.json", "run_id"),

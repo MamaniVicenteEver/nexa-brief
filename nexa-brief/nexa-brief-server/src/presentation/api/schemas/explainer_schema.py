@@ -82,6 +82,7 @@ class ExplainerVideoResponse(BaseModel):
     category_id: str
     category_name: str
     category_path: str
+    category_paths: list[str] = Field(default_factory=list)
     title: str
     topic: str = ""
     status: str
@@ -130,6 +131,7 @@ class SandboxItemResponse(BaseModel):
     has_index: bool
     has_poster: bool
     has_info: bool = False
+    has_components: bool = False
     total_tokens: int | None = None
     thumbnail_url: str | None = None
     player: Literal["protocol", "video", "none"] = "none"
@@ -138,6 +140,22 @@ class SandboxItemResponse(BaseModel):
     updated_at: str | None = None
     promotable: bool = False
     promote_blocker: str | None = None
+
+
+class SandboxComponentsResponse(BaseModel):
+    id: str
+    folder: str
+    subcategory: str | None = None
+    path: str
+    title: str
+    status: str | None = None
+    summary: str | None = None
+    design: str | None = None
+    has_index: bool
+    updated_at: str | None = None
+    thumbnail_url: str | None = None
+    components: list[dict] = Field(default_factory=list)
+    has_components: bool = False
 
 
 class SandboxPromotionResponse(BaseModel):
@@ -178,6 +196,7 @@ class SandboxForecastResponse(BaseModel):
 
 
 class SandboxInfoResponse(BaseModel):
+    components: list[dict] = Field(default_factory=list)
     info: dict | None = None
     totals_by_model: list[SandboxModelUsageResponse] = Field(default_factory=list)
     fresh_input_tokens: int = 0

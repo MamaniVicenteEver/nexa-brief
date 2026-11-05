@@ -1,0 +1,80 @@
+import sys
+sys.dont_write_bytecode=True
+import functools,importlib.util,json,socketserver,threading,os
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+os.sched_setaffinity(0,sorted(os.sched_getaffinity(0))[:2])
+project=Path.cwd();atlas=project.parent/'_atlas';templates=project.parents[2]
+spec=importlib.util.spec_from_file_location('smoke',atlas/'test/smoke.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+class Handler(m.Handler):
+ def log_message(self,*args):pass
+class Server(socketserver.ThreadingTCPServer):daemon_threads=True
+server=Server(('127.0.0.1',0),functools.partial(Handler,directory=str(templates)));threading.Thread(target=server.serve_forever,daemon=True).start()
+try:
+ with sync_playwright() as p:
+  browser=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist'])
+  try:
+   page=browser.new_page(viewport={'width':1080,'height':1920});page.set_default_timeout(180000);errors=[]
+   page.route('**/*',lambda route:route.continue_() if route.request.url.startswith(('http://127.0.0.1:', 'data:')) else route.abort())
+   page.on('pageerror',lambda e:errors.append(str(e)))
+   page.on('console',lambda e:errors.append(e.text) if e.type=='error' else None)
+   page.goto(f'http://127.0.0.1:{server.server_address[1]}/sandbox/nodehistory/atlas-en-movimiento/work/bench/index.new.html?base=plano&controls=1&t=0')
+   page.wait_for_function('window.__promo && window.__nexaProtoControl');page.evaluate('__atlas.ready')
+   result=page.evaluate('''async()=>{
+     const c=__benchContext, config=c.blurConfig, camera=c.camera;
+     async function pixels(t){await __promo.seek(t);return c.g.getImageData(0,0,c.st.W,c.st.H).data;}
+     function difference(a,b){let sum=0,max=0,changed=0;for(let i=0;i<a.length;i++){const d=Math.abs(a[i]-b[i]);sum+=d;max=Math.max(max,d);if(d)changed++;}return {meanRGBA:sum/a.length,max,changed};}
+     const traces=[];
+     c.tactico={key:t=>t,draw(g,view,t,info){
+       const m=g.getTransform();traces.push({t,info,m:[m.a,m.b,m.c,m.d,m.e,m.f]});
+       const p=view.project(54+t*.1,27);g.fillStyle='#ff0000';g.fillRect(p.x-5,p.y-5,10,10);
+     }};
+     c.blurConfig={...config,mode:'exact'};await pixels(19);const exactTrace=traces.splice(0);
+     c.blurConfig={...config,mode:'affine'};await pixels(19);const affineTrace=traces.splice(0);
+     if(JSON.stringify(exactTrace)!==JSON.stringify(affineTrace))throw Error('tactico no recibió las mismas muestras');
+     if(affineTrace.length!==4||affineTrace.some(x=>JSON.stringify(x.m)!=='[1,0,0,1,0,0]'))throw Error('transformación filtrada a tactico');
+     c.camera={at:()=>camera.at(0)};
+     const itemA=await pixels(.1),itemB=await pixels(.2),itemAgain=await pixels(.1);
+     const itemDifference=difference(itemA,itemB),itemRepeat=difference(itemA,itemAgain);
+     if(!itemDifference.changed||itemRepeat.changed)throw Error('key(t) no invalida el reposo o el seek no es puro');
+     c.camera=camera;c.tactico=null;
+     const layer=c.highlights[0],oldStart=layer.t;layer.t=18.9;
+     c.blurConfig={...config,mode:'affine'};const fadeAffine=await pixels(19),fallbackMode=c.lastMode;
+     c.blurConfig={...config,mode:'exact'};const fadeExact=await pixels(19);layer.t=oldStart;
+     const fadeDifference=difference(fadeExact,fadeAffine);
+     if(fallbackMode!=='exact'||fadeDifference.changed)throw Error('el fade no volvió al modo exacto');
+     c.camera={at:t=>camera.at(t<18.99?8:19)};
+     c.blurConfig={...config,mode:'affine'};const cutAffine=await pixels(19),cutMode=c.lastMode;
+     c.blurConfig={...config,mode:'exact'};const cutExact=await pixels(19);
+     const cutDifference=difference(cutExact,cutAffine);
+     if(cutMode!=='exact'||cutDifference.changed)throw Error('un salto extremo no volvió al modo exacto');
+     c.camera=camera;c.blurConfig=config;
+     const quiet=await pixels(0),moving=await pixels(19);c.blurConfig={enabled:false};
+     const quietOff=await pixels(0),movingOff=await pixels(19);
+     const boundaries=[];
+     for(const zoom of [3,4,5,6]){
+       const pose={lon:51,lat:27,zoom:zoom-1e-6,pitch:0,bearing:25};
+       c.camera={at:()=>pose};c.tiles.plan(__atlas.view(10));pose.zoom=zoom+1e-6;c.tiles.plan(__atlas.view(10));await c.tiles.preload();
+       pose.zoom=zoom-1e-6;const a=await pixels(10);pose.zoom=zoom+1e-6;const b=await pixels(10);
+       boundaries.push({zoom,...difference(a,b)});
+     }
+     c.camera=camera;c.blurConfig=config;
+     await __promo.seek(8);
+     const before=__atlas.stats().loads;await __promo.seek(19);await __promo.seek(0);
+     return {tactico:{exactTrace,affineTrace,itemDifference,itemRepeat},fadeFallback:{mode:fallbackMode,difference:fadeDifference},cutFallback:{mode:cutMode,difference:cutDifference},quietBlurDifference:difference(quiet,quietOff),movingBlurDifference:difference(moving,movingOff),boundaries,loadsDuringSeeks:__atlas.stats().loads-before,controls:!!window.NexaPlayerBridge,stats:__atlas.stats()};
+   }''')
+   page.reload();page.wait_for_function('window.__promo && window.__nexaProtoControl');page.evaluate('__atlas.ready')
+   page.set_viewport_size({'width':1920,'height':1080});page.evaluate('__promo.seek(19)')
+   result['landscape']=page.evaluate('({W:__benchContext.st.W,H:__benchContext.st.H,stats:__atlas.stats()})')
+   page.locator('#stage canvas').screenshot(path=str(project/'work/bench/results/plano-v2-landscape.png'))
+   result['errors']=errors
+   result['ok']=(not errors and result['controls'] and result['loadsDuringSeeks']==0
+     and result['quietBlurDifference']['changed']==0 and result['movingBlurDifference']['changed']>0
+     and all(x['meanRGBA']<.02 for x in result['boundaries'])
+     and result['landscape']['W']==1920 and result['landscape']['H']==1080)
+
+   (project/'work/bench/results/qa-v2.json').write_text(json.dumps(result,indent=2)+'\n')
+   print(json.dumps(result,indent=2),flush=True)
+   if not result['ok']:raise AssertionError('QA incompleta: ver qa-v2.json')
+  finally:browser.close()
+finally:server.shutdown();server.server_close()

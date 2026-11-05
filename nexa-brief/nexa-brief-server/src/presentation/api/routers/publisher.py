@@ -58,6 +58,7 @@ from src.adapters.publishing.instagram_media_url import (
     signed_media_mime,
 )
 from src.adapters.publishing.token_storage import TokenStorage
+from src.adapters.publishing.tiktok_business_client import TikTokBusinessClient, TikTokBusinessError
 from src.adapters.publishing.credential_factory import build_credential_store
 from src.adapters.publishing.tiktok_service import pairing as tiktok_pairing
 from src.adapters.publishing.tiktok_service.client import TikTokServiceClient, TikTokServiceError
@@ -265,23 +266,6 @@ async def manual_publish(request: ManualPublishRequest) -> PublishResponse:
 
 # ── GET /publish/accounts — List all configured accounts ─────────────────────
 
-async def _register_service_accounts() -> None:
-    facade = _get_facade()
-    try:
-        accounts = await TikTokServiceClient().request("GET", "/v1/accounts")
-    except PublisherError:
-        return
-    storage = facade._token_manager._storage
-    existing = {(a["platform"], a["alias"]): a for a in facade.list_accounts()}
-    for account in accounts:
-        alias = account["alias"]
-        previous = existing.get(("tiktok", alias))
-        if previous and previous.get("mode") == "api":
-            continue
-        if not previous or previous.get("mode") == "browser":
-            storage.save_browser_account("tiktok", alias, account.get("identity") or {}, "")
-
-
 @router.get("/accounts", response_model=list[AccountStatusResponse])
 async def list_accounts() -> list[AccountStatusResponse]:
     """List all configured social-media accounts and their token status.
@@ -294,8 +278,7 @@ async def list_accounts() -> list[AccountStatusResponse]:
     facade = _get_facade()
 
     try:
-        await _register_service_accounts()
-        accounts = facade.list_accounts()
+        accounts = [a for a in facade.list_accounts() if not (a["platform"] == "tiktok" and a.get("mode") in {"browser", "service"})]
     except PublisherError as exc:
         raise _map_publisher_error(exc) from exc
 
@@ -488,6 +471,14 @@ async def verify_account_connection(platform: str, alias: str) -> ChannelHealthR
                     await storage.mark_requires_reauth(platform, alias, reason="platform rejected the OAuth token")
                     return _health_response(platform, alias, "requires_reauth", reason)
                 return _health_response(platform, alias, "attention", reason)
+        elif platform == "tiktok" and storage.get_api_provider(platform, alias) == "tiktok_business":
+            try:
+                async with httpx.AsyncClient(timeout=30) as client:
+                    profile = await TikTokBusinessClient(client).get_profile(
+                        access_token=token, business_id=account.get("target_id") or "")
+                await _save_tiktok_business_profile(storage, alias, account.get("target_id") or "", profile)
+            except TikTokBusinessError:
+                return _health_response(platform, alias, "attention", "unavailable")
         else:
             valid, reason = await _check_tiktok_channel(account.get("target_id") or "", token)
             if not valid:
@@ -533,130 +524,6 @@ def _account_response(account: dict) -> AccountStatusResponse:
         synced_at=channel.get("synced_at"),
         can_sync=account.get("mode") == "service" or _get_facade().catalog_for(platform) is not None,
     )
-
-
-@router.get("/browser/tiktok/health", dependencies=[Depends(require_internal)])
-async def tiktok_service_health():
-    client = TikTokServiceClient()
-    try:
-        health = await client.request("GET", "/health")
-        health["review_jobs"] = await client.request("GET", "/v1/jobs")
-        return health
-    except PublisherError:
-        return {"status": "down", "last_backup_at": None, "needs_review": 0, "review_jobs": []}
-
-
-@router.post("/browser/tiktok/pair", dependencies=[Depends(require_internal)])
-async def create_tiktok_browser_pairing(body: TikTokBrowserAliasRequest, request: Request) -> dict[str, str]:
-    try:
-        validate_alias(body.alias)
-        origin = _tiktok_nexa_origin(request)
-        pairing_id, import_url = tiktok_pairing.create_pairing(body.alias, origin)
-    except ValueError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-    except RuntimeError as exc:
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    return {"pairing_id": pairing_id, "import_url": import_url}
-
-
-@router.post("/browser/tiktok/import/{pairing_id}")
-async def import_tiktok_browser_session(pairing_id: str, request: Request, k: str | None = None) -> dict:
-    content_length = request.headers.get("content-length")
-    if content_length:
-        try:
-            if int(content_length) > _TIKTOK_IMPORT_MAX_BYTES:
-                raise HTTPException(status_code=413, detail="La importación supera el límite de 256 KB.")
-        except ValueError:
-            raise HTTPException(status_code=400, detail="Content-Length inválido.") from None
-    raw = bytearray()
-    async for chunk in request.stream():
-        raw.extend(chunk)
-        if len(raw) > _TIKTOK_IMPORT_MAX_BYTES:
-            raise HTTPException(status_code=413, detail="La importación supera el límite de 256 KB.")
-    try:
-        body = TikTokBrowserImportRequest.model_validate_json(bytes(raw))
-    except ValidationError as exc:
-        raise HTTPException(status_code=422, detail="El body debe incluir cookies y expected_username válidos.") from exc
-
-    alias = tiktok_pairing.consume_pairing(pairing_id, k)
-    if alias is None:
-        raise HTTPException(status_code=401, detail="El enlace de importación es inválido, venció o ya fue usado.")
-    try:
-        identity = (await TikTokServiceClient().request("POST", "/v1/sessions/import", json={"alias": alias, "cookies": body.cookies, "expected_username": body.expected_username}))["identity"]
-        _get_facade()._token_manager._storage.save_browser_account("tiktok", alias, identity, "")
-    except Exception as exc:  # noqa: BLE001 - never include cookies in error diagnostics
-        logger.info("tiktok_browser_import_rejected", alias=alias, error_type=type(exc).__name__)
-        raise HTTPException(status_code=422, detail="No se pudo verificar la sesión importada.") from exc
-    return {
-        "status": "ok",
-        "account": {
-            "platform": "tiktok",
-            "alias": alias,
-            "mode": "service",
-            "status": "ok",
-            "username": identity.get("username"),
-            "name": identity.get("nickname"),
-            "avatar": identity.get("avatar_url"),
-        },
-    }
-
-
-@router.post("/browser/tiktok/qr/start", dependencies=[Depends(require_internal)])
-async def start_tiktok_browser_qr(body: TikTokBrowserAliasRequest) -> dict[str, str]:
-    try:
-        validate_alias(body.alias)
-        session_id = (await TikTokServiceClient().request("POST", "/v1/sessions/qr", json={"alias": body.alias}))["session_id"]
-    except ValueError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-    except PublisherError as exc:
-        raise _map_publisher_error(exc) from exc
-    return {"session_id": session_id}
-
-
-@router.get("/browser/sessions/{session_id}", dependencies=[Depends(require_internal)])
-async def get_tiktok_browser_session(session_id: str) -> dict:
-    try:
-        result = await TikTokServiceClient().request("GET", f"/v1/sessions/{session_id}")
-    except PublisherError as exc:
-        raise _map_publisher_error(exc) from exc
-    if result.get("state") == "done":
-        await _register_service_accounts()
-    return result
-
-
-@router.post("/browser/sessions/{session_id}/cancel", dependencies=[Depends(require_internal)])
-async def cancel_tiktok_browser_session(session_id: str) -> dict[str, str]:
-    try:
-        return await TikTokServiceClient().request("POST", f"/v1/sessions/{session_id}/cancel")
-    except PublisherError as exc:
-        raise _map_publisher_error(exc) from exc
-
-
-@router.post("/accounts/tiktok/{alias}/check-session", response_model=AccountStatusResponse,
-             dependencies=[Depends(require_internal)])
-async def check_tiktok_browser_session(alias: str) -> AccountStatusResponse:
-    try:
-        validate_alias(alias)
-    except ValueError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-    facade = _get_facade()
-    account = next(
-        (item for item in facade.list_accounts() if item["platform"] == "tiktok" and item["alias"] == alias),
-        None,
-    )
-    if account is None or account.get("mode") not in {"browser", "service"}:
-        raise HTTPException(status_code=404, detail="No existe una cuenta TikTok conectada por navegador con ese alias.")
-    try:
-        identity = (await TikTokServiceClient().request("POST", f"/v1/accounts/{alias}/check"))["identity"]
-        facade._token_manager._storage.save_browser_account("tiktok", alias, identity, "")
-    except TikTokServiceError as exc:
-        if exc.code != "requires_reauth":
-            raise _map_publisher_error(exc) from exc
-        await facade._token_manager._storage.mark_requires_reauth("tiktok", alias, "service_session_expired")
-    except PublisherError as exc:
-        raise _map_publisher_error(exc) from exc
-    refreshed = next(item for item in facade.list_accounts() if item["platform"] == "tiktok" and item["alias"] == alias)
-    return _account_response(refreshed)
 
 
 # ── POST /publish/accounts/{platform}/{alias}/sync — Sincronizar con la plataforma ──
@@ -902,6 +769,26 @@ async def _update_channels_json(
         _spawn_channel_sync(platform, alias)
 
 
+async def _save_tiktok_business_profile(storage, alias: str, target_id: str, profile: dict) -> None:
+    """Update display metadata only; never replace the connected account's identity."""
+    handle = str(profile.get("username") or "").strip().lstrip("@") or None
+    name = str(profile.get("display_name") or handle or alias).strip()
+    avatar = str(profile.get("profile_image") or "").strip() or None
+    now = time.time()
+    if not storage.update_channel_profile(
+        "tiktok", alias, name=name, target_id=target_id, handle=handle,
+        description="", custom_url=None, avatar=avatar, profile_synced_at=now,
+    ):
+        return
+    await collection("channels").update_where(
+        {"platform": "tiktok", "alias": alias, "target_id": target_id},
+        {"name": name, "handle": handle, "avatar": avatar, "profile_synced_at": now},
+    )
+    await get_event_bus().publish(RealtimeEvent(type="channel_status_changed", data={
+        "platform": "tiktok", "alias": alias, "status": "synced",
+    }))
+
+
 async def _remove_from_channels_json(platform: str, alias: str) -> None:
     await collection("channels").delete_where({"platform": platform, "alias": alias})
 
@@ -917,28 +804,37 @@ async def tiktok_oauth_start(
     Args:
         alias: Internal account identifier to associate with the resulting tokens.
     """
-    client_key = settings.tiktok_client_id
-    if not client_key:
-        raise HTTPException(status_code=500, detail="TIKTOK_CLIENT_ID not configured in .env")
-
-    # All providers use the same canonical public origin from PUBLIC_APP_URL.
-    cb_url = public_url("/api/v1/publish/auth/tiktok/callback")
-
-    params = {
-        "client_key": client_key,
-        "scope": "user.info.basic,video.upload,video.publish",
-        "response_type": "code",
-        "redirect_uri": cb_url,
-        "state": alias,
-    }
-
-    auth_url = f"https://www.tiktok.com/v2/auth/authorize/?{urllib.parse.urlencode(params)}"
-    logger.info("tiktok_oauth_start", alias=alias, redirect_uri=cb_url)
-    return RedirectResponse(url=auth_url)
+    try:
+        validate_alias(alias)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    cb_url = settings.tiktok_business_redirect_uri
+    authorization = settings.tiktok_business_authorization_url
+    signing_key = settings.publisher_encryption_key
+    if not all((settings.tiktok_business_app_id, settings.tiktok_business_secret, cb_url, authorization, signing_key)):
+        raise HTTPException(status_code=503, detail="TikTok Business no está configurado en el servidor.")
+    parsed = urllib.parse.urlsplit(authorization)
+    if parsed.scheme != "https" or parsed.hostname not in {"www.tiktok.com", "tiktok.com", "business-api.tiktok.com", "ads.tiktok.com"}:
+        raise HTTPException(status_code=503, detail="URL de autorización de TikTok Business inválida.")
+    if cb_url != public_url("/api/v1/publish/auth/tiktok/callback"):
+        raise HTTPException(status_code=503, detail="La URL de retorno de TikTok no coincide con la ruta pública de Nexa.")
+    nonce = secrets.token_urlsafe(24)
+    state_payload = f"tiktok:{alias}:{int(time.time()) + 600}:{nonce}"
+    signature = hmac.new(signing_key.encode(), state_payload.encode(), hashlib.sha256).hexdigest()
+    query = [(k, v) for k, v in urllib.parse.parse_qsl(parsed.query, keep_blank_values=True) if k != "state"]
+    query.append(("state", f"{state_payload}:{signature}"))
+    auth_url = urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path, urllib.parse.urlencode(query), parsed.fragment))
+    redirect = RedirectResponse(url=auth_url)
+    redirect.set_cookie("nexa_tiktok_oauth_state", nonce, max_age=600, httponly=True,
+                        secure=cb_url.startswith("https://"), samesite="lax",
+                        path="/api/v1/publish/auth/tiktok/callback")
+    return redirect
 
 
 @router.get("/auth/tiktok/callback", response_class=HTMLResponse, tags=["tiktok"])
 async def tiktok_oauth_callback(
+    request: Request,
+    auth_code: str | None = None,
     code: str | None = None,
     state: str | None = None,
     error: str | None = None,
@@ -949,60 +845,57 @@ async def tiktok_oauth_callback(
         logger.error("tiktok_oauth_denied", error=error, description=error_description)
         return HTMLResponse(_html_error("Autorización cancelada", "TikTok no otorgó el permiso. Si fue un error, vuelve a intentarlo desde Canales.", detail=f"{error}: {error_description or ''}", platform="tiktok"), status_code=400)
 
-    if not code:
+    if auth_code and code and auth_code != code:
+        return HTMLResponse(_html_error("Código de autorización inválido", "Vuelve a iniciar la conexión desde Canales.", platform="tiktok"), status_code=400)
+    auth_code = auth_code or code
+    if not auth_code:
         return HTMLResponse(_html_error("Falta el código de autorización", "TikTok no devolvió el código necesario para completar la conexión.", platform="tiktok"), status_code=400)
 
-    alias = state or "cuenta_1"
-    client_key = settings.tiktok_client_id
-    client_secret = settings.tiktok_client_secret
+    try:
+        state_payload, signature = (state or "").rsplit(":", 1)
+        state_platform, alias, expires_at, nonce = state_payload.split(":", 3)
+        expected = hmac.new(settings.publisher_encryption_key.encode(), state_payload.encode(), hashlib.sha256).hexdigest()
+        validate_alias(alias)
+        if (state_platform != "tiktok" or not settings.publisher_encryption_key
+                or int(expires_at) < int(time.time()) or not hmac.compare_digest(signature, expected)
+                or not hmac.compare_digest(request.cookies.get("nexa_tiktok_oauth_state", ""), nonce)):
+            raise ValueError("Invalid state")
+    except (ValueError, TypeError):
+        return HTMLResponse(_html_error("Conexión inválida", "Inicia de nuevo la conexión desde Canales.", platform="tiktok"), status_code=400)
+    client_key = settings.tiktok_business_app_id
+    client_secret = settings.tiktok_business_secret
 
     if not client_key or not client_secret:
         return HTMLResponse(_html_error("Configuración incompleta", "Faltan las credenciales de la app de TikTok en el servidor.", detail="TIKTOK_CLIENT_ID / TIKTOK_CLIENT_SECRET no configurados en .env", platform="tiktok"), status_code=500)
 
     # Reconstruct the exact redirect_uri sent during oauth start
-    cb_url = public_url("/api/v1/publish/auth/tiktok/callback")
+    cb_url = settings.tiktok_business_redirect_uri
 
     logger.info("tiktok_oauth_exchange", alias=alias, redirect_uri=cb_url)
 
     try:
         async with httpx.AsyncClient(timeout=30) as client:
-            resp = await client.post(
-                "https://open.tiktokapis.com/v2/oauth/token/",
-                headers={"Content-Type": "application/x-www-form-urlencoded"},
-                data={
-                    "client_key": client_key,
-                    "client_secret": client_secret,
-                    "code": code,
-                    "grant_type": "authorization_code",
-                    "redirect_uri": cb_url,
-                }
-            )
+            token_info = await TikTokBusinessClient(client).exchange_code(
+                app_id=client_key, secret=client_secret, auth_code=auth_code, redirect_uri=cb_url)
     except Exception as exc:
         logger.error("tiktok_oauth_network_error", error=str(exc))
         return HTMLResponse(_html_error("Sin conexión con TikTok", "No pudimos comunicarnos con TikTok. Revisa tu conexión e inténtalo de nuevo.", detail=str(exc), platform="tiktok"), status_code=502)
 
-    if resp.status_code != 200:
-        logger.error("tiktok_oauth_exchange_failed", status=resp.status_code, body=resp.text)
-        return HTMLResponse(_html_error("TikTok rechazó la conexión", "El intercambio del código de autorización falló.", detail=f"HTTP {resp.status_code}\n{resp.text[:400]}", platform="tiktok"), status_code=502)
-
-    data = resp.json()
-    error_code = data.get("error") or data.get("data", {}).get("error_code")
-    if error_code:
-        logger.error("tiktok_oauth_error_response", response=data)
-        return HTMLResponse(_html_error("TikTok devolvió un error", "La respuesta de TikTok no permitió completar la conexión.", detail=str(data), platform="tiktok"), status_code=400)
-
-    token_info = data.get("data", {})
-    if not token_info:
-        token_info = data
-
     access_token = token_info.get("access_token")
     refresh_token = token_info.get("refresh_token")
     expires_in = token_info.get("expires_in", 86400)
-    refresh_expires_in = token_info.get("refresh_expires_in", 31536000)
+    refresh_expires_in = token_info.get("refresh_token_expires_in") or token_info.get("refresh_expires_in")
     open_id = token_info.get("open_id")
 
-    if not access_token:
+    if not access_token or not refresh_token or not open_id:
         return HTMLResponse(_html_error("Token no recibido", "TikTok no devolvió un token de acceso.", platform="tiktok"), status_code=502)
+
+    profile = None
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            profile = await TikTokBusinessClient(client).get_profile(access_token=access_token, business_id=open_id)
+    except TikTokBusinessError as exc:
+        logger.warning("tiktok_business_profile_unavailable", error_type=type(exc).__name__)
 
     try:
         encryption_key = settings.publisher_encryption_key
@@ -1019,6 +912,8 @@ async def tiktok_oauth_callback(
             refresh_token=refresh_token,
             expires_in=expires_in,
             refresh_expires_in=refresh_expires_in,
+            api_provider="tiktok_business",
+            target_id=open_id,
         )
 
         storage._data.setdefault("tiktok", {}).setdefault(alias, {}).update({
@@ -1029,6 +924,8 @@ async def tiktok_oauth_callback(
         storage._save()
 
         await _update_channels_json("tiktok", alias, alias, open_id or alias, avatar="")
+        if profile:
+            await _save_tiktok_business_profile(storage, alias, open_id, profile)
     except Exception as exc:
         logger.error("tiktok_oauth_save_failed", error=str(exc))
         return HTMLResponse(_html_error("No se pudo guardar la cuenta", "La autorización fue correcta, pero el servidor no pudo guardar los tokens.", detail=str(exc)), status_code=500)

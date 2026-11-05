@@ -15,7 +15,7 @@ Se corre al conectar una cuenta, con el botón «Sincronizar» y una vez al día
 from __future__ import annotations
 
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 
 import structlog
 
@@ -79,6 +79,9 @@ async def sync_channel(platform: str, alias: str, catalog: ChannelCatalogPort) -
     """Sincroniza una cuenta. Los errores de la plataforma (PublisherError) suben tal cual."""
     remote = await catalog.list_channel_videos(alias)
     stats = await catalog.get_channel_stats(alias)
+    if (platform == "tiktok" and remote and stats.video_count == len(remote)
+            and all(video.views is not None for video in remote)):
+        stats = replace(stats, views=sum(video.views for video in remote if video.views is not None))
     now = time.time()
 
     local = publish_log.list_published_videos(platform, alias)

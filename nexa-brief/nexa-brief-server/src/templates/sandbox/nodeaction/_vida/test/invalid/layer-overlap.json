@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "id": "prueba-corta",
+  "title": "Los apuntes",
+  "language": "es-419",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "resources": {
+    "timing": "../../../vida-en-escena/assets/timing.json",
+    "audioBase": "../../../vida-en-escena/assets/"
+  },
+  "cast": {
+    "tomas": "tomas",
+    "nico": "nico"
+  },
+  "ui": {
+    "subtitles": {
+      "y": 1405,
+      "size": 78
+    },
+    "title": {
+      "text": "UN AMIGO A TIEMPO",
+      "dur": 1.2
+    }
+  },
+  "scenes": [
+    {
+      "id": "entrada",
+      "set": "escuela-entrada",
+      "actors": {
+        "nico": {
+          "at": "meet",
+          "view": "3q-left",
+          "face": "smile"
+        },
+        "tomas": {
+          "at": "enter-left",
+          "view": "3q-right"
+        }
+      },
+      "objects": {
+        "cuaderno": {
+          "prop": "notebook",
+          "owner": {
+            "actor": "nico",
+            "hand": "left"
+          }
+        },
+        "mochila": {
+          "prop": "backpack",
+          "owner": {
+            "actor": "tomas",
+            "slot": "back"
+          }
+        }
+      },
+      "steps": [
+        {
+          "do": {
+            "who": "tomas",
+            "action": "walk",
+            "to": "arrive",
+            "speed": 1.6,
+            "dur": 1.35,
+            "view": "3q-right"
+          }
+        },
+        {
+          "say": "L01",
+          "intent": "exclaim",
+          "face": "smirk",
+          "trim": {
+            "out": 3.6
+          }
+        },
+        {
+          "say": "L02",
+          "intent": "ask",
+          "face": "shy",
+          "trim": {
+            "out": 3.35
+          }
+        },
+        {
+          "say": "L05",
+          "intent": "explain",
+          "face": "smile",
+          "trim": {
+            "out": 3.4
+          }
+        },
+        {
+          "say": "L06",
+          "intent": "explain",
+          "face": "smile",
+          "trim": {
+            "out": 2.8
+          }
+        }
+      ],
+      "actions": [
+        {
+          "who": "tomas",
+          "action": "stop",
+          "at": 1.35,
+          "dur": 0.55,
+          "breath": 1
+        },
+        {
+          "who": "nico",
+          "action": "point",
+          "hand": "right",
+          "to": "tomas",
+          "at": "@L01.despeinado-0.25",
+          "dur": 1,
+          "fade": 0.32
+        },
+        {
+          "who": "tomas",
+          "action": "react",
+          "kind": "shy",
+          "intensity": 0.85,
+          "at": "@L01.despeinado",
+          "dur": 1.15
+        },
+        {
+          "who": "tomas",
+          "action": "touch-head",
+          "hand": "right",
+          "at": "@L01.despeinado+0.15",
+          "dur": 1.05,
+          "fade": 0.32
+        },
+        {
+          "who": "nico",
+          "action": "listen",
+          "to": "tomas",
+          "line": "L02",
+          "reactions": [
+            {
+              "word": "dormido",
+              "kind": "surprise"
+            }
+          ],
+          "at": "@L02",
+          "dur": 3.35
+        },
+        {
+          "who": "nico",
+          "action": "react",
+          "kind": "laugh",
+          "intensity": 0.7,
+          "at": "@L05.Tranquilo",
+          "dur": 0.95
+        },
+        {
+          "who": "nico",
+          "action": "give",
+          "object": "cuaderno",
+          "hand": "left",
+          "to": "tomas",
+          "recipientHand": "right",
+          "at": "@L05.apuntes-0.55",
+          "dur": 1.1
+        },
+        {
+          "who": "tomas",
+          "action": "react",
+          "kind": "relief",
+          "intensity": 0.75,
+          "at": "@L06",
+          "dur": 1.3
+        },
+        {
+          "who": "tomas",
+          "action": "hold",
+          "object": "cuaderno",
+          "hand": "right",
+          "hug": true,
+          "at": "@L06+0.25",
+          "dur": 2.5
+        },
+        {
+          "who": "nico",
+          "action": "look",
+          "to": "tomas",
+          "at": "@L06",
+          "dur": 2.8
+        },
+        {
+          "who": "tomas",
+          "action": "wave",
+          "at": 0.2,
+          "dur": 1,
+          "hand": "right"
+        },
+        {
+          "who": "tomas",
+          "action": "touch-head",
+          "at": 0.3,
+          "dur": 0.6,
+          "hand": "right"
+        }
+      ],
+      "camera": [
+        {
+          "at": 0,
+          "dur": 1.35,
+          "type": "wide",
+          "target": "tomas",
+          "move": "follow"
+        },
+        {
+          "at": "@L01",
+          "until": "@L05.apuntes-0.55",
+          "type": "two",
+          "targets": [
+            "tomas",
+            "nico"
+          ],
+          "move": "fixed"
+        },
+        {
+          "at": "@L05.apuntes-0.55",
+          "dur": 1.1,
+          "type": "insert",
+          "target": "cuaderno",
+          "move": "follow"
+        },
+        {
+          "at": "@L05.apuntes+0.55",
+          "until": "@L06:end",
+          "type": "two",
+          "targets": [
+            "tomas",
+            "nico"
+          ],
+          "move": "fixed"
+        }
+      ]
+    }
+  ]
+}

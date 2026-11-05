@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.word",
+  "description": "Título condensado BLANCO (Fjalla One) sobre el plano en curso: cada renglón SUBE desde abajo con degradé de opacidad (arriba aparece primero) y desenfoque, y después el título se ACHICA lento y exponencial (rápido al principio) mientras el mapa sigue moviéndose (ref 10–27 s: 'JAPANESE EMPIRE'). Usalo como overlay sobre imperio.archive / imperio.map para el nombre del imperio, la doctrina o el tema del bloque.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Texto ('\\n' parte renglones). Mayúsculas automáticas.",
+      "default": null
+    },
+    "textPortrait": {
+      "type": "string",
+      "description": "Versión para 9:16.",
+      "default": ""
+    },
+    "at": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo en que sube (acepta '@palabra'). −1 = ya está (continúa el título de imperio.title sin volver a entrar).",
+      "default": 0.2
+    },
+    "shrinkAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo en que empieza a achicarse (−1 = nunca).",
+      "default": 2.8
+    },
+    "shrinkTo": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 1,
+      "description": "Escala final a la que tiende.",
+      "default": 0.18
+    },
+    "tau": {
+      "type": "number",
+      "minimum": 0.3,
+      "description": "Constante de tiempo del achique (s): más chico = más rápido.",
+      "default": 2.8
+    },
+    "y": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 0.9,
+      "description": "Centro vertical (fracción del alto) en 16:9.",
+      "default": 0.68
+    },
+    "size": {
+      "type": "number",
+      "minimum": 0.2,
+      "maximum": 0.95,
+      "description": "Ancho del renglón más largo (fracción del ancho) en 16:9; en 9:16 se usa 0.86.",
+      "default": 0.62
+    },
+    "rise": {
+      "type": "number",
+      "minimum": -0.3,
+      "maximum": 0.3,
+      "description": "Mientras se achica sube hacia el centro (fracción del alto).",
+      "default": 0.06
+    },
+    "tilt": {
+      "type": "number",
+      "minimum": -15,
+      "maximum": 15,
+      "description": "Giro inicial en grados.",
+      "default": 0
+    },
+    "spin": {
+      "type": "number",
+      "minimum": -3,
+      "maximum": 3,
+      "description": "Grados por segundo que gira (acompaña al mapa).",
+      "default": 0.25
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "$defs": {},
+  "examples": [
+    {
+      "text": "JAPANESE\nEMPIRE",
+      "at": 0.2,
+      "shrinkAt": 2.8,
+      "shrinkTo": 0.18,
+      "tau": 2.8
+    }
+  ],
+  "x-layer": "overlay",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

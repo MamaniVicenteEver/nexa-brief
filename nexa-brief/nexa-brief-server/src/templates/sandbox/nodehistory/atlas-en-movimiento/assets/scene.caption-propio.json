@@ -1,0 +1,3677 @@
+{
+  "format": "atlas-v1",
+  "title": "La guerra de los petroleros",
+  "duration": 262.84,
+  "end": 262.84,
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "lang": "es",
+  "lyricsUrl": "lyrics.json",
+  "intro": false,
+  "outro": false,
+  "captions": {
+    "enabled": true,
+    "maxWords": 3,
+    "size": 45,
+    "y": 0.9,
+    "font": "AtlasDisplay, sans-serif",
+    "color": "#ffffff",
+    "reductionPercent": 35.6,
+    "yLandscape": 0.915,
+    "yOffsetLandscape": 10,
+    "stroke": true,
+    "strokeColor": "#000000",
+    "background": ""
+  },
+  "planoLook": "tactico",
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "work/escena/cache-inventory.json"
+  },
+  "motionBlur": {
+    "samples": 4,
+    "fps": 30,
+    "shutter": 0.5,
+    "thresholdPx": 2,
+    "mode": "affine"
+  },
+  "defs": {
+    "fonts": {
+      "label": "AtlasDisplay, sans-serif",
+      "display": "AtlasDisplay, sans-serif"
+    },
+    "palette": {
+      "background": "#081e2c",
+      "paper": "#e9e3ba",
+      "accent": "#f6edb4",
+      "danger": "#d1495b",
+      "success": "#399e58",
+      "cyan": "#66c6e3",
+      "text": "#e9e3ba",
+      "dark": "#081e2c"
+    }
+  },
+  "places": {
+    "Farsi": [
+      49.8333,
+      27.9667
+    ],
+    "Abadan": [
+      48.27,
+      30.36
+    ],
+    "Jorramchar": [
+      48.18,
+      30.44
+    ],
+    "Basora": [
+      47.95,
+      30.55
+    ],
+    "Kharg": [
+      50.32,
+      29.24
+    ],
+    "Sirri": [
+      54.54,
+      25.91
+    ],
+    "Ormuz": [
+      56.4,
+      26.5
+    ],
+    "Golfo": [
+      53.1,
+      27.1
+    ],
+    "Stark": [
+      51.9167,
+      26.7833
+    ],
+    "IranAjr": [
+      51.2,
+      26.6
+    ],
+    "Roberts": [
+      51.6,
+      26.2
+    ],
+    "Sassan": [
+      53.13,
+      25.5
+    ],
+    "PlataformaSirri": [
+      54.5,
+      25.83
+    ],
+    "Enterprise": [
+      59,
+      24
+    ],
+    "Sahand": [
+      56,
+      26.5
+    ],
+    "Sabalan": [
+      56.36,
+      26.78
+    ],
+    "Joshan": [
+      54.5,
+      25.8
+    ],
+    "AlFaw": [
+      48.47,
+      29.98
+    ]
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        50.03,
+        27.78
+      ],
+      "zoom": 8.3,
+      "bearing": -22,
+      "pitch": 0
+    },
+    {
+      "t": 4.85,
+      "follow": "bridgeton",
+      "zoom": 8.3,
+      "dur": 17,
+      "bearing": -22
+    },
+    {
+      "t": 23.2,
+      "zoomThrough": {
+        "to": [
+          48.6,
+          32.3
+        ],
+        "zoom": 5.35,
+        "spin": 22
+      },
+      "dur": 2.5,
+      "ease": "inOut"
+    },
+    {
+      "t": 34.8,
+      "zoomThrough": {
+        "to": [
+          48.25,
+          30.65
+        ],
+        "zoom": 8.5,
+        "spin": 8
+      },
+      "dur": 2.3,
+      "ease": "inOut"
+    },
+    {
+      "t": 49.63,
+      "center": [
+        48.2,
+        30.65
+      ],
+      "zoom": 8.7,
+      "bearing": 0,
+      "dur": 1.8,
+      "arc": 0
+    },
+    {
+      "t": 59.03,
+      "center": [
+        48,
+        30.65
+      ],
+      "zoom": 8.6,
+      "bearing": -8,
+      "dur": 2,
+      "arc": 0
+    },
+    {
+      "t": 66.05,
+      "zoomThrough": {
+        "to": "Kharg",
+        "zoom": 7.4,
+        "spin": 8
+      },
+      "dur": 2.2,
+      "ease": "inOut"
+    },
+    {
+      "t": 75.29,
+      "center": [
+        53.7,
+        27
+      ],
+      "zoom": 6.2,
+      "dur": 2.4,
+      "bearing": -45,
+      "ease": "inOut",
+      "arc": 0
+    },
+    {
+      "t": 90.19,
+      "zoomThrough": {
+        "to": [
+          50.25,
+          28.95
+        ],
+        "zoom": 7.5,
+        "spin": 45
+      },
+      "dur": 2.6,
+      "ease": "inOut"
+    },
+    {
+      "t": 104.87,
+      "center": [
+        50.32,
+        29.2
+      ],
+      "zoom": 8,
+      "bearing": 0,
+      "dur": 2,
+      "arc": 0
+    },
+    {
+      "t": 115.37,
+      "zoomThrough": {
+        "to": "Stark",
+        "zoom": 8.4,
+        "spin": -15
+      },
+      "dur": 2.1,
+      "ease": "inOut"
+    },
+    {
+      "t": 133.81,
+      "zoomThrough": {
+        "to": [
+          57.2,
+          25.6
+        ],
+        "zoom": 8.1,
+        "spin": 15
+      },
+      "dur": 2.5,
+      "ease": "inOut"
+    },
+    {
+      "t": 145.13,
+      "follow": "bridgeton-julio",
+      "zoom": 8.1,
+      "dur": 6.5,
+      "bearing": 0
+    },
+    {
+      "t": 152.3,
+      "zoomThrough": {
+        "to": [
+          51.05,
+          26.65
+        ],
+        "zoom": 8.3,
+        "spin": -12
+      },
+      "dur": 2.5,
+      "ease": "inOut"
+    },
+    {
+      "t": 169.97,
+      "center": [
+        51.6,
+        26.2
+      ],
+      "zoom": 8.3,
+      "bearing": 0,
+      "dur": 2.2,
+      "arc": 0
+    },
+    {
+      "t": 179.61,
+      "reframe": [
+        "Sassan",
+        "PlataformaSirri"
+      ],
+      "pad": 0.7,
+      "dur": 2.8,
+      "bearing": 0,
+      "ease": "inOut"
+    },
+    {
+      "t": 188.4,
+      "zoomThrough": {
+        "to": [
+          60.04,
+          23.73
+        ],
+        "zoom": 8.3,
+        "spin": -22
+      },
+      "dur": 2.3,
+      "ease": "inOut"
+    },
+    {
+      "t": 191.59,
+      "follow": "enterprise",
+      "zoom": 8.3,
+      "dur": 6.3,
+      "bearing": -22
+    },
+    {
+      "t": 197.9,
+      "reframe": [
+        "Sahand",
+        "Joshan"
+      ],
+      "pad": 0.5,
+      "dur": 1.1,
+      "bearing": 0,
+      "ease": "inOut"
+    },
+    {
+      "t": 202.1,
+      "zoomThrough": {
+        "to": "Sabalan",
+        "zoom": 8.6,
+        "spin": 0
+      },
+      "dur": 1.5,
+      "ease": "inOut"
+    },
+    {
+      "t": 207.9,
+      "zoomThrough": {
+        "to": [
+          48.42,
+          30.1
+        ],
+        "zoom": 8.4,
+        "spin": 12
+      },
+      "dur": 2.3,
+      "ease": "inOut"
+    },
+    {
+      "t": 215.67,
+      "center": [
+        52.8,
+        27
+      ],
+      "zoom": 5.8,
+      "bearing": 0,
+      "dur": 2,
+      "arc": 0
+    },
+    {
+      "t": 225.87,
+      "center": [
+        56.2,
+        26.4
+      ],
+      "zoom": 7.4,
+      "bearing": 0,
+      "dur": 2.2,
+      "arc": 0
+    },
+    {
+      "t": 236.63,
+      "center": [
+        49,
+        31.5
+      ],
+      "zoom": 5.55,
+      "bearing": 0,
+      "dur": 2.8,
+      "arc": 0
+    }
+  ],
+  "layers": [],
+  "items": [
+    {
+      "id": "intro",
+      "type": "intro.title",
+      "t": 0,
+      "dur": 5.5,
+      "out": 5.2,
+      "fade": 0,
+      "sfx": false,
+      "title": "LA GUERRA DE\nLOS PETROLEROS",
+      "subtitle": "Golfo Pérsico · 1980–1988",
+      "kicker": "ATLAS EN MOVIMIENTO",
+      "year": "1987",
+      "focus": "Farsi",
+      "style": "focus"
+    },
+    {
+      "id": "bridgeton",
+      "type": "naval.cargo",
+      "t": 0,
+      "dur": 25.23,
+      "out": 24.93,
+      "fade": 0.3,
+      "at": [
+        50.03,
+        27.78
+      ],
+      "variant": "tanker",
+      "flag": "US",
+      "label": "Bridgeton",
+      "heading": "auto",
+      "scale": 1.08,
+      "path": {
+        "via": [
+          [
+            50.03,
+            27.78
+          ],
+          [
+            49.8333,
+            27.9667
+          ],
+          [
+            49.67,
+            28.12
+          ]
+        ],
+        "t": 4.85,
+        "dur": 15.994997055914052,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "states": [
+        {
+          "at": "@mina",
+          "state": "hit",
+          "dur": 0.35
+        }
+      ],
+      "source_facts": [
+        "G23",
+        "G24"
+      ]
+    },
+    {
+      "id": "escoltas-inicio",
+      "type": "naval.group",
+      "t": 0,
+      "dur": 16.5,
+      "out": 16.2,
+      "fade": 0.3,
+      "sfx": false,
+      "leader": "bridgeton",
+      "units": [
+        {
+          "type": "naval.warship",
+          "variant": "cruiser",
+          "label": "USS Fox",
+          "flag": "US"
+        },
+        {
+          "type": "naval.warship",
+          "variant": "destroyer",
+          "label": "USS Kidd",
+          "flag": "US"
+        },
+        {
+          "type": "naval.warship",
+          "variant": "frigate",
+          "label": "USS Crommelin",
+          "flag": "US"
+        }
+      ],
+      "formation": "diamond",
+      "spacing": 0.72,
+      "path": {
+        "via": [
+          [
+            50.03,
+            27.78
+          ],
+          [
+            49.8333,
+            27.9667
+          ],
+          [
+            49.67,
+            28.12
+          ]
+        ],
+        "t": 4.85,
+        "dur": 15.994997055914052,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto",
+      "scale": 1.08
+    },
+    {
+      "id": "escoltas-estela",
+      "type": "naval.group",
+      "t": "@estela-3.25",
+      "dur": 9.03,
+      "out": 24.93,
+      "fade": 0.3,
+      "sfx": false,
+      "leader": "bridgeton",
+      "units": [
+        {
+          "type": "naval.warship",
+          "variant": "cruiser",
+          "label": "USS Fox",
+          "flag": "US"
+        },
+        {
+          "type": "naval.warship",
+          "variant": "destroyer",
+          "label": "USS Kidd",
+          "flag": "US"
+        },
+        {
+          "type": "naval.warship",
+          "variant": "frigate",
+          "label": "USS Crommelin",
+          "flag": "US"
+        }
+      ],
+      "formation": "line",
+      "spacing": 0.43,
+      "path": {
+        "via": [
+          [
+            50.03,
+            27.78
+          ],
+          [
+            49.8333,
+            27.9667
+          ],
+          [
+            49.67,
+            28.12
+          ]
+        ],
+        "t": 4.85,
+        "dur": 15.994997055914052,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto",
+      "scale": 1.08
+    },
+    {
+      "id": "fecha-bridgeton",
+      "type": "label.chip",
+      "t": "@24",
+      "dur": 24.06,
+      "out": 24.93,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "24 JUL 1987 · AL OESTE DE FARSI",
+      "screen": [
+        0.5,
+        0.1
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "capitan",
+      "type": "label.chip",
+      "t": "@frank",
+      "dur": 4.16,
+      "out": 9.99,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Frank C. Seitz, Jr. · capitán del Bridgeton",
+      "screen": [
+        0.5,
+        0.23
+      ],
+      "width": 920,
+      "size": 30
+    },
+    {
+      "id": "mina-bridgeton",
+      "type": "fx.impact",
+      "t": "@mina",
+      "dur": 1.7,
+      "out": 14.51,
+      "fade": 0,
+      "sfx": [
+        {
+          "sfx": "explosion-far",
+          "dur": 1.6,
+          "gain_db": -29
+        }
+      ],
+      "at": "bridgeton",
+      "size": 80,
+      "particles": 36,
+      "variant": "water"
+    },
+    {
+      "id": "onda-bridgeton",
+      "type": "fx.shockwave",
+      "t": "@mina",
+      "dur": 2.19,
+      "out": 15,
+      "fade": 0,
+      "sfx": false,
+      "at": "bridgeton",
+      "variant": "water",
+      "size": 100
+    },
+    {
+      "id": "sobrevive-bridgeton",
+      "type": "label.chip",
+      "t": "@mina+1.8",
+      "dur": 4.29,
+      "out": 18.9,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "El mercante sobrevive",
+      "screen": [
+        0.5,
+        0.23
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "siguen-estela",
+      "type": "label.chip",
+      "t": "@estela",
+      "dur": 4.05,
+      "out": 23.2,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Las escoltas siguen su estela",
+      "screen": [
+        0.5,
+        0.23
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "retroceso",
+      "type": "label.chip",
+      "t": "@siete-0.8",
+      "dur": 3.85,
+      "out": 27,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Siete años antes",
+      "screen": [
+        0.5,
+        0.72
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "iran-bandera",
+      "type": "territory.flag",
+      "t": 25.23,
+      "dur": 10.27,
+      "out": 35.2,
+      "fade": 0.3,
+      "sfx": false,
+      "region": "IR",
+      "flag": "IR",
+      "flagMode": "fill",
+      "opacity": 0.58
+    },
+    {
+      "id": "iraq-bandera",
+      "type": "territory.flag",
+      "t": 25.23,
+      "dur": 10.27,
+      "out": 35.2,
+      "fade": 0.3,
+      "sfx": false,
+      "region": "IQ",
+      "flag": "IQ",
+      "flagMode": "marker",
+      "at": [
+        44.8,
+        33.7
+      ],
+      "flagWidth": 110
+    },
+    {
+      "id": "iraq-tinte",
+      "type": "territory.fill",
+      "t": 25.23,
+      "dur": 42.52,
+      "out": 67.45,
+      "fade": 0.3,
+      "sfx": false,
+      "region": "IQ",
+      "color": "danger",
+      "opacity": 0.22
+    },
+    {
+      "id": "iran-tinte",
+      "type": "territory.fill",
+      "t": 35.2,
+      "dur": 32.55,
+      "out": 67.45,
+      "fade": 0.3,
+      "sfx": false,
+      "region": "IR",
+      "color": "success",
+      "opacity": 0.2
+    },
+    {
+      "id": "iran-borde",
+      "type": "territory.glow",
+      "t": 25.23,
+      "dur": 10.27,
+      "out": 35.2,
+      "fade": 0.3,
+      "sfx": false,
+      "region": "IR",
+      "color": "cyan",
+      "opacity": 0.4,
+      "pulse": false,
+      "width": 1
+    },
+    {
+      "id": "invasion",
+      "type": "label.chip",
+      "t": "@invade",
+      "dur": 14.39,
+      "out": 40.5,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "SEPTIEMBRE DE 1980",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "iran-nombre",
+      "type": "label.neon",
+      "t": 25.8,
+      "dur": 9.7,
+      "out": 35.2,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        53,
+        33
+      ],
+      "text": "IRÁN",
+      "color": "cyan",
+      "size": 74
+    },
+    {
+      "id": "iraq-nombre",
+      "type": "label.neon",
+      "t": 25.8,
+      "dur": 9.7,
+      "out": 35.2,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        44.6,
+        31.8
+      ],
+      "text": "IRAK",
+      "color": "accent",
+      "size": 66
+    },
+    {
+      "id": "sadam",
+      "type": "portrait.badge",
+      "t": "@invade",
+      "dur": 8.39,
+      "out": 34.5,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        46.8,
+        32.2
+      ],
+      "src": "assets/media/P02.png",
+      "name": "Sadam Husein",
+      "role": "Presidente de Irak · 1980",
+      "date": "Foto: antes de 1987",
+      "credit": "Min. Información de Irak · PD",
+      "offset": [
+        -245,
+        420
+      ],
+      "scale": 0.76
+    },
+    {
+      "id": "jomeini",
+      "type": "portrait.badge",
+      "t": "@invade",
+      "dur": 8.39,
+      "out": 34.5,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        46.8,
+        32.2
+      ],
+      "src": "assets/media/P01.png",
+      "name": "Ruhollah Jomeini",
+      "role": "Líder supremo de Irán",
+      "date": "Foto: 6 may 1981",
+      "credit": "Ali Kaveh · PD-Iran",
+      "offset": [
+        245,
+        420
+      ],
+      "scale": 0.76
+    },
+    {
+      "id": "avance-0",
+      "type": "unit.advance",
+      "t": "@avance",
+      "dur": 9.95,
+      "out": 40.5,
+      "fade": 0.3,
+      "sfx": false,
+      "flag": "IQ",
+      "count": 4,
+      "formation": "wedge",
+      "scale": 0.63,
+      "path": {
+        "via": [
+          [
+            46,
+            32.7
+          ],
+          [
+            46.17,
+            33.12
+          ]
+        ],
+        "t": "@avance",
+        "dur": 7,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "flecha-avance-0",
+      "type": "arrow.route",
+      "t": "@avance",
+      "dur": 9.95,
+      "out": 40.5,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          46,
+          32.7
+        ],
+        [
+          46.17,
+          33.12
+        ]
+      ],
+      "width": 6,
+      "color": "accent"
+    },
+    {
+      "id": "avance-1",
+      "type": "unit.advance",
+      "t": "@avance",
+      "dur": 9.95,
+      "out": 40.5,
+      "fade": 0.3,
+      "sfx": false,
+      "flag": "IQ",
+      "count": 4,
+      "formation": "wedge",
+      "scale": 0.63,
+      "path": {
+        "via": [
+          [
+            47.3,
+            31.75
+          ],
+          [
+            48.1,
+            32.2
+          ]
+        ],
+        "t": "@avance",
+        "dur": 7,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "flecha-avance-1",
+      "type": "arrow.route",
+      "t": "@avance",
+      "dur": 9.95,
+      "out": 40.5,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          47.3,
+          31.75
+        ],
+        [
+          48.1,
+          32.2
+        ]
+      ],
+      "width": 6,
+      "color": "accent"
+    },
+    {
+      "id": "avance-2",
+      "type": "unit.advance",
+      "t": "@avance",
+      "dur": 9.95,
+      "out": 40.5,
+      "fade": 0.3,
+      "sfx": false,
+      "flag": "IQ",
+      "count": 4,
+      "formation": "wedge",
+      "scale": 0.63,
+      "path": {
+        "via": [
+          [
+            47.6,
+            30.7
+          ],
+          [
+            48.1,
+            30.51
+          ]
+        ],
+        "t": "@avance",
+        "dur": 7,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "flecha-avance-2",
+      "type": "arrow.route",
+      "t": "@avance",
+      "dur": 9.95,
+      "out": 40.5,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          47.6,
+          30.7
+        ],
+        [
+          48.1,
+          30.51
+        ]
+      ],
+      "width": 6,
+      "color": "accent"
+    },
+    {
+      "id": "frente",
+      "type": "front.line",
+      "t": "@avance",
+      "dur": 36.9,
+      "out": 67.45,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          45.58,
+          34.52
+        ],
+        [
+          46.17,
+          33.12
+        ],
+        [
+          48.12,
+          32.35
+        ],
+        [
+          48.45,
+          31.43
+        ],
+        [
+          48.18,
+          30.44
+        ]
+      ],
+      "color": "danger",
+      "width": 4,
+      "states": [
+        {
+          "at": "@territorio",
+          "state": "retreat",
+          "via": [
+            [
+              45.4,
+              34.5
+            ],
+            [
+              45.85,
+              33.3
+            ],
+            [
+              47.1,
+              32.5
+            ],
+            [
+              47.45,
+              31.35
+            ],
+            [
+              47.95,
+              30.55
+            ]
+          ],
+          "dur": 1.2
+        }
+      ],
+      "note": "G07/G10; esquema regional, no línea digitalizada ni frontera jurídica."
+    },
+    {
+      "id": "frente-aprox",
+      "type": "label.chip",
+      "t": "@avance",
+      "dur": 36.9,
+      "out": 67.45,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Frente aproximado · flechas: direcciones",
+      "screen": [
+        0.5,
+        0.78
+      ],
+      "width": 920,
+      "size": 27
+    },
+    {
+      "id": "jorramchar-mapa",
+      "type": "label.callout",
+      "t": "@jorramchar",
+      "dur": 22.42,
+      "out": 58.73,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Jorramchar",
+      "text": "Jorramchar\n(Khorramshahr)",
+      "offset": [
+        -190,
+        -210
+      ],
+      "width": 440,
+      "size": 34
+    },
+    {
+      "id": "abadan",
+      "type": "site.refinery",
+      "t": "@jorramchar",
+      "dur": 22.42,
+      "out": 58.73,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Abadan",
+      "label": "Abadán · refinería",
+      "scale": 0.92,
+      "states": [
+        {
+          "at": "@refineria",
+          "state": "hit",
+          "dur": 0.35
+        }
+      ],
+      "source_facts": [
+        "G05",
+        "G06"
+      ]
+    },
+    {
+      "id": "abadan-resiste",
+      "type": "label.chip",
+      "t": "@resiste",
+      "dur": 3.74,
+      "out": 45.43,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Abadán resiste el asedio",
+      "screen": [
+        0.5,
+        0.22
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "humo-abadan",
+      "type": "fx.smoke",
+      "t": "@refineria",
+      "dur": 3.92,
+      "out": 48.43,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Abadan",
+      "size": 50,
+      "particles": 18,
+      "drift": [
+        20,
+        -35
+      ],
+      "variant": "column"
+    },
+    {
+      "id": "rompe-cerco",
+      "type": "label.chip",
+      "t": "@rompe",
+      "dur": 1.87,
+      "out": 50.3,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "SEP 1981 · Irán rompe el cerco",
+      "screen": [
+        0.5,
+        0.22
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "ano-1982",
+      "type": "text.year",
+      "t": "@1982",
+      "dur": 7.32,
+      "out": 58.73,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "1982",
+      "screen": [
+        0.5,
+        0.23
+      ],
+      "size": 140,
+      "width": 900
+    },
+    {
+      "id": "recupera-jorramchar",
+      "type": "label.chip",
+      "t": "@recupera",
+      "dur": 5.08,
+      "out": 58.73,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "24 MAY 1982 · Irán recupera Jorramchar",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "retirada-iraq",
+      "type": "unit.retreat",
+      "t": "@recupera",
+      "dur": 5.08,
+      "out": 58.73,
+      "fade": 0.3,
+      "sfx": false,
+      "flag": "IQ",
+      "count": 5,
+      "scale": 0.72,
+      "path": {
+        "via": [
+          [
+            48.16,
+            30.52
+          ],
+          [
+            47.92,
+            30.7
+          ]
+        ],
+        "t": "@recupera",
+        "dur": 4.6,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "recuperacion-iran",
+      "type": "unit.advance",
+      "t": "@recupera",
+      "dur": 5.08,
+      "out": 58.73,
+      "fade": 0.3,
+      "sfx": false,
+      "flag": "IR",
+      "count": 4,
+      "scale": 0.64,
+      "path": {
+        "via": [
+          [
+            48.45,
+            30.62
+          ],
+          [
+            48.18,
+            30.44
+          ]
+        ],
+        "t": "@recupera",
+        "dur": 4.2,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "guerra-continua",
+      "type": "label.chip",
+      "t": "@continua",
+      "dur": 4.17,
+      "out": 64.2,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "La guerra continúa",
+      "screen": [
+        0.5,
+        0.22
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "ofensiva-basora",
+      "type": "unit.advance",
+      "t": 62.27,
+      "dur": 5.48,
+      "out": 67.45,
+      "fade": 0.3,
+      "sfx": false,
+      "flag": "IR",
+      "count": 5,
+      "scale": 0.8,
+      "path": {
+        "via": [
+          [
+            48.28,
+            30.7
+          ],
+          [
+            47.95,
+            30.55
+          ]
+        ],
+        "t": 62.27,
+        "dur": 5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "basora-label",
+      "type": "label.callout",
+      "t": "@basora",
+      "dur": 1.7,
+      "out": 67.45,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Basora",
+      "text": "Basora · Irak",
+      "offset": [
+        -100,
+        -190
+      ],
+      "size": 36
+    },
+    {
+      "id": "kharg-terminal",
+      "type": "site.port",
+      "t": "@kharg",
+      "dur": 22.44,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Kharg",
+      "label": "Kharg · terminal exportador",
+      "scale": 1.1
+    },
+    {
+      "id": "kharg-no-refineria",
+      "type": "label.chip",
+      "t": "@kharg",
+      "dur": 7.54,
+      "out": 74.99,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Terminal de exportación de crudo",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "instalaciones-distintas",
+      "type": "label.chip",
+      "t": "@abadan#3",
+      "dur": 4.38,
+      "out": 79.05,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Abadán: refinería · Kharg: terminal",
+      "screen": [
+        0.5,
+        0.73
+      ],
+      "width": 920,
+      "size": 32
+    },
+    {
+      "id": "rutas-esquema",
+      "type": "label.chip",
+      "t": "@petroleros",
+      "dur": 13.86,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Rutas esquemáticas · flujos sin escala",
+      "screen": [
+        0.5,
+        0.76
+      ],
+      "width": 920,
+      "size": 28
+    },
+    {
+      "id": "ruta-exportacion",
+      "type": "route.sea",
+      "t": "@petroleros",
+      "dur": 13.86,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          50.32,
+          29.2
+        ],
+        [
+          50.3,
+          28.5
+        ],
+        [
+          51.3,
+          27.6
+        ],
+        [
+          52.3,
+          26.9
+        ],
+        [
+          54.5,
+          26
+        ],
+        [
+          55.5,
+          26.35
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          56.75,
+          26.25
+        ],
+        [
+          57.2,
+          25.6
+        ],
+        [
+          58.4,
+          24.9
+        ]
+      ],
+      "color": "text",
+      "width": 2
+    },
+    {
+      "id": "carriles-ormuz",
+      "type": "route.lanes",
+      "t": "@petroleros",
+      "dur": 13.86,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          52.3,
+          26.9
+        ],
+        [
+          54.5,
+          26
+        ],
+        [
+          55.5,
+          26.35
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          56.75,
+          26.25
+        ],
+        [
+          57.2,
+          25.6
+        ],
+        [
+          58.4,
+          24.9
+        ]
+      ],
+      "text": "ORMUZ",
+      "chipAt": 0.68,
+      "width": 1.5,
+      "lanes": 3
+    },
+    {
+      "id": "flecha-exportacion",
+      "type": "arrow.flow",
+      "t": "@petroleros",
+      "dur": 13.86,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          50.32,
+          29.2
+        ],
+        [
+          50.3,
+          28.5
+        ],
+        [
+          51.3,
+          27.6
+        ],
+        [
+          52.3,
+          26.9
+        ],
+        [
+          54.5,
+          26
+        ],
+        [
+          55.5,
+          26.35
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          56.75,
+          26.25
+        ],
+        [
+          57.2,
+          25.6
+        ],
+        [
+          58.4,
+          24.9
+        ]
+      ],
+      "width": 5,
+      "color": "accent"
+    },
+    {
+      "id": "flujo-economico",
+      "type": "money.flow",
+      "t": "@petroleros",
+      "dur": 13.86,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Kharg",
+      "via": [
+        [
+          50.32,
+          29.2
+        ],
+        [
+          50.3,
+          28.5
+        ],
+        [
+          51.3,
+          27.6
+        ],
+        [
+          52.3,
+          26.9
+        ],
+        [
+          54.5,
+          26
+        ],
+        [
+          55.5,
+          26.35
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          56.75,
+          26.25
+        ],
+        [
+          57.2,
+          25.6
+        ],
+        [
+          58.4,
+          24.9
+        ]
+      ],
+      "count": 4,
+      "scale": 0.5,
+      "period": 7,
+      "routeVisible": false,
+      "note": "Símbolo económico; no cifra, cargamento ni destino histórico específico."
+    },
+    {
+      "id": "mercante-crudo",
+      "type": "naval.cargo",
+      "t": "@traslada",
+      "dur": 8.08,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "variant": "tanker",
+      "flag": "IR",
+      "scale": 0.62,
+      "label": "Crudo hacia Sirri",
+      "path": {
+        "via": [
+          [
+            50.32,
+            29.2
+          ],
+          [
+            50.3,
+            28.5
+          ],
+          [
+            51.3,
+            27.6
+          ],
+          [
+            52.3,
+            26.9
+          ],
+          [
+            54.5,
+            26
+          ],
+          [
+            54.54,
+            25.98
+          ]
+        ],
+        "t": "@traslada",
+        "dur": 6.5,
+        "curve": "line",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "sirri-terminal",
+      "type": "site.port",
+      "t": "@traslada",
+      "dur": 8.08,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Sirri",
+      "label": "Sirri",
+      "scale": 0.75
+    },
+    {
+      "id": "traslado-1985",
+      "type": "label.chip",
+      "t": "@traslada",
+      "dur": 6.59,
+      "out": 88.4,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "1985 · Kharg → Sirri",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "compradores",
+      "type": "label.chip",
+      "t": "@compradores",
+      "dur": 1.46,
+      "out": 89.89,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Menor exposición de compradores",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "ano-1984",
+      "type": "text.year",
+      "t": 90.19,
+      "dur": 7.81,
+      "out": 97.7,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "1984",
+      "screen": [
+        0.5,
+        0.23
+      ],
+      "size": 140,
+      "width": 900
+    },
+    {
+      "id": "intensifica",
+      "type": "label.chip",
+      "t": "@intensifica",
+      "dur": 7.77,
+      "out": 102.1,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "La campaña se intensifica",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "reactor-iraqui",
+      "type": "air.jet",
+      "t": "@aviones",
+      "dur": 13.83,
+      "out": 110.7,
+      "fade": 0.3,
+      "sfx": [
+        {
+          "sfx": "jet-pass",
+          "dur": 3.2,
+          "gain_db": -27
+        }
+      ],
+      "variant": "attack",
+      "flag": "IQ",
+      "scale": 3,
+      "label": "Avión iraquí",
+      "path": {
+        "via": [
+          [
+            49.3,
+            29.55
+          ],
+          [
+            50.1,
+            29.05
+          ],
+          [
+            50.9,
+            28.75
+          ]
+        ],
+        "t": "@aviones",
+        "dur": 9,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "estela-reactor",
+      "type": "trail.contrail",
+      "t": "@aviones",
+      "dur": 13.83,
+      "out": 110.7,
+      "fade": 0.3,
+      "sfx": false,
+      "follow": "reactor-iraqui",
+      "width": 3,
+      "life": 1.8,
+      "particles": 18
+    },
+    {
+      "id": "antecedentes",
+      "type": "label.chip",
+      "t": "@antecedentes",
+      "dur": 3.35,
+      "out": 105.7,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Hubo ataques antes de 1984",
+      "screen": [
+        0.5,
+        0.74
+      ],
+      "width": 920,
+      "size": 31
+    },
+    {
+      "id": "kharg-danado",
+      "type": "site.port",
+      "t": 104.87,
+      "dur": 10.5,
+      "out": 115.07,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Kharg",
+      "label": "Kharg · terminal",
+      "scale": 1.2,
+      "states": [
+        {
+          "at": "@terminales#2",
+          "state": "hit",
+          "dur": 0.35
+        }
+      ]
+    },
+    {
+      "id": "kharg-humo",
+      "type": "fx.smoke",
+      "t": "@terminales#2",
+      "dur": 6.09,
+      "out": 113.7,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Kharg",
+      "size": 55,
+      "particles": 20
+    },
+    {
+      "id": "kharg-danos",
+      "type": "label.chip",
+      "t": "@terminales#2",
+      "dur": 6.29,
+      "out": 113.9,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Terminales bajo ataque",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "kharg-reparaciones",
+      "type": "label.chip",
+      "t": "@reparaciones",
+      "dur": 2.21,
+      "out": 116.2,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Daños y reparaciones",
+      "screen": [
+        0.5,
+        0.73
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "stark",
+      "type": "naval.warship",
+      "t": 115.37,
+      "dur": 18.44,
+      "out": 133.51,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Stark",
+      "variant": "frigate",
+      "flag": "US",
+      "scale": 2,
+      "label": "USS Stark",
+      "heading": 335,
+      "states": [
+        {
+          "at": "@exocet+0.65",
+          "state": "hit",
+          "dur": 0.35
+        }
+      ],
+      "source_facts": [
+        "G18",
+        "G19"
+      ]
+    },
+    {
+      "id": "stark-fecha",
+      "type": "label.chip",
+      "t": 115.37,
+      "dur": 18.44,
+      "out": 133.51,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "17 MAY 1987 · USS STARK",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "stark-nombre",
+      "type": "label.chip",
+      "t": "@stark",
+      "dur": 3.09,
+      "out": 123.1,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Fragata estadounidense",
+      "screen": [
+        0.5,
+        0.73
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "stark-exocet-0",
+      "type": "strike.missile",
+      "t": "@exocet",
+      "dur": 2.73,
+      "out": 125.9,
+      "fade": 0,
+      "sfx": [
+        {
+          "sfx": "explosion-far",
+          "at": "@exocet+0.65",
+          "dur": 1.4,
+          "gain_db": -30
+        }
+      ],
+      "from": [
+        51.32,
+        27.36
+      ],
+      "to": "Stark",
+      "flightDur": 0.65,
+      "width": 3,
+      "onHit": {
+        "fx": "fx.impact",
+        "variant": "water",
+        "size": 45
+      },
+      "note": "Lanzamiento aéreo fuera de campo; modelo del avión no fijado."
+    },
+    {
+      "id": "stark-exocet-1",
+      "type": "strike.missile",
+      "t": "@exocet+0.38",
+      "dur": 2.35,
+      "out": 125.9,
+      "fade": 0,
+      "sfx": [
+        {
+          "sfx": "explosion-far",
+          "at": "@exocet+1.03",
+          "dur": 1.4,
+          "gain_db": -30
+        }
+      ],
+      "from": [
+        51.38,
+        27.36
+      ],
+      "to": "Stark",
+      "flightDur": 0.65,
+      "width": 3,
+      "onHit": {
+        "fx": "fx.impact",
+        "variant": "water",
+        "size": 45
+      },
+      "note": "Lanzamiento aéreo fuera de campo; modelo del avión no fijado."
+    },
+    {
+      "id": "stark-documento",
+      "type": "editorial.press",
+      "t": 126,
+      "dur": 7.81,
+      "out": 133.51,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Stark",
+      "src": "assets/media/P03-soft.png",
+      "name": "Ronald Reagan",
+      "role": "Presidente de EE. UU.",
+      "date": "Foto: 7 feb 1981 · ataque: 17 may 1987",
+      "credit": "Michael Evans · Casa Blanca · PD",
+      "docSrc": "assets/media/A01.png",
+      "docText": "USS Stark · daños tras el ataque",
+      "docCredit": "U.S. Navy · DN-ST-89-01562 · PD",
+      "offset": [
+        0,
+        -240
+      ],
+      "scale": 1.05
+    },
+    {
+      "id": "stark-victimas",
+      "type": "label.chip",
+      "t": "@37",
+      "dur": 3.64,
+      "out": 131.77,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "37 tripulantes murieron",
+      "screen": [
+        0.5,
+        0.78
+      ],
+      "width": 920,
+      "size": 40
+    },
+    {
+      "id": "stark-sobrevive",
+      "type": "label.chip",
+      "t": "@sobrevive#2",
+      "dur": 1.74,
+      "out": 133.51,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "El buque sobrevive",
+      "screen": [
+        0.5,
+        0.78
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "bridgeton-julio",
+      "type": "naval.cargo",
+      "t": 133.81,
+      "dur": 18.49,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "variant": "tanker",
+      "flag": "KW",
+      "label": "",
+      "scale": 0.75,
+      "at": [
+        57.2,
+        25.65
+      ],
+      "path": {
+        "via": [
+          [
+            57.2,
+            25.65
+          ],
+          [
+            56.8,
+            26.2
+          ],
+          [
+            56.4,
+            26.5
+          ],
+          [
+            55.95,
+            26.46
+          ]
+        ],
+        "t": "@parte#2",
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto",
+      "name": "Bridgeton"
+    },
+    {
+      "id": "bridgeton-julio-flag-kw",
+      "type": "flag.marker",
+      "t": 133.81,
+      "dur": 4.02,
+      "out": "@izan",
+      "fade": 0.3,
+      "sfx": false,
+      "at": "bridgeton-julio",
+      "flag": "KW",
+      "flagWidth": 58,
+      "poleHeight": 75
+    },
+    {
+      "id": "bridgeton-julio-flag-us",
+      "type": "flag.marker",
+      "t": "@izan",
+      "dur": 14.47,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "bridgeton-julio",
+      "flag": "US",
+      "flagWidth": 58,
+      "poleHeight": 75
+    },
+    {
+      "id": "gas-prince",
+      "type": "naval.cargo",
+      "t": 133.81,
+      "dur": 18.49,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "variant": "tanker",
+      "flag": "KW",
+      "label": "",
+      "scale": 0.75,
+      "at": [
+        57.5,
+        25.33
+      ],
+      "path": {
+        "via": [
+          [
+            57.5,
+            25.33
+          ],
+          [
+            57.08,
+            26.12
+          ],
+          [
+            56.65,
+            26.55
+          ],
+          [
+            56.15,
+            26.55
+          ]
+        ],
+        "t": "@parte#2",
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto",
+      "name": "Gas Prince"
+    },
+    {
+      "id": "gas-prince-flag-kw",
+      "type": "flag.marker",
+      "t": 133.81,
+      "dur": 4.02,
+      "out": "@izan",
+      "fade": 0.3,
+      "sfx": false,
+      "at": "gas-prince",
+      "flag": "KW",
+      "flagWidth": 58,
+      "poleHeight": 75
+    },
+    {
+      "id": "gas-prince-flag-us",
+      "type": "flag.marker",
+      "t": "@izan",
+      "dur": 14.47,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "gas-prince",
+      "flag": "US",
+      "flagWidth": 58,
+      "poleHeight": 75
+    },
+    {
+      "id": "reabanderamiento",
+      "type": "label.chip",
+      "t": "@izan",
+      "dur": 6.67,
+      "out": 144.2,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "21 JUL 1987 · BANDERA ESTADOUNIDENSE",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 32
+    },
+    {
+      "id": "dos-mercantes",
+      "type": "label.chip",
+      "t": "@gas",
+      "dur": 10.71,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Bridgeton y Gas Prince · rumbo a Kuwait",
+      "screen": [
+        0.5,
+        0.7
+      ],
+      "width": 920,
+      "size": 31
+    },
+    {
+      "id": "salida-convoy",
+      "type": "label.chip",
+      "t": "@parte#2",
+      "dur": 3.56,
+      "out": 148.39,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "22 JUL 1987 · PRIMER CONVOY",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "convoy-julio",
+      "type": "naval.group",
+      "t": "@parte#2",
+      "dur": 7.17,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "leader": "bridgeton-julio",
+      "units": [
+        {
+          "type": "naval.warship",
+          "variant": "cruiser",
+          "label": "",
+          "flag": "US"
+        },
+        {
+          "type": "naval.warship",
+          "variant": "destroyer",
+          "label": "",
+          "flag": "US"
+        },
+        {
+          "type": "naval.warship",
+          "variant": "frigate",
+          "label": "",
+          "flag": "US"
+        }
+      ],
+      "formation": "line",
+      "spacing": 0.55,
+      "path": {
+        "via": [
+          [
+            57.2,
+            25.65
+          ],
+          [
+            56.8,
+            26.2
+          ],
+          [
+            56.4,
+            26.5
+          ],
+          [
+            55.95,
+            26.46
+          ]
+        ],
+        "t": "@parte#2",
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "scale": 0.62,
+      "heading": "auto"
+    },
+    {
+      "id": "ormuz-ruta",
+      "type": "route.sea",
+      "t": 133.81,
+      "dur": 18.49,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          57.2,
+          25.65
+        ],
+        [
+          56.8,
+          26.2
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          55.95,
+          26.46
+        ]
+      ],
+      "width": 2
+    },
+    {
+      "id": "ormuz-esquema",
+      "type": "label.chip",
+      "t": 133.81,
+      "dur": 18.49,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Ormuz · formación y ruta esquemáticas",
+      "screen": [
+        0.5,
+        0.79
+      ],
+      "width": 920,
+      "size": 26
+    },
+    {
+      "id": "riesgo-mina",
+      "type": "label.chip",
+      "t": "@mina#2",
+      "dur": 3.25,
+      "out": 152,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "24 JUL · la mina revela el riesgo",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "iran-ajr",
+      "type": "naval.cargo",
+      "t": 152.3,
+      "dur": 17.67,
+      "out": 169.67,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "IranAjr",
+      "variant": "bulk",
+      "flag": "IR",
+      "label": "Iran Ajr · posaminas",
+      "scale": 1.05,
+      "heading": 330,
+      "states": [
+        {
+          "at": "@atacan+0.6",
+          "state": "hit",
+          "dur": 0.35
+        }
+      ]
+    },
+    {
+      "id": "jarrett",
+      "type": "naval.warship",
+      "t": 152.3,
+      "dur": 12.2,
+      "out": 164.2,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        50.75,
+        26.55
+      ],
+      "variant": "frigate",
+      "flag": "US",
+      "label": "USS Jarrett",
+      "scale": 1.4,
+      "heading": 20
+    },
+    {
+      "id": "iran-ajr-fecha",
+      "type": "label.chip",
+      "t": 152.3,
+      "dur": 12.2,
+      "out": 164.2,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "21 SEP 1987 · IRAN AJR",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "siembra-minas",
+      "type": "label.chip",
+      "t": "@minas",
+      "dur": 3.49,
+      "out": 161.4,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Siembra de minas · posición aproximada",
+      "screen": [
+        0.5,
+        0.75
+      ],
+      "width": 920,
+      "size": 30
+    },
+    {
+      "id": "heli-0",
+      "type": "air.helicopter",
+      "t": 154,
+      "dur": 10.5,
+      "out": 164.2,
+      "fade": 0.3,
+      "sfx": [
+        {
+          "sfx": "helicopter",
+          "dur": 5.8,
+          "gain_db": -29
+        }
+      ],
+      "at": "jarrett",
+      "variant": "utility",
+      "scale": 2,
+      "flag": "US",
+      "label": "",
+      "path": {
+        "via": [
+          [
+            50.75,
+            26.55
+          ],
+          [
+            50.9,
+            26.75
+          ],
+          [
+            51.12,
+            26.68
+          ]
+        ],
+        "t": 154,
+        "dur": 6,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto",
+      "note": "Silueta utility de biblioteca; roles y cantidad documentados G26."
+    },
+    {
+      "id": "heli-1",
+      "type": "air.helicopter",
+      "t": 154.3,
+      "dur": 10.2,
+      "out": 164.2,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "jarrett",
+      "variant": "utility",
+      "scale": 2,
+      "flag": "US",
+      "label": "",
+      "path": {
+        "via": [
+          [
+            50.75,
+            26.55
+          ],
+          [
+            51,
+            26.83
+          ],
+          [
+            51.239999999999995,
+            26.75
+          ]
+        ],
+        "t": 154.3,
+        "dur": 6,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto",
+      "note": "Silueta utility de biblioteca; roles y cantidad documentados G26."
+    },
+    {
+      "id": "heli-2",
+      "type": "air.helicopter",
+      "t": 154.6,
+      "dur": 9.9,
+      "out": 164.2,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "jarrett",
+      "variant": "utility",
+      "scale": 2,
+      "flag": "US",
+      "label": "",
+      "path": {
+        "via": [
+          [
+            50.75,
+            26.55
+          ],
+          [
+            51.1,
+            26.91
+          ],
+          [
+            51.36,
+            26.82
+          ]
+        ],
+        "t": 154.6,
+        "dur": 6,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto",
+      "note": "Silueta utility de biblioteca; roles y cantidad documentados G26."
+    },
+    {
+      "id": "cohetes-ajr-0",
+      "type": "strike.salvo",
+      "t": "@atacan",
+      "dur": 2.73,
+      "out": 164.2,
+      "fade": 0,
+      "sfx": false,
+      "from": [
+        51.02,
+        26.76
+      ],
+      "to": "IranAjr",
+      "count": 2,
+      "stagger": 0.16,
+      "flightDur": 0.55,
+      "spread": 0.015,
+      "onHit": {
+        "fx": "fx.impact",
+        "size": 36
+      },
+      "note": "Cohetes esquemáticos; no misiles antibuque."
+    },
+    {
+      "id": "cohetes-ajr-1",
+      "type": "strike.salvo",
+      "t": "@atacan+0.18",
+      "dur": 2.55,
+      "out": 164.2,
+      "fade": 0,
+      "sfx": false,
+      "from": [
+        51.14,
+        26.830000000000002
+      ],
+      "to": "IranAjr",
+      "count": 2,
+      "stagger": 0.16,
+      "flightDur": 0.55,
+      "spread": 0.015,
+      "onHit": {
+        "fx": "fx.impact",
+        "size": 36
+      },
+      "note": "Cohetes esquemáticos; no misiles antibuque."
+    },
+    {
+      "id": "ajr-foto",
+      "type": "callout.photo",
+      "t": 164.5,
+      "dur": 5.47,
+      "out": 169.67,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "IranAjr",
+      "src": "assets/media/A05.png",
+      "caption": "Minas en la cubierta del Iran Ajr",
+      "date": "22 sep 1987 · después del abordaje",
+      "credit": "PH3 H. Cleveland · U.S. Navy · PD",
+      "offset": [
+        0,
+        -340
+      ],
+      "scale": 1.15
+    },
+    {
+      "id": "nueve-minas",
+      "type": "label.chip",
+      "t": "@nueve",
+      "dur": 2.8,
+      "out": 169.67,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Nueve minas halladas a bordo",
+      "screen": [
+        0.5,
+        0.78
+      ],
+      "width": 920,
+      "size": 34
+    },
+    {
+      "id": "roberts",
+      "type": "naval.warship",
+      "t": 169.97,
+      "dur": 9.64,
+      "out": 179.31,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Roberts",
+      "variant": "frigate",
+      "flag": "US",
+      "scale": 2,
+      "label": "USS Samuel B. Roberts",
+      "heading": 320,
+      "states": [
+        {
+          "at": "@mina#3",
+          "state": "hit",
+          "dur": 0.35
+        }
+      ]
+    },
+    {
+      "id": "roberts-fecha",
+      "type": "label.chip",
+      "t": 169.97,
+      "dur": 9.64,
+      "out": 179.31,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "14 ABR 1988 · SAMUEL B. ROBERTS",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 33
+    },
+    {
+      "id": "mina-roberts",
+      "type": "fx.impact",
+      "t": "@mina#3",
+      "dur": 1.7,
+      "out": 174.93,
+      "fade": 0,
+      "sfx": [
+        {
+          "sfx": "explosion-far",
+          "dur": 1.6,
+          "gain_db": -29
+        }
+      ],
+      "at": "Roberts",
+      "size": 85,
+      "particles": 36,
+      "variant": "water"
+    },
+    {
+      "id": "roberts-danos",
+      "type": "label.chip",
+      "t": "@roberts",
+      "dur": 3.18,
+      "out": 179.31,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Daños graves por una mina",
+      "screen": [
+        0.5,
+        0.74
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "mantis",
+      "type": "label.chip",
+      "t": "@mantis-2.8",
+      "dur": 8.6,
+      "out": 188.45,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "18 ABR 1988 · MANTIS RELIGIOSA",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 34
+    },
+    {
+      "id": "sassan",
+      "type": "site.platform",
+      "t": 179.61,
+      "dur": 9.14,
+      "out": 188.45,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Sassan",
+      "label": "Sassan",
+      "scale": 1.12,
+      "states": [
+        {
+          "at": "@atacan#2",
+          "state": "hit",
+          "dur": 0.35
+        },
+        {
+          "at": "@atacan#2+0.7",
+          "state": "burning",
+          "dur": 0.35
+        }
+      ]
+    },
+    {
+      "id": "sassan-grupo",
+      "type": "naval.group",
+      "t": 179.61,
+      "dur": 9.14,
+      "out": 188.45,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        52.82,
+        25.67
+      ],
+      "leader": {
+        "type": "naval.warship",
+        "variant": "destroyer",
+        "flag": "US"
+      },
+      "units": [
+        "naval.warship:ff"
+      ],
+      "formation": "line",
+      "scale": 0.8,
+      "heading": 65
+    },
+    {
+      "id": "sassan-tiro",
+      "type": "strike.shell",
+      "t": "@atacan#2-0.55",
+      "dur": 2.78,
+      "out": 187.6,
+      "fade": 0,
+      "sfx": [
+        {
+          "sfx": "explosion-far",
+          "at": "@atacan#2",
+          "dur": 1.8,
+          "gain_db": -27
+        }
+      ],
+      "from": [
+        52.82,
+        25.67
+      ],
+      "to": "Sassan",
+      "flightDur": 0.55,
+      "onHit": {
+        "fx": "fx.impact",
+        "size": 65
+      }
+    },
+    {
+      "id": "sirri",
+      "type": "site.platform",
+      "t": 179.61,
+      "dur": 9.14,
+      "out": 188.45,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "PlataformaSirri",
+      "label": "Sirri",
+      "scale": 1.12,
+      "states": [
+        {
+          "at": "@atacan#2",
+          "state": "hit",
+          "dur": 0.35
+        },
+        {
+          "at": "@atacan#2+0.7",
+          "state": "burning",
+          "dur": 0.35
+        }
+      ]
+    },
+    {
+      "id": "sirri-grupo",
+      "type": "naval.group",
+      "t": 179.61,
+      "dur": 9.14,
+      "out": 188.45,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        54.15,
+        25.55
+      ],
+      "leader": {
+        "type": "naval.warship",
+        "variant": "destroyer",
+        "flag": "US"
+      },
+      "units": [
+        "naval.warship:ff"
+      ],
+      "formation": "line",
+      "scale": 0.8,
+      "heading": 65
+    },
+    {
+      "id": "sirri-tiro",
+      "type": "strike.shell",
+      "t": "@atacan#2-0.55",
+      "dur": 2.78,
+      "out": 187.6,
+      "fade": 0,
+      "sfx": [
+        {
+          "sfx": "explosion-far",
+          "at": "@atacan#2",
+          "dur": 1.8,
+          "gain_db": -27
+        }
+      ],
+      "from": [
+        54.15,
+        25.55
+      ],
+      "to": "PlataformaSirri",
+      "flightDur": 0.55,
+      "onHit": {
+        "fx": "fx.impact",
+        "size": 65
+      }
+    },
+    {
+      "id": "plataformas-aprox",
+      "type": "label.chip",
+      "t": "@atacan#2",
+      "dur": 3.08,
+      "out": 188.45,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Sassan y Sirri · ubicaciones aproximadas",
+      "screen": [
+        0.5,
+        0.76
+      ],
+      "width": 920,
+      "size": 28
+    },
+    {
+      "id": "enterprise",
+      "type": "naval.carrier",
+      "t": 188.75,
+      "dur": 9.5,
+      "out": 197.95,
+      "fade": 0.3,
+      "sfx": [
+        {
+          "sfx": "naval-engine-low",
+          "dur": 7,
+          "gain_db": -30
+        }
+      ],
+      "at": [
+        60.1,
+        23.65
+      ],
+      "variant": "supercarrier",
+      "flag": "US",
+      "label": "USS Enterprise · CVN-65",
+      "heading": "auto",
+      "scale": 1.55,
+      "path": {
+        "via": [
+          [
+            60.1,
+            23.65
+          ],
+          [
+            60.03,
+            23.73
+          ],
+          [
+            59.91,
+            23.79
+          ]
+        ],
+        "t": 188.75,
+        "dur": 8,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "deck": {
+        "aircraft": 12
+      },
+      "spacing": 0.65,
+      "escorts": {
+        "formation": "diamond",
+        "units": [
+          "naval.warship:cg",
+          "naval.warship:ddg",
+          "naval.warship:ff"
+        ]
+      },
+      "states": [
+        {
+          "at": "@despegan",
+          "state": "flightops",
+          "dur": 0.35
+        }
+      ],
+      "note": "G31; al este de Ormuz. Derrota, escoltas y 12 figuras en cubierta son composición simbólica, no inventario histórico."
+    },
+    {
+      "id": "enterprise-este",
+      "type": "label.chip",
+      "t": "@enterprise-2.5",
+      "dur": 9.16,
+      "out": 197.95,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "AL ESTE DE ORMUZ · MAR ARÁBIGO",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 33
+    },
+    {
+      "id": "salida-intruder",
+      "type": "air.launch",
+      "t": "@despegan",
+      "dur": 4.2,
+      "out": 197.95,
+      "fade": 0,
+      "at": "enterprise",
+      "carrier": "enterprise",
+      "unit": "air.jet:a6",
+      "to": [
+        59.2,
+        24.4
+      ],
+      "count": 2,
+      "interval": 0.7,
+      "deckDur": 0.65,
+      "flightDur": 2.8,
+      "scale": 1.25,
+      "note": "G32. A-6 de biblioteca; dos salidas ilustrativas, no recuento total de misión. Acción agregada, no vista en ref5."
+    },
+    {
+      "id": "intruder",
+      "type": "label.chip",
+      "t": "@despegan",
+      "dur": 4.2,
+      "out": 197.95,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "A-6E Intruder · aviones de ataque",
+      "screen": [
+        0.5,
+        0.77
+      ],
+      "width": 920,
+      "size": 32
+    },
+    {
+      "id": "sahand",
+      "type": "naval.warship",
+      "t": 198.1,
+      "dur": 4.8,
+      "out": 202.6,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Sahand",
+      "variant": "frigate",
+      "scale": 1.6,
+      "flag": "IR",
+      "label": "Sahand · fragata",
+      "heading": 310,
+      "states": [
+        {
+          "at": 199.45,
+          "state": "hit",
+          "dur": 0.2
+        },
+        {
+          "at": 199.7,
+          "state": "burning",
+          "dur": 0.3
+        },
+        {
+          "at": "@hunden",
+          "state": "sunk",
+          "dur": 1.5
+        }
+      ],
+      "note": "G34. Secuencia de estados comprimida, no duración histórica."
+    },
+    {
+      "id": "sahand-ataque",
+      "type": "strike.missile",
+      "t": 199.05,
+      "dur": 2.15,
+      "out": 200.9,
+      "fade": 0,
+      "sfx": false,
+      "from": [
+        56.6,
+        26.3
+      ],
+      "to": "Sahand",
+      "flightDur": 0.4,
+      "onHit": {
+        "fx": "fx.impact",
+        "size": 50
+      }
+    },
+    {
+      "id": "joshan",
+      "type": "naval.warship",
+      "t": 198.1,
+      "dur": 4.8,
+      "out": 202.6,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Joshan",
+      "variant": "frigate",
+      "scale": 0.85,
+      "flag": "IR",
+      "label": "Joshan · lancha misilera",
+      "heading": 310,
+      "states": [
+        {
+          "at": 199.45,
+          "state": "hit",
+          "dur": 0.2
+        },
+        {
+          "at": 199.7,
+          "state": "burning",
+          "dur": 0.3
+        },
+        {
+          "at": "@hunden",
+          "state": "sunk",
+          "dur": 1.5
+        }
+      ],
+      "note": "G33. Silueta reducida de biblioteca: no hay Kaman/Combattante II específica."
+    },
+    {
+      "id": "joshan-ataque",
+      "type": "strike.missile",
+      "t": 199.05,
+      "dur": 2.15,
+      "out": 200.9,
+      "fade": 0,
+      "sfx": false,
+      "from": [
+        54.1,
+        25.65
+      ],
+      "to": "Joshan",
+      "flightDur": 0.4,
+      "onHit": {
+        "fx": "fx.impact",
+        "size": 50
+      }
+    },
+    {
+      "id": "hundimientos",
+      "type": "label.chip",
+      "t": "@hunden",
+      "dur": 2.21,
+      "out": 202.7,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Sahand y Joshan se hunden",
+      "screen": [
+        0.5,
+        0.18
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "sabalan",
+      "type": "naval.warship",
+      "t": 202.2,
+      "dur": 5.7,
+      "out": 207.6,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "Sabalan",
+      "variant": "frigate",
+      "flag": "IR",
+      "scale": 1.7,
+      "label": "Sabalan",
+      "heading": 290,
+      "states": [
+        {
+          "at": "@inmovilizada",
+          "state": "hit",
+          "dur": 0.35
+        }
+      ],
+      "wake": false,
+      "note": "G35. Detenida y dañada; nunca sunk."
+    },
+    {
+      "id": "bomba-sabalan",
+      "type": "air.drop",
+      "t": "@inmovilizada-1",
+      "dur": 2.25,
+      "out": 205.1,
+      "fade": 0,
+      "sfx": false,
+      "at": "Sabalan",
+      "to": "Sabalan",
+      "count": 1,
+      "fallDur": 1,
+      "height": 100,
+      "note": "G35. Bomba guiada esquemática; caída visual agregada."
+    },
+    {
+      "id": "sabalan-estado",
+      "type": "label.chip",
+      "t": "@inmovilizada",
+      "dur": 3.75,
+      "out": 207.6,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Sabalan · inmovilizada y remolcada",
+      "screen": [
+        0.5,
+        0.2
+      ],
+      "width": 920,
+      "size": 34
+    },
+    {
+      "id": "al-faw-avance",
+      "type": "army.advance",
+      "t": 207.9,
+      "dur": 7.77,
+      "out": 215.37,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        48.28,
+        30.17
+      ],
+      "flag": "IQ",
+      "count": 12,
+      "columns": 4,
+      "radius": 23,
+      "spacing": 53,
+      "scale": 0.7,
+      "label": "",
+      "path": {
+        "via": [
+          [
+            48.28,
+            30.17
+          ],
+          [
+            48.47,
+            29.98
+          ]
+        ],
+        "t": "@recuperando",
+        "dur": 4.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto"
+    },
+    {
+      "id": "tierra-1988",
+      "type": "label.chip",
+      "t": "@recuperando",
+      "dur": 5.66,
+      "out": 215.37,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "ABR 1988 · OFENSIVA EN TIERRA",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 33
+    },
+    {
+      "id": "al-faw",
+      "type": "label.chip",
+      "t": "@peninsula",
+      "dur": 2.94,
+      "out": 215.37,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Al-Faw · campaña distinta de Mantis",
+      "screen": [
+        0.5,
+        0.72
+      ],
+      "width": 920,
+      "size": 34
+    },
+    {
+      "id": "al-faw-aprox",
+      "type": "label.chip",
+      "t": 207.9,
+      "dur": 7.77,
+      "out": 215.37,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Frente y movimientos aproximados",
+      "screen": [
+        0.5,
+        0.78
+      ],
+      "width": 920,
+      "size": 27
+    },
+    {
+      "id": "resolucion-598",
+      "type": "editorial.press",
+      "t": "@598",
+      "dur": 8.98,
+      "out": 225.57,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        52.8,
+        27
+      ],
+      "src": "assets/media/A09.png",
+      "name": "Consejo de Seguridad de la ONU",
+      "role": "Resolución 598 (1987)",
+      "date": "20 jul 1987 · retrospectiva",
+      "credit": "Naciones Unidas · documento oficial · PD",
+      "docSrc": "assets/media/A09.png",
+      "docText": "Resolución 598 (1987)",
+      "docCredit": "ONU · S/RES/598(1987)",
+      "offset": [
+        0,
+        0
+      ],
+      "scale": 1.2,
+      "tilt": -4
+    },
+    {
+      "id": "resolucion-anterior",
+      "type": "label.chip",
+      "t": 215.67,
+      "dur": 6.94,
+      "out": 222.31,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Una resolución del año anterior",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 34
+    },
+    {
+      "id": "resolucion-fecha",
+      "type": "label.chip",
+      "t": "@adopto",
+      "dur": 3.26,
+      "out": 225.57,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "20 JUL 1987 · ADOPCIÓN",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "ruta-civil",
+      "type": "arrow.route",
+      "t": 225.87,
+      "dur": 10.76,
+      "out": 236.33,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          56.35,
+          27.2
+        ],
+        [
+          56.2,
+          26.6
+        ],
+        [
+          55.4,
+          25.3
+        ]
+      ],
+      "width": 1.4,
+      "color": "text",
+      "reveal": 0,
+      "note": "Ruta civil esquemática, sin representar el punto exacto del derribo. G38."
+    },
+    {
+      "id": "vuelo-civil",
+      "type": "label.chip",
+      "t": 225.87,
+      "dur": 10.76,
+      "out": 236.33,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "3 JUL 1988 · IRAN AIR 655",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "derribo-civil",
+      "type": "label.chip",
+      "t": "@derriba",
+      "dur": 4.83,
+      "out": 233.2,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Vincennes derriba el vuelo civil",
+      "screen": [
+        0.5,
+        0.39
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "victimas-civiles",
+      "type": "label.chip",
+      "t": "@290",
+      "dur": 3,
+      "out": 236.33,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "290 personas murieron",
+      "screen": [
+        0.5,
+        0.52
+      ],
+      "width": 920,
+      "size": 45
+    },
+    {
+      "id": "aceptacion",
+      "type": "label.chip",
+      "t": "@acepta",
+      "dur": 4.21,
+      "out": 241.3,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "JUL 1988 · IRÁN ACEPTA LA RESOLUCIÓN",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 33
+    },
+    {
+      "id": "alto-fuego",
+      "type": "label.chip",
+      "t": "@20",
+      "dur": 12.87,
+      "out": 254.54,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "20 AGO 1988 · ALTO EL FUEGO",
+      "screen": [
+        0.5,
+        0.13
+      ],
+      "width": 920,
+      "size": 36
+    },
+    {
+      "id": "frente-final",
+      "type": "front.line",
+      "t": 236.63,
+      "dur": 18.21,
+      "out": 254.54,
+      "fade": 0.3,
+      "sfx": false,
+      "via": [
+        [
+          45.4,
+          34.5
+        ],
+        [
+          45.85,
+          33.3
+        ],
+        [
+          47.1,
+          32.5
+        ],
+        [
+          47.45,
+          31.35
+        ],
+        [
+          47.95,
+          30.55
+        ]
+      ],
+      "width": 3,
+      "color": "danger",
+      "reveal": 0.2,
+      "note": "G37/G41. Esquema regional de posiciones pendientes, separado de las fronteras de referencia."
+    },
+    {
+      "id": "frente-final-aprox",
+      "type": "label.chip",
+      "t": 236.63,
+      "dur": 11.17,
+      "out": 247.5,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "Frente aproximado · frontera de referencia",
+      "screen": [
+        0.5,
+        0.77
+      ],
+      "width": 920,
+      "size": 27
+    },
+    {
+      "id": "retirada-posterior",
+      "type": "label.chip",
+      "t": "@retirada",
+      "dur": 6.89,
+      "out": 254.54,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "La retirada completa todavía llevará tiempo",
+      "screen": [
+        0.5,
+        0.75
+      ],
+      "width": 920,
+      "size": 32
+    },
+    {
+      "id": "bridgeton-final",
+      "type": "callout.photo",
+      "t": "@bridgeton#4",
+      "dur": 3.15,
+      "out": 254.54,
+      "fade": 0.3,
+      "sfx": false,
+      "at": [
+        51.6,
+        28.1
+      ],
+      "src": "assets/media/A02.png",
+      "caption": "Bridgeton · el mercante sobrevivió",
+      "date": "Foto: 22 ago 1987 · Earnest Will",
+      "credit": "PH3 H. Cleveland · U.S. Navy · PD",
+      "offset": [
+        0,
+        0
+      ],
+      "scale": 0.9,
+      "beam": false
+    },
+    {
+      "id": "cierre",
+      "type": "outro.channel",
+      "t": 254.84,
+      "dur": 8,
+      "out": 262.84,
+      "fade": 0,
+      "sfx": false,
+      "channel": "NODEHISTORY",
+      "handle": "youtube.com/@nodehistory",
+      "dim": 0.74
+    },
+    {
+      "id": "bridgeton-us",
+      "type": "flag.marker",
+      "t": 5.5,
+      "dur": 19.73,
+      "out": 24.93,
+      "fade": 0.3,
+      "sfx": false,
+      "at": "bridgeton",
+      "flag": "US",
+      "flagWidth": 62,
+      "poleHeight": 88
+    },
+    {
+      "id": "helicopteros-observa",
+      "type": "label.chip",
+      "t": 159.25,
+      "dur": 5.25,
+      "out": 164.2,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "1 MH-6 · observación",
+      "screen": [
+        0.5,
+        0.24
+      ],
+      "width": 920,
+      "size": 32
+    },
+    {
+      "id": "helicopteros-atacan",
+      "type": "label.chip",
+      "t": "@atacan",
+      "dur": 2.73,
+      "out": 164.2,
+      "fade": 0.3,
+      "sfx": false,
+      "text": "2 AH-6 · ataque",
+      "screen": [
+        0.5,
+        0.3
+      ],
+      "width": 920,
+      "size": 32
+    },
+    {
+      "id": "transcripcion-propia",
+      "type": "caption.transcript",
+      "t": 0,
+      "dur": 262.84,
+      "fade": 0,
+      "maxWords": 3,
+      "size": 45,
+      "y": 0.9,
+      "font": "AtlasDisplay, sans-serif",
+      "color": "#ffffff",
+      "lyricsUrl": "assets/lyrics.json",
+      "enabled": true,
+      "reductionPercent": 35.6,
+      "yLandscape": 0.915,
+      "yOffsetLandscape": 10,
+      "stroke": true,
+      "strokeColor": "#000000",
+      "background": ""
+    }
+  ],
+  "sound": {
+    "mix": "assets/mix.mp3",
+    "cues": [
+      {
+        "sfx": "whoosh",
+        "at": 23.2,
+        "dur": 1.2,
+        "gain_db": -34
+      },
+      {
+        "sfx": "industrial-hum",
+        "at": "@kharg",
+        "dur": 19,
+        "gain_db": -37
+      },
+      {
+        "sfx": "whoosh",
+        "at": 188.4,
+        "dur": 1.7,
+        "gain_db": -32
+      }
+    ]
+  },
+  "blocks": [
+    {
+      "block": 1,
+      "title": "El barco protegido",
+      "start": 1.17,
+      "end": 25.23,
+      "words_script": 48,
+      "segment_ids": [
+        "s01",
+        "s02"
+      ],
+      "scene_start": 0,
+      "scene_end": 25.23,
+      "scene_duration": 25.23
+    },
+    {
+      "block": 2,
+      "title": "La guerra en tierra",
+      "start": 25.23,
+      "end": 67.75,
+      "words_script": 90,
+      "segment_ids": [
+        "s03",
+        "s04",
+        "s05",
+        "s06"
+      ],
+      "scene_start": 25.23,
+      "scene_end": 67.75,
+      "scene_duration": 42.52
+    },
+    {
+      "block": 3,
+      "title": "Por qué importa el petróleo",
+      "start": 67.75,
+      "end": 89.93,
+      "words_script": 54,
+      "segment_ids": [
+        "s07",
+        "s08"
+      ],
+      "scene_start": 67.75,
+      "scene_end": 90.19,
+      "scene_duration": 22.44
+    },
+    {
+      "block": 4,
+      "title": "Terminales y mercantes bajo ataque",
+      "start": 90.19,
+      "end": 133.81,
+      "words_script": 91,
+      "segment_ids": [
+        "s09",
+        "s10",
+        "s11",
+        "s12"
+      ],
+      "scene_start": 90.19,
+      "scene_end": 133.81,
+      "scene_duration": 43.62
+    },
+    {
+      "block": 5,
+      "title": "Bandera nueva, peligro persistente",
+      "start": 133.81,
+      "end": 168.75,
+      "words_script": 72,
+      "segment_ids": [
+        "s13",
+        "s14",
+        "s15"
+      ],
+      "scene_start": 133.81,
+      "scene_end": 169.97,
+      "scene_duration": 36.16
+    },
+    {
+      "block": 6,
+      "title": "Mantis Religiosa",
+      "start": 169.97,
+      "end": 215.51,
+      "words_script": 98,
+      "segment_ids": [
+        "s16",
+        "s17",
+        "s18",
+        "s19",
+        "s20"
+      ],
+      "scene_start": 169.97,
+      "scene_end": 215.67,
+      "scene_duration": 45.7
+    },
+    {
+      "block": 7,
+      "title": "Una resolución, un alto el fuego",
+      "start": 215.67,
+      "end": 256.35,
+      "words_script": 96,
+      "segment_ids": [
+        "s21",
+        "s22",
+        "s23",
+        "s24"
+      ],
+      "scene_start": 215.67,
+      "scene_end": 262.84,
+      "scene_duration": 47.17
+    }
+  ],
+  "editorial": {
+    "sources": "work/research/HECHOS.md",
+    "anchors": "work/voz/anclas.json",
+    "positions": "Ciudades y hechos según HECHOS; rutas, formaciones y frentes esquemáticos. Sahand/Sabalan desplazados dentro del sector para no situarlos sobre Qeshm en Natural Earth.",
+    "omissions": "No submarinos, torpedos, tsunami, inventarios nacionales ni plataformas ajenas a Mantis: ESTRUCTURA excluye incorporarlos por completar el catálogo."
+  }
+}

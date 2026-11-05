@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "mode": "isolated-overlays",
+  "production": {
+    "renderer": "imperio",
+    "usesMap": true,
+    "coordinateSystem": "longitude-latitude",
+    "inputs": [
+      "country",
+      "from",
+      "to",
+      "sunAt",
+      "pins[].at",
+      "targets[].at",
+      "labels[].at"
+    ],
+    "note": "Los JSON mantienen el contrato del video con mapa. El aislamiento existe solo en el showcase."
+  },
+  "components": [
+    {
+      "name": "imperio.title",
+      "frameTime": 6.5,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.map",
+      "frameTime": 2.8,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.expansion",
+      "frameTime": 3.8,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.archive",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.word",
+      "frameTime": 1.8,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.native",
+      "frameTime": 2.2,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.introv1",
+      "frameTime": 3.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.introv2",
+      "frameTime": 4,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.outro",
+      "frameTime": 4.8,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.outrov2",
+      "frameTime": 4.8,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.campaign",
+      "frameTime": 3.8,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.footage",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.date",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.country",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.flag",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.city",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.arrow",
+      "frameTime": 2.9,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.territory",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.caption",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.sun",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.rays",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.ships",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "imperio.compass",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "common.flash",
+      "frameTime": 0.08,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    },
+    {
+      "name": "common.lyric",
+      "frameTime": 2.6,
+      "formats": [
+        "9x16",
+        "16x9"
+      ]
+    }
+  ]
+}

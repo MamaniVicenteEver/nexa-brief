@@ -53,8 +53,15 @@ def _state():
     try: return json.loads(STATE.read_text())
     except Exception: return {}
 def _mark_exhausted(keyname, model):
-    st = _state(); st.setdefault(model, {})[keyname] = time.time() + 23.5 * 3600
-    STATE.parent.mkdir(exist_ok=True); STATE.write_text(json.dumps(st, indent=1))
+    import fcntl, tempfile
+    STATE.parent.mkdir(exist_ok=True)
+    with STATE.with_suffix(".lock").open("a") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        st = _state(); st.setdefault(model, {})[keyname] = time.time() + 23.5 * 3600
+        with tempfile.NamedTemporaryFile("w", dir=STATE.parent, delete=False) as tmp:
+            json.dump(st, tmp, indent=1)
+            temp_path = pathlib.Path(tmp.name)
+        os.replace(temp_path, STATE)
 def _available(model):
     st = _state().get(model, {}); now = time.time()
     return [(k, v) for k, v in gemini_keys() if st.get(k, 0) < now]

@@ -1,0 +1,320 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.expansion",
+  "description": "Expansión: desde el sol del país foco salen HACES carmesí translúcidos hacia cada región destino, uno tras otro; al llegar, la región se raya (territorio ocupado) y aparece su nombre en condensada blanca. Para invasiones, zonas de influencia, rutas de ataque o alcance de una doctrina.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "country": {
+      "type": "string",
+      "description": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+      "default": ""
+    },
+    "hatch": {
+      "anyOf": [
+        {
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+      "default": null
+    },
+    "sun": {
+      "type": "boolean",
+      "description": "Círculo carmesí que late sobre el país foco.",
+      "default": true
+    },
+    "sunAt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "[lon, lat] del sol (vacío = centro del país foco).",
+      "default": null
+    },
+    "sunSize": {
+      "type": "number",
+      "minimum": 0.2,
+      "maximum": 6,
+      "description": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+      "default": 1.3
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "type": "string"
+          },
+          "at": {
+            "$ref": "#/$defs/place"
+          }
+        },
+        "required": [
+          "t",
+          "at"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "description": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+      "default": []
+    },
+    "compass": {
+      "type": "boolean",
+      "description": "Rosa de los vientos de línea fina abajo a la derecha.",
+      "default": false
+    },
+    "gray": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+      "default": 0
+    },
+    "enter": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 2,
+      "description": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+      "default": 0.5
+    },
+    "flag": {
+      "type": "string",
+      "description": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+      "default": "auto"
+    },
+    "from": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+      "default": null
+    },
+    "to": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+      "default": null
+    },
+    "zoom": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 6,
+      "description": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+      "default": 1.3
+    },
+    "tilt": {
+      "type": "number",
+      "minimum": -20,
+      "maximum": 20,
+      "description": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+      "default": 2
+    },
+    "ease": {
+      "enum": [
+        "auto",
+        "out",
+        "in",
+        "inOut",
+        "linear",
+        "expo"
+      ],
+      "description": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+      "default": "inOut"
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/place"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "at": {
+                "$ref": "#/$defs/place"
+              },
+              "t": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "at"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "minItems": 0,
+      "description": "Destinos: países o puntos: [\"Philippines\", {\"at\":\"Indonesia\", \"t\":\"Indias Orientales\"}, {\"at\":[151, -9], \"t\":\"Nueva Guinea\"}].",
+      "default": []
+    },
+    "at": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo del primer haz (acepta '@palabra').",
+      "default": 0.6
+    },
+    "stagger": {
+      "type": "number",
+      "minimum": 0.1,
+      "description": "Segundos entre haz y haz.",
+      "default": 0.7
+    },
+    "conquer": {
+      "type": "boolean",
+      "description": "Rayar cada país destino cuando llega su haz.",
+      "default": true
+    },
+    "ships": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "Barquitos por haz.",
+      "default": 1
+    },
+    "beam": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 3,
+      "description": "Ancho de los haces (multiplicador).",
+      "default": 1
+    }
+  },
+  "required": [
+    "targets"
+  ],
+  "$defs": {
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    },
+    "place": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "camera": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 4,
+          "items": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "country": "Japan",
+      "targets": [
+        {
+          "at": "Philippines",
+          "t": "Filipinas"
+        },
+        {
+          "at": "Indonesia",
+          "t": "Indias Orientales"
+        },
+        {
+          "at": "Malaysia",
+          "t": "Malasia"
+        },
+        {
+          "at": "Myanmar",
+          "t": "Birmania"
+        }
+      ],
+      "hatch": [
+        "Japan",
+        "South Korea",
+        "North Korea",
+        "Taiwan"
+      ],
+      "labels": [
+        {
+          "t": "Océano\nPacífico",
+          "at": [
+            150,
+            15
+          ]
+        },
+        {
+          "t": "Mar de la\nChina Meridional",
+          "at": [
+            114,
+            13
+          ]
+        }
+      ],
+      "compass": true
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

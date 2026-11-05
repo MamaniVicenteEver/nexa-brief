@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "tipo": "guia-para-ia",
+  "titulo": "Cambiar el vestuario de un personaje",
+  "objetivo": "Preparar una variante de vestuario compatible con Cara a Cara conservando el personaje original y sus poses.",
+  "estado_actual": {
+    "capacidad": "La ropa está dibujada en cada pose de la lámina. El motor no tiene prendas intercambiables ni un parámetro de vestuario.",
+    "metodo": "Crear otra lámina del mismo personaje con las ocho poses y registrarla como una variante con id único. No se modifica la imagen original."
+  },
+  "entradas": [
+    "Personaje existente e id (por ejemplo leo o lia).",
+    "Descripción concreta de la nueva ropa o referencia visual autorizada.",
+    "Identificador nuevo para la variante, en minúsculas, por ejemplo leo-chaqueta-azul."
+  ],
+  "archivos_existentes": {
+    "referencia": "assets/avatar/sheet-original.png",
+    "guia_personaje": "assets/avatar/crear-personaje.json",
+    "perfil_compartido": "../_pizarra/profiles/leo.json",
+    "escena": "assets/scene.json",
+    "origen_rutas": "Rutas relativas a sandbox/nodeaction/cara-a-cara/."
+  },
+  "principios": [
+    "Conservar rostro, cabello, tono de piel, identidad, proporciones y estilo del personaje de referencia; variar únicamente la vestimenta solicitada y mantenerla idéntica en todas las poses.",
+    "Dibujo 2D limpio con contornos oscuros, cuerpo entero, fondo blanco uniforme y margen alrededor de cabeza, manos y zapatos.",
+    "Ocho poses en orden: talk, point-left, point-right, think, explain, surprise, celebrate, question. Cada pose debe ser legible, sin texto, marcas, objetos adicionales ni partes cortadas.",
+    "Un generador puede cambiar la cara o la ropa entre poses; revisar cada imagen y corregir antes de integrar."
+  ],
+  "pasos": [
+    "1. Confirmar personaje, ropa e id nuevo; consultar la referencia visual y la guía crear-personaje.json.",
+    "2. Generar o recibir una lámina PNG nueva con las ocho poses del mismo personaje, por ejemplo 4 columnas × 2 filas. La cuadrícula no sustituye la medición de los recortes.",
+    "3. Guardar la lámina en assets/avatar/characters/<id-variante>/sheet.png sin sobrescribir ninguna existente.",
+    "4. Medir las cajas reales de cada pose y normalizarlas como [x/W, y/H, ancho/W, alto/H]. Cada valor debe ser finito, los tamaños positivos y la caja debe quedar dentro de la imagen.",
+    "5. Añadir avatar.characters.<id-variante> al perfil compartido, con src relativo al perfil y los ocho recortes medidos, siguiendo crear-personaje.json. Conservar leo, lia, defaultCharacter y todos los demás campos.",
+    "6. Elegir la variante con ?character=<id-variante> para revisión o con shots[].character en una escena de prueba. La selección en la URL tiene prioridad.",
+    "7. Revisar las ocho poses y los cambios entre planos en 9:16, pausa y seek; confirmar que el personaje original continúa igual y que no hay errores de carga o consola."
+  ],
+  "no_hacer": [
+    "No modificar ropa mediante un campo inexistente ni dibujar prendas con código como si fueran una capa compatible.",
+    "No sobrescribir la lámina maestra ni redefinir leo o lia.",
+    "No cambiar automáticamente la voz Puck, el audio aprobado, los subtítulos o la composición.",
+    "No publicar ni producir un video final sin solicitud expresa."
+  ],
+  "resultado_esperado": [
+    "PNG de la variante y fuente o procedencia.",
+    "Una entrada nueva en el perfil y ocho recortes verificados.",
+    "Resumen de pruebas y cualquier limitación. Si no se puede probar alguna parte, indicarlo; no afirmar integración completa."
+  ]
+}

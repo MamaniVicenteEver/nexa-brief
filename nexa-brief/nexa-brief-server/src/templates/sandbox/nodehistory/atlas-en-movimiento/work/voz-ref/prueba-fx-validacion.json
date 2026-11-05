@@ -1,0 +1,99 @@
+{
+  "source": "Picker_Rickmansworth_88_mp3.mp3",
+  "excerpt_start_s": 190,
+  "excerpt_duration_s": 20,
+  "purpose": "Comparación técnica, no publicar ni considerar voz final de Malvinas",
+  "api_calls": 0,
+  "breath_cues": [
+    {
+      "file": "/home/university/aem-local/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/work/voz-ref/sfx-cc0/exhale-02.wav",
+      "start": 7.515,
+      "absolute_reference_start": 197.515,
+      "source_start": 0.9,
+      "duration": 0.18,
+      "target_rms_dbfs": -46.60730952866523,
+      "license": "CC0",
+      "provider_sound_id": "exhale-02",
+      "measured_gap": {
+        "start": 197.32,
+        "end": 197.76,
+        "duration": 0.4399999999999977,
+        "after": " gente.",
+        "before": " Intenta",
+        "punctuation": "punto"
+      },
+      "acoustic_quiet_threshold_dbfs": -31.393457348113927,
+      "acoustic_rms_max_dbfs": -32.576734487477204,
+      "selection_note": "Recorte alrededor del pico informado por el proveedor; pendiente de escucha, no aprobación editorial."
+    },
+    {
+      "file": "/home/university/aem-local/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/work/voz-ref/sfx-cc0/sigh-03.wav",
+      "start": 17.9,
+      "absolute_reference_start": 207.9,
+      "source_start": 0.17,
+      "duration": 0.22,
+      "target_rms_dbfs": -46.60730952866523,
+      "license": "CC0",
+      "provider_sound_id": "sigh-03",
+      "measured_gap": {
+        "start": 207.7,
+        "end": 208.2,
+        "duration": 0.5,
+        "after": " cocina.",
+        "before": " Al",
+        "punctuation": "punto"
+      },
+      "acoustic_quiet_threshold_dbfs": -31.393457348113927,
+      "acoustic_rms_max_dbfs": -40.25960658760287,
+      "selection_note": "Recorte alrededor del pico informado por el proveedor; pendiente de escucha, no aprobación editorial."
+    }
+  ],
+  "comparison_gain_db": {
+    "before": -0.48999999999999844,
+    "after": 0
+  },
+  "mastering_note": "Objetivo del master −16 LUFS. El límite de picos puede dejar la medición más baja. La comparación se igualó atenuando la versión más fuerte, sin aumentar picos.",
+  "before": {
+    "input_i": "-16.99",
+    "input_tp": "-2.24",
+    "input_lra": "1.40",
+    "input_thresh": "-27.24",
+    "output_i": "-16.10",
+    "output_tp": "-1.50",
+    "output_lra": "1.50",
+    "output_thresh": "-26.34",
+    "normalization_type": "dynamic",
+    "target_offset": "0.10"
+  },
+  "after": {
+    "input_i": "-16.99",
+    "input_tp": "-1.74",
+    "input_lra": "1.30",
+    "input_thresh": "-27.22",
+    "output_i": "-16.49",
+    "output_tp": "-1.50",
+    "output_lra": "1.40",
+    "output_thresh": "-26.69",
+    "normalization_type": "dynamic",
+    "target_offset": "0.49"
+  },
+  "audio": {
+    "before": {
+      "decoded_duration_s": 20.0,
+      "rms_dbfs": -16.5653298932824,
+      "sample_peak_dbfs": -2.1431139896446574,
+      "clipped_samples": 0,
+      "low_80_250_to_mid_500_1500_db": 7.717604303106227,
+      "presence_2000_4000_to_mid_500_1500_db": -4.008095956534372
+    },
+    "after": {
+      "decoded_duration_s": 20.0,
+      "rms_dbfs": -16.54800273758405,
+      "sample_peak_dbfs": -1.4839220758012683,
+      "clipped_samples": 0,
+      "low_80_250_to_mid_500_1500_db": 8.59610909073231,
+      "presence_2000_4000_to_mid_500_1500_db": -2.7785434256398944
+    }
+  },
+  "integrated_loudness_difference_lu": 0.0
+}

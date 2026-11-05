@@ -46,6 +46,24 @@ def test_plan_promotion_accepts_ready_video(tmp_path: Path) -> None:
     assert promotion_blocker(item_dir, templates_dir=templates_dir) is None
 
 
+def test_manifest_category_selects_production_folder(tmp_path):
+    templates = tmp_path / "templates"
+    item = make_item(templates)
+    (item / "manifest.json").write_text(json.dumps({"status": "listo", "category": "node_atlas"}))
+    plan = promote(item, templates_dir=templates)
+    assert plan.destination == templates / "nodeatlas" / "demo"
+    assert not item.exists()
+
+
+def test_unknown_destination_category_does_not_move_the_video(tmp_path):
+    templates = tmp_path / "templates"
+    item = make_item(templates)
+    (item / "manifest.json").write_text(json.dumps({"status": "listo", "category": "unknown"}))
+    with pytest.raises(PromoteError, match="Categoría de producción inválida"):
+        promote(item, templates_dir=templates)
+    assert item.exists()
+
+
 def test_not_ready_video_has_blocker_message(tmp_path: Path) -> None:
     templates_dir = tmp_path / "templates"
     item_dir = make_item(templates_dir, status="borrador")

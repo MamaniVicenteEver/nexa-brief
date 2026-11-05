@@ -1,0 +1,86 @@
+{
+  "name": "label.neon",
+  "family": "label",
+  "description": "Rótulo neón con contorno oscuro, rotación y ajuste de líneas. Úsala para identificar lugares y objetos.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "size": {
+      "type": "number",
+      "default": 64,
+      "range": null,
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "width": {
+      "type": "number",
+      "default": 650,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "height": {
+      "type": "number",
+      "default": 220,
+      "range": null,
+      "description": "Alto del elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "accent",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "fit": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Modo de ajuste del contenido al espacio disponible."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    },
+    "rotation": {
+      "type": "number",
+      "default": 0,
+      "range": null,
+      "description": "Rotación de la figura en grados."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-label-neon",
+    "t": 0,
+    "type": "label.neon",
+    "at": [
+      54,
+      32
+    ],
+    "text": "IRÁN",
+    "color": "cyan",
+    "size": 78,
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-labels.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/label.neon.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

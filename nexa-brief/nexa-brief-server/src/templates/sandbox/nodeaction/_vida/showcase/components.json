@@ -1,0 +1,8303 @@
+{
+  "components": [
+    {
+      "name": "characters.heladero",
+      "summary": "Heladero: buzz, apron. Voz tomas.",
+      "states": [
+        "heladero"
+      ],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 0.84,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.17,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 672041
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smile",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "used_by": [
+        "heladero"
+      ],
+      "demo": {
+        "type": "heladero",
+        "height": 0.84,
+        "ink.width": 0.012,
+        "head.radius": 0.17,
+        "seed": 672041,
+        "view": "front",
+        "face.expression": "smile"
+      },
+      "preview": {
+        "section": "characters",
+        "id": "heladero",
+        "url": "studio.html?sheet=heladero"
+      }
+    },
+    {
+      "name": "characters.mama",
+      "summary": "Rosa: curly, apron. Voz mama.",
+      "states": [
+        "mama"
+      ],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 1.08,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.163,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 5337
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smile",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "used_by": [
+        "mama"
+      ],
+      "demo": {
+        "type": "mama",
+        "height": 1.08,
+        "ink.width": 0.012,
+        "head.radius": 0.163,
+        "seed": 5337,
+        "view": "front",
+        "face.expression": "smile"
+      },
+      "preview": {
+        "section": "characters",
+        "id": "mama",
+        "url": "studio.html?sheet=mama"
+      }
+    },
+    {
+      "name": "characters.nico",
+      "summary": "Nico: buzz, tshirt. Voz nico.",
+      "states": [
+        "nico"
+      ],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 0.93,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.174,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 1289
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smile",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "used_by": [
+        "nico"
+      ],
+      "demo": {
+        "type": "nico",
+        "height": 0.93,
+        "ink.width": 0.012,
+        "head.radius": 0.174,
+        "seed": 1289,
+        "view": "front",
+        "face.expression": "smile"
+      },
+      "preview": {
+        "section": "characters",
+        "id": "nico",
+        "url": "studio.html?sheet=nico"
+      }
+    },
+    {
+      "name": "characters.tomas",
+      "summary": "Tomás: spiky, hoodie. Voz tomas.",
+      "states": [
+        "tomas"
+      ],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 1,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.166,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 7401
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smirk",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "used_by": [
+        "tomas"
+      ],
+      "demo": {
+        "type": "tomas",
+        "height": 1,
+        "ink.width": 0.012,
+        "head.radius": 0.166,
+        "seed": 7401,
+        "view": "front",
+        "face.expression": "smirk"
+      },
+      "preview": {
+        "section": "characters",
+        "id": "tomas",
+        "url": "studio.html?sheet=tomas"
+      }
+    },
+    {
+      "name": "characters.valeria",
+      "summary": "Valeria: ponytail, dress. Voz valeria.",
+      "states": [
+        "valeria"
+      ],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 0.98,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.166,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 9032
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smile",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "used_by": [
+        "valeria"
+      ],
+      "demo": {
+        "type": "valeria",
+        "height": 0.98,
+        "ink.width": 0.012,
+        "head.radius": 0.166,
+        "seed": 9032,
+        "view": "front",
+        "face.expression": "smile"
+      },
+      "preview": {
+        "section": "characters",
+        "id": "valeria",
+        "url": "studio.html?sheet=valeria"
+      }
+    },
+    {
+      "name": "expressions.neutral",
+      "summary": "Reposo atento.",
+      "states": [
+        "neutral"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "neutral",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "neutral",
+        "url": "studio.html?character=tomas&expression=neutral&t=0"
+      }
+    },
+    {
+      "name": "expressions.smile",
+      "summary": "Sonrisa suave; mejillas levantan el párpado inferior.",
+      "states": [
+        "smile"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "smile",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "smile",
+        "url": "studio.html?character=tomas&expression=smile&t=0"
+      }
+    },
+    {
+      "name": "expressions.smirk",
+      "summary": "Sonrisa ladeada y cejas asimétricas.",
+      "states": [
+        "smirk"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "smirk",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "smirk",
+        "url": "studio.html?character=tomas&expression=smirk&t=0"
+      }
+    },
+    {
+      "name": "expressions.grin",
+      "summary": "Sonrisa amplia con dientes y ojos entrecerrados desde abajo.",
+      "states": [
+        "grin"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "grin",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "grin",
+        "url": "studio.html?character=tomas&expression=grin&t=0"
+      }
+    },
+    {
+      "name": "expressions.laugh",
+      "summary": "Carcajada, ojos en arco, lengua y lágrimas.",
+      "states": [
+        "laugh"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "laugh",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "laugh",
+        "url": "studio.html?character=tomas&expression=laugh&t=0"
+      }
+    },
+    {
+      "name": "expressions.sad",
+      "summary": "Comisuras caídas, cejas internas elevadas, mirada baja y lágrimas.",
+      "states": [
+        "sad"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "sad",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "sad",
+        "url": "studio.html?character=tomas&expression=sad&t=0"
+      }
+    },
+    {
+      "name": "expressions.worry",
+      "summary": "Tensión, cejas oblicuas y gota de sudor.",
+      "states": [
+        "worry"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "worry",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "worry",
+        "url": "studio.html?character=tomas&expression=worry&t=0"
+      }
+    },
+    {
+      "name": "expressions.surprise",
+      "summary": "Ojos grandes, cejas altas y boca redonda.",
+      "states": [
+        "surprise"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "surprise",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "surprise",
+        "url": "studio.html?character=tomas&expression=surprise&t=0"
+      }
+    },
+    {
+      "name": "expressions.shock",
+      "summary": "Ojos muy abiertos, pupilas pequeñas y mandíbula caída.",
+      "states": [
+        "shock"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "shock",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "shock",
+        "url": "studio.html?character=tomas&expression=shock&t=0"
+      }
+    },
+    {
+      "name": "expressions.annoyed",
+      "summary": "Cejas hacia el centro y párpados superiores bajos.",
+      "states": [
+        "annoyed"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "annoyed",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "annoyed",
+        "url": "studio.html?character=tomas&expression=annoyed&t=0"
+      }
+    },
+    {
+      "name": "expressions.skeptical",
+      "summary": "Un ojo entrecerrado y una ceja levantada.",
+      "states": [
+        "skeptical"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "skeptical",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "skeptical",
+        "url": "studio.html?character=tomas&expression=skeptical&t=0"
+      }
+    },
+    {
+      "name": "expressions.shy",
+      "summary": "Mirada baja, sonrisa pequeña y rubor.",
+      "states": [
+        "shy"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "shy",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "shy",
+        "url": "studio.html?character=tomas&expression=shy&t=0"
+      }
+    },
+    {
+      "name": "expressions.love",
+      "summary": "Pupilas de corazón, mejillas rosadas y sonrisa.",
+      "states": [
+        "love"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "love",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "love",
+        "url": "studio.html?character=tomas&expression=love&t=0"
+      }
+    },
+    {
+      "name": "expressions.think",
+      "summary": "Mirada arriba y al lado; boca y cejas asimétricas.",
+      "states": [
+        "think"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "think",
+        "intensity": 1,
+        "eyeScale": 1,
+        "mix.weight": 0,
+        "blink": "auto",
+        "lookAt": null,
+        "closeUp": false
+      },
+      "preview": {
+        "section": "expressions",
+        "id": "think",
+        "url": "studio.html?character=tomas&expression=think&t=0"
+      }
+    },
+    {
+      "name": "visemes.X",
+      "summary": "Boca cerrada de reposo.",
+      "states": [
+        "X"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "X",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "X",
+        "url": "studio.html?character=tomas&viseme=X&t=0"
+      }
+    },
+    {
+      "name": "visemes.A",
+      "summary": "Vocal abierta con lengua.",
+      "states": [
+        "A"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "A",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "A",
+        "url": "studio.html?character=tomas&viseme=A&t=0"
+      }
+    },
+    {
+      "name": "visemes.E",
+      "summary": "Vocal ancha con dientes.",
+      "states": [
+        "E"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "E",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "E",
+        "url": "studio.html?character=tomas&viseme=E&t=0"
+      }
+    },
+    {
+      "name": "visemes.I",
+      "summary": "Vocal estirada de apertura pequeña.",
+      "states": [
+        "I"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "I",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "I",
+        "url": "studio.html?character=tomas&viseme=I&t=0"
+      }
+    },
+    {
+      "name": "visemes.O",
+      "summary": "Vocal redondeada amplia.",
+      "states": [
+        "O"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "O",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "O",
+        "url": "studio.html?character=tomas&viseme=O&t=0"
+      }
+    },
+    {
+      "name": "visemes.U",
+      "summary": "Vocal redondeada estrecha.",
+      "states": [
+        "U"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "U",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "U",
+        "url": "studio.html?character=tomas&viseme=U&t=0"
+      }
+    },
+    {
+      "name": "visemes.MBP",
+      "summary": "Labios en contacto.",
+      "states": [
+        "MBP"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "MBP",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "MBP",
+        "url": "studio.html?character=tomas&viseme=MBP&t=0"
+      }
+    },
+    {
+      "name": "visemes.FV",
+      "summary": "Incisivos sobre el labio inferior.",
+      "states": [
+        "FV"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "FV",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "FV",
+        "url": "studio.html?character=tomas&viseme=FV&t=0"
+      }
+    },
+    {
+      "name": "visemes.L",
+      "summary": "Lengua elevada; también r/n/d/t.",
+      "states": [
+        "L"
+      ],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "L",
+        "open": 1,
+        "speechWeight": 1,
+        "viseme.mix": 0
+      },
+      "preview": {
+        "section": "visemes",
+        "id": "L",
+        "url": "studio.html?character=tomas&viseme=L&t=0"
+      }
+    },
+    {
+      "name": "hands.open",
+      "summary": "Mitón relajado con pulgar.",
+      "states": [
+        "open"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "open",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "open",
+        "handShapes.right": "open",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "open",
+        "url": "studio.html?character=tomas&pose=wave&hand=open&t=0"
+      }
+    },
+    {
+      "name": "hands.fist",
+      "summary": "Puño cerrado.",
+      "states": [
+        "fist"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "fist",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "fist",
+        "handShapes.right": "fist",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "fist",
+        "url": "studio.html?character=tomas&pose=wave&hand=fist&t=0"
+      }
+    },
+    {
+      "name": "hands.point",
+      "summary": "Índice extendido.",
+      "states": [
+        "point"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "point",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "point",
+        "handShapes.right": "point",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "point",
+        "url": "studio.html?character=tomas&pose=wave&hand=point&t=0"
+      }
+    },
+    {
+      "name": "hands.thumb",
+      "summary": "Pulgar arriba.",
+      "states": [
+        "thumb"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "thumb",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "thumb",
+        "handShapes.right": "thumb",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "thumb",
+        "url": "studio.html?character=tomas&pose=wave&hand=thumb&t=0"
+      }
+    },
+    {
+      "name": "hands.hold",
+      "summary": "Pinza curva para un objeto.",
+      "states": [
+        "hold"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "hold",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "hold",
+        "handShapes.right": "hold",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "hold",
+        "url": "studio.html?character=tomas&pose=wave&hand=hold&t=0"
+      }
+    },
+    {
+      "name": "hands.wave",
+      "summary": "Palma abierta con dedos separados.",
+      "states": [
+        "wave"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "wave",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "wave",
+        "handShapes.right": "wave",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "wave",
+        "url": "studio.html?character=tomas&pose=wave&hand=wave&t=0"
+      }
+    },
+    {
+      "name": "hands.flat",
+      "summary": "Mano plana extendida.",
+      "states": [
+        "flat"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "flat",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "flat",
+        "handShapes.right": "flat",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "flat",
+        "url": "studio.html?character=tomas&pose=wave&hand=flat&t=0"
+      }
+    },
+    {
+      "name": "hands.two",
+      "summary": "Dos dedos para contar.",
+      "states": [
+        "two"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "two",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "two",
+        "handShapes.right": "two",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "two",
+        "url": "studio.html?character=tomas&pose=wave&hand=two&t=0"
+      }
+    },
+    {
+      "name": "hands.three",
+      "summary": "Tres dedos para contar.",
+      "states": [
+        "three"
+      ],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "three",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama",
+        "nico",
+        "tomas",
+        "valeria"
+      ],
+      "demo": {
+        "type": "three",
+        "handShapes.right": "three",
+        "handAngles.right": null
+      },
+      "preview": {
+        "section": "hands",
+        "id": "three",
+        "url": "studio.html?character=tomas&pose=wave&hand=three&t=0"
+      }
+    },
+    {
+      "name": "hair.spiky",
+      "summary": "Mechones castaños en punta y sombra plana.",
+      "states": [
+        "spiky"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#61412c"
+        },
+        "secondary.at": {
+          "type": "number",
+          "min": 0,
+          "max": 7200,
+          "default": 0,
+          "summary": "Instante del impulso.",
+          "doc": "Instante del impulso."
+        },
+        "secondary.amplitude": {
+          "type": "number",
+          "min": -0.6,
+          "max": 0.6,
+          "default": 0.15,
+          "summary": "Desplazamiento angular inicial.",
+          "doc": "Desplazamiento angular inicial."
+        },
+        "secondary.frequency": {
+          "type": "number",
+          "min": 0.1,
+          "max": 8,
+          "default": 2.6,
+          "summary": "Frecuencia natural en Hz.",
+          "doc": "Frecuencia natural en Hz."
+        },
+        "secondary.damping": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.48,
+          "summary": "Amortiguación.",
+          "doc": "Amortiguación."
+        }
+      },
+      "used_by": [
+        "tomas"
+      ],
+      "demo": {
+        "type": "spiky",
+        "color": "#61412c",
+        "secondary.at": 0,
+        "secondary.amplitude": 0.15,
+        "secondary.frequency": 2.6,
+        "secondary.damping": 0.48
+      },
+      "preview": {
+        "section": "hair",
+        "id": "spiky",
+        "url": "studio.html?character=tomas&hair=spiky&t=0"
+      }
+    },
+    {
+      "name": "hair.ponytail",
+      "summary": "Coleta larga con moño; movimiento secundario.",
+      "states": [
+        "ponytail"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#493331"
+        },
+        "secondary.at": {
+          "type": "number",
+          "min": 0,
+          "max": 7200,
+          "default": 0,
+          "summary": "Instante del impulso.",
+          "doc": "Instante del impulso."
+        },
+        "secondary.amplitude": {
+          "type": "number",
+          "min": -0.6,
+          "max": 0.6,
+          "default": 0.15,
+          "summary": "Desplazamiento angular inicial.",
+          "doc": "Desplazamiento angular inicial."
+        },
+        "secondary.frequency": {
+          "type": "number",
+          "min": 0.1,
+          "max": 8,
+          "default": 2.6,
+          "summary": "Frecuencia natural en Hz.",
+          "doc": "Frecuencia natural en Hz."
+        },
+        "secondary.damping": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.48,
+          "summary": "Amortiguación.",
+          "doc": "Amortiguación."
+        }
+      },
+      "used_by": [
+        "valeria"
+      ],
+      "demo": {
+        "type": "ponytail",
+        "color": "#493331",
+        "secondary.at": 0,
+        "secondary.amplitude": 0.15,
+        "secondary.frequency": 2.6,
+        "secondary.damping": 0.48
+      },
+      "preview": {
+        "section": "hair",
+        "id": "ponytail",
+        "url": "studio.html?character=valeria&hair=ponytail&t=0"
+      }
+    },
+    {
+      "name": "hair.curly",
+      "summary": "Rulos cortos con una sola silueta continua.",
+      "states": [
+        "curly"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#3c3033"
+        },
+        "secondary.at": {
+          "type": "number",
+          "min": 0,
+          "max": 7200,
+          "default": 0,
+          "summary": "Instante del impulso.",
+          "doc": "Instante del impulso."
+        },
+        "secondary.amplitude": {
+          "type": "number",
+          "min": -0.6,
+          "max": 0.6,
+          "default": 0.15,
+          "summary": "Desplazamiento angular inicial.",
+          "doc": "Desplazamiento angular inicial."
+        },
+        "secondary.frequency": {
+          "type": "number",
+          "min": 0.1,
+          "max": 8,
+          "default": 2.6,
+          "summary": "Frecuencia natural en Hz.",
+          "doc": "Frecuencia natural en Hz."
+        },
+        "secondary.damping": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.48,
+          "summary": "Amortiguación.",
+          "doc": "Amortiguación."
+        }
+      },
+      "used_by": [
+        "mama"
+      ],
+      "demo": {
+        "type": "curly",
+        "color": "#3c3033",
+        "secondary.at": 0,
+        "secondary.amplitude": 0.15,
+        "secondary.frequency": 2.6,
+        "secondary.damping": 0.48
+      },
+      "preview": {
+        "section": "hair",
+        "id": "curly",
+        "url": "studio.html?character=mama&hair=curly&t=0"
+      }
+    },
+    {
+      "name": "hair.buzz",
+      "summary": "Pelo rapado, compatible con gorra.",
+      "states": [
+        "buzz"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#493b37"
+        },
+        "secondary.at": {
+          "type": "number",
+          "min": 0,
+          "max": 7200,
+          "default": 0,
+          "summary": "Instante del impulso.",
+          "doc": "Instante del impulso."
+        },
+        "secondary.amplitude": {
+          "type": "number",
+          "min": -0.6,
+          "max": 0.6,
+          "default": 0.15,
+          "summary": "Desplazamiento angular inicial.",
+          "doc": "Desplazamiento angular inicial."
+        },
+        "secondary.frequency": {
+          "type": "number",
+          "min": 0.1,
+          "max": 8,
+          "default": 2.6,
+          "summary": "Frecuencia natural en Hz.",
+          "doc": "Frecuencia natural en Hz."
+        },
+        "secondary.damping": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.48,
+          "summary": "Amortiguación.",
+          "doc": "Amortiguación."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "nico"
+      ],
+      "demo": {
+        "type": "buzz",
+        "color": "#493b37",
+        "secondary.at": 0,
+        "secondary.amplitude": 0.15,
+        "secondary.frequency": 2.6,
+        "secondary.damping": 0.48
+      },
+      "preview": {
+        "section": "hair",
+        "id": "buzz",
+        "url": "studio.html?character=heladero&hair=buzz&t=0"
+      }
+    },
+    {
+      "name": "outfits.tshirt",
+      "summary": "Camiseta de manga corta.",
+      "states": [
+        "tshirt"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#f3cc5d"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#d9ac45"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "used_by": [
+        "nico"
+      ],
+      "demo": {
+        "type": "tshirt",
+        "color": "#f3cc5d",
+        "shadow": "#d9ac45",
+        "body.width": 1
+      },
+      "preview": {
+        "section": "outfits",
+        "id": "tshirt",
+        "url": "studio.html?character=nico&outfit=tshirt&t=0"
+      }
+    },
+    {
+      "name": "outfits.hoodie",
+      "summary": "Buzo con capucha, abertura, cordones y bolsillo canguro.",
+      "states": [
+        "hoodie"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#efefea"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#c6d1d6"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "used_by": [
+        "tomas"
+      ],
+      "demo": {
+        "type": "hoodie",
+        "color": "#efefea",
+        "shadow": "#c6d1d6",
+        "body.width": 1
+      },
+      "preview": {
+        "section": "outfits",
+        "id": "hoodie",
+        "url": "studio.html?character=tomas&outfit=hoodie&t=0"
+      }
+    },
+    {
+      "name": "outfits.dress",
+      "summary": "Vestido de manga corta con falda acampanada.",
+      "states": [
+        "dress"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#cbb6e4"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#ae93c9"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "used_by": [
+        "valeria"
+      ],
+      "demo": {
+        "type": "dress",
+        "color": "#cbb6e4",
+        "shadow": "#ae93c9",
+        "body.width": 1
+      },
+      "preview": {
+        "section": "outfits",
+        "id": "dress",
+        "url": "studio.html?character=valeria&outfit=dress&t=0"
+      }
+    },
+    {
+      "name": "outfits.skirt",
+      "summary": "Camiseta con falda.",
+      "states": [
+        "skirt"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#cbb6e4"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#ae93c9"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "used_by": [],
+      "demo": {
+        "type": "skirt",
+        "color": "#cbb6e4",
+        "shadow": "#ae93c9",
+        "body.width": 1
+      },
+      "preview": {
+        "section": "outfits",
+        "id": "skirt",
+        "url": "studio.html?character=tomas&outfit=skirt&t=0"
+      }
+    },
+    {
+      "name": "outfits.pants",
+      "summary": "Camiseta y pantalones articulados.",
+      "states": [
+        "pants"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#cbb6e4"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#ae93c9"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "used_by": [],
+      "demo": {
+        "type": "pants",
+        "color": "#cbb6e4",
+        "shadow": "#ae93c9",
+        "body.width": 1
+      },
+      "preview": {
+        "section": "outfits",
+        "id": "pants",
+        "url": "studio.html?character=tomas&outfit=pants&t=0"
+      }
+    },
+    {
+      "name": "outfits.apron",
+      "summary": "Blusa y delantal con bolsillo.",
+      "states": [
+        "apron"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#6aa99a"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#4b8379"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "used_by": [
+        "heladero",
+        "mama"
+      ],
+      "demo": {
+        "type": "apron",
+        "color": "#6aa99a",
+        "shadow": "#4b8379",
+        "body.width": 1
+      },
+      "preview": {
+        "section": "outfits",
+        "id": "apron",
+        "url": "studio.html?character=heladero&outfit=apron&t=0"
+      }
+    },
+    {
+      "name": "actions.idle",
+      "summary": "Acción del personaje: idle.",
+      "states": [
+        "idle"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "used_by": [
+        "catalogo-acciones"
+      ],
+      "demo": {
+        "type": "idle",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "idle",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=0.500"
+      }
+    },
+    {
+      "name": "actions.walk",
+      "summary": "Acción del personaje: walk.",
+      "states": [
+        "walk"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        },
+        "speed": {
+          "type": "number",
+          "min": 0.1,
+          "max": 3,
+          "default": 1
+        },
+        "ease": {
+          "type": "string",
+          "enum": [
+            "smooth",
+            "smoother",
+            "linear"
+          ],
+          "default": "smooth",
+          "values": [
+            "smooth",
+            "smoother",
+            "linear"
+          ]
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "summary": "Vista final: hereda la vista del plano si se omite.",
+          "doc": "Vista final: hereda la vista del plano si se omite.",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "spacing": {
+          "type": "number",
+          "min": 0,
+          "max": 2,
+          "default": 1.15
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "un-dia-cualquiera",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "walk",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "speed": 1,
+        "ease": "smooth",
+        "spacing": 1.15
+      },
+      "preview": {
+        "section": "actions",
+        "id": "walk",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=0.675"
+      }
+    },
+    {
+      "name": "actions.stop",
+      "summary": "Acción del personaje: stop.",
+      "states": [
+        "stop"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "breath": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "stop",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "breath": 0
+      },
+      "preview": {
+        "section": "actions",
+        "id": "stop",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=1.625"
+      }
+    },
+    {
+      "name": "actions.talk",
+      "summary": "Acción del personaje: talk.",
+      "states": [
+        "talk"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "intent": {
+          "type": "string",
+          "enum": [
+            "explain",
+            "ask",
+            "exclaim",
+            "deny",
+            "whisper",
+            "list"
+          ],
+          "default": "explain",
+          "values": [
+            "explain",
+            "ask",
+            "exclaim",
+            "deny",
+            "whisper",
+            "list"
+          ]
+        },
+        "line": {
+          "type": "string",
+          "required": true
+        },
+        "face": {
+          "type": "string"
+        },
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "un-dia-cualquiera",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "talk",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "intent": "explain",
+        "intensity": 1
+      },
+      "preview": {
+        "section": "actions",
+        "id": "talk",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=3.150"
+      }
+    },
+    {
+      "name": "actions.listen",
+      "summary": "Acción del personaje: listen.",
+      "states": [
+        "listen"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        },
+        "line": {
+          "type": "string"
+        },
+        "reactions": {
+          "type": "array"
+        },
+        "react": {
+          "type": "reaction"
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "un-dia-cualquiera",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "listen",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "listen",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=3.150"
+      }
+    },
+    {
+      "name": "actions.react",
+      "summary": "Acción del personaje: react.",
+      "states": [
+        "react"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "surprise",
+            "laugh",
+            "shy",
+            "worry",
+            "annoyed",
+            "relief",
+            "shock"
+          ],
+          "default": "surprise",
+          "required": true,
+          "values": [
+            "surprise",
+            "laugh",
+            "shy",
+            "worry",
+            "annoyed",
+            "relief",
+            "shock"
+          ]
+        },
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "react",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "kind": "surprise",
+        "intensity": 1
+      },
+      "preview": {
+        "section": "actions",
+        "id": "react",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=4.265"
+      }
+    },
+    {
+      "name": "actions.look",
+      "summary": "Acción del personaje: look.",
+      "states": [
+        "look"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "look",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "look",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=13.100"
+      }
+    },
+    {
+      "name": "actions.point",
+      "summary": "Acción del personaje: point.",
+      "states": [
+        "point"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "point",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "point",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=3.940"
+      }
+    },
+    {
+      "name": "actions.turn",
+      "summary": "Acción del personaje: turn.",
+      "states": [
+        "turn"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "required": true,
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        }
+      },
+      "used_by": [
+        "catalogo-acciones"
+      ],
+      "demo": {
+        "type": "turn",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "view": "front"
+      },
+      "preview": {
+        "section": "actions",
+        "id": "turn",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=4.500"
+      }
+    },
+    {
+      "name": "actions.wave",
+      "summary": "Acción del personaje: wave.",
+      "states": [
+        "wave"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "wave",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "wave",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=1.500"
+      }
+    },
+    {
+      "name": "actions.cross-arms",
+      "summary": "Acción del personaje: cross-arms.",
+      "states": [
+        "cross-arms"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "cross-arms",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "cross-arms",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=6.000"
+      }
+    },
+    {
+      "name": "actions.hands-hips",
+      "summary": "Acción del personaje: hands-hips.",
+      "states": [
+        "hands-hips"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "hands-hips",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "hands-hips",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=7.000"
+      }
+    },
+    {
+      "name": "actions.touch-head",
+      "summary": "Acción del personaje: touch-head.",
+      "states": [
+        "touch-head"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "touch-head",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "touch-head",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=4.365"
+      }
+    },
+    {
+      "name": "actions.sit",
+      "summary": "Acción del personaje: sit.",
+      "states": [
+        "sit"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "seat": {
+          "type": "target",
+          "required": true
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "summary": "Default: 3q hacia el interlocutor según facing del asiento.",
+          "doc": "Default: 3q hacia el interlocutor según facing del asiento.",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "sit",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "sit",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=18.600"
+      }
+    },
+    {
+      "name": "actions.stand",
+      "summary": "Acción del personaje: stand.",
+      "states": [
+        "stand"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "seat": {
+          "type": "target"
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "stand",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18
+      },
+      "preview": {
+        "section": "actions",
+        "id": "stand",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=28.600"
+      }
+    },
+    {
+      "name": "actions.pick",
+      "summary": "Acción del personaje: pick.",
+      "states": [
+        "pick"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "pick",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false
+      },
+      "preview": {
+        "section": "actions",
+        "id": "pick",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=19.600"
+      }
+    },
+    {
+      "name": "actions.take",
+      "summary": "Acción del personaje: take.",
+      "states": [
+        "take"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "take",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false
+      },
+      "preview": {
+        "section": "actions",
+        "id": "take",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=22.600"
+      }
+    },
+    {
+      "name": "actions.hold",
+      "summary": "Acción del personaje: hold.",
+      "states": [
+        "hold"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        },
+        "carry": {
+          "type": "string",
+          "enum": [
+            "side",
+            "chest",
+            "front",
+            "behind"
+          ],
+          "default": "side",
+          "values": [
+            "side",
+            "chest",
+            "front",
+            "behind"
+          ]
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "hold",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false,
+        "carry": "side"
+      },
+      "preview": {
+        "section": "actions",
+        "id": "hold",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=13.200"
+      }
+    },
+    {
+      "name": "actions.give",
+      "summary": "Acción del personaje: give.",
+      "states": [
+        "give"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "un-dia-cualquiera",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "give",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false
+      },
+      "preview": {
+        "section": "actions",
+        "id": "give",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=9.820"
+      }
+    },
+    {
+      "name": "actions.put",
+      "summary": "Acción del personaje: put.",
+      "states": [
+        "put"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "put",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false
+      },
+      "preview": {
+        "section": "actions",
+        "id": "put",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=21.600"
+      }
+    },
+    {
+      "name": "actions.wear",
+      "summary": "Acción del personaje: wear.",
+      "states": [
+        "wear"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "wear",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false
+      },
+      "preview": {
+        "section": "actions",
+        "id": "wear",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=29.600"
+      }
+    },
+    {
+      "name": "actions.unwear",
+      "summary": "Acción del personaje: unwear.",
+      "states": [
+        "unwear"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "unwear",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false
+      },
+      "preview": {
+        "section": "actions",
+        "id": "unwear",
+        "url": "../vida-en-escena/index.html?ep=assets/episode.json&t=54.183"
+      }
+    },
+    {
+      "name": "actions.stow",
+      "summary": "Acción del personaje: stow.",
+      "states": [
+        "stow"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "stow",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false
+      },
+      "preview": {
+        "section": "actions",
+        "id": "stow",
+        "url": "../vida-en-escena/index.html?ep=assets/episode.json&t=1.420"
+      }
+    },
+    {
+      "name": "actions.unstow",
+      "summary": "Acción del personaje: unstow.",
+      "states": [
+        "unstow"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "capacidades"
+      ],
+      "demo": {
+        "type": "unstow",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "right",
+        "hug": false
+      },
+      "preview": {
+        "section": "actions",
+        "id": "unstow",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/capacidades.json&t=2.400"
+      }
+    },
+    {
+      "name": "actions.highfive",
+      "summary": "Acción del personaje: highfive.",
+      "states": [
+        "highfive"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "left",
+          "values": [
+            "left",
+            "right"
+          ]
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "highfive",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "recipientHand": "left"
+      },
+      "preview": {
+        "section": "actions",
+        "id": "highfive",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=9.100"
+      }
+    },
+    {
+      "name": "actions.eat",
+      "summary": "Acción del personaje: eat.",
+      "states": [
+        "eat"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string"
+        },
+        "item": {
+          "type": "string",
+          "summary": "Alias de object; cuchara con plate u objeto de mano.",
+          "doc": "Alias de object; cuchara con plate u objeto de mano."
+        },
+        "plate": {
+          "type": "string"
+        },
+        "cycles": {
+          "type": "number",
+          "min": 1,
+          "max": 8,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "eat",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "cycles": 1
+      },
+      "preview": {
+        "section": "actions",
+        "id": "eat",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=26.100"
+      }
+    },
+    {
+      "name": "actions.gesture",
+      "summary": "Acción del personaje: gesture.",
+      "states": [
+        "gesture"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "shrug",
+            "open-arms",
+            "facepalm",
+            "count-fingers",
+            "thumbs-up",
+            "nod",
+            "shake-head"
+          ],
+          "default": "shrug",
+          "required": true,
+          "values": [
+            "shrug",
+            "open-arms",
+            "facepalm",
+            "count-fingers",
+            "thumbs-up",
+            "nod",
+            "shake-head"
+          ]
+        },
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "gesture",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "kind": "shrug",
+        "intensity": 1
+      },
+      "preview": {
+        "section": "actions",
+        "id": "gesture",
+        "url": "../vida-en-escena/index.html?ep=assets/episode.json&t=41.997"
+      }
+    },
+    {
+      "name": "actions.fx",
+      "summary": "Acción del personaje: fx.",
+      "states": [
+        "fx"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "shock",
+            "?",
+            "!",
+            "sweat",
+            "blush",
+            "tears",
+            "sparkle",
+            "hearts",
+            "motion"
+          ],
+          "default": "shock",
+          "required": true,
+          "values": [
+            "shock",
+            "?",
+            "!",
+            "sweat",
+            "blush",
+            "tears",
+            "sparkle",
+            "hearts",
+            "motion"
+          ]
+        },
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ]
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "fx",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "kind": "shock",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "actions",
+        "id": "fx",
+        "url": "../vida-en-escena/index.html?ep=assets/episode.json&t=41.997"
+      }
+    },
+    {
+      "name": "actions.open",
+      "summary": "Acción del personaje: open.",
+      "states": [
+        "open"
+      ],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "amount": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "open",
+        "hand": "right",
+        "weight": 1,
+        "fade": 0.18,
+        "amount": 1
+      },
+      "preview": {
+        "section": "actions",
+        "id": "open",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/catalogo-acciones.json&t=30.700"
+      }
+    },
+    {
+      "name": "props.backpack",
+      "summary": "Objeto: backpack.",
+      "states": [
+        "backpack"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 110
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 155
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "backpack",
+        "w": 110,
+        "h": 155,
+        "color": "#cba383"
+      },
+      "preview": {
+        "section": "props",
+        "id": "backpack",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.notebook",
+      "summary": "Objeto: notebook.",
+      "states": [
+        "notebook"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 108
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 138
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "notebook",
+        "w": 108,
+        "h": 138,
+        "color": "#cba383"
+      },
+      "preview": {
+        "section": "props",
+        "id": "notebook",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.icecream",
+      "summary": "Objeto: icecream.",
+      "states": [
+        "icecream"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 62
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 120
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "icecream",
+        "w": 62,
+        "h": 120,
+        "color": "#cba383"
+      },
+      "preview": {
+        "section": "props",
+        "id": "icecream",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.phone",
+      "summary": "Objeto: phone.",
+      "states": [
+        "phone"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 50
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 90
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "phone",
+        "w": 50,
+        "h": 90,
+        "color": "#cba383"
+      },
+      "preview": {
+        "section": "props",
+        "id": "phone",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.spoon",
+      "summary": "Objeto: spoon.",
+      "states": [
+        "spoon"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 23
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 92
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "spoon",
+        "w": 23,
+        "h": 92,
+        "color": "#cba383"
+      },
+      "preview": {
+        "section": "props",
+        "id": "spoon",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.plate",
+      "summary": "Objeto: plate.",
+      "states": [
+        "plate"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 115
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 35
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera"
+      ],
+      "demo": {
+        "type": "plate",
+        "w": 115,
+        "h": 35,
+        "color": "#cba383"
+      },
+      "preview": {
+        "section": "props",
+        "id": "plate",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.cup",
+      "summary": "Objeto: cup.",
+      "states": [
+        "cup"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 64
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 75
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "used_by": [],
+      "demo": {
+        "type": "cup",
+        "w": 64,
+        "h": 75,
+        "color": "#cba383"
+      },
+      "preview": {
+        "section": "props",
+        "id": "cup",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.school-gate",
+      "summary": "Objeto: school-gate.",
+      "states": [
+        "school-gate"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 300
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 400
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "school-gate",
+        "w": 300,
+        "h": 400,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "school-gate",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.desk",
+      "summary": "Objeto: desk.",
+      "states": [
+        "desk"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 220
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 280
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "desk",
+        "w": 220,
+        "h": 280,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "desk",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.counter",
+      "summary": "Objeto: counter.",
+      "states": [
+        "counter"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 360
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 220
+        },
+        "color": {
+          "type": "color",
+          "default": "#f0bd8d"
+        },
+        "topColor": {
+          "type": "color",
+          "default": "#f7dcc0"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "counter",
+        "w": 360,
+        "h": 220,
+        "color": "#f0bd8d",
+        "topColor": "#f7dcc0",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "counter",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.chair",
+      "summary": "Objeto: chair.",
+      "states": [
+        "chair"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 155
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 300
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "chair",
+        "w": 155,
+        "h": 300,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "chair",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.bench",
+      "summary": "Objeto: bench.",
+      "states": [
+        "bench"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 440
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 300
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "bench",
+        "w": 440,
+        "h": 300,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "bench",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.table",
+      "summary": "Objeto: table.",
+      "states": [
+        "table"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 450
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 280
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "table",
+        "w": 450,
+        "h": 280,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "table",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.door",
+      "summary": "Objeto: door.",
+      "states": [
+        "door"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 250
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 600
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "door",
+        "w": 250,
+        "h": 600,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "door",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.lamp",
+      "summary": "Objeto: lamp.",
+      "states": [
+        "lamp"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 130
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 440
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "lamp",
+        "w": 130,
+        "h": 440,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "lamp",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.plant",
+      "summary": "Objeto: plant.",
+      "states": [
+        "plant"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 145
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 220
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "plant",
+        "w": 145,
+        "h": 220,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "plant",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.wall-clock",
+      "summary": "Objeto: wall-clock.",
+      "states": [
+        "wall-clock"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 94
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 94
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "wall-clock",
+        "w": 94,
+        "h": 94,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "wall-clock",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.frame",
+      "summary": "Objeto: frame.",
+      "states": [
+        "frame"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 150
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 120
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "frame",
+        "w": 150,
+        "h": 120,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "frame",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.shelf",
+      "summary": "Objeto: shelf.",
+      "states": [
+        "shelf"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 210
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 80
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "shelf",
+        "w": 210,
+        "h": 80,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "shelf",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.rug",
+      "summary": "Objeto: rug.",
+      "states": [
+        "rug"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 460
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 100
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "rug",
+        "w": 460,
+        "h": 100,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "rug",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "props.poster",
+      "summary": "Objeto: poster.",
+      "states": [
+        "poster"
+      ],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 150
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 210
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "poster",
+        "w": 150,
+        "h": 210,
+        "color": "#cba383",
+        "open": 0,
+        "seatY": 816,
+        "surfaceY": 675
+      },
+      "preview": {
+        "section": "props",
+        "id": "poster",
+        "url": "review/props.jpg"
+      }
+    },
+    {
+      "name": "sets.aula",
+      "summary": "Escenario: Aula · luz de día.",
+      "states": [
+        "aula"
+      ],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 560
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "aula",
+        "floorY": 960,
+        "charHeight": 560,
+        "walk": [
+          140,
+          1396
+        ]
+      },
+      "preview": {
+        "section": "sets",
+        "id": "aula",
+        "url": "review/sets.jpg"
+      }
+    },
+    {
+      "name": "sets.casa-comedor",
+      "summary": "Escenario: Casa · comedor de noche.",
+      "states": [
+        "casa-comedor"
+      ],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 560
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "casa-comedor",
+        "floorY": 960,
+        "charHeight": 560,
+        "walk": [
+          140,
+          1396
+        ]
+      },
+      "preview": {
+        "section": "sets",
+        "id": "casa-comedor",
+        "url": "review/sets.jpg"
+      }
+    },
+    {
+      "name": "sets.escuela-entrada",
+      "summary": "Escenario: Escuela · entrada por la mañana.",
+      "states": [
+        "escuela-entrada"
+      ],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 560
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "escuela-entrada",
+        "floorY": 960,
+        "charHeight": 560,
+        "walk": [
+          140,
+          1396
+        ]
+      },
+      "preview": {
+        "section": "sets",
+        "id": "escuela-entrada",
+        "url": "review/sets.jpg"
+      }
+    },
+    {
+      "name": "sets.heladeria",
+      "summary": "Escenario: Heladería · mañana soleada.",
+      "states": [
+        "heladeria"
+      ],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 400
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "used_by": [
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "heladeria",
+        "floorY": 960,
+        "charHeight": 400,
+        "walk": [
+          140,
+          1396
+        ]
+      },
+      "preview": {
+        "section": "sets",
+        "id": "heladeria",
+        "url": "review/sets.jpg"
+      }
+    },
+    {
+      "name": "sets.parque",
+      "summary": "Escenario: Parque · tarde dorada.",
+      "states": [
+        "parque"
+      ],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 560
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "parque",
+        "floorY": 960,
+        "charHeight": 560,
+        "walk": [
+          140,
+          1396
+        ]
+      },
+      "preview": {
+        "section": "sets",
+        "id": "parque",
+        "url": "review/sets.jpg"
+      }
+    },
+    {
+      "name": "shots.wide",
+      "summary": "Plano de cámara: wide.",
+      "states": [
+        "wide"
+      ],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "un-dia-cualquiera",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "wide",
+        "move": "fixed",
+        "ease": "smoother",
+        "transition": "cut",
+        "locked": false,
+        "fit": true,
+        "thirds": false
+      },
+      "preview": {
+        "section": "shots",
+        "id": "wide",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=0.300"
+      }
+    },
+    {
+      "name": "shots.two",
+      "summary": "Plano de cámara: two.",
+      "states": [
+        "two"
+      ],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "two",
+        "move": "fixed",
+        "ease": "smoother",
+        "transition": "cut",
+        "locked": false,
+        "fit": true,
+        "thirds": false
+      },
+      "preview": {
+        "section": "shots",
+        "id": "two",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=6.000"
+      }
+    },
+    {
+      "name": "shots.medium",
+      "summary": "Plano de cámara: medium.",
+      "states": [
+        "medium"
+      ],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "medium",
+        "move": "fixed",
+        "ease": "smoother",
+        "transition": "cut",
+        "locked": false,
+        "fit": true,
+        "thirds": false
+      },
+      "preview": {
+        "section": "shots",
+        "id": "medium",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=1.650"
+      }
+    },
+    {
+      "name": "shots.close",
+      "summary": "Plano de cámara: close.",
+      "states": [
+        "close"
+      ],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "close",
+        "move": "fixed",
+        "ease": "smoother",
+        "transition": "cut",
+        "locked": false,
+        "fit": true,
+        "thirds": false
+      },
+      "preview": {
+        "section": "shots",
+        "id": "close",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=2.200"
+      }
+    },
+    {
+      "name": "shots.insert",
+      "summary": "Plano de cámara: insert.",
+      "states": [
+        "insert"
+      ],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "insert",
+        "move": "fixed",
+        "ease": "smoother",
+        "transition": "cut",
+        "locked": false,
+        "fit": true,
+        "thirds": false
+      },
+      "preview": {
+        "section": "shots",
+        "id": "insert",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=9.570"
+      }
+    },
+    {
+      "name": "fx.shock",
+      "summary": "Efecto expresivo: shock.",
+      "states": [
+        "shock"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "capacidades"
+      ],
+      "demo": {
+        "type": "shock",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "shock",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "fx.?",
+      "summary": "Efecto expresivo: ?.",
+      "states": [
+        "?"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "?",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "?",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "fx.!",
+      "summary": "Efecto expresivo: !.",
+      "states": [
+        "!"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "capacidades"
+      ],
+      "demo": {
+        "type": "!",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "!",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "fx.sweat",
+      "summary": "Efecto expresivo: sweat.",
+      "states": [
+        "sweat"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "sweat",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "sweat",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "fx.blush",
+      "summary": "Efecto expresivo: blush.",
+      "states": [
+        "blush"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [],
+      "demo": {
+        "type": "blush",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "blush",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "fx.tears",
+      "summary": "Efecto expresivo: tears.",
+      "states": [
+        "tears"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [],
+      "demo": {
+        "type": "tears",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "tears",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "fx.sparkle",
+      "summary": "Efecto expresivo: sparkle.",
+      "states": [
+        "sparkle"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "capacidades"
+      ],
+      "demo": {
+        "type": "sparkle",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "sparkle",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "fx.hearts",
+      "summary": "Efecto expresivo: hearts.",
+      "states": [
+        "hearts"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "hearts",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "hearts",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "fx.motion",
+      "summary": "Efecto expresivo: motion.",
+      "states": [
+        "motion"
+      ],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "used_by": [],
+      "demo": {
+        "type": "motion",
+        "intensity": 1,
+        "offset": [
+          0.19,
+          -0.14
+        ],
+        "size": 1
+      },
+      "preview": {
+        "section": "fx",
+        "id": "motion",
+        "url": "review/fx.jpg"
+      }
+    },
+    {
+      "name": "ui.subtitles",
+      "summary": "Texto en pantalla: subtitles.",
+      "states": [
+        "subtitles"
+      ],
+      "params": {
+        "maxWords": {
+          "type": "integer",
+          "min": 1,
+          "max": 3,
+          "default": 3
+        },
+        "x": {
+          "type": "number",
+          "min": 60,
+          "max": 1020,
+          "default": 540
+        },
+        "y": {
+          "type": "number",
+          "min": 1360,
+          "max": 1450,
+          "default": 1430
+        },
+        "size": {
+          "type": "number",
+          "min": 30,
+          "max": 110,
+          "default": 78
+        }
+      },
+      "used_by": [
+        "prueba-corta"
+      ],
+      "demo": {
+        "type": "subtitles",
+        "maxWords": 3,
+        "x": 540,
+        "y": 1430,
+        "size": 78
+      },
+      "preview": {
+        "section": "ui",
+        "id": "subtitles",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=10.950"
+      }
+    },
+    {
+      "name": "ui.title",
+      "summary": "Texto en pantalla: title.",
+      "states": [
+        "title"
+      ],
+      "params": {
+        "text": {
+          "type": "string"
+        },
+        "dur": {
+          "type": "number",
+          "min": 0.2,
+          "max": 10,
+          "default": 1.2
+        }
+      },
+      "used_by": [
+        "prueba-corta"
+      ],
+      "demo": {
+        "type": "title",
+        "dur": 1.2
+      },
+      "preview": {
+        "section": "ui",
+        "id": "title",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=0.500"
+      }
+    },
+    {
+      "name": "ui.end",
+      "summary": "Texto en pantalla: end.",
+      "states": [
+        "end"
+      ],
+      "params": {
+        "text": {
+          "type": "string"
+        },
+        "dur": {
+          "type": "number",
+          "min": 0.2,
+          "max": 10,
+          "default": 1.5
+        }
+      },
+      "used_by": [],
+      "demo": {
+        "type": "end",
+        "dur": 1.5
+      },
+      "preview": {
+        "section": "ui",
+        "id": "end",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/prueba-corta.json&t=0.500"
+      }
+    },
+    {
+      "name": "castModes.offscreen",
+      "summary": "Voz sin cuerpo, listeners ni miradas; subtítulos en cursiva.",
+      "states": [
+        "offscreen"
+      ],
+      "params": {
+        "offscreen": {
+          "type": "boolean",
+          "default": false
+        },
+        "voice": {
+          "type": "string"
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "offscreen",
+        "offscreen": false
+      },
+      "preview": {
+        "section": "castModes",
+        "id": "offscreen",
+        "url": "../vida-en-escena/index.html?ep=assets/episode.json&t=1.400"
+      }
+    },
+    {
+      "name": "sceneTransitions.cut",
+      "summary": "Transición entrante de dos cuadros completos, incluida UI; exige resources.createCanvas. No desplaza tiempo ni audio.",
+      "states": [
+        "cut"
+      ],
+      "params": {
+        "dur": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "exclusiveMinimum": true,
+          "default": 0.6
+        }
+      },
+      "used_by": [
+        "prueba-corta",
+        "catalogo-acciones",
+        "un-dia-cualquiera",
+        "capacidades",
+        "vida-en-escena-heladeria"
+      ],
+      "demo": {
+        "type": "cut",
+        "dur": 0.6
+      },
+      "preview": {
+        "section": "sceneTransitions",
+        "id": "cut",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/capacidades.json&t=0.200"
+      }
+    },
+    {
+      "name": "sceneTransitions.fade",
+      "summary": "Transición entrante de dos cuadros completos, incluida UI; exige resources.createCanvas. No desplaza tiempo ni audio.",
+      "states": [
+        "fade"
+      ],
+      "params": {
+        "dur": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "exclusiveMinimum": true,
+          "default": 0.6
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "fade",
+        "dur": 0.6
+      },
+      "preview": {
+        "section": "sceneTransitions",
+        "id": "fade",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/capacidades.json&t=14.977"
+      }
+    },
+    {
+      "name": "sceneTransitions.wipe",
+      "summary": "Transición entrante de dos cuadros completos, incluida UI; exige resources.createCanvas. No desplaza tiempo ni audio.",
+      "states": [
+        "wipe"
+      ],
+      "params": {
+        "dur": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "exclusiveMinimum": true,
+          "default": 0.6
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "type": "wipe",
+        "dur": 0.6
+      },
+      "preview": {
+        "section": "sceneTransitions",
+        "id": "wipe",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/capacidades.json&t=6.577"
+      }
+    },
+    {
+      "name": "sceneTransitions.dip-white",
+      "summary": "Transición entrante de dos cuadros completos, incluida UI; exige resources.createCanvas. No desplaza tiempo ni audio.",
+      "states": [
+        "dip-white"
+      ],
+      "params": {
+        "dur": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "exclusiveMinimum": true,
+          "default": 0.6
+        }
+      },
+      "used_by": [
+        "capacidades"
+      ],
+      "demo": {
+        "type": "dip-white",
+        "dur": 0.6
+      },
+      "preview": {
+        "section": "sceneTransitions",
+        "id": "dip-white",
+        "url": "../vida-en-escena/index.html?ep=assets/episodes/capacidades.json&t=17.977"
+      }
+    },
+    {
+      "name": "initialState.start",
+      "summary": "Estado en el primer cuadro, sin animación. Asigna dueño si no se declara; contradicciones son error.",
+      "params": {
+        "seated": {
+          "type": "string",
+          "summary": "Ancla seat.",
+          "doc": "Ancla seat."
+        },
+        "holding": {
+          "type": "object",
+          "example": {
+            "right": {
+              "object": "cuaderno",
+              "carry": "chest",
+              "hug": true
+            }
+          }
+        },
+        "wearing": {
+          "type": "string",
+          "summary": "Id de mochila.",
+          "doc": "Id de mochila."
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "expression": {
+          "type": "string"
+        }
+      },
+      "used_by": [
+        "un-dia-cualquiera",
+        "capacidades"
+      ],
+      "demo": {
+        "start": {
+          "seated": "seat"
+        }
+      },
+      "preview": {
+        "section": "initialState",
+        "id": "start",
+        "url": "../vida-en-escena/index.html?ep=assets/episode.json&t=36.000"
+      }
+    }
+  ]
+}

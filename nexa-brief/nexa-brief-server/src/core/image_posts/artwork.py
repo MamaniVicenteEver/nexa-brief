@@ -13,7 +13,7 @@ import hashlib
 from typing import TYPE_CHECKING, Any
 
 from .errors import ImagePostError
-from .models import DeliveryStatus, EditorialReview, PostStatus, PublicationRecord, RenderedSlide, ValidationResult
+from .models import DeliveryStatus, EditorialReview, PostStatus, PublicationRecord, RenderedSlide, ValidationResult, FormatArtwork
 from .profiles import get_image_profile
 
 if TYPE_CHECKING:
@@ -115,7 +115,12 @@ class ImagePostArtwork:
         async with lock:
             return await self._export(record, revision, format)
 
-    async def _export(self, record: PublicationRecord, revision: int, format: str) -> PublicationRecord:
+    async def export_variant(self, record: PublicationRecord, revision: int, format: str) -> PublicationRecord:
+        lock = _export_locks.setdefault(record.post_id, asyncio.Lock())
+        async with lock:
+            return await self._export(record, revision, format, variant=True)
+
+    async def _export(self, record: PublicationRecord, revision: int, format: str, *, variant: bool = False) -> PublicationRecord:
         from .service import _id, _now, _field, _jsonable
         from .render import render_async, renderer_source_hash, RENDERER_VERSION
         from .plan import plan_hash
@@ -135,6 +140,9 @@ class ImagePostArtwork:
             raise ImagePostError("RENDER_IN_PROGRESS", "Hay una exportación en curso para este post", 409)
         plan, style, media = self._source(record, format)
         fingerprint = renderer_source_hash(plan, style)
+        existing = record.technical.format_exports.get(format)
+        if variant and existing and existing.revision == revision and existing.source_hash == fingerprint:
+            return record
         if (
             record.technical.composition_plan.format == format
             and record.technical.slides
@@ -227,6 +235,18 @@ class ImagePostArtwork:
                 ),
             }
         )
+        if variant:
+            exported = FormatArtwork(
+                revision=revision, source_hash=fingerprint, renderer_version=RENDERER_VERSION,
+                slides=slides, validations=validations,
+            )
+            current_technical = fresh.technical.model_copy(update={
+                "format_exports": {**fresh.technical.format_exports, format: exported},
+            })
+            return await self.service.repository.update(record.publication_id, {
+                "technical": current_technical.model_dump(mode="json"),
+            }, fresh.record_version)
+        technical = technical.model_copy(update={"format_exports": {}})
         changed = record.model_copy(
             update={
                 "publication_id": publication_id,
@@ -252,3 +272,24 @@ class ImagePostArtwork:
             "image_post_changed", {"publication_id": saved.publication_id, "status": saved.status.value}
         )
         return saved
+
+
+def target_artwork(service: ImagePostService, record: PublicationRecord, platform: str, format: str | None):
+    selected = format or record.technical.composition_plan.format
+    if selected == record.technical.composition_plan.format:
+        validate_target_format(record, platform)
+        return record.technical.slides
+    profile = get_image_profile(selected)
+    if platform == "instagram" and selected != "4:5":
+        raise ImagePostError("UNSUPPORTED_IMAGE_RATIO", "El feed de Instagram requiere 4:5", 422)
+    artwork = record.technical.format_exports.get(selected)
+    plan, style, _media = ImagePostArtwork(service)._source(record, selected)
+    from .render import renderer_source_hash, RENDERER_VERSION
+    if (not artwork or artwork.revision != record.revision
+            or artwork.renderer_version != RENDERER_VERSION
+            or artwork.source_hash != renderer_source_hash(plan, style)
+            or not artwork.validations or any(not item.passed for item in artwork.validations)
+            or len(artwork.slides) != len(record.technical.slides)
+            or any((slide.width, slide.height) != profile.size for slide in artwork.slides)):
+        raise ImagePostError("IMAGE_FORMAT_NOT_EXPORTED", "Prepara y revisa el JPEG de cada formato antes de publicar", 422)
+    return artwork.slides

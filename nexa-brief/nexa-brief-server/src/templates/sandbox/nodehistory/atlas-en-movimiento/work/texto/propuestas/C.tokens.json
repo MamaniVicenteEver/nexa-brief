@@ -1,0 +1,1691 @@
+{
+  "version": 1,
+  "id": "C",
+  "name": "Archivo / verde botella",
+  "idea": "Columna editorial con regla vertical, serif documental y metadatos sans. Documento en papel neutro, sin marcos ornamentales.",
+  "paletteReason": "Verde botella y un solo acento salvia mineral; papel casi blanco sin amarillo. Tratamiento de archivo con serif y notas sans.",
+  "units": "U = min(W,H) / 1080; una U a escala 1080 equivale a 1 px",
+  "preview": {
+    "magnification": 2.5,
+    "backgrounds": {
+      "oscuro": "#24282b",
+      "negro": "#000000",
+      "claro": "#f5f5f5"
+    },
+    "maxAnimated": 6
+  },
+  "palette": {
+    "ink": "#152d26",
+    "surface": "#152d26",
+    "text": "#f3f4ef",
+    "muted": "#c3cec5",
+    "accent": "#b6bfa5",
+    "paper": "#f3f4ef"
+  },
+  "fonts": {
+    "display": "PropuestaGaramond",
+    "ui": "PropuestaOpenSans",
+    "family": "EB Garamond",
+    "uiFamily": "Open Sans",
+    "weight": 700,
+    "uiWeight": 700,
+    "files": [
+      "assets/fonts/propuestas/EB-Garamond-700.ttf",
+      "assets/fonts/propuestas/Open-Sans-700.ttf"
+    ]
+  },
+  "motion": {
+    "kind": "reveal",
+    "in": 0.48,
+    "out": 0.3,
+    "hold": 3.9,
+    "travelU": 0,
+    "ease": "cubic-bezier(.4,0,.2,1)"
+  },
+  "components": {
+    "caption.transcript": {
+      "type": "caption.transcript",
+      "params": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "size": 33.75,
+        "color": "#f3f4ef",
+        "activeColor": "#f3f4ef",
+        "inactiveColor": "#c3cec5",
+        "stroke": false,
+        "strokeColor": "#152d26",
+        "strokeWidth": 0,
+        "upper": false,
+        "y": 0.9,
+        "yLandscape": 0.915,
+        "maxWords": 3,
+        "gap": 0.45,
+        "highlight": "word",
+        "background": "#152d26",
+        "padding": 10,
+        "radius": 0,
+        "fade": 0
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 33.75,
+        "lineHeight": 1.25,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "#152d26",
+        "supportColor": "#152d26",
+        "supportPaddingU": 10,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "label.chip": {
+      "type": "label.chip",
+      "params": {
+        "size": 30,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 30,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "label.callout": {
+      "type": "label.callout",
+      "params": {
+        "size": 34,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220,
+        "offset": [
+          110,
+          -100
+        ],
+        "reveal": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 34,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "label.neon": {
+      "type": "label.neon",
+      "params": {
+        "size": 74,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 74,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "text.year": {
+      "type": "text.year",
+      "params": {
+        "size": 140,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 140,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "label.figure": {
+      "type": "label.figure",
+      "params": {
+        "size": 96,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 96,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "label.front": {
+      "type": "label.front",
+      "params": {
+        "size": 24,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaOpenSans",
+        "weight": 700,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "label.route": {
+      "type": "label.route",
+      "params": {
+        "size": 24,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaOpenSans",
+        "weight": 700,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "label.unit": {
+      "type": "label.unit",
+      "params": {
+        "size": 22,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaOpenSans",
+        "weight": 700,
+        "sizeU": 22,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "label.site": {
+      "type": "label.site",
+      "params": {
+        "size": 24,
+        "color": "#f3f4ef",
+        "fade": 0.48,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaOpenSans",
+        "weight": 700,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "text.attribution": {
+      "type": "text.attribution",
+      "params": {
+        "size": 14,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaOpenSans",
+        "weight": 700,
+        "sizeU": 14,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "portrait.badge": {
+      "type": "portrait.badge",
+      "params": {
+        "size": 29,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 29,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "portrait.cutout": {
+      "type": "portrait.cutout",
+      "params": {
+        "size": 29,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 29,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "editorial.press": {
+      "type": "editorial.press",
+      "params": {
+        "size": 33,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 33,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#152d26",
+        "secondaryFill": "#152d26",
+        "background": "#f3f4ef",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#152d26",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "callout.photo": {
+      "type": "callout.photo",
+      "params": {
+        "size": 28,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 28,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "intro.title": {
+      "type": "intro.title",
+      "params": {
+        "size": 70,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 70,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 70,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "outro.channel": {
+      "type": "outro.channel",
+      "params": {
+        "size": 66,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 66,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 66,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "badge.count": {
+      "type": "badge.count",
+      "params": {
+        "size": 66,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 66,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "inventory.units": {
+      "type": "inventory.units",
+      "params": {
+        "size": 28,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaOpenSans",
+        "weight": 700,
+        "sizeU": 28,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    },
+    "icon.badge": {
+      "type": "icon.badge",
+      "params": {
+        "size": 0,
+        "color": "#f3f4ef",
+        "fade": 0.48
+      },
+      "style": {
+        "font": "PropuestaGaramond",
+        "weight": 700,
+        "sizeU": 0,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0,
+        "fill": "#f3f4ef",
+        "secondaryFill": "#c3cec5",
+        "background": "transparent",
+        "supportColor": "#152d26",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#152d26",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#b6bfa5",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#b6bfa5",
+        "rule": {
+          "edge": "left",
+          "widthU": 1,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "column",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "reveal",
+          "in": 0.48,
+          "out": 0.3,
+          "hold": 3.9,
+          "travelU": 0,
+          "ease": "cubic-bezier(.4,0,.2,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaGaramond",
+          "metadata": "PropuestaOpenSans"
+        }
+      }
+    }
+  },
+  "compatibility": {
+    "caption": "params se pueden mezclar directamente con scene.captions o un item caption.transcript; no se ha aplicado",
+    "labels": "params son campos existentes. Fuente mediante defs.fonts.display. style y motion son especificación de presentación pendiente; labels.js fija caja, borde, trazo y peso. No basta cargar JSON para estas estructuras en el motor actual.",
+    "presentation": "app.js interpreta style y motion para esta página aislada. No cambia el episodio."
+  }
+}

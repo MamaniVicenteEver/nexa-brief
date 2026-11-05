@@ -88,7 +88,7 @@ HTTP (la app lo muestra en `/plantillas?cat=<categoría>`). `kit.py render` solo
   `src/templates/nodetech/programadores-nueva-era/assets/components/rough-review-lens.js` (rough) ·
   `src/templates/nodehistory/y2k-medianoche/assets/components/y2kfield.js` (binary).
 - Nombre `<familia>.<camelCase>`, archivo en `assets/components/`, registrado en `components` del `config.json`.
-- `kit.py components <id>` → mirar `work/components/<nombre>.png`. Máximo 2 rondas por componente; si no aprueba, descartalo y usá el catálogo, aunque no se alcance el mínimo.
+- `kit.py components <id>` registra automáticamente los componentes válidos en la biblioteca; en Imperio genera sus fotogramas aislados para el showcase. Declarar `example` y parámetros JSON representativos; los medios propios usan rutas `assets/...`. No editar el showcase para registrarlos. → mirar `work/components/<nombre>.png`. Máximo 2 rondas por componente; si no aprueba, descartalo y usá el catálogo, aunque no se alcance el mínimo.
 - Se puede delegar el borrador a DeepSeek (`kit.py delegate <id> component_draft --prompt-file work/pedido-<n>.md`).
 - Para una primera versión de texto o diálogo, considera Terra si ayuda: `text_draft` o `dialogue_draft`
   vía `kit.py delegate`. El resultado es Markdown para revisar; el productor decide qué conservar.

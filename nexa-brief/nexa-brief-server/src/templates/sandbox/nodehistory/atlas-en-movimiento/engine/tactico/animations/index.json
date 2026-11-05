@@ -1,0 +1,1006 @@
+{
+  "version": 1,
+  "animations": [
+    {
+      "name": "air.bomber",
+      "family": "air",
+      "description": "Bombardero de ala volante o alas en flecha, rumbo y sombra con altura. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+      "file": "air.bomber.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/air.bomber.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "air.drop",
+      "family": "air",
+      "description": "Agregado: caída de bombas con sombra convergente y destello, ausente de las referencias. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+      "file": "air.drop.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/air.drop.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "air.helicopter",
+      "family": "air",
+      "description": "Helicóptero con rotor animado por tiempo absoluto. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+      "file": "air.helicopter.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/air.helicopter.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "air.jet",
+      "family": "air",
+      "description": "Avión de ataque o caza. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+      "file": "air.jet.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/air.jet.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "air.launch",
+      "family": "air",
+      "description": "Agregado: despegues escalonados por la cubierta angulada de un portaaviones móvil. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+      "file": "air.launch.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/air.launch.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "air.prop",
+      "family": "air",
+      "description": "Transporte de hélices animadas. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+      "file": "air.prop.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/air.prop.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "air.recover",
+      "family": "air",
+      "description": "Agregado: aproximación y recuperación sobre la cubierta de un portaaviones móvil. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+      "file": "air.recover.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/air.recover.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "army.advance",
+      "family": "army",
+      "description": "Ola de fichas con relieve, bandera, filas escalonadas, flecha progresiva y frente luminoso. Úsala para representar formaciones de tropas.",
+      "file": "army.advance.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/army.advance.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "army.banner",
+      "family": "army",
+      "description": "Estandarte ondeante con banda biselada, nombre de ejército y fecha. Úsala para representar formaciones de tropas.",
+      "file": "army.banner.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/army.banner.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "army.clash",
+      "family": "army",
+      "description": "Dos ejércitos enfrentados con destellos deterministas y fichas que caen. Úsala para representar formaciones de tropas.",
+      "file": "army.clash.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/army.clash.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "army.encircle",
+      "family": "army",
+      "description": "Dos brazos de fichas que cierran el cerco gradualmente. Úsala para representar formaciones de tropas.",
+      "file": "army.encircle.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/army.encircle.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "army.hold",
+      "family": "army",
+      "description": "Línea defensiva escalonada que resiste con un pulso coordinado. Úsala para representar formaciones de tropas.",
+      "file": "army.hold.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/army.hold.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "army.retreat",
+      "family": "army",
+      "description": "Retirada organizada de fichas con ondulación, polvo y frente rojo discontinuo. Úsala para representar formaciones de tropas.",
+      "file": "army.retreat.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/army.retreat.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "army.supply",
+      "family": "army",
+      "description": "Ruta logística discontinua con pequeños camiones, polvo y entrada/salida suave. Úsala para representar formaciones de tropas.",
+      "file": "army.supply.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/army.supply.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "arrow.bolt",
+      "family": "arrow",
+      "description": "Rayo angular determinista entre dos puntos con núcleo brillante y pulso. Úsala para dirigir la atención o representar un desplazamiento.",
+      "file": "arrow.bolt.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/arrow.bolt.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "arrow.curve",
+      "family": "arrow",
+      "description": "Curva cuadrática con punta, revelado y estela luminosa en movimiento. Úsala para dirigir la atención o representar un desplazamiento.",
+      "file": "arrow.curve.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/arrow.curve.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "arrow.flow",
+      "family": "arrow",
+      "description": "Flujo ondulado con flechas que recorren la curva según tiempo absoluto. Úsala para dirigir la atención o representar un desplazamiento.",
+      "file": "arrow.flow.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/arrow.flow.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "arrow.route",
+      "family": "arrow",
+      "description": "Flecha por waypoints con contorno y punta que avanza a longitud constante. Úsala para dirigir la atención o representar un desplazamiento.",
+      "file": "arrow.route.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/arrow.route.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "badge.count",
+      "family": "badge",
+      "description": "Contador circular con dígitos rodantes y valores explícitos por estados fechados. Úsala para destacar una cifra.",
+      "file": "badge.count.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/badge.count.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "callout.photo",
+      "family": "callout",
+      "description": "Foto/documento con pie y crédito visibles, haz hasta un punto del mapa. Úsala para vincular una imagen documentada con una posición.",
+      "file": "callout.photo.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/callout.photo.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "caption.transcript",
+      "family": "caption",
+      "description": "Transcripción configurable: blanco con borde negro, reducción predeterminada 35,6 %, +10 U en horizontal y enabled true/false; entrada original de 0,18 s. Úsala para acompañar la narración con texto.",
+      "file": "caption.transcript.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/caption.transcript.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "debug.dot",
+      "family": "debug",
+      "description": "Punto geográfico; sirve como unidad de prueba para trayectorias y estados. Úsala para comprobar posiciones, trayectorias y rótulos.",
+      "file": "debug.dot.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/debug.dot.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "debug.label",
+      "family": "debug",
+      "description": "Rótulo geográfico con contorno y tipografía declarada. Úsala para comprobar posiciones, trayectorias y rótulos.",
+      "file": "debug.label.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/debug.label.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "debug.path",
+      "family": "debug",
+      "description": "Trayectoria Mercator con cabeza y tramo recorrido; línea, arco o Catmull-Rom. Úsala para comprobar posiciones, trayectorias y rótulos.",
+      "file": "debug.path.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/debug.path.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "editorial.press",
+      "family": "editorial",
+      "description": "Retrato y documento inclinado; solo docText del episodio y atribución explícita. Úsala para introducir un documento con atribución.",
+      "file": "editorial.press.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/editorial.press.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "flag.marker",
+      "family": "flag",
+      "description": "Bandera independiente en mástil, sombra y onda calculada desde el tiempo; admite ancla móvil. Úsala para identificar una nacionalidad en una posición.",
+      "file": "flag.marker.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/flag.marker.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "front.line",
+      "family": "front",
+      "description": "Frente discontinuo rotulado «aproximado»; interpola posiciones fechadas de avance o retirada. Úsala para mostrar un frente y sus cambios en el tiempo.",
+      "file": "front.line.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/front.line.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.clash",
+      "family": "fx",
+      "description": "Choque entre dos grupos: destello y ondas en el punto medio móvil. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.clash.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.clash.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.dust",
+      "family": "fx",
+      "description": "Polvo determinista detrás de una ruta terrestre, con emisión proporcional al movimiento. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.dust.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.dust.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.explosion",
+      "family": "fx",
+      "description": "Explosión con bola de fuego, chispas, escombros y humo expansivo. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.explosion.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.explosion.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.fire",
+      "family": "fx",
+      "description": "Llamas cíclicas sobre un punto o casco, con cierre suave de cada partícula. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.fire.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.fire.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.flash",
+      "family": "fx",
+      "description": "Destello radial breve con núcleo luminoso. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.flash.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.flash.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.impact",
+      "family": "fx",
+      "description": "Impacto con anillo; agua con columna, gotas y espuma. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.impact.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.impact.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.ring",
+      "family": "fx",
+      "description": "Anillos concéntricos pulsantes de sonar, objetivo o detección. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.ring.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.ring.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.shockwave",
+      "family": "fx",
+      "description": "Onda circular con tres bordes de refracción simulada. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.shockwave.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.shockwave.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "fx.smoke",
+      "family": "fx",
+      "description": "Columna de humo sembrada, con deriva y emisión acotada. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+      "file": "fx.smoke.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/fx.smoke.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "ground.ambulance",
+      "family": "ground",
+      "description": "Ambulancia con cruz o media luna, balizas alternas y rumbo de ruta. Úsala para movimientos y estados de fuerzas terrestres.",
+      "file": "ground.ambulance.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/ground.ambulance.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "ground.apc",
+      "family": "ground",
+      "description": "Blindado de ruedas con escotilla, sombra, polvo y huellas. Úsala para movimientos y estados de fuerzas terrestres.",
+      "file": "ground.apc.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/ground.apc.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "ground.artillery",
+      "family": "ground",
+      "description": "Obús remolcado o autopropulsado con fogonazo y retroceso programados. Úsala para movimientos y estados de fuerzas terrestres.",
+      "file": "ground.artillery.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/ground.artillery.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "ground.convoy",
+      "family": "ground",
+      "description": "Columna mixta que recorre una curva por distancia con separación y bandera líder. Úsala para movimientos y estados de fuerzas terrestres.",
+      "file": "ground.convoy.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/ground.convoy.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "ground.jeep",
+      "family": "ground",
+      "description": "Vehículo ligero abierto con rueda de repuesto y sombra. Úsala para movimientos y estados de fuerzas terrestres.",
+      "file": "ground.jeep.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/ground.jeep.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "ground.launcher",
+      "family": "ground",
+      "description": "Lanzador sobre camión; cada fire prepara un strike.missile hacia to. Úsala para movimientos y estados de fuerzas terrestres.",
+      "file": "ground.launcher.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/ground.launcher.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "ground.tank",
+      "family": "ground",
+      "description": "Tanque con casco, orugas, torreta orientable y retroceso; principal o ligero. Úsala para movimientos y estados de fuerzas terrestres.",
+      "file": "ground.tank.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/ground.tank.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "ground.truck",
+      "family": "ground",
+      "description": "Camión militar de lona o cisterna, con rodadura animada. Úsala para movimientos y estados de fuerzas terrestres.",
+      "file": "ground.truck.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/ground.truck.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "icon.badge",
+      "family": "icon",
+      "description": "Medallón vectorial propio: avión, barco, petróleo, edificio, escudo o estrella. Úsala para acompañar un rótulo con un símbolo.",
+      "file": "icon.badge.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/icon.badge.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "intro.title",
+      "family": "intro",
+      "description": "Título Atlas: anillo geográfico que enfoca el mapa, año, rótulo neón y tres entradas propias. Úsala al comenzar un episodio.",
+      "file": "intro.title.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/intro.title.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "inventory.units",
+      "family": "inventory",
+      "description": "Rejilla de siluetas de unidades con contador explícito; máximo 60 iconos y total independiente. Úsala para comparar cantidades mediante iconos.",
+      "file": "inventory.units.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/inventory.units.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "label.callout",
+      "family": "label",
+      "description": "Ficha ajustada a zona segura con guía, estrella vectorial y escritura progresiva. Úsala para identificar lugares y objetos.",
+      "file": "label.callout.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/label.callout.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "label.chip",
+      "family": "label",
+      "description": "Fecha o rótulo sin recuadro, con contorno oscuro. Úsala para identificar lugares y objetos.",
+      "file": "label.chip.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/label.chip.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "label.figure",
+      "family": "label",
+      "description": "Cifra grande con unidad y procedencia obligatoria; no genera valores. Úsala para identificar lugares y objetos.",
+      "file": "label.figure.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/label.figure.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "label.front",
+      "family": "label",
+      "description": "Rótulo independiente idéntico al integrado en front.line. Úsala para identificar lugares y objetos.",
+      "file": "label.front.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/label.front.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "label.neon",
+      "family": "label",
+      "description": "Rótulo neón con contorno oscuro, rotación y ajuste de líneas. Úsala para identificar lugares y objetos.",
+      "file": "label.neon.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/label.neon.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "label.route",
+      "family": "label",
+      "description": "Rótulo independiente idéntico al integrado en route.lanes. Úsala para identificar lugares y objetos.",
+      "file": "label.route.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/label.route.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "label.site",
+      "family": "label",
+      "description": "Nombre de instalación: mismo trazo 6 U, peso 800 y línea base alfabética de sites.js. Úsala para identificar lugares y objetos.",
+      "file": "label.site.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/label.site.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "label.unit",
+      "family": "label",
+      "description": "Nombre con el mismo helper que naval (22 px), air (21 px) y unidades (24 px). Úsala para identificar lugares y objetos.",
+      "file": "label.unit.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/label.unit.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "money.flow",
+      "family": "money",
+      "description": "Billetes simbólicos por una ruta geográfica; fase y rumbo puros de t, sin afirmar un valor comercial. Úsala para explicar recursos, pagos y cambios económicos.",
+      "file": "money.flow.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/money.flow.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "money.stack",
+      "family": "money",
+      "description": "Fajos simbólicos que se deslizan y apilan; sin moneda ni cifra económica implícita. Úsala para explicar recursos, pagos y cambios económicos.",
+      "file": "money.stack.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/money.stack.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "naval.cargo",
+      "family": "naval",
+      "description": "Mercante: petrolero, contenedores o granelero, con estados de casco y estela. Úsala para representar flotas, navegación y cambios de estado de embarcaciones.",
+      "file": "naval.cargo.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/naval.cargo.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "naval.carrier",
+      "family": "naval",
+      "description": "Portaaviones con cubierta angulada, aviones, escoltas coordinadas y operaciones aéreas. Úsala para representar flotas, navegación y cambios de estado de embarcaciones.",
+      "file": "naval.carrier.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/naval.carrier.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "naval.group",
+      "family": "naval",
+      "description": "Líder y escoltas en formación rígida que gira con la ruta, por ids o tipos. Úsala para representar flotas, navegación y cambios de estado de embarcaciones.",
+      "file": "naval.group.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/naval.group.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "naval.submarine",
+      "family": "naval",
+      "description": "Submarino opaco o azul translúcido, rótulo y línea guía. Úsala para representar flotas, navegación y cambios de estado de embarcaciones.",
+      "file": "naval.submarine.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/naval.submarine.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "naval.warship",
+      "family": "naval",
+      "description": "Destructor, fragata o crucero gris con torres. Úsala para representar flotas, navegación y cambios de estado de embarcaciones.",
+      "file": "naval.warship.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/naval.warship.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "outro.channel",
+      "family": "outro",
+      "description": "Cierre Atlas ≤8 s: gracias, canal, me gusta, suscribirse y campana, apoyo y handle sin recuadro. Úsala para cerrar un episodio y presentar el canal.",
+      "file": "outro.channel.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/outro.channel.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "portrait.badge",
+      "family": "portrait",
+      "description": "Retrato circular u octogonal con cargo y fecha documentada. Úsala para presentar una persona con cargo, fecha y crédito.",
+      "file": "portrait.badge.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/portrait.badge.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "portrait.cutout",
+      "family": "portrait",
+      "description": "Retrato con máscara suave sobre una forma, borde y sombra. Úsala para presentar una persona con cargo, fecha y crédito.",
+      "file": "portrait.cutout.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/portrait.cutout.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "range.ring",
+      "family": "range",
+      "description": "Anillo de alcance geodésico o simbólico en pantalla, pulso y guiones móviles. Úsala para señalar un radio de alcance.",
+      "file": "range.ring.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/range.ring.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "route.lanes",
+      "family": "route",
+      "description": "Haz de carriles convergentes de pantalla con chip ajustado al punto de paso. Úsala para explicar recorridos y pasos estratégicos.",
+      "file": "route.lanes.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/route.lanes.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "route.sea",
+      "family": "route",
+      "description": "Ruta marítima por waypoints, puntos y guiones animados; rechaza cada cruce con tierra. Úsala para explicar recorridos y pasos estratégicos.",
+      "file": "route.sea.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/route.sea.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "site.base",
+      "family": "site",
+      "description": "Base con pista y hangares; extrusión, sombra y daño persistente. Úsala para localizar infraestructura y mostrar su estado.",
+      "file": "site.base.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/site.base.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "site.oilfield",
+      "family": "site",
+      "description": "Campo petrolero con balancines; extrusión, sombra y daño persistente. Úsala para localizar infraestructura y mostrar su estado.",
+      "file": "site.oilfield.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/site.oilfield.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "site.plant",
+      "family": "site",
+      "description": "Planta industrial; extrusión, sombra y daño persistente. Úsala para localizar infraestructura y mostrar su estado.",
+      "file": "site.plant.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/site.plant.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "site.platform",
+      "family": "site",
+      "description": "Plataforma petrolera elevada; extrusión, sombra y daño persistente. Úsala para localizar infraestructura y mostrar su estado.",
+      "file": "site.platform.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/site.platform.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "site.port",
+      "family": "site",
+      "description": "Terminal de tanques y muelle; extrusión, sombra y daño persistente. Úsala para localizar infraestructura y mostrar su estado.",
+      "file": "site.port.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/site.port.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "site.refinery",
+      "family": "site",
+      "description": "Refinería con torres y tuberías; extrusión, sombra y daño persistente. Úsala para localizar infraestructura y mostrar su estado.",
+      "file": "site.refinery.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/site.refinery.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "strike.missile",
+      "family": "strike",
+      "description": "Misil de rumbo tangente con estela roja, cabeza luminosa y onHit programable. Úsala para representar un ataque desde su lanzamiento hasta el impacto.",
+      "file": "strike.missile.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/strike.missile.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "strike.salvo",
+      "family": "strike",
+      "description": "Salva escalonada de hasta diez misiles con curvas en abanico e impactos programables. Úsala para representar un ataque desde su lanzamiento hasta el impacto.",
+      "file": "strike.salvo.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/strike.salvo.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "strike.shell",
+      "family": "strike",
+      "description": "Proyectil rápido con trazadora corta e impacto programable. Úsala para representar un ataque desde su lanzamiento hasta el impacto.",
+      "file": "strike.shell.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/strike.shell.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "strike.torpedo",
+      "family": "strike",
+      "description": "Torpedo bajo el agua, estela blanca, zigzag y burbujas; impacto acuático. Úsala para representar un ataque desde su lanzamiento hasta el impacto.",
+      "file": "strike.torpedo.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/strike.torpedo.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "territory.extrude",
+      "family": "territory",
+      "description": "Losa geográfica con canto y sombra desplazados en píxeles de pantalla. Úsala para explicar control territorial y cambios de frontera.",
+      "file": "territory.extrude.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/territory.extrude.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "territory.fill",
+      "family": "territory",
+      "description": "Envuelve el relleno original de Atlas plano con multiply, screen y overlay. Úsala para explicar control territorial y cambios de frontera.",
+      "file": "territory.fill.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/territory.fill.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "territory.flag",
+      "family": "territory",
+      "description": "Bandera recortada al país, en poste, ambas o ninguna; catálogo original de 148 banderas. Úsala para explicar control territorial y cambios de frontera.",
+      "file": "territory.flag.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/territory.flag.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "territory.glow",
+      "family": "territory",
+      "description": "Borde neón de tres trazos sin desenfoque costoso por cuadro. Úsala para explicar control territorial y cambios de frontera.",
+      "file": "territory.glow.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/territory.glow.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "territory.hatch",
+      "family": "territory",
+      "description": "Rayado diagonal de pantalla recortado por costa y huecos del país. Úsala para explicar control territorial y cambios de frontera.",
+      "file": "territory.hatch.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/territory.hatch.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "territory.state",
+      "family": "territory",
+      "description": "Cambio territorial fechado, con color interpolado y barrido direccional o radial. Úsala para explicar control territorial y cambios de frontera.",
+      "file": "territory.state.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/territory.state.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "text.year",
+      "family": "text",
+      "description": "Año gigante con contorno, giro y ajuste dentro del encuadre. Úsala para fechas y atribuciones.",
+      "file": "text.year.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/text.year.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "trail.contrail",
+      "family": "trail",
+      "description": "Doble estela de condensación enganchada al path de follow; historial geográfico calculado desde t. Úsala para hacer visible la trayectoria reciente de una unidad.",
+      "file": "trail.contrail.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/trail.contrail.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "unit.advance",
+      "family": "unit",
+      "description": "Avance con frente dorado y estela. Úsala para señalar posiciones y avances de fuerzas.",
+      "file": "unit.advance.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/unit.advance.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "unit.group",
+      "family": "unit",
+      "description": "Fichas en línea, cuña o columna. Úsala para señalar posiciones y avances de fuerzas.",
+      "file": "unit.group.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/unit.group.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "unit.move",
+      "family": "unit",
+      "description": "Formación terrestre que recorre una ruta. Úsala para señalar posiciones y avances de fuerzas.",
+      "file": "unit.move.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/unit.move.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "unit.retreat",
+      "family": "unit",
+      "description": "Retirada con frente rojo discontinuo. Úsala para señalar posiciones y avances de fuerzas.",
+      "file": "unit.retreat.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/unit.retreat.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "unit.token",
+      "family": "unit",
+      "description": "Ficha octogonal con bandera, soldado y aro dorado. Úsala para señalar posiciones y avances de fuerzas.",
+      "file": "unit.token.json",
+      "preview": {
+        "bg": "white",
+        "poster": "work/tactico/thumbs/unit.token.jpg",
+        "autoplay": true
+      }
+    }
+  ]
+}

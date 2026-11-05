@@ -1,0 +1,124 @@
+{
+  "name": "money.flow",
+  "family": "money",
+  "description": "Billetes simbólicos por una ruta geográfica; fase y rumbo puros de t, sin afirmar un valor comercial. Úsala para explicar recursos, pagos y cambios económicos.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 30,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "via": {
+      "type": "array",
+      "default": [
+        [
+          50.33,
+          29.25
+        ],
+        [
+          52,
+          27.5
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          58,
+          24
+        ]
+      ],
+      "range": null,
+      "description": "Waypoints de la trayectoria en orden."
+    },
+    "count": {
+      "type": "number",
+      "default": 7,
+      "min": 1,
+      "max": 40,
+      "range": {
+        "min": 1,
+        "max": 40
+      },
+      "description": "Cantidad de elementos."
+    },
+    "period": {
+      "type": "number",
+      "default": 5,
+      "min": 0.2,
+      "max": 60,
+      "range": {
+        "min": 0.2,
+        "max": 60
+      },
+      "description": "Período de repetición interna en segundos."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.2,
+      "max": 4,
+      "range": {
+        "min": 0.2,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "routeVisible": {
+      "type": "boolean",
+      "default": false,
+      "range": null,
+      "description": "Muestra la ruta además de la unidad."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-money-flow",
+    "t": 0,
+    "type": "money.flow",
+    "at": [
+      50.33,
+      29.25
+    ],
+    "via": [
+      [
+        50.33,
+        29.25
+      ],
+      [
+        51.8,
+        27.4
+      ],
+      [
+        54.5,
+        26.1
+      ],
+      [
+        56.4,
+        26.5
+      ],
+      [
+        58,
+        24
+      ]
+    ],
+    "count": 7,
+    "period": 5,
+    "dur": 8,
+    "out": 7,
+    "note": "Flujo simbólico · rutas esquemáticas"
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/scene-economy.json",
+    "work/tactico/scene-editorial.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/money.flow.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

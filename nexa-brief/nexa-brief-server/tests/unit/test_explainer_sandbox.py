@@ -172,6 +172,7 @@ async def test_sandbox_endpoint_returns_contract_shape(tmp_path: Path, monkeypat
                     "has_index": False,
                     "has_poster": False,
                     "has_info": False,
+                    "has_components": False,
                     "total_tokens": None,
                     "thumbnail_url": None,
                     "player": "video",

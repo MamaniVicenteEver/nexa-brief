@@ -36,6 +36,7 @@ interface AccountStatusResponseDto {
     video_count?: number | null;
     followers?: number | null;
     views?: number | null;
+    likes?: number | null;
   } | null;
   synced_at?: number | null;
   can_sync?: boolean;
@@ -98,6 +99,7 @@ function mapChannelAccount(dto: AccountStatusResponseDto): ChannelAccount {
         videoCount: dto.stats.video_count ?? null,
         followers: dto.stats.followers ?? null,
         views: dto.stats.views ?? null,
+        likes: dto.stats.likes ?? null,
       }
     : null;
   return {

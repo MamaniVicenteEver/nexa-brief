@@ -1,0 +1,15 @@
+import bpy
+bpy.ops.wm.save_as_mainfile(filepath="/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodehistory/_tactico/sprites2/blend/missile-launcher.blend",copy=True,compress=True)
+print('SAVED_COPY missile-launcher')
+
+# Retirar solamente los datos propios de la escena compartida
+import bpy
+coll=bpy.data.collections['AEM_missile-launcher']
+for ob in list(coll.objects):
+    data=ob.data
+    bpy.data.objects.remove(ob,do_unlink=True)
+    if data is not None and data.users==0 and isinstance(data,bpy.types.Mesh): bpy.data.meshes.remove(data)
+bpy.data.collections.remove(coll)
+for mat in list(bpy.data.materials):
+    if mat.name.startswith('AEM_missile-launcher_') and mat.users==0: bpy.data.materials.remove(mat)
+print('RETIRED missile-launcher')

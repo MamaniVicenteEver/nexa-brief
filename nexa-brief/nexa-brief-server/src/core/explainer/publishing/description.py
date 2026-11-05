@@ -1,14 +1,13 @@
-"""Arma las descripciones a partir de los bloques del paquete.
+"""Public descriptions: a brief opening, one question and a few hashtags.
 
-YouTube (9 bloques): gancho, contexto, capítulos, reflexión, agradecimiento,
-pregunta, fuentes, créditos y hashtags. Facebook (más corta): primera línea,
-reflexión, pregunta y hashtags. Un bloque vacío (p. ej. sin fuentes) no se
-escribe: el validador lo reporta, pero el texto nunca lleva un marcador a medias.
+The full research package keeps chapters, sources and credits as separate data.
 """
 
 from __future__ import annotations
 
 import hashlib
+
+from src.core.social_caption import brief_caption
 
 from src.core.explainer.publishing.package import PublishPackage
 from src.core.explainer.publishing.strategies import DescriptionStrategy, GratitudeStrategy
@@ -42,22 +41,8 @@ def _section(heading: str, lines: list[str]) -> str:
 
 
 def render_youtube(package: PublishPackage, gratitude: str, strategy: DescriptionStrategy) -> str:
-    d = package.description
-    blocks = [
-        d.hook,
-        d.context,
-        _section(strategy.headings["chapters"], [f"{c.at} {c.title}" for c in d.chapters]),
-        d.reflection,
-        gratitude,
-        d.question,
-        _section(strategy.headings["sources"], [f"- {s}" for s in package.sources]),
-        _section(strategy.headings["credits"], [f"- {c}" for c in package.credits]),
-        " ".join(package.tags.youtube_hashtags),
-    ]
-    return "\n\n".join(block for block in blocks if block)
+    return brief_caption(package.description.hook, package.description.question, package.tags.youtube_hashtags)
 
 
 def render_facebook(package: PublishPackage) -> str:
-    d = package.description
-    blocks = [package.titles.facebook.first_line, d.reflection, d.question, " ".join(package.tags.facebook)]
-    return "\n\n".join(block for block in blocks if block)
+    return brief_caption(package.titles.facebook.first_line, package.description.question, package.tags.facebook)

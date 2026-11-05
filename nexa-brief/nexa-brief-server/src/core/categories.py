@@ -58,6 +58,8 @@ class CategoryNode(BaseModel):
     # Carpeta de videos en src/templates/ (solo categorías explainer: nodetech, …)
     folder: str | None = None
     designs: list[str] = Field(default_factory=list)
+    # Diseños de otra categoría que también se ofrecen en esta, sin duplicar su dueño.
+    shared_designs: list[str] = Field(default_factory=list)
     niches: list[str] = Field(default_factory=list)
     strategy: CategoryStrategy | None = None
     children: dict[str, "CategoryNode"] = Field(default_factory=dict)
@@ -105,6 +107,13 @@ def validate_tree(
                     f"diseño '{design}' asignado a {seen_designs[design]} y {path}"
                 )
             seen_designs.setdefault(design, path)
+
+    for path, node in _walk(tree):
+        for design in node.shared_designs:
+            if design not in seen_designs:
+                errors.append(f"{path}: diseño compartido '{design}' sin categoría dueña")
+            elif design in node.designs:
+                errors.append(f"{path}: diseño '{design}' repetido como propio y compartido")
 
     if errors:
         raise ValueError("categories inválidas: " + "; ".join(errors))
@@ -225,8 +234,9 @@ def designs_for_category(category_path: str, available: list[str]) -> tuple[list
     if node is None:
         raise KeyError(category_path)
     own = [d for _, sub in _walk({"_": node}) for d in sub.designs]
-    if own:
-        return own, False
+    shared = [d for _, sub in _walk({"_": node}) for d in sub.shared_designs]
+    if own or shared:
+        return list(dict.fromkeys([*own, *shared])), bool(shared)
     if node.engine == "explainer_kit":
         return list(available), True
     return [], False

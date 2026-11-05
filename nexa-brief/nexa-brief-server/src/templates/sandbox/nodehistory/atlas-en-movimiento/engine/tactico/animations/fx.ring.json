@@ -1,0 +1,134 @@
+{
+  "name": "fx.ring",
+  "family": "fx",
+  "description": "Anillos concéntricos pulsantes de sonar, objetivo o detección. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+  "duration": 6.35,
+  "loop": true,
+  "layer": 60,
+  "states": [],
+  "params": {
+    "dur": {
+      "type": "number",
+      "default": 6,
+      "min": 0.05,
+      "range": {
+        "min": 0.05,
+        "max": null
+      },
+      "description": "Duración en segundos."
+    },
+    "size": {
+      "type": "number",
+      "default": 100,
+      "min": 4,
+      "max": 260,
+      "description": "Radio simbólico en px a U=1.",
+      "range": {
+        "min": 4,
+        "max": 260
+      }
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.1,
+      "max": 4,
+      "range": {
+        "min": 0.1,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "seed": {
+      "default": 1,
+      "description": "Semilla numérica o texto.",
+      "type": "number|string",
+      "range": null
+    },
+    "particles": {
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "max": 300,
+      "range": {
+        "min": 1,
+        "max": 300
+      },
+      "description": "Número de partículas del efecto."
+    },
+    "variant": {
+      "type": "enum",
+      "values": [
+        "sonar",
+        "target",
+        "detection"
+      ],
+      "default": "sonar",
+      "range": [
+        "sonar",
+        "target",
+        "detection"
+      ],
+      "description": "Variante visual del componente."
+    },
+    "period": {
+      "type": "number",
+      "default": 2,
+      "min": 0.2,
+      "max": 12,
+      "range": {
+        "min": 0.2,
+        "max": 12
+      },
+      "description": "Período de repetición interna en segundos."
+    },
+    "rings": {
+      "type": "number",
+      "default": 3,
+      "min": 1,
+      "max": 6,
+      "range": {
+        "min": 1,
+        "max": 6
+      },
+      "description": "Número de anillos de detección."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "fx-ring",
+    "t": 0,
+    "type": "fx.ring",
+    "at": [
+      54,
+      27
+    ],
+    "dur": 6,
+    "size": 100,
+    "particles": 1,
+    "variant": "sonar",
+    "seed": 73
+  },
+  "usedBy": [
+    "work/tactico/scene-fx.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/fx.ring.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

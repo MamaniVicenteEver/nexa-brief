@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+
+from src.core.social_caption import brief_caption
 from typing import Any
 
 from src.core.explainer.publishing.description import (
@@ -70,7 +72,7 @@ def compat_fields(video_id: str, package: PublishPackage, strategies: ActiveStra
         "youtube_tags": list(package.tags.youtube),
         "facebook_title": titles.facebook.title,
         "facebook_description": render_facebook(package),
-        "tiktok_caption": titles.tiktok.caption,
+        "tiktok_caption": brief_caption(titles.tiktok.caption.split("¿", 1)[0], package.description.question),
         "tiktok_hashtags": list(package.tags.tiktok),
         "thumbnail_text": package.thumbnail.chosen_text,
         "gratitude_used": variant,

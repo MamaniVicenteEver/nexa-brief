@@ -371,7 +371,7 @@ async def test_approval_does_not_confuse_decimal_with_integer(tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_cc_by_approval_requires_license_url_and_change_notice_in_plan_image_and_captions(tmp_path):
+async def test_cc_by_approval_uses_artwork_and_metadata_without_requiring_comments(tmp_path):
     components = build_publication_components(data_dir=tmp_path)
     record = _record(status=PostStatus.READY_FOR_REVIEW)
     technical = record.technical.model_dump(mode="json")
@@ -389,11 +389,7 @@ async def test_cc_by_approval_requires_license_url_and_change_notice_in_plan_ima
     technical["composition_plan"]["slides"][0]["texts"] = [
         {"role": "credit", "value": credit, "claim_refs": []},
     ]
-    caption = (
-        "Dato confirmado.\n\nCréditos visuales: Fotógrafa (CC BY 2.0; licencia: "
-        "https://creativecommons.org/licenses/by/2.0/; cambios: recortada y convertida a B/N) — "
-        "https://commons.wikimedia.org/wiki/File:Photo.jpg"
-    )
+    caption = "Dato confirmado.\n\n¿Qué opinas?\n\n#Tecnología"
     copy = PostCopy(
         facebook=NetworkCopy(caption=caption, caption_claim_refs=["claim_1"]),
         instagram=NetworkCopy(caption=caption, caption_claim_refs=["claim_1"]),
@@ -436,7 +432,7 @@ async def test_cc_by_approval_requires_license_url_and_change_notice_in_plan_ima
 
 
 @pytest.mark.asyncio
-async def test_review_rejects_photo_if_network_caption_loses_attribution(tmp_path):
+async def test_review_rejects_photo_with_missing_license_metadata(tmp_path):
     components = build_publication_components(data_dir=tmp_path)
     record = _record(status=PostStatus.READY_FOR_REVIEW)
     technical_data = record.technical.model_dump(mode="json")
@@ -827,7 +823,8 @@ async def test_default_plan_builder_uses_verified_source_material(tmp_path, monk
     assert record.editorial.title == "Un margen de 37 segundos"
     assert record.editorial.strategy_id == "cifra_que_frena"
     assert record.technical.copy_sources == {"claim_1": "reglas: modelo apagado"}
-    assert "https://example.org/report" in record.editorial.copy_data.facebook.caption
+    assert "https://" not in record.editorial.copy_data.facebook.caption
+    assert record.editorial.sources[0].url == "https://example.org/report"
     assert record.editorial.slides[0].alt_text_ig
     assert len(plan.slides[0].claim_refs) == 1
     assert plan.slides[0].claim_refs[0].id == "claim_1"
@@ -1311,6 +1308,8 @@ async def test_long_image_publish_renews_persistent_lease_for_another_worker(tmp
 class FakeMetaPublisher:
     async def publish_image_delivery(self, spec):
         assert spec.platform == "facebook"
+        assert spec.first_comment is None
+        assert spec.comment_allowed is False
         assert spec.media_keys
         assert len(spec.media_sha256) == len(spec.media_keys)
         assert all(len(digest) == 64 for digest in spec.media_sha256)

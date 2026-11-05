@@ -1,0 +1,493 @@
+{
+  "$defs": {
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    },
+    "camera": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 4,
+          "items": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "place": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "time": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ]
+    },
+    "region": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        {
+          "type": "object",
+          "properties": {
+            "poly": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coordinate"
+              },
+              "minItems": 3
+            },
+            "within": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "poly"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "dots": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coordinate"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "dots"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "$ref": "#/$defs/place"
+        },
+        "region": {
+          "$ref": "#/$defs/region"
+        },
+        "label": {
+          "type": "string"
+        },
+        "year": {
+          "type": "string"
+        },
+        "flag": {
+          "type": "string",
+          "enum": [
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6",
+            "f7",
+            "f8",
+            "f9",
+            "f10",
+            "f11",
+            "f12"
+          ]
+        },
+        "time": {
+          "$ref": "#/$defs/time"
+        },
+        "kind": {
+          "enum": [
+            "badge",
+            "city"
+          ]
+        },
+        "arrow": {
+          "type": "boolean"
+        },
+        "from": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "badgeAt": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "bow": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "size": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "hold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "side": {
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
+        "dy": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "cameraStep": {
+      "type": "object",
+      "properties": {
+        "t": {
+          "$ref": "#/$defs/time"
+        },
+        "focus": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/place"
+              },
+              {
+                "const": "sun"
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        "to": {
+          "$ref": "#/$defs/camera"
+        },
+        "k": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "tilt": {
+          "type": "number"
+        },
+        "dur": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ease": {
+          "enum": [
+            "linear",
+            "in",
+            "out",
+            "inOut",
+            "expo"
+          ]
+        },
+        "cut": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "t"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "focus"
+          ]
+        },
+        {
+          "required": [
+            "to"
+          ]
+        }
+      ]
+    },
+    "plate": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "$ref": "#/$defs/time"
+        },
+        "video": {
+          "enum": [
+            "v1",
+            "v2",
+            "v3",
+            "v4"
+          ]
+        },
+        "image": {
+          "enum": [
+            "p1",
+            "p2"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "start": {
+          "type": "number",
+          "minimum": 0
+        },
+        "rate": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "focus": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "caption": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "at"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "video"
+          ]
+        },
+        {
+          "required": [
+            "image"
+          ]
+        }
+      ]
+    }
+  },
+  "params": {
+    "from": {
+      "$ref": "#/$defs/camera"
+    },
+    "to": {
+      "$ref": "#/$defs/camera"
+    },
+    "target": {
+      "$ref": "#/$defs/place"
+    },
+    "region": {
+      "$ref": "#/$defs/region"
+    },
+    "origin": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sunAt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "cameras": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cameraStep"
+      },
+      "minItems": 0
+    },
+    "plates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/plate"
+      },
+      "minItems": 0
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "type": "string"
+          },
+          "at": {
+            "$ref": "#/$defs/place"
+          }
+        },
+        "required": [
+          "t",
+          "at"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "pins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "type": "string"
+          },
+          "at": {
+            "$ref": "#/$defs/place"
+          }
+        },
+        "required": [
+          "at"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    }
+  },
+  "components": {
+    "imperio.campaign": {
+      "targets": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/target"
+        },
+        "minItems": 0
+      },
+      "held": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/region"
+        },
+        "minItems": 0
+      },
+      "parts": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "territories",
+            "arrows",
+            "sun",
+            "badges",
+            "dates",
+            "plates",
+            "captions"
+          ]
+        },
+        "minItems": 0
+      }
+    },
+    "imperio.expansion": {
+      "targets": {
+        "type": "array",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/place"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "at": {
+                  "$ref": "#/$defs/place"
+                },
+                "t": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "at"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "minItems": 0
+      }
+    }
+  }
+}

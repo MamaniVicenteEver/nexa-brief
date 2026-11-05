@@ -11,24 +11,27 @@ const GLYPHS: Record<ChannelPlatform, string> = {
   instagram: "",
 };
 
-/** Brand-colored rounded tile with the platform glyph. */
+/** Platform glyph; neutral tone is opt-in for quieter administrative views. */
 export function PlatformIcon({
   platform,
   className,
   rounded = "rounded-[10px]",
+  tone = "brand",
 }: {
   platform: ChannelPlatform;
   className?: string;
   rounded?: string;
+  tone?: "brand" | "neutral";
 }) {
   const meta = PLATFORM_META[platform] ?? { color: "#737373" };
   const glyph = GLYPHS[platform];
+  const ink = tone === "neutral" ? "#4d4943" : "#fff";
 
   return (
     <span
       aria-hidden
       className={cn("inline-grid size-9 shrink-0 place-items-center", rounded, className)}
-      style={{ backgroundColor: meta.color }}
+      style={{ backgroundColor: tone === "neutral" ? "#eae7e1" : meta.color }}
     >
       <svg viewBox="0 0 24 24" className="size-[62%]" aria-hidden="true">
         {platform === "instagram" ? (
@@ -40,16 +43,16 @@ export function PlatformIcon({
               height="17"
               rx="5"
               fill="none"
-              stroke="#fff"
+              stroke={ink}
               strokeWidth="2"
             />
-            <circle cx="12" cy="12" r="4" fill="none" stroke="#fff" strokeWidth="2" />
-            <circle cx="17.6" cy="6.7" r="1.2" fill="#fff" />
+            <circle cx="12" cy="12" r="4" fill="none" stroke={ink} strokeWidth="2" />
+            <circle cx="17.6" cy="6.7" r="1.2" fill={ink} />
           </>
         ) : glyph ? (
-          <path fill="#fff" d={glyph} />
+          <path fill={ink} d={glyph} />
         ) : (
-          <circle cx="12" cy="12" r="4" fill="#fff" />
+          <circle cx="12" cy="12" r="4" fill={ink} />
         )}
       </svg>
     </span>

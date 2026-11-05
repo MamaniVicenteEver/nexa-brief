@@ -1,0 +1,191 @@
+{
+  "name": "army.hold",
+  "family": "army",
+  "description": "Línea defensiva escalonada que resiste con un pulso coordinado. Úsala para representar formaciones de tropas.",
+  "duration": 8.6,
+  "loop": true,
+  "layer": 30,
+  "states": [
+    "normal",
+    "engaged",
+    "routed",
+    "destroyed"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "flag": {
+      "type": "string",
+      "default": "IQ",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.35,
+      "max": 2.5,
+      "step": 0.05,
+      "range": {
+        "min": 0.35,
+        "max": 2.5
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "count": {
+      "type": "number",
+      "default": 24,
+      "min": 8,
+      "max": 40,
+      "step": 1,
+      "range": {
+        "min": 8,
+        "max": 40
+      },
+      "description": "Cantidad de elementos."
+    },
+    "columns": {
+      "type": "number",
+      "default": 6,
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "range": {
+        "min": 2,
+        "max": 10
+      },
+      "description": "Cantidad de columnas de la formación o inventario."
+    },
+    "spacing": {
+      "type": "number",
+      "default": 59,
+      "min": 44,
+      "max": 100,
+      "step": 1,
+      "range": {
+        "min": 44,
+        "max": 100
+      },
+      "description": "Separación entre elementos en píxeles de diseño."
+    },
+    "radius": {
+      "type": "number",
+      "default": 25,
+      "min": 16,
+      "max": 42,
+      "step": 1,
+      "range": {
+        "min": 16,
+        "max": 42
+      },
+      "description": "Radio del efecto o de la formación en píxeles de diseño."
+    },
+    "wave": {
+      "type": "number",
+      "default": 5,
+      "min": 0,
+      "max": 16,
+      "step": 0.5,
+      "range": {
+        "min": 0,
+        "max": 16
+      },
+      "description": "Activa la ondulación de la bandera o formación."
+    },
+    "speed": {
+      "type": "number",
+      "default": 1.6,
+      "min": 0.1,
+      "max": 5,
+      "step": 0.1,
+      "range": {
+        "min": 0.1,
+        "max": 5
+      },
+      "description": "Velocidad del desplazamiento o flujo visual."
+    },
+    "dust": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la nube de polvo asociada al movimiento."
+    },
+    "arrow": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la flecha de dirección."
+    },
+    "banner": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Texto de la banda de identificación."
+    },
+    "label": {
+      "type": "string",
+      "default": "EJÉRCITO",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "date": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fecha documentada visible."
+    },
+    "seed": {
+      "default": 23,
+      "type": "number|string",
+      "range": null,
+      "description": "Semilla para que las partículas y variaciones sean reproducibles."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "army-hold",
+    "t": 0,
+    "type": "army.hold",
+    "at": [
+      48.45,
+      31.2
+    ],
+    "flag": "IQ",
+    "dur": 8,
+    "fade": 0.6,
+    "count": 24,
+    "columns": 6,
+    "radius": 25,
+    "spacing": 59,
+    "wave": 5,
+    "label": "LÍNEA DEFENSIVA",
+    "date": ""
+  },
+  "usedBy": [
+    "work/tactico/items-terrestre.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/army.hold.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

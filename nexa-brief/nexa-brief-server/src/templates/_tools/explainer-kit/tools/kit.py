@@ -45,6 +45,7 @@ from places import KIT, SERVER, TEMPLATES, find_video, folder_for_design  # noqa
 sys.path.insert(0, str(SERVER))
 from src.core.explainer.promote import PromoteError, promote  # noqa: E402
 from lengths import of_script  # noqa: E402
+from scene_count import storyboard_moments  # noqa: E402
 import outro as outro_tool  # noqa: E402
 import usage  # noqa: E402
 import transcribe_job  # noqa: E402
@@ -88,8 +89,11 @@ def cmd_new(a):
     put("PLAN.md", (T / "PLAN.md").read_text().replace("{{TITLE}}", title).replace("{{DESIGN}}", f"{a.design} ({D['name']})"))
     put("assets/media/CREDITS.md", f"# Créditos de medios · {title}\n\narchivo — título — autor — licencia — URL de la fuente\n")
     if not (d / "assets/config.json").exists():
-        jsave(d / "assets/config.json", {"activeId": a.id, "configs": [{"id": a.id, "design": a.design, "title": title, "quality_policy_version": 5,
-              "audio": {"src": "assets/song.mp3"}, "lyricsUrl": "assets/lyrics.json", "storyboardUrl": "assets/storyboard.json", "seed": int(hashlib.sha1(a.id.encode()).hexdigest()[:6], 16) % 9999}]})
+        config = {"id": a.id, "design": a.design, "title": title, "quality_policy_version": 5,
+                  "audio": {"src": "assets/song.mp3"}, "lyricsUrl": "assets/lyrics.json", "storyboardUrl": "assets/storyboard.json", "seed": int(hashlib.sha1(a.id.encode()).hexdigest()[:6], 16) % 9999}
+        if a.design == "imperio" and d.parent.name == "nodeatlas":
+            config["outro"] = {"dur": 6, "fadeOut": False}
+        jsave(d / "assets/config.json", {"activeId": a.id, "configs": [config]})
     if not (d / "assets/script.json").exists():
         script = {"id": a.id, "design": a.design, "title": title.upper(), "kicker": "", "language": "es-419",
                   "voice_direction": "", "segments": [{"id": "s01", "tone": "intriga", "intensity": 0.7, "text": "…"}]}
@@ -131,7 +135,7 @@ def cmd_status(a):
         ("4 voz (song.mp3)", (A / "song.mp3").exists() and not (ly.get("metadata") or {}).get("fake")),
         ("5 transcripción (lyrics.json)", bool(ly.get("segments")) and not (ly.get("metadata") or {}).get("fake")),
         ("5b cierre con voz del canal (kit.py outro)", outro_tool.spec_for(d) is None or bool((ly.get("metadata") or {}).get("outro"))),
-        (f"6 storyboard (≥ {T['beats'][0]} planos)", len(sb.get("beats", [])) >= max(15, T["beats"][0])),
+        (f"6 storyboard ({len(sb.get('beats', []))} beats; ≥ {max(15, T['beats'][0])} momentos narrados)", storyboard_moments(sb, ly) >= max(15, T["beats"][0])),
         ("8 hoja de revisión", any((d / "work").glob("sheet-*.png"))),
         ("9 manifest", (jload(d / "manifest.json", {}) or {}).get("status") in ("listo", "renderizado")),
         ("10 render", any((d / "render").glob("*.mp4"))),
@@ -222,7 +226,7 @@ def cmd_manifest(a):
         # work/ no viaja con el repo: sin el QC de la voz se conserva el bloque que ya tenía el manifest.
         "voice": {"voice": qcj.get("voice"), "provenance": qcj.get("provenance"), "wpm": qcj.get("wpm"), "wer_aprox": qcj.get("wer_aprox"), "faltan": qcj.get("faltan", [])[:10], "sobran": qcj.get("sobran", [])[:10]} if qcj else M.get("voice"),
         "transcript": {"words": sum(len(s.get("words", [])) for s in ly.get("segments", [])), "fake": bool((ly.get("metadata") or {}).get("fake"))},
-        "storyboard": {"beats": len(sb.get("beats", [])), "components": uses, "lyrics_moments": uses.get("common.lyric", 0)},
+        "storyboard": {"beats": len(sb.get("beats", [])), "moments": storyboard_moments(sb, ly), "components": uses, "lyrics_moments": uses.get("common.lyric", 0)},
         "media": credits,
         "video_formats": [{"id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": f"render/{a.id}-9x16.mp4"},
                           {"id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": f"render/{a.id}-16x9.mp4"}],
@@ -236,7 +240,7 @@ def cmd_manifest(a):
         if pub.get(k): M[k] = pub[k]
     # el cierre con voz del canal es obligatorio si el canal/voz lo tiene grabado (outro/)
     has_outro = outro_tool.spec_for(d) is None or bool((ly.get("metadata") or {}).get("outro"))
-    ok = all([M["duration_seconds"], M["transcript"]["words"], M["storyboard"]["beats"] >= 15, not M["transcript"]["fake"], has_outro])
+    ok = all([M["duration_seconds"], M["transcript"]["words"], M["storyboard"]["moments"] >= 15, not M["transcript"]["fake"], has_outro])
     if not has_outro: print("⚠ falta el cierre con voz del canal: correr kit.py outro " + a.id)
     # No declarar listo un storyboard que incumple los checks; check también actualiza quality.
     check_inputs = [A / "config.json", A / "lyrics.json", A / "storyboard.json"]
@@ -300,7 +304,16 @@ def cmd_render(a):
         env["PYTHONUNBUFFERED"] = "1"
         r = run(cmd, cwd=TEMPLATES, env=env)
         if r.returncode: sys.exit(r.returncode)
-    if not a.seconds: cmd_manifest(a)
+    if not a.seconds:
+        cmd_manifest(a)
+        try:
+            from src.config.settings import settings
+            from src.core.explainer.backup_event import write_render_event
+            write_render_event(d, TEMPLATES, settings.data_dir, a.id, formats)
+        except Exception as exc:
+            # El video terminado sigue disponible; avisar si el marcador no pudo persistirse.
+            print(f"⚠ Respaldo pendiente: no se pudo registrar ({type(exc).__name__})", file=sys.stderr)
+
 
 def cmd_poster(a):
     vdir(a.id)
@@ -366,6 +379,7 @@ def main():
         mode = p.add_mutually_exclusive_group(); mode.add_argument("--background", action="store_true"); mode.add_argument("--wait", action="store_true")
         p.add_argument("--timeout", type=float, default=20, help="segundos de espera por consulta (0–30; solo con --wait)")
     a = ap.parse_args()
+    os.environ["NEXA_EXPLAINER_RESOURCE_BUDGET"] = "1"
     if os.environ.get("NEXA_EXPLAINER_PIPELINE_AGENT") == "1" and a.cmd in ("voice", "transcribe", "outro", "preview"):
         ap.error(f"{a.cmd} corresponde al host en el pipeline; termina la fase para solicitarlo")
     if a.cmd == "delegate" and not a.wait and (not a.role or not a.prompt_file):
@@ -396,4 +410,12 @@ def main():
                      seconds=(datetime.datetime.now() - started).total_seconds())
 
 if __name__ == "__main__":
-    main()
+    from src.core.explainer.runtime import heavy_tool_slot
+    # A foreground launcher waits for its child; only the actual tool worker owns the budget.
+    launcher = len(sys.argv) > 1 and sys.argv[1] in {"voice", "sheet", "components"} and not os.environ.get("NEXA_KIT_JOB_FD")
+    background_query = "--wait" in sys.argv or "--background" in sys.argv
+    if launcher or background_query or (len(sys.argv) > 1 and sys.argv[1] == "transcribe"):
+        main()
+    else:
+        with heavy_tool_slot(sys.argv[1] if len(sys.argv) > 1 else ""):
+            main()

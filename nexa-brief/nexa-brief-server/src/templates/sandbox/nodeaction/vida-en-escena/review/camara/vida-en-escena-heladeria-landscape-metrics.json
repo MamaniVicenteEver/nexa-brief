@@ -1,0 +1,625 @@
+{
+  "warnings": [],
+  "head_overlaps": [],
+  "knees": {
+    "samples": 82,
+    "backward": 0
+  },
+  "subtitle_safe": {
+    "samples": 263,
+    "max_hand_bottom_px": 703.7845586337406,
+    "max_object_bottom_px": 708.9438147432289,
+    "violations": []
+  },
+  "conversation_stops": [
+    {
+      "actor": "valeria",
+      "to": "tomas",
+      "t": 1.35,
+      "center_distance_px": 289.2384000000002,
+      "minimum_center_distance_px": 289.23840000000007,
+      "edge_gap_in_head_widths": 1.2000000000000013
+    }
+  ],
+  "camera": {
+    "max_same_framing_seconds": 5.0636670000000015,
+    "spans": [
+      {
+        "type": "wide",
+        "start": 0,
+        "end": 1.35
+      },
+      {
+        "type": "close",
+        "target": "valeria",
+        "start": 1.35,
+        "end": 4.805458
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 4.805458,
+        "end": 7.265458
+      },
+      {
+        "type": "insert",
+        "target": "helado",
+        "start": 7.265458,
+        "end": 12.329125000000001
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 12.329125000000001,
+        "end": 14.630459
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 14.630459,
+        "end": 17.655126
+      },
+      {
+        "type": "two",
+        "start": 17.655126,
+        "end": 22.455126
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 22.455126,
+        "end": 24.557543
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 24.557543,
+        "end": 28.255376
+      },
+      {
+        "type": "close",
+        "target": "heladero",
+        "start": 28.255376,
+        "end": 30.311251
+      }
+    ],
+    "insert_returns": [
+      {
+        "at": 12.329125000000001,
+        "previousAt": 7.265457,
+        "fit_adjusted": true,
+        "max_rect_error_px": 1.5360024008259643e-7
+      }
+    ]
+  },
+  "subtitles": {
+    "aligned_words": 42,
+    "fallbacks": []
+  },
+  "camera_motion": {
+    "fps": 30,
+    "limits": {
+      "maxZoomRate": 0.3,
+      "maxPan": 0.35,
+      "maxZoomAcceleration": 1.2,
+      "maxPanAcceleration": 1.4,
+      "maxZoomJerk": 8,
+      "maxPanJerk": 10,
+      "smoothing": 0.65,
+      "anticipation": 0.8,
+      "deadzone": 0.035,
+      "handheld": 0,
+      "defaultEase": "smoother",
+      "minShot": 1.2,
+      "breath": 0.02,
+      "style": "estable",
+      "seed": 1
+    },
+    "p99": {
+      "zoom": 0.07879110084700187,
+      "pan": 0.2856541066689597,
+      "zoomAcceleration": 0.12123489355645972,
+      "panAcceleration": 0.38498091421565006,
+      "zoomJerk": 0.5548268926369099,
+      "panJerk": 1.309090863858309
+    },
+    "continuity": [
+      {
+        "at": 8.265457999999999,
+        "error": 1.1368683772161603e-13
+      },
+      {
+        "at": 10.129125,
+        "error": 5.821797230964876e-7
+      },
+      {
+        "at": 11.029125,
+        "error": 0.0000020278736201362335
+      }
+    ],
+    "safetyCorrections": 0,
+    "inversions": 0,
+    "stationaryInversions": 0,
+    "jumps": [],
+    "shots": [
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 0,
+        "t1": 1.35,
+        "type": "wide",
+        "move": "fixed",
+        "transition": "cut",
+        "stationary": true,
+        "whip": false,
+        "p99": {
+          "zoom": 0,
+          "pan": 0,
+          "zoomAcceleration": 0,
+          "panAcceleration": 0,
+          "zoomJerk": 0,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 1.35,
+        "t1": 4.805458,
+        "type": "close",
+        "target": "valeria",
+        "move": "push",
+        "stationary": false,
+        "whip": false,
+        "p99": {
+          "zoom": 0.07862066702490818,
+          "pan": 0,
+          "zoomAcceleration": 0.12121454013988578,
+          "panAcceleration": 0,
+          "zoomJerk": 0.508851502836801,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0.058268575120650645,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 4.805458,
+        "t1": 7.265458,
+        "type": "medium",
+        "target": "tomas",
+        "move": "drift",
+        "stationary": false,
+        "whip": false,
+        "p99": {
+          "zoom": 0,
+          "pan": 0,
+          "zoomAcceleration": 0,
+          "panAcceleration": 0,
+          "zoomJerk": 0,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 7.265458,
+        "t1": 8.265457999999999,
+        "type": "insert",
+        "target": "helado",
+        "move": "fixed",
+        "transition": "cut",
+        "stationary": true,
+        "whip": false,
+        "p99": {
+          "zoom": 0,
+          "pan": 0,
+          "zoomAcceleration": 0,
+          "panAcceleration": 0,
+          "zoomJerk": 0,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 8.265457999999999,
+        "t1": 10.129125,
+        "type": "insert",
+        "target": "helado",
+        "move": "track",
+        "transition": "move",
+        "stationary": false,
+        "whip": false,
+        "p99": {
+          "zoom": 1.8021196139823748e-10,
+          "pan": 0.08199959475215386,
+          "zoomAcceleration": 3.944058711488531e-10,
+          "panAcceleration": 0.1552684553319427,
+          "zoomJerk": 1.626059293334516e-9,
+          "panJerk": 0.4604169341748123
+        },
+        "inversions": 0,
+        "logRange": 9.980727355696217e-11,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 10.129125,
+        "t1": 11.029125,
+        "type": "insert",
+        "target": "helado",
+        "move": "fixed",
+        "transition": "move",
+        "stationary": false,
+        "whip": false,
+        "p99": {
+          "zoom": 0.011848399275742811,
+          "pan": 0.02192804741479478,
+          "zoomAcceleration": 0.049468228111352215,
+          "panAcceleration": 0.19092559911450804,
+          "zoomJerk": 0.13701422735593002,
+          "panJerk": 0.5794854780705584
+        },
+        "inversions": 0,
+        "logRange": 0.0015485908033125995,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 11.029125,
+        "t1": 12.329125000000001,
+        "type": "insert",
+        "target": "helado",
+        "move": "track",
+        "transition": "move",
+        "stationary": false,
+        "whip": false,
+        "p99": {
+          "zoom": 0.07807783840717032,
+          "pan": 0.2856541066689597,
+          "zoomAcceleration": 0.09491010329589036,
+          "panAcceleration": 0.38498091421565006,
+          "zoomJerk": 0.3195051841474459,
+          "panJerk": 1.309090863858309
+        },
+        "inversions": 0,
+        "logRange": 0.049444909322789776,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 12.329125000000001,
+        "t1": 14.630459,
+        "type": "medium",
+        "target": "tomas",
+        "move": "hold",
+        "transition": "cut",
+        "stationary": true,
+        "whip": false,
+        "p99": {
+          "zoom": 0,
+          "pan": 0,
+          "zoomAcceleration": 0,
+          "panAcceleration": 0,
+          "zoomJerk": 0,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 14.630459,
+        "t1": 17.655126,
+        "type": "medium",
+        "target": "valeria",
+        "move": "hold",
+        "stationary": true,
+        "whip": false,
+        "p99": {
+          "zoom": 0,
+          "pan": 0,
+          "zoomAcceleration": 0,
+          "panAcceleration": 0,
+          "zoomJerk": 0,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 17.655126,
+        "t1": 22.455126,
+        "type": "two",
+        "move": "hold",
+        "transition": "cut",
+        "stationary": true,
+        "whip": false,
+        "p99": {
+          "zoom": 0,
+          "pan": 0,
+          "zoomAcceleration": 0,
+          "panAcceleration": 0,
+          "zoomJerk": 0,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 22.455126,
+        "t1": 24.557543,
+        "type": "medium",
+        "target": "valeria",
+        "move": "hold",
+        "stationary": true,
+        "whip": false,
+        "p99": {
+          "zoom": 0,
+          "pan": 0,
+          "zoomAcceleration": 0,
+          "panAcceleration": 0,
+          "zoomJerk": 0,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 24.557543,
+        "t1": 28.255376,
+        "type": "medium",
+        "target": "tomas",
+        "move": "hold",
+        "stationary": true,
+        "whip": false,
+        "p99": {
+          "zoom": 0,
+          "pan": 0,
+          "zoomAcceleration": 0,
+          "panAcceleration": 0,
+          "zoomJerk": 0,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      },
+      {
+        "scene": "mañana-en-la-heladería",
+        "t0": 28.255376,
+        "t1": 30.311251,
+        "type": "close",
+        "target": "heladero",
+        "move": "push",
+        "stationary": false,
+        "whip": false,
+        "p99": {
+          "zoom": 0.07879110084700187,
+          "pan": 0,
+          "zoomAcceleration": 0.12123489355645972,
+          "panAcceleration": 0,
+          "zoomJerk": 0.5548268926369099,
+          "panJerk": 0
+        },
+        "inversions": 0,
+        "logRange": 0.05826880417486979,
+        "headroomFailures": 0,
+        "leadRoomFailures": 0
+      }
+    ],
+    "criteria": {
+      "camara_continuidad": true,
+      "camara_velocidad": true,
+      "camara_aceleracion": true,
+      "camara_jerk": true,
+      "sin_bombeo": true,
+      "plano_minimo": true,
+      "sin_salto": true,
+      "margen_headroom": true,
+      "leadRoom": true
+    },
+    "failed": []
+  },
+  "view": "landscape",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "framing_mode": "fit",
+  "actores_completos": {
+    "samples": 2094,
+    "failed_samples": 0,
+    "violations": []
+  },
+  "sin_zona_vacia": {
+    "passed": true,
+    "plates": {
+      "heladeria": {
+        "opaque_min_alpha": 255,
+        "plate_edge_max_alpha": 3,
+        "texture_colors": 9683,
+        "luminance_variance": 236.45719506869864,
+        "ok": true
+      }
+    }
+  },
+  "overrides_adjusted": [
+    "$.scenes[0].camera[1]"
+  ],
+  "composition": {
+    "sujeto_suficiente": {
+      "samples": 1942,
+      "min_ratio_by_shot": {
+        "wide": 0.41144096320176216,
+        "close": 0.3262579702475652,
+        "medium": 0.41111379864955155,
+        "two": 0.41144176608981914
+      },
+      "violations": [],
+      "failed_samples": 0
+    },
+    "sin_suelo_vacio": {
+      "samples": 910,
+      "max_ratio": 0,
+      "opening_wide_samples": 910,
+      "violations": [],
+      "failed_samples": 0
+    },
+    "objeto_no_tapa_cuerpo": {
+      "samples": 3454,
+      "max_ratio": 0,
+      "violations": [],
+      "failed_samples": 0
+    },
+    "transition_frames": 0
+  },
+  "episode": "vida-en-escena-heladeria",
+  "duration": 30.311251,
+  "fps": 30,
+  "foot_slip": {
+    "max_slip_px": 0.3730273580889318,
+    "samples": 5350,
+    "worst": {
+      "id": "heladero",
+      "side": "right",
+      "t": 28.433333333333334,
+      "contact": "mañana-en-la-heladería:heladero:initial:right",
+      "from": [
+        621.84,
+        720
+      ],
+      "to": [
+        621.8107670353819,
+        719.6281198530945
+      ]
+    }
+  },
+  "mouth": {
+    "silent_actor_frames": 2319,
+    "open_without_voice_frames": 0,
+    "percent": 0
+  },
+  "determinism": {
+    "frames": 30,
+    "resolution": [
+      960,
+      540
+    ],
+    "order": [
+      7,
+      24,
+      11,
+      28,
+      15,
+      2,
+      19,
+      6,
+      23,
+      10,
+      27,
+      14,
+      1,
+      18,
+      5,
+      22,
+      9,
+      26,
+      13,
+      0,
+      17,
+      4,
+      21,
+      8,
+      25,
+      12,
+      29,
+      16,
+      3,
+      20
+    ],
+    "mismatches": [],
+    "ok": true,
+    "hashes": [
+      "55451236f13422bb55d76e92aeb179d046a518507cfdd00e82031ea180b3a01b",
+      "e0ca92702bd3042fc231285fabd0a2d5b9993b3701fe06091594719964af81f8",
+      "dc895ba16dd74bd2e8f59cb9770644efb5968e3dbc4ec0eea027d7fcd7a6c479",
+      "62f0bf4ca6e7384901abfe20c622dc03d1e01cbfb135821ca2a1b8eef2dfb7a7",
+      "9680668671dc913296dbe7a76f98700e784cee8f9b6bd64565bfc1c531b7fff4",
+      "e29d8d4103d50e77bbb5e191b6626d2f13c5765e74f3cad342323326d7fff3a8",
+      "044e36088f2a6b42843bd3db1376a4a0a32b20dcea36a72350f787c3782ec126",
+      "af14ec48ae684c9bbbd7853c33328eafaf6f8b86fd4fc83ab1cac9c798d59217",
+      "b152be900adb8e3d0a4bb410082c064ed0630cbf1a25185987923ee33319eea6",
+      "1c287d913cf6526fcd15fdefe649457ac16aba54c3e6419a82b639fb0b8f3d82",
+      "41d11666181247e45dced45756d317d22d9cd20c34c9775df6f5d353eef4958e",
+      "0e2b8a1b109bddff25006e57384e942b8b77a09dd446d40ace8ff656910edd01",
+      "4168529e68f78cd574e403687f811de9e5cacf423482fb0e14db0b1e4124b255",
+      "81b4e6d5939ee4dc9b920d076fbd6e6347fc6754644dff814f83680fd5c37750",
+      "f04269140a157f997ecee690f6d1ac24e32570b0417c1e3cf4e8575c51a07652",
+      "c899fda6ed27e99de0b1fa374d8a09ee9e412f656798b7eb0f3c48d65ec220ea",
+      "3da7492f490be0a54e7e220743df3bc43649a84f11fd3ac22ef305343b3a2758",
+      "145cfc1978c7e5e14ed058541555e1463697ca704a4ba94fda744b2b82533e3e",
+      "9c8ce13b809a4ad1b13e5ec3754c90b49ee122a88189c74426049b18b7547282",
+      "9a58174941aa1b39e7c4b616ca561eb65ae8f5fea35719a7ce7f9d497e84bbab",
+      "c5543561eb9938c38be4afb33a319d89ce1e835308b945083b8e6655b52303e3",
+      "e151f5af3b5ebe7402efdb897408413360590d440f32e0453bdf48cf3c7c0ae8",
+      "afac6401147f8e2c5ead1bb8808b1af76779acdd66dcf45ec463a22e5f9bf5d8",
+      "763f2bc5300d542c96a8ad1c7de2ca88b5ab3974e1bd325ea2b7f97b9b73a70d",
+      "36840fbd8a2b76572df1b4ec8599594008e12989a3fc1896229ee4de3a35b1a1",
+      "b054fac18fadbcf1d02ea81db8052943626b16f6e788de1ffd1c9fbdde260d13",
+      "7b22167215e2daa1d442f3c35e8c208b9a68ef20ceb4d1cfc0403dc178e07ff3",
+      "1aaac5f2ec0642abee2d5ebe2833be22f126d5fee40637f8467080beb50be3c3",
+      "d349a78e444385294ca4f6833da68bb4d5b9feb262e90773884e07b427ca7c39",
+      "bc795b74e88b960b1cfffe661311ff65912fa8780c67c944110bfc2d4be59003"
+    ]
+  },
+  "objects": {
+    "ownership_samples": 1820,
+    "max_grip_error_px": 0
+  },
+  "framing": {
+    "target_crop_frames": 0,
+    "target_crop_details": [],
+    "offscreen_non_targets": 332,
+    "whip_transition_frames": 0,
+    "intentional_body_crop_frames": 166,
+    "offscreen_set_objects": 0,
+    "hidden_objects": 0,
+    "object_crop_frames": 0,
+    "object_crop_details": []
+  },
+  "pose_motion": {
+    "max_boundary_jump_px": 0.0017153614755493797,
+    "boundary_epsilon_seconds": 0.000001,
+    "max_anchor_step_per_frame_px": 43.088704280126635,
+    "note": "Desplazamiento bruto a 30 fps; incluye gestos y caminata, no equivale por sí solo a un salto."
+  },
+  "passed": true,
+  "failed": []
+}

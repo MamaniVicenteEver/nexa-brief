@@ -85,7 +85,7 @@ logger = structlog.get_logger(__name__)
 
 FILES_PREFIX = "/api/v1/explainer/files"
 MAX_UPLOAD_BYTES = 300 * 1024 * 1024
-SANDBOX_SHARED_DIRS = frozenset({"_engine", "_mapas", "_pizarra", "_avatar", "_player"})
+SANDBOX_SHARED_DIRS = frozenset({"_engine", "_mapas", "_pizarra", "_avatar", "_player", "_atlas", "_vida"})
 
 
 def is_servable(parts: tuple[str, ...]) -> bool:
@@ -171,6 +171,16 @@ def _design_response(design: KitDesign) -> DesignResponse:
 
 
 def _thumbnails(video: ExplainerVideo) -> ThumbnailsResponse:
+    # Agents can be writing a draft package while another request lists the catalogue.
+    # Its validation issues are exposed by _publish_package; keep other videos usable.
+    try:
+        return _valid_thumbnails(video)
+    except (ValueError, OSError):
+        logger.warning("explainer_draft_thumbnail_unavailable", video_id=video.video_id)
+        return ThumbnailsResponse()
+
+
+def _valid_thumbnails(video: ExplainerVideo) -> ThumbnailsResponse:
     specs = thumbnails.intro_specs(video)
     if not specs:
         return ThumbnailsResponse()
@@ -252,6 +262,7 @@ def _video_response(video: ExplainerVideo) -> ExplainerVideoResponse:
         category_id=top_id,
         category_name=top.display_name if top else "Sin categoría",
         category_path=video.category_path,
+        category_paths=video.category_paths,
         title=video.title,
         topic=video.topic,
         status=video.status,
@@ -304,7 +315,8 @@ def _production_response(rec: dict, with_log: bool = False) -> ProductionRespons
 
 @router.get("/explainer/videos", response_model=list[ExplainerVideoResponse])
 async def list_explainer_videos(category: str | None = None) -> list[ExplainerVideoResponse]:
-    return [_video_response(v) for v in list_videos() if _in_category(v.category_path, category)]
+    return [_video_response(v) for v in list_videos()
+            if any(_in_category(path, category) for path in v.category_paths)]
 
 
 @router.post(
@@ -329,7 +341,7 @@ async def record_explainer_video(video_id: str, body: RecordExplainerRequest) ->
             thumbnail=body.thumbnail,
         )
     except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     logger.info("explainer_record_submitted", video_id=video_id, job_id=job.job_id, publish=body.publish)
     return _job_response(job)
 
@@ -365,7 +377,7 @@ async def choose_thumbnail(video_id: str, body: ThumbnailChoiceRequest) -> Thumb
         thumbnails.choose(video, body.option)
         await thumbnails.ensure(video, body.option)
     except thumbnails.ThumbnailError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     return _thumbnails(video)
 
 
@@ -477,6 +489,11 @@ async def list_design_groups(first: str | None = None) -> list[DesignGroupRespon
     for design in list_designs():
         groups.setdefault(design.category_path or "sin_categoria", []).append(design)
     tree = list_categories()
+    by_id = {d.design_id: d for group in groups.values() for d in group}
+    for category_id, node in tree.items():
+        for design_id in node.shared_designs:
+            if design_id in by_id:
+                groups.setdefault(category_id, []).append(by_id[design_id])
     order = list(tree)
     first_top = (first or "").split("/", 1)[0]
     keys = sorted(groups, key=lambda k: (k != first_top, order.index(k) if k in order else 99))
@@ -511,7 +528,7 @@ async def create_brief(body: BriefRequest) -> dict:
             title_level=body.title_level,
         )
     except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     except NexaBriefError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
     return brief.model_dump()
@@ -558,7 +575,7 @@ async def create_production(
                 title_level=req.title_level,
             )
         except ValueError as exc:
-            raise HTTPException(status_code=400, detail=str(exc)) from exc
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
     if req.plan_item_id:
         from src.core.schedule.planner import link_production
 
@@ -596,7 +613,7 @@ async def resume_production(production_id: str) -> ProductionResponse:
 
 @router.post("/explainer/component-previews", response_model=ComponentPreviewBatchResponse)
 async def post_component_previews(body: ComponentPreviewBatchRequest) -> ComponentPreviewBatchResponse:
-    """Devuelve URLs del escenario aislado para uno o varios componentes del kit."""
+    """Devuelve URLs del escenario aislado para uno o varios componentes del kit o Sandbox."""
     try:
         return ComponentPreviewBatchResponse(previews=build_component_previews(body.previews))
     except ComponentPreviewError as exc:
@@ -620,6 +637,64 @@ def _preview_resource_urls(value):
     return value
 
 
+# La caché guarda solo bytes comprimidos y limita tanto entradas como memoria.
+import asyncio
+import gzip
+import threading
+from collections import OrderedDict
+
+_PREVIEW_GZIP_TYPES = frozenset({".json", ".geojson", ".js", ".mjs", ".css", ".html", ".svg", ".md", ".txt"})
+_PREVIEW_GZIP_MIN_SIZE = 64 * 1024
+_PREVIEW_GZIP_CACHE_LIMIT = 64 * 1024 * 1024
+_preview_gzip_cache = OrderedDict()
+_preview_gzip_lock = threading.Lock()
+
+
+def _accepts_preview_gzip(header: str) -> bool:
+    for coding in header.split(","):
+        name, *params = coding.strip().lower().split(";")
+        if name.strip() != "gzip":
+            continue
+        for param in params:
+            key, separator, value = param.strip().partition("=")
+            if key.strip() == "q" and separator:
+                try:
+                    return 0 < float(value.strip()) <= 1
+                except ValueError:
+                    return False
+        return True
+    return False
+
+
+def _compressed_preview(target: Path, stat, etag: str, body: bytes | None) -> bytes:
+    key = (str(target), stat.st_mtime_ns, stat.st_size, etag)
+    with _preview_gzip_lock:
+        cached = _preview_gzip_cache.get(key)
+        if cached is not None:
+            _preview_gzip_cache.move_to_end(key)
+            return cached
+    compressed = gzip.compress(body if body is not None else target.read_bytes(), compresslevel=6, mtime=0)
+    if len(compressed) <= _PREVIEW_GZIP_CACHE_LIMIT:
+        with _preview_gzip_lock:
+            _preview_gzip_cache[key] = compressed
+            _preview_gzip_cache.move_to_end(key)
+            while (len(_preview_gzip_cache) > 32 or
+                   sum(map(len, _preview_gzip_cache.values())) > _PREVIEW_GZIP_CACHE_LIMIT):
+                _preview_gzip_cache.popitem(last=False)
+    return compressed
+
+
+def _translated_preview_json(target: Path) -> bytes | None:
+    try:
+        original = json.loads(target.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    translated = _preview_resource_urls(original)
+    if translated != original:
+        return json.dumps(translated, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return None
+
+
 @router.get("/explainer/files/{file_path:path}")
 async def get_explainer_file(file_path: str, request: Request) -> Response:
     """Sirve archivos del kit, categorías y sandbox para previews de solo lectura."""
@@ -634,32 +709,40 @@ async def get_explainer_file(file_path: str, request: Request) -> Response:
         raise HTTPException(status_code=404, detail="no encontrado")
     # Los previews cambian durante desarrollo: revalidamos, pero un ETag válido no
     # debe volver a transferir el audio o las imágenes completas.
-    response = FileResponse(
-        target,
-        stat_result=target.stat(),
-        headers={"Cache-Control": "no-cache"},
-    )
+    stat = target.stat()
+    response = FileResponse(target, stat_result=stat, headers={"Cache-Control": "no-cache"})
+    body = None
     if target.suffix.lower() == ".json":
-        try:
-            original = json.loads(target.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            original = None  # Keep the file endpoint's ordinary behavior for unfinished JSON.
-        translated = _preview_resource_urls(original)
-        if translated != original:
-            body = json.dumps(translated, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-            # A transformed response needs a different ETag than the original
-            # FileResponse, including after upgrading an already cached preview.
+        body = await asyncio.to_thread(_translated_preview_json, target)
+        if body is not None:
             response = Response(
                 body, media_type="application/json",
                 headers={"Cache-Control": "no-cache", "ETag": '"' + hashlib.sha256(body).hexdigest() + '"'},
             )
+    eligible = target.suffix.lower() in _PREVIEW_GZIP_TYPES and stat.st_size >= _PREVIEW_GZIP_MIN_SIZE
+    use_gzip = eligible and "range" not in request.headers and _accepts_preview_gzip(
+        request.headers.get("accept-encoding", "")
+    )
+    if eligible:
+        response.headers["Vary"] = "Accept-Encoding"
     etag = response.headers.get("etag")
+    if use_gzip and etag:
+        etag = etag[:-1] + '-gzip"'
     if etag:
         candidates = {tag.strip() for tag in request.headers.get("if-none-match", "").split(",")}
         if "*" in candidates or etag in candidates or f"W/{etag}" in candidates:
             headers = {"Cache-Control": "no-cache", "ETag": etag}
+            if eligible:
+                headers["Vary"] = "Accept-Encoding"
+            if use_gzip:
+                headers["Content-Encoding"] = "gzip"
             last_modified = response.headers.get("last-modified")
             if last_modified:
                 headers["Last-Modified"] = last_modified
             return Response(status_code=304, headers=headers)
+    if use_gzip:
+        compressed = await asyncio.to_thread(_compressed_preview, target, stat, etag, body)
+        headers = dict(response.headers)
+        headers.update({"content-encoding": "gzip", "etag": etag, "content-length": str(len(compressed))})
+        return Response(compressed, headers=headers)
     return response

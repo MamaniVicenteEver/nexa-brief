@@ -6,6 +6,7 @@ import subprocess
 import sys
 import time
 import traceback
+from contextlib import nullcontext
 
 import job
 import outro
@@ -26,7 +27,22 @@ def lock(work):
     return job.lock(work, "transcribe")
 
 
+def _resource_slot():
+    if os.environ.get("NEXA_EXPLAINER_RESOURCE_BUDGET") != "1":
+        return nullcontext()
+    sys.path.insert(0, str(TOOLS.parents[4]))
+    from src.core.explainer.runtime import heavy_tool_slot
+    return heavy_tool_slot("transcribe")
+
+
 def worker(video, fd):
+    # Foreground job.launch calls worker directly, without executing __main__.
+    # The shared budget belongs here so both foreground and detached paths use it.
+    with _resource_slot():
+        return _worker(video, fd)
+
+
+def _worker(video, fd):
     work = video / "work"
     start = time.monotonic()
     started = datetime.datetime.now(datetime.timezone.utc).isoformat()

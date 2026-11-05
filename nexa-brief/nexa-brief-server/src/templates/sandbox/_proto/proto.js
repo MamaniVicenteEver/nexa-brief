@@ -15,7 +15,125 @@
  * La escena puede traer: intro {style:"v1"|"v2", …}, outro {…}, captions {…}, end.
  * Determinismo: nada de Math.random/Date/timers; todo sale de t.
  */
-(() => {
+// Resolucion de componentes, compartida con las pruebas de Node.
+function validateDeclared(components) {
+  if (!Array.isArray(components)) { console.warn("[proto] components debe ser un arreglo"); return []; }
+  const valid = [], names = new Set();
+  const object = v => v !== null && typeof v === "object" && !Array.isArray(v);
+  for (const c of components) {
+    const paramsValid = c && (c.params === undefined || (object(c.params) && Object.values(c.params).every(p =>
+      object(p) && ["string", "number", "boolean"].includes(p.type) &&
+      (p.default === undefined || typeof p.default === p.type) &&
+      (p.doc === undefined || typeof p.doc === "string") && (p.required === undefined || typeof p.required === "boolean") &&
+      (p.options === undefined || (Array.isArray(p.options) && p.options.every(v => typeof v === p.type))) &&
+      (p.min === undefined || typeof p.min === "number") && (p.max === undefined || typeof p.max === "number") &&
+      (p.min === undefined || p.max === undefined || p.min <= p.max) &&
+      (p.default === undefined || ((p.options === undefined || p.options.includes(p.default)) &&
+        (p.min === undefined || p.default >= p.min) && (p.max === undefined || p.default <= p.max))))));
+    if (!object(c) || typeof c.name !== "string" || !/^[a-z][a-z0-9_-]*\.[A-Za-z0-9]+$/.test(c.name) || names.has(c.name) ||
+        typeof c.label !== "string" || c.label.length > 60 || typeof c.summary !== "string" || c.summary.length > 200 ||
+        (c.group !== undefined && (typeof c.group !== "string" || !/^[a-z][a-z0-9-]*$/.test(c.group))) ||
+        (c.default !== undefined && typeof c.default !== "boolean") || !paramsValid || valid.length >= 16) {
+      console.warn("[proto] componente invalido", c); continue;
+    }
+    names.add(c.name); valid.push(c);
+  }
+  const groups = new Map();
+  for (const c of valid) if (c.group) groups.set(c.group, (groups.get(c.group) || 0) + (c.default === true ? 1 : 0));
+  for (const [group, count] of groups) if (count !== 1) console.warn("[proto] grupo sin un unico default", group);
+  return valid.filter(c => !c.group || groups.get(c.group) === 1);
+}
+
+function parseComponentQuery(search) {
+  const qs = search instanceof URLSearchParams ? search : new URLSearchParams(search || "");
+  let params = {};
+  const raw = qs.get("p");
+  if (raw !== null) {
+    try {
+      if (new TextEncoder().encode(raw).length > 8192) throw new Error("p supera 8 KB");
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("p debe ser un objeto");
+      params = parsed;
+    } catch (e) { console.warn("[proto] parametros invalidos", e.message); }
+  }
+  return { components: qs.getAll("c"), explicit: qs.get("cx") === "1", params };
+}
+
+function buildSelection(declared, query) {
+  query = query || {};
+  const active = new Set(), chosen = new Set(), byName = new Map(declared.map(c => [c.name, c]));
+  for (const c of declared) if (c.default === true && (c.group || !query.explicit)) active.add(c.name);
+  for (const name of query.components || []) {
+    const c = byName.get(name);
+    if (!c) { console.warn("[proto] componente desconocido", name); continue; }
+    if (c.group) {
+      if (chosen.has(c.group)) { console.warn("[proto] grupo repetido", c.group); continue; }
+      chosen.add(c.group);
+      for (const other of declared) if (other.group === c.group) active.delete(other.name);
+      active.add(c.name);
+    } else if (query.explicit) active.add(c.name);
+  }
+  const params = {};
+  for (const c of declared) {
+    const values = {}, supplied = query.params && query.params[c.name];
+    for (const [key, spec] of Object.entries(c.params || {})) {
+      if (spec.default !== undefined) values[key] = spec.default;
+      if (supplied && Object.prototype.hasOwnProperty.call(supplied, key)) values[key] = supplied[key];
+    }
+    params[c.name] = values;
+  }
+  return { active: [...active], params };
+}
+
+function resolveComponents(scene, declared, selection) {
+  if (!Array.isArray(declared) || !declared.length) return scene;
+  const active = new Set(selection.active), groups = new Map(), switches = new Map();
+  for (const c of declared) {
+    const id = c.name.split(".")[1];
+    if (c.group) { if (!groups.has(c.group)) groups.set(c.group, null); if (active.has(c.name)) groups.set(c.group, id); }
+    else switches.set(id, active.has(c.name));
+  }
+  const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+  function resolve(value) {
+    if (Array.isArray(value)) return value.flatMap(item => {
+      if (item && typeof item === "object" && !Array.isArray(item) && own(item, "when")) {
+        let matches = true, unknown = false;
+        for (const [key, expected] of Object.entries(item.when || {})) {
+          if (!groups.has(key) && !switches.has(key)) { console.error("[proto] condicion no declarada", key); unknown = true; continue; }
+          const actual = groups.has(key) ? groups.get(key) : switches.get(key);
+          if (!(Array.isArray(expected) ? expected.includes(actual) : expected === actual)) matches = false;
+        }
+        if (!matches && !unknown) return [];
+        const { when, ...rest } = item;
+        return [resolve(rest)];
+      }
+      return [resolve(item)];
+    });
+    if (!value || typeof value !== "object") return value;
+    if (own(value, "$by")) {
+      const key = value.$by;
+      let branch;
+      if (groups.has(key)) branch = groups.get(key);
+      else if (switches.has(key)) branch = switches.get(key) ? "on" : "off";
+      else console.error("[proto] selector no declarado", key);
+      if (!own(value, branch)) branch = "default";
+      if (!own(value, branch)) { console.error("[proto] falta rama para", key); branch = Object.keys(value).find(k => k !== "$by"); }
+      return resolve(value[branch]);
+    }
+    if (own(value, "$param")) {
+      const ref = typeof value.$param === "string" ? value.$param.split(".") : [];
+      const name = ref.slice(0, 2).join("."), param = ref.slice(2).join(".");
+      const component = declared.find(c => c.name === name && own(c.params || {}, param));
+      if (!component) { console.error("[proto] parametro no declarado", value.$param); return undefined; }
+      const values = selection.params?.[name];
+      return resolve(values && own(values, param) ? values[param] : component.params[param].default);
+    }
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, resolve(v)]));
+  }
+  return resolve(scene);
+}
+
+if (typeof window !== "undefined") (() => {
   "use strict";
   const QS = new URLSearchParams(location.search);
   const CONTROLLED = QS.get("controls") === "1";
@@ -80,10 +198,12 @@
     return caps;
   }
   function drawCaption(g, st, caps, t, cfg) {
+    if (cfg.enabled === false) return;
     const c = caps.find(c => t >= c.t0 && t < c.t1); if (!c) return;
     const land = st.W > st.H;
-    const size = (cfg.size || 34) * st.U * (land ? 1.1 : 1);
-    const y = st.H * (land ? cfg.yLandscape ?? 0.915 : cfg.y ?? 0.885);
+    const reduction = clamp(cfg.reductionPercent ?? 0, 0, 95);
+    const size = (cfg.size || 34) * (1 - reduction / 100) * st.U * (land ? 1.1 : 1);
+    const y = st.H * (land ? cfg.yLandscape ?? 0.915 : cfg.y ?? 0.885) + (land ? cfg.yOffsetLandscape ?? 0 : 0) * st.U;
     const text = cfg.upper === false ? c.text : c.text.toUpperCase(), k = back((t - c.t0) / 0.18);
     g.save(); g.font = `${cfg.weight || 800} ${size}px ${cfg.font || "Montserrat, sans-serif"}`; g.textAlign = "center"; g.textBaseline = "middle";
     g.translate(st.W / 2, y); g.scale(lerp(0.85, 1, k), lerp(0.85, 1, k));
@@ -261,6 +381,12 @@
         video.src = blobUrl; video.load();
         await Promise.race([metadata, waitForMediaEvent(video, "error", 10000)]);
         if (!Number.isFinite(video.duration)) throw new Error("metadatos de video no disponibles");
+        const start = Math.max(0, Number(item.start) || 0);
+        if (start > 0) {
+          const seeked = waitForMediaEvent(video, "seeked");
+          video.currentTime = Math.min(start, video.duration); await seeked;
+          await waitForVideoFrame(video);
+        }
         return blobUrl;
       } catch (error) {
         console.warn("[proto] video de ventana no disponible", item.src, error);
@@ -304,7 +430,8 @@
     const media = { items: [], videos: new Map(), cornerCache: new Map(), avoid, prepareGeneration: 0 };
     if (!url) return media;
     try {
-      const data = await getJSON([url]);
+      // Un motor puede preparar sus ventanas con la geometría de su composición.
+      const data = ctx.mediaWindows || await getJSON([url]);
       const defaults = data?.defaults || {};
       media.items = (data?.items || []).map((raw, index) => {
         const item = {
@@ -379,7 +506,7 @@
       const end = item._at + item._dur;
       if (t < item._at || t >= end) continue;
       const frame = mediaWindowRect(ctx, media, item);
-      const enter = easeOut((t - item._at) / 0.35), leave = easeOut((end - t) / 0.3);
+      const enter = item.embedded ? 1 : easeOut((t - item._at) / 0.35), leave = item.embedded ? 1 : easeOut((end - t) / 0.3);
       const alpha = item._opacity * Math.min(enter, leave), scale = (0.94 + 0.06 * enter) * (0.94 + 0.06 * leave);
       const cx = frame.x + frame.w / 2, cy = frame.y + frame.h / 2;
       const x = cx - frame.w * scale / 2, y = cy - frame.h * scale / 2, w = frame.w * scale, h = frame.h * scale;
@@ -393,7 +520,7 @@
           if (video.paused) video.play().catch(() => {});
         } else video.pause();
       }
-      g.save(); g.globalAlpha = alpha; g.shadowColor = "rgba(0,0,0,.48)"; g.shadowBlur = Math.min(W, H) * 0.025; g.shadowOffsetY = Math.min(W, H) * 0.008;
+      g.save(); g.globalAlpha = alpha; g.shadowColor = "rgba(0,0,0,.48)"; g.shadowBlur = item.embedded ? 0 : Math.min(W, H) * 0.025; g.shadowOffsetY = item.embedded ? 0 : Math.min(W, H) * 0.008;
       g.beginPath(); g.roundRect(x, y, w, h, radius); g.fillStyle = "#10151d"; g.fill(); g.shadowBlur = 0; g.shadowOffsetY = 0; g.clip();
       const source = item._kind === "video" ? video : imgCache.get(item._src);
       const ready = item._kind === "video" ? !!(video && video.readyState >= 2 && !video.error) : !!source;
@@ -460,10 +587,20 @@
 
   async function run(E) {
     const stage = document.getElementById("stage"), audio = document.getElementById("audio");
-    const cfgAll = await getJSON(["config.json", "assets/config.json"]);
+    const supplied = E.loadData ? await E.loadData() : null;
+    const cfgAll = supplied?.config || await getJSON(["config.json", "assets/config.json"]);
     const C = cfgAll?.configs?.[0] || {};
-    const scene = await getJSON([C.sceneUrl || "assets/scene.json"]);
-    const lyr = C.lyricsUrl ? (await getJSON([C.lyricsUrl])) || { segments: [] } : { segments: [] };
+    const loadedScene = supplied?.scene || await getJSON([(E.allowSceneQuery && QS.get("scene")) || C.sceneUrl || "assets/scene.json"]);
+    let info = supplied?.info || null;
+    if (!supplied) try { const response = await fetch("info.json"); if (response.ok) info = await response.json(); } catch (_) { /* info es opcional */ }
+    let scene = loadedScene, components = null;
+    if (info && Object.prototype.hasOwnProperty.call(info, "components")) {
+      const declared = validateDeclared(info.components);
+      const selection = buildSelection(declared, parseComponentQuery(QS));
+      scene = resolveComponents(loadedScene, declared, selection);
+      components = { declared, ...selection };
+    }
+    const lyr = supplied?.lyrics || (C.lyricsUrl ? (await getJSON([C.lyricsUrl])) || { segments: [] } : { segments: [] });
     const words = (lyr.segments || []).flatMap(s => s.words || []).filter(w => w && isFinite(w.start));
     const T = makeTimer(words, E.name);
     await Promise.all((E.fonts || []).map(f => document.fonts.load(f).catch(() => 0)));
@@ -482,12 +619,13 @@
 
     // duración: escena.end, o última palabra + cola del cierre
     const lastWord = words.length ? words[words.length - 1].end : 10;
-    const O = { enabled: true, dur: 6, ...(E.theme.outro || {}), ...(scene.outro || {}) };
+    const O = { enabled: E.sceneOptIn ? !!scene.outro : true, dur: 6, ...(E.theme.outro || {}), ...(scene.outro || {}) };
+    if (E.sceneOptIn && !scene.outro) O.enabled = false;
     const END = T(scene.end, lastWord + (O.enabled ? O.dur + 0.4 : 1.5));
     const O_T0 = O.enabled ? END - O.dur : Infinity;
     const I = scene.intro ? { dur: 5, ...scene.intro } : null;
     const capCfg = { ...(E.theme.captions || {}), ...(scene.captions || {}) };
-    const caps = capCfg.enabled === false ? [] : buildCaptions(words, END, capCfg);
+    const caps = capCfg.enabled === false || (E.sceneOptIn && !scene.captions) ? [] : buildCaptions(words, END, capCfg);
     ctx.END = END; ctx.outroAt = O_T0; ctx.intro = I;
 
     function render(t) {
@@ -527,13 +665,16 @@
 
     const cuts = (E.shots ? E.shots(ctx) : [0]).filter((v, i, A) => A.indexOf(v) === i && v < END).sort((a, b) => a - b);
     window.__promo = {
+      ...(components ? { components } : {}),
       scenes: () => cuts.map((t0, i) => ({ t0, t1: cuts[i + 1] ?? END, type: "shot", seg: { text: "" } })).concat([{ t0: END, t1: END, type: "end", seg: { text: "" } }]),
       total: END,
-      async prepare(t) { return prepareMediaWindows(ctx, media, t); },
+      async prepare(t) { const ready = await prepareMediaWindows(ctx, media, t); return ready && (!E.prepare || await E.prepare(ctx, t)); },
       async seek(t) { forced = t; if (await window.__promo.prepare(t)) render(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
       release() { forced = null; if (!window.__loop) { window.__loop = 1; requestAnimationFrame(frame); } },
       missingAnchors: () => [...T.missing],
+      ...(E.missingTiles ? { missingTiles: E.missingTiles } : {}),
     };
+    if (E.onReady) E.onReady(ctx);
     window.__nexaProtoControl = {
       async setTime(t, freeze = true) {
         controlledTime = clamp(Number(t) || 0, 0, END);
@@ -626,5 +767,7 @@
     if (hasAudio && !QS.has("paused") && !CONTROLLED) audio.play().then(() => showBtn(false), () => showBtn(true)); else if (hasAudio) showBtn(!CONTROLLED);
   }
 
-  window.Proto = { run, U, makeTimer, loadImg, outroTimes };
+  window.Proto = { run, U, makeTimer, loadImg, outroTimes, validateDeclared, parseComponentQuery, buildSelection, resolveComponents };
 })();
+
+if (typeof module !== "undefined" && module.exports) module.exports = { resolveComponents, parseComponentQuery, buildSelection, validateDeclared };

@@ -1,0 +1,501 @@
+{
+  "measured_preview": {
+    "report_path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/reports/disk-test-20261102T221955Z",
+    "video_id": "clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+    "preview_seconds": 20,
+    "formats": [
+      "9x16",
+      "16x9"
+    ],
+    "sample_interval_s": 0.25,
+    "elapsed_s": 88.553,
+    "sample_count": 325,
+    "before": {
+      "at_utc": "2026-11-02T22:19:56.078195+00:00",
+      "elapsed_s": 0.969,
+      "phase": "baseline",
+      "df_used_bytes": 180890505216,
+      "df_available_bytes": 263522197504,
+      "tmp": {
+        "logical_bytes": 583918,
+        "allocated_file_bytes": 598016,
+        "file_count": 6,
+        "frame_directories": {}
+      },
+      "host_meminfo": {
+        "MemTotal": 11853185024,
+        "MemFree": 6430224384,
+        "MemAvailable": 7271374848,
+        "Buffers": 155463680,
+        "Cached": 704163840,
+        "SwapTotal": 4294963200,
+        "SwapFree": 4362240,
+        "Dirty": 1716224,
+        "Writeback": 0,
+        "Shmem": 10797056,
+        "SReclaimable": 386031616
+      },
+      "container_cgroup": {
+        "memory.current": 267776000,
+        "memory.peak": 1187614720,
+        "memory.swap.current": 14172160,
+        "memory.stat": {
+          "anon": 120897536,
+          "file": 136581120,
+          "kernel": 5910528,
+          "file_dirty": 0,
+          "file_writeback": 0,
+          "inactive_file": 116084736,
+          "active_file": 20496384,
+          "slab": 4481104
+        },
+        "memory.events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0,
+          "sock_throttled": 5
+        },
+        "memory.swap.events": {
+          "high": 0,
+          "max": 0,
+          "fail": 0
+        }
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "Name": "docker-init",
+          "PPid": "0",
+          "VmRSS": "240 kB",
+          "VmSwap": "28 kB"
+        },
+        {
+          "pid": 7,
+          "Name": "uvicorn",
+          "PPid": "1",
+          "VmRSS": "93252 kB",
+          "VmSwap": "13812 kB"
+        },
+        {
+          "pid": 2330,
+          "Name": "python",
+          "PPid": "0",
+          "VmRSS": "44628 kB",
+          "VmSwap": "0 kB"
+        }
+      ],
+      "source_preview_usage": [
+        0,
+        0,
+        0
+      ],
+      "output_preview_usage": [
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "at_utc": "2026-11-02T22:21:23.224807+00:00",
+      "elapsed_s": 88.116,
+      "phase": "after",
+      "df_used_bytes": 180900962304,
+      "df_available_bytes": 263511740416,
+      "tmp": {
+        "logical_bytes": 583918,
+        "allocated_file_bytes": 598016,
+        "file_count": 6,
+        "frame_directories": {}
+      },
+      "host_meminfo": {
+        "MemTotal": 11853185024,
+        "MemFree": 5738029056,
+        "MemAvailable": 7124357120,
+        "Buffers": 162004992,
+        "Cached": 1248268288,
+        "SwapTotal": 4294963200,
+        "SwapFree": 13017088,
+        "Dirty": 8912896,
+        "Writeback": 0,
+        "Shmem": 18849792,
+        "SReclaimable": 388632576
+      },
+      "container_cgroup": {
+        "memory.current": 731873280,
+        "memory.peak": 4020744192,
+        "memory.swap.current": 14172160,
+        "memory.stat": {
+          "anon": 129007616,
+          "file": 589479936,
+          "kernel": 9039872,
+          "file_dirty": 7045120,
+          "file_writeback": 0,
+          "inactive_file": 190255104,
+          "active_file": 399224832,
+          "slab": 7658184
+        },
+        "memory.events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0,
+          "sock_throttled": 5
+        },
+        "memory.swap.events": {
+          "high": 0,
+          "max": 0,
+          "fail": 0
+        }
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "Name": "docker-init",
+          "PPid": "0",
+          "VmRSS": "240 kB",
+          "VmSwap": "28 kB"
+        },
+        {
+          "pid": 7,
+          "Name": "uvicorn",
+          "PPid": "1",
+          "VmRSS": "93252 kB",
+          "VmSwap": "13812 kB"
+        },
+        {
+          "pid": 2330,
+          "Name": "python",
+          "PPid": "0",
+          "VmRSS": "52636 kB",
+          "VmSwap": "0 kB"
+        }
+      ],
+      "source_preview_usage": [
+        4442403,
+        4456448,
+        4
+      ],
+      "output_preview_usage": [
+        4442273,
+        4448256,
+        2
+      ],
+      "job": {
+        "state": "done",
+        "format": "16x9",
+        "phase": "encoding",
+        "progress": 1.0
+      }
+    },
+    "disk_delta_bytes": 10457088,
+    "disk_peak_used_bytes": 180988280832,
+    "disk_peak_delta_bytes": 97775616,
+    "frame_peaks": {
+      "/tmp/tmp8bq95k2i": {
+        "count": 600,
+        "bytes": 93720184,
+        "allocated": 95072256,
+        "at_utc": "2026-11-02T22:20:33.445084+00:00",
+        "format": "9x16"
+      },
+      "/tmp/tmpawjs6_a_": {
+        "count": 600,
+        "bytes": 81293537,
+        "allocated": 82518016,
+        "at_utc": "2026-11-02T22:21:12.408757+00:00",
+        "format": "16x9"
+      }
+    },
+    "frame_dirs_remaining": {},
+    "container_memory_peak_observed_bytes": 3989852160,
+    "container_swap_peak_observed_bytes": 14172160,
+    "host_min_MemAvailable_bytes": 3675729920,
+    "job": {
+      "job_id": "ffb6e647a4ec",
+      "video_id": "clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+      "category_path": "node_tech",
+      "duration": "20",
+      "publish": false,
+      "privacy": "private",
+      "account_selector": null,
+      "account_selectors": [],
+      "account_formats": {},
+      "formats": [
+        "9x16",
+        "16x9"
+      ],
+      "state": "done",
+      "error": null,
+      "outputs": [
+        "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/preview-20s/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16-20s.mp4",
+        "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/preview-20s/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9-20s.mp4"
+      ],
+      "output_dir": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/preview-20s",
+      "scheduled_job_id": null,
+      "publish_result": null,
+      "publish_results": [],
+      "render_seconds": 82.1,
+      "thumbnail": null,
+      "progress": 1.0,
+      "progress_format": "16x9",
+      "progress_phase": "encoding",
+      "started_at": "2026-11-02 22:19:56.085041+00:00",
+      "eta_seconds": 0,
+      "finished_at": "2026-11-02 22:21:18.216641+00:00"
+    },
+    "outputs": [
+      {
+        "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/preview-20s/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16-20s.mp4",
+        "bytes": 2388941,
+        "allocated": 2392064,
+        "sha256": "a61c3ba2eedfb79ec315faf645cd6aea6df2035244136e83a00cd47b6f6f636e",
+        "ffprobe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1080,
+              "height": 1920,
+              "r_frame_rate": "30/1"
+            },
+            {
+              "codec_name": "aac",
+              "r_frame_rate": "0/0"
+            }
+          ],
+          "format": {
+            "duration": "20.000000",
+            "size": "2388941",
+            "bit_rate": "955576"
+          }
+        }
+      },
+      {
+        "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/preview-20s/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9-20s.mp4",
+        "bytes": 2053332,
+        "allocated": 2056192,
+        "sha256": "058a393708829d99e25d76ed2ff7dbfb5eade24388d8efd2942d1df816eccd29",
+        "ffprobe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1920,
+              "height": 1080,
+              "r_frame_rate": "30/1"
+            },
+            {
+              "codec_name": "aac",
+              "r_frame_rate": "0/0"
+            }
+          ],
+          "format": {
+            "duration": "20.000000",
+            "size": "2053332",
+            "bit_rate": "821332"
+          }
+        }
+      }
+    ],
+    "source_changed_files": {
+      "render/preview/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16-20s.mp4.sha256": {
+        "before": null,
+        "after": {
+          "bytes": 65,
+          "allocated": 4096,
+          "mtime_ns": 1793658078212675973,
+          "inode": 7999253
+        }
+      },
+      "render/preview/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9-20s.mp4.sha256": {
+        "before": null,
+        "after": {
+          "bytes": 65,
+          "allocated": 4096,
+          "mtime_ns": 1793658078212770702,
+          "inode": 7999254
+        }
+      },
+      "render/preview/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16-20s.mp4": {
+        "before": null,
+        "after": {
+          "bytes": 2388941,
+          "allocated": 2392064,
+          "mtime_ns": 1793658039600109397,
+          "inode": 7999244
+        }
+      },
+      "render/preview/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9-20s.mp4": {
+        "before": null,
+        "after": {
+          "bytes": 2053332,
+          "allocated": 2056192,
+          "mtime_ns": 1793658078161495492,
+          "inode": 7999250
+        }
+      }
+    },
+    "source_deleted_files": [],
+    "source_preview_inventory": {
+      "clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16-20s.mp4.sha256": {
+        "bytes": 65,
+        "allocated": 4096,
+        "mtime_ns": 1793658078212675973,
+        "inode": 7999253
+      },
+      "clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9-20s.mp4.sha256": {
+        "bytes": 65,
+        "allocated": 4096,
+        "mtime_ns": 1793658078212770702,
+        "inode": 7999254
+      },
+      "clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16-20s.mp4": {
+        "bytes": 2388941,
+        "allocated": 2392064,
+        "mtime_ns": 1793658039600109397,
+        "inode": 7999244
+      },
+      "clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9-20s.mp4": {
+        "bytes": 2053332,
+        "allocated": 2056192,
+        "mtime_ns": 1793658078161495492,
+        "inode": 7999250
+      }
+    },
+    "output_preview_inventory": {
+      "clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16-20s.mp4": {
+        "bytes": 2388941,
+        "allocated": 2392064,
+        "mtime_ns": 1793658039600109397,
+        "inode": 13408952
+      },
+      "clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9-20s.mp4": {
+        "bytes": 2053332,
+        "allocated": 2056192,
+        "mtime_ns": 1793658078161495492,
+        "inode": 13408953
+      }
+    },
+    "full_mp4_unchanged": {
+      "clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9.mp4": true,
+      "clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16.mp4": true
+    },
+    "signature_before": "4c744bf4390a9ba903984fcb3f6fdbc183fb5ac100cdf649aff02e97a339f17c",
+    "signature_after": "4c744bf4390a9ba903984fcb3f6fdbc183fb5ac100cdf649aff02e97a339f17c",
+    "monitor_errors": [],
+    "method": "Same ExplainerRecorder.submit preview branch used by UI, with injected runner calling the identical render_promo.py arguments used by kit.py (20s,4workers,1080p,30fps). kit.py wrapper bypassed because current mounted version imports src.core.explainer.runtime missing in current image. No code edits to application; no Docker rebuild; separate Python process in API container; no HTTP authentication token read; no publish.",
+    "concurrency_note": "Other host content worker active and other agents may use API container. Global df delta is not automatically attributable solely to this render."
+  },
+  "independent_docker_worker_audit": {
+    "docker_final_timestamp": "2026-11-02T18:21:44-04:00",
+    "docker_final_totals": [
+      "TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE",
+      "Images          26        4         71.46GB   38.27GB (53%)",
+      "Containers      4         3         966.7kB   20.48kB (2%)",
+      "Local Volumes   4         0         8.139GB   8.139GB (100%)",
+      "Build Cache     201       0         50.89GB   21.63GB"
+    ],
+    "image_inventory_unchanged": true,
+    "worker_file": "/tmp/nexa-audit-worker-retry-20261102.jsonl",
+    "worker_samples": 124,
+    "worker_start": "2026-11-02T18:19:52.577208-04:00",
+    "worker_end": "2026-11-02T18:21:55.679065-04:00",
+    "worker_peak_ram_bytes_all": 4489617408,
+    "worker_peak_ram_bytes_during_render": 33247232,
+    "worker_peak_swap_bytes_during_render": 0,
+    "host_df_peak_bytes_during_render": 180988575744,
+    "host_df_render_baseline_bytes": 180890505216,
+    "host_df_peak_delta_bytes_during_render": 98070528,
+    "worker_last": {
+      "ts": "2026-11-02T18:21:55.679065-04:00",
+      "n": 123,
+      "memory.current": 4489617408,
+      "memory.peak": 4489617408,
+      "memory.swap.current": 0,
+      "pids.current": 18,
+      "processes": [
+        {
+          "pid": 2420881,
+          "name": "python",
+          "rss_kb": "44320 kB",
+          "swap_kb": "0 kB"
+        },
+        {
+          "pid": 2420921,
+          "name": "python",
+          "rss_kb": "43840 kB",
+          "swap_kb": "0 kB"
+        },
+        {
+          "pid": 2420923,
+          "name": "python",
+          "rss_kb": "43760 kB",
+          "swap_kb": "0 kB"
+        },
+        {
+          "pid": 2420925,
+          "name": "python",
+          "rss_kb": "43808 kB",
+          "swap_kb": "0 kB"
+        },
+        {
+          "pid": 2420927,
+          "name": "python",
+          "rss_kb": "3293224 kB",
+          "swap_kb": "0 kB"
+        },
+        {
+          "pid": 2420937,
+          "name": "python",
+          "rss_kb": "43104 kB",
+          "swap_kb": "0 kB"
+        },
+        {
+          "pid": 2420938,
+          "name": "python",
+          "rss_kb": "43204 kB",
+          "swap_kb": "0 kB"
+        }
+      ],
+      "df_used_bytes": 180901376000
+    }
+  },
+  "telemetry_file_sizes": {
+    "before.json": 1737,
+    "samples.jsonl": 940586,
+    "render.log": 4356,
+    "after.json": 1872,
+    "summary.json": 11325
+  },
+  "validation": {
+    "ffmpeg_full_decode_horizontal": "passed without errors",
+    "ffmpeg_full_decode_vertical": "passed without errors",
+    "horizontal_frame_at_8s": "visually reviewed",
+    "download_sha256_both_mp4": "matched",
+    "source_signature_unchanged": true,
+    "original_full_mp4_hashes_unchanged": true,
+    "tmp_file_totals_identical_before_after": true
+  },
+  "known_persistent_mp4_logical_bytes": 8884546,
+  "root_df_later_observation": {
+    "at_utc": "2026-11-02T22:24:22.297461+00:00",
+    "used_bytes": 180915965952,
+    "note": "Later than the controlled render interval, with concurrent content processing; not attributed to the render."
+  },
+  "wrapper_mismatch": {
+    "host_runtime_bytes": 3109,
+    "host_runtime_mtime_utc": "2026-11-02T22:08:12Z",
+    "mounted_kit_mtime_utc": "2026-11-02T22:13:50Z",
+    "required_import": "src.core.explainer.runtime.heavy_tool_slot",
+    "container_runtime_module_present": false,
+    "failed_attempt_report": "/home/alfred/.local/share/nexa-brief/profiles/profesional/reports/disk-test-20261102T221905Z",
+    "failed_attempt_disk_delta_bytes": 126976,
+    "failed_attempt_frames": 0,
+    "failed_attempt_mp4": 0
+  }
+}

@@ -790,7 +790,7 @@
   const MC = canvas(8, 8).getContext("2d");
   IM.measure = (txt, font, ls = 0) => { MC.font = font; MC.letterSpacing = ls + "px"; return MC.measureText(txt).width; };
   IM.nativeFont = fs => `700 ${fs}px ${NATIVE_FONT}`;
-  IM.wordFont = fs => `400 ${fs}px 'Fjalla One'`;
+  IM.wordFont = (fs, weight = 400) => `${weight} ${fs}px 'Fjalla One'`;
   /**
    * Título en idioma original (kanji, alemán, ruso…) + traducción en mayúsculas.
    * Cada carácter entra con escala+desenfoque escalonado; la traducción se tipea en sincronía.
@@ -837,9 +837,9 @@
    * degradé de opacidad (arriba aparece primero) y desenfoque. o = { text, x, y (centro), size (px del
    * renglón más largo), maxFs, at, scale, rot, alpha, rise }
    */
-  IM.wordLayout = (text, width, maxFs) => {
+  IM.wordLayout = (text, width, maxFs, weight = 400) => {
     const lines = String(text || "").toUpperCase().split("\n").map(s => s.trim()).filter(Boolean);
-    const mw = Math.max(1, ...lines.map(l => IM.measure(l, IM.wordFont(100), 1) / 100));
+    const mw = Math.max(1, ...lines.map(l => IM.measure(l, IM.wordFont(100, weight), 1) / 100));
     const fs = Math.min(maxFs, width / mw);
     return { lines, fs, lh: fs * 1.02, h: fs * 1.02 * lines.length };
   };
@@ -847,7 +847,7 @@
     const L = o.layout || IM.wordLayout(o.text, o.width, o.maxFs || st.H * 0.22); if (!L.lines.length) return;
     const { fs, lh } = L, s = o.scale ?? 1, a0 = o.alpha ?? 1;
     G.save(); G.translate(o.x, o.y); G.rotate(o.rot || 0); G.scale(s, s);
-    G.font = IM.wordFont(fs); G.letterSpacing = fs * 0.01 + "px"; G.textAlign = "center"; G.textBaseline = "alphabetic";
+    G.font = IM.wordFont(fs, o.weight); G.letterSpacing = fs * 0.01 + "px"; G.textAlign = "center"; G.textBaseline = "alphabetic";
     const top = -L.h / 2;
     const revealStagger = o.stagger ?? 0.32, revealDur = o.reveal ?? 0.95;
     L.lines.forEach((line, i) => {

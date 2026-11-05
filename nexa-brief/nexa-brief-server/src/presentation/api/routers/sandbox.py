@@ -19,6 +19,7 @@ from src.presentation.api.routers.explainer import get_producer, get_recorder
 from src.presentation.api.security import require_internal
 from src.presentation.api.schemas.explainer_schema import (
     SandboxFolderResponse,
+    SandboxComponentsResponse,
     SandboxInfoResponse,
     SandboxPromotionResponse,
 )
@@ -53,6 +54,13 @@ async def get_explainer_sandbox() -> list[SandboxFolderResponse]:
         SandboxFolderResponse.model_validate(asdict(folder))
         for folder in sandbox_catalog.list_sandbox(busy_ids=busy_ids)
     ]
+
+
+@router.get("/explainer/sandbox/components", response_model=list[SandboxComponentsResponse])
+async def get_sandbox_components():
+    """Lista los prototipos y sus componentes sin generar vistas previas."""
+    from src.core.explainer.sandbox_components import list_components
+    return list_components(sandbox_catalog.SANDBOX_DIR)
 
 
 @router.get(

@@ -1,0 +1,9 @@
+# Comparación vertical
+
+`comparacion.js` es un componente opt-in que usa `Proto.run` y no carga `pizarra.js`. Su lienzo lógico es 1080×1920; para la muestra usar viewport 9:16. `scene.json` admite `title`, `background`, `accent`, `end`, `outro`, `captions`, `subjects` y `shots`. Cada sujeto tiene `id`, `title`, `src`, `fit` (`contain` o `cover`) y `detail`. Cada plano acepta `t` (segundos o ancla de voz), `mode` (`duo` o `single`), `focus` (`left` o `right` en single), `headline`, `subjects` (sobrescribe los sujetos por id), `pose` y `character`.
+
+`avatar` admite `src`, `poses` (nombre a recorte normalizado `[x,y,ancho,alto]`), `timeline` (`[{at,pose}]`), `defaultCharacter` y `characters` (mapa de id a `{src,poses}`). `?character=id` selecciona otro personaje. El cambio es por corte y la oscilación depende del tiempo del reproductor. Cada pose de un plano prevalece sobre eventos anteriores; un evento posterior de timeline puede cambiarla.
+
+El medio de apoyo se configura con `overlaysUrl` en `assets/config.json` y la lista `items` habitual de Proto; foto o video usan `kind`, `src`, `at`, `dur`. Para llenar la segunda franja en viewport 1080×1920: `x:6.48, y:36.67, w:85.19, h:20.625, aspect:"2.323:1", opacity:1, kenburns:1`. `start` controla inicio de clip. La superposición estándar añade transición y sombra. `captions` permite ajustar `maxWords` (predeterminado 3) y `y` (0.633). El reloj, controles `?controls=1`, anclas, `__promo.prepare` y `__promo.seek` son los de Proto. `outro.enabled:false` evita el cierre estándar.
+
+El componente fija canvas y estado lógico a 1080×1920 en setup y resize; CSS object-fit:contain conserva 9:16 incluso dentro de un visor horizontal. Las ventanas de medio y subtítulos usan el mismo lienzo lógico. El foco left/right añade borde amarillo; ambos conserva borde neutro.

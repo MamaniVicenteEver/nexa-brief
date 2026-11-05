@@ -121,9 +121,13 @@ async def _process_tick(facade: PublisherFacadeLike, now: datetime | None) -> di
 
     due_entries = queue_repository.find_due(now.isoformat())
     results: dict[str, str] = {}
-    for entry in due_entries:
-        processed = await publish_entry(facade, entry)
+    due_slots = asyncio.Semaphore(settings.publish_max_concurrent_uploads)
+    async def publish_due(entry: QueueEntry) -> None:
+        async with due_slots:
+            processed = await publish_entry(facade, entry)
         results[processed.entry_id] = processed.status.value
+
+    await asyncio.gather(*(publish_due(entry) for entry in due_entries))
 
     summary = {
         "recovered_stale": recovered,

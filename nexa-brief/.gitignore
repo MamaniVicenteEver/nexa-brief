@@ -54,3 +54,8 @@ client_secret*.json
 /nexa-brief-server/output
 /nexa-brief-web/data
 /nexa-tiktok/data
+
+# Datos administrativos offline del motor Atlas
+!/nexa-brief-server/src/templates/sandbox/nodehistory/_atlas/data/
+/nexa-brief-server/src/templates/sandbox/nodehistory/_atlas/data/*
+!/nexa-brief-server/src/templates/sandbox/nodehistory/_atlas/data/geo/

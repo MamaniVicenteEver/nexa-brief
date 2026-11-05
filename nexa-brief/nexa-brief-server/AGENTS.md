@@ -2,6 +2,13 @@
 
 Entrada para cualquier agente de IA (Codex, Claude Code…) que trabaje en este servidor.
 
+## Atlas Cinemático (mapas 3D)
+
+Para crear videos con **Atlas Cinemático / nodehistory-atlas**, empieza por
+`src/templates/sandbox/nodehistory/_atlas/SKILL.md`. Descubre las entradas con
+`produce.mjs catalog` y `example`; trabaja en una carpeta de episodio de producción.
+Es distinto del diseño `atlas` 2D del explainer-kit. No leas ni copies el motor para montar un video.
+
 ## Si te piden un VIDEO explicativo (NodeTech, NodeHistory, NodeEconomy…)
 
 **Con un diseño que ya existe (el caso normal): `src/skills/explainer/produce/SKILL.md` y nada más.**

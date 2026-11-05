@@ -98,9 +98,18 @@ async def lifespan(app: FastAPI):
                     scheduler_lease.release()
             await asyncio.sleep(5)
     leader_task = asyncio.create_task(scheduler_leader())
+    from src.core.explainer.batches import worker_loop
+    preparation_producer = explainer.get_producer()
+    preparation_worker = asyncio.create_task(worker_loop(preparation_producer))
 
     yield
 
+    preparation_worker.cancel()
+    try:
+        await preparation_worker
+    except asyncio.CancelledError:
+        pass
+    await preparation_producer.shutdown()
     leader_task.cancel()
     try:
         await leader_task

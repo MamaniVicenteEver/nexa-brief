@@ -101,5 +101,38 @@
     ],
     "status": "experimental",
     "notes": "HTML autónomo; el adaptador compartido solo conecta controles de previsualización, no el render."
+  },
+  {
+    "id": "nodehistory-atlas",
+    "path": "sandbox/nodehistory/_atlas",
+    "kind": "engine",
+    "components": "sandbox/nodehistory/_atlas/components.json",
+    "reference_template": "sandbox/nodehistory/atlas-cinematico",
+    "docs": [
+      "sandbox/nodehistory/_atlas/SKILL.md",
+      "sandbox/nodehistory/_atlas/components.json",
+      "sandbox/nodehistory/_atlas/PRODUCIR.md"
+    ],
+    "depends_on": [
+      "proto"
+    ],
+    "status": "experimental",
+    "notes": "Kit 3D por JSON: 36 entradas reutilizables, catálogo y guía en showcase; produce.mjs new/check/voice/transcribe/prepare/render. Datos y recursos se validan por episodio; la prueba documental de siete minutos está pendiente."
+  },
+  {
+    "id": "nodeaction-vida",
+    "path": "sandbox/nodeaction/_vida",
+    "kind": "engine",
+    "components": "sandbox/nodeaction/_vida/catalog.json",
+    "reference_template": "sandbox/nodeaction/vida-en-escena",
+    "docs": [
+      "sandbox/nodeaction/_vida/SKILL.md",
+      "sandbox/nodeaction/_vida/docs/PRODUCCION.md",
+      "sandbox/nodeaction/_vida/docs/EPISODIO.md",
+      "sandbox/nodeaction/_vida/docs/CAMARA.md",
+      "sandbox/nodeaction/_vida/VIDA.md"
+    ],
+    "status": "ready",
+    "notes": "Motor 2D de personajes con cara, cámara profesional por JSON y salida 9:16 y 16:9. Episodios = solo datos: `node tools/new-episode.mjs` y `node tools/produce.mjs` (validate→review→voz→mix→render con puertas de calidad). Límites: 5 escenarios y 5 personajes; voz Gemini con cuota; escenario nuevo = lámina image_gen (~65 s, solo en alfred-server)."
   }
 ]

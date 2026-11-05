@@ -58,6 +58,7 @@ class SandboxItem:
     promotable: bool = False
     promote_blocker: str | None = None
     subcategory: str | None = None
+    has_components: bool = False
 
 
 @dataclass
@@ -173,8 +174,9 @@ def load_item(
     if kind == "reference":
         has_info = (item_dir / "info.json").is_file()
         total_tokens = None
+        has_components = bool(sandbox_info._declared_components(reference_info, item_dir / "info.json"))
     else:
-        has_info, total_tokens = sandbox_info.get_item_costs(item_dir.parents[1], item_dir)
+        has_info, total_tokens, has_components = sandbox_info.get_item_costs(item_dir.parents[1], item_dir)
     encoded_folder = quote(item_folder, safe="")
     encoded_id = quote(item_dir.name, safe="")
     encoded_subcategory = quote(subcategory, safe="") if subcategory else None
@@ -224,6 +226,7 @@ def load_item(
         has_index=index.is_file(),
         has_poster=has_poster,
         has_info=has_info,
+        has_components=has_components,
         total_tokens=total_tokens,
         thumbnail_url=thumbnail_url,
         player=player,

@@ -1,0 +1,92 @@
+"""Validate delivered images, schema compatibility, scale, masks, damage, and resource budget."""
+import argparse,hashlib,json
+from pathlib import Path
+import numpy as np
+from PIL import Image
+from catalog import SPECS,STATES
+
+
+def require(condition,message):
+    if not condition: raise AssertionError(message)
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('directory',type=Path,nargs='?',default=Path(__file__).resolve().parents[2]/'sprites2')
+    p.add_argument('--report',type=Path)
+    a=p.parse_args(); root=a.directory
+    data=json.loads((root/'sprites2.json').read_text()); entries=data['sprites']
+    require(not data['rendering']['preview'],'El manifiesto es de previsualización')
+    require(set(data['base_sprites'])==set(SPECS),'Faltan variantes')
+    require(len(data['base_sprites'])==len(SPECS),'Bases duplicadas')
+    expected={base if state=='normal' else base+'-'+state for base in SPECS for state in STATES}
+    require(set(entries)==expected,'Estados ausentes o sobrantes')
+    required={'file','mask','anchor','bow','length_relative','length_m','length_pixels','variant','family','state','states','size','base','shadow_opacity'}
+    medical={}; hashes={}; referenced={'hoja2.png','hoja2-escalas.png'}
+    for base,spec in SPECS.items():
+        m=entries[base]
+        require(set(m['states'])==set(STATES),f'Estados incompletos: {base}')
+        original=np.array(Image.open(root/m['file']))
+        alpha=original[:,:,3]
+        with Image.open(root/m['mask']) as sh:
+            require(sh.mode=='RGBA' and sh.size==tuple(m['size']),f'Máscara incompatible: {base}')
+            mask=np.array(sh)
+        require(not mask[:,:,:3].any(),f'Máscara no negra: {base}')
+        require(np.array_equal(mask[:,:,3],alpha),f'Máscara desalineada: {base}')
+        with Image.open(root/m['tint_mask']) as ti:
+            require(ti.mode=='L' and ti.size==tuple(m['size']),f'Tinte incompatible: {base}')
+            tint=np.array(ti)
+        require(np.all(tint<=alpha),f'Tinte fuera de silueta: {base}')
+        red=(original[:,:,0].astype(float)-original[:,:,1]>22)&(original[:,:,0]>original[:,:,1]*1.6)&(alpha>200)
+        neutral=(alpha>200)&~red
+        require(np.array_equal(original[:,:,0][neutral],original[:,:,1][neutral]) and np.array_equal(original[:,:,1][neutral],original[:,:,2][neutral]),f'Base no neutra: {base}')
+        if base.startswith('ambulance'):
+            require(np.count_nonzero(red)>400,f'Emblema sanitario ausente: {base}')
+            require(not tint[red].any(),f'El tinte tapa el emblema: {base}')
+            medical[base]=int(np.count_nonzero(red))
+        else: require(not red.any(),f'Rojo inesperado: {base}')
+        state_hashes=set()
+        for state,key in m['states'].items():
+            e=entries[key]; referenced.update([e['file'],e['mask'],e['tint_mask']])
+            require(required<=set(e),f'Esquema incompatible: {key}')
+            require(e['base']==base and e['state']==state and e['variant']==spec['variant'],f'Metadatos incorrectos: {key}')
+            require(e['file']==f'{key}.png' and '/' not in e['file'],f'Ruta incorrecta: {key}')
+            require(e['anchor']==[.5,.5] and e['bow']==[0,-1],f'Pivote/rumbo: {key}')
+            with Image.open(root/e['file']) as im:
+                require(im.mode=='RGBA',f'Sin RGBA: {key}')
+                require(list(im.size)==e['size'] and max(im.size)==1024 and all(n%2==0 for n in im.size),f'Resolución incorrecta: {key}')
+                ar=np.array(im)
+            require(ar.shape==original.shape and np.array_equal(ar[:,:,3],alpha),f'El estado desplaza silueta: {key}')
+            require(0<np.count_nonzero(alpha)<alpha.size,f'Alfa inválido: {key}')
+            require(not ar[alpha==0,:3].any(),f'RGB bajo alfa cero: {key}')
+            require(not any(x.any() for x in [alpha[:5],alpha[-5:],alpha[:,:5],alpha[:,-5:]]),f'Recorte: {key}')
+            require(e['length_pixels']>0 and e['length_m']==spec['length_m'] and e['length_relative']==spec['relative_length'],f'Escala: {key}')
+            require(e['states']==m['states'],f'Referencias de estado: {key}')
+            if spec['scale_basis']=='physical-332m':
+                require(abs(e['length_m']/332-e['length_relative'])<1e-9,f'Escala física: {key}')
+            else: require(abs(e['physical_relative_length']-e['length_m']/332)<1e-9,f'Escala terrestre física auxiliar: {key}')
+            digest=hashlib.sha256(ar.tobytes()).hexdigest(); state_hashes.add(digest); hashes[key]=digest
+        require(len(state_hashes)==len(STATES),f'Estados idénticos: {base}')
+    require(medical['ambulance-cross']!=medical['ambulance-crescent'],'Variantes sanitarias iguales')
+    require(hashes['tank-main']!=hashes['tank-main-rounded'],'Siluetas de tanque iguales')
+    heavy=entries['air-bomber-heavy']
+    require(abs(heavy['span_relative']*heavy['hero_scale_multiplier']-.55)<1e-9,'Escala héroe bombardero')
+    for name in ['hoja2.png','hoja2-escalas.png']:
+        with Image.open(root/name) as sheet: sheet.verify()
+    actual={x.name for x in root.glob('*.png')}
+    require(actual==referenced,f'PNG huérfanos/ausentes: {actual^referenced}')
+    timing=json.loads((root/'render-times.json').read_text())
+    require({r['id'] for r in timing['renders']}==set(SPECS),'Mediciones incompletas')
+    require(all(r['threads']==1 and r['samples']==16 and r['source_size']==[1280,1280] and r['engine']=='Cycles CPU' for r in timing['renders']),'Presupuesto Blender incorrecto')
+    total=sum(f.stat().st_size for f in root.rglob('*') if f.is_file())
+    tools_dir=Path(__file__).resolve().parent
+    tool_bytes=sum(f.stat().st_size for f in tools_dir.rglob('*') if f.is_file())
+    require(total+tool_bytes<=40_000_000,f'Supera 40 MB: {total+tool_bytes}')
+    report=dict(status='PASS',base_variants=len(SPECS),color_sprites=len(entries),shadow_masks=len(SPECS),tint_masks=len(SPECS),
+                png_files=len(actual),sprite_bytes=total,tools_bytes=tool_bytes,combined_megabytes=round((total+tool_bytes)/1e6,3),
+                medical_red_pixels=medical,render_total_seconds=timing['render_total_seconds'],errors=0)
+    if a.report: a.report.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+    print(json.dumps(report,ensure_ascii=False,indent=2))
+
+
+if __name__=='__main__': main()

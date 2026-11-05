@@ -3,6 +3,7 @@ import type { ShowcaseRepository } from "../api/showcase-repository";
 import type { CatalogContext, FormatId, Item } from "../types";
 import { ComponentCard } from "./ComponentCard";
 import { ItemPreview } from "./StagePreview";
+import type { PreviewFramePosition } from "./PreviewFrameSelector";
 
 export type GridProps = {
   items: Item[];
@@ -13,6 +14,8 @@ export type GridProps = {
   onOpen(item: Item): void;
   context: CatalogContext;
   repo: ShowcaseRepository;
+  suspended?: boolean;
+  framePosition?: PreviewFramePosition;
 };
 
 export function ShowcaseGrid({
@@ -24,6 +27,8 @@ export function ShowcaseGrid({
   onOpen,
   context,
   repo,
+  suspended = false,
+  framePosition = "first",
 }: GridProps) {
   if (state === "loading")
     return (
@@ -56,8 +61,18 @@ export function ShowcaseGrid({
         <ComponentCard
           key={item.key}
           item={item}
+          format={format}
           onOpen={() => onOpen(item)}
-          preview={<ItemPreview item={item} context={context} repo={repo} format={format} />}
+          preview={
+            <ItemPreview
+              item={item}
+              context={context}
+              repo={repo}
+              format={format}
+              suspended={suspended}
+              framePosition={framePosition}
+            />
+          }
         />
       ))}
     </section>

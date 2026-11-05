@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.introv1",
+  "description": "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Titular gancho (2–7 palabras). '\\n' = renglón; '^x^' = palabras sobre franja carmesí.",
+      "default": null
+    },
+    "kicker": {
+      "type": "string",
+      "description": "Rótulo chico arriba (lugar · fecha).",
+      "default": ""
+    },
+    "sub": {
+      "type": "string",
+      "description": "Línea chica en itálica debajo del titular.",
+      "default": ""
+    },
+    "country": {
+      "type": "string",
+      "description": "País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro.",
+      "default": ""
+    },
+    "sunAt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Segundo en que cae el sol.",
+      "default": 0.15
+    },
+    "wordAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de la primera palabra.",
+      "default": 0.7
+    },
+    "stagger": {
+      "type": "number",
+      "minimum": 0.06,
+      "description": "Segundos entre palabras.",
+      "default": 0.2
+    },
+    "burstAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto).",
+      "default": 2.6
+    },
+    "bg": {
+      "enum": [
+        "auto",
+        "atlas",
+        "archivo",
+        "papel",
+        "image",
+        "component",
+        "none"
+      ],
+      "description": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+      "default": "auto"
+    },
+    "src": {
+      "type": "string",
+      "description": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+      "default": ""
+    },
+    "focus": {
+      "type": "array",
+      "description": "Punto de interés de la foto [x,y] (0..1).",
+      "default": [
+        0.5,
+        0.5
+      ]
+    },
+    "use": {
+      "type": "string",
+      "description": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+      "default": ""
+    },
+    "useParams": {
+      "type": "object",
+      "description": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+      "default": {}
+    },
+    "dim": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Oscurecido del fondo foto/componente.",
+      "default": 0.35
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "$defs": {
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    }
+  },
+  "examples": [
+    {
+      "text": "EL IMPERIO QUE\nMIRÓ AL ^SUR^",
+      "kicker": "Tokio · 1940",
+      "sub": "la doctrina que llevó a la guerra del Pacífico",
+      "country": "Japan"
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

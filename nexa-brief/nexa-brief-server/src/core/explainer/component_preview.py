@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 import re
-from urllib.parse import urlencode, urlparse
+from urllib.parse import quote, urlencode, urlparse
+
+from src.core.explainer import sandbox, sandbox_info
 
 from src.core.explainer.catalog import KIT_DIR, get_video
 
@@ -71,6 +73,9 @@ def build_component_previews(previews: list) -> list[dict[str, str]]:
     """Resuelve varias definiciones en URLs del escenario aislado del kit."""
     output: list[dict[str, str]] = []
     for item in previews:
+        if item.scope == "sandbox":
+            output.append(_sandbox_preview(item))
+            continue
         video = get_video(item.video_id)
         if video is None:
             raise ComponentPreviewError(f"No existe la plantilla «{item.video_id}».")
@@ -106,3 +111,41 @@ def build_component_previews(previews: list) -> list[dict[str, str]]:
             }
         )
     return output
+
+
+def _sandbox_preview(item) -> dict[str, str]:
+    from src.core.explainer.sandbox_components import list_components
+    matches = [entry for entry in list_components(sandbox.SANDBOX_DIR) if entry["id"] == item.video_id]
+    if not matches:
+        raise ComponentPreviewError(f"No existe el prototipo «{item.video_id}» en el Sandbox.")
+    if len(matches) > 1:
+        raise ComponentPreviewError(f"El prototipo «{item.video_id}» es ambiguo: aparece en varias categorías del Sandbox.")
+    entry = matches[0]
+    info_path = sandbox.SANDBOX_DIR.joinpath(*entry["path"].split("/")[1:]) / "info.json"
+    declared = {component["name"]: component for component in sandbox_info.load_declared_components(info_path)}
+    for name in [item.component, *(item.components or [])]:
+        if name not in declared:
+            raise ComponentPreviewError(f"El componente «{name}» no está declarado en «{item.video_id}».")
+    spec = declared[item.component].get("params", {})
+    for key, value in item.params.items():
+        if key not in spec or not sandbox_info._value_valid(value, spec[key]):
+            raise ComponentPreviewError(f"Parámetro «{key}» no válido para «{item.component}».")
+    for key, param in spec.items():
+        if param.get("required") and key not in item.params:
+            raise ComponentPreviewError(f"Falta el parámetro obligatorio «{key}» para «{item.component}».")
+    _check_image_sources(item.params)
+    query = [("controls", "1"), ("c", item.component)]
+    if item.components is not None:
+        query.extend(("c", name) for name in dict.fromkeys(item.components) if name != item.component)
+        query.append(("cx", "1"))
+    if item.params:
+        try:
+            params = json.dumps({item.component: item.params}, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+        except (TypeError, ValueError) as exc:
+            raise ComponentPreviewError(f"Parámetros no válidos para «{item.component}».") from exc
+        if len(params.encode("utf-8")) > 8000:
+            raise ComponentPreviewError("Los parámetros de cada vista previa deben ocupar menos de 8 KB.")
+        query.append(("p", params))
+    path = "/".join(quote(part, safe="") for part in entry["path"].split("/"))
+    return {"key": item.key, "video_id": item.video_id, "design": "", "component": item.component,
+            "preview_url": f"{FILES_PREFIX}/{path}/index.html?{urlencode(query)}"}

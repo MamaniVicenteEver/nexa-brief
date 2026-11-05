@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "title": "Crear otro video con Atlas Cinemático",
+  "summary": "Trabajar con datos JSON, reutilizar el motor y verificar cada fase antes de exportar. El video de la Unión Europea se realizará después de validar esta base.",
+  "status": "Kit de producción con revisión por episodio",
+  "entrypoint": "SKILL.md",
+  "catalog": "components.json",
+  "capabilities": [
+    {
+      "title": "Mapas y territorios",
+      "description": "Satélite con relieve, fronteras exactas y ocho looks. Países y regiones se declaran por ID o geometría preparada."
+    },
+    {
+      "title": "Cámara",
+      "description": "Vuelos, acercamientos y giros con encuadre, inclinación, duración y deriva por JSON."
+    },
+    {
+      "title": "Rutas y comercio",
+      "description": "Arcos, flechas rectas o curvas, trazo discontinuo, doble sentido y marcadores de flujo. Etiquetas y porcentajes desde datos con fuente."
+    },
+    {
+      "title": "Fotografías y textos",
+      "description": "Fotos circulares, hexagonales y paneles; rótulos, tarjetas de cifras y títulos. Una implementación por tipo, tantas instancias como necesite el video."
+    },
+    {
+      "title": "Entradas y salidas",
+      "description": "Fade, subida, escala y desplazamiento lateral mediante enter/exit; aperturas y dos cierres de globo."
+    },
+    {
+      "title": "Narración y subtítulos",
+      "description": "Voz con las herramientas existentes, transcripción por palabra y anclas @palabra. La voz marca el reloj de reproducción."
+    }
+  ],
+  "inputs": [
+    {
+      "name": "Tema y duración",
+      "description": "Ángulo del relato, audiencia, idioma y segundos de duración previstos.",
+      "required": true
+    },
+    {
+      "name": "Fuentes y datos",
+      "description": "research.json con enlaces primarios, año, unidad y alcance. Porcentajes: especificar siempre qué total es el denominador.",
+      "required": true
+    },
+    {
+      "name": "Guion",
+      "description": "assets/script.json revisado antes de generar narración; cada cifra debe poder comprobarse.",
+      "required": true
+    },
+    {
+      "name": "Escena",
+      "description": "assets/scene.json con camera, looks, layers y data. Copiar entradas desde components.json y adaptar sus valores.",
+      "required": true
+    },
+    {
+      "name": "Narración y transcripción",
+      "description": "assets/song.mp3 y assets/lyrics.json reales para una exportación narrada.",
+      "required": true
+    },
+    {
+      "name": "Imágenes y créditos",
+      "description": "Archivos en assets/media con autoría, licencia y fuente en credits.json.",
+      "required": false
+    }
+  ],
+  "steps": [
+    {
+      "title": "1. Descubrir componentes",
+      "description": "Leer SKILL.md y buscar por nombre o familia. example devuelve entradas, tipos y un JSON insertable.",
+      "command": "node src/templates/sandbox/nodehistory/_atlas/produce.mjs catalog rutas\nnode src/templates/sandbox/nodehistory/_atlas/produce.mjs example atlas.arrow"
+    },
+    {
+      "title": "2. Crear carpeta de episodio",
+      "description": "Crea solo datos y un enlace al motor compartido; no copia ni modifica el motor. Para siete minutos usar --duration 420.",
+      "command": "node src/templates/sandbox/nodehistory/_atlas/produce.mjs new <id> --title \"Título\" --duration 420"
+    },
+    {
+      "title": "3. Investigar y escribir",
+      "description": "Buscar fuentes primarias actuales; registrar investigación y guion. En comercio distinguir bienes de servicios, importaciones de exportaciones y UE de Europa. No usar cifras ilustrativas como datos reales."
+    },
+    {
+      "title": "4. Generar y revisar la voz",
+      "description": "Guion definitivo primero. dry muestra la preparación; voice usa TTS real. Escuchar y revisar antes de continuar.",
+      "command": "node src/templates/sandbox/nodehistory/_atlas/produce.mjs voice <id> --dry\nnode src/templates/sandbox/nodehistory/_atlas/produce.mjs voice <id>\nnode src/templates/sandbox/nodehistory/_atlas/produce.mjs transcribe <id>"
+    },
+    {
+      "title": "5. Armar las escenas",
+      "description": "Añadir componentes con example/add o editar solo el JSON del episodio. Vincular tiempos a palabras de la transcripción.",
+      "command": "node src/templates/sandbox/nodehistory/_atlas/produce.mjs example atlas.data\nnode src/templates/sandbox/nodehistory/_atlas/produce.mjs add <id> atlas.data --input '{\"id\":\"socio-demo\"}'\nnode src/templates/sandbox/nodehistory/_atlas/produce.mjs add <id> atlas.arrow --input '{\"from\":[4.35,50.85],\"to\":[-77.04,38.9],\"t\":12,\"out\":20}'"
+    },
+    {
+      "title": "6. Validar datos y preparar mapas",
+      "description": "Resolver fuentes, imágenes, anclas y variantes. Sin --fetch la preparación solo estima; --fetch descarga recursos al caché compartido.",
+      "command": "node src/templates/sandbox/nodehistory/_atlas/produce.mjs check <id> --ready\nnode src/templates/sandbox/nodehistory/_atlas/produce.mjs prepare <id> --fetch"
+    },
+    {
+      "title": "7. Revisar ambos formatos",
+      "description": "Comprobar recursos en navegador y mirar composición, fotos, etiquetas y subtítulos en cada orientación solicitada.",
+      "command": "node src/templates/sandbox/nodehistory/_atlas/produce.mjs prepare <id> --verify --size 1920x1080\nnode src/templates/sandbox/nodehistory/_atlas/produce.mjs prepare <id> --verify --size 1080x1920"
+    },
+    {
+      "title": "8. Exportar cuando se solicite",
+      "description": "Primero una prueba corta y revisarla; luego el video completo. No publica en redes.",
+      "command": "node src/templates/sandbox/nodehistory/_atlas/produce.mjs render <id> /tmp/prueba-atlas.mp4 --to 15\nnode src/templates/sandbox/nodehistory/_atlas/produce.mjs render <id> /tmp/video-atlas.mp4"
+    }
+  ],
+  "limitations": [
+    "Las cifras de las demostraciones son ilustrativas. Un dato real necesita fuente, periodo y alcance; los porcentajes necesitan denominador.",
+    "Un recorrido nuevo puede requerir nuevas teselas y geometrías. La comprobación de recursos y la revisión visual corresponden a cada episodio.",
+    "Los arcos usan curvatura en pantalla; no representan alturas reales sobre el terreno.",
+    "El detalle satelital y las etiquetas disponibles dependen de la región y del proveedor preparado.",
+    "La generación de voz depende de la configuración existente y de la cuota del proveedor. No se generan tiempos ficticios para sustituir una transcripción.",
+    "Este kit no certifica producción masiva ni una duración de render. El video narrado de siete minutos es la siguiente prueba integral."
+  ],
+  "agent_prompt": "Crea un video nuevo con Atlas Cinemático. Desde nexa-brief-server/, empieza por src/templates/sandbox/nodehistory/_atlas/SKILL.md y produce.mjs catalog/example. Usa components.json como contrato de entradas; trabaja solo en la carpeta del episodio. Investiga con fuentes primarias, registra los datos y su denominador, escribe y revisa el guion, genera voz y transcripción reales, monta scene.json con componentes existentes y valida mapas, anclas, medios y ambos formatos. No leas ni reescribas el motor para montar un episodio. No publiques. Si no se solicita exportación, termina con la preparación y revisión.",
+  "documents": [
+    {
+      "label": "Entrada para agentes",
+      "path": "SKILL.md"
+    },
+    {
+      "label": "Procedimiento completo",
+      "path": "PRODUCIR.md"
+    },
+    {
+      "label": "Catálogo JSON",
+      "path": "components.json"
+    },
+    {
+      "label": "Contrato de escenas y cámara",
+      "path": "ESCENA.md"
+    },
+    {
+      "label": "Fotos, flechas y rótulos",
+      "path": "OVERLAYS.md"
+    }
+  ]
+}

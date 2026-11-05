@@ -40,6 +40,7 @@ from src.core import notification_tracker
 from src.core.notification import Notification
 from src.core.schedule import queue_repository
 from src.core.explainer import thumbnails
+from src.core.explainer.render_cache import render_current, render_signature, stamp_render
 from src.core.explainer.publishing.store import read_publish
 from src.core.explainer.catalog import KIT_DIR, ExplainerVideo
 from src.core.job import JobStage
@@ -137,19 +138,22 @@ async def run_kit_render(
         cmd += ["--seconds", str(seconds)]
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"
-    proc = await asyncio.create_subprocess_exec(
-        *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT, env=env
+    # El CLI administrado se respalda desde el job persistente de Biblioteca.
+    env["NEXA_RENDER_MANAGED"] = "1"
+    from src.adapters.recorder.infrastructure.subprocess_progress import run_with_progress
+
+    def consume(line: str) -> None:
+        if on_output is not None:
+            on_output(line)
+        return None
+
+    result = await run_with_progress(
+        cmd, cwd=settings.templates_dir.parent.parent, timeout=None,
+        parse_progress=consume, env=env,
     )
-    tail = ""
-    if proc.stdout is not None:
-        while line := await proc.stdout.readline():
-            text = line.decode("utf-8", "replace")
-            tail = (tail + text)[-800:]
-            if on_output is not None:
-                on_output(text.rstrip("\r\n"))
-    await proc.wait()
-    if proc.returncode != 0:
-        raise RenderError(f"kit.py render terminó con código {proc.returncode}: {tail}")
+    if result.returncode != 0:
+        raise RenderError(f"kit.py render terminó con código {result.returncode}: {result.stderr_tail or result.stdout_tail}")
+
 
 
 def _clean(text: str) -> str:
@@ -165,6 +169,9 @@ def _copy_for(video: ExplainerVideo, platform: str) -> tuple[str, str, list[str]
         title, description, tags = video.facebook_title, video.facebook_description or video.youtube_description, video.youtube_tags
     else:
         title, description, tags = video.youtube_title, video.youtube_description, video.youtube_tags
+    if platform in ("facebook", "instagram", "tiktok"):
+        from src.core.social_caption import social_video_parts
+        description, tags = social_video_parts(title, description, tags)
     return _clean(title), _clean(description), [t for t in (strip_emojis(t) for t in tags) if t.strip("#")]
 
 
@@ -362,7 +369,10 @@ class ExplainerRecorder:
         src_dir = render_dir / "preview" if seconds else render_dir
 
         job.state = RecordState.rendering
-        missing = tuple(f for f in job.formats if not (src_dir / render_filename(video.video_id, f, seconds)).exists())
+        signature = render_signature(video)
+        missing = tuple(f for f in job.formats if not render_current(
+            src_dir / render_filename(video.video_id, f, seconds), signature,
+        ))
         if missing:
             job.started_at = datetime.now(timezone.utc)
             render_started = time.monotonic()
@@ -383,6 +393,8 @@ class ExplainerRecorder:
             else:
                 # Compatibilidad con RenderRunner inyectados antes del callback.
                 await self._render(video.video_id, seconds, missing)
+            for fmt in missing:
+                stamp_render(src_dir / render_filename(video.video_id, fmt, seconds), signature)
         else:
             job.started_at = datetime.now(timezone.utc)
         job.progress = 1.0
@@ -429,7 +441,8 @@ class ExplainerRecorder:
         failures: list[str] = []
         pinned_comment = _clean(read_publish(video.path).get("pinned_comment") or "")
         published_count = 0
-        for selector in job.account_selectors:
+        async def publish_channel_locked(selector: str) -> None:
+            nonlocal published_count
             platform, alias = selector.split(":", 1)
             title, description, tags = _copy_for(video, platform)
             selected_formats = job.account_formats.get(selector) or (PLATFORM_FORMAT[platform],)
@@ -488,6 +501,13 @@ class ExplainerRecorder:
                         ))
                     except Exception as exc:
                         logger.warning("explainer_comment_notification_failed", error=str(exc))
+        channel_slots = asyncio.Semaphore(settings.publish_max_concurrent_uploads)
+
+        async def publish_channel(selector: str) -> None:
+            async with channel_slots:
+                await publish_channel_locked(selector)
+
+        await asyncio.gather(*(publish_channel(selector) for selector in job.account_selectors))
         if failures and published_count == 0:
             raise RuntimeError("no se publicó en ningún canal: " + "; ".join(failures))
         job.error = "; ".join(failures) or None

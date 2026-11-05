@@ -9,6 +9,7 @@ import importlib.util
 import json
 import re
 import sys
+import warnings
 from pathlib import Path, PurePosixPath
 
 from costs import TOKEN_FIELDS, calculate_costs
@@ -151,6 +152,14 @@ def validate_info(info: object) -> list[str]:
     if not isinstance(info, dict):
         return ["la raíz debe ser un objeto JSON"]
     errors = []
+    if "components" in info:
+        # El mismo criterio de la API; los componentes inválidos son avisos.
+        sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
+        from src.core.explainer.sandbox_info import _declared_components
+        raw = info["components"]
+        valid = _declared_components(info, Path("info.json"))
+        if not isinstance(raw, list) or len(valid) != len(raw):
+            warnings.warn("components contiene entradas o grupos inválidos; se omitirán", UserWarning)
     required = {
         "version", "title", "summary", "engine", "based_on", "is_new_design",
         "status", "created_at", "libraries", "inputs", "notes",

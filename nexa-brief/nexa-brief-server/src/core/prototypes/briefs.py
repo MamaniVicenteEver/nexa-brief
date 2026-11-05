@@ -169,6 +169,7 @@ def compose_brief(
             "",
             "## Instrucciones",
             "",
+            "- Si hay variantes, cierres, fichas u otras partes elegibles, declaralas en `info.json` según `_proto/COMPONENTES.md` e informá la lista en el resultado.",
             f"Seguí [PROTOTIPO.md]({public_base}{PROTOTIPO_URL_PATH}) (URL pública + ruta).",
             f"- Ruta local: `{(root / 'sandbox' / 'PROTOTIPO.md').resolve()}`",
             "- Ruta SSH: `alfred-server:~/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/PROTOTIPO.md`",

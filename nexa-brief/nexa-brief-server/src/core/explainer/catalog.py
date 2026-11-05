@@ -67,6 +67,11 @@ class ExplainerVideo:
     has_poster: bool = False
     demo: bool = False      # demo de un diseño (mismo guion que otro video): ojo al publicar
     quality_issues: list[str] = field(default_factory=list)
+    shared_categories: list[str] = field(default_factory=list)
+
+    @property
+    def category_paths(self) -> list[str]:
+        return list(dict.fromkeys([self.category_path, *self.shared_categories]))
 
     @property
     def ready(self) -> bool:
@@ -80,7 +85,12 @@ class ExplainerVideo:
 def _read_json(path: Path) -> dict:
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        return value if isinstance(value, dict) else {}
+    except (ValueError, OSError):
+        # Parallel agents may be replacing an incomplete draft during catalogue reads.
+        return {}
 
 
 def load_video(video_dir: Path) -> ExplainerVideo | None:
@@ -132,6 +142,8 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         narrative_id=story.narrative_id,
         narrative_label=story.label,
         demo=bool(manifest.get("demo")),
+        shared_categories=[c for c in manifest.get("shared_categories", [])
+                           if isinstance(c, str) and get_category(c) is not None],
         quality_issues=[str(issue) for issue in manifest.get("quality_issues", []) if isinstance(issue, str)],
         has_poster=(video_dir / "render" / "poster.jpg").exists(),
     )

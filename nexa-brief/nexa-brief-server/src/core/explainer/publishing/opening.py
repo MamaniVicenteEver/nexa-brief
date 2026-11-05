@@ -103,6 +103,16 @@ def opening_specs(package: PublishPackage, video_dir: Path, design: str) -> dict
         specs["B"] = {"component": v2["name"],
                       "params": intro_params(v2, thumb.with_image.text, thumb.kicker, image_src=media_src(video_dir, image),
                                              image_side=thumb.with_image.image_side)}
+    # Las intros cartográficas conservan el país del prototipo (el escenario
+    # aislado no recibe los parámetros de su primer plano automáticamente).
+    storyboard_path = video_dir / "assets" / "storyboard.json"
+    if storyboard_path.is_file():
+        beats = json.loads(storyboard_path.read_text(encoding="utf-8")).get("beats", [])
+        country = ((beats[0].get("params") or {}).get("country")) if beats else None
+        if isinstance(country, str) and country:
+            for option, component in (("A", v1), ("B", v2)):
+                if option in specs and component and "country" in component.get("params", {}):
+                    specs[option]["params"]["country"] = country
     tabloid = thumb.tabloid
     if tabloid is None and thumb.chosen != "tabloid" and recorded(video_dir).narrative_id != "narrative_amarillista_v1":
         return specs

@@ -1,0 +1,729 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.campaign",
+  "description": "Campaña en UN plano continuo: la cámara vuela entre destinos (`cameras`); desde el país foco salen flechas gruesas hacia cada destino y llegan justo cuando la voz lo nombra (`time: \"@palabra\"`). Al llegar, el territorio queda marcado en carmesí y aparece su bandera en un círculo con nombre y año (después se retira; el territorio sigue marcado). Tramos de video y fotos de archivo (`plates`) se funden en blanco y negro con el atlas. Para anexiones, ocupaciones y avances militares a lo largo del tiempo.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "country": {
+      "type": "string",
+      "description": "País foco: pone el sol y el rayado.",
+      "default": "Japan"
+    },
+    "hatch": {
+      "anyOf": [
+        {
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Países ya ocupados (rayado fijo). Va acumulando de plano en plano.",
+      "default": null
+    },
+    "sunAt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "[lon, lat] del sol (vacío = centro del país foco).",
+      "default": null
+    },
+    "sunSize": {
+      "type": "number",
+      "minimum": 0.2,
+      "maximum": 6,
+      "description": "Radio del sol en grados de mapa.",
+      "default": 1.15
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "type": "string"
+          },
+          "at": {
+            "$ref": "#/$defs/place"
+          }
+        },
+        "required": [
+          "t",
+          "at"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "description": "Rótulos de mares: [{\"t\":\"Mar de\\nChina\", \"at\":[120,20]}].",
+      "default": []
+    },
+    "compass": {
+      "type": "boolean",
+      "description": "Rosa de los vientos fina abajo a la derecha.",
+      "default": false
+    },
+    "gray": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Desaturación del atlas.",
+      "default": 0
+    },
+    "enter": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 2,
+      "description": "Segundos de fundido de entrada sobre el plano anterior.",
+      "default": 0.6
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "territories",
+          "arrows",
+          "sun",
+          "badges",
+          "dates",
+          "plates",
+          "captions"
+        ]
+      },
+      "minItems": 0,
+      "description": "Capas reutilizables: territories, arrows, sun, badges (países/ciudades), dates (año), plates (archivo), captions. Omitir = composición original completa.",
+      "default": [
+        "territories",
+        "arrows",
+        "sun",
+        "badges",
+        "dates",
+        "plates",
+        "captions"
+      ]
+    },
+    "from": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+      "default": null
+    },
+    "to": {
+      "$ref": "#/$defs/camera",
+      "description": "Solo para encuadrar planos vecinos: cámara final. Vacío = la de la última entrada de `cameras`.",
+      "default": null
+    },
+    "zoom": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 6,
+      "description": "Si no hay cámaras: cuánto se aleja.",
+      "default": 1.08
+    },
+    "tilt": {
+      "type": "number",
+      "minimum": -20,
+      "maximum": 20,
+      "description": "Giro de las cámaras automáticas.",
+      "default": 0
+    },
+    "ease": {
+      "enum": [
+        "auto",
+        "out",
+        "in",
+        "inOut",
+        "linear",
+        "expo"
+      ],
+      "description": "Solo para planos vecinos (la cámara de este plano la dan `cameras`).",
+      "default": "linear"
+    },
+    "fit": {
+      "type": "number",
+      "minimum": 1.1,
+      "maximum": 4,
+      "description": "Margen del encuadre automático de `cameras[].focus` (más alto = más mapa alrededor).",
+      "default": 1.9
+    },
+    "cameras": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cameraStep"
+      },
+      "minItems": 0,
+      "description": "Vuelos de cámara en orden: [{\"t\":\"@Sajalín-1.8\", \"focus\":[\"sun\", [142.8,48.5]], \"k\":1.9}] o {\"t\":..,\"to\":[lon,lat,span,giro]}. Opcional `dur`, `ease`, `tilt`. Cada vuelo parte de donde esté la cámara. Con `\"cut\": true` (o `dur: 0`) la cámara salta al encuadre sin moverse: así el plano no tiene movimientos de cámara.",
+      "default": []
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/target"
+      },
+      "minItems": 0,
+      "description": "Destinos: [{\"at\":\"Taiwan\", \"region\":\"Taiwan\"|[\"A\",\"B\"]|{\"poly\":[[lon,lat]…],\"within\":\"China\"}|{\"dots\":[[lon,lat]…]}|null, \"label\":\"TAIWÁN\", \"year\":\"1895\", \"flag\":\"f1\", \"time\":\"@Taiwán\", \"kind\":\"badge|city\", \"arrow\":true, \"from\":[lon,lat], \"badgeAt\":[lon,lat], \"bow\":0.16, \"size\":1, \"hold\":4.5, \"side\":\"left|right\", \"dy\":0}]. `time` = cuándo la voz lo nombra: la flecha llega en ese instante.",
+      "default": []
+    },
+    "plates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/plate"
+      },
+      "minItems": 0,
+      "description": "Tramos de archivo: video 8–16 s o imagen 6–12 s; para fotos usar image:p1/p2 en vez de video. Ejemplo: [{\"video\":\"v1\", \"at\":\"@Manchuria-1\", \"dur\":8, \"start\":0, \"rate\":1, \"strength\":0.9, \"focus\":[0.5,0.45], \"caption\":\"ARCHIVO · 1931\"}]. El atlas se pone gris y el clip se funde en multiplicar.",
+      "default": []
+    },
+    "held": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/region"
+      },
+      "minItems": 0,
+      "description": "Territorios ya ocupados al empezar, siempre marcados (mismas formas que `region`).",
+      "default": []
+    },
+    "travel": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 3,
+      "description": "Segundos que tarda cada flecha en cruzar el mar antes de llegar a su `time`.",
+      "default": 1.1
+    },
+    "hold": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 20,
+      "description": "Segundos que se queda la bandera con su rótulo tras llegar (el territorio sigue marcado).",
+      "default": 4.5
+    },
+    "beam": {
+      "type": "number",
+      "minimum": 0.4,
+      "maximum": 2.5,
+      "description": "Grosor de las flechas (multiplicador).",
+      "default": 1
+    },
+    "badge": {
+      "type": "number",
+      "minimum": 0.5,
+      "maximum": 2,
+      "description": "Tamaño de las banderas redondas (multiplicador).",
+      "default": 1
+    },
+    "stamp": {
+      "type": "boolean",
+      "description": "Sello grande con el año del último destino, arriba a la izquierda.",
+      "default": true
+    },
+    "smoke": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Humo oscuro sobre los tramos de archivo.",
+      "default": 0.6
+    },
+    "f1": {
+      "type": "string",
+      "description": "Bandera f1 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f1\".",
+      "default": ""
+    },
+    "f2": {
+      "type": "string",
+      "description": "Bandera f2 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f2\".",
+      "default": ""
+    },
+    "f3": {
+      "type": "string",
+      "description": "Bandera f3 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f3\".",
+      "default": ""
+    },
+    "f4": {
+      "type": "string",
+      "description": "Bandera f4 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f4\".",
+      "default": ""
+    },
+    "f5": {
+      "type": "string",
+      "description": "Bandera f5 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f5\".",
+      "default": ""
+    },
+    "f6": {
+      "type": "string",
+      "description": "Bandera f6 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f6\".",
+      "default": ""
+    },
+    "f7": {
+      "type": "string",
+      "description": "Bandera f7 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f7\".",
+      "default": ""
+    },
+    "f8": {
+      "type": "string",
+      "description": "Bandera f8 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f8\".",
+      "default": ""
+    },
+    "f9": {
+      "type": "string",
+      "description": "Bandera f9 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f9\".",
+      "default": ""
+    },
+    "f10": {
+      "type": "string",
+      "description": "Bandera f10 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f10\".",
+      "default": ""
+    },
+    "f11": {
+      "type": "string",
+      "description": "Bandera f11 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f11\".",
+      "default": ""
+    },
+    "f12": {
+      "type": "string",
+      "description": "Bandera f12 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f12\".",
+      "default": ""
+    },
+    "v1": {
+      "type": "string",
+      "description": "Clip mudo v1 (assets/media). Un tramo de archivo lo usa con \"video\": \"v1\".",
+      "default": ""
+    },
+    "v2": {
+      "type": "string",
+      "description": "Clip mudo v2 (assets/media). Un tramo de archivo lo usa con \"video\": \"v2\".",
+      "default": ""
+    },
+    "v3": {
+      "type": "string",
+      "description": "Clip mudo v3 (assets/media). Un tramo de archivo lo usa con \"video\": \"v3\".",
+      "default": ""
+    },
+    "v4": {
+      "type": "string",
+      "description": "Clip mudo v4 (assets/media). Un tramo de archivo lo usa con \"video\": \"v4\".",
+      "default": ""
+    },
+    "p1": {
+      "type": "string",
+      "description": "Fotografía o fotograma p1 (assets/media). Un tramo ilustrativo lo usa con \"image\": \"p1\" durante 6–12 s.",
+      "default": ""
+    },
+    "p2": {
+      "type": "string",
+      "description": "Fotografía o fotograma p2 (assets/media). Un tramo ilustrativo lo usa con \"image\": \"p2\" durante 6–12 s.",
+      "default": ""
+    }
+  },
+  "required": [
+    "targets"
+  ],
+  "$defs": {
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    },
+    "place": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "camera": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 4,
+          "items": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "cameraStep": {
+      "type": "object",
+      "properties": {
+        "t": {
+          "$ref": "#/$defs/time"
+        },
+        "focus": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/place"
+              },
+              {
+                "const": "sun"
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        "to": {
+          "$ref": "#/$defs/camera"
+        },
+        "k": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "tilt": {
+          "type": "number"
+        },
+        "dur": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ease": {
+          "enum": [
+            "linear",
+            "in",
+            "out",
+            "inOut",
+            "expo"
+          ]
+        },
+        "cut": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "t"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "focus"
+          ]
+        },
+        {
+          "required": [
+            "to"
+          ]
+        }
+      ]
+    },
+    "time": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ]
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "$ref": "#/$defs/place"
+        },
+        "region": {
+          "$ref": "#/$defs/region"
+        },
+        "label": {
+          "type": "string"
+        },
+        "year": {
+          "type": "string"
+        },
+        "flag": {
+          "type": "string",
+          "enum": [
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6",
+            "f7",
+            "f8",
+            "f9",
+            "f10",
+            "f11",
+            "f12"
+          ]
+        },
+        "time": {
+          "$ref": "#/$defs/time"
+        },
+        "kind": {
+          "enum": [
+            "badge",
+            "city"
+          ]
+        },
+        "arrow": {
+          "type": "boolean"
+        },
+        "from": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "badgeAt": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "bow": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "size": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "hold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "side": {
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
+        "dy": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "region": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        {
+          "type": "object",
+          "properties": {
+            "poly": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coordinate"
+              },
+              "minItems": 3
+            },
+            "within": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "poly"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "dots": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coordinate"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "dots"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "plate": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "$ref": "#/$defs/time"
+        },
+        "video": {
+          "enum": [
+            "v1",
+            "v2",
+            "v3",
+            "v4"
+          ]
+        },
+        "image": {
+          "enum": [
+            "p1",
+            "p2"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "start": {
+          "type": "number",
+          "minimum": 0
+        },
+        "rate": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "focus": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "caption": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "at"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "video"
+          ]
+        },
+        {
+          "required": [
+            "image"
+          ]
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "from": [
+        132,
+        32,
+        75,
+        0
+      ],
+      "to": [
+        132,
+        32,
+        75,
+        0
+      ],
+      "country": "Japan",
+      "hatch": [
+        "Japan"
+      ],
+      "sunSize": 1.4,
+      "f1": "assets/flags/qing.svg",
+      "f2": "assets/flags/korean-empire.svg",
+      "cameras": [],
+      "targets": [
+        {
+          "at": "Taiwan",
+          "region": "Taiwan",
+          "label": "TAIWÁN",
+          "year": "1895",
+          "flag": "f1",
+          "time": 2
+        },
+        {
+          "at": [
+            127.8,
+            36.5
+          ],
+          "region": [
+            "South Korea",
+            "North Korea"
+          ],
+          "label": "COREA",
+          "year": "1910",
+          "flag": "f2",
+          "time": 3.2
+        }
+      ],
+      "labels": [
+        {
+          "t": "Mar de\nChina Oriental",
+          "at": [
+            124,
+            29
+          ]
+        }
+      ]
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

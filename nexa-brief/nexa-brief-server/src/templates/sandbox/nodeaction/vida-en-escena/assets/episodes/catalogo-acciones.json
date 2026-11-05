@@ -1,0 +1,336 @@
+{
+  "version": 1,
+  "id": "catalogo-acciones",
+  "title": "Catálogo de acciones",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "resources": {
+    "timing": "../timing.json",
+    "audioBase": "../",
+    "dialogue": "../mixes/catalogo-acciones/dialogue.mp3"
+  },
+  "ui": {
+    "subtitles": false
+  },
+  "scenes": [
+    {
+      "id": "gestos",
+      "set": "escuela-entrada",
+      "actors": {
+        "tomas": {
+          "at": "arrive",
+          "view": "3q-right"
+        },
+        "nico": {
+          "at": "meet",
+          "view": "3q-left"
+        }
+      },
+      "steps": [
+        {
+          "do": {
+            "who": "tomas",
+            "action": "idle",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "wave",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "point",
+            "to": "nico",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "look",
+            "to": "nico",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "turn",
+            "view": "side-right",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "turn",
+            "view": "3q-right",
+            "dur": 0.5
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "cross-arms",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "hands-hips",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "touch-head",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "highfive",
+            "to": "nico",
+            "hand": "right",
+            "recipientHand": "left",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "react",
+            "kind": "surprise",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "react",
+            "kind": "laugh",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "react",
+            "kind": "shy",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "react",
+            "kind": "worry",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "react",
+            "kind": "annoyed",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "react",
+            "kind": "relief",
+            "dur": 1.2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "react",
+            "kind": "shock",
+            "dur": 1.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "objetos",
+      "set": "aula",
+      "actors": {
+        "tomas": {
+          "at": "seat-tomas",
+          "view": "3q-right"
+        },
+        "nico": {
+          "at": "seat-nico",
+          "view": "3q-left"
+        }
+      },
+      "objects": {
+        "libro": {
+          "prop": "notebook",
+          "owner": {
+            "anchor": "desk-tomas"
+          }
+        },
+        "bag": {
+          "prop": "backpack",
+          "owner": {
+            "actor": "tomas",
+            "hand": "left"
+          }
+        },
+        "spoon": {
+          "prop": "spoon",
+          "owner": {
+            "anchor": [
+              730,
+              675
+            ]
+          }
+        },
+        "plate": {
+          "prop": "plate",
+          "owner": {
+            "anchor": [
+              650,
+              675
+            ]
+          }
+        }
+      },
+      "steps": [
+        {
+          "do": {
+            "who": "tomas",
+            "action": "sit",
+            "seat": "seat-tomas",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "pick",
+            "object": "libro",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "hold",
+            "object": "libro",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "put",
+            "object": "libro",
+            "to": "desk-tomas",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "take",
+            "object": "libro",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "put",
+            "object": "libro",
+            "to": "desk-tomas",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "pick",
+            "object": "spoon",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "eat",
+            "object": "spoon",
+            "plate": "plate",
+            "dur": 2
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "put",
+            "object": "spoon",
+            "to": [
+              730,
+              675
+            ],
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "stand",
+            "dur": 1
+          }
+        },
+        {
+          "do": {
+            "who": "tomas",
+            "action": "wear",
+            "object": "bag",
+            "hand": "left",
+            "dur": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "puerta",
+      "set": "casa-comedor",
+      "actors": {
+        "tomas": {
+          "at": "door",
+          "view": "front"
+        }
+      },
+      "steps": [
+        {
+          "do": {
+            "who": "tomas",
+            "action": "open",
+            "object": "door-0",
+            "dur": 1.2
+          }
+        },
+        {
+          "wait": 0.5
+        }
+      ]
+    }
+  ]
+}

@@ -39,6 +39,7 @@ from src.adapters.publishing.token_storage import TokenStorage
 from src.adapters.publishing.credential_factory import build_credential_store
 from src.adapters.publishing.token_manager import TokenManager
 from src.adapters.publishing.tiktok_adapter import TikTokAdapter
+from src.adapters.publishing.tiktok_business_adapter import TikTokBusinessAdapter
 from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
 from src.adapters.publishing.youtube_adapter import YouTubeAdapter, YouTubeChannelProfile
 from src.adapters.publishing.facebook_adapter import FacebookAdapter
@@ -99,7 +100,9 @@ class PublisherFacade:
                 f"Unknown platform '{platform}'. Supported: {_SUPPORTED_PLATFORMS}"
             )
         if platform == "tiktok" and self._token_manager._storage.get_mode(platform, alias) in {"browser", "service"}:
-            adapter = TikTokServiceAdapter()
+            raise UnsupportedOperationError("La conexión de TikTok por navegador fue retirada. Conecta la cuenta mediante la API oficial.")
+        elif platform == "tiktok" and self._token_manager._storage.get_api_provider(platform, alias) == "tiktok_business":
+            adapter = TikTokBusinessAdapter(self._token_manager)
         else:
             adapter = self._adapters[platform]
         return platform, alias, adapter
@@ -107,6 +110,26 @@ class PublisherFacade:
     # ── CREATE ────────────────────────────────────────────────────────────────
 
     async def publish_video(
+        self,
+        video_path: Path,
+        title: str,
+        description: str,
+        tags: list[str],
+        account_selector: str | None = None,
+        *,
+        privacy: str = "public",
+        **kwargs: Any,
+    ) -> PublishVideoResult:
+        """Publish within the shared upload limit, serializing the same account."""
+        from src.core.publish_concurrency import publication_slot
+
+        selector = account_selector or settings.active_account
+        async with publication_slot(selector):
+            return await self._publish_video(
+                video_path, title, description, tags, selector, privacy=privacy, **kwargs,
+            )
+
+    async def _publish_video(
         self,
         video_path: Path,
         title: str,
@@ -133,6 +156,13 @@ class PublisherFacade:
         """
         selector = account_selector or settings.active_account
         platform, alias, adapter = self._resolve(selector)
+
+        if platform in ("instagram", "facebook", "tiktok"):
+            from src.core.social_caption import social_video_parts
+            description, tags = social_video_parts(title, description, tags)
+            if platform in ("instagram", "tiktok"):
+                # Those adapters prepend their title; the caption already starts with it.
+                title = ""
 
         if platform in ("instagram", "facebook"):
             from src.adapters.publishing.video_cover import ensure_video_cover
@@ -259,7 +289,7 @@ class PublisherFacade:
     def list_accounts(self) -> list[dict[str, Any]]:
         """Return all configured accounts and their token status (no tokens exposed)."""
         storage = self._token_manager._storage
-        accounts = storage.list_accounts()
+        accounts = [a for a in storage.list_accounts() if not (a["platform"] == "tiktok" and a.get("mode") in {"browser", "service"})]
         logger.info("publisher_list_accounts", total=len(accounts))
         return accounts
 
@@ -371,12 +401,16 @@ class PublisherFacade:
 
     def catalog_for(self, platform: str) -> ChannelCatalogPort | None:
         """El adaptador de la red si sabe leer su catálogo (ChannelCatalogPort), si no None."""
+        if platform == "tiktok":
+            return TikTokBusinessAdapter(self._token_manager)
         adapter = self._adapters.get(platform)
         return adapter if isinstance(adapter, ChannelCatalogPort) else None
 
     async def sync_channel(self, platform: str, alias: str) -> channel_sync.SyncSummary:
         """Trae de la plataforma los videos y totales de la cuenta (ver core/channel_sync.py)."""
-        catalog = TikTokServiceAdapter() if platform == "tiktok" and self._token_manager._storage.get_mode(platform, alias) in {"browser", "service"} else self.catalog_for(platform)
+        if platform == "tiktok" and self._token_manager._storage.get_api_provider(platform, alias) != "tiktok_business":
+            raise UnsupportedOperationError("Esta cuenta no usa TikTok Business.")
+        catalog = self.catalog_for(platform)
         if catalog is None:
             raise UnsupportedOperationError(f"La sincronización de canales todavía no está disponible para {platform}.")
         if not any(a["platform"] == platform and a["alias"] == alias for a in self.list_accounts()):

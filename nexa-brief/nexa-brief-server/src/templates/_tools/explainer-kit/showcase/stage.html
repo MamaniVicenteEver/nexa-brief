@@ -22,6 +22,10 @@
   if (QS.has("gallery") && QS.get("clock") === "synthetic") document.addEventListener("keydown", event => {
     if (event.key === "Escape") window.parent.postMessage({ type: "kit-stage-close" }, location.origin);
   });
+  if (QS.has("gallery") && QS.get("isolated") === "1") {
+    const failure = () => window.parent.postMessage({ type: "nexa-animation-error" }, location.origin);
+    addEventListener("error", failure); addEventListener("unhandledrejection", failure);
+  }
   const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop", "memorias", "dinero", "atlas", "imperio"];
   const prefix = c.split(".")[0];
   const d = QS.get("d") || (ids.includes(prefix) ? prefix : "binary");
@@ -36,7 +40,7 @@
   const load = src => new Promise(res => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => { console.error("no carga", src); res(); }; document.body.appendChild(s); });
   for (const src of QS.getAll("js")) await load(src);
   if (QS.has("catalog")) {
-    window.parent.postMessage({ type: "kit-design-catalog", design: D.id, components: Kit.catalog() }, location.origin);
+    window.parent.postMessage({ type: "kit-design-catalog", design: D.id, components: D.showcase?.components ? Kit.catalog().filter(c => D.showcase.components.includes(c.name)) : Kit.catalog() }, location.origin);
     return;
   }
   if (QS.get("list")) {                       /* catálogo de todos los diseños */
@@ -51,17 +55,44 @@
     }
     window.__catalog = Kit.catalog(); document.body.textContent = JSON.stringify(window.__catalog); return;
   }
+  // Solo esta vista de la galería omite el atlas; el registro y los JSON no cambian.
+  const isolated = D.id === "imperio" && QS.has("gallery") && QS.get("isolated") === "1";
+  if (isolated) {
+    await load("./imperio-isolated.js");
+    if (!window.__imperioShowcase) throw new Error("No se pudo preparar la vista aislada de Imperio.");
+  }
   const fam = D.family, name = QS.get("c") || fam + ".title", def = Kit.registry.get(name);
+  if (QS.has("gallery") && !def) {
+    window.parent.postMessage({ type: "nexa-animation-error" }, location.origin);
+    return;
+  }
   const params = QS.get("p") ? JSON.parse(QS.get("p")) : JSON.parse(JSON.stringify(def?.example || {}));
   if (QS.has("gallery") && !QS.has("p")) {
     if (name === "common.clip") params.src = "samples/demo.mp4";
+    if (name === "imperio.footage") params.video = "samples/imperio-archive.mp4";
     if (name === "rough.introv2") params.video = "samples/demo.mp4";
   }
-  /* rutas de imágenes de ejemplo: relativas al kit (../showcase/samples/…) */
-  for (const [k, v] of Object.entries(params)) if (def?.params?.[k]?.type === "image" && typeof v === "string" && v && !v.startsWith("http") && !v.startsWith("/") && !v.startsWith("../")) params[k] = "samples/" + v.split("/").pop();
+  // Los medios propios de un video se resuelven desde su carpeta, también en objetos anidados.
+  // Solo se aceptan segmentos literales y rutas assets/; nunca se habilita salir del video.
+  const video = QS.get("video") || "";
+  const safe = part => part && !part.startsWith(".") && !/[%\\:?#\x00-\x1f\x7f]/.test(part);
+  const videoParts = video.split("/");
+  const resolveMedia = value => {
+    if (Array.isArray(value)) return value.map(resolveMedia);
+    if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, resolveMedia(v)]));
+    if (typeof value === "string" && value.startsWith("assets/") && videoParts.length === 2 && videoParts.every(safe)) {
+      const parts = value.split("/");
+      if (parts.every(safe)) return "../../../" + [...videoParts, ...parts].map(encodeURIComponent).join("/");
+    }
+    return value;
+  };
+  for (const [k, v] of Object.entries(params)) {
+    params[k] = resolveMedia(v);
+    if (def?.params?.[k]?.type === "image" && typeof params[k] === "string" && params[k] && !params[k].startsWith("http") && !params[k].startsWith("/") && !params[k].startsWith("../")) params[k] = "samples/" + params[k].split("/").pop();
+  }
   const dur = +(QS.get("dur") || 7);
   const solo = QS.has("solo");
-  const prevByFamily = { binary: "binary.icon", rough: "rough.icon", acuarela: "acuarela.title", carta: "carta.title", collage: "collage.intro", cronica: "cronica.title", enmienda: "enmienda.title", grunge: "grunge.title", pelicula: "pelicula.title", periodico: "periodico.title", pop: "pop.title" };
+  const prevByFamily = { binary: "binary.icon", rough: "rough.icon", acuarela: "acuarela.title", carta: "carta.title", collage: "collage.intro", cronica: "cronica.title", enmienda: "enmienda.title", grunge: "grunge.title", pelicula: "pelicula.title", periodico: "periodico.title", pop: "pop.title", imperio: "imperio.map" };
   const prevUse = QS.get("prev") || prevByFamily[fam] || "binary.icon";
   const prevDef = Kit.registry.get(prevUse), prevParams = JSON.parse(JSON.stringify(prevDef?.example || (fam === "rough" ? { icon: "spark" } : { icon: "question" })));
   const componentAt = solo ? 0 : 1.5;
@@ -72,12 +103,22 @@
   if (!words && name === "common.lyric") words = "UNA FRASE QUE LA VOZ DICE EN GRANDE";
   await Kit.boot({
     design: D,
-    config: { id: "stage", captions: { enabled: false }, outro: { enabled: false }, seed: 7 },
+    config: { id: "stage", captions: { enabled: false }, outro: { enabled: false }, seed: 7, ...(isolated ? {palette:{bg:D.showcase?.backgrounds?.[name] || ((name.startsWith("common.") && name !== "common.logo") || (video && def?.layer === "overlay") ? "#304653" : "#ffffff")}} : {}) },
     storyboard: { beats },
     lyrics: { segments: words ? [{ words: words.split(" ").map((w, i) => ({ word: " " + w, start: componentAt + 0.1 + i * 0.38, end: componentAt + 0.4 + i * 0.38 })) }] : [] },
     total: componentAt + dur,
+    ...(isolated ? {startAt: name === "common.flash" ? .08 : .35} : {}),
   });
-  if (QS.has("gallery") && QS.get("clock") !== "synthetic") {
+  // Este componente construye su texto al terminar de cargar su fuente local.
+  if (isolated && window.__tabloidFontReady) await window.__tabloidFontReady;
+  if (isolated && name === "common.logo") {
+    const note = document.createElement("p");
+    note.textContent = "Componente obsoleto. El logo se añade dentro de una foto o video.";
+    note.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:12%;text-align:center;color:#253848;font:600 18px/1.5 sans-serif";
+    document.getElementById("stage").appendChild(note);
+  }
+  if (QS.has("gallery")) requestAnimationFrame(() => window.parent.postMessage({ type: "nexa-animation-ready" }, location.origin));
+  if (QS.has("gallery") && QS.get("clock") !== "synthetic" && !isolated && !QS.has("t")) {
     // Congelar también los videos embebidos, conservando el último cuadro del beat.
     setTimeout(async () => {
       await window.__promo.seek(Math.max(0, dur - 0.04));

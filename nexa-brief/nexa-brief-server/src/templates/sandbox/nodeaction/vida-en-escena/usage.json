@@ -1,0 +1,101 @@
+{
+  "video": "vida-en-escena",
+  "updated_at": "2026-11-03T07:07:00+00:00",
+  "note": "Tokens tal como los informa cada proveedor. Codex y Claude corren con la suscripción (CLI local, sin costo por token); DeepSeek y Gemini se pagan por token (api).",
+  "totals": {
+    "calls": 3,
+    "failed": 0,
+    "seconds": 0.0,
+    "input_tokens": 435290,
+    "cached_input_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_tokens": 0
+  },
+  "api_tokens": {},
+  "by_provider": {
+    "codex": {
+      "calls": 3,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 435290,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    }
+  },
+  "by_model": {
+    "codex:gpt-6.1-sol": {
+      "calls": 2,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 178860,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    },
+    "codex:gpt-6-astra": {
+      "calls": 1,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 256430,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    }
+  },
+  "by_role": {
+    "agente": {
+      "calls": 3,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 435290,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    }
+  },
+  "iterations": {
+    "agente:sandbox": 3
+  },
+  "timeline": [
+    {
+      "ts": "2026-11-03T06:39:26+00:00",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "role": "agente",
+      "step": "sandbox",
+      "iteration": 1,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 53918,
+      "output_tokens": 0,
+      "note": "Total combinado informado por codex exec; el log no separa entrada, salida ni razonamiento."
+    },
+    {
+      "ts": "2026-11-03T07:01:41+00:00",
+      "provider": "codex",
+      "model": "gpt-6-astra",
+      "role": "agente",
+      "step": "sandbox",
+      "iteration": 2,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 256430,
+      "output_tokens": 0,
+      "note": "Total combinado informado por codex exec; el log no separa entrada, salida ni razonamiento."
+    },
+    {
+      "ts": "2026-11-03T07:07:00+00:00",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "role": "agente",
+      "step": "sandbox",
+      "iteration": 3,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 124942,
+      "output_tokens": 0,
+      "note": "Total combinado informado por codex exec; el log no separa entrada, salida ni razonamiento."
+    }
+  ]
+}

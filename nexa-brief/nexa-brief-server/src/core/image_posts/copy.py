@@ -6,6 +6,7 @@ import json
 from typing import Any, Mapping, Sequence
 
 from .plan import ImagePlan, parse_image_plan
+from src.core.social_caption import brief_caption, clean_tags
 
 
 class CopyError(ValueError):
@@ -48,23 +49,15 @@ def _clean_hashtags(publish: Mapping[str, Any]) -> tuple[str, ...]:
     raw = publish.get("tags", [])
     candidates: list[str] = []
     if isinstance(raw, Mapping):
-        for value in raw.values():
+        for key in ("facebook", "instagram", "youtube_hashtags", "tiktok"):
+            value = raw.get(key)
             if isinstance(value, list):
                 candidates.extend(str(item) for item in value)
             elif isinstance(value, str):
                 candidates.extend(value.split())
     elif isinstance(raw, list):
         candidates.extend(str(item) for item in raw)
-    tags = []
-    for item in candidates:
-        tag = item.strip()
-        if not tag:
-            continue
-        if not tag.startswith("#"):
-            tag = "#" + tag
-        if tag[1:].replace("_", "").isalnum() and tag not in tags:
-            tags.append(tag)
-    return tuple(tags[:5])
+    return tuple(clean_tags(candidates))
 
 
 def _pinned_comment(publish: Mapping[str, Any]) -> str | None:
@@ -149,44 +142,10 @@ def build_copy(
     question = question_override if question_override is not None else description.get("question")
     question = question.strip() if isinstance(question, str) else ""
     title = title.strip()
-    if image_plan.template_id == "five_slides":
-        editorial_line = f"Desliza las {len(image_plan.slides)} láminas y revisa el contexto y las fuentes de cada dato."
-    else:
-        editorial_line = next(
-            (value for slide in image_plan.slides for value in [_role(slide, "body")] if value),
-            "",
-        )
-    sources = []
-    seen_sources = set()
-    for slide in image_plan.slides:
-        for claim in slide.claim_refs:
-            if claim.id not in requested_claims or claim.url in seen_sources:
-                continue
-            sources.append(claim.url)
-            seen_sources.add(claim.url)
-    if not sources:
-        raise CopyError("Las afirmaciones del copy no tienen URL")
-    source_line = "Fuentes: " + " · ".join(sources)
-    credits = []
-    seen_media = set()
-    for slide in image_plan.slides:
-        for media in slide.media:
-            key = (media.author, media.license_id, media.license_url, media.url, media.changes)
-            if key in seen_media:
-                continue
-            seen_media.add(key)
-            license_url = f"; licencia: {media.license_url}" if media.license_url else ""
-            changes = f"; cambios: {media.changes}" if media.changes else ""
-            credits.append(
-                f"{media.author} ({media.license_id}{license_url}{changes}) — {media.url}"
-            )
-    credits_line = "Créditos visuales: " + " · ".join(credits) if credits else ""
-    caption_base = "\n\n".join(part for part in (title, editorial_line, source_line, credits_line, question) if part)
-    caption_fb = caption_base
-    caption_ig = caption_base
-    if tags:
-        caption_ig = f"{caption_ig}\n\n{' '.join(tags)}"
-    first_comment = _pinned_comment(publish_v2)
+    caption_base = brief_caption(title, question, tags)
+    caption_fb = caption_ig = caption_base
+    # Visual credits stay in the artwork and media metadata; no automatic comment.
+    first_comment = None
     facebook_alt = tuple(_alt_text(slide) for slide in image_plan.slides)
     instagram_alt = facebook_alt
     if any(not alt for alt in facebook_alt):

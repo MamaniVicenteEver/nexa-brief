@@ -191,7 +191,7 @@ vi.mock("../components/ImagePostPublishingPanel", () => ({
         onPrepared?.({
           postId: "img_review",
           revision: 2,
-          format: "9:16",
+          format: "4:5",
           slides: slides.map((slide, index) => ({
             ...slide,
             assetId: `final-${index}`,
@@ -236,14 +236,14 @@ describe("recorrido de imagen", () => {
     fireEvent.click(screen.getByRole("button", { name: "JPEG final" }));
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Formato 4:5, 1080 por 1350 píxeles",
+        name: "Formato 3:5, 1080 por 1800 píxeles",
       }),
     );
-    expect(screen.getByTestId("code-slide_0").getAttribute("data-format")).toBe("4:5");
+    expect(screen.getByTestId("code-slide_0").getAttribute("data-format")).toBe("3:5");
     expect(screen.queryByRole("button", { name: "JPEG final" })).toBeNull();
   });
 
-  it("previsualiza borradores desde código en 9:16 y cambia de formato sin modificar el post", () => {
+  it("previsualiza borradores desde código en 4:5 y cambia de formato sin modificar el post", () => {
     publication.postId = "img_review";
     render(
       <QueryClientProvider client={new QueryClient()}>
@@ -252,7 +252,7 @@ describe("recorrido de imagen", () => {
         </NextIntlClientProvider>
       </QueryClientProvider>,
     );
-    expect(screen.getByTestId("code-slide_0").getAttribute("data-format")).toBe("9:16");
+    expect(screen.getByTestId("code-slide_0").getAttribute("data-format")).toBe("4:5");
     expect(screen.getAllByTestId(/^code-slide_/)).toHaveLength(1);
     fireEvent.click(
       screen.getByRole("button", {

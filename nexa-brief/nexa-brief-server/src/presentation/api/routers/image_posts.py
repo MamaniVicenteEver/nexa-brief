@@ -78,7 +78,11 @@ def _post_json(record: PublicationRecord) -> dict[str, Any]:
     reel = result.get("technical", {}).get("reel")
     if isinstance(reel, dict):
         reel.pop("storage_key", None)
-    for slide in result.get("technical", {}).get("slides", []):
+    variants = result.get("technical", {}).get("format_exports", {})
+    slides = [*result.get("technical", {}).get("slides", []),
+              *(slide for artwork in variants.values() for slide in artwork.get("slides", [])),
+              *(slide for delivery in result.get("deliveries", []) for slide in delivery.get("slides", []))]
+    for slide in slides:
         asset_id = slide.get("asset_id")
         slide.pop("storage_key", None)
         slide["preview_url"] = f"/api/v1/image-posts/{record.publication_id}/assets/{asset_id}"
@@ -148,11 +152,18 @@ async def list_strategies() -> list[dict[str, Any]]:
 
 
 @router.get("/capabilities")
-async def get_capabilities(category_id: str, identity: ImageSession = Depends(require_image_session)) -> dict[str, Any]:
+async def get_capabilities(category_id: str, post_id: str | None = None, identity: ImageSession = Depends(require_image_session)) -> dict[str, Any]:
     try:
         service = get_image_post_service()
         require_category_access(identity, category_id)
-        result = service.capabilities(category_id)
+        record = _record(service, post_id) if post_id else None
+        if post_id and record is None:
+            raise HTTPException(status_code=404, detail="Image post not found")
+        if record:
+            _authorize_record(identity, record)
+            if record.editorial.category_id != category_id:
+                raise HTTPException(status_code=403, detail="La publicación pertenece a otra categoría")
+        result = await service.verified_capabilities(category_id, record)
         result["accounts"] = [
             row for row in result["accounts"]
             if _account_visible(identity, category_id, row["platform"], row["alias"])
@@ -293,7 +304,7 @@ async def preview_image_post(
 
 @router.post("/{post_id}/format")
 async def export_image_post_format(
-    post_id: str, body: ImageFormatExportRequest,
+    post_id: str, body: ImageFormatExportRequest, variant: bool = False,
     identity: ImageSession = Depends(require_image_session),
 ) -> dict[str, Any]:
     service = get_image_post_service()
@@ -303,7 +314,9 @@ async def export_image_post_format(
     _authorize_record(identity, record)
     try:
         from src.core.image_posts.artwork import ImagePostArtwork
-        saved = await ImagePostArtwork(service).export(record, body.revision, body.format)
+        artwork = ImagePostArtwork(service)
+        export = artwork.export_variant if variant else artwork.export
+        saved = await export(record, body.revision, body.format)
         return _post_json(saved)
     except Exception as exc:
         _raise(exc)
@@ -491,7 +504,10 @@ async def get_preview_asset(
     if record is None:
         raise HTTPException(status_code=404, detail="Image post not found")
     _authorize_record(identity, record)
-    slide = next((item for item in record.technical.slides if item.asset_id == asset_id), None)
+    candidates = [*record.technical.slides,
+                  *(slide for artwork in record.technical.format_exports.values() for slide in artwork.slides),
+                  *(slide for delivery in record.deliveries for slide in delivery.slides)]
+    slide = next((item for item in candidates if item.asset_id == asset_id), None)
     if slide is None:
         raise HTTPException(status_code=404, detail="Asset not found")
     try:

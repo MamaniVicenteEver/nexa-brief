@@ -98,4 +98,6 @@ def test_claude_prompt_keeps_the_read_tool_and_old_productions_have_no_target(tm
     assert "herramienta de lectura (Read)" in prompt
     assert "Duración objetivo" not in prompt   # producción anterior a lengths.json: formato corto
     politics = build_agent_prompt({**rec, "category_path": "node_politics"}, tmp_path / "v1")
-    assert "PAQUETE v2" not in politics   # sin perfil de categoría: textos v1
+    assert "PAQUETE v2" in politics  # NodePolitics ya tiene perfil de publicación completo.
+    economy = build_agent_prompt({**rec, "category_path": "node_economy"}, tmp_path / "v1")
+    assert "PAQUETE v2" not in economy  # sin perfil de categoría: textos v1

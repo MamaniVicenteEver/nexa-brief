@@ -1,0 +1,96 @@
+{
+  "name": "fx.flash",
+  "family": "fx",
+  "description": "Destello radial breve con núcleo luminoso. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+  "duration": 0.8,
+  "loop": true,
+  "layer": 60,
+  "states": [],
+  "params": {
+    "dur": {
+      "type": "number",
+      "default": 0.45,
+      "min": 0.05,
+      "range": {
+        "min": 0.05,
+        "max": null
+      },
+      "description": "Duración en segundos."
+    },
+    "size": {
+      "type": "number",
+      "default": 80,
+      "min": 4,
+      "max": 260,
+      "description": "Radio simbólico en px a U=1.",
+      "range": {
+        "min": 4,
+        "max": 260
+      }
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.1,
+      "max": 4,
+      "range": {
+        "min": 0.1,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "seed": {
+      "default": 1,
+      "description": "Semilla numérica o texto.",
+      "type": "number|string",
+      "range": null
+    },
+    "particles": {
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "max": 300,
+      "range": {
+        "min": 1,
+        "max": 300
+      },
+      "description": "Número de partículas del efecto."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "fx-flash",
+    "t": 0,
+    "type": "fx.flash",
+    "at": [
+      54,
+      27
+    ],
+    "dur": 0.45,
+    "size": 80,
+    "particles": 1,
+    "seed": 73
+  },
+  "usedBy": [
+    "work/tactico/scene-fx.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/fx.flash.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

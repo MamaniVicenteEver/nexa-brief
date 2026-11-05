@@ -85,6 +85,7 @@
       p = { textIn: "slam", accentIn: "slide", bulletIn: "slam", stagger: .16, inDuration: .42, start: 0, rate: 1, loop: true, muted: true, ...p };
       const still = new URLSearchParams(location.search).has("tabloidStill");
       const { W, H, u, portrait } = ctx.stage, photo = Boolean(p.src || p.video || p.poster), side = !portrait && p.imageSide === "left" ? "left" : "right";
+      const coverAdjusted = portrait && new URLSearchParams(location.search).get("coverSafe") === "1";
       const brand = p.palette !== "alert", config = ctx.C || K.design?.defaults || {}, colors = config.palette || {};
       const bg = brand ? (colors.bg || BLACK) : BLACK;
       const choices = [colors.ink, colors.accent, colors.paperHi, colors.nightInk, colors.accentInk, colors.paper, colors.night, colors.bg2, ...Object.values(colors)].filter(Boolean);
@@ -142,11 +143,30 @@
       const logo = photo && K.brandLogo.attach(ctx, p, photoBox, Array.isArray(p.focus) ? p.focus : [0.5, 0.5], root);
       const motion = motionCanvas.getContext("2d"), layers = [];
       let c = canvas.getContext("2d");
+      // Fine-tune the exported portrait cover after the original layout is solved.
+      // Preserve the original line breaks and first text anchor; compact the following rows.
+      const shownBox = b => {
+        if (!coverAdjusted || !["title","accent","bullet"].includes(b.type)) return b;
+        const scale=b.type === "bullet" ? .81 : .85;
+        const dy=b.type === "bullet" ? 50 : (b.coverOffsetY || 0), anchor=b.textAnchor || b;
+        return {...b,x:anchor.x+(b.x-anchor.x)*scale,y:anchor.y+(b.y-anchor.y)*scale+dy,
+          w:b.w*scale,h:b.h*scale,...(b.fontSize ? {fontSize:b.fontSize*scale} : {}),
+          ...(b.inkHeight ? {inkHeight:b.inkHeight*scale} : {}),
+          ...(b.textAnchor ? {textAnchor:{x:b.textAnchor.x,y:b.textAnchor.y+dy}} : {})};
+      };
       const paint = (kind, index, bounds, draw) => {
         const surface = document.createElement("canvas"); surface.width = W; surface.height = H;
         const previous = c; c = surface.getContext("2d");
-        try { draw(); } finally { c = previous; }
-        layers.push({ kind, index, bounds, surface });
+        const displayed=shownBox(bounds);
+        try {
+          if (coverAdjusted) {
+            const scale=kind === "bullet" ? .81 : .85, anchor=bounds.textAnchor || bounds;
+            c.translate(anchor.x,anchor.y+(kind === "bullet" ? 50 : (bounds.coverOffsetY || 0)));
+            c.scale(scale,scale);c.translate(-anchor.x,-anchor.y);
+          }
+          draw();
+        } finally { c = previous; }
+        layers.push({ kind, index, bounds:displayed, surface });
       };
       const layout = { width: W, height: H, boxes: [], warnings: [], photo: photoBox };
       layout.style = { palette: brand ? "brand" : "alert", bg, ink, highlight, family, weight };
@@ -209,13 +229,20 @@
         }
         if (!best) layout.warnings.push("No hay espacio seguro para el titular; se omitió.");
         else {
+          let nextCoverTop = null;
           for (let i=0;i<best.rows.length;i++) {
             const b=best.rows[i], l=best.lines[i], rowScale=l.sx; put(b); font(l.fs);
             const baseline=b.y+l.pad+l.m.asc, localX=l.pad+l.m.left, x=b.x+localX*rowScale, at=accent ? l.text.indexOf(accent) : -1;
+            b.textAnchor={x:b.x+l.pad*rowScale,y:b.y+l.pad}; b.fontSize=l.fs;
+            b.inkHeight=l.m.asc+l.m.desc;
+            // Keep the first row fixed. Move later rows upward to a compact gap,
+            // measured between the actual glyphs, without changing their font size.
+            b.coverOffsetY=coverAdjusted && nextCoverTop !== null ? Math.min(0,nextCoverTop-b.textAnchor.y) : 0;
+            nextCoverTop=b.textAnchor.y+b.coverOffsetY+b.inkHeight*.85+W*.02;
             let ab = null;
             if (at >= 0) {
               const prefix=l.text.slice(0,at), marked=l.text.slice(at,at+accent.length), prefixW=c.measureText(prefix).width, markedW=c.measureText(marked).width;
-              ab=box(x+(prefixW-l.pad/2)*rowScale,b.y,(markedW+l.pad)*rowScale,b.h,"accent",{parent:i});
+              ab=box(x+(prefixW-l.pad/2)*rowScale,b.y,(markedW+l.pad)*rowScale,b.h,"accent",{parent:i,textAnchor:b.textAnchor,fontSize:l.fs,coverOffsetY:b.coverOffsetY});
               layout.boxes.push(ab);
             }
             paint("title",i,b,() => {
@@ -311,6 +338,7 @@
             } else layout.warnings.push("marker omitido: no hay espacio seguro alrededor del foco.");
           }
         } else if (p.marker) layout.warnings.push("marker omitido: no hay foto.");
+        if (coverAdjusted) layout.boxes=layout.boxes.map(shownBox);
       });
       function drawLayer(layer, lt) {
         const mode = layer.kind === "title" ? p.textIn : layer.kind === "accent" ? p.accentIn : p.bulletIn;

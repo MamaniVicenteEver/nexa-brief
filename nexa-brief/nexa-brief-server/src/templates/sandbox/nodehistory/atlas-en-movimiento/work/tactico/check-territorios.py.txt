@@ -1,0 +1,98 @@
+"""QA secuencial de territorios/rutas/rótulos. Ejecutar una copia en /tmp, nunca MP4."""
+import sys
+sys.dont_write_bytecode=True
+import base64
+import argparse,functools,http.server,socketserver,threading,json,hashlib,io,math,time,fcntl
+from pathlib import Path
+from urllib.parse import urlparse
+from PIL import Image,ImageDraw
+from playwright.sync_api import sync_playwright
+FLAGS=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2']
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def log_message(self,*args):pass
+class Server(socketserver.ThreadingTCPServer):
+    daemon_threads=True
+    allow_reuse_address=True
+
+def main():
+    parser=argparse.ArgumentParser();parser.add_argument('--project',type=Path,default=Path.cwd());parser.add_argument('--perf-only',action='store_true');args=parser.parse_args()
+    project=args.project.resolve();out=project/'work/tactico';report={'viewport':[1080,1920],'flags':FLAGS,'consoleErrors':[],'failedRequests':[],'captures':[],'determinism':[],'performance':{}}
+    lock=open('/tmp/atlas-tactico-chromium.lock','w');fcntl.flock(lock,fcntl.LOCK_EX)
+    server=Server(('127.0.0.1',0),functools.partial(Handler,directory=str(project.parents[2])));threading.Thread(target=server.serve_forever,daemon=True).start()
+    root=f'http://127.0.0.1:{server.server_address[1]}/sandbox/nodehistory/atlas-en-movimiento/work/tactico/'
+    sheets={}
+    try:
+      with sync_playwright() as p:
+        browser=p.chromium.launch(headless=True,args=FLAGS)
+        try:
+          page=browser.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1)
+          page.set_default_timeout(90000)
+          capture=lambda:base64.b64decode(page.evaluate("()=>__territorios.canvas.toDataURL('image/png').split(',')[1]"))
+          pixel_hash=lambda:page.evaluate("async()=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',__territorios.canvas.getContext('2d').getImageData(0,0,1080,1920).data)),x=>x.toString(16).padStart(2,'0')).join('')")
+          page.route('**/*',lambda route:route.continue_() if urlparse(route.request.url).hostname in ('127.0.0.1','localhost',None) else route.abort())
+          page.on('pageerror',lambda e:report['consoleErrors'].append(str(e)))
+          page.on('console',lambda m:report['consoleErrors'].append(m.text) if m.type=='error' else None)
+          page.on('requestfailed',lambda r:report['failedRequests'].append(r.url))
+          page.goto(root+'territorios.new.html?shot=1',wait_until='load',timeout=90000)
+          page.wait_for_function('window.__territorios?.ready || window.__territoriosError',timeout=90000)
+          failure=page.evaluate('window.__territoriosError');assert not failure,failure
+          report['missing']=page.evaluate('__territorios.missing()')
+          cases=page.evaluate('__territorios.cases.components')
+          if not args.perf_only:
+            for t in [2.4,8.0]:
+              page.evaluate('t=>__territorios.draw(t)',t)
+              path=out/'shots/territory'/f'overview-{t}.png';path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(capture())
+            for case in cases:
+              page.evaluate('async item=>__territorios.setItems([item])',case['item'])
+              shots=[]
+              for idx,t in enumerate(case['times']):
+                page.evaluate('t=>__territorios.draw(t)',t)
+                raw=capture();name=f"{case['name']}-{['entrada','pleno','salida'][idx]}.png";path=out/'shots'/case['family']/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
+                report['captures'].append(str(path.relative_to(project)));shots.append((case['name']+f' · {t:.2f}s',Image.open(io.BytesIO(raw)).convert('RGB')))
+              sheets.setdefault(case['family'],[]).extend(shots)
+              page.evaluate('()=>__territorios.draw(2.4)')
+              expected=pixel_hash()
+              page.evaluate('()=>{__territorios.draw(5.8);__territorios.draw(.1);__territorios.draw(4.2);__territorios.draw(2.4)}')
+              actual=pixel_hash()
+              report['determinism'].append({'component':case['name'],'hash':expected,'stable':expected==actual})
+            # Todos los iconos y texto largo cerca de los bordes: prueba visual adicional.
+            icons=[{'id':f'icon-{n}','type':'icon.badge','icon':name,'screen':[.25+(n%2)*.5,.2+(n//2)*.22],'t':0,'dur':6,'radius':65} for n,name in enumerate(['plane','ship','oil','building','shield','star'])]
+            await_items=[*icons,{'id':'long','type':'label.neon','text':'ROTULACIÓN MUY LARGA PARA VERIFICAR EL AJUSTE DENTRO DEL CUADRO VERTICAL','screen':[.99,.99],'rotation':-12,'width':900,'height':200,'size':100,'t':0,'dur':6}]
+            page.evaluate('async items=>__territorios.setItems(items)',await_items);page.evaluate('()=>__territorios.draw(2.4)');(out/'shots/labels/icons-and-fit.png').write_bytes(capture())
+          for case in cases:
+            measurement=page.evaluate('''async item=>{
+              const api=__territorios,items=Array.from({length:20},(_,n)=>({...structuredClone(item),id:'perf-'+n}));
+              await api.setItems(items);
+              const canvas=new OffscreenCanvas(1080,1920),g=canvas.getContext('2d',{willReadFrequently:true});
+              const flush=()=>g.getImageData(0,0,1080,1920);
+              for(let n=0;n<3;n++){g.clearRect(0,0,1080,1920);api.runtime.draw(g,api.view,2+n*.01);flush();}
+              const total=[],control=[],draw=[];
+              for(let n=0;n<15;n++){
+                g.clearRect(0,0,1080,1920);let start=performance.now();flush();control.push(performance.now()-start);
+                g.clearRect(0,0,1080,1920);start=performance.now();api.runtime.draw(g,api.view,2.4+n/30);const mark=performance.now();flush();const end=performance.now();total.push(end-start);draw.push(mark-start);
+              }
+              const mean=xs=>xs.reduce((a,b)=>a+b)/xs.length,p95=xs=>[...xs].sort((a,b)=>a-b)[Math.ceil(xs.length*.95)-1];
+              return {instances:20,frames:15,jsMeanMs:mean(draw),forcedMeanMs:mean(total),readbackMeanMs:mean(control),netMeanMs:Math.max(0,mean(total)-mean(control)),forcedP95Ms:p95(total)};
+            }''',case['item'])
+            report['performance'][case['name']]=measurement
+            print(case['name'],json.dumps(measurement),flush=True)
+          if not args.perf_only:
+            # Una sola página: se reutiliza para verificar la galería oficial de Atlas plano.
+            page.goto(root+'demo.new.html?items=scene-territorios.json&headless=1&t=2.4',wait_until='load',timeout=90000)
+            page.wait_for_function('window.__tacticoContext?.tactico',timeout=90000)
+            page.evaluate('async()=>{await __atlas.ready;await __promo.seek(2.4)}')
+            page.screenshot(path=str(out/'shots/territory/atlas-gallery.png'))
+            report['atlasGallery']={'items':page.evaluate('__tacticoContext.scene.items.length'),'missing':page.evaluate('__atlas.missingTiles()')}
+        finally:browser.close()
+      if not args.perf_only:
+        for family,shots in sheets.items():
+          w=240;h=round(w*1920/1080);height=h+30;sheet=Image.new('RGB',(3*w,math.ceil(len(shots)/3)*height),'#081e2c');draw=ImageDraw.Draw(sheet)
+          for idx,(title,img) in enumerate(shots):
+            x=(idx%3)*w;y=(idx//3)*height;sheet.paste(img.resize((w,h),Image.Resampling.LANCZOS),(x,y+30));draw.text((x+6,y+8),title,fill='white')
+          sheet.save(out/'sheets'/f'{family}.jpg',quality=91)
+      (out/('metrics-territorios-perf.json' if args.perf_only else 'metrics-territorios.json')).write_text(json.dumps(report,indent=2)+'\n')
+      assert not report['consoleErrors'],report['consoleErrors']
+      assert all(x['stable'] for x in report['determinism'])
+      print('QA completa',flush=True)
+    finally:server.shutdown();server.server_close();lock.close()
+if __name__=='__main__':main()

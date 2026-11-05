@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDownIcon, LogOutIcon } from "lucide-react";
+import { ChevronDownIcon, LogOutIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -35,25 +35,25 @@ export function AdminHeader() {
   const isManagementActive = MANAGEMENT_LINKS.some((link) => pathname === link.href);
 
   return (
-    <nav className="nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between px-10 py-1">
+    <nav className="nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-2 px-3 py-1 sm:px-6 2xl:px-10">
       <Link
         href="/dashboard"
         aria-label={t("brand")}
-        className="inline-flex items-center gap-0 font-nb-sans text-[20px] font-bold tracking-[-0.03em] text-nb-ink no-underline"
+        className="inline-flex shrink-0 items-center gap-0 font-nb-sans text-[17px] font-bold tracking-[-0.03em] whitespace-nowrap text-nb-ink no-underline sm:text-[20px]"
       >
         <Image
           src="/logo/nexa-mark-bw-transparent.png"
           alt=""
           width={56}
           height={56}
-          className="size-12 shrink-0 object-contain md:size-14"
+          className="size-10 shrink-0 object-contain sm:size-12 md:size-14"
         />
         <span className="-ml-1" aria-hidden="true">
           exa Brief
         </span>
       </Link>
 
-      <ul className="absolute left-1/2 flex -translate-x-1/2 gap-3 text-[12px]">
+      <ul className="absolute left-1/2 hidden -translate-x-1/2 gap-3 text-[12px] 2xl:flex">
         <li>
           <Link
             href="/dashboard"
@@ -129,13 +129,58 @@ export function AdminHeader() {
         </li>
       </ul>
 
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1 sm:gap-2">
         {process.env.NODE_ENV === "development" && (
-          <span className="rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold text-amber-900">
+          <span className="hidden rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold text-amber-900 2xl:inline">
             {t("developmentEnvironment")}
           </span>
         )}
-        <StorageProfileIndicator />
+        <div className="hidden 2xl:block">
+          <StorageProfileIndicator />
+        </div>
+        <div className="2xl:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                aria-label={t("gestion")}
+                className="flex size-8 items-center justify-center rounded-full border border-nb-line bg-nb-surface text-nb-ink"
+              >
+                <MenuIcon size={16} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="max-h-[80dvh] min-w-[210px] overflow-y-auto rounded-2xl p-2"
+            >
+              {[
+                { href: "/dashboard", label: t("dashboard") },
+                { href: "/crear-video", label: t("crearVideo") },
+                { href: "/plantillas", label: t("plantillas") },
+                { href: "/canales", label: t("canales") },
+                ...MANAGEMENT_LINKS,
+              ].map((link) => (
+                <DropdownMenuItem key={link.href} asChild>
+                  <Link
+                    href={link.href}
+                    aria-current={pathname === link.href ? "page" : undefined}
+                    className="text-[13px] font-medium"
+                  >
+                    {link.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+              <div className="mt-2 flex flex-col gap-2 border-t border-nb-line px-2 pt-3 pb-1">
+                {process.env.NODE_ENV === "development" && (
+                  <span className="text-[10px] font-semibold text-amber-800">
+                    {t("developmentEnvironment")}
+                  </span>
+                )}
+                <StorageProfileIndicator />
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <LocaleSwitcher />
         <NotificationBell />
         <button

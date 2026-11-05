@@ -284,6 +284,9 @@ interface SavedPlanItemDto extends PlanItemDto {
   production_state?: string | null;
   video_id?: string | null;
   created_at?: string;
+  generation_at?: string | null;
+  timezone?: string | null;
+  batch_id?: string | null;
 }
 
 function mapPlanItem(dto: PlanItemDto): PlanItem {
@@ -318,6 +321,9 @@ function mapSavedPlanItem(dto: SavedPlanItemDto): SavedPlanItem {
     productionState: dto.production_state ?? null,
     videoId: dto.video_id ?? null,
     createdAt: dto.created_at ?? "",
+    generationAt: dto.generation_at ?? null,
+    timezone: dto.timezone ?? null,
+    batchId: dto.batch_id ?? null,
   };
 }
 

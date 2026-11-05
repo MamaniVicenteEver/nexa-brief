@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
+import signal
 import re
 from collections import deque
 from collections.abc import Callable
@@ -59,12 +61,15 @@ async def run_with_progress(
     cmd: list[str],
     *,
     cwd: Path,
-    timeout: float,
+    timeout: float | None,
     parse_progress: ProgressParser,
+    env: dict[str, str] | None = None,
 ) -> ProcessOutput:
     """Raises asyncio.TimeoutError (after killing the process) if it exceeds `timeout`."""
     proc = await asyncio.create_subprocess_exec(
-        *cmd, cwd=str(cwd), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+        *cmd, cwd=str(cwd), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+        start_new_session=True,
+        env=env,
     )
     tails: dict[str, deque[str]] = {"stdout": deque(maxlen=_TAIL_LINES), "stderr": deque(maxlen=_TAIL_LINES)}
 
@@ -85,16 +90,29 @@ async def run_with_progress(
         if buffer.strip():
             tails[name].append(buffer.decode(errors="replace").strip())
 
+    async def stop_group() -> None:
+        # Even after the CLI exits, a worker may survive with its pipes closed.
+        # Signal only this invocation's session and reap the direct child.
+        try:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            await proc.wait()
+            return
+        await asyncio.sleep(0.2)
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        await proc.wait()
+
     assert proc.stdout is not None and proc.stderr is not None
     try:
         await asyncio.wait_for(
             asyncio.gather(pump(proc.stdout, "stdout"), pump(proc.stderr, "stderr"), proc.wait()),
             timeout=timeout,
         )
-    except asyncio.TimeoutError:
-        proc.kill()
-        await proc.wait()
-        raise
+    finally:
+        await stop_group()
 
     return ProcessOutput(
         returncode=proc.returncode if proc.returncode is not None else -1,

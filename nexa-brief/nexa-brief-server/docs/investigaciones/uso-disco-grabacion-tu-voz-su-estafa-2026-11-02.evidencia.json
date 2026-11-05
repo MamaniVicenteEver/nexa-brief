@@ -1,0 +1,554 @@
+{
+  "collected_local": "2026-11-02T18:11:43.927010-04:00",
+  "hostname": "alfred",
+  "scope": "Read-only storage audit. File metadata only outside the named video; no credentials read.",
+  "df_bytes": {
+    "exit_code": 0,
+    "stdout": "Filesystem                           1B-blocks         Used    Available Use% Mounted on\n/dev/mapper/ubuntu--vg-ubuntu--lv 464422191104 180876558336 263536144384  41% /",
+    "stderr": ""
+  },
+  "df_inodes": {
+    "exit_code": 0,
+    "stdout": "Filesystem                          Inodes   IUsed    IFree IUse% Mounted on\n/dev/mapper/ubuntu--vg-ubuntu--lv 28835840 2122960 26712880    8% /",
+    "stderr": ""
+  },
+  "memory": {
+    "exit_code": 0,
+    "stdout": "total        used        free      shared  buff/cache   available\nMem:     11853185024  5375488000   320614400   139522048  6635384832  6477697024\nSwap:     4294963200  4053549056   241414144",
+    "stderr": ""
+  },
+  "git": {
+    "exit_code": 0,
+    "stdout": "ebe4e0a",
+    "stderr": ""
+  },
+  "source": {
+    "root": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+    "regular_files": 106,
+    "directories": 9,
+    "logical_file_bytes": 242407263,
+    "allocated_file_bytes": 242647040,
+    "top_level_allocated_file_bytes": {
+      "render": 97284096,
+      "work": 76083200,
+      "assets": 69185536,
+      "usage.json": 32768,
+      "manifest.json": 24576,
+      "PLAN.md": 16384,
+      "publish.json": 12288,
+      "BRIEF.md": 4096,
+      "index.html": 4096
+    },
+    "extension_logical_bytes": {
+      ".mp4": 132194839,
+      ".wav": 54579992,
+      ".mp3": 41655822,
+      ".png": 8415656,
+      ".jpg": 3058677,
+      ".svg": 1600490,
+      ".webp": 361252,
+      ".json": 315176,
+      ".md": 172523,
+      ".jsonl": 31255,
+      ".js": 20422,
+      ".html": 883,
+      ".sha256": 256,
+      "(no extension)": 20,
+      ".lock": 0,
+      ".log": 0
+    },
+    "largest_files": [
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/render/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16.mp4",
+        "size_bytes": 50213392,
+        "allocated_bytes": 50216960,
+        "mtime_local": "2026-11-02T16:28:27.417646-04:00",
+        "ctime_local": "2026-11-02T16:28:27.417646-04:00",
+        "device": 64512,
+        "inode": 7999245,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/render/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9.mp4",
+        "size_bytes": 46159772,
+        "allocated_bytes": 46161920,
+        "mtime_local": "2026-11-02T16:44:32.720324-04:00",
+        "ctime_local": "2026-11-02T16:44:32.720324-04:00",
+        "device": 64512,
+        "inode": 7999246,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/work/narration.wav",
+        "size_bytes": 27297644,
+        "allocated_bytes": 27299840,
+        "mtime_local": "2026-10-30T14:29:42.403826-04:00",
+        "ctime_local": "2026-10-30T14:29:42.403826-04:00",
+        "device": 64512,
+        "inode": 8001528,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets/song-with-outro.mp3",
+        "size_bytes": 14008990,
+        "allocated_bytes": 14012416,
+        "mtime_local": "2026-10-30T15:44:44.162812-04:00",
+        "ctime_local": "2026-10-30T15:44:44.162812-04:00",
+        "device": 64512,
+        "inode": 8004878,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets/song.mp3",
+        "size_bytes": 13823416,
+        "allocated_bytes": 13824000,
+        "mtime_local": "2026-10-30T14:38:44.583453-04:00",
+        "ctime_local": "2026-10-30T14:38:44.584453-04:00",
+        "device": 64512,
+        "inode": 8001531,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/work/narration.mp3",
+        "size_bytes": 13823416,
+        "allocated_bytes": 13824000,
+        "mtime_local": "2026-10-30T14:29:53.170619-04:00",
+        "ctime_local": "2026-10-30T14:29:53.170619-04:00",
+        "device": 64512,
+        "inode": 8001529,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets/media/servidores-video.mp4",
+        "size_bytes": 13152401,
+        "allocated_bytes": 13156352,
+        "mtime_local": "2026-10-30T18:59:03.551324-04:00",
+        "ctime_local": "2026-10-30T18:59:03.551324-04:00",
+        "device": 64512,
+        "inode": 8004954,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets/media/llamada-video.mp4",
+        "size_bytes": 11703716,
+        "allocated_bytes": 11706368,
+        "mtime_local": "2026-10-30T17:37:36.221190-04:00",
+        "ctime_local": "2026-10-30T17:37:36.221190-04:00",
+        "device": 64512,
+        "inode": 8004907,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/work/narration.part1.wav",
+        "size_bytes": 10786916,
+        "allocated_bytes": 10788864,
+        "mtime_local": "2026-10-30T14:29:14.547294-04:00",
+        "ctime_local": "2026-10-30T14:29:14.547294-04:00",
+        "device": 64512,
+        "inode": 8001527,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/work/narration.part2.wav",
+        "size_bytes": 8436836,
+        "allocated_bytes": 8437760,
+        "mtime_local": "2026-10-30T14:29:42.366612-04:00",
+        "ctime_local": "2026-10-30T14:29:42.366612-04:00",
+        "device": 64512,
+        "inode": 8001532,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/work/narration.part0.wav",
+        "size_bytes": 8058596,
+        "allocated_bytes": 8060928,
+        "mtime_local": "2026-10-30T14:28:43.326341-04:00",
+        "ctime_local": "2026-10-30T14:28:43.326341-04:00",
+        "device": 64512,
+        "inode": 8001503,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets/media/oficina-video.mp4",
+        "size_bytes": 6042343,
+        "allocated_bytes": 6045696,
+        "mtime_local": "2026-10-30T17:36:23.596436-04:00",
+        "ctime_local": "2026-10-30T17:36:23.596436-04:00",
+        "device": 64512,
+        "inode": 8004906,
+        "links": 1
+      }
+    ]
+  },
+  "output": {
+    "root": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+    "regular_files": 6,
+    "directories": 3,
+    "logical_file_bytes": 96842201,
+    "allocated_file_bytes": 96858112,
+    "top_level_allocated_file_bytes": {
+      "7c53aa5c": 96858112
+    },
+    "extension_logical_bytes": {
+      ".mp4": 96373164,
+      ".jpg": 463232,
+      ".json": 5805
+    },
+    "largest_files": [
+      {
+        "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/7c53aa5c/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16.mp4",
+        "size_bytes": 50213392,
+        "allocated_bytes": 50216960,
+        "mtime_local": "2026-11-02T16:28:27.417646-04:00",
+        "ctime_local": "2026-11-02T16:44:34.454295-04:00",
+        "device": 64512,
+        "inode": 13406166,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/7c53aa5c/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9.mp4",
+        "size_bytes": 46159772,
+        "allocated_bytes": 46166016,
+        "mtime_local": "2026-11-02T16:44:32.720324-04:00",
+        "ctime_local": "2026-11-02T16:44:34.475295-04:00",
+        "device": 64512,
+        "inode": 13406167,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/7c53aa5c/thumbnail-16x9.jpg",
+        "size_bytes": 154593,
+        "allocated_bytes": 155648,
+        "mtime_local": "2026-11-02T16:44:37.239249-04:00",
+        "ctime_local": "2026-11-02T16:44:37.532932-04:00",
+        "device": 64512,
+        "inode": 13406169,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/7c53aa5c/thumbnail.jpg",
+        "size_bytes": 154593,
+        "allocated_bytes": 155648,
+        "mtime_local": "2026-11-02T16:44:37.239249-04:00",
+        "ctime_local": "2026-11-02T16:44:37.532742-04:00",
+        "device": 64512,
+        "inode": 13406168,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/7c53aa5c/thumbnail-9x16.jpg",
+        "size_bytes": 154046,
+        "allocated_bytes": 155648,
+        "mtime_local": "2026-11-02T16:44:39.982204-04:00",
+        "ctime_local": "2026-11-02T16:44:40.274516-04:00",
+        "device": 64512,
+        "inode": 13406170,
+        "links": 1
+      },
+      {
+        "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/7c53aa5c/logs/08_resumen_final.json",
+        "size_bytes": 5805,
+        "allocated_bytes": 8192,
+        "mtime_local": "2026-11-02T16:44:40.275199-04:00",
+        "ctime_local": "2026-11-02T16:44:40.275199-04:00",
+        "device": 64512,
+        "inode": 13406172,
+        "links": 1
+      }
+    ]
+  },
+  "video_files": [
+    {
+      "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/render/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9.mp4",
+      "size_bytes": 46159772,
+      "allocated_bytes": 46161920,
+      "mtime_local": "2026-11-02T16:44:32.720324-04:00",
+      "ctime_local": "2026-11-02T16:44:32.720324-04:00",
+      "device": 64512,
+      "inode": 7999246,
+      "links": 1,
+      "sha256": "f454211a0152b7d72af5f0813283fa32fb66f69e31def1ae48f7b944d99a7774",
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "30/1"
+          },
+          {
+            "codec_name": "aac",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "583.637000",
+          "size": "46159772",
+          "bit_rate": "632718"
+        }
+      }
+    },
+    {
+      "path": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/render/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16.mp4",
+      "size_bytes": 50213392,
+      "allocated_bytes": 50216960,
+      "mtime_local": "2026-11-02T16:28:27.417646-04:00",
+      "ctime_local": "2026-11-02T16:28:27.417646-04:00",
+      "device": 64512,
+      "inode": 7999245,
+      "links": 1,
+      "sha256": "0b9e65bbe282ec29e7726e85c28bac914802afb7d3f85e27dcb40f8db92d2dd7",
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1"
+          },
+          {
+            "codec_name": "aac",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "583.637000",
+          "size": "50213392",
+          "bit_rate": "688282"
+        }
+      }
+    },
+    {
+      "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/7c53aa5c/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-16x9.mp4",
+      "size_bytes": 46159772,
+      "allocated_bytes": 46166016,
+      "mtime_local": "2026-11-02T16:44:32.720324-04:00",
+      "ctime_local": "2026-11-02T16:44:34.475295-04:00",
+      "device": 64512,
+      "inode": 13406167,
+      "links": 1,
+      "sha256": "f454211a0152b7d72af5f0813283fa32fb66f69e31def1ae48f7b944d99a7774",
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "30/1"
+          },
+          {
+            "codec_name": "aac",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "583.637000",
+          "size": "46159772",
+          "bit_rate": "632718"
+        }
+      }
+    },
+    {
+      "path": "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/7c53aa5c/clonan-tu-voz-con-3-segundos-de-audio-las-llamad-9x16.mp4",
+      "size_bytes": 50213392,
+      "allocated_bytes": 50216960,
+      "mtime_local": "2026-11-02T16:28:27.417646-04:00",
+      "ctime_local": "2026-11-02T16:44:34.454295-04:00",
+      "device": 64512,
+      "inode": 13406166,
+      "links": 1,
+      "sha256": "0b9e65bbe282ec29e7726e85c28bac914802afb7d3f85e27dcb40f8db92d2dd7",
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1"
+          },
+          {
+            "codec_name": "aac",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "583.637000",
+          "size": "50213392",
+          "bit_rate": "688282"
+        }
+      }
+    }
+  ],
+  "du_bytes": {
+    "/home/alfred/.local/share/nexa-brief/profiles/profesional/output": {
+      "exit_code": 0,
+      "stdout": "8191823872\t/home/alfred/.local/share/nexa-brief/profiles/profesional/output",
+      "stderr": ""
+    },
+    "/home/alfred/.local/share/nexa-brief/profiles/profesional/data": {
+      "exit_code": 0,
+      "stdout": "512741376\t/home/alfred/.local/share/nexa-brief/profiles/profesional/data",
+      "stderr": ""
+    },
+    "/home/alfred/.local/share/nexa-brief/profiles/profesional": {
+      "exit_code": 0,
+      "stdout": "9502978048\t/home/alfred/.local/share/nexa-brief/profiles/profesional",
+      "stderr": ""
+    },
+    "/home/alfred/.local/share/nexa-brief/backups/professional-migration-20261102T172920Z": {
+      "exit_code": 0,
+      "stdout": "17384345600\t/home/alfred/.local/share/nexa-brief/backups/professional-migration-20261102T172920Z",
+      "stderr": ""
+    },
+    "/home/alfred/.local/share/nexa-brief-migration-20261024": {
+      "exit_code": 0,
+      "stdout": "8146165760\t/home/alfred/.local/share/nexa-brief-migration-20261024",
+      "stderr": ""
+    },
+    "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad": {
+      "exit_code": 0,
+      "stdout": "242683904\t/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+      "stderr": ""
+    },
+    "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/render": {
+      "exit_code": 0,
+      "stdout": "97288192\t/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/render",
+      "stderr": ""
+    },
+    "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets": {
+      "exit_code": 0,
+      "stdout": "69201920\t/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/assets",
+      "stderr": ""
+    },
+    "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/work": {
+      "exit_code": 0,
+      "stdout": "76095488\t/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad/work",
+      "stderr": ""
+    },
+    "/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad": {
+      "exit_code": 0,
+      "stdout": "96870400\t/home/alfred/.local/share/nexa-brief/profiles/profesional/output/node_tech/rough/clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+      "stderr": ""
+    },
+    "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates": {
+      "exit_code": 0,
+      "stdout": "8044138496\t/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates",
+      "stderr": ""
+    },
+    "/home/alfred/codex/nexa-brief/wt-amarillista": {
+      "exit_code": 0,
+      "stdout": "10974756864\t/home/alfred/codex/nexa-brief/wt-amarillista",
+      "stderr": ""
+    },
+    "/home/alfred/.cache": {
+      "exit_code": 0,
+      "stdout": "7729115136\t/home/alfred/.cache",
+      "stderr": ""
+    },
+    "/home/alfred/.npm": {
+      "exit_code": 0,
+      "stdout": "2512703488\t/home/alfred/.npm",
+      "stderr": ""
+    },
+    "/tmp": {
+      "exit_code": 1,
+      "stdout": "3185266688\t/tmp",
+      "stderr": "du: cannot read directory '/tmp/systemd-private-1bd53cbb1b41405f86b63bde7a85c6cc-upower.service-YnjbdU': Permission denied\ndu: cannot read directory '/tmp/systemd-private-1bd53cbb1b41405f86b63bde7a85c6cc-fwupd.service-ZWtkXD': Permission denied\ndu: cannot read directory '/tmp/systemd-private-1bd53cbb1b41405f86b63bde7a85c6cc-ModemManager.service-S87tdz': Permission denied\ndu: cannot read directory '/tmp/systemd-private-1bd53cbb1b41405f86b63bde7a85c6cc-systemd-logind.service-GPSiml': Permission denied\ndu: cannot read directory '/tmp/systemd-private-1bd53cbb1b41405f86b63bde7a85c6cc-polkit.service-vjrkR6': Permission denied\ndu: cannot read directory '/tmp/systemd-private-1bd53cbb1b41405f86b63bde7a85c6cc-chrony.service-sAS7LZ': Permission denied\ndu: cannot read directory '/tmp/snap-private-tmp': Permission denied"
+    },
+    "/var/log": {
+      "exit_code": 1,
+      "stdout": "209399808\t/var/log",
+      "stderr": "du: cannot read directory '/var/log/netdata/otel': Permission denied\ndu: cannot read directory '/var/log/private': Permission denied\ndu: cannot read directory '/var/log/chrony': Permission denied"
+    }
+  },
+  "docker_df": {
+    "exit_code": 0,
+    "stdout": "TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE\nImages          26        4         71.46GB   38.27GB (53%)\nContainers      4         3         569.3kB   20.48kB (3%)\nLocal Volumes   4         0         8.139GB   8.139GB (100%)\nBuild Cache     201       0         50.89GB   21.63GB",
+    "stderr": ""
+  },
+  "docker_df_verbose": {
+    "exit_code": 0,
+    "stdout": "Images space usage:\n\nREPOSITORY               TAG                                    IMAGE ID       CREATED          SIZE      SHARED SIZE   UNIQUE SIZE   CONTAINERS\nnexa-brief-api           latest                                 ebd1c47384c0   20 minutes ago   5.87GB    2.314GB       3.557GB       1\nnexa-brief-web           latest                                 d0535c4962f7   2 hours ago      541MB     327.7MB       213.1MB       1\nnexa-brief-api           before-video-quality-20261102          aa0580dd274b   2 hours ago      5.82GB    2.314GB       3.509GB       0\nnexa-brief-web           before-opening-readiness-20261102      f892d052c756   3 hours ago      541MB     327.7MB       213.1MB       0\nnexa-brief-web           before-category-scroll-20261102        3202a03bf21b   3 hours ago      541MB     327.7MB       213.1MB       0\nnexa-brief-api           before-opening-readiness-20261102      ce0c3da268e4   3 hours ago      5.82GB    2.314GB       3.508GB       0\nnexa-brief-api           before-category-management-20261102    16724d871726   3 hours ago      5.82GB    2.314GB       3.508GB       0\nnexa-brief-web           before-category-management-20261102    44b08fccc3bf   3 hours ago      541MB     327.7MB       213MB         0\nnexa-brief-api           before-instagram-profile-20261102      5c22e4c9d5c2   3 hours ago      5.82GB    2.314GB       3.508GB       0\nnexa-brief-api           before-facebook-catalog-20261102       f1d3e3c639bc   4 hours ago      5.82GB    2.314GB       3.508GB       0\nnexa-brief-api           before-facebook-scope-20261102         c3535de83179   4 hours ago      5.82GB    4.302GB       1.521GB       0\nnexa-brief-web           before-facebook-catalog-20261102       4dcfe92048f5   4 hours ago      541MB     327.7MB       213MB         0\nnexa-brief-web           before-category-view-20261102          8d2f668f4146   4 hours ago      541MB     327.7MB       212.9MB       0\nnexa-brief-web           before-channel-icons-20261102          990115b82325   4 hours ago      541MB     327.7MB       213MB         0\nnexa-brief-api           before-meta-covers-20261102            3505b3892b9e   5 hours ago      5.82GB    4.302GB       1.521GB       0\nnexa-brief-web           before-professional-profile-20261102   c7ee9bb92f8c   7 hours ago      541MB     327.7MB       212.9MB       0\nnexa-brief-api           before-professional-profile-20261102   91faed63e599   7 hours ago      5.82GB    2.314GB       3.508GB       0\nnexa-brief-web           before-youtube-access-20261102         6cc5546a53d9   7 hours ago      541MB     327.7MB       212.9MB       0\nnexa-brief-api           before-youtube-access-20261102         ec8b667a2a39   7 hours ago      5.82GB    2.314GB       3.508GB       0\nnexa-brief-web           before-shared-connections-20261102     c899f5b5bb48   28 hours ago     541MB     327.7MB       212.9MB       0\nnexa-brief-api           before-shared-connections-20261102     6fef46ccaa5f   28 hours ago     5.82GB    2.314GB       3.508GB       0\n<none>                   <none>                                 51cef0837fe8   5 days ago       322MB     243.8MB       78.6MB        0\ncloudflare/cloudflared   latest                                 faa8e0a1475f   12 days ago      98.6MB    0B            98.55MB       1\nhello-world              latest                                 11a3eb1597e8   7 months ago     25.9kB    0B            25.87kB       0\nnode                     22.14.0-bookworm-slim                  1c18d9ab3af4   20 months ago    325MB     243.8MB       80.85MB       0\nbusybox                  1.37.0                                 bdf57e528e45   2 years ago      6.77MB    0B            6.77MB        1\n\nContainers space usage:\n\nCONTAINER ID   IMAGE                           COMMAND                  LOCAL VOLUMES   SIZE      CREATED          STATUS                    NAMES\n19af8f1f073a   nexa-brief-api                  \"uvicorn src.present…\"   0               487kB     18 minutes ago   Up 18 minutes (healthy)   nexa-brief-api-1\neacb8e90d286   nexa-brief-web                  \"docker-entrypoint.s…\"   0               49.2kB    2 hours ago      Up 2 hours (healthy)      nexa-brief-web-1\n1ab53db0cea6   busybox:1.37.0                  \"sh -c 'mkdir -p /da…\"   0               20.5kB    5 hours ago      Exited (0) 4 hours ago    nexa-brief-volume-init-1\ne023d3c7ab34   cloudflare/cloudflared:latest   \"cloudflared --no-au…\"   0               12.3kB    9 days ago       Up 2 days                 nexa-brief-cloudflared\n\nLocal Volumes space usage:\n\nVOLUME NAME           LINKS     SIZE\nnexa-brief-accounts   0         21.12kB\nnexa-brief-data       0         158.1MB\nnexa-brief-output     0         7.981GB\nnexa-brief-web-data   0         267B\n\nBuild cache usage: 50.89GB\n\nCACHE ID       CACHE TYPE        SIZE      CREATED          LAST USED        USAGE     SHARED\nhs4ngbmt9rfl   regular           114MB     9 days ago       9 days ago       1         true\n74bpb3qg53vl   regular           113MB     9 days ago       9 days ago       1         true\nncsaahys091f   regular           13.9MB    9 days ago       9 days ago       1         true\n56rm3j78w9jz   regular           72.9kB    9 days ago       9 days ago       1         true\nzl9dt63m1hua   regular           75.9MB    9 days ago       9 days ago       1         true\n36v7h0v9qyf4   regular           199MB     9 days ago       9 days ago       1         true\nv3piwo78v8pk   regular           20.7kB    9 days ago       9 days ago       1         true\nxqrim2fnnbxi   regular           9.04MB    9 days ago       9 days ago       1         true\nn84iaikr0ndc   regular           20.9kB    9 days ago       9 days ago       1         true\noyf97q0ss2u4   regular           12.3kB    9 days ago       9 days ago       1         true\np4krt4u7hdu4   regular           242kB     5 days ago       5 days ago       1         false\nlohhpln519ul   regular           8.28kB    5 days ago       5 days ago       1         true\n4m8clil1204z   regular           54.4kB    5 days ago       5 days ago       3         true\nwjjdiyq90n48   regular           23.8MB    5 days ago       5 days ago       1         false\nqm007mwki0uu   regular           120MB     5 days ago       5 days ago       1         false\n9fsjj3s2hit2   regular           81.9MB    5 days ago       5 days ago       1         false\nluqta5nog7fw   source.local      8.19kB    5 days ago       5 days ago       1         false\nz2vj33qy0itz   regular           4.02MB    5 days ago       5 days ago       1         false\nyd76oqrw59wr   regular           17.3kB    5 days ago       5 days ago       1         false\nvmx1fb2lnsc1   source.local      8.19kB    5 days ago       5 days ago       1         false\nqgawglaszmjx   regular           206kB     5 days ago       5 days ago       1         false\nzi28f14firtt   source.local      23.8MB    5 days ago       5 days ago       1         false\nyov85ugy8lua   regular           17.9MB    9 days ago       5 days ago       2         true\nxi2wi9xopgju   regular           1.17GB    5 days ago       5 days ago       1         false\nt36dt3z0r5d1   regular           471MB     5 days ago       5 days ago       1         true\nhy7ocmx6mju6   regular           36.9kB    5 days ago       5 days ago       1         false\n7jtk5m7rdgdh   regular           70.9kB    5 days ago       5 days ago       1         true\nogaiezmsup73   regular           1.35GB    5 days ago       5 days ago       1         true\n5wrxs29x0ybo   regular           24.6MB    5 days ago       5 days ago       1         false\nngj32fhyeabk   regular           1.54GB    5 days ago       5 days ago       1         true\ngtg09nnad0t8   regular           179MB     5 days ago       5 days ago       1         false\nt0o9xiu7phxk   regular           164MB     5 days ago       5 days ago       1         false\nvjtjwz276fqh   regular           229kB     9 days ago       5 days ago       2         true\n92nol1qlh4i4   regular           1.88GB    5 days ago       5 days ago       1         false\ntc7jssxgeed0   regular           584MB     5 days ago       5 days ago       1         false\npd09xht8qj3g   regular           8.29kB    5 days ago       5 days ago       1         true\nyhu2bdgp9pyp   regular           692kB     5 days ago       5 days ago       1         false\njymz11xsuep4   regular           24MB      5 days ago       5 days ago       3         false\noj7gq4qvpg9x   regular           34.7MB    5 days ago       5 days ago       2         false\ndktk8pu9t3tp   regular           206kB     5 days ago       5 days ago       1         false\nkfqgyhhsrrit   regular           120MB     5 days ago       5 days ago       1         false\n3u6kirbec318   regular           82MB      5 days ago       5 days ago       1         false\n8yis4lnqiahh   regular           4.02MB    5 days ago       5 days ago       1         false\nv83y84z6nrlc   regular           17.3kB    5 days ago       5 days ago       1         false\n5niehb0okdiu   regular           887MB     5 days ago       5 days ago       3         false\n69vmoe0g3ets   regular           24.1MB    5 days ago       5 days ago       1         false\nrutefpy9h3fg   regular           209MB     28 hours ago     28 hours ago     1         false\njoxr0q4r2h9s   regular           24.6MB    28 hours ago     28 hours ago     1         true\nyse6tuu897ip   regular           36.9kB    28 hours ago     28 hours ago     1         false\nwizl1358i9k4   regular           584MB     28 hours ago     28 hours ago     1         true\ngl6tf18orj2k   regular           1.94GB    28 hours ago     28 hours ago     1         true\notb05th2pwuo   regular           164MB     28 hours ago     28 hours ago     1         true\nx3s492ekebrm   exec.cachemount   22MB      5 days ago       28 hours ago     4         false\nmn6tzijsjfef   exec.cachemount   748MB     5 days ago       28 hours ago     4         false\noywkm5l5lz05   regular           279kB     28 hours ago     28 hours ago     1         false\ngtgr8swmgjsr   regular           56.7MB    28 hours ago     28 hours ago     1         true\nbjtw6or9wrrp   regular           17.3kB    28 hours ago     28 hours ago     1         true\nvpk3o70xmty9   regular           102MB     28 hours ago     28 hours ago     1         false\np2v4kxk7xtgh   regular           89.7MB    28 hours ago     28 hours ago     1         false\n4j92hmy5ti3l   regular           3.87MB    28 hours ago     28 hours ago     1         true\np7emxrzbnej5   regular           206kB     28 hours ago     28 hours ago     1         true\npkk8o7sj1hc6   regular           164MB     7 hours ago      7 hours ago      1         true\nw3zw8rg2mg3w   regular           584MB     7 hours ago      7 hours ago      1         true\nr49s6ao7jpsz   regular           36.9kB    7 hours ago      7 hours ago      1         false\n54o5fajfz61l   regular           1.94GB    7 hours ago      7 hours ago      1         true\ntzmusrbql0fc   regular           209MB     7 hours ago      7 hours ago      1         false\no6mu3chkto4o   regular           24.6MB    7 hours ago      7 hours ago      1         true\n87vr2bn2as6r   regular           102MB     7 hours ago      7 hours ago      1         false\no36gng03sv1o   regular           56.7MB    7 hours ago      7 hours ago      1         true\ns3r11id5gocy   regular           3.88MB    7 hours ago      7 hours ago      1         true\nk0c9jiv5f6so   regular           17.3kB    7 hours ago      7 hours ago      1         true\nmovitwdv5s2u   regular           89.8MB    7 hours ago      7 hours ago      1         false\nj9z9znlv3njh   regular           206kB     7 hours ago      7 hours ago      1         true\nkjrxnr7w1x0s   regular           1.94GB    7 hours ago      7 hours ago      1         true\ne1jceux6klty   regular           164MB     7 hours ago      7 hours ago      1         true\nzwfsqpc2yd3c   regular           209MB     7 hours ago      7 hours ago      1         false\n3l5v2uygpwfl   regular           36.9kB    7 hours ago      7 hours ago      1         false\nkjsaowogd0ef   regular           584MB     7 hours ago      7 hours ago      1         true\njd6rj0yke9fn   regular           24.6MB    7 hours ago      7 hours ago      1         true\nzj76woay1b8o   regular           56.7MB    7 hours ago      7 hours ago      1         true\nx21blbclsftw   regular           3.89MB    7 hours ago      7 hours ago      1         true\nzlwz49mzsvjf   regular           89.8MB    7 hours ago      7 hours ago      1         false\n854bhrjl2sc0   regular           17.3kB    7 hours ago      7 hours ago      1         true\nmvrjop377n3l   regular           206kB     7 hours ago      7 hours ago      1         true\noii448lqn6g8   regular           102MB     7 hours ago      7 hours ago      1         false\ngqimji67gpgp   regular           158MB     28 hours ago     7 hours ago      3         true\ntn4zsrbc6drb   regular           209MB     5 hours ago      5 hours ago      1         false\np9vbkvi5vgl7   regular           1.94GB    5 hours ago      5 hours ago      1         false\no1mnetxpejju   regular           24.6MB    5 hours ago      5 hours ago      1         false\n9ne1o0bn6nme   regular           584MB     5 hours ago      5 hours ago      1         false\n448a8xwgwtn7   regular           164MB     5 hours ago      5 hours ago      1         false\ntzd2ygvudjmo   regular           36.9kB    5 hours ago      5 hours ago      1         false\nmrbu9cpacth4   regular           3.89MB    5 hours ago      5 hours ago      1         false\nxtee7b2lhu91   regular           17.3kB    5 hours ago      5 hours ago      1         false\nlwy0e84nys7o   regular           206kB     5 hours ago      5 hours ago      1         false\nkt1ycexs6ba3   regular           89.8MB    5 hours ago      5 hours ago      1         false\nykdjxo12qqzv   regular           54.4kB    5 hours ago      5 hours ago      1         true\nlnl3xrilqc5v   regular           102MB     5 hours ago      5 hours ago      1         false\n5uknvgx5yvmo   regular           90.9kB    5 hours ago      5 hours ago      1         true\nn0zks7pg32wd   regular           56.7MB    5 hours ago      5 hours ago      1         false\nrv0xfo26y28a   regular           209MB     5 hours ago      5 hours ago      1         false\nwbcfcotij9et   regular           1.94GB    5 hours ago      5 hours ago      1         true\n39742ek1hk8a   regular           36.9kB    5 hours ago      5 hours ago      1         false\nty58wqfymkxj   regular           584MB     5 hours ago      5 hours ago      1         true\nbm3w79nm9scf   regular           164MB     5 hours ago      5 hours ago      1         true\n4jp9yfw2x4uv   regular           24.6MB    5 hours ago      5 hours ago      1         true\ndc7kk78hh5jr   regular           89.8MB    4 hours ago      4 hours ago      1         false\nz6hobq0qy1r0   regular           102MB     4 hours ago      4 hours ago      1         false\nqyk8gnolpv67   regular           3.89MB    4 hours ago      4 hours ago      1         true\nqigttfspseqa   regular           206kB     4 hours ago      4 hours ago      1         true\nxmarc3hv5wu4   regular           56.7MB    4 hours ago      4 hours ago      1         true\nre5ulii51f6j   regular           17.3kB    4 hours ago      4 hours ago      1         true\ntsyrqi4hry1i   regular           102MB     4 hours ago      4 hours ago      1         false\nw8loekzgiqqa   regular           89.8MB    4 hours ago      4 hours ago      1         false\nx7xme438tcvy   regular           3.85MB    4 hours ago      4 hours ago      1         true\nz9squmr5p5gc   regular           56.7MB    4 hours ago      4 hours ago      1         true\nkcn87q6w63m7   regular           17.3kB    4 hours ago      4 hours ago      1         true\n2y16qzh4jaby   regular           206kB     4 hours ago      4 hours ago      1         true\npvcc3m4behdo   regular           89.8MB    4 hours ago      4 hours ago      1         false\ngld75dxps6i2   regular           56.7MB    4 hours ago      4 hours ago      1         true\nqas9z1lvjrj5   regular           17.3kB    4 hours ago      4 hours ago      1         true\nhurophsqp071   regular           3.92MB    4 hours ago      4 hours ago      1         true\nzf7ue2e5ukv6   regular           206kB     4 hours ago      4 hours ago      1         true\nzr8xo3bq19pu   regular           102MB     4 hours ago      4 hours ago      1         false\nr18ox4rnjq7g   regular           584MB     4 hours ago      4 hours ago      1         true\nohptij4fnyq9   regular           164MB     4 hours ago      4 hours ago      1         true\nl0uj9kuzegsh   regular           24.6MB    4 hours ago      4 hours ago      1         true\nyuthortm59zq   regular           209MB     4 hours ago      4 hours ago      1         false\nyse0nvvn9sng   regular           1.94GB    4 hours ago      4 hours ago      1         true\nv8wepid22dtw   regular           36.9kB    4 hours ago      4 hours ago      1         false\nf2uwc1ywehyw   regular           164MB     3 hours ago      3 hours ago      1         false\nmzim4cirl7he   regular           210MB     3 hours ago      3 hours ago      1         false\n7sz8xznbv25x   regular           1.94GB    3 hours ago      3 hours ago      1         false\nwdioiyfabqtz   regular           584MB     3 hours ago      3 hours ago      1         false\n8bqtdmuel783   regular           36.9kB    3 hours ago      3 hours ago      1         false\nwp725r5qt5i7   regular           102MB     3 hours ago      3 hours ago      1         false\nmz3pkwu7ey4u   regular           3.92MB    3 hours ago      3 hours ago      1         true\nadwu1xbevnqa   regular           17.3kB    3 hours ago      3 hours ago      1         true\nry2o7e7bd6tf   regular           56.8MB    3 hours ago      3 hours ago      1         true\nf3vcjxb4rc4g   regular           206kB     3 hours ago      3 hours ago      1         true\njso4zp2ul6qn   regular           89.8MB    3 hours ago      3 hours ago      1         false\nmpzgr89s6sgr   regular           24.6MB    3 hours ago      3 hours ago      2         false\nn1fi4d0onj3e   regular           24.6MB    3 hours ago      3 hours ago      1         true\nihkk22kj6ieu   regular           164MB     3 hours ago      3 hours ago      1         true\n6200yslz4k5c   regular           210MB     3 hours ago      3 hours ago      1         false\nbltp3iqajkqz   regular           36.9kB    3 hours ago      3 hours ago      1         false\n5c4k2ikr2u1s   regular           1.94GB    3 hours ago      3 hours ago      1         true\nt4enntur8sto   regular           584MB     3 hours ago      3 hours ago      1         true\nxzi0hrwj5egp   regular           36.9kB    3 hours ago      3 hours ago      1         false\n626flng91971   regular           24.6MB    3 hours ago      3 hours ago      1         true\ny2qca7h9ixn2   regular           164MB     3 hours ago      3 hours ago      1         true\nnb35ylp0w0da   regular           210MB     3 hours ago      3 hours ago      1         false\nrishvdrb7q52   regular           584MB     3 hours ago      3 hours ago      1         true\n8e0s5wsge0w5   regular           1.94GB    3 hours ago      3 hours ago      1         true\n0a0lg6739zxd   regular           56.8MB    3 hours ago      3 hours ago      1         true\nptkkhxg1vk7i   regular           3.94MB    3 hours ago      3 hours ago      1         true\nlogj7kop0x4t   regular           17.3kB    3 hours ago      3 hours ago      1         true\n5zotcy43hq7k   regular           89.8MB    3 hours ago      3 hours ago      1         false\nsaemvhoizcpz   regular           102MB     3 hours ago      3 hours ago      1         false\n9kdao5caanfz   regular           206kB     3 hours ago      3 hours ago      1         true\n3yi738yxgwwd   regular           56.8MB    3 hours ago      3 hours ago      1         true\n5fhrk7b8p5rd   regular           3.94MB    3 hours ago      3 hours ago      1         true\ndamqan1iq2mb   regular           102MB     3 hours ago      3 hours ago      1         false\nxafk9lj7xp30   regular           17.3kB    3 hours ago      3 hours ago      1         true\nzjtajusfb8r1   regular           89.8MB    3 hours ago      3 hours ago      1         false\nphxv88jrv93l   regular           206kB     3 hours ago      3 hours ago      1         true\n8p73hv46526o   regular           36.9kB    2 hours ago      2 hours ago      1         false\now9abccjx02d   regular           164MB     2 hours ago      2 hours ago      1         true\nsqijgs3xh9h8   regular           24.6MB    2 hours ago      2 hours ago      1         true\nn18e9mp7kgby   regular           1.94GB    2 hours ago      2 hours ago      1         true\nhpcb2hnr5b20   regular           210MB     2 hours ago      2 hours ago      1         false\nxqes66yfgk46   regular           584MB     2 hours ago      2 hours ago      1         true\ni07b2e61ggbc   regular           89.8MB    2 hours ago      2 hours ago      1         false\n71m71tuvtdpj   source.local      89.8MB    5 days ago       2 hours ago      15        false\nk6ddkzewndo3   regular           56.8MB    2 hours ago      2 hours ago      1         true\nug92lnjt23qy   regular           994MB     28 hours ago     2 hours ago      11        false\n2douv3pttlbu   regular           17.3kB    2 hours ago      2 hours ago      1         true\nmeet8isqkxdw   regular           102MB     2 hours ago      2 hours ago      1         false\nsegdgwgx3vvj   regular           158MB     5 hours ago      2 hours ago      8         true\nvjldbr8x7esf   regular           206kB     2 hours ago      2 hours ago      1         true\np7rmojtjugsp   source.local      8.19kB    5 days ago       2 hours ago      15        false\npu9wdlh1e87w   source.local      8.19kB    5 days ago       2 hours ago      15        false\nih63hg4moppq   regular           3.94MB    2 hours ago      2 hours ago      1         true\n8imlpm2pl15y   regular           234MB     24 minutes ago   23 minutes ago   1         false\n59ojozleza4d   regular           164MB     24 minutes ago   23 minutes ago   1         false\n0jybvz03lk2e   regular           24.6MB    24 minutes ago   23 minutes ago   1         false\nku8xviofqhj8   regular           36.9kB    24 minutes ago   23 minutes ago   1         false\n1kfsen3p8yp5   regular           584MB     24 minutes ago   23 minutes ago   1         false\n8ogdxgsnwkvl   regular           1.98GB    24 minutes ago   23 minutes ago   1         false\nvp2j2jwkb3v9   regular           584MB     20 minutes ago   19 minutes ago   1         true\nlviqxo46zc4j   source.local      8.19kB    9 days ago       19 minutes ago   15        false\ncer67ld1xnvh   regular           234MB     21 minutes ago   19 minutes ago   1         false\nkaeuzl6834ea   source.local      8.19kB    9 days ago       19 minutes ago   15        false\nl2jqzh0v9mv2   regular           2.24MB    5 days ago       19 minutes ago   13        true\nuulxnwyizk17   frontend          35.8MB    9 days ago       19 minutes ago   27        false\nxbm92rg9hw3h   source.local      237MB     9 days ago       19 minutes ago   15        false\n8k7uwdu7861j   regular           24.6MB    20 minutes ago   19 minutes ago   1         true\nog66tz075u1r   regular           36.9kB    21 minutes ago   19 minutes ago   1         false\nuxtht4gkdzag   regular           1.98GB    21 minutes ago   19 minutes ago   1         true\nuw3397t9l4y4   regular           164MB     20 minutes ago   19 minutes ago   1         true\nnbybwaj334n2   exec.cachemount   1.17GB    5 days ago       19 minutes ago   27        false",
+    "stderr": ""
+  },
+  "docker_images": {
+    "exit_code": 0,
+    "stdout": "ebd1c47384c0\tnexa-brief-api:latest\t2026-11-02 21:50:59 +0000 UTC\t5.87GB\nd0535c4962f7\tnexa-brief-web:latest\t2026-11-02 19:56:03 +0000 UTC\t541MB\naa0580dd274b\tnexa-brief-api:before-video-quality-20261102\t2026-11-02 19:53:56 +0000 UTC\t5.82GB\nf892d052c756\tnexa-brief-web:before-opening-readiness-20261102\t2026-11-02 19:36:12 +0000 UTC\t541MB\n3202a03bf21b\tnexa-brief-web:before-category-scroll-20261102\t2026-11-02 19:20:28 +0000 UTC\t541MB\nce0c3da268e4\tnexa-brief-api:before-opening-readiness-20261102\t2026-11-02 19:18:30 +0000 UTC\t5.82GB\n16724d871726\tnexa-brief-api:before-category-management-20261102\t2026-11-02 19:07:31 +0000 UTC\t5.82GB\n44b08fccc3bf\tnexa-brief-web:before-category-management-20261102\t2026-11-02 18:56:52 +0000 UTC\t541MB\n5c22e4c9d5c2\tnexa-brief-api:before-instagram-profile-20261102\t2026-11-02 18:54:45 +0000 UTC\t5.82GB\nf1d3e3c639bc\tnexa-brief-api:before-facebook-catalog-20261102\t2026-11-02 18:35:23 +0000 UTC\t5.82GB\nc3535de83179\tnexa-brief-api:before-facebook-scope-20261102\t2026-11-02 18:23:57 +0000 UTC\t5.82GB\nc3535de83179\tnexa-brief-api:meta-covers-20261102\t2026-11-02 18:23:57 +0000 UTC\t5.82GB\n4dcfe92048f5\tnexa-brief-web:before-facebook-catalog-20261102\t2026-11-02 18:20:04 +0000 UTC\t541MB\n8d2f668f4146\tnexa-brief-web:before-category-view-20261102\t2026-11-02 18:10:29 +0000 UTC\t541MB\n990115b82325\tnexa-brief-web:before-channel-icons-20261102\t2026-11-02 17:44:17 +0000 UTC\t541MB\n3505b3892b9e\tnexa-brief-api:before-meta-covers-20261102\t2026-11-02 17:40:01 +0000 UTC\t5.82GB\nc7ee9bb92f8c\tnexa-brief-web:before-professional-profile-20261102\t2026-11-02 15:39:46 +0000 UTC\t541MB\n91faed63e599\tnexa-brief-api:before-professional-profile-20261102\t2026-11-02 15:37:25 +0000 UTC\t5.82GB\n6cc5546a53d9\tnexa-brief-web:before-youtube-access-20261102\t2026-11-02 15:03:42 +0000 UTC\t541MB\nec8b667a2a39\tnexa-brief-api:before-youtube-access-20261102\t2026-11-02 15:01:48 +0000 UTC\t5.82GB\nc899f5b5bb48\tnexa-brief-web:before-shared-connections-20261102\t2026-11-01 18:24:07 +0000 UTC\t541MB\n6fef46ccaa5f\tnexa-brief-api:before-shared-connections-20261102\t2026-11-01 18:21:27 +0000 UTC\t5.82GB\nfaa8e0a1475f\tcloudflare/cloudflared:latest\t2026-10-21 13:26:38 +0000 UTC\t98.6MB\n11a3eb1597e8\thello-world:latest\t2026-03-23 21:33:59 +0000 UTC\t25.9kB\n1c18d9ab3af4\tnode:22.14.0-bookworm-slim\t2025-02-13 05:05:05 +0000 UTC\t325MB\nbdf57e528e45\tbusybox:1.37.0\t2024-09-26 21:31:42 +0000 UTC\t6.77MB",
+    "stderr": ""
+  },
+  "docker_containers": {
+    "exit_code": 0,
+    "stdout": "nexa-brief-api-1\tUp 18 minutes (healthy)\tnexa-brief-api\nnexa-brief-web-1\tUp 2 hours (healthy)\tnexa-brief-web\nnexa-brief-volume-init-1\tExited (0) 4 hours ago\tbusybox:1.37.0\nnexa-brief-cloudflared\tUp 2 days\tcloudflare/cloudflared:latest",
+    "stderr": ""
+  },
+  "docker_mounts": {
+    "exit_code": 0,
+    "stdout": "/nexa-brief-api-1 /home/alfred/.local/share/nexa-brief/profiles/profesional/connections -> /app/accounts; /home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates -> /app/src/templates; /home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates -> /home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates; /home/alfred/.local/share/nexa-brief/profiles/profesional -> /home/alfred/.local/share/nexa-brief/profiles/profesional; /home/alfred/.local/share/nexa-brief/profiles/profesional/data -> /app/data; /home/alfred/.local/share/nexa-brief/profiles/profesional/output -> /app/output; \n/nexa-brief-web-1 /home/alfred/.local/share/nexa-brief/profiles/profesional/web-data -> /app/data; /home/alfred/.local/share/nexa-brief/profiles/profesional/profile.json -> /app/profile.json;",
+    "stderr": ""
+  },
+  "docker_container_dates": {
+    "exit_code": 0,
+    "stdout": "/nexa-brief-api-1 created=2026-11-02T21:53:16.023301609Z started=2026-11-02T21:53:16.561469454Z\n/nexa-brief-web-1 created=2026-11-02T19:57:10.587961653Z started=2026-11-02T19:57:17.050601585Z",
+    "stderr": ""
+  },
+  "container_tmp": {
+    "exit_code": 0,
+    "stdout": "4096\t/tmp/org.chromium.Chromium.chromium_chrome_url_fetcher_.YktO1J\n225280\t/tmp",
+    "stderr": ""
+  },
+  "container_processes": {
+    "exit_code": 0,
+    "stdout": "PID    PPID     ELAPSED COMMAND\n      1       0       18:34 docker-init\n      7       1       18:34 uvicorn\n   1512       0       00:00 ps",
+    "stderr": ""
+  },
+  "backup_dates": {
+    "exit_code": 0,
+    "stdout": "/home/alfred/.local/share/nexa-brief/backups/professional-migration-20261102T172920Z|birth=2026-11-02 17:29:20.465106640 +0000|modified=2026-11-02 17:32:25.843082827 +0000\n/home/alfred/.local/share/nexa-brief-migration-20261024|birth=2026-10-24 16:23:26.940899547 +0000|modified=2026-10-24 16:41:50.432090419 +0000",
+    "stderr": ""
+  },
+  "sudo_read_available": {
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "sudo: interactive authentication is required"
+  },
+  "limitations": [
+    "No historical df baseline for the claimed 160 to 187 GB change.",
+    "Docker image and build-cache accounting overlaps; do not sum their displayed totals.",
+    "No sudo password requested; root-owned paths measured through Docker storage API only.",
+    "The current API container started after the video finished; its tmp does not describe the old container peak."
+  ],
+  "host_numeric_frame_scan": {
+    "roots": [
+      "/tmp",
+      "/var/tmp"
+    ],
+    "pattern": "[0-9]{6}.jpg",
+    "accessible_matches": 0,
+    "files_read": false,
+    "notes": "Scanned accessible paths only; os.walk permissions do not establish coverage of other users private directories."
+  },
+  "render_source_evidence": {
+    "jpeg_capture": "src/templates/_tools/commercial/render_promo.py:43, JPEG quality=92",
+    "temporary_directory": "src/templates/_tools/commercial/render_promo.py:64",
+    "encoding_after_capture": "src/templates/_tools/commercial/render_promo.py:85",
+    "formats_sequential": "src/templates/_tools/explainer-kit/tools/kit.py:296",
+    "physical_copy_per_recording": "src/core/explainer/recorder.py:397-412",
+    "double_venv_copy": "nexa-brief-server/Dockerfile:43-44",
+    "layer_sizes_reported_by_docker_history": {
+      "dependencies_venv": "1.17GB",
+      "build_app_including_venv": "1.4GB"
+    }
+  },
+  "scope_notes": [
+    "No cleanup, rebuild, restart, render, publication or credential-content access performed.",
+    "Evidence and report files are the only deliberate persistent writes by this audit."
+  ]
+}

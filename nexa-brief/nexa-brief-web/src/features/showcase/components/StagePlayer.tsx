@@ -1,4 +1,4 @@
-import { Pause, Play, RotateCcw } from "lucide-react";
+import { Pause, Play, RotateCcw, Square } from "lucide-react";
 import type { RefObject } from "react";
 import type { PlayerStatus } from "../hooks/useStagePlayer";
 import type { FormatId } from "../types";
@@ -9,11 +9,25 @@ type ControlsProps = {
   onPlayPause(): void;
   onReplay(): void;
   onRetry(): void;
+  stopInsteadOfPause?: boolean;
 };
 
-export function StagePlayerControls({ status, onPlayPause, onReplay, onRetry }: ControlsProps) {
-  const disabled = status === "loading" || status === "error";
-  const label = status === "playing" ? "Pausar" : "Reanudar";
+export function StagePlayerControls({
+  status,
+  onPlayPause,
+  onReplay,
+  onRetry,
+  stopInsteadOfPause = false,
+}: ControlsProps) {
+  const disabled = status === "error" || (status === "loading" && !stopInsteadOfPause);
+  const active = status === "playing" || (stopInsteadOfPause && status === "loading");
+  const label = active
+    ? stopInsteadOfPause
+      ? "Detener"
+      : "Pausar"
+    : stopInsteadOfPause
+      ? "Reproducir"
+      : "Reanudar";
   return (
     <>
       <button
@@ -22,13 +36,21 @@ export function StagePlayerControls({ status, onPlayPause, onReplay, onRetry }: 
         disabled={disabled}
         className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/85 transition-colors hover:bg-white/20 hover:text-white disabled:opacity-40"
       >
-        {status === "playing" ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
+        {active ? (
+          stopInsteadOfPause ? (
+            <Square className="size-3.5" />
+          ) : (
+            <Pause className="size-3.5" />
+          )
+        ) : (
+          <Play className="size-3.5" />
+        )}
         {label}
       </button>
       <IconAction
         label="Repetir animación"
         onClick={onReplay}
-        disabled={disabled}
+        disabled={status === "loading" || status === "error"}
         className="size-7 bg-white/10 text-white/85 hover:bg-white/20"
       >
         <RotateCcw />
@@ -56,6 +78,7 @@ type PlayerProps = {
   time: number;
   totalTime: number;
   onSeek(time: number): void;
+  poster?: string;
 };
 
 function formatTime(time: number) {
@@ -73,11 +96,13 @@ export function StagePlayer({
   time,
   totalTime,
   onSeek,
+  poster,
 }: PlayerProps) {
   return (
     <>
       <div
-        className={`relative mx-auto max-w-full overflow-hidden rounded-[18px] bg-black transition-[width,height] duration-200 ${format === "9x16" ? "max-h-[74vh] w-[min(390px,88vw,41.625vh)]" : "max-h-[74vh] w-full"}`}
+        data-preview-frame
+        className={`relative mx-auto max-w-full overflow-hidden rounded-[18px] ${poster ? "bg-white" : "bg-black"} transition-[width,height] duration-200 ${format === "9x16" ? "max-h-[74vh] w-[min(390px,88vw,41.625vh)]" : "w-[min(100%,131.5556vh)]"}`}
         style={{ aspectRatio: format === "9x16" ? "9 / 16" : "16 / 9" }}
       >
         <iframe
@@ -87,7 +112,16 @@ export function StagePlayer({
           title={title}
           className="absolute inset-0 h-full w-full border-0"
         />
-        {status === "loading" && (
+        {poster &&
+          (status === "loading" || status === "error" || (status === "paused" && time === 0)) && (
+            // biome-ignore lint/performance/noImgElement: authenticated component frames use the current browser session.
+            <img
+              src={poster}
+              alt={`Fotograma de ${title}`}
+              className="pointer-events-none absolute inset-0 h-full w-full object-contain"
+            />
+          )}
+        {status === "loading" && !poster && (
           <p
             role="status"
             className="pointer-events-none absolute inset-0 grid place-items-center bg-black text-sm text-white/65"

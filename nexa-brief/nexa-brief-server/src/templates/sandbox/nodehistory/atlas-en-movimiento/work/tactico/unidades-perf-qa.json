@@ -1,0 +1,530 @@
+{
+  "viewport": [
+    1080,
+    1920
+  ],
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--renderer-process-limit=1",
+    "--num-raster-threads=1"
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "browser": "148.0.7778.96",
+  "initial": {
+    "missing": [
+      "sprites.json: 404: http://127.0.0.1:45505/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites/sprites.json"
+    ],
+    "missingTiles": [
+      "gibs-bluemarble/8/165/113",
+      "gibs-bluemarble/8/166/113",
+      "gibs-bluemarble/8/166/114",
+      "gibs-bluemarble/8/166/115",
+      "gibs-bluemarble/8/167/113",
+      "gibs-bluemarble/8/167/114",
+      "gibs-bluemarble/8/167/115",
+      "gibs-bluemarble/8/167/116",
+      "gibs-bluemarble/8/167/117",
+      "gibs-bluemarble/8/168/113",
+      "gibs-bluemarble/8/168/114",
+      "gibs-bluemarble/8/168/115",
+      "gibs-bluemarble/8/168/116",
+      "gibs-bluemarble/8/168/117",
+      "gibs-bluemarble/8/169/113",
+      "gibs-bluemarble/8/169/114",
+      "gibs-bluemarble/8/169/115",
+      "gibs-bluemarble/8/169/116",
+      "gibs-bluemarble/8/169/117",
+      "gibs-bluemarble/8/170/113",
+      "gibs-bluemarble/8/170/114",
+      "gibs-bluemarble/8/170/115",
+      "gibs-bluemarble/8/170/116",
+      "gibs-bluemarble/8/170/117",
+      "gibs-bluemarble/8/171/113",
+      "gibs-bluemarble/8/171/114",
+      "gibs-bluemarble/8/171/115",
+      "gibs-bluemarble/8/171/116",
+      "gibs-bluemarble/8/171/117",
+      "gibs-bluemarble/8/172/105",
+      "gibs-bluemarble/8/172/106",
+      "gibs-bluemarble/8/172/107",
+      "gibs-bluemarble/8/172/108",
+      "gibs-bluemarble/8/172/109",
+      "gibs-bluemarble/8/172/110",
+      "gibs-bluemarble/8/172/111",
+      "gibs-bluemarble/8/172/112",
+      "gibs-bluemarble/8/172/113",
+      "gibs-bluemarble/8/172/114",
+      "gibs-bluemarble/8/172/115",
+      "gibs-bluemarble/8/172/116",
+      "gibs-bluemarble/8/172/117",
+      "gibs-bluemarble/8/173/108",
+      "gibs-bluemarble/8/173/109",
+      "gibs-bluemarble/8/173/110",
+      "gibs-bluemarble/8/173/111",
+      "gibs-bluemarble/8/173/112",
+      "gibs-bluemarble/8/173/113",
+      "gibs-bluemarble/8/173/114",
+      "gibs-bluemarble/8/173/115",
+      "gibs-bluemarble/8/173/116",
+      "gibs-bluemarble/8/173/117",
+      "gibs-bluemarble/8/174/108",
+      "gibs-bluemarble/8/174/109",
+      "gibs-bluemarble/8/174/110",
+      "gibs-bluemarble/8/174/111",
+      "gibs-bluemarble/8/174/112",
+      "gibs-bluemarble/8/174/113",
+      "gibs-bluemarble/8/174/114",
+      "gibs-bluemarble/8/174/115",
+      "gibs-bluemarble/8/174/116",
+      "gibs-bluemarble/8/174/117"
+    ]
+  },
+  "benchmarks": [
+    {
+      "family": "units",
+      "mode": "mixed family",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 11.964999999664723,
+        "p95": 12.799999997019768
+      },
+      "submissionMs": {
+        "mean": 1.9174999997019768,
+        "p95": 2.2999999970197678
+      },
+      "readbackMs": {
+        "mean": 6.987500000558794,
+        "p95": 7.200000002980232
+      },
+      "netMeanMs": 4.977499999105929,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "naval",
+      "mode": "mixed family",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 23.732499999552964,
+        "p95": 25.399999998509884
+      },
+      "submissionMs": {
+        "mean": 1.8949999997392297,
+        "p95": 2.899999998509884
+      },
+      "readbackMs": {
+        "mean": 7.050000000558794,
+        "p95": 7.4000000059604645
+      },
+      "netMeanMs": 16.68249999899417,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "air",
+      "mode": "mixed family",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 21.827500000037254,
+        "p95": 23.899999998509884
+      },
+      "submissionMs": {
+        "mean": 2.982499999925494,
+        "p95": 4.5
+      },
+      "readbackMs": {
+        "mean": 7.269999999925494,
+        "p95": 7.899999998509884
+      },
+      "netMeanMs": 14.55750000011176,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "unit.token",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 10.70499999988824,
+        "p95": 10.5
+      },
+      "submissionMs": {
+        "mean": 1.3899999994784593,
+        "p95": 1.7000000029802322
+      },
+      "readbackMs": {
+        "mean": 7.0100000003352765,
+        "p95": 7.299999997019768
+      },
+      "netMeanMs": 3.694999999552964,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "unit.group",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 11.83249999973923,
+        "p95": 12.700000002980232
+      },
+      "submissionMs": {
+        "mean": 1.7599999999627471,
+        "p95": 2.2999999970197678
+      },
+      "readbackMs": {
+        "mean": 8.132500000111758,
+        "p95": 7.399999998509884
+      },
+      "netMeanMs": 3.6999999996274724,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "unit.move",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 11.68000000026077,
+        "p95": 12
+      },
+      "submissionMs": {
+        "mean": 1.5374999998137355,
+        "p95": 1.6000000014901161
+      },
+      "readbackMs": {
+        "mean": 7.102500000037253,
+        "p95": 7.300000004470348
+      },
+      "netMeanMs": 4.577500000223518,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "unit.advance",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 11.852499999292196,
+        "p95": 12.399999998509884
+      },
+      "submissionMs": {
+        "mean": 1.6299999995157122,
+        "p95": 2.100000001490116
+      },
+      "readbackMs": {
+        "mean": 8.03500000052154,
+        "p95": 7.399999998509884
+      },
+      "netMeanMs": 3.8174999987706553,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "unit.retreat",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 12.282500000111758,
+        "p95": 13.300000004470348
+      },
+      "submissionMs": {
+        "mean": 1.7450000001117587,
+        "p95": 2.5
+      },
+      "readbackMs": {
+        "mean": 8.20000000037253,
+        "p95": 7.199999995529652
+      },
+      "netMeanMs": 4.082499999739229,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "fx.clash",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 7.942500000447035,
+        "p95": 8.100000001490116
+      },
+      "submissionMs": {
+        "mean": 0.44250000044703486,
+        "p95": 0.5
+      },
+      "readbackMs": {
+        "mean": 7.979999999888241,
+        "p95": 7.200000002980232
+      },
+      "netMeanMs": 0,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "naval.cargo",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 18.784999999031424,
+        "p95": 19.69999999552965
+      },
+      "submissionMs": {
+        "mean": 0.7525000000372529,
+        "p95": 1
+      },
+      "readbackMs": {
+        "mean": 7.67250000089407,
+        "p95": 7.300000004470348
+      },
+      "netMeanMs": 11.112499998137354,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "naval.warship",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 13.007499999925495,
+        "p95": 14
+      },
+      "submissionMs": {
+        "mean": 0.8799999985843897,
+        "p95": 1.1000000014901161
+      },
+      "readbackMs": {
+        "mean": 7.617499999888241,
+        "p95": 8.299999997019768
+      },
+      "netMeanMs": 5.390000000037253,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "naval.submarine",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 14.389999999478459,
+        "p95": 16.299999997019768
+      },
+      "submissionMs": {
+        "mean": 0.8324999991804362,
+        "p95": 1.1999999955296516
+      },
+      "readbackMs": {
+        "mean": 7.430000000633299,
+        "p95": 7.899999998509884
+      },
+      "netMeanMs": 6.959999998845159,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "naval.group",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 39.18000000137836,
+        "p95": 45.80000000447035
+      },
+      "submissionMs": {
+        "mean": 2.6225000005215406,
+        "p95": 4.899999998509884
+      },
+      "readbackMs": {
+        "mean": 7.359999998658895,
+        "p95": 7.699999995529652
+      },
+      "netMeanMs": 31.820000002719464,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "naval.carrier",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 42.5625,
+        "p95": 54.400000005960464
+      },
+      "submissionMs": {
+        "mean": 2.8474999994039534,
+        "p95": 5.300000004470348
+      },
+      "readbackMs": {
+        "mean": 7.862500000186264,
+        "p95": 10
+      },
+      "netMeanMs": 34.699999999813734,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "air.bomber",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 27.905000001564623,
+        "p95": 30.400000005960464
+      },
+      "submissionMs": {
+        "mean": 2.5900000013411044,
+        "p95": 2.7000000029802322
+      },
+      "readbackMs": {
+        "mean": 7.6524999987334015,
+        "p95": 7.799999997019768
+      },
+      "netMeanMs": 20.252500002831223,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "air.jet",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 21.0125,
+        "p95": 35.600000001490116
+      },
+      "submissionMs": {
+        "mean": 2.8750000007450582,
+        "p95": 3.2000000029802322
+      },
+      "readbackMs": {
+        "mean": 8.264999999850989,
+        "p95": 11.699999995529652
+      },
+      "netMeanMs": 12.74750000014901,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "air.helicopter",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 20.37249999996275,
+        "p95": 35.600000001490116
+      },
+      "submissionMs": {
+        "mean": 3.042499999329448,
+        "p95": 3.1999999955296516
+      },
+      "readbackMs": {
+        "mean": 7.81750000026077,
+        "p95": 8.100000001490116
+      },
+      "netMeanMs": 12.554999999701979,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "air.prop",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 24.38999999947846,
+        "p95": 34.5
+      },
+      "submissionMs": {
+        "mean": 2.60999999884516,
+        "p95": 3.5999999940395355
+      },
+      "readbackMs": {
+        "mean": 7.750000000186264,
+        "p95": 11.700000002980232
+      },
+      "netMeanMs": 16.639999999292193,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "air.drop",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 0,
+      "samples": 40,
+      "renderMs": {
+        "mean": 8.794999999180437,
+        "p95": 9
+      },
+      "submissionMs": {
+        "mean": 0.3899999998509884,
+        "p95": 0.5
+      },
+      "readbackMs": {
+        "mean": 7.827500000782311,
+        "p95": 7.200000002980232
+      },
+      "netMeanMs": 0.9674999983981261,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "air.launch",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 20,
+      "samples": 40,
+      "renderMs": {
+        "mean": 12.785000000149012,
+        "p95": 16.600000001490116
+      },
+      "submissionMs": {
+        "mean": 2.5425000002607705,
+        "p95": 4.300000004470348
+      },
+      "readbackMs": {
+        "mean": 7.4224999999627475,
+        "p95": 7.299999997019768
+      },
+      "netMeanMs": 5.362500000186264,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    },
+    {
+      "family": "air.recover",
+      "mode": "component",
+      "instances": 20,
+      "referenceOnlyItems": 20,
+      "samples": 40,
+      "renderMs": {
+        "mean": 15.255000000447035,
+        "p95": 16.80000000447035
+      },
+      "submissionMs": {
+        "mean": 1.2174999998882412,
+        "p95": 1.6999999955296516
+      },
+      "readbackMs": {
+        "mean": 7.0149999994784595,
+        "p95": 7.200000002980232
+      },
+      "netMeanMs": 8.240000000968575,
+      "includes": "20 drawn instances (groups contain additional hulls/tokens); draw + full RGBA readback, excludes clearRect, base map and encoding; net subtracts empty readback control; reference-only carriers are invisible"
+    }
+  ],
+  "complete": true
+}

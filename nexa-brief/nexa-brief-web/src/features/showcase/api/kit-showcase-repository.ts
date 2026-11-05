@@ -121,12 +121,14 @@ function sourceOf(value: ObjectValue): Source {
     !optionalString(value.sheet) ||
     (value.sheet_exists !== undefined && typeof value.sheet_exists !== "boolean") ||
     !optionalString(value.source_sheet) ||
+    !optionalString(value.preview_9x16) ||
+    !optionalString(value.preview_16x9) ||
     (value.source_sha256 !== undefined &&
       value.source_sha256 !== null &&
       typeof value.source_sha256 !== "string")
   )
     throw new Error("Origen de biblioteca inválido");
-  for (const path of [value.sheet, value.source_sheet])
+  for (const path of [value.sheet, value.source_sheet, value.preview_9x16, value.preview_16x9])
     if (typeof path === "string") encodeRelativePath(path);
   return {
     video: value.video,
@@ -134,6 +136,8 @@ function sourceOf(value: ObjectValue): Source {
     ...(value.sheet !== undefined && { sheet: value.sheet as string }),
     ...(value.sheet_exists !== undefined && { sheetExists: value.sheet_exists as boolean }),
     ...(value.source_sheet !== undefined && { sourceSheet: value.source_sheet as string }),
+    ...(value.preview_9x16 !== undefined && { preview9x16: value.preview_9x16 as string }),
+    ...(value.preview_16x9 !== undefined && { preview16x9: value.preview_16x9 as string }),
     ...(value.source_sha256 !== undefined && {
       sourceSha256: value.source_sha256 as string | null,
     }),
@@ -193,11 +197,19 @@ export class KitShowcaseRepository implements ShowcaseRepository {
     const data = await loadStageCatalog(designId, context, signal);
     if (!Array.isArray(data)) throw new Error("Catálogo inválido");
     const items = data.map((value) => ({ key: "", designId, component: parseComponent(value) }));
-    return withKeys(
+    const nativeItems = withKeys(
       items,
       items.map(({ component }) => [designId, component.name]),
       "design",
     );
+    if (designId !== "imperio") return nativeItems;
+    const library = await this.getLibrary(context.designs, signal);
+    // Estas dos piezas del video de Japón ya fueron promovidas al diseño.
+    const promotedSource = "nodeatlas/japon-expansion-prueba/assets/components/japon.js";
+    return [...nativeItems, ...library.filter(item =>
+      item.designId === designId && !(item.source?.source === promotedSource &&
+        ["imperio.campaign", "imperio.footage"].includes(item.component.name))
+    )];
   }
   previewUrl(item: Item, context: CatalogContext, mode: "card" | "modal"): string {
     return buildPreviewUrl(item, context, mode);

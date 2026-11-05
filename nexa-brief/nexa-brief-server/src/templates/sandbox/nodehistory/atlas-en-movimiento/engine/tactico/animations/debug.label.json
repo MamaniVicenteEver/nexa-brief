@@ -1,0 +1,64 @@
+{
+  "name": "debug.label",
+  "family": "debug",
+  "description": "Rótulo geográfico con contorno y tipografía declarada. Úsala para comprobar posiciones, trayectorias y rótulos.",
+  "duration": 9.35,
+  "loop": true,
+  "layer": 70,
+  "states": [
+    "normal",
+    "hit"
+  ],
+  "params": {
+    "text": {
+      "type": "string",
+      "required": true,
+      "default": null,
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "size": {
+      "type": "number",
+      "default": 28,
+      "min": 1,
+      "max": 200,
+      "range": {
+        "min": 1,
+        "max": 200
+      },
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "font": {
+      "type": "string",
+      "default": "sans-serif",
+      "range": null,
+      "description": "Familia tipográfica declarada para el texto."
+    },
+    "dy": {
+      "type": "number",
+      "default": -42,
+      "range": null,
+      "description": "Desplazamiento vertical del texto en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "core-label",
+    "t": 0,
+    "type": "debug.label",
+    "text": "Núcleo táctico",
+    "at": "core-dot",
+    "dur": 9
+  },
+  "usedBy": [
+    "work/tactico/scene-core.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/debug.label.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/animations/debug.dot.json"
+  ]
+}

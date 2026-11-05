@@ -1,0 +1,30 @@
+{
+  "format": "atlas-v1",
+  "duration": 25,
+  "lang": "es",
+  "look": "satelite-realista",
+  "lookOverrides": {
+    "projection": "mercator",
+    "terrain": {"exaggeration": 0},
+    "shade": {"visible": false, "opacity": 0},
+    "sat": {"saturation": -0.28, "contrast": 0.12, "brightness": 0, "brightnessMax": 1, "viirs": false, "detail": null},
+    "labels": {"visible": false},
+    "borders": {"visible": true, "admin0": {"color": "#e9e3ba", "width": 0.8, "opacity": 0.6}, "admin1": {"opacity": 0}, "admin2": {"opacity": 0}}
+  },
+  "planoLook": "tactico",
+  "tiles": {"provider": "gibs-bluemarble", "manifest": "cache-inventory.json"},
+  "motionBlur": {"samples": 4, "fps": 30, "shutter": 0.5, "thresholdPx": 2},
+  "camera": [
+    {"t": 0, "center": [0, 0], "zoom": 2, "pitch": 0, "bearing": 0},
+    {"t": 2, "center": [51, 27], "zoom": 4.4, "pitch": 0, "bearing": 0, "dur": 8, "arc": 0.35},
+    {"t": 12, "center": [52, 27], "zoom": 4.4, "pitch": 0, "bearing": 35, "dur": 3, "arc": 0},
+    {"t": 18, "center": [56.5, 26.55], "zoom": 7, "pitch": 0, "bearing": -12, "dur": 2.3, "arc": 0}
+  ],
+  "layers": [
+    {"type": "highlight", "region": "IR", "t": -1, "dur": 0.5, "border": true, "style": {"fill": "#339649", "opacity": 0.8, "line": "#f1efaa", "width": 1.2}},
+    {"type": "highlight", "region": "OM", "t": -1, "dur": 0.5, "border": true, "style": {"fill": "#00a6b0", "opacity": 0.8, "line": "#c3f7ee", "width": 1.2}}
+  ],
+  "intro": false,
+  "outro": false,
+  "captions": {"enabled": false}
+}

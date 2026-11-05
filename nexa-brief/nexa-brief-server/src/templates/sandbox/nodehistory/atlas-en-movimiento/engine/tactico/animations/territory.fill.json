@@ -1,0 +1,59 @@
+{
+  "name": "territory.fill",
+  "family": "territory",
+  "description": "Envuelve el relleno original de Atlas plano con multiply, screen y overlay. Úsala para explicar control territorial y cambios de frontera.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 10,
+  "states": [],
+  "params": {
+    "region": {
+      "type": "string",
+      "default": "IR",
+      "range": null,
+      "description": "Código o nombre de la región geográfica."
+    },
+    "color": {
+      "type": "string",
+      "default": "success",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "opacity": {
+      "type": "number",
+      "default": 0.8,
+      "range": null,
+      "description": "Opacidad de 0 a 1."
+    },
+    "border": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa el contorno de la silueta."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-territory-fill",
+    "t": 0,
+    "region": "IR",
+    "dur": 6,
+    "out": 5.5,
+    "type": "territory.fill",
+    "color": "success"
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-territory.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/territory.fill.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "../_atlas/data/geo/admin0.geojson"
+  ]
+}

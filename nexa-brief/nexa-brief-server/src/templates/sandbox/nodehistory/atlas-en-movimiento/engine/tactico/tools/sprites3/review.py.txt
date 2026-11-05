@@ -1,0 +1,12 @@
+"""Crop final sheets for readable visual QA; review files stay in /tmp."""
+from pathlib import Path
+from PIL import Image
+HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]/'sprites3'
+out=Path('/tmp/aem-militar-review');out.mkdir(exist_ok=True)
+im=Image.open(ROOT/'hoja3.png').convert('RGB')
+for start in range(0,50,10):
+ im.crop((0,180+start*184,2560,180+min(50,start+10)*184)).save(out/f'states-{start:02}.jpg',quality=95,subsampling=0)
+im=Image.open(ROOT/'hoja3-escalas.png').convert('RGB')
+for start in range(0,50,5):
+ im.crop((0,150+start*560,2160,150+min(50,start+5)*560)).save(out/f'scales-{start:02}.jpg',quality=95,subsampling=0)
+print(out)

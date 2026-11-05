@@ -1,0 +1,72 @@
+{
+  "name": "territory.extrude",
+  "family": "territory",
+  "description": "Losa geográfica con canto y sombra desplazados en píxeles de pantalla. Úsala para explicar control territorial y cambios de frontera.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 10,
+  "states": [],
+  "params": {
+    "region": {
+      "type": "string",
+      "default": "IR",
+      "range": null,
+      "description": "Código o nombre de la región geográfica."
+    },
+    "color": {
+      "type": "string",
+      "default": "success",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "opacity": {
+      "type": "number",
+      "default": 0.8,
+      "range": null,
+      "description": "Opacidad de 0 a 1."
+    },
+    "border": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa el contorno de la silueta."
+    },
+    "depth": {
+      "type": "number",
+      "default": 16,
+      "range": null,
+      "description": "Profundidad visual de la extrusión en píxeles de diseño."
+    },
+    "offset": {
+      "type": "array",
+      "default": [
+        10,
+        16
+      ],
+      "range": null,
+      "description": "Desplazamiento [x,y] en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-territory-extrude",
+    "t": 0,
+    "region": "IQ",
+    "dur": 6,
+    "out": 5.5,
+    "type": "territory.extrude",
+    "color": "danger"
+  },
+  "usedBy": [
+    "work/tactico/items-territory.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/territory.extrude.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "../_atlas/data/geo/admin0.geojson"
+  ]
+}

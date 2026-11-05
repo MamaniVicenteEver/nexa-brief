@@ -36,6 +36,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+import os
 import shutil
 import time
 from dataclasses import dataclass
@@ -47,6 +48,7 @@ import structlog
 from src.adapters.recorder.infrastructure.hyperframes_audio import compute_equalizer_magnitudes
 from src.config.exceptions import RecordingError
 from src.config.settings import settings
+from src.adapters.recorder.infrastructure.render_workspace import render_workspace
 from src.adapters.recorder.infrastructure.subprocess_progress import parse_percent, run_with_progress
 from src.config.template_manifest import get_template_paths
 from src.core.ports.recorder_port import RecorderPort, RecordingResult
@@ -345,19 +347,28 @@ class HyperframesAdapter(RecorderPort):
             passes = _render_passes(niche_cfg, supersample=effective_render_target != "aws")
             pass_seconds: list[float] = []
             report_step_progress(0.0)  # waiting for the render slot is not progress
-            async with _get_render_semaphore():
-                for i, rp in enumerate(passes):
-                    site_dir = output_dir / f"_hyperframes_site_{rp.width}x{rp.height}"
-                    self._stage_generic_site(
-                        site_dir, template_dir, output_dir, audio_path, bg_source, rp, duration_seconds
-                    )
-                    t0 = time.monotonic()
-                    await self._render(
-                        bin_path, site_dir, output_dir / rp.filenames[0], effective_render_target,
-                        output_dir.name, resolution=rp.resolution_flag, progress_span=(i, len(passes)),
-                        duration_seconds=duration_seconds,
-                    )
-                    pass_seconds.append(round(time.monotonic() - t0, 1))
+            with render_workspace(output_dir, "hyperframes") as workspace:
+                staged = []
+                async with _get_render_semaphore():
+                    for i, rp in enumerate(passes):
+                        pass_dir = workspace / str(i)
+                        pass_dir.mkdir()
+                        site_dir = pass_dir / "site"
+                        self._stage_generic_site(
+                            site_dir, template_dir, output_dir, audio_path, bg_source, rp, duration_seconds
+                        )
+                        t0 = time.monotonic()
+                        staged_output = pass_dir / Path(rp.filenames[0]).name
+                        await self._render(
+                            bin_path, site_dir, staged_output, effective_render_target,
+                            output_dir.name, resolution=rp.resolution_flag, progress_span=(i, len(passes)),
+                            duration_seconds=duration_seconds,
+                        )
+                        staged.append((rp, staged_output))
+                        pass_seconds.append(round(time.monotonic() - t0, 1))
+                # Publish only once every render pass succeeded.
+                for rp, staged_output in staged:
+                    os.replace(staged_output, output_dir / rp.filenames[0])
                     for alias in rp.filenames[1:]:
                         alias_path = output_dir / alias
                         alias_path.unlink(missing_ok=True)
@@ -381,39 +392,39 @@ class HyperframesAdapter(RecorderPort):
                     f"HyperframesAdapter: falta config.json en {output_dir} "
                     "(¿corrió html_generator antes de este stage?)."
                 )
-            site_dir = output_dir / "_hyperframes_site"
-            if site_dir.exists():
-                shutil.rmtree(site_dir)
-            shutil.copytree(composition_dir, site_dir)
-            shutil.copy(bg_source, site_dir / bg_source.name)
-            shutil.copy(audio_path, site_dir / audio_path.name)
+            with render_workspace(output_dir, "hyperframes") as workspace:
+                site_dir = workspace / "site"
+                shutil.copytree(composition_dir, site_dir)
+                shutil.copy(bg_source, site_dir / bg_source.name)
+                shutil.copy(audio_path, site_dir / audio_path.name)
 
-            index_path = site_dir / "index.html"
-            index_path.write_text(
-                index_path.read_text(encoding="utf-8")
-                .replace("{{DURATION}}", str(duration_seconds))
-                .replace("{{BG_SRC}}", bg_source.name)
-                .replace("{{AUDIO_SRC}}", audio_path.name),
-                encoding="utf-8",
-            )
-
-            # Ecualizador: magnitudes precalculadas por frame en vez de
-            # AnalyserNode en vivo (ver hyperframes_audio.py) — mismo problema
-            # que ya resolvió la versión Remotion de este template con
-            # @remotion/media-utils, sin equivalente JS instalado acá.
-            eq_magnitudes = compute_equalizer_magnitudes(audio_path, duration_seconds, fps=_FPS)
-            variables = {
-                "config": json.loads(config_path.read_text(encoding="utf-8")),
-                "eqMagnitudes": eq_magnitudes,
-            }
-            (site_dir / "_hyperframes_variables.json").write_text(json.dumps(variables), encoding="utf-8")
-
-            report_step_progress(0.0)  # waiting for the render slot is not progress
-            async with _get_render_semaphore():
-                await self._render(
-                    bin_path, site_dir, youtube_path, effective_render_target, output_dir.name,
-                    duration_seconds=duration_seconds,
+                index_path = site_dir / "index.html"
+                index_path.write_text(
+                    index_path.read_text(encoding="utf-8")
+                    .replace("{{DURATION}}", str(duration_seconds))
+                    .replace("{{BG_SRC}}", bg_source.name)
+                    .replace("{{AUDIO_SRC}}", audio_path.name),
+                    encoding="utf-8",
                 )
+
+                # Ecualizador: magnitudes precalculadas por frame en vez de
+                # AnalyserNode en vivo (ver hyperframes_audio.py) — mismo problema
+                # que ya resolvió la versión Remotion de este template con
+                # @remotion/media-utils, sin equivalente JS instalado acá.
+                eq_magnitudes = compute_equalizer_magnitudes(audio_path, duration_seconds, fps=_FPS)
+                variables = {
+                    "config": json.loads(config_path.read_text(encoding="utf-8")),
+                    "eqMagnitudes": eq_magnitudes,
+                }
+                (site_dir / "_hyperframes_variables.json").write_text(json.dumps(variables), encoding="utf-8")
+
+                report_step_progress(0.0)  # waiting for the render slot is not progress
+                async with _get_render_semaphore():
+                    await self._render(
+                        bin_path, site_dir, workspace / youtube_path.name, effective_render_target, output_dir.name,
+                        duration_seconds=duration_seconds,
+                    )
+                os.replace(workspace / youtube_path.name, youtube_path)
             stats_extra = {}
 
         logger.info("hyperframes_render_done", output=str(youtube_path))
@@ -565,10 +576,7 @@ class HyperframesAdapter(RecorderPort):
             str(dest_path),
             f"--region={settings.hyperframes_aws_region}",
         ]
-        proc = await asyncio.create_subprocess_exec(
-            *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await proc.communicate()
-        if proc.returncode != 0:
-            err = stderr.decode(errors="replace")[-500:] if stderr else "no stderr"
-            raise RecordingError(f"HyperFrames: fallo al descargar resultado de S3 (exit {proc.returncode}): {err}")
+        result = await run_with_progress(cmd, cwd=Path.cwd(), timeout=None, parse_progress=lambda _: None)
+        if result.returncode != 0:
+            err = result.stderr_tail[-500:] or "no stderr"
+            raise RecordingError(f"HyperFrames: fallo al descargar resultado de S3 (exit {result.returncode}): {err}")

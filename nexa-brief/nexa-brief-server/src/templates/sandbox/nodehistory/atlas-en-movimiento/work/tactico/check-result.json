@@ -1,0 +1,657 @@
+{
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--renderer-process-limit=1",
+    "--num-raster-threads=1"
+  ],
+  "viewport": [
+    1080,
+    1920
+  ],
+  "times": [
+    0,
+    0.18,
+    1.5,
+    3,
+    5.4,
+    7.9,
+    9.5,
+    12.8
+  ],
+  "seekOrder": [
+    9.5,
+    0,
+    5.4,
+    1.5,
+    12.8,
+    3,
+    7.9,
+    0.18
+  ],
+  "hashes": {
+    "0": "f730d47cf42b9c5bfd52e1163e6540cd05cd884f1c1532d9099f439957d5eeda",
+    "0.18": "2fc6bed97bfa9a0f63ea0e90c638f31a0b9a88b6418261d688ac701e37d43256",
+    "1.5": "7e521e1506e7a0260eaa5a7afd892104b79e602b2837430106780dea4d0b01a6",
+    "3": "3d286ce3e5318ea2d6339bb164000858223eb2045b0bc83623f45eb3d949f82c",
+    "5.4": "ed405a0beb8b0d638cb5c487c754e164878dea7948cadd87f283fbac2b7a4708",
+    "7.9": "da66c6ecd5af1898e15c6570a3479827774e82691eaa8f99499f8c7c4cdc788d",
+    "9.5": "af62f10e1c77ee6427547b96b7634e5d680cf2bbbed25563b6ffa70698765a64",
+    "12.8": "c4f558e4b753f83b10e91aaebf5fa9c8709d5bd7beeb6dd776d1e70d8b420c6f"
+  },
+  "stable": {
+    "9.5": true,
+    "0": true,
+    "5.4": true,
+    "1.5": true,
+    "12.8": true,
+    "3": true,
+    "7.9": true,
+    "0.18": true
+  },
+  "consoleErrors": [],
+  "consoleWarnings": [
+    "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+    "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+  ],
+  "httpErrors": [],
+  "external": [],
+  "chromium": "148.0.7778.96",
+  "resourcesDuringSeeks": 0,
+  "missingTactico": [],
+  "missingTiles": [],
+  "stats": {
+    "planned": 193,
+    "loaded": 193,
+    "failed": 0,
+    "unplanned": 0,
+    "loads": 193,
+    "fallbackDraws": 0,
+    "paths": 4274,
+    "blurSamples": 1,
+    "blurMode": "single",
+    "phases": {
+      "tiles": 0.29999999701976776,
+      "territories": 0.10000000149011612,
+      "blur": 0.19999999552965164,
+      "look": 0,
+      "present": 39.80000000447035
+    },
+    "renderMs": 40.399999998509884,
+    "preloadMs": 1573.3999999985099,
+    "cachedFrames": 2
+  },
+  "idleKey": true,
+  "cameraKeys": [
+    {
+      "t": 0,
+      "center": [
+        56.25,
+        26.65
+      ],
+      "zoom": 6.5,
+      "bearing": 0,
+      "pitch": 0
+    },
+    {
+      "t": 1,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.25039748474339,
+        26.649701130066468
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.003067365264541877,
+        "y": -0.002586812806959493,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 1.25,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.25182862682348,
+        26.648615036911238
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.008842550676035899,
+        "y": -0.007554467549519828,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 1.5,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.255092366356024,
+        26.646094594254567
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.017823845394104865,
+        "y": -0.015553356400799245,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 1.75,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.26094180001789,
+        26.641473438595288
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.02946110746506747,
+        "y": -0.026315439817237163,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 2,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.270097987842604,
+        26.63408620274563
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.04432618455894044,
+        "y": -0.04032121506880593,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 2.25,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.28332876020116,
+        26.62327170522701
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.062181059973909214,
+        "y": -0.05700970678534922,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 2.5,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.30144955475387,
+        26.608443289922857
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.08332939526098926,
+        "y": -0.07597722417007624,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 2.75,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.32539032496797,
+        26.5891170373744
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.10877571755827375,
+        "y": -0.09702352984630735,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 3,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.35625909035156,
+        26.564997359247435
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.13906005767125862,
+        "y": -0.11865976397462674,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 3.25,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.395483890412976,
+        26.536161677285616
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.17605671753813112,
+        "y": -0.13857240335202192,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 3.5,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.44511404545284,
+        26.503547530251375
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.22263250351102215,
+        "y": -0.15159903043604483,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 3.75,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.504356073839006,
+        26.469999487841566
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.24176734808634137,
+        "y": -0.14378093731415298,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 4,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.561242128783704,
+        26.44079035936974
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.20969810668702848,
+        "y": -0.11678411338478245,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 4.25,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.609096214655835,
+        26.417318023690072
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.1735178073829502,
+        "y": -0.09371022677839846,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 4.5,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.648234869407986,
+        26.39854401438328
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.13982648166006584,
+        "y": -0.07435900309293864,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 4.75,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.67940920336409,
+        26.383747936361196
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.10999723953091234,
+        "y": -0.05812586087650118,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 5,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.703470936371104,
+        26.372360715846593
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.08325719793447206,
+        "y": -0.044010746474199,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 5.25,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.72131515365706,
+        26.36388943885148
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.060166964038899096,
+        "y": -0.03199288581756665,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 5.5,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.73387180742307,
+        26.35787957404053
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.04119595059250969,
+        "y": -0.022134765848225157,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 5.75,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.74206557442625,
+        26.35391146682316
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.02543083335240226,
+        "y": -0.013842317242440672,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 6,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.7468454996463,
+        26.351566685817634
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.013498907514986058,
+        "y": -0.007438891374889067,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 6.25,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.74915011523211,
+        26.350424100483643
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.005502902752141381,
+        "y": -0.0030580611672936797,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 6.5,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.74989896806218,
+        26.35005052262198
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0.001146755585068604,
+        "y": -0.0006396887839432708,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 6.75,
+      "dur": 0.25,
+      "zoom": 6.5,
+      "center": [
+        56.74999935157081,
+        26.350000324423053
+      ],
+      "bearing": 0,
+      "arc": 0,
+      "ease": "inOut",
+      "drift": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "p": 0,
+        "b": 0
+      },
+      "settle": 0.2,
+      "pitch": 0
+    },
+    {
+      "t": 7.5,
+      "dur": 1.8,
+      "center": [
+        56.75,
+        26.35
+      ],
+      "zoom": 7.3,
+      "bearing": 25,
+      "arc": 0,
+      "ease": "out",
+      "pitch": 0
+    },
+    {
+      "t": 10,
+      "dur": 1.5,
+      "bearing": 0,
+      "center": [
+        56.5,
+        26.50009789659109
+      ],
+      "span": 0.8336409233122052,
+      "zoom": 9.831170687222437,
+      "pitch": 0
+    }
+  ],
+  "sprites": {
+    "rasterAvailable": true,
+    "tintDiffers": true
+  },
+  "landscapeStable": {
+    "12.8": true,
+    "1.5": true,
+    "7.9": true
+  },
+  "missingTilesLandscape": [
+    "gibs-bluemarble/8/173/104",
+    "gibs-bluemarble/8/173/105",
+    "gibs-bluemarble/8/173/106",
+    "gibs-bluemarble/8/174/104",
+    "gibs-bluemarble/8/174/105",
+    "gibs-bluemarble/8/174/106",
+    "gibs-bluemarble/8/174/107",
+    "gibs-bluemarble/8/174/108",
+    "gibs-bluemarble/8/174/109",
+    "gibs-bluemarble/8/174/110",
+    "gibs-bluemarble/8/174/111",
+    "gibs-bluemarble/8/174/112"
+  ],
+  "labelDemo": [
+    "debug.dot",
+    "debug.label"
+  ],
+  "tilesComplete": false,
+  "ok": true
+}

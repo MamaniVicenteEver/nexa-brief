@@ -1,49 +1,52 @@
-import { Timer } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { stageLabel } from "@/features/history/components/stage-labels";
 import { formatDurationShort, type PerformanceStats } from "@/features/stats";
+import styles from "./dashboard.module.css";
 import { EmptyNote, Panel } from "./Panel";
 
 export function PerformancePanel({ performance }: { performance: PerformanceStats }) {
   const t = useTranslations("dashboard.performance");
-  const top = performance.stages.slice(0, 4);
-  const max = Math.max(1, ...top.map((s) => s.avgSeconds));
+  const stages = useTranslations("dashboard.operations.stages");
+  const max = Math.max(1, ...performance.stages.map((s) => s.avgSeconds));
+  const rows = performance.stages.map((stage, index) => (
+    <li key={stage.stage} className={styles.timing}>
+      <span>{stages.has(stage.stage) ? stages(stage.stage) : stage.stage}</span>
+      <span className={styles.bar}>
+        <span
+          style={{
+            width: `${Math.max(0, (stage.avgSeconds / max) * 100)}%`,
+            background: index === 0 ? "var(--color-nb-accent-amber)" : "var(--color-nb-green-dark)",
+          }}
+        />
+      </span>
+      <span className="text-nb-mute tabular-nums">{formatDurationShort(stage.avgSeconds)}</span>
+    </li>
+  ));
   return (
-    <Panel title={t("title")}>
+    <Panel title={t("title")} description={t("description")}>
       {performance.avgGenerationSeconds === null ? (
         <EmptyNote>{t("empty")}</EmptyNote>
       ) : (
         <>
-          <div className="flex items-baseline gap-2">
-            <Timer className="size-4 self-center text-nb-mute" />
-            <span className="font-nb-sans text-[28px] leading-none font-extrabold tracking-[-0.03em] text-nb-ink">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <strong className={styles.bigNumber}>
               {formatDurationShort(performance.avgGenerationSeconds)}
-            </span>
-            <span className="text-[12px] text-nb-mute">
+            </strong>
+            <span className={styles.description}>
               {t("average", { count: performance.sampleSize })}
             </span>
           </div>
-          <ul className="mt-4 flex flex-col gap-2.5">
-            {top.map((stage, index) => (
-              <li
-                key={stage.stage}
-                className="grid grid-cols-[124px_1fr_56px] items-center gap-2.5 text-[12px]"
-              >
-                <span className={index === 0 ? "font-semibold text-nb-ink" : "text-nb-ink-soft"}>
-                  {stageLabel(stage.stage)}
-                </span>
-                <span className="h-1.5 overflow-hidden rounded-full bg-nb-bg-2">
-                  <span
-                    className={`block h-full rounded-full ${index === 0 ? "bg-nb-accent-amber" : "bg-nb-green-dark/60"}`}
-                    style={{ width: `${Math.max(4, (stage.avgSeconds / max) * 100)}%` }}
-                  />
-                </span>
-                <span className="text-right text-nb-mute tabular-nums">
-                  {formatDurationShort(stage.avgSeconds)}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <ul className={styles.timings}>{rows.slice(0, 4)}</ul>
+          {rows.length > 4 && (
+            <details className={styles.disclosure}>
+              <summary>{t("more", { count: rows.length - 4 })}</summary>
+              <ul className={styles.timings}>{rows.slice(4)}</ul>
+            </details>
+          )}
+          {performance.fastestGenerationSeconds !== null && (
+            <footer className={styles.footer}>
+              {t("fastest", { time: formatDurationShort(performance.fastestGenerationSeconds) })}
+            </footer>
+          )}
         </>
       )}
     </Panel>

@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "id": "leo-comparaciones-v1",
+  "name": "Leo · comparaciones verticales",
+  "approved_at": "2026-11-03",
+  "voice": {
+    "voice": "Puck",
+    "models": [
+      "gemini-3.8-flash-tts"
+    ],
+    "base": "Leo: presentador joven adulto, español latinoamericano neutro, cercano, luminoso y simpático. Sonrisa audible sin exageración. Conversación con un amigo curioso, energía moderada, articulación limpia, identidad consistente. No usar tono grave de documental, noticiero ni vendedor. No imitar a ninguna persona real. Ritmo natural aproximadamente 140 palabras por minuto.",
+    "lead": 0.35,
+    "tail": 0.6
+  },
+  "postprocess": {
+    "tempo": 0.9,
+    "pitch_preserved": true
+  },
+  "reference": {
+    "audio": "../../cara-a-cara/assets/song.mp3",
+    "sha256": "27ab37ec70295effc4bc13bb7749ee72ed649f1b9bb15142039c53f4db55f837",
+    "duration_seconds": 60
+  },
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "reference_mobile_width": 393,
+    "duration_range_seconds": [
+      60,
+      240
+    ],
+    "background": "#ffffff",
+    "accent": "#9B7400"
+  },
+  "layout": {
+    "side_mobile_px": 20,
+    "column_gap_mobile_px": 10,
+    "card_height": 576,
+    "card_raise_mobile_px": 15,
+    "card_media_inset": 12,
+    "avatar_width": 700,
+    "avatar_height": 684,
+    "avatar_bottom_mobile_px": 20,
+    "caption_avatar_gap_mobile_px": 10,
+    "card_caption_gap_mobile_px": 10
+  },
+  "typography": {
+    "ui": "DM Sans, sans-serif",
+    "headline": {
+      "font": "Archivo Black, sans-serif",
+      "weight": 400,
+      "max_size": 60.8,
+      "min_size": 38,
+      "size_step": 1.9,
+      "one_line_y": 102,
+      "two_line_y": 66,
+      "line_height": 74.1
+    },
+    "labels": {
+      "font": "Anton, sans-serif",
+      "weight": 400,
+      "max_size": 60,
+      "min_size": 36,
+      "offset_y": 43
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 3,
+      "font": "Anton, sans-serif",
+      "weight": 400,
+      "size": 72,
+      "stroke": false,
+      "color": "#171717"
+    }
+  },
+  "avatar": {
+    "defaultCharacter": "leo",
+    "characters": {
+      "leo": {
+        "src": "../../cara-a-cara/assets/avatar/sheet-original.png",
+        "poses": {
+          "talk": [
+            0.052734,
+            0.003418,
+            0.123535,
+            0.240723
+          ],
+          "point-left": [
+            0.297363,
+            0.003906,
+            0.122559,
+            0.240723
+          ],
+          "point-right": [
+            0.575684,
+            0.003418,
+            0.125977,
+            0.240723
+          ],
+          "think": [
+            0.82959,
+            0.003906,
+            0.09082,
+            0.240234
+          ],
+          "explain": [
+            0.05127,
+            0.25293,
+            0.151855,
+            0.240723
+          ],
+          "surprise": [
+            0.311523,
+            0.252441,
+            0.124023,
+            0.241211
+          ],
+          "celebrate": [
+            0.570801,
+            0.252441,
+            0.106445,
+            0.241211
+          ],
+          "question": [
+            0.791992,
+            0.254395,
+            0.166992,
+            0.239746
+          ]
+        }
+      },
+      "lia": {
+        "src": "../../cara-a-cara/assets/avatar/sheet-original.png",
+        "poses": {
+          "talk": [
+            0.05127,
+            0.504395,
+            0.128418,
+            0.241211
+          ],
+          "point-left": [
+            0.296387,
+            0.504883,
+            0.125488,
+            0.240723
+          ],
+          "point-right": [
+            0.575195,
+            0.505371,
+            0.126953,
+            0.239746
+          ],
+          "think": [
+            0.831055,
+            0.504883,
+            0.093262,
+            0.240234
+          ],
+          "explain": [
+            0.048828,
+            0.754883,
+            0.15625,
+            0.240723
+          ],
+          "surprise": [
+            0.310059,
+            0.754883,
+            0.127441,
+            0.241211
+          ],
+          "celebrate": [
+            0.568359,
+            0.756348,
+            0.102051,
+            0.240234
+          ],
+          "question": [
+            0.789551,
+            0.756836,
+            0.168945,
+            0.239746
+          ]
+        }
+      },
+      "nara": {
+        "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet-2.png",
+        "poses": {
+          "talk": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet-2.png",
+            "crop": [
+              0.166667,
+              0.002392,
+              0.246411,
+              0.478469
+            ]
+          },
+          "point-left": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet.png",
+            "crop": [
+              0.591707,
+              0.002392,
+              0.244817,
+              0.478469
+            ]
+          },
+          "point-right": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet.png",
+            "crop": [
+              0.158692,
+              0.50319,
+              0.251994,
+              0.478469
+            ]
+          },
+          "think": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet.png",
+            "crop": [
+              0.651515,
+              0.507177,
+              0.177033,
+              0.474482
+            ]
+          },
+          "explain": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet.png",
+            "crop": [
+              0.123604,
+              0.002392,
+              0.283892,
+              0.478469
+            ]
+          },
+          "surprise": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet-2.png",
+            "crop": [
+              0.600478,
+              0.002392,
+              0.230463,
+              0.478469
+            ]
+          },
+          "celebrate": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet-2.png",
+            "crop": [
+              0.150718,
+              0.504785,
+              0.200957,
+              0.476874
+            ]
+          },
+          "question": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/sheet-2.png",
+            "crop": [
+              0.566986,
+              0.50319,
+              0.272727,
+              0.478469
+            ]
+          },
+          "esceptica": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/expresiones-01.png",
+            "crop": [
+              0.169059,
+              0.007177,
+              0.225678,
+              0.4689
+            ]
+          },
+          "descubrimiento": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/expresiones-01.png",
+            "crop": [
+              0.631579,
+              0.007177,
+              0.191388,
+              0.4689
+            ]
+          },
+          "preocupada": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/expresiones-01.png",
+            "crop": [
+              0.174641,
+              0.504785,
+              0.179426,
+              0.472887
+            ]
+          },
+          "pulgar-arriba": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nara/expresiones-01.png",
+            "crop": [
+              0.620415,
+              0.505582,
+              0.194577,
+              0.472089
+            ]
+          }
+        }
+      },
+      "nora-vega": {
+        "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-01.png",
+        "poses": {
+          "talk": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-01.png",
+            "crop": [
+              0.10219,
+              0.000784,
+              0.261152,
+              0.487843
+            ]
+          },
+          "point-left": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-01.png",
+            "crop": [
+              0.579886,
+              0.001569,
+              0.268451,
+              0.487059
+            ]
+          },
+          "point-right": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-01.png",
+            "crop": [
+              0.143552,
+              0.507451,
+              0.272506,
+              0.489412
+            ]
+          },
+          "think": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-01.png",
+            "crop": [
+              0.665856,
+              0.511373,
+              0.163017,
+              0.48549
+            ]
+          },
+          "explain": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-02.png",
+            "crop": [
+              0.090024,
+              0.000784,
+              0.336577,
+              0.487461
+            ]
+          },
+          "surprise": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-02.png",
+            "crop": [
+              0.646391,
+              0.000784,
+              0.182482,
+              0.487461
+            ]
+          },
+          "celebrate": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-02.png",
+            "crop": [
+              0.150041,
+              0.507837,
+              0.211679,
+              0.489028
+            ]
+          },
+          "question": {
+            "src": "../../cara-a-cara/assets/avatar/characters/nora-vega/poses-02.png",
+            "crop": [
+              0.585564,
+              0.508621,
+              0.310624,
+              0.489812
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La guerra de los petroleros · caption.transcript</title><link rel="icon" href="data:,"><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#stage,#stage>canvas{position:fixed;inset:0;display:block}</style></head>
+<body><audio id="audio" preload="auto"></audio><div id="stage"></div>
+<script src="../../_proto/proto.js"></script>
+<script type="module">
+import {create} from './engine/tactico/core.js';
+// Proto paints captions after the map's vignette and motion blur. This local
+// entry keeps that composition order without changing Proto or Atlas plano.
+const run=Proto.run;
+Proto.run=options=>{
+  const setup=options.setup,render=options.render;
+  options.setup=async c=>{
+    const response=await fetch('assets/scene.caption-propio.json');
+    if(!response.ok)throw Error(`Escena caption: ${response.status}`);
+    const scene=await response.json(),hud=scene.items.filter(i=>i.type==='caption.transcript').map(i=>({...i,...scene.captions,enabled:scene.captions?.enabled!==false&&i.enabled!==false}));
+    Object.assign(c.scene,scene,{captions:{...scene.captions,enabled:false},items:scene.items.filter(i=>i.type!=='caption.transcript')});
+    await setup(c);
+    c.captionHUD=await create(c,{duration:scene.duration,end:scene.end,defs:scene.defs,items:hud});
+    window.__captionHUD=c.captionHUD;
+  };
+  options.render=(c,t)=>{
+    render(c,t);
+    c.captionHUD.draw(c.g,{W:c.st.W,H:c.st.H,zoom:0,project:()=>({x:0,y:0,k:1})},t);
+  };
+  return run(options);
+};
+await import('./engine/plano/plano.js');
+</script></body></html>

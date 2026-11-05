@@ -1,0 +1,342 @@
+"""Recorte, estados, sombras, manifiesto y hoja. No modifica los renders originales."""
+
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import time
+
+import numpy as np
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageOps
+
+from catalog import SPECS, STATES
+
+HERE = Path(__file__).resolve().parent
+DEFAULT_OUTPUT = HERE.parents[1] / "sprites2"
+
+
+def save_png(im, path):
+    im.save(path, optimize=True, compress_level=9)
+
+
+def seed_for(name):
+    return int.from_bytes(hashlib.sha256(name.encode()).digest()[:8], "little")
+
+
+def noise(rng, size):
+    w,h=size
+    result=np.zeros((h,w),dtype=np.float32)
+    for cells,weight in [(7,.50),(25,.28),(90,.15),(256,.07)]:
+        rows=max(2,round(cells*h/max(w,h))); cols=max(2,round(cells*w/max(w,h)))
+        ar=rng.random((rows,cols),dtype=np.float32)
+        im=Image.fromarray(ar).resize((w,h),Image.Resampling.BICUBIC)
+        result+=np.asarray(im)*weight
+    return result
+
+
+def prepare(raw, record=None):
+    # Recorte simétrico respecto del origen Blender: todos los estados comparten pivote.
+    alpha=raw.getchannel("A")
+    bbox=alpha.point(lambda v: 255 if v>2 else 0).getbbox()
+    if not bbox: raise ValueError("Render vacío")
+    cx,cy=raw.width//2,raw.height//2
+    rx=max(cx-bbox[0],bbox[2]-cx)+10
+    ry=max(cy-bbox[1],bbox[3]-cy)+10
+    if rx>=cx or ry>=cy: raise ValueError("El modelo alcanza el borde del render")
+    rect=(cx-rx,cy-ry,cx+rx,cy+ry)
+    im=raw.crop(rect)
+    factor=1024/max(im.size)
+    new_size=tuple(max(2,round(d*factor/2)*2) for d in im.size)
+    im=im.resize(new_size,Image.Resampling.LANCZOS)
+    # Gris exacto permite colorear identidad sin dominantes de luz o material.
+    color=np.array(im)
+    medical=(color[:,:,0].astype(float)-color[:,:,1]>22)&(color[:,:,0]>color[:,:,1]*1.6)&(color[:,:,3]>0)
+    gray=ImageOps.grayscale(im)
+    im=Image.merge("RGBA",(gray,gray,gray,im.getchannel("A")))
+    a=im.getchannel("A")
+    outer=a.filter(ImageFilter.MaxFilter(5))
+    border=Image.new("RGBA",im.size,(12,15,18,0)); border.putalpha(outer)
+    border.alpha_composite(im)
+    # El borde también es neutro; el matiz azul queda reservado al submarino sumergido.
+    ar=np.array(border); rgb=ar[:,:,:3]
+    g=np.round(rgb.mean(axis=2)).astype(np.uint8)
+    ar[:,:,:3]=g[:,:,None]
+    ar[medical,:3]=color[medical,:3]
+    ar[ar[:,:,3]==0,:3]=0
+    return Image.fromarray(ar),dict(crop=list(rect),resize_factor=new_size[1]/(2*ry),
+                                  pixels_per_world_unit=(record["source_size"][1]/record["ortho_scale"] if record else 1280/112)*new_size[1]/(2*ry),
+                                  silhouette_bounds_px=list(bbox))
+
+
+def damage(im, name, state):
+    ar=np.asarray(im).copy()
+    rgb=ar[:,:,:3].astype(np.float32)
+    a=ar[:,:,3]
+    h,w=a.shape
+    rng=np.random.default_rng(seed_for(name))
+    n=noise(rng,(w,h))
+    yy,xx=np.mgrid[:h,:w]
+    zones=np.zeros((h,w),dtype=np.float32)
+    centers=[(.48,.33,.42,.12),(.54,.63,.38,.13)]
+    if name=="air-bomber-wing": centers=[(.35,.51,.18,.28),(.62,.52,.18,.28)]
+    if name.startswith("air-") and name!="air-bomber-wing": centers=[(.49,.46,.35,.17),(.52,.70,.27,.11)]
+    for cx,cy,rx,ry in centers:
+        dist=((xx/w-cx)/rx)**2+((yy/h-cy)/ry)**2
+        zones=np.maximum(zones,np.clip(1-dist+(n-.5)*1.5,0,1))
+    char=np.clip(zones*2.1,0,1)
+    if state=="burning":
+        soot=(.16+.16*n)[:,:,None]
+        rgb=rgb*(1-char[:,:,None]*.91)+rgb*soot*char[:,:,None]*.91
+        # Brasa y metal al rojo dentro de la silueta: base estática para fx.fire, sin humo horneado.
+        core=np.clip((zones-.72)*4,0,1)*np.clip((n-.50)*5,0,1)
+        fleck=(rng.random((h,w))>.992)&(zones>.65)
+        strength=np.clip(core*.72+fleck*.6,0,.9)[:,:,None]
+        ember=np.stack((200+45*n,47+95*n,8+20*n),axis=2)
+        rgb=rgb*(1-strength)+ember*strength
+    else:
+        rgb*=((.26+.19*n)*(1-char*.50))[:,:,None]
+        # Restos de chapa, hollín y arañazos: conserva la lectura de cubierta destruida.
+        scars=(rng.random((h,w))>.991)&(zones>.05)
+        rgb[scars]=rgb[scars]*.4+np.array([67,63,58])*.6
+    ar[:,:,:3]=np.clip(rgb,0,255).astype(np.uint8)
+    ar[a==0,:3]=0
+    return Image.fromarray(ar)
+
+
+def detected(im):
+    ar=np.array(im)
+    alpha=im.getchannel("A")
+    edge=np.asarray(ImageChops.subtract(alpha,alpha.filter(ImageFilter.MinFilter(9))),dtype=np.float32)/255
+    rgb=ar[:,:,:3].astype(np.float32)
+    rgb=np.clip(rgb*1.13+5,0,255)
+    mix=edge[:,:,None]*.85
+    rgb=rgb*(1-mix)+np.array([72,206,230])*mix
+    ar[:,:,:3]=rgb.astype(np.uint8)
+    ar[ar[:,:,3]==0,:3]=0
+    return Image.fromarray(ar)
+
+
+def submerged(im):
+    ar=np.array(im)
+    g=ar[:,:,0].astype(np.float32)/255
+    ar[:,:,0]=np.clip(22+g*70,0,255)
+    ar[:,:,1]=np.clip(80+g*105,0,255)
+    ar[:,:,2]=np.clip(120+g*118,0,255)
+    ar[:,:,3]=(ar[:,:,3].astype(np.float32)*.56).astype(np.uint8)
+    ar[ar[:,:,3]==0,:3]=0
+    return Image.fromarray(ar)
+
+
+def shadow(im):
+    mask=Image.new("RGBA",im.size,(0,0,0,0))
+    mask.putalpha(im.getchannel("A"))
+    return mask
+
+
+def font(size,bold=False):
+    p="/usr/share/fonts/truetype/dejavu/DejaVuSans"+("-Bold" if bold else "")+".ttf"
+    return ImageFont.truetype(p,size)
+
+
+def legacy_sheet(output, manifest, ocean):
+    bases=manifest["base_sprites"]
+    width=2400; row_h=218; header=286; footer=390
+    height=header+row_h*len(bases)+footer
+    if ocean:
+        tile=Image.open(ocean).convert("RGB").crop((0,0,256,150))
+        tile=ImageOps.colorize(ImageOps.grayscale(tile),"#071624","#153e50")
+        tile=ImageOps.fit(tile,(width,height),Image.Resampling.BICUBIC)
+    else:
+        rng=np.random.default_rng(415)
+        n=noise(rng,(width,height))
+        tile=Image.fromarray(np.stack([8+n*7,22+n*14,34+n*20],axis=2).astype(np.uint8))
+    im=tile.convert("RGBA")
+    overlay=Image.new("RGBA",im.size); d=ImageDraw.Draw(overlay)
+    d.rectangle((0,0,width,header-30),fill=(5,16,25,215))
+    d.text((48,30),"ATLAS  /  BIBLIOTECA TÁCTICA",font=font(20,True),fill="#7cb7c9")
+    d.text((48,70),"Flota y aviación",font=font(54,True),fill="#f4f5f4")
+    d.text((50,148),"Blender · cenital ortográfica · sol arriba izquierda · PNG transparentes · lado largo 1024 px",font=font(22),fill="#b5c9d0")
+    d.text((50,185),"Misma ampliación por fila; proa a la derecha en navales y arriba en aeronaves. Escala física: pie de hoja.",font=font(19),fill="#91aeb9")
+    colx=300; colw=510
+    for j,(s,label) in enumerate(zip(STATES,["NORMAL", "DETECTADO", "INCENDIADO", "CALCINADO"])):
+        color=["#dbe7e9","#62d1e9","#efa95b","#9caaa9"][j]
+        d.text((colx+j*colw+16,238),label,font=font(22,True),fill=color)
+    for i,base in enumerate(bases):
+        y=header+i*row_h; meta=manifest["sprites"][base]
+        d.rectangle((25,y+3,width-25,y+row_h-4),fill=(4,16,25,104 if i%2 else 145))
+        label=base.replace("carrier-","portaaviones\n").replace("warship-","escolta\n").replace("cargo-","mercante\n").replace("air-","aeronave\n").replace("submarine-submerged","submarino\nsumergido")
+        if base=="submarine": label="submarino\nsuperficie"
+        label=label.replace("helicopter-","helicóptero\n").replace("bomber-","bombardero\n").replace("jet-","jet\n")
+        for k,piece in enumerate(label.splitlines()):
+            d.text((48,y+26+k*28),piece,font=font(19,True),fill="#e0e9ea")
+        d.text((48,y+147),f'{meta["length_m"]:g} m · {meta["length_relative"]:.3f}×',font=font(17),fill="#819faa")
+        if meta.get("deck_aircraft") is not None:
+            d.text((48,y+176),f'{meta["deck_aircraft"]} aviones en cubierta',font=font(14),fill="#8aa7b1")
+        for j,s in enumerate(STATES):
+            key=meta["states"].get(s)
+            if not key:
+                d.text((colx+j*colw+26,y+90),"Capa independiente del cuerpo",font=font(15),fill="#64808d")
+                continue
+    # Fondo y texto se componen antes de las imágenes para no velarlas.
+    im=Image.alpha_composite(tile.convert("RGBA"),overlay)
+    for i,base in enumerate(bases):
+        y=header+i*row_h; meta=manifest["sprites"][base]
+        for j,s in enumerate(STATES):
+            key=meta["states"].get(s)
+            if not key: continue
+            asset=Image.open(output/manifest["sprites"][key]["file"]).convert("RGBA")
+            if meta["family"]!="air": asset=asset.rotate(-90,expand=True)
+            asset.thumbnail((450,172),Image.Resampling.LANCZOS)
+            px=colx+j*colw+(colw-asset.width)//2; py=y+(row_h-asset.height)//2
+            sh=shadow(asset); sh.putalpha(sh.getchannel("A").point(lambda a:int(a*.6)).filter(ImageFilter.GaussianBlur(3)))
+            im.alpha_composite(sh,(px+5,py+7)); im.alpha_composite(asset,(px,py))
+    d=ImageDraw.Draw(im)
+    y=height-footer+20
+    d.line((48,y,width-48,y),fill="#385665",width=2)
+    d.text((48,y+22),"ESCALA COMÚN  /  332 m = 310 px",font=font(20,True),fill="#d1e0e4")
+    cursor=70
+    for base in ["carrier-super","warship-destroyer","warship-frigate","cargo-tanker","cargo-container","cargo-bulk","submarine","air-bomber-wing","air-helicopter-body"]:
+        m=manifest["sprites"][base]; a=Image.open(output/m["file"]).convert("RGBA")
+        if m["family"]!="air": a=a.rotate(-90,expand=True)
+        # length_pixels es la proyección longitudinal, no el lado largo de un ala volante.
+        target=max(12,round(310*m["length_relative"]/m["length_pixels"]*max(a.size)))
+        a.thumbnail((target,target),Image.Resampling.LANCZOS)
+        im.alpha_composite(a,(cursor,y+105+(120-a.height)//2))
+        label=base.replace("warship-","").replace("cargo-","").replace("carrier-","").replace("air-","")
+        d.text((cursor,y+245),label,font=font(13),fill="#8daab7")
+        cursor+=max(a.width+50,130)
+    d.text((48,height-40),"Estados horneados: hollín y brasas; humo, llamas, estelas y anillos de detección se animan con efectos separados.",font=font(17),fill="#87a3ad")
+    save_png(im.convert("RGB"),output/"hoja.png")
+
+
+
+def composite_unit(canvas, asset, x, y, opacity=.48, blur=3):
+    sh=shadow(asset)
+    sh.putalpha(sh.getchannel('A').point(lambda a:round(a*opacity)).filter(ImageFilter.GaussianBlur(blur)))
+    canvas.alpha_composite(sh,(x+5,y+7)); canvas.alpha_composite(asset,(x,y))
+
+
+def show_asset(output,meta,box_size):
+    asset=Image.open(output/meta['file']).convert('RGBA')
+    if meta['family']!='air': asset=asset.rotate(-90,expand=True)
+    asset.thumbnail(box_size,Image.Resampling.LANCZOS)
+    return asset
+
+
+def sheet(output,manifest):
+    # Two substrates in every row, every base and every state. No photographic sources.
+    bases=manifest['base_sprites']; width=2360; header=180; row_h=184
+    im=Image.new('RGBA',(width,header+row_h*len(bases)+80),'#081c29')
+    d=ImageDraw.Draw(im)
+    d.text((34,22),'ATLAS / VEHÍCULOS, FLOTA Y AVIACIÓN',font=font(32,True),fill='#f0f2f0')
+    d.text((34,69),'Cenital · luz NO · máscara separada · estados deterministas · sin matrículas ni banderas',font=font(18),fill='#a9c3cb')
+    d.text((280,105),'OCÉANO OSCURO',font=font(18,True),fill='#90c6d4')
+    d.text((1330,105),'DESIERTO CLARO',font=font(18,True),fill='#e8d1a4')
+    labels=['NORMAL','DETECTADO','INCENDIADO','CALCINADO']
+    for j in range(8):
+        x=270+(j//4)*1040+(j%4)*250
+        d.text((x+9,145),labels[j%4],font=font(16,True),fill='#b7c8ce')
+    for i,base in enumerate(bases):
+        y=header+i*row_h; m=manifest['sprites'][base]
+        d.rectangle((20,y+2,259,y+row_h-3),fill='#102733')
+        parts=base.replace('artillery-','artillery-\n').replace('air-helicopter-','air-helicopter-\n').replace('ship-tanker-','ship-tanker-\n').splitlines()
+        for k,label in enumerate(parts): d.text((32,y+19+k*24),label,font=font(16,True),fill='#e7eff0')
+        d.text((32,y+105),f'{m["length_m"]:g} m / {m["length_relative"]:.3f}×',font=font(15),fill='#9eb5bf')
+        d.text((32,y+132),'simbólico' if m['scale_basis']=='symbolic-ground' else '332 m = 1.0',font=font(14),fill='#829eac')
+        for substrate in range(2):
+            x0=270+substrate*1040
+            d.rectangle((x0,y+2,x0+1000,y+row_h-3),fill='#163a49' if substrate==0 else '#d4bd92')
+            for j,state in enumerate(STATES):
+                meta=manifest['sprites'][m['states'][state]]
+                a=show_asset(output,meta,(226,147))
+                composite_unit(im,a,x0+j*250+(250-a.width)//2,y+(row_h-a.height)//2)
+    d.text((34,im.height-50),'Escala gráfica ampliada por fila. Ver hoja2-escalas.png: lados largos exactos de 120, 240 y 480 px.',font=font(18),fill='#a9c3cb')
+    save_png(im.convert('RGB'),output/'hoja2.png')
+
+
+def scale_sheet(output,manifest):
+    width=2280; header=160; row=520
+    bases=manifest['base_sprites']
+    im=Image.new('RGBA',(width,header+row*(len(bases)+3)+60),'#081c29'); d=ImageDraw.Draw(im)
+    d.text((28,22),'TAMAÑO REAL EN PANTALLA / 120 · 240 · 480 PX',font=font(29,True),fill='#eef1ef')
+    d.text((28,67),'Abrir al 100 %. El tamaño indica el lado largo del PNG, con su margen transparente.',font=font(18),fill='#a4bfc9')
+    # Three extra rows prove the main tank's states at all actual sizes.
+    for i,(base,state) in enumerate([(b,'normal') for b in bases]+[('tank-main',s) for s in STATES[1:]]):
+        y=header+i*row; m=manifest['sprites'][manifest['sprites'][base]['states'][state]]
+        for substrate in range(2):
+            x0=substrate*1140
+            d.rectangle((x0+10,y,x0+1130,y+row-5),fill='#163a49' if substrate==0 else '#d4bd92')
+            color='#e7eff0' if substrate==0 else '#332c23'
+            d.text((x0+24,y+10),f'{base} / {state}',font=font(18,True),fill=color)
+            for size,left in [(120,28),(240,198),(480,508)]:
+                a=show_asset(output,m,(size,size))
+                x=x0+left+(size-a.width)//2; yy=y+37+(480-a.height)//2
+                composite_unit(im,a,x,yy,blur=2)
+                d.text((x0+left,y+row-27),f'{size} px',font=font(16),fill=color)
+    save_png(im.convert('RGB'),output/'hoja2-escalas.png')
+
+
+def tint_mask(im):
+    ar=np.array(im); a=ar[:,:,3].copy()
+    red=(ar[:,:,0].astype(float)-ar[:,:,1]>22)&(ar[:,:,0]>ar[:,:,1]*1.6)
+    a[red]=0
+    return Image.fromarray(a)
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--raw',type=Path,default=Path('/tmp/atlas-sprites2/raw-final'))
+    p.add_argument('--output',type=Path,default=DEFAULT_OUTPUT)
+    p.add_argument('--only',nargs='+',choices=list(SPECS))
+    p.add_argument('--preview',action='store_true',help='Review only, not a final delivery')
+    args=p.parse_args(); started=time.perf_counter()
+    args.output.mkdir(parents=True,exist_ok=True)
+    manifest=dict(schema_version=1,base_sprites=[],sprites={},
+        coordinates=dict(anchor='normalized [x,y], center [0.5,0.5]',bow='image-space vector [0,-1]',heading='degrees clockwise from north',
+                         shadow='RGBA black, silhouette in alpha; same dimensions and anchor as file',
+                         length_relative='longitudinal length / 332 m for naval/air/site; ground uses documented symbolic scale',
+                         length_pixels='longitudinal silhouette extent in source PNG',
+                         tint_mask='L zone alpha; medical red excluded, same dimensions as file'),
+        rendering=dict(blender='5.2.3 LTS',engine='Cycles CPU',samples=4 if args.preview else 16,threads=1,orthographic=True,
+                       sun_from=[-75,100,145],long_side_px=1024,preview=args.preview),
+        sources=dict(models='Original procedural geometry extended from the sprites tools snapshot',
+                     sheet_ocean='Original solid petroleum ocean',sheet_desert='Original solid light sand'))
+    timing=[]
+    for name in args.only or SPECS:
+        record=json.loads((args.raw/f'{name}.json').read_text()); timing.append(record)
+        im,geo=prepare(Image.open(args.raw/f'{name}.png').convert('RGBA'),record)
+        props=SPECS[name]; base=name; manifest['base_sprites'].append(base)
+        mapping={state:base if state=='normal' else f'{base}-{state}' for state in STATES}
+        mask_name=f'{base}-shadow.png'; tint_name=f'{base}-tint.png'
+        save_png(shadow(im),args.output/mask_name); save_png(tint_mask(im),args.output/tint_name)
+        bounds=im.getchannel('A').getbbox()
+        for state,identifier in mapping.items():
+            picture=im if state=='normal' else detected(im) if state=='detected' else damage(im,base,state)
+            filename=f'{identifier}.png'; save_png(picture,args.output/filename)
+            m=dict(file=filename,mask=mask_name,anchor=[.5,.5],bow=[0,-1],length_relative=props['relative_length'],
+                   length_m=props['length_m'],length_pixels=bounds[3]-bounds[1],variant=props['variant'],family=props['family'],
+                   state=state,states=mapping,size=list(im.size),base=base,shadow_opacity=.5,
+                   scale_basis=props['scale_basis'],physical_relative_length=props['length_m']/332,tint_mask=tint_name)
+            if props.get('span_m'):
+                m['span_m']=props['span_m']; m['span_pixels']=bounds[2]-bounds[0]
+                m['span_relative']=props['span_m']/332
+            if base=='air-bomber-heavy':
+                m['scale_notes']='Physical length 48/332; span 60/332. Hero option: span .55 -> multiply all dimensions by 3.0433333333.'
+                m['hero_span_relative']=.55; m['hero_scale_multiplier']=.55/(props['span_m']/332)
+            if base.startswith('ambulance'):
+                m['preserve_medical_red']=True
+            if base=='air-helicopter-heavy':
+                m['rotor_mode']='static tandem rotors baked in PNG; animate independent geometry in component if required'
+            manifest['sprites'][identifier]=m
+        print('POST_DONE '+name,flush=True)
+    (args.output/'sprites2.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+    sheet(args.output,manifest); scale_sheet(args.output,manifest)
+    metrics=dict(render_total_seconds=round(sum(x['render_seconds'] for x in timing),3),
+                 model_total_seconds=round(sum(x['model_seconds'] for x in timing),3),
+                 postprocess_seconds=round(time.perf_counter()-started,3),renders=timing)
+    (args.output/'render-times.json').write_text(json.dumps(metrics,indent=2)+'\n')
+    print(json.dumps({k:v for k,v in metrics.items() if k!='renders'}),flush=True)
+
+
+if __name__=='__main__': main()

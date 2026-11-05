@@ -1,0 +1,69 @@
+"""Checks real deliverables; no Blender models are built or modified here."""
+from pathlib import Path
+import json,hashlib,zipfile
+import numpy as np
+from PIL import Image
+HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]/'sprites3';BASE=HERE.parents[2]/'atlas-en-movimiento'
+m=json.loads((ROOT/'sprites3.json').read_text());jobs=json.loads((HERE/'jobs.json').read_text())
+original=json.loads((BASE/'../_tactico/sprites2/sprites2.json').read_text())
+errors=[];measurements=[]
+def check(ok,message):
+ if not ok:errors.append(message)
+check(len(m['base_sprites'])==50,'Expected 50 liveries')
+check(len(m['sprites'])==200,'Expected 200 state entries')
+check(not any(k.startswith(('ship-tug','ship-tanker-vlcc','ship-platform')) for k in m['sprites']),'Civil IDs remain')
+source_hashes=json.loads((HERE/'mcp-source-hashes.json').read_text())
+with zipfile.ZipFile(HERE/'mcp-sources.zip') as z:
+ check(z.testzip() is None,'MCP source archive corrupt')
+ check(len(z.namelist())==50,'MCP source count')
+ for name,digest in source_hashes.items():check(hashlib.sha256(z.read(name)).hexdigest()==digest,'MCP source hash '+name)
+for j in jobs:
+ name=j['id'];s=m['sprites'][name];pic=Image.open(ROOT/s['file']).convert('RGBA');a=np.array(pic)
+ check(s['length_relative']==original['sprites'][j['source']]['length_relative'],name+' changed relative length')
+ check(s['anchor']==original['sprites'][j['source']]['anchor'] and s['bow']==original['sprites'][j['source']]['bow'],name+' changed anchor/bow')
+ execution=json.loads((HERE/'evidence'/(name+'-execution.json')).read_text())
+ check(execution['threads'] in [1,2],name+' thread limit')
+ check(execution['threads']==1 or execution['load_before_render']<2,name+' two threads above allowed load')
+ check(max(pic.size)==1024,name+' not 1024')
+ check(a[:,:,3].max()==255,name+' empty')
+ check(not a[0,:,3].any() and not a[-1,:,3].any() and not a[:,0,3].any() and not a[:,-1,3].any(),name+' clipped')
+ check(not a[:,:,:3][a[:,:,3]==0].any(),name+' transparent RGB')
+ alpha=a[:,:,3];inside=alpha>240;rgb=a[:,:,:3][inside];mean=rgb.mean(axis=0)
+ check(mean.mean()<185,name+' too pale')
+ if j['land'] or name in ['air-transport-jet','air-helicopter-heavy']:
+  check(mean[0]>mean[2]*1.13 and mean[1]>mean[2]*1.10,name+' lacks military chroma')
+ if j['livery']=='camo':
+  for node_mat in json.loads((HERE/'evidence'/(name+'-qa.json')).read_text())['materials'].values():
+   check(node_mat['principled'],name+' missing Principled')
+ for state,key in s['states'].items():
+  r=m['sprites'][key];p=np.array(Image.open(ROOT/r['file']).convert('RGBA'))
+  check(p.shape==a.shape and np.array_equal(p[:,:,3],alpha),key+' misaligned alpha')
+  check(state=='normal' or not np.array_equal(p,a),key+' identical state')
+  check(r['anchor']==[.5,.5] and r['bow']==[0,-1],key+' anchor/bow')
+  check(r['length_relative']==s['length_relative'] and r['variant']==s['variant'],key+' metadata')
+  check((ROOT/r['model_file']).is_file(),key+' missing blend')
+ for field in ['mask','tint_mask']:
+  p=Image.open(ROOT/s[field]);check(p.size==pic.size,name+' '+field+' size')
+ check(np.array(Image.open(ROOT/s['tint_mask'])).max()==0,name+' paint may be recolored')
+ q=json.loads((HERE/'evidence'/(name+'-qa.json')).read_text())
+ for k in ['boundary_edges','nonmanifold_edges','loose_vertices','degenerate_faces','duplicate_faces','nonunit_scales','negative_volumes','bad_normals']:check(q[k]==0,name+' QA '+k)
+ # Border contrast is measured against both standard review backgrounds.
+ edge=(alpha>240)&(np.asarray(pic.getchannel('A').filter(__import__('PIL.ImageFilter',fromlist=['MinFilter']).MinFilter(7)))<30)
+ ergb=a[:,:,:3][edge];eluma=ergb.mean(axis=1) if len(ergb) else np.array([0.])
+ measurements.append(dict(id=name,mean_rgb=mean.round(2).tolist(),opaque_pixels=int(inside.sum()),edge_pixels=int(edge.sum()),mean_edge_luma=round(float(eluma.mean()),2)))
+for base in [j['base'] for j in jobs if j['livery']=='olive']:
+ colors=[]
+ for suffix in ['','-desert','-camo']:
+  p=np.array(Image.open(ROOT/(base+suffix+'.png')).convert('RGBA'));colors.append(p)
+ check(np.array_equal(colors[0][:,:,3],colors[1][:,:,3]) and np.array_equal(colors[0][:,:,3],colors[2][:,:,3]),base+' liveries changed silhouette')
+ check(not np.array_equal(colors[0],colors[1]) and not np.array_equal(colors[0],colors[2]),base+' liveries identical')
+for n in ['ambulance-cross','ambulance-crescent']:
+ for suffix in ['','-desert','-camo']:
+  a=np.array(Image.open(ROOT/(n+suffix+'.png')).convert('RGBA'));red=(a[:,:,0]>a[:,:,1]*1.6)&(a[:,:,0]>90)&(a[:,:,1]<110)&(a[:,:,3]>240)
+  check(red.sum()>150,n+suffix+' red emblem absent')
+for path,digest in json.loads((HERE/'source-hashes.json').read_text()).items():check(hashlib.sha256((BASE/path).read_bytes()).hexdigest()==digest,'Original modified: '+path)
+for n in ['hoja3.png','hoja3-escalas.png']:check((ROOT/n).is_file(),n+' missing')
+total=sum(p.stat().st_size for folder in [ROOT,HERE] for p in folder.rglob('*') if p.is_file())
+check(total<=40*1024**2,'Combined delivery exceeds 40 MiB')
+result=dict(status='PASS' if not errors else 'FAIL',errors=errors,base_sprites=len(m['base_sprites']),states=len(m['sprites']),combined_bytes=total,combined_megabytes=round(total/1024**2,3),measurements=measurements)
+(ROOT/'validation.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items() if k!='measurements'},indent=2));raise SystemExit(bool(errors))

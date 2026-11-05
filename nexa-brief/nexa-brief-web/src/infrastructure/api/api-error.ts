@@ -1,6 +1,6 @@
 export interface FieldError {
-  path: string;
-  message: string;
+	path: string;
+	message: string;
 }
 
 /**
@@ -8,48 +8,75 @@ export interface FieldError {
  * `{"detail": "<string>"}` (400/401/500) y `{"detail": [{"loc","msg",...}]}` (422).
  */
 export class ApiError extends Error {
-  readonly status: number;
-  readonly fieldErrors: FieldError[];
+	readonly status: number;
+	readonly fieldErrors: FieldError[];
+	readonly code?: string;
 
-  constructor(status: number, message: string, fieldErrors: FieldError[] = []) {
-    super(message);
-    this.name = "ApiError";
-    this.status = status;
-    this.fieldErrors = fieldErrors;
-  }
+	constructor(
+		status: number,
+		message: string,
+		fieldErrors: FieldError[] = [],
+		code?: string,
+	) {
+		super(message);
+		this.name = "ApiError";
+		this.status = status;
+		this.fieldErrors = fieldErrors;
+		this.code = code;
+	}
 }
 
 interface PydanticValidationIssue {
-  loc: (string | number)[];
-  msg: string;
+	loc: (string | number)[];
+	msg: string;
 }
 
-function isPydanticValidationIssues(value: unknown): value is PydanticValidationIssue[] {
-  return (
-    Array.isArray(value) &&
-    value.every((item) => item && typeof item === "object" && "loc" in item && "msg" in item)
-  );
+function isPydanticValidationIssues(
+	value: unknown,
+): value is PydanticValidationIssue[] {
+	return (
+		Array.isArray(value) &&
+		value.every(
+			(item) =>
+				item && typeof item === "object" && "loc" in item && "msg" in item,
+		)
+	);
 }
 
 export function parseErrorBody(status: number, body: unknown): ApiError {
-  const detail =
-    body && typeof body === "object" ? (body as { detail?: unknown }).detail : undefined;
+	const detail =
+		body && typeof body === "object"
+			? (body as { detail?: unknown }).detail
+			: undefined;
 
-  if (status === 422 && isPydanticValidationIssues(detail)) {
-    const fieldErrors: FieldError[] = detail.map((issue) => ({
-      path: issue.loc.slice(1).join("."),
-      message: issue.msg,
-    }));
-    return new ApiError(
-      status,
-      fieldErrors[0]?.message ?? "Revisa los campos marcados",
-      fieldErrors,
-    );
-  }
+	if (status === 422 && isPydanticValidationIssues(detail)) {
+		const fieldErrors: FieldError[] = detail.map((issue) => ({
+			path: issue.loc.slice(1).join("."),
+			message: issue.msg,
+		}));
+		return new ApiError(
+			status,
+			fieldErrors[0]?.message ?? "Revisa los campos marcados",
+			fieldErrors,
+		);
+	}
 
-  if (typeof detail === "string") {
-    return new ApiError(status, detail);
-  }
+	if (typeof detail === "string") {
+		return new ApiError(status, detail);
+	}
 
-  return new ApiError(status, "Error de conexión con el servidor");
+	if (detail && typeof detail === "object" && !Array.isArray(detail)) {
+		const error = detail as { message?: unknown; code?: unknown };
+		if (typeof error.message === "string")
+			return new ApiError(
+				status,
+				error.message,
+				[],
+				typeof error.code === "string" ? error.code : undefined,
+			);
+	}
+	return new ApiError(
+		status,
+		`El servidor rechazó la solicitud (HTTP ${status})`,
+	);
 }

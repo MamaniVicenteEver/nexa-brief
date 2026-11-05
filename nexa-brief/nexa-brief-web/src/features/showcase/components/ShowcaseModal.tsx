@@ -1,17 +1,18 @@
 "use client";
 
-import { Copy, Maximize2, Menu, X } from "lucide-react";
+import { Copy, Maximize2, Menu } from "lucide-react";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/shared/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/shared/components/ui/dialog";
 import type { ShowcaseRepository } from "../api/showcase-repository";
 import { useStagePlayer } from "../hooks/useStagePlayer";
 import { copyText } from "../lib/clipboard";
+import { isolatedPosterUrl } from "../lib/kit-urls";
 import type { CatalogContext, FormatId, Item } from "../types";
 import { ComponentDetails } from "./ComponentDetails";
 import { IconAction } from "./IconAction";
 import { StagePlayer, StagePlayerControls } from "./StagePlayer";
+import { ShowcaseDialog, ShowcaseModalToolbar } from "./ShowcaseDialog";
 
 type ModalProps = {
   item: Item | null;
@@ -30,14 +31,19 @@ function ModalContent({
   format,
   onFormat,
   onClose,
-}: Omit<ModalProps, "item"> & { item: Item }) {
+  sidebarOpen,
+  setSidebarOpen,
+}: Omit<ModalProps, "item"> & {
+  item: Item;
+  sidebarOpen: boolean;
+  setSidebarOpen(value: boolean): void;
+}) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const { status, component, playPause, replay, retry, frameKey, time, totalTime, seek } =
-    useStagePlayer(frameRef, item, onClose);
+    useStagePlayer(frameRef, item, onClose, item.designId === "imperio");
   const [copyStatus, setCopyStatus] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   let src: string | null = null;
   let error = "";
   try {
@@ -53,63 +59,35 @@ function ModalContent({
   const design = context.designs.find((entry) => entry.id === item.designId);
   return (
     <div ref={containerRef} className="flex min-w-0 flex-col gap-2">
-      <div className="flex flex-wrap items-center justify-between gap-3 px-2 pt-1 pr-10">
-        <div className="flex min-w-0 items-center gap-2">
-          {(
-            [
-              ["9x16", "Móvil (9:16)"],
-              ["16x9", "Desktop (16:9)"],
-            ] as const
-          ).map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={format === value}
-              onClick={() => onFormat(value)}
-              className={cn(
-                "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
-                format === value
-                  ? "bg-white text-black"
-                  : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white",
-              )}
-            >
-              {label}
-            </button>
-          ))}
-          <span className="ml-2 hidden min-w-0 truncate text-[13px] font-semibold text-white/85 md:inline">
-            {component.name}
-          </span>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <StagePlayerControls
-            status={status}
-            onPlayPause={playPause}
-            onReplay={replay}
-            onRetry={retry}
-          />
-          <IconAction
-            label="Pantalla completa"
-            className="size-7 bg-white/10 text-white/85 hover:bg-white/20"
-            onClick={() => {
-              if (document.fullscreenElement) void document.exitFullscreen();
-              else void stageRef.current?.requestFullscreen?.();
-            }}
-          >
-            <Maximize2 />
-          </IconAction>
-          <IconAction
-            label="Información del componente"
-            aria-expanded={sidebarOpen}
-            onClick={() => setSidebarOpen((value) => !value)}
-            className={cn(
-              "size-7",
-              sidebarOpen ? "bg-white text-black" : "bg-white/10 text-white/85 hover:bg-white/20",
-            )}
-          >
-            <Menu />
-          </IconAction>
-        </div>
-      </div>
+      <ShowcaseModalToolbar title={component.name} format={format} onFormat={onFormat}>
+        <StagePlayerControls
+          status={status}
+          onPlayPause={playPause}
+          onReplay={replay}
+          onRetry={retry}
+        />
+        <IconAction
+          label="Pantalla completa"
+          className="size-7 bg-white/10 text-white/85 hover:bg-white/20"
+          onClick={() => {
+            if (document.fullscreenElement) void document.exitFullscreen();
+            else void stageRef.current?.requestFullscreen?.();
+          }}
+        >
+          <Maximize2 />
+        </IconAction>
+        <IconAction
+          label="Información del componente"
+          aria-expanded={sidebarOpen}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className={cn(
+            "size-7",
+            sidebarOpen ? "bg-white text-black" : "bg-white/10 text-white/85 hover:bg-white/20",
+          )}
+        >
+          <Menu />
+        </IconAction>
+      </ShowcaseModalToolbar>
       <div className="flex flex-col gap-2 md:flex-row md:items-stretch">
         <section
           ref={stageRef}
@@ -127,6 +105,7 @@ function ModalContent({
               time={time}
               totalTime={totalTime}
               onSeek={seek}
+              poster={isolatedPosterUrl(item.designId, item.component.name, format, item.source)}
             />
           ) : (
             <p role="alert">{error}</p>
@@ -136,7 +115,7 @@ function ModalContent({
           hidden={!sidebarOpen}
           aria-label="Información del componente"
           className={cn(
-            "relative max-h-[70vh] min-h-80 w-full flex-col overflow-hidden rounded-[18px] bg-nb-surface text-nb-ink md:max-h-[calc(96vh-4.5rem)] md:w-[22%] md:min-w-75 md:shrink-0",
+            "relative max-h-[70vh] min-h-80 w-full flex-col overflow-hidden rounded-[18px] bg-nb-surface text-nb-ink md:max-h-[calc(96vh-4.5rem)] md:w-[18.75rem] md:min-w-0 md:shrink-0",
             sidebarOpen ? "flex" : "hidden",
           )}
         >
@@ -151,6 +130,12 @@ function ModalContent({
             </div>
             <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-4">
               <ComponentDetails component={component} source={item.source} mode="modal" />
+              {item.designId === "imperio" && (
+                <p className="text-xs text-muted-foreground">
+                  Vista aislada, sin el fondo del mapa. En los videos se usan las coordenadas y los
+                  parámetros JSON para colocar estas animaciones sobre el mapa.
+                </p>
+              )}
               <Button
                 type="button"
                 variant="outline"
@@ -175,55 +160,30 @@ function ModalContent({
 }
 
 export function ShowcaseModal({ item, context, repo, format, onFormat, onClose }: ModalProps) {
-  const closeRef = useRef<HTMLButtonElement>(null);
-  const previousFocus = useRef<HTMLElement | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   return (
-    <Dialog
+    <ShowcaseDialog
       open={item !== null}
-      onOpenChange={(open) => {
-        if (!open) onClose();
+      title={item?.component.name ?? "Componente"}
+      sidebarOpen={sidebarOpen}
+      onClose={() => {
+        setSidebarOpen(true);
+        onClose();
       }}
     >
       {item && (
-        <DialogContent
-          showCloseButton={false}
-          aria-describedby={undefined}
-          className="w-[min(98vw,1760px)] !max-w-[min(98vw,1760px)] max-h-[96vh] gap-2 overflow-y-auto rounded-[24px] bg-black p-2 text-white ring-white/10 md:overflow-hidden"
-          onOpenAutoFocus={(event) => {
-            event.preventDefault();
-            previousFocus.current =
-              document.activeElement instanceof HTMLElement ? document.activeElement : null;
-            closeRef.current?.focus();
-          }}
-          onCloseAutoFocus={(event) => {
-            event.preventDefault();
-            if (previousFocus.current?.isConnected) previousFocus.current.focus();
-            previousFocus.current = null;
-          }}
-        >
-          <DialogTitle className="sr-only">{item.component.name}</DialogTitle>
-          <DialogClose asChild>
-            <button
-              ref={closeRef}
-              type="button"
-              aria-label="Cerrar"
-              title="Cerrar"
-              className="absolute right-2 top-2 z-10 inline-flex size-8 items-center justify-center rounded-full text-white/85 hover:bg-white/20"
-            >
-              <X className="size-4" />
-            </button>
-          </DialogClose>
-          <ModalContent
-            key={item.key}
-            item={item}
-            context={context}
-            repo={repo}
-            format={format}
-            onFormat={onFormat}
-            onClose={onClose}
-          />
-        </DialogContent>
+        <ModalContent
+          key={item.key}
+          item={item}
+          context={context}
+          repo={repo}
+          format={format}
+          onFormat={onFormat}
+          onClose={onClose}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+        />
       )}
-    </Dialog>
+    </ShowcaseDialog>
   );
 }

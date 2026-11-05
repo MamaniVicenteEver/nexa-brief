@@ -1,0 +1,187 @@
+{
+  "name": "ground.convoy",
+  "family": "ground",
+  "description": "Columna mixta que recorre una curva por distancia con separación y bandera líder. Úsala para movimientos y estados de fuerzas terrestres.",
+  "duration": 8.6,
+  "loop": true,
+  "layer": 30,
+  "states": [
+    "normal",
+    "hit",
+    "burning",
+    "destroyed"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.2,
+      "max": 4,
+      "step": 0.05,
+      "range": {
+        "min": 0.2,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "length": {
+      "type": "number",
+      "default": 110,
+      "min": 40,
+      "max": 360,
+      "step": 2,
+      "range": {
+        "min": 40,
+        "max": 360
+      },
+      "description": "Longitud visual del objeto en píxeles de diseño."
+    },
+    "flag": {
+      "type": "string",
+      "default": "IQ",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "dust": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la nube de polvo asociada al movimiento."
+    },
+    "tracks": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa las huellas y marcas de movimiento."
+    },
+    "particles": {
+      "type": "number",
+      "default": 14,
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "range": {
+        "min": 0,
+        "max": 48
+      },
+      "description": "Número de partículas del efecto."
+    },
+    "seed": {
+      "default": 1,
+      "type": "number|string",
+      "range": null,
+      "description": "Semilla para que las partículas y variaciones sean reproducibles."
+    },
+    "count": {
+      "type": "number",
+      "default": 6,
+      "min": 1,
+      "max": 40,
+      "step": 1,
+      "range": {
+        "min": 1,
+        "max": 40
+      },
+      "description": "Cantidad de elementos."
+    },
+    "spacing": {
+      "type": "number",
+      "default": 110,
+      "min": 30,
+      "max": 300,
+      "step": 2,
+      "range": {
+        "min": 30,
+        "max": 300
+      },
+      "description": "Separación entre elementos en píxeles de diseño."
+    },
+    "vehicles": {
+      "type": "array",
+      "default": [
+        "tank:main",
+        "apc",
+        "truck:cargo",
+        "truck:fuel",
+        "jeep",
+        "ambulance:cross"
+      ],
+      "range": null,
+      "description": "Lista de vehículos de la formación."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "ground-convoy",
+    "t": 0,
+    "type": "ground.convoy",
+    "at": [
+      48.4,
+      31.1
+    ],
+    "dur": 8,
+    "fade": 0.6,
+    "flag": "IQ",
+    "path": {
+      "via": [
+        [
+          48.3,
+          31
+        ],
+        [
+          48.42,
+          31.13
+        ],
+        [
+          48.65,
+          31.22
+        ]
+      ],
+      "t": 0.6,
+      "dur": 6.5,
+      "curve": "smooth",
+      "ease": "inOut"
+    },
+    "count": 6,
+    "length": 92,
+    "spacing": 98,
+    "label": "",
+    "seed": 17
+  },
+  "usedBy": [
+    "work/tactico/items-terrestre.json",
+    "work/tactico/scene-terrestre.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/ground.convoy.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

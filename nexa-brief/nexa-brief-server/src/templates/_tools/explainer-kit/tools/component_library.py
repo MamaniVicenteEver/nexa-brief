@@ -40,8 +40,15 @@ def _entries(video):
             sheet.parent.mkdir(parents=True, exist_ok=True)
             if not sheet.is_file() or hashlib.sha256(sheet.read_bytes()).digest() != hashlib.sha256(original_sheet.read_bytes()).digest():
                 shutil.copyfile(original_sheet, sheet)
+        previews = {}
+        for orient in ("9x16", "16x9"):
+            image = video / "assets/components/previews" / (name.replace(".", "-") + "-" + orient + ".jpg")
+            if image.is_file():
+                previews["preview_" + orient] = str(image.relative_to(TEMPLATES))
         entries.append({
             "name": name, "summary": component.get("summary", ""), "params": component.get("params", {}),
+            "layer": component.get("layer", "main"), "tags": component.get("tags", []),
+            "example": component.get("example"), **previews,
             "video": str(video.relative_to(TEMPLATES)), "source": str(source.relative_to(TEMPLATES)) if source and source.exists() else None,
             "sheet": str(sheet.relative_to(TEMPLATES)), "sheet_exists": sheet.is_file(),
             "source_sheet": str(original_sheet.relative_to(TEMPLATES)),

@@ -1,0 +1,134 @@
+"""Copiar a /tmp y ejecutar. Una sola página Chromium; no genera video."""
+import sys
+sys.dont_write_bytecode=True
+import base64, functools, hashlib, io, json, signal, threading
+from pathlib import Path
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import urlparse, unquote
+from PIL import Image, ImageDraw
+from playwright.sync_api import sync_playwright
+PROJECT=Path.cwd()
+OUT=PROJECT/'work/tactico'
+SOURCE=Path('/home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/src/templates')
+FLAGS=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--num-raster-threads=1','--renderer-process-limit=1','--disable-dev-shm-usage','--disable-accelerated-2d-canvas']
+report={'flags':FLAGS,'errors':[],'httpErrors':[],'externalRequests':[],'readonlyFallbacks':[],'shots':[],'determinism':[],'benchmarks':[]}
+class Handler(SimpleHTTPRequestHandler):
+    def translate_path(self,path):
+        original=super().translate_path(path)
+        # The isolated template fixture lacks the vendor font that labels.js
+        # imports. Resolve that existing shared dependency read-only, never
+        # change a shared file or substitute our new component during QA.
+        if not Path(original).exists() and unquote(urlparse(path).path)=='/_tools/explainer-kit/vendor/fonts/Archivo-900.ttf':
+            fallback=SOURCE/'_tools/explainer-kit/vendor/fonts/Archivo-900.ttf'
+            if fallback.exists():
+                report['readonlyFallbacks'].append(str(fallback));return str(fallback)
+        return original
+    def log_message(self,fmt,*args):
+        if len(args)>1 and str(args[1]).isdigit() and int(args[1])>=400:report['httpErrors'].append(str(args))
+server=ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Handler,directory=str(PROJECT.parents[2])))
+threading.Thread(target=server.serve_forever,daemon=True).start()
+root=f'http://127.0.0.1:{server.server_port}'
+base=root+'/sandbox/nodehistory/atlas-en-movimiento/work/tactico/'
+SHOTS=OUT/'shots/intro';SHOTS.mkdir(parents=True,exist_ok=True)
+(OUT/'sheets').mkdir(exist_ok=True)
+def measure(page,t,png=False):
+    print('Muestra',t,'png' if png else 'hash',flush=True)
+    return page.evaluate('''async ({t,png})=>{__intro.draw(t);const cv=__intro.canvas,raw=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;return {hash:Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',raw)),v=>v.toString(16).padStart(2,'0')).join(''),png:png?cv.toDataURL().split(',')[1]:null,key:__intro.runtime.key(t)};}''',{'t':t,'png':png})
+def snap(page,name,t):
+    frame=measure(page,t,True);path=SHOTS/(name+'.png');path.write_bytes(base64.b64decode(frame.pop('png')))
+    report['shots'].append({'name':name,'t':t,'file':str(path.relative_to(PROJECT)),**frame});return path,frame['hash']
+def sheet(rows,path):
+    widths=[270 if orient=='9x16' else 480 for _,orient,_ in rows]
+    heights=[480 if orient=='9x16' else 270 for _,orient,_ in rows]
+    canvas=Image.new('RGB',(1440,sum(h+32 for h in heights)),'#081e2c');d=ImageDraw.Draw(canvas);y=0
+    for (label,orient,shots),w,h in zip(rows,widths,heights):
+        for n,(shot_path,t) in enumerate(shots):
+            x=n*480+(480-w)//2;d.text((n*480+10,y+8),f'{label} / {orient} / {t:.2f}s',fill='#f6edb4')
+            with Image.open(shot_path) as im:canvas.paste(im.convert('RGB').resize((w,h),Image.Resampling.LANCZOS),(x,y+32))
+        y+=h+32
+    canvas.save(path,quality=94)
+BENCH='''async ({type,style,t})=>{
+ const src=__intro.scene.items.find(i=>i.type===type),scene=structuredClone(__intro.scene);
+ scene.items=Array.from({length:20},(_,n)=>({...src,id:'bench-'+n,...(style?{style}:{})}));
+ const runtime=await __intro.create(__intro.c,scene),canvas=new OffscreenCanvas(1080,1920),g=canvas.getContext('2d',{willReadFrequently:true});
+ const view=__intro.view;const raw=[],empty=[],submit=[];
+ const clear=()=>{g.clearRect(0,0,1080,1920);g.getImageData(0,0,1080,1920);};
+ for(let n=0;n<40;n++){
+   const time=t+.01*Math.sin(n*.7);let start=performance.now();clear();const base=performance.now()-start;
+   g.clearRect(0,0,1080,1920);start=performance.now();runtime.draw(g,view,time);const command=performance.now()-start;
+   g.getImageData(0,0,1080,1920);const elapsed=performance.now()-start;
+   if(n>=10){raw.push(elapsed);empty.push(base);submit.push(command);}
+   await new Promise(requestAnimationFrame);
+ }
+ const stats=a=>{a.sort((a,b)=>a-b);return {mean:a.reduce((a,b)=>a+b,0)/a.length,p95:a[Math.ceil(a.length*.95)-1],max:a.at(-1)};};
+ const totalMs=stats(raw),baselineMs=stats(empty);return {type,style,t,instances:20,frames:raw.length,totalMs,baselineMs,submitMs:stats(submit),incrementalMs:totalMs.mean-baselineMs.mean};
+}'''
+try:
+    print('Playwright',flush=True)
+    with sync_playwright() as p:
+        browser=p.chromium.launch(executable_path='/home/university/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome',headless=True,args=FLAGS)
+        report['chromium']=browser.version;print('Chromium listo',flush=True)
+        page=browser.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1)
+        page.on('pageerror',lambda e:report['errors'].append(str(e)))
+        def route(r):
+            if urlparse(r.request.url).hostname in ('127.0.0.1',None):r.continue_()
+            else:report['externalRequests'].append(r.request.url);r.abort()
+        page.route('**/*',route)
+        print('Abriendo demo',flush=True)
+        page.goto(base+'intro.new.html?shot=1',wait_until='domcontentloaded')
+        print('DOM listo',flush=True)
+        page.wait_for_function('window.__intro?.ready || window.__introError',timeout=60000)
+        if page.evaluate('window.__introError||null'):raise RuntimeError(page.evaluate('__introError'))
+        print('Mapa y runtime listos',flush=True)
+        rows=[];variants=[]
+        for orient,size in [('9x16',{'width':1080,'height':1920}),('16x9',{'width':1920,'height':1080})]:
+            print('Formato',orient,flush=True)
+            page.set_viewport_size(size);page.evaluate('__intro.resize()')
+            for style in ['focus','trace','meridian']:
+                print('Variante',style,flush=True)
+                page.evaluate('style=>__intro.setStyle(style)',style);shots=[];hashes={}
+                for phase,t in [('entrada',.55),('pleno',2.4),('salida',5.78)]:
+                    path,digest=snap(page,f'intro-{style}-{orient}-{phase}',t);hashes[t]=digest;shots.append((path,t))
+                for t in [5.78,.55,2.4]:assert measure(page,t)['hash']==hashes[t],f'Seek inestable {orient} {style} {t}'
+                report['determinism'].append({'component':'intro.title','style':style,'orient':orient,'reverseSeek':True})
+                variants.append((style,orient,shots))
+                if style=='focus':rows.append(('intro.title · focus',orient,shots))
+            shots=[];hashes={}
+            for phase,t in [('entrada',12.55),('pleno',19.0),('salida',19.78)]:
+                print('Outro',orient,phase,flush=True)
+                path,digest=snap(page,f'outro-{orient}-{phase}',t);shots.append((path,t));hashes[t]=digest
+            for t in [19.78,12.55,19.0]:
+                print('Seek outro',orient,t,flush=True)
+                assert measure(page,t)['hash']==hashes[t],f'Seek inestable outro {orient} {t}'
+            rows.append(('outro.channel',orient,shots));report['determinism'].append({'component':'outro.channel','orient':orient,'reverseSeek':True})
+            print('Etapas cierre',orient,flush=True)
+            (OUT/'intro-check.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+            for stage,t in [('gracias',12.5),('canal',13.3),('me-gusta',14.4),('suscribirse-campana',15.9),('apoyo',17.3),('handle',18.7)]:snap(page,f'outro-{orient}-etapa-{stage}',t)
+            report.setdefault('missing',{})[orient]=page.evaluate('__intro.missing()')
+        print('Hojas',flush=True)
+        sheet(rows,OUT/'sheets/intro-cierre.jpg');sheet(variants,OUT/'sheets/intro-variantes.jpg')
+        print('Limites y medicion',flush=True)
+        # Timing boundaries must leave no HUD pixels or timeline extension.
+        page.set_viewport_size({'width':1080,'height':1920});page.evaluate('__intro.resize()')
+        report['boundaries']=page.evaluate('''()=>({introEnd:__intro.runtime.key(6),beforeOutro:__intro.runtime.key(11.999),end:__intro.runtime.key(20),duration:__intro.runtime.duration})''')
+        for style,t in [('focus',.55),('focus',2.4),('trace',.55),('meridian',.55)]:
+            print('Midiendo',t,flush=True)
+            result=page.evaluate(BENCH,{'type':'intro.title','style':style,'t':t});report['benchmarks'].append(result);(OUT/'intro-check.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print('20 instancias',style,t,round(result['incrementalMs'],3),'ms',flush=True)
+        for t in [15.9,19.0]:
+            print('Midiendo',t,flush=True)
+            result=page.evaluate(BENCH,{'type':'outro.channel','style':None,'t':t});report['benchmarks'].append(result);(OUT/'intro-check.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print('20 instancias outro',t,round(result['incrementalMs'],3),'ms',flush=True)
+        report['fonts']=page.evaluate('({title:document.fonts.check("40px AtlasIntroTitle"),ui:document.fonts.check("40px AtlasIntroUI")})')
+        # Real Proto/Atlas integration, using the same page, after standalone QA.
+        page.goto(base+'demo.new.html?items=scene-intro.json&headless=1',wait_until='domcontentloaded')
+        page.wait_for_function('window.__tacticoContext?.tactico && window.__promo?.seek',timeout=60000)
+        page.evaluate('__atlas.ready');page.evaluate('__promo.seek(2.4)')
+        report['sharedGallery']=page.evaluate('({items:__tacticoContext.scene.items.length,total:__promo.total,missing:__tactico.missing(),tiles:__atlas.missingTiles(),outroAt:String(__tacticoContext.outroAt),intro:__tacticoContext.intro,captions:__tacticoContext.scene.captions})')
+        for t in [2.4,19.0]:
+            page.evaluate('t=>__promo.seek(t)',t)
+            (SHOTS/f'galeria-{t}.png').write_bytes(base64.b64decode(page.evaluate('document.querySelector("#stage canvas").toDataURL().split(",")[1]')))
+        browser.close()
+    report['ok']=not report['errors'] and not report['httpErrors'] and not report['externalRequests'] and all(not any(m.values()) for m in report['missing'].values())
+finally:
+    server.shutdown();server.server_close()
+    (OUT/'intro-check.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+print('QA:',report.get('ok',False),flush=True)

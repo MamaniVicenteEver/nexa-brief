@@ -1,0 +1,3326 @@
+{
+  "cases": [
+    {
+      "id": "unit-token",
+      "family": "units",
+      "type": "unit.token",
+      "times": [
+        0.18,
+        2.8,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.4,
+              30.6
+            ],
+            "zoom": 8.5
+          }
+        ],
+        "items": [
+          {
+            "id": "unit-token",
+            "type": "unit.token",
+            "at": [
+              48.4,
+              30.6
+            ],
+            "flag": "IQ",
+            "label": "FRENTE",
+            "count": 1,
+            "t": 0,
+            "dur": 7,
+            "states": [
+              {
+                "at": 1,
+                "state": "active"
+              },
+              {
+                "at": 5.8,
+                "state": "idle"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "unit-group",
+      "family": "units",
+      "type": "unit.group",
+      "times": [
+        0.18,
+        2.8,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.4,
+              30.6
+            ],
+            "zoom": 8.5
+          }
+        ],
+        "items": [
+          {
+            "id": "unit-group",
+            "type": "unit.group",
+            "at": [
+              48.4,
+              30.6
+            ],
+            "flag": "IQ",
+            "label": "FRENTE",
+            "count": 5,
+            "t": 0,
+            "dur": 7,
+            "states": [
+              {
+                "at": 1,
+                "state": "active"
+              },
+              {
+                "at": 5.8,
+                "state": "idle"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "unit-move",
+      "family": "units",
+      "type": "unit.move",
+      "times": [
+        0.18,
+        2.8,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.6,
+              30.7
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "unit-move",
+            "type": "unit.move",
+            "at": [
+              48.4,
+              30.6
+            ],
+            "flag": "IQ",
+            "label": "FRENTE",
+            "count": 5,
+            "t": 0,
+            "dur": 7,
+            "path": {
+              "via": [
+                [
+                  48.2,
+                  30.5
+                ],
+                [
+                  48.6,
+                  30.7
+                ],
+                [
+                  48.9,
+                  30.6
+                ]
+              ],
+              "t": 0.5,
+              "dur": 5,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 1,
+                "state": "active"
+              },
+              {
+                "at": 5.8,
+                "state": "idle"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "unit-advance",
+      "family": "units",
+      "type": "unit.advance",
+      "times": [
+        0.18,
+        2.8,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.6,
+              30.7
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "unit-advance",
+            "type": "unit.advance",
+            "at": [
+              48.4,
+              30.6
+            ],
+            "flag": "IQ",
+            "label": "FRENTE",
+            "count": 5,
+            "t": 0,
+            "dur": 7,
+            "path": {
+              "via": [
+                [
+                  48.2,
+                  30.5
+                ],
+                [
+                  48.6,
+                  30.7
+                ],
+                [
+                  48.9,
+                  30.6
+                ]
+              ],
+              "t": 0.5,
+              "dur": 5,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 1,
+                "state": "active"
+              },
+              {
+                "at": 5.8,
+                "state": "idle"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "unit-retreat",
+      "family": "units",
+      "type": "unit.retreat",
+      "times": [
+        0.18,
+        2.8,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.6,
+              30.7
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "unit-retreat",
+            "type": "unit.retreat",
+            "at": [
+              48.4,
+              30.6
+            ],
+            "flag": "IQ",
+            "label": "RETIRADA",
+            "count": 5,
+            "t": 0,
+            "dur": 7,
+            "path": {
+              "via": [
+                [
+                  48.2,
+                  30.5
+                ],
+                [
+                  48.6,
+                  30.7
+                ],
+                [
+                  48.9,
+                  30.6
+                ]
+              ],
+              "t": 0.5,
+              "dur": 5,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 1,
+                "state": "active"
+              },
+              {
+                "at": 5.8,
+                "state": "retreat"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "fx-clash",
+      "family": "units",
+      "type": "fx.clash",
+      "times": [
+        0.18,
+        1.1,
+        2.17
+      ],
+      "scene": {
+        "duration": 2.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.5,
+              30.6
+            ],
+            "zoom": 8.5
+          }
+        ],
+        "items": [
+          {
+            "type": "fx.clash",
+            "id": "clash",
+            "at": [
+              48.5,
+              30.6
+            ],
+            "t": 0,
+            "dur": 2,
+            "scale": 1.6,
+            "sfx": false,
+            "groups": [
+              "clash-west",
+              "clash-east"
+            ]
+          },
+          {
+            "id": "clash-west",
+            "type": "unit.move",
+            "flag": "IQ",
+            "count": 3,
+            "formation": "line",
+            "scale": 0.65,
+            "t": 0,
+            "dur": 2.35,
+            "sfx": false,
+            "path": {
+              "via": [
+                [
+                  48.2,
+                  30.6
+                ],
+                [
+                  48.45,
+                  30.6
+                ]
+              ],
+              "t": 0,
+              "dur": 1.2
+            }
+          },
+          {
+            "id": "clash-east",
+            "type": "unit.move",
+            "flag": "IR",
+            "count": 3,
+            "formation": "line",
+            "scale": 0.65,
+            "t": 0,
+            "dur": 2.35,
+            "sfx": false,
+            "path": {
+              "via": [
+                [
+                  48.8,
+                  30.6
+                ],
+                [
+                  48.55,
+                  30.6
+                ]
+              ],
+              "t": 0,
+              "dur": 1.2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-cargo",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.cargo",
+            "id": "naval-cargo",
+            "variant": "tanker",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "PETROLERO",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-warship",
+      "family": "naval",
+      "type": "naval.warship",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.warship",
+            "id": "naval-warship",
+            "variant": "destroyer",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "DESTRUCTOR",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-submarine",
+      "family": "naval",
+      "type": "naval.submarine",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.submarine",
+            "id": "naval-submarine",
+            "variant": "normal",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "SUBMARINO",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-group",
+      "family": "naval",
+      "type": "naval.group",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.group",
+            "id": "naval-group",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "GRUPO NAVAL",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-carrier",
+      "family": "naval",
+      "type": "naval.carrier",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.carrier",
+            "id": "naval-carrier",
+            "variant": "supercarrier",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "PORTAAVIONES",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "deck": {
+              "aircraft": 12
+            },
+            "escorts": {
+              "formation": "diamond",
+              "units": [
+                "naval.warship:cg",
+                "naval.warship:ddg",
+                "naval.warship:ff"
+              ]
+            },
+            "states": [
+              {
+                "at": 3,
+                "state": "flightops"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-bomber",
+      "family": "air",
+      "type": "air.bomber",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.14,
+              25.02
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-bomber",
+            "type": "air.bomber",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "variant": "wing",
+            "scale": 2.7,
+            "heading": "auto",
+            "altitude": 2,
+            "contrail": true,
+            "t": 0,
+            "dur": 8,
+            "label": "ALA VOLANTE",
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.14,
+                  25.02
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.3,
+              "dur": 6.5,
+              "curve": "smooth"
+            },
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-jet",
+      "family": "air",
+      "type": "air.jet",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.14,
+              25.02
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-jet",
+            "type": "air.jet",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "variant": "attack",
+            "scale": 4,
+            "heading": "auto",
+            "altitude": 2,
+            "contrail": true,
+            "t": 0,
+            "dur": 8,
+            "label": "CAZA",
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.14,
+                  25.02
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.3,
+              "dur": 6.5,
+              "curve": "smooth"
+            },
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-helicopter",
+      "family": "air",
+      "type": "air.helicopter",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.14,
+              25.02
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-helicopter",
+            "type": "air.helicopter",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "variant": "utility",
+            "scale": 4,
+            "heading": "auto",
+            "altitude": 2,
+            "contrail": true,
+            "t": 0,
+            "dur": 8,
+            "label": "HELICÓPTERO",
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.14,
+                  25.02
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.3,
+              "dur": 6.5,
+              "curve": "smooth"
+            },
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-prop",
+      "family": "air",
+      "type": "air.prop",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.14,
+              25.02
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-prop",
+            "type": "air.prop",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "variant": "transport",
+            "scale": 4,
+            "heading": "auto",
+            "altitude": 2,
+            "contrail": true,
+            "t": 0,
+            "dur": 8,
+            "label": "TRANSPORTE",
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.14,
+                  25.02
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.3,
+              "dur": 6.5,
+              "curve": "smooth"
+            },
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-drop",
+      "family": "air",
+      "type": "air.drop",
+      "times": [
+        0.18,
+        2.2,
+        4.17
+      ],
+      "scene": {
+        "duration": 4.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-drop",
+            "type": "air.drop",
+            "at": [
+              58.2,
+              25
+            ],
+            "to": [
+              58.2,
+              25
+            ],
+            "count": 4,
+            "t": 0,
+            "dur": 4,
+            "note": "Caída agregada, no observada en las referencias.",
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-launch",
+      "family": "air",
+      "type": "air.launch",
+      "times": [
+        0.18,
+        2.8,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25.05
+            ],
+            "zoom": 8.4
+          }
+        ],
+        "items": [
+          {
+            "id": "demo-carrier",
+            "type": "naval.carrier",
+            "variant": "supercarrier",
+            "label": "CUBIERTA ANGULADA",
+            "flag": "US",
+            "scale": 1,
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": "auto",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.25,
+                  24.95
+                ],
+                [
+                  58.18,
+                  25.05
+                ],
+                [
+                  58.05,
+                  25.12
+                ]
+              ],
+              "t": 0,
+              "dur": 7,
+              "curve": "smooth"
+            },
+            "escorts": null,
+            "deck": {
+              "aircraft": 12
+            },
+            "states": [
+              {
+                "at": 0,
+                "state": "flightops"
+              }
+            ],
+            "actions": [],
+            "sfx": false
+          },
+          {
+            "id": "air-launch",
+            "type": "air.launch",
+            "carrier": "demo-carrier",
+            "at": "demo-carrier",
+            "to": [
+              57.8,
+              25.3
+            ],
+            "count": 2,
+            "t": 0,
+            "dur": 7,
+            "unit": "air.jet:attack",
+            "note": "Agregado: no aparece en las referencias. Requiere el item demo-carrier.",
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-recover",
+      "family": "air",
+      "type": "air.recover",
+      "times": [
+        0.18,
+        2.8,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25.05
+            ],
+            "zoom": 8.4
+          }
+        ],
+        "items": [
+          {
+            "id": "demo-carrier",
+            "type": "naval.carrier",
+            "variant": "supercarrier",
+            "label": "CUBIERTA ANGULADA",
+            "flag": "US",
+            "scale": 1,
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": "auto",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.25,
+                  24.95
+                ],
+                [
+                  58.18,
+                  25.05
+                ],
+                [
+                  58.05,
+                  25.12
+                ]
+              ],
+              "t": 0,
+              "dur": 7,
+              "curve": "smooth"
+            },
+            "escorts": null,
+            "deck": {
+              "aircraft": 12
+            },
+            "states": [
+              {
+                "at": 0,
+                "state": "flightops"
+              }
+            ],
+            "actions": [],
+            "sfx": false
+          },
+          {
+            "id": "air-recover",
+            "type": "air.recover",
+            "carrier": "demo-carrier",
+            "at": "demo-carrier",
+            "to": [
+              57.8,
+              25.3
+            ],
+            "from": [
+              57.8,
+              25.3
+            ],
+            "count": 2,
+            "t": 0,
+            "dur": 7,
+            "unit": "air.jet:attack",
+            "note": "Agregado: no aparece en las referencias. Requiere el item demo-carrier.",
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-cargo-container",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.cargo",
+            "id": "naval-cargo",
+            "variant": "container",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": "auto",
+            "label": "PORTACONTENEDORES",
+            "t": 0,
+            "dur": 7,
+            "path": null,
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-cargo-bulk",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.cargo",
+            "id": "naval-cargo",
+            "variant": "bulk",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": "auto",
+            "label": "GRANELERO",
+            "t": 0,
+            "dur": 7,
+            "path": null,
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-warship-frigate",
+      "family": "naval",
+      "type": "naval.warship",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.warship",
+            "id": "naval-warship",
+            "variant": "frigate",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": "auto",
+            "label": "FRAGATA",
+            "t": 0,
+            "dur": 7,
+            "path": null,
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-warship-cruiser",
+      "family": "naval",
+      "type": "naval.warship",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.warship",
+            "id": "naval-warship",
+            "variant": "cruiser",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": "auto",
+            "label": "CRUCERO",
+            "t": 0,
+            "dur": 7,
+            "path": null,
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-submarine-translucent",
+      "family": "naval",
+      "type": "naval.submarine",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.submarine",
+            "id": "naval-submarine",
+            "variant": "translucent",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": "auto",
+            "label": "SUBMARINO",
+            "t": 0,
+            "dur": 7,
+            "path": null,
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-carrier-stovl",
+      "family": "naval",
+      "type": "naval.carrier",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.carrier",
+            "id": "naval-carrier",
+            "variant": "stovl",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": "auto",
+            "label": "CUBIERTA STOVL",
+            "t": 0,
+            "dur": 7,
+            "path": null,
+            "deck": {
+              "aircraft": 12
+            },
+            "escorts": null,
+            "states": [
+              {
+                "at": 3,
+                "state": "flightops"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-carrier-hero",
+      "family": "naval",
+      "type": "naval.carrier",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              54,
+              32
+            ],
+            "zoom": 5
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.carrier",
+            "id": "naval-carrier",
+            "variant": "hero",
+            "at": [
+              54,
+              32
+            ],
+            "heading": 65,
+            "label": "PORTAAVIONES",
+            "t": 0,
+            "dur": 7,
+            "path": null,
+            "deck": {
+              "aircraft": 12
+            },
+            "escorts": null,
+            "states": [
+              {
+                "at": 3,
+                "state": "flightops"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-carrier-inventory",
+      "family": "naval",
+      "type": "naval.carrier",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              54,
+              32
+            ],
+            "zoom": 4.5
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.carrier",
+            "id": "naval-carrier",
+            "variant": "inventory",
+            "at": [
+              54,
+              32
+            ],
+            "heading": "auto",
+            "label": "PORTAAVIONES",
+            "t": 0,
+            "dur": 7,
+            "path": null,
+            "deck": {
+              "aircraft": 0
+            },
+            "escorts": null,
+            "states": [
+              {
+                "at": 3,
+                "state": "flightops"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false,
+            "region": "IR",
+            "count": 8
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-bomber-swept",
+      "family": "air",
+      "type": "air.bomber",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-bomber",
+            "type": "air.bomber",
+            "at": [
+              58.2,
+              25
+            ],
+            "variant": "swept",
+            "scale": 2.7,
+            "heading": "auto",
+            "altitude": 2,
+            "contrail": true,
+            "t": 0,
+            "dur": 7,
+            "label": "ALAS EN FLECHA",
+            "path": null,
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-jet-attack",
+      "family": "air",
+      "type": "air.jet",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-jet",
+            "type": "air.jet",
+            "at": [
+              58.2,
+              25
+            ],
+            "variant": "attack",
+            "scale": 4,
+            "heading": "auto",
+            "altitude": 2,
+            "contrail": true,
+            "t": 0,
+            "dur": 7,
+            "label": "AVIÓN DE ATAQUE",
+            "path": null,
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-state-detected",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "hull-detected",
+            "type": "naval.cargo",
+            "variant": "tanker",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": 35,
+            "t": 0,
+            "dur": 7,
+            "scale": 1.3,
+            "label": "DETECTED",
+            "states": [
+              {
+                "at": 1,
+                "state": "detected",
+                "dur": 0.65
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-state-targeted",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "hull-targeted",
+            "type": "naval.cargo",
+            "variant": "tanker",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": 35,
+            "t": 0,
+            "dur": 7,
+            "scale": 1.3,
+            "label": "TARGETED",
+            "states": [
+              {
+                "at": 1,
+                "state": "targeted",
+                "dur": 0.65
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-state-hit",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "hull-hit",
+            "type": "naval.cargo",
+            "variant": "tanker",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": 35,
+            "t": 0,
+            "dur": 7,
+            "scale": 1.3,
+            "label": "HIT",
+            "states": [
+              {
+                "at": 1,
+                "state": "hit",
+                "dur": 0.65
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-state-burning",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "hull-burning",
+            "type": "naval.cargo",
+            "variant": "tanker",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": 35,
+            "t": 0,
+            "dur": 7,
+            "scale": 1.3,
+            "label": "BURNING",
+            "states": [
+              {
+                "at": 1,
+                "state": "burning",
+                "dur": 0.65
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-state-wrecked",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        3,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "hull-wrecked",
+            "type": "naval.cargo",
+            "variant": "tanker",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": 35,
+            "t": 0,
+            "dur": 7,
+            "scale": 1.3,
+            "label": "WRECKED",
+            "states": [
+              {
+                "at": 1,
+                "state": "wrecked",
+                "dur": 0.65
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-state-sunk",
+      "family": "naval",
+      "type": "naval.cargo",
+      "times": [
+        0.18,
+        2.5,
+        7.17
+      ],
+      "scene": {
+        "duration": 7.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.2,
+              25
+            ],
+            "zoom": 7.8
+          }
+        ],
+        "items": [
+          {
+            "id": "hull-sunk",
+            "type": "naval.cargo",
+            "variant": "tanker",
+            "at": [
+              58.2,
+              25
+            ],
+            "heading": 35,
+            "t": 0,
+            "dur": 7,
+            "scale": 1.3,
+            "label": "SUNK",
+            "states": [
+              {
+                "at": 1,
+                "state": "sunk",
+                "dur": 3
+              }
+            ],
+            "sfx": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-group-line",
+      "family": "naval",
+      "type": "naval.group",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.group",
+            "id": "naval-group",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "GRUPO NAVAL",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false,
+            "formation": "line"
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-group-box",
+      "family": "naval",
+      "type": "naval.group",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.group",
+            "id": "naval-group",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "GRUPO NAVAL",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false,
+            "formation": "box"
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-group-escort-ring",
+      "family": "naval",
+      "type": "naval.group",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.group",
+            "id": "naval-group",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "GRUPO NAVAL",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "states": [
+              {
+                "at": 3,
+                "state": "detected"
+              },
+              {
+                "at": 5.5,
+                "state": "normal"
+              }
+            ],
+            "sfx": false,
+            "formation": "escort-ring"
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-state-hit",
+      "family": "air",
+      "type": "air.jet",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.14,
+              25.02
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-jet",
+            "type": "air.jet",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "variant": "attack",
+            "scale": 4,
+            "heading": "auto",
+            "altitude": 2,
+            "contrail": true,
+            "t": 0,
+            "dur": 8,
+            "label": "CAZA",
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.14,
+                  25.02
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.3,
+              "dur": 6.5,
+              "curve": "smooth"
+            },
+            "sfx": false,
+            "states": [
+              {
+                "at": 1,
+                "state": "hit",
+                "dur": 0.6
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "air-state-destroyed",
+      "family": "air",
+      "type": "air.jet",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.14,
+              25.02
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "air-jet",
+            "type": "air.jet",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "variant": "attack",
+            "scale": 4,
+            "heading": "auto",
+            "altitude": 2,
+            "contrail": true,
+            "t": 0,
+            "dur": 8,
+            "label": "CAZA",
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.14,
+                  25.02
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.3,
+              "dur": 6.5,
+              "curve": "smooth"
+            },
+            "sfx": false,
+            "states": [
+              {
+                "at": 1,
+                "state": "destroyed",
+                "dur": 0.6
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "naval-group-references",
+      "family": "naval",
+      "type": "naval.group",
+      "times": [
+        0.18,
+        2.8,
+        8.17
+      ],
+      "scene": {
+        "duration": 8.35,
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif",
+            "display": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "ink": "#e9e3ba",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "tiles": {
+          "provider": "gibs-bluemarble",
+          "manifest": "../bench/cache-inventory.json"
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              58.18,
+              25.04
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "type": "naval.group",
+            "id": "naval-group",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "heading": "auto",
+            "label": "GRUPO NAVAL",
+            "t": 0,
+            "dur": 8,
+            "path": {
+              "via": [
+                [
+                  58.4,
+                  24.9
+                ],
+                [
+                  58.18,
+                  25.04
+                ],
+                [
+                  57.95,
+                  25.06
+                ]
+              ],
+              "t": 0.5,
+              "dur": 6,
+              "curve": "smooth"
+            },
+            "states": [],
+            "sfx": false,
+            "leader": "ref-carrier",
+            "units": [
+              "ref-destroyer",
+              "ref-frigate"
+            ]
+          },
+          {
+            "id": "ref-carrier",
+            "type": "naval.carrier",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "deck": {
+              "aircraft": 6
+            },
+            "t": 0,
+            "dur": 8,
+            "sfx": false
+          },
+          {
+            "id": "ref-destroyer",
+            "type": "naval.warship",
+            "variant": "destroyer",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "states": [
+              {
+                "at": 1,
+                "state": "hit",
+                "dur": 2
+              },
+              {
+                "at": 2,
+                "state": "burning",
+                "dur": 1
+              }
+            ],
+            "t": 0,
+            "dur": 8,
+            "sfx": false
+          },
+          {
+            "id": "ref-frigate",
+            "type": "naval.warship",
+            "variant": "frigate",
+            "at": [
+              58.4,
+              24.9
+            ],
+            "t": 0,
+            "dur": 8,
+            "sfx": false
+          }
+        ]
+      }
+    }
+  ]
+}

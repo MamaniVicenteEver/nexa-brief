@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.outro",
+  "description": "Cierre v1 con mapa del mundo completo que se aleja y oscurece, en los colores de Imperio. GRACIAS POR VER → canal en blanco ante el sol carmesí y sus rayos → alfiler LIKE → flecha → SUSCRÍBETE y campana → apoyo tipeado y dirección. Fondo alternativo con bg; tiempos sincronizables con likeAt, subscribeAt, bellAt y supportAt.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "thanks": {
+      "type": "string",
+      "description": "Rótulo inicial.",
+      "default": "GRACIAS POR VER"
+    },
+    "channel": {
+      "type": "string",
+      "description": "Nombre del canal (grande).",
+      "default": "NODEPOLITICS"
+    },
+    "cta": {
+      "type": "string",
+      "description": "Texto del botón de suscripción.",
+      "default": "SUSCRÍBETE"
+    },
+    "support": {
+      "type": "string",
+      "description": "Mensaje de apoyo.",
+      "default": "Apoya el canal y comparte el video."
+    },
+    "handle": {
+      "type": "string",
+      "description": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+      "default": "youtube.com/@nodepolitics"
+    },
+    "arrow": {
+      "type": "boolean",
+      "description": "Flecha del LIKE a SUSCRÍBETE.",
+      "default": true
+    },
+    "likeAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo del LIKE.",
+      "default": 1
+    },
+    "subscribeAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de SUSCRÍBETE.",
+      "default": 2.5
+    },
+    "bellAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de la campana.",
+      "default": 3.25
+    },
+    "supportAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo del mensaje de apoyo y la dirección.",
+      "default": 3.65
+    },
+    "country": {
+      "type": "string",
+      "description": "País foco cuando bg es archivo; el mundo de auto/atlas/world muestra todos los continentes.",
+      "default": ""
+    },
+    "bg": {
+      "enum": [
+        "auto",
+        "atlas",
+        "world",
+        "dark",
+        "archivo",
+        "papel",
+        "image",
+        "component",
+        "none"
+      ],
+      "description": "auto, atlas o world: mapa mundial ligero; dark: fondo oscuro; archivo: atlas histórico; papel: textura; image: foto en src; component: componente en use; none: liso.",
+      "default": "auto"
+    },
+    "src": {
+      "type": "string",
+      "description": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+      "default": ""
+    },
+    "focus": {
+      "type": "array",
+      "description": "Punto de interés de la foto [x,y] (0..1).",
+      "default": [
+        0.5,
+        0.5
+      ]
+    },
+    "use": {
+      "type": "string",
+      "description": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+      "default": ""
+    },
+    "useParams": {
+      "type": "object",
+      "description": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+      "default": {}
+    },
+    "dim": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Oscurecido del fondo foto/componente.",
+      "default": 0.5
+    }
+  },
+  "required": [],
+  "$defs": {},
+  "examples": [
+    {
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODEPOLITICS",
+      "cta": "SUSCRÍBETE",
+      "support": "Apoya el canal y comparte el video.",
+      "handle": "youtube.com/@nodepolitics"
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

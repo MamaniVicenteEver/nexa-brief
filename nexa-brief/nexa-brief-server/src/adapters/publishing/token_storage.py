@@ -268,6 +268,11 @@ class TokenStorage:
         entry = self._data.get(platform, {}).get(alias)
         return str(entry.get("mode", "api")) if entry is not None else None
 
+    def get_api_provider(self, platform: str, alias: str) -> str:
+        """Identify the OAuth API without exposing credentials."""
+        self._data = self._load()
+        return str(self._data.get(platform, {}).get(alias, {}).get("api_provider", ""))
+
     def save_browser_account(
         self,
         platform: str,
@@ -343,7 +348,7 @@ class TokenStorage:
         # Profile refreshes cannot reassign an Instagram alias, even if another
         # process reconnects it while the remote profile request is in flight.
         return self._save(
-            expected_identity=(platform, alias, target_id) if platform == "instagram" else None
+            expected_identity=(platform, alias, target_id) if platform in {"instagram", "tiktok"} else None
         )
 
     def save_tokens(
@@ -355,6 +360,8 @@ class TokenStorage:
         refresh_token: str | None = None,
         expires_in: int | None = None,
         refresh_expires_in: int | None = None,
+        api_provider: str | None = None,
+        target_id: str | None = None,
     ) -> None:
         """Encrypt and persist updated tokens for the given account."""
         if platform not in self._data:
@@ -367,6 +374,11 @@ class TokenStorage:
         entry["mode"] = "api"
         entry["status"] = "ok"
         entry.setdefault("connected_at", time.time())
+
+        if api_provider is not None:
+            entry["api_provider"] = api_provider
+        if target_id is not None:
+            entry["target_id"] = target_id
 
         if expires_in is not None:
             entry["expires_at"] = time.time() + expires_in

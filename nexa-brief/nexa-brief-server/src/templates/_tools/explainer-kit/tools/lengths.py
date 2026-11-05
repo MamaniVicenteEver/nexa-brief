@@ -59,6 +59,19 @@ def targets(minutes: float | None, wpm: tuple[int, int] = DEFAULT_WPM) -> dict:
 
 def of_script(script: dict, design: str | None = None) -> dict:
     """Rangos del video a partir de su script.json (target_minutes + voz del diseño)."""
+    profile = SPEC.get("formats", {}).get(script.get("format"))
+    if profile:
+        result = {"legacy": False, **profile}
+        if profile.get("scale_with_target"):
+            minutes = float(script.get("target_minutes") or profile["minutes"])
+            if not 1 <= minutes <= 2:
+                raise ValueError("short_preparation admite entre 1 y 2 minutos")
+            ratio = minutes / profile["minutes"]
+            result["minutes"] = minutes
+            for key in ("words", "segments", "beats"):
+                a, b = profile[key]
+                result[key] = [max(1, math.floor(a * ratio)), max(1, math.ceil(b * ratio))]
+        return result
     return targets(script.get("target_minutes"), design_wpm(design or script.get("design", "binary")))
 
 

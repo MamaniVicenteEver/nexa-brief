@@ -1,0 +1,126 @@
+{
+  "name": "inventory.units",
+  "family": "inventory",
+  "description": "Rejilla de siluetas de unidades con contador explícito; máximo 60 iconos y total independiente. Úsala para comparar cantidades mediante iconos.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 80,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "appearance": {
+      "type": "object",
+      "default": {},
+      "doc": "Estilo 01 por defecto: tarjeta y marco #20252B, textos blancos neutros con contorno negro. Para oscurecer ambos usar appearance.cardColor (ejemplo #0F1216); appearance.photoBorderColor permite ajustar el borde de forma independiente. Conservar la jerarquía de letras salvo pedido explícito.",
+      "range": null,
+      "description": "Estilo 01 por defecto: tarjeta y marco #20252B, textos blancos neutros con contorno negro. Para oscurecer ambos usar appearance.cardColor (ejemplo #0F1216); appearance.photoBorderColor permite ajustar el borde de forma independiente. Conservar la jerarquía de letras salvo pedido explícito."
+    },
+    "icon": {
+      "type": "string",
+      "default": "naval.carrier",
+      "range": null,
+      "description": "Id del icono o sprite que se repite."
+    },
+    "useSprites": {
+      "type": "boolean",
+      "default": false,
+      "range": null,
+      "description": "Usa sprites en lugar de iconos esquemáticos."
+    },
+    "count": {
+      "type": "number",
+      "default": 11,
+      "min": 0,
+      "max": 60,
+      "range": {
+        "min": 0,
+        "max": 60
+      },
+      "description": "Cantidad de elementos."
+    },
+    "total": {
+      "type": "number",
+      "default": null,
+      "min": 0,
+      "max": 1000000,
+      "range": {
+        "min": 0,
+        "max": 1000000
+      },
+      "description": "Cantidad total de referencia."
+    },
+    "columns": {
+      "type": "number",
+      "default": 4,
+      "min": 1,
+      "max": 10,
+      "range": {
+        "min": 1,
+        "max": 10
+      },
+      "description": "Cantidad de columnas de la formación o inventario."
+    },
+    "label": {
+      "type": "string",
+      "default": "Inventario",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.2,
+      "max": 2,
+      "range": {
+        "min": 0.2,
+        "max": 2
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "offset": {
+      "type": "array",
+      "default": [
+        0,
+        -200
+      ],
+      "range": null,
+      "description": "Desplazamiento [x,y] en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-inventory",
+    "t": 0,
+    "type": "inventory.units",
+    "at": [
+      51,
+      28
+    ],
+    "icon": "naval.carrier",
+    "count": 11,
+    "total": 11,
+    "columns": 4,
+    "label": "Inventario · muestra de biblioteca",
+    "offset": [
+      0,
+      -100
+    ],
+    "dur": 8,
+    "out": 7,
+    "note": "Ejemplo de capacidad; no es una cifra de la guerra del Golfo."
+  },
+  "usedBy": [
+    "work/tactico/scene-editorial.json",
+    "work/tactico/scene-portraits.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/inventory.units.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/fonts/AtlasEditorial.ttf",
+    "naval.carrier"
+  ]
+}

@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vida en Escena</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#e8ded0}body{display:grid;place-items:center}canvas{display:block;width:100vw;height:100dvh;object-fit:contain}button{position:fixed;inset:45% auto auto 50%;transform:translateX(-50%);border:0;border-radius:100%;background:#fff9ec;color:#203a3d;width:76px;height:76px;font-size:30px;box-shadow:0 5px 25px #0004;cursor:pointer}#status{position:fixed;bottom:16px;left:5%;right:5%;padding:16px;background:#fff5e9;font:16px sans-serif;color:#8b3030}[hidden]{display:none}</style>
+</head><body>
+<audio id="audio" preload="auto"></audio><canvas aria-label="Vida en Escena, episodio animado"></canvas><button id="play" aria-label="Reproducir" hidden>▶</button><p id="status" role="alert" hidden></p>
+<script id="default-config" type="application/json">{"episode":"assets/episodes/prueba-corta.json"}</script>
+<script type="module" src="../_vida/player.js"></script>
+</body></html>

@@ -1,5 +1,13 @@
 # imperio · atlas de cine histórico
 
+**Reutilización por JSON:** empezar por [catalog.json](catalog.json), leer solo el contrato elegido en `contracts/` y usar [recipes.json](recipes.json). Origen, composición y mantenimiento: [REUSE.md](REUSE.md).
+
+## Vista aislada en el showcase
+
+La biblioteca muestra los componentes sin el fondo del atlas físico para evitar hornear un mapa por tarjeta. Sus fotogramas y reproductores usan los componentes originales; `showcase/imperio-isolated.js` conserva la proyección y omite solo el fondo y su precalentado dentro de `stage.html?gallery&isolated=1`.
+
+Esto no es otra plantilla ni otro formato de storyboard. Para producir videos, mantener `country`, `sunAt`, `from`, `to`, `pins[].at`, `targets[].at`, `labels[].at` y las demás entradas del componente. Las animaciones se dibujan sobre el mapa con esas coordenadas. El catálogo, los ejemplos JSON y el renderizador de los videos conservan su contrato; no se debe copiar el adaptador del showcase a un episodio.
+
 Diseño documental para política e historia. El recurso visual central es un atlas físico claro sobre océano azul grisáceo, con el país foco marcado por un sol carmesí. Los rayos y el archivo monocromo convierten el mapa en una escena, sin dejar de leerlo como geografía.
 
 ## 1. Referencia
@@ -66,6 +74,22 @@ El océano tiene una textura suave; la tierra combina iluminaciones, relieve gra
 - `imperio.expansion`: rutas o zonas de influencia que irradian desde un país hacia destinos.
 - `imperio.introv1` / `imperio.introv2`: dos ganchos autónomos, con fondos de atlas, archivo, papel o foto.
 - `imperio.outro`: cierre de canal con el sol naciente y llamada a la acción.
+- `imperio.outrov2`: cierre alternativo con GRACIAS POR VER un 45 % mayor, texto en negrita y fondos rojo sangre oscuro en LIKE y SUSCRÍBETE. Reutiliza la misma animación; `thanksScale`, `textWeight` y `actionColor` controlan el estilo por JSON.
+
+Para elegir la v2 como cierre automático de un video, usar en `assets/config.json` (el motor lo añade al final):
+
+```json
+{
+  "outro": {
+    "use": "imperio.outrov2",
+    "thanksScale": 1.45,
+    "textWeight": 800,
+    "actionColor": "#700B1B"
+  }
+}
+```
+
+Los textos, tiempos y fondos conservan las mismas entradas de `imperio.outro`. El cierre original sigue siendo la opción predeterminada del diseño.
 
 Los nombres de país admiten los nombres de World Atlas y alias en español (`Japón`, `Alemania`, `Reino Unido`). El título nativo y su traducción son parámetros, igual que la cámara, el sol, los rayos, las etiquetas de mar y la foto.
 

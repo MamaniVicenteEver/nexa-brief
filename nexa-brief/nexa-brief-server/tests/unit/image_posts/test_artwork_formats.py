@@ -371,3 +371,95 @@ async def test_routes_require_session_category_access_and_validate_format(compon
         )
     assert len(components.repository.list().items) == 1
     assert components.service.renderer.calls == 0
+
+
+@pytest.mark.asyncio
+async def test_account_formats_are_immutable_and_do_not_change_modal_or_revision(components):
+    record = await store_record(components)
+    result = await ImagePostArtwork(components.service).export_variant(record, record.revision, "9:16")
+    assert result.revision == record.revision
+    assert result.publication_id == record.publication_id
+    assert result.technical.composition_plan.format == "4:5"
+    assert result.editorial == record.editorial
+    assert result.technical.slides == record.technical.slides
+    assert result.technical.format_exports["9:16"].slides[0].height == 1920
+    replay = await ImagePostArtwork(components.service).export_variant(result, result.revision, "9:16")
+    assert replay.record_version == result.record_version
+    assert components.service.renderer.calls == 1
+    deliveries = await components.service.schedule_deliveries(result.publication_id, result.revision, [
+        {"platform": "instagram", "account_alias": "test", "format": "4:5"},
+        {"platform": "facebook", "account_alias": "test", "format": "9:16"},
+    ], "test-formats", immediate=True)
+    assert [d.format for d in deliveries] == ["4:5", "9:16"]
+    assert [d.slides[0].height for d in deliveries] == [1350, 1920]
+    assert deliveries[0].slides[0].storage_key != deliveries[1].slides[0].storage_key
+
+
+@pytest.mark.asyncio
+async def test_unprepared_or_incompatible_destination_format_cannot_queue(components):
+    record = await store_record(components)
+    with pytest.raises(ImagePostError) as missing:
+        await components.service.schedule_deliveries(record.publication_id, record.revision, [
+            {"platform": "facebook", "account_alias": "test", "format": "9:16"},
+        ], "missing-format", immediate=True)
+    assert missing.value.code == "IMAGE_FORMAT_NOT_EXPORTED"
+    with pytest.raises(ImagePostError) as incompatible:
+        await components.service.schedule_deliveries(record.publication_id, record.revision, [
+            {"platform": "instagram", "account_alias": "test", "format": "9:16"},
+        ], "bad-format", immediate=True)
+    assert incompatible.value.code == "UNSUPPORTED_IMAGE_RATIO"
+    components.service._queue_deliveries.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_stale_format_export_cannot_queue(components):
+    record = await store_record(components)
+    result = await ImagePostArtwork(components.service).export_variant(record, record.revision, "9:16")
+    result = await components.repository.update(result.publication_id, {"revision": result.revision + 1}, result.record_version)
+    with pytest.raises(ImagePostError) as stale:
+        await components.service.schedule_deliveries(result.publication_id, result.revision, [
+            {"platform": "facebook", "account_alias": "test", "format": "9:16"},
+        ], "stale-format", immediate=True)
+    assert stale.value.code == "IMAGE_FORMAT_NOT_EXPORTED"
+    components.service._queue_deliveries.assert_not_called()
+
+
+async def store_credit_record(components):
+    from src.core.image_posts.models import PlanMediaRef
+    record = await store_record(components)
+    photo = PlanMediaRef(asset_id="photo", sha256="0" * 64, license_id="CC BY 4.0", author="Author", url="https://example.org/photo", license_url="https://example.org/license", changes="cropped")
+    plan = record.technical.composition_plan.model_copy(update={"slides": [record.technical.composition_plan.slides[0].model_copy(update={"media": [photo]})]})
+    copies = record.editorial.copy_data.model_copy(update={
+        platform: getattr(record.editorial.copy_data, platform).model_copy(update={"first_comment": "Créditos visuales: Author CC BY 4.0 https://example.org/photo https://example.org/license cropped"})
+        for platform in ("facebook", "instagram")})
+    return await components.repository.update(record.publication_id, {
+        "technical": record.technical.model_copy(update={"composition_plan": plan}).model_dump(mode="json"),
+        "editorial": record.editorial.model_copy(update={"copy_data": copies}).model_dump(mode="json"),
+    }, record.record_version)
+
+
+@pytest.mark.asyncio
+async def test_comment_permissions_do_not_block_post_capabilities(components):
+    record = await store_credit_record(components)
+    components.service.account_mapping = SimpleNamespace(accounts_for_category=lambda _: [
+        {"platform": p, "account_alias": "test", "name": p, "active": True, "can_comment": False}
+        for p in ("instagram", "facebook")])
+    result = await components.service.verified_capabilities("node_tech", record)
+    assert all(row["can_publish"] for row in result["accounts"])
+    assert all(not row["can_comment"] for row in result["accounts"])
+    assert all(not row.get("publish_block_reason") for row in result["accounts"])
+    assert not components.repository.get(record.publication_id).deliveries
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("platform,can_comment", [("instagram", True), ("facebook", False)])
+async def test_legacy_credit_comments_are_not_scheduled(components, platform, can_comment):
+    record = await store_credit_record(components)
+    components.service.account_mapping = SimpleNamespace(resolve_account=lambda *_: {"active": True, "can_comment": can_comment})
+    claimed = await components.service.schedule_deliveries(record.publication_id, record.revision,
+        [{"platform": platform, "account_alias": "test", "format": "4:5"}], "no-comment-test", immediate=True)
+    assert claimed[0].comment_status == "not_requested"
+    assert claimed[0].first_comment is None
+    assert "https://example.org/photo" not in claimed[0].caption
+    assert "Créditos visuales" in getattr(components.repository.get(record.publication_id).editorial.copy_data, platform).first_comment
+    components.service.publisher.assert_not_called()
