@@ -43,7 +43,7 @@ from src.presentation.api.resource_sources import (
     resolve_music_source,
     resolve_video_source,
 )
-from src.presentation.api.preview_injection import inject_preview_scripts
+from src.presentation.api.preview_injection import inject_preview_scripts, version_local_assets
 from src.presentation.api.preview_media import media_for_request, preview_config_json
 from src.presentation.api.schemas.template_schema import (
     PREVIEW_ALLOWED_FILENAMES,
@@ -53,6 +53,8 @@ from src.presentation.api.schemas.template_schema import (
     TemplateRequirementsResponse,
     TemplateResponse,
 )
+
+NO_CACHE = {"Cache-Control": "no-cache"}
 
 router = APIRouter(tags=["templates"])
 logger = structlog.get_logger(__name__)
@@ -92,7 +94,9 @@ def _build_template_response(template_id: str, niche: NicheConfig | None) -> Tem
         if path is None or asset_dir is None:
             return None
         relative_path = path.relative_to(asset_dir).as_posix()
-        return f"/api/v1/templates/{template_id}/asset/{relative_path}"
+        # ?v=<mtime>: si se regenera la portada (p. ej. cambia el nombre de la canción en la intro),
+        # el navegador no sigue mostrando la vieja desde su caché.
+        return f"/api/v1/templates/{template_id}/asset/{relative_path}?v={int(path.stat().st_mtime)}"
 
     return TemplateResponse(
         template_id=template_id,
@@ -204,7 +208,7 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
             path = candidate
     allowed_suffixes = {
         ".html", ".json", ".mp3", ".mp4", ".webm", ".mov", ".jpg", ".jpeg",
-        ".png", ".webp", ".svg", ".woff", ".woff2", ".ttf",
+        ".png", ".webp", ".svg", ".js", ".woff", ".woff2", ".ttf",
     }
     if (
         not path.is_relative_to(template_root)
@@ -217,14 +221,19 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
     if path.suffix.lower() in {".html", ".json"}:
         content = path.read_text(encoding="utf-8")
         if path.suffix.lower() == ".html":
-            content = inject_preview_scripts(content, request.query_params)
+            content = version_local_assets(inject_preview_scripts(content, request.query_params), path.parent)
         else:
             content = preview_config_json(content, request)
-        return Response(content=content, media_type=media_type)
+    # El código de la plantilla (html/json/js) se revalida siempre: si se edita, el navegador no sigue
+    # mostrando la versión vieja desde su caché. Videos e imágenes sí se cachean.
+        return Response(content=content, media_type=media_type, headers=NO_CACHE)
     # Videos pedidos desde la tarjeta o el modal: copia liviana (ver preview_media).
     path = media_for_request(path, request)
     media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
-    return serve_file_with_range(path, request.headers.get("range"), media_type)
+    response = serve_file_with_range(path, request.headers.get("range"), media_type)
+    if path.suffix.lower() in {".js", ".css"}:
+        response.headers.update(NO_CACHE)
+    return response
 
 
 @router.post("/templates/{template_id}/preview", response_model=TemplatePreviewAcceptedResponse, status_code=202)
@@ -296,9 +305,18 @@ async def get_preview_status(preview_id: str) -> PreviewStatusResponse:
     return PreviewStatusResponse.from_record(record)
 
 
-@router.get("/templates/preview/{preview_id}/{filename}")
+@router.get("/templates/preview/{preview_id}/{filename:path}")
 async def get_preview_file(preview_id: str, filename: str, request: Request) -> Response:
-    if filename not in PREVIEW_ALLOWED_FILENAMES:
+    in_assets = filename.startswith("assets/")
+    name = filename.removeprefix("assets/") if in_assets else filename
+    from src.config.content_paths import is_private_content_key
+    media_suffixes = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".avif", ".bmp",
+                      ".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac", ".opus",
+                      ".mp4", ".mov", ".webm", ".mkv", ".m4v", ".js", ".css", ".woff", ".woff2", ".ttf", ".otf"}
+    valid_media = in_assets and Path(name).suffix.lower() in media_suffixes
+    if (is_private_content_key(filename) or "\\" in filename or
+            (name not in PREVIEW_ALLOWED_FILENAMES and not valid_media) or
+            (in_assets and name == "index.html")):
         raise HTTPException(status_code=404, detail=f"Unknown preview file '{filename}'")
 
     record = preview_tracker.get(preview_id)
@@ -310,8 +328,17 @@ async def get_preview_file(preview_id: str, filename: str, request: Request) -> 
         raise HTTPException(status_code=404, detail="Preview output not ready yet")
 
     output_dir = Path(output_dir_str).resolve()
-    path = (output_dir / filename).resolve()
-    if not path.is_relative_to(output_dir) or not path.exists():
+    assets_dir = Path(record.get("assets_dir") or output_dir).resolve()
+    if not assets_dir.is_relative_to(output_dir):
+        raise HTTPException(status_code=404, detail="Invalid preview assets")
+    if in_assets and assets_dir == output_dir:
+        raise HTTPException(status_code=404, detail="Unknown preview file")
+    source_dir = assets_dir if in_assets else output_dir
+    candidate = source_dir / name
+    if candidate.is_symlink() or any(part.is_symlink() for part in candidate.parents if part != source_dir and part.is_relative_to(source_dir)):
+        raise HTTPException(status_code=404, detail="Unknown preview file")
+    path = candidate.resolve()
+    if not path.is_relative_to(source_dir) or not path.is_file():
         raise HTTPException(status_code=404, detail=f"'{filename}' not available for this preview")
 
     if filename == "index.html":

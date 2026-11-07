@@ -1,0 +1,135 @@
+{
+  "name": "territory.state",
+  "family": "territory",
+  "description": "Cambio territorial fechado, con color interpolado y barrido direccional o radial. Úsala para explicar control territorial y cambios de frontera.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 10,
+  "states": [
+    "normal",
+    "ocupado",
+    "disputado",
+    "liberado"
+  ],
+  "params": {
+    "region": {
+      "type": "string",
+      "default": "IR",
+      "range": null,
+      "description": "Código o nombre de la región geográfica."
+    },
+    "color": {
+      "type": "string",
+      "default": "success",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "opacity": {
+      "type": "number",
+      "default": 0.8,
+      "range": null,
+      "description": "Opacidad de 0 a 1."
+    },
+    "border": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa el contorno de la silueta."
+    },
+    "state": {
+      "type": "enum",
+      "values": [
+        "normal",
+        "ocupado",
+        "disputado",
+        "liberado"
+      ],
+      "default": "normal",
+      "range": [
+        "normal",
+        "ocupado",
+        "disputado",
+        "liberado"
+      ],
+      "description": "Estado visual inicial."
+    },
+    "transition": {
+      "type": "enum",
+      "values": [
+        "color",
+        "wipe",
+        "radial"
+      ],
+      "default": "wipe",
+      "range": [
+        "color",
+        "wipe",
+        "radial"
+      ],
+      "description": "Modo de transición de estado: color, barrido o radial."
+    },
+    "direction": {
+      "type": "enum",
+      "values": [
+        "east",
+        "west",
+        "north",
+        "south"
+      ],
+      "default": "east",
+      "range": [
+        "east",
+        "west",
+        "north",
+        "south"
+      ],
+      "description": "Dirección del barrido territorial."
+    },
+    "stateColors": {
+      "type": "object",
+      "default": {},
+      "range": null,
+      "description": "Colores de paleta por estado territorial."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-territory-state",
+    "t": 0,
+    "region": "IQ",
+    "dur": 6,
+    "out": 5.5,
+    "type": "territory.state",
+    "states": [
+      {
+        "at": 1,
+        "state": "disputado",
+        "dur": 1
+      },
+      {
+        "at": 3,
+        "state": "ocupado",
+        "dur": 1
+      },
+      {
+        "at": 4.5,
+        "state": "liberado",
+        "dur": 0.8
+      }
+    ],
+    "transition": "wipe",
+    "note": "Estados sintéticos: no describen hechos históricos."
+  },
+  "usedBy": [
+    "work/tactico/items-territory.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/territory.state.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "../_atlas/data/geo/admin0.geojson"
+  ]
+}

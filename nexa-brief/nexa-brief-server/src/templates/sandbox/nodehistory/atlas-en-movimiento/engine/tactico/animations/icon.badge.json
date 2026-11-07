@@ -1,0 +1,69 @@
+{
+  "name": "icon.badge",
+  "family": "icon",
+  "description": "Medallón vectorial propio: avión, barco, petróleo, edificio, escudo o estrella. Úsala para acompañar un rótulo con un símbolo.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "icon": {
+      "type": "enum",
+      "values": [
+        "plane",
+        "ship",
+        "oil",
+        "building",
+        "shield",
+        "star"
+      ],
+      "default": "ship",
+      "range": [
+        "plane",
+        "ship",
+        "oil",
+        "building",
+        "shield",
+        "star"
+      ],
+      "description": "Id del icono o sprite que se repite."
+    },
+    "radius": {
+      "type": "number",
+      "default": 60,
+      "range": null,
+      "description": "Radio del efecto o de la formación en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "accent",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-icon-badge",
+    "t": 0,
+    "type": "icon.badge",
+    "screen": [
+      0.5,
+      0.4
+    ],
+    "icon": "ship",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "work/tactico/items-labels.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/icon.badge.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "ship"
+  ]
+}

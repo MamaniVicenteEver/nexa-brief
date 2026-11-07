@@ -25,6 +25,11 @@
       "display_name": "Video y movimiento",
       "description": "Plantillas que usan video como fondo o sujeto visual.",
       "order": 40
+    },
+    "testing": {
+      "display_name": "Fase de pruebas",
+      "description": "Plantillas de NodeMotion seleccionadas para revisión y pruebas.",
+      "order": 100
     }
   },
   "templates": {
@@ -260,7 +265,7 @@
     "lyrics-neon": {
       "folder": "nodemotion/lyrics/lyrics-neon",
       "display_name": "Letras de Neón",
-      "description": "Letreros de tubo neón que se encienden letra por letra sobre una foto nocturna urbana, con cámara impredecible y sincronización real con la canción.",
+      "description": "Letreros de tubo neón que se encienden letra por letra sobre un video nocturno urbano integrado, con cámara impredecible y sincronización real con la canción.",
       "native_orientation": "any",
       "index_html": "nodemotion/lyrics/lyrics-neon/index.html",
       "config_json": "nodemotion/lyrics/lyrics-neon/assets/config.json",
@@ -268,7 +273,9 @@
       "config_prompt": "nodemotion/lyrics/lyrics-neon/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/NeonLetras.js (o NeonLetrasVideo.js, variante con fondo de video)",
       "runtime_assets": [
-        "assets/remix.mp4"
+        "assets/remix.mp4",
+        "components/intro.js",
+        "components/outro.js"
       ],
       "category_id": "lyrics",
       "sort_order": 14,
@@ -278,7 +285,7 @@
         "music-video",
         "urbano"
       ],
-      "requires_image": true,
+      "requires_image": false,
       "requires_video": false,
       "requires_lyrics": true,
       "inputs": {
@@ -286,17 +293,7 @@
           "required": true,
           "lyrics": "auto"
         },
-        "media": [
-          {
-            "slot": "background",
-            "kind": "image",
-            "count": 1,
-            "orientation": "portrait",
-            "target": "source",
-            "label": "Fondo",
-            "hint": "escena nocturna urbana con luces de neón"
-          }
-        ],
+        "media": [{"slot": "background", "kind": "image|video", "min": 0, "max": 1, "target": "config", "path": "bg.src", "label": "Fondo (opcional)", "hint": "Video o imagen nocturna: luces, calle, fiesta. Si no subes nada, se usa el video de la plantilla."}],
         "texts": [],
         "brief": true
       }
@@ -312,7 +309,9 @@
       "config_prompt": "nodemotion/lyrics/lyrics-impact/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/LyricsImpact.js",
       "runtime_assets": [
-        "assets/women-dancing.mp4"
+        "assets/women-dancing.mp4",
+        "components/intro.js",
+        "components/outro.js"
       ],
       "category_id": "lyrics",
       "sort_order": 15,
@@ -358,7 +357,9 @@
       "runtime_assets": [
         "assets/Bruses Dueles Tan Bien Audio.mp3",
         "assets/bruses_desktop.jpg",
-        "assets/lyrics-bruses-dueles-tan-bien.json"
+        "assets/lyrics-bruses-dueles-tan-bien.json",
+        "components/intro.js",
+        "components/outro.js"
       ],
       "category_id": "lyrics",
       "sort_order": 16,
@@ -402,7 +403,9 @@
       "config_prompt": "nodemotion/lyrics/lyrics-calado/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/LetrasCaladas.js",
       "runtime_assets": [
-        "assets/bg.mp4"
+        "assets/bg.mp4",
+        "components/intro.js",
+        "components/outro.js"
       ],
       "category_id": "lyrics",
       "sort_order": 17,
@@ -444,7 +447,10 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-expediente/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/HiloRojo.js",
-      "runtime_assets": [],
+      "runtime_assets": [
+        "components/intro.js",
+        "components/outro.js"
+      ],
       "category_id": "lyrics",
       "sort_order": 18,
       "status": "ready",
@@ -476,7 +482,7 @@
       "config_prompt": "nodemotion/lyrics/lyrics-latido/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/LatidoEnVivo.js",
       "runtime_assets": [],
-      "category_id": "lyrics",
+      "category_id": "testing",
       "sort_order": 19,
       "status": "ready",
       "tags": [
@@ -509,7 +515,7 @@
       "runtime_assets": [
         "assets/bg.jpg"
       ],
-      "category_id": "in_progress",
+      "category_id": "testing",
       "sort_order": 20,
       "status": "ready",
       "tags": [
@@ -552,7 +558,7 @@
       "runtime_assets": [
         "assets/bg.jpg"
       ],
-      "category_id": "in_progress",
+      "category_id": "testing",
       "sort_order": 21,
       "status": "ready",
       "tags": [
@@ -593,7 +599,10 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-manifiesto/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/Manifiesto.js",
-      "runtime_assets": [],
+      "runtime_assets": [
+        "components/intro.js",
+        "components/outro.js"
+      ],
       "category_id": "lyrics",
       "sort_order": 22,
       "status": "ready",
@@ -625,7 +634,7 @@
       "config_prompt": "nodemotion/lyrics/lyrics-resaltado/prompts/config_mapper.md",
       "remotion_component": "nexa-brief-remotion/src/components/PaginaSubrayada.js",
       "runtime_assets": [],
-      "category_id": "lyrics",
+      "category_id": "testing",
       "sort_order": 23,
       "status": "ready",
       "tags": [
@@ -657,7 +666,9 @@
       "config_prompt": "nodemotion/lyrics/lyrics-collage/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
-        "assets/figures"
+        "assets/figures",
+        "components/intro.js",
+        "components/outro.js"
       ],
       "category_id": "lyrics",
       "sort_order": 24,
@@ -691,7 +702,9 @@
       "config_prompt": "nodemotion/lyrics/lyrics-mixtas/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
-        "assets/media"
+        "assets/media",
+        "components/intro.js",
+        "components/outro.js"
       ],
       "category_id": "lyrics",
       "sort_order": 25,
@@ -735,7 +748,9 @@
       "config_prompt": "nodemotion/lyrics/lyrics-grunge/prompts/config_mapper.md",
       "remotion_component": null,
       "runtime_assets": [
-        "assets/media"
+        "assets/media",
+        "components/intro.js",
+        "components/outro.js"
       ],
       "category_id": "lyrics",
       "sort_order": 26,
@@ -1173,7 +1188,10 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-stylish-kinetic/prompts/config_mapper.md",
       "remotion_component": null,
-      "runtime_assets": [],
+      "runtime_assets": [
+        "components/intro.js",
+        "components/outro.js"
+      ],
       "category_id": "lyrics",
       "sort_order": 33,
       "status": "ready",
@@ -1205,7 +1223,7 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-caution/prompts/config_mapper.md",
       "remotion_component": null,
-      "runtime_assets": [],
+      "runtime_assets": ["components/intro.js", "components/outro.js"],
       "category_id": "lyrics",
       "sort_order": 34,
       "status": "ready",
@@ -1241,7 +1259,7 @@
         "assets/figures",
         "assets/humo.mp4"
       ],
-      "category_id": "in_progress",
+      "category_id": "testing",
       "sort_order": 35,
       "status": "ready",
       "tags": [
@@ -1275,7 +1293,7 @@
         "assets/media",
         "assets/niebla.mp4"
       ],
-      "category_id": "lyrics",
+      "category_id": "testing",
       "sort_order": 36,
       "status": "ready",
       "tags": [
@@ -1305,11 +1323,7 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-night-journey/prompts/config_mapper.md",
       "remotion_component": null,
-      "runtime_assets": [
-        "assets/cover.jpg",
-        "assets/moon.png",
-        "assets/path.mp4"
-      ],
+      "runtime_assets": ["assets/cover.jpg", "assets/moon.png", "assets/path.mp4", "components/intro.js", "components/outro.js"],
       "category_id": "lyrics",
       "sort_order": 37,
       "status": "ready",
@@ -1341,7 +1355,7 @@
       "config_prompt": null,
       "remotion_component": null,
       "runtime_assets": [],
-      "category_id": "in_progress",
+      "category_id": "testing",
       "sort_order": 38,
       "status": "ready",
       "tags": [
@@ -1372,9 +1386,7 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-lluvia-gris/prompts/config_mapper.md",
       "remotion_component": null,
-      "runtime_assets": [
-        "assets/media"
-      ],
+      "runtime_assets": ["assets/media", "components/intro.js", "components/outro.js"],
       "category_id": "lyrics",
       "sort_order": 39,
       "status": "ready",
@@ -1417,9 +1429,7 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-memoria/prompts/config_mapper.md",
       "remotion_component": null,
-      "runtime_assets": [
-        "assets/media"
-      ],
+      "runtime_assets": ["assets/media", "components/intro.js", "components/outro.js"],
       "category_id": "lyrics",
       "sort_order": 40,
       "status": "ready",
@@ -1462,9 +1472,7 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-ceniza/prompts/config_mapper.md",
       "remotion_component": null,
-      "runtime_assets": [
-        "assets/media"
-      ],
+      "runtime_assets": ["assets/media", "components/intro.js", "components/outro.js"],
       "category_id": "lyrics",
       "sort_order": 41,
       "status": "ready",
@@ -1507,9 +1515,7 @@
       "vision_prompt": null,
       "config_prompt": "nodemotion/lyrics/lyrics-vacio/prompts/config_mapper.md",
       "remotion_component": null,
-      "runtime_assets": [
-        "assets/media"
-      ],
+      "runtime_assets": ["assets/media", "components/intro.js", "components/outro.js"],
       "category_id": "lyrics",
       "sort_order": 42,
       "status": "ready",

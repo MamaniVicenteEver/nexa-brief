@@ -25,8 +25,12 @@
     "designs/carta/components/panels.js",
     "designs/common/outro-v1.js",
     "designs/common/hook.js",
+    "designs/common/logo.js",
+    "designs/common/clip.js",
     "designs/carta/components/intros.js",
-    "designs/carta/components/outro.js"
+    "designs/carta/components/outro.js",
+    "designs/common/tabloid.js",
+    "designs/common/question.js"
   ],
   "defaults": {
     "family": "carta",
@@ -71,6 +75,11 @@
       "support": "apoya el canal · comparte el video",
       "handle": "youtube.com/@nodehistory",
       "use": "carta.outro"
+    },
+    "clip": {
+      "filter": "sepia(0.8) contrast(1.05)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

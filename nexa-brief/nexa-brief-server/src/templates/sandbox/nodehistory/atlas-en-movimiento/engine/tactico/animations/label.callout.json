@@ -1,0 +1,97 @@
+{
+  "name": "label.callout",
+  "family": "label",
+  "description": "Ficha ajustada a zona segura con guía, estrella vectorial y escritura progresiva. Úsala para identificar lugares y objetos.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "size": {
+      "type": "number",
+      "default": 32,
+      "range": null,
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "width": {
+      "type": "number",
+      "default": 650,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "height": {
+      "type": "number",
+      "default": 220,
+      "range": null,
+      "description": "Alto del elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "fit": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Modo de ajuste del contenido al espacio disponible."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    },
+    "offset": {
+      "type": "array",
+      "default": [
+        110,
+        -100
+      ],
+      "range": null,
+      "description": "Desplazamiento [x,y] en píxeles de diseño."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 0.65,
+      "range": null,
+      "description": "Duración del revelado progresivo en segundos."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-label-callout",
+    "t": 0,
+    "type": "label.callout",
+    "at": [
+      53,
+      27
+    ],
+    "text": "Unidad de demostración",
+    "offset": [
+      100,
+      -120
+    ],
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-labels.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/label.callout.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

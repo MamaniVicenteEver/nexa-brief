@@ -1,0 +1,59 @@
+{
+  "title": "Vida en Escena · Heladería",
+  "engine": "nodeaction/_vida",
+  "based_on": "vida-en-escena",
+  "is_new_design": false,
+  "status": "lista",
+  "summary": "Variante breve (30 s) hecha solo con datos por un modelo económico: escenario nuevo (heladería), personaje nuevo (heladero) y otra historia con clips ya aprobados de Tomás y Valeria.",
+  "created_at": "2026-11-03",
+  "libraries": [
+    {
+      "name": "Canvas 2D (ES modules)",
+      "version": "nativo del navegador",
+      "purpose": "motor compartido nodeaction/_vida: previsualización y exportación"
+    },
+    {
+      "name": "@napi-rs/canvas",
+      "version": "1.1.0",
+      "purpose": "renderiza los mismos cuadros en Node"
+    },
+    {
+      "name": "ffmpeg",
+      "version": "del sistema",
+      "purpose": "codifica H.264 + AAC; recibe los cuadros por stdin"
+    },
+    {
+      "name": "Ajv",
+      "version": "8.20.0",
+      "purpose": "valida episodio, personaje, set y voz contra los esquemas JSON"
+    },
+    {
+      "name": "Anton",
+      "version": "fuente local",
+      "purpose": "subtítulos (assets/fonts/Anton-Regular.ttf)"
+    }
+  ],
+  "inputs": [
+    "Episodio (json): assets/episode.json"
+  ],
+  "notes": [
+    "Producir otro episodio con el mismo motor: node _vida/tools/new-episode.mjs <id> y node _vida/tools/produce.mjs <id> (guía _vida/docs/PRODUCCION.md; cámara por JSON en _vida/docs/CAMARA.md). Ampliar el motor: _vida/VIDA.md.",
+    "Mismo motor sin cambios de código; usa el index.html genérico de vida-en-escena (copia idéntica).",
+    "Creada por gpt-6-luna leyendo SKILL.md, catálogo, esquemas y prueba-corta.json; ver work/results/vida-variante.md.",
+    "El líder corrigió a mano dos datos (planos a dos que incluían al heladero, ancho del mostrador); la reutilización destapó un defecto de encuadre del motor que se corrigió en el motor (no en el episodio).",
+    "Salidas: render/heladeria.mp4 (9:16) y render/heladeria-16x9.mp4 (16:9)."
+  ],
+  "reference": "referencias/nodeaction/figuras",
+  "design": "vida-en-escena",
+  "catalog": {
+    "base": "sandbox/nodeaction/_vida",
+    "components": "showcase/components.json",
+    "sprites": "showcase/sprites.json",
+    "spritesDir": "showcase/characters",
+    "sheet": "review/sheets/group.png",
+    "gallery": "showcase.html",
+    "thumbs": "showcase/thumbs/thumbs.json",
+    "previewReady": true,
+    "workflows": "agent-guide/workflows.json"
+  }
+}

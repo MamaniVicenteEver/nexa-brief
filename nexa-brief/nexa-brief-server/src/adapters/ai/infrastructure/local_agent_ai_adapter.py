@@ -14,8 +14,10 @@ from pathlib import Path
 
 import structlog
 
+from src.core.execution_logs import register_execution_log
 from src.config.exceptions import AIGenerationError, AIValidationError
 from src.config.settings import BASE_DIR, settings
+from src.config.profile_layout import layout_for_settings
 from src.core.ports.agent_port import AgentRunnerPort
 from src.core.ports.ai_port import AIPort
 
@@ -53,7 +55,12 @@ class LocalAgentAIAdapter(AIPort):
     async def complete_text(self, system_prompt: str, user_prompt: str) -> str:
         if not self._agent.available():
             raise AIGenerationError(f"el agente local '{self._agent.name}' no está instalado")
-        log = settings.data_dir / "agent_logs" / f"text-{self._agent.name}-{uuid.uuid4().hex[:8]}.log"
+        layout = layout_for_settings(settings)
+        log_dir = (layout.logs_dir / "agents" / self._agent.name if layout.schema_version >= 2
+                   else settings.data_dir / "agent_logs")
+        log = log_dir / f"text-{self._agent.name}-{uuid.uuid4().hex[:8]}.log"
+        registered = await register_execution_log(log.relative_to(layout.root), kind="agent")
+        log = registered.path
         prompt = f"{system_prompt}\n\n---\n\n{user_prompt}"
         result = await self._agent.run(prompt, cwd=self._cwd, log_path=log, timeout_seconds=self._timeout)
         if result.timed_out:

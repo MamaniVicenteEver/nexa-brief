@@ -1,0 +1,41 @@
+{
+  "exact_requests_required": 2,
+  "max_requests": 2,
+  "automatic_retries": 0,
+  "full_narration_generated": false,
+  "requests": [
+    {
+      "voice": "Orus",
+      "model": "gemini-3.8-flash-tts",
+      "state": "success",
+      "http_attempts": 1,
+      "retries": 0,
+      "sample_words": 27,
+      "started_utc": "2026-11-03T17:46:34.008356+00:00",
+      "request_body_sha256": "a2146be28509dc528208687af9fe135809e6f1d140131c5b8b6f7adf58251981",
+      "tokens": null,
+      "cost_usd": null,
+      "http_status": 200,
+      "request_elapsed_seconds": 9.008,
+      "audio_seconds": 13.48
+    },
+    {
+      "voice": "Achird",
+      "model": "gemini-3.8-flash-tts",
+      "state": "success",
+      "http_attempts": 1,
+      "retries": 0,
+      "sample_words": 27,
+      "started_utc": "2026-11-03T17:46:43.367351+00:00",
+      "request_body_sha256": "a1062ada961ba8b7361879e0421ea4c1c3770554b6d0305b7f0183311f38efed",
+      "tokens": null,
+      "cost_usd": null,
+      "http_status": 200,
+      "request_elapsed_seconds": 7.514,
+      "audio_seconds": 11.92
+    }
+  ],
+  "cost_usd": null,
+  "note": "Cada envío se registra antes de la red. Tokens solo si el proveedor los informa; no se inventa coste. Credenciales gestionadas por el kit, sin mostrarlas.",
+  "http_attempts_total": 2
+}

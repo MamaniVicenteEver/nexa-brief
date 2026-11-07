@@ -1,0 +1,111 @@
+{
+ "id": "tiktok_hook_question_v2",
+ "platform": "tiktok",
+ "name": "TikTok · Frase corta + pregunta corta (v2)",
+ "description": "Corto, natural y puntual: una frase con la que alguien se identifica y una pregunta breve. v1 con límites más cortos.",
+ "fields": {
+  "hook_statement": {
+   "type": "text",
+   "max_chars": 50,
+   "instruction": "Una frase muy corta (máximo 8 palabras), natural, como la diría una persona, sobre lo que siente la canción. Sin el nombre de la canción ni del artista. Termina con punto. Nunca digas 'plantilla' ni el nombre del diseño o del estilo visual (por ejemplo 'carta', 'neón', 'collage'): habla de la canción o de 'este video'.",
+   "examples": {
+    "es": [
+     "Hay personas que duelen bonito.",
+     "Olvidar no es dejar de extrañar.",
+     "Algunos se van y siguen en todo."
+    ],
+    "en": [
+     "Some people hurt beautifully.",
+     "Forgetting isn't the same as not missing.",
+     "Some leave and stay in everything."
+    ]
+   },
+   "avoid": {
+    "es": [
+     "Esta canción está brutal.",
+     "POV: escuchas esta joya."
+    ],
+    "en": [
+     "This song is fire.",
+     "POV: you hear this gem."
+    ]
+   }
+  },
+  "memory_question": {
+   "type": "text",
+   "max_chars": 55,
+   "instruction": "Una pregunta muy corta (máximo 9 palabras) que haga pensar en una persona o momento propio. Nunca de sí o no.",
+   "examples": {
+    "es": [
+     "¿Quién se te vino a la mente?",
+     "¿A quién se la dedicarías?"
+    ],
+    "en": [
+     "Who came to mind?",
+     "Who would you send it to?"
+    ]
+   },
+   "avoid": {
+    "es": [
+     "¿Te gustó?",
+     "¿La conocías?"
+    ],
+    "en": [
+     "Did you like it?",
+     "Did you know it?"
+    ]
+   }
+  },
+  "hashtags": {
+   "type": "list",
+   "min_items": 4,
+   "max_items": 4,
+   "instruction": "Exactamente 4 hashtags sin '#', en minúsculas y sin espacios: el artista, la canción, el sentimiento o tema, y uno amplio como 'letras' (o 'lyrics'). Nunca 'fyp', 'parati' ni 'viral'.",
+   "examples": {
+    "es": [
+     [
+      "morat",
+      "comoteatreves",
+      "desamor",
+      "letras"
+     ]
+    ],
+    "en": [
+     [
+      "adele",
+      "easyonme",
+      "heartbreak",
+      "lyrics"
+     ]
+    ]
+   }
+  }
+ },
+ "rotating": {},
+ "output": {
+  "title": {
+   "max_chars": 2000,
+   "templates": {
+    "es": [
+     "{hook_statement} {memory_question}\n{song} – {artist}",
+     "{hook_statement} {memory_question}\n{song}",
+     "{hook_statement} {memory_question}"
+    ],
+    "en": [
+     "{hook_statement} {memory_question}\n{song} – {artist}",
+     "{hook_statement} {memory_question}\n{song}",
+     "{hook_statement} {memory_question}"
+    ]
+   },
+   "multiline": true
+  },
+  "description": {
+   "max_chars": 2000,
+   "same_as": "title"
+  },
+  "tags": {
+   "from": "hashtags",
+   "style": "hashtag"
+  }
+ }
+}

@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "tipo": "guia-para-ia",
+  "titulo": "Crear una escena de comparación",
+  "objetivo": "Preparar otra comparación usando el motor y perfil existentes, con nuevos sujetos, planos y medios.",
+  "estado_actual": {
+    "capacidad": "El motor carga la composición desde scene.json y los medios de apoyo desde overlays.json. Las imágenes y clips se asignan a tarjetas; no son fondos completos detrás del presentador.",
+    "reutilizacion": "Reutilizar Proto, comparacion.js y el perfil existente; un nuevo tema cambia datos y recursos del video, no exige escribir otro motor."
+  },
+  "entradas": [
+    "Tema y pregunta, uno o dos sujetos, hechos y fuentes verificables.",
+    "Guion definitivo, medios autorizados y créditos.",
+    "Duración y elección de personaje existente o variante registrada.",
+    "Si se pide narración, perfil de voz y audio autorizados; transcribir el audio final."
+  ],
+  "archivos": {
+    "config": "assets/config.json: conecta sceneUrl, lyricsUrl, audio.src y overlaysUrl.",
+    "escena": "assets/scene.json: subjects, shots, avatar.timeline y end.",
+    "medios": "assets/overlays.json: lista de imágenes y clips asignados a un sujeto.",
+    "guion_y_voz": "assets/script.json, assets/song.mp3 y assets/lyrics.json: contenido y sincronía de la narración.",
+    "creditos": "CREDITS.md o archivo de créditos del video.",
+    "nota": "Rutas relativas a la carpeta del video. Crear un video nuevo o una copia de prueba; no sobrescribir la muestra NASA/URSS."
+  },
+  "campos_reales": {
+    "sujeto": "subjects[]: id, title, src y fit (contain o cover); src se resuelve desde el HTML del video.",
+    "plano": "shots[]: t en segundos o ancla de voz, mode duo o single, focus left/right/both, headline, pose, character y opcionalmente subjects para sobreescribir datos.",
+    "poses": "avatar.timeline[]: at y pose. Se pueden sincronizar con segundos o frases de lyrics.json; la identidad y poses disponibles provienen del perfil compartido.",
+    "medios": "overlays.items[]: subject (id de subjects), kind photo o video, src, at y dur o until; start es el segundo inicial del clip. Videos mudos: el audio de la narración manda.",
+    "sincronizacion": "Usar frases únicas como anclas, probar que se resuelven; no reutilizar los tiempos de una voz si se genera otro audio."
+  },
+  "ejemplo_de_estructura": {
+    "aviso": "Ejemplo ilustrativo: sustituir rutas y tiempos por archivos reales y anclas presentes; no es un video completo.",
+    "scene": {
+      "end": 60,
+      "profile_id": "leo-comparaciones-v1",
+      "subjects": [
+        {
+          "id": "uno",
+          "title": "SUJETO UNO",
+          "src": "assets/media/uno.jpg",
+          "fit": "contain"
+        },
+        {
+          "id": "dos",
+          "title": "SUJETO DOS",
+          "src": "assets/media/dos.jpg",
+          "fit": "contain"
+        }
+      ],
+      "shots": [
+        {
+          "t": 0,
+          "mode": "duo",
+          "focus": "both",
+          "headline": "¿CUÁL ELEGIR?",
+          "pose": "question"
+        },
+        {
+          "t": 10,
+          "mode": "single",
+          "focus": "left",
+          "headline": "PRIMER SUJETO",
+          "pose": "point-left"
+        }
+      ],
+      "avatar": {
+        "timeline": [
+          {
+            "at": 0,
+            "pose": "question"
+          },
+          {
+            "at": 10,
+            "pose": "point-left"
+          }
+        ]
+      }
+    },
+    "overlays": {
+      "items": [
+        {
+          "subject": "uno",
+          "kind": "photo",
+          "src": "assets/media/uno.jpg",
+          "at": 10,
+          "dur": 5,
+          "opacity": 1
+        }
+      ]
+    }
+  },
+  "pasos": [
+    "1. Definir tesis, sujetos, fuentes y guion; preparar una carpeta de video nueva sin modificar la muestra aprobada.",
+    "2. Configurar subjects y shots, con tiempos numéricos o anclas verificables; registrar las poses y el personaje disponibles.",
+    "3. Guardar fotos o clips pertinentes en assets/media y asignarlos por subject en overlays.json; conservar sus créditos y comprobar duraciones.",
+    "4. Si se encarga una nueva voz, generar el audio con el perfil acordado y transcribir el MP3 final; si no hay voz autorizada, no generarla.",
+    "5. Ajustar end y comprobar que rutas, recursos, anclas y duración existen; revisar el paso de duo a single y viceversa.",
+    "6. Probar 9:16, lectura, subtítulos, poses, pausa, saltos y videos mudos sincronizados. Informar fallos o validaciones pendientes; no exportar ni publicar salvo petición."
+  ],
+  "limites": [
+    "El motor fija el lienzo a 1080×1920; el perfil aprobado controla colores, distribución y tipografía.",
+    "scene.background no reemplaza actualmente el fondo global del perfil; consultar crear-fondo.json si se necesita un escenario detrás del presentador.",
+    "No inventar búsqueda automática de recursos ni producir voz o medios si no se solicitaron."
+  ]
+}

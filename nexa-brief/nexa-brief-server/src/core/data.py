@@ -33,6 +33,11 @@ def set_data_store(store: DataStore | None) -> None:
     _store = store
 
 
+def coordination(name: str):
+    """Port de exclusión compartida para operaciones de varios pasos."""
+    return get_data_store().coordination(name)
+
+
 def collection(name: str) -> RecordCollection:
     return get_data_store().collection(name)
 

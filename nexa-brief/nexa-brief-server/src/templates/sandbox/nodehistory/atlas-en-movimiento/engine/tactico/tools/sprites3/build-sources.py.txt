@@ -1,0 +1,54 @@
+"""Prepare exact, safe-mode MCP payloads. Does not execute Blender code."""
+from pathlib import Path
+import json
+HERE=Path(__file__).resolve().parent
+BASE=HERE.parents[3]
+manifest=json.loads((BASE/'engine/tactico/sprites2/sprites2.json').read_text())
+add=(HERE/'materials.py.txt').read_text()
+jobs=[]
+for old in manifest['base_sprites']:
+    base={'ship-tug':'ship-landing-craft','ship-tanker-vlcc':'ship-oiler','ship-platform':'ship-support-platform'}.get(old,old)
+    land=manifest['sprites'][old]['family']=='ground'
+    for livery in (['olive','desert','camo'] if land else ['naval' if base.startswith('ship-') else 'military']):
+        name=base+('-'+livery if land and livery!='olive' else '')
+        source=(HERE.parent/'sprites2'/(old+'.py.txt')).read_text()
+        source=source[:source.index('\naem_start(SPRITE)')]
+        # Rename all live-owned datablocks, without touching the existing assets.
+        source=source.replace('AEM_vehiculos','AEM_militar').replace("'AEM_'","'AEM_M3_'").replace('(12000,0,0)','(18000,0,0)')
+        # Preserve geometry dispatch using its old name; actual IDs are distinct.
+        source=source.replace('SPRITE="'+old+'"','SPRITE="'+name+'"\nLIVERY="'+livery+'"')
+        source=source.replace('tank(sprite)','tank('+repr(old)+')').replace('aircraft(sprite)','aircraft('+repr(old)+')')
+        source=source.replace('    aem_materials()','    aem_materials()\n    aem_mat(\'medical\',.82,0,.85,False)\n    aem_mat(\'mud\',.04,0,.97,True)\n    military_materials()')
+        # Desert/camo IDs dispatch to same geometry, ambulances retain their emblem.
+        dispatch=source.index("    if sprite.startswith('tank-')",source.index('def aem_start'))
+        end=source.index('    bpy.context.view_layer.update()',dispatch)
+        fn='tank' if old.startswith('tank-') or old=='artillery-self-propelled' else 'apc' if old=='apc' else 'towed' if old=='artillery-towed' else 'engineer' if old=='engineer' else 'ship' if old.startswith('ship-') else 'aircraft' if old.startswith('air-') else 'truck'
+        call=fn+'('+ (repr(old) if fn in ['tank','truck','ship','aircraft'] else '')+')'
+        if old=='ship-tug':call='landing_craft()'
+        if old=='ship-platform':call='support_platform()'
+        source=source[:dispatch]+'    '+call+'\n'+source[end:]
+        if old=='missile-launcher':
+            source=source.replace("box('Contenedor misil',(x,-1.38,zz),(.72,6.4,.65),'light',.10)","rod('Tubo misil',(x,-4.58,zz),(x,1.82,zz),.35,'light',24)")
+            source=source.replace("box('Tapa contenedor',(x,1.86,zz),(.65,.12,.56),'dark',.05)","rod('Tapa tubo',(x,1.82,zz),(x,1.96,zz),.29,'dark',24)")
+        # Fixed original rounding corrections: bevel cannot exceed the smallest extent.
+        # Every material sees the same root coordinate system for uninterrupted camo.
+        source+='\n'+add+'\naem_start(SPRITE)\n'
+        source+='''
+# Resolve a livery-independent identifier for recognisable field details.
+_variant_name=SPRITE
+SPRITE='''+repr(base)+'''
+military_details()
+if SPRITE.startswith('ambulance-'):
+    for ob in AEM['C'].objects:
+        if ob.type=='MESH' and 'Luz emergencia' in ob.name:ob.data.materials[0]=AEM_M['panel']
+'''+('oiler_details()\n' if base=='ship-oiler' else '')+'''SPRITE=_variant_name
+for ob in AEM['C'].objects:
+    if ob.type=='MESH':
+        for mod in ob.modifiers:
+            if mod.type=='BEVEL':mod.width=min(mod.width,min(max(v.co[i] for v in ob.data.vertices)-min(v.co[i] for v in ob.data.vertices) for i in range(3))*.35)
+bpy.context.view_layer.update()
+'''
+        (HERE/(name+'.py.txt')).write_text(source)
+        jobs.append(dict(id=name,source=old,base=base,livery=livery,land=land))
+(HERE/'jobs.json').write_text(json.dumps(jobs,indent=2)+'\n')
+print(json.dumps({'models':len(jobs),'species':len(manifest['base_sprites'])}))

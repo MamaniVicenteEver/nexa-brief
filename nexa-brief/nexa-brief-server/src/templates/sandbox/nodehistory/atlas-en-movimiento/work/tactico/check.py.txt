@@ -1,0 +1,133 @@
+"""QA del núcleo táctico; ejecutar una copia en /tmp para no disparar uvicorn --reload.
+cp work/tactico/check.py.txt /tmp/tactico-core-check.py
+nice -n 15 env PYTHONDONTWRITEBYTECODE=1 ../../../../../.venv/bin/python /tmp/tactico-core-check.py --project "$PWD"
+"""
+import sys
+sys.dont_write_bytecode = True
+import argparse
+import base64
+import functools
+import http.server
+import io
+import json
+from pathlib import Path
+import socketserver
+import threading
+from urllib.parse import urlparse
+from PIL import Image, ImageDraw
+from playwright.sync_api import sync_playwright
+
+FLAGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--renderer-process-limit=1', '--num-raster-threads=1']
+TIMES = [0, .18, 1.5, 3, 5.4, 7.9, 9.5, 12.8]
+ORDER = [9.5, 0, 5.4, 1.5, 12.8, 3, 7.9, .18]
+MEASURE = """async t => {
+  await __promo.seek(t);
+  const canvas=document.querySelector('#stage canvas'), g=canvas.getContext('2d');
+  const data=g.getImageData(0,0,canvas.width,canvas.height).data;
+  const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data)),b=>b.toString(16).padStart(2,'0')).join('');
+  return {t,hash,png:canvas.toDataURL('image/png').split(',')[1],key:__tactico.key(t)};
+}"""
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--project', type=Path, default=Path.cwd())
+    args=parser.parse_args()
+    project=args.project.resolve()
+    out=project/'work/tactico/shots'
+    out.mkdir(parents=True, exist_ok=True)
+    atlas=project.parent/'_atlas'
+    keys=sorted(str(p.relative_to(atlas/'cache/gibs-bluemarble').with_suffix('')) for p in (atlas/'cache/gibs-bluemarble').rglob('*.jpg'))
+    (project/'work/tactico/cache-inventory.json').write_text(json.dumps({'provider':'gibs-bluemarble','keys':keys})+'\n')
+    failures=[]
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def log_message(self,fmt,*values):
+            if len(values)>1 and str(values[1]).isdigit() and int(values[1])>=400:
+                failures.append({'request':str(values[0]),'status':int(values[1])})
+    class Server(socketserver.ThreadingTCPServer):
+        allow_reuse_address=True
+        daemon_threads=True
+    server=Server(('127.0.0.1',0),functools.partial(Handler,directory=str(project.parents[2])))
+    threading.Thread(target=server.serve_forever,daemon=True).start()
+    origin=f'http://127.0.0.1:{server.server_address[1]}'
+    errors=[];warnings=[];external=[]
+    report={'flags':FLAGS,'viewport':[1080,1920],'times':TIMES,'seekOrder':ORDER,'hashes':{},'stable':{},'consoleErrors':errors,'consoleWarnings':warnings,'httpErrors':failures,'external':external}
+    try:
+        with sync_playwright() as p:
+            browser=p.chromium.launch(headless=True,args=FLAGS)
+            report['chromium']=browser.version
+            try:
+                context=browser.new_context(viewport={'width':1080,'height':1920},device_scale_factor=1)
+                def local_only(route):
+                    if urlparse(route.request.url).hostname in ('127.0.0.1',None):route.continue_()
+                    else:external.append(route.request.url);route.abort()
+                context.route('**/*',local_only)
+                page=context.new_page();page.set_default_timeout(180000)
+                page.on('pageerror',lambda e:errors.append(str(e)))
+                page.on('console',lambda m:errors.append(m.text) if m.type=='error' else warnings.append(m.text) if m.type=='warning' else None)
+                page.goto(origin+'/sandbox/nodehistory/atlas-en-movimiento/work/tactico/demo.new.html?headless=1&t=0',wait_until='domcontentloaded')
+                page.wait_for_function('window.__promo && window.__tacticoContext')
+                page.evaluate('__atlas.ready')
+                baseline=page.evaluate('performance.getEntriesByType("resource").length')
+                frames=[]
+                for t in TIMES:
+                    frame=page.evaluate(MEASURE,t)
+                    report['hashes'][str(t)]=frame['hash']
+                    image=Image.open(io.BytesIO(base64.b64decode(frame['png']))).convert('RGB')
+                    image.save(out/f'core-{t:05.2f}.png')
+                    frames.append((t,image))
+                    print(f'captura {t:.2f} s {frame["hash"][:16]}',flush=True)
+                for t in ORDER:
+                    frame=page.evaluate(MEASURE,t)
+                    report['stable'][str(t)]=frame['hash']==report['hashes'][str(t)]
+                report['resourcesDuringSeeks']=page.evaluate('performance.getEntriesByType("resource").length')-baseline
+                report['missingTactico']=page.evaluate('__tactico.missing()')
+                report['missingTiles']=page.evaluate('__atlas.missingTiles()')
+                report['stats']=page.evaluate('__atlas.stats()')
+                report['idleKey']=page.evaluate('__tactico.key(12)===__tactico.key(13)')
+                report['cameraKeys']=page.evaluate('__tacticoContext.camera.keys')
+                # Comprueba PNG/máscara, tinte de estado y respaldos sin recursos externos.
+                report['sprites']=page.evaluate("""async()=>{
+                  const {createSprites}=await import('../../../_tactico/sprites.js');
+                  const make=()=>{const c=new OffscreenCanvas(40,100),g=c.getContext('2d');g.fillStyle='#aabbcc';g.beginPath();g.moveTo(20,0);g.lineTo(40,100);g.lineTo(0,100);g.closePath();g.fill();return c;};
+                  const store=createSprites({manifest:{sprites:{ship:{src:'ship.png',mask:'mask.png'}}},loadImage:async()=>make()});await store.load();
+                  const c=new OffscreenCanvas(500,200),g=c.getContext('2d');
+                  store.drawSprite(g,'ship',50.25,80.75,{length:100,state:'normal',shadow:true});
+                  store.drawSprite(g,'ship',150.25,80.75,{length:100,state:'hit',shadow:true});
+                  for(const [i,name]of['naval.cargo','naval.carrier','air.jet'].entries())store.drawSprite(g,name,250.25+i*100,80.75,{length:80,shadow:true});
+                  const normal=g.getImageData(50,80,1,1).data,hit=g.getImageData(150,80,1,1).data;
+                  const png=await c.convertToBlob({type:'image/png'}),bytes=new Uint8Array(await png.arrayBuffer());let raw='';for(const b of bytes)raw+=String.fromCharCode(b);
+                  return {rasterAvailable:store.sprite('ship').available,tintDiffers:normal.slice(0,3).some((v,i)=>v!==hit[i]),png:btoa(raw)};
+                }""")
+                (out/'sprites.png').write_bytes(base64.b64decode(report['sprites'].pop('png')))
+                # Resize recompone el mismo renderer; no se abre una segunda página.
+                page.set_viewport_size({'width':1920,'height':1080})
+                horizontal={}
+                for t in [1.5,7.9,12.8]:horizontal[str(t)]=page.evaluate(MEASURE,t)['hash']
+                report['landscapeStable']={str(t):page.evaluate(MEASURE,t)['hash']==horizontal[str(t)] for t in [12.8,1.5,7.9]}
+                landscape=page.evaluate(MEASURE,7.9)
+                (out/'landscape.png').write_bytes(base64.b64decode(landscape['png']))
+                report['missingTilesLandscape']=page.evaluate('__atlas.missingTiles()')
+                # Misma página: el demo de un rótulo debe incluir la unidad a la que se ancla.
+                page.goto(origin+'/sandbox/nodehistory/atlas-en-movimiento/work/tactico/demo.new.html?headless=1&component=debug.label',wait_until='domcontentloaded')
+                page.wait_for_function('window.__promo && window.__tacticoContext')
+                page.evaluate('__atlas.ready');page.evaluate('__promo.seek(2)')
+                report['labelDemo']=page.evaluate('__tacticoContext.scene.items.map(i=>i.type)')
+            finally:
+                browser.close()
+            width=270;height=480
+            sheet=Image.new('RGB',(width*4,(height+24)*2),'#081e2c');draw=ImageDraw.Draw(sheet)
+            for i,(t,image) in enumerate(frames):
+                x=(i%4)*width;y=(i//4)*(height+24)
+                sheet.paste(image.resize((width,height),Image.Resampling.LANCZOS),(x,y+24));draw.text((x+8,y+5),f'{t:.2f} s',fill='white')
+            sheet.save(out/'sheet.jpg',quality=92)
+        report['tilesComplete']=not report['missingTiles'] and not report['missingTilesLandscape']
+        # Aceptación del núcleo. La integridad de la caché externa se informa por separado,
+        # conservando la lista completa de faltantes y sin certificarlos para grabación.
+        report['ok']=all(report['stable'].values()) and all(report['landscapeStable'].values()) and not errors and not failures and not external and report['idleKey'] and report['sprites']['tintDiffers'] and not report['missingTactico'] and set(report['labelDemo'])=={'debug.dot','debug.label'} and report['resourcesDuringSeeks']==0
+        (project/'work/tactico/check-result.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+        print(json.dumps({k:report[k] for k in ['ok','tilesComplete','stable','landscapeStable','consoleErrors','resourcesDuringSeeks','sprites']},ensure_ascii=False,indent=2),flush=True)
+        return 0 if report['ok'] else 1
+    finally:
+        server.shutdown();server.server_close()
+
+if __name__=='__main__':raise SystemExit(main())

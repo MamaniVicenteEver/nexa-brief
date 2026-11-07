@@ -56,6 +56,7 @@ interface QueueEntryDto {
   job_id: string;
   platform: string;
   account_alias: string;
+  format?: string | null;
   slot_id: string | null;
   scheduled_at: string | null;
   source: string;
@@ -74,6 +75,7 @@ function mapQueueEntry(dto: QueueEntryDto): QueueEntry {
     jobId: dto.job_id,
     platform: dto.platform as ChannelPlatform,
     accountAlias: dto.account_alias,
+    format: dto.format ?? null,
     slotId: dto.slot_id,
     scheduledAt: dto.scheduled_at,
     source: dto.source as QueueSourceType,
@@ -213,8 +215,10 @@ export async function publishNow(input: PublishNowInput): Promise<QueueEntry> {
     method: "POST",
     body: {
       job_id: input.jobId,
+      idempotency_key: input.idempotencyKey,
       platform: input.platform,
       account_alias: input.accountAlias,
+      format: input.format ?? null,
     },
   });
   return mapQueueEntry(dto);
@@ -280,6 +284,9 @@ interface SavedPlanItemDto extends PlanItemDto {
   production_state?: string | null;
   video_id?: string | null;
   created_at?: string;
+  generation_at?: string | null;
+  timezone?: string | null;
+  batch_id?: string | null;
 }
 
 function mapPlanItem(dto: PlanItemDto): PlanItem {
@@ -314,6 +321,9 @@ function mapSavedPlanItem(dto: SavedPlanItemDto): SavedPlanItem {
     productionState: dto.production_state ?? null,
     videoId: dto.video_id ?? null,
     createdAt: dto.created_at ?? "",
+    generationAt: dto.generation_at ?? null,
+    timezone: dto.timezone ?? null,
+    batchId: dto.batch_id ?? null,
   };
 }
 

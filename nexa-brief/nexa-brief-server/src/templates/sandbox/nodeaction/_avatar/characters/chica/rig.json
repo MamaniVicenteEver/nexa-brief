@@ -1,0 +1,80 @@
+{
+  "//": "Rig del avatar 'chica'. Coordenadas en píxeles de source.png (1024×1536). L/R = lado de PANTALLA. Lo lee build_avatar.py (cuts) y avatar.js (bones, layers, face).",
+  "name": "Chica de suéter",
+  "source": "source.png",
+  "size": [1024, 1536],
+  "feet": [518, 1462],
+  "height": 1420,
+
+  "cuts": {
+    "headBelowY": 300,
+    "neck": { "x": [457, 526], "lines": [[459, 463], [519, 523]], "extendTo": 205, "sample": [492, 282] },
+    "collarRegionsSeed": [[460, 330], [545, 330]],
+    "bodyRegionsSeed": [[450, 1000], [580, 1000], [430, 700], [545, 700], [612, 665], [432, 688]],
+    "armL": {
+      "line": [[383, 330], [389, 380], [397, 420], [404, 460], [409, 500], [412, 540], [409, 580], [397, 605], [397, 630], [402, 650], [405, 760]],
+      "top": 330, "bottom": 760, "band": 6
+    },
+    "armR": {
+      "line": [[600, 330], [601, 385], [606, 420], [612, 445], [614, 465], [613, 485], [611, 500], [608, 520], [608, 540], [616, 560], [627, 580], [634, 600], [628, 620], [623, 640], [626, 660], [633, 680], [640, 760]],
+      "top": 330, "bottom": 760, "band": 6
+    },
+    "handL": { "seed": [340, 800], "wristTop": 726, "extend": 34 },
+    "handR": { "seed": [675, 790], "wristTop": 722, "extend": 34 }
+  },
+
+  "bones": {
+    "root":   { "parent": null,     "at": [518, 1462] },
+    "hips":   { "parent": "root",   "at": [518, 660] },
+    "chest":  { "parent": "hips",   "at": [518, 655] },
+    "head":   { "parent": "chest",  "at": [492, 288] },
+    "hair":   { "parent": "chest",  "at": [492, 288] },
+    "armL":   { "parent": "chest",  "at": [366, 418] },
+    "foreL":  { "parent": "armL",   "at": [337, 598] },
+    "handL":  { "parent": "foreL",  "at": [336, 730] },
+    "armR":   { "parent": "chest",  "at": [632, 418] },
+    "foreR":  { "parent": "armR",   "at": [664, 596] },
+    "handR":  { "parent": "foreR",  "at": [667, 726] }
+  },
+
+  "layers": [
+    { "id": "body",  "cell": 10, "weights": { "type": "vertical", "from": "hips", "to": "chest", "y0": 690, "y1": 560 } },
+    { "id": "head",  "cell": 5,  "weights": { "type": "head", "bone": "head", "hair": "hair", "center": [512, 196], "r0": 78, "r1": 150, "minY": 150 } },
+    { "id": "handL", "cell": 6,  "weights": { "type": "rigid", "bone": "handL" }, "slot": "handL" },
+    { "id": "armL",  "cell": 7,  "weights": { "type": "chain", "bones": ["chest", "armL", "foreL"], "points": [[372, 372], [366, 418], [337, 598], [336, 730]], "blend": [38, 46], "pin": { "cut": "armL", "r": 22, "maxY": 470 } } },
+    { "id": "handR", "cell": 6,  "weights": { "type": "rigid", "bone": "handR" }, "slot": "handR" },
+    { "id": "armR",  "cell": 7,  "weights": { "type": "chain", "bones": ["chest", "armR", "foreR"], "points": [[624, 372], [632, 418], [664, 596], [667, 726]], "blend": [38, 46], "pin": { "cut": "armR", "r": 22, "maxY": 470 } } }
+  ],
+
+  "hands": {
+    "//": "manos de gesto (tools/hands_svg.py → hands/*.svg). Mano IZQUIERDA de pantalla, palma a cámara, dedos hacia abajo; dedo = [x, y, ancho, largo, ángulo(+ = hacia el pulgar), \"curl\"?]",
+    "shapes": ["open", "spread", "point", "fist", "thumb"],
+    "box": [120, 200], "wrist": [60, 18],
+    "ink": "#141110", "skin": "#ebded6", "shade": "#e3d0c5", "line": 4.4,
+    "palm": "M44 0 L76 0 C77 30 81 55 82 76 C83 94 81 104 76 108 L44 108 C39 104 37 94 38 78 C39 55 43 30 44 0 Z",
+    "spec": {
+      "open":   { "fingers": [[43, 96, 10.5, 62, 2], [54, 100, 11, 68, 0], [65, 98, 10.5, 62, -1.5], [75.5, 94, 9.5, 52, -4]], "thumb": [42, 50, 12, 50, 30], "crease": "M45 50 C48 64 50 76 49 88" },
+      "spread": { "fingers": [[43, 96, 10.5, 60, 14], [54, 100, 11, 66, 3], [65, 98, 10.5, 61, -8], [75.5, 94, 9.5, 50, -19]], "thumb": [42, 50, 12, 50, 52], "crease": "M45 50 C48 64 50 76 49 88" },
+      "point":  { "fingers": [[43, 96, 10.5, 64, 1], [54, 98, 11, 20, 0, "curl"], [65, 96, 10.5, 19, -2, "curl"], [75.5, 92, 9.5, 17, -5, "curl"]], "thumb": [41, 78, 11.5, 34, -70], "thumbOver": true },
+      "fist":   { "fingers": [[43, 96, 10.5, 21, 2, "curl"], [54, 98, 11, 22, 0, "curl"], [65, 96, 10.5, 20, -2, "curl"], [75.5, 92, 9.5, 18, -5, "curl"]], "thumb": [41, 78, 11.5, 34, -70], "thumbOver": true },
+      "thumb":  { "fingers": [[48, 96, 10.5, 21, 2, "curl"], [58, 98, 11, 22, 0, "curl"], [67.5, 96, 10.5, 20, -2, "curl"], [76.5, 92, 9.5, 18, -5, "curl"]], "thumb": [41, 84, 12, 58, 4] }
+    }
+  },
+
+  "face": {
+    "center": [512, 198],
+    "chin": [505, 268],
+    "turn": { "r": 74, "shift": 9, "hairShift": -3 },
+    "eyes": {
+      "L": { "c": [476, 185], "r": [21, 17], "lid": 197 },
+      "R": { "c": [543, 172], "r": [18, 17], "lid": 184 }
+    },
+    "brows": {
+      "L": { "c": [486, 142], "r": [22, 10] },
+      "R": { "c": [545, 134], "r": [21, 10] }
+    },
+    "mouth": { "c": [516, 230], "left": [493, 233], "right": [541, 224], "mid": [514, 236], "patch": [30, 13] },
+    "skin": "#efe3db",
+    "ink": "#141110"
+  }
+}

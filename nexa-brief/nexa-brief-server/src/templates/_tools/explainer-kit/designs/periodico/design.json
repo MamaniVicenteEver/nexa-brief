@@ -26,8 +26,12 @@
     "designs/periodico/components/scenes.js",
     "designs/common/outro-v1.js",
     "designs/common/hook.js",
+    "designs/common/logo.js",
+    "designs/common/clip.js",
     "designs/periodico/components/intros.js",
-    "designs/periodico/components/outro.js"
+    "designs/periodico/components/outro.js",
+    "designs/common/tabloid.js",
+    "designs/common/question.js"
   ],
   "defaults": {
     "family": "periodico",
@@ -68,6 +72,11 @@
       "support": "apoya el canal · comparte el video",
       "handle": "youtube.com/@nodehistory",
       "use": "periodico.outro"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.45)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

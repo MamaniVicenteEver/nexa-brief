@@ -40,3 +40,7 @@ Los `.gitignore` anclan esas carpetas a la raíz de cada proyecto (`/data/`, `/o
 Hexagonal: `src/core` (dominio y puertos) no conoce la infraestructura; `src/adapters` implementa los puertos
 (IA, medios, grabación, publicación, datos) y `src/presentation` expone la API. Toda la persistencia pasa por el
 DataStore (`src/adapters/data/README.md`).
+
+### Servicio TikTok local
+
+Instalá `nexa-tiktok` con `cd nexa-tiktok && uv sync --python 3.12` y `uv run playwright install chromium`. La versión de Playwright y Chromium queda fijada por `uv.lock`; no la cambies mientras existan perfiles. Configurá `nexa-tiktok/.env` desde `.env.example` y hacé coincidir `TIKTOK_SERVICE_KEY` del `.env` raíz con `NEXA_TIKTOK_KEY` del servicio. `make dev` inicia el servicio en `127.0.0.1:8100` junto con la web y la API. La cuenta se conecta desde `/canales`, escaneando el QR con la aplicación de TikTok en el móvil. No cierres sesión en TikTok. No expongas el servicio a Internet.

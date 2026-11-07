@@ -1,0 +1,3221 @@
+{
+ "version": 1,
+ "character": "nina",
+ "intro": {
+  "style": "v1",
+  "text": "POR QUÉ ^OLVIDAS^\nLO QUE ESTUDIAS",
+  "kicker": "MEMORIA · 4 PASOS",
+  "dur": 4.5
+ },
+ "outro": {
+  "channel": "NODEACTION",
+  "handle": "youtube.com/@nodeaction",
+  "dur": 6
+ },
+ "shots": [
+  {
+   "t": "@Repaso-1.6",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Repaso-1.6",
+       "pose": "hold",
+       "face": "smile"
+      },
+      {
+       "at": "@sonrie",
+       "pose": "stand",
+       "face": "grin"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Repaso-1.6",
+     "open": false,
+     "title": "EXAMEN",
+     "hold": "ines:R",
+     "dx": 5,
+     "dy": -10
+    },
+    {
+     "type": "prop",
+     "name": "clock",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Repaso-1.6",
+     "hour": 11.8
+    },
+    {
+     "type": "arc",
+     "x": 960,
+     "y": 205,
+     "size": 76,
+     "radius": 840,
+     "text": "EL EXAMEN EN BLANCO",
+     "at": "@Repaso-1.6",
+     "dur": 0.75
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 760,
+     "size": 50,
+     "weight": 800,
+     "text": "EL MARTES",
+     "at": "@Repaso-1.6",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Cuando lee la primera",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Cuando lee la primera",
+       "pose": "shock",
+       "face": "worried"
+      },
+      {
+       "at": "@la respuesta se le escurre",
+       "pose": "shrug",
+       "face": "worried"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "exam",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Cuando lee la primera",
+     "q": "¿Qué recuerdas?"
+    },
+    {
+     "type": "prop",
+     "name": "clock",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Cuando lee la primera",
+     "hour": 11.9,
+     "spin": 0.12
+    },
+    {
+     "type": "prop",
+     "name": "question",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Cuando lee la primera"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "¿Y AHORA QUÉ?",
+     "at": "@Cuando lee la primera",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Tal vez te paso",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Tal vez te paso",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@formula",
+       "pose": "talk",
+       "face": "worried"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 260,
+     "y": 520,
+     "at": "@Tal vez te paso",
+     "text": "x² + 1",
+     "back": "2x"
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 650,
+     "y": 610,
+     "at": "@Tal vez te paso",
+     "text": "hello",
+     "back": "hola"
+    },
+    {
+     "type": "prop",
+     "name": "question",
+     "s": 220,
+     "x": 1040,
+     "y": 520,
+     "at": "@Tal vez te paso"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "ME SUENA, NO SALE",
+     "at": "@Tal vez te paso",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Esa sensacion",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Esa sensacion",
+       "pose": "think",
+       "face": "worried"
+      },
+      {
+       "at": "@parece que ya lo sabes",
+       "pose": "shrug",
+       "face": "think"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Esa sensacion",
+     "open": true,
+     "title": "IDEAS"
+    },
+    {
+     "type": "prop",
+     "name": "eye",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Esa sensacion"
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Esa sensacion",
+     "len": 220,
+     "bow": 0.25
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "FAMILIAR NO ES SABER",
+     "at": "@Esa sensacion",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Reconocer una pagina",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Reconocer una pagina",
+       "pose": "point",
+       "face": "smile"
+      },
+      {
+       "at": "@recuperar una idea",
+       "pose": "talk",
+       "face": "talk"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "eye",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Reconocer una pagina"
+    },
+    {
+     "type": "prop",
+     "name": "brain",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Reconocer una pagina",
+     "glow": false
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Reconocer una pagina",
+     "len": 200,
+     "curly": true
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "RECONOCER NO ES RECORDAR",
+     "at": "@Reconocer una pagina",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Vamos a cambiar",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Vamos a cambiar",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@Ebbinghaus",
+       "pose": "point",
+       "face": "think"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "scientist",
+     "s": 220,
+     "x": 260,
+     "y": 520,
+     "at": "@Ebbinghaus"
+    },
+    {
+     "type": "prop",
+     "name": "syllables",
+     "s": 220,
+     "x": 650,
+     "y": 610,
+     "at": "@silabas",
+     "items": [
+      "DAX",
+      "BUP",
+      "ZOL"
+     ]
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "s": 220,
+     "x": 1040,
+     "y": 520,
+     "at": "@publico"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "EBBINGHAUS",
+     "at": "@Vamos a cambiar",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@1885",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@1885",
+       "pose": "pointL",
+       "face": "think"
+      },
+      {
+       "at": "@pruebas hechas",
+       "pose": "think",
+       "face": "think"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "syllables",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@1885",
+     "items": [
+      "DAX",
+      "BUP",
+      "ZOL"
+     ]
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@1885"
+    },
+    {
+     "type": "prop",
+     "name": "scientist",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@1885"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "1885 · PRUEBAS PROPIAS",
+     "at": "@1885",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Para medirlo",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Para medirlo",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@Calculaba cuanto trabajo",
+       "pose": "pointL",
+       "face": "think"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "hourglass",
+     "s": 220,
+     "x": 260,
+     "y": 520,
+     "at": "@Para medirlo",
+     "dur": 7
+    },
+    {
+     "type": "prop",
+     "name": "syllables",
+     "s": 220,
+     "x": 650,
+     "y": 610,
+     "at": "@Para medirlo",
+     "items": [
+      "DAX",
+      "BUP",
+      "ZOL"
+     ]
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "s": 220,
+     "x": 1040,
+     "y": 520,
+     "at": "@Para medirlo"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "AHORRO AL REAPRENDER",
+     "at": "@Para medirlo",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Asi convirtio",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Asi convirtio",
+       "pose": "point",
+       "face": "smile"
+      },
+      {
+       "at": "@En 2015",
+       "pose": "think",
+       "face": "worried"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "curve",
+     "s": 250,
+     "x": 1050,
+     "y": 520,
+     "at": "@Asi convirtio",
+     "points": 4,
+     "flat": 0.7,
+     "draw": 1.3,
+     "labels": true
+    },
+    {
+     "type": "prop",
+     "name": "scientist",
+     "s": 250,
+     "x": 1510,
+     "y": 610,
+     "at": "@En 2015"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "CURVA MEDIBLE",
+     "at": "@Asi convirtio",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Hallaron una curva",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@Hallaron una curva",
+       "pose": "shrug",
+       "face": "worried"
+      },
+      {
+       "at": "@pero eso no la convierte",
+       "pose": "pointL",
+       "face": "think"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "curve",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@Hallaron una curva",
+     "points": 4,
+     "flat": 0.65,
+     "labels": false
+    },
+    {
+     "type": "prop",
+     "name": "clock",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@Hallaron una curva",
+     "hour": 10.2
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "NO ES UN RELOJ",
+     "at": "@Hallaron una curva",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@La imagen util",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@La imagen util",
+       "pose": "pointL",
+       "face": "think"
+      },
+      {
+       "at": "@el descenso suele ralentizarse",
+       "pose": "think",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "curve",
+     "s": 300,
+     "x": 650,
+     "y": 520,
+     "at": "@La imagen util",
+     "points": 3,
+     "flat": 0.78,
+     "labels": true
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "BAJA, LUEGO FRENA",
+     "at": "@La imagen util",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@No hay un porcentaje",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@No hay un porcentaje",
+       "pose": "shrug",
+       "face": "worried"
+      },
+      {
+       "at": "@Usala como advertencia",
+       "pose": "pointL",
+       "face": "think"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "percent",
+     "s": 250,
+     "x": 1050,
+     "y": 520,
+     "at": "@No hay un porcentaje",
+     "text": "%",
+     "strike": 1.1
+    },
+    {
+     "type": "prop",
+     "name": "exam",
+     "s": 250,
+     "x": 1510,
+     "y": 610,
+     "at": "@No hay un porcentaje",
+     "q": "¿Qué recuerdas?"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "NO HAY PORCENTAJE FIJO",
+     "at": "@No hay un porcentaje",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Y tampoco necesitas",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Y tampoco necesitas",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@sentir familiaridad",
+       "pose": "shrug",
+       "face": "worried"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Y tampoco necesitas",
+     "open": true,
+     "title": "LEER"
+    },
+    {
+     "type": "prop",
+     "name": "eye",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Y tampoco necesitas"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "RELEER NO BASTA",
+     "at": "@Y tampoco necesitas",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Esa pagina ya la vi",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Esa pagina ya la vi",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@El examen pide otra cosa",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "eye",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Esa pagina ya la vi"
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Esa pagina ya la vi",
+     "open": false,
+     "title": "CERRADO"
+    },
+    {
+     "type": "prop",
+     "name": "brain",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Esa pagina ya la vi",
+     "glow": true
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "TRÁELO A LA MENTE",
+     "at": "@Esa pagina ya la vi",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Primero evita concentrar",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Primero evita concentrar",
+       "pose": "point",
+       "face": "smile"
+      },
+      {
+       "at": "@Distribuye las sesiones",
+       "pose": "pointL",
+       "face": "smile"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "pile",
+     "s": 250,
+     "x": 1050,
+     "y": 520,
+     "at": "@Primero evita concentrar",
+     "n": 12,
+     "split": 1,
+     "splitAt": 1.2
+    },
+    {
+     "type": "prop",
+     "name": "calendar",
+     "s": 250,
+     "x": 1510,
+     "y": 610,
+     "at": "@Distribuye las sesiones",
+     "days": 7,
+     "marks": [
+      0,
+      2,
+      5
+     ],
+     "markAt": 0.35
+    },
+    {
+     "type": "arc",
+     "x": 960,
+     "y": 205,
+     "size": 76,
+     "radius": 840,
+     "text": "PASO 1 · DEJA ESPACIO",
+     "at": "@Primero evita concentrar",
+     "dur": 0.75
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 760,
+     "size": 50,
+     "weight": 800,
+     "text": "REPASOS ESPACIADOS",
+     "at": "@Primero evita concentrar",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Un analisis de 317",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Un analisis de 317",
+       "pose": "think",
+       "face": "talk"
+      },
+      {
+       "at": "@317",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "calendar",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Un analisis de 317",
+     "days": 7,
+     "marks": [
+      0,
+      2,
+      5
+     ],
+     "markAt": 0.3
+    },
+    {
+     "type": "prop",
+     "name": "papers",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Un analisis de 317",
+     "from": 2,
+     "to": 8,
+     "grow": 1.4
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "317 EXPERIMENTOS",
+     "at": "@Un analisis de 317",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@El intervalo ideal",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@El intervalo ideal",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@No existe un calendario",
+       "pose": "shrug",
+       "face": "worried"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "calendar",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@El intervalo ideal",
+     "days": 7,
+     "marks": [
+      1,
+      4
+     ],
+     "markAt": 0.4
+    },
+    {
+     "type": "prop",
+     "name": "hourglass",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@El intervalo ideal",
+     "dur": 6
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "DEPENDE DEL PLAZO",
+     "at": "@El intervalo ideal",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@No existe un calendario",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@No existe un calendario",
+       "pose": "shrug",
+       "face": "think"
+      },
+      {
+       "at": "@Empieza hoy",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "calendar",
+     "s": 250,
+     "x": 1050,
+     "y": 520,
+     "at": "@No existe un calendario",
+     "days": 7,
+     "marks": [
+      0,
+      2,
+      5
+     ],
+     "markAt": 0.35
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 250,
+     "x": 1510,
+     "y": 610,
+     "at": "@Empieza hoy",
+     "len": 210,
+     "curly": true
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "SIN AGENDA MÁGICA",
+     "at": "@No existe un calendario",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Si tienes el examen",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Si tienes el examen",
+       "pose": "write",
+       "face": "talk"
+      },
+      {
+       "at": "@una semana",
+       "pose": "think",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "exam",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Si tienes el examen",
+     "q": "¿En una semana?"
+    },
+    {
+     "type": "prop",
+     "name": "calendar",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Si tienes el examen",
+     "days": 7,
+     "marks": [
+      0,
+      1,
+      3
+     ],
+     "markAt": 0.3
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "PRUEBA UNA SEMANA",
+     "at": "@Si tienes el examen",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Anade una mas",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@Anade una mas",
+       "pose": "write",
+       "face": "talk"
+      },
+      {
+       "at": "@Es una propuesta inicial",
+       "pose": "shrug",
+       "face": "smile"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "calendar",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@Anade una mas",
+     "days": 7,
+     "marks": [
+      0,
+      1,
+      3
+     ],
+     "markAt": 0.26
+    },
+    {
+     "type": "prop",
+     "name": "check",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@Anade una mas"
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "HOY · MAÑANA · MITAD",
+     "at": "@Anade una mas",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Con el idioma",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Con el idioma",
+       "pose": "hold",
+       "face": "smile"
+      },
+      {
+       "at": "@descansa",
+       "pose": "think",
+       "face": "think"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Con el idioma",
+     "text": "casa",
+     "back": "house"
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Con el idioma",
+     "text": "agua",
+     "back": "water"
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Con el idioma",
+     "text": "luz",
+     "back": "light"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "VOCABULARIO ESPACIADO",
+     "at": "@Con el idioma",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Una palabra aparece",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Una palabra aparece",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@regresa",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Una palabra aparece",
+     "text": "casa",
+     "back": "house",
+     "flipAt": 2.2
+    },
+    {
+     "type": "prop",
+     "name": "hourglass",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Una palabra aparece",
+     "dur": 5
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "APARECE · DESCANSA · VUELVE",
+     "at": "@Una palabra aparece",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Recuerda su significado",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@Recuerda su significado",
+       "pose": "hold",
+       "face": "think"
+      },
+      {
+       "at": "@Cada regreso",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@Recuerda su significado",
+     "text": "¿Qué significa?",
+     "back": "house",
+     "flipAt": 3
+    },
+    {
+     "type": "prop",
+     "name": "bubble",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@Recuerda su significado",
+     "text": "casa",
+     "kind": "thought"
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "RECUERDA ANTES DE MIRAR",
+     "at": "@Recuerda su significado",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Un esfuerzo breve",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Un esfuerzo breve",
+       "pose": "point",
+       "face": "smile"
+      },
+      {
+       "at": "@si fallas",
+       "pose": "talk",
+       "face": "talk"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Un esfuerzo breve",
+     "text": "¿Lo recuerdas?",
+     "back": "respuesta",
+     "flipAt": 2.2
+    },
+    {
+     "type": "prop",
+     "name": "check",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Un esfuerzo breve"
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Un esfuerzo breve",
+     "len": 180,
+     "curly": true
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "INTENTA · REVISA · VUELVE",
+     "at": "@Un esfuerzo breve",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Ahora Ines",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@Ahora Ines",
+       "pose": "think",
+       "face": "think"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@Ahora Ines",
+     "open": false,
+     "title": "APUNTES"
+    },
+    {
+     "type": "prop",
+     "name": "plant",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@Ahora Ines"
+    },
+    {
+     "type": "arc",
+     "x": 960,
+     "y": 205,
+     "size": 76,
+     "radius": 840,
+     "text": "PASO 2 · RECUPERA",
+     "at": "@Ahora Ines",
+     "dur": 0.75
+    }
+   ]
+  },
+  {
+   "t": "@voz alta",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@voz alta",
+       "pose": "talk",
+       "face": "talk"
+      },
+      {
+       "at": "@entrena la memoria",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "plant",
+     "s": 220,
+     "x": 260,
+     "y": 520,
+     "at": "@voz alta"
+    },
+    {
+     "type": "prop",
+     "name": "bubble",
+     "s": 220,
+     "x": 650,
+     "y": 610,
+     "at": "@voz alta",
+     "text": "FOTOSÍNTESIS",
+     "kind": "speech"
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "s": 220,
+     "x": 1040,
+     "y": 520,
+     "at": "@voz alta"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "EXPLICA SIN MIRAR",
+     "at": "@voz alta",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Hazlo con una hoja",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Hazlo con una hoja",
+       "pose": "write",
+       "face": "talk"
+      },
+      {
+       "at": "@Tambien puedes dibujar",
+       "pose": "pointL",
+       "face": "think"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "s": 250,
+     "x": 1050,
+     "y": 520,
+     "at": "@Hazlo con una hoja"
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 250,
+     "x": 1510,
+     "y": 610,
+     "at": "@Hazlo con una hoja",
+     "text": "¿Qué recuerdas?",
+     "back": "respuesta"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "HOJA · TARJETA · PREGUNTA",
+     "at": "@Hazlo con una hoja",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Tambien puedes dibujar",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@Tambien puedes dibujar",
+       "pose": "point",
+       "face": "smile"
+      },
+      {
+       "at": "@Di la respuesta",
+       "pose": "hold",
+       "face": "talk"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "plant",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@Tambien puedes dibujar"
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@Tambien puedes dibujar",
+     "len": 190,
+     "curly": true
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "DIBUJA EL PROCESO",
+     "at": "@Tambien puedes dibujar",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Roediger y Karpicke",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Roediger y Karpicke",
+       "pose": "pointL",
+       "face": "think"
+      },
+      {
+       "at": "@practicar el recuerdo",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "columns",
+     "s": 250,
+     "x": 1050,
+     "y": 520,
+     "at": "@Roediger y Karpicke",
+     "left": "RELEER",
+     "right": "PROBAR"
+    },
+    {
+     "type": "prop",
+     "name": "clock",
+     "s": 250,
+     "x": 1510,
+     "y": 610,
+     "at": "@Roediger y Karpicke",
+     "hour": 3
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "RECUERDO DEMORADO",
+     "at": "@Roediger y Karpicke",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Para una prueba inmediata",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Para una prueba inmediata",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@releer dio ventaja",
+       "pose": "pointL",
+       "face": "talk"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "columns",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Para una prueba inmediata",
+     "left": "RELEER",
+     "right": "RECORDAR"
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Para una prueba inmediata",
+     "open": true,
+     "title": "HOY"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "PRUEBA INMEDIATA",
+     "at": "@Para una prueba inmediata",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Preguntate",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Preguntate",
+       "pose": "talk",
+       "face": "talk"
+      },
+      {
+       "at": "@responde primero",
+       "pose": "point",
+       "face": "think"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 250,
+     "x": 1050,
+     "y": 520,
+     "at": "@Preguntate",
+     "text": "¿Qué explica?",
+     "back": "fórmula",
+     "flipAt": 3
+    },
+    {
+     "type": "prop",
+     "name": "bubble",
+     "s": 250,
+     "x": 1510,
+     "y": 610,
+     "at": "@Preguntate",
+     "text": "¿Cómo lo digo?",
+     "kind": "speech"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "RESPONDE DE MEMORIA",
+     "at": "@Preguntate",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Si no sale",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@Si no sale",
+       "pose": "shrug",
+       "face": "worried"
+      },
+      {
+       "at": "@Consulta una fuente confiable",
+       "pose": "think",
+       "face": "think"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "exam",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@Si no sale",
+     "q": "¿Qué falta?"
+    },
+    {
+     "type": "prop",
+     "name": "x",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@Si no sale"
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "SIN CASTIGO",
+     "at": "@Si no sale",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@El error te senala",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@El error te senala",
+       "pose": "think",
+       "face": "worried"
+      },
+      {
+       "at": "@La clave es alternar",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "magnifier",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@El error te senala"
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@El error te senala",
+     "len": 190,
+     "curly": true
+    },
+    {
+     "type": "prop",
+     "name": "check",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@El error te senala"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "ERROR = PISTA",
+     "at": "@El error te senala",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@En ensayos",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@En ensayos",
+       "pose": "point",
+       "face": "think"
+      },
+      {
+       "at": "@La respuesta correcta",
+       "pose": "hold",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "columns",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@En ensayos",
+     "left": "ESTUDIO",
+     "right": "PRUEBA"
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@En ensayos",
+     "text": "¿Lo recuerdas?",
+     "back": "respuesta"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "UNA SEMANA DESPUÉS",
+     "at": "@En ensayos",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Aqui esta el giro",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@Aqui esta el giro",
+       "pose": "cheer",
+       "face": "grin"
+      },
+      {
+       "at": "@El estudio no se mide",
+       "pose": "point",
+       "face": "talk"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 220,
+     "x": 450,
+     "y": 520,
+     "at": "@Aqui esta el giro",
+     "open": false,
+     "title": "CERRADO"
+    },
+    {
+     "type": "prop",
+     "name": "brain",
+     "s": 220,
+     "x": 960,
+     "y": 610,
+     "at": "@Aqui esta el giro",
+     "glow": true
+    },
+    {
+     "type": "prop",
+     "name": "puzzle",
+     "s": 220,
+     "x": 1470,
+     "y": 520,
+     "at": "@Aqui esta el giro",
+     "joinAt": 1.5
+    },
+    {
+     "type": "script",
+     "x": 960,
+     "y": 380,
+     "size": 64,
+     "text": "El giro",
+     "tilt": -3,
+     "at": "@Aqui esta el giro"
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "RECONSTRUIR SIN MIRAR",
+     "at": "@Aqui esta el giro",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@reconstruyes sin mirarlas",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@reconstruyes sin mirarlas",
+       "pose": "point",
+       "face": "smile"
+      },
+      {
+       "at": "@incluso cuando cuesta",
+       "pose": "cheer",
+       "face": "grin"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "puzzle",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@reconstruyes sin mirarlas",
+     "joinAt": 1.2
+    },
+    {
+     "type": "prop",
+     "name": "brain",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@reconstruyes sin mirarlas",
+     "glow": true
+    },
+    {
+     "type": "prop",
+     "name": "star",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@reconstruyes sin mirarlas"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "EL CAMINO SE REFUERZA",
+     "at": "@reconstruyes sin mirarlas",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Escribe tres preguntas-0.2",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Escribe tres preguntas-0.2",
+       "pose": "write",
+       "face": "think"
+      },
+      {
+       "at": "@Si contestas dos",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "exam",
+     "s": 220,
+     "x": 260,
+     "y": 520,
+     "at": "@Escribe tres preguntas",
+     "q": "Idea 1 · 2 · 3"
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "s": 220,
+     "x": 650,
+     "y": 610,
+     "at": "@Escribe tres preguntas"
+    },
+    {
+     "type": "prop",
+     "name": "check",
+     "s": 220,
+     "x": 1040,
+     "y": 520,
+     "at": "@Escribe tres preguntas"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "TRES PREGUNTAS",
+     "at": "@Escribe tres preguntas",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@El tercer paso",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@El tercer paso",
+       "pose": "point",
+       "face": "think"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "columns",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@El tercer paso",
+     "left": "TIPO A",
+     "right": "TIPO B"
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@El tercer paso",
+     "len": 200,
+     "curly": true
+    },
+    {
+     "type": "arc",
+     "x": 960,
+     "y": 205,
+     "size": 76,
+     "radius": 840,
+     "text": "PASO 3 · INTERCALA",
+     "at": "@El tercer paso",
+     "dur": 0.75
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 760,
+     "size": 50,
+     "weight": 800,
+     "text": "ELIGE EL MÉTODO",
+     "at": "@El tercer paso",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Tras aprender",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Tras aprender",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@parecidos",
+       "pose": "pointL",
+       "face": "talk"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Tras aprender",
+     "text": "A",
+     "back": "método A"
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Tras aprender",
+     "text": "B",
+     "back": "método B"
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Tras aprender",
+     "len": 200
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "COMPARA DIFERENCIAS",
+     "at": "@Tras aprender",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Intercalar no sirve",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Intercalar no sirve",
+       "pose": "shrug",
+       "face": "think"
+      },
+      {
+       "at": "@beneficios al distinguir",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "columns",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Intercalar no sirve",
+     "left": "IMÁGENES",
+     "right": "TEXTOS"
+    },
+    {
+     "type": "prop",
+     "name": "puzzle",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Intercalar no sirve",
+     "pieces": 2
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "DEPENDE DEL MATERIAL",
+     "at": "@Intercalar no sirve",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Para textos",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Para textos",
+       "pose": "pointL",
+       "face": "think"
+      },
+      {
+       "at": "@resultados fueron variables",
+       "pose": "shrug",
+       "face": "worried"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "columns",
+     "s": 250,
+     "x": 1050,
+     "y": 520,
+     "at": "@Para textos",
+     "left": "PALABRAS",
+     "right": "TEXTOS"
+    },
+    {
+     "type": "prop",
+     "name": "syllables",
+     "s": 250,
+     "x": 1510,
+     "y": 610,
+     "at": "@Para textos",
+     "items": [
+      "A",
+      "B",
+      "C"
+     ]
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "RESULTADOS VARIABLES",
+     "at": "@Para textos",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Aun asi alternar",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Aun asi alternar",
+       "pose": "point",
+       "face": "smile"
+      },
+      {
+       "at": "@cada problema",
+       "pose": "think",
+       "face": "think"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "exam",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Aun asi alternar",
+     "q": "¿Qué método toca?"
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Aun asi alternar",
+     "text": "¿Sumar o despejar?",
+     "back": "elige"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "ELIGE EL MÉTODO",
+     "at": "@Aun asi alternar",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@sumar multiplicar o despejar",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@sumar multiplicar o despejar",
+       "pose": "pointL",
+       "face": "talk"
+      },
+      {
+       "at": "@despejar",
+       "pose": "think",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "letter",
+     "s": 220,
+     "x": 260,
+     "y": 520,
+     "at": "@sumar multiplicar o despejar",
+     "text": "+"
+    },
+    {
+     "type": "prop",
+     "name": "letter",
+     "s": 220,
+     "x": 650,
+     "y": 610,
+     "at": "@sumar multiplicar o despejar",
+     "text": "×"
+    },
+    {
+     "type": "prop",
+     "name": "letter",
+     "s": 220,
+     "x": 1040,
+     "y": 520,
+     "at": "@sumar multiplicar o despejar",
+     "text": "x"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "SUMAR · MULTIPLICAR · DESPEJAR",
+     "at": "@sumar multiplicar o despejar",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@El cuarto paso",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@El cuarto paso",
+       "pose": "think",
+       "face": "worried"
+      },
+      {
+       "at": "@dormir",
+       "pose": "wave",
+       "face": "smile"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "moon",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@El cuarto paso"
+    },
+    {
+     "type": "prop",
+     "name": "bed",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@El cuarto paso"
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@El cuarto paso",
+     "open": false,
+     "title": "REPASO"
+    },
+    {
+     "type": "arc",
+     "x": 960,
+     "y": 205,
+     "size": 76,
+     "radius": 840,
+     "text": "PASO 4 · DUERME",
+     "at": "@El cuarto paso",
+     "dur": 0.75
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 760,
+     "size": 50,
+     "weight": 800,
+     "text": "SUEÑO Y MEMORIA",
+     "at": "@El cuarto paso",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Las revisiones cientificas",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Las revisiones cientificas",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@consolidacion de recuerdos",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "brain",
+     "s": 250,
+     "x": 420,
+     "y": 520,
+     "at": "@Las revisiones cientificas",
+     "glow": true
+    },
+    {
+     "type": "prop",
+     "name": "moon",
+     "s": 250,
+     "x": 880,
+     "y": 610,
+     "at": "@Las revisiones cientificas"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "SUEÑO Y RECUERDOS",
+     "at": "@Las revisiones cientificas",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@No es magia",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@No es magia",
+       "pose": "shrug",
+       "face": "think"
+      },
+      {
+       "at": "@duerme lo suficiente",
+       "pose": "wave",
+       "face": "smile"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@No es magia",
+     "open": false,
+     "title": "ESTUDIO"
+    },
+    {
+     "type": "prop",
+     "name": "moon",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@No es magia"
+    },
+    {
+     "type": "type",
+     "x": 1540,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "NO REEMPLAZA ESTUDIAR",
+     "at": "@No es magia",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Deja que el descanso",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Deja que el descanso",
+       "pose": "talk",
+       "face": "talk"
+      },
+      {
+       "at": "@No cambies horas de sueno",
+       "pose": "wave",
+       "face": "smile"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "bed",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Deja que el descanso"
+    },
+    {
+     "type": "prop",
+     "name": "moon",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Deja que el descanso"
+    },
+    {
+     "type": "prop",
+     "name": "clock",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Deja que el descanso",
+     "hour": 10.8
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "DESCANSO ACOMPAÑA",
+     "at": "@Deja que el descanso",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Tu reto empieza hoy",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Tu reto empieza hoy",
+       "pose": "write",
+       "face": "grin"
+      },
+      {
+       "at": "@responde con el libro cerrado",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "exam",
+     "s": 220,
+     "x": 260,
+     "y": 520,
+     "at": "@Tu reto empieza hoy",
+     "q": "Tema del examen"
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 650,
+     "y": 610,
+     "at": "@Tu reto empieza hoy",
+     "text": "¿Qué recuerdas?",
+     "back": "respuesta"
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "s": 220,
+     "x": 1040,
+     "y": 520,
+     "at": "@Tu reto empieza hoy"
+    },
+    {
+     "type": "script",
+     "x": 650,
+     "y": 380,
+     "size": 64,
+     "text": "Tu reto",
+     "tilt": -3,
+     "at": "@Tu reto empieza hoy"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "ELIGE UN TEMA",
+     "at": "@Tu reto empieza hoy",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Despues abre tus apuntes",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@Despues abre tus apuntes",
+       "pose": "hold",
+       "face": "think"
+      },
+      {
+       "at": "@comprueba tus respuestas",
+       "pose": "point",
+       "face": "smile"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@Despues abre tus apuntes",
+     "open": true,
+     "title": "APUNTES"
+    },
+    {
+     "type": "prop",
+     "name": "check",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@Despues abre tus apuntes"
+    },
+    {
+     "type": "type",
+     "x": 1540,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "COMPRUEBA TUS RESPUESTAS",
+     "at": "@Despues abre tus apuntes",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Mezcla preguntas parecidas",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Mezcla preguntas parecidas",
+       "pose": "point",
+       "face": "smile"
+      },
+      {
+       "at": "@reserva una noche normal",
+       "pose": "wave",
+       "face": "smile"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "calendar",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Mezcla preguntas parecidas",
+     "days": 7,
+     "marks": [
+      0,
+      1,
+      4
+     ],
+     "markAt": 0.3
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Mezcla preguntas parecidas",
+     "text": "Pregunta",
+     "back": "respuesta"
+    },
+    {
+     "type": "prop",
+     "name": "bed",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Mezcla preguntas parecidas"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "ESPACIA · CORRIGE · DUERME",
+     "at": "@Mezcla preguntas parecidas",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@No hace falta una sesion heroica",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 960,
+     "y": 1010,
+     "h": 550,
+     "poses": [
+      {
+       "at": "@No hace falta una sesion heroica",
+       "pose": "shrug",
+       "face": "worried"
+      },
+      {
+       "at": "@Ines ya no confia",
+       "pose": "think",
+       "face": "smile"
+      }
+     ],
+     "lookX": 0
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 250,
+     "x": 590,
+     "y": 520,
+     "at": "@No hace falta una sesion heroica",
+     "open": false,
+     "title": "CERRADO"
+    },
+    {
+     "type": "prop",
+     "name": "clock",
+     "s": 250,
+     "x": 1330,
+     "y": 610,
+     "at": "@No hace falta una sesion heroica",
+     "hour": 10.4
+    },
+    {
+     "type": "type",
+     "x": 1400,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "SIN SESIÓN HEROICA",
+     "at": "@No hace falta una sesion heroica",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Cierra el libro#2",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 1530,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Cierra el libro#2",
+       "pose": "hold",
+       "face": "smile"
+      },
+      {
+       "at": "@La proxima vez",
+       "pose": "cheer",
+       "face": "grin"
+      }
+     ],
+     "lookX": -1
+    },
+    {
+     "type": "prop",
+     "name": "book",
+     "s": 220,
+     "x": 260,
+     "y": 520,
+     "at": "@Cierra el libro#2",
+     "open": false,
+     "title": "RESPUESTA",
+     "hold": "ines:R",
+     "dx": 5,
+     "dy": -12
+    },
+    {
+     "type": "prop",
+     "name": "card",
+     "s": 220,
+     "x": 650,
+     "y": 610,
+     "at": "@Cierra el libro#2",
+     "text": "¿Lo recuerdas?",
+     "back": "sí",
+     "flipAt": 2
+    },
+    {
+     "type": "prop",
+     "name": "check",
+     "s": 220,
+     "x": 1040,
+     "y": 520,
+     "at": "@Cierra el libro#2"
+    },
+    {
+     "type": "type",
+     "x": 650,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "AHORA SÍ RECUERDA",
+     "at": "@Cierra el libro#2",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  },
+  {
+   "t": "@Olvidar no es el final",
+   "items": [
+    {
+     "type": "man",
+     "id": "ines",
+     "x": 390,
+     "y": 1010,
+     "h": 750,
+     "poses": [
+      {
+       "at": "@Olvidar no es el final",
+       "pose": "cheer",
+       "face": "grin"
+      },
+      {
+       "at": "@es la senal",
+       "pose": "wave",
+       "face": "grin"
+      }
+     ],
+     "lookX": 1
+    },
+    {
+     "type": "prop",
+     "name": "calendar",
+     "s": 220,
+     "x": 890,
+     "y": 520,
+     "at": "@Olvidar no es el final",
+     "days": 7,
+     "marks": [
+      0,
+      2,
+      5
+     ],
+     "markAt": 0.3
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "s": 220,
+     "x": 1280,
+     "y": 610,
+     "at": "@Olvidar no es el final",
+     "len": 220,
+     "curly": true
+    },
+    {
+     "type": "prop",
+     "name": "star",
+     "s": 220,
+     "x": 1670,
+     "y": 520,
+     "at": "@Olvidar no es el final"
+    },
+    {
+     "type": "type",
+     "x": 1280,
+     "y": 820,
+     "size": 50,
+     "weight": 800,
+     "text": "VUELVE DE OTRA MANERA",
+     "at": "@Olvidar no es el final",
+     "maxW": 1000,
+     "step": 0.13
+    }
+   ]
+  }
+ ]
+}

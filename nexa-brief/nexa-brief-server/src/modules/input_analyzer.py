@@ -103,7 +103,7 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     t_start = time.monotonic()
     logger.info("input_analyzer_start", job_id=job.job_id, category=job.input.category_name)
 
-    logs_dir: Path = job.artifacts.output_dir / "logs"
+    logs_dir: Path = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     # ── Recolección: lo que el usuario ya sabe sobre la canción ───────────────

@@ -1,0 +1,660 @@
+{
+  "version": 1,
+  "end": 20,
+  "outro": {
+    "enabled": false
+  },
+  "shots": [
+    {
+      "t": 0,
+      "items": [
+        {
+          "type": "prop",
+          "name": "clock",
+          "x": 120,
+          "y": 110,
+          "s": 92,
+          "hour": 10.2,
+          "spin": 0.04,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 120,
+          "y": 184,
+          "text": "clock",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "bulb",
+          "x": 360,
+          "y": 110,
+          "s": 92,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 360,
+          "y": 184,
+          "text": "bulb",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "enigma",
+          "x": 600,
+          "y": 110,
+          "s": 92,
+          "spin": 0.6,
+          "lit": true,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 600,
+          "y": 184,
+          "text": "enigma",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "letter",
+          "x": 840,
+          "y": 110,
+          "s": 82,
+          "text": "A",
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 840,
+          "y": 184,
+          "text": "letter",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "rotor",
+          "x": 1080,
+          "y": 110,
+          "s": 92,
+          "spin": 1.4,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1080,
+          "y": 184,
+          "text": "rotor",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "papers",
+          "x": 1320,
+          "y": 110,
+          "s": 105,
+          "from": 5,
+          "to": 12,
+          "grow": 2.7,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1320,
+          "y": 184,
+          "text": "papers",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "paper",
+          "x": 1560,
+          "y": 110,
+          "s": 92,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1560,
+          "y": 184,
+          "text": "paper",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "lock",
+          "x": 1800,
+          "y": 110,
+          "s": 86,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1800,
+          "y": 184,
+          "text": "lock",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "x",
+          "x": 120,
+          "y": 315,
+          "s": 76,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 120,
+          "y": 389,
+          "text": "x",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "check",
+          "x": 360,
+          "y": 315,
+          "s": 72,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 360,
+          "y": 389,
+          "text": "check",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "arrow",
+          "x": 600,
+          "y": 315,
+          "s": 74,
+          "len": 142,
+          "bow": 0.4,
+          "draw": 0.65,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 600,
+          "y": 389,
+          "text": "arrow",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "universe",
+          "x": 840,
+          "y": 315,
+          "s": 100,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 840,
+          "y": 389,
+          "text": "universe",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "envelope",
+          "x": 1080,
+          "y": 315,
+          "s": 88,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1080,
+          "y": 389,
+          "text": "envelope",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "question",
+          "x": 1320,
+          "y": 315,
+          "s": 68,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1320,
+          "y": 389,
+          "text": "question",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "sub",
+          "x": 1560,
+          "y": 315,
+          "s": 82,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1560,
+          "y": 389,
+          "text": "sub",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "exam",
+          "x": 1800,
+          "y": 315,
+          "s": 102,
+          "q": "¿Qué recuerdas?",
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1800,
+          "y": 389,
+          "text": "exam",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "book",
+          "x": 120,
+          "y": 520,
+          "s": 110,
+          "open": true,
+          "title": "IDEAS",
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 120,
+          "y": 594,
+          "text": "book · open",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "book",
+          "x": 360,
+          "y": 520,
+          "s": 110,
+          "open": false,
+          "title": "ESTUDIO",
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 360,
+          "y": 594,
+          "text": "book · closed",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "card",
+          "x": 600,
+          "y": 520,
+          "s": 106,
+          "text": "¿Lo recuerdas?",
+          "back": "¡Sí!",
+          "flipAt": 2,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 600,
+          "y": 594,
+          "text": "card",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "brain",
+          "x": 840,
+          "y": 520,
+          "s": 100,
+          "glow": true,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 840,
+          "y": 594,
+          "text": "brain",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "eye",
+          "x": 1080,
+          "y": 520,
+          "s": 100,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1080,
+          "y": 594,
+          "text": "eye",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "hourglass",
+          "x": 1320,
+          "y": 520,
+          "s": 104,
+          "dur": 5,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1320,
+          "y": 594,
+          "text": "hourglass",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "curve",
+          "x": 1560,
+          "y": 520,
+          "s": 115,
+          "points": 5,
+          "draw": 1.7,
+          "flat": 0.65,
+          "labels": true,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1560,
+          "y": 594,
+          "text": "curve",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "calendar",
+          "x": 1800,
+          "y": 520,
+          "s": 112,
+          "days": 7,
+          "marks": [
+            0,
+            2,
+            4,
+            6
+          ],
+          "markAt": 0.38,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1800,
+          "y": 594,
+          "text": "calendar",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "bubble",
+          "x": 120,
+          "y": 725,
+          "s": 104,
+          "text": "Lo recuerdo",
+          "kind": "speech",
+          "tail": "left",
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 120,
+          "y": 799,
+          "text": "bubble · speech",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "bubble",
+          "x": 360,
+          "y": 725,
+          "s": 104,
+          "text": "¿Y si…?",
+          "kind": "thought",
+          "tail": "right",
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 360,
+          "y": 799,
+          "text": "bubble · thought",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "magnifier",
+          "x": 600,
+          "y": 725,
+          "s": 104,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 600,
+          "y": 799,
+          "text": "magnifier",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "plant",
+          "x": 840,
+          "y": 725,
+          "s": 100,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 840,
+          "y": 799,
+          "text": "plant",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "puzzle",
+          "x": 1080,
+          "y": 725,
+          "s": 112,
+          "pieces": 3,
+          "joinAt": 2.8,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1080,
+          "y": 799,
+          "text": "puzzle",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "star",
+          "x": 1320,
+          "y": 725,
+          "s": 90,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1320,
+          "y": 799,
+          "text": "star",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "bed",
+          "x": 1560,
+          "y": 725,
+          "s": 104,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1560,
+          "y": 799,
+          "text": "bed",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "moon",
+          "x": 1800,
+          "y": 725,
+          "s": 94,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1800,
+          "y": 799,
+          "text": "moon",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "syllables",
+          "x": 120,
+          "y": 930,
+          "s": 110,
+          "items": [
+            "DAX",
+            "BUP",
+            "ZOL"
+          ],
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 120,
+          "y": 1004,
+          "text": "syllables",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "percent",
+          "x": 360,
+          "y": 930,
+          "s": 78,
+          "text": "%",
+          "strike": 2.5,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 360,
+          "y": 1004,
+          "text": "percent",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "scientist",
+          "x": 600,
+          "y": 930,
+          "s": 96,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 600,
+          "y": 1004,
+          "text": "scientist",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "columns",
+          "x": 840,
+          "y": 930,
+          "s": 108,
+          "left": "ANTES",
+          "right": "DESPUÉS",
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 840,
+          "y": 1004,
+          "text": "columns",
+          "size": 20,
+          "at": 0
+        },
+        {
+          "type": "prop",
+          "name": "pile",
+          "x": 1080,
+          "y": 930,
+          "s": 110,
+          "n": 15,
+          "split": 1,
+          "splitAt": 3.2,
+          "at": 0
+        },
+        {
+          "type": "label",
+          "x": 1080,
+          "y": 1004,
+          "text": "pile",
+          "size": 20,
+          "at": 0
+        }
+      ]
+    }
+  ]
+}

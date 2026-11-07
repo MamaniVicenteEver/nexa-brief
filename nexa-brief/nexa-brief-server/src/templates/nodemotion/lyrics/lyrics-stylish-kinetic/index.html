@@ -837,6 +837,8 @@
   @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
   body.headless #hint { display: none !important; }
 </style>
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
 </head>
 <body>
 <!-- desenfoque de movimiento direccional (x / y) en 3 intensidades -->
@@ -873,7 +875,7 @@
    ?t=12.3 congela ese cuadro (debug / capturas). */
 const ACTIVE_ID = null;   /* <-- forzar un id · null = usa "activeId" del JSON */
 
-const DEFAULT_CONFIG = {"activeId":"default","configs":[{"id":"default","description":"Kinetic typography stylish de colores planos. — metadata para marketing/SEO, la plantilla no la usa todavía.","audio":{"src":"assets/From-Klickpin2.mp3"},"lyricsUrl":"assets/lyrics.json","fonts":{"googleUrl":"https://fonts.googleapis.com/css2?family=Lilita+One&family=Sniglet:wght@800&display=swap","caps":"\"Lilita One\", sans-serif","low":"\"Sniglet\", sans-serif","lowerI":true,"wobbleDeg":4,"jitterEm":0.035},"palette":{"schemes":{"red":{"bg":"#E31D40","ink":"#FFFFFF","accent":"#F3C10A"},"yellow":{"bg":"#F3C10A","ink":"#FFFFFF","accent":"#084E62"},"mint":{"bg":"#85E5D3","ink":"#FFFFFF","accent":"#E31D40"},"teal":{"bg":"#084E62","ink":"#FFFFFF","accent":"#F3C10A"}},"order":["red","yellow","mint","red","yellow"],"cycle":["red","yellow","mint","teal"]},"brush":{"color":"#FFFFFF","chance":0.8},"intro":{"artist":"","title":""},"outro":{"enabled":true,"title":"Gracias","sub":"Por ver","feats":"Suscríbete · NEXA BRIEF"},"timing":{"leadSec":0.1,"longWordSec":0.5,"longWordLead":0.35,"exitSec":0.38,"holdSec":1.0,"interludeSec":3.0},"scenes":{"minWords":3,"maxWords":10,"minSec":1.4,"maxSec":5.5,"signature":["arc","slide","type","tilt","slide"],"cooldown":2,"stopwords":[]},"layouts":{},"transitions":{"signature":"cut","weights":{"cut":3,"circle":1.5,"wipe":1.2,"push":1}},"debug":{"enabled":false},"seed":5}]};
+const DEFAULT_CONFIG = {"activeId":"default","configs":[{"id":"default","description":"Kinetic typography stylish de colores planos. — metadata para marketing/SEO, la plantilla no la usa todavía.","audio":{"src":"assets/From-Klickpin2.mp3"},"lyricsUrl":"assets/lyrics.json","fonts":{"googleUrl":"https://fonts.googleapis.com/css2?family=Lilita+One&family=Sniglet:wght@800&display=swap","caps":"\"Lilita One\", sans-serif","low":"\"Sniglet\", sans-serif","lowerI":true,"wobbleDeg":4,"jitterEm":0.035},"palette":{"schemes":{"red":{"bg":"#E31D40","ink":"#FFFFFF","accent":"#F3C10A"},"yellow":{"bg":"#F3C10A","ink":"#FFFFFF","accent":"#084E62"},"mint":{"bg":"#85E5D3","ink":"#FFFFFF","accent":"#E31D40"},"teal":{"bg":"#084E62","ink":"#FFFFFF","accent":"#F3C10A"}},"order":["red","yellow","mint","red","yellow"],"cycle":["red","yellow","mint","teal"]},"brush":{"color":"#FFFFFF","chance":0.8},"intro":{"artist":"","title":""},"outro":{"enabled":true,"title":"Gracias","sub":"Por ver","feats":"Suscribite | NodeMotion"},"timing":{"leadSec":0.1,"longWordSec":0.5,"longWordLead":0.35,"exitSec":0.38,"holdSec":1.0,"interludeSec":3.0},"scenes":{"minWords":3,"maxWords":10,"minSec":1.4,"maxSec":5.5,"signature":["arc","slide","type","tilt","slide"],"cooldown":2,"stopwords":[]},"layouts":{},"transitions":{"signature":"cut","weights":{"cut":3,"circle":1.5,"wipe":1.2,"push":1}},"debug":{"enabled":false},"seed":5}]};
 
 /* palabras funcionales (en + es): nunca son la palabra fuerte de un bloque */
 const BASE_STOP = ("a an the and or but so of to in on at by for from with up out off as is are am be was were " +
@@ -1493,6 +1495,7 @@ R.split = (sc, X) => {
 
 /* tarjeta de intro / cierre: 1ª línea grande (acento), 2ª mediana, 3ª chica */
 R.card = (sc, X) => {
+  if (sc.kind === "outro") return window.NexaStylishOutro.render(sc, X, {capsText, fit, dims, sw, mkLine, popIn, slideIn, brush, div, EASE_OUT, config: C.outro || {}});
   const { W, H, G, pal } = X, ws = sc.words;
   const specs = [[0.62, 0.3, pal.accent], [0.5, 0.15, pal.ink], [0.56, 0.065, pal.ink]];
   const items = ws.slice(0, 3).map((w, i) => {
@@ -1623,7 +1626,7 @@ function buildTimeline(segs, dur) {
   let startAt = 0;
   if (first >= 1.4) {
     const texts = [C.intro.artist, C.intro.title].filter(Boolean);
-    if (texts.length) { list.push(mk("intro", 0, first, syn([C.intro.title || C.intro.artist, C.intro.title ? C.intro.artist : ""], 0), { layout: "card" })); startAt = first; }
+    if (texts.length) { list.push(mk("intro", 0, first, window.NexaTemplateIntro.words(C.intro.title || C.intro.artist, 0, Tm.leadSec), { layout: "card" })); startAt = first; }
   }
   ph.forEach((ws, i) => {
     let t0 = i === 0 && !list.length ? 0 : Math.max(0, ws[0].t - Tm.leadSec);
@@ -1633,7 +1636,12 @@ function buildTimeline(segs, dur) {
     let gapAfter = null;
     if (nx && t1 - lastEnd > Tm.interludeSec) { gapAfter = [lastEnd + Tm.holdSec, t1]; t1 = lastEnd + Tm.holdSec; }
     let outro = null;
-    if (!nx && C.outro.enabled && dur - (lastEnd + Tm.holdSec) >= 1.8) { outro = [lastEnd + Tm.holdSec, dur]; t1 = outro[0]; }
+    if (!nx && C.outro.enabled && dur - lastEnd >= 1.25) {
+      const tailSec = dur - lastEnd;
+      const outroSec = Math.min(3.2, tailSec - 0.05);
+      outro = [Math.max(lastEnd + 0.05, dur - outroSec), dur];
+      t1 = outro[0];
+    }
     list.push(mk("lyric", t0, t1, ws));
     if (gapAfter) {
       /* interludio instrumental: tramos de ~2.2 s con ecos (título / palabras

@@ -1,0 +1,126 @@
+{
+  "method": "Señales automáticas para revisión; no son correcciones por escucha",
+  "language": "es",
+  "language_probability": 0.9924392700195312,
+  "low_word_probability_lt_0_6": [
+    {
+      "start": 6.16,
+      "end": 6.36,
+      "word": " Yes",
+      "probability": 0.5753451585769653
+    },
+    {
+      "start": 86.96,
+      "end": 87.06,
+      "word": " ha",
+      "probability": 0.28274258971214294
+    },
+    {
+      "start": 87.06,
+      "end": 87.06,
+      "word": " pasado.",
+      "probability": 0.042904339730739594
+    },
+    {
+      "start": 87.08,
+      "end": 87.2,
+      "word": " Es",
+      "probability": 0.011766446754336357
+    },
+    {
+      "start": 104.34,
+      "end": 104.5,
+      "word": " él,",
+      "probability": 0.4364442825317383
+    },
+    {
+      "start": 111.34,
+      "end": 111.52,
+      "word": " Hawaii.",
+      "probability": 0.5252874493598938
+    },
+    {
+      "start": 117.08,
+      "end": 117.1,
+      "word": " En",
+      "probability": 0.38275983929634094
+    },
+    {
+      "start": 142.26,
+      "end": 142.6,
+      "word": " seis",
+      "probability": 0.4148592948913574
+    },
+    {
+      "start": 145.85999999999999,
+      "end": 146.26,
+      "word": " Allí",
+      "probability": 0.5230301879346371
+    },
+    {
+      "start": 146.48,
+      "end": 146.72,
+      "word": " tiene",
+      "probability": 0.3375415503978729
+    },
+    {
+      "start": 150.74,
+      "end": 150.92,
+      "word": " cuatro",
+      "probability": 0.2108076959848404
+    },
+    {
+      "start": 159.64,
+      "end": 159.88,
+      "word": " Hawaii",
+      "probability": 0.14817243814468384
+    },
+    {
+      "start": 204.94,
+      "end": 205.1,
+      "word": " En",
+      "probability": 0.3790525496006012
+    },
+    {
+      "start": 206.68,
+      "end": 206.94,
+      "word": " en",
+      "probability": 0.4906914532184601
+    }
+  ],
+  "word_duration_lt_20ms": [
+    {
+      "start": 87.06,
+      "end": 87.06,
+      "word": " pasado.",
+      "probability": 0.042904339730739594
+    },
+    {
+      "start": 204.14,
+      "end": 204.14,
+      "word": " la",
+      "probability": 0.9999384880065918
+    }
+  ],
+  "phrases_to_review": [
+    {
+      "start": 20.64,
+      "end": 22.26,
+      "asr": "Tan pronto que Neal se lo creía.",
+      "reason": "Nombre o segmentación inesperados en contexto; no se corrige sin escucha."
+    },
+    {
+      "start": 167.98,
+      "end": 169.16,
+      "asr": "Se queda aún más.",
+      "reason": "Posible confusión léxica; no se reemplaza por una conjetura."
+    },
+    {
+      "start": 205.52,
+      "end": 207.7,
+      "asr": "Y cuando le daba el dinero en un poco de cocina.",
+      "reason": "Posible confusión léxica; conservar original automático y revisar audio."
+    }
+  ],
+  "no_manual_corrections": true
+}

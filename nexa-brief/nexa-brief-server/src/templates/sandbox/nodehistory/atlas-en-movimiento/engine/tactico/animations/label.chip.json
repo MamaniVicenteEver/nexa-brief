@@ -1,0 +1,78 @@
+{
+  "name": "label.chip",
+  "family": "label",
+  "description": "Fecha o rótulo sin recuadro, con contorno oscuro. Úsala para identificar lugares y objetos.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "size": {
+      "type": "number",
+      "default": 30,
+      "range": null,
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "width": {
+      "type": "number",
+      "default": 650,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "height": {
+      "type": "number",
+      "default": 220,
+      "range": null,
+      "description": "Alto del elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "fit": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Modo de ajuste del contenido al espacio disponible."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-label-chip",
+    "t": 0,
+    "type": "label.chip",
+    "at": [
+      56.4,
+      26.5
+    ],
+    "text": "ESTRECHO DE ORMUZ",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-labels.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/label.chip.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

@@ -1,0 +1,3184 @@
+{
+  "schema_version": 1,
+  "design_id": "collage",
+  "revision": "018f713de882d242a31456fe311baad6dc39c4b478ff341a590536c3a1dfd7e2",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "collage.intro",
+      "name": "collage.intro",
+      "label": "collage.intro",
+      "kind": "component",
+      "summary": "Apertura de HEMEROTECA: masthead NODETECH, fecha de archivo, año grande y titular sobre papel claro con reglas bordó.",
+      "tags": [
+        "apertura",
+        "archivo",
+        "título"
+      ],
+      "params": {
+        "number": {
+          "type": "string",
+          "default": "1989",
+          "doc": "Año o cifra principal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "before": {
+          "type": "string",
+          "default": "",
+          "doc": "Fecha o contexto breve.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "after": {
+          "type": "string",
+          "default": "",
+          "doc": "Lugar o segundo dato.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Titular de apertura.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "number": "1989",
+        "before": "9 nov",
+        "after": "Berlín",
+        "line": "LA NOCHE QUE CAYÓ EL MURO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.intro",
+      "data": {
+        "native_name": "collage.intro"
+      }
+    },
+    {
+      "id": "collage.title",
+      "name": "collage.title",
+      "label": "collage.title",
+      "kind": "component",
+      "summary": "Alias compatible de collage.intro; usa la nueva apertura de archivo.",
+      "tags": [
+        "apertura",
+        "archivo",
+        "título"
+      ],
+      "params": {
+        "number": {
+          "type": "string",
+          "default": "1989",
+          "doc": "Año o cifra principal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "before": {
+          "type": "string",
+          "default": "",
+          "doc": "Fecha o contexto breve.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "after": {
+          "type": "string",
+          "default": "",
+          "doc": "Lugar o segundo dato.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Titular de apertura.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "number": "1989",
+        "before": "9 nov",
+        "after": "Berlín",
+        "line": "LA NOCHE QUE CAYÓ EL MURO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.title",
+      "data": {
+        "native_name": "collage.title"
+      }
+    },
+    {
+      "id": "collage.board",
+      "name": "collage.board",
+      "label": "collage.board",
+      "kind": "component",
+      "summary": "El plano tipo: mesa de papel de diario con fotos de borde blanco viradas (B/N, verde azulado, rosa, sepia), recortes, sellos y moneda; año en serif bordó con fecha chica; recorte con titular opcional. La cámara se desliza (move) con paralaje y las fotos secundarias entran escalonadas.",
+      "tags": [
+        "foto",
+        "collage",
+        "archivo",
+        "año"
+      ],
+      "params": {
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto principal.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 2 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 3 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo4": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 4 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo5": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 5 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "trio",
+          "doc": "Disposición: hero (una foto grande + 2 chicas), duo, trio (foto de fondo + 2 retratos a los lados), quad, scatter (5 fotos), strip (3 en fila).",
+          "required": false,
+          "options": [
+            "hero",
+            "duo",
+            "trio",
+            "quad",
+            "scatter",
+            "strip"
+          ],
+          "min": null,
+          "max": null
+        },
+        "tones": {
+          "type": "array",
+          "default": [],
+          "doc": "Virado por foto: bw, teal, rose, sepia, color, red (vacío = el del layout).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "year": {
+          "type": "string",
+          "default": "",
+          "doc": "Año en serif bordó (p. ej. '1961').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "yearSmall": {
+          "type": "string",
+          "default": "",
+          "doc": "Fecha chica sobre el año ('13.08').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "yearFrom": {
+          "type": "number",
+          "default": null,
+          "doc": "Si se da, el año cuenta desde este valor hasta `year`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "headline": {
+          "type": "string",
+          "default": "",
+          "doc": "Titular de un recorte de periódico (texto propio).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "swap": {
+          "type": "bool",
+          "default": false,
+          "doc": "La foto principal va cambiando entre las fotos del plano (fundido).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "swapEvery": {
+          "type": "number",
+          "default": 1.6,
+          "doc": "Segundos entre cambios de foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "appear": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada de las fotos secundarias.",
+          "required": false,
+          "options": [
+            "slide",
+            "drop",
+            "fade",
+            "pop"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundos entre entradas de fotos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "density": {
+          "type": "number",
+          "default": 14,
+          "doc": "Recortes de relleno alrededor.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 40
+        },
+        "coins": {
+          "type": "bool",
+          "default": true,
+          "doc": "Moneda dorada que cae sobre la mesa.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.05,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "photo": "assets/media/mauerbau.jpg",
+        "photo2": "assets/media/leipzig.jpg",
+        "layout": "trio",
+        "year": "1961",
+        "yearSmall": "13.08",
+        "headline": "SE LEVANTA EL MURO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.board",
+      "data": {
+        "native_name": "collage.board"
+      }
+    },
+    {
+      "id": "collage.date",
+      "name": "collage.date",
+      "label": "collage.date",
+      "kind": "component",
+      "summary": "Fecha/cifra protagonista: número grande en serif bordó (cuenta desde `from` si se da) con fecha chica arriba y una línea en versalitas debajo, sobre el collage con 2 fotos que entran por el costado.",
+      "tags": [
+        "fecha",
+        "año",
+        "cifra",
+        "contador"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Cifra/fecha grande ('1989', '23:30', '10 NOV').",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "number",
+          "default": null,
+          "doc": "Si `text` es un número: cuenta desde este valor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "count": {
+          "type": "number",
+          "default": 1.8,
+          "doc": "Segundos que dura la cuenta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "small": {
+          "type": "string",
+          "default": "",
+          "doc": "Fecha/etiqueta chica arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea en versalitas debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto principal.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 2 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 3 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tones": {
+          "type": "array",
+          "default": [],
+          "doc": "Virado por foto: bw, teal, rose, sepia, color, red (vacío = el del layout).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "density": {
+          "type": "number",
+          "default": 14,
+          "doc": "Recortes de relleno alrededor.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 40
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.05,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "1989",
+        "from": 1961,
+        "small": "28 AÑOS",
+        "kicker": "UNA CIUDAD PARTIDA EN DOS",
+        "photo": "assets/media/mauerbau.jpg",
+        "photo2": "assets/media/muro-gente.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.date",
+      "data": {
+        "native_name": "collage.date"
+      }
+    },
+    {
+      "id": "collage.banner",
+      "name": "collage.banner",
+      "label": "collage.banner",
+      "kind": "component",
+      "summary": "Banda oscura translúcida que cruza el collage con un titular en serif romana mayúscula (como 'GLUBB PASHA FLIES HOME'), retrato pequeño al final de la banda y fotos debajo; cámara en diagonal.",
+      "tags": [
+        "titular",
+        "banda",
+        "cita",
+        "frase"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular (mayúsculas; '\\n' parte en 9:16).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "year": {
+          "type": "string",
+          "default": "",
+          "doc": "Año bordó junto a la foto inferior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto principal.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 2 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 3 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tones": {
+          "type": "array",
+          "default": [],
+          "doc": "Virado por foto: bw, teal, rose, sepia, color, red (vacío = el del layout).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "density": {
+          "type": "number",
+          "default": 14,
+          "doc": "Recortes de relleno alrededor.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 40
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "diag",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.05,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "HORMIGÓN Y ALAMBRE",
+        "photo": "assets/media/mauerbau.jpg",
+        "photo2": "assets/media/bornholmer.jpg",
+        "photo3": "assets/media/muro-gente.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.banner",
+      "data": {
+        "native_name": "collage.banner"
+      }
+    },
+    {
+      "id": "collage.headline",
+      "name": "collage.headline",
+      "label": "collage.headline",
+      "kind": "component",
+      "summary": "Página de diario en primer plano: foto grande con filete, bajada en itálica, regla y titular grande en serif negra bordó; foto rosada desenfocada al costado. Pensado para salir con el plano siguiente en tin:'dive' (la cámara se zambulle en el titular).",
+      "tags": [
+        "titular",
+        "periódico",
+        "frase",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular ('\\n' para partir).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Bajada en itálica sobre el titular.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto principal.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 2 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tones": {
+          "type": "array",
+          "default": [],
+          "doc": "Virado por foto: bw, teal, rose, sepia, color, red (vacío = el del layout).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "in",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.03,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "photo": "assets/media/schabowski.jpg",
+        "kicker": "AL FINAL DE LA CONFERENCIA",
+        "text": "LO LEYÓ TAL CUAL"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.headline",
+      "data": {
+        "native_name": "collage.headline"
+      }
+    },
+    {
+      "id": "collage.map",
+      "name": "collage.map",
+      "label": "collage.map",
+      "kind": "component",
+      "summary": "Mapa antiguo (costas, retícula, ríos, fronteras punteadas) con lugares rotulados y rutas rojas que se trazan solas; foto recortada de bordes suaves encima (paralaje) y una lupa de bronce que recorre el mapa.",
+      "tags": [
+        "mapa",
+        "lugar",
+        "ruta",
+        "geografía"
+      ],
+      "params": {
+        "places": {
+          "type": "array",
+          "default": [
+            "Berlín",
+            "Praga",
+            "Viena"
+          ],
+          "doc": "Nombres de lugares (2–6), de izquierda a derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "routes": {
+          "type": "array",
+          "default": [],
+          "doc": "Rutas [[desde,hasta],…] por índice (vacío = encadenar en orden).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Nombre de región grande y espaciado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "lens": {
+          "type": "bool",
+          "default": true,
+          "doc": "Lupa que recorre el mapa.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "year": {
+          "type": "string",
+          "default": "",
+          "doc": "Año bordó.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto recortada sobre el mapa (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tones": {
+          "type": "array",
+          "default": [],
+          "doc": "Virado por foto: bw, teal, rose, sepia, color, red (vacío = el del layout).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "drift",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.05,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "places": [
+          "Leipzig",
+          "Praga",
+          "Budapest",
+          "Viena"
+        ],
+        "title": "EUROPA CENTRAL",
+        "photo": "assets/media/leipzig.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.map",
+      "data": {
+        "native_name": "collage.map"
+      }
+    },
+    {
+      "id": "collage.panels",
+      "name": "collage.panels",
+      "label": "collage.panels",
+      "kind": "component",
+      "summary": "Paneles de color apagado (violeta, verde azulado, mostaza, oliva) con titular, bajada y foto, que caen sobre un mapa desde cerca de cámara de a uno (entrada escalonada). Para listas, comparaciones (2) o hitos (3–4).",
+      "tags": [
+        "lista",
+        "comparación",
+        "paneles",
+        "datos"
+      ],
+      "params": {
+        "items": {
+          "type": "array",
+          "default": null,
+          "doc": "2–4 paneles {title, text}.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto principal.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 2 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 3 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo4": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 4 (opcional; si falta se repiten las anteriores con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tones": {
+          "type": "array",
+          "default": [],
+          "doc": "Virado por foto: bw, teal, rose, sepia, color, red (vacío = el del layout).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "in",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.03,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "items": [
+          {
+            "title": "ESTE",
+            "text": "una ciudad cerrada"
+          },
+          {
+            "title": "OESTE",
+            "text": "al otro lado de la calle"
+          }
+        ],
+        "photo": "assets/media/mauerbau.jpg",
+        "photo2": "assets/media/leipzig.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.panels",
+      "data": {
+        "native_name": "collage.panels"
+      }
+    },
+    {
+      "id": "collage.ribbon",
+      "name": "collage.ribbon",
+      "label": "collage.ribbon",
+      "kind": "component",
+      "summary": "Columna central: foto arriba, cinta bordó con volutas ornamentales y texto crema, foto abajo; a los costados fotos grandes desenfocadas y estelas de fuegos artificiales/destellos. Para celebraciones y momentos solemnes.",
+      "tags": [
+        "celebración",
+        "título",
+        "cinta",
+        "momento"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto de la cinta ('\\n' = 2 renglones).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto superior.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto inferior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo3": {
+          "type": "image",
+          "default": "",
+          "doc": "Fotos laterales desenfocadas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo4": {
+          "type": "image",
+          "default": "",
+          "doc": "Otra foto lateral.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sparks": {
+          "type": "bool",
+          "default": true,
+          "doc": "Estelas de fuegos artificiales.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tones": {
+          "type": "array",
+          "default": [],
+          "doc": "Virados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "in",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.03,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "LA NOCHE EN QUE\nCAYÓ EL MURO",
+        "photo": "assets/media/muro-gente.jpg",
+        "photo2": "assets/media/mauerspecht.jpg",
+        "photo3": "assets/media/bornholmer.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.ribbon",
+      "data": {
+        "native_name": "collage.ribbon"
+      }
+    },
+    {
+      "id": "collage.tribute",
+      "name": "collage.tribute",
+      "label": "collage.tribute",
+      "kind": "component",
+      "summary": "Homenaje sobrio: foto en óvalo que se funde con el papel, fecha chica y titular bordó sobre una regla, bruma rosada y pétalos rojos que caen (algunos grandes y desenfocados, cerca de cámara).",
+      "tags": [
+        "homenaje",
+        "víctimas",
+        "memoria",
+        "duelo"
+      ],
+      "params": {
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto del homenaje.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "date": {
+          "type": "string",
+          "default": "",
+          "doc": "Fecha chica.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Titular ('\\n' parte).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "petals": {
+          "type": "number",
+          "default": 16,
+          "doc": "Cantidad de pétalos.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 40
+        },
+        "tone": {
+          "type": "enum",
+          "default": "rose",
+          "doc": "Virado de la foto.",
+          "required": false,
+          "options": [
+            "bw",
+            "teal",
+            "rose",
+            "sepia",
+            "color",
+            "red"
+          ],
+          "min": null,
+          "max": null
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "in",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.025,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "photo": "assets/media/muro-gente.jpg",
+        "date": "1961 · 1989",
+        "text": "AL MENOS 140 PERSONAS MURIERON EN EL MURO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.tribute",
+      "data": {
+        "native_name": "collage.tribute"
+      }
+    },
+    {
+      "id": "collage.portraits",
+      "name": "collage.portraits",
+      "label": "collage.portraits",
+      "kind": "component",
+      "summary": "Página de libro con un gran medallón: 2–4 retratos en óvalos viñeteados (virados verde azulado/sepia), adornos rojos y un título en versalitas; la cámara se aleja y gira como al levantar el libro.",
+      "tags": [
+        "personas",
+        "protagonistas",
+        "retratos",
+        "líderes"
+      ],
+      "params": {
+        "photo": {
+          "type": "image",
+          "default": "",
+          "doc": "Retrato 1.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo2": {
+          "type": "image",
+          "default": "",
+          "doc": "Retrato 2.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo3": {
+          "type": "image",
+          "default": "",
+          "doc": "Retrato 3.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photo4": {
+          "type": "image",
+          "default": "",
+          "doc": "Retrato superior (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título en versalitas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tones": {
+          "type": "array",
+          "default": [],
+          "doc": "Virados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "enum",
+          "default": "out",
+          "doc": "Movimiento de cámara sobre el collage (en 9:16 se gira 90°).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "in",
+            "out",
+            "diag",
+            "drift",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.04,
+          "doc": "Velocidad de cámara (alto de cuadro por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación de la mesa en grados (0 = automática ±2°).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "photo": "assets/media/schabowski.jpg",
+        "photo2": "assets/media/mauerspecht.jpg",
+        "photo3": "assets/media/muro-gente.jpg",
+        "title": "GRANDES BATALLAS, GRANDES LÍDERES"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.portraits",
+      "data": {
+        "native_name": "collage.portraits"
+      }
+    },
+    {
+      "id": "collage.emblem",
+      "name": "collage.emblem",
+      "label": "collage.emblem",
+      "kind": "component",
+      "summary": "Emblema conmemorativo: sobre cielo desenfocado, un número/año dorado en 3D entra girando letra por letra, cinta bordó en arco con el título, libro abierto de línea y bajada; el fondo se aclara a blanco.",
+      "tags": [
+        "cierre",
+        "emblema",
+        "aniversario",
+        "cifra"
+      ],
+      "params": {
+        "number": {
+          "type": "string",
+          "default": null,
+          "doc": "Número/año/palabra corta en 3D.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de la cinta en arco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Bajada ('\\n' = segundo renglón).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "white": {
+          "type": "bool",
+          "default": true,
+          "doc": "El fondo se aclara a blanco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tin": {
+          "type": "enum",
+          "default": "flip",
+          "doc": "Transición de ENTRADA: flip (pasan hojas de libro), burst (ráfaga de luz hacia adelante), whip (barrido lateral con desenfoque), leak (cortina de luz rosa), dive (sale zambulléndose en el titular del plano anterior; usar después de collage.headline), smoke (disolución de humo), flare (mancha roja que cruza), cut.",
+          "required": false,
+          "options": [
+            "cut",
+            "flip",
+            "burst",
+            "whip",
+            "leak",
+            "dive",
+            "smoke",
+            "flare"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "number": "1989",
+        "title": "DE INMEDIATO",
+        "sub": "SIN DEMORA\nBerlín · 9 de noviembre"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.emblem",
+      "data": {
+        "native_name": "collage.emblem"
+      }
+    },
+    {
+      "id": "collage.leak",
+      "name": "collage.leak",
+      "label": "collage.leak",
+      "kind": "component",
+      "summary": "Cortina de luz cálida (fuga de película) que barre el cuadro para marcar un golpe o una frase clave. Se suma a la lente global (modo pantalla).",
+      "tags": [
+        "transición",
+        "golpe",
+        "luz",
+        "énfasis"
+      ],
+      "params": {
+        "color": {
+          "type": "enum",
+          "default": "warm",
+          "doc": "Color de la luz.",
+          "required": false,
+          "options": [
+            "warm",
+            "pink",
+            "red",
+            "white"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Intensidad.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "warm",
+        "strength": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.leak",
+      "data": {
+        "native_name": "collage.leak"
+      }
+    },
+    {
+      "id": "collage.introv1",
+      "name": "collage.introv1",
+      "label": "collage.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura (lo primero que se ve). Fondo adaptable al tema (bg: table | sky | map | press | image con src | component con use/useParams); por defecto la mesa de archivo en plano secuencia con paralaje, recortes y fotos que caen y se apilan, bokeh y fugas de luz. Una banda oscura se desliza y el titular GIGANTE en romana cae palabra por palabra como un recorte (escala + desenfoque + sacudida + chispas); '^palabra^' va en dorado 3D. En flashAt, ráfaga de luz cálida: la cámara se adelanta y el dorado destella.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "título",
+        "archivo",
+        "impacto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho, corto (2–6 palabras). '\\n' = renglón; '^x^' = palabra en dorado 3D.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (lugar · fecha), en versalitas doradas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo del titular (itálica).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundo del primer golpe de palabra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Segundos entre palabra y palabra.",
+          "required": false,
+          "options": null,
+          "min": 0.08,
+          "max": null
+        },
+        "flashAt": {
+          "type": "number",
+          "default": 2.3,
+          "doc": "Segundo de la ráfaga de luz cálida (cámara adelante + destello del dorado). -1 = sin ráfaga.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photoTone": {
+          "type": "enum",
+          "default": "teal",
+          "doc": "Virado de la foto de fondo (bg=image): bw, teal, rose, sepia, color, red.",
+          "required": false,
+          "options": [
+            "bw",
+            "teal",
+            "rose",
+            "sepia",
+            "color",
+            "red"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: table, sky, map, press; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "table",
+            "sky",
+            "map",
+            "press",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
+        "kicker": "Berlín · 9 nov 1989",
+        "sub": "la noche que nadie vio venir",
+        "flashAt": 2.3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.introv1",
+      "data": {
+        "native_name": "collage.introv1"
+      }
+    },
+    {
+      "id": "collage.introv2",
+      "name": "collage.introv2",
+      "label": "collage.introv2",
+      "kind": "component",
+      "summary": "GANCHO 'primera plana'. Fondo adaptable al tema (bg: map | table | sky | press | image con src | component con use/useParams); por defecto un mapa antiguo con rutas rojas que se trazan y una lupa de bronce. Una hoja de diario cae sobre la mesa, la pregunta se IMPRIME letra a letra en titular negro con cursor, las columnas aparecen, y la respuesta llega en una CINTA bordó con volutas que golpea encima con destello y chispas doradas.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "pregunta",
+        "diario",
+        "cinta"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Bajada en itálica sobre el titular (fecha, lugar).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "masthead": {
+          "type": "string",
+          "default": "EDICIÓN ESPECIAL",
+          "doc": "Cabecera de la hoja de diario.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Respuesta en la cinta bordó que golpea (vacío = sin cinta; '\\n' = 2 renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundo de la cinta (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo en que empieza a imprimirse la pregunta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 18,
+          "doc": "Letras por segundo.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "photoTone": {
+          "type": "enum",
+          "default": "sepia",
+          "doc": "Virado de la foto de fondo (bg=image): bw, teal, rose, sepia, color, red.",
+          "required": false,
+          "options": [
+            "bw",
+            "teal",
+            "rose",
+            "sepia",
+            "color",
+            "red"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: map, table, sky, press; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "map",
+            "table",
+            "sky",
+            "press",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+        "kicker": "Berlín · 9 de noviembre de 1989",
+        "stamp": "NADIE DIO LA ORDEN",
+        "stampAt": 2.4
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.introv2",
+      "data": {
+        "native_name": "collage.introv2"
+      }
+    },
+    {
+      "id": "collage.outro",
+      "name": "collage.outro",
+      "label": "collage.outro",
+      "kind": "component",
+      "summary": "Cierre del canal SIN recuadro (bg: table | sky | map | press | image con src | component con use/useParams): por defecto la mesa de archivo en plano secuencia, oscurecida. GRACIAS POR VER en versalitas doradas → nombre del canal en DORADO 3D que entra girando letra por letra y destella → recorte LIKE que se presiona y queda marcado con un círculo de tinta roja → ruta punteada roja → cinta bordó SUSCRÍBETE que cae + campana dorada que suena → apoyo en itálica palabra por palabra → youtube.com/@canal. Tiempos sincronizables con la despedida narrada.",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "archivo"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Tu apoyo permite seguir contando historias de archivo.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: table, sky, map, press; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "table",
+            "sky",
+            "map",
+            "press",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.66,
+          "doc": "Oscurecido del fondo foto/componente (el cierre tiene mucho texto).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "photoTone": {
+          "type": "enum",
+          "default": "bw",
+          "doc": "Virado de la foto de fondo (bg=image): bw, teal, rose, sepia, color, red.",
+          "required": false,
+          "options": [
+            "bw",
+            "teal",
+            "rose",
+            "sepia",
+            "color",
+            "red"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "HEMEROTECA",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo permite seguir contando historias de archivo.",
+        "handle": "youtube.com/@hemeroteca"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=collage&c=collage.outro",
+      "data": {
+        "native_name": "collage.outro"
+      }
+    }
+  ]
+}

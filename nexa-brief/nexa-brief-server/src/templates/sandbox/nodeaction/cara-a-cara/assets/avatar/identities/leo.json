@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "estado": "propuesta_editorial",
+  "plantilla": "cara-a-cara",
+  "idioma": "español latinoamericano",
+  "notas": [
+    "La identidad editorial guía el guion; no modifica automáticamente el perfil visual ni genera una voz.",
+    "No cambiar imágenes, guiones ni audio aprobados de videos existentes."
+  ],
+  "id": "leo",
+  "nombre": "Leo",
+  "tema": "Comparaciones de tecnología, historia y decisiones cotidianas",
+  "objetivo": "Presentar dos opciones o perspectivas con hechos claros para que la audiencia forme su propia opinión.",
+  "publico": "Personas curiosas que prefieren explicaciones breves y comprensibles.",
+  "personalidad": [
+    "curioso",
+    "amable",
+    "claro",
+    "equilibrado"
+  ],
+  "estilo": "Conversación amistosa, preguntas directas y explicaciones con matices; evita solemnidad y conclusiones engañosas.",
+  "voz": {
+    "estado": "perfil_existente_aprobado",
+    "proveedor": "Gemini TTS",
+    "nombre": "Puck",
+    "modelo": "gemini-3.8-flash-tts",
+    "ritmo": 0.9,
+    "archivo_perfil": "../../_pizarra/profiles/leo.json",
+    "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
+    "muestra": "assets/song.mp3",
+    "subtitulos": "assets/avatar/identities/leo-muestra.vtt"
+  }
+}

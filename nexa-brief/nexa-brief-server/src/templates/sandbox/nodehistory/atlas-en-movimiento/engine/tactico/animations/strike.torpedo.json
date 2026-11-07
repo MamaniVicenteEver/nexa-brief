@@ -1,0 +1,137 @@
+{
+  "name": "strike.torpedo",
+  "family": "strike",
+  "description": "Torpedo bajo el agua, estela blanca, zigzag y burbujas; impacto acuático. Úsala para representar un ataque desde su lanzamiento hasta el impacto.",
+  "duration": 5.949999999999999,
+  "loop": true,
+  "layer": 60,
+  "states": [],
+  "params": {
+    "from": {
+      "default": null,
+      "description": "[lon,lat], lugar o id; alternativo a path.via.",
+      "type": "place",
+      "range": null
+    },
+    "to": {
+      "default": null,
+      "description": "[lon,lat], lugar o id de destino.",
+      "type": "place",
+      "range": null
+    },
+    "dur": {
+      "type": "number",
+      "default": 5.6,
+      "description": "Vida completa incluyendo onHit; ampliarla si cambia el vuelo o el impacto.",
+      "range": null
+    },
+    "flightDur": {
+      "type": "number",
+      "default": 4,
+      "min": 0.05,
+      "range": {
+        "min": 0.05,
+        "max": null
+      },
+      "description": "Duración del vuelo del proyectil en segundos."
+    },
+    "width": {
+      "type": "number",
+      "default": 3.5,
+      "min": 0.5,
+      "max": 16,
+      "range": {
+        "min": 0.5,
+        "max": 16
+      },
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "bend": {
+      "type": "number",
+      "default": 0,
+      "min": -1,
+      "max": 1,
+      "range": {
+        "min": -1,
+        "max": 1
+      },
+      "description": "Curvatura de la trayectoria."
+    },
+    "particles": {
+      "type": "number",
+      "default": 96,
+      "min": 8,
+      "max": 300,
+      "description": "Presupuesto agregado de estelas y todos los impactos.",
+      "range": {
+        "min": 8,
+        "max": 300
+      }
+    },
+    "seed": {
+      "default": 1,
+      "description": "Semilla numérica o texto.",
+      "type": "number|string",
+      "range": null
+    },
+    "trailLife": {
+      "type": "number",
+      "default": 0.85,
+      "range": null,
+      "description": "Tiempo de persistencia de la estela en segundos."
+    },
+    "onHit": {
+      "default": {
+        "fx": "fx.impact",
+        "variant": "water"
+      },
+      "type": "object",
+      "range": null,
+      "description": "Efecto que se genera al alcanzar el objetivo."
+    },
+    "zigzag": {
+      "type": "number",
+      "default": 7,
+      "min": 0,
+      "max": 30,
+      "range": {
+        "min": 0,
+        "max": 30
+      },
+      "description": "Amplitud del zigzag de la trayectoria."
+    }
+  },
+  "sfx": [
+    "torpedo",
+    "water-impact"
+  ],
+  "example": {
+    "id": "strike-torpedo",
+    "t": 0,
+    "type": "strike.torpedo",
+    "from": [
+      51.5,
+      27
+    ],
+    "to": [
+      55,
+      28.5
+    ],
+    "dur": 5.6,
+    "flightDur": 4,
+    "seed": 51,
+    "onHit": {
+      "fx": "fx.impact",
+      "variant": "water"
+    }
+  },
+  "usedBy": [
+    "work/tactico/scene-fx.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/strike.torpedo.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

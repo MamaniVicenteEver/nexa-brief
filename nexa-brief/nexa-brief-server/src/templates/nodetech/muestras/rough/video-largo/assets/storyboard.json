@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "family": "rough",
+  "defaults": {"offset": 0},
+  "beats": [
+    {"t": 0, "use": "rough.introv2", "params": {"text": "TU TEMA\nAQUÍ", "kicker": "PLANTILLA EDITABLE", "src": "/api/v1/explainer/files/_tools/explainer-kit/showcase/samples/hamilton.jpg"}},
+    {"t": 15, "use": "rough.title", "params": {"text": "PRIMERA\nSECCIÓN", "kicker": "REEMPLAZAR"}},
+    {"t": 30, "use": "rough.icon", "params": {"icon": "gear", "caption": "EJEMPLO"}},
+    {"t": 45, "use": "rough.title", "params": {"text": "SEGUNDA\nSECCIÓN", "kicker": "REEMPLAZAR"}},
+    {"t": 60, "use": "rough.icon", "params": {"icon": "spark", "caption": "EJEMPLO"}},
+    {"t": 75, "use": "rough.title", "params": {"text": "CONCLUSIÓN", "kicker": "REEMPLAZAR"}}
+  ]
+}

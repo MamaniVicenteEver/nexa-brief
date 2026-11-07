@@ -1,0 +1,7 @@
+Completé la tarea en los archivos autorizados. Entregué [flags.js](/home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodehistory/_mapas/flags.js), [places.json](/home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodehistory/_mapas/places.json) y el [reporte](/home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodehistory/_mapas/tareas/codex-banderas-lugares-report.md).
+
+- **148 banderas**, incluidas las seis históricas pedidas. Playwright las dibujó en una hoja de prueba; revisé la imagen y no hubo errores de página: [hoja de banderas](/home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodehistory/_mapas/tareas/flags-sheet.png).
+- **303 lugares y 240 alias**. Los 240 destinos existen en `countries-50m.js`; están los 25 lugares de la Guerra del Pacífico y los seis centros visuales solicitados.
+- `places.json` pasó la carga de JSON y todas las ubicaciones tienen pares de coordenadas con dos decimales. Las capitales y ciudades usan el extracto de [GeoNames](https://www.geonames.org/export/); para los topónimos históricos consulté, entre otros, [Cobija](https://es.wikipedia.org/wiki/Cobija_(Chile)), [Pisagua](https://es.wikipedia.org/wiki/Pisagua) y [Tarapacá](https://en.wikipedia.org/wiki/Tarapac%C3%A1).
+
+No hice commits. El árbol ya mostraba cambios ajenos a esta tarea; la entrega quedó dentro de `_mapas/` y `tareas/`.

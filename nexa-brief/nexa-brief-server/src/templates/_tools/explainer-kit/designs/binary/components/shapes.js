@@ -343,6 +343,7 @@
       size: { type: "number", default: 0.82, min: 0.3, max: 1, doc: "Fracción del contenido." },
       tilt: { type: "number", default: 0, doc: "Inclinación del marco en grados." },
       morph: { type: "number", default: 1.0, doc: "Segundos de armado del marco." },
+      ...K.brandLogo.params,
     },
     points(ctx, p) {
       const im = ctx.img(p.src), ar = p.ar || (im ? im.width / im.height : 1.4), bx = boxIn(ctx, p.size, ar), out = [], step = ctx.stage.u * 0.75, r = K.rng(31);
@@ -357,6 +358,8 @@
     motion: (lt, b) => ({ s: 1 + lt * 0.006, r: (b.params?.tilt || 0) * Math.PI / 180 }),
     create(ctx, p) {
       const im = ctx.img(p.src);
+      const ar = p.ar || (im ? im.width / im.height : 1.4);
+      const logo = K.brandLogo.attach(ctx, p, boxIn(ctx, p.size, ar));
       let gray = null;
       if (im) { gray = document.createElement("canvas"); gray.width = im.width; gray.height = im.height; const g = gray.getContext("2d"); g.filter = "grayscale(1) contrast(1.12) brightness(0.92)"; g.drawImage(im, 0, 0); }
       return { render(lt, b) {
@@ -374,7 +377,8 @@
         let y = bx.y + bx.h + u * 5.5;
         if (p.title) { G.save(); G.globalAlpha = ta; G.fillStyle = "#f0f0f0"; G.font = `italic 400 ${u * 3}px 'Playfair Display', serif`; G.textAlign = "center"; G.fillText(p.title, cx, y); G.restore(); y += u * 3.4; }
         if (p.sub) B.mono(G, p.sub, cx, y, { u, size: 1.2, alpha: ta * 0.7, spacing: u * 0.25 });
-      } };
+        if (logo) logo.render(lt);
+      }, dispose() { if (logo) logo.dispose(); } };
     },
   });
 

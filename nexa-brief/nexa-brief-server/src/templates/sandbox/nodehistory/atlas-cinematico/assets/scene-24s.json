@@ -1,0 +1,389 @@
+{
+  "format": "atlas-v1",
+  "duration": 24,
+  "lang": "es",
+  "_nota": "Prototipo: replica los primeros 24 s de la referencia. Las coordenadas son ESTIMADAS del video (no hay metadatos); lugares genericos que la referencia muestra.",
+  "look": "satelite-realista",
+  "looks": [
+    {
+      "t": 22.2,
+      "look": "espacio",
+      "dur": 0.05
+    }
+  ],
+  "places": {
+    "Inicio": [
+      3.5,
+      48.0
+    ],
+    "Austin": [
+      -97.74,
+      30.27
+    ],
+    "Sacramento": [
+      -121.5,
+      38.6
+    ],
+    "Montana": [
+      -109.6,
+      47.0
+    ],
+    "Quebec": [
+      -73.0,
+      46.6
+    ],
+    "Amazonia": [
+      -52.0,
+      -4.0
+    ],
+    "Kazan": [
+      48.0,
+      56.0
+    ],
+    "Congo": [
+      23.5,
+      -1.5
+    ]
+  },
+  "camera": [
+    {
+      "t": 0,
+      "focus": [
+        -3,
+        45
+      ],
+      "span": 62,
+      "pitch": 60,
+      "bearing": 0,
+      "drift": {
+        "z": 0.01
+      }
+    },
+    {
+      "t": 1.0,
+      "focus": [
+        -97,
+        34
+      ],
+      "span": 60,
+      "pitch": 58,
+      "bearing": 4,
+      "dur": 2.3,
+      "drift": {
+        "z": 0.012
+      },
+      "settle": 6
+    },
+    {
+      "t": 9.0,
+      "focus": [
+        -58,
+        -6
+      ],
+      "span": 56,
+      "pitch": 68,
+      "bearing": 0,
+      "dur": 2.6,
+      "drift": {
+        "z": 0.01
+      },
+      "settle": 5
+    },
+    {
+      "t": 13.3,
+      "focus": [
+        38,
+        50
+      ],
+      "span": 58,
+      "pitch": 62,
+      "bearing": -4,
+      "dur": 2.9,
+      "drift": {
+        "z": 0.01
+      },
+      "settle": 5
+    },
+    {
+      "t": 17.7,
+      "focus": [
+        20,
+        -3
+      ],
+      "span": 78,
+      "pitch": 60,
+      "bearing": 0,
+      "dur": 2.1,
+      "drift": {
+        "z": 0.015
+      },
+      "settle": 5
+    },
+    {
+      "t": 22.2,
+      "focus": [
+        0,
+        5
+      ],
+      "zoom": 2.3,
+      "pitch": 80,
+      "bearing": 0,
+      "dur": 0.05,
+      "arc": 0
+    }
+  ],
+  "layers": [
+    {
+      "type": "dot",
+      "at": "Inicio",
+      "t": 0,
+      "out": 1.6,
+      "r": 7
+    },
+    {
+      "type": "arc",
+      "from": "Inicio",
+      "to": "Austin",
+      "t": 0.9,
+      "dur": 2.3,
+      "style": "cyan",
+      "lift": 70,
+      "tail": 0.35,
+      "keep": true,
+      "out": 22.2
+    },
+    {
+      "type": "highlight",
+      "region": "US",
+      "style": "olive",
+      "t": 2.8,
+      "dur": 0.8,
+      "border": true,
+      "out": 22.2
+    },
+    {
+      "type": "highlight",
+      "region": "US-TX",
+      "style": "pink",
+      "t": 3.1,
+      "dur": 0.5,
+      "border": true,
+      "out": 22.2
+    },
+    {
+      "type": "ring",
+      "at": "Austin",
+      "t": 2.9,
+      "r": 40,
+      "color": "#ffffff",
+      "pulse": true,
+      "out": 22.2
+    },
+    {
+      "type": "pole-photo",
+      "at": "Austin",
+      "t": 3.4,
+      "src": "media/austin.jpg",
+      "label": "Headquarter",
+      "poleH": 120,
+      "size": 70,
+      "side": "right",
+      "ring": true,
+      "out": 22.2
+    },
+    {
+      "type": "highlight",
+      "region": "US-CA",
+      "style": "pink",
+      "t": 5.9,
+      "dur": 0.5,
+      "border": true,
+      "out": 22.2
+    },
+    {
+      "type": "highlight",
+      "region": "US-MT",
+      "style": "pink",
+      "t": 6.3,
+      "dur": 0.5,
+      "border": true,
+      "out": 22.2
+    },
+    {
+      "type": "arc",
+      "from": "Austin",
+      "to": "Sacramento",
+      "t": 5.6,
+      "dur": 0.9,
+      "style": "magenta",
+      "lift": 150,
+      "keep": true,
+      "out": 22.2
+    },
+    {
+      "type": "arc",
+      "from": "Austin",
+      "to": "Montana",
+      "t": 6.0,
+      "dur": 0.9,
+      "style": "magenta",
+      "lift": 230,
+      "keep": true,
+      "out": 22.2
+    },
+    {
+      "type": "arc",
+      "from": "Austin",
+      "to": "Quebec",
+      "t": 6.4,
+      "dur": 0.9,
+      "style": "magenta",
+      "lift": 150,
+      "keep": true,
+      "out": 22.2
+    },
+    {
+      "type": "tag",
+      "at": "Sacramento",
+      "t": 6.5,
+      "text": "Research",
+      "up": 70,
+      "out": 22.2
+    },
+    {
+      "type": "tag",
+      "at": "Montana",
+      "t": 6.9,
+      "text": "Development",
+      "up": 70,
+      "out": 22.2
+    },
+    {
+      "type": "tag",
+      "at": "Quebec",
+      "t": 7.3,
+      "text": "Offices",
+      "up": 70,
+      "out": 22.2
+    },
+    {
+      "type": "arc",
+      "from": "Austin",
+      "to": "Amazonia",
+      "t": 9.2,
+      "dur": 1.8,
+      "style": "cyan",
+      "lift": 140,
+      "tail": 0.4,
+      "out": 22.2
+    },
+    {
+      "type": "highlight",
+      "region": "BR",
+      "style": "olive",
+      "t": 11.0,
+      "dur": 0.7,
+      "border": true,
+      "out": 22.2
+    },
+    {
+      "type": "hex-photo",
+      "at": "Amazonia",
+      "t": 10.8,
+      "fillAt": 12.0,
+      "src": "media/saopaulo.jpg",
+      "title": "Supplier",
+      "text": "Lorem ipsum dolor sit amet, consectetuer. Aenean massa. Cum sociis natoque magnis dis nascetur ridiculus mus.",
+      "side": "left",
+      "out": 22.2
+    },
+    {
+      "type": "arc",
+      "from": "Amazonia",
+      "to": "Kazan",
+      "t": 13.2,
+      "dur": 2.8,
+      "style": "cyan",
+      "lift": 90,
+      "tail": 0.4,
+      "out": 22.2
+    },
+    {
+      "type": "highlight",
+      "region": "RU",
+      "style": "olive",
+      "t": 15.6,
+      "dur": 0.7,
+      "border": true,
+      "out": 22.2
+    },
+    {
+      "type": "ring",
+      "at": "Kazan",
+      "t": 15.9,
+      "r": 34,
+      "color": "#ffffff",
+      "pulse": true,
+      "out": 22.2
+    },
+    {
+      "type": "panel",
+      "at": "Kazan",
+      "t": 16.0,
+      "blankFor": 0.5,
+      "src": "media/tren.jpg",
+      "title": "Distributor",
+      "text": "Lorem ipsum dolor sit amet, consectetuer. Aenean massa. Cum sociis natoque magnis dis nascetur ridiculus mus.",
+      "anchor": "left",
+      "accent": "#18b4f0",
+      "out": 22.2
+    },
+    {
+      "type": "arc",
+      "from": "Kazan",
+      "to": "Congo",
+      "t": 17.8,
+      "dur": 1.9,
+      "style": "cyan",
+      "lift": 90,
+      "tail": 0.4,
+      "out": 22.2
+    },
+    {
+      "type": "highlight",
+      "region": "CD",
+      "style": "olive",
+      "t": 20.8,
+      "dur": 0.6,
+      "border": true,
+      "out": 22.2
+    },
+    {
+      "type": "ring",
+      "at": "Congo",
+      "t": 19.9,
+      "r": 30,
+      "color": "#ffffff",
+      "pulse": true,
+      "out": 22.2
+    },
+    {
+      "type": "bars",
+      "at": "Congo",
+      "t": 20.4,
+      "text": "Warehouse",
+      "out": 22.2
+    },
+    {
+      "type": "title",
+      "text": "ATLAS CINEMATICO",
+      "sub": "Mapas 3D para contar el mundo",
+      "t": 23.2,
+      "y": 0.28,
+      "size": 64
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

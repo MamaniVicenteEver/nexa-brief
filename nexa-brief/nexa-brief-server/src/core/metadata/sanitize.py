@@ -26,8 +26,16 @@ _EMOJI = re.compile(
 )
 
 
+def has_emoji(text: str) -> bool:
+    return bool(_EMOJI.search(text or ""))
+
+
+# Emoji used as a sentence break ("Apolo 11 🚀 Y la mujer…"): it becomes a period, not a glued sentence.
+_EMOJI_BREAK = re.compile(r"(?<=[\w)\]»\"'])\s*(?:" + _EMOJI.pattern + r")\s+(?=[A-ZÁÉÍÓÚÑ¿¡«])")
+
+
 def strip_emojis(text: str) -> str:
-    return _SPACES.sub(" ", _EMOJI.sub("", text)).strip()
+    return _SPACES.sub(" ", _EMOJI.sub("", _EMOJI_BREAK.sub(". ", text))).strip()
 
 
 def _clean_line(text: str) -> str:
@@ -62,15 +70,21 @@ def _dedupe(items: list[str]) -> list[str]:
     return out
 
 
+def _tag_cost(tag: str) -> int:
+    return len(tag) + (2 if " " in tag else 0)
+
+
+def youtube_tags_length(tags: list[str]) -> int:
+    """Length YouTube checks against its 500-char limit: multi-word tags count their quotes, plus one comma between tags."""
+    return sum(_tag_cost(tag) for tag in tags) + max(len(tags) - 1, 0)
+
+
 def clean_tags(tags: list[str], max_count: int = YOUTUBE_TAGS_MAX, max_chars: int = YOUTUBE_TAGS_MAX_CHARS) -> list[str]:
-    """YouTube counts multi-word tags with their surrounding quotes, plus a comma between tags."""
-    out, used = [], 0
+    out: list[str] = []
     for tag in _dedupe([_clean_line(t).lstrip("#").strip(",") for t in tags]):
-        cost = len(tag) + (2 if " " in tag else 0) + (1 if out else 0)
-        if len(out) >= max_count or used + cost > max_chars:
+        if len(out) >= max_count or youtube_tags_length([*out, tag]) > max_chars:
             break
         out.append(tag)
-        used += cost
     return out
 
 

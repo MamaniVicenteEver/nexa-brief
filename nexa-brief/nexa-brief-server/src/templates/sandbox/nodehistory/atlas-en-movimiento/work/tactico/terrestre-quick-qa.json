@@ -1,0 +1,291 @@
+{
+  "stage": "quick",
+  "viewport": [
+    1080,
+    1920
+  ],
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--renderer-process-limit=1",
+    "--num-raster-threads=1"
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "browser": "148.0.7778.96",
+  "cases": [
+    {
+      "id": "ground-tank",
+      "frames": [
+        {
+          "time": 3.3,
+          "hash": "9ee1875a",
+          "bounds": {
+            "left": 434,
+            "top": 942,
+            "right": 572,
+            "bottom": 1133,
+            "width": 139,
+            "height": 192
+          },
+          "crop": [
+            233,
+            768,
+            540,
+            540
+          ],
+          "full": "shots/terrestre/terrestre-quick-ground-tank-full.png",
+          "subject": "shots/terrestre/terrestre-quick-ground-tank.png"
+        }
+      ],
+      "deterministic": true,
+      "resources": {
+        "missing": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites/sprites.json"
+        ],
+        "optionalSprites": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites2/sprites2.json"
+        ],
+        "missingTiles": [
+          "gibs-bluemarble/8/160/101",
+          "gibs-bluemarble/8/160/102",
+          "gibs-bluemarble/8/161/101",
+          "gibs-bluemarble/8/161/102",
+          "gibs-bluemarble/8/162/101",
+          "gibs-bluemarble/8/162/102",
+          "gibs-bluemarble/8/163/101",
+          "gibs-bluemarble/8/163/102",
+          "gibs-bluemarble/8/164/101",
+          "gibs-bluemarble/8/164/102"
+        ]
+      }
+    },
+    {
+      "id": "ground-artillery",
+      "frames": [
+        {
+          "time": 3.3,
+          "hash": "85e47854",
+          "bounds": {
+            "left": 434,
+            "top": 939,
+            "right": 568,
+            "bottom": 1133,
+            "width": 135,
+            "height": 195
+          },
+          "crop": [
+            231,
+            766,
+            540,
+            540
+          ],
+          "full": "shots/terrestre/terrestre-quick-ground-artillery-full.png",
+          "subject": "shots/terrestre/terrestre-quick-ground-artillery.png"
+        }
+      ],
+      "deterministic": true,
+      "resources": {
+        "missing": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites/sprites.json"
+        ],
+        "optionalSprites": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites2/sprites2.json"
+        ],
+        "missingTiles": [
+          "gibs-bluemarble/8/160/101",
+          "gibs-bluemarble/8/160/102",
+          "gibs-bluemarble/8/161/101",
+          "gibs-bluemarble/8/161/102",
+          "gibs-bluemarble/8/162/101",
+          "gibs-bluemarble/8/162/102",
+          "gibs-bluemarble/8/163/101",
+          "gibs-bluemarble/8/163/102",
+          "gibs-bluemarble/8/164/101",
+          "gibs-bluemarble/8/164/102"
+        ]
+      }
+    },
+    {
+      "id": "ground-convoy",
+      "frames": [
+        {
+          "time": 3.3,
+          "hash": "83a3fbf3",
+          "bounds": {
+            "left": 155,
+            "top": 940,
+            "right": 574,
+            "bottom": 1474,
+            "width": 420,
+            "height": 535
+          },
+          "crop": [
+            94,
+            937,
+            540,
+            540
+          ],
+          "full": "shots/terrestre/terrestre-quick-ground-convoy-full.png",
+          "subject": "shots/terrestre/terrestre-quick-ground-convoy.png"
+        }
+      ],
+      "deterministic": true,
+      "resources": {
+        "missing": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites/sprites.json"
+        ],
+        "optionalSprites": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites2/sprites2.json"
+        ],
+        "missingTiles": [
+          "gibs-bluemarble/8/160/101",
+          "gibs-bluemarble/8/160/102",
+          "gibs-bluemarble/8/161/101",
+          "gibs-bluemarble/8/161/102",
+          "gibs-bluemarble/8/162/101",
+          "gibs-bluemarble/8/162/102",
+          "gibs-bluemarble/8/163/101",
+          "gibs-bluemarble/8/163/102",
+          "gibs-bluemarble/8/164/101",
+          "gibs-bluemarble/8/164/102"
+        ]
+      }
+    },
+    {
+      "id": "army-advance",
+      "frames": [
+        {
+          "time": 3.3,
+          "hash": "36663dc",
+          "bounds": {
+            "left": 278,
+            "top": 803,
+            "right": 733,
+            "bottom": 1263,
+            "width": 456,
+            "height": 461
+          },
+          "crop": [
+            236,
+            763,
+            540,
+            540
+          ],
+          "full": "shots/terrestre/terrestre-quick-army-advance-full.png",
+          "subject": "shots/terrestre/terrestre-quick-army-advance.png"
+        }
+      ],
+      "deterministic": true,
+      "resources": {
+        "missing": [],
+        "optionalSprites": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites2/sprites2.json"
+        ],
+        "missingTiles": [
+          "gibs-bluemarble/8/160/101",
+          "gibs-bluemarble/8/160/102",
+          "gibs-bluemarble/8/161/101",
+          "gibs-bluemarble/8/161/102",
+          "gibs-bluemarble/8/162/101",
+          "gibs-bluemarble/8/162/102",
+          "gibs-bluemarble/8/163/101",
+          "gibs-bluemarble/8/163/102",
+          "gibs-bluemarble/8/164/101",
+          "gibs-bluemarble/8/164/102"
+        ]
+      }
+    },
+    {
+      "id": "army-encircle",
+      "frames": [
+        {
+          "time": 3.3,
+          "hash": "30069881",
+          "bounds": {
+            "left": 338,
+            "top": 740,
+            "right": 744,
+            "bottom": 1182,
+            "width": 407,
+            "height": 443
+          },
+          "crop": [
+            271,
+            691,
+            540,
+            540
+          ],
+          "full": "shots/terrestre/terrestre-quick-army-encircle-full.png",
+          "subject": "shots/terrestre/terrestre-quick-army-encircle.png"
+        }
+      ],
+      "deterministic": true,
+      "resources": {
+        "missing": [],
+        "optionalSprites": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites2/sprites2.json"
+        ],
+        "missingTiles": [
+          "gibs-bluemarble/8/160/101",
+          "gibs-bluemarble/8/160/102",
+          "gibs-bluemarble/8/161/101",
+          "gibs-bluemarble/8/161/102",
+          "gibs-bluemarble/8/162/101",
+          "gibs-bluemarble/8/162/102",
+          "gibs-bluemarble/8/163/101",
+          "gibs-bluemarble/8/163/102",
+          "gibs-bluemarble/8/164/101",
+          "gibs-bluemarble/8/164/102"
+        ]
+      }
+    },
+    {
+      "id": "army-clash",
+      "frames": [
+        {
+          "time": 3.3,
+          "hash": "91497183",
+          "bounds": {
+            "left": 321,
+            "top": 740,
+            "right": 762,
+            "bottom": 1180,
+            "width": 442,
+            "height": 441
+          },
+          "crop": [
+            272,
+            690,
+            540,
+            540
+          ],
+          "full": "shots/terrestre/terrestre-quick-army-clash-full.png",
+          "subject": "shots/terrestre/terrestre-quick-army-clash.png"
+        }
+      ],
+      "deterministic": true,
+      "resources": {
+        "missing": [],
+        "optionalSprites": [
+          "sprites.json: 404: http://127.0.0.1:43297/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/sprites2/sprites2.json"
+        ],
+        "missingTiles": [
+          "gibs-bluemarble/8/160/101",
+          "gibs-bluemarble/8/160/102",
+          "gibs-bluemarble/8/161/101",
+          "gibs-bluemarble/8/161/102",
+          "gibs-bluemarble/8/162/101",
+          "gibs-bluemarble/8/162/102",
+          "gibs-bluemarble/8/163/101",
+          "gibs-bluemarble/8/163/102",
+          "gibs-bluemarble/8/164/101",
+          "gibs-bluemarble/8/164/102"
+        ]
+      }
+    }
+  ],
+  "complete": true
+}

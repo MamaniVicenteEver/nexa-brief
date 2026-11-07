@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "title": "La noche que cayó el Muro",
+  "summary": "Demo del diseño memorias, que convierte la caída del Muro de Berlín en una secuencia de acuarela, bocetos y fotografías. Usa la historia y materiales del video nodehistory/muro-de-berlin para probar la identidad visual.",
+  "engine": "explainer-kit:memorias",
+  "based_on": "muro-de-berlin",
+  "is_new_design": true,
+  "status": "en progreso",
+  "created_at": "2026-10-15",
+  "libraries": [
+    {
+      "name": "Google Fonts: Mr Dafoe, Barlow, Quicksand, Old Standard TT",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía del diseño memorias"
+    }
+  ],
+  "inputs": [
+    "Guion, voz, letra y fotografías reutilizados de nodehistory/muro-de-berlin.",
+    "Diseño memorias y sus componentes del explainer-kit."
+  ],
+  "notes": [
+    "El manifest indica estado nuevo y no hay render final; work contiene hojas de revisión 16:9 y 9:16.",
+    "Es una prueba visual de diseño; la serie de demos de historia comparte el mismo relato y no debe publicarse como videos distintos."
+  ],
+  "usage_backfill": {
+    "estimated": true,
+    "source": "Estimación de ~/.codex/sessions/**/*.jsonl (Codex: 7 sesiones, 92 menciones de sandbox/nodehistory/memorias-demo) y /home/alfred/codex/nexa-brief/claude-sessions-usage.json (Claude: 8 sesiones, 224 sandbox_mentions). Repartí los tokens de cada sesión que toca varias plantillas proporcionalmente a sus menciones de ruta; los modelos de Claude se asignaron según el recuento de modelos del resumen. El resumen Claude no trae reasoning_tokens (registrado como 0, no disponible por separado). Revisé sandbox/nodemotion/_codex/*.log: no tenían contadores numéricos de tokens (0 campos encontrados), así que no los sumé.",
+    "by_model": [
+      {
+        "provider": "claude",
+        "model": "claude-haiku-4-5-20251001",
+        "input_tokens": 1,
+        "cached_input_tokens": 7236,
+        "output_tokens": 47,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "claude",
+        "model": "claude-opus-5-5",
+        "input_tokens": 1236,
+        "cached_input_tokens": 277571048,
+        "output_tokens": 612309,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "codex",
+        "model": "gpt-6-luna",
+        "input_tokens": 6469502,
+        "cached_input_tokens": 6349051,
+        "output_tokens": 39168,
+        "reasoning_tokens": 23734
+      }
+    ]
+  }
+}

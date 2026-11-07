@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atlas · efectos y ataques</title><link rel="icon" href="data:,">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#081e2c;color:#e9e3ba;font-family:sans-serif}canvas{display:block;width:100%;height:100%}#controls{position:fixed;bottom:2%;left:3%;right:3%;display:flex;gap:8px;padding:12px;background:#081e2ce8}button,select{max-width:43vw;background:#e9e3ba;border:0;padding:8px;color:#081e2c}input{min-width:50px;flex:1}#status{position:fixed;top:2%;left:3%;font-size:14px;white-space:pre-wrap}body.shot #controls,body.shot #status{display:none}</style></head>
+<body><canvas></canvas><div id="status">Preparando mapa y componentes…</div><div id="controls"><button id="play">Reproducir</button><select id="case"></select><input id="time" type="range" min="0" max="200" step=".01"><span id="clock"></span></div>
+<script type="module">
+import {create,Tactico} from '../../../_tactico/core.js';
+import '../../../_tactico/components/fx.js';
+import '../../../_tactico/components/strike.js';
+import {createView} from '../../../_atlas/plano/view.js';
+import {createTiles} from '../../../_atlas/plano/tiles.js';
+import {createTerritories} from '../../../_atlas/plano/territories.js';
+import {atlasURL} from '../../../_atlas/plano/paths.js';
+// An explicit backend preference prevents readback heuristics from migrating
+// the canvas halfway through the seek/hash sequence.
+const query=new URLSearchParams(location.search), canvas=document.querySelector('canvas'),g=canvas.getContext('2d',{willReadFrequently:true});
+if(query.has('shot'))document.body.classList.add('shot');
+const json=async url=>{const r=await fetch(url);if(!r.ok)throw Error(`${r.status}: ${url}`);return r.json();};
+try{
+ const [original,cases,look,providers,geo,inventory]=await Promise.all([json(query.get('items')||'scene-fx.json'),json('cases-fx.json'),json('../../../_atlas/looks/tactico.json'),json(atlasURL('providers.json')),json(atlasURL('data/geo/admin0.geojson')),json('cache-inventory.json')]);
+ const st={W:innerWidth,H:innerHeight,U:innerWidth/1080};canvas.width=st.W;canvas.height=st.H;
+ const pose={lon:53.5,lat:27.7,zoom:6.3,bearing:0},view=createView(pose,st.W,st.H);
+ const territories=createTerritories(geo),provider=providers.find(p=>p.id==='gibs-bluemarble');
+ const tiles=createTiles(provider,look,territories,inventory);tiles.plan(view);await tiles.preload();
+ const background=new OffscreenCanvas(st.W,st.H),bg=background.getContext('2d',{willReadFrequently:true});
+ bg.fillStyle=look.background;bg.fillRect(0,0,st.W,st.H);tiles.draw(bg,view);territories.draw(bg,view,[],0,look);
+ const backgrounds=Object.fromEntries(['dark','light'].map(mode=>{
+   const image=new OffscreenCanvas(st.W,st.H),ctx=image.getContext('2d',{willReadFrequently:true});
+   ctx.filter=mode==='light'?'brightness(1.75) saturate(.7) contrast(.8)':'brightness(.72) contrast(1.1)';
+   ctx.drawImage(background,0,0);return [mode,image];
+ }));
+ let scene=original,runtime=await create({st,look},scene),t=Number(query.get('t')||0),playing=false,last=0,mode=query.get('background')||'dark';
+ const select=document.querySelector('#case'),slider=document.querySelector('#time');slider.max=scene.duration;
+ for(const entry of cases){const option=document.createElement('option');option.value=entry.id;option.textContent=entry.id;select.append(option);}
+ function draw(time){
+   t=time;g.resetTransform();g.globalAlpha=1;g.globalCompositeOperation='source-over';g.clearRect(0,0,st.W,st.H);
+   g.drawImage(backgrounds[mode]||backgrounds.dark,0,0);
+   runtime.draw(g,view,t);slider.value=t;document.querySelector('#clock').textContent=t.toFixed(2)+' s';return runtime.key(t);
+ }
+ async function useCase(id){const entry=cases.find(c=>c.id===id);if(!entry)throw Error(`Caso desconocido: ${id}`);
+   scene={...original,duration:entry.item.dur,items:[...(entry.support||[]),entry.item]};
+   runtime=await create({st,look},scene);slider.max=scene.duration;select.value=id;draw(entry.times[1]);return entry;
+ }
+ slider.oninput=()=>draw(Number(slider.value));select.onchange=()=>useCase(select.value);
+ document.querySelector('#play').onclick=()=>{playing=!playing;last=0;document.querySelector('#play').textContent=playing?'Pausar':'Reproducir';if(playing)requestAnimationFrame(tick);};
+ function tick(now){if(!playing)return;const dt=last?(now-last)/1000:0;last=now;draw((t+dt)%scene.duration);requestAnimationFrame(tick);}
+ window.__fx={ready:true,canvas,view,st,Tactico,cases,draw,useCase,setBackground:value=>{mode=value;draw(t);},
+   runtime:()=>runtime,scene:()=>scene,missing:()=>({tiles:tiles.missingTiles(),assets:runtime.missing()}),
+   async setScene(value){scene=value;runtime=await create({st,look},scene);return runtime;}};
+ if(query.has('case'))await useCase(query.get('case'));else draw(t);
+ document.querySelector('#status').textContent='Efectos y ataques · mapa NASA GIBS / Natural Earth';
+}catch(error){document.querySelector('#status').textContent=error.stack;window.__fxError=String(error);console.error(error);}
+</script></body></html>

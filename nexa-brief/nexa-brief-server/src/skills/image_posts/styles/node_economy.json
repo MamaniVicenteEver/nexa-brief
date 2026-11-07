@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "style_id": "node_economy_dinero",
+  "category_id": "node_economy",
+  "version": "1.0.0",
+  "design_id": "dinero",
+  "palette": {
+    "bg": "#020c0f",
+    "bg2": "#020c0f",
+    "ink": "#fcfaf8",
+    "muted": "#fcfaf8",
+    "accent": "#1a961f",
+    "accentInk": "#020c0f"
+  },
+  "fonts": {
+    "headline": "Open Sans",
+    "body": "Open Sans",
+    "mono": "Open Sans",
+    "decorative": "Open Sans",
+    "font_assets": [
+      {
+        "family": "Open Sans",
+        "weight": 700,
+        "style": "normal",
+        "path": "fonts/Open-Sans-700.ttf",
+        "sha256": "75367e6da7d914eaed87883ba51b2a2b5816b5cdbb39f96ec5c81a5b032bfd5a",
+        "license": "OFL-1.1",
+        "license_url": "https://openfontlicense.org/"
+      }
+    ]
+  },
+  "textures": [],
+  "grid": {
+    "margin_px": 72,
+    "columns": 12,
+    "gutter_px": 24,
+    "safe_bottom_px": 110
+  },
+  "composition": {
+    "allowed_components": [
+      "image.dinero.daily_fact",
+      "image.dinero.five_slides"
+    ],
+    "photo_filter": "grayscale(1) contrast(1.3)",
+    "contrast_min": 4.5,
+    "headline_lines_max": 2,
+    "body_lines_max": 4
+  },
+  "tone": {
+    "language": "es",
+    "voice": "curioso, preciso y cercano",
+    "rules": [
+      "Explicar la jerga antes de usarla.",
+      "Cada cifra debe apuntar a una fuente verificada.",
+      "No presentar una proyección como un resultado observado.",
+      "Usar un solo acento lima por bloque visual."
+    ]
+  },
+  "brand": {
+    "name": "NodeEconomy",
+    "handle": "@nodeconomy"
+  },
+  "alarm": {
+    "red": "#B74A42",
+    "yellow": "#D3B35A",
+    "allowed": [
+      "ribbon",
+      "marked_word",
+      "underline",
+      "arrow"
+    ],
+    "levels": {
+      "negro": {
+        "max_area": 0.2,
+        "opacity": 0.9
+      },
+      "alto": {
+        "max_area": 0.1,
+        "opacity": 0.8
+      },
+      "medio": {
+        "max_area": 0.05,
+        "opacity": 0.7
+      },
+      "basico": {
+        "max_area": 0.02,
+        "opacity": 0.6
+      }
+    }
+  }
+}

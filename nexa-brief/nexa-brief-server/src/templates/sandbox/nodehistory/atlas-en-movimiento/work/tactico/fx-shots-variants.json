@@ -1,0 +1,146 @@
+{
+  "viewport": [
+    1080,
+    1920
+  ],
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--num-raster-threads=1",
+    "--renderer-process-limit=1",
+    "--disable-dev-shm-usage"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "determinism": [
+    {
+      "case": "fx.explosion-naval",
+      "background": "dark",
+      "hashes": {
+        "0.12": "ab2e7b7139aa90c40e5518823185256bb67ea733abdb766c6d4960e4f4860fae",
+        "1.0639999999999998": "72928a338ca35f8f33ce7eeffb3309025a255030c2f1a5e60b36c5b53a0933e0",
+        "2.548": "87f4859fef9a75ed7ae3479a3191ee518adf258e2a0ab399872c35bf279cf7ba"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion-naval",
+      "background": "light",
+      "hashes": {
+        "0.12": "a43d2f585f8e9b670e727f1ec1a3d89c2a538bac78fd03661daa23fd19236be2",
+        "1.0639999999999998": "6ac83c1cc552ae45dc4986ee2f7a8453a3c297b3d0c16e191ae4486712317034",
+        "2.548": "caf1d8965774b4e4d6c9f8aefb1d1407ce82d2a60a9493904e26e29981f16131"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.impact-water",
+      "background": "dark",
+      "hashes": {
+        "0.12": "f6902f338ab7198b65a55c309913920941f523069673e17bfae3c15c6d732967",
+        "0.6080000000000001": "532621624471580639fa03af918304cd0e8498b9a22fae77a9ee14b4c223b4b0",
+        "1.4560000000000002": "f254d35830930021456a3d864e054f454fdd8e6e74161a8a2335051d01188928"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.impact-water",
+      "background": "light",
+      "hashes": {
+        "0.12": "06d7832092e19036f451b82ece541d5aeba61519c94974a9a98e8c52dc3749db",
+        "0.6080000000000001": "d031b05dc2919454813a90008303cdc68df516eb000a9515a7b454b47a3eb2a2",
+        "1.4560000000000002": "9548c23578bf273dff07a51bb7efefb7328bded5e34e788f92149fdf8ec0e5c6"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.shockwave-water",
+      "background": "dark",
+      "hashes": {
+        "0.12": "72bff808a233c588e25b3084521d2d89f20444454173dca08023f8ae77247219",
+        "0.9119999999999999": "ee7bb9f825587cd7629c338c735c9686060d27e46d6ce9e71d717f37b90e0a26",
+        "2.184": "f5c5133de9c360bb5cf0ec7e2ecffd694c5a28759b6501fa3e99839a8aa59296"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.shockwave-water",
+      "background": "light",
+      "hashes": {
+        "0.12": "d65e5864b56c17b5e5f5e20e97212b2bacba5a2e367be0354747f7a767f35d07",
+        "0.9119999999999999": "a2a38d4b55bcee7e023bf1f549a37fc1844af34960fa2dce2f0c11b1eccfd49d",
+        "2.184": "dcf23f5ff555725bfa4271d86f49b65937f47ec0a728cf8a2792889e96a903e0"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.smoke-trail",
+      "background": "dark",
+      "hashes": {
+        "0.12": "8632e87b3883fe1f286db181747aba732697ff63041f5f129d0f6f12e2eead04",
+        "3.04": "09ff3602c540bbb6ef6546f97dceb094833ca263a01a9a85069dc3054ccb2bfd",
+        "7.28": "a9e7bbdf04248a55c1f7ac617725f686cfd61ffa46f28a5d5724a3c42354994e"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.smoke-trail",
+      "background": "light",
+      "hashes": {
+        "0.12": "48f90504ec2f223a044633de9dbd7c4ff1aef7499c932e86306d294b706f93dd",
+        "3.04": "42ef3bb49ac838bae052270cd4654a1700e0f39ef26db1ac2f2b5c4da8bc16a8",
+        "7.28": "211d6cb6be08916dd04e75451c6133ff6be2784e4b2cc9a04b112677cf82de67"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring-target",
+      "background": "dark",
+      "hashes": {
+        "0.12": "28e6dc5309140e5a6c19ef086385336114a01e60af1292f699598f71f7e381e5",
+        "2.2800000000000002": "fc7919f5bd4fc73baaf3cd8a27b113d34f39575c5a27382050f5e7d7aa053948",
+        "5.46": "d7379a3ab8fd57f84276569c7be9c26ff6f53ee70d95455f05abaa3ad0d57ad8"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring-target",
+      "background": "light",
+      "hashes": {
+        "0.12": "e76e689a9e668277b60ac903b157ed0f245c9a8fdd224f2ace7ff62f25aacc93",
+        "2.2800000000000002": "ccb413c853b494d3cb5fdea49aeabf1dac2d34f83cb81a401a30046be8fb43c6",
+        "5.46": "bcab64ce695d2b447f6372d6fc2125b47682853e21af21786a206a85072a55d4"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring-detection",
+      "background": "dark",
+      "hashes": {
+        "0.12": "49eb0d0837026f9e0a9d8ab547363b531ea9b047f5989a3f1a84c1024c399422",
+        "2.2800000000000002": "1d18c0b97a380f53209932402a95dfcb18617fb444a80237bc887e084de373f2",
+        "5.46": "ee61da515310f90bccc70936fe4395504dd8cb93276ecaf8b160c7837eabcde0"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring-detection",
+      "background": "light",
+      "hashes": {
+        "0.12": "e7df511e81cbcc74915517d5feb9b3387b254bbc860c107456477d33550e9c37",
+        "2.2800000000000002": "8b7125d739775a3a3949340c7027275e9840635ece0e4607dcd454300e1bfd79",
+        "5.46": "fb7a13b39e9c4eb8f792061018f7ddd8af5d2230659aac64aac24e4a284b3bd7"
+      },
+      "reverseSeek": true
+    }
+  ],
+  "benchmarks": [],
+  "fontSubstitution": "Archivo-900.ttf missing in shared workspace; QA server serves local assets/fonts/AtlasEditorial.ttf for labels.js import only. FX draw no text.",
+  "chromium": "151.0.7922.34",
+  "missing": {
+    "tiles": [],
+    "assets": []
+  }
+}

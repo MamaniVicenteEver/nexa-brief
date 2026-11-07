@@ -6,11 +6,15 @@ import asyncio
 import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from src.core.ports.agent_port import AgentIsolationUnavailableError
 
 from src.config.logging_config import setup_logging
 from src.config.settings import settings
+from src.presentation.api.routers import sound_design
 from src.presentation.api.routers import (
     categories,
+    content,
     history,
     library,
     niches,
@@ -25,8 +29,13 @@ from src.presentation.api.routers import (
     stock,
     drafts,
     explainer,
+    sandbox,
+    prototypes,
     media_plans,
     voice,
+    image_posts,
+    publications,
+    showcase,
 )
 
 
@@ -38,45 +47,84 @@ _scheduler = None  # Holds the APScheduler instance during the app lifetime
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_logging(settings.log_level)
+    from src.config.profile_layout import layout_for_settings
+    startup_layout = layout_for_settings(settings)
     settings.output_dir.mkdir(parents=True, exist_ok=True)
-    (settings.output_dir / "logs").mkdir(exist_ok=True)
+    (startup_layout.logs_dir if startup_layout.schema_version >= 3 else settings.output_dir / "logs").mkdir(parents=True, exist_ok=True)
     # output/node_tech, output/node_history, output/node_motion/letras, …
     from src.core.categories import ensure_output_dirs
     ensure_output_dirs(settings.output_dir)
     logger.info("nexa_brief_started", output_dir=str(settings.output_dir))
+
+    # Marcar runs que quedaron sin proceso al reiniciar y reactivar la cola persistida.
+    await prototypes.get_prototype_run_service().recover_interrupted()
+
+    # Reparar el índice derivado y dejar publicaciones interrumpidas en
+    # conciliación; una entrega ambigua nunca se reenvía automáticamente.
+    from src.adapters.data.publication_factory import get_publication_components
+    publication_components = get_publication_components()
+    publication_components.port.repair_index()
+    await publication_components.service.reconcile_interrupted()
 
     # ── Wire the realtime event bus to its WebSocket broadcaster ──────────────
     # Always on (unlike the scheduler below) — every write path that publishes
     # a RealtimeEvent expects a subscriber to already be listening.
     from src.adapters.realtime.factory import wire_realtime
     wire_realtime()
+    relay = None
+    if settings.storage_profile_dir is not None:
+        from src.adapters.realtime.shared_events import SharedEventRelay
+        from src.core.realtime.event_bus import get_event_bus
+        from src.config.profile_layout import layout_for_settings
+        layout = layout_for_settings(settings)
+        relay = SharedEventRelay(layout.system_dir if layout.schema_version >= 2 else settings.data_dir, get_event_bus())
+        relay.start()
 
-    # ── Start token refresh scheduler (only when publisher is configured) ─────
-    global _scheduler
-    if settings.enable_auto_publishing and settings.publisher_encryption_key:
-        try:
-            from src.adapters.publishing.factory import get_publisher_facade
-            from src.adapters.publishing.scheduler import start_publishing_scheduler
-            facade = get_publisher_facade()
-            loop = asyncio.get_event_loop()
-            _scheduler = start_publishing_scheduler(facade, loop)
-            logger.info("publisher_scheduler_active", active_account=settings.active_account)
-        except Exception as exc:
-            # Scheduler failure must NOT prevent the app from starting
-            logger.warning("publisher_scheduler_start_failed", error=str(exc))
-    else:
-        logger.info(
-            "publisher_scheduler_skipped",
-            enable_auto_publishing=settings.enable_auto_publishing,
-            has_encryption_key=bool(settings.publisher_encryption_key),
-        )
+    # A profile has one scheduler owner even if both APIs are running.
+    from src.core.task_ownership import TaskLease
+    scheduler_lease = TaskLease("runtime", "scheduler")
+    async def scheduler_leader():
+        global _scheduler
+        while True:
+            if settings.publisher_encryption_key and scheduler_lease.acquire():
+                try:
+                    from src.adapters.publishing.factory import get_publisher_facade
+                    from src.adapters.publishing.scheduler import start_publishing_scheduler, start_token_refresh_scheduler
+                    facade = get_publisher_facade()
+                    loop = asyncio.get_running_loop()
+                    _scheduler = (start_publishing_scheduler(facade, loop) if settings.enable_auto_publishing
+                                  else start_token_refresh_scheduler(facade, loop))
+                    await asyncio.Event().wait()
+                except asyncio.CancelledError:
+                    raise
+                except Exception as exc:
+                    logger.warning("publisher_scheduler_start_failed", error_type=type(exc).__name__)
+                finally:
+                    if _scheduler is not None:
+                        _scheduler.shutdown(wait=False)
+                        _scheduler = None
+                    scheduler_lease.release()
+            await asyncio.sleep(5)
+    leader_task = asyncio.create_task(scheduler_leader())
+    from src.core.explainer.batches import worker_loop
+    preparation_producer = explainer.get_producer()
+    preparation_worker = asyncio.create_task(worker_loop(preparation_producer))
 
     yield
 
-    # ── Graceful shutdown ──────────────────────────────────────────────────────
-    if _scheduler is not None:
-        _scheduler.shutdown(wait=False)
-        logger.info("publisher_scheduler_stopped")
+    preparation_worker.cancel()
+    try:
+        await preparation_worker
+    except asyncio.CancelledError:
+        pass
+    await preparation_producer.shutdown()
+    leader_task.cancel()
+    try:
+        await leader_task
+    except asyncio.CancelledError:
+        pass
+    if relay is not None:
+        await relay.stop()
     logger.info("nexa_brief_shutdown")
 
 
@@ -126,6 +174,14 @@ openapi_tags = [
         "description": "Recurring publishing slots and the publish queue (Programación) — auto-fill + manual assignment + immediate publish.",
     },
     {
+        "name": "image-posts",
+        "description": "Planes, revisión y entregas FB/IG de publicaciones de imagen.",
+    },
+    {
+        "name": "publications",
+        "description": "Archivo y galería autenticada de publicaciones y métricas.",
+    },
+    {
         "name": "realtime",
         "description": "WebSocket push for channel/job/notification changes — replaces frontend polling.",
     },
@@ -139,15 +195,33 @@ app = FastAPI(
     openapi_tags=openapi_tags,
 )
 
+
+@app.exception_handler(AgentIsolationUnavailableError)
+async def agent_isolation_unavailable(_request, _error):
+    return JSONResponse(status_code=503, content={
+        "detail": "Este perfil requiere un agente aislado; el backend de aislamiento aún no está disponible.",
+        "code": "agent_isolation_unavailable",
+    })
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_allow_origins,
     allow_origin_regex=settings.cors_allow_origin_regex or None,
     allow_credentials=False,  # sin cookies de auth en este flujo (el login vive en el frontend)
-    allow_methods=["GET", "POST", "PUT", "DELETE"],  # verbos usados hoy en toda la API
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["*"],  # necesario por el boundary variable de multipart/form-data
     allow_private_network=True,
 )
+@app.get("/api/v1/storage/profile")
+def current_storage_profile():
+    # Only non-sensitive profile metadata is returned.
+    return {"id": settings.storage_profile_id, "label": settings.storage_profile_label,
+            "providers": {"records": settings.data_backend, "publications": settings.publication_backend,
+                          "credentials": settings.credentials_backend, "media": settings.media_backend}}
+
+
+app.include_router(content.router, prefix="/api/v1")
+app.include_router(showcase.router, prefix="/api/v1")
 app.include_router(videos.router, prefix="/api/v1")
 app.include_router(niches.router, prefix="/api/v1")
 # Publisher router is always registered; auth is managed via accounts.json
@@ -163,6 +237,11 @@ app.include_router(stock.router, prefix="/api/v1")
 app.include_router(drafts.router, prefix="/api/v1")
 app.include_router(media_plans.router, prefix="/api/v1")
 app.include_router(explainer.router, prefix="/api/v1")
+app.include_router(sandbox.router, prefix="/api/v1")
+app.include_router(prototypes.router, prefix="/api/v1")
+app.include_router(image_posts.router, prefix="/api/v1")
+app.include_router(publications.router, prefix="/api/v1")
+app.include_router(sound_design.router, prefix="/api/v1")
 app.include_router(categories.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 # YouTube OAuth 2.0 server-side flow

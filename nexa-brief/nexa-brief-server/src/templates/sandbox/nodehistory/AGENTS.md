@@ -77,10 +77,10 @@ K=src/templates/_tools/explainer-kit/tools/kit.py; M=src/templates/_tools/explai
 
 ## 6. Lecciones de NodeHistory
 
-- **Hay 12 videos en producción: 3 reales** (`turing-enigma`, `muro-de-berlin`, `codex-titanic`, todos
-  binary) **+ 9 demos** (`<diseño>-demo`, `demo: true`) que son **el mismo guion del Muro de Berlín**
-  con 7 fotos repetidas. No publiques más de uno de esa serie (riesgo "contenido no auténtico") ni copies
-  su práctica de repetir fotos: en un video real `check` lo marca y hay que justificarlo.
+- El perfil activo conserva las producciones en `productions/nodehistory/`; consultá su catálogo para
+  conocer los videos actuales. `muro-de-berlin` es la demo de Binary y los demás `<diseño>-demo`
+  comparten el guion del Muro. No publiques más de uno de esa serie ni copies su práctica de repetir
+  fotos: en un video real `check` lo marca y hay que justificarlo.
 - Para un tema nuevo, imitá el nivel de `turing-enigma` (arco con duelo y reparación) y `muro-de-berlin`
   (clímax 1.0 en s09 de 17, urgencia → alivio).
 - **Titanic (Codex)**: buena investigación, pero tono de informe, unidades en yardas, una frase con la
@@ -101,3 +101,49 @@ K=src/templates/_tools/explainer-kit/tools/kit.py; M=src/templates/_tools/explai
 Checklist: `../EXPLAINER.md` §7, más: respeto en temas de muertes revisado en guion, fotos y textos.
 
 > Al terminar una prueba, sumá acá (§6) lo que funcionó y lo que no.
+
+## 8. Prototipo de mapas satelitales (2026-10-22)
+
+- `fronteras-demo/` + motor propio `_mapas/mapas.js` (réplica de `../referencias/nodehistory/mapas-con-banderas/`, 3 videos 9:16):
+  satélite NASA Blue Marble pasado a Mercator, países con color + borde neón, rayado, flechas, banderas,
+  año, subtítulos amarillos y cámara que viaja. Escena = solo datos (`assets/scene.json`); ver su `PLAN.md`.
+  Voz/texto reutilizados del Muro (0–58 s). Es prototipo: si se aprueba, pasarlo a diseño del explainer-kit
+  (componentes `mapa.*`) en vez de mantener un motor aparte.
+- Blue Marble de diciembre trae nieve en Europa: usar julio (`world.topo.bathy.200407`). El servidor de
+  NASA corta la descarga del tile de 90 MB: reanudar con `curl -r <bytes>-` en bucle.
+- Rellenos: `multiply` (color aclarado) + `screen` + `overlay` deja ver el relieve como la referencia.
+  En zoom muy cercano dentro de un país, sacar su relleno (si no, la pantalla queda de un solo color).
+- Polígonos propios (corte de un país, Berlín Oeste) se proyectan punto a punto y se recortan con el
+  clip del canvas: así no importa el sentido de giro (d3 invierte polígonos esféricos mal orientados).
+- Mismo reproductor que la pizarra: tiempo desde `audio.currentTime`, botón ▶ si el navegador bloquea el
+  autoplay (antes corría mudo y se quedaba en el último cuadro, Leipzig).
+- 2026-10-23 · **Motor de mapas modular** (`_mapas/`: geo, camera, layers, flags, places.json, mapas.js) sobre el
+  núcleo `../_proto/proto.js` (intro, cierre, subtítulos más abajo, reproductor). Formato: `_mapas/ESCENA.md`.
+  Video completo `bolivia-mar/` (8:01, Codex guion + storyboard, Claude revisión). Fábrica: `../_proto/FABRICA.md`.
+  Lugares por nombre (303 + 240 alias), 148 banderas, cámara con vuelo van Wijk (aleja y acerca sola),
+  regiones `poly` recortadas contra la tierra y `within` un país. Satélite: `_mapas/media/sat-{world,europa,sudamerica}.jpg`
+  (para otra región: `_mapas/tareas/sat.py` sobre un tile Blue Marble de julio).
+
+
+## Atlas Cinemático · componentes y producción por JSON
+
+Entrada única: `_atlas/SKILL.md`; catálogo `_atlas/components.json`; procedimiento `_atlas/PRODUCIR.md`.
+El showcase de `atlas-cinematico` usa el mismo catálogo y `_atlas/production.json`.
+Un episodio nuevo se crea con `node src/templates/sandbox/nodehistory/_atlas/produce.mjs new <id> --title "Título" --duration <segundos>` desde nexa-brief-server; sale en `src/templates/nodehistory/<id>`, enlazado al motor compartido.
+No confundir con el diseño atlas 2D ni con Atlas en Movimiento (táctico).
+Las flechas, fotos, rótulos, animaciones y cámara se instancian con JSON; los porcentajes documentales usan `scene.data` con fuente, período y alcance.
+El planificador resuelve variantes igual que Proto y acepta orientación. Verificar recursos de cada recorrido y revisar ambas composiciones antes de certificarlo.
+
+- 2026-11-04 · Atlas en Movimiento: cuatro estudios de texto en `atlas-en-movimiento/diseno-textos-versiones.html` y `diseno-textos-v1.html` a `v4.html`; documentación en `work/texto/versiones/LEEME.md`. Fuentes locales Inter, Manrope, Space Grotesk y DM Sans; 34 tratamientos por dirección. El estudio lee catálogo y palabras reales sin inicializar ni modificar el motor. Probar la composición completa, además de la paleta: los estilos no se integran al video cambiando solo defs.palette.
+
+- 2026-11-04 · Showcase de Atlas: Cinemático abre la biblioteca completa de `components.json` (36 entradas), con fotogramas en `_atlas/showcase/thumbs/`. `previewReady` espera al primer cuadro preparado, no al `load` del iframe. El icono de esquina inicia/detiene; las miniaturas tácticas blancas prevalecen sobre el póster oscuro histórico. Ver `_atlas/showcase/README.md` y su prueba de cobertura al añadir componentes.
+
+## Atlas en Movimiento / Atlas plano: sin crédito técnico sobre el video
+
+Por pedido explícito del usuario (2026-11-04), no dibujar la leyenda «Imagery: NASA GIBS / Blue Marble · Boundaries: Natural Earth» ni regenerarla en los futuros videos de esta plantilla. El pie se retiró de `atlas-en-movimiento/engine/plano/plano.js` y `_atlas/plano/plano.js`. `text.attribution` queda retirado, sin dibujo y excluido del catálogo y las animaciones. No reactivarlo desde escenas, estilos o generadores. Los datos de procedencia permanecen en los archivos de créditos y fuentes fuera del cuadro. Las capturas utilizadas en previsualizaciones deben regenerarse cuando contengan la leyenda antigua.
+
+## Atlas en Movimiento: transcripción aprobada y tarjeta en revisión (2026-11-04)
+
+La transcripción de la plantilla queda con fuente original, relleno #ffffff, contorno #000000 y sin caja. `scene.captions.size = 45` conserva el tamaño base; `reductionPercent = 35.6` aplica el 30 % anterior y otro 8 % relativo (45 × 0.70 × 0.92 = 28.98). Se pueden usar 35, 40 u otros porcentajes. `enabled` es booleano true/false. `yOffsetLandscape = 10` añade 10 U (10 px en 1920×1080) solo en horizontal. La posición vertical no cambia. El generador de la escena, los defaults tácticos y las dos entradas de reproducción usan esos parámetros; no volver a valores crema ni perder la reducción al regenerar.
+
+La tarjeta `editorial.press` de USS Stark sigue EN REVISIÓN. El video conserva su aspecto anterior. `transcripcion-previsualizacion.html#editorial` prueba `appearance` con documento blanco/negro suave, texto claro con contorno negro sin caja, sin bordes ni placa de color en la foto y fecha blanca sobre negro. No aplicar automáticamente esas opciones al episodio hasta que el usuario elija la variante. Las fotos, textos y créditos documentales no se sustituyen.

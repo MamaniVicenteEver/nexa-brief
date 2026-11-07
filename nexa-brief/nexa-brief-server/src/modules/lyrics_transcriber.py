@@ -60,8 +60,8 @@ async def run(job: Job, niche_cfg: NicheConfig) -> Job:
 
     logger.info("lyrics_transcriber_done_analyzing", job_id=job.job_id, cache_hit=cache_hit)
 
-    output_dir: Path = artifacts.output_dir
-    logs_dir = output_dir / "logs"
+    output_dir: Path = artifacts.content_dir
+    logs_dir = artifacts.log_dir or artifacts.output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     lyrics_path = output_dir / "lyrics.json"

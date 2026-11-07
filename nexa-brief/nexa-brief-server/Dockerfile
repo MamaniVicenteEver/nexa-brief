@@ -40,7 +40,6 @@ RUN groupadd --system --gid ${APP_GID} nexa \
     && useradd --system --uid ${APP_UID} --gid nexa --home-dir /app --shell /usr/sbin/nologin nexa \
     && mkdir -p /app/data /app/output /app/.cache /home/nexa \
     && chown -R nexa:nexa /app /home/nexa
-COPY --from=dependencies /app/.venv /app/.venv
 COPY --from=build --chown=nexa:nexa /app /app
 COPY --from=remotion-dependencies --chown=nexa:nexa /opt/remotion /opt/remotion
 COPY --from=remotion-dependencies /usr/local/bin/node /usr/local/bin/node

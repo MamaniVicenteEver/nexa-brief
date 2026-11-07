@@ -1,0 +1,12 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Atlas · prueba de sonido · 30 s</title><link rel="icon" href="data:,"><style>html,body{margin:0;background:#081e2c;color:#eee8d0;font:16px sans-serif}#stage,#stage canvas{position:fixed;inset:0;display:block}#controls{position:fixed;bottom:3%;left:5%;right:5%;padding:18px;background:#081e2cee;border:1px solid #748d99;z-index:10}audio{width:100%}p{margin:8px 0;font-size:14px}</style></head><body><div id="stage"></div><div id="controls"><strong>Prueba de sonido · 30 s</strong><audio id="audio" controls preload="auto"></audio><p>0 motor · 2 bocina · 8 reactor · 12 explosión · 18 agua · 21 rotor · 28 transición. Voz con ducking de efectos a −9 dB.</p><p id="status">Preparando…</p></div>
+<script src="../../../../_proto/proto.js"></script><script type="module">
+import {installProtoAudio} from '../../../_tactico/audio.js';
+installProtoAudio();
+await import('../../../_atlas/plano/plano.js');
+await __atlas.ready;
+const audio=document.querySelector('audio');
+audio.addEventListener('play',()=>__promo.release());
+audio.addEventListener('pause',()=>__promo.seek(audio.currentTime));
+audio.addEventListener('seeked',async()=>{await __promo.seek(audio.currentTime);if(!audio.paused)__promo.release();});
+document.querySelector('#status').textContent='Listo. Reproducí, pausá o mové el tiempo; volumen y mute afectan voz y efectos.';
+</script></body></html>

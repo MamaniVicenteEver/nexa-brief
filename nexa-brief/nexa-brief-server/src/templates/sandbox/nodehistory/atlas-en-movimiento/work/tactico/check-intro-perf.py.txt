@@ -1,0 +1,32 @@
+"""Medición complementaria: mismos flags SwiftShader del smoke, sin desactivar canvas acelerado.
+Ejecutar una copia en /tmp; reutiliza utilidades del QA, una sola página y navegador.
+"""
+from pathlib import Path
+support=Path('work/tactico/check-intro.py.txt').read_text().split("try:\n    print('Playwright',flush=True)")[0]
+exec(compile(support,'intro-qa-support','exec'))
+FLAGS=[flag for flag in FLAGS if flag!='--disable-accelerated-2d-canvas']
+bench=BENCH.replace('({type,style,t})','({type,style,t,count})').replace('length:20','length:count').replace('instances:20','instances:count').replace('n<40','n<28').replace('n>=10','n>=8')
+results={'flags':FLAGS,'viewport':[1080,1920],'benchmarks':[],'errors':[]}
+try:
+ with sync_playwright() as p:
+  browser=p.chromium.launch(executable_path='/home/university/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome',headless=True,args=FLAGS)
+  results['chromium']=browser.version
+  page=browser.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1)
+  page.on('pageerror',lambda e:results['errors'].append(str(e)))
+  def local(r):
+   if urlparse(r.request.url).hostname in ('127.0.0.1',None):r.continue_()
+   else:results['errors'].append('external request '+r.request.url);r.abort()
+  page.route('**/*',local)
+  page.goto(base+'intro.new.html?shot=1',wait_until='domcontentloaded')
+  page.wait_for_function('window.__intro?.ready || window.__introError',timeout=60000)
+  if page.evaluate('window.__introError||null'):raise RuntimeError(page.evaluate('__introError'))
+  print('Demo lista',flush=True)
+  for count in [1,20]:
+   for name,style,t in [('intro.title','focus',2.4),('outro.channel',None,19.0)]:
+    result=page.evaluate(bench,{'count':count,'type':name,'style':style,'t':t});results['benchmarks'].append(result)
+    print(count,name,round(result['incrementalMs'],3),'ms / comandos',round(result['submitMs']['mean'],3),flush=True)
+    (OUT/'intro-perf.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n')
+  browser.close()
+finally:
+ server.shutdown();server.server_close()
+ (OUT/'intro-perf.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n')

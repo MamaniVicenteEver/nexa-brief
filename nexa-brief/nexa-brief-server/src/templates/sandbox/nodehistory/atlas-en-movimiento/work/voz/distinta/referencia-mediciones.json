@@ -1,0 +1,5105 @@
+{
+  "method": {
+    "ppm": "Palabras del guion con números desarrollados, no 616 tokens que incluyen etiquetas; sobre archivo y sobre primer-inicio/último-fin ASR.",
+    "pauses_ASR": "Huecos >=120 ms entre palabras sin limpiar; pueden contener aire y Whisper puede absorber silencio en una palabra. Se excluyen márgenes.",
+    "pauses_acoustic": "-40 dBFS, mínimo120 ms, fusiona separación <=40 ms; excluye márgenes. Puede confundir consonantes débiles con silencio.",
+    "pitch": "Praat AC 60–400 Hz, 10 ms, voicing=0.5; rango robusto p10–p90; min/max también en JSON. Contraste75–500 Hz sin corregir octavas.",
+    "dynamics": "RMS30 ms/paso10 ms dentro de intervalos de palabras y >-40dBFS; rango p90−p10 dB. Distribución ASR sin excluir silencio y LRA en LU se informan aparte. Umbral dependiente de nivel; todas las muestras finales están a -16LUFS.",
+    "loudness_peak": "FFmpeg loudnorm input_i e input_tp sobre MP3 final; pico de muestra float a frecuencia nativa aparte.",
+    "perception": "No hay escucha ni prueba perceptual de naturalidad. Métricas descriptivas; muestra corta, dos tonos, no extrapolar a un relato completo."
+  },
+  "approved_full": {
+    "file": "assets/song.mp3",
+    "sha256": "eeec723348eed6759489c6f78770cd9ebd59e2b38d7ea19e32a261f458cb879f",
+    "duration_seconds": 262.84,
+    "spoken_script_words": 549,
+    "ppm_file": 125.32339065591235,
+    "ppm_narration": 129.0853515165765,
+    "word_span_seconds": 255.18000000000004,
+    "first_word_start": 1.17,
+    "last_word_end": 256.35,
+    "ASR_pauses_ge120ms": {
+      "n": 56,
+      "min": 0.13999999999998636,
+      "p10": 0.18000000000000327,
+      "median": 0.5,
+      "p90": 0.9699999999999935,
+      "max": 3.200000000000017
+    },
+    "ASR_sentence_pauses_ge120ms": {
+      "n": 44,
+      "min": 0.13999999999998636,
+      "p10": 0.2060000000000116,
+      "median": 0.6299999999999955,
+      "p90": 1.0779999999999972,
+      "max": 3.200000000000017
+    },
+    "ASR_gaps": [
+      {
+        "start": 1.91,
+        "end": 1.91,
+        "seconds": 0.0,
+        "after": " 24",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 2.35,
+        "end": 2.35,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " julio",
+        "punctuation": "none"
+      },
+      {
+        "start": 2.81,
+        "end": 2.81,
+        "seconds": 0.0,
+        "after": " julio",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 2.95,
+        "end": 2.95,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " 1987.",
+        "punctuation": "none"
+      },
+      {
+        "start": 3.73,
+        "end": 4.85,
+        "seconds": 1.1199999999999997,
+        "after": " 1987.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 5.71,
+        "end": 5.71,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " capitán",
+        "punctuation": "none"
+      },
+      {
+        "start": 6.13,
+        "end": 6.13,
+        "seconds": 0.0,
+        "after": " capitán",
+        "before": " Frank",
+        "punctuation": "none"
+      },
+      {
+        "start": 6.43,
+        "end": 6.43,
+        "seconds": 0.0,
+        "after": " Frank",
+        "before": " Seitz",
+        "punctuation": "none"
+      },
+      {
+        "start": 6.91,
+        "end": 6.91,
+        "seconds": 0.0,
+        "after": " Seitz",
+        "before": " navega",
+        "punctuation": "none"
+      },
+      {
+        "start": 7.69,
+        "end": 7.69,
+        "seconds": 0.0,
+        "after": " navega",
+        "before": " bajo",
+        "punctuation": "none"
+      },
+      {
+        "start": 7.85,
+        "end": 7.85,
+        "seconds": 0.0,
+        "after": " bajo",
+        "before": " protección",
+        "punctuation": "none"
+      },
+      {
+        "start": 8.55,
+        "end": 8.55,
+        "seconds": 0.0,
+        "after": " protección",
+        "before": " estadounidense.",
+        "punctuation": "none"
+      },
+      {
+        "start": 9.43,
+        "end": 10.29,
+        "seconds": 0.8599999999999994,
+        "after": " estadounidense.",
+        "before": " Entonces,",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 11.15,
+        "end": 11.51,
+        "seconds": 0.35999999999999943,
+        "after": " Entonces,",
+        "before": " el",
+        "punctuation": "comma"
+      },
+      {
+        "start": 11.97,
+        "end": 11.97,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " Bridgeton",
+        "punctuation": "none"
+      },
+      {
+        "start": 12.49,
+        "end": 12.49,
+        "seconds": 0.0,
+        "after": " Bridgeton",
+        "before": " golpea",
+        "punctuation": "none"
+      },
+      {
+        "start": 12.97,
+        "end": 12.97,
+        "seconds": 0.0,
+        "after": " golpea",
+        "before": " una",
+        "punctuation": "none"
+      },
+      {
+        "start": 13.11,
+        "end": 13.11,
+        "seconds": 0.0,
+        "after": " una",
+        "before": " mina",
+        "punctuation": "none"
+      },
+      {
+        "start": 13.47,
+        "end": 13.47,
+        "seconds": 0.0,
+        "after": " mina",
+        "before": " al",
+        "punctuation": "none"
+      },
+      {
+        "start": 13.69,
+        "end": 13.69,
+        "seconds": 0.0,
+        "after": " al",
+        "before": " oeste",
+        "punctuation": "none"
+      },
+      {
+        "start": 14.13,
+        "end": 14.13,
+        "seconds": 0.0,
+        "after": " oeste",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 14.25,
+        "end": 14.25,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " Farsi.",
+        "punctuation": "none"
+      },
+      {
+        "start": 14.49,
+        "end": 14.91,
+        "seconds": 0.41999999999999993,
+        "after": " Farsi.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 15.77,
+        "end": 15.77,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " mercante",
+        "punctuation": "none"
+      },
+      {
+        "start": 16.17,
+        "end": 16.17,
+        "seconds": 0.0,
+        "after": " mercante",
+        "before": " sobrevive,",
+        "punctuation": "none"
+      },
+      {
+        "start": 16.83,
+        "end": 16.93,
+        "seconds": 0.10000000000000142,
+        "after": " sobrevive,",
+        "before": " pero",
+        "punctuation": "comma"
+      },
+      {
+        "start": 17.53,
+        "end": 17.53,
+        "seconds": 0.0,
+        "after": " pero",
+        "before": " sus",
+        "punctuation": "none"
+      },
+      {
+        "start": 17.69,
+        "end": 17.69,
+        "seconds": 0.0,
+        "after": " sus",
+        "before": " escoltas",
+        "punctuation": "none"
+      },
+      {
+        "start": 18.21,
+        "end": 18.21,
+        "seconds": 0.0,
+        "after": " escoltas",
+        "before": " terminan",
+        "punctuation": "none"
+      },
+      {
+        "start": 18.75,
+        "end": 18.75,
+        "seconds": 0.0,
+        "after": " terminan",
+        "before": " siguiendo",
+        "punctuation": "none"
+      },
+      {
+        "start": 19.27,
+        "end": 19.27,
+        "seconds": 0.0,
+        "after": " siguiendo",
+        "before": " su",
+        "punctuation": "none"
+      },
+      {
+        "start": 19.45,
+        "end": 19.45,
+        "seconds": 0.0,
+        "after": " su",
+        "before": " estela.",
+        "punctuation": "none"
+      },
+      {
+        "start": 19.79,
+        "end": 20.33,
+        "seconds": 0.5399999999999991,
+        "after": " estela.",
+        "before": " Para",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 21.19,
+        "end": 21.19,
+        "seconds": 0.0,
+        "after": " Para",
+        "before": " entender",
+        "punctuation": "none"
+      },
+      {
+        "start": 21.53,
+        "end": 21.53,
+        "seconds": 0.0,
+        "after": " entender",
+        "before": " cómo",
+        "punctuation": "none"
+      },
+      {
+        "start": 21.89,
+        "end": 21.89,
+        "seconds": 0.0,
+        "after": " cómo",
+        "before": " llegaron",
+        "punctuation": "none"
+      },
+      {
+        "start": 22.41,
+        "end": 22.41,
+        "seconds": 0.0,
+        "after": " llegaron",
+        "before": " hasta",
+        "punctuation": "none"
+      },
+      {
+        "start": 22.61,
+        "end": 22.61,
+        "seconds": 0.0,
+        "after": " hasta",
+        "before": " aquí,",
+        "punctuation": "none"
+      },
+      {
+        "start": 22.89,
+        "end": 23.07,
+        "seconds": 0.17999999999999972,
+        "after": " aquí,",
+        "before": " hay",
+        "punctuation": "comma"
+      },
+      {
+        "start": 23.91,
+        "end": 23.91,
+        "seconds": 0.0,
+        "after": " hay",
+        "before": " que",
+        "punctuation": "none"
+      },
+      {
+        "start": 24.03,
+        "end": 24.03,
+        "seconds": 0.0,
+        "after": " que",
+        "before": " volver",
+        "punctuation": "none"
+      },
+      {
+        "start": 24.25,
+        "end": 24.25,
+        "seconds": 0.0,
+        "after": " volver",
+        "before": " siete",
+        "punctuation": "none"
+      },
+      {
+        "start": 24.73,
+        "end": 24.73,
+        "seconds": 0.0,
+        "after": " siete",
+        "before": " años.",
+        "punctuation": "none"
+      },
+      {
+        "start": 25.23,
+        "end": 25.23,
+        "seconds": 0.0,
+        "after": " años.",
+        "before": " Irak",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 26.41,
+        "end": 26.41,
+        "seconds": 0.0,
+        "after": " Irak",
+        "before": " invade",
+        "punctuation": "none"
+      },
+      {
+        "start": 26.83,
+        "end": 26.83,
+        "seconds": 0.0,
+        "after": " invade",
+        "before": " Irán",
+        "punctuation": "none"
+      },
+      {
+        "start": 27.41,
+        "end": 27.41,
+        "seconds": 0.0,
+        "after": " Irán",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 27.61,
+        "end": 27.61,
+        "seconds": 0.0,
+        "after": " en",
+        "before": " septiembre",
+        "punctuation": "none"
+      },
+      {
+        "start": 28.27,
+        "end": 28.27,
+        "seconds": 0.0,
+        "after": " septiembre",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 28.47,
+        "end": 28.47,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " 1980.",
+        "punctuation": "none"
+      },
+      {
+        "start": 29.01,
+        "end": 29.97,
+        "seconds": 0.9599999999999973,
+        "after": " 1980.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 30.85,
+        "end": 30.85,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " avance",
+        "punctuation": "none"
+      },
+      {
+        "start": 31.23,
+        "end": 31.23,
+        "seconds": 0.0,
+        "after": " avance",
+        "before": " busca",
+        "punctuation": "none"
+      },
+      {
+        "start": 31.69,
+        "end": 31.69,
+        "seconds": 0.0,
+        "after": " busca",
+        "before": " ciudades,",
+        "punctuation": "none"
+      },
+      {
+        "start": 32.49,
+        "end": 32.57,
+        "seconds": 0.0799999999999983,
+        "after": " ciudades,",
+        "before": " pasos",
+        "punctuation": "comma"
+      },
+      {
+        "start": 33.23,
+        "end": 33.23,
+        "seconds": 0.0,
+        "after": " pasos",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 33.45,
+        "end": 33.45,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " petróleo",
+        "punctuation": "none"
+      },
+      {
+        "start": 34.01,
+        "end": 34.01,
+        "seconds": 0.0,
+        "after": " petróleo",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 34.19,
+        "end": 34.19,
+        "seconds": 0.0,
+        "after": " en",
+        "before": " distintos",
+        "punctuation": "none"
+      },
+      {
+        "start": 34.47,
+        "end": 34.47,
+        "seconds": 0.0,
+        "after": " distintos",
+        "before": " corredores.",
+        "punctuation": "none"
+      },
+      {
+        "start": 35.23,
+        "end": 35.53,
+        "seconds": 0.30000000000000426,
+        "after": " corredores.",
+        "before": " Al",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 36.19,
+        "end": 36.19,
+        "seconds": 0.0,
+        "after": " Al",
+        "before": " sur,",
+        "punctuation": "none"
+      },
+      {
+        "start": 36.45,
+        "end": 36.61,
+        "seconds": 0.1599999999999966,
+        "after": " sur,",
+        "before": " Jorramchar",
+        "punctuation": "comma"
+      },
+      {
+        "start": 37.41,
+        "end": 37.41,
+        "seconds": 0.0,
+        "after": " Jorramchar",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 37.71,
+        "end": 37.71,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " Abadán",
+        "punctuation": "none"
+      },
+      {
+        "start": 38.09,
+        "end": 38.09,
+        "seconds": 0.0,
+        "after": " Abadán",
+        "before": " están",
+        "punctuation": "none"
+      },
+      {
+        "start": 38.67,
+        "end": 38.67,
+        "seconds": 0.0,
+        "after": " están",
+        "before": " entre",
+        "punctuation": "none"
+      },
+      {
+        "start": 38.91,
+        "end": 38.91,
+        "seconds": 0.0,
+        "after": " entre",
+        "before": " los",
+        "punctuation": "none"
+      },
+      {
+        "start": 39.11,
+        "end": 39.11,
+        "seconds": 0.0,
+        "after": " los",
+        "before": " principales",
+        "punctuation": "none"
+      },
+      {
+        "start": 39.81,
+        "end": 39.81,
+        "seconds": 0.0,
+        "after": " principales",
+        "before": " objetivos.",
+        "punctuation": "none"
+      },
+      {
+        "start": 40.39,
+        "end": 41.11,
+        "seconds": 0.7199999999999989,
+        "after": " objetivos.",
+        "before": " Abadán",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 41.99,
+        "end": 41.99,
+        "seconds": 0.0,
+        "after": " Abadán",
+        "before": " resiste",
+        "punctuation": "none"
+      },
+      {
+        "start": 42.55,
+        "end": 42.55,
+        "seconds": 0.0,
+        "after": " resiste",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 42.59,
+        "end": 42.59,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " asedio;",
+        "punctuation": "none"
+      },
+      {
+        "start": 43.03,
+        "end": 43.13,
+        "seconds": 0.10000000000000142,
+        "after": " asedio;",
+        "before": " los",
+        "punctuation": "none"
+      },
+      {
+        "start": 43.65,
+        "end": 43.65,
+        "seconds": 0.0,
+        "after": " los",
+        "before": " ataques",
+        "punctuation": "none"
+      },
+      {
+        "start": 44.11,
+        "end": 44.11,
+        "seconds": 0.0,
+        "after": " ataques",
+        "before": " alcanzan",
+        "punctuation": "none"
+      },
+      {
+        "start": 44.69,
+        "end": 44.69,
+        "seconds": 0.0,
+        "after": " alcanzan",
+        "before": " su",
+        "punctuation": "none"
+      },
+      {
+        "start": 44.81,
+        "end": 44.81,
+        "seconds": 0.0,
+        "after": " su",
+        "before": " refinería.",
+        "punctuation": "none"
+      },
+      {
+        "start": 45.41,
+        "end": 45.73,
+        "seconds": 0.3200000000000003,
+        "after": " refinería.",
+        "before": " En",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 46.61,
+        "end": 46.61,
+        "seconds": 0.0,
+        "after": " En",
+        "before": " septiembre",
+        "punctuation": "none"
+      },
+      {
+        "start": 47.11,
+        "end": 47.11,
+        "seconds": 0.0,
+        "after": " septiembre",
+        "before": " del",
+        "punctuation": "none"
+      },
+      {
+        "start": 47.31,
+        "end": 47.31,
+        "seconds": 0.0,
+        "after": " del",
+        "before": " año",
+        "punctuation": "none"
+      },
+      {
+        "start": 47.45,
+        "end": 47.45,
+        "seconds": 0.0,
+        "after": " año",
+        "before": " siguiente,",
+        "punctuation": "none"
+      },
+      {
+        "start": 47.87,
+        "end": 47.87,
+        "seconds": 0.0,
+        "after": " siguiente,",
+        "before": " Irán",
+        "punctuation": "comma"
+      },
+      {
+        "start": 48.73,
+        "end": 48.73,
+        "seconds": 0.0,
+        "after": " Irán",
+        "before": " rompe",
+        "punctuation": "none"
+      },
+      {
+        "start": 49.27,
+        "end": 49.27,
+        "seconds": 0.0,
+        "after": " rompe",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 49.29,
+        "end": 49.29,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " cerco.",
+        "punctuation": "none"
+      },
+      {
+        "start": 49.63,
+        "end": 49.63,
+        "seconds": 0.0,
+        "after": " cerco.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 50.31,
+        "end": 50.31,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " 24",
+        "punctuation": "none"
+      },
+      {
+        "start": 50.79,
+        "end": 50.79,
+        "seconds": 0.0,
+        "after": " 24",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 51.19,
+        "end": 51.19,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " mayo",
+        "punctuation": "none"
+      },
+      {
+        "start": 51.45,
+        "end": 51.45,
+        "seconds": 0.0,
+        "after": " mayo",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 51.71,
+        "end": 51.71,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " 1982",
+        "punctuation": "none"
+      },
+      {
+        "start": 52.25,
+        "end": 52.25,
+        "seconds": 0.0,
+        "after": " 1982",
+        "before": " Irán",
+        "punctuation": "none"
+      },
+      {
+        "start": 53.95,
+        "end": 53.95,
+        "seconds": 0.0,
+        "after": " Irán",
+        "before": " recupera",
+        "punctuation": "none"
+      },
+      {
+        "start": 54.65,
+        "end": 54.65,
+        "seconds": 0.0,
+        "after": " recupera",
+        "before": " Jorramchar.",
+        "punctuation": "none"
+      },
+      {
+        "start": 55.17,
+        "end": 55.17,
+        "seconds": 0.0,
+        "after": " Jorramchar.",
+        "before": " Recupera",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 56.63,
+        "end": 56.63,
+        "seconds": 0.0,
+        "after": " Recupera",
+        "before": " también",
+        "punctuation": "none"
+      },
+      {
+        "start": 56.85,
+        "end": 56.85,
+        "seconds": 0.0,
+        "after": " también",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 57.15,
+        "end": 57.15,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " mayor",
+        "punctuation": "none"
+      },
+      {
+        "start": 57.35,
+        "end": 57.35,
+        "seconds": 0.0,
+        "after": " mayor",
+        "before": " parte",
+        "punctuation": "none"
+      },
+      {
+        "start": 57.75,
+        "end": 57.75,
+        "seconds": 0.0,
+        "after": " parte",
+        "before": " del",
+        "punctuation": "none"
+      },
+      {
+        "start": 57.97,
+        "end": 57.97,
+        "seconds": 0.0,
+        "after": " del",
+        "before": " territorio",
+        "punctuation": "none"
+      },
+      {
+        "start": 58.57,
+        "end": 58.57,
+        "seconds": 0.0,
+        "after": " territorio",
+        "before": " ocupado.",
+        "punctuation": "none"
+      },
+      {
+        "start": 59.03,
+        "end": 59.03,
+        "seconds": 0.0,
+        "after": " ocupado.",
+        "before": " Pero",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 59.89,
+        "end": 59.89,
+        "seconds": 0.0,
+        "after": " Pero",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 60.05,
+        "end": 60.05,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " guerra",
+        "punctuation": "none"
+      },
+      {
+        "start": 60.33,
+        "end": 60.33,
+        "seconds": 0.0,
+        "after": " guerra",
+        "before": " continúa",
+        "punctuation": "none"
+      },
+      {
+        "start": 61.03,
+        "end": 61.03,
+        "seconds": 0.0,
+        "after": " continúa",
+        "before": " al",
+        "punctuation": "none"
+      },
+      {
+        "start": 61.21,
+        "end": 61.21,
+        "seconds": 0.0,
+        "after": " al",
+        "before": " otro",
+        "punctuation": "none"
+      },
+      {
+        "start": 61.39,
+        "end": 61.39,
+        "seconds": 0.0,
+        "after": " otro",
+        "before": " lado",
+        "punctuation": "none"
+      },
+      {
+        "start": 61.65,
+        "end": 61.65,
+        "seconds": 0.0,
+        "after": " lado",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 61.83,
+        "end": 61.83,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 61.89,
+        "end": 61.89,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " frontera.",
+        "punctuation": "none"
+      },
+      {
+        "start": 62.27,
+        "end": 62.27,
+        "seconds": 0.0,
+        "after": " frontera.",
+        "before": " En",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 63.39,
+        "end": 63.39,
+        "seconds": 0.0,
+        "after": " En",
+        "before": " julio,",
+        "punctuation": "none"
+      },
+      {
+        "start": 63.83,
+        "end": 63.83,
+        "seconds": 0.0,
+        "after": " julio,",
+        "before": " Irán",
+        "punctuation": "comma"
+      },
+      {
+        "start": 64.53,
+        "end": 64.53,
+        "seconds": 0.0,
+        "after": " Irán",
+        "before": " pasa",
+        "punctuation": "none"
+      },
+      {
+        "start": 64.93,
+        "end": 64.93,
+        "seconds": 0.0,
+        "after": " pasa",
+        "before": " a",
+        "punctuation": "none"
+      },
+      {
+        "start": 65.11,
+        "end": 65.11,
+        "seconds": 0.0,
+        "after": " a",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 65.19,
+        "end": 65.19,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " ofensiva",
+        "punctuation": "none"
+      },
+      {
+        "start": 65.87,
+        "end": 65.87,
+        "seconds": 0.0,
+        "after": " ofensiva",
+        "before": " hacia",
+        "punctuation": "none"
+      },
+      {
+        "start": 66.05,
+        "end": 66.05,
+        "seconds": 0.0,
+        "after": " hacia",
+        "before": " Basora,",
+        "punctuation": "none"
+      },
+      {
+        "start": 66.45,
+        "end": 66.45,
+        "seconds": 0.0,
+        "after": " Basora,",
+        "before": " dentro",
+        "punctuation": "comma"
+      },
+      {
+        "start": 67.25,
+        "end": 67.25,
+        "seconds": 0.0,
+        "after": " dentro",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 67.49,
+        "end": 67.49,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " Irak.",
+        "punctuation": "none"
+      },
+      {
+        "start": 67.75,
+        "end": 67.75,
+        "seconds": 0.0,
+        "after": " Irak.",
+        "before": " Kharg",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 68.67,
+        "end": 68.67,
+        "seconds": 0.0,
+        "after": " Kharg",
+        "before": " concentra",
+        "punctuation": "none"
+      },
+      {
+        "start": 69.45,
+        "end": 69.45,
+        "seconds": 0.0,
+        "after": " concentra",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 69.55,
+        "end": 69.55,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " exportación",
+        "punctuation": "none"
+      },
+      {
+        "start": 70.17,
+        "end": 70.17,
+        "seconds": 0.0,
+        "after": " exportación",
+        "before": " iraní",
+        "punctuation": "none"
+      },
+      {
+        "start": 70.57,
+        "end": 70.57,
+        "seconds": 0.0,
+        "after": " iraní",
+        "before": " a",
+        "punctuation": "none"
+      },
+      {
+        "start": 70.75,
+        "end": 70.75,
+        "seconds": 0.0,
+        "after": " a",
+        "before": " través",
+        "punctuation": "none"
+      },
+      {
+        "start": 70.99,
+        "end": 70.99,
+        "seconds": 0.0,
+        "after": " través",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 71.19,
+        "end": 71.19,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " sus",
+        "punctuation": "none"
+      },
+      {
+        "start": 71.33,
+        "end": 71.33,
+        "seconds": 0.0,
+        "after": " sus",
+        "before": " terminales.",
+        "punctuation": "none"
+      },
+      {
+        "start": 72.01,
+        "end": 72.01,
+        "seconds": 0.0,
+        "after": " terminales.",
+        "before": " Es",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 72.77,
+        "end": 72.77,
+        "seconds": 0.0,
+        "after": " Es",
+        "before": " una",
+        "punctuation": "none"
+      },
+      {
+        "start": 72.91,
+        "end": 72.91,
+        "seconds": 0.0,
+        "after": " una",
+        "before": " instalación",
+        "punctuation": "none"
+      },
+      {
+        "start": 73.39,
+        "end": 73.39,
+        "seconds": 0.0,
+        "after": " instalación",
+        "before": " distinta",
+        "punctuation": "none"
+      },
+      {
+        "start": 74.01,
+        "end": 74.01,
+        "seconds": 0.0,
+        "after": " distinta",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 74.21,
+        "end": 74.21,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 74.31,
+        "end": 74.31,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " refinería",
+        "punctuation": "none"
+      },
+      {
+        "start": 74.87,
+        "end": 74.87,
+        "seconds": 0.0,
+        "after": " refinería",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 74.97,
+        "end": 74.97,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " Abadán.",
+        "punctuation": "none"
+      },
+      {
+        "start": 75.29,
+        "end": 75.29,
+        "seconds": 0.0,
+        "after": " Abadán.",
+        "before": " Los",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 76.33,
+        "end": 76.33,
+        "seconds": 0.0,
+        "after": " Los",
+        "before": " petroleros",
+        "punctuation": "none"
+      },
+      {
+        "start": 76.95,
+        "end": 76.95,
+        "seconds": 0.0,
+        "after": " petroleros",
+        "before": " llevan",
+        "punctuation": "none"
+      },
+      {
+        "start": 77.19,
+        "end": 77.19,
+        "seconds": 0.0,
+        "after": " llevan",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 77.31,
+        "end": 77.31,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " conflicto",
+        "punctuation": "none"
+      },
+      {
+        "start": 77.83,
+        "end": 77.83,
+        "seconds": 0.0,
+        "after": " conflicto",
+        "before": " a",
+        "punctuation": "none"
+      },
+      {
+        "start": 77.87,
+        "end": 77.87,
+        "seconds": 0.0,
+        "after": " a",
+        "before": " las",
+        "punctuation": "none"
+      },
+      {
+        "start": 77.97,
+        "end": 77.97,
+        "seconds": 0.0,
+        "after": " las",
+        "before": " rutas",
+        "punctuation": "none"
+      },
+      {
+        "start": 78.39,
+        "end": 78.39,
+        "seconds": 0.0,
+        "after": " rutas",
+        "before": " del",
+        "punctuation": "none"
+      },
+      {
+        "start": 78.47,
+        "end": 78.47,
+        "seconds": 0.0,
+        "after": " del",
+        "before": " Golfo.",
+        "punctuation": "none"
+      },
+      {
+        "start": 78.89,
+        "end": 79.35,
+        "seconds": 0.45999999999999375,
+        "after": " Golfo.",
+        "before": " En",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 80.19,
+        "end": 80.19,
+        "seconds": 0.0,
+        "after": " En",
+        "before": " 1985,",
+        "punctuation": "none"
+      },
+      {
+        "start": 80.63,
+        "end": 81.49,
+        "seconds": 0.8599999999999994,
+        "after": " 1985,",
+        "before": " Irán",
+        "punctuation": "comma"
+      },
+      {
+        "start": 82.11,
+        "end": 82.11,
+        "seconds": 0.0,
+        "after": " Irán",
+        "before": " traslada",
+        "punctuation": "none"
+      },
+      {
+        "start": 82.51,
+        "end": 82.51,
+        "seconds": 0.0,
+        "after": " traslada",
+        "before": " crudo",
+        "punctuation": "none"
+      },
+      {
+        "start": 82.87,
+        "end": 82.87,
+        "seconds": 0.0,
+        "after": " crudo",
+        "before": " desde",
+        "punctuation": "none"
+      },
+      {
+        "start": 83.11,
+        "end": 83.11,
+        "seconds": 0.0,
+        "after": " desde",
+        "before": " Kharg",
+        "punctuation": "none"
+      },
+      {
+        "start": 83.45,
+        "end": 83.45,
+        "seconds": 0.0,
+        "after": " Kharg",
+        "before": " hasta",
+        "punctuation": "none"
+      },
+      {
+        "start": 83.69,
+        "end": 83.69,
+        "seconds": 0.0,
+        "after": " hasta",
+        "before": " Sirri.",
+        "punctuation": "none"
+      },
+      {
+        "start": 84.09,
+        "end": 84.83,
+        "seconds": 0.7399999999999949,
+        "after": " Sirri.",
+        "before": " Utiliza",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 85.67,
+        "end": 85.67,
+        "seconds": 0.0,
+        "after": " Utiliza",
+        "before": " petroleros",
+        "punctuation": "none"
+      },
+      {
+        "start": 86.19,
+        "end": 86.19,
+        "seconds": 0.0,
+        "after": " petroleros",
+        "before": " propios",
+        "punctuation": "none"
+      },
+      {
+        "start": 86.67,
+        "end": 86.67,
+        "seconds": 0.0,
+        "after": " propios",
+        "before": " o",
+        "punctuation": "none"
+      },
+      {
+        "start": 86.79,
+        "end": 86.79,
+        "seconds": 0.0,
+        "after": " o",
+        "before": " fletados",
+        "punctuation": "none"
+      },
+      {
+        "start": 87.17,
+        "end": 87.17,
+        "seconds": 0.0,
+        "after": " fletados",
+        "before": " para",
+        "punctuation": "none"
+      },
+      {
+        "start": 87.49,
+        "end": 87.49,
+        "seconds": 0.0,
+        "after": " para",
+        "before": " reducir",
+        "punctuation": "none"
+      },
+      {
+        "start": 87.95,
+        "end": 87.95,
+        "seconds": 0.0,
+        "after": " reducir",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 88.11,
+        "end": 88.11,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " exposición",
+        "punctuation": "none"
+      },
+      {
+        "start": 88.57,
+        "end": 88.57,
+        "seconds": 0.0,
+        "after": " exposición",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 88.73,
+        "end": 88.73,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " compradores",
+        "punctuation": "none"
+      },
+      {
+        "start": 89.25,
+        "end": 89.25,
+        "seconds": 0.0,
+        "after": " compradores",
+        "before": " extranjeros.",
+        "punctuation": "none"
+      },
+      {
+        "start": 89.93,
+        "end": 90.19,
+        "seconds": 0.2599999999999909,
+        "after": " extranjeros.",
+        "before": " En",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 90.69,
+        "end": 90.69,
+        "seconds": 0.0,
+        "after": " En",
+        "before": " 1984,",
+        "punctuation": "none"
+      },
+      {
+        "start": 91.63,
+        "end": 92.43,
+        "seconds": 0.8000000000000114,
+        "after": " 1984,",
+        "before": " la",
+        "punctuation": "comma"
+      },
+      {
+        "start": 93.09,
+        "end": 93.09,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " guerra",
+        "punctuation": "none"
+      },
+      {
+        "start": 93.51,
+        "end": 93.51,
+        "seconds": 0.0,
+        "after": " guerra",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 93.63,
+        "end": 93.63,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " los",
+        "punctuation": "none"
+      },
+      {
+        "start": 93.75,
+        "end": 93.75,
+        "seconds": 0.0,
+        "after": " los",
+        "before": " petroleros",
+        "punctuation": "none"
+      },
+      {
+        "start": 94.47,
+        "end": 94.47,
+        "seconds": 0.0,
+        "after": " petroleros",
+        "before": " se",
+        "punctuation": "none"
+      },
+      {
+        "start": 94.63,
+        "end": 94.63,
+        "seconds": 0.0,
+        "after": " se",
+        "before": " intensifica.",
+        "punctuation": "none"
+      },
+      {
+        "start": 95.37,
+        "end": 95.77,
+        "seconds": 0.3999999999999915,
+        "after": " intensifica.",
+        "before": " Irak",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 96.61,
+        "end": 96.61,
+        "seconds": 0.0,
+        "after": " Irak",
+        "before": " emplea",
+        "punctuation": "none"
+      },
+      {
+        "start": 97.17,
+        "end": 97.17,
+        "seconds": 0.0,
+        "after": " emplea",
+        "before": " aviones",
+        "punctuation": "none"
+      },
+      {
+        "start": 97.59,
+        "end": 97.59,
+        "seconds": 0.0,
+        "after": " aviones",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 97.81,
+        "end": 97.81,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " reacción",
+        "punctuation": "none"
+      },
+      {
+        "start": 98.29,
+        "end": 98.29,
+        "seconds": 0.0,
+        "after": " reacción",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 98.69,
+        "end": 98.69,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " misiles",
+        "punctuation": "none"
+      },
+      {
+        "start": 99.25,
+        "end": 99.25,
+        "seconds": 0.0,
+        "after": " misiles",
+        "before": " contra",
+        "punctuation": "none"
+      },
+      {
+        "start": 99.69,
+        "end": 99.69,
+        "seconds": 0.0,
+        "after": " contra",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 100.03,
+        "end": 100.03,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " navegación.",
+        "punctuation": "none"
+      },
+      {
+        "start": 100.63,
+        "end": 101.07,
+        "seconds": 0.4399999999999977,
+        "after": " navegación.",
+        "before": " Los",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 101.71,
+        "end": 101.71,
+        "seconds": 0.0,
+        "after": " Los",
+        "before": " ataques",
+        "punctuation": "none"
+      },
+      {
+        "start": 102.17,
+        "end": 102.17,
+        "seconds": 0.0,
+        "after": " ataques",
+        "before": " ya",
+        "punctuation": "none"
+      },
+      {
+        "start": 102.33,
+        "end": 102.33,
+        "seconds": 0.0,
+        "after": " ya",
+        "before": " tenían",
+        "punctuation": "none"
+      },
+      {
+        "start": 102.65,
+        "end": 102.65,
+        "seconds": 0.0,
+        "after": " tenían",
+        "before": " antecedentes",
+        "punctuation": "none"
+      },
+      {
+        "start": 103.41,
+        "end": 103.41,
+        "seconds": 0.0,
+        "after": " antecedentes",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 103.59,
+        "end": 103.59,
+        "seconds": 0.0,
+        "after": " en",
+        "before": " los",
+        "punctuation": "none"
+      },
+      {
+        "start": 103.69,
+        "end": 103.69,
+        "seconds": 0.0,
+        "after": " los",
+        "before": " años",
+        "punctuation": "none"
+      },
+      {
+        "start": 103.97,
+        "end": 103.97,
+        "seconds": 0.0,
+        "after": " años",
+        "before": " anteriores.",
+        "punctuation": "none"
+      },
+      {
+        "start": 104.69,
+        "end": 104.87,
+        "seconds": 0.18000000000000682,
+        "after": " anteriores.",
+        "before": " Los",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 105.71,
+        "end": 105.73,
+        "seconds": 0.020000000000010232,
+        "after": " Los",
+        "before": " ataques",
+        "punctuation": "none"
+      },
+      {
+        "start": 106.15,
+        "end": 106.15,
+        "seconds": 0.0,
+        "after": " ataques",
+        "before": " iraquíes",
+        "punctuation": "none"
+      },
+      {
+        "start": 106.75,
+        "end": 106.75,
+        "seconds": 0.0,
+        "after": " iraquíes",
+        "before": " se",
+        "punctuation": "none"
+      },
+      {
+        "start": 106.83,
+        "end": 106.83,
+        "seconds": 0.0,
+        "after": " se",
+        "before": " intensifican",
+        "punctuation": "none"
+      },
+      {
+        "start": 107.65,
+        "end": 107.65,
+        "seconds": 0.0,
+        "after": " intensifican",
+        "before": " contra",
+        "punctuation": "none"
+      },
+      {
+        "start": 107.91,
+        "end": 107.91,
+        "seconds": 0.0,
+        "after": " contra",
+        "before": " terminales",
+        "punctuation": "none"
+      },
+      {
+        "start": 108.83,
+        "end": 108.83,
+        "seconds": 0.0,
+        "after": " terminales",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 108.91,
+        "end": 108.91,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " navegación.",
+        "punctuation": "none"
+      },
+      {
+        "start": 109.51,
+        "end": 110.45,
+        "seconds": 0.9399999999999977,
+        "after": " navegación.",
+        "before": " Kharg",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 110.85,
+        "end": 110.85,
+        "seconds": 0.0,
+        "after": " Kharg",
+        "before": " sufre",
+        "punctuation": "none"
+      },
+      {
+        "start": 111.23,
+        "end": 111.23,
+        "seconds": 0.0,
+        "after": " sufre",
+        "before": " daños,",
+        "punctuation": "none"
+      },
+      {
+        "start": 111.67,
+        "end": 111.73,
+        "seconds": 0.060000000000002274,
+        "after": " daños,",
+        "before": " pero",
+        "punctuation": "comma"
+      },
+      {
+        "start": 112.17,
+        "end": 112.17,
+        "seconds": 0.0,
+        "after": " pero",
+        "before": " sus",
+        "punctuation": "none"
+      },
+      {
+        "start": 112.41,
+        "end": 112.41,
+        "seconds": 0.0,
+        "after": " sus",
+        "before": " instalaciones",
+        "punctuation": "none"
+      },
+      {
+        "start": 113.17,
+        "end": 113.17,
+        "seconds": 0.0,
+        "after": " instalaciones",
+        "before": " también",
+        "punctuation": "none"
+      },
+      {
+        "start": 113.55,
+        "end": 113.55,
+        "seconds": 0.0,
+        "after": " también",
+        "before": " reciben",
+        "punctuation": "none"
+      },
+      {
+        "start": 114.29,
+        "end": 114.29,
+        "seconds": 0.0,
+        "after": " reciben",
+        "before": " reparaciones.",
+        "punctuation": "none"
+      },
+      {
+        "start": 114.89,
+        "end": 115.37,
+        "seconds": 0.480000000000004,
+        "after": " reparaciones.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 115.81,
+        "end": 115.81,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " 17",
+        "punctuation": "none"
+      },
+      {
+        "start": 116.21,
+        "end": 116.21,
+        "seconds": 0.0,
+        "after": " 17",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 116.65,
+        "end": 116.65,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " mayo",
+        "punctuation": "none"
+      },
+      {
+        "start": 116.89,
+        "end": 116.89,
+        "seconds": 0.0,
+        "after": " mayo",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 117.17,
+        "end": 117.17,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " 1987",
+        "punctuation": "none"
+      },
+      {
+        "start": 117.83,
+        "end": 117.83,
+        "seconds": 0.0,
+        "after": " 1987",
+        "before": " ocurre",
+        "punctuation": "none"
+      },
+      {
+        "start": 119.77,
+        "end": 119.77,
+        "seconds": 0.0,
+        "after": " ocurre",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 119.85,
+        "end": 119.85,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " ataque",
+        "punctuation": "none"
+      },
+      {
+        "start": 120.13,
+        "end": 120.13,
+        "seconds": 0.0,
+        "after": " ataque",
+        "before": " al",
+        "punctuation": "none"
+      },
+      {
+        "start": 120.31,
+        "end": 120.31,
+        "seconds": 0.0,
+        "after": " al",
+        "before": " Stark.",
+        "punctuation": "none"
+      },
+      {
+        "start": 120.53,
+        "end": 121.25,
+        "seconds": 0.7199999999999989,
+        "after": " Stark.",
+        "before": " Un",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 121.63,
+        "end": 121.63,
+        "seconds": 0.0,
+        "after": " Un",
+        "before": " avión",
+        "punctuation": "none"
+      },
+      {
+        "start": 121.93,
+        "end": 121.93,
+        "seconds": 0.0,
+        "after": " avión",
+        "before": " iraquí",
+        "punctuation": "none"
+      },
+      {
+        "start": 122.33,
+        "end": 122.33,
+        "seconds": 0.0,
+        "after": " iraquí",
+        "before": " lanza",
+        "punctuation": "none"
+      },
+      {
+        "start": 122.73,
+        "end": 122.73,
+        "seconds": 0.0,
+        "after": " lanza",
+        "before": " dos",
+        "punctuation": "none"
+      },
+      {
+        "start": 122.93,
+        "end": 122.93,
+        "seconds": 0.0,
+        "after": " dos",
+        "before": " misiles",
+        "punctuation": "none"
+      },
+      {
+        "start": 123.47,
+        "end": 123.47,
+        "seconds": 0.0,
+        "after": " misiles",
+        "before": " Exocet",
+        "punctuation": "none"
+      },
+      {
+        "start": 124.11,
+        "end": 124.11,
+        "seconds": 0.0,
+        "after": " Exocet",
+        "before": " contra",
+        "punctuation": "none"
+      },
+      {
+        "start": 124.43,
+        "end": 124.43,
+        "seconds": 0.0,
+        "after": " contra",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 124.63,
+        "end": 124.63,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " buque.",
+        "punctuation": "none"
+      },
+      {
+        "start": 124.85,
+        "end": 128.05,
+        "seconds": 3.200000000000017,
+        "after": " buque.",
+        "before": " Mueren",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 128.43,
+        "end": 128.43,
+        "seconds": 0.0,
+        "after": " Mueren",
+        "before": " 37",
+        "punctuation": "none"
+      },
+      {
+        "start": 128.85,
+        "end": 128.85,
+        "seconds": 0.0,
+        "after": " 37",
+        "before": " tripulantes",
+        "punctuation": "none"
+      },
+      {
+        "start": 129.97,
+        "end": 129.97,
+        "seconds": 0.0,
+        "after": " tripulantes",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 130.17,
+        "end": 130.17,
+        "seconds": 0.0,
+        "after": " en",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 130.27,
+        "end": 130.27,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " ataque.",
+        "punctuation": "none"
+      },
+      {
+        "start": 130.49,
+        "end": 131.47,
+        "seconds": 0.9799999999999898,
+        "after": " ataque.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 131.85,
+        "end": 131.85,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " buque",
+        "punctuation": "none"
+      },
+      {
+        "start": 132.07,
+        "end": 132.07,
+        "seconds": 0.0,
+        "after": " buque",
+        "before": " sobrevive",
+        "punctuation": "none"
+      },
+      {
+        "start": 132.61,
+        "end": 132.61,
+        "seconds": 0.0,
+        "after": " sobrevive",
+        "before": " al",
+        "punctuation": "none"
+      },
+      {
+        "start": 132.75,
+        "end": 132.75,
+        "seconds": 0.0,
+        "after": " al",
+        "before": " impacto",
+        "punctuation": "none"
+      },
+      {
+        "start": 133.03,
+        "end": 133.03,
+        "seconds": 0.0,
+        "after": " impacto",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 133.29,
+        "end": 133.29,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " los",
+        "punctuation": "none"
+      },
+      {
+        "start": 133.39,
+        "end": 133.39,
+        "seconds": 0.0,
+        "after": " los",
+        "before": " misiles.",
+        "punctuation": "none"
+      },
+      {
+        "start": 133.81,
+        "end": 133.81,
+        "seconds": 0.0,
+        "after": " misiles.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 134.57,
+        "end": 134.57,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " 21",
+        "punctuation": "none"
+      },
+      {
+        "start": 134.93,
+        "end": 134.93,
+        "seconds": 0.0,
+        "after": " 21",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 135.19,
+        "end": 135.19,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " julio,",
+        "punctuation": "none"
+      },
+      {
+        "start": 135.69,
+        "end": 135.71,
+        "seconds": 0.020000000000010232,
+        "after": " julio,",
+        "before": " dos",
+        "punctuation": "comma"
+      },
+      {
+        "start": 136.15,
+        "end": 136.15,
+        "seconds": 0.0,
+        "after": " dos",
+        "before": " mercantes",
+        "punctuation": "none"
+      },
+      {
+        "start": 136.83,
+        "end": 136.83,
+        "seconds": 0.0,
+        "after": " mercantes",
+        "before": " kuwaitíes",
+        "punctuation": "none"
+      },
+      {
+        "start": 137.83,
+        "end": 137.83,
+        "seconds": 0.0,
+        "after": " kuwaitíes",
+        "before": " izan",
+        "punctuation": "none"
+      },
+      {
+        "start": 138.23,
+        "end": 138.23,
+        "seconds": 0.0,
+        "after": " izan",
+        "before": " bandera",
+        "punctuation": "none"
+      },
+      {
+        "start": 138.77,
+        "end": 138.77,
+        "seconds": 0.0,
+        "after": " bandera",
+        "before": " estadounidense.",
+        "punctuation": "none"
+      },
+      {
+        "start": 139.65,
+        "end": 139.79,
+        "seconds": 0.13999999999998636,
+        "after": " estadounidense.",
+        "before": " Son",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 140.45,
+        "end": 140.45,
+        "seconds": 0.0,
+        "after": " Son",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 140.65,
+        "end": 140.65,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " Bridgeton",
+        "punctuation": "none"
+      },
+      {
+        "start": 141.15,
+        "end": 141.15,
+        "seconds": 0.0,
+        "after": " Bridgeton",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 141.45,
+        "end": 141.45,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 141.59,
+        "end": 141.59,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " Gas",
+        "punctuation": "none"
+      },
+      {
+        "start": 141.81,
+        "end": 141.81,
+        "seconds": 0.0,
+        "after": " Gas",
+        "before": " Prince,",
+        "punctuation": "none"
+      },
+      {
+        "start": 142.07,
+        "end": 142.07,
+        "seconds": 0.0,
+        "after": " Prince,",
+        "before": " rumbo",
+        "punctuation": "comma"
+      },
+      {
+        "start": 142.97,
+        "end": 142.97,
+        "seconds": 0.0,
+        "after": " rumbo",
+        "before": " a",
+        "punctuation": "none"
+      },
+      {
+        "start": 143.05,
+        "end": 143.05,
+        "seconds": 0.0,
+        "after": " a",
+        "before": " Kuwait.",
+        "punctuation": "none"
+      },
+      {
+        "start": 143.43,
+        "end": 143.71,
+        "seconds": 0.28000000000000114,
+        "after": " Kuwait.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 144.43,
+        "end": 144.43,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " primer",
+        "punctuation": "none"
+      },
+      {
+        "start": 144.71,
+        "end": 144.71,
+        "seconds": 0.0,
+        "after": " primer",
+        "before": " convoy",
+        "punctuation": "none"
+      },
+      {
+        "start": 145.13,
+        "end": 145.13,
+        "seconds": 0.0,
+        "after": " convoy",
+        "before": " parte",
+        "punctuation": "none"
+      },
+      {
+        "start": 145.47,
+        "end": 145.47,
+        "seconds": 0.0,
+        "after": " parte",
+        "before": " al",
+        "punctuation": "none"
+      },
+      {
+        "start": 145.65,
+        "end": 145.65,
+        "seconds": 0.0,
+        "after": " al",
+        "before": " día",
+        "punctuation": "none"
+      },
+      {
+        "start": 145.79,
+        "end": 145.79,
+        "seconds": 0.0,
+        "after": " día",
+        "before": " siguiente,",
+        "punctuation": "none"
+      },
+      {
+        "start": 146.23,
+        "end": 146.43,
+        "seconds": 0.20000000000001705,
+        "after": " siguiente,",
+        "before": " atravesando",
+        "punctuation": "comma"
+      },
+      {
+        "start": 147.23,
+        "end": 147.23,
+        "seconds": 0.0,
+        "after": " atravesando",
+        "before": " Ormuz.",
+        "punctuation": "none"
+      },
+      {
+        "start": 147.57,
+        "end": 148.69,
+        "seconds": 1.1200000000000045,
+        "after": " Ormuz.",
+        "before": " La",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 149.05,
+        "end": 149.05,
+        "seconds": 0.0,
+        "after": " La",
+        "before": " mina",
+        "punctuation": "none"
+      },
+      {
+        "start": 149.35,
+        "end": 149.35,
+        "seconds": 0.0,
+        "after": " mina",
+        "before": " del",
+        "punctuation": "none"
+      },
+      {
+        "start": 149.51,
+        "end": 149.51,
+        "seconds": 0.0,
+        "after": " del",
+        "before": " Bridgeton",
+        "punctuation": "none"
+      },
+      {
+        "start": 150.03,
+        "end": 150.03,
+        "seconds": 0.0,
+        "after": " Bridgeton",
+        "before": " demuestra",
+        "punctuation": "none"
+      },
+      {
+        "start": 150.83,
+        "end": 150.83,
+        "seconds": 0.0,
+        "after": " demuestra",
+        "before": " que",
+        "punctuation": "none"
+      },
+      {
+        "start": 150.97,
+        "end": 150.97,
+        "seconds": 0.0,
+        "after": " que",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 151.07,
+        "end": 151.07,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " escolta",
+        "punctuation": "none"
+      },
+      {
+        "start": 151.55,
+        "end": 151.55,
+        "seconds": 0.0,
+        "after": " escolta",
+        "before": " no",
+        "punctuation": "none"
+      },
+      {
+        "start": 151.77,
+        "end": 151.77,
+        "seconds": 0.0,
+        "after": " no",
+        "before": " elimina",
+        "punctuation": "none"
+      },
+      {
+        "start": 152.41,
+        "end": 152.41,
+        "seconds": 0.0,
+        "after": " elimina",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 152.51,
+        "end": 152.51,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " peligro.",
+        "punctuation": "none"
+      },
+      {
+        "start": 152.93,
+        "end": 153.19,
+        "seconds": 0.2599999999999909,
+        "after": " peligro.",
+        "before": " En",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 153.79,
+        "end": 153.79,
+        "seconds": 0.0,
+        "after": " En",
+        "before": " septiembre,",
+        "punctuation": "none"
+      },
+      {
+        "start": 154.35,
+        "end": 154.43,
+        "seconds": 0.0800000000000125,
+        "after": " septiembre,",
+        "before": " helicópteros",
+        "punctuation": "comma"
+      },
+      {
+        "start": 155.37,
+        "end": 155.37,
+        "seconds": 0.0,
+        "after": " helicópteros",
+        "before": " desde",
+        "punctuation": "none"
+      },
+      {
+        "start": 155.53,
+        "end": 155.53,
+        "seconds": 0.0,
+        "after": " desde",
+        "before": " Jarrett",
+        "punctuation": "none"
+      },
+      {
+        "start": 155.89,
+        "end": 155.89,
+        "seconds": 0.0,
+        "after": " Jarrett",
+        "before": " sorprenden",
+        "punctuation": "none"
+      },
+      {
+        "start": 156.75,
+        "end": 156.75,
+        "seconds": 0.0,
+        "after": " sorprenden",
+        "before": " al",
+        "punctuation": "none"
+      },
+      {
+        "start": 156.91,
+        "end": 156.91,
+        "seconds": 0.0,
+        "after": " al",
+        "before": " Iran",
+        "punctuation": "none"
+      },
+      {
+        "start": 157.07,
+        "end": 157.07,
+        "seconds": 0.0,
+        "after": " Iran",
+        "before": " Ajr",
+        "punctuation": "none"
+      },
+      {
+        "start": 157.43,
+        "end": 157.43,
+        "seconds": 0.0,
+        "after": " Ajr",
+        "before": " sembrando",
+        "punctuation": "none"
+      },
+      {
+        "start": 158.21,
+        "end": 158.21,
+        "seconds": 0.0,
+        "after": " sembrando",
+        "before": " minas.",
+        "punctuation": "none"
+      },
+      {
+        "start": 158.75,
+        "end": 159.25,
+        "seconds": 0.5,
+        "after": " minas.",
+        "before": " Uno",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 159.65,
+        "end": 159.65,
+        "seconds": 0.0,
+        "after": " Uno",
+        "before": " observa;",
+        "punctuation": "none"
+      },
+      {
+        "start": 160.45,
+        "end": 161.01,
+        "seconds": 0.5600000000000023,
+        "after": " observa;",
+        "before": " otros",
+        "punctuation": "none"
+      },
+      {
+        "start": 161.41,
+        "end": 161.41,
+        "seconds": 0.0,
+        "after": " otros",
+        "before": " dos",
+        "punctuation": "none"
+      },
+      {
+        "start": 161.61,
+        "end": 161.61,
+        "seconds": 0.0,
+        "after": " dos",
+        "before": " lo",
+        "punctuation": "none"
+      },
+      {
+        "start": 161.77,
+        "end": 161.77,
+        "seconds": 0.0,
+        "after": " lo",
+        "before": " atacan",
+        "punctuation": "none"
+      },
+      {
+        "start": 162.27,
+        "end": 162.27,
+        "seconds": 0.0,
+        "after": " atacan",
+        "before": " con",
+        "punctuation": "none"
+      },
+      {
+        "start": 162.43,
+        "end": 162.43,
+        "seconds": 0.0,
+        "after": " con",
+        "before": " cohetes",
+        "punctuation": "none"
+      },
+      {
+        "start": 163.05,
+        "end": 163.05,
+        "seconds": 0.0,
+        "after": " cohetes",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 163.13,
+        "end": 163.13,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " ametralladoras.",
+        "punctuation": "none"
+      },
+      {
+        "start": 163.97,
+        "end": 164.55,
+        "seconds": 0.5800000000000125,
+        "after": " ametralladoras.",
+        "before": " Al",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 164.95,
+        "end": 164.95,
+        "seconds": 0.0,
+        "after": " Al",
+        "before": " amanecer",
+        "punctuation": "none"
+      },
+      {
+        "start": 165.37,
+        "end": 165.37,
+        "seconds": 0.0,
+        "after": " amanecer",
+        "before": " siguiente,",
+        "punctuation": "none"
+      },
+      {
+        "start": 165.59,
+        "end": 165.89,
+        "seconds": 0.29999999999998295,
+        "after": " siguiente,",
+        "before": " el",
+        "punctuation": "comma"
+      },
+      {
+        "start": 166.39,
+        "end": 166.39,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " abordaje",
+        "punctuation": "none"
+      },
+      {
+        "start": 166.81,
+        "end": 166.81,
+        "seconds": 0.0,
+        "after": " abordaje",
+        "before": " encuentra",
+        "punctuation": "none"
+      },
+      {
+        "start": 167.17,
+        "end": 167.17,
+        "seconds": 0.0,
+        "after": " encuentra",
+        "before": " nueve",
+        "punctuation": "none"
+      },
+      {
+        "start": 167.85,
+        "end": 167.85,
+        "seconds": 0.0,
+        "after": " nueve",
+        "before": " minas",
+        "punctuation": "none"
+      },
+      {
+        "start": 168.37,
+        "end": 168.37,
+        "seconds": 0.0,
+        "after": " minas",
+        "before": " a",
+        "punctuation": "none"
+      },
+      {
+        "start": 168.53,
+        "end": 168.53,
+        "seconds": 0.0,
+        "after": " a",
+        "before": " bordo.",
+        "punctuation": "none"
+      },
+      {
+        "start": 168.75,
+        "end": 169.97,
+        "seconds": 1.2199999999999989,
+        "after": " bordo.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 170.77,
+        "end": 170.77,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " 14",
+        "punctuation": "none"
+      },
+      {
+        "start": 171.03,
+        "end": 171.03,
+        "seconds": 0.0,
+        "after": " 14",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 171.29,
+        "end": 171.29,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " abril",
+        "punctuation": "none"
+      },
+      {
+        "start": 171.51,
+        "end": 171.51,
+        "seconds": 0.0,
+        "after": " abril",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 171.65,
+        "end": 171.65,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " 1988,",
+        "punctuation": "none"
+      },
+      {
+        "start": 172.45,
+        "end": 172.95,
+        "seconds": 0.5,
+        "after": " 1988,",
+        "before": " otra",
+        "punctuation": "comma"
+      },
+      {
+        "start": 173.53,
+        "end": 173.53,
+        "seconds": 0.0,
+        "after": " otra",
+        "before": " mina",
+        "punctuation": "none"
+      },
+      {
+        "start": 173.77,
+        "end": 173.77,
+        "seconds": 0.0,
+        "after": " mina",
+        "before": " alcanza",
+        "punctuation": "none"
+      },
+      {
+        "start": 174.23,
+        "end": 174.23,
+        "seconds": 0.0,
+        "after": " alcanza",
+        "before": " una",
+        "punctuation": "none"
+      },
+      {
+        "start": 174.37,
+        "end": 174.37,
+        "seconds": 0.0,
+        "after": " una",
+        "before": " fragata.",
+        "punctuation": "none"
+      },
+      {
+        "start": 174.81,
+        "end": 175.23,
+        "seconds": 0.4199999999999875,
+        "after": " fragata.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 175.63,
+        "end": 175.63,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " Samuel",
+        "punctuation": "none"
+      },
+      {
+        "start": 175.99,
+        "end": 175.99,
+        "seconds": 0.0,
+        "after": " Samuel",
+        "before": " B.",
+        "punctuation": "none"
+      },
+      {
+        "start": 176.27,
+        "end": 176.43,
+        "seconds": 0.1599999999999966,
+        "after": " B.",
+        "before": " Roberts",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 177.07,
+        "end": 177.07,
+        "seconds": 0.0,
+        "after": " Roberts",
+        "before": " sufre",
+        "punctuation": "none"
+      },
+      {
+        "start": 178.01,
+        "end": 178.01,
+        "seconds": 0.0,
+        "after": " sufre",
+        "before": " daños",
+        "punctuation": "none"
+      },
+      {
+        "start": 178.29,
+        "end": 178.29,
+        "seconds": 0.0,
+        "after": " daños",
+        "before": " graves",
+        "punctuation": "none"
+      },
+      {
+        "start": 178.65,
+        "end": 178.65,
+        "seconds": 0.0,
+        "after": " graves",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 178.91,
+        "end": 178.91,
+        "seconds": 0.0,
+        "after": " en",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 179.01,
+        "end": 179.01,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " Golfo.",
+        "punctuation": "none"
+      },
+      {
+        "start": 179.41,
+        "end": 179.61,
+        "seconds": 0.20000000000001705,
+        "after": " Golfo.",
+        "before": " Cuatro",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 180.33,
+        "end": 180.33,
+        "seconds": 0.0,
+        "after": " Cuatro",
+        "before": " días",
+        "punctuation": "none"
+      },
+      {
+        "start": 180.55,
+        "end": 180.55,
+        "seconds": 0.0,
+        "after": " días",
+        "before": " después,",
+        "punctuation": "none"
+      },
+      {
+        "start": 180.97,
+        "end": 181.29,
+        "seconds": 0.3199999999999932,
+        "after": " después,",
+        "before": " Estados",
+        "punctuation": "comma"
+      },
+      {
+        "start": 181.85,
+        "end": 181.85,
+        "seconds": 0.0,
+        "after": " Estados",
+        "before": " Unidos",
+        "punctuation": "none"
+      },
+      {
+        "start": 182.33,
+        "end": 182.33,
+        "seconds": 0.0,
+        "after": " Unidos",
+        "before": " lanza",
+        "punctuation": "none"
+      },
+      {
+        "start": 182.95,
+        "end": 182.95,
+        "seconds": 0.0,
+        "after": " lanza",
+        "before": " Mantis",
+        "punctuation": "none"
+      },
+      {
+        "start": 183.57,
+        "end": 183.57,
+        "seconds": 0.0,
+        "after": " Mantis",
+        "before": " Religiosa.",
+        "punctuation": "none"
+      },
+      {
+        "start": 184.21,
+        "end": 184.89,
+        "seconds": 0.6799999999999784,
+        "after": " Religiosa.",
+        "before": " Sus",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 185.29,
+        "end": 185.29,
+        "seconds": 0.0,
+        "after": " Sus",
+        "before": " fuerzas",
+        "punctuation": "none"
+      },
+      {
+        "start": 185.67,
+        "end": 185.67,
+        "seconds": 0.0,
+        "after": " fuerzas",
+        "before": " atacan",
+        "punctuation": "none"
+      },
+      {
+        "start": 186.11,
+        "end": 186.11,
+        "seconds": 0.0,
+        "after": " atacan",
+        "before": " las",
+        "punctuation": "none"
+      },
+      {
+        "start": 186.19,
+        "end": 186.19,
+        "seconds": 0.0,
+        "after": " las",
+        "before": " plataformas",
+        "punctuation": "none"
+      },
+      {
+        "start": 186.85,
+        "end": 186.85,
+        "seconds": 0.0,
+        "after": " plataformas",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 186.93,
+        "end": 186.93,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " Sassan",
+        "punctuation": "none"
+      },
+      {
+        "start": 187.35,
+        "end": 187.35,
+        "seconds": 0.0,
+        "after": " Sassan",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 187.63,
+        "end": 187.63,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " Sirri.",
+        "punctuation": "none"
+      },
+      {
+        "start": 187.93,
+        "end": 188.75,
+        "seconds": 0.8199999999999932,
+        "after": " Sirri.",
+        "before": " Al",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 189.45,
+        "end": 189.45,
+        "seconds": 0.0,
+        "after": " Al",
+        "before": " este",
+        "punctuation": "none"
+      },
+      {
+        "start": 189.69,
+        "end": 189.69,
+        "seconds": 0.0,
+        "after": " este",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 189.85,
+        "end": 189.85,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " Ormuz",
+        "punctuation": "none"
+      },
+      {
+        "start": 190.21,
+        "end": 190.21,
+        "seconds": 0.0,
+        "after": " Ormuz",
+        "before": " opera",
+        "punctuation": "none"
+      },
+      {
+        "start": 190.79,
+        "end": 190.79,
+        "seconds": 0.0,
+        "after": " opera",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 191.03,
+        "end": 191.03,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " portaaviones",
+        "punctuation": "none"
+      },
+      {
+        "start": 191.59,
+        "end": 191.59,
+        "seconds": 0.0,
+        "after": " portaaviones",
+        "before": " Enterprise.",
+        "punctuation": "none"
+      },
+      {
+        "start": 192.09,
+        "end": 192.79,
+        "seconds": 0.6999999999999886,
+        "after": " Enterprise.",
+        "before": " Desde",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 193.61,
+        "end": 193.61,
+        "seconds": 0.0,
+        "after": " Desde",
+        "before": " Enterprise",
+        "punctuation": "none"
+      },
+      {
+        "start": 194.05,
+        "end": 194.05,
+        "seconds": 0.0,
+        "after": " Enterprise",
+        "before": " despegan",
+        "punctuation": "none"
+      },
+      {
+        "start": 194.83,
+        "end": 194.83,
+        "seconds": 0.0,
+        "after": " despegan",
+        "before": " los",
+        "punctuation": "none"
+      },
+      {
+        "start": 194.95,
+        "end": 194.95,
+        "seconds": 0.0,
+        "after": " los",
+        "before": " aviones",
+        "punctuation": "none"
+      },
+      {
+        "start": 195.31,
+        "end": 195.31,
+        "seconds": 0.0,
+        "after": " aviones",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 195.43,
+        "end": 195.43,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " ataque",
+        "punctuation": "none"
+      },
+      {
+        "start": 195.67,
+        "end": 195.67,
+        "seconds": 0.0,
+        "after": " ataque",
+        "before": " Intruder.",
+        "punctuation": "none"
+      },
+      {
+        "start": 196.19,
+        "end": 196.43,
+        "seconds": 0.2400000000000091,
+        "after": " Intruder.",
+        "before": " La",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 196.99,
+        "end": 196.99,
+        "seconds": 0.0,
+        "after": " La",
+        "before": " fragata",
+        "punctuation": "none"
+      },
+      {
+        "start": 197.51,
+        "end": 197.51,
+        "seconds": 0.0,
+        "after": " fragata",
+        "before": " Sahand",
+        "punctuation": "none"
+      },
+      {
+        "start": 198.15,
+        "end": 198.15,
+        "seconds": 0.0,
+        "after": " Sahand",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 198.65,
+        "end": 198.65,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 198.81,
+        "end": 198.81,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " lancha",
+        "punctuation": "none"
+      },
+      {
+        "start": 199.21,
+        "end": 199.21,
+        "seconds": 0.0,
+        "after": " lancha",
+        "before": " misilera",
+        "punctuation": "none"
+      },
+      {
+        "start": 199.75,
+        "end": 199.75,
+        "seconds": 0.0,
+        "after": " misilera",
+        "before": " Joshan",
+        "punctuation": "none"
+      },
+      {
+        "start": 200.17,
+        "end": 200.17,
+        "seconds": 0.0,
+        "after": " Joshan",
+        "before": " se",
+        "punctuation": "none"
+      },
+      {
+        "start": 200.79,
+        "end": 200.79,
+        "seconds": 0.0,
+        "after": " se",
+        "before": " hunden",
+        "punctuation": "none"
+      },
+      {
+        "start": 201.19,
+        "end": 201.19,
+        "seconds": 0.0,
+        "after": " hunden",
+        "before": " durante",
+        "punctuation": "none"
+      },
+      {
+        "start": 201.45,
+        "end": 201.45,
+        "seconds": 0.0,
+        "after": " durante",
+        "before": " los",
+        "punctuation": "none"
+      },
+      {
+        "start": 201.75,
+        "end": 201.75,
+        "seconds": 0.0,
+        "after": " los",
+        "before": " combates.",
+        "punctuation": "none"
+      },
+      {
+        "start": 202.19,
+        "end": 202.99,
+        "seconds": 0.8000000000000114,
+        "after": " combates.",
+        "before": " Sabalan",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 203.79,
+        "end": 203.79,
+        "seconds": 0.0,
+        "after": " Sabalan",
+        "before": " queda",
+        "punctuation": "none"
+      },
+      {
+        "start": 204.15,
+        "end": 204.15,
+        "seconds": 0.0,
+        "after": " queda",
+        "before": " inmovilizada",
+        "punctuation": "none"
+      },
+      {
+        "start": 204.79,
+        "end": 204.79,
+        "seconds": 0.0,
+        "after": " inmovilizada",
+        "before": " por",
+        "punctuation": "none"
+      },
+      {
+        "start": 205.05,
+        "end": 205.05,
+        "seconds": 0.0,
+        "after": " por",
+        "before": " una",
+        "punctuation": "none"
+      },
+      {
+        "start": 205.23,
+        "end": 205.23,
+        "seconds": 0.0,
+        "after": " una",
+        "before": " bomba",
+        "punctuation": "none"
+      },
+      {
+        "start": 205.67,
+        "end": 205.67,
+        "seconds": 0.0,
+        "after": " bomba",
+        "before": " y",
+        "punctuation": "none"
+      },
+      {
+        "start": 205.99,
+        "end": 205.99,
+        "seconds": 0.0,
+        "after": " y",
+        "before": " después",
+        "punctuation": "none"
+      },
+      {
+        "start": 206.29,
+        "end": 206.29,
+        "seconds": 0.0,
+        "after": " después",
+        "before": " es",
+        "punctuation": "none"
+      },
+      {
+        "start": 206.61,
+        "end": 206.61,
+        "seconds": 0.0,
+        "after": " es",
+        "before": " remolcada.",
+        "punctuation": "none"
+      },
+      {
+        "start": 207.09,
+        "end": 207.9,
+        "seconds": 0.8100000000000023,
+        "after": " remolcada.",
+        "before": " En",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 208.31,
+        "end": 208.31,
+        "seconds": 0.0,
+        "after": " En",
+        "before": " tierra,",
+        "punctuation": "none"
+      },
+      {
+        "start": 208.61,
+        "end": 208.79,
+        "seconds": 0.1799999999999784,
+        "after": " tierra,",
+        "before": " Irak",
+        "punctuation": "comma"
+      },
+      {
+        "start": 209.41,
+        "end": 209.41,
+        "seconds": 0.0,
+        "after": " Irak",
+        "before": " también",
+        "punctuation": "none"
+      },
+      {
+        "start": 209.67,
+        "end": 209.67,
+        "seconds": 0.0,
+        "after": " también",
+        "before": " está",
+        "punctuation": "none"
+      },
+      {
+        "start": 210.01,
+        "end": 210.01,
+        "seconds": 0.0,
+        "after": " está",
+        "before": " recuperando",
+        "punctuation": "none"
+      },
+      {
+        "start": 210.61,
+        "end": 210.61,
+        "seconds": 0.0,
+        "after": " recuperando",
+        "before": " posiciones.",
+        "punctuation": "none"
+      },
+      {
+        "start": 211.07,
+        "end": 211.81,
+        "seconds": 0.7400000000000091,
+        "after": " posiciones.",
+        "before": " Recupera",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 212.63,
+        "end": 212.63,
+        "seconds": 0.0,
+        "after": " Recupera",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 212.73,
+        "end": 212.73,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " península",
+        "punctuation": "none"
+      },
+      {
+        "start": 213.23,
+        "end": 213.23,
+        "seconds": 0.0,
+        "after": " península",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 213.49,
+        "end": 213.49,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " al",
+        "punctuation": "none"
+      },
+      {
+        "start": 213.75,
+        "end": 213.75,
+        "seconds": 0.0,
+        "after": " al",
+        "before": " Faw",
+        "punctuation": "none"
+      },
+      {
+        "start": 213.99,
+        "end": 213.99,
+        "seconds": 0.0,
+        "after": " Faw",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 214.21,
+        "end": 214.21,
+        "seconds": 0.0,
+        "after": " en",
+        "before": " una",
+        "punctuation": "none"
+      },
+      {
+        "start": 214.59,
+        "end": 214.59,
+        "seconds": 0.0,
+        "after": " una",
+        "before": " campaña",
+        "punctuation": "none"
+      },
+      {
+        "start": 215.09,
+        "end": 215.09,
+        "seconds": 0.0,
+        "after": " campaña",
+        "before": " distinta.",
+        "punctuation": "none"
+      },
+      {
+        "start": 215.51,
+        "end": 215.67,
+        "seconds": 0.1599999999999966,
+        "after": " distinta.",
+        "before": " La",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 216.19,
+        "end": 216.19,
+        "seconds": 0.0,
+        "after": " La",
+        "before": " resolución",
+        "punctuation": "none"
+      },
+      {
+        "start": 216.89,
+        "end": 216.89,
+        "seconds": 0.0,
+        "after": " resolución",
+        "before": " 598",
+        "punctuation": "none"
+      },
+      {
+        "start": 217.95,
+        "end": 217.95,
+        "seconds": 0.0,
+        "after": " 598",
+        "before": " había",
+        "punctuation": "none"
+      },
+      {
+        "start": 218.77,
+        "end": 218.77,
+        "seconds": 0.0,
+        "after": " había",
+        "before": " sido",
+        "punctuation": "none"
+      },
+      {
+        "start": 219.05,
+        "end": 219.05,
+        "seconds": 0.0,
+        "after": " sido",
+        "before": " aprobada",
+        "punctuation": "none"
+      },
+      {
+        "start": 219.57,
+        "end": 219.57,
+        "seconds": 0.0,
+        "after": " aprobada",
+        "before": " un",
+        "punctuation": "none"
+      },
+      {
+        "start": 219.73,
+        "end": 219.73,
+        "seconds": 0.0,
+        "after": " un",
+        "before": " año",
+        "punctuation": "none"
+      },
+      {
+        "start": 220.01,
+        "end": 220.01,
+        "seconds": 0.0,
+        "after": " año",
+        "before": " antes.",
+        "punctuation": "none"
+      },
+      {
+        "start": 220.37,
+        "end": 220.59,
+        "seconds": 0.21999999999999886,
+        "after": " antes.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 221.33,
+        "end": 221.33,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " Consejo",
+        "punctuation": "none"
+      },
+      {
+        "start": 221.77,
+        "end": 221.77,
+        "seconds": 0.0,
+        "after": " Consejo",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 221.87,
+        "end": 221.87,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " Seguridad",
+        "punctuation": "none"
+      },
+      {
+        "start": 222.35,
+        "end": 222.35,
+        "seconds": 0.0,
+        "after": " Seguridad",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 222.61,
+        "end": 222.61,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " adoptó",
+        "punctuation": "none"
+      },
+      {
+        "start": 223.03,
+        "end": 223.03,
+        "seconds": 0.0,
+        "after": " adoptó",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 223.15,
+        "end": 223.15,
+        "seconds": 0.0,
+        "after": " en",
+        "before": " julio",
+        "punctuation": "none"
+      },
+      {
+        "start": 223.53,
+        "end": 223.53,
+        "seconds": 0.0,
+        "after": " julio",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 223.63,
+        "end": 223.63,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " 1987.",
+        "punctuation": "none"
+      },
+      {
+        "start": 224.25,
+        "end": 225.87,
+        "seconds": 1.6200000000000045,
+        "after": " 1987.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 226.63,
+        "end": 226.63,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " 3",
+        "punctuation": "none"
+      },
+      {
+        "start": 226.81,
+        "end": 226.81,
+        "seconds": 0.0,
+        "after": " 3",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 226.99,
+        "end": 226.99,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " julio",
+        "punctuation": "none"
+      },
+      {
+        "start": 227.35,
+        "end": 227.35,
+        "seconds": 0.0,
+        "after": " julio",
+        "before": " siguiente,",
+        "punctuation": "none"
+      },
+      {
+        "start": 227.61,
+        "end": 227.95,
+        "seconds": 0.339999999999975,
+        "after": " siguiente,",
+        "before": " Vincennes",
+        "punctuation": "comma"
+      },
+      {
+        "start": 228.67,
+        "end": 228.67,
+        "seconds": 0.0,
+        "after": " Vincennes",
+        "before": " derriba",
+        "punctuation": "none"
+      },
+      {
+        "start": 229.19,
+        "end": 229.19,
+        "seconds": 0.0,
+        "after": " derriba",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 229.31,
+        "end": 229.31,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " vuelo",
+        "punctuation": "none"
+      },
+      {
+        "start": 229.59,
+        "end": 229.59,
+        "seconds": 0.0,
+        "after": " vuelo",
+        "before": " civil",
+        "punctuation": "none"
+      },
+      {
+        "start": 229.83,
+        "end": 229.83,
+        "seconds": 0.0,
+        "after": " civil",
+        "before": " Iran",
+        "punctuation": "none"
+      },
+      {
+        "start": 230.27,
+        "end": 230.27,
+        "seconds": 0.0,
+        "after": " Iran",
+        "before": " Air",
+        "punctuation": "none"
+      },
+      {
+        "start": 230.53,
+        "end": 230.53,
+        "seconds": 0.0,
+        "after": " Air",
+        "before": " 655.",
+        "punctuation": "none"
+      },
+      {
+        "start": 231.77,
+        "end": 232.69,
+        "seconds": 0.9199999999999875,
+        "after": " 655.",
+        "before": " Mueren",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 233.45,
+        "end": 233.45,
+        "seconds": 0.0,
+        "after": " Mueren",
+        "before": " las",
+        "punctuation": "none"
+      },
+      {
+        "start": 233.63,
+        "end": 233.63,
+        "seconds": 0.0,
+        "after": " las",
+        "before": " 290",
+        "punctuation": "none"
+      },
+      {
+        "start": 234.31,
+        "end": 234.31,
+        "seconds": 0.0,
+        "after": " 290",
+        "before": " personas",
+        "punctuation": "none"
+      },
+      {
+        "start": 234.93,
+        "end": 234.93,
+        "seconds": 0.0,
+        "after": " personas",
+        "before": " que",
+        "punctuation": "none"
+      },
+      {
+        "start": 235.39,
+        "end": 235.39,
+        "seconds": 0.0,
+        "after": " que",
+        "before": " viajaban",
+        "punctuation": "none"
+      },
+      {
+        "start": 235.85,
+        "end": 235.85,
+        "seconds": 0.0,
+        "after": " viajaban",
+        "before": " a",
+        "punctuation": "none"
+      },
+      {
+        "start": 235.99,
+        "end": 235.99,
+        "seconds": 0.0,
+        "after": " a",
+        "before": " bordo.",
+        "punctuation": "none"
+      },
+      {
+        "start": 236.21,
+        "end": 236.63,
+        "seconds": 0.4199999999999875,
+        "after": " bordo.",
+        "before": " Irán",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 237.39,
+        "end": 237.39,
+        "seconds": 0.0,
+        "after": " Irán",
+        "before": " acepta",
+        "punctuation": "none"
+      },
+      {
+        "start": 237.91,
+        "end": 237.91,
+        "seconds": 0.0,
+        "after": " acepta",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 237.99,
+        "end": 237.99,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " resolución",
+        "punctuation": "none"
+      },
+      {
+        "start": 238.51,
+        "end": 238.51,
+        "seconds": 0.0,
+        "after": " resolución",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 238.89,
+        "end": 238.97,
+        "seconds": 0.0800000000000125,
+        "after": " en",
+        "before": " julio",
+        "punctuation": "none"
+      },
+      {
+        "start": 239.35,
+        "end": 239.35,
+        "seconds": 0.0,
+        "after": " julio",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 239.41,
+        "end": 239.41,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " 1988.",
+        "punctuation": "none"
+      },
+      {
+        "start": 240.33,
+        "end": 241.21,
+        "seconds": 0.8799999999999955,
+        "after": " 1988.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 241.97,
+        "end": 241.97,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " 20",
+        "punctuation": "none"
+      },
+      {
+        "start": 242.23,
+        "end": 242.23,
+        "seconds": 0.0,
+        "after": " 20",
+        "before": " de",
+        "punctuation": "none"
+      },
+      {
+        "start": 242.37,
+        "end": 242.37,
+        "seconds": 0.0,
+        "after": " de",
+        "before": " agosto",
+        "punctuation": "none"
+      },
+      {
+        "start": 242.77,
+        "end": 242.77,
+        "seconds": 0.0,
+        "after": " agosto",
+        "before": " entra",
+        "punctuation": "none"
+      },
+      {
+        "start": 243.33,
+        "end": 243.33,
+        "seconds": 0.0,
+        "after": " entra",
+        "before": " en",
+        "punctuation": "none"
+      },
+      {
+        "start": 243.51,
+        "end": 243.51,
+        "seconds": 0.0,
+        "after": " en",
+        "before": " vigor",
+        "punctuation": "none"
+      },
+      {
+        "start": 243.75,
+        "end": 243.75,
+        "seconds": 0.0,
+        "after": " vigor",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 244.17,
+        "end": 244.17,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " alto",
+        "punctuation": "none"
+      },
+      {
+        "start": 244.39,
+        "end": 244.39,
+        "seconds": 0.0,
+        "after": " alto",
+        "before": " el",
+        "punctuation": "none"
+      },
+      {
+        "start": 244.57,
+        "end": 244.57,
+        "seconds": 0.0,
+        "after": " el",
+        "before": " fuego.",
+        "punctuation": "none"
+      },
+      {
+        "start": 244.85,
+        "end": 245.71,
+        "seconds": 0.8600000000000136,
+        "after": " fuego.",
+        "before": " La",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 246.47,
+        "end": 246.47,
+        "seconds": 0.0,
+        "after": " La",
+        "before": " guerra",
+        "punctuation": "none"
+      },
+      {
+        "start": 246.69,
+        "end": 246.69,
+        "seconds": 0.0,
+        "after": " guerra",
+        "before": " se",
+        "punctuation": "none"
+      },
+      {
+        "start": 246.85,
+        "end": 246.85,
+        "seconds": 0.0,
+        "after": " se",
+        "before": " detiene;",
+        "punctuation": "none"
+      },
+      {
+        "start": 247.29,
+        "end": 247.35,
+        "seconds": 0.060000000000002274,
+        "after": " detiene;",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 247.95,
+        "end": 247.95,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " retirada",
+        "punctuation": "none"
+      },
+      {
+        "start": 248.43,
+        "end": 248.43,
+        "seconds": 0.0,
+        "after": " retirada",
+        "before": " completa",
+        "punctuation": "none"
+      },
+      {
+        "start": 248.77,
+        "end": 248.77,
+        "seconds": 0.0,
+        "after": " completa",
+        "before": " todavía",
+        "punctuation": "none"
+      },
+      {
+        "start": 249.41,
+        "end": 249.41,
+        "seconds": 0.0,
+        "after": " todavía",
+        "before": " llevará",
+        "punctuation": "none"
+      },
+      {
+        "start": 249.97,
+        "end": 249.97,
+        "seconds": 0.0,
+        "after": " llevará",
+        "before": " tiempo.",
+        "punctuation": "none"
+      },
+      {
+        "start": 250.17,
+        "end": 251.05,
+        "seconds": 0.8800000000000239,
+        "after": " tiempo.",
+        "before": " El",
+        "punctuation": "sentence"
+      },
+      {
+        "start": 251.69,
+        "end": 251.69,
+        "seconds": 0.0,
+        "after": " El",
+        "before": " Bridgeton",
+        "punctuation": "none"
+      },
+      {
+        "start": 252.23,
+        "end": 252.23,
+        "seconds": 0.0,
+        "after": " Bridgeton",
+        "before": " sobrevivió,",
+        "punctuation": "none"
+      },
+      {
+        "start": 252.99,
+        "end": 253.01,
+        "seconds": 0.01999999999998181,
+        "after": " sobrevivió,",
+        "before": " pero",
+        "punctuation": "comma"
+      },
+      {
+        "start": 253.73,
+        "end": 253.73,
+        "seconds": 0.0,
+        "after": " pero",
+        "before": " proteger",
+        "punctuation": "none"
+      },
+      {
+        "start": 254.21,
+        "end": 254.21,
+        "seconds": 0.0,
+        "after": " proteger",
+        "before": " las",
+        "punctuation": "none"
+      },
+      {
+        "start": 254.35,
+        "end": 254.35,
+        "seconds": 0.0,
+        "after": " las",
+        "before": " rutas",
+        "punctuation": "none"
+      },
+      {
+        "start": 254.83,
+        "end": 254.83,
+        "seconds": 0.0,
+        "after": " rutas",
+        "before": " no",
+        "punctuation": "none"
+      },
+      {
+        "start": 255.31,
+        "end": 255.31,
+        "seconds": 0.0,
+        "after": " no",
+        "before": " había",
+        "punctuation": "none"
+      },
+      {
+        "start": 255.49,
+        "end": 255.49,
+        "seconds": 0.0,
+        "after": " había",
+        "before": " detenido",
+        "punctuation": "none"
+      },
+      {
+        "start": 256.05,
+        "end": 256.05,
+        "seconds": 0.0,
+        "after": " detenido",
+        "before": " la",
+        "punctuation": "none"
+      },
+      {
+        "start": 256.19,
+        "end": 256.19,
+        "seconds": 0.0,
+        "after": " la",
+        "before": " guerra.",
+        "punctuation": "none"
+      }
+    ],
+    "acoustic_pauses_ge120ms": {
+      "n": 97,
+      "min": 0.12346999999999753,
+      "p10": 0.15405840000000243,
+      "median": 0.47807299999999486,
+      "p90": 1.0637864000000152,
+      "max": 1.810816999999986
+    },
+    "acoustic_internal_silences": [
+      {
+        "start": 4.986553,
+        "end": 5.454399,
+        "seconds": 0.46784600000000065
+      },
+      {
+        "start": 7.151882,
+        "end": 7.402041,
+        "seconds": 0.250159
+      },
+      {
+        "start": 9.669093,
+        "end": 10.848435,
+        "seconds": 1.1793420000000001
+      },
+      {
+        "start": 11.600748,
+        "end": 11.933129,
+        "seconds": 0.3323809999999998
+      },
+      {
+        "start": 14.750567,
+        "end": 15.475306,
+        "seconds": 0.7247389999999996
+      },
+      {
+        "start": 16.984036,
+        "end": 17.310703,
+        "seconds": 0.3266670000000005
+      },
+      {
+        "start": 20.00093,
+        "end": 21.173469,
+        "seconds": 1.1725390000000004
+      },
+      {
+        "start": 23.126213,
+        "end": 23.847392,
+        "seconds": 0.7211789999999993
+      },
+      {
+        "start": 25.551587,
+        "end": 26.149252,
+        "seconds": 0.5976649999999992
+      },
+      {
+        "start": 27.916757,
+        "end": 28.044127,
+        "seconds": 0.1273699999999991
+      },
+      {
+        "start": 29.954853,
+        "end": 30.577619,
+        "seconds": 0.6227659999999986
+      },
+      {
+        "start": 32.736961,
+        "end": 32.880499,
+        "seconds": 0.1435379999999995
+      },
+      {
+        "start": 35.449977,
+        "end": 35.941247,
+        "seconds": 0.4912700000000001
+      },
+      {
+        "start": 36.632562,
+        "end": 36.990839,
+        "seconds": 0.35827700000000107
+      },
+      {
+        "start": 38.279365,
+        "end": 38.525533,
+        "seconds": 0.24616800000000438
+      },
+      {
+        "start": 40.667846,
+        "end": 41.53381,
+        "seconds": 0.8659640000000053
+      },
+      {
+        "start": 43.161701,
+        "end": 43.527755,
+        "seconds": 0.3660539999999983
+      },
+      {
+        "start": 45.519002,
+        "end": 46.234603,
+        "seconds": 0.7156009999999995
+      },
+      {
+        "start": 48.195714,
+        "end": 48.523469,
+        "seconds": 0.32775499999999624
+      },
+      {
+        "start": 49.777732,
+        "end": 50.311882,
+        "seconds": 0.5341499999999968
+      },
+      {
+        "start": 53.422653,
+        "end": 53.776531,
+        "seconds": 0.3538780000000017
+      },
+      {
+        "start": 55.404286,
+        "end": 56.131542,
+        "seconds": 0.7272560000000041
+      },
+      {
+        "start": 59.151995,
+        "end": 59.851224,
+        "seconds": 0.6992290000000025
+      },
+      {
+        "start": 62.503243,
+        "end": 63.384014,
+        "seconds": 0.8807710000000029
+      },
+      {
+        "start": 63.888073,
+        "end": 64.365011,
+        "seconds": 0.476937999999997
+      },
+      {
+        "start": 66.64771,
+        "end": 67.106395,
+        "seconds": 0.4586850000000027
+      },
+      {
+        "start": 67.902744,
+        "end": 68.495465,
+        "seconds": 0.5927209999999974
+      },
+      {
+        "start": 72.112381,
+        "end": 72.430159,
+        "seconds": 0.3177780000000041
+      },
+      {
+        "start": 72.621202,
+        "end": 72.749546,
+        "seconds": 0.12834399999999846
+      },
+      {
+        "start": 75.411519,
+        "end": 76.277891,
+        "seconds": 0.8663719999999984
+      },
+      {
+        "start": 78.950499,
+        "end": 80.177642,
+        "seconds": 1.2271430000000123
+      },
+      {
+        "start": 81.688186,
+        "end": 81.960091,
+        "seconds": 0.27190500000000384
+      },
+      {
+        "start": 84.198367,
+        "end": 84.804218,
+        "seconds": 0.6058510000000012
+      },
+      {
+        "start": 85.067415,
+        "end": 85.34458,
+        "seconds": 0.27716499999999655
+      },
+      {
+        "start": 90.015646,
+        "end": 90.668776,
+        "seconds": 0.6531299999999902
+      },
+      {
+        "start": 92.8461,
+        "end": 93.014376,
+        "seconds": 0.16827599999999165
+      },
+      {
+        "start": 95.733878,
+        "end": 96.039456,
+        "seconds": 0.305577999999997
+      },
+      {
+        "start": 100.944082,
+        "end": 101.362834,
+        "seconds": 0.418752000000012
+      },
+      {
+        "start": 104.870975,
+        "end": 105.691769,
+        "seconds": 0.8207939999999923
+      },
+      {
+        "start": 109.847551,
+        "end": 110.231995,
+        "seconds": 0.384444000000002
+      },
+      {
+        "start": 110.472177,
+        "end": 110.631859,
+        "seconds": 0.15968200000000365
+      },
+      {
+        "start": 115.283832,
+        "end": 115.781134,
+        "seconds": 0.4973019999999906
+      },
+      {
+        "start": 119.001837,
+        "end": 119.138141,
+        "seconds": 0.13630400000000975
+      },
+      {
+        "start": 120.819365,
+        "end": 121.250544,
+        "seconds": 0.4311790000000002
+      },
+      {
+        "start": 121.347075,
+        "end": 121.627324,
+        "seconds": 0.28024899999999775
+      },
+      {
+        "start": 125.061791,
+        "end": 126.372336,
+        "seconds": 1.3105450000000047
+      },
+      {
+        "start": 126.415692,
+        "end": 128.225556,
+        "seconds": 1.8098640000000046
+      },
+      {
+        "start": 130.787143,
+        "end": 131.839637,
+        "seconds": 1.0524940000000242
+      },
+      {
+        "start": 134.03263,
+        "end": 134.552857,
+        "seconds": 0.5202269999999771
+      },
+      {
+        "start": 135.890204,
+        "end": 136.035261,
+        "seconds": 0.14505699999998
+      },
+      {
+        "start": 139.894467,
+        "end": 140.141678,
+        "seconds": 0.24721100000002139
+      },
+      {
+        "start": 142.531429,
+        "end": 142.661497,
+        "seconds": 0.1300679999999943
+      },
+      {
+        "start": 143.746485,
+        "end": 144.224558,
+        "seconds": 0.47807299999999486
+      },
+      {
+        "start": 147.910862,
+        "end": 148.991587,
+        "seconds": 1.080725000000001
+      },
+      {
+        "start": 153.093061,
+        "end": 153.553265,
+        "seconds": 0.4602040000000045
+      },
+      {
+        "start": 153.657642,
+        "end": 153.785624,
+        "seconds": 0.12798200000000293
+      },
+      {
+        "start": 154.488345,
+        "end": 154.735601,
+        "seconds": 0.24725599999999304
+      },
+      {
+        "start": 158.924853,
+        "end": 159.5239,
+        "seconds": 0.5990469999999846
+      },
+      {
+        "start": 160.508549,
+        "end": 161.197438,
+        "seconds": 0.6888890000000174
+      },
+      {
+        "start": 164.068027,
+        "end": 164.926803,
+        "seconds": 0.858776000000006
+      },
+      {
+        "start": 165.939138,
+        "end": 166.370272,
+        "seconds": 0.4311339999999859
+      },
+      {
+        "start": 168.960317,
+        "end": 170.771134,
+        "seconds": 1.810816999999986
+      },
+      {
+        "start": 173.07839,
+        "end": 173.402834,
+        "seconds": 0.32444399999999973
+      },
+      {
+        "start": 174.98898,
+        "end": 175.599909,
+        "seconds": 0.6109289999999987
+      },
+      {
+        "start": 176.514921,
+        "end": 176.892744,
+        "seconds": 0.37782300000000646
+      },
+      {
+        "start": 177.473741,
+        "end": 177.790363,
+        "seconds": 0.3166220000000237
+      },
+      {
+        "start": 179.491202,
+        "end": 180.002086,
+        "seconds": 0.5108840000000043
+      },
+      {
+        "start": 181.409206,
+        "end": 181.642313,
+        "seconds": 0.23310699999998974
+      },
+      {
+        "start": 184.436712,
+        "end": 185.219297,
+        "seconds": 0.7825850000000116
+      },
+      {
+        "start": 188.15458,
+        "end": 189.347392,
+        "seconds": 1.1928120000000035
+      },
+      {
+        "start": 190.546848,
+        "end": 190.684762,
+        "seconds": 0.13791399999999499
+      },
+      {
+        "start": 192.67449,
+        "end": 193.303447,
+        "seconds": 0.628957000000014
+      },
+      {
+        "start": 196.465351,
+        "end": 196.977324,
+        "seconds": 0.5119730000000118
+      },
+      {
+        "start": 198.405624,
+        "end": 198.710068,
+        "seconds": 0.3044440000000179
+      },
+      {
+        "start": 200.429184,
+        "end": 200.712789,
+        "seconds": 0.28360499999999433
+      },
+      {
+        "start": 202.493696,
+        "end": 203.404376,
+        "seconds": 0.9106800000000135
+      },
+      {
+        "start": 205.770907,
+        "end": 206.022698,
+        "seconds": 0.2517909999999972
+      },
+      {
+        "start": 207.275306,
+        "end": 208.279388,
+        "seconds": 1.004082000000011
+      },
+      {
+        "start": 208.842789,
+        "end": 209.227256,
+        "seconds": 0.3844670000000008
+      },
+      {
+        "start": 211.423764,
+        "end": 212.203288,
+        "seconds": 0.7795239999999808
+      },
+      {
+        "start": 214.190476,
+        "end": 214.453175,
+        "seconds": 0.2626989999999978
+      },
+      {
+        "start": 215.644603,
+        "end": 216.16263,
+        "seconds": 0.5180270000000178
+      },
+      {
+        "start": 218.586893,
+        "end": 218.710363,
+        "seconds": 0.12346999999999753
+      },
+      {
+        "start": 220.613356,
+        "end": 221.334626,
+        "seconds": 0.7212699999999757
+      },
+      {
+        "start": 225.432449,
+        "end": 226.605918,
+        "seconds": 1.1734690000000114
+      },
+      {
+        "start": 228.00381,
+        "end": 228.295329,
+        "seconds": 0.2915190000000223
+      },
+      {
+        "start": 232.314263,
+        "end": 233.190658,
+        "seconds": 0.8763950000000023
+      },
+      {
+        "start": 236.403492,
+        "end": 237.191859,
+        "seconds": 0.7883669999999938
+      },
+      {
+        "start": 241.101905,
+        "end": 241.726712,
+        "seconds": 0.6248070000000041
+      },
+      {
+        "start": 242.908367,
+        "end": 243.184626,
+        "seconds": 0.27625900000001025
+      },
+      {
+        "start": 244.982562,
+        "end": 246.455125,
+        "seconds": 1.472563000000008
+      },
+      {
+        "start": 247.373628,
+        "end": 247.931383,
+        "seconds": 0.5577550000000144
+      },
+      {
+        "start": 249.150794,
+        "end": 249.296417,
+        "seconds": 0.1456230000000005
+      },
+      {
+        "start": 250.426757,
+        "end": 251.008912,
+        "seconds": 0.5821550000000002
+      },
+      {
+        "start": 251.338639,
+        "end": 251.668413,
+        "seconds": 0.32977399999998624
+      },
+      {
+        "start": 253.048345,
+        "end": 253.667483,
+        "seconds": 0.6191379999999924
+      },
+      {
+        "start": 255.051723,
+        "end": 255.289206,
+        "seconds": 0.23748299999999745
+      }
+    ],
+    "acoustic_all_silences": [
+      {
+        "start": 0.0,
+        "end": 1.495556,
+        "seconds": 1.495556
+      },
+      {
+        "start": 4.986553,
+        "end": 5.454399,
+        "seconds": 0.46784600000000065
+      },
+      {
+        "start": 7.151882,
+        "end": 7.402041,
+        "seconds": 0.250159
+      },
+      {
+        "start": 9.669093,
+        "end": 10.848435,
+        "seconds": 1.1793420000000001
+      },
+      {
+        "start": 11.600748,
+        "end": 11.933129,
+        "seconds": 0.3323809999999998
+      },
+      {
+        "start": 14.750567,
+        "end": 15.475306,
+        "seconds": 0.7247389999999996
+      },
+      {
+        "start": 16.984036,
+        "end": 17.310703,
+        "seconds": 0.3266670000000005
+      },
+      {
+        "start": 20.00093,
+        "end": 21.173469,
+        "seconds": 1.1725390000000004
+      },
+      {
+        "start": 23.126213,
+        "end": 23.847392,
+        "seconds": 0.7211789999999993
+      },
+      {
+        "start": 25.551587,
+        "end": 26.149252,
+        "seconds": 0.5976649999999992
+      },
+      {
+        "start": 27.916757,
+        "end": 28.044127,
+        "seconds": 0.1273699999999991
+      },
+      {
+        "start": 29.954853,
+        "end": 30.577619,
+        "seconds": 0.6227659999999986
+      },
+      {
+        "start": 32.736961,
+        "end": 32.880499,
+        "seconds": 0.1435379999999995
+      },
+      {
+        "start": 35.449977,
+        "end": 35.941247,
+        "seconds": 0.4912700000000001
+      },
+      {
+        "start": 36.632562,
+        "end": 36.990839,
+        "seconds": 0.35827700000000107
+      },
+      {
+        "start": 38.279365,
+        "end": 38.525533,
+        "seconds": 0.24616800000000438
+      },
+      {
+        "start": 40.667846,
+        "end": 41.53381,
+        "seconds": 0.8659640000000053
+      },
+      {
+        "start": 43.161701,
+        "end": 43.527755,
+        "seconds": 0.3660539999999983
+      },
+      {
+        "start": 45.519002,
+        "end": 46.234603,
+        "seconds": 0.7156009999999995
+      },
+      {
+        "start": 48.195714,
+        "end": 48.523469,
+        "seconds": 0.32775499999999624
+      },
+      {
+        "start": 49.777732,
+        "end": 50.311882,
+        "seconds": 0.5341499999999968
+      },
+      {
+        "start": 53.422653,
+        "end": 53.776531,
+        "seconds": 0.3538780000000017
+      },
+      {
+        "start": 55.404286,
+        "end": 56.131542,
+        "seconds": 0.7272560000000041
+      },
+      {
+        "start": 59.151995,
+        "end": 59.851224,
+        "seconds": 0.6992290000000025
+      },
+      {
+        "start": 62.503243,
+        "end": 63.384014,
+        "seconds": 0.8807710000000029
+      },
+      {
+        "start": 63.888073,
+        "end": 64.365011,
+        "seconds": 0.476937999999997
+      },
+      {
+        "start": 66.64771,
+        "end": 67.106395,
+        "seconds": 0.4586850000000027
+      },
+      {
+        "start": 67.902744,
+        "end": 68.495465,
+        "seconds": 0.5927209999999974
+      },
+      {
+        "start": 72.112381,
+        "end": 72.430159,
+        "seconds": 0.3177780000000041
+      },
+      {
+        "start": 72.621202,
+        "end": 72.749546,
+        "seconds": 0.12834399999999846
+      },
+      {
+        "start": 75.411519,
+        "end": 76.277891,
+        "seconds": 0.8663719999999984
+      },
+      {
+        "start": 78.950499,
+        "end": 80.177642,
+        "seconds": 1.2271430000000123
+      },
+      {
+        "start": 81.688186,
+        "end": 81.960091,
+        "seconds": 0.27190500000000384
+      },
+      {
+        "start": 84.198367,
+        "end": 84.804218,
+        "seconds": 0.6058510000000012
+      },
+      {
+        "start": 85.067415,
+        "end": 85.34458,
+        "seconds": 0.27716499999999655
+      },
+      {
+        "start": 90.015646,
+        "end": 90.668776,
+        "seconds": 0.6531299999999902
+      },
+      {
+        "start": 92.8461,
+        "end": 93.014376,
+        "seconds": 0.16827599999999165
+      },
+      {
+        "start": 95.733878,
+        "end": 96.039456,
+        "seconds": 0.305577999999997
+      },
+      {
+        "start": 100.944082,
+        "end": 101.362834,
+        "seconds": 0.418752000000012
+      },
+      {
+        "start": 104.870975,
+        "end": 105.691769,
+        "seconds": 0.8207939999999923
+      },
+      {
+        "start": 109.847551,
+        "end": 110.231995,
+        "seconds": 0.384444000000002
+      },
+      {
+        "start": 110.472177,
+        "end": 110.631859,
+        "seconds": 0.15968200000000365
+      },
+      {
+        "start": 115.283832,
+        "end": 115.781134,
+        "seconds": 0.4973019999999906
+      },
+      {
+        "start": 119.001837,
+        "end": 119.138141,
+        "seconds": 0.13630400000000975
+      },
+      {
+        "start": 120.819365,
+        "end": 121.250544,
+        "seconds": 0.4311790000000002
+      },
+      {
+        "start": 121.347075,
+        "end": 121.627324,
+        "seconds": 0.28024899999999775
+      },
+      {
+        "start": 125.061791,
+        "end": 126.372336,
+        "seconds": 1.3105450000000047
+      },
+      {
+        "start": 126.415692,
+        "end": 128.225556,
+        "seconds": 1.8098640000000046
+      },
+      {
+        "start": 130.787143,
+        "end": 131.839637,
+        "seconds": 1.0524940000000242
+      },
+      {
+        "start": 134.03263,
+        "end": 134.552857,
+        "seconds": 0.5202269999999771
+      },
+      {
+        "start": 135.890204,
+        "end": 136.035261,
+        "seconds": 0.14505699999998
+      },
+      {
+        "start": 139.894467,
+        "end": 140.141678,
+        "seconds": 0.24721100000002139
+      },
+      {
+        "start": 142.531429,
+        "end": 142.661497,
+        "seconds": 0.1300679999999943
+      },
+      {
+        "start": 143.746485,
+        "end": 144.224558,
+        "seconds": 0.47807299999999486
+      },
+      {
+        "start": 147.910862,
+        "end": 148.991587,
+        "seconds": 1.080725000000001
+      },
+      {
+        "start": 153.093061,
+        "end": 153.553265,
+        "seconds": 0.4602040000000045
+      },
+      {
+        "start": 153.657642,
+        "end": 153.785624,
+        "seconds": 0.12798200000000293
+      },
+      {
+        "start": 154.488345,
+        "end": 154.735601,
+        "seconds": 0.24725599999999304
+      },
+      {
+        "start": 158.924853,
+        "end": 159.5239,
+        "seconds": 0.5990469999999846
+      },
+      {
+        "start": 160.508549,
+        "end": 161.197438,
+        "seconds": 0.6888890000000174
+      },
+      {
+        "start": 164.068027,
+        "end": 164.926803,
+        "seconds": 0.858776000000006
+      },
+      {
+        "start": 165.939138,
+        "end": 166.370272,
+        "seconds": 0.4311339999999859
+      },
+      {
+        "start": 168.960317,
+        "end": 170.771134,
+        "seconds": 1.810816999999986
+      },
+      {
+        "start": 173.07839,
+        "end": 173.402834,
+        "seconds": 0.32444399999999973
+      },
+      {
+        "start": 174.98898,
+        "end": 175.599909,
+        "seconds": 0.6109289999999987
+      },
+      {
+        "start": 176.514921,
+        "end": 176.892744,
+        "seconds": 0.37782300000000646
+      },
+      {
+        "start": 177.473741,
+        "end": 177.790363,
+        "seconds": 0.3166220000000237
+      },
+      {
+        "start": 179.491202,
+        "end": 180.002086,
+        "seconds": 0.5108840000000043
+      },
+      {
+        "start": 181.409206,
+        "end": 181.642313,
+        "seconds": 0.23310699999998974
+      },
+      {
+        "start": 184.436712,
+        "end": 185.219297,
+        "seconds": 0.7825850000000116
+      },
+      {
+        "start": 188.15458,
+        "end": 189.347392,
+        "seconds": 1.1928120000000035
+      },
+      {
+        "start": 190.546848,
+        "end": 190.684762,
+        "seconds": 0.13791399999999499
+      },
+      {
+        "start": 192.67449,
+        "end": 193.303447,
+        "seconds": 0.628957000000014
+      },
+      {
+        "start": 196.465351,
+        "end": 196.977324,
+        "seconds": 0.5119730000000118
+      },
+      {
+        "start": 198.405624,
+        "end": 198.710068,
+        "seconds": 0.3044440000000179
+      },
+      {
+        "start": 200.429184,
+        "end": 200.712789,
+        "seconds": 0.28360499999999433
+      },
+      {
+        "start": 202.493696,
+        "end": 203.404376,
+        "seconds": 0.9106800000000135
+      },
+      {
+        "start": 205.770907,
+        "end": 206.022698,
+        "seconds": 0.2517909999999972
+      },
+      {
+        "start": 207.275306,
+        "end": 208.279388,
+        "seconds": 1.004082000000011
+      },
+      {
+        "start": 208.842789,
+        "end": 209.227256,
+        "seconds": 0.3844670000000008
+      },
+      {
+        "start": 211.423764,
+        "end": 212.203288,
+        "seconds": 0.7795239999999808
+      },
+      {
+        "start": 214.190476,
+        "end": 214.453175,
+        "seconds": 0.2626989999999978
+      },
+      {
+        "start": 215.644603,
+        "end": 216.16263,
+        "seconds": 0.5180270000000178
+      },
+      {
+        "start": 218.586893,
+        "end": 218.710363,
+        "seconds": 0.12346999999999753
+      },
+      {
+        "start": 220.613356,
+        "end": 221.334626,
+        "seconds": 0.7212699999999757
+      },
+      {
+        "start": 225.432449,
+        "end": 226.605918,
+        "seconds": 1.1734690000000114
+      },
+      {
+        "start": 228.00381,
+        "end": 228.295329,
+        "seconds": 0.2915190000000223
+      },
+      {
+        "start": 232.314263,
+        "end": 233.190658,
+        "seconds": 0.8763950000000023
+      },
+      {
+        "start": 236.403492,
+        "end": 237.191859,
+        "seconds": 0.7883669999999938
+      },
+      {
+        "start": 241.101905,
+        "end": 241.726712,
+        "seconds": 0.6248070000000041
+      },
+      {
+        "start": 242.908367,
+        "end": 243.184626,
+        "seconds": 0.27625900000001025
+      },
+      {
+        "start": 244.982562,
+        "end": 246.455125,
+        "seconds": 1.472563000000008
+      },
+      {
+        "start": 247.373628,
+        "end": 247.931383,
+        "seconds": 0.5577550000000144
+      },
+      {
+        "start": 249.150794,
+        "end": 249.296417,
+        "seconds": 0.1456230000000005
+      },
+      {
+        "start": 250.426757,
+        "end": 251.008912,
+        "seconds": 0.5821550000000002
+      },
+      {
+        "start": 251.338639,
+        "end": 251.668413,
+        "seconds": 0.32977399999998624
+      },
+      {
+        "start": 253.048345,
+        "end": 253.667483,
+        "seconds": 0.6191379999999924
+      },
+      {
+        "start": 255.051723,
+        "end": 255.289206,
+        "seconds": 0.23748299999999745
+      },
+      {
+        "start": 256.584354,
+        "end": 262.84,
+        "seconds": 6.255645999999956
+      }
+    ],
+    "f0_hz": {
+      "n": 11456,
+      "min": 59.806024297386465,
+      "p10": 71.15523221117336,
+      "median": 94.568134602242,
+      "p90": 129.99604336196788,
+      "max": 382.98939004879776
+    },
+    "f0_p10_p90_semitones": 10.433111552025306,
+    "f0_alternate_median_hz": 96.60395526609977,
+    "f0_alternate_disagreement_gt9st_percent": 10.350398869029586,
+    "speech_frame_rms_dbfs": {
+      "n": 16817,
+      "min": -39.99745125599871,
+      "p10": -30.35514799470507,
+      "median": -17.78579936411898,
+      "p90": -11.450306045959676,
+      "max": -6.562408897264497
+    },
+    "ASR_frame_rms_including_silence_dbfs": {
+      "n": 22013,
+      "min": -167.2302874374838,
+      "p10": -62.549405728707725,
+      "median": -21.469480651153006,
+      "p90": -11.971003461174977,
+      "max": -6.562408897264497
+    },
+    "speech_dynamic_range_p90_p10_db": 18.904841948745393,
+    "lufs_i": -16.84,
+    "true_peak_dbTP": -1.69,
+    "loudness_range_LU": 5.1,
+    "native_sample_peak_dbfs": -1.7191121578216553,
+    "native_samples_abs_ge1": 0
+  }
+}

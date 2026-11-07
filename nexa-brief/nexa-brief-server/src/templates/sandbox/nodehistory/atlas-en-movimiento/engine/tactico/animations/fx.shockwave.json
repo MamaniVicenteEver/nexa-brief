@@ -1,0 +1,112 @@
+{
+  "name": "fx.shockwave",
+  "family": "fx",
+  "description": "Onda circular con tres bordes de refracción simulada. Úsala para enfatizar un impacto, una alerta o un cambio durante una escena.",
+  "duration": 2.75,
+  "loop": true,
+  "layer": 60,
+  "states": [],
+  "params": {
+    "dur": {
+      "type": "number",
+      "default": 2.4,
+      "min": 0.05,
+      "range": {
+        "min": 0.05,
+        "max": null
+      },
+      "description": "Duración en segundos."
+    },
+    "size": {
+      "type": "number",
+      "default": 110,
+      "min": 4,
+      "max": 260,
+      "description": "Radio simbólico en px a U=1.",
+      "range": {
+        "min": 4,
+        "max": 260
+      }
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.1,
+      "max": 4,
+      "range": {
+        "min": 0.1,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "seed": {
+      "default": 1,
+      "description": "Semilla numérica o texto.",
+      "type": "number|string",
+      "range": null
+    },
+    "particles": {
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "max": 300,
+      "range": {
+        "min": 1,
+        "max": 300
+      },
+      "description": "Número de partículas del efecto."
+    },
+    "variant": {
+      "type": "enum",
+      "values": [
+        "ground",
+        "water"
+      ],
+      "default": "ground",
+      "range": [
+        "ground",
+        "water"
+      ],
+      "description": "Variante visual del componente."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "fx-shockwave",
+    "t": 0,
+    "type": "fx.shockwave",
+    "at": [
+      54,
+      27
+    ],
+    "dur": 2.4,
+    "size": 110,
+    "particles": 1,
+    "variant": "ground",
+    "seed": 73
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/scene-fx.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/fx.shockwave.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "title": "Un mismo guion · personaje articulado y poses ilustradas",
+  "summary": "Comparación narrada de 31,6 segundos: el mismo fragmento se repite con un personaje 2D y con poses ilustradas de mayor tamaño.",
+  "engine": "nodeaction/_pizarra",
+  "based_on": "pizarra-demo",
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-10-28",
+  "libraries": [
+    {
+      "name": "Google Fonts: DM Sans, Fraunces",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía del motor pizarra"
+    }
+  ],
+  "inputs": [
+    "Una pista de audio con el mismo fragmento repetido y una transcripción por palabras.",
+    "Hoja de 100 poses generadas y hoja de cuatro poses más grandes para el video."
+  ],
+  "notes": [
+    "La hoja 10 × 10 mide 1254 × 1254 píxeles; no es 4K y su retícula no es uniforme. Consultar assets/poses-index.json.",
+    "El video usa una segunda hoja de cuatro poses de 1347 × 1167 píxeles con fondo transparente sobre pizarra blanca.",
+    "Las dos partes usan el mismo audio y textos, sincronizados con la misma transcripción.",
+    "Los datos de uso no fueron registrados; 0 tokens no representa el costo real.",
+    "Vista diseñada para escritorio; el formato vertical requiere adaptación."
+  ]
+}

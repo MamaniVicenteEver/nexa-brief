@@ -1,0 +1,92 @@
+import sys
+sys.dont_write_bytecode=True
+import fcntl,functools,importlib.util,json,threading,socketserver,time,io,hashlib,base64,argparse
+from pathlib import Path
+from PIL import Image,ImageDraw
+from playwright.sync_api import sync_playwright
+ROOT=Path.cwd(); OUT=ROOT/'work/escena'; TEMPLATES=ROOT.parents[2]
+parser=argparse.ArgumentParser();parser.add_argument('--strips',action='store_true');parser.add_argument('--only',default='');args=parser.parse_args()
+spec=importlib.util.spec_from_file_location('smoke',ROOT.parent/'_atlas/test/smoke.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+class Handler(m.Handler):
+ def log_message(self,*args):pass
+class Server(socketserver.ThreadingTCPServer):daemon_threads=True;allow_reuse_address=True
+lock=open('/tmp/atlas-tactico-chromium.lock','w');print('Esperando turno único Chromium',flush=True);fcntl.flock(lock,fcntl.LOCK_EX)
+server=Server(('127.0.0.1',0),functools.partial(Handler,directory=str(TEMPLATES)));threading.Thread(target=server.serve_forever,daemon=True).start()
+report={'errors':[],'httpErrors':[],'seeks':[],'renders':[]};(OUT/'hojas').mkdir(exist_ok=True);(OUT/'cuadros').mkdir(exist_ok=True)
+try:
+ with sync_playwright() as p:
+  browser=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2'])
+  page=browser.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1)
+  page.on('pageerror',lambda e:report['errors'].append(str(e)))
+  page.on('requestfailed',lambda r:print('FAILED',r.url,r.failure,flush=True))
+  page.on('console',lambda m:print('CONSOLE',m.type,m.text,flush=True) if m.type=='error' else None)
+  page.on('response',lambda r:report['httpErrors'].append({'status':r.status,'url':r.url.split('/sandbox/')[-1]}) if r.status>=400 else None)
+  page.route('**/*',lambda r:r.continue_() if r.request.url.startswith(('http://127.0.0.1:','data:','blob:')) else r.abort())
+  base=f'http://127.0.0.1:{server.server_address[1]}/sandbox/nodehistory/atlas-en-movimiento/'
+  page.goto(base+'index.new.html?headless=1',wait_until='domcontentloaded',timeout=60000)
+  start=time.monotonic()
+  for attempt in range(60):
+   try:page.wait_for_function('window.__promo && window.__tactico',timeout=10000);break
+   except Exception:
+    print('Precargando escena',round(time.monotonic()-start),'s',flush=True)
+    if report['errors']:raise RuntimeError({'errors':report['errors'],'http':report['httpErrors']})
+  else:raise RuntimeError('Precarga >10 min')
+  page.evaluate('document.fonts.ready');report['preloadSeconds']=time.monotonic()-start
+  print('Escena preparada',round(report['preloadSeconds'],2),'s',flush=True)
+  def capture(t,width=1080):
+   page.evaluate('t=>__promo.seek(t)',t)
+   result=page.evaluate('w=>{const c=document.querySelector("#stage canvas");if(w===1080)return c.toDataURL("image/png");const a=document.createElement("canvas");a.width=w;a.height=w*1920/1080;a.getContext("2d").drawImage(c,0,0,a.width,a.height);return a.toDataURL("image/jpeg",.88)}',width)
+   report['renders'].append({'t':t,**page.evaluate('__atlas.stats()')})
+   return base64.b64decode(result.split(',',1)[1])
+  if args.strips:
+   for block,start,end in [(1,0,25.23),(6,169.97,215.67)]:
+    total=int((end-start)*10)+1
+    for offset in range(0,total,100):
+     count=min(100,total-offset);sheet=Image.new('RGB',(1800,((count+9)//10)*342),'#081e2c');d=ImageDraw.Draw(sheet)
+     for j in range(count):
+      t=round(start+(offset+j)/10,2);b=capture(t,180);im=Image.open(io.BytesIO(b));x=(j%10)*180;y=(j//10)*342;sheet.paste(im,(x,y+22));d.text((x+5,y+4),f'B{block}  {t:.2f} s',fill='#e9e3ba')
+     dest=OUT/'hojas'/f'bloque-{block}-10fps-{offset//100+1:02}.jpg';sheet.save(dest,quality=90)
+     print('Tira',dest.name,count,'cuadros',flush=True)
+  else:
+   times=[round(i*7.45,2) for i in range(36)]
+   if args.only:times=[float(t) for t in args.only.split(',')]
+   sheet=Image.new('RGB',(1620,((len(times)+5)//6)*504),'#081e2c');d=ImageDraw.Draw(sheet)
+   for i,t in enumerate(times):
+    b=capture(t);(OUT/'cuadros'/f'{t:06.2f}.png').write_bytes(b);im=Image.open(io.BytesIO(b)).convert('RGB');im.thumbnail((270,480));x=(i%6)*270;y=(i//6)*504;sheet.paste(im,(x,y+24));d.text((x+8,y+5),f'{t:06.2f} s',fill='#e9e3ba')
+    print('Cuadro',i+1,len(times),t,flush=True)
+   sheet.save(OUT/'hojas'/('focos.jpg' if args.only else 'episodio-36.jpg'),quality=92)
+   if not args.only:
+    focused=[2.7,7.45,13.4,16.35,16.5,22.35,30,55,84,99,124.5,129.5,138.5,147,149,151.5,161.95,166.9,174,186.4,194.8,195.5,196.5,199.6,199.85,201.6,205,213,219.5,233.9,242.8,255.5,261.3]
+    fsheet=Image.new('RGB',(1620,((len(focused)+5)//6)*504),'#081e2c');fd=ImageDraw.Draw(fsheet)
+    for i,t in enumerate(focused):
+     b=capture(t);(OUT/'cuadros'/f'{t:06.2f}.png').write_bytes(b);im=Image.open(io.BytesIO(b)).convert('RGB');im.thumbnail((270,480));x=(i%6)*270;y=(i//6)*504;fsheet.paste(im,(x,y+24));fd.text((x+8,y+5),f'{t:06.2f} s',fill='#e9e3ba')
+    fsheet.save(OUT/'hojas/focos.jpg',quality=92)
+   seekTimes=[13.5,32,55,83,124.5,161.95,195.1,233.9]
+   before={t:hashlib.sha256(capture(t)).hexdigest() for t in seekTimes}
+   for t in [195.1,32,233.9,13.5,161.95,55,124.5,83]:
+    after=hashlib.sha256(capture(t)).hexdigest();report['seeks'].append({'t':t,'sha256':after,'stable':before[t]==after})
+   report['camera']=page.evaluate('''async()=>{
+    const {createView,transform}=await import('../_atlas/plano/view.js');
+    const scene=await (await fetch('assets/scene.json')).json();
+    const {timerFromWords}=await import('../_tactico/tools/anchors.js');
+    const {expandScene}=await import('../_tactico/core.js');
+    const {createCamera}=await import('../_atlas/camera.js');
+    const {cameraKeys,createGeo}=await import('../_atlas/geo.js');
+    const words=(await (await fetch('assets/lyrics.json')).json()).segments.flatMap(s=>s.words||[]),T=timerFromWords(words),commands=structuredClone(scene.camera);
+    expandScene(scene,{T});const geo=createGeo(scene,{},[]),camera=createCamera(cameraKeys(scene,geo,T,1080));
+    const speed=(t,dt=1/30)=>{const a=createView(camera.at(Math.max(0,t-dt)),1080,1920),b=createView(camera.at(t),1080,1920);return Math.max(...[[0,0],[1080,0],[1080,1920],[0,1920],[540,960]].map(([x,y])=>{const m=transform(a.screenToMercator,x,y),p=transform(b.mercatorToScreen,m.x,m.y);return Math.hypot(p.x-x,p.y-y)/dt}));};
+    const flights=commands.slice(1).map((k,i)=>{const t=T(k.t),end=Math.min(t+k.dur,T(commands[i+2]?.t,scene.duration));let max=0,peak=t;for(let v=t+1/30;v<=end;v+=1/30){const s=speed(v);if(s>max){max=s;peak=v;}}return {t,end,duration:end-t,mode:k.follow?'follow':k.zoomThrough?'zoomThrough':k.reframe?'reframe':'flight',maxPxPerSecond:max,peakAt:peak};});
+    const boundaries=scene.camera.slice(1).map(k=>{const t=T(k.t);return {t,deltaPxAt10us:speed(t+.00001,.00002)*.00002};});
+    return {width:1080,height:1920,fps:30,method:'Desplazamiento de 4 esquinas y centro entre poses, convertido a px/s; incluye pan, zoom y giro.',flights,maxPxPerSecond:Math.max(...flights.map(f=>f.maxPxPerSecond)),maxBoundaryDeltaPx:Math.max(...boundaries.map(b=>b.deltaPxAt10us)),closingDriftPx:speed(260),boundaries};
+   }''')
+   (OUT/'camara.json').write_text(json.dumps(report['camera'],indent=2)+'\n');del report['camera']
+  missing=page.evaluate('__atlas.missingTiles()');(OUT/'teselas-faltantes.json').write_text(json.dumps({'provider':'gibs-bluemarble','count':len(missing),'missingTiles':missing,'downloaded':False,'source':'Barrido real del motor a 30 fps con muestras de shutter, caché local solamente.'},indent=2)+'\n')
+  if not args.strips:
+   page.evaluate('async()=>{const a=document.querySelector("audio");a.currentTime=5;await a.play()}');page.wait_for_timeout(250);progress=page.evaluate('document.querySelector("audio").currentTime');page.evaluate('document.querySelector("audio").pause()');page.evaluate('async()=>window.__NB_PREVIEW_PLAYER__?.seek?.(100)')
+   report['playback']={'start':5,'after250ms':progress,'advances':progress>5}
+  report['missingResources']=page.evaluate('__tactico.missing()');report['finalStats']=page.evaluate('__atlas.stats()');report['duration']=page.evaluate('__promo.total');report['audio']=page.evaluate('({src:document.querySelector("audio").getAttribute("src"),duration:document.querySelector("audio").duration})')
+  report['missingAnchors']=page.evaluate('__promo.missingAnchors()')
+  report['ok']=not report['errors'] and not report['missingResources'] and all(s['stable'] for s in report['seeks'])
+  (OUT/('qa-tiras.json' if args.strips else 'qa-focos.json' if args.only else 'qa.json')).write_text(json.dumps(report,indent=2)+'\n')
+  print(json.dumps({k:v for k,v in report.items() if k not in ['renders','httpErrors']}),flush=True);browser.close()
+finally:server.shutdown();server.server_close();lock.close()

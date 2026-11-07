@@ -1,6 +1,16 @@
 "use client";
 
-import { Loader2, Maximize2, Menu, Pause, Play, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  Maximize2,
+  Menu,
+  Pause,
+  Play,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   forwardRef,
@@ -55,6 +65,9 @@ interface MediaPlayerModalProps {
   /** Texto accesible del botón ☰ (lo traduce quien pasa el sidebar). */
   sidebarToggleLabel?: string;
   defaultSidebarOpen?: boolean;
+  /** Arte temporal en el escenario (p. ej. la vista grande de una miniatura). */
+  stagePreview?: ReactNode;
+  onCloseStagePreview?: () => void;
 }
 
 interface StageHandle {
@@ -91,7 +104,18 @@ function postToFrame(frame: HTMLIFrameElement | null, message: Record<string, un
 
 const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: string }>(
   function IframeStage(
-    { url, title, playing, volume, muted, onTime, onEnded, onPlayingChange, onMutedChange, onStarted },
+    {
+      url,
+      title,
+      playing,
+      volume,
+      muted,
+      onTime,
+      onEnded,
+      onPlayingChange,
+      onMutedChange,
+      onStarted,
+    },
     ref,
   ) {
     const frameRef = useRef<HTMLIFrameElement>(null);
@@ -131,7 +155,8 @@ const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: s
         if (event.data?.type === "nexa-template-ended") onEnded();
         // Estado real del reproductor: si el navegador rechazó el play(), el botón
         // no queda en "Pausar" con el video quieto.
-        if (event.data?.type === "nexa-template-state") onPlayingChange(Boolean(event.data.playing));
+        if (event.data?.type === "nexa-template-state")
+          onPlayingChange(Boolean(event.data.playing));
         if (event.data?.type === "nexa-template-muted") onMutedChange?.(Boolean(event.data.muted));
         if (event.data?.type === "nexa-template-started") onStarted?.();
       };
@@ -141,7 +166,7 @@ const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: s
 
     return (
       <iframe
-        key={restartKey}
+        key={`${url}:${restartKey}`}
         ref={frameRef}
         src={url}
         title={title}
@@ -211,7 +236,7 @@ const VideoStage = forwardRef<
         ref={videoRef}
         src={url}
         playsInline
-        preload="auto"
+        preload="metadata"
         onClick={() => onPlayingChange(!playing)}
         onLoadedMetadata={(e) => {
           const video = e.currentTarget;
@@ -253,6 +278,8 @@ export function MediaPlayerModal({
   sidebar,
   sidebarToggleLabel = "Panel",
   defaultSidebarOpen = true,
+  stagePreview,
+  onCloseStagePreview,
 }: MediaPlayerModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -278,6 +305,8 @@ export function MediaPlayerModal({
           sidebar={sidebar}
           sidebarToggleLabel={sidebarToggleLabel}
           defaultSidebarOpen={defaultSidebarOpen}
+          stagePreview={stagePreview}
+          onCloseStagePreview={onCloseStagePreview}
         />
       </DialogContent>
     </Dialog>
@@ -293,6 +322,8 @@ function PlayerBody({
   sidebar,
   sidebarToggleLabel,
   defaultSidebarOpen,
+  stagePreview,
+  onCloseStagePreview,
 }: {
   title: string;
   source: MediaSource | null;
@@ -302,10 +333,13 @@ function PlayerBody({
   sidebar?: ReactNode;
   sidebarToggleLabel: string;
   defaultSidebarOpen: boolean;
+  stagePreview?: ReactNode;
+  onCloseStagePreview?: () => void;
 }) {
   const t = useTranslations("mediaPlayer");
   const stageRef = useRef<StageHandle>(null);
   const stageBoxRef = useRef<HTMLDivElement>(null);
+  const hasStagePreview = stagePreview !== undefined && stagePreview !== null;
 
   const hasMobile = source?.kind === "iframe" || Boolean(source?.mobileUrl);
   const hasDesktop = source?.kind === "iframe" || Boolean(source?.desktopUrl);
@@ -343,6 +377,10 @@ function PlayerBody({
     setStarted(false);
   }, [iframeUrl]);
 
+  useEffect(() => {
+    if (hasStagePreview) setPlaying(false);
+  }, [hasStagePreview]);
+
   const effectiveVolume = muted ? 0 : volume;
   const videoUrl =
     source?.kind === "video"
@@ -375,6 +413,7 @@ function PlayerBody({
   };
 
   const seek = (target: number) => {
+    if (hasStagePreview) return;
     const next = Math.max(0, Math.min(target, duration || Number.POSITIVE_INFINITY));
     setTime(next);
     setEnded(false);
@@ -382,6 +421,7 @@ function PlayerBody({
   };
 
   const togglePlayback = () => {
+    if (hasStagePreview) return;
     if (playing) {
       setPlaying(false);
       return;
@@ -453,7 +493,7 @@ function PlayerBody({
     <button
       type="button"
       aria-pressed={viewport === mode}
-      disabled={!enabled}
+      disabled={!enabled || hasStagePreview}
       onClick={() => changeViewport(mode)}
       className={cn(
         "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-35",
@@ -467,6 +507,8 @@ function PlayerBody({
   );
 
   const canPlay = source !== null && (source.kind === "iframe" || videoUrl !== null);
+  const silentComponentPreview =
+    source?.kind === "iframe" && source.url.includes("clock=synthetic");
 
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: atajos de teclado del reproductor (espacio, flechas, m, f)
@@ -485,7 +527,7 @@ function PlayerBody({
             aria-label={playing ? t("pause") : t("play")}
             aria-pressed={playing}
             onClick={togglePlayback}
-            disabled={!canPlay}
+            disabled={!canPlay || hasStagePreview}
             className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/85 transition-colors hover:bg-white/20 hover:text-white disabled:opacity-40"
           >
             {playing ? (
@@ -497,29 +539,31 @@ function PlayerBody({
             )}
             {playing ? t("pause") : ended ? t("replay") : t("play")}
           </button>
-          <div className="flex items-center gap-2 rounded-full bg-white/10 px-2 py-1">
-            <button
-              type="button"
-              aria-label={muted ? t("unmute") : t("mute")}
-              onClick={toggleMute}
-              className="text-white/85 transition-colors hover:text-white"
-            >
-              {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
-            </button>
-            <input
-              aria-label={t("volume")}
-              type="range"
-              min="0"
-              max="1"
-              step="0.05"
-              value={effectiveVolume}
-              onChange={(event) => changeVolume(Number(event.target.value))}
-              className="h-1 w-24 cursor-pointer accent-white"
-            />
-            <span className="min-w-8 text-right text-[10px] font-semibold text-white/70">
-              {Math.round(effectiveVolume * 100)}%
-            </span>
-          </div>
+          {!silentComponentPreview && (
+            <div className="flex items-center gap-2 rounded-full bg-white/10 px-2 py-1">
+              <button
+                type="button"
+                aria-label={muted ? t("unmute") : t("mute")}
+                onClick={toggleMute}
+                className="text-white/85 transition-colors hover:text-white"
+              >
+                {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+              </button>
+              <input
+                aria-label={t("volume")}
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={effectiveVolume}
+                onChange={(event) => changeVolume(Number(event.target.value))}
+                className="h-1 w-24 cursor-pointer accent-white"
+              />
+              <span className="min-w-8 text-right text-[10px] font-semibold text-white/70">
+                {Math.round(effectiveVolume * 100)}%
+              </span>
+            </div>
+          )}
           <button
             type="button"
             aria-label={t("fullscreen")}
@@ -566,7 +610,11 @@ function PlayerBody({
                     <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black">
                       {source.poster && (
                         // biome-ignore lint/performance/noImgElement: portada servida por la API, sin optimizar
-                        <img src={source.poster} alt="" className="absolute inset-0 size-full object-cover" />
+                        <img
+                          src={source.poster}
+                          alt=""
+                          className="absolute inset-0 size-full object-cover"
+                        />
                       )}
                       {playing && (
                         <Loader2 className="relative size-8 animate-spin text-white/85 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]" />
@@ -586,6 +634,19 @@ function PlayerBody({
                   />
                 )
               )}
+              {hasStagePreview && (
+                <div className="absolute inset-0 z-20 flex items-center justify-center bg-black p-3">
+                  {stagePreview}
+                  <button
+                    type="button"
+                    onClick={onCloseStagePreview}
+                    className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/75 px-3 py-2 text-xs font-semibold text-white shadow-lg ring-1 ring-white/20 backdrop-blur transition-colors hover:bg-black"
+                  >
+                    <ArrowLeft className="size-3.5" />
+                    {t("backToVideo")}
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <p className="p-10 text-center text-sm text-white/70">{t("unavailable")}</p>
@@ -603,7 +664,7 @@ function PlayerBody({
                   step="0.1"
                   value={Math.min(time, duration)}
                   onChange={(event) => seek(Number(event.target.value))}
-                  disabled={duration <= 0}
+                  disabled={duration <= 0 || hasStagePreview}
                   className="h-1 min-w-0 flex-1 cursor-pointer accent-white"
                 />
                 <span className="w-10 tabular-nums">{formatTime(duration)}</span>
@@ -613,7 +674,8 @@ function PlayerBody({
                   type="button"
                   aria-label={t("skipBack")}
                   onClick={() => seek(time - 5)}
-                  className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                  disabled={hasStagePreview}
+                  className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white disabled:opacity-40"
                 >
                   −5s
                 </button>
@@ -621,7 +683,8 @@ function PlayerBody({
                   type="button"
                   aria-label={t("skipForward")}
                   onClick={() => seek(time + 5)}
-                  className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                  disabled={hasStagePreview}
+                  className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white disabled:opacity-40"
                 >
                   +5s
                 </button>

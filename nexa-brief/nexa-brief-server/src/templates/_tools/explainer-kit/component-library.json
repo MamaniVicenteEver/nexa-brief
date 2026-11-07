@@ -1,0 +1,1452 @@
+{
+  "version": 3,
+  "components": [
+    {
+      "name": "binary.crisisdesk",
+      "summary": "Una mesa de operaciones con tres terminales y una persona de guardia; los indicadores recorren reporte, respaldo y recuperación.",
+      "params": {
+        "label": {
+          "type": "string",
+          "default": "CENTRO DE OPERACIONES",
+          "doc": "Nombre corto del centro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "states": {
+          "type": "array",
+          "default": [
+            "REPORTE",
+            "RESPALDO",
+            "RECUPERACIÓN"
+          ],
+          "doc": "Tres etapas de la guardia.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Tiempo para formar la sala.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 3
+        }
+      },
+      "video": "nodehistory/y2k-medianoche",
+      "source": "_tools/explainer-kit/component-library/sources/binary/crisisdesk.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodehistory--y2k-medianoche--binary-crisisdesk.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodehistory--y2k-medianoche--binary-crisisdesk.png",
+      "source_sha256": "0ae6c49e3309af79f032072625e2f88adb53fcbc9799f6d2d7a01786d410575c"
+    },
+    {
+      "name": "binary.midnightrelay",
+      "summary": "Una ruta de tres relojes enlaza Kiritimati, Chatham y Auckland mientras el cambio de fecha avanza por el Pacífico.",
+      "params": {
+        "label": {
+          "type": "string",
+          "default": "EL CAMBIO VIAJA",
+          "doc": "Título corto de la ruta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "first": {
+          "type": "string",
+          "default": "MILLENNIUM",
+          "doc": "Primera isla reportada en entrar al año nuevo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "second": {
+          "type": "string",
+          "default": "CHATHAM",
+          "doc": "Zona de Nueva Zelanda que entra quince minutos después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "third": {
+          "type": "string",
+          "default": "AUCKLAND",
+          "doc": "Siguiente referencia horaria.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodehistory/y2k-medianoche",
+      "source": "_tools/explainer-kit/component-library/sources/binary/midnightrelay.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodehistory--y2k-medianoche--binary-midnightrelay.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodehistory--y2k-medianoche--binary-midnightrelay.png",
+      "source_sha256": "8b41b8818b60c0ea81d66afd275e779c16feabe35c88d5db8c74e1f51e101291"
+    },
+    {
+      "name": "binary.y2kfield",
+      "summary": "Calendario digital hecho de dígitos binarios: muestra el campo de año de dos dígitos y el paso de 99 a 00, con la ambigüedad de leer 00 como 1900. Sirve para explicar por qué se usaban dos dígitos y qué podía pasar al cambiar de siglo.",
+      "params": {
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos de armado de la forma.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 3
+        },
+        "showHint": {
+          "type": "bool",
+          "default": true,
+          "doc": "Mostrar rótulos 99 / 00 / 1900.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "CAMPO DE AÑO",
+          "doc": "Etiqueta superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodehistory/y2k-medianoche",
+      "source": "_tools/explainer-kit/component-library/sources/binary/y2kfield.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodehistory--y2k-medianoche--binary-y2kfield.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodehistory--y2k-medianoche--binary-y2kfield.png",
+      "source_sha256": "39e6abc7a352d7609657ad973e452674c16efcfb3901d62bab263fa5d8104360"
+    },
+    {
+      "name": "imperio.campaign",
+      "summary": "Campaña en UN plano continuo: la cámara vuela entre destinos (`cameras`); desde el sol de Japón salen flechas gruesas hacia cada destino y llegan justo cuando la voz lo nombra (`time: \"@palabra\"`). Al llegar, el territorio queda marcado en carmesí y aparece su bandera en un círculo con nombre y año (después se retira; el territorio sigue marcado). Tramos de video y fotos de archivo (`plates`) se funden en blanco y negro con el atlas. Para anexiones, ocupaciones y avances militares a lo largo del tiempo.",
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países ya ocupados (rayado fijo). Va acumulando de plano en plano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 1.15,
+          "doc": "Radio del sol en grados de mapa.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares: [{\"t\":\"Mar de\\nChina\", \"at\":[120,20]}].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rosa de los vientos fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Solo para encuadrar planos vecinos: cámara final. Vacío = la de la última entrada de `cameras`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.08,
+          "doc": "Si no hay cámaras: cuánto se aleja.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Giro de las cámaras automáticas.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "linear",
+          "doc": "Solo para planos vecinos (la cámara de este plano la dan `cameras`).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "fit": {
+          "type": "number",
+          "default": 1.9,
+          "doc": "Margen del encuadre automático de `cameras[].focus` (más alto = más mapa alrededor).",
+          "required": false,
+          "options": null,
+          "min": 1.1,
+          "max": 4
+        },
+        "cameras": {
+          "type": "array",
+          "default": [],
+          "doc": "Vuelos de cámara en orden: [{\"t\":\"@Sajalín-1.8\", \"focus\":[\"sun\", [142.8,48.5]], \"k\":1.9}] o {\"t\":..,\"to\":[lon,lat,span,giro]}. Opcional `dur`, `ease`, `tilt`. Cada vuelo parte de donde esté la cámara. Con `\"cut\": true` (o `dur: 0`) la cámara salta al encuadre sin moverse: así el plano no tiene movimientos de cámara.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "targets": {
+          "type": "array",
+          "default": [],
+          "doc": "Destinos: [{\"at\":\"Taiwan\", \"region\":\"Taiwan\"|[\"A\",\"B\"]|{\"poly\":[[lon,lat]…],\"within\":\"China\"}|{\"dots\":[[lon,lat]…]}|null, \"label\":\"TAIWÁN\", \"year\":\"1895\", \"flag\":\"f1\", \"time\":\"@Taiwán\", \"kind\":\"badge|city\", \"arrow\":true, \"from\":[lon,lat], \"badgeAt\":[lon,lat], \"bow\":0.16, \"size\":1, \"hold\":4.5, \"side\":\"left|right\", \"dy\":0}]. `time` = cuándo la voz lo nombra: la flecha llega en ese instante.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "plates": {
+          "type": "array",
+          "default": [],
+          "doc": "Tramos de archivo: video 8–16 s o imagen 6–12 s; para fotos usar image:p1/p2 en vez de video. Ejemplo: [{\"video\":\"v1\", \"at\":\"@Manchuria-1\", \"dur\":8, \"start\":0, \"rate\":1, \"strength\":0.9, \"focus\":[0.5,0.45], \"caption\":\"ARCHIVO · 1931\"}]. El atlas se pone gris y el clip se funde en multiplicar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "held": {
+          "type": "array",
+          "default": [],
+          "doc": "Territorios ya ocupados al empezar, siempre marcados (mismas formas que `region`).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "travel": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundos que tarda cada flecha en cruzar el mar antes de llegar a su `time`.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 3
+        },
+        "hold": {
+          "type": "number",
+          "default": 4.5,
+          "doc": "Segundos que se queda la bandera con su rótulo tras llegar (el territorio sigue marcado).",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 20
+        },
+        "beam": {
+          "type": "number",
+          "default": 1,
+          "doc": "Grosor de las flechas (multiplicador).",
+          "required": false,
+          "options": null,
+          "min": 0.4,
+          "max": 2.5
+        },
+        "badge": {
+          "type": "number",
+          "default": 1,
+          "doc": "Tamaño de las banderas redondas (multiplicador).",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 2
+        },
+        "stamp": {
+          "type": "bool",
+          "default": true,
+          "doc": "Sello grande con el año del último destino, arriba a la izquierda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "smoke": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Humo oscuro sobre los tramos de archivo.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "f1": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f1 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f1\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f2": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f2 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f2\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f3": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f3 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f3\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f4": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f4 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f4\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f5": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f5 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f5\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f6": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f6 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f6\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f7": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f7 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f7\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f8": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f8 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f8\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f9": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f9 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f9\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f10": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f10 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f10\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f11": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f11 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f11\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f12": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f12 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f12\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "v1": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo v1 (assets/media). Un tramo de archivo lo usa con \"video\": \"v1\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "v2": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo v2 (assets/media). Un tramo de archivo lo usa con \"video\": \"v2\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "v3": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo v3 (assets/media). Un tramo de archivo lo usa con \"video\": \"v3\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "v4": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo v4 (assets/media). Un tramo de archivo lo usa con \"video\": \"v4\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "p1": {
+          "type": "image",
+          "default": "",
+          "doc": "Fotografía o fotograma p1 (assets/media). Un tramo ilustrativo lo usa con \"image\": \"p1\" durante 6–12 s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "p2": {
+          "type": "image",
+          "default": "",
+          "doc": "Fotografía o fotograma p2 (assets/media). Un tramo ilustrativo lo usa con \"image\": \"p2\" durante 6–12 s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodeatlas/japon-expansion-prueba",
+      "source": "nodeatlas/japon-expansion-prueba/assets/components/japon.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodeatlas--japon-expansion-prueba--imperio-campaign.png",
+      "sheet_exists": true,
+      "source_sheet": "nodeatlas/japon-expansion-prueba/work/components/imperio-campaign.png",
+      "source_sha256": "00a60ab8fab82cbbe1ebb6b0ce76a5c2b5a3d92ca25245d0b77ae7806dbcecf7"
+    },
+    {
+      "name": "imperio.footage",
+      "summary": "Material de archivo en VIDEO (en vez de foto): el atlas se desatura a gris, baja humo oscuro y el clip mudo se funde en blanco y negro, en multiplicar, con el mapa; el sol y los rayos carmesí siguen encima. Como imperio.archive pero con movimiento real.",
+      "params": {
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo de assets/media (se pasa a B/N contrastado). Vacío = solo atlas gris, humo y rayos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip (bajar si es corto).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repetir el clip si es más corto que el plano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.45
+          ],
+          "doc": "Punto de interés del clip [x,y] 0..1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países ya ocupados (rayado fijo). Va acumulando de plano en plano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 3,
+          "doc": "Radio del sol en grados de mapa.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares: [{\"t\":\"Mar de\\nChina\", \"at\":[120,20]}].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": true,
+          "doc": "Rosa de los vientos fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 3,
+          "doc": "Si no hay `to`: grados que gira el mapa.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 28,
+          "doc": "Rayos del sol.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo del abanico (0 = norte, 180 = sur).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.72,
+          "doc": "Cierre del abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.02,
+          "doc": "Largo residual de los rayos opuestos.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0.56,
+          "doc": "Opacidad de los rayos.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Largo de los rayos (fracción del lado largo).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo en que nacen los rayos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "",
+          "doc": "Color hex de los rayos en multiplicar (el demo usa un carmesí vivo). Vacío = granate grisáceo del mapa.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 2,
+          "doc": "Barquitos sobre los rayos.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "grayDur": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Segundos en que el atlas pasa a gris.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "videoAt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo en que empieza a aparecer el clip.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "videoDur": {
+          "type": "number",
+          "default": 1,
+          "doc": "Duración del fundido del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.95,
+          "doc": "Intensidad del clip (multiplicar).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "smoke": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Humo oscuro desde arriba.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico en itálica abajo a la izquierda (lugar · año del metraje).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodeatlas/japon-expansion-prueba",
+      "source": "nodeatlas/japon-expansion-prueba/assets/components/japon.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodeatlas--japon-expansion-prueba--imperio-footage.png",
+      "sheet_exists": true,
+      "source_sheet": "nodeatlas/japon-expansion-prueba/work/components/imperio-footage.png",
+      "source_sha256": "00a60ab8fab82cbbe1ebb6b0ce76a5c2b5a3d92ca25245d0b77ae7806dbcecf7"
+    },
+    {
+      "name": "rough.abstractionLadder",
+      "summary": "Escalera de capas que sube el nivel de abstracción: de instrucciones de máquina a un agente que produce código. Sirve para narrar la evolución de las herramientas de programación sin sugerir pérdida de trabajo.",
+      "params": {
+        "labels": {
+          "type": "array",
+          "default": [
+            "MÁQUINA",
+            "LENGUAJE",
+            "VISUAL",
+            "AGENTE"
+          ],
+          "doc": "Rótulos cortos de cada capa (3 a 5).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "active": {
+          "type": "number",
+          "default": 3,
+          "doc": "Índice de la capa activa (destacada en lima).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 4
+        },
+        "header": {
+          "type": "string",
+          "default": "NIVELES DE ABSTRACCIÓN",
+          "doc": "Título superior; puede ser vacío.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "activeTag": {
+          "type": "string",
+          "default": "ACTIVA",
+          "doc": "Rótulo de la capa resaltada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita opcional al pie.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/programadores-nueva-era",
+      "source": "_tools/explainer-kit/component-library/sources/rough/rough-abstraction-ladder.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--programadores-nueva-era--rough-abstractionLadder.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodetech--programadores-nueva-era--rough-abstractionLadder.png",
+      "source_sha256": "9f7bb5b369e8c86cdd4333081d943bf197c9f515ac029e9b0e0f32bfd8a29ad1"
+    },
+    {
+      "name": "rough.careerLadder",
+      "summary": "La escalera de una carrera dibujada a mano, con un rótulo por peldaño. Al pie, una persona espera. En `dropAt` el primer peldaño se pinta de lima, se tacha y cae: queda el hueco y el segundo escalón lejos. Con `dropAt: -1` la escalera queda entera (la escalera sigue ahí).",
+      "params": {
+        "rungs": {
+          "type": "array",
+          "default": [
+            "PRIMER EMPLEO",
+            "SEMI-SENIOR",
+            "SENIOR",
+            "LÍDER"
+          ],
+          "doc": "Rótulos de los peldaños, de abajo hacia arriba (3–5).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dropAt": {
+          "type": "number",
+          "default": 1.8,
+          "doc": "Segundo del beat en que cae el primer peldaño; -1 = no cae.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo arriba (mono); vacío = nada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "who": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo manuscrito junto a la persona del pie; vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita al pie; vacío = nada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/ia-despidos-programadores-amazon",
+      "source": "_tools/explainer-kit/component-library/sources/rough/rough-career-ladder.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--ia-despidos-programadores-amazon--rough-careerLadder.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodetech--ia-despidos-programadores-amazon--rough-careerLadder.png",
+      "source_sha256": "a5607fe059cd6cadbde2e5f135b617b7a642a487028b8117eda614b40815ed80"
+    },
+    {
+      "name": "rough.chatRedaction",
+      "summary": "Globo de conversación con datos ocultados.",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats",
+      "source": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/assets/components/registro-chat.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--lo-que-le-contas-a-la-ia-no-es-privado-tus-chats--rough-chatRedaction.png",
+      "sheet_exists": true,
+      "source_sheet": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/work/components/rough-chatRedaction.png",
+      "source_sha256": "fd08f4cefb01883190122ec0534281119117d8b1f2717beedb23017f065685bd"
+    },
+    {
+      "name": "rough.codeReview",
+      "summary": "Un editor de código dibujado a mano: las líneas se escriben solas, rápido, en gris (las escribe la máquina). En modo `review` una persona revisa: en `reviewAt` tacha en lima la línea mala y firma con un ✓ lima. En modo `ai` solo escribe la máquina, con cursor y rótulo de quién teclea.",
+      "params": {
+        "mode": {
+          "type": "string",
+          "default": "review",
+          "doc": "ai = solo escribe la máquina · review = además una persona tacha y aprueba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "header": {
+          "type": "string",
+          "default": "pedido.js",
+          "doc": "Nombre del archivo en la barra del editor (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "lines": {
+          "type": "array",
+          "default": [
+            "function cobrar(pedido) {",
+            "  const total = sumar(pedido)",
+            "  if (total < 0) borrar()",
+            "  return enviar(total)",
+            "}"
+          ],
+          "doc": "Líneas de código (hasta 6, ~26 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "who": {
+          "type": "string",
+          "default": "IA ESCRIBIENDO…",
+          "doc": "Rótulo arriba del editor (quién escribe); vacío = nada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bad": {
+          "type": "number",
+          "default": 2,
+          "doc": "Índice de la línea que la persona tacha en modo review; -1 = ninguna.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "reviewAt": {
+          "type": "number",
+          "default": 2.2,
+          "doc": "Segundo del beat en que llegan las marcas humanas (modo review).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita al pie (modo review sale en lima junto al ✓); vacío = nada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/ia-despidos-programadores-amazon",
+      "source": "_tools/explainer-kit/component-library/sources/rough/rough-code-review.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--ia-despidos-programadores-amazon--rough-codeReview.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodetech--ia-despidos-programadores-amazon--rough-codeReview.png",
+      "source_sha256": "24cf194cc0a36e7c97487f60850618cb9b6af1b5fc641052fe69833bfadba2e4"
+    },
+    {
+      "name": "rough.entryGate",
+      "summary": "Dos carriles dibujados a mano: el de tareas de entrada se estrecha como una puerta que se cierra, mientras el de revisión y diseño gana espacio. Sirve para el momento en que la narración dice que el primer peldaño se angosta.",
+      "params": {
+        "juniorLabel": {
+          "type": "string",
+          "default": "PRIMER PELDAÑO",
+          "doc": "Rótulo del carril que se estrecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "entryTasks": {
+          "type": "string",
+          "default": "tareas de entrada",
+          "doc": "Texto corto del carril de entrada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "reviewLabel": {
+          "type": "string",
+          "default": "REVISIÓN Y DISEÑO",
+          "doc": "Rótulo del carril que gana peso.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "reviewTasks": {
+          "type": "string",
+          "default": "criterio · diseño · responsabilidad",
+          "doc": "Texto corto del carril de revisión.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "se angosta",
+          "doc": "Nota manuscrita en lima (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/programadores-nueva-era",
+      "source": "_tools/explainer-kit/component-library/sources/rough/rough-entry-gate.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--programadores-nueva-era--rough-entryGate.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodetech--programadores-nueva-era--rough-entryGate.png",
+      "source_sha256": "4a4562b2e4c569568888a14b1af99bf0baf9bacb4f9de4988598e0d4658ad8ca"
+    },
+    {
+      "name": "rough.incomingCall",
+      "summary": "Un teléfono dibujado a mano con pantalla de llamada entrante: nombre aparente, botón de responder y de rechazar. Sirve para mostrar el momento en que suena una llamada de un supuesto familiar.",
+      "params": {
+        "callerName": {
+          "type": "string",
+          "default": "MAMÁ",
+          "doc": "Nombre que aparece en la pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subtitle": {
+          "type": "string",
+          "default": "LLAMADA ENTRANTE",
+          "doc": "Texto chico arriba del nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "acceptLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo del botón verde (accent).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "declineLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo del botón de colgar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota al pie.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+      "source": "_tools/explainer-kit/component-library/sources/rough/incoming-call.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--clonan-tu-voz-con-3-segundos-de-audio-las-llamad--rough-incomingCall.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodetech--clonan-tu-voz-con-3-segundos-de-audio-las-llamad--rough-incomingCall.png",
+      "source_sha256": "663300d6a31760260f6b2f7e11698fb192a0c5d86017567c32dc40c258f563c6"
+    },
+    {
+      "name": "rough.layoffMail",
+      "summary": "Un teléfono dibujado a mano se enciende de madrugada: llega una notificación con remitente y asunto, el teléfono vibra y en `stampAt` cae un sello lima (PUESTO ELIMINADO). Para el momento en que alguien se entera de un despido por correo o mensaje.",
+      "params": {
+        "time": {
+          "type": "string",
+          "default": "6:04",
+          "doc": "Hora grande en la pantalla bloqueada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "string",
+          "default": "RECURSOS HUMANOS",
+          "doc": "Remitente de la notificación (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subject": {
+          "type": "string",
+          "default": "Tu puesto ha sido eliminado",
+          "doc": "Asunto del correo (hasta 3 renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "PUESTO ELIMINADO",
+          "doc": "Texto del sello lima; vacío = sin sello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundo del beat en que cae el sello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta de contexto arriba (fecha, empresa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "badge": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra manuscrita al costado del teléfono (p. ej. ×250); vacío = nada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita al pie; vacío = nada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/ia-despidos-programadores-amazon",
+      "source": "_tools/explainer-kit/component-library/sources/rough/rough-layoff-mail.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--ia-despidos-programadores-amazon--rough-layoffMail.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodetech--ia-despidos-programadores-amazon--rough-layoffMail.png",
+      "source_sha256": "24b080421c66350de1ba3f39af766e5055408a700484cf342d8dc3e2e03d59c1"
+    },
+    {
+      "name": "rough.legalWarrant",
+      "summary": "Documento y sello de orden judicial.",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats",
+      "source": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/assets/components/escenas-datos.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--lo-que-le-contas-a-la-ia-no-es-privado-tus-chats--rough-legalWarrant.png",
+      "sheet_exists": true,
+      "source_sheet": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/work/components/rough-legalWarrant.png",
+      "source_sha256": "0c9d1f9b383a61d2a82c55619155158a85c020c785b899d7a0c9bf75ed12f685"
+    },
+    {
+      "name": "rough.paymentRequest",
+      "summary": "Una orden de transferencia ilustrada: tarjeta grande con importe, botón ENVIAR tachado y flecha de urgencia. Sirve para el momento en que la narración muestra la exigencia de dinero.",
+      "params": {
+        "amount": {
+          "type": "string",
+          "default": "$5.400",
+          "doc": "Importe grande en la tarjeta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "TRANSFERENCIA URGENTE",
+          "doc": "Título de la tarjeta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subtitle": {
+          "type": "string",
+          "default": "SOLICITUD DE PAGO",
+          "doc": "Rótulo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "ENVIAR",
+          "doc": "Texto del botón (se dibuja tachado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita al pie.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "urgency": {
+          "type": "string",
+          "default": "AHORA",
+          "doc": "Rótulo de la flecha de urgencia.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/clonan-tu-voz-con-3-segundos-de-audio-las-llamad",
+      "source": "_tools/explainer-kit/component-library/sources/rough/payment-request.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--clonan-tu-voz-con-3-segundos-de-audio-las-llamad--rough-paymentRequest.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodetech--clonan-tu-voz-con-3-segundos-de-audio-las-llamad--rough-paymentRequest.png",
+      "source_sha256": "8be600fc3859c2687ce168c80364ea103b70d9c1828e0d594488f38f14b4d47a"
+    },
+    {
+      "name": "rough.retentionCalendar",
+      "summary": "Calendario y archivo que representan retención.",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats",
+      "source": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/assets/components/registro-chat.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--lo-que-le-contas-a-la-ia-no-es-privado-tus-chats--rough-retentionCalendar.png",
+      "sheet_exists": true,
+      "source_sheet": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/work/components/rough-retentionCalendar.png",
+      "source_sha256": "fd08f4cefb01883190122ec0534281119117d8b1f2717beedb23017f065685bd"
+    },
+    {
+      "name": "rough.reviewLens",
+      "summary": "Una hoja de código bajo la lupa de una revisión humana: el lente recorre las líneas y la marca de aprobación queda pendiente (o se completa). Sirve para el momento en que algo generado espera el visto bueno de alguien.",
+      "params": {
+        "header": {
+          "type": "string",
+          "default": "REVISAR",
+          "doc": "Rótulo superior (mono, mayúsculas).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "status": {
+          "type": "string",
+          "default": "ANTES DE APROBAR",
+          "doc": "Rótulo inferior de estado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "approved": {
+          "type": "bool",
+          "default": false,
+          "doc": "Si es true, la marca de aprobación se completa en lima.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita opcional (puede ir vacía).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/programadores-nueva-era",
+      "source": "_tools/explainer-kit/component-library/sources/rough/rough-review-lens.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--programadores-nueva-era--rough-reviewLens.png",
+      "sheet_exists": true,
+      "source_sheet": "_tools/explainer-kit/component-library/sheets/nodetech--programadores-nueva-era--rough-reviewLens.png",
+      "source_sha256": "cfaaa03f6b84f458101dc7790ca2e373aab5d2ccf04c060710035e8403ac9007"
+    },
+    {
+      "name": "rough.temporaryChat",
+      "summary": "Conversación temporal y reloj de retención.",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "video": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats",
+      "source": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/assets/components/escenas-datos.js",
+      "sheet": "_tools/explainer-kit/component-library/sheets/nodetech--lo-que-le-contas-a-la-ia-no-es-privado-tus-chats--rough-temporaryChat.png",
+      "sheet_exists": true,
+      "source_sheet": "nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/work/components/rough-temporaryChat.png",
+      "source_sha256": "0c9d1f9b383a61d2a82c55619155158a85c020c785b899d7a0c9bf75ed12f685"
+    }
+  ]
+}

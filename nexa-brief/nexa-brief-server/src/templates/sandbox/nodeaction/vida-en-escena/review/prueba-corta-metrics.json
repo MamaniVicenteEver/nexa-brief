@@ -1,0 +1,224 @@
+{
+  "warnings": [],
+  "head_overlaps": [],
+  "knees": {
+    "samples": 82,
+    "backward": 0
+  },
+  "subtitle_safe": {
+    "samples": 124,
+    "max_hand_bottom_px": 1155.8631468293622,
+    "max_object_bottom_px": 1172.3315522041742,
+    "violations": []
+  },
+  "conversation_stops": [
+    {
+      "actor": "tomas",
+      "to": "nico",
+      "t": 1.35,
+      "center_distance_px": 394.69528,
+      "minimum_center_distance_px": 394.69528,
+      "edge_gap_in_head_widths": 1.15
+    }
+  ],
+  "camera": {
+    "max_same_framing_seconds": 3.3500000000000005,
+    "spans": [
+      {
+        "type": "wide",
+        "target": "tomas",
+        "start": 0,
+        "end": 1.35
+      },
+      {
+        "type": "two",
+        "start": 1.35,
+        "end": 1.9000000000000001
+      },
+      {
+        "type": "close",
+        "target": "nico",
+        "start": 1.9000000000000001,
+        "end": 3
+      },
+      {
+        "type": "medium",
+        "target": "nico",
+        "start": 3,
+        "end": 3.69
+      },
+      {
+        "type": "close",
+        "target": "tomas",
+        "start": 3.69,
+        "end": 4.95
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 4.95,
+        "end": 8.3
+      },
+      {
+        "type": "close",
+        "target": "nico",
+        "start": 8.3,
+        "end": 9.27
+      },
+      {
+        "type": "insert",
+        "target": "cuaderno",
+        "start": 9.27,
+        "end": 10.37
+      },
+      {
+        "type": "close",
+        "target": "nico",
+        "start": 10.37,
+        "end": 11.700000000000001
+      },
+      {
+        "type": "close",
+        "target": "tomas",
+        "start": 11.700000000000001,
+        "end": 13.000000000000002
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 13.000000000000002,
+        "end": 14.5
+      }
+    ],
+    "insert_returns": [
+      {
+        "at": 10.37,
+        "previousAt": 9.269999,
+        "max_rect_error_px": 0
+      }
+    ]
+  },
+  "subtitles": {
+    "aligned_words": 22,
+    "fallbacks": []
+  },
+  "episode": "prueba-corta",
+  "duration": 14.5,
+  "fps": 30,
+  "foot_slip": {
+    "max_slip_px": 0.2889097919696974,
+    "samples": 1718,
+    "worst": {
+      "id": "nico",
+      "side": "right",
+      "t": 8.433333333333334,
+      "contact": "entrada:nico:initial:right",
+      "from": [
+        853.852,
+        960
+      ],
+      "to": [
+        853.8251938189667,
+        959.7123364872731
+      ]
+    }
+  },
+  "mouth": {
+    "silent_actor_frames": 605,
+    "open_without_voice_frames": 0,
+    "percent": 0
+  },
+  "determinism": {
+    "frames": 30,
+    "resolution": [
+      540,
+      960
+    ],
+    "order": [
+      7,
+      24,
+      11,
+      28,
+      15,
+      2,
+      19,
+      6,
+      23,
+      10,
+      27,
+      14,
+      1,
+      18,
+      5,
+      22,
+      9,
+      26,
+      13,
+      0,
+      17,
+      4,
+      21,
+      8,
+      25,
+      12,
+      29,
+      16,
+      3,
+      20
+    ],
+    "mismatches": [],
+    "ok": true,
+    "hashes": [
+      "d870b8836952f1a2b911507a4193a9d1b0a9a535582aa10165e95360e14fc679",
+      "5c366d9bd4a49b55682e08050a455c2d6a8252a72ed96c582c1297d3deadc808",
+      "49883398372329d659c999f92a86ebadffede37b4cb0a42221772a3ebe6201ef",
+      "1828e9581814a8b06623365f7b64a95cbc69c897c3b31990f9bd056dcb8ed5c2",
+      "f7111877b1c27bd2266ed4f00a97c5c3945fea2c16760819eca8e5b018424200",
+      "2933c74f86a3c49567b3a0931cf868a462e1cfc09724463904ba11c3c3e41973",
+      "7d31260ccdd4ae4b4dc4f7b7571749767b9ce4223cac2ac3952a669e2ea9be42",
+      "6625972b924795eced0316e7bef19c4218b0edaaa716dadcb4d98600d234ba87",
+      "0cd0b5fb4f295a9075eeb1bffec6e6141f96d526cce4f1fb5d1d99c6c675cc0e",
+      "f5bcb26fbc73021db501fc578e6d85d830fcfeacb13afda2fb7f53b11ebe9b45",
+      "e174c090f5e0325cccbaad83a6a5fadd3ec5492ad9ef00e1483465aea5dbfb10",
+      "a00b938401005dfed20b654b94bfb0cc1d0b147aa21889a87b0a95d906994824",
+      "8038963c4ac14334b0d148fbdebc9423e22596576d76f21f9e6c0e8bc1afd8fc",
+      "002cfed46ec18e5b9c5fdc3a842fc7bda664b151dfe7eee0cd3d2b85ca130ac3",
+      "4c172fc784b2ded371e7056c3b3c9d5888f6bbeb95d42937cb334a13fd320304",
+      "aed0bdbe48386ec4f9a75885687ba00ed06cbb4c16ace5dc037d183bc73166e5",
+      "a85e3e2d091aeaa5ce598794b8ce0cad2be09f8b77f0a217efcd4e3c81ef9111",
+      "f3c8fe4b9640c38f8c72b144fb362878f18dcdb2077c0ff22394a85193eaab75",
+      "1c807b5f648e3b77c6f1541b7b1f1be5d607c6b302d7e350ef93b688664a199e",
+      "1a914a371627bb3eea9dc0c2b1e44c4be94c02032a4d441bf8b7ef1aaf460b5f",
+      "64b0aac61a7a9d021ca3907df952ecb74458d707b7c1c3bcb9aa6d4eeb13da4d",
+      "bdd6ae5946b3b67d82333acdd13be173c176e6451b43a764074c33b83468b0b6",
+      "b1e796d3b092a097a79ab72e2792e3d00bcfa510284ed12b06159d0953125f9e",
+      "d482db57e35be74f9bd395e799c00402b77e3960eb5331061ccac084aca472e0",
+      "4c0036cd35a1d6c4bc13ae215bd90e3734db578202a6d79f53c045fc887a60ef",
+      "586166f490ac8cd02b3f075c10633c7ade05375d5c781f963ec1857f6d9b21a0",
+      "323608a59ee5244d45cb05b5a1306a314d3fea64428047fdc2de97bdcf0e9f82",
+      "819490419d44e525d1d5248d46bf8799c22121dd2dff2b12fad9908be1cda7a5",
+      "d11b4733883831f10acdc5966aa129be84fc75e64c9682f0dcdc35ff2aed4c28",
+      "d3bf38a19a1e5deb21610717451ea50340a26398cd5e4344451dd6e7d9e4c951"
+    ]
+  },
+  "objects": {
+    "ownership_samples": 870,
+    "max_grip_error_px": 0
+  },
+  "framing": {
+    "target_crop_frames": 0,
+    "target_crop_details": [],
+    "offscreen_non_targets": 365,
+    "whip_transition_frames": 40,
+    "intentional_body_crop_frames": 324,
+    "object_crop_frames": 0,
+    "object_crop_details": []
+  },
+  "pose_motion": {
+    "max_boundary_jump_px": 0.003688285779597127,
+    "boundary_epsilon_seconds": 0.000001,
+    "max_anchor_step_per_frame_px": 71.19901414373298,
+    "note": "Desplazamiento bruto a 30 fps; incluye gestos y caminata, no equivale por sí solo a un salto."
+  },
+  "passed": true
+}

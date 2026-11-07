@@ -1,0 +1,130 @@
+{
+  "title": "CARA A CARA",
+  "end": 60,
+  "outro": {
+    "enabled": false
+  },
+  "subjects": [
+    {
+      "id": "nasa",
+      "title": "NASA · EE. UU.",
+      "src": "assets/media/nasa.svg",
+      "fit": "contain",
+      "detail": "La meta: la Luna"
+    },
+    {
+      "id": "urss",
+      "title": "UNIÓN SOVIÉTICA",
+      "src": "assets/media/urss.svg",
+      "fit": "contain",
+      "detail": "Los primeros hitos"
+    }
+  ],
+  "shots": [
+    {
+      "t": 0,
+      "mode": "duo",
+      "focus": "both",
+      "headline": "¿QUIÉN GANÓ LA CARRERA ESPACIAL?",
+      "pose": "question"
+    },
+    {
+      "t": "@1957",
+      "mode": "single",
+      "focus": "right",
+      "headline": "1957 · PRIMER SATÉLITE",
+      "pose": "point-right"
+    },
+    {
+      "t": "@1961",
+      "mode": "single",
+      "focus": "right",
+      "headline": "1961 · PRIMER HUMANO EN EL ESPACIO",
+      "pose": "point-right",
+      "subjects": [
+        {
+          "id": "nasa"
+        },
+        {
+          "id": "urss",
+          "title": "YURI GAGARIN",
+          "src": "assets/media/gagarin.gif",
+          "detail": "Vostok 1 · Unión Soviética"
+        }
+      ]
+    },
+    {
+      "t": "@Pero Estados Unidos",
+      "mode": "duo",
+      "focus": "left",
+      "headline": "1969 · RUMBO A LA LUNA",
+      "pose": "point-left"
+    },
+    {
+      "t": "@Apolo",
+      "mode": "single",
+      "focus": "left",
+      "headline": "1969 · PRIMER ALUNIZAJE TRIPULADO",
+      "pose": "point-left"
+    },
+    {
+      "t": "@Entonces",
+      "mode": "duo",
+      "focus": "both",
+      "headline": "DISTINTAS METAS, DISTINTOS HITOS",
+      "pose": "explain",
+      "subjects": [
+        {
+          "id": "nasa",
+          "src": "assets/media/aldrin.jpg",
+          "fit": "cover"
+        },
+        {
+          "id": "urss",
+          "src": "assets/media/gagarin.gif",
+          "fit": "cover"
+        }
+      ]
+    },
+    {
+      "t": "@No hay",
+      "mode": "duo",
+      "focus": "both",
+      "headline": "¿TÚ QUÉ VALORARÍAS MÁS?",
+      "pose": "question"
+    }
+  ],
+  "avatar": {
+    "timeline": [
+      {
+        "at": 0,
+        "pose": "question"
+      },
+      {
+        "at": "@NASA",
+        "pose": "point-left"
+      },
+      {
+        "at": "@Sputnik",
+        "pose": "point-right"
+      },
+      {
+        "at": "@Gagarin",
+        "pose": "celebrate"
+      },
+      {
+        "at": "@Pero Estados Unidos",
+        "pose": "point-left"
+      },
+      {
+        "at": "@Entonces",
+        "pose": "think"
+      },
+      {
+        "at": "@valorarías",
+        "pose": "question"
+      }
+    ]
+  },
+  "profile_id": "leo-comparaciones-v1"
+}

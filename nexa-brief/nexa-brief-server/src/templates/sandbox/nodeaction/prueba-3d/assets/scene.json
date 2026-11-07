@@ -1,0 +1,37 @@
+{
+  "version": 1, "seed": 3, "render": "3d", "duration": 17,
+  "arena": { "x": [-4, 4], "z": [4, 12] },
+  "teams": {
+    "uk": { "flag": "uk", "body": "#6b6748", "helmet": "#6f6c47", "paint": "#3a3631" },
+    "de": { "flag": "de-empire", "body": "#5c6459", "helmet": "#596158", "paint": "#3a3631" }
+  },
+  "cast": [
+    { "id": "tommy", "team": "uk", "style": "soldier", "weapon": "rifle", "pos": [0, 6], "away": true, "hero": true },
+    { "id": "fritz", "team": "de", "style": "soldier", "weapon": "rifle", "look": { "head": "stahl" }, "pos": [3.2, 9.5], "face": -1 }
+  ],
+  "props": [ { "type": "crater", "at": [-1.6, 7.2], "r": 0.5 } ],
+  "timeline": [
+    { "t": 0.6, "actor": "tommy", "do": "march", "to": [0.2, 7.6] },
+    { "t": 4.0, "actor": "tommy", "do": "shoot", "target": "fritz", "hit": false, "ready": 0.6 },
+    { "t": 4.8, "actor": "tommy", "do": "shoot", "target": "fritz", "hit": false },
+    { "t": 5.8, "actor": "tommy", "do": "kneel", "dur": 2.4 },
+    { "t": 6.6, "actor": "tommy", "do": "shoot", "target": "fritz", "hit": false },
+    { "t": 7.4, "actor": "tommy", "do": "shoot", "target": "fritz", "hit": false },
+    { "t": 8.6, "actor": "tommy", "do": "run", "to": [-1.5, 8.6] },
+    { "t": 10.4, "actor": "tommy", "do": "march", "to": [0.4, 9.6] },
+    { "t": 6.0, "actor": "fritz", "do": "shoot", "target": "tommy", "hit": false },
+    { "t": 9.5, "actor": "fritz", "do": "shoot", "target": "tommy", "hit": false },
+    { "t": 13.6, "actor": "fritz", "do": "shoot", "target": "tommy", "hit": true, "ready": 0.5 }
+  ],
+  "camera": {
+    "horizon": { "landscape": 0.5, "portrait": 0.5 }, "smooth": 2.5,
+    "keys": [
+      { "t": 0, "orbit": "tommy", "radius": 4.6, "yaw": 0, "y": 1.7, "pitch": 9, "zoom": 1.0, "smooth": 1.5 },
+      { "t": 2.0, "orbit": "tommy", "radius": 4.6, "yaw": 90, "y": 1.7, "pitch": 9, "smooth": 2.5 },
+      { "t": 5.0, "orbit": "tommy", "radius": 4.4, "yaw": 180, "y": 1.6, "pitch": 9, "smooth": 2.5 },
+      { "t": 8.0, "orbit": "tommy", "radius": 4.6, "yaw": 270, "y": 1.9, "pitch": 11, "smooth": 2.5 },
+      { "t": 11.0, "orbit": "tommy", "radius": 4.8, "yaw": 360, "y": 2.2, "pitch": 14, "smooth": 2.5 },
+      { "t": 13.0, "orbit": "tommy", "radius": 5.0, "yaw": 420, "y": 2.6, "pitch": 18, "smooth": 2.5 }
+    ]
+  }
+}

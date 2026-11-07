@@ -17,8 +17,9 @@ import {
   useExplainerOptions,
   useGenerateBrief,
 } from "../hooks/useExplainer";
-import type { AgentName, ExplainerBrief, TextProvider } from "../types";
+import type { AgentName, ExplainerBrief, TextProvider, TitleLevel } from "../types";
 import { BriefEditor } from "./BriefEditor";
+import { NarrativePicker } from "./NarrativePicker";
 import { PreviewFrame } from "./PreviewFrameModal";
 
 const MEDIA_ACCEPT = "image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm";
@@ -46,7 +47,7 @@ export function CreateExplainerVideoModal({
   const t = useTranslations("explainer");
   // Todas las plantillas del kit: primero las de esta categoría, debajo las de las demás.
   const { data: designGroups = [] } = useDesignGroups(categoryPath);
-  const { data: options } = useExplainerOptions();
+  const { data: options } = useExplainerOptions(categoryPath);
   const briefMutation = useGenerateBrief();
   const productionMutation = useCreateProduction();
 
@@ -59,6 +60,12 @@ export function CreateExplainerVideoModal({
   const [autoRecord, setAutoRecord] = useState(false);
   const [brief, setBrief] = useState<ExplainerBrief | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  // duración: un preset (5 · 10 · 15 · 30) o "custom" con minutos a mano (lengths.json)
+  const [lengthChoice, setLengthChoice] = useState<string>("");
+  const [customMinutes, setCustomMinutes] = useState(45);
+  // narrativa y nivel de título: vacío = la default de la categoría (la manda el servidor)
+  const [narrativeId, setNarrativeId] = useState("");
+  const [titleLevel, setTitleLevel] = useState<TitleLevel | null>(null);
 
   const designs = designGroups.flatMap((g) => g.designs);
   const selectedDesign = designs.find((d) => d.designId === design) ?? designs[0] ?? null;
@@ -68,6 +75,18 @@ export function CreateExplainerVideoModal({
     options?.textProviders.find((p) => p.name === name)?.available ?? true;
   const agentAvailable = (name: string) =>
     options?.agents.find((a) => a.name === name)?.available ?? true;
+  const lengths = options?.lengths;
+  const lengthValue = lengthChoice || String(lengths?.defaultMinutes ?? 10);
+  const minutes =
+    lengthValue === "custom"
+      ? Math.min(lengths?.maxMinutes ?? 60, Math.max(lengths?.minMinutes ?? 5, customMinutes))
+      : Number(lengthValue);
+  const narratives = options?.narratives ?? [];
+  const selectedNarrativeId = narrativeId || options?.defaultNarrative || "";
+  const selectedNarrative = narratives.find((n) => n.id === selectedNarrativeId) ?? null;
+  const selectedTitleLevel = selectedNarrative?.titleLevels.length
+    ? (titleLevel ?? selectedNarrative.defaultTitleLevel ?? undefined)
+    : undefined;
 
   const busy = briefMutation.isPending || productionMutation.isPending;
   const topicOk = topic.trim().length >= 3;
@@ -92,6 +111,9 @@ export function CreateExplainerVideoModal({
         design: selectedDesign?.designId,
         provider: selectedProvider,
         mediaNames: files.map((f) => f.name),
+        minutes,
+        narrativeId: selectedNarrativeId || undefined,
+        titleLevel: selectedTitleLevel,
       },
       { onSuccess: (result) => setBrief(result) },
     );
@@ -107,8 +129,11 @@ export function CreateExplainerVideoModal({
         description: description.trim(),
         agent: selectedAgent,
         brief,
+        narrativeId: selectedNarrativeId || undefined,
+        titleLevel: selectedTitleLevel,
         autoRecord,
         files,
+        minutes,
       },
       {
         onSuccess: (production) => {
@@ -222,6 +247,23 @@ export function CreateExplainerVideoModal({
               </p>
             )}
 
+            <NarrativePicker
+              narratives={narratives}
+              defaultId={options?.defaultNarrative ?? null}
+              value={selectedNarrativeId}
+              onChange={(id) => {
+                setNarrativeId(id);
+                setTitleLevel(null);
+                setBrief(null);
+              }}
+              titleLevel={selectedTitleLevel ?? null}
+              onTitleLevelChange={(level) => {
+                setTitleLevel(level);
+                setBrief(null);
+              }}
+              disabled={busy}
+            />
+
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="flex flex-col gap-1.5">
                 <span className={LABEL_CLASS}>{t("fields.textProvider")}</span>
@@ -276,6 +318,42 @@ export function CreateExplainerVideoModal({
               ) : (
                 <p className="text-[11.5px] text-nb-mute">{t("fields.mediaHint")}</p>
               )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className={LABEL_CLASS}>{t("fields.length")}</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <select
+                  aria-label={t("fields.length")}
+                  value={lengthValue}
+                  onChange={(e) => {
+                    setLengthChoice(e.target.value);
+                    setBrief(null);
+                  }}
+                  disabled={busy}
+                  className={INPUT_CLASS}
+                >
+                  {(lengths?.presets ?? []).map((preset) => (
+                    <option key={preset.id} value={String(preset.minutes)}>
+                      {t("fields.lengthOption", { minutes: preset.minutes, label: preset.label })}
+                    </option>
+                  ))}
+                  <option value="custom">{t("fields.lengthCustom")}</option>
+                </select>
+                {lengthValue === "custom" && (
+                  <input
+                    type="number"
+                    aria-label={t("fields.lengthMinutes")}
+                    min={lengths?.minMinutes ?? 5}
+                    max={lengths?.maxMinutes ?? 60}
+                    value={customMinutes}
+                    onChange={(e) => setCustomMinutes(Number(e.target.value))}
+                    disabled={busy}
+                    className={`${INPUT_CLASS} w-24`}
+                  />
+                )}
+              </div>
+              <p className="text-[11.5px] text-nb-mute">{t("fields.lengthHint")}</p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">

@@ -1,0 +1,63 @@
+{
+  "name": "badge.count",
+  "family": "badge",
+  "description": "Contador circular con dígitos rodantes y valores explícitos por estados fechados. Úsala para destacar una cifra.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 90,
+  "states": [
+    "count"
+  ],
+  "params": {
+    "value": {
+      "type": "number",
+      "default": 0,
+      "range": null,
+      "description": "Valor numérico mostrado."
+    },
+    "radius": {
+      "type": "number",
+      "default": 66,
+      "range": null,
+      "description": "Radio del efecto o de la formación en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "success",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-badge-count",
+    "t": 0,
+    "type": "badge.count",
+    "screen": [
+      0.5,
+      0.35
+    ],
+    "value": 2,
+    "states": [
+      {
+        "at": 2,
+        "state": "count",
+        "value": 3,
+        "dur": 0.8
+      }
+    ],
+    "dur": 6,
+    "out": 5.5,
+    "note": "Contador sintético para demostrar la animación."
+  },
+  "usedBy": [
+    "work/tactico/items-labels.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/badge.count.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

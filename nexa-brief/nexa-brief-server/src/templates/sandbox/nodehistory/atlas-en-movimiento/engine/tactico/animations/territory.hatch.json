@@ -1,0 +1,69 @@
+{
+  "name": "territory.hatch",
+  "family": "territory",
+  "description": "Rayado diagonal de pantalla recortado por costa y huecos del país. Úsala para explicar control territorial y cambios de frontera.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 10,
+  "states": [],
+  "params": {
+    "region": {
+      "type": "string",
+      "default": "IR",
+      "range": null,
+      "description": "Código o nombre de la región geográfica."
+    },
+    "color": {
+      "type": "string",
+      "default": "success",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "opacity": {
+      "type": "number",
+      "default": 0.8,
+      "range": null,
+      "description": "Opacidad de 0 a 1."
+    },
+    "border": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa el contorno de la silueta."
+    },
+    "spacing": {
+      "type": "number",
+      "default": 18,
+      "range": null,
+      "description": "Separación entre elementos en píxeles de diseño."
+    },
+    "width": {
+      "type": "number",
+      "default": 2,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-territory-hatch",
+    "t": 0,
+    "region": "IR",
+    "dur": 6,
+    "out": 5.5,
+    "type": "territory.hatch",
+    "color": "accent"
+  },
+  "usedBy": [
+    "work/tactico/items-territory.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/territory.hatch.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "../_atlas/data/geo/admin0.geojson"
+  ]
+}

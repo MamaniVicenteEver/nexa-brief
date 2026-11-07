@@ -162,6 +162,9 @@ async def test_result_summarizer_stores_every_platform_copy(tmp_path):
                    "hashtags": ["bruses", "duelestanbien", "desamor", "letras"]},
         "facebook": {"hook_statement": "Hay amores que intoxican.", "memory_question": "¿A quién se la mandarías?",
                      "hashtags": ["Bruses", "DuelesTanBien", "Desamor"]},
+        "instagram": {"hook_statement": "Hay canciones que duelen bonito.",
+                      "memory_question": "¿Quién se te vino a la mente? Etiquétala.",
+                      "hashtags": ["Bruses", "DuelesTanBien", "Desamor"]},
     }
     ai = AsyncMock()
     ai.complete_json = AsyncMock(return_value=raw)
@@ -173,7 +176,7 @@ async def test_result_summarizer_stores_every_platform_copy(tmp_path):
 
     summary = result.artifacts.summary
     assert ai.complete_json.await_count == 1                      # no retry needed
-    assert set(summary.platform_copies) == {"youtube", "tiktok", "facebook"}
+    assert set(summary.platform_copies) == {"youtube", "tiktok", "facebook", "instagram"}
     assert summary.youtube_title == summary.platform_copies["youtube"].title
     assert summary.tiktok_caption.startswith("Sabes que te rompe")
     assert summary.platform_copies["facebook"].strategy == "facebook_hook_question_v1"

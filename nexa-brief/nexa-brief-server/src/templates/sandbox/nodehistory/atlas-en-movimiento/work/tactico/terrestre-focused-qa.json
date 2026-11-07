@@ -1,0 +1,58 @@
+{
+  "stage": "focused",
+  "viewport": [
+    1080,
+    1920
+  ],
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--renderer-process-limit=1",
+    "--num-raster-threads=1"
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "browser": "148.0.7778.96",
+  "benchmark": {
+    "type": "army.advance",
+    "instances": 1,
+    "tokensPerInstance": 40,
+    "scale": 1,
+    "samples": 60,
+    "forcedMs": {
+      "mean": 11.306666666766008,
+      "p95": 11.400000005960464
+    },
+    "controlMs": {
+      "mean": 7.286666666840514,
+      "p95": 7.200000002980232
+    },
+    "submissionMs": {
+      "mean": 0.6783333332588275,
+      "p95": 0.7000000029802322
+    },
+    "netMs": 4.019999999925494,
+    "drawAndBarrier1pxMs": {
+      "mean": 4.454999999701977,
+      "p95": 4.600000001490116
+    },
+    "cache": {
+      "entries": 3,
+      "pixels": 33536,
+      "limit": 8000000
+    }
+  },
+  "probes": {
+    "spriteDraws": 3,
+    "ambulanceBeaconsAnimateWithSprite": true,
+    "spriteSeekStable": true,
+    "cache": {
+      "entries": 4,
+      "pixels": 42752,
+      "limit": 8000000
+    }
+  },
+  "complete": true
+}

@@ -6,7 +6,15 @@ import { routing } from "./routing";
  * (ej. `{ "resources": {...} }`) y se mezclan encima del base. Así cada
  * feature edita solo su archivo. Para agregar uno: crearlo en ambos idiomas y
  * sumarlo a FEATURE_NAMESPACES. */
-const FEATURE_NAMESPACES = ["resources", "studio", "createFlow"] as const;
+const FEATURE_NAMESPACES = [
+  "resources",
+  "studio",
+  "createFlow",
+  "legal",
+  "schedule",
+  "dashboard",
+  "showcase",
+] as const;
 
 type Messages = Record<string, unknown>;
 
@@ -15,7 +23,11 @@ function deepMerge(base: Messages, extra: Messages): Messages {
   for (const [key, value] of Object.entries(extra)) {
     const current = out[key];
     out[key] =
-      current && typeof current === "object" && value && typeof value === "object" && !Array.isArray(value)
+      current &&
+      typeof current === "object" &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value)
         ? deepMerge(current as Messages, value as Messages)
         : value;
   }

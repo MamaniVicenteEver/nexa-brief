@@ -11,7 +11,8 @@ La clave se lee del .env de nexa-explainer (DEEPSEEK_API_KEY) y nunca se imprime
 import argparse, json, pathlib, re, time, urllib.request
 
 KIT = pathlib.Path(__file__).resolve().parents[1]
-ENV = pathlib.Path("/home/university/Documentos/Proyectos/nexa-brief/nexa-explainer/nexa-explainer-server/.env")
+# .env del proyecto hermano nexa-explainer (ruta relativa al repo: funciona en cualquier máquina)
+ENV = KIT.parents[3].parents[1] / "nexa-explainer" / "nexa-explainer-server" / ".env"
 
 def key():
     for line in ENV.read_text().splitlines():

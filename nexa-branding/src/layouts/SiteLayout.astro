@@ -1,0 +1,51 @@
+---
+import '@/styles/fonts.css';
+import '@/styles/tokens.css';
+import '@/styles/global.css';
+import Header from '@/shared/ui/Header.astro';
+import Footer from '@/shared/ui/Footer.astro';
+import type { Locale } from '@/shared/lib/locale';
+interface Props {
+  title: string;
+  description: string;
+  locale?: Locale;
+}
+const { title, description, locale = 'es' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={locale} data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#f3f0e8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="NODE Media Network" />
+    <meta property="og:image" content={new URL('/assets/brand/network-social.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('node-brand-theme');
+        if (saved === 'dark' || saved === 'light') document.documentElement.dataset.theme = saved;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">
+      {locale === 'es' ? 'Saltar al contenido' : 'Skip to content'}
+    </a>
+    <Header locale={locale} />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

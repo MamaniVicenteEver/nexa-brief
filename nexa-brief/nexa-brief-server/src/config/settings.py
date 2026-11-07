@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from src.config.production_limits import MAX_CONTENT_PRODUCERS
 
 # ── Project root (3 levels up: settings.py → config → src → root) ───────────
 BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
@@ -10,11 +10,43 @@ BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=BASE_DIR / ".env",
+        # Root .env owns shared public configuration; server .env keeps API secrets.
+        env_file=(BASE_DIR.parent / ".env", BASE_DIR / ".env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
     )
+
+    storage_profile_dir: Path | None = Field(default=None, alias="NEXA_PROFILE_DIR")
+    storage_profile_id: str = "legacy"
+    storage_profile_label: str = "Local"
+    storage_layout_version: int = 1
+    logs_dir: Path | None = None
+    productions_dir: Path | None = None
+    renders_dir: Path | None = None
+    resources_dir: Path | None = None
+    sandbox_dir: Path | None = None
+    system_dir: Path | None = None
+    runtime_dir: Path | None = None
+    cache_dir: Path | None = None
+    tiktok_dir: Path | None = None
+    web_data_dir: Path | None = None
+    publication_backend: str = Field(default="json", alias="PUBLICATION_BACKEND")
+    credentials_backend: str = Field(default="encrypted_json", alias="CREDENTIALS_BACKEND")
+    media_backend: str = Field(default="filesystem", alias="MEDIA_BACKEND")
+    niches_path: Path = BASE_DIR / "niches.json"
+    image_styles_dir: Path | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def configure_storage_profile(cls, values):
+        from src.config.storage_profile import apply_profile
+        return apply_profile(values)
+
+    # ── API boundary secrets ─────────────────────────────────────────────────
+    app_env: str = Field(default="development", alias="APP_ENV")
+    nexa_internal_token: str = Field(default="", alias="NEXA_INTERNAL_TOKEN")
+    nexa_link_secret: str = Field(default="", alias="NEXA_LINK_SECRET")
 
     # ── API Keys ──────────────────────────────────────────────────────────────
     gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
@@ -103,6 +135,10 @@ class Settings(BaseSettings):
     max_concurrent_recordings: int = 1
     # Grabaciones del explainer a la vez. Benchmark 2026-10-11 (4 núcleos): 2 a la vez
     # rinden solo ~16% más que en serie y cada una tarda ~67% más → 1 por defecto.
+    explainer_max_concurrent_productions: int = Field(default=1, ge=1, le=MAX_CONTENT_PRODUCERS, alias="EXPLAINER_MAX_CONCURRENT_PRODUCTIONS")
+    explainer_audio_min_available_mib: int = Field(default=5120, ge=0, alias="EXPLAINER_AUDIO_MIN_AVAILABLE_MIB")
+    explainer_visual_min_available_mib: int = Field(default=1024, ge=0, alias="EXPLAINER_VISUAL_MIN_AVAILABLE_MIB")
+    explainer_max_pending_productions: int = Field(default=100, ge=1, alias="EXPLAINER_MAX_PENDING_PRODUCTIONS")
     explainer_max_concurrent_recordings: int = Field(default=1, alias="EXPLAINER_MAX_CONCURRENT_RECORDINGS")
     # "libx264" (software, comportamiento actual) | "h264_vaapi" (hardware,
     # vía /dev/dri — libera casi toda la CPU durante el encode, dejándola
@@ -180,6 +216,10 @@ class Settings(BaseSettings):
     # timeout de Remotion, pero sin benchmark todavía con contenido de
     # producción real. Default conservador, no medido contra un caso real.
     hyperframes_render_timeout_seconds: int = 1800
+    # El límite real crece con el video: max(el de arriba, segundos de video × esto). Medido
+    # 2026-10-14 en el i3-8100 con 2 workers: Neón (4:16, fondo de video) captura ~3,4 cuadros/s →
+    # ~9 s de render por segundo de video; 15 deja margen (antes cortaba a los 30 min a mitad).
+    hyperframes_timeout_seconds_per_video_second: float = 15.0
     # Workers de renderizado en paralelo dentro de UN render local (flag -w/--workers
     # del CLI) — no confundir con hyperframes_max_concurrent_renders (cuántos
     # renders simultáneos acepta el servidor).
@@ -220,7 +260,7 @@ class Settings(BaseSettings):
     # DATA_BACKEND=json vive en data_dir; la estructura interna la define
     # src/adapters/data/layout.py — ningún otro módulo arma rutas de data/.
     data_dir: Path = Field(default=BASE_DIR / "data", alias="DATA_DIR")
-    data_backend: Literal["json"] = Field(default="json", alias="DATA_BACKEND")
+    data_backend: str = Field(default="json", alias="DATA_BACKEND")
     skills_dir: Path = BASE_DIR / "src" / "skills"
     templates_dir: Path = BASE_DIR / "src" / "templates"
 
@@ -253,14 +293,21 @@ class Settings(BaseSettings):
     # CORS_ALLOW_ORIGIN_REGEX=^http://100\.[0-9.]+:3000$   (vacío = solo la lista de arriba)
     cors_allow_origin_regex: str = Field(default="", alias="CORS_ALLOW_ORIGIN_REGEX")
 
-    # Base URL of nexa-brief-web, used to link back to it from the OAuth
-    # success/error pages (which are server-rendered HTML, not JSON).
-    frontend_url: str = Field(default="http://localhost:3001", alias="FRONTEND_URL")
+    # One canonical public origin shared by OAuth callbacks, emails and web redirects.
+    public_app_url: str = Field(default="", alias="PUBLIC_APP_URL")
+    # Canonical origin used by signed prototype links shared with chat agents.
+    public_base_url: str = Field(
+        default="https://nexa-brief.everdev.space",
+        alias="PUBLIC_BASE_URL",
+    )
 
     # ── Social Publisher — Feature Flag ───────────────────────────────────────
     # Set ENABLE_AUTO_PUBLISHING=true to activate Stage 9 in the pipeline.
     # When false (default) the pipeline ends at PACKAGED exactly as before.
     enable_auto_publishing: bool = Field(default=False, alias="ENABLE_AUTO_PUBLISHING")
+    publish_max_concurrent_uploads: int = Field(
+        default=3, ge=1, le=8, alias="PUBLISH_MAX_CONCURRENT_UPLOADS",
+    )
 
     # Active account selector: format "platform:alias" (e.g. "tiktok:cuenta_1")
     # Change this single variable to switch between all configured accounts.
@@ -276,13 +323,22 @@ class Settings(BaseSettings):
         default=BASE_DIR / "accounts.json",
         alias="ACCOUNTS_JSON_PATH",
     )
+    shared_connections_dir: Path | None = Field(default=None, alias="SHARED_CONNECTIONS_DIR")
+    tiktok_service_upload_media: bool = Field(default=False, alias="TIKTOK_SERVICE_UPLOAD_MEDIA")
+    tiktok_idempotency_namespace: str = Field(default="", alias="TIKTOK_IDEMPOTENCY_NAMESPACE", pattern=r"^[a-z0-9_-]{0,32}$")
     # Copia de accounts.json en base64 para levantar una máquina nueva solo con el .env:
     # si accounts.json no existe, TokenStorage lo crea desde acá. Generar con
     #   base64 -w0 accounts.json
     accounts_json_b64: str = Field(default="", alias="ACCOUNTS_JSON_B64")
 
     # ── Social Publisher — TikTok OAuth 2.0 ──────────────────────────────────
+    tiktok_service_url: str = Field(default="http://127.0.0.1:8100", alias="TIKTOK_SERVICE_URL")
+    tiktok_service_key: str = Field(default="", alias="TIKTOK_SERVICE_KEY")
     tiktok_client_id: str = Field(default="", alias="TIKTOK_CLIENT_ID")
+    tiktok_business_app_id: str = Field(default="", alias="TIKTOK_BUSINESS_APP_ID")
+    tiktok_business_secret: str = Field(default="", alias="TIKTOK_BUSINESS_SECRET")
+    tiktok_business_authorization_url: str = Field(default="", alias="TIKTOK_BUSINESS_AUTHORIZATION_URL")
+    tiktok_business_redirect_uri: str = Field(default="", alias="TIKTOK_BUSINESS_REDIRECT_URI")
     # Mientras TikTok no audite la app (Content Posting API), solo permite
     # publicar en cuentas PRIVADAS y con privacy_level=SELF_ONLY — cualquier
     # otro valor responde 403 unaudited_client_can_only_post_to_private_accounts.
@@ -302,8 +358,13 @@ class Settings(BaseSettings):
     # ── Social Publisher — Facebook OAuth 2.0 ────────────────────────────────
     facebook_client_id: str = Field(default="", alias="FACEBOOK_CLIENT_ID")
     facebook_client_secret: str = Field(default="", alias="FACEBOOK_CLIENT_SECRET")
+    facebook_login_for_business_config_id: str = Field(
+        default="", alias="FACEBOOK_LOGIN_FOR_BUSINESS_CONFIG_ID"
+    )
     facebook_account_1_name: str = Field(default="pagina_1", alias="FACEBOOK_ACCOUNT_1_NAME")
     facebook_account_2_name: str = Field(default="pagina_2", alias="FACEBOOK_ACCOUNT_2_NAME")
+    # Shared Graph API version for Facebook Pages and Instagram Graph API.
+    meta_graph_api_version: str = Field(default="v26.0", alias="META_GRAPH_API_VERSION")
 
     # ── Social Publisher — Upload behaviour ──────────────────────────────────
     # Seconds before upload requests time out (videos can be large)
@@ -315,6 +376,25 @@ class Settings(BaseSettings):
     # YouTube quota guard: daily limit and cost per upload
     youtube_daily_quota_limit: int = Field(default=10000, alias="YOUTUBE_DAILY_QUOTA_LIMIT")
     youtube_quota_cost_per_upload: int = Field(default=1600, alias="YOUTUBE_QUOTA_COST_PER_UPLOAD")
+    # Un video público se sube en privado y se hace público recién cuando YouTube terminó de
+    # procesar la HD: si sale público antes, los primeros espectadores lo ven en 360p.
+    # Pasado el tope de espera se hace público igual (mejor publicado que retenido).
+    youtube_wait_for_hd: bool = Field(default=True, alias="YOUTUBE_WAIT_FOR_HD")
+    youtube_hd_max_wait_seconds: int = Field(default=2700, alias="YOUTUBE_HD_MAX_WAIT_SECONDS")
+    # Sincronización de Canales (src/core/channel_sync.py): cada cuántas horas se releen los
+    # videos y totales de todas las cuentas. 0 = solo al conectar y con el botón «Sincronizar».
+    channel_sync_interval_hours: int = Field(default=24, alias="CHANNEL_SYNC_INTERVAL_HOURS")
+
+    # ── Compresión antes de publicar — src/modules/video_compressor.py ──────────
+    # El render sale a ~30 Mbps (HyperFrames "high" = CRF 15): se recomprime con H.264
+    # CRF 18 + tope de bitrate, ~64 % menos peso sin diferencia visible (medido 2026-10-20:
+    # 292 → 104 MB, SSIM 0,958, ~1,6× la duración del video). Las redes recomprimen igual.
+    video_compress_enabled: bool = Field(default=True, alias="VIDEO_COMPRESS_ENABLED")
+    video_compress_crf: int = Field(default=18, alias="VIDEO_COMPRESS_CRF")
+    video_compress_preset: str = Field(default="fast", alias="VIDEO_COMPRESS_PRESET")
+    video_compress_maxrate_mbps: int = Field(default=12, alias="VIDEO_COMPRESS_MAXRATE_MBPS")
+    # Conserva la grabación original como <nombre>.master.mp4 (para volver a comprimir distinto).
+    video_compress_keep_master: bool = Field(default=True, alias="VIDEO_COMPRESS_KEEP_MASTER")
 
     # ── Scheduling (Programación) — src/core/schedule/ ───────────────────────
     # Horarios recurrentes + cola de publicación: colecciones "schedule_slots"
@@ -370,6 +450,11 @@ class Settings(BaseSettings):
     # ── Explainer (NodeTech, NodeHistory, NodePolitics, NodeEconomy) ──────────
     # Quién escribe títulos/descripciones: "claude" | "codex" (CLI local) | "deepseek" (API).
     explainer_text_provider: str = Field(default="claude", alias="EXPLAINER_TEXT_PROVIDER")
+    # Quién escribe los textos de publicación de NodeMotion (Preparar y al grabar): "deepseek" | "gemini".
+    copy_ai_provider: str = Field(default="deepseek", alias="COPY_AI_PROVIDER")
+    # Idioma de TODOS los textos de publicación de NodeMotion (canciones y promos): el del canal,
+    # aunque la canción sea en otro idioma (su nombre se deja tal cual).
+    copy_language: str = Field(default="es", alias="COPY_LANGUAGE")
     # Quién produce el video completo con el explainer-kit: "claude" | "codex".
     explainer_agent: str = Field(default="claude", alias="EXPLAINER_AGENT")
     # Quién conversa en el planificador semanal de Programación.

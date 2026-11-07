@@ -101,7 +101,7 @@ export async function LiveNumbersSection({ stats }: { stats: PublicStats | null 
                 const className =
                   "group flex items-center gap-3 rounded-2xl border border-nb-line bg-nb-bg/50 px-4 py-3 no-underline transition-colors";
                 return (
-                  <li key={`${channel.platform}:${channel.name}`}>
+                  <li key={channel.id}>
                     {channel.publicUrl ? (
                       <a
                         href={channel.publicUrl}

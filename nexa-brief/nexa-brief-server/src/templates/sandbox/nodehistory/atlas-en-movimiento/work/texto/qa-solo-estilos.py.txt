@@ -1,0 +1,78 @@
+import json,fcntl,time,base64,io,hashlib
+from pathlib import Path
+from PIL import Image,ImageDraw
+from playwright.sync_api import sync_playwright
+root=Path.cwd();out=root/'work/texto/capturas';report={'errors':[],'httpErrors':[],'requests':[]}
+lock=open('/tmp/atlas-tactico-chromium.lock','w');fcntl.flock(lock,fcntl.LOCK_EX)
+base='http://192.168.20.2:8000/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/'
+with sync_playwright() as p:
+ b=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2'])
+ try:
+  page=b.new_page(viewport={'width':1440,'height':1100},device_scale_factor=1)
+  page.on('pageerror',lambda e:report['errors'].append(str(e)))
+  page.on('response',lambda r:report['httpErrors'].append({'status':r.status,'url':r.url}) if r.status>=400 else None)
+  page.on('request',lambda r:report['requests'].append(r.url))
+  start=time.monotonic();page.goto(base+'diseno-textos.html',wait_until='domcontentloaded');page.wait_for_function('window.__textos?.ready || !document.querySelector("#error").hidden',timeout=20000)
+  if not page.evaluate('!!window.__textos?.ready'):raise RuntimeError(page.locator('#error').inner_text())
+  report['loadSeconds']=time.monotonic()-start;report['stats']=page.evaluate('__textos.stats()')
+  page.evaluate('__textos.seek(13.4)');page.wait_for_timeout(100);page.screenshot(path=str(out/'solo-01-transcripcion.png'))
+  report['captionMetrics']=page.evaluate('''()=>{const g=document.createElement('canvas').getContext('2d');g.font='800 45px AtlasDisplay';const m=g.measureText('UNA MINA AL');return {actualInkHeight:(m.actualBoundingBoxAscent+m.actualBoundingBoxDescent)*3.5,fontPx:45*3.5,strokePx:9.9*3.5};}''')
+  report['elements']=page.evaluate('({images:document.images.length,iframes:document.querySelectorAll("iframe").length,video:document.querySelectorAll("video").length,canvases:document.querySelectorAll("canvas").length})')
+  for color,name in [('#000000','negro'),('#f4efe3','claro')]:
+   page.select_option('#background',color);page.screenshot(path=str(out/f'solo-transcripcion-{name}.png'))
+  page.select_option('#background','#0b1620')
+  ids=page.locator('article').evaluate_all('(els)=>els.map(e=>e.id)');report['samples']=[]
+  for id in ids:
+   el=page.locator('#'+id);el.scroll_into_view_if_needed();page.wait_for_timeout(30);page.evaluate('(id)=>__textos.sample(id,id==="estilo-27"?7.2:2.7)',id);page.wait_for_timeout(30)
+   el.screenshot(path=str(out/f'solo-muestra-{id}.png'))
+   report['samples'].append({'id':id,'height':el.bounding_box()['height'],'width':el.bounding_box()['width'],'canvas':el.locator('canvas').bounding_box()})
+  page.screenshot(path=str(out/'solo-pagina-completa-1440.png'),full_page=True)
+  # Six instants of one real group: UNA MINA AL, t0=12.97.
+  frames=[]
+  cap=page.locator('#transcripcion');cap.scroll_into_view_if_needed();page.wait_for_timeout(50)
+  for n,dt in enumerate([0,.03,.06,.12,.18,.45]):
+   page.evaluate('(t)=>__textos.sample("transcripcion",t)',12.97+dt)
+   buf=cap.locator('canvas').screenshot(path=str(out/f'solo-transcripcion-{n+1:02d}.png'))
+   im=Image.open(io.BytesIO(buf)).convert('RGB');frames.append((dt,im))
+  strip=Image.new('RGB',(1440,6*285),'#0b1620');d=ImageDraw.Draw(strip)
+  for n,(dt,im) in enumerate(frames):
+   d.text((30,n*285+12),f'UNA MINA AL — +{dt:.2f} s',(230,235,240));strip.paste(im,(48,n*285+38))
+  strip.save(out/'solo-tira-transcripcion-6.png')
+  # Raw glyph from real frame, same words and instant; no map in the page.
+  page.evaluate('__textos.sample("transcripcion",13.4)')
+  sample=Image.open(io.BytesIO(cap.locator('canvas').screenshot())).convert('RGB')
+  sample.save(out/'solo-transcripcion-comparar.png')
+  report['backgroundOptions']=page.locator('#background option').evaluate_all('(els)=>els.map(e=>e.value)')
+  report['horizontalOverflow']=page.evaluate('document.documentElement.scrollWidth > innerWidth')
+  # Controls and device pixel ratio, same page, sequentially.
+  page.locator('#estilo-12 button').click();report['replayPlaying']=page.locator('#play').inner_text()=='Pausar';page.evaluate('__textos.seek(2.7)')
+  page.select_option('#speed','0.5');report['speed']=page.locator('#speed').input_value()
+  page.set_viewport_size({'width':390,'height':844});cap.scroll_into_view_if_needed();page.wait_for_timeout(60);page.evaluate('__textos.sample("transcripcion",13.4)');page.screenshot(path=str(out/'solo-movil.png'))
+  report['mobileOverflow']=page.evaluate('document.documentElement.scrollWidth > innerWidth')
+  page.set_viewport_size({'width':1440,'height':1100})
+  report['animationChecks']=[]
+  for id in ids:
+   el=page.locator('#'+id);el.scroll_into_view_if_needed();page.wait_for_timeout(25)
+   ts=[.06,2.7,4.28] if id not in ['transcripcion','estilo-26','estilo-27','estilo-28'] else {'transcripcion':[12.97,13.03,13.4],'estilo-26':[.1,2.7,5.2],'estilo-27':[.1,7.2,8.1],'estilo-28':[.1,2.7,4.28]}[id]
+   hashes=[]
+   for t in ts:
+    page.evaluate('(v)=>__textos.sample(v[0],v[1])',[id,t]);hashes.append(el.locator('canvas').evaluate('(c)=>c.toDataURL()'))
+   report['animationChecks'].append({'id':id,'times':ts,'distinctFrames':len(set(hashes))})
+   assert len(set(hashes))>=2 or id=='estilo-28',id
+  page.locator('#transcripcion').scroll_into_view_if_needed();page.wait_for_timeout(25);page.evaluate('__textos.sample("transcripcion",8.1)')
+  report['longCaption']=page.locator('#transcripcion').evaluate('(e)=>({viewport:e.querySelector(".sample").clientWidth,canvas:e.querySelector("canvas").clientWidth,scrollable:e.querySelector(".sample").scrollWidth>e.querySelector(".sample").clientWidth})')
+  assert report['longCaption']['scrollable']
+  page.screenshot(path=str(out/'solo-transcripcion-frase-larga.png'))
+  report['attributionText']=page.evaluate('__textos.cards.find(c=>c.type==="text.attribution").item.text')
+  assert 'NASA GIBS' in report['attributionText']
+  page.close()
+  page=b.new_page(viewport={'width':1440,'height':1100},device_scale_factor=2)
+  page.goto(base+'diseno-textos.html',wait_until='domcontentloaded');page.wait_for_function('window.__textos?.ready');page.evaluate('__textos.seek(13.4)');page.wait_for_timeout(50)
+  report['dpr2']=page.locator('#transcripcion canvas').evaluate('(c)=>({css:c.clientWidth,bitmap:c.width,dpr:devicePixelRatio})')
+  assert report['dpr2']['bitmap']==report['dpr2']['css']*2
+  page.screenshot(path=str(out/'solo-transcripcion-dpr2.png'))
+ finally:b.close()
+protected=json.loads((root/'work/texto/solo-estilos-protegidos.json').read_text())
+report['protectedUnchanged']={f:hashlib.sha256((root/f).read_bytes()).hexdigest()==h for f,h in protected.items()}
+(root/'work/texto/solo-estilos-qa.json').write_text(json.dumps(report,indent=2,ensure_ascii=False))
+print(json.dumps({k:v for k,v in report.items() if k not in ['requests','samples']},indent=2,ensure_ascii=False))

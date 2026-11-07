@@ -15,6 +15,7 @@ backend). Lo arma `kit.py manifest <id>` a partir de los archivos del video + `p
 | `media` | líneas de CREDITS.md |
 | `video_formats` | 9:16 (1080×1920) y 16:9 (1920×1080) con su archivo en render/ |
 | `files` | archivos del video y su tamaño |
+| `target_minutes`, `chapters` | script.json: duración objetivo y capítulos `[{at: "m:ss", title}]` (segmentos con `chapter`, tiempos de lyrics.json) |
 | `youtube_title`, `youtube_description`, `youtube_tags`, `tiktok_caption`, `tiktok_hashtags`, `thumbnail_text` | `publish.json` |
 
 ## publish.json (lo escribe el agente)
@@ -30,4 +31,13 @@ backend). Lo arma `kit.py manifest <id>` a partir de los archivos del video + `p
 }
 ```
 
-La descripción DEBE incluir los créditos de las imágenes CC BY / CC BY-SA.
+La descripción DEBE incluir los créditos de las imágenes CC BY / CC BY-SA y, si el video tiene
+capítulos, el bloque `CAPÍTULOS` copiado de `manifest.chapters` (el primero en 0:00).
+
+**Miniatura** (la de YouTube es una captura de la intro del diseño, la elige la persona antes de
+grabar): A = `<diseño>.introv1` con `thumbnail_text`; B = `<diseño>.introv2` con `thumbnail_text`
+y la foto `thumbnail_image` (archivo de `assets/media/`, la más reconocible del tema: un rostro o el
+objeto del punto crítico) y opcional `thumbnail_image_side` (`auto` | `left` | `right`).
+
+**Sin emojis** en ningún campo (títulos, descripciones, captions, hashtags, texto de miniatura): el
+backend los borra igual antes de publicar, pero el texto tiene que leerse bien sin ellos.

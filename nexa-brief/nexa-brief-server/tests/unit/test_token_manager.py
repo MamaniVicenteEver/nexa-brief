@@ -96,18 +96,8 @@ async def test_facebook_token_no_refresh_no_expiry(tmp_path: Path, key: str = No
     """Facebook tokens with no expiry return without any refresh attempt."""
     k = Fernet.generate_key().decode()
     storage = TokenStorage(tmp_path / "accounts.json", k)
-    # Facebook page tokens have no expiry
-    storage._data = {
-        "facebook": {
-            "pagina_1": {
-                "name": "my_page",
-                "target_id": "123456",
-                "encrypted_access_token": storage.encrypt("fb_page_token_forever"),
-                "expires_at": None,
-                "status": "ok",
-            }
-        }
-    }
+    # Persist via the public API; independent processes must read committed state.
+    storage.save_tokens("facebook", "pagina_1", access_token="fb_page_token_forever")
 
     manager = TokenManager(storage)
     token = await manager.get_valid_token("facebook", "pagina_1")

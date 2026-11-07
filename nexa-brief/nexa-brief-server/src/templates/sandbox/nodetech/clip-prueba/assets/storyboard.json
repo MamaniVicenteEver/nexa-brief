@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "family": "rough",
+  "title": "Prueba de clip",
+  "beats": [
+    { "t": 0, "use": "common.clip", "params": { "src": "assets/media/servidores.mp4", "layout": "full", "caption": "Un centro de datos", "sub": "PIXABAY · CLIP DE PRUEBA" } },
+    { "t": 5, "use": "common.clip", "params": { "src": "assets/media/lanzamiento.mp4", "layout": "frame", "caption": "Apolo 11", "sub": "NASA · 16 JUL 1969", "rate": 0.5 } },
+    { "t": 10, "use": "common.clip", "params": { "src": "assets/media/servidores.mp4", "layout": "full", "tone": "color", "start": 1 } }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "title": "Vida en Escena",
+  "summary": "Historias cotidianas 9:16 con personajes de tinta articulados que caminan, hablan, escuchan, reaccionan, se sientan y manipulan objetos. Episodio de muestra «Un día cualquiera» (2:08, 4 escenarios, 4 personajes, 25 líneas con voz).",
+  "engine": "nodeaction/_vida",
+  "based_on": "figuras",
+  "is_new_design": true,
+  "status": "lista",
+  "created_at": "2026-11-03",
+  "libraries": [
+    {
+      "name": "Canvas 2D (ES modules)",
+      "version": "nativo del navegador",
+      "purpose": "motor compartido nodeaction/_vida: previsualización y exportación"
+    },
+    {
+      "name": "@napi-rs/canvas",
+      "version": "1.1.0",
+      "purpose": "renderiza los mismos cuadros en Node"
+    },
+    {
+      "name": "ffmpeg",
+      "version": "del sistema",
+      "purpose": "codifica H.264 + AAC; recibe los cuadros por stdin"
+    },
+    {
+      "name": "Ajv",
+      "version": "8.20.0",
+      "purpose": "valida episodio, personaje, set y voz contra los esquemas JSON"
+    },
+    {
+      "name": "Anton",
+      "version": "fuente local",
+      "purpose": "subtítulos (assets/fonts/Anton-Regular.ttf)"
+    },
+    {
+      "name": "Gemini TTS + Whisper large-v3",
+      "version": "gemini-3.8-flash-tts",
+      "purpose": "voces por línea y sincronía; herramientas del explainer-kit"
+    },
+    {
+      "name": "src.adapters.image_gen",
+      "version": "interno",
+      "purpose": "láminas de los escenarios"
+    }
+  ],
+  "inputs": [
+    "Episodio (json): assets/episode.json"
+  ],
+  "notes": [
+    "Producir otro episodio con el mismo motor: node _vida/tools/new-episode.mjs <id> y node _vida/tools/produce.mjs <id> (guía _vida/docs/PRODUCCION.md; cámara por JSON en _vida/docs/CAMARA.md). Ampliar el motor: _vida/VIDA.md.",
+    "index.html es genérico y no se edita por episodio: config.json → assets/config.json → embebido; ?ep= cambia de episodio; ?t= congela; ?controls=1 usa _tools/player/bridge.js.",
+    "Voces: _vida/voices/*.json (no aprobadas aún por escucha humana). Faltan L07, L23 y N04 por saldo de Gemini agotado (HTTP 402); puntos de inserción en work/results/vida-episodio.md.",
+    "Variante hecha solo con datos: ../vida-en-escena-heladeria.",
+    "Salidas: render/*.mp4 (9:16) y render/*-16x9.mp4 (16:9). La vista previa elige 16:9 o 9:16 según la ventana. Faltan las líneas L07, L23 y N04 del principal por saldo de Gemini; los perfiles de voz no están aprobados por escucha."
+  ],
+  "reference": "referencias/nodeaction/figuras",
+  "design": "vida-en-escena",
+  "catalog": {
+    "base": "sandbox/nodeaction/_vida",
+    "components": "showcase/components.json",
+    "sprites": "showcase/sprites.json",
+    "spritesDir": "showcase/characters",
+    "sheet": "review/sheets/group.png",
+    "gallery": "showcase.html",
+    "thumbs": "showcase/thumbs/thumbs.json",
+    "previewReady": true,
+    "workflows": "agent-guide/workflows.json"
+  }
+}

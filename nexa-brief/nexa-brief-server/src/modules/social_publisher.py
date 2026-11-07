@@ -60,6 +60,7 @@ Structured log events:
 
 from __future__ import annotations
 
+import asyncio
 import time
 from pathlib import Path
 
@@ -116,12 +117,12 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
             "Did Stage 7 (result_summarizer) complete successfully?"
         )
 
-    for account_selector in account_selectors:
+    async def publish_account_locked(account_selector: str) -> None:
         if ":" not in account_selector:
             err_msg = f"Invalid account selector format: '{account_selector}'. Expected 'platform:alias'"
             platform_errors[account_selector] = err_msg
             logger.error("social_publisher_invalid_selector", job_id=job.job_id, selector=account_selector)
-            continue
+            return
 
         platform, alias = account_selector.split(":", 1)
 
@@ -129,6 +130,10 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
         if platform == "tiktok":
             video_path: Path | None = job.artifacts.tiktok_video_path
             video_type = "tiktok"
+        elif platform == "instagram" and job.artifacts.reels_video_path:
+            # Reels: el 9:16 completo si el nicho lo genera (igual que schedule/engine.py)
+            video_path = job.artifacts.reels_video_path
+            video_type = "reels"
         else:
             video_path = job.artifacts.youtube_video_path
             video_type = "youtube"
@@ -137,13 +142,13 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
             err_msg = f"No {video_type} video path in job artifacts."
             platform_errors[account_selector] = err_msg
             logger.error("social_publisher_missing_video", job_id=job.job_id, selector=account_selector, video_type=video_type)
-            continue
+            return
 
         if not video_path.exists():
             err_msg = f"Video file not found on disk: {video_path}."
             platform_errors[account_selector] = err_msg
             logger.error("social_publisher_file_not_found", job_id=job.job_id, selector=account_selector, video_path=str(video_path))
-            continue
+            return
 
         logger.info(
             "social_publisher_video_selected",
@@ -248,10 +253,18 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
                 error=err_msg,
             )
 
+    slots = asyncio.Semaphore(settings.publish_max_concurrent_uploads)
+
+    async def publish_account(selector: str) -> None:
+        async with slots:
+            await publish_account_locked(selector)
+
+    await asyncio.gather(*(publish_account(selector) for selector in account_selectors))
+
     elapsed = round(time.monotonic() - t_start, 2)
 
     # ── 4. Write audit JSON ───────────────────────────────────────────────────
-    logs_dir = job.artifacts.output_dir / "logs"
+    logs_dir = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     audit_data = {

@@ -10,12 +10,16 @@ máquina donde vive el servidor; más adelante se agregan agentes por API
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
 class AgentUnavailableError(RuntimeError):
-    """El CLI del agente no está instalado o no se encontró."""
+    """El CLI del agente no está disponible."""
+
+
+class AgentIsolationUnavailableError(AgentUnavailableError):
+    """No hay ejecución aislada verificada para el perfil seleccionado."""
 
 
 @dataclass(frozen=True)
@@ -34,6 +38,15 @@ class AgentScope:
     os_sandbox_dir: str | None = None
     # Rutas absolutas extra que el agente puede escribir (p. ej. el estado del kit).
     extra_writable: tuple[str, ...] = ()
+    # Modelo y esfuerzo específicos para el trabajo acotado. Si no se indican,
+    # cada runner conserva su configuración habitual.
+    model: str | None = None
+    reasoning_effort: str | None = None
+    # Variables heredadas por las herramientas que ejecuta este agente.
+    extra_env: dict[str, str] = field(default_factory=dict)
+    # Opciones de respuesta estructurada; no alteran los agentes de producción.
+    read_only: bool = False
+    output_schema: Path | None = None
 
 
 @dataclass
@@ -42,6 +55,10 @@ class AgentRunResult:
     last_message: str      # respuesta final del agente (o la cola de la salida)
     duration_seconds: float
     timed_out: bool = False
+    # Uso informado por el CLI: input_tokens, cached_input_tokens, output_tokens, reasoning_tokens
+    # (y cost_usd si el proveedor lo da). Vacío si el CLI no lo informó.
+    usage: dict = field(default_factory=dict)
+    model: str = ""
 
     @property
     def ok(self) -> bool:
@@ -70,3 +87,12 @@ class AgentRunnerPort(ABC):
         scope=None: solo lectura (respuestas de texto/JSON). Con scope: escribe
         solo en `scope.writable_dir` y corre solo `scope.commands`.
         """
+
+
+class IsolatedAgentRunnerPort(AgentRunnerPort):
+    """Contrato reservado para un futuro runner aislado de verdad.
+
+    Su implementación deberá aislar lecturas, entorno, sockets y red y mediar
+    el acceso a inferencia sin exponer sesiones. Esta clase no habilita ningún
+    backend ni constituye una prueba de aislamiento; aún no hay implementación.
+    """

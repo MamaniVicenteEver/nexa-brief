@@ -1,762 +1,760 @@
 {
- "version": 1,
- "family": "enmienda",
- "title": "La noche que cayó el Muro",
- "defaults": {
-  "offset": -0.12
- },
- "beats": [
-  {
-   "t": 0,
-   "use": "enmienda.introv1",
-   "params": {
-    "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
-    "kicker": "Berlín · 9 nov 1989",
-    "sub": "la noche que nadie vio venir",
-    "crackAt": 2.3
-   },
-   "_alt": {
-    "use": "enmienda.introv2",
-    "params": {
-     "text": "¿QUIÉN ABRIÓ\nEL MURO?",
-     "kicker": "Expediente · Berlín 1989",
-     "stamp": "NADIE DIO LA ORDEN",
-     "stampAt": 2.4
+  "version": 1,
+  "family": "enmienda",
+  "title": "La noche que cayó el Muro",
+  "defaults": {
+    "offset": -0.12
+  },
+  "beats": [
+    {
+      "t": 0,
+      "use": "enmienda.introv1",
+      "params": {
+        "text": "VIAJAR AL\n^OESTE^\nCAMBIÓ ESA NOCHE",
+        "kicker": "BERLÍN · 9 NOV 1989"
+      },
+      "_alt": {
+        "use": "enmienda.introv2",
+        "params": {
+          "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+          "kicker": "Expediente · Berlín 1989",
+          "stamp": "NADIE DIO LA ORDEN",
+          "stampAt": 2.4
+        }
+      }
+    },
+    {
+      "at": "Casi las 7",
+      "use": "enmienda.slats",
+      "params": {
+        "text": "1989",
+        "sub": "9 de noviembre · 19:00",
+        "buildSec": 1.1,
+        "doc": "Berlín · nueve de noviembre"
+      }
+    },
+    {
+      "at": "Un funcionario lee",
+      "use": "enmienda.plaque",
+      "params": {
+        "lines": [
+          "LA NOCHE",
+          "QUE CAYÓ",
+          "EL MURO"
+        ],
+        "in": "dive"
+      }
+    },
+    {
+      "at": "un papel que casi",
+      "use": "enmienda.word",
+      "params": {
+        "text": "UN PAPEL",
+        "font": "serif",
+        "in": "blur",
+        "out": "blur",
+        "size": 0.5
+      }
+    },
+    {
+      "at": "Y sin saberlo",
+      "use": "enmienda.word",
+      "params": {
+        "text": "SIN SABERLO",
+        "in": "swipe",
+        "out": "birds",
+        "size": 0.62
+      }
+    },
+    {
+      "at": "derribar el muro",
+      "use": "enmienda.flag",
+      "params": {
+        "bands": "de",
+        "text": "EL ^MURO^ MÁS FAMOSO",
+        "textAt": 1.0
+      }
+    },
+    {
+      "at": "Durante 28 años",
+      "use": "enmienda.slats",
+      "params": {
+        "text": "XXVIII",
+        "sub": "años · Berlín partida en dos",
+        "out": "cut",
+        "buildSec": 1.3,
+        "doc": "Berlín · 1961 — 1989"
+      }
+    },
+    {
+      "at": "En agosto de 1961",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/mauerbau.jpg",
+        "frame": "film",
+        "name": "Agosto de 1961",
+        "role": "Se levanta el muro",
+        "org": "Berlín",
+        "focus": [
+          0.5,
+          0.45
+        ]
+      }
+    },
+    {
+      "at": "un muro de hormigón",
+      "use": "enmienda.document",
+      "params": {
+        "text": "De un día para otro, el gobierno de Alemania del Este levantó un muro de hormigón y alambre en medio de la ciudad. Nadie podía cruzar al otro lado.",
+        "highlight": "muro de hormigón y alambre",
+        "highlightAt": "@hormigón",
+        "label": "Berlín · agosto de 1961",
+        "src": "assets/media/mauerbau.jpg"
+      }
+    },
+    {
+      "at": "Familias separadas",
+      "use": "enmienda.tapes",
+      "params": {
+        "items": [
+          "MADRE\nBERLÍN ESTE\nSEPARADA",
+          "HERMANO\nBERLÍN OESTE\nSEPARADO",
+          "VECINOS\nBERNAUER STR.\nSIN VERSE",
+          "ABUELA\nPANKOW\nDEL OTRO LADO",
+          "AMIGOS\nKREUZBERG\n28 AÑOS",
+          "HIJA\nMITTE\nSEPARADA",
+          "PRIMOS\nWEDDING\nSIN VERSE"
+        ],
+        "toWall": "@verse",
+        "plaque": "UNA CALLE\nDOS MUNDOS"
+      }
+    },
+    {
+      "at": "Al menos 140",
+      "use": "enmienda.inmates",
+      "params": {
+        "number": "140",
+        "label": "MURIERON EN EL MURO",
+        "sub": "Berlín · 1961 — 1989",
+        "whipAt": 0.9
+      }
+    },
+    {
+      "at": "Pero en el otoño",
+      "use": "enmienda.word",
+      "params": {
+        "text": "OTOÑO\nDE 1989",
+        "ghost": "RDA|LEIPZIG|HUNGRÍA|FRONTERA|1989|OTOÑO",
+        "size": 0.5
+      }
+    },
+    {
+      "at": "algo se estaba",
+      "use": "enmienda.word",
+      "params": {
+        "text": "ALGO SE\nROMPE",
+        "in": "tumble",
+        "mark": "x",
+        "markAt": 0.75,
+        "size": 0.55
+      }
+    },
+    {
+      "at": "Miles de alemanes",
+      "use": "enmienda.wordcloud",
+      "params": {
+        "words": [
+          "HUNGRÍA",
+          "CHECOSLOVAQUIA",
+          "ESCAPAR",
+          "FRONTERA",
+          "LIBERTAD",
+          "VIAJAR",
+          "MILES",
+          "PRAGA",
+          "EMBAJADA",
+          "SALIR",
+          "ESTE",
+          "OESTE"
+        ]
+      }
+    },
+    {
+      "at": "y cada lunes",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/leipzig.jpg",
+        "name": "Leipzig",
+        "role": "Marchas de los lunes",
+        "org": "Otoño de 1989",
+        "focus": [
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "at": "pidiendo libertad",
+      "use": "enmienda.map",
+      "params": {
+        "from": "country",
+        "split": true,
+        "text": "LIBERTAD\nPARA VIAJAR",
+        "textAt": 0.25,
+        "dots": 0
+      }
+    },
+    {
+      "at": "El gobierno decidió",
+      "use": "enmienda.word",
+      "params": {
+        "text": "SOLTAR\nLA CUERDA",
+        "font": "stencil",
+        "in": "tumble",
+        "size": 0.5
+      }
+    },
+    {
+      "at": "Redactó una nueva",
+      "use": "enmienda.word",
+      "params": {
+        "text": "NUEVA\nREGLA",
+        "font": "stencil",
+        "in": "slam",
+        "mark": "underline",
+        "markAt": 0.6,
+        "size": 0.42
+      }
+    },
+    {
+      "at": "Los ciudadanos podrían",
+      "use": "enmienda.cards",
+      "params": {
+        "words": [
+          "PERMISO",
+          "PARA",
+          "VIAJAR",
+          "AL OESTE"
+        ]
+      }
+    },
+    {
+      "at": "Iba a anunciarse",
+      "use": "enmienda.graph",
+      "params": {
+        "title": "SALIDAS\nHACIA EL\nOESTE",
+        "points": [
+          "ENE",
+          "MAR",
+          "MAY",
+          "JUL",
+          "AGO",
+          "SEP",
+          "OCT",
+          "NOV"
+        ],
+        "values": [
+          0.04,
+          0.06,
+          0.09,
+          0.15,
+          0.28,
+          0.42,
+          0.58,
+          1.0
+        ]
+      }
+    },
+    {
+      "at": "El encargado de contarlo",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/schabowski.jpg",
+        "name": "Günter Schabowski",
+        "role": "Vocero del partido",
+        "org": "SED · RDA",
+        "focus": [
+          0.5,
+          0.4
+        ]
+      }
+    },
+    {
+      "at": "le entregaron la nota",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/nota.jpg",
+        "focus": [
+          0.5,
+          0.3
+        ],
+        "zoom": 1.2,
+        "push": 0.04
+      }
+    },
+    {
+      "at": "Nadie le advirtió",
+      "use": "enmienda.letter",
+      "params": {
+        "headline": "ESPERAR\nHASTA LA\nMAÑANA.",
+        "body": "La nueva regla de viaje se anunciaría\nal día siguiente, con calma, con trámites\ny con orden. Nadie se lo dijo al vocero.",
+        "hand": "no antes del 10/11",
+        "sign": "Oficina de prensa · 9 nov 1989"
+      }
+    },
+    {
+      "at": "La conferencia fue larga",
+      "use": "enmienda.bars",
+      "params": {
+        "texts": [
+          "LARGA",
+          "Y ABURRIDA",
+          "UNA HORA"
+        ]
+      }
+    },
+    {
+      "at": "Al final Schabowski",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/schabowski.jpg",
+        "frame": "film",
+        "zoom": 1.45,
+        "focus": [
+          0.45,
+          0.38
+        ],
+        "push": 0.03,
+        "in": "fade"
+      }
+    },
+    {
+      "at": "Los periodistas se miraron",
+      "use": "enmienda.word",
+      "params": {
+        "text": "¿VIAJAR?",
+        "ghost": "PRENSA|CONFERENCIA|REGLA|VIAJAR|PERMISO",
+        "size": 0.45
+      }
+    },
+    {
+      "at": "Sin requisitos",
+      "use": "enmienda.word",
+      "params": {
+        "text": "¿SIN\nREQUISITOS?",
+        "mark": "circle",
+        "markAt": 0.6,
+        "size": 0.55
+      }
+    },
+    {
+      "at": "Entonces llegó la pregunta",
+      "use": "enmienda.word",
+      "params": {
+        "text": "LA\nPREGUNTA",
+        "font": "stencil",
+        "in": "tumble",
+        "size": 0.4
+      }
+    },
+    {
+      "at": "Cuándo entra en vigor",
+      "use": "enmienda.word",
+      "params": {
+        "text": "¿CUÁNDO\nENTRA EN\nVIGOR?",
+        "font": "stencil",
+        "in": "slam",
+        "mark": "crosshair",
+        "markAt": 0.35,
+        "size": 0.42
+      }
+    },
+    {
+      "at": "Schabowski revolvió",
+      "use": "enmienda.cards",
+      "params": {
+        "mode": "pile",
+        "words": [
+          "NOTA",
+          "REGLA",
+          "PRENSA",
+          "PERMISO",
+          "OESTE",
+          "RDA",
+          "VIAJES"
+        ],
+        "count": 14
+      }
+    },
+    {
+      "at": "No la encontró",
+      "use": "enmienda.plaque",
+      "params": {
+        "lines": [
+          "BUSCÓ",
+          "LA",
+          "RESPUESTA"
+        ],
+        "strike": [
+          0,
+          1,
+          2
+        ],
+        "strikeAt": "@encontró"
+      }
+    },
+    {
+      "at": "De inmediato",
+      "use": "enmienda.word",
+      "params": {
+        "text": "DE\nINMEDIATO.",
+        "font": "heavy",
+        "in": "slam",
+        "out": "cut",
+        "size": 0.55
+      }
+    },
+    {
+      "at": "De inmediato",
+      "use": "enmienda.flicker",
+      "params": {
+        "kind": "white"
+      },
+      "dur": 0.4,
+      "layer": "overlay"
+    },
+    {
+      "at": "Sin demora",
+      "use": "enmienda.word",
+      "params": {
+        "text": "SIN\nDEMORA.",
+        "font": "heavy",
+        "in": "slam",
+        "out": "erode",
+        "size": 0.5
+      }
+    },
+    {
+      "at": "Dos palabras que",
+      "use": "enmienda.cards",
+      "params": {
+        "words": [
+          "DOS",
+          "PALABRAS",
+          "QUE NADIE",
+          "AUTORIZÓ"
+        ]
+      }
+    },
+    {
+      "at": "La televisión del Oeste",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/muro-gente.jpg",
+        "frame": "film",
+        "name": "TV del Oeste",
+        "role": "Esa misma noche",
+        "org": "9 nov 1989",
+        "focus": [
+          0.5,
+          0.3
+        ]
+      }
+    },
+    {
+      "at": "Las fronteras están abiertas",
+      "use": "enmienda.word",
+      "params": {
+        "text": "FRONTERAS\nABIERTAS",
+        "font": "serif",
+        "in": "blur",
+        "out": "blur",
+        "size": 0.6
+      }
+    },
+    {
+      "at": "Miles de personas salieron",
+      "use": "enmienda.pictogram",
+      "params": {
+        "title": "Berlín Este · 9 nov 1989",
+        "tag": "En la calle",
+        "ratio": "Una multitud",
+        "big": "MILES",
+        "note": "Hacia los puestos fronterizos"
+      }
+    },
+    {
+      "at": "En el cruce de",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/bornholmer.jpg",
+        "name": "Bornholmer Strasse",
+        "role": "Paso fronterizo",
+        "org": "Berlín",
+        "focus": [
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "at": "el oficial Harald",
+      "use": "enmienda.cutout",
+      "params": {
+        "src1": "assets/media/bornholmer.jpg",
+        "src2": "assets/media/muro-gente.jpg",
+        "src3": "assets/media/leipzig.jpg",
+        "name": "Harald Jäger",
+        "role": "Oficial de frontera"
+      }
+    },
+    {
+      "at": "Llamó a sus superiores",
+      "use": "enmienda.word",
+      "params": {
+        "text": "LLAMÓ",
+        "ghost": "ORDEN|SUPERIORES|TELÉFONO|FRONTERA",
+        "size": 0.38
+      }
+    },
+    {
+      "at": "Nadie le dio",
+      "use": "enmienda.word",
+      "params": {
+        "text": "NINGUNA\nRESPUESTA",
+        "mark": "scribble",
+        "markAt": 0.6,
+        "size": 0.55
+      }
+    },
+    {
+      "at": "La gente gritaba",
+      "use": "enmienda.cards",
+      "params": {
+        "words": [
+          "ABRAN",
+          "LA",
+          "PUERTA"
+        ]
+      }
+    },
+    {
+      "at": "A las once",
+      "use": "enmienda.wall",
+      "params": {
+        "plaque": "23:30\nLA DECISIÓN",
+        "openAt": "@barrera",
+        "openSec": 2.0
+      }
+    },
+    {
+      "at": "la barrera",
+      "use": "enmienda.flicker",
+      "params": {
+        "kind": "white",
+        "strength": 0.7
+      },
+      "dur": 0.45,
+      "layer": "overlay"
+    },
+    {
+      "at": "Esa noche los berlineses",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/muro-gente.jpg",
+        "focus": [
+          0.5,
+          0.42
+        ],
+        "in": "fade"
+      }
+    },
+    {
+      "at": "con martillos",
+      "use": "enmienda.archive",
+      "params": {
+        "src": "assets/media/mauerspecht.jpg",
+        "name": "Martillos y cinceles",
+        "role": "Sobre el muro",
+        "org": "Noviembre de 1989",
+        "focus": [
+          0.5,
+          0.45
+        ]
+      }
+    },
+    {
+      "at": "Desconocidos se abrazaban",
+      "use": "enmienda.cutout",
+      "params": {
+        "src1": "assets/media/muro-gente.jpg",
+        "src2": "assets/media/mauerspecht.jpg",
+        "src3": "assets/media/leipzig.jpg",
+        "stagger": 0.32
+      }
+    },
+    {
+      "at": "Personas que llevaban",
+      "use": "enmienda.word",
+      "params": {
+        "text": "28 AÑOS",
+        "font": "heavy",
+        "size": 0.5
+      }
+    },
+    {
+      "at": "sin pisar el otro",
+      "use": "enmienda.word",
+      "params": {
+        "text": "SIN PISAR\nEL OTRO LADO",
+        "size": 0.6
+      }
+    },
+    {
+      "at": "por su propia ciudad",
+      "use": "enmienda.word",
+      "params": {
+        "text": "POR SU\nPROPIA CIUDAD",
+        "mark": "underline",
+        "markAt": 0.8,
+        "size": 0.62
+      }
+    },
+    {
+      "at": "Menos de un año",
+      "use": "enmienda.collage",
+      "params": {
+        "src1": "assets/media/mauerbau.jpg",
+        "src2": "assets/media/leipzig.jpg",
+        "src3": "assets/media/schabowski.jpg",
+        "src4": "assets/media/bornholmer.jpg",
+        "words": [
+          "IX·XI",
+          "1961",
+          "RDA",
+          "XXVIII",
+          "LEIPZIG"
+        ],
+        "kicker": "3 de octubre",
+        "big": "1990",
+        "from": 1961,
+        "sub": "Reunificación"
+      }
+    },
+    {
+      "at": "Alemania volvió a",
+      "use": "enmienda.map",
+      "params": {
+        "from": "country",
+        "split": true,
+        "mergeAt": 0.5,
+        "text": "UN SOLO\nPAÍS",
+        "textAt": 1.5,
+        "label": "BERLÍN",
+        "labelAt": 0.1
+      }
+    },
+    {
+      "at": "La historia suele contar",
+      "use": "enmienda.word",
+      "params": {
+        "text": "GRANDES\nBATALLAS",
+        "font": "serif",
+        "in": "blur",
+        "out": "blur",
+        "size": 0.5
+      }
+    },
+    {
+      "at": "y grandes líderes",
+      "use": "enmienda.word",
+      "params": {
+        "text": "GRANDES\nLÍDERES",
+        "font": "serif",
+        "in": "blur",
+        "out": "erode",
+        "size": 0.5
+      }
+    },
+    {
+      "at": "pero este muro",
+      "use": "enmienda.word",
+      "params": {
+        "text": "ESTE MURO\nDE HORMIGÓN",
+        "ghost": "HORMIGÓN|ALAMBRE|1961|1989|BERLÍN",
+        "size": 0.6
+      }
+    },
+    {
+      "at": "cayó por un papel",
+      "use": "enmienda.plaque",
+      "params": {
+        "lines": [
+          "UN PAPEL",
+          "LEÍDO ANTES",
+          "DE TIEMPO"
+        ]
+      }
+    },
+    {
+      "at": "y por un oficial",
+      "use": "enmienda.cards",
+      "params": {
+        "words": [
+          "ABRIR",
+          "EN LUGAR DE",
+          "DISPARAR"
+        ],
+        "strike": [
+          2
+        ],
+        "strikeAt": "@disparar"
+      }
+    },
+    {
+      "at": "Porque a veces",
+      "use": "enmienda.word",
+      "params": {
+        "text": "NO LA MUEVE\nUN EJÉRCITO",
+        "font": "stencil",
+        "in": "tumble",
+        "mark": "crosshair",
+        "markAt": 0.9,
+        "size": 0.55
+      }
+    },
+    {
+      "at": "la mueven dos palabras",
+      "use": "enmienda.document",
+      "params": {
+        "text": "La historia no la mueve un ejército. La mueven dos palabras dichas en el momento justo.",
+        "highlight": "dos palabras",
+        "highlightAt": "@palabras",
+        "label": "Berlín · 9 de noviembre de 1989",
+        "src": "assets/media/nota.jpg"
+      }
+    },
+    {
+      "at": "de inmediato sin demora",
+      "use": "enmienda.finale",
+      "dur": 5.28,
+      "params": {
+        "text": "IX XI",
+        "label": "DE INMEDIATO\nSIN DEMORA",
+        "labelOn": 1
+      }
+    },
+    {
+      "t": 204.930612,
+      "offset": 0,
+      "dur": 13.68,
+      "use": "enmienda.outro",
+      "params": {
+        "likeAt": 5.16,
+        "subscribeAt": 5.54,
+        "bellAt": 7.84,
+        "supportAt": 8.94
+      }
     }
-   }
-  },
-  {
-   "at": "Casi las 7",
-   "use": "enmienda.slats",
-   "params": {
-    "text": "1989",
-    "sub": "9 de noviembre · 19:00",
-    "buildSec": 1.1,
-    "doc": "Berlín · nueve de noviembre"
-   }
-  },
-  {
-   "at": "Un funcionario lee",
-   "use": "enmienda.plaque",
-   "params": {
-    "lines": [
-     "LA NOCHE",
-     "QUE CAYÓ",
-     "EL MURO"
-    ],
-    "in": "dive"
-   }
-  },
-  {
-   "at": "un papel que casi",
-   "use": "enmienda.word",
-   "params": {
-    "text": "UN PAPEL",
-    "font": "serif",
-    "in": "blur",
-    "out": "blur",
-    "size": 0.5
-   }
-  },
-  {
-   "at": "Y sin saberlo",
-   "use": "enmienda.word",
-   "params": {
-    "text": "SIN SABERLO",
-    "in": "swipe",
-    "out": "birds",
-    "size": 0.62
-   }
-  },
-  {
-   "at": "derribar el muro",
-   "use": "enmienda.flag",
-   "params": {
-    "bands": "de",
-    "text": "EL ^MURO^ MÁS FAMOSO",
-    "textAt": 1.0
-   }
-  },
-  {
-   "at": "Durante 28 años",
-   "use": "enmienda.slats",
-   "params": {
-    "text": "XXVIII",
-    "sub": "años · Berlín partida en dos",
-    "out": "cut",
-    "buildSec": 1.3,
-    "doc": "Berlín · 1961 — 1989"
-   }
-  },
-  {
-   "at": "En agosto de 1961",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/mauerbau.jpg",
-    "frame": "film",
-    "name": "Agosto de 1961",
-    "role": "Se levanta el muro",
-    "org": "Berlín",
-    "focus": [
-     0.5,
-     0.45
-    ]
-   }
-  },
-  {
-   "at": "un muro de hormigón",
-   "use": "enmienda.document",
-   "params": {
-    "text": "De un día para otro, el gobierno de Alemania del Este levantó un muro de hormigón y alambre en medio de la ciudad. Nadie podía cruzar al otro lado.",
-    "highlight": "muro de hormigón y alambre",
-    "highlightAt": "@hormigón",
-    "label": "Berlín · agosto de 1961",
-    "src": "assets/media/mauerbau.jpg"
-   }
-  },
-  {
-   "at": "Familias separadas",
-   "use": "enmienda.tapes",
-   "params": {
-    "items": [
-     "MADRE\nBERLÍN ESTE\nSEPARADA",
-     "HERMANO\nBERLÍN OESTE\nSEPARADO",
-     "VECINOS\nBERNAUER STR.\nSIN VERSE",
-     "ABUELA\nPANKOW\nDEL OTRO LADO",
-     "AMIGOS\nKREUZBERG\n28 AÑOS",
-     "HIJA\nMITTE\nSEPARADA",
-     "PRIMOS\nWEDDING\nSIN VERSE"
-    ],
-    "toWall": "@verse",
-    "plaque": "UNA CALLE\nDOS MUNDOS"
-   }
-  },
-  {
-   "at": "Al menos 140",
-   "use": "enmienda.inmates",
-   "params": {
-    "number": "140",
-    "label": "MURIERON EN EL MURO",
-    "sub": "Berlín · 1961 — 1989",
-    "whipAt": 0.9
-   }
-  },
-  {
-   "at": "Pero en el otoño",
-   "use": "enmienda.word",
-   "params": {
-    "text": "OTOÑO\nDE 1989",
-    "ghost": "RDA|LEIPZIG|HUNGRÍA|FRONTERA|1989|OTOÑO",
-    "size": 0.5
-   }
-  },
-  {
-   "at": "algo se estaba",
-   "use": "enmienda.word",
-   "params": {
-    "text": "ALGO SE\nROMPE",
-    "in": "tumble",
-    "mark": "x",
-    "markAt": 0.75,
-    "size": 0.55
-   }
-  },
-  {
-   "at": "Miles de alemanes",
-   "use": "enmienda.wordcloud",
-   "params": {
-    "words": [
-     "HUNGRÍA",
-     "CHECOSLOVAQUIA",
-     "ESCAPAR",
-     "FRONTERA",
-     "LIBERTAD",
-     "VIAJAR",
-     "MILES",
-     "PRAGA",
-     "EMBAJADA",
-     "SALIR",
-     "ESTE",
-     "OESTE"
-    ]
-   }
-  },
-  {
-   "at": "y cada lunes",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/leipzig.jpg",
-    "name": "Leipzig",
-    "role": "Marchas de los lunes",
-    "org": "Otoño de 1989",
-    "focus": [
-     0.5,
-     0.5
-    ]
-   }
-  },
-  {
-   "at": "pidiendo libertad",
-   "use": "enmienda.map",
-   "params": {
-    "from": "country",
-    "split": true,
-    "text": "LIBERTAD\nPARA VIAJAR",
-    "textAt": 0.25,
-    "dots": 0
-   }
-  },
-  {
-   "at": "El gobierno decidió",
-   "use": "enmienda.word",
-   "params": {
-    "text": "SOLTAR\nLA CUERDA",
-    "font": "stencil",
-    "in": "tumble",
-    "size": 0.5
-   }
-  },
-  {
-   "at": "Redactó una nueva",
-   "use": "enmienda.word",
-   "params": {
-    "text": "NUEVA\nREGLA",
-    "font": "stencil",
-    "in": "slam",
-    "mark": "underline",
-    "markAt": 0.6,
-    "size": 0.42
-   }
-  },
-  {
-   "at": "Los ciudadanos podrían",
-   "use": "enmienda.cards",
-   "params": {
-    "words": [
-     "PERMISO",
-     "PARA",
-     "VIAJAR",
-     "AL OESTE"
-    ]
-   }
-  },
-  {
-   "at": "Iba a anunciarse",
-   "use": "enmienda.graph",
-   "params": {
-    "title": "SALIDAS\nHACIA EL\nOESTE",
-    "points": [
-     "ENE",
-     "MAR",
-     "MAY",
-     "JUL",
-     "AGO",
-     "SEP",
-     "OCT",
-     "NOV"
-    ],
-    "values": [
-     0.04,
-     0.06,
-     0.09,
-     0.15,
-     0.28,
-     0.42,
-     0.58,
-     1.0
-    ]
-   }
-  },
-  {
-   "at": "El encargado de contarlo",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/schabowski.jpg",
-    "name": "Günter Schabowski",
-    "role": "Vocero del partido",
-    "org": "SED · RDA",
-    "focus": [
-     0.5,
-     0.4
-    ]
-   }
-  },
-  {
-   "at": "le entregaron la nota",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/nota.jpg",
-    "focus": [
-     0.5,
-     0.3
-    ],
-    "zoom": 1.2,
-    "push": 0.04
-   }
-  },
-  {
-   "at": "Nadie le advirtió",
-   "use": "enmienda.letter",
-   "params": {
-    "headline": "ESPERAR\nHASTA LA\nMAÑANA.",
-    "body": "La nueva regla de viaje se anunciaría\nal día siguiente, con calma, con trámites\ny con orden. Nadie se lo dijo al vocero.",
-    "hand": "no antes del 10/11",
-    "sign": "Oficina de prensa · 9 nov 1989"
-   }
-  },
-  {
-   "at": "La conferencia fue larga",
-   "use": "enmienda.bars",
-   "params": {
-    "texts": [
-     "LARGA",
-     "Y ABURRIDA",
-     "UNA HORA"
-    ]
-   }
-  },
-  {
-   "at": "Al final Schabowski",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/schabowski.jpg",
-    "frame": "film",
-    "zoom": 1.45,
-    "focus": [
-     0.45,
-     0.38
-    ],
-    "push": 0.03,
-    "in": "fade"
-   }
-  },
-  {
-   "at": "Los periodistas se miraron",
-   "use": "enmienda.word",
-   "params": {
-    "text": "¿VIAJAR?",
-    "ghost": "PRENSA|CONFERENCIA|REGLA|VIAJAR|PERMISO",
-    "size": 0.45
-   }
-  },
-  {
-   "at": "Sin requisitos",
-   "use": "enmienda.word",
-   "params": {
-    "text": "¿SIN\nREQUISITOS?",
-    "mark": "circle",
-    "markAt": 0.6,
-    "size": 0.55
-   }
-  },
-  {
-   "at": "Entonces llegó la pregunta",
-   "use": "enmienda.word",
-   "params": {
-    "text": "LA\nPREGUNTA",
-    "font": "stencil",
-    "in": "tumble",
-    "size": 0.4
-   }
-  },
-  {
-   "at": "Cuándo entra en vigor",
-   "use": "enmienda.word",
-   "params": {
-    "text": "¿CUÁNDO\nENTRA EN\nVIGOR?",
-    "font": "stencil",
-    "in": "slam",
-    "mark": "crosshair",
-    "markAt": 0.35,
-    "size": 0.42
-   }
-  },
-  {
-   "at": "Schabowski revolvió",
-   "use": "enmienda.cards",
-   "params": {
-    "mode": "pile",
-    "words": [
-     "NOTA",
-     "REGLA",
-     "PRENSA",
-     "PERMISO",
-     "OESTE",
-     "RDA",
-     "VIAJES"
-    ],
-    "count": 14
-   }
-  },
-  {
-   "at": "No la encontró",
-   "use": "enmienda.plaque",
-   "params": {
-    "lines": [
-     "BUSCÓ",
-     "LA",
-     "RESPUESTA"
-    ],
-    "strike": [
-     0,
-     1,
-     2
-    ],
-    "strikeAt": "@encontró"
-   }
-  },
-  {
-   "at": "De inmediato",
-   "use": "enmienda.word",
-   "params": {
-    "text": "DE\nINMEDIATO.",
-    "font": "heavy",
-    "in": "slam",
-    "out": "cut",
-    "size": 0.55
-   }
-  },
-  {
-   "at": "De inmediato",
-   "use": "enmienda.flicker",
-   "params": {
-    "kind": "white"
-   },
-   "dur": 0.4,
-   "layer": "overlay"
-  },
-  {
-   "at": "Sin demora",
-   "use": "enmienda.word",
-   "params": {
-    "text": "SIN\nDEMORA.",
-    "font": "heavy",
-    "in": "slam",
-    "out": "erode",
-    "size": 0.5
-   }
-  },
-  {
-   "at": "Dos palabras que",
-   "use": "enmienda.cards",
-   "params": {
-    "words": [
-     "DOS",
-     "PALABRAS",
-     "QUE NADIE",
-     "AUTORIZÓ"
-    ]
-   }
-  },
-  {
-   "at": "La televisión del Oeste",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/muro-gente.jpg",
-    "frame": "film",
-    "name": "TV del Oeste",
-    "role": "Esa misma noche",
-    "org": "9 nov 1989",
-    "focus": [
-     0.5,
-     0.3
-    ]
-   }
-  },
-  {
-   "at": "Las fronteras están abiertas",
-   "use": "enmienda.word",
-   "params": {
-    "text": "FRONTERAS\nABIERTAS",
-    "font": "serif",
-    "in": "blur",
-    "out": "blur",
-    "size": 0.6
-   }
-  },
-  {
-   "at": "Miles de personas salieron",
-   "use": "enmienda.pictogram",
-   "params": {
-    "title": "Berlín Este · 9 nov 1989",
-    "tag": "En la calle",
-    "ratio": "Una multitud",
-    "big": "MILES",
-    "note": "Hacia los puestos fronterizos"
-   }
-  },
-  {
-   "at": "En el cruce de",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/bornholmer.jpg",
-    "name": "Bornholmer Strasse",
-    "role": "Paso fronterizo",
-    "org": "Berlín",
-    "focus": [
-     0.5,
-     0.5
-    ]
-   }
-  },
-  {
-   "at": "el oficial Harald",
-   "use": "enmienda.cutout",
-   "params": {
-    "src1": "assets/media/bornholmer.jpg",
-    "src2": "assets/media/muro-gente.jpg",
-    "src3": "assets/media/leipzig.jpg",
-    "name": "Harald Jäger",
-    "role": "Oficial de frontera"
-   }
-  },
-  {
-   "at": "Llamó a sus superiores",
-   "use": "enmienda.word",
-   "params": {
-    "text": "LLAMÓ",
-    "ghost": "ORDEN|SUPERIORES|TELÉFONO|FRONTERA",
-    "size": 0.38
-   }
-  },
-  {
-   "at": "Nadie le dio",
-   "use": "enmienda.word",
-   "params": {
-    "text": "NINGUNA\nRESPUESTA",
-    "mark": "scribble",
-    "markAt": 0.6,
-    "size": 0.55
-   }
-  },
-  {
-   "at": "La gente gritaba",
-   "use": "enmienda.cards",
-   "params": {
-    "words": [
-     "ABRAN",
-     "LA",
-     "PUERTA"
-    ]
-   }
-  },
-  {
-   "at": "A las once",
-   "use": "enmienda.wall",
-   "params": {
-    "plaque": "23:30\nLA DECISIÓN",
-    "openAt": "@barrera",
-    "openSec": 2.0
-   }
-  },
-  {
-   "at": "la barrera",
-   "use": "enmienda.flicker",
-   "params": {
-    "kind": "white",
-    "strength": 0.7
-   },
-   "dur": 0.45,
-   "layer": "overlay"
-  },
-  {
-   "at": "Esa noche los berlineses",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/muro-gente.jpg",
-    "focus": [
-     0.5,
-     0.42
-    ],
-    "in": "fade"
-   }
-  },
-  {
-   "at": "con martillos",
-   "use": "enmienda.archive",
-   "params": {
-    "src": "assets/media/mauerspecht.jpg",
-    "name": "Martillos y cinceles",
-    "role": "Sobre el muro",
-    "org": "Noviembre de 1989",
-    "focus": [
-     0.5,
-     0.45
-    ]
-   }
-  },
-  {
-   "at": "Desconocidos se abrazaban",
-   "use": "enmienda.cutout",
-   "params": {
-    "src1": "assets/media/muro-gente.jpg",
-    "src2": "assets/media/mauerspecht.jpg",
-    "src3": "assets/media/leipzig.jpg",
-    "stagger": 0.32
-   }
-  },
-  {
-   "at": "Personas que llevaban",
-   "use": "enmienda.word",
-   "params": {
-    "text": "28 AÑOS",
-    "font": "heavy",
-    "size": 0.5
-   }
-  },
-  {
-   "at": "sin pisar el otro",
-   "use": "enmienda.word",
-   "params": {
-    "text": "SIN PISAR\nEL OTRO LADO",
-    "size": 0.6
-   }
-  },
-  {
-   "at": "por su propia ciudad",
-   "use": "enmienda.word",
-   "params": {
-    "text": "POR SU\nPROPIA CIUDAD",
-    "mark": "underline",
-    "markAt": 0.8,
-    "size": 0.62
-   }
-  },
-  {
-   "at": "Menos de un año",
-   "use": "enmienda.collage",
-   "params": {
-    "src1": "assets/media/mauerbau.jpg",
-    "src2": "assets/media/leipzig.jpg",
-    "src3": "assets/media/schabowski.jpg",
-    "src4": "assets/media/bornholmer.jpg",
-    "words": [
-     "IX·XI",
-     "1961",
-     "RDA",
-     "XXVIII",
-     "LEIPZIG"
-    ],
-    "kicker": "3 de octubre",
-    "big": "1990",
-    "from": 1961,
-    "sub": "Reunificación"
-   }
-  },
-  {
-   "at": "Alemania volvió a",
-   "use": "enmienda.map",
-   "params": {
-    "from": "country",
-    "split": true,
-    "mergeAt": 0.5,
-    "text": "UN SOLO\nPAÍS",
-    "textAt": 1.5,
-    "label": "BERLÍN",
-    "labelAt": 0.1
-   }
-  },
-  {
-   "at": "La historia suele contar",
-   "use": "enmienda.word",
-   "params": {
-    "text": "GRANDES\nBATALLAS",
-    "font": "serif",
-    "in": "blur",
-    "out": "blur",
-    "size": 0.5
-   }
-  },
-  {
-   "at": "y grandes líderes",
-   "use": "enmienda.word",
-   "params": {
-    "text": "GRANDES\nLÍDERES",
-    "font": "serif",
-    "in": "blur",
-    "out": "erode",
-    "size": 0.5
-   }
-  },
-  {
-   "at": "pero este muro",
-   "use": "enmienda.word",
-   "params": {
-    "text": "ESTE MURO\nDE HORMIGÓN",
-    "ghost": "HORMIGÓN|ALAMBRE|1961|1989|BERLÍN",
-    "size": 0.6
-   }
-  },
-  {
-   "at": "cayó por un papel",
-   "use": "enmienda.plaque",
-   "params": {
-    "lines": [
-     "UN PAPEL",
-     "LEÍDO ANTES",
-     "DE TIEMPO"
-    ]
-   }
-  },
-  {
-   "at": "y por un oficial",
-   "use": "enmienda.cards",
-   "params": {
-    "words": [
-     "ABRIR",
-     "EN LUGAR DE",
-     "DISPARAR"
-    ],
-    "strike": [
-     2
-    ],
-    "strikeAt": "@disparar"
-   }
-  },
-  {
-   "at": "Porque a veces",
-   "use": "enmienda.word",
-   "params": {
-    "text": "NO LA MUEVE\nUN EJÉRCITO",
-    "font": "stencil",
-    "in": "tumble",
-    "mark": "crosshair",
-    "markAt": 0.9,
-    "size": 0.55
-   }
-  },
-  {
-   "at": "la mueven dos palabras",
-   "use": "enmienda.document",
-   "params": {
-    "text": "La historia no la mueve un ejército. La mueven dos palabras dichas en el momento justo.",
-    "highlight": "dos palabras",
-    "highlightAt": "@palabras",
-    "label": "Berlín · 9 de noviembre de 1989",
-    "src": "assets/media/nota.jpg"
-   }
-  },
-  {
-   "at": "de inmediato sin demora",
-   "use": "enmienda.finale",
-   "dur": 5.28,
-   "params": {
-    "text": "IX XI",
-    "label": "DE INMEDIATO\nSIN DEMORA",
-    "labelOn": 1
-   }
-  },
-  {
-   "t": 204.930612,
-   "offset": 0,
-   "dur": 13.68,
-   "use": "enmienda.outro",
-   "params": {
-    "likeAt": 5.16,
-    "subscribeAt": 5.54,
-    "bellAt": 7.84,
-    "supportAt": 8.94
-   }
-  }
- ]
+  ]
 }

@@ -25,13 +25,17 @@ def test_every_template_declares_inputs():
         assert set(inputs) == {"audio", "media", "texts", "brief"}
         for slot in inputs["media"]:
             assert slot["min"] <= slot["max"]
-            assert slot["target"] in {"source", "media"}
+            assert slot["target"] in {"source", "media", "config"}
+            if slot["target"] == "config":
+                assert slot["path"], template_id   # un fondo opcional necesita a qué ruta del config va
 
 
 def test_lyrics_and_promo_requirements():
     neon = get_template_inputs("lyrics-neon")
     assert neon["audio"] == {"required": True, "lyrics": "auto"}
-    assert [(s["slot"], s["kind"], s["target"]) for s in neon["media"]] == [("background", "image", "source")]
+    # Neón trae su propio video de fondo: subir uno (video o imagen) es opcional y va a bg.src
+    assert [(s["slot"], s["kind"], s["target"], s["path"], s["min"]) for s in neon["media"]] == [
+        ("background", "image|video", "config", "bg.src", 0)]
 
     calado = get_template_inputs("lyrics-calado")
     assert calado["media"][0]["kind"] == "video"
@@ -118,7 +122,21 @@ async def test_apply_texts_and_media(tmp_path: Path):
 
 async def test_apply_without_inputs_is_noop(tmp_path: Path):
     config = {"bg": {"src": "bg.jpg"}}
-    assert await apply_template_inputs(config, None, "lyrics-neon", tmp_path) is config
+    assert await apply_template_inputs(config, None, "lyrics-calado", tmp_path) is config
     # El fondo de letras entra por image/video source: el applier no lo toca.
-    result = await apply_template_inputs(config, TemplateInputs(media={"background": ["abc"]}), "lyrics-neon", tmp_path)
+    result = await apply_template_inputs(config, TemplateInputs(media={"background": ["abc"]}), "lyrics-calado", tmp_path)
     assert result == config
+
+
+async def test_optional_background_goes_to_its_config_path(tmp_path: Path):
+    video_src = tmp_path / "noche.mp4"
+    _make_video(video_src)
+    video = await asset_library.register_video(video_src, category="test", source="upload")
+    config = {"bg": {"src": "assets/remix.mp4", "filter": "x"}}
+    out = tmp_path / "out"
+    result = await apply_template_inputs(config, TemplateInputs(media={"background": [video.asset_id]}), "lyrics-neon", out)
+    assert result["bg"] == {"src": "assets/inputs/background.mp4", "filter": "x"}
+    assert (out / "assets/inputs/background.mp4").exists()
+    # sin nada subido queda el video de la plantilla
+    same = await apply_template_inputs(config, TemplateInputs(media={}), "lyrics-neon", out)
+    assert same["bg"]["src"] == "assets/remix.mp4"

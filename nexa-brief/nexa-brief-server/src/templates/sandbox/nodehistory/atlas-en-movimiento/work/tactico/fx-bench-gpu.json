@@ -1,0 +1,136 @@
+{
+  "viewport": [
+    1080,
+    1920
+  ],
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--num-raster-threads=1",
+    "--renderer-process-limit=1",
+    "--disable-dev-shm-usage"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "determinism": [],
+  "benchmarks": [
+    {
+      "id": "fx.explosion",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 279.96666666666664,
+        "p95": 331.69999998807907,
+        "max": 342.90000000596046
+      },
+      "emptyReadbackMs": {
+        "mean": 32.72000000079473,
+        "p95": 47.29999998211861,
+        "max": 47.400000005960464
+      },
+      "submitMs": {
+        "mean": 11.786666666467985,
+        "p95": 18.30000001192093,
+        "max": 18.80000001192093
+      },
+      "incrementalMs": 247.2466666658719
+    },
+    {
+      "id": "fx.impact",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 160.27333333392937,
+        "p95": 190,
+        "max": 199.40000000596046
+      },
+      "emptyReadbackMs": {
+        "mean": 33.8433333337307,
+        "p95": 50.5,
+        "max": 54.099999994039536
+      },
+      "submitMs": {
+        "mean": 4.82666666607062,
+        "p95": 5.4000000059604645,
+        "max": 11.5
+      },
+      "incrementalMs": 126.43000000019867
+    },
+    {
+      "id": "fx.shockwave",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 229.55999999940394,
+        "p95": 374.80000001192093,
+        "max": 665.3000000119209
+      },
+      "emptyReadbackMs": {
+        "mean": 34.36000000039736,
+        "p95": 42.30000001192093,
+        "max": 42.80000001192093
+      },
+      "submitMs": {
+        "mean": 2.9200000007947287,
+        "p95": 3.9000000059604645,
+        "max": 61.69999998807907
+      },
+      "incrementalMs": 195.1999999990066
+    },
+    {
+      "id": "fx.smoke",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 183.3100000023842,
+        "p95": 204.7999999821186,
+        "max": 205
+      },
+      "emptyReadbackMs": {
+        "mean": 33.256666664282484,
+        "p95": 38.30000001192093,
+        "max": 39
+      },
+      "submitMs": {
+        "mean": 9.630000003178914,
+        "p95": 18.400000005960464,
+        "max": 18.80000001192093
+      },
+      "incrementalMs": 150.0533333381017
+    },
+    {
+      "id": "fx.fire",
+      "phase": "pleno",
+      "instances": 20,
+      "frames": 30,
+      "totalMs": {
+        "mean": 119.6000000009934,
+        "p95": 134.90000000596046,
+        "max": 157.5
+      },
+      "emptyReadbackMs": {
+        "mean": 38.63333333233992,
+        "p95": 59.400000005960464,
+        "max": 68.7999999821186
+      },
+      "submitMs": {
+        "mean": 7.369999999801318,
+        "p95": 13.599999994039536,
+        "max": 15.899999976158142
+      },
+      "incrementalMs": 80.96666666865349
+    }
+  ],
+  "fontSubstitution": "Archivo-900.ttf missing in shared workspace; QA server serves local assets/fonts/AtlasEditorial.ttf for labels.js import only. FX draw no text.",
+  "chromium": "151.0.7922.34",
+  "missing": {
+    "tiles": [],
+    "assets": []
+  }
+}

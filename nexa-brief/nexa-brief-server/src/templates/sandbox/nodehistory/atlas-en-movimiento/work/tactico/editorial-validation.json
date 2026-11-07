@@ -1,0 +1,92 @@
+[
+  {
+    "type": "site.refinery",
+    "rejected": true,
+    "errors": [
+      {
+        "code": "param",
+        "path": "items[0].scale",
+        "message": "Valor inválido para scale",
+        "item": "demo-site-refinery"
+      },
+      {
+        "code": "component-validation",
+        "path": "items[0]",
+        "item": "demo-site-refinery",
+        "message": "scale debe estar entre 0 y 4"
+      }
+    ]
+  },
+  {
+    "type": "money.stack",
+    "rejected": true,
+    "errors": [
+      {
+        "code": "component-validation",
+        "path": "items[0]",
+        "item": "demo-money-stack",
+        "message": "count debe ser entero entre 1 y 36"
+      }
+    ]
+  },
+  {
+    "type": "money.flow",
+    "rejected": true,
+    "errors": [
+      {
+        "code": "component-validation",
+        "path": "items[0]",
+        "item": "demo-money-flow",
+        "message": "via necesita al menos dos pares lon/lat válidos"
+      }
+    ]
+  },
+  {
+    "type": "portrait.badge",
+    "rejected": true,
+    "errors": [
+      {
+        "code": "component-validation",
+        "path": "items[0]",
+        "item": "demo-portrait-badge",
+        "message": "src debe ser un medio local relativo a la plantilla"
+      },
+      {
+        "code": "component-validation",
+        "path": "items[0]",
+        "item": "demo-portrait-badge",
+        "message": "credit es obligatorio y debe ser visible"
+      }
+    ]
+  },
+  {
+    "type": "editorial.press",
+    "rejected": true,
+    "errors": [
+      {
+        "code": "component-validation",
+        "path": "items[0]",
+        "item": "demo-press",
+        "message": "docText debe ser provisto por el episodio"
+      },
+      {
+        "code": "component-validation",
+        "path": "items[0]",
+        "item": "demo-press",
+        "message": "docCredit es obligatorio"
+      }
+    ]
+  },
+  {
+    "type": "inventory.units",
+    "rejected": true,
+    "errors": [
+      {
+        "code": "component-validation",
+        "path": "items[0]",
+        "item": "demo-inventory",
+        "message": "total no puede ser menor que count"
+      }
+    ]
+  }
+]

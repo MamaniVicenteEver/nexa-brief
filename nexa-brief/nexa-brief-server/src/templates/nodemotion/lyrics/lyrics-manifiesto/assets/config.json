@@ -4,17 +4,55 @@
     {
       "id": "default",
       "description": "Manifiesto editorial suizo blanco/negro — configuración por defecto sin fondo de video, usada como fallback cuando el pipeline real no está disponible.",
-      "audio": { "src": "assets/song.mp3" },
+      "audio": {
+        "src": "assets/song.mp3"
+      },
       "lyricsUrl": "assets/lyrics.json",
-      "bg": { "type": "none", "src": "", "filter": "grayscale(1) contrast(1.25) brightness(0.32)" },
-      "colors": { "paper": "#F4F2EE", "ink": "#0A0A0A" },
-      "wordmark": "NEXA BRIEF — MANIFIESTO",
-      "intro": { "artist": "", "title": "Manifiesto", "sub": "", "feats": "" },
-      "outro": { "leadSec": 8, "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
-      "debug": { "enabled": false },
-      "phrase": { "gapSec": 0.52, "maxWords": 5, "maxChars": 24 },
+      "bg": {
+        "type": "none",
+        "src": "",
+        "filter": "grayscale(1) contrast(1.25) brightness(0.32)"
+      },
+      "colors": {
+        "paper": "#F4F2EE",
+        "ink": "#0A0A0A"
+      },
+      "wordmark": "NODEMOTION — MANIFIESTO",
+      "intro": {
+        "artist": "",
+        "title": "Colapso",
+        "sub": "",
+        "feats": ""
+      },
+      "outro": {
+        "leadSec": 8,
+        "title": "Gracias",
+        "sub": "Por ver",
+        "feats": "Suscribite | NodeMotion"
+      },
+      "debug": {
+        "enabled": false
+      },
+      "phrase": {
+        "gapSec": 0.52,
+        "maxWords": 5,
+        "maxChars": 24
+      },
       "laminas": {
-        "deck": ["pleno", "pleno", "columna", "pleno", "micro", "borde", "columna", "contra", "pleno", "borde", "micro", "columna"],
+        "deck": [
+          "pleno",
+          "pleno",
+          "columna",
+          "pleno",
+          "micro",
+          "borde",
+          "columna",
+          "contra",
+          "pleno",
+          "borde",
+          "micro",
+          "columna"
+        ],
         "contraCooldownSec": 6,
         "pushScale": 1.028,
         "pushSec": 7

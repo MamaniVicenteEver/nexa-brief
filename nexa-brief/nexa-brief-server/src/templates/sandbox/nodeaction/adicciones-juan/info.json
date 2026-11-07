@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "title": "Por qué cuesta salir de una adicción · La historia de Juan",
+  "summary": "Pizarra ilustrada de 9 a 10 minutos con el caso ficticio de Juan. Explica los trastornos por consumo de alcohol, el apoyo, la atención y la recuperación de forma respetuosa.",
+  "engine": "nodeaction/_pizarra",
+  "based_on": "prueba-avatar-comparacion",
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-10-28",
+  "libraries": [
+    {
+      "name": "Google Fonts: DM Sans, Fraunces",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía de pizarra"
+    }
+  ],
+  "inputs": [
+    "Guion original documentado con fuentes sanitarias y caso ficticio.",
+    "Una voz generada, transcripción por palabra y hojas de poses RGBA."
+  ],
+  "notes": [
+    "Prototipo de la línea de pizarra con personajes ilustrados; visualizar en Plantillas. No hay grabación ni MP4, por solicitud del usuario.",
+    "Incluye precaución sobre abstinencia de alcohol y sedantes; no sustituye atención clínica.",
+    "Doce poses de Juan y cuatro gráficos; los PNG son 1536×1024 y no son 4K.",
+    "Subtítulos pequeños en la parte inferior; composición diseñada para 16:9.",
+    "La transcripción se comparó automáticamente con el guion; queda pendiente revisar manualmente pronunciación, tiempos y la omisión de una conjunción en una frase.",
+    "La medición de Codex es parcial hasta el momento registrado en work/usage.jsonl. No incluye los tokens internos de generación de imágenes ni costos o tokens de voz no informados.",
+    "Las poses son imágenes estáticas: se animan su entrada y los gráficos de la escena; no son animaciones corporales completas."
+  ],
+  "reference": "referencias/nodeaction/adicciones-personajes"
+}

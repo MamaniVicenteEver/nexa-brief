@@ -1,0 +1,90 @@
+{
+  "name": "arrow.curve",
+  "family": "arrow",
+  "description": "Curva cuadrática con punta, revelado y estela luminosa en movimiento. Úsala para dirigir la atención o representar un desplazamiento.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 15,
+  "states": [],
+  "params": {
+    "via": {
+      "type": "array",
+      "default": [
+        [
+          49,
+          28
+        ],
+        [
+          56.3,
+          26.5
+        ],
+        [
+          59,
+          24
+        ]
+      ],
+      "range": null,
+      "description": "Waypoints de la trayectoria en orden."
+    },
+    "width": {
+      "type": "number",
+      "default": 4,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Duración del revelado progresivo en segundos."
+    },
+    "bend": {
+      "type": "number",
+      "default": 0.3,
+      "range": null,
+      "description": "Curvatura de la trayectoria."
+    },
+    "trail": {
+      "type": "number",
+      "default": 0.24,
+      "range": null,
+      "description": "Longitud relativa de la estela de la flecha."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-arrow-curve",
+    "t": 0,
+    "via": [
+      [
+        48,
+        33
+      ],
+      [
+        56,
+        27
+      ]
+    ],
+    "dur": 6,
+    "out": 5.5,
+    "type": "arrow.curve",
+    "color": "text",
+    "width": 9
+  },
+  "usedBy": [
+    "work/tactico/items-routes.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/arrow.curve.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

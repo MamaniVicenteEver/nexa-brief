@@ -2,12 +2,18 @@
   "resources": {
     "navLabel": "Resources",
     "title": "Resources",
-    "subtitle": "Your songs, images and videos to use in templates. Songs are transcribed automatically when uploaded.",
-    "tabs": { "music": "Songs", "images": "Images", "videos": "Videos" },
+    "subtitle": "Your songs, images, videos and sound effects, ready to reuse in templates.",
+    "tabs": {
+      "music": "Songs",
+      "images": "Images",
+      "videos": "Videos",
+      "sounds": "Sound effects"
+    },
     "searchPlaceholder": {
       "music": "Search by name, artist or tag…",
       "images": "Search by name, description or tag…",
-      "videos": "Search by name, description or tag…"
+      "videos": "Search by name, description or tag…",
+      "sounds": "Search sound, description, use or tag…"
     },
     "clearSearch": "Clear search",
     "categoryLabel": "Category",
@@ -16,12 +22,18 @@
     "empty": {
       "music": "You haven't uploaded any songs yet",
       "images": "You haven't uploaded any images yet",
-      "videos": "You haven't uploaded any videos yet"
+      "videos": "You haven't uploaded any videos yet",
+      "sounds": "No sound effects saved yet"
     },
     "emptyFiltered": "No results match those filters",
     "emptyHint": "Drag files onto the upload area to add them.",
     "upload": {
-      "title": { "music": "Upload songs", "images": "Upload images", "videos": "Upload videos" },
+      "title": {
+        "music": "Upload songs",
+        "images": "Upload images",
+        "videos": "Upload videos",
+        "sounds": "Upload sound effects"
+      },
       "hint": "Drag and drop, or click to choose",
       "state": {
         "queued": "Queued",
@@ -30,7 +42,20 @@
         "error": "Failed"
       }
     },
-    "card": { "edit": "Edit", "delete": "Delete", "lyrics": "View lyrics" },
+    "card": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "lyrics": "View lyrics",
+      "sound": "Sound effect",
+      "recommendedUses": "Suggested uses",
+      "usageCount": "{count, plural, one {# use} other {# uses}}",
+      "status": {
+        "pending": "Needs review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "soundCategory": "Sound effects"
+    },
     "transcription": {
       "pending": "Pending",
       "running": "Transcribing",
@@ -57,7 +82,13 @@
       "category": "Category",
       "cancel": "Cancel",
       "save": "Save",
-      "saved": "Changes saved"
+      "saved": "Changes saved",
+      "recommendedUses": "Suggested uses",
+      "recommendedUsesHint": "One suggestion per line.",
+      "approvalStatus": "Review",
+      "pending": "Needs review",
+      "approved": "Approved",
+      "rejected": "Rejected"
     },
     "delete": {
       "title": "Delete this resource?",

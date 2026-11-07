@@ -1,0 +1,538 @@
+{
+  "checks": {
+    "pause_stops_all": true,
+    "paused_seek_silent": true,
+    "seek_does_not_accumulate": true,
+    "backward_seek_restarts": true,
+    "bridge_play_pause": true,
+    "bridge_seek_while_playing": true,
+    "bridge_volume": true,
+    "loop_seek_offset": true,
+    "volume_nonzero": true,
+    "decoded_all": true,
+    "no_page_errors": true,
+    "main_entry_loaded": true
+  },
+  "errors": [],
+  "chromium": "148.0.7778.96",
+  "initial": {
+    "active": 0,
+    "sources": [],
+    "decoded": 7,
+    "master_gain": 1,
+    "volume": 1,
+    "context": "running",
+    "frozen": true,
+    "serial": 0,
+    "errors": []
+  },
+  "runtime_plan": {
+    "version": 1,
+    "duration": 30,
+    "duck_db": -9,
+    "speech_ranges": [
+      [
+        1.17,
+        3.73
+      ],
+      [
+        4.85,
+        9.43
+      ],
+      [
+        10.29,
+        11.15
+      ],
+      [
+        11.51,
+        14.49
+      ],
+      [
+        14.91,
+        19.79
+      ],
+      [
+        20.33,
+        29.01
+      ],
+      [
+        29.97,
+        30
+      ]
+    ],
+    "cues": [
+      {
+        "id": "naval-engine-low",
+        "file": "assets/sfx/ship-diesel-engine-01.mp3",
+        "asset_id": "",
+        "duration": 7.330416666666666,
+        "license": "CC0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "url": "https://sfxmint.com/sounds/ship-diesel-engine-01",
+        "download_url": "https://sfxmint.com/dl/ship-diesel-engine-01.mp3",
+        "provider": "sfxmint",
+        "provider_sound_id": "ship-diesel-engine-01",
+        "sha256": "d73f32b4f267e225c00210cbcafeee10c001c8dda0e7f0d2f47fecb95fcb6217",
+        "gain_db": -27,
+        "fade_in": 0.3,
+        "fade_out": 0.6,
+        "loop": false,
+        "source_in": 0,
+        "substitute": false,
+        "sfx": "naval-engine-low",
+        "at": 0,
+        "dur": 7.330416666666666,
+        "item": "cargo",
+        "requested_sfx": "naval-engine-low",
+        "cue_id": "cue-0"
+      },
+      {
+        "id": "ship-horn",
+        "file": "assets/sfx/ship-horn-02.mp3",
+        "asset_id": "",
+        "duration": 2.5,
+        "license": "CC0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "url": "https://sfxmint.com/sounds/ship-horn-02",
+        "download_url": "https://sfxmint.com/dl/ship-horn-02.mp3",
+        "provider": "sfxmint",
+        "provider_sound_id": "ship-horn-02",
+        "sha256": "a09702eefcbf67e8a2536dd2dab5102c1188c3505b8a9d4a2b6a066ccd5a0230",
+        "gain_db": -25,
+        "fade_in": 0.03,
+        "fade_out": 0.3,
+        "loop": false,
+        "source_in": 0,
+        "substitute": false,
+        "sfx": "ship-horn",
+        "at": 2,
+        "dur": 2,
+        "requested_sfx": "ship-horn",
+        "cue_id": "cue-1"
+      },
+      {
+        "id": "jet-pass",
+        "file": "assets/sfx/jet-flyby-01.mp3",
+        "asset_id": "",
+        "duration": 3.4023541666666666,
+        "license": "CC0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "url": "https://sfxmint.com/sounds/jet-flyby-01",
+        "download_url": "https://sfxmint.com/dl/jet-flyby-01.mp3",
+        "provider": "sfxmint",
+        "provider_sound_id": "jet-flyby-01",
+        "sha256": "5116c06db0927ce20f3fd4b3d13f92df1a7fabf06513185e7cd68a31d87a8acb",
+        "gain_db": -25,
+        "fade_in": 0.05,
+        "fade_out": 0.35,
+        "loop": false,
+        "source_in": 0,
+        "substitute": false,
+        "sfx": "jet-pass",
+        "at": 8,
+        "dur": 3,
+        "requested_sfx": "jet-pass",
+        "cue_id": "cue-2"
+      },
+      {
+        "id": "explosion-near",
+        "file": "assets/sfx/impact-explosion-14.mp3",
+        "asset_id": "",
+        "duration": 4,
+        "license": "CC0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "url": "https://sfxmint.com/sounds/impact-explosion-14",
+        "download_url": "https://sfxmint.com/dl/impact-explosion-14.mp3",
+        "provider": "sfxmint",
+        "provider_sound_id": "impact-explosion-14",
+        "sha256": "8d3d16d9552a2596e22a7fc3223e41b71d658cd3d7e03a5f0c16d03c34c0ccf0",
+        "gain_db": -12,
+        "fade_in": 0.01,
+        "fade_out": 0.4,
+        "loop": false,
+        "source_in": 0,
+        "substitute": false,
+        "sfx": "explosion-near",
+        "at": 12,
+        "dur": 1.8,
+        "item": "impact",
+        "requested_sfx": "explosion-near",
+        "cue_id": "cue-3"
+      },
+      {
+        "id": "water-impact",
+        "file": "assets/sfx/ship-cannon-whistle-splash-01.mp3",
+        "asset_id": "",
+        "duration": 6.2,
+        "license": "CC0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "url": "https://sfxmint.com/sounds/ship-cannon-whistle-splash-01",
+        "download_url": "https://sfxmint.com/dl/ship-cannon-whistle-splash-01.mp3",
+        "provider": "sfxmint",
+        "provider_sound_id": "ship-cannon-whistle-splash-01",
+        "sha256": "994cbe33428ae29d279c27b3a6197daa6bbab056851ee72b4491e0d58cda2e57",
+        "gain_db": -12,
+        "fade_in": 0.05,
+        "fade_out": 0.5,
+        "loop": false,
+        "source_in": 4.2,
+        "substitute": true,
+        "note": "Cola de compuesto ca\u00f1\u00f3n/silbido/agua desde 4.2 s; recorte provisional sin aprobaci\u00f3n auditiva.",
+        "sfx": "water-impact",
+        "at": 18,
+        "dur": 1.5,
+        "item": "water",
+        "requested_sfx": "water-impact",
+        "cue_id": "cue-4"
+      },
+      {
+        "id": "helicopter",
+        "file": "assets/sfx/helicopter-03.mp3",
+        "asset_id": "",
+        "duration": 5.8497916666666665,
+        "license": "CC0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "url": "https://sfxmint.com/sounds/helicopter-03",
+        "download_url": "https://sfxmint.com/dl/helicopter-03.mp3",
+        "provider": "sfxmint",
+        "provider_sound_id": "helicopter-03",
+        "sha256": "e5957b6bf53e731fa0b26a76d70ba7dbb8328e336afd9a25a198f86ca5bc82e0",
+        "gain_db": -27,
+        "fade_in": 0.15,
+        "fade_out": 0.5,
+        "loop": false,
+        "source_in": 0,
+        "substitute": false,
+        "sfx": "helicopter",
+        "at": 21,
+        "dur": 4,
+        "requested_sfx": "helicopter",
+        "cue_id": "cue-5"
+      },
+      {
+        "id": "whoosh",
+        "file": "assets/sfx/transition-whoosh-74.mp3",
+        "asset_id": "",
+        "duration": 1.7790625,
+        "license": "CC0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "url": "https://sfxmint.com/sounds/transition-whoosh-74",
+        "download_url": "https://sfxmint.com/dl/transition-whoosh-74.mp3",
+        "provider": "sfxmint",
+        "provider_sound_id": "transition-whoosh-74",
+        "sha256": "987f6336d81f0b0debc47c99412fe2bc3469f97b7ee5b86002a72a170db445f0",
+        "gain_db": -33,
+        "fade_in": 0.02,
+        "fade_out": 0.2,
+        "loop": false,
+        "source_in": 0,
+        "substitute": false,
+        "sfx": "whoosh",
+        "at": 28,
+        "dur": 1.4,
+        "requested_sfx": "whoosh",
+        "cue_id": "cue-6"
+      }
+    ]
+  },
+  "playing": {
+    "time": 1.184459,
+    "active": 1,
+    "sources": [
+      {
+        "id": "cue-0",
+        "at": 1.019422,
+        "end": 7.330416666666666,
+        "offset": 1.019422
+      }
+    ],
+    "decoded": 7,
+    "master_gain": 1,
+    "volume": 1,
+    "context": "running",
+    "frozen": false,
+    "serial": 6,
+    "errors": []
+  },
+  "paused": {
+    "active": 0,
+    "sources": [],
+    "decoded": 7,
+    "master_gain": 1,
+    "volume": 1,
+    "context": "running",
+    "frozen": true,
+    "serial": 8,
+    "errors": []
+  },
+  "after_paused_seeks": {
+    "active": 0,
+    "sources": [],
+    "decoded": 7,
+    "master_gain": 1,
+    "volume": 1,
+    "context": "running",
+    "frozen": true,
+    "serial": 20,
+    "errors": []
+  },
+  "resume_seeks": [
+    {
+      "time": 5.127666,
+      "active": 1,
+      "sources": [
+        {
+          "id": "cue-0",
+          "at": 5.006283,
+          "end": 7.330416666666666,
+          "offset": 5.006283
+        }
+      ],
+      "decoded": 7,
+      "master_gain": 1,
+      "volume": 1,
+      "context": "running",
+      "frozen": false,
+      "serial": 25,
+      "errors": []
+    },
+    {
+      "time": 1.130667,
+      "active": 1,
+      "sources": [
+        {
+          "id": "cue-0",
+          "at": 1.008286,
+          "end": 7.330416666666666,
+          "offset": 1.008286
+        }
+      ],
+      "decoded": 7,
+      "master_gain": 1,
+      "volume": 1,
+      "context": "running",
+      "frozen": false,
+      "serial": 32,
+      "errors": []
+    },
+    {
+      "time": 12.496012,
+      "active": 1,
+      "sources": [
+        {
+          "id": "cue-3",
+          "at": 12.419686,
+          "end": 13.8,
+          "offset": 0.41968600000000045
+        }
+      ],
+      "decoded": 7,
+      "master_gain": 1,
+      "volume": 1,
+      "context": "running",
+      "frozen": false,
+      "serial": 40,
+      "errors": []
+    },
+    {
+      "time": 18.301502,
+      "active": 1,
+      "sources": [
+        {
+          "id": "cue-4",
+          "at": 18.226971,
+          "end": 19.5,
+          "offset": 4.426970999999999
+        }
+      ],
+      "decoded": 7,
+      "master_gain": 1,
+      "volume": 1,
+      "context": "running",
+      "frozen": false,
+      "serial": 48,
+      "errors": []
+    },
+    {
+      "time": 21.264338,
+      "active": 1,
+      "sources": [
+        {
+          "id": "cue-5",
+          "at": 21.2,
+          "end": 25,
+          "offset": 0.1999999999999993
+        }
+      ],
+      "decoded": 7,
+      "master_gain": 1,
+      "volume": 1,
+      "context": "running",
+      "frozen": false,
+      "serial": 56,
+      "errors": []
+    },
+    {
+      "time": 28.332483,
+      "active": 1,
+      "sources": [
+        {
+          "id": "cue-6",
+          "at": 28.2357,
+          "end": 29.4,
+          "offset": 0.23570000000000135
+        }
+      ],
+      "decoded": 7,
+      "master_gain": 1,
+      "volume": 1,
+      "context": "running",
+      "frozen": false,
+      "serial": 64,
+      "errors": []
+    },
+    {
+      "time": 5.084661,
+      "active": 1,
+      "sources": [
+        {
+          "id": "cue-0",
+          "at": 5.024211,
+          "end": 7.330416666666666,
+          "offset": 5.024211
+        }
+      ],
+      "decoded": 7,
+      "master_gain": 1,
+      "volume": 1,
+      "context": "running",
+      "frozen": false,
+      "serial": 73,
+      "errors": []
+    }
+  ],
+  "muted": {
+    "volume": 0.25,
+    "muted": true,
+    "stats": {
+      "active": 1,
+      "sources": [
+        {
+          "id": "cue-0",
+          "at": 5.024211,
+          "end": 7.330416666666666,
+          "offset": 5.024211
+        }
+      ],
+      "decoded": 7,
+      "master_gain": 0,
+      "volume": 1,
+      "context": "running",
+      "frozen": false,
+      "serial": 73,
+      "errors": []
+    }
+  },
+  "bridge_play": {
+    "active": 1,
+    "sources": [
+      {
+        "id": "cue-0",
+        "at": 5.022927,
+        "end": 7.330416666666666,
+        "offset": 5.022927
+      }
+    ],
+    "decoded": 7,
+    "master_gain": 1,
+    "volume": 1,
+    "context": "running",
+    "frozen": false,
+    "serial": 7,
+    "errors": []
+  },
+  "bridge_pause": {
+    "active": 0,
+    "sources": [],
+    "decoded": 7,
+    "master_gain": 1,
+    "volume": 1,
+    "context": "running",
+    "frozen": true,
+    "serial": 10,
+    "errors": []
+  },
+  "bridge_seek_while_playing": {
+    "active": 1,
+    "sources": [
+      {
+        "id": "cue-5",
+        "at": 21.230109,
+        "end": 25,
+        "offset": 0.2301089999999988
+      }
+    ],
+    "decoded": 7,
+    "master_gain": 1,
+    "volume": 1,
+    "context": "running",
+    "frozen": false,
+    "serial": 24,
+    "errors": []
+  },
+  "bridge_volume": {
+    "v": 0.35,
+    "m": true,
+    "master": 0
+  },
+  "loop_seek": {
+    "active": 1,
+    "sources": [
+      {
+        "id": "cue-0",
+        "at": 24.002722,
+        "end": 30,
+        "offset": 8.25542041269841
+      }
+    ],
+    "decoded": 1,
+    "master_gain": 0,
+    "volume": 1,
+    "context": "running",
+    "frozen": false,
+    "serial": 4,
+    "errors": []
+  },
+  "volume_nonzero_detail": {
+    "media": {
+      "volume": 0.4,
+      "muted": false
+    },
+    "stats": {
+      "active": 0,
+      "sources": [],
+      "decoded": 7,
+      "master_gain": 0.4000000059604645,
+      "volume": 1,
+      "context": "running",
+      "frozen": true,
+      "serial": 36,
+      "errors": []
+    }
+  },
+  "main_entry": {
+    "stats": {
+      "active": 0,
+      "sources": [],
+      "decoded": 1,
+      "master_gain": 1,
+      "volume": 1,
+      "context": "running",
+      "frozen": true,
+      "serial": 0,
+      "errors": []
+    },
+    "cues": 2,
+    "total": 20
+  }
+}

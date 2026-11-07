@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "appliedToEpisode": false,
+  "caption": {
+    "existingParams": [
+      "size",
+      "font",
+      "weight",
+      "color",
+      "activeColor",
+      "inactiveColor",
+      "stroke",
+      "strokeColor",
+      "strokeWidth",
+      "background",
+      "padding",
+      "radius",
+      "upper",
+      "maxWords",
+      "gap",
+      "highlight",
+      "y",
+      "yLandscape",
+      "fade"
+    ],
+    "fixedInCurrentRenderer": [
+      "back .85→1 / .18s",
+      "landscape multiplier 1.1",
+      "no line wrapping"
+    ],
+    "requiredExtensions": [
+      "style.lineHeight",
+      "style.layout.maxLines",
+      "style.layout.maxWidthPortraitU",
+      "style.layout.maxWidthLandscapeU",
+      "style.animation"
+    ]
+  },
+  "labels": {
+    "existingParams": [
+      "text",
+      "size",
+      "width",
+      "height",
+      "color",
+      "screen",
+      "offset",
+      "reveal",
+      "rotation",
+      "fade"
+    ],
+    "fontParameter": "scene.defs.fonts.display",
+    "fixedInCurrentRenderer": [
+      "fit/ink weight 800",
+      "ink outline max(2U,size*.11)",
+      "chip dark background, 1.5U border, 8U radius",
+      "neon blur 12U"
+    ],
+    "requiredExtensions": [
+      "style.font",
+      "style.weight",
+      "style.fill",
+      "style.secondaryFill",
+      "style.stroke",
+      "style.border",
+      "style.background",
+      "style.supportColor",
+      "style.rule",
+      "style.structure",
+      "style.radiusU",
+      "style.letterSpacingU",
+      "style.animation"
+    ]
+  },
+  "editorial": {
+    "fixedInCurrentRenderer": [
+      "AtlasEditorial bitmap font",
+      "octagonal and paper geometry",
+      "bitmap scale and role sizes"
+    ],
+    "requiredExtensions": [
+      "role fonts and sizes from style.roles",
+      "layout structure",
+      "background",
+      "support",
+      "animation"
+    ]
+  },
+  "introOutro": {
+    "requiredExtensions": [
+      "role fonts and sizes",
+      "rule/column/ribbon layout",
+      "animation"
+    ]
+  },
+  "attribution": {
+    "requiredExtensions": [
+      "font",
+      "sizeU",
+      "support",
+      "fill"
+    ]
+  }
+}

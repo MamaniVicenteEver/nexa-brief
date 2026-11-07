@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light"><title>Vida en Escena · Personajes</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{--paper:#f6f3eb;--ink:#24242d;--muted:#77756e;--line:#ddd8cc;--accent:#536e61}
+    *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:15px/1.5 system-ui,sans-serif}
+    header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:25px 36px;border-bottom:1px solid var(--line)}
+    .brand{font-size:13px;letter-spacing:.15em;font-weight:750}.sub{color:var(--muted);font-size:13px}
+    main{max-width:1500px;margin:auto;display:grid;grid-template-columns:310px 1fr;min-height:calc(100vh - 92px)}
+    aside{padding:32px 28px;border-right:1px solid var(--line)}h1{font-size:28px;letter-spacing:-.04em;margin:0 0 4px}p{margin:0 0 25px;color:var(--muted)}
+    fieldset{border:0;padding:0;margin:0 0 22px}legend{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;margin-bottom:12px;color:var(--accent)}
+    label{display:block;font-size:12px;margin:0 0 5px}select,button{font:inherit;color:var(--ink);border:1px solid var(--line);border-radius:7px;background:#fffcf6;padding:9px 11px}
+    select{width:100%;margin-bottom:12px}input[type=range]{width:100%;accent-color:var(--accent);margin:5px 0 12px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .check{display:flex;align-items:center;gap:8px;font-size:13px}button{cursor:pointer}button:hover{border-color:var(--accent)}button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #779c87;outline-offset:3px}
+    .stage{min-width:0;padding:22px 32px;display:flex;flex-direction:column;align-items:center}.stage canvas{display:block;max-width:100%;height:min(75vh,950px);aspect-ratio:3/4;object-fit:contain}
+    .toolbar{width:min(700px,100%);display:flex;align-items:center;gap:16px;padding:15px 0;border-top:1px solid var(--line)}.toolbar input{margin:0;flex:1}.toolbar output{font-variant-numeric:tabular-nums;font-size:13px;min-width:55px}
+    a{color:var(--accent);text-underline-offset:4px}.links{font-size:13px;display:flex;gap:16px;margin-top:8px}.status{color:var(--muted);font-size:12px;margin-top:12px}
+    #error{color:#9b3434;padding:20px}#sheet{padding:25px;display:none}#sheet canvas{width:100%;height:auto;display:block;margin-bottom:14px;background:#faf8f2}
+    body.sheet main{display:none}body.sheet #sheet{display:block}.sheet header a{display:block}header a{font-size:13px}
+    @media(max-width:760px){header{padding:20px}.sub{display:none}main{grid-template-columns:1fr}.stage{grid-row:1;padding:16px}.stage canvas{height:58vh}aside{border-right:0;border-top:1px solid var(--line);padding:24px}aside form{display:grid;grid-template-columns:1fr 1fr;gap:18px}aside h1,aside p{display:none}.toolbar{gap:10px}#sheet{padding:5px}}
+  </style>
+</head>
+<body>
+  <header><div><div class="brand">VIDA EN ESCENA</div><div class="sub">Estudio de personajes · etapa 01</div></div><a href="?sheet=group">Ver el elenco ↗</a></header>
+  <main>
+    <aside><h1>Personajes y cara</h1><p>Una identidad. Todos sus gestos.</p>
+      <form id="controls">
+        <fieldset><legend>Personaje</legend><label for="character">Identidad</label><select id="character"></select>
+          <label for="view">Vista</label><select id="view"></select><label for="yaw">Giro continuo</label><input id="yaw" type="range" min="-1" max="1" step="0.005" value="0">
+          <label for="framing">Encuadre</label><select id="framing"><option value="full">Cuerpo completo</option><option value="close">Primer plano</option></select>
+        </fieldset>
+        <fieldset><legend>Expresión</legend><label for="expression">Emoción</label><select id="expression"></select>
+          <label for="intensity">Intensidad</label><input id="intensity" type="range" min="0" max="1" step="0.01" value="1">
+          <label for="eyeScale">Tamaño de ojos</label><input id="eyeScale" type="range" min="0.7" max="1.4" step="0.01" value="1">
+          <label for="blink">Parpadeo</label><select id="blink"><option value="auto">Natural</option><option value="off">Ojos abiertos</option><option value="half">A medio cerrar</option><option value="closed">Ojos cerrados</option></select>
+          <label class="check"><input id="look" type="checkbox"> Mirar el cursor</label>
+        </fieldset>
+        <fieldset><legend>Habla</legend><label for="viseme">Visema</label><select id="viseme"><option value="">Boca de la expresión</option></select>
+          <label for="open">Apertura / energía</label><input id="open" type="range" min="0" max="1" step="0.01" value="1">
+          <label for="mix">Transición A → O</label><input id="mix" type="range" min="0" max="1" step="0.01" value="0.5">
+        </fieldset>
+        <fieldset><legend>Cuerpo</legend><label for="pose">Pose</label><select id="pose"></select><label for="hand">Forma de la mano derecha</label><select id="hand"><option value="">Según la pose</option></select>
+          <label class="check"><input id="secondary" type="checkbox"> Rebote de pelo / coleta</label>
+          <div class="links"><a id="sheetLink" href="?sheet=tomas">Hoja completa ↗</a><button type="button" id="reset">Restablecer</button></div>
+        </fieldset>
+      </form>
+    </aside>
+    <section class="stage" aria-label="Vista del personaje"><canvas id="canvas" width="1080" height="1440" aria-label="Personaje articulado"></canvas>
+      <div class="toolbar"><button id="play" aria-label="Pausar">Pausar</button><input id="time" aria-label="Tiempo" type="range" min="0" max="20" step="0.001" value="0"><output id="clock">0.00 s</output><button id="download">PNG</button></div>
+      <div class="status" id="status" aria-live="polite">Cargando personajes…</div>
+    </section>
+  </main>
+  <div id="sheet"></div><div id="error" role="alert" hidden></div>
+  <script type="module" src="./studio.js"></script>
+</body>
+</html>

@@ -1,0 +1,3166 @@
+{
+  "schema_version": 1,
+  "design_id": "rough",
+  "revision": "c22a5d16f2083b7e4d43f81d7f90ea1e155e84ee675191bd3fb3a927491baf32",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "rough.title",
+      "name": "rough.title",
+      "label": "rough.title",
+      "kind": "component",
+      "summary": "Título de apertura GIGANTE (cartel: cada renglón al ancho total, ~80% del cuadro): las letras se dibujan en contorno y se rellenan; antetítulo en etiqueta lima, subtítulo debajo y subrayado a mano. Puede parpadear como alarma.",
+      "tags": [
+        "intro",
+        "gancho",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título; '\\n' parte renglones.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Cortes alternativos para 9:16.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Antetítulo (etiqueta lima arriba).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo debajo (Inter 800, se parte solo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "bool",
+          "default": false,
+          "doc": "Título en color de acento (lima) en vez de blanco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "blink": {
+          "type": "number",
+          "default": 0,
+          "doc": "Parpadeos tipo alarma al terminar de dibujarse (0 = ninguno).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 6
+        },
+        "fill": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Fracción del ancho que ocupa.",
+          "required": false,
+          "options": null,
+          "min": 0.4,
+          "max": 1
+        },
+        "underline": {
+          "type": "bool",
+          "default": true,
+          "doc": "Subrayado a mano bajo el último renglón.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "1202",
+        "kicker": "APOLO 11 · 20 JUL 1969",
+        "sub": "EL ERROR QUE LLEVÓ A LA HUMANIDAD A LA LUNA",
+        "accent": true,
+        "blink": 3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.title",
+      "data": {
+        "native_name": "rough.title"
+      }
+    },
+    {
+      "id": "rough.icon",
+      "name": "rough.icon",
+      "label": "rough.icon",
+      "kind": "component",
+      "summary": "Boceto de un objeto (diccionario rough/sketches.js) que se dibuja trazo a trazo; relleno rayado lima opcional, etiqueta arriba y nota manuscrita abajo.",
+      "tags": [
+        "objeto",
+        "concepto",
+        "símbolo"
+      ],
+      "params": {
+        "icon": {
+          "type": "icon",
+          "default": null,
+          "doc": "Nombre del boceto (ver catálogo de sketches).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.55,
+          "doc": "Fracción del contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.15,
+          "max": 1
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta lima arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita (Caveat) abajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "bool",
+          "default": false,
+          "doc": "Relleno rayado lima (resalta este objeto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del trazo.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent"
+          ],
+          "min": null,
+          "max": null
+        },
+        "drawSec": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Segundos que tarda en dibujarse.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "icon": "rocket",
+        "tag": "APOLO 11",
+        "caption": "julio de 1969",
+        "accent": true
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.icon",
+      "data": {
+        "native_name": "rough.icon"
+      }
+    },
+    {
+      "id": "rough.photo",
+      "name": "rough.photo",
+      "label": "rough.photo",
+      "kind": "component",
+      "summary": "Foto real en blanco y negro (o virada a lima) que se revela con un barrido dentro de un marco dibujado a mano con cintas; nombre manuscrito y ficha mono debajo. Zoom lento (Ken Burns).",
+      "tags": [
+        "foto",
+        "persona",
+        "lugar",
+        "documento"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (jpg/png local).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Nombre / título manuscrito (Caveat, lima).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Ficha mono bajo el nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tone": {
+          "type": "enum",
+          "default": "mono",
+          "doc": "mono = B/N contrastado; lime = sombras negras y luces lima.",
+          "required": false,
+          "options": [
+            "mono",
+            "lime"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.84,
+          "doc": "Fracción del contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "Proporción del recorte (0 = la de la foto; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tilt": {
+          "type": "number",
+          "default": -1.5,
+          "doc": "Inclinación del marco en grados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.4
+          ],
+          "doc": "Punto [x,y] 0..1 hacia donde se acerca el zoom.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/hamilton.jpg",
+        "caption": "Margaret Hamilton",
+        "sub": "DIRECTORA DE SOFTWARE · MIT · 32 AÑOS"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.photo",
+      "data": {
+        "native_name": "rough.photo"
+      }
+    },
+    {
+      "id": "rough.annotate",
+      "name": "rough.annotate",
+      "label": "rough.annotate",
+      "kind": "component",
+      "summary": "Marca a mano ENCIMA de lo que hay en pantalla: círculo, subrayado, flecha, caja o tachado, en lima, sobre una zona del cuadro de contenido; texto manuscrito opcional al lado.",
+      "tags": [
+        "énfasis",
+        "marca",
+        "flecha"
+      ],
+      "params": {
+        "kind": {
+          "type": "enum",
+          "default": "circle",
+          "doc": "Tipo de marca.",
+          "required": false,
+          "options": [
+            "circle",
+            "underline",
+            "arrow",
+            "box",
+            "cross"
+          ],
+          "min": null,
+          "max": null
+        },
+        "x": {
+          "type": "number",
+          "default": 0.2,
+          "doc": "Zona: x (fracción del contenido).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Zona: y.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "w": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Zona: ancho.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "h": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Zona: alto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto manuscrito junto a la marca.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drawSec": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Segundos de trazo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "kind": "circle",
+        "x": 0.2,
+        "y": 0.3,
+        "w": 0.6,
+        "h": 0.3,
+        "note": "¡aquí!"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.annotate",
+      "data": {
+        "native_name": "rough.annotate"
+      }
+    },
+    {
+      "id": "rough.introv1",
+      "name": "rough.introv1",
+      "label": "rough.introv1",
+      "kind": "component",
+      "summary": "Miniatura de solo texto con el tratamiento a mano de rough: título enorme, línea lima y antetítulo opcional.",
+      "tags": [
+        "intro",
+        "miniatura",
+        "solo texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título; '\\n' separa renglones.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Cortes alternativos para 9:16.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "highlight": {
+          "type": "string",
+          "default": "",
+          "doc": "Renglón que se pinta en lima.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Antetítulo en etiqueta lima.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica opcional bajo el título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fill": {
+          "type": "number",
+          "default": 0.88,
+          "doc": "Ancho ocupado por el título.",
+          "required": false,
+          "options": null,
+          "min": 0.45,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "LA COMPUTADORA\nDEL APOLO 11\nSE RINDIÓ",
+        "highlight": "SE RINDIÓ",
+        "kicker": "APOLO 11 · 1969"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.introv1",
+      "data": {
+        "native_name": "rough.introv1"
+      }
+    },
+    {
+      "id": "rough.introv2",
+      "name": "rough.introv2",
+      "label": "rough.introv2",
+      "kind": "component",
+      "summary": "Miniatura de texto e imagen al estilo de las miniaturas de tecnología: título enorme alineado a la izquierda y una foto o video grande a color que se funde con el fondo (en 9:16 va arriba).",
+      "tags": [
+        "intro",
+        "miniatura",
+        "texto e imagen"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título; '\\n' separa renglones (2 a 4 renglones cortos).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Cortes alternativos para 9:16.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "highlight": {
+          "type": "string",
+          "default": "",
+          "doc": "Renglón que se pinta en lima (el remate).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Antetítulo en etiqueta lima.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica opcional bajo el título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto o render del objeto del tema (a color).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local, siempre mudo; reemplaza la foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen inicial y respaldo del video; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes del beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "saturate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Color de la foto (0 = blanco y negro).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1.4
+        },
+        "focus": {
+          "type": "string",
+          "default": "xMidYMid",
+          "doc": "Encuadre de la foto (preserveAspectRatio: xMinYMid, xMaxYMid…).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "¿SE ACABÓ\nLA PC\nBARATA?",
+        "highlight": "BARATA?",
+        "kicker": "MEMORIA RAM · 2026",
+        "src": "assets/media/hamilton.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.introv2",
+      "data": {
+        "native_name": "rough.introv2"
+      }
+    },
+    {
+      "id": "rough.flow",
+      "name": "rough.flow",
+      "label": "rough.flow",
+      "kind": "component",
+      "summary": "Cadena de 2-5 pasos (boceto + rótulo) unidos por flechas a mano que aparecen en orden: causa → efecto, un proceso, un sistema. `active` resalta un paso en lima.",
+      "tags": [
+        "proceso",
+        "causa",
+        "pasos",
+        "sistema"
+      ],
+      "params": {
+        "nodes": {
+          "type": "array",
+          "default": null,
+          "doc": "[{icon, label}] de 2 a 5.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "active": {
+          "type": "number",
+          "default": -1,
+          "doc": "Índice resaltado (-1 = ninguno).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stepSec": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Segundos entre paso y paso.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta lima arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "nodes": [
+          {
+            "icon": "radar",
+            "label": "RADAR"
+          },
+          {
+            "icon": "chip",
+            "label": "COMPUTADORA"
+          },
+          {
+            "icon": "alarm",
+            "label": "1202"
+          }
+        ],
+        "active": 2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.flow",
+      "data": {
+        "native_name": "rough.flow"
+      }
+    },
+    {
+      "id": "rough.compare",
+      "name": "rough.compare",
+      "label": "rough.compare",
+      "kind": "component",
+      "summary": "Comparación de escala por ÁREA: un cuadrado diminuto (lo chico, en lima) dentro de uno enorme (lo grande). Para 'millones de veces más': el chico queda casi un punto. Con valores y flecha manuscrita.",
+      "tags": [
+        "escala",
+        "comparación",
+        "datos",
+        "tamaño"
+      ],
+      "params": {
+        "small": {
+          "type": "object",
+          "default": null,
+          "doc": "{label, value} — lo pequeño (va en lima).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "big": {
+          "type": "object",
+          "default": null,
+          "doc": "{label, value} — lo grande.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ratio": {
+          "type": "number",
+          "default": 100,
+          "doc": "Cuántas veces más grande (área). Mínimo visible: un punto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bigFirst": {
+          "type": "bool",
+          "default": false,
+          "doc": "true = primero el grande y después aparece el chico.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bigAt": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Segundo (local) en que se dibuja el grande (admite \"@palabra\").",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "small": {
+          "label": "APOLO 11",
+          "value": "4 KB"
+        },
+        "big": {
+          "label": "TU TELÉFONO",
+          "value": "MILLONES DE VECES MÁS"
+        },
+        "ratio": 1000000
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.compare",
+      "data": {
+        "native_name": "rough.compare"
+      }
+    },
+    {
+      "id": "rough.stack",
+      "name": "rough.stack",
+      "label": "rough.stack",
+      "kind": "component",
+      "summary": "Pila de tareas en cajas a mano; en `dropAt` las que no se conservan se tachan y caen, y las importantes suben y se pintan de lima. Para prioridades, triage, 'soltar lo secundario'.",
+      "tags": [
+        "prioridades",
+        "lista",
+        "sistema",
+        "descartar"
+      ],
+      "params": {
+        "items": {
+          "type": "array",
+          "default": null,
+          "doc": "[{label, keep}] de arriba (más importante) hacia abajo, 2-6.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dropAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo (local) en que se descarta lo secundario (-1 = nunca).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta lima arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "title": "PRIORIDADES",
+        "items": [
+          {
+            "label": "ATERRIZAR",
+            "keep": true
+          },
+          {
+            "label": "NAVEGAR",
+            "keep": true
+          },
+          {
+            "label": "PANTALLA"
+          },
+          {
+            "label": "RADAR"
+          }
+        ],
+        "dropAt": 2.4
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.stack",
+      "data": {
+        "native_name": "rough.stack"
+      }
+    },
+    {
+      "id": "rough.dsky",
+      "name": "rough.dsky",
+      "label": "rough.dsky",
+      "kind": "component",
+      "summary": "Panel de la computadora del Apolo (DSKY) dibujado a mano: luces de aviso, pantalla PROG/VERB/NOUN y teclado. El código (p. ej. 1202) aparece en lima y parpadea con la luz PROG encendida.",
+      "tags": [
+        "computadora",
+        "pantalla",
+        "alarma",
+        "apolo"
+      ],
+      "params": {
+        "code": {
+          "type": "string",
+          "default": "1202",
+          "doc": "Código que aparece en la pantalla (4-5 dígitos).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "alarm": {
+          "type": "bool",
+          "default": true,
+          "doc": "Luz PROG encendida y código parpadeando.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "verb": {
+          "type": "string",
+          "default": "05",
+          "doc": "Valor VERB.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "noun": {
+          "type": "string",
+          "default": "09",
+          "doc": "Valor NOUN.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        }
+      },
+      "example": {
+        "code": "1202",
+        "alarm": true
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.dsky",
+      "data": {
+        "native_name": "rough.dsky"
+      }
+    },
+    {
+      "id": "rough.rope",
+      "name": "rough.rope",
+      "label": "rough.rope",
+      "kind": "component",
+      "summary": "Memoria de cuerda (core rope): anillos magnéticos en fila y un alambre que se teje: si ATRAVIESA el anillo es 1, si lo RODEA es 0. Los bits aparecen debajo a medida que pasa el alambre.",
+      "tags": [
+        "memoria",
+        "datos",
+        "unos y ceros",
+        "tejido"
+      ],
+      "params": {
+        "bits": {
+          "type": "string",
+          "default": "1011",
+          "doc": "Bits (3-8 caracteres '0'/'1').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drawSec": {
+          "type": "number",
+          "default": 2.6,
+          "doc": "Segundos que tarda el alambre en tejerse.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "bits": "101101",
+        "caption": "tejido a mano"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.rope",
+      "data": {
+        "native_name": "rough.rope"
+      }
+    },
+    {
+      "id": "rough.gauge",
+      "name": "rough.gauge",
+      "label": "rough.gauge",
+      "kind": "component",
+      "summary": "Indicador semicircular a mano con aguja y número grande que baja (o sube) de `from` a `to`: combustible, tiempo que queda, presión. La zona crítica final parpadea en lima.",
+      "tags": [
+        "combustible",
+        "cuenta regresiva",
+        "nivel",
+        "urgencia"
+      ],
+      "params": {
+        "from": {
+          "type": "number",
+          "default": 60,
+          "doc": "Valor inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "number",
+          "default": 30,
+          "doc": "Valor final.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "max": {
+          "type": "number",
+          "default": 0,
+          "doc": "Escala máxima del dial (0 = max(from,to)).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 3,
+          "doc": "Segundos que tarda en llegar a `to`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad bajo el número.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta lima arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "critical": {
+          "type": "number",
+          "default": 0.25,
+          "doc": "Fracción del dial considerada crítica (zona rayada).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": 60,
+        "to": 30,
+        "unit": "SEGUNDOS",
+        "label": "COMBUSTIBLE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.gauge",
+      "data": {
+        "native_name": "rough.gauge"
+      }
+    },
+    {
+      "id": "rough.descent",
+      "name": "rough.descent",
+      "label": "rough.descent",
+      "kind": "component",
+      "summary": "Vista lateral de un descenso: suelo lunar a mano con cráter y rocas, el módulo lunar bajando por su trayectoria. mode=auto va directo al cráter; mode=manual se desvía en el último tramo hasta una zona plana marcada con X.",
+      "tags": [
+        "trayectoria",
+        "aterrizaje",
+        "maniobra",
+        "luna"
+      ],
+      "params": {
+        "mode": {
+          "type": "enum",
+          "default": "manual",
+          "doc": "Trayectoria.",
+          "required": false,
+          "options": [
+            "auto",
+            "manual"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 4.5,
+          "doc": "Segundos del descenso completo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hazard": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo del cráter.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita del punto de aterrizaje.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "altFrom": {
+          "type": "number",
+          "default": 150,
+          "doc": "Altitud inicial mostrada (m).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "divertAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo (local) en que empieza el desvío manual (admite \"@palabra\"; -1 = al 60%).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "mode": "manual",
+        "hazard": "CRÁTER CON ROCAS",
+        "target": "zona plana"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.descent",
+      "data": {
+        "native_name": "rough.descent"
+      }
+    },
+    {
+      "id": "rough.tally",
+      "name": "rough.tally",
+      "label": "rough.tally",
+      "kind": "component",
+      "summary": "Algo que se repite N veces: boceto que se sacude en cada repetición, palotes a mano (|||| tachados de a 5) y contador grande '×N'.",
+      "tags": [
+        "repetición",
+        "conteo",
+        "alarma",
+        "veces"
+      ],
+      "params": {
+        "icon": {
+          "type": "icon",
+          "default": "alarm",
+          "doc": "Boceto que se sacude.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "count": {
+          "type": "number",
+          "default": 5,
+          "doc": "Cantidad de repeticiones.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 15
+        },
+        "interval": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Segundos entre repeticiones.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta lima arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "icon": "alarm",
+        "count": 5,
+        "interval": 0.55,
+        "label": "ALARMA 1202"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.tally",
+      "data": {
+        "native_name": "rough.tally"
+      }
+    },
+    {
+      "id": "rough.choice",
+      "name": "rough.choice",
+      "label": "rough.choice",
+      "kind": "component",
+      "summary": "Dos (o tres) opciones en cajas a mano; en `pickAt` la elegida se pinta de lima con un ✓ y las otras se tachan. Para decisiones bajo presión (ABORTAR / SEGUIR).",
+      "tags": [
+        "decisión",
+        "opciones",
+        "dilema",
+        "elección"
+      ],
+      "params": {
+        "options": {
+          "type": "array",
+          "default": null,
+          "doc": "2-3 textos cortos.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pick": {
+          "type": "number",
+          "default": -1,
+          "doc": "Índice elegido (-1 = sin decidir).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pickAt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundo (local) de la decisión.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "question": {
+          "type": "string",
+          "default": "",
+          "doc": "Pregunta manuscrita arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "options": [
+          "ABORTAR",
+          "SEGUIR"
+        ],
+        "pick": 1,
+        "pickAt": 2.2,
+        "question": "¿y ahora?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.choice",
+      "data": {
+        "native_name": "rough.choice"
+      }
+    },
+    {
+      "id": "rough.timeline",
+      "name": "rough.timeline",
+      "label": "rough.timeline",
+      "kind": "component",
+      "summary": "Línea de tiempo a mano (vertical en 9:16, horizontal en 16:9) con hitos que se marcan al pasar el trazo; el hito `active` va en lima con círculo a mano.",
+      "tags": [
+        "tiempo",
+        "fechas",
+        "historia",
+        "cronología"
+      ],
+      "params": {
+        "items": {
+          "type": "array",
+          "default": null,
+          "doc": "[{year, label}] 2-6.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "active": {
+          "type": "number",
+          "default": -1,
+          "doc": "Índice resaltado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drawSec": {
+          "type": "number",
+          "default": 1.8,
+          "doc": "Segundos del trazo completo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "items": [
+          {
+            "year": "1961",
+            "label": "Kennedy: la Luna"
+          },
+          {
+            "year": "1965",
+            "label": "Hamilton entra al MIT"
+          },
+          {
+            "year": "1969",
+            "label": "Apolo 11"
+          }
+        ],
+        "active": 2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.timeline",
+      "data": {
+        "native_name": "rough.timeline"
+      }
+    },
+    {
+      "id": "rough.load",
+      "name": "rough.load",
+      "label": "rough.load",
+      "kind": "component",
+      "summary": "Un recipiente vertical (la máquina) se llena de bloques de tareas de abajo hacia arriba; cuando llegan tareas extra que no caben, quedan fuera temblando y el borde se raya en lima con un rótulo grande de desborde.",
+      "tags": [
+        "capacidad",
+        "límite",
+        "desborde",
+        "computadora"
+      ],
+      "params": {
+        "tasks": {
+          "type": "array",
+          "default": [
+            "BOOT",
+            "SCAN",
+            "INDEX",
+            "QUERY",
+            "WRITE"
+          ],
+          "doc": "Tareas que entran en orden.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "capacity": {
+          "type": "number",
+          "default": 5,
+          "doc": "Ranuras del recipiente.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 12
+        },
+        "stepSec": {
+          "type": "number",
+          "default": 0.55,
+          "doc": "Segundos entre bloque y bloque.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "overflowAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo local en que llegan las tareas extra (-1 = nunca).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "extra": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de tareas que no caben.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "overflowLabel": {
+          "type": "string",
+          "default": "1202",
+          "doc": "Rótulo grande de desborde.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta lima arriba (vacío = sin etiqueta).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "tasks": [
+          "BOOT",
+          "SCAN",
+          "INDEX",
+          "QUERY",
+          "WRITE"
+        ],
+        "capacity": 5,
+        "stepSec": 0.55,
+        "overflowAt": 3.6,
+        "extra": [
+          "RADAR",
+          "RADAR"
+        ],
+        "overflowLabel": "1202"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.load",
+      "data": {
+        "native_name": "rough.load"
+      }
+    },
+    {
+      "id": "rough.note",
+      "name": "rough.note",
+      "label": "rough.note",
+      "kind": "component",
+      "summary": "Hoja de papel dibujada a mano con un título mecanografiado y renglones de texto garabateado; en `noteAt` aparece una nota manuscrita en lima en el margen (un comentario, una firma, 'vago, pero emocionante').",
+      "tags": [
+        "documento",
+        "propuesta",
+        "nota",
+        "manuscrito"
+      ],
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título del documento (mono, se escribe letra a letra).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita en lima (Caveat).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "noteAt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundo (local) en que aparece la nota (admite \"@palabra\").",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "lines": {
+          "type": "number",
+          "default": 9,
+          "doc": "Renglones de texto garabateado.",
+          "required": false,
+          "options": null,
+          "min": 3,
+          "max": 16
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo mono debajo del papel (fecha, autor).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "title": "INFORMATION MANAGEMENT: A PROPOSAL",
+        "note": "vague but exciting…",
+        "noteAt": 2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.note",
+      "data": {
+        "native_name": "rough.note"
+      }
+    },
+    {
+      "id": "rough.network",
+      "name": "rough.network",
+      "label": "rough.network",
+      "kind": "component",
+      "summary": "Red que crece: un nodo central y nodos que aparecen en anillos, unidos por enlaces a mano (documentos que se enlazan, la web, una comunidad). Los primeros nodos pueden llevar rótulo; el central va en lima.",
+      "tags": [
+        "red",
+        "enlaces",
+        "web",
+        "conexiones",
+        "crecimiento"
+      ],
+      "params": {
+        "center": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo del nodo central (lima).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de los primeros nodos del anillo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "count": {
+          "type": "number",
+          "default": 24,
+          "doc": "Cantidad de nodos.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": 70
+        },
+        "growSec": {
+          "type": "number",
+          "default": 3,
+          "doc": "Segundos hasta mostrar los nodos principales.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "scale": {
+          "type": "number",
+          "default": 1.15,
+          "doc": "Escala de nodos, rótulos y red.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 2
+        },
+        "keepGrowing": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Agrega nodos exteriores durante el resto del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "extra": {
+          "type": "number",
+          "default": 8,
+          "doc": "Cantidad de nodos exteriores sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 20
+        }
+      },
+      "example": {
+        "center": "WWW",
+        "labels": [
+          "DOC",
+          "FOTO",
+          "VIDEO",
+          "MAPA"
+        ],
+        "count": 28,
+        "growSec": 3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.network",
+      "data": {
+        "native_name": "rough.network"
+      }
+    },
+    {
+      "id": "rough.browser",
+      "name": "rough.browser",
+      "label": "rough.browser",
+      "kind": "component",
+      "summary": "Ventana de navegador dibujada a mano: la dirección se escribe letra a letra en la barra, aparece la página (título + renglones) y un cursor hace clic en un enlace lima en `clickAt`.",
+      "tags": [
+        "web",
+        "navegador",
+        "página",
+        "internet",
+        "sitio"
+      ],
+      "params": {
+        "url": {
+          "type": "string",
+          "default": "info.cern.ch",
+          "doc": "Dirección (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande de la página.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "link": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto del enlace (lima, subrayado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "clickAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo (local) del clic en el enlace (-1 = sin clic; admite \"@palabra\").",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "url": "info.cern.ch",
+        "title": "World Wide Web",
+        "link": "¿qué es esto?",
+        "clickAt": 3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.browser",
+      "data": {
+        "native_name": "rough.browser"
+      }
+    },
+    {
+      "id": "rough.counter",
+      "name": "rough.counter",
+      "label": "rough.counter",
+      "kind": "component",
+      "summary": "Cifra GIGANTE que cuenta de `from` a `to` (con separador de miles) y queda subrayada a mano; etiqueta lima arriba y unidad manuscrita abajo. Para cifras de escala: usuarios, sitios, años, dinero.",
+      "tags": [
+        "número",
+        "cifra",
+        "escala",
+        "crecimiento",
+        "impacto"
+      ],
+      "params": {
+        "from": {
+          "type": "number",
+          "default": 0,
+          "doc": "Valor inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "number",
+          "default": 100,
+          "doc": "Valor final.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 2.2,
+          "doc": "Segundos de conteo (admite \"@palabra\").",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta lima arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad / comentario manuscrito abajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "prefix": {
+          "type": "string",
+          "default": "",
+          "doc": "Prefijo (p. ej. '$').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "suffix": {
+          "type": "string",
+          "default": "",
+          "doc": "Sufijo (p. ej. '%').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": 0,
+        "to": 6000000000,
+        "label": "PERSONAS EN INTERNET",
+        "unit": "y contando…",
+        "dur": 2.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.counter",
+      "data": {
+        "native_name": "rough.counter"
+      }
+    },
+    {
+      "id": "rough.notemark",
+      "name": "rough.notemark",
+      "label": "rough.notemark",
+      "kind": "component",
+      "summary": "Hoja manuscrita con conceptos destacados por separado en el margen o como sellos. Para ver sellos en stage.html agrega &p={\"title\":\"ACCESO AUTORIZADO\",\"marks\":[\"seguridad\",\"soporte\",\"asuntos legales\"],\"style\":\"stamps\"}.",
+      "tags": [
+        "documento",
+        "nota",
+        "marcador",
+        "sello"
+      ],
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título de la hoja.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marks": {
+          "type": "array",
+          "default": [],
+          "doc": "1–5 textos u objetos {text, at}; at es segundo local o ancla @palabras.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Alternativa a marks: conceptos separados por ·.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "style": {
+          "type": "string",
+          "default": "marker",
+          "doc": "Marcador en renglón o sellos sobre el papel.",
+          "required": false,
+          "options": [
+            "marker",
+            "stamps"
+          ],
+          "min": null,
+          "max": null
+        },
+        "side": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Margen de las etiquetas marker; auto elige derecha.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "seed": {
+          "type": "string",
+          "default": "",
+          "doc": "Variante determinista; vacío deriva del contenido y del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrowLen": {
+          "type": "number",
+          "default": 1,
+          "doc": "Multiplicador del largo de las flechas; la semilla suma entre 15 % y 25 %.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 1.4
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundos entre marcas desde 0,8; cada at lo reemplaza.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        }
+      },
+      "example": {
+        "title": "ACCESO AUTORIZADO",
+        "marks": [
+          "seguridad",
+          "soporte",
+          "asuntos legales"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.notemark",
+      "data": {
+        "native_name": "rough.notemark"
+      }
+    },
+    {
+      "id": "rough.outrov1",
+      "name": "rough.outrov1",
+      "label": "rough.outrov1",
+      "kind": "component",
+      "summary": "Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida.",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Línea superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón pintado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades.",
+          "doc": "Texto de apoyo inferior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Usuario del canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo de la voz en que aparece el like.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de la voz en que empieza a dibujarse suscríbete.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la voz en que aparece la campana.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo de la voz en que aparece el mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODETECH",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades."
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.outrov1",
+      "data": {
+        "native_name": "rough.outrov1"
+      }
+    },
+    {
+      "id": "rough.outro",
+      "name": "rough.outro",
+      "label": "rough.outro",
+      "kind": "component",
+      "summary": "Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. Alias compatible para rough.outro.",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Línea superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón pintado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades.",
+          "doc": "Texto de apoyo inferior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Usuario del canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo de la voz en que aparece el like.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de la voz en que empieza a dibujarse suscríbete.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la voz en que aparece la campana.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo de la voz en que aparece el mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODETECH",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades."
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=rough&c=rough.outro",
+      "data": {
+        "native_name": "rough.outro"
+      }
+    }
+  ]
+}

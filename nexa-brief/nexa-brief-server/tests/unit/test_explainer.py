@@ -10,12 +10,12 @@ from __future__ import annotations
 
 import asyncio
 import json
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from fastapi.testclient import TestClient
 
 from src.config.settings import settings
 from src.core import job_tracker
@@ -26,9 +26,6 @@ from src.core.explainer.recorder import ExplainerRecorder, RecordState
 from src.core.metadata import copy_for_platform
 from src.core.schedule import engine, queue_repository, slot_repository
 from src.core.schedule.models import QueueStatus
-from src.presentation.main import app
-
-client = TestClient(app)
 
 MONDAY_9AM = datetime(2026, 10, 12, 9, 0, tzinfo=timezone.utc)  # weekday() == 0
 
@@ -135,6 +132,16 @@ def test_ready_follows_manifest_status(videos_root: Path):
     assert load_video(videos_root / "sin-titulo").publish_ready is False
 
 
+def test_demo_can_be_shared_without_changing_its_primary_category(videos_root):
+    path = videos_root / "hist-1" / "manifest.json"
+    data = json.loads(path.read_text())
+    data.update(category="node_politics", demo=True, shared_categories=["node_atlas", "unknown", "node_atlas"])
+    path.write_text(json.dumps(data))
+    video = load_video(path.parent)
+    assert video.category_paths == ["node_politics", "node_atlas"]
+    assert video.category_path == "node_politics"
+
+
 # ── validación al pedir una grabación ───────────────────────────────────────
 
 def test_record_rejects_video_not_ready(videos_root: Path, make_recorder):
@@ -188,13 +195,31 @@ def test_default_duration_is_ten_seconds(videos_root: Path, make_recorder):
 
 def test_existing_preview_is_reused(videos_root: Path, make_recorder):
     rec, render = make_recorder()
+    video = load_video(videos_root / "tech-1")
+    signature = recorder_mod.render_signature(video)
     preview = videos_root / "tech-1" / "render" / "preview"
     preview.mkdir(parents=True)
     for fmt in ("9x16", "16x9"):
-        (preview / f"tech-1-{fmt}-10s.mp4").write_bytes(b"old")
-    job = _record(rec, load_video(videos_root / "tech-1"), duration="10")
+        path = preview / f"tech-1-{fmt}-10s.mp4"
+        path.write_bytes(b"old")
+        recorder_mod.stamp_render(path, signature)
+    job = _record(rec, video, duration="10")
     assert job.state == RecordState.done
     assert render.calls == []
+
+
+def test_old_or_changed_preview_is_not_reused(videos_root: Path, make_recorder):
+    rec, render = make_recorder()
+    video = load_video(videos_root / "tech-1")
+    preview = video.path / "render/preview"
+    preview.mkdir()
+    (preview / "tech-1-16x9-10s.mp4").write_bytes(b"old frozen render")
+    assert _record(rec, video, duration="10").state == RecordState.done
+    assets = video.path / "assets"
+    assets.mkdir()
+    (assets / "storyboard.json").write_text('{"beats": []}')
+    assert _record(rec, video, duration="10").state == RecordState.done
+    assert len(render.calls) == 2
 
 
 def test_preview_does_not_reuse_full_render(videos_root: Path, make_recorder):
@@ -247,7 +272,10 @@ def test_full_recording_registers_packaged_job(videos_root: Path, make_recorder,
 
     assert job.state == RecordState.done, job.error
     assert render.calls == [("hist-1", None)]
-    out = tmp_path / "output" / "node_history" / "binary" / "hist-1"
+    # una carpeta por grabación (output/<categoría>/<diseño>/<video>/<id de la grabación>)
+    out = Path(job.output_dir)
+    assert out.parent == tmp_path / "output" / "node_history" / "binary" / "hist-1"
+    assert job.scheduled_job_id.endswith(out.name)
     assert (out / "hist-1-16x9.mp4").exists()
 
     record = job_tracker.get(job.scheduled_job_id)
@@ -291,21 +319,27 @@ def test_tiktok_publish_uses_vertical(videos_root: Path, make_recorder, monkeypa
 
 # ── programación por categoría ──────────────────────────────────────────────
 
-def test_category_slot_publishes_recorded_video(videos_root: Path, make_recorder, monkeypatch):
+async def test_category_slot_publishes_recorded_video(videos_root: Path, make_recorder, monkeypatch, api_client):
     """Flujo completo: grabar → horario de NodeHistory → tick → publicado."""
     monkeypatch.setattr(settings, "schedule_auto_fill_enabled", True)
+
+    async def no_thumbnail(_file_paths):
+        return None
+
+    monkeypatch.setattr("src.modules.thumbnail_maker.ensure_for_job", no_thumbnail)
     rec, _ = make_recorder()
-    job = _record(rec, load_video(videos_root / "hist-1"), duration="full")
+    submitted = rec.submit(load_video(videos_root / "hist-1"), duration="full")
+    job = await rec.wait(submitted.job_id)
 
     # El horario se crea por la API, como lo hace la web.
-    response = client.post(
+    response = await api_client.post(
         "/api/v1/schedule/slots",
         json={"platform": "youtube", "account_alias": "canal_1", "days": [0], "times": ["09:00"], "niche_filter": "node_history"},
     )
     assert response.status_code == 201, response.text
 
     publisher = _FakePublisher()
-    summary = asyncio.run(engine.process_tick(publisher, now=MONDAY_9AM))
+    summary = await engine.process_tick(publisher, now=MONDAY_9AM)
 
     assert summary["gaps_filled"] == 1
     assert list(summary["results"].values()) == ["published"]
@@ -332,15 +366,21 @@ def test_category_slot_does_not_take_other_categories(videos_root: Path, make_re
     assert publisher.calls == []
 
 
-def test_same_video_is_not_published_twice_to_same_account(videos_root: Path, make_recorder, monkeypatch):
+async def test_same_video_is_not_published_twice_to_same_account(videos_root: Path, make_recorder, monkeypatch):
     monkeypatch.setattr(settings, "schedule_auto_fill_enabled", True)
+
+    async def no_thumbnail(_file_paths):
+        return None
+
+    monkeypatch.setattr("src.modules.thumbnail_maker.ensure_for_job", no_thumbnail)
     rec, _ = make_recorder()
-    _record(rec, load_video(videos_root / "tech-1"), duration="full")
-    asyncio.run(slot_repository.create(platform="youtube", account_alias="c", days=[0, 1], times=["09:00"], niche_filter="node_tech"))
+    submitted = rec.submit(load_video(videos_root / "tech-1"), duration="full")
+    await rec.wait(submitted.job_id)
+    await slot_repository.create(platform="youtube", account_alias="c", days=[0, 1], times=["09:00"], niche_filter="node_tech")
 
     publisher = _FakePublisher()
-    asyncio.run(engine.process_tick(publisher, now=MONDAY_9AM))
-    asyncio.run(engine.process_tick(publisher, now=datetime(2026, 10, 13, 9, 0, tzinfo=timezone.utc)))
+    await engine.process_tick(publisher, now=MONDAY_9AM)
+    await engine.process_tick(publisher, now=datetime(2026, 10, 13, 9, 0, tzinfo=timezone.utc))
     assert len(publisher.calls) == 1
 
 
@@ -375,20 +415,42 @@ def test_slot_filter_follows_category_tree(tmp_path: Path, niche_filter, picked)
 
 # ── comando real que se ejecuta ─────────────────────────────────────────────
 
+class _FakePipe:
+    def __init__(self, chunks=()):
+        self.chunks = list(chunks)
+
+    async def read(self, _size):
+        return self.chunks.pop(0) if self.chunks else b""
+
+
+@pytest.fixture
+def fake_render_process(monkeypatch):
+    """Emula los dos pipes y la sesión del proceso sin lanzar CLI real."""
+    from src.adapters.recorder.infrastructure import subprocess_progress
+
+    def no_process_group(_pid, _signal):
+        raise ProcessLookupError
+
+    monkeypatch.setattr(subprocess_progress.os, "killpg", no_process_group)
+    def make(*, stdout=(), stderr=(), returncode=0):
+        class Process:
+            pid = 99999999
+            async def wait(self):
+                return self.returncode
+        process = Process()
+        process.stdout = _FakePipe(stdout)
+        process.stderr = _FakePipe(stderr)
+        process.returncode = returncode
+        return process
+    return make
+
+
 @pytest.mark.parametrize(("seconds", "expected_tail"), [(10, ["--seconds", "10"]), (None, ["--formats", "9x16,16x9"])])
-def test_kit_render_command(monkeypatch, seconds, expected_tail):
-    captured: list[tuple] = []
-
-    class _Proc:
-        returncode = 0
-
-        async def communicate(self):
-            return b"ok", None
-
+def test_kit_render_command(monkeypatch, fake_render_process, seconds, expected_tail):
+    captured = []
     async def fake_exec(*cmd, **kwargs):
         captured.append(cmd)
-        return _Proc()
-
+        return fake_render_process()
     monkeypatch.setattr(recorder_mod.asyncio, "create_subprocess_exec", fake_exec)
     asyncio.run(recorder_mod.run_kit_render("codex-titanic", seconds))
     cmd = list(captured[0])
@@ -398,25 +460,62 @@ def test_kit_render_command(monkeypatch, seconds, expected_tail):
     assert Path(cmd[1]).exists()
 
 
-def test_kit_render_failure_raises(monkeypatch):
-    class _Proc:
-        returncode = 2
-
-        async def communicate(self):
-            return b"Traceback: boom", None
-
+def test_kit_render_failure_raises(monkeypatch, fake_render_process):
     async def fake_exec(*cmd, **kwargs):
-        return _Proc()
-
+        return fake_render_process(stderr=[b"Traceback: boom\n"], returncode=2)
     monkeypatch.setattr(recorder_mod.asyncio, "create_subprocess_exec", fake_exec)
-    with pytest.raises(recorder_mod.RenderError, match="código 2"):
+    with pytest.raises(recorder_mod.RenderError, match="código 2.*boom"):
         asyncio.run(recorder_mod.run_kit_render("x", 10))
+
+
+def test_kit_render_forwards_output_as_it_arrives(monkeypatch, fake_render_process):
+    captured = {}
+    async def fake_exec(*cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured.update(kwargs)
+        return fake_render_process(stdout=[b"@@format 16x9 1 1\n", b"@@progress 3 5\n"])
+    monkeypatch.setattr(recorder_mod.asyncio, "create_subprocess_exec", fake_exec)
+    received = []
+    asyncio.run(recorder_mod.run_kit_render("x", None, ("16x9",), on_output=received.append))
+    assert received == ["@@format 16x9 1 1", "@@progress 3 5"]
+    assert captured["env"]["PYTHONUNBUFFERED"] == "1"
+
+
+def test_render_progress_protocol_aggregates_formats_and_estimates_eta():
+    job = recorder_mod.RecordJob(
+        job_id="j1",
+        video_id="tech-1",
+        category_path="node_tech",
+        duration="full",
+        publish=False,
+        privacy="private",
+        account_selector=None,
+        formats=("16x9", "9x16"),
+    )
+    started = time.monotonic() - 12
+
+    recorder_mod._consume_render_line(job, "@@format 16x9 1 2", started)
+    recorder_mod._consume_render_line(job, "@@progress 50 100", started)
+    assert job.progress == pytest.approx(0.2375)
+    assert job.progress_format == "16x9"
+    assert job.progress_phase == "capturing"
+    assert job.eta_seconds is not None and job.eta_seconds > 0
+
+    recorder_mod._consume_render_line(job, "@@phase encode", started)
+    assert job.progress_phase == "encoding"
+    assert job.progress == pytest.approx(0.2375)
+
+    recorder_mod._consume_render_line(job, "@@format 9x16 2 2", started)
+    recorder_mod._consume_render_line(job, "@@progress 50 100", started)
+    assert job.progress_format == "9x16"
+    assert job.progress_phase == "capturing"
+    assert job.progress == pytest.approx(0.7375)
 
 
 # ── API HTTP ────────────────────────────────────────────────────────────────
 
-def test_api_lists_real_videos_with_category():
-    response = client.get("/api/v1/explainer/videos")
+async def test_api_lists_real_videos_with_category(api_client):
+    response = await api_client.get("/api/v1/explainer/videos")
     assert response.status_code == 200
     by_id = {item["video_id"]: item for item in response.json()}
     if "codex-titanic" in by_id:
@@ -426,54 +525,89 @@ def test_api_lists_real_videos_with_category():
         assert by_id["codex-titanic"]["ready"] is True
 
 
-def test_api_categories_tree():
-    response = client.get("/api/v1/categories")
+async def test_api_categories_tree(api_client):
+    response = await api_client.get("/api/v1/categories")
     assert response.status_code == 200
     tree = {c["id"]: c for c in response.json()}
-    assert set(tree) == {"node_tech", "node_history", "node_motion", "node_politics", "node_economy"}
+    assert set(tree) == {"node_tech", "node_history", "node_motion", "node_politics", "node_economy", "node_atlas"}
+    assert tree["node_atlas"]["designs"] == ["imperio"]
     assert tree["node_tech"]["designs"] == ["rough"]
     assert [c["path"] for c in tree["node_motion"]["children"]] == [
         "node_motion/letras", "node_motion/promos", "node_motion/fondos", "node_motion/instrumental",
+        "node_motion/fase_de_pruebas",
     ]
 
 
-def test_api_record_404_for_unknown_video():
-    assert client.post("/api/v1/explainer/videos/no-existe/record", json={}).status_code == 404
+async def test_api_record_404_for_unknown_video(api_client):
+    assert (await api_client.post("/api/v1/explainer/videos/no-existe/record", json={})).status_code == 404
+
+
+async def test_api_filters_shared_demo_and_atlas_only_video(api_client, monkeypatch, tmp_path):
+    from src.core.explainer.catalog import ExplainerVideo
+    from src.presentation.api.routers import explainer as routes
+    shared = ExplainerVideo(video_id="shared", path=tmp_path, design="imperio", category_path="node_politics",
+                            title="Demo", status="listo", duration_seconds=120, demo=True,
+                            shared_categories=["node_atlas"])
+    atlas = ExplainerVideo(video_id="atlas-only", path=tmp_path, design="imperio", category_path="node_atlas",
+                          title="Expansión", status="listo", duration_seconds=120)
+    monkeypatch.setattr(routes, "list_videos", lambda: [shared, atlas])
+    monkeypatch.setattr(routes, "_video_response", lambda video: {"video_id": video.video_id})
+    result = await routes.list_explainer_videos("node_politics")
+    assert [v["video_id"] for v in result] == ["shared"]
+    result = await routes.list_explainer_videos("node_atlas")
+    assert [v["video_id"] for v in result] == ["shared", "atlas-only"]
+
+
+async def test_design_picker_offers_imperio_in_both_categories(api_client):
+    groups = (await api_client.get("/api/v1/explainer/design-groups", params={"first": "node_atlas"})).json()
+    assert groups[0]["category_path"] == "node_atlas"
+    by_category = {g["category_path"]: {d["design_id"] for d in g["designs"]} for g in groups}
+    assert "imperio" in by_category["node_atlas"] & by_category["node_politics"]
 
 
 @pytest.mark.parametrize(
     ("body", "status"),
     [
-        ({"publish": True, "duration": "full"}, 400),                                   # falta cuenta
-        ({"publish": True, "duration": "10", "account_selector": "youtube:c"}, 400),    # preview no se publica
+        ({"publish": True, "duration": "full"}, 422),                                   # falta cuenta
+        ({"publish": True, "duration": "10", "account_selector": "youtube:c"}, 422),    # preview no se publica
         ({"duration": "30"}, 422),                                                      # duración inválida
         ({"privacy": "secreto"}, 422),                                                  # privacidad inválida
     ],
 )
-def test_api_record_validation(body, status):
-    response = client.post("/api/v1/explainer/videos/codex-titanic/record", json=body)
+async def test_api_record_validation(body, status, api_client, monkeypatch, videos_root):
+    # El endpoint traduce ValueError del recorder a 422; usa un video de fixture.
+    monkeypatch.setattr("src.presentation.api.routers.explainer.get_video", lambda _: load_video(videos_root / "tech-1"))
+    response = await api_client.post("/api/v1/explainer/videos/tech-1/record", json=body)
     assert response.status_code == status, response.text
 
 
-def test_api_record_accepts_and_reports_job(monkeypatch, make_recorder, videos_root):
+async def test_api_record_accepts_and_reports_job(monkeypatch, make_recorder, videos_root, api_client):
     """POST devuelve 202 con el job; GET /jobs/{id} lo encuentra."""
     rec, _ = make_recorder()
     monkeypatch.setattr("src.presentation.api.routers.explainer.get_recorder", lambda: rec)
     monkeypatch.setattr("src.presentation.api.routers.explainer.get_video", lambda vid: load_video(videos_root / "tech-1"))
 
-    response = client.post("/api/v1/explainer/videos/tech-1/record", json={"duration": "20"})
+    response = await api_client.post("/api/v1/explainer/videos/tech-1/record", json={"duration": "20"})
     assert response.status_code == 202, response.text
     body = response.json()
     assert body["duration"] == "20"
     assert body["category_path"] == "node_tech"
 
-    job = client.get(f"/api/v1/explainer/jobs/{body['job_id']}")
+    job = await api_client.get(f"/api/v1/explainer/jobs/{body['job_id']}")
     assert job.status_code == 200
     assert job.json()["video_id"] == "tech-1"
+    assert 0 <= job.json()["progress"] <= 1
+    assert {"progress_format", "progress_phase", "started_at", "eta_seconds"} <= job.json().keys()
+    listed = await api_client.get("/api/v1/explainer/jobs?active=true")
+    assert listed.status_code == 200
+    assert any(item["job_id"] == body["job_id"] for item in listed.json())
+    await rec.wait(body["job_id"])
+    recent = await api_client.get("/api/v1/explainer/jobs?active=true")
+    assert any(item["job_id"] == body["job_id"] and item["state"] == "done" for item in recent.json())
 
 
-def test_api_unknown_job_404():
-    assert client.get("/api/v1/explainer/jobs/nope").status_code == 404
+async def test_api_unknown_job_404(api_client):
+    assert (await api_client.get("/api/v1/explainer/jobs/nope")).status_code == 404
 
 
 # ── contrato con el CLI real ────────────────────────────────────────────────
@@ -488,7 +622,7 @@ def _load_kit_module():
 
 
 @pytest.mark.parametrize("seconds", [10, 20, None])
-def test_kit_cli_writes_the_files_the_recorder_reads(tmp_path: Path, monkeypatch, seconds):
+def test_kit_cli_writes_the_files_the_recorder_reads(tmp_path: Path, monkeypatch, seconds, capsys):
     """Ejecuta el cmd_render REAL de kit.py (sin render_promo) y compara las rutas.
 
     La prueba en vivo del 2026-10-10 falló justo aquí: kit.py escribía
@@ -510,6 +644,7 @@ def test_kit_cli_writes_the_files_the_recorder_reads(tmp_path: Path, monkeypatch
 
     expected_dir = video_dir / "render" / "preview" if seconds else video_dir / "render"
     assert written == [expected_dir / recorder_mod.render_filename("vid", f, seconds) for f in ("9x16", "16x9")]
+    assert capsys.readouterr().out.splitlines() == ["@@format 9x16 1 2", "@@format 16x9 2 2"]
 
 
 def test_kit_cli_stops_when_render_fails(tmp_path: Path, monkeypatch):
@@ -520,6 +655,42 @@ def test_kit_cli_stops_when_render_fails(tmp_path: Path, monkeypatch):
     with pytest.raises(SystemExit) as exc:
         kit.cmd_render(SimpleNamespace(id="vid", formats="9x16", seconds=10))
     assert exc.value.code == 3
+
+
+def test_kit_cli_v3_stages_managed_and_commits_standalone_renders(tmp_path: Path, monkeypatch):
+    from src.config.profile_layout import resolve_profile_layout
+
+    layout = resolve_profile_layout(tmp_path / "profile", 3)
+    monkeypatch.setattr(settings, "storage_profile_dir", layout.root)
+    monkeypatch.setattr(settings, "storage_layout_version", 3)
+    monkeypatch.setattr(settings, "data_dir", layout.data_dir)
+    monkeypatch.setattr(settings, "output_dir", layout.renders_dir)
+    monkeypatch.delenv("NEXA_RENDER_MANAGED", raising=False)
+    monkeypatch.delenv("NEXA_RENDER_OUTPUT_DIR", raising=False)
+    video = layout.productions_dir / "nodetech" / "vid"
+    video.mkdir(parents=True)
+    (video / "index.html").write_text("<html></html>")
+    kit = _load_kit_module()
+    monkeypatch.setattr(kit, "vdir", lambda _id: video)
+    monkeypatch.setattr(kit, "cmd_manifest", lambda a: None)
+    def fake_run(cmd, **kwargs):
+        Path(cmd[3]).write_bytes(b"synthetic video")
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(kit, "run", fake_run)
+    kit.cmd_render(SimpleNamespace(id="vid", formats="9x16,16x9", seconds=0))
+    outputs = list((layout.renders_dir / "videos/nodetech/vid").glob("*/video.mp4"))
+    assert len(outputs) == 2
+    assert all(path.read_bytes() == b"synthetic video" for path in outputs)
+    event = next((layout.runtime_dir / "video_backups/events").glob("*.json"))
+    assert set(json.loads(event.read_text())["outputs"]) == {"9x16", "16x9"}
+    staging = layout.runtime_dir / "recordings/vid/managed"
+    monkeypatch.setenv("NEXA_RENDER_MANAGED", "1")
+    monkeypatch.setenv("NEXA_RENDER_OUTPUT_DIR", str(staging))
+    kit.cmd_render(SimpleNamespace(id="vid", formats="16x9", seconds=10))
+    assert (staging / "vid-16x9-10s.mp4").is_file()
+    monkeypatch.setenv("NEXA_RENDER_OUTPUT_DIR", str(tmp_path / "elsewhere"))
+    with pytest.raises(SystemExit):
+        kit.cmd_render(SimpleNamespace(id="vid", formats="16x9", seconds=10))
 
 
 def test_publish_to_several_channels_with_own_texts(videos_root: Path, make_recorder, monkeypatch):
@@ -547,6 +718,11 @@ def test_publish_to_several_channels_with_own_texts(videos_root: Path, make_reco
     by = {c["account_selector"]: c for c in calls}
     assert by["youtube:a"]["video_path"].name == "tech-1-16x9.mp4" and by["youtube:a"]["privacy"] == "public"
     assert by["tiktok:b"]["video_path"].name == "tech-1-9x16.mp4" and by["tiktok:b"]["title"] == "Caption TT"
+    tiktok_entry = next(
+        entry for entry in collection("queue_entries").list()
+        if entry["job_id"] == job.scheduled_job_id and entry["platform"] == "tiktok"
+    )
+    assert by["tiktok:b"]["idempotency_key"] == f"schedule:{tiktok_entry['entry_id']}"
     assert by["facebook:c"]["title"] == "Título FB"
     assert [r.get("post_id") for r in job.publish_results] == ["p-youtube", "p-tiktok", None]
     assert "facebook:c" in job.error
@@ -579,6 +755,88 @@ def test_default_records_only_desktop_16x9(videos_root: Path, make_recorder, tmp
     assert record["ready_formats"] == ["youtube"]
 
 
+class _FakeThumbnails:
+    """Imita thumbnails.render: escribe render/thumbnail-<opción>.jpg sin abrir el navegador."""
+
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, tuple[str, ...]]] = []
+
+    async def __call__(self, video, options):
+        self.calls.append((video.video_id, tuple(options)))
+        out = {}
+        for option in options:
+            path = video.path / "render" / f"thumbnail-{option}.jpg"
+            path.write_bytes(b"jpg")
+            out[option] = path
+        return out
+
+
+def test_full_recording_attaches_the_chosen_thumbnail(videos_root: Path, tmp_path: Path):
+    thumbs, publisher = _FakeThumbnails(), _FakePublisher()
+    rec = ExplainerRecorder(render_runner=_FakeRender(videos_root), publisher_getter=lambda: publisher,
+                            output_root=tmp_path / "output", thumbnail_renderer=thumbs)
+    job = _record(rec, load_video(videos_root / "hist-1"), duration="full", publish=True,
+                  account_selectors=["youtube:c", "tiktok:t"], thumbnail="A")
+    assert job.state == RecordState.done, job.error
+    assert thumbs.calls == [("hist-1", ("A",))]   # se captura de nuevo antes de publicar
+    youtube = next(c for c in publisher.calls if c["account_selector"] == "youtube:c")
+    tiktok = next(c for c in publisher.calls if c["account_selector"] == "tiktok:t")
+    assert youtube["thumbnail_path"].name == "thumbnail.jpg" and "thumbnail_path" not in tiktok
+    record = job_tracker.get(job.scheduled_job_id)
+    assert Path(record["file_paths"]["thumbnail"]).exists()
+    assert "thumbnail" not in record["ready_formats"]
+
+
+def test_v1_publish_can_offer_the_image_thumbnail(videos_root: Path, monkeypatch):
+    from src.core.explainer import thumbnails
+    from src.core.explainer.publishing import opening
+    monkeypatch.setattr(opening, "TEMPLATES_DIR", videos_root)
+    video_dir = videos_root / "hist-1"
+    (video_dir / "assets" / "media").mkdir(parents=True)
+    (video_dir / "assets" / "media" / "retrato.jpg").write_bytes(b"jpg")
+    data = json.loads((video_dir / "publish.json").read_text())
+    data.update(thumbnail_text="UN SOLO ERROR", thumbnail_image="retrato.jpg", thumbnail_image_side="left")
+    (video_dir / "publish.json").write_text(json.dumps(data))
+    specs = thumbnails.intro_specs(load_video(video_dir))
+    assert specs["B"]["component"] == "binary.introv2"
+    assert specs["B"]["params"]["src"] == "/hist-1/assets/media/retrato.jpg" and specs["B"]["params"]["imageSide"] == "left"
+    thumbnails.choose(load_video(video_dir), "B")
+    assert json.loads((video_dir / "publish.json").read_text())["thumbnail_option"] == "B"
+
+
+def test_unavailable_thumbnail_option_is_rejected(videos_root: Path, make_recorder):
+    rec, _ = make_recorder()
+    with pytest.raises(ValueError, match="no está disponible"):   # v1 sin foto elegida: solo A
+        rec.submit(load_video(videos_root / "hist-1"), duration="full", thumbnail="B")
+
+
+def test_previews_never_capture_thumbnails(videos_root: Path, tmp_path: Path):
+    thumbs = _FakeThumbnails()
+    rec = ExplainerRecorder(render_runner=_FakeRender(videos_root), output_root=tmp_path / "output", thumbnail_renderer=thumbs)
+    job = _record(rec, load_video(videos_root / "hist-1"), duration="10")
+    assert job.state == RecordState.done and thumbs.calls == []
+
+
+def test_scheduled_youtube_publish_uploads_the_explainer_thumbnail(videos_root: Path, tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(settings, "schedule_auto_fill_enabled", True)
+    rec = ExplainerRecorder(render_runner=_FakeRender(videos_root), output_root=tmp_path / "output",
+                            thumbnail_renderer=_FakeThumbnails())
+    _record(rec, load_video(videos_root / "hist-1"), duration="full")
+    asyncio.run(slot_repository.create(platform="youtube", account_alias="c", days=[0], times=["09:00"], niche_filter="node_history"))
+    publisher = _FakePublisher()
+    asyncio.run(engine.process_tick(publisher, now=MONDAY_9AM))
+    assert publisher.calls[0]["thumbnail_path"].name == "thumbnail.jpg"
+
+
+def test_explainer_publish_texts_drop_emojis(videos_root: Path):
+    publish = videos_root / "hist-1" / "publish.json"
+    data = json.loads(publish.read_text())
+    data.update(youtube_title="El muro cayó 🔥 Nadie lo esperaba", youtube_description="Línea 1 😱\nLínea 2", youtube_tags=["muro", "🔥"])
+    publish.write_text(json.dumps(data, ensure_ascii=False))
+    title, description, tags = recorder_mod._copy_for(load_video(videos_root / "hist-1"), "youtube")
+    assert (title, description, tags) == ("El muro cayó. Nadie lo esperaba", "Línea 1\nLínea 2", ["muro"])
+
+
 def test_mobile_9x16_only_when_requested(videos_root: Path, make_recorder):
     rec, render = make_recorder()
     _record(rec, load_video(videos_root / "hist-1"), duration="full", formats=["16x9", "9x16"])
@@ -606,3 +864,48 @@ def test_full_recording_stores_generation_seconds_for_library(videos_root: Path,
     record = job_tracker.get(job.scheduled_job_id)
     assert record["generation_seconds"] == job.render_seconds
     assert job_tracker.generation_seconds(record) is not None
+
+
+def test_channel_uploads_use_three_workers_and_fill_first_free_slot(videos_root, make_recorder, monkeypatch):
+    monkeypatch.setattr(recorder_mod, "record_published_video", _noop_async)
+    monkeypatch.setattr(recorder_mod.settings, "publish_max_concurrent_uploads", 3)
+
+    async def scenario():
+        selectors = ["youtube:a", "facebook:b", "tiktok:c", "instagram:d"]
+        entered = {s: asyncio.Event() for s in selectors}
+        release = {s: asyncio.Event() for s in selectors}
+        running = 0
+        peak = 0
+
+        class Facade:
+            async def publish_video(self, **kw):
+                nonlocal running, peak
+                selector = kw["account_selector"]
+                running += 1
+                peak = max(peak, running)
+                entered[selector].set()
+                try:
+                    await release[selector].wait()
+                    platform, alias = selector.split(":")
+                    return SimpleNamespace(post_id=platform, url=f"https://x/{platform}",
+                                           platform=platform, account_alias=alias, raw_response={})
+                finally:
+                    running -= 1
+
+        rec, _ = make_recorder(Facade())
+        job = rec.submit(load_video(videos_root / "tech-1"), duration="full", publish=True,
+                         account_selectors=selectors)
+        try:
+            await asyncio.wait_for(asyncio.gather(*(entered[s].wait() for s in selectors[:3])), 5)
+            assert not entered[selectors[3]].is_set()
+            release["facebook:b"].set()
+            await asyncio.wait_for(entered["instagram:d"].wait(), 5)
+            assert not release["youtube:a"].is_set() and not release["tiktok:c"].is_set()
+            assert peak == 3
+        finally:
+            for event in release.values():
+                event.set()
+            await rec.wait(job.job_id)
+        assert job.state == RecordState.done and len(job.publish_results) == 4
+
+    asyncio.run(scenario())

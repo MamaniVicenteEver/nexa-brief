@@ -1,5 +1,9 @@
 const React = require('react');
+const HiloIntro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-expediente/components/intro.js');
+const HiloOutro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-expediente/components/outro.js');
 const {useCurrentFrame, AbsoluteFill, Audio, interpolate} = require('remotion');
+const {loadFont: loadAnton} = require('@remotion/google-fonts/Anton');
+loadAnton();
 const {loadFont: loadSpecialElite} = require('@remotion/google-fonts/SpecialElite');
 const {loadFont: loadOswald} = require('@remotion/google-fonts/Oswald');
 const {loadFont: loadCaveat} = require('@remotion/google-fonts/Caveat');
@@ -219,116 +223,7 @@ function Dust({dust, frame, fps}) {
   );
 }
 
-function Card({cfg, opacity}) {
-  return React.createElement(
-    'div',
-    {
-      style: {
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        opacity,
-      },
-    },
-    React.createElement(
-      'div',
-      {
-        style: {
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '2.6vh',
-          padding: '7vh 7vw 6vh',
-          transform: 'rotate(-1.6deg)',
-          background: 'linear-gradient(174deg, #CBB88C 0%, #C0AB77 55%, #AE9760 100%)',
-          borderRadius: '4px 14px 5px 5px',
-          boxShadow: '0 24px 60px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,255,255,0.28)',
-        },
-      },
-      React.createElement('div', {
-        key: 'tab',
-        style: {
-          position: 'absolute',
-          top: '-3vh',
-          left: '7%',
-          width: '26%',
-          height: '3.2vh',
-          background: 'linear-gradient(#CBB88C, #C0AB77)',
-          borderRadius: '8px 8px 0 0',
-        },
-      }),
-      React.createElement(
-        'div',
-        {
-          key: 'artist',
-          style: {
-            fontFamily: '"Special Elite", monospace',
-            fontSize: '2.4vh',
-            letterSpacing: '0.34em',
-            color: '#241C10',
-            textTransform: 'uppercase',
-          },
-        },
-        cfg.artist ?? cfg.songTitle ?? ''
-      ),
-      React.createElement(
-        'div',
-        {
-          key: 'title',
-          style: {
-            fontFamily: '"Oswald", sans-serif',
-            fontWeight: 700,
-            fontSize: '11vh',
-            lineHeight: 1.05,
-            textTransform: 'uppercase',
-            letterSpacing: '0.07em',
-            color: '#C3231E',
-            border: '0.9vh solid #C3231E',
-            boxShadow: 'inset 0 0 0 0.25vh #C3231E',
-            padding: '0.4vh 2.4vh 0.2vh',
-            transform: 'rotate(-2.6deg)',
-            filter: 'url(#rough)',
-            mixBlendMode: 'multiply',
-          },
-        },
-        cfg.title
-      ),
-      React.createElement(
-        'div',
-        {
-          key: 'sub',
-          style: {
-            fontFamily: '"Special Elite", monospace',
-            fontSize: '3.4vh',
-            letterSpacing: '0.55em',
-            paddingLeft: '0.55em',
-            color: '#241C10',
-            textTransform: 'uppercase',
-          },
-        },
-        cfg.sub
-      ),
-      React.createElement(
-        'div',
-        {
-          key: 'feats',
-          style: {
-            fontFamily: '"Special Elite", monospace',
-            fontSize: '1.7vh',
-            letterSpacing: '0.3em',
-            color: '#3A2E1A',
-            marginTop: '1.6vh',
-          },
-        },
-        cfg.feats
-      )
-    )
-  );
-}
+
 
 function HiloRojo({configData, lyricsData, audioSrc, bgSrc}) {
   const frame = useCurrentFrame();
@@ -349,15 +244,15 @@ function HiloRojo({configData, lyricsData, audioSrc, bgSrc}) {
   const visiblePieces = [];
   for (let i = windowStart; i <= lastIdx; i++) visiblePieces.push(i);
 
-  const introVisible = PIECES.length === 0 || frame < PIECES[0].frame;
   const cardTransFrames = 1.3 * fps;
-  const introOpacity = PIECES.length
-    ? interpolate(frame, [PIECES[0].frame, PIECES[0].frame + cardTransFrames], [1, 0], {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp',
-      })
-    : 1;
-  const outroOpacity = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + cardTransFrames], [0, 1], {
+  const introDurationSeconds = PIECES.length
+    ? PIECES[0].frame / fps
+    : HiloIntro.DEFAULT_DURATION_SECONDS;
+  const outroOpacity = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 1.1 * fps], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const backgroundDim = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 1.8 * fps], [1, 0.52], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -385,7 +280,7 @@ function HiloRojo({configData, lyricsData, audioSrc, bgSrc}) {
       style: {
         position: 'absolute',
         inset: 0,
-        opacity: worldDim,
+        opacity: backgroundDim,
         background:
           'radial-gradient(ellipse 60vw 45vh at 18% 22%, rgba(255,235,190,0.045), transparent 70%),' +
           'radial-gradient(ellipse 50vw 60vh at 82% 70%, rgba(0,0,0,0.35), transparent 75%),' +
@@ -406,7 +301,7 @@ function HiloRojo({configData, lyricsData, audioSrc, bgSrc}) {
           height: '100%',
           objectFit: 'cover',
           filter: 'grayscale(0.8) sepia(0.5) brightness(0.22) contrast(1.15)',
-          opacity: 0.5 * worldDim,
+          opacity: 0.72 * backgroundDim,
         },
       }),
     // #viewport/#world — todo lo clavado al muro, bajo la cámara virtual
@@ -477,8 +372,13 @@ function HiloRojo({configData, lyricsData, audioSrc, bgSrc}) {
         opacity: flashOpacity,
       },
     }),
-    introVisible && React.createElement(Card, {cfg: C.intro, opacity: introOpacity}),
-    frame >= OUTRO_FRAME && React.createElement(Card, {cfg: C.outro, opacity: outroOpacity})
+    HiloIntro.createRemotionElement({
+      React, config: C.intro,
+      timeSeconds: frame / fps,
+      durationSeconds: introDurationSeconds,
+      outroActive: frame >= OUTRO_FRAME,
+    }),
+    frame >= OUTRO_FRAME && HiloOutro.createRemotionElement({React, config: C.outro, opacity: outroOpacity, elapsedSeconds: Math.max(0, (frame - OUTRO_FRAME) / fps), width: WIDTH, height: HEIGHT})
   );
 }
 

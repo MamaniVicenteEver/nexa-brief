@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { LocaleSwitcher } from "./LocaleSwitcher";
@@ -21,12 +22,23 @@ export async function PublicHeader() {
   ] as const;
 
   return (
-    <nav className="nexa-public-header nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-[12px] md:px-10">
+    <nav className="nexa-public-header nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-1.5 md:px-10">
       <Link
         href="/"
-        className="nexa-public-header__logo font-nb-sans font-bold text-[20px] tracking-[-0.03em] text-nb-ink no-underline md:text-[22px]"
+        aria-label={t("logo")}
+        className="nexa-public-header__logo inline-flex items-center gap-0 font-nb-brand font-bold text-[19px] tracking-[-0.02em] text-nb-ink no-underline md:text-[21px]"
       >
-        {t("logo")}
+        <Image
+          src="/logo/nexa-mark-bw-transparent.png"
+          alt=""
+          width={52}
+          height={52}
+          className="size-[46px] shrink-0 object-contain md:size-[52px]"
+        />
+        {/* El PNG trae aire a la derecha de la N: «exa» se acerca para leerse «Nexa». */}
+        <span className="-ml-[7px] md:-ml-2" aria-hidden="true">
+          exa Brief
+        </span>
       </Link>
 
       <ul className="nexa-public-header__links absolute left-1/2 hidden -translate-x-1/2 gap-7 md:flex">
@@ -46,7 +58,7 @@ export async function PublicHeader() {
         <LocaleSwitcher className="hidden sm:inline-flex" />
         <Link
           href="/acceso"
-          className="nexa-public-header__access-link nb-btn-pill inline-block px-6 py-[13px] font-nb-sans text-sm font-medium no-underline md:px-7"
+          className="nexa-public-header__access-link nb-btn-pill inline-block px-5 py-2.5 font-nb-sans text-sm font-medium no-underline md:px-7"
         >
           {tCommon("solicitarAcceso")}
         </Link>

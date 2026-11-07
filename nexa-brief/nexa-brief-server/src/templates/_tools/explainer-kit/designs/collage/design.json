@@ -26,9 +26,13 @@
     "designs/collage/components/scenes.js",
     "designs/collage/components/special.js",
     "designs/common/hook.js",
+    "designs/common/logo.js",
+    "designs/common/clip.js",
     "designs/collage/components/intros.js",
     "designs/common/outro-v1.js",
-    "designs/collage/components/outro.js"
+    "designs/collage/components/outro.js",
+    "designs/common/tabloid.js",
+    "designs/common/question.js"
   ],
   "defaults": {
     "family": "collage",
@@ -79,6 +83,11 @@
       "support": "apoya el canal · comparte la historia",
       "handle": "youtube.com/@nodehistory",
       "use": "collage.outro"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.25)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

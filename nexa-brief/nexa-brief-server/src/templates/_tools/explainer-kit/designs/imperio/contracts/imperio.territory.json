@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.territory",
+  "description": "Territorio que aparece en carmesí con borde y pulso. Admite países, varios países, polígonos recortados dentro de un país o islas mediante puntos.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "from": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+      "default": null
+    },
+    "to": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+      "default": null
+    },
+    "zoom": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 6,
+      "description": "Si no hay `to`: cuánto se aleja la cámara.",
+      "default": 1
+    },
+    "tilt": {
+      "type": "number",
+      "minimum": -20,
+      "maximum": 20,
+      "description": "Si no hay `to`: grados que gira el mapa.",
+      "default": 0
+    },
+    "ease": {
+      "enum": [
+        "auto",
+        "out",
+        "in",
+        "inOut",
+        "linear",
+        "expo"
+      ],
+      "description": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+      "default": "expo"
+    },
+    "country": {
+      "type": "string",
+      "description": "País foco: pone el sol y el rayado.",
+      "default": "Japan"
+    },
+    "target": {
+      "$ref": "#/$defs/place",
+      "description": "País o punto [longitud, latitud] del destino; nunca píxeles.",
+      "default": "Taiwan"
+    },
+    "region": {
+      "$ref": "#/$defs/region",
+      "description": "Territorio: nombre de país, lista de países, {poly:[[lon,lat]…],within:'País'} o {dots:[[lon,lat]…]}. Vacío = el país de target.",
+      "default": null
+    },
+    "time": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo local de llegada. Acepta @palabra de la narración.",
+      "default": 0.5
+    }
+  },
+  "required": [],
+  "$defs": {
+    "camera": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 4,
+          "items": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "place": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    },
+    "region": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        {
+          "type": "object",
+          "properties": {
+            "poly": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coordinate"
+              },
+              "minItems": 3
+            },
+            "within": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "poly"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "dots": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coordinate"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "dots"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "from": [
+        128,
+        37.5,
+        40,
+        0
+      ],
+      "to": [
+        128,
+        37.5,
+        40,
+        0
+      ],
+      "time": 0.5,
+      "target": [
+        127.6,
+        36.6
+      ],
+      "region": [
+        "South Korea",
+        "North Korea"
+      ]
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

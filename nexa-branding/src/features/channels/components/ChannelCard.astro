@@ -1,0 +1,75 @@
+---
+import { medallionUrl } from '@/shared/lib/images';
+import { ArrowRight, ArrowUpRight } from '@lucide/astro';
+import type { Channel } from '../model/types';
+import { text, channelPath, type Locale } from '@/shared/lib/locale';
+import SocialIcon from '@/shared/ui/SocialIcon.astro';
+interface Props {
+  channel: Channel;
+  locale: Locale;
+  wide?: boolean;
+}
+const { channel, locale, wide = false } = Astro.props;
+---
+
+<article
+  class:list={['channel-card', { 'channel-card--wide': wide }]}
+  style={`--channel-accent:${channel.accent}`}
+>
+  <div class="channel-card__art">
+    <span class="channel-card__number">{channel.number} / NODE</span>
+    <img
+      src={medallionUrl(channel.id)}
+      alt={text(locale, `Emblema de ${channel.name}`, `${channel.name} emblem`)}
+      width="320"
+      height="320"
+      loading="lazy"
+    />
+    <div class="channel-card__art-rule"></div>
+    <span class="channel-card__category">{channel.category[locale]}</span>
+  </div>
+  <div class="channel-card__body">
+    <div class="channel-card__top">
+      <h3>{channel.name}</h3>
+      <a
+        class="icon-link"
+        href={channel.socials.youtube.url!}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={text(
+          locale,
+          `Abrir ${channel.name} en YouTube`,
+          `Open ${channel.name} on YouTube`,
+        )}
+      >
+        <ArrowUpRight size={21} />
+      </a>
+    </div>
+    <p class="channel-card__headline">{channel.headline[locale]}</p>
+    <p class="channel-card__description">{channel.description[locale]}</p>
+    <ul class="topic-list" aria-label={text(locale, 'Temas', 'Topics')}>
+      {channel.topics[locale].map((topic) => (
+        <li>{topic}</li>
+      ))}
+    </ul>
+    <div class="channel-card__actions">
+      <button class="text-button" type="button" data-open-channel={channel.id}>
+        {text(locale, 'Ver identidad', 'View identity')}
+        <ArrowRight size={17} />
+      </button>
+      <a
+        class="channel-handle"
+        href={channel.socials.youtube.url!}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <SocialIcon platform="youtube" size={15} />
+        {channel.socials.youtube.handle}
+      </a>
+    </div>
+    <a class="channel-card__detail" href={channelPath(channel.id, locale)}>
+      {text(locale, 'Conocer el canal', 'Discover the channel')}
+      <ArrowUpRight size={14} />
+    </a>
+  </div>
+</article>

@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "title": "Cara a Cara · ¿Quién ganó la carrera espacial?",
+  "summary": "Comparaciones móviles con perfil de Leo: logos, fotos y videos en cada tarjeta; los hitos ocupan ambas columnas y los clips continúan sincronizados. Muestra de 60 s lista para probar.",
+  "engine": "nodeaction/_pizarra",
+  "based_on": "prueba-avatar-comparacion",
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-11-03",
+  "libraries": [
+    {
+      "name": "Nexa Proto + Pizarra/comparacion",
+      "version": "local compartida",
+      "purpose": "reproductor, comparación móvil, subtítulos y ventanas de medios"
+    },
+    {
+      "name": "Archivo Black",
+      "version": "Google Fonts",
+      "purpose": "pregunta principal en tipografía gruesa"
+    },
+    {
+      "name": "Anton",
+      "version": "Google Fonts",
+      "purpose": "nombres de tarjetas y subtítulos"
+    }
+  ],
+  "inputs": [
+    "Uno o dos sujetos con nombre, imagen y breve descripción.",
+    "Guion verificado y duración entre 60 y 240 segundos.",
+    "Fotos o clips de apoyo con procedencia y créditos.",
+    "Personaje Leo o Lía, ocho poses reutilizables cada uno.",
+    "Perfil de voz Puck, conversacional en español latinoamericano."
+  ],
+  "notes": [
+    "Solo 9:16: canvas lógico fijo 1080×1920, incluso en visores horizontales.",
+    "Muestra terminada de 60 s, preparada en Sandbox; sin grabación ni publicación.",
+    "Nueva voz Puck; ritmo ajustado sin cambiar tono. Transcripción real de 124 palabras con tiempos.",
+    "Base prueba-avatar-comparacion; motor compartido Proto y componente opt-in comparacion.js.",
+    "Leo y Lía comparten una hoja de 16 poses y recortes por metadatos; no se duplican PNG por pose.",
+    "Para otros temas cambiar datos, narración y medios; no se ha integrado una nueva búsqueda automática desde la interfaz.",
+    "Validación: audio, pausa, saltos no secuenciales, clip, móviles y visor horizontal; sin errores JS ni anclas faltantes.",
+    "Uso de tokens parcial: registro del trabajador y de generación de imágenes. No incluye toda la coordinación y revisión; TTS no devolvió desglose.",
+    "Diseño aprobado el 2026-11-03: no cambiar la distribución por tema; el perfil compartido _pizarra/profiles/leo.json concentra posiciones, tipografías y personajes.",
+    "Voz de Leo estandarizada: Puck / gemini-3.8-flash-tts, dirección vocal y ritmo 0.9. Generar con scripts/narrate_leo.py; no sustituir modelo ni voz automáticamente.",
+    "El audio aprobado song.mp3 permanece intacto. assets/voice-profile.json enlaza al perfil único; las futuras narraciones requieren una nueva transcripción del MP3 final.",
+    "Medios por subject en overlays.json: fotos o videos en izquierda/derecha; el cambio duo/single conserva el reloj del clip. Ejemplo: 26,57–31,72 s, video NASA y foto soviética; después se amplía NASA.",
+    "Reutiliza el reproductor Proto: clips silenciados y sincronizados con la voz, pausa y seek. No se generan frames ni se duplican archivos de video."
+  ],
+  "reference": "referencias/nodeaction/cara-a-cara",
+  "native_orientation": "9:16",
+  "formats": [
+    "9:16"
+  ],
+  "duration_range_seconds": [
+    60,
+    240
+  ],
+  "duration_seconds": 60,
+  "profile_id": "leo-comparaciones-v1",
+  "catalog": {
+    "components": "showcase/components.json",
+    "gallery": "showcase.html",
+    "thumbs": "showcase/thumbs/thumbs.json",
+    "previewReady": true,
+    "tabs": [
+      {
+        "id": "new-componentes",
+        "label": "New componentes",
+        "families": [],
+        "components": [
+          "personajes.crear-personaje",
+          "personajes.cambiar-vestuario",
+          "escenas.crear-escena",
+          "escenarios.crear-fondo",
+          "personajes.identidad-leo",
+          "personajes.identidad-lia",
+          "personajes.crear-expresiones",
+          "personajes.identidad-nara",
+          "personajes.identidad-nora-vega"
+        ]
+      }
+    ],
+    "sprites": "showcase/characters.json",
+    "spritesDir": "showcase/thumbs",
+    "spritesLabel": "Personaje"
+  }
+}

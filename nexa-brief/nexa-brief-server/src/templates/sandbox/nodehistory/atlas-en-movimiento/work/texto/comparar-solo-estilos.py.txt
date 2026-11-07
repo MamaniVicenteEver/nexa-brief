@@ -1,0 +1,35 @@
+from PIL import Image,ImageDraw,ImageFont,ImageChops
+from pathlib import Path
+import json
+out=Path('work/texto/capturas')
+a=Image.open('work/escena/cuadros/013.40.png').convert('RGB').crop((350,1680,730,1775))
+b=Image.open(out/'solo-transcripcion-comparar.png').convert('RGB')
+color=(246,237,180)
+def ink(im):
+ mask=Image.new('L',im.size);mask.putdata([255 if p==color else 0 for p in im.getdata()]);return mask
+ma,mb=ink(a),ink(b);ba,bb=ma.getbbox(),mb.getbbox();assert ba and bb
+f=ImageFont.truetype('assets/fonts/AtlasEditorial.ttf',23)
+plate=Image.new('RGB',(1560,400),'#0b1620');d=ImageDraw.Draw(plate)
+for n,(label,im,box) in enumerate([('VIDEO REAL · 13,40 s',a,ba),('PÁGINA · 13,40 s',b,bb)]):
+ d.text((30+n*780,25),label,font=f,fill='#edf0f2')
+ pad=8 if n==0 else 28
+ crop=im.crop((max(0,box[0]-pad),max(0,box[1]-pad),min(im.width,box[2]+pad),min(im.height,box[3]+pad)))
+ crop.thumbnail((730,260),Image.Resampling.LANCZOS)
+ # Enlarge both glyph runs to the same inspection width.
+ k=730/crop.width;crop=crop.resize((730,round(crop.height*k)),Image.Resampling.LANCZOS)
+ plate.paste(crop,(25+n*780,100))
+ d.text((30+n*780,340),'UNA MINA AL · Archivo Black · #f6edb4',font=ImageFont.truetype('assets/fonts/AtlasEditorial.ttf',17),fill='#b4bec7')
+plate.save(out/'comparacion-transcripcion.png')
+# Compare the interiors independently from the video background and raster scale.
+ma=ma.crop(ba).resize((1000,100),Image.Resampling.NEAREST);mb=mb.crop(bb).resize((1000,100),Image.Resampling.NEAREST)
+a1=list(ma.getdata());b1=list(mb.getdata());inter=sum(x>0 and y>0 for x,y in zip(a1,b1));union=sum(x>0 or y>0 for x,y in zip(a1,b1))
+report={'phrase':'UNA MINA AL','time':13.4,'source':'work/escena/cuadros/013.40.png','fillRGB':color,'videoFillBoundsInCrop':ba,'pageFillBounds':bb,'inkScaleX':(bb[2]-bb[0])/(ba[2]-ba[0]),'inkScaleY':(bb[3]-bb[1])/(ba[3]-ba[1]),'normalizedExactInteriorIoU':inter/union,'note':'Comparación de máscaras de relleno exacto; las diferencias incluyen antialiasing a 45 frente a 157,5 px.'}
+Path('work/texto/solo-estilos-comparacion.json').write_text(json.dumps(report,indent=2,ensure_ascii=False));print(json.dumps(report,indent=2))
+# Review sheets: show the whole text area, metadata omitted in this contact sheet.
+files=sorted(out.glob('solo-muestra-*.png'))
+for start in range(0,len(files),8):
+ sheet=Image.new('RGB',(1440,4*600),'#0b1620');d=ImageDraw.Draw(sheet)
+ for n,path in enumerate(files[start:start+8]):
+  im=Image.open(path).convert('RGB');im=im.crop((0,0,im.width,min(im.height,900)));im.thumbnail((700,550))
+  x=(n%2)*720;y=(n//2)*600;d.text((x+10,y+8),path.stem,fill='white');sheet.paste(im,(x+10,y+35))
+ sheet.save(out/f'solo-revision-{start//8+1}.jpg',quality=85)

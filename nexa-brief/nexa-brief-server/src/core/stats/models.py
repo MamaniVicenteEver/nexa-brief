@@ -12,7 +12,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-Platform = Literal["youtube", "tiktok", "facebook"]
+Platform = Literal["youtube", "tiktok", "facebook", "instagram"]
 
 
 # ── Videos ───────────────────────────────────────────────────────────────────
@@ -43,6 +43,7 @@ class PublicationStats(BaseModel):
 # ── Canales ──────────────────────────────────────────────────────────────────
 
 class PublicChannel(BaseModel):
+    id: str
     platform: Platform
     name: str
     avatar: str | None = None
@@ -72,7 +73,7 @@ class CatalogStats(BaseModel):
     visual_templates: int = 0
     active_niches: int = 0
     engines: list[str] = []
-    platforms_supported: list[Platform] = ["youtube", "tiktok", "facebook"]
+    platforms_supported: list[Platform] = ["youtube", "tiktok", "facebook", "instagram"]
 
 
 # ── Rendimiento ──────────────────────────────────────────────────────────────

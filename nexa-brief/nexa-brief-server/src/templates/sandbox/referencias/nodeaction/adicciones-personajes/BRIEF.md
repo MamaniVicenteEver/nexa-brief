@@ -1,0 +1,3 @@
+# Brief · Pizarra con personajes ilustrados
+
+Video explicativo en español de 8 a 14 minutos sobre por qué es difícil superar una adicción, a través del caso ficticio de Juan. Tono empático y basado en fuentes; no estigmatizar ni dar instrucciones clínicas personales. Narración, transcripción por palabra y subtítulos pequeños abajo. Un personaje ilustrado generado con IA a un lado, gráficos animados al otro, intro y cierre siguiendo la familia pizarra. Mantener una guía visual y componentes reutilizables. La referencia visual es `referencia.png`; la comparación de imágenes y rig está en `nodeaction/prueba-avatar-comparacion` y la pizarra narrativa de referencia es `nodeaction/pizarra-olvido`.

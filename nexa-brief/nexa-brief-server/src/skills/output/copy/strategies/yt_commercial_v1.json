@@ -1,0 +1,203 @@
+{
+ "id": "yt_commercial_v1",
+ "platform": "youtube",
+ "name": "YouTube · Promo (comercial)",
+ "description": "Título que dice qué promo es y cómo está editada; descripción breve, invitación a pedir evento/promo/equipo para este diseño y comentario fijado.",
+ "fields": {
+  "promo_title": {
+   "type": "text",
+   "max_chars": 60,
+   "instruction": "Qué muestra la promo, concreto, con los nombres que aparecen en pantalla (evento, equipos, marca). El video es una promo (comercial) editada con textos animados al ritmo de la música: habla del evento, equipo, marca o producto que muestra y de cómo se ve, nunca de una canción, de letras ni de sentimientos de una canción. Nunca digas 'plantilla' ni el nombre del diseño. Si en pantalla no hay un evento o marca concreto, di qué tipo de mensaje anuncia (por ejemplo 'Promo de lanzamiento con frases al ritmo'). Nunca cuentes elementos ('20 frases'), ni nombres colores, fondos o técnicas.",
+   "examples": {
+    "es": [
+     "Promo de una final deportiva: Leones vs Halcones",
+     "Lanzamiento de una colección urbana de zapatillas"
+    ],
+    "en": [
+     "Promo for a sports final: Lions vs Hawks",
+     "Launch of an urban sneaker collection"
+    ]
+   },
+   "avoid": {
+    "es": [
+     "Plantilla editorial increíble",
+     "Video épico",
+     "Promo solo texto: 20 frases sobre fondo carbón"
+    ],
+    "en": [
+     "Amazing editorial template",
+     "Epic video"
+    ]
+   }
+  },
+  "style_label": {
+   "type": "text",
+   "max_chars": 35,
+   "instruction": "Cómo se ve la edición, en pocas palabras y de forma descriptiva (no el nombre del diseño). El video es una promo (comercial) editada con textos animados al ritmo de la música: habla del evento, equipo, marca o producto que muestra y de cómo se ve, nunca de una canción, de letras ni de sentimientos de una canción. Nunca digas 'plantilla' ni el nombre del diseño. Sin colores ni nombres de técnicas en inglés.",
+   "examples": {
+    "es": [
+     "Edición estilo revista",
+     "Cortes rápidos al ritmo"
+    ],
+    "en": [
+     "Magazine-style edit",
+     "Fast cuts on the beat"
+    ]
+   },
+   "avoid": {
+    "es": [
+     "Plantilla Editorial",
+     "Promo Kinetic"
+    ],
+    "en": [
+     "Editorial template",
+     "Promo Kinetic"
+    ]
+   }
+  },
+  "video_summary": {
+   "type": "text",
+   "max_chars": 180,
+   "instruction": "Primera línea de la descripción: una o dos frases sobre lo que se ve en el video (qué se anuncia y cómo se cuenta). El video es una promo (comercial) editada con textos animados al ritmo de la música: habla del evento, equipo, marca o producto que muestra y de cómo se ve, nunca de una canción, de letras ni de sentimientos de una canción. Nunca digas 'plantilla' ni el nombre del diseño.",
+   "examples": {
+    "es": [
+     "Una final contada como portada de revista: nombres que entran con fuerza, marcador, fecha y la cuenta regresiva al partido."
+    ],
+    "en": [
+     "A final told like a magazine cover: names hitting hard, the score, the date and the countdown to kickoff."
+    ]
+   },
+   "avoid": {
+    "es": [
+     "Sumérgete en esta increíble promo."
+    ],
+    "en": [
+     "Immerse yourself in this amazing promo."
+    ]
+   }
+  },
+  "hashtags": {
+   "type": "list",
+   "min_items": 3,
+   "max_items": 3,
+   "instruction": "Exactamente 3 hashtags sin '#', en CamelCase: tipo de promo, edición de video y motion graphics o el rubro.",
+   "examples": {
+    "es": [
+     [
+      "PromoDeportiva",
+      "EdicionDeVideo",
+      "MotionGraphics"
+     ]
+    ],
+    "en": [
+     [
+      "SportsPromo",
+      "VideoEditing",
+      "MotionGraphics"
+     ]
+    ]
+   }
+  },
+  "tags": {
+   "type": "list",
+   "min_items": 8,
+   "max_items": 12,
+   "instruction": "Entre 8 y 12 tags en minúsculas, como búsquedas reales de quien necesita una promo así: tipo de promo, rubro, 'video promocional', 'edicion de video', 'motion graphics', 'intro para evento'. Sin el nombre del diseño ni 'plantilla'.",
+   "examples": {
+    "es": [
+     [
+      "promo deportiva",
+      "video promocional",
+      "edicion de video",
+      "motion graphics",
+      "intro para evento"
+     ]
+    ],
+    "en": [
+     [
+      "sports promo",
+      "promo video",
+      "video editing",
+      "motion graphics",
+      "event intro"
+     ]
+    ]
+   }
+  }
+ },
+ "rotating": {
+  "design_line": {
+   "es": [
+    "Editamos cada corte al ritmo de la música para que se sienta como un evento grande. ¿Con qué evento, promo o equipo te gustaría ver este diseño? Déjalo en los comentarios y lo trabajamos para un próximo video.",
+    "Este video lo armamos corte por corte. ¿Para qué evento, marca o equipo te gustaría ver este diseño? Escríbelo en los comentarios y lo editamos para un próximo video.",
+    "Nos tomó tiempo cuadrar cada texto con la música. ¿Con qué evento, promo o equipo quieres ver este diseño? Te leemos en los comentarios."
+   ],
+   "en": [
+    "We cut every shot to the beat so it feels like a big event. Which event, promo or team would you like to see with this design? Leave it in the comments and we'll work on it for a future video.",
+    "We built this video cut by cut. Which event, brand or team would you like to see with this design? Write it in the comments and we'll edit it for a future video.",
+    "Timing every text to the music took a while. Which event, promo or team do you want to see with this design? We read every comment."
+   ]
+  },
+  "subscribe_line": {
+   "es": [
+    "Si te gustan estas ediciones, suscríbete: cada semana subimos un diseño nuevo.",
+    "Suscríbete para ver el próximo diseño que editemos."
+   ],
+   "en": [
+    "If you like these edits, subscribe: a new design every week.",
+    "Subscribe to see the next design we edit."
+   ]
+  },
+  "pinned_line": {
+   "es": [
+    "¿Qué te gustaría que editemos en el próximo video?\n¿Con qué evento, promo o equipo te gustaría ver este diseño? Te leemos y elegimos de sus comentarios.",
+    "¿Qué editamos para el próximo video?\n¿Para qué evento, marca o equipo te gustaría ver este diseño? Te leemos."
+   ],
+   "en": [
+    "What would you like us to edit in the next video?\nWhich event, promo or team would you like to see with this design? We read every comment and pick from here.",
+    "What should we edit next?\nWhich event, brand or team would you like to see with this design? We're reading."
+   ]
+  }
+ },
+ "output": {
+  "title": {
+   "max_chars": 100,
+   "templates": {
+    "es": [
+     "{promo_title} | {style_label}",
+     "{promo_title}"
+    ],
+    "en": [
+     "{promo_title} | {style_label}",
+     "{promo_title}"
+    ]
+   }
+  },
+  "description": {
+   "max_chars": 5000,
+   "templates": {
+    "es": [
+     "{video_summary}\n\n{design_line}\n\n{subscribe_line}\n\n{hashtags}"
+    ],
+    "en": [
+     "{video_summary}\n\n{design_line}\n\n{subscribe_line}\n\n{hashtags}"
+    ]
+   }
+  },
+  "tags": {
+   "from": "tags",
+   "style": "keyword"
+  },
+  "pinned_comment": {
+   "max_chars": 500,
+   "templates": {
+    "es": [
+     "{pinned_line}"
+    ],
+    "en": [
+     "{pinned_line}"
+    ]
+   }
+  }
+ }
+}

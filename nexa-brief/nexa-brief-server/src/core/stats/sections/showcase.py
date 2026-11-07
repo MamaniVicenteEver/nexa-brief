@@ -8,7 +8,7 @@ from src.core.stats.context import StatsContext
 from src.core.stats.models import ShowcasePublication
 
 # YouTube primero: su enlace siempre es público; TikTok sin auditar publica en privado.
-_PLATFORM_PREFERENCE = {"youtube": 0, "facebook": 1, "tiktok": 2}
+_PLATFORM_PREFERENCE = {"youtube": 0, "facebook": 1, "instagram": 2, "tiktok": 3}
 
 
 def _playable_file(ctx: StatsContext, job_id: str | None) -> str | None:

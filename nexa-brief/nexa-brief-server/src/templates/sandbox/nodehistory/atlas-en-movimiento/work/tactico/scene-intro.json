@@ -1,0 +1,26 @@
+{
+  "format": "atlas-v1",
+  "duration": 20,
+  "end": 20,
+  "lang": "es",
+  "intro": false,
+  "outro": false,
+  "captions": {"enabled": false},
+  "planoLook": "tactico",
+  "tiles": {"provider": "gibs-bluemarble", "manifest": "cache-inventory.json"},
+  "motionBlur": {"samples": 1},
+  "defs": {
+    "palette": {"background": "#081e2c", "paper": "#e9e3ba", "accent": "#f6edb4", "neon": "#ffd21a"},
+    "fonts": {"introTitle": "AtlasIntroTitle", "introUI": "AtlasIntroUI"}
+  },
+  "places": {"Golfo": [52, 26.8]},
+  "camera": [{"t": 0, "center": [52, 22.6], "zoom": 4.7, "bearing": 0, "pitch": 0}],
+  "layers": [],
+  "items": [
+    {"id": "intro-atlas", "type": "intro.title", "t": 0, "dur": 6, "fade": 0,
+     "title": "EL GOLFO\nBAJO PRESIÓN", "subtitle": "Una ruta. Un punto de tensión.",
+     "kicker": "ATLAS EN MOVIMIENTO", "year": "1987", "focus": "Golfo", "style": "focus"},
+    {"id": "cierre-atlas", "type": "outro.channel", "t": 12, "dur": 8, "fade": 0,
+     "channel": "NODEHISTORY", "handle": "youtube.com/@nodehistory", "dim": 0.78}
+  ]
+}

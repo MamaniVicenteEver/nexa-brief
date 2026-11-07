@@ -212,7 +212,10 @@ def get_template_preview_assets(template_id: str) -> dict[str, Path | None]:
         )
 
     return {
-        "image": first_existing(("bg.png", "bg.jpg", "cover.jpg", "angel.jpg"), _IMAGE_SUFFIXES),
+        "image": first_existing(
+            ("card-poster.webp", "bg.png", "bg.jpg", "cover.jpg", "angel.jpg"),
+            _IMAGE_SUFFIXES,
+        ),
         "video": first_existing(("bg.mp4", "path.mp4", "humo.mp4", "niebla.mp4"), _VIDEO_SUFFIXES),
         "audio": files.get("song.mp3"),
     }
@@ -246,8 +249,11 @@ def _normalize_media_slot(raw: dict) -> dict | None:
         "max": max(min_count, max_count, 1),
         "orientation": raw.get("orientation"),
         # "source" = entra por la imagen/video de fondo del job (MusicSource/
-        # ImageSource/VideoSource); "media" = reemplaza config.media en orden.
+        # ImageSource/VideoSource); "media" = reemplaza config.media en orden;
+        # "config" = el archivo va a la ruta `path` del config (ej. "bg.src": un fondo
+        # opcional que, si no se sube, deja el que trae la plantilla).
         "target": raw.get("target") or "source",
+        "path": raw.get("path") if raw.get("target") == "config" else None,
         "label": raw.get("label") or slot,
         "hint": raw.get("hint") or "",
     }

@@ -1,0 +1,213 @@
+"""Análisis local, secuencial, dos hilos CPU. Fases: baseline, normalize, samples.
+No tiene cliente de síntesis; nunca llama Gemini.
+"""
+import os
+os.environ.update(OMP_NUM_THREADS='2', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1',
+                  HF_HUB_OFFLINE='1', TOKENIZERS_PARALLELISM='false')
+import sys
+sys.dont_write_bytecode = True
+sys.path.insert(0, '/tmp/voz-malvinas-libs')
+from pathlib import Path
+import difflib
+import hashlib
+import json
+import re
+import subprocess
+import numpy as np
+import parselmouth
+
+ROOT = Path.cwd()
+OUT = ROOT / 'work/voz/distinta'
+sys.path.insert(0, str((ROOT / '../../../_tools/explainer-kit/tools').resolve()))
+import narrate
+
+def dump(name, value):
+    (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n')
+
+def ff(args):
+    return subprocess.run(['ffmpeg', '-hide_banner', '-nostdin', '-threads', '1',
+        '-filter_threads', '1', *args], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+
+def stat(values):
+    a = np.asarray(values, dtype=float)
+    a = a[np.isfinite(a)]
+    if not len(a):
+        return {'n': 0, 'median': None, 'max': None}
+    return {'n': len(a), **{k: float(v) for k, v in zip(
+        ['min', 'p10', 'median', 'p90', 'max'], np.percentile(a, [0, 10, 50, 90, 100]))}}
+
+def loudness(path):
+    proc = ff(['-i', str(path), '-af', 'loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json', '-f', 'null', '-'])
+    (OUT / (path.stem + '.loudness.log')).write_bytes(proc.stderr)
+    return json.loads(re.search(rb'\{\s*"input_i".*?\}', proc.stderr, re.S).group())
+
+def measure(path, words, count):
+    raw = ff(['-v', 'error', '-i', str(path), '-ac', '1', '-ar', '16000', '-f', 'f32le', '-']).stdout
+    x = np.frombuffer(raw, dtype='<f4').astype(float)
+    duration = len(x) / 16000
+    snd = parselmouth.Sound(x, sampling_frequency=16000)
+    pitch = snd.to_pitch_ac(time_step=.01, pitch_floor=60, pitch_ceiling=400, voicing_threshold=.5)
+    f0 = pitch.selected_array['frequency']
+    voiced = f0[f0 > 0]
+    alt = snd.to_pitch_ac(time_step=.01, pitch_floor=75, pitch_ceiling=500, voicing_threshold=.5)
+    alternate = np.interp(pitch.xs(), alt.xs(), alt.selected_array['frequency'])
+    valid = (f0 > 0) & (alternate > 0)
+    delta = 12 * np.log2(alternate[valid] / f0[valid])
+    gaps = [{'start': a['end'], 'end': b['start'], 'seconds': max(0., b['start'] - a['end']),
+             'after': a['word'], 'before': b['word'],
+             'punctuation': 'sentence' if re.search(r'[.!?]$', a['word'].strip()) else
+                            'comma' if a['word'].strip().endswith(',') else 'none'}
+            for a, b in zip(words, words[1:])]
+    silence = ff(['-i', str(path), '-af', 'silencedetect=noise=-40dB:d=0.12', '-f', 'null', '-']).stderr.decode()
+    (OUT / (path.stem + '.silences.log')).write_text(silence)
+    start = None
+    silences = []
+    for kind, value in re.findall(r'silence_(start|end): ([\d.]+)', silence):
+        if kind == 'start':
+            start = float(value)
+        elif start is not None:
+            silences.append({'start': start, 'end': float(value), 'seconds': float(value) - start})
+            start = None
+    merged = []
+    for gap in silences:
+        if merged and gap['start'] - merged[-1]['end'] <= .04:
+            merged[-1]['end'] = gap['end']
+            merged[-1]['seconds'] = gap['end'] - merged[-1]['start']
+        else:
+            merged.append(dict(gap))
+    internal = [g for g in merged if g['start'] > .02 and g['end'] < duration - .02]
+    frames = np.lib.stride_tricks.sliding_window_view(x, 480)[::160]
+    rms = 20 * np.log10(np.maximum(np.sqrt(np.mean(frames**2, axis=1)), 1e-10))
+    times = (np.arange(len(frames)) * 160 + 240) / 16000
+    mask = np.zeros(len(times), dtype=bool)
+    for w in words:
+        mask |= (times >= w['start']) & (times <= w['end'])
+    raw_frame_stats = stat(rms[mask])
+    # Los timestamps ASR absorben silencios, incluso bajo -60 dBFS. Evitar
+    # llamar dinámica vocal a la diferencia entre voz y esos silencios.
+    frame_stats = stat(rms[mask & (rms > -40)])
+    loud = loudness(path)
+    span = words[-1]['end'] - words[0]['start']
+    native = np.frombuffer(ff(['-v', 'error', '-i', str(path), '-f', 'f32le', '-']).stdout, dtype='<f4')
+    return {'file': str(path.relative_to(ROOT)), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+        'duration_seconds': duration, 'spoken_script_words': count,
+        'ppm_file': count * 60 / duration, 'ppm_narration': count * 60 / span,
+        'word_span_seconds': span, 'first_word_start': words[0]['start'], 'last_word_end': words[-1]['end'],
+        'ASR_pauses_ge120ms': stat([g['seconds'] for g in gaps if g['seconds'] >= .119999]),
+        'ASR_sentence_pauses_ge120ms': stat([g['seconds'] for g in gaps if g['seconds'] >= .119999 and g['punctuation']=='sentence']),
+        'ASR_gaps': gaps, 'acoustic_pauses_ge120ms': stat([g['seconds'] for g in internal]),
+        'acoustic_internal_silences': internal, 'acoustic_all_silences': merged,
+        'f0_hz': stat(voiced), 'f0_p10_p90_semitones': float(12 * np.log2(np.percentile(voiced, 90) / np.percentile(voiced, 10))),
+        'f0_alternate_median_hz': float(np.median(alternate[alternate > 0])),
+        'f0_alternate_disagreement_gt9st_percent': float(np.mean(np.abs(delta) > 9) * 100),
+        'speech_frame_rms_dbfs': frame_stats,
+        'ASR_frame_rms_including_silence_dbfs': raw_frame_stats,
+        'speech_dynamic_range_p90_p10_db': frame_stats['p90'] - frame_stats['p10'],
+        'lufs_i': float(loud['input_i']), 'true_peak_dbTP': float(loud['input_tp']),
+        'loudness_range_LU': float(loud['input_lra']),
+        'native_sample_peak_dbfs': float(20 * np.log10(np.max(np.abs(native)))),
+        'native_samples_abs_ge1': int(np.sum(np.abs(native) >= 1))}
+
+method = {'ppm': 'Palabras del guion con números desarrollados, no 616 tokens que incluyen etiquetas; sobre archivo y sobre primer-inicio/último-fin ASR.',
+    'pauses_ASR': 'Huecos >=120 ms entre palabras sin limpiar; pueden contener aire y Whisper puede absorber silencio en una palabra. Se excluyen márgenes.',
+    'pauses_acoustic': '-40 dBFS, mínimo120 ms, fusiona separación <=40 ms; excluye márgenes. Puede confundir consonantes débiles con silencio.',
+    'pitch': 'Praat AC 60–400 Hz, 10 ms, voicing=0.5; rango robusto p10–p90; min/max también en JSON. Contraste75–500 Hz sin corregir octavas.',
+    'dynamics': 'RMS30 ms/paso10 ms dentro de intervalos de palabras y >-40dBFS; rango p90−p10 dB. Distribución ASR sin excluir silencio y LRA en LU se informan aparte. Umbral dependiente de nivel; todas las muestras finales están a -16LUFS.',
+    'loudness_peak': 'FFmpeg loudnorm input_i e input_tp sobre MP3 final; pico de muestra float a frecuencia nativa aparte.',
+    'perception': 'No hay escucha ni prueba perceptual de naturalidad. Métricas descriptivas; muestra corta, dos tonos, no extrapolar a un relato completo.'}
+
+phase = sys.argv[1]
+if phase == 'baseline':
+    script = json.loads((ROOT / 'assets/script.json').read_text())
+    lyrics = json.loads((ROOT / 'assets/lyrics.json').read_text())
+    words = [w for s in lyrics['segments'] for w in s['words']]
+    result = {'method': method, 'approved_full': measure(ROOT / 'assets/song.mp3', words,
+        sum(len(s['text'].split()) for s in script['segments']))}
+    dump('referencia-mediciones.json', result)
+    print(json.dumps({k: result['approved_full'][k] for k in ['ppm_narration', 'ASR_pauses_ge120ms', 'acoustic_pauses_ge120ms', 'f0_hz', 'speech_dynamic_range_p90_p10_db']}, ensure_ascii=False), flush=True)
+elif phase == 'normalize':
+    crop = json.loads((OUT / 'preparacion.json').read_text())['reference_crop']
+    refwav = OUT / 'charon-referencia.wav'
+    ff(['-y', '-i', str(ROOT / crop['source']), '-ss', str(crop['start_seconds']),
+        '-t', str(crop['end_seconds'] - crop['start_seconds']), '-c:a', 'pcm_s24le', str(refwav)])
+    records = []
+    for name in ['charon-referencia', 'orus', 'achird']:
+        wav = OUT / (name + '.wav')
+        if not wav.exists():
+            continue
+        before = loudness(wav)
+        gain = -16 - float(before['input_i'])
+        if float(before['input_tp']) + gain < -1.5:
+            filters = f'volume={gain:.6f}dB'
+            dsp = 'Solo ganancia constante y codificación MP3192kbps.'
+        else:
+            # Igualación estándar en dos pasadas con control de pico: el recorte
+            # de Charon carece de margen para alcanzar -16 mediante ganancia sola.
+            filters = ('loudnorm=I=-16:TP=-1.5:LRA=11:linear=true:'
+                f"measured_I={before['input_i']}:measured_TP={before['input_tp']}:"
+                f"measured_LRA={before['input_lra']}:measured_thresh={before['input_thresh']}:"
+                f"offset={before['target_offset']}")
+            dsp = 'Normalización loudnorm en dos pasadas, pico objetivo-1.5dBTP; puede limitar picos. Sin FX de timbre ni cambios temporales.'
+        normalized = OUT / (name + '.normalized.wav')
+        ff(['-y', '-i', str(wav), '-af', filters, '-ar', '44100', '-c:a', 'pcm_s24le', str(normalized)])
+        normalized_loudness = loudness(normalized)
+        correction = -16 - float(normalized_loudness['input_i'])
+        assert float(normalized_loudness['input_tp']) + correction < -.3
+        ff(['-y', '-i', str(normalized), '-af', f'volume={correction:.6f}dB',
+            '-ar', '44100', '-b:a', '192k', str(OUT / (name + '.mp3'))])
+        after = loudness(OUT / (name + '.mp3'))
+        records.append({'file': name+'.mp3', 'source': wav.name, 'constant_gain_db': gain,
+            'pcm_loudness_correction_db': correction,
+            'lufs_before': float(before['input_i']), 'lufs_after': float(after['input_i']),
+            'true_peak_dbTP': float(after['input_tp']), 'dsp': dsp})
+        print(name, records[-1], flush=True)
+    dump('normalizacion.json', records)
+elif phase == 'samples':
+    from faster_whisper import WhisperModel
+    model = WhisperModel('large-v3', device='cpu', compute_type='int8', cpu_threads=2,
+                         num_workers=1, local_files_only=True)
+    script = json.loads((OUT / 'script.muestra.json').read_text())
+    expected = narrate.norm(' '.join(s['text'] for s in script['segments']))
+    results = json.loads((OUT / 'referencia-mediciones.json').read_text())
+    results['samples'] = {}
+    for name in ['charon-referencia', 'orus', 'achird']:
+        path = OUT / (name + '.mp3')
+        if not path.exists():
+            continue
+        destination = OUT / ('transcripcion-' + name + '.json')
+        if destination.exists():
+            tr = json.loads(destination.read_text())
+        else:
+            segs, info = model.transcribe(str(path), language='es', beam_size=5,
+                word_timestamps=True, vad_filter=False, condition_on_previous_text=False,
+                initial_prompt='Frank Seitz, Bridgeton, Farsi.')
+            tr = {'model': 'faster-whisper large-v3 CPU int8 2 hilos, local',
+                'initial_prompt': 'Frank Seitz, Bridgeton, Farsi.', 'cleaned_against_script': False,
+                'segments': [{'start': s.start, 'end': s.end, 'text': s.text,
+                    'words': [{'word': w.word, 'start': w.start, 'end': w.end, 'probability': w.probability}
+                              for w in s.words]} for s in segs]}
+            dump(destination.name, tr)
+        words = [w for s in tr['segments'] for w in s['words']]
+        text = ' '.join(s['text'].strip() for s in tr['segments'])
+        actual = [token for w in narrate.norm(text) for token in narrate.NUMW(w).split()]
+        diff = [{'op': op, 'expected': expected[a:b], 'asr': actual[c:d]}
+            for op, a, b, c, d in difflib.SequenceMatcher(a=expected, b=actual, autojunk=False).get_opcodes() if op!='equal']
+        measured = measure(path, words, len(expected))
+        measured['transcription'] = {'text': text, 'expected_words': len(expected), 'asr_expanded_words': len(actual),
+            'differences': diff, 'exact_after_number_normalization': expected==actual,
+            'short_word_objects_under20ms': [w for w in words if w['end'] - w['start'] < .01999]}
+        results['samples'][name] = measured
+        print(name, text, 'diferencias:', diff, flush=True)
+        dump('mediciones.json', results)
+    reference = results['samples']['charon-referencia']
+    for name, values in results['samples'].items():
+        values['vs_charon_reference'] = {
+            'ppm_narration_delta': values['ppm_narration'] - reference['ppm_narration'],
+            'f0_median_delta_hz': values['f0_hz']['median'] - reference['f0_hz']['median'],
+            'dynamic_range_delta_db': values['speech_dynamic_range_p90_p10_db'] - reference['speech_dynamic_range_p90_p10_db'],
+            'acoustic_pause_count_delta': values['acoustic_pauses_ge120ms']['n'] - reference['acoustic_pauses_ge120ms']['n'],
+            'acoustic_pause_median_delta_s': values['acoustic_pauses_ge120ms']['median'] - reference['acoustic_pauses_ge120ms']['median'],
+            'acoustic_pause_max_delta_s': values['acoustic_pauses_ge120ms']['max'] - reference['acoustic_pauses_ge120ms']['max']}
+    dump('mediciones.json', results)
+else:
+    raise SystemExit('Fase desconocida')

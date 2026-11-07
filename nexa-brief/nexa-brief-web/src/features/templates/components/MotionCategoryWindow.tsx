@@ -80,13 +80,10 @@ export function MotionCategoryWindow({
 
   return (
     <div className="flex flex-col">
-      <div className="mb-6">
+      <div className="sr-only">
         <h2 className="font-nb-sans text-[20px] font-extrabold tracking-[-0.02em] text-nb-ink">
           {category.displayName}
         </h2>
-        <p className="mt-1 text-[13.5px] text-nb-mute">
-          {category.strategy?.audience || category.topic}
-        </p>
       </div>
 
       {isLoading && <p className="py-10 text-center text-sm text-nb-mute">{t("grid.loading")}</p>}
@@ -95,10 +92,8 @@ export function MotionCategoryWindow({
       )}
       {!isLoading && total > 0 && (
         <>
-          <fieldset className="mb-8 flex flex-wrap items-center gap-2">
-            <legend className="mr-1 text-[11px] font-bold tracking-[0.08em] text-nb-mute uppercase">
-              {t("windows.subcategories")}
-            </legend>
+          <fieldset className="mb-4 flex flex-wrap items-center gap-2">
+            <legend className="sr-only">{t("windows.subcategories")}</legend>
             <button
               type="button"
               onClick={() => setSelected(null)}
@@ -123,7 +118,11 @@ export function MotionCategoryWindow({
           {selected !== null && visible.length === 0 && (
             <p className="py-6 text-sm text-nb-mute">{t("windows.subcategoryEmpty")}</p>
           )}
-          <div className="flex flex-col gap-10">
+          <div className="my-5 flex items-center gap-3">
+            <h3 className="shrink-0 text-xs font-semibold text-nb-mute">{t("prep.designDemos")}</h3>
+            <hr className="w-full border-nb-line" />
+          </div>
+          <div className="flex flex-col gap-6">
             {visible.map((group) => (
               <section key={group.id} aria-labelledby={`template-group-${group.id}`}>
                 <div className="mb-3 flex items-baseline justify-between gap-3">
@@ -137,7 +136,7 @@ export function MotionCategoryWindow({
                 </div>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-2">
                   {group.templates.map((template) => (
-                    <TemplateCard key={template.id} template={template} />
+                    <TemplateCard key={template.id} template={template} showDemoBadge />
                   ))}
                 </div>
               </section>

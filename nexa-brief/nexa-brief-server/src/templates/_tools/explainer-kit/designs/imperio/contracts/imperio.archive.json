@@ -1,0 +1,381 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.archive",
+  "description": "Material de archivo (ref 11.5–27.7 s): el atlas se DESATURA a gris, baja humo oscuro desde arriba y la foto en blanco y negro se FUNDE en multiplicar con el mapa (lo claro deja ver el mapa, lo oscuro lo tapa); los rayos carmesí siguen encima, rosa de los vientos fina abajo a la derecha, grano y polvo; la cámara sigue alejándose. Para mostrar una foto histórica sin salir del mapa.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "src": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Foto de archivo (se pasa a B/N contrastado).",
+      "default": null
+    },
+    "photoFocus": {
+      "type": "array",
+      "description": "Punto de interés de la foto [x,y] 0..1.",
+      "default": [
+        0.5,
+        0.42
+      ]
+    },
+    "country": {
+      "type": "string",
+      "description": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+      "default": ""
+    },
+    "hatch": {
+      "anyOf": [
+        {
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+      "default": null
+    },
+    "sun": {
+      "type": "boolean",
+      "description": "Círculo carmesí que late sobre el país foco.",
+      "default": true
+    },
+    "sunAt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "[lon, lat] del sol (vacío = centro del país foco).",
+      "default": null
+    },
+    "sunSize": {
+      "type": "number",
+      "minimum": 0.2,
+      "maximum": 6,
+      "description": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+      "default": 1.3
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "type": "string"
+          },
+          "at": {
+            "$ref": "#/$defs/place"
+          }
+        },
+        "required": [
+          "t",
+          "at"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "description": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+      "default": []
+    },
+    "compass": {
+      "type": "boolean",
+      "description": "Rosa de los vientos de línea fina abajo a la derecha.",
+      "default": true
+    },
+    "gray": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+      "default": 0
+    },
+    "enter": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 2,
+      "description": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+      "default": 0.7
+    },
+    "flag": {
+      "type": "string",
+      "description": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+      "default": "auto"
+    },
+    "from": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+      "default": null
+    },
+    "to": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+      "default": null
+    },
+    "zoom": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 6,
+      "description": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+      "default": 1.35
+    },
+    "tilt": {
+      "type": "number",
+      "minimum": -20,
+      "maximum": 20,
+      "description": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+      "default": 3
+    },
+    "ease": {
+      "enum": [
+        "auto",
+        "out",
+        "in",
+        "inOut",
+        "linear",
+        "expo"
+      ],
+      "description": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+      "default": "auto"
+    },
+    "rays": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 60,
+      "description": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+      "default": 28
+    },
+    "dir": {
+      "type": "number",
+      "description": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+      "default": 180
+    },
+    "spread": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+      "default": 0.72
+    },
+    "rayFloor": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.4,
+      "description": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+      "default": 0.02
+    },
+    "rayAlpha": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Opacidad de los rayos carmesí.",
+      "default": 0.56
+    },
+    "rayLen": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 1,
+      "description": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+      "default": 0.46
+    },
+    "raysAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo en que nacen los rayos (acepta '@palabra').",
+      "default": 0
+    },
+    "ships": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+      "default": 3
+    },
+    "rayColor": {
+      "type": "string",
+      "description": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+      "default": "#b3122f"
+    },
+    "grayDur": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Segundos en que el atlas pasa de color a gris (0 = ya gris).",
+      "default": 0.9
+    },
+    "photoAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo en que empieza a aparecer la foto.",
+      "default": 0
+    },
+    "photoDur": {
+      "type": "number",
+      "minimum": 0.1,
+      "description": "Duración del fundido de la foto.",
+      "default": 0.9
+    },
+    "photo": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Intensidad de la foto (multiplicar).",
+      "default": 0.95
+    },
+    "smoke": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Humo oscuro desde arriba.",
+      "default": 0.85
+    },
+    "caption": {
+      "type": "string",
+      "description": "Rótulo chico en itálica (lugar · año de la foto), abajo a la izquierda.",
+      "default": ""
+    }
+  },
+  "required": [
+    "src"
+  ],
+  "$defs": {
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    },
+    "place": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "camera": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 4,
+          "items": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "src": "../designs/imperio/assets/uboat.jpg",
+      "country": "Japan",
+      "from": [
+        145,
+        35,
+        125,
+        3
+      ],
+      "to": [
+        135,
+        32,
+        165,
+        6
+      ],
+      "rays": 28,
+      "dir": 180,
+      "spread": 0.72,
+      "rayFloor": 0.02,
+      "rayAlpha": 0.56,
+      "rayLen": 0.46,
+      "ships": 2,
+      "compass": true,
+      "photoAt": 0,
+      "photoDur": 0.9,
+      "labels": [
+        {
+          "t": "MAR DE JAPÓN",
+          "at": [
+            135,
+            40
+          ]
+        },
+        {
+          "t": "OCÉANO PACÍFICO",
+          "at": [
+            151,
+            23
+          ]
+        }
+      ]
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

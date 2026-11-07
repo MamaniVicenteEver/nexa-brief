@@ -42,7 +42,7 @@ def _to_response(node_id: str, node: CategoryNode, prefix: str = "") -> Category
         status=node.status,
         engine=node.engine,
         niches=node.niches,
-        designs=node.designs,
+        designs=list(dict.fromkeys([*node.designs, *node.shared_designs])),
         strategy=node.strategy.model_dump() if node.strategy else None,
         children=[_to_response(cid, child, path) for cid, child in node.children.items()],
     )

@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500;600&family=IBM+Plex+Mono:wght@500&display=swap");
+/* NodeAction · capas DOM (rótulo del plano, subtítulos). Estilo documental: sobrio, chico, abajo. */
+:root { --na-accent: #e8b65a; --na-cap-bg: rgba(16, 17, 20, 0.74); --na-cap-fg: #f3efe6; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #fff; }
+#stage { position: fixed; inset: 0; overflow: hidden; }
+.na-hud { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.na-brand { position: absolute; left: 3.2vmin; top: 2.6vmin; font: 600 3vmin/1 "IBM Plex Sans", system-ui, sans-serif; color: #111; }
+.na-brand span { color: var(--na-accent); margin-left: 0.25em; }
+.na-brand:empty { display: none; }
+.na-label { position: absolute; left: 3.4vmin; top: 3.2vmin; font: 500 1.45vmin/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.2em; text-transform: uppercase; color: rgba(25, 25, 28, 0.55); }
+.na-label:empty { display: none; }
+.na-cap { position: absolute; left: 0; right: 0; bottom: 3.4vh; text-align: center; z-index: 4; pointer-events: none; }
+.na-cap-line { display: inline-block; max-width: 64%; padding: 0.34em 0.75em 0.4em; border-radius: 0.3em;
+  font: 500 2.15vmin/1.32 "IBM Plex Sans", system-ui, sans-serif; letter-spacing: 0.005em;
+  color: var(--na-cap-fg); background: var(--na-cap-bg); }
+.na-w { opacity: 0.92; }
+.na-w-cur { color: var(--na-accent); opacity: 1; }
+@media (orientation: portrait) {
+  .na-cap { bottom: 5.5vh; }
+  .na-cap-line { max-width: 84%; font-size: 3.1vmin; }
+  .na-label { font-size: 2vmin; }
+}

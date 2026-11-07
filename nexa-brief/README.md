@@ -3,12 +3,43 @@
 Generación automática de videos (plantillas de letras, promos y documentales narrados) y publicación en
 YouTube, TikTok y Facebook.
 
-| Proyecto | Qué es | Puerto |
+| Proyecto | Qué es | Puerto de desarrollo |
 | --- | --- | --- |
 | `nexa-brief-server` | API FastAPI: pipeline, grabación (Playwright + ffmpeg), publicación | 8000 |
 | `nexa-brief-web` | Panel Next.js | 3000 |
 | `nexa-brief-remotion` | Motor de render Node que invoca la API | — |
 | `nexa-brief-hyperframes` | Composiciones HyperFrames (CLI) | — |
+
+## Arranque en el servidor
+
+Desde `~/Projects/Git-Projects/nexa-brief/nexa-brief`, elegí el entorno:
+
+```bash
+./scripts/start-docker.sh  # despierta la API y la web de producción
+./scripts/start-dev.sh     # inicia la API y la web de desarrollo
+```
+
+| Entorno | Dirección pública | Web en el servidor | API en el servidor |
+| --- | --- | --- | --- |
+| Docker | [nexa-brief.everdev.space](https://nexa-brief.everdev.space) | `127.0.0.1:3002` | `127.0.0.1:8002` |
+| Desarrollo | [dev-nexa-brief.everdev.space](https://dev-nexa-brief.everdev.space) | `0.0.0.0:3000` | `0.0.0.0:8000` |
+
+El script de Docker inicia los contenedores existentes y espera a que estén saludables; no reconstruye imágenes
+ni borra volúmenes. La primera instalación necesita crear los contenedores con `make docker-up`. El script de
+desarrollo corre en primer plano: `Ctrl+C` detiene ambos procesos. Si ya están activos, lo informa sin reiniciarlos.
+
+Para dormir Docker sin borrar sus datos, ejecutá `docker compose stop web api`. Mientras esté detenido, el
+dominio de producción no responderá; el desarrollo puede seguir funcionando. El túnel `nexa-brief-cloudflared`
+debe estar activo para acceder a cualquiera de los dos subdominios. No hay que usar `make public-up` para
+despertar Docker: ese comando prepara el desarrollo en el puerto 3000.
+
+En este servidor, `docker-compose.override.yml` configura los puertos locales 3002 y 8002, y `.dev-local.mk`
+configura la URL pública de desarrollo. Los trabajos, colas, archivos de salida y usuarios de Docker son independientes de los de desarrollo.
+Las conexiones de redes y los metadatos de canales se comparten mediante `.runtime/connections`.
+TikTok corre como un servicio del usuario independiente de ambos entornos; detener desarrollo no lo detiene.
+El desarrollo muestra «Desarrollo · cuentas reales» y mantiene la publicación automática desactivada.
+Ver [configuración, validación y recuperación](nexa-brief-server/docs/investigaciones/conexiones-compartidas-dev-docker-2026-11.md).
+La entrada directa de desarrollo está habilitada públicamente: cualquiera que conozca su enlace puede entrar.
 
 ## Inicio rápido (desarrollo local)
 
@@ -34,9 +65,53 @@ Entrá a la web con **admin@nexabrief.com / admin123**. Cambiala con
 | --- | --- | --- |
 | Claves de servicios (Gemini, Pexels, YouTube…) | `nexa-brief-server/.env` | Pedilas al equipo. La API arranca sin ellas; cada función avisa qué clave falta. |
 | Audios y videos de las plantillas (~3,6 GB) | `nexa-brief-server/src/templates/**` | `make media-pull` con `MEDIA_REMOTE` en `.env` (acceso SSH al servidor del equipo). |
-| Cuentas conectadas (tokens cifrados) | `nexa-brief-server/accounts.json` | Se crean al conectar una red desde la web (**Canales**), o desde `ACCOUNTS_JSON_B64` en el `.env`. |
-| Datos de la app (jobs, cola, biblioteca) | `nexa-brief-server/data/` | Se crean solos. Cada máquina tiene los suyos. |
-| Usuarios de la web | `nexa-brief-web/data/users.json` | `make setup` / `make seed-admin`. |
+| Cuentas conectadas (tokens cifrados) | `<perfil>/.system/connections/` en v2/v3; `<perfil>/connections/` en v1 | Se crean al conectar una red desde la web (**Canales**), o desde `ACCOUNTS_JSON_B64` en el `.env`. |
+| Datos de la app (jobs, cola, biblioteca) | `<perfil>/data/` | Se crean solos. Cada máquina tiene los suyos. |
+| Usuarios de la web | `<perfil>/.system/web-data/` en v2/v3; `<perfil>/web-data/` en v1 | `make setup` / `make seed-admin`. |
+
+### Perfiles de almacenamiento
+
+El layout vigente para altas nuevas es v3. Profesional permanece en v1 mientras
+se resuelve el aislamiento de agentes. Los agentes CLI se rechazan en v2/v3 hasta disponer de un ejecutor con
+aislamiento verificado; los perfiles v1 conservan su funcionamiento actual.
+Consulta el [layout, estado real y límites de la refactorización](nexa-brief-server/docs/profile-layout-v3-2026-11.md).
+
+Cada perfil es independiente. `init` crea un perfil v3 vacío con las categorías y
+estilos predeterminados del producto, sin importar usuarios, cuentas ni contenido
+de otros perfiles. El directorio predeterminado es
+`~/.local/share/nexa-brief/profiles/<nombre>/`:
+
+```bash
+python3 scripts/storage-profile.py init equipo --tiktok-port 8101
+python3 scripts/storage-profile.py show equipo
+make seed-admin NEXA_DATA_PROFILE=equipo EMAIL=tu@correo PASSWORD=tu-clave
+make dev NEXA_DATA_PROFILE=equipo
+```
+
+Un perfil nuevo necesita su propio administrador y sus conexiones. El puerto
+TikTok debe ser distinto para servicios que corran simultáneamente. En v3,
+`data/json/` contiene un archivo por sección; `productions/`, los proyectos;
+`renders/videos/` y `renders/images/`, los resultados por categoría e ID;
+`resources/` los medios, `sandbox/` los prototipos y `logs/` las trazas;
+`.system/` contiene estado técnico, caché, conexiones y datos de la web.
+Los perfiles v1 conservan sus rutas hasta una migración explícita.
+
+`NEXA_DATA_PROFILE` selecciona el perfil para `make` y sus procesos hijos;
+`NEXA_PROFILE_DIR` permite indicar una ruta absoluta. En v2/v3, los overrides de
+rutas deben apuntar al mismo árbol del perfil seleccionado; en v1 siguen siendo
+independientes, por lo que variables heredadas pueden apuntar a otro perfil.
+`storage-profile.py
+activate equipo` guarda un selector para procesos que no reciben esa variable;
+`make` usa por defecto `profesional`. Cambiar el selector no cambia procesos
+ya iniciados: detené y reiniciá la API y la web con el mismo perfil.
+
+Para usar Compose directamente con un perfil, cargá primero las rutas y el UID/GID:
+
+```bash
+export NEXA_DATA_PROFILE=equipo APP_UID=$(id -u) APP_GID=$(id -g)
+source scripts/profile-env.sh
+docker compose up -d
+```
 
 ### Comandos
 
@@ -48,6 +123,8 @@ make format      # arregla formato
 make media-pull  # baja los medios de las plantillas
 make media-push  # sube medios nuevos (plantillas creadas por vos)
 make preview-media  # copias livianas para las vistas previas (si no, se generan solas al abrirlas)
+make template-posters  # renderiza intros NodeMotion y las guarda como portadas WebP
+make template-posters FORCE=1  # fuerza regenerar portadas existentes
 ```
 
 ## Docker
@@ -59,9 +136,15 @@ make docker-up
 make docker-seed-admin      # primer usuario de la web dentro del contenedor
 ```
 
-- Web: http://localhost:3000 · API: http://localhost:8000 · Salud: http://localhost:8000/health · OpenAPI: http://localhost:8000/docs
-- `NEXT_PUBLIC_API_URL` es la URL que usa **el navegador** (`http://localhost:8000` o la IP del servidor), no
-  `http://api:8000`, que solo existe dentro de Docker. Se fija al construir la imagen web.
+Docker starts with scheduled publishing disabled for safety. Manual publishing still works; enable the
+background scheduler explicitly with `make docker-up NEXA_ENABLE_AUTO_PUBLISHING=true` after reviewing
+the saved schedule and queue.
+
+- Por defecto, sin el override del servidor, Docker usa la web en `http://localhost:3000` y la API en `http://localhost:8000`.
+  En el servidor usa los puertos 3002 y 8002 indicados arriba.
+- En Docker, `NEXT_PUBLIC_API_URL` queda vacío: el navegador usa el mismo origen (`/api/v1`) y Next.js reenvía
+  las peticiones a `INTERNAL_API_URL=http://api:8000` dentro de la red privada. Configurá solo `PUBLIC_APP_URL` con la URL HTTPS pública (por ejemplo, el túnel) para que OAuth, los accesos y
+  las redirecciones usen el mismo origen; `AUTH_URL` se deriva de esa variable; `INTERNAL_API_URL` se fija también al construir la imagen web.
 - La API monta `nexa-brief-server/src/templates` del disco: los medios que bajes con `make media-pull` y las
   grabaciones se ven sin reconstruir. Construí con `make docker-build` (pasa tu UID/GID para que el contenedor
   pueda escribir ahí); con `docker compose` directo, exportá antes `APP_UID=$(id -u) APP_GID=$(id -g)`.
@@ -109,3 +192,11 @@ ALLOWED_DEV_ORIGINS=<ip-del-servidor>
 | La API usa mucha CPU sin hacer nada | `--reload` sin `--reload-dir src` vigila `output/` y `.venv/`. `make dev` ya lo limita. |
 
 Más detalle: `CONTRIBUTING.md` (flujo de trabajo) y `nexa-brief-server/README.md` (API y arquitectura).
+
+### Servicio TikTok local
+
+Instalá con `cd nexa-tiktok && uv sync --python 3.12` y `uv run playwright install chromium`; `uv.lock` fija Playwright 1.64.1 y Chromium, así que conservá esa versión mientras existan perfiles. Copiá `nexa-tiktok/.env.example` a `nexa-tiktok/.env` y configurá también `TIKTOK_SERVICE_KEY` en el `.env` raíz con el mismo valor que `NEXA_TIKTOK_KEY` del servicio. `make dev` inicia la API, la web y el servicio TikTok local en `127.0.0.1:8100`. Conectá la cuenta desde `/canales`: escaneá el QR con la aplicación de TikTok en el móvil y confirmá el acceso. No cierres sesión en TikTok. No expongas el servicio a Internet.
+
+### Perfil de datos compartido en alfred-server
+
+Desarrollo y Docker usan el perfil Profesional externo al repositorio. Consultar [ubicación, arranque, perfiles independientes, preparación para Supabase y verificación](nexa-brief-server/docs/investigaciones/perfil-profesional-compartido-2026-11.md).

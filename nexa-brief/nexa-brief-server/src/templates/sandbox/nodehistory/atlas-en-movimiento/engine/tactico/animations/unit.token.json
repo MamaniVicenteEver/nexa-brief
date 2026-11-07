@@ -1,0 +1,134 @@
+{
+  "name": "unit.token",
+  "family": "unit",
+  "description": "Ficha octogonal con bandera, soldado y aro dorado. Úsala para señalar posiciones y avances de fuerzas.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 30,
+  "states": [
+    "idle",
+    "active",
+    "retreat",
+    "hit",
+    "destroyed"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "kmLength": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Longitud geográfica en kilómetros para scaleMode geo."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "flag": {
+      "type": "string",
+      "default": "US",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "count": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Cantidad de elementos."
+    },
+    "formation": {
+      "type": "enum",
+      "values": [
+        "line",
+        "wedge",
+        "column"
+      ],
+      "default": "wedge",
+      "range": [
+        "line",
+        "wedge",
+        "column"
+      ],
+      "description": "Distribución de las unidades dentro del grupo."
+    },
+    "trail": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Longitud relativa de la estela de la flecha."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "unit-token",
+    "t": 0,
+    "type": "unit.token",
+    "at": [
+      48.4,
+      30.6
+    ],
+    "flag": "IQ",
+    "label": "FRENTE",
+    "count": 1,
+    "dur": 7,
+    "states": [
+      {
+        "at": 1,
+        "state": "active"
+      },
+      {
+        "at": 5.8,
+        "state": "idle"
+      }
+    ]
+  },
+  "usedBy": [
+    "work/tactico/items-units.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/unit.token.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

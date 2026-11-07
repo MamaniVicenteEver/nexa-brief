@@ -35,7 +35,7 @@ def copy_for_platform(summary: VideoSummary | Mapping[str, Any], platform: str) 
         caption = data.get("tiktok_caption") or ""
         return PlatformCopy(caption, caption, list(data.get("tiktok_hashtags") or []), language)
 
-    # Facebook reuses the YouTube copy (same horizontal video).
+    # Facebook and Instagram reuse the YouTube copy when no platform copy exists.
     return PlatformCopy(
         data.get("youtube_title") or "",
         data.get("youtube_description") or "",

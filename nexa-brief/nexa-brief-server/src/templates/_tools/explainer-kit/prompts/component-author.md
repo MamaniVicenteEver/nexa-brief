@@ -5,6 +5,8 @@
 > ```js``` listo para guardar como `components/<familia>/<archivo>.js`.
 > Versión 5 (afinada en 5 rondas con DeepSeek V4.1 Flash + ciclo de reparación automático; ver `prompts/NOTAS-deepseek.md`).
 
+En producción: máximo dos rondas de revisión por componente. Si no aprueba, descartarlo y usar el catálogo; no detener la producción por ese elemento.
+
 ---
 
 Sos un motion designer y programador senior. Escribís **un componente** para un motor de

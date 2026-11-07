@@ -1,0 +1,3641 @@
+{
+  "schema_version": 1,
+  "design_id": "binary",
+  "revision": "6df4bd7d868128631ec124cd960dc82a4f4ecd62315a67ceb49a2006953e0f2e",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "binary.title",
+      "name": "binary.title",
+      "label": "binary.title",
+      "kind": "component",
+      "summary": "Título de apertura GIGANTE hecho de 0 y 1 (~80% del cuadro, estilo cartel: cada renglón ocupa todo el ancho) con antetítulo y línea; las partículas convergen desde el polvo.",
+      "tags": [
+        "intro",
+        "texto",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título; '\\n' parte renglones (2-4 renglones cortos).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Cortes alternativos para 9:16 (más renglones = letras más grandes).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Antetítulo chico en mono (época, protagonista).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fit": {
+          "type": "enum",
+          "default": "lines",
+          "doc": "lines = cada renglón al ancho total (cartel); block = mismo tamaño.",
+          "required": false,
+          "options": [
+            "lines",
+            "block"
+          ],
+          "min": null,
+          "max": null
+        },
+        "font": {
+          "type": "string",
+          "default": "900 100px 'Inter', sans-serif",
+          "doc": "Fuente canvas del título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fill": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Fracción del ancho del cuadro que ocupa.",
+          "required": false,
+          "options": null,
+          "min": 0.4,
+          "max": 1
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.6,
+          "doc": "Segundos que tardan las partículas en armar el título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "EL HOMBRE\nQUE ROMPIÓ\nENIGMA",
+        "textPortrait": "EL HOMBRE\nQUE\nROMPIÓ\nENIGMA",
+        "kicker": "ALAN TURING · 1940"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.title",
+      "data": {
+        "native_name": "binary.title"
+      }
+    },
+    {
+      "id": "binary.word",
+      "name": "binary.word",
+      "label": "binary.word",
+      "kind": "component",
+      "summary": "Palabra o número grande hecho de glifos (momentos de alto impacto: '159 TRILLONES', '1952'), con rótulo arriba y nota abajo.",
+      "tags": [
+        "texto",
+        "número",
+        "impacto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta blanca arriba (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica mono debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho de contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "font": {
+          "type": "string",
+          "default": "900 100px 'Inter', sans-serif",
+          "doc": "Fuente canvas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "159\nTRILLONES",
+        "kicker": "COMBINACIONES POSIBLES",
+        "note": "UN NÚMERO DE 21 CIFRAS"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.word",
+      "data": {
+        "native_name": "binary.word"
+      }
+    },
+    {
+      "id": "binary.portrait",
+      "name": "binary.portrait",
+      "label": "binary.portrait",
+      "kind": "component",
+      "summary": "Retrato (o cualquier foto) reconstruido como grilla de 0 y 1: el brillo de la imagen define la opacidad de cada dígito. Pie de foto y contador de años opcionales.",
+      "tags": [
+        "persona",
+        "imagen",
+        "histórico"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Imagen (mejor fondo oscuro/limpio y rostro centrado).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Nombre en serif itálica debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea mono debajo del nombre (rol, años).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "contrast": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Contraste aplicado antes de muestrear.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brightness": {
+          "type": "number",
+          "default": 1.05,
+          "doc": "Brillo aplicado antes de muestrear.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "threshold": {
+          "type": "number",
+          "default": 0.08,
+          "doc": "Brillo mínimo para poner un glifo (más alto = menos fondo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "counter": {
+          "type": "object",
+          "default": null,
+          "doc": "{from,to,label,dur} — año que rueda debajo (p.ej. 2026 → 1940).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cell": {
+          "type": "number",
+          "default": 0.72,
+          "doc": "Tamaño de celda (más chico = más detalle, más partículas).",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.4
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.4,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/turing.jpg",
+        "caption": "Alan Turing",
+        "counter": {
+          "from": 2026,
+          "to": 1940,
+          "label": ""
+        }
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.portrait",
+      "data": {
+        "native_name": "binary.portrait"
+      }
+    },
+    {
+      "id": "binary.icon",
+      "name": "binary.icon",
+      "label": "binary.icon",
+      "kind": "component",
+      "summary": "Silueta de un objeto hecha de glifos (bombilla, llave, barco, submarino, manzana, reloj…), con etiqueta tipo 'tag' y pie.",
+      "tags": [
+        "objeto",
+        "símbolo"
+      ],
+      "params": {
+        "icon": {
+          "type": "icon",
+          "default": null,
+          "doc": "Nombre en binary/icons.js, 'text:X' (un carácter) o 'svg:<path 100×100>'.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.62,
+          "doc": "Fracción del contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.15,
+          "max": 1
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta blanca sobre la forma.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto mono debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "outline": {
+          "type": "bool",
+          "default": false,
+          "doc": "Solo el contorno (más liviano y técnico).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spin": {
+          "type": "number",
+          "default": 0,
+          "doc": "Giro lento en vueltas por segundo (0 = quieto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "icon": "key",
+        "tag": "LA LLAVE",
+        "caption": "palabras previsibles"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.icon",
+      "data": {
+        "native_name": "binary.icon"
+      }
+    },
+    {
+      "id": "binary.orbit",
+      "name": "binary.orbit",
+      "label": "binary.orbit",
+      "kind": "component",
+      "summary": "Ciclo: forma central de glifos dentro de un anillo punteado con 2-6 etapas alrededor; un punto recorre el anillo y la etapa activa se ilumina.",
+      "tags": [
+        "proceso",
+        "ciclo",
+        "diagrama"
+      ],
+      "params": {
+        "icon": {
+          "type": "icon",
+          "default": "bulb",
+          "doc": "Forma central.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "labels": {
+          "type": "array",
+          "default": [
+            "HACER",
+            "OBSERVAR",
+            "CAMBIAR",
+            "INTENTAR"
+          ],
+          "doc": "Etapas alrededor (sentido horario desde arriba).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tags": {
+          "type": "array",
+          "default": [],
+          "doc": "Etiquetas que se alternan sobre la forma central.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "period": {
+          "type": "number",
+          "default": 3.2,
+          "doc": "Segundos por vuelta del punto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "icon": "gear",
+        "labels": [
+          "PROBAR",
+          "OBSERVAR",
+          "AJUSTAR",
+          "REPETIR"
+        ],
+        "tags": [
+          "INTENTO 1",
+          "INTENTO 2"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.orbit",
+      "data": {
+        "native_name": "binary.orbit"
+      }
+    },
+    {
+      "id": "binary.grid",
+      "name": "binary.grid",
+      "label": "binary.grid",
+      "kind": "component",
+      "summary": "Grilla de N copias de una forma que van apareciendo una a una con un contador ('VERSIONES 08'): muestra repetición, escala o cantidad.",
+      "tags": [
+        "cantidad",
+        "iteración",
+        "versiones"
+      ],
+      "params": {
+        "icon": {
+          "type": "icon",
+          "default": "bulb",
+          "doc": "Forma repetida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "count": {
+          "type": "number",
+          "default": 12,
+          "doc": "Cuántas copias.",
+          "required": false,
+          "options": null,
+          "min": 2,
+          "max": 40
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo del contador (vacío = sin contador).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "revealSec": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundos hasta mostrar todas las copias.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Segundos de armado de cada copia.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "icon": "bulb",
+        "count": 16,
+        "label": "VERSIONES"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.grid",
+      "data": {
+        "native_name": "binary.grid"
+      }
+    },
+    {
+      "id": "binary.chart",
+      "name": "binary.chart",
+      "label": "binary.chart",
+      "kind": "component",
+      "summary": "Curva de datos hecha de glifos que se dibuja de izquierda a derecha sobre ejes finos; etiqueta en el punto final ('DÍAS → HORAS').",
+      "tags": [
+        "datos",
+        "tendencia"
+      ],
+      "params": {
+        "curve": {
+          "type": "enum",
+          "default": "decay",
+          "doc": "Forma de la curva.",
+          "required": false,
+          "options": [
+            "decay",
+            "growth",
+            "linear",
+            "s"
+          ],
+          "min": null,
+          "max": null
+        },
+        "startLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del punto inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "endLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del punto final.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "axisX": {
+          "type": "string",
+          "default": "",
+          "doc": "Nombre del eje X.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "axisY": {
+          "type": "string",
+          "default": "",
+          "doc": "Nombre del eje Y.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drawSec": {
+          "type": "number",
+          "default": 2.2,
+          "doc": "Segundos que tarda en dibujarse la curva.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "curve": "decay",
+        "startLabel": "DÍAS",
+        "endLabel": "HORAS",
+        "axisX": "TIEMPO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.chart",
+      "data": {
+        "native_name": "binary.chart"
+      }
+    },
+    {
+      "id": "binary.tunnel",
+      "name": "binary.tunnel",
+      "label": "binary.tunnel",
+      "kind": "component",
+      "summary": "Túnel de anillos concéntricos de glifos que gira y avanza hacia la cámara: pausa dramática, viaje en el tiempo, 'entrar' en una idea.",
+      "tags": [
+        "transición",
+        "profundidad",
+        "tiempo"
+      ],
+      "params": {
+        "rings": {
+          "type": "number",
+          "default": 14,
+          "doc": "Cantidad de anillos.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": 30
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Velocidad de avance (zoom por segundo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Palabra mono en el centro (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "rings": 14,
+        "text": ""
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.tunnel",
+      "data": {
+        "native_name": "binary.tunnel"
+      }
+    },
+    {
+      "id": "binary.rays",
+      "name": "binary.rays",
+      "label": "binary.rays",
+      "kind": "component",
+      "summary": "Haz de líneas de glifos que salen de un punto: abanico de caminos posibles, 'X' de contradicción o estallido radial; se dibujan del centro hacia afuera.",
+      "tags": [
+        "opciones",
+        "caminos",
+        "contradicción",
+        "explosión"
+      ],
+      "params": {
+        "mode": {
+          "type": "enum",
+          "default": "fan",
+          "doc": "fan = abanico hacia abajo, x = cruz, burst = estrella.",
+          "required": false,
+          "options": [
+            "fan",
+            "x",
+            "burst"
+          ],
+          "min": null,
+          "max": null
+        },
+        "count": {
+          "type": "number",
+          "default": 10,
+          "doc": "Cantidad de líneas (fan/burst).",
+          "required": false,
+          "options": null,
+          "min": 2,
+          "max": 36
+        },
+        "highlight": {
+          "type": "number",
+          "default": -1,
+          "doc": "Índice de la línea resaltada (-1 = ninguna).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta junto a la línea resaltada o arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drawSec": {
+          "type": "number",
+          "default": 1.4,
+          "doc": "Segundos en desplegarse.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "mode": "fan",
+        "count": 10,
+        "label": "10 CAMINOS"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.rays",
+      "data": {
+        "native_name": "binary.rays"
+      }
+    },
+    {
+      "id": "binary.frame",
+      "name": "binary.frame",
+      "label": "binary.frame",
+      "kind": "component",
+      "summary": "Foto real (blanco y negro) dentro de un marco de glifos punteado, con título en serif y ficha mono: documento histórico, lugar, objeto real.",
+      "tags": [
+        "foto",
+        "documento",
+        "evidencia"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se muestra en escala de grises).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título en serif itálica bajo la foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Ficha mono bajo el título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "Proporción del marco (0 = la de la foto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Inclinación del marco en grados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos de armado del marco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/bletchley.jpg",
+        "title": "Bletchley Park",
+        "sub": "INGLATERRA · 1939–1945"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.frame",
+      "data": {
+        "native_name": "binary.frame"
+      }
+    },
+    {
+      "id": "binary.bubble",
+      "name": "binary.bubble",
+      "label": "binary.bubble",
+      "kind": "component",
+      "summary": "Globo de diálogo de contorno con tres puntos que 'escriben' (esperar una respuesta, una pregunta en el aire).",
+      "tags": [
+        "diálogo",
+        "pregunta",
+        "espera"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto dentro del globo (vacío = puntos animados).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Fracción del contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "morph": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": ""
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.bubble",
+      "data": {
+        "native_name": "binary.bubble"
+      }
+    },
+    {
+      "id": "binary.floor",
+      "name": "binary.floor",
+      "label": "binary.floor",
+      "kind": "component",
+      "summary": "Piso infinito en perspectiva hecho de filas de glifos que se desplazan hacia la cámara (vacío, inmensidad, final reflexivo).",
+      "tags": [
+        "espacio",
+        "vacío",
+        "cierre"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto mono flotando sobre el horizonte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Velocidad de avance.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "¿Y AHORA?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.floor",
+      "data": {
+        "native_name": "binary.floor"
+      }
+    },
+    {
+      "id": "binary.introv1",
+      "name": "binary.introv1",
+      "label": "binary.introv1",
+      "kind": "component",
+      "summary": "Miniatura de solo texto en el estilo monocromo de binary: el título hecho de partículas 0/1, en blanco puro, con la fecha en letras blancas encima.",
+      "tags": [
+        "intro",
+        "miniatura",
+        "solo texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título; '\\n' parte renglones (2-4 renglones cortos).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Cortes alternativos para 9:16 (más renglones = letras más grandes).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Antetítulo (fecha, lugar) en letras blancas sobre el título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fit": {
+          "type": "enum",
+          "default": "lines",
+          "doc": "lines = cada renglón al ancho total (cartel); block = mismo tamaño.",
+          "required": false,
+          "options": [
+            "lines",
+            "block"
+          ],
+          "min": null,
+          "max": null
+        },
+        "font": {
+          "type": "string",
+          "default": "900 100px 'Inter', sans-serif",
+          "doc": "Fuente canvas del título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fill": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Fracción del ancho del cuadro que ocupa.",
+          "required": false,
+          "options": null,
+          "min": 0.4,
+          "max": 1
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.6,
+          "doc": "Segundos que tardan las partículas en armar el título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "highlight": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase opcional que se destaca en una etiqueta invertida debajo del título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea mono opcional debajo del título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "glow": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Opacidad extra de los glifos del texto (más = blanco más luminoso).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.6
+        }
+      },
+      "example": {
+        "text": "EL HOMBRE\nQUE ROMPIÓ\nENIGMA",
+        "kicker": "ALAN TURING · 1940",
+        "highlight": "ENIGMA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.introv1",
+      "data": {
+        "native_name": "binary.introv1"
+      }
+    },
+    {
+      "id": "binary.introv2",
+      "name": "binary.introv2",
+      "label": "binary.introv2",
+      "kind": "component",
+      "summary": "Miniatura de texto e imagen: la frase (como en introv1, más chica) en una mitad y el retrato en glifos 0/1 en la otra; el lado de la foto se elige con imageSide.",
+      "tags": [
+        "intro",
+        "miniatura",
+        "texto e imagen"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto de la miniatura; sin '\\n' se corta solo en 1–3 renglones (el corte con la letra más grande).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Cortes alternativos para 9:16.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Antetítulo (fecha, lugar) en caja blanca con letra negra sobre el texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "highlight": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase opcional que se destaca en una etiqueta invertida debajo del texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea mono opcional debajo del texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Retrato o foto del tema (archivo de assets/media/ o URL). Vacío = cartel «IMAGEN PENDIENTE».",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local, siempre mudo, convertido a glifos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen inicial y respaldo; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes del beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de la foto en 16:9 (el texto va en el otro). auto = alterna entre videos según el texto, así las intros no se ven siempre iguales; left/right lo fija (p. ej. para que el rostro mire hacia el texto). En 9:16 la foto va siempre arriba.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Ampliación de la foto (1 = entera): un retrato más grande se reconoce mejor.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        },
+        "focusX": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro del recorte en la foto, horizontal (0 = izquierda). Moverlo hacia el rostro si queda cortado.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "focusY": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro del recorte en la foto, vertical (0 = arriba).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "imageCell": {
+          "type": "number",
+          "default": 0.65,
+          "doc": "Escala de glifos de la fotografía (menor = más detalle).",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "contrast": {
+          "type": "number",
+          "default": 1.9,
+          "doc": "Contraste de la foto antes de muestrear (más = luces y sombras más separadas).",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 2.5
+        },
+        "gamma": {
+          "type": "number",
+          "default": 1,
+          "doc": "Curva de la foto: más alto = medios tonos y sombras más oscuros.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        },
+        "threshold": {
+          "type": "number",
+          "default": 0.14,
+          "doc": "Brillo mínimo para formar la imagen (lo que queda debajo es negro).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.8
+        },
+        "glow": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Opacidad extra de los glifos del texto (más = blanco más luminoso).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.6
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundos para armar texto e imagen.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "ELLA LO\nPREVIÓ",
+        "kicker": "APOLO 11 · 1969",
+        "src": "assets/media/hamilton.jpg",
+        "imageSide": "right"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.introv2",
+      "data": {
+        "native_name": "binary.introv2"
+      }
+    },
+    {
+      "id": "binary.counter",
+      "name": "binary.counter",
+      "label": "binary.counter",
+      "kind": "component",
+      "summary": "Número que se arma dígito a dígito como una tragamonedas (slot) o que cuenta hasta su valor (count), entre dos reglas de glifos: cifras enormes, años, cantidades.",
+      "tags": [
+        "número",
+        "dato",
+        "escala",
+        "impacto"
+      ],
+      "params": {
+        "value": {
+          "type": "string",
+          "default": null,
+          "doc": "Valor final tal como se lee ('159.000.000…', '2048', '1940').",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "slot",
+          "doc": "slot = cada dígito gira y se fija de izquierda a derecha; count = cuenta numérica desde `from`.",
+          "required": false,
+          "options": [
+            "slot",
+            "count"
+          ],
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "number",
+          "default": 0,
+          "doc": "Valor inicial (solo mode=count).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 2.2,
+          "doc": "Segundos hasta fijar el último dígito.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta blanca arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea mono debajo (aparece al terminar).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.92,
+          "doc": "Fracción del ancho del contenido.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "morph": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Segundos de armado de las reglas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "value": "159.000.000.000.000.000.000",
+        "label": "COMBINACIONES",
+        "note": "21 CIFRAS",
+        "mode": "slot"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.counter",
+      "data": {
+        "native_name": "binary.counter"
+      }
+    },
+    {
+      "id": "binary.cipher",
+      "name": "binary.cipher",
+      "label": "binary.cipher",
+      "kind": "component",
+      "summary": "Mensaje que se cifra letra por letra: texto claro arriba, columna de glifos que 'pasa por la máquina' y letra cifrada abajo en caja. Con mode='crib' muestra una frase conocida alineada bajo el cifrado (la llave).",
+      "tags": [
+        "código",
+        "cifrado",
+        "letras",
+        "criptografía"
+      ],
+      "params": {
+        "plain": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto en claro (mayúsculas, sin acentos mejor).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cipher": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto cifrado; vacío = sustitución sembrada que nunca cifra una letra como sí misma (como Enigma).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "encrypt",
+          "doc": "encrypt = claro→cifrado; crib = cifrado arriba y la frase conocida abajo, resaltada.",
+          "required": false,
+          "options": [
+            "encrypt",
+            "crib"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stepSec": {
+          "type": "number",
+          "default": 0.14,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "plain": "NADA QUE INFORMAR",
+        "label": "TEXTO CLARO → CIFRADO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.cipher",
+      "data": {
+        "native_name": "binary.cipher"
+      }
+    },
+    {
+      "id": "binary.rotors",
+      "name": "binary.rotors",
+      "label": "binary.rotors",
+      "kind": "component",
+      "summary": "Rotores/tambores de glifos que giran a distinto ritmo: con pocos (1-5) muestran el abecedario y la letra activa en una ventana (Enigma); con muchos (6-120) forman una batería de tambores girando a la vez (la Bomba).",
+      "tags": [
+        "máquina",
+        "engranaje",
+        "mecanismo",
+        "combinaciones"
+      ],
+      "params": {
+        "count": {
+          "type": "number",
+          "default": 3,
+          "doc": "Cantidad de rotores.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 120
+        },
+        "speed": {
+          "type": "number",
+          "default": 4,
+          "doc": "Pasos por segundo del rotor más rápido.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tags": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulo bajo cada rotor (solo con pocos rotores).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "count": 3,
+        "tags": [
+          "I",
+          "II",
+          "III"
+        ],
+        "label": "ROTORES"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.rotors",
+      "data": {
+        "native_name": "binary.rotors"
+      }
+    },
+    {
+      "id": "binary.timeline",
+      "name": "binary.timeline",
+      "label": "binary.timeline",
+      "kind": "component",
+      "summary": "Línea de tiempo de glifos (vertical en 9:16, horizontal en 16:9) con hitos que aparecen al pasar el trazo; el hito `active` queda resaltado con caja y pulso.",
+      "tags": [
+        "tiempo",
+        "fechas",
+        "historia",
+        "cronología"
+      ],
+      "params": {
+        "items": {
+          "type": "array",
+          "default": null,
+          "doc": "[{year, label}] de 2 a 7 hitos, en orden.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "active": {
+          "type": "number",
+          "default": -1,
+          "doc": "Índice resaltado (-1 = ninguno).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drawSec": {
+          "type": "number",
+          "default": 1.8,
+          "doc": "Segundos que tarda en recorrerse la línea.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "items": [
+          {
+            "year": "1936",
+            "label": "MÁQUINA UNIVERSAL"
+          },
+          {
+            "year": "1940",
+            "label": "LA BOMBA"
+          },
+          {
+            "year": "1950",
+            "label": "¿PUEDEN PENSAR?"
+          },
+          {
+            "year": "1954",
+            "label": "MUERE"
+          }
+        ],
+        "active": 2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.timeline",
+      "data": {
+        "native_name": "binary.timeline"
+      }
+    },
+    {
+      "id": "binary.versus",
+      "name": "binary.versus",
+      "label": "binary.versus",
+      "kind": "component",
+      "summary": "Dos formas enfrentadas (persona ↔ máquina, prisión ↔ tratamiento) con un símbolo en el medio ('?', 'VS', '='); lado a lado en 16:9, una sobre otra en 9:16. `pick` resalta la elegida.",
+      "tags": [
+        "comparación",
+        "dilema",
+        "pregunta",
+        "elección"
+      ],
+      "params": {
+        "left": {
+          "type": "object",
+          "default": null,
+          "doc": "{icon, label} — primera opción.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "right": {
+          "type": "object",
+          "default": null,
+          "doc": "{icon, label} — segunda opción.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mid": {
+          "type": "string",
+          "default": "?",
+          "doc": "Símbolo central (1-3 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pick": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Resalta una opción (la otra se apaga) a los `pickAt` s.",
+          "required": false,
+          "options": [
+            "none",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "pickAt": {
+          "type": "number",
+          "default": 1.8,
+          "doc": "Segundo (local) en que se resalta la elegida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "left": {
+          "icon": "person",
+          "label": "PERSONA"
+        },
+        "right": {
+          "icon": "chip",
+          "label": "MÁQUINA"
+        },
+        "mid": "?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.versus",
+      "data": {
+        "native_name": "binary.versus"
+      }
+    },
+    {
+      "id": "binary.convoy",
+      "name": "binary.convoy",
+      "label": "binary.convoy",
+      "kind": "component",
+      "summary": "Mar de glifos visto desde arriba con un convoy de barcos que cruza y submarinos al acecho. mode: attack (un barco se hunde), reroute (el convoy cambia de rumbo a tiempo), hunt (los submarinos quedan marcados y desaparecen).",
+      "tags": [
+        "guerra",
+        "mar",
+        "barcos",
+        "rutas",
+        "amenaza"
+      ],
+      "params": {
+        "mode": {
+          "type": "enum",
+          "default": "attack",
+          "doc": "Qué pasa en la escena.",
+          "required": false,
+          "options": [
+            "attack",
+            "reroute",
+            "hunt"
+          ],
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 5,
+          "doc": "Barcos del convoy.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 9
+        },
+        "subs": {
+          "type": "number",
+          "default": 3,
+          "doc": "Submarinos.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 6
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta arriba (lugar).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo del desenlace (aparece a los 2.4 s): 'HUNDIDO', 'RUTA NUEVA', 'CAZADOS'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "mode": "reroute",
+        "ships": 5,
+        "subs": 3,
+        "label": "ATLÁNTICO NORTE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.convoy",
+      "data": {
+        "native_name": "binary.convoy"
+      }
+    },
+    {
+      "id": "binary.banknote",
+      "name": "binary.banknote",
+      "label": "binary.banknote",
+      "kind": "component",
+      "summary": "Un billete hecho de glifos 0/1: marco doble, medallón ovalado con un retrato muestreado y el valor grande a la izquierda. Sirve para el momento en que un personaje 'termina en un billete'.",
+      "tags": [
+        "billete",
+        "dinero",
+        "retrato",
+        "historia"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Retrato que va dentro del medallón ovalado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "value": {
+          "type": "string",
+          "default": "50",
+          "doc": "Valor grande, hecho de glifos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "currency": {
+          "type": "string",
+          "default": "£",
+          "doc": "Símbolo de la moneda, texto nítido junto al valor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea mono debajo del billete.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos de armado de la forma.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/turing.jpg",
+        "value": "50",
+        "currency": "£",
+        "caption": "BILLETE DE 50 LIBRAS · 2021",
+        "morph": 1
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.banknote",
+      "data": {
+        "native_name": "binary.banknote"
+      }
+    },
+    {
+      "id": "binary.wall",
+      "name": "binary.wall",
+      "label": "binary.wall",
+      "kind": "component",
+      "summary": "Muro de ladrillos hechos de glifos con alambre arriba. mode=build lo levanta fila por fila; stand lo muestra quieto (división, encierro); break abre una brecha en el centro en `breakAt` y los fragmentos caen.",
+      "tags": [
+        "muro",
+        "frontera",
+        "división",
+        "caída",
+        "construcción"
+      ],
+      "params": {
+        "mode": {
+          "type": "enum",
+          "default": "stand",
+          "doc": "build = se levanta, stand = quieto, break = se rompe en el centro.",
+          "required": false,
+          "options": [
+            "build",
+            "stand",
+            "break"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rows": {
+          "type": "number",
+          "default": 7,
+          "doc": "Filas de ladrillos.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": 14
+        },
+        "buildSec": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundos para levantarlo (mode=build).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "breakAt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundo (local) en que se rompe (mode=break; admite \"@palabra\").",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta blanca arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea mono debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos de armado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "mode": "break",
+        "label": "28 AÑOS",
+        "breakAt": 2.2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.wall",
+      "data": {
+        "native_name": "binary.wall"
+      }
+    },
+    {
+      "id": "binary.chessboard",
+      "name": "binary.chessboard",
+      "label": "binary.chessboard",
+      "kind": "component",
+      "summary": "Diagrama de ajedrez con piezas vectoriales y jugadas UCI animadas; muestra aperturas y momentos concretos de una partida.",
+      "tags": [
+        "ajedrez",
+        "tablero",
+        "partida",
+        "movimientos"
+      ],
+      "params": {
+        "fen": {
+          "type": "string",
+          "default": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+          "doc": "FEN inicial del tablero.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "moves": {
+          "type": "array",
+          "default": [],
+          "doc": "Lista de jugadas UCI, como e2e4 o g5e6.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "notation": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulo opcional por jugada, por ejemplo 8. Nxe6.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "moveSec": {
+          "type": "number",
+          "default": 1.15,
+          "doc": "Intervalo entre comienzos de jugadas.",
+          "required": false,
+          "options": null,
+          "min": 0.35,
+          "max": 4
+        },
+        "animSec": {
+          "type": "number",
+          "default": 0.78,
+          "doc": "Duración del desplazamiento de cada pieza.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 3
+        },
+        "delay": {
+          "type": "number",
+          "default": 0.4,
+          "doc": "Espera antes de la primera jugada.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 5
+        },
+        "focus": {
+          "type": "string",
+          "default": "",
+          "doc": "Casilla para enmarcar, por ejemplo b5.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta sobre el tablero.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota debajo del tablero.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos para armar la trama binaria.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "moves": [
+          "e2e4",
+          "c7c6",
+          "d2d4",
+          "d7d5"
+        ],
+        "notation": [
+          "1. e4",
+          "1... c6",
+          "2. d4",
+          "2... d5"
+        ],
+        "moveSec": 1.1,
+        "label": "DEFENSA CARO-KANN",
+        "note": "DIAGRAMA DE APERTURA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.chessboard",
+      "data": {
+        "native_name": "binary.chessboard"
+      }
+    },
+    {
+      "id": "binary.chesspiece",
+      "name": "binary.chesspiece",
+      "label": "binary.chesspiece",
+      "kind": "component",
+      "summary": "Pieza de ajedrez con siluetas SVG trazadas en dígitos 0/1 generados por Canvas; permite elegir entre los dos caballos de referencia.",
+      "tags": [
+        "ajedrez",
+        "caballo",
+        "torre",
+        "pieza"
+      ],
+      "params": {
+        "piece": {
+          "type": "enum",
+          "default": "knight",
+          "doc": "Tipo de pieza.",
+          "required": false,
+          "options": [
+            "pawn",
+            "knight",
+            "bishop",
+            "rook",
+            "queen",
+            "king"
+          ],
+          "min": null,
+          "max": null
+        },
+        "side": {
+          "type": "enum",
+          "default": "white",
+          "doc": "Color de la pieza.",
+          "required": false,
+          "options": [
+            "white",
+            "black"
+          ],
+          "min": null,
+          "max": null
+        },
+        "action": {
+          "type": "enum",
+          "default": "idle",
+          "doc": "Tratamiento visual.",
+          "required": false,
+          "options": [
+            "idle",
+            "advance",
+            "threatened",
+            "sacrifice"
+          ],
+          "min": null,
+          "max": null
+        },
+        "art": {
+          "type": "enum",
+          "default": "variable",
+          "doc": "Silueta SVG fuente del caballo: versión detallada o trazado de referencia.",
+          "required": false,
+          "options": [
+            "variable",
+            "referencia"
+          ],
+          "min": null,
+          "max": null
+        },
+        "srcVariable": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG del caballo detallado de 360 × 360.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcReference": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG del caballo de referencia de 687 × 1024.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota inferior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos para armar la trama binaria.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "piece": "knight",
+        "side": "white",
+        "action": "threatened",
+        "art": "variable",
+        "label": "CABALLO BLANCO",
+        "note": "EL PEÓN h6 AMENAZA g5"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.chesspiece",
+      "data": {
+        "native_name": "binary.chesspiece"
+      }
+    },
+    {
+      "id": "binary.searchtree",
+      "name": "binary.searchtree",
+      "label": "binary.searchtree",
+      "kind": "component",
+      "summary": "Árbol esquemático de jugadas posibles con una ruta destacada; sirve para explicar búsqueda y evaluación sin afirmar que sea un registro literal del cálculo.",
+      "tags": [
+        "búsqueda",
+        "opciones",
+        "ramas",
+        "cálculo"
+      ],
+      "params": {
+        "depth": {
+          "type": "number",
+          "default": 4,
+          "doc": "Cantidad de niveles de decisión.",
+          "required": false,
+          "options": null,
+          "min": 2,
+          "max": 4
+        },
+        "branching": {
+          "type": "number",
+          "default": 2,
+          "doc": "Ramas por posición.",
+          "required": false,
+          "options": null,
+          "min": 2,
+          "max": 3
+        },
+        "focusPath": {
+          "type": "array",
+          "default": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "doc": "Índice de la rama destacada en cada nivel.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota inferior; usar ESQUEMA para aclarar el dibujo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos para armar la trama binaria.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "depth": 4,
+        "branching": 2,
+        "focusPath": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "label": "HARDWARE + BÚSQUEDA",
+        "note": "ESQUEMA DE OPCIONES"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.searchtree",
+      "data": {
+        "native_name": "binary.searchtree"
+      }
+    },
+    {
+      "id": "binary.outrov1",
+      "name": "binary.outrov1",
+      "label": "binary.outrov1",
+      "kind": "component",
+      "summary": "Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa.",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Línea superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal, dibujado con glifos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Tu apoyo hace posible que sigamos trayendo nuevas historias y miradas sobre el pasado.",
+          "doc": "Texto de apoyo inferior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Usuario del canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Segundos de armado del nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo de la voz en que aparece el like.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de la voz en que aparece suscríbete.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la voz en que aparece la campana.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo de la voz en que aparece el mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODETECH",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo hace posible que sigamos trayendo nuevas historias y miradas sobre el pasado."
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.outrov1",
+      "data": {
+        "native_name": "binary.outrov1"
+      }
+    },
+    {
+      "id": "binary.outro",
+      "name": "binary.outro",
+      "label": "binary.outro",
+      "kind": "component",
+      "summary": "Cierre v1 para NODETECH: canal en glifos, LIKE plano que se activa y desaparece, suscripción y notificación directa. Alias compatible para binary.outro.",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Línea superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal, dibujado con glifos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Tu apoyo hace posible que sigamos trayendo nuevas historias y miradas sobre el pasado.",
+          "doc": "Texto de apoyo inferior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Usuario del canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "morph": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Segundos de armado del nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo de la voz en que aparece el like.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de la voz en que aparece suscríbete.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la voz en que aparece la campana.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo de la voz en que aparece el mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODETECH",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo hace posible que sigamos trayendo nuevas historias y miradas sobre el pasado."
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=binary.outro",
+      "data": {
+        "native_name": "binary.outro"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=binary&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    }
+  ]
+}

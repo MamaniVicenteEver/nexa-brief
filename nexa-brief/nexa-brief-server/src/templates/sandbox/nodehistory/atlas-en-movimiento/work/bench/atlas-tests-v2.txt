@@ -1,0 +1,35 @@
+✔ mercator ida y vuelta (1.152603ms)
+✔ posición exacta en las keys de llegada (t+dur) (0.242437ms)
+✔ determinista fuera de orden (1.328191ms)
+✔ continuidad C0 y C1 en cada salida/llegada de vuelo (1.751904ms)
+✔ sin saltos: paso máximo por fotograma acotado (1.967435ms)
+✔ interrumpir un vuelo conserva velocidad (0.402958ms)
+✔ rumbo y longitud toman el camino corto (0.769754ms)
+✔ sin rebote en vuelo simple desde reposo (0.851522ms)
+✔ la deriva se acota y nunca congela del todo (0.328037ms)
+✔ lift constante, límites y compatibilidad sin lift (0.590732ms)
+✔ lift interpola suavemente sin overshoot y mantiene velocidad al encadenar (3.117563ms)
+✔ seek determinista y operaciones finitas para todas las capas (9.130806ms)
+✔ proyección invisible no dibuja elementos geográficos (0.36617ms)
+✔ distribución sin solapes y texto ajustado a cuatro líneas (0.916432ms)
+✔ precarga y rutas ausentes (0.35476ms)
+✔ layout de la escena demo sin solapes (0.320886ms)
+✔ escena real a 7.5 s: evita fichas y etiquetas proyectadas cercanas (9.134999ms)
+✔ out retira también los arcos keep en el corte (1.089737ms)
+✔ estilos: JSON, fuentes existentes e identificadores únicos (28.242433ms)
+✔ mezcla extremos, colores y conmutatividad (1.999617ms)
+✔ lookAt es puro al interrumpir una transición (3.115061ms)
+✔ la proyección cambia al empezar la transición (1.18558ms)
+✔ overrides profundos iniciales y por transición sin mutar los looks (1.363545ms)
+✔ etiquetas únicas de país, jerarquía y detalle limitado a cobertura (3.133586ms)
+✔ la proyección del override se sustituye completa y entra al iniciar el evento (1.606815ms)
+✔ resuelve lugares y regiones por id, alias y bbox (0.288018ms)
+✔ cameraKeys conserva lift y deja ausente el valor omitido (0.132971ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 141.386932

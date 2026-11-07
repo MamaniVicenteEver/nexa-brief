@@ -1,0 +1,60 @@
+{
+  "name": "flag.marker",
+  "family": "flag",
+  "description": "Bandera independiente en mástil, sombra y onda calculada desde el tiempo; admite ancla móvil. Úsala para identificar una nacionalidad en una posición.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "flag": {
+      "type": "string",
+      "default": "US",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "flagWidth": {
+      "type": "number",
+      "default": 78,
+      "range": null,
+      "description": "Ancho de la bandera en píxeles de diseño."
+    },
+    "poleHeight": {
+      "type": "number",
+      "default": 98,
+      "range": null,
+      "description": "Altura del mástil en píxeles de diseño."
+    },
+    "wave": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la ondulación de la bandera o formación."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-flag-marker",
+    "t": 0,
+    "type": "flag.marker",
+    "at": [
+      53,
+      27
+    ],
+    "flag": "US",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-territory.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/flag.marker.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

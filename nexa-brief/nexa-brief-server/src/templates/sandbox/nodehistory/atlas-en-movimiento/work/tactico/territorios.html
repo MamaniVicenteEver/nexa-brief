@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Atlas · territorios, rutas y rótulos</title><link rel="icon" href="data:,">
+<style>@font-face{font-family:AtlasDisplay;src:url('../../../../../_tools/explainer-kit/vendor/fonts/Archivo-900.ttf')}html,body{margin:0;height:100%;background:#081e2c;color:#f4f1da;font-family:AtlasDisplay,sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}#controls{position:fixed;bottom:12px;left:3%;right:3%;display:flex;gap:8px;background:#081e2ce8;padding:12px}input{flex:1;min-width:40px}select{max-width:35vw}#status{position:fixed;top:1%;left:3%;font-size:13px}.shot #controls,.shot #status{display:none}</style></head>
+<body><canvas></canvas><div id="status">Preparando mapa…</div><div id="controls"><button id="play">Reproducir</button><select id="component"></select><input id="time" type="range" step=".01" value="0"><span id="clock"></span></div>
+<script type="module">
+import {create,Tactico} from '../../engine/tactico/core.js';
+import {createView} from '../../engine/plano/view.js';
+import {createTiles} from '../../engine/plano/tiles.js';
+import {createTerritories} from '../../engine/plano/territories.js';
+import {atlasURL} from '../../engine/plano/paths.js';
+import {landIndex} from '../../engine/tactico/tools/geometry.js';
+const qs=new URLSearchParams(location.search);if(qs.has('shot'))document.body.classList.add('shot');
+const get=async url=>{const r=await fetch(url);if(!r.ok)throw Error(`${r.status}: ${url}`);return r.json();};
+try {
+ await document.fonts.load('40px AtlasDisplay');
+ const [scene,cases,look,providers,collection,inventory,{createGeo}]=await Promise.all([get(qs.get('items')??'scene-territorios.json'),get('cases-territorios.json'),get('../../engine/looks/tactico.json'),get(atlasURL('providers.json')),get(atlasURL('data/geo/admin0.geojson')),get('../bench/cache-inventory.json'),import(atlasURL('geo.js'))]);
+ const canvas=document.querySelector('canvas'),g=canvas.getContext('2d',{willReadFrequently:true}),st={W:innerWidth,H:innerHeight,U:innerWidth/1080};canvas.width=st.W;canvas.height=st.H;
+ const territories=createTerritories(collection),land=landIndex(collection),geo=createGeo(scene,{},[collection]);
+ const pose=scene.camera[0],view=createView({lon:pose.center[0],lat:pose.center[1],zoom:pose.zoom,bearing:pose.bearing??0},st.W,st.H);
+ const tiles=createTiles(providers.find(p=>p.id==='gibs-bluemarble'),look,territories,inventory);tiles.plan(view);await tiles.preload();
+ const background=new OffscreenCanvas(st.W,st.H),bg=background.getContext('2d',{willReadFrequently:true});bg.fillStyle=look.background;bg.fillRect(0,0,st.W,st.H);tiles.draw(bg,view);territories.draw(bg,view,[],0,look);
+ const gradient=bg.createRadialGradient(st.W/2,st.H*.45,st.W*.25,st.W/2,st.H*.45,st.H*.75);gradient.addColorStop(0,'#081e2c00');gradient.addColorStop(1,'#081e2ca0');bg.fillStyle=gradient;bg.fillRect(0,0,st.W,st.H);
+ const c={st,look,territories,land,geo,T:(x,f=0)=>typeof x==='number'?x:f};let runtime=await create(c,scene),current=scene,t=0,playing=false,last=0;
+ const slider=document.querySelector('#time');slider.max=scene.duration;
+ const select=document.querySelector('#component');for(const item of scene.items.filter(i=>i.id.startsWith('demo-')||i.id==='iran-fill')){const option=document.createElement('option');option.value=item.t;option.textContent=item.type+' · '+item.t+' s';select.append(option);}
+ function draw(time){t=time;g.resetTransform();g.globalAlpha=1;g.globalCompositeOperation='source-over';g.drawImage(background,0,0);runtime.draw(g,view,t);g.font=`${14*st.U}px AtlasDisplay`;g.fillStyle='#e9e3ba';g.textAlign='center';g.fillText('NASA GIBS / Blue Marble · límites Natural Earth',st.W/2,st.H*.92);slider.value=t;document.querySelector('#clock').textContent=t.toFixed(2)+' s';}
+ async function setItems(items,base=cases.base){current={...base,items};runtime=await create({...c,geo:createGeo(current,{},[collection])},current);return true;}
+ slider.oninput=()=>draw(Number(slider.value));select.onchange=()=>draw(Number(select.value)+2.4);document.querySelector('#play').onclick=()=>{playing=!playing;last=0;if(playing)requestAnimationFrame(tick);};
+ function tick(now){if(!playing)return;const dt=last?(now-last)/1000:0;last=now;draw((t+dt)%current.duration);requestAnimationFrame(tick);}
+ window.__territorios={ready:true,cases,scene,c,view,canvas,background,Tactico,setItems,draw,get runtime(){return runtime;},missing:()=>({tiles:tiles.missingTiles(),assets:runtime.missing()})};draw(Number(qs.get('t')??2.4));document.querySelector('#status').textContent=`${cases.components.length} componentes · ${scene.duration} s`;
+}catch(error){document.querySelector('#status').textContent=error.stack;window.__territoriosError=String(error);console.error(error);}
+</script></body></html>

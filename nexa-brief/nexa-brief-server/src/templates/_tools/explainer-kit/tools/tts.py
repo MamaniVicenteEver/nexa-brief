@@ -15,9 +15,13 @@ Ambas devuelven PCM 16-bit mono 24 kHz → se guarda como WAV.
 from __future__ import annotations
 import base64, hashlib, json, os, pathlib, re, time, wave, urllib.request, urllib.error
 
-# claves: se leen de estos .env (en orden) o de variables de entorno; NUNCA se imprimen
-ENV_FILES = [pathlib.Path("/home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/.env"),
-             pathlib.Path("/home/university/Documentos/Proyectos/nexa-brief/nexa-explainer/nexa-explainer-server/.env")]
+# claves: se leen de estos .env (en orden) o de variables de entorno; NUNCA se imprimen.
+# Rutas relativas al repo (tools → explainer-kit → _tools → templates → src → nexa-brief-server),
+# así funcionan en cualquier máquina; antes eran absolutas de una sola computadora y en el
+# servidor el kit se quedaba sin claves ("sin claves con cuota").
+_SERVER = pathlib.Path(__file__).resolve().parents[5]
+ENV_FILES = [_SERVER / ".env",
+             _SERVER.parents[1] / "nexa-explainer" / "nexa-explainer-server" / ".env"]
 STATE = pathlib.Path(__file__).resolve().parents[1] / ".state" / "gemini-quota.json"
 
 class QuotaError(RuntimeError):
@@ -49,8 +53,15 @@ def _state():
     try: return json.loads(STATE.read_text())
     except Exception: return {}
 def _mark_exhausted(keyname, model):
-    st = _state(); st.setdefault(model, {})[keyname] = time.time() + 23.5 * 3600
-    STATE.parent.mkdir(exist_ok=True); STATE.write_text(json.dumps(st, indent=1))
+    import fcntl, tempfile
+    STATE.parent.mkdir(exist_ok=True)
+    with STATE.with_suffix(".lock").open("a") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        st = _state(); st.setdefault(model, {})[keyname] = time.time() + 23.5 * 3600
+        with tempfile.NamedTemporaryFile("w", dir=STATE.parent, delete=False) as tmp:
+            json.dump(st, tmp, indent=1)
+            temp_path = pathlib.Path(tmp.name)
+        os.replace(temp_path, STATE)
 def _available(model):
     st = _state().get(model, {}); now = time.time()
     return [(k, v) for k, v in gemini_keys() if st.get(k, 0) < now]
@@ -67,12 +78,16 @@ def with_key_rotation(model, call):
             print(f"  · {name} sin cuota para {model} → siguiente clave", flush=True); _mark_exhausted(name, model)
     raise QuotaError(f"todas las claves agotadas para {model}")
 
+LAST_USAGE: dict = {}   # usageMetadata de la última respuesta (narrate.py lo anota en el registro del video)
+
 def _post(url: str, body: dict, headers: dict, timeout=300) -> dict:
     req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) nexa-explainer-kit/1.0", **headers}, method="POST")
     for attempt in range(4):
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
-                return json.loads(r.read())
+                data = json.loads(r.read())
+                LAST_USAGE.clear(); LAST_USAGE.update(data.get("usageMetadata") or {})
+                return data
         except urllib.error.HTTPError as e:
             msg = e.read().decode(errors="replace")[:400]
             # en el plan gratuito CADA intento cuenta para la cuota: no reintentar un 429 diario y
@@ -150,7 +165,7 @@ TAG_BY_TONE = {
     "curiosidad": "thoughtful", "revelación": "revealing, emphatic", "dolor contenido": "with contained sorrow, slow",
     "duelo": "very quietly, grieving, long pauses", "reparación": "measured, a little hope", "cierre": "firm and warm",
     "urgencia": "urgent, fast but clear", "alivio": "relieved, breath out", "reflexivo": "reflectively",
-    "cercano": "warmly, close", "admiración": "with admiration",
+    "cercano": "warmly, close", "alarma": "urgently, like a breaking-news alert", "admiración": "with admiration",
 }
 
 def director_prompt(script: dict, segs: list[dict]) -> str:
@@ -159,6 +174,7 @@ def director_prompt(script: dict, segs: list[dict]) -> str:
             "AUDIO PROFILE\nOne mature, close, natural Latin American Spanish documentary narrator. Neutral Latin American accent "
             "(no Castilian ceceo). Do not imitate a real person.\n\n"
             f"SCENE\nA short documentary for social media: {script['title'].title()}.\n\n"
-            f"DIRECTOR'S NOTES\n{script['voice_direction']} Natural human breathing, clear diction, let short pauses breathe "
-            "between sentences. Numbers read naturally in Spanish.\n\n"
+            f"DIRECTOR'S NOTES\n{script['voice_direction']} Aim for 130 Spanish words per minute, unhurried. "
+            "Natural human breathing, clear diction, let short pauses breathe between sentences and ideas. "
+            "Numbers read naturally in Spanish.\n\n"
             f"TRANSCRIPT BEGINS\n{lines}\nTRANSCRIPT ENDS")

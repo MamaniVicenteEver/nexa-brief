@@ -1,0 +1,139 @@
+{
+  "name": "army.supply",
+  "family": "army",
+  "description": "Ruta logística discontinua con pequeños camiones, polvo y entrada/salida suave. Úsala para representar formaciones de tropas.",
+  "duration": 8.6,
+  "loop": true,
+  "layer": 30,
+  "states": [
+    "normal",
+    "engaged",
+    "routed",
+    "destroyed"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "flag": {
+      "type": "string",
+      "default": "IQ",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.35,
+      "max": 2.5,
+      "step": 0.05,
+      "range": {
+        "min": 0.35,
+        "max": 2.5
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "dust": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la nube de polvo asociada al movimiento."
+    },
+    "label": {
+      "type": "string",
+      "default": "EJÉRCITO",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "date": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fecha documentada visible."
+    },
+    "seed": {
+      "default": 23,
+      "type": "number|string",
+      "range": null,
+      "description": "Semilla para que las partículas y variaciones sean reproducibles."
+    },
+    "supplyCount": {
+      "type": "number",
+      "default": 5,
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "range": {
+        "min": 2,
+        "max": 12
+      },
+      "description": "Cantidad de unidades de suministro."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "army-supply",
+    "t": 0,
+    "type": "army.supply",
+    "at": [
+      48.45,
+      31.2
+    ],
+    "flag": "IQ",
+    "dur": 8,
+    "fade": 0.6,
+    "count": 24,
+    "columns": 6,
+    "radius": 25,
+    "spacing": 59,
+    "wave": 5,
+    "label": "ABASTECIMIENTO",
+    "date": "",
+    "path": {
+      "via": [
+        [
+          48.3,
+          30.98
+        ],
+        [
+          48.48,
+          31.18
+        ],
+        [
+          48.6,
+          31.38
+        ]
+      ],
+      "t": 0.5,
+      "dur": 7,
+      "curve": "smooth",
+      "ease": "inOut"
+    }
+  },
+  "usedBy": [
+    "work/tactico/items-terrestre.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/army.supply.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "sizeRequested": [
+    1536,
+    1024
+  ],
+  "modelPreset": "luna-xhigh",
+  "results": {
+    "escuela-entrada": {
+      "attempts": 1,
+      "seconds": null,
+      "status": "adapter-failed",
+      "error": "Read-only file system (os error 30), initializing in-process app-server client",
+      "note": "Primer intento: duración no instrumentada."
+    },
+    "aula": {
+      "attempts": 1,
+      "seconds": 1.401,
+      "status": "adapter-failed",
+      "exitCode": 1,
+      "error": "Read-only file system (os error 30), initializing in-process app-server client"
+    },
+    "parque": {
+      "attempts": 1,
+      "seconds": 1.28,
+      "status": "adapter-failed",
+      "exitCode": 1,
+      "error": "Read-only file system (os error 30), initializing in-process app-server client"
+    },
+    "casa-comedor": {
+      "attempts": 1,
+      "seconds": 1.054,
+      "status": "adapter-failed",
+      "exitCode": 1,
+      "error": "Read-only file system (os error 30), initializing in-process app-server client"
+    }
+  }
+}

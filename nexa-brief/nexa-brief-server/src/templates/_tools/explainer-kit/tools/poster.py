@@ -13,6 +13,7 @@ import argparse, asyncio, io, pathlib, sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from places import TEMPLATES, find_video, folders  # noqa: E402
 from shoot import serve  # noqa: E402
+from src.config.content_paths import content_key, preview_directory, production_root
 
 from PIL import Image  # noqa: E402
 import os
@@ -33,7 +34,7 @@ async def posters(video_dirs, t):
         b = await p.chromium.launch(executable_path=CHROMIUM, args=["--autoplay-policy=no-user-gesture-required"])
         for d in video_dirs:
             pg = await b.new_page(viewport={"width": W, "height": H})
-            rel = d.relative_to(TEMPLATES).as_posix()
+            rel = content_key(d)
             try:
                 await pg.goto(f"{base}/{rel}/index.html?paused", wait_until="domcontentloaded", timeout=120000)
                 await pg.wait_for_function("window.__promo", timeout=90000)
@@ -43,11 +44,11 @@ async def posters(video_dirs, t):
                     " return b ? +(b.t0 + Math.min(2.4, b.dur * 0.7)).toFixed(2) : 3; })()")
                 await pg.evaluate(f"window.__promo.seek({at})")
                 png = await pg.screenshot(type="png")
-                out = d / "render" / "poster.jpg"
-                out.parent.mkdir(exist_ok=True)
+                out = preview_directory(d) / "poster.jpg"
+                out.parent.mkdir(parents=True, exist_ok=True)
                 Image.open(io.BytesIO(png)).convert("RGB").save(out, quality=82)
                 done.append(out)
-                print(f"✓ {out.relative_to(TEMPLATES)}", flush=True)
+                print(f"✓ {content_key(out)}", flush=True)
             except Exception as e:  # un video roto no frena a los demás
                 print(f"✗ {rel}: {e}", flush=True)
             await pg.close()
@@ -64,8 +65,8 @@ def main():
     ap.add_argument("--t", type=float, default=None, help="segundo del cuadro (por defecto: el título armado)")
     a = ap.parse_args()
     if a.all:
-        dirs = [d for f in folders() if (TEMPLATES / f).exists() for d in sorted((TEMPLATES / f).iterdir())
-                if (d / "index.html").exists() and (a.force or not (d / "render" / "poster.jpg").exists())]
+        dirs = [d for f in folders() if (production_root() / f).exists() for d in sorted((production_root() / f).iterdir())
+                if (d / "index.html").exists() and (a.force or not (preview_directory(d) / "poster.jpg").exists())]
     else:
         dirs = [find_video(i) or sys.exit(f"no existe el video {i}") for i in a.ids]
     if not dirs:

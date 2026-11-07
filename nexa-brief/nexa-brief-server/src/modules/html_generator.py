@@ -15,7 +15,6 @@ Two completely different behaviors depending on niche_cfg.pipeline_type:
 from __future__ import annotations
 
 import json
-import shutil
 import time
 from pathlib import Path
 
@@ -40,6 +39,17 @@ Genero código HTML autónomo, moderno y visualmente impresionante.
 Respondo ÚNICAMENTE con el código HTML completo, sin ningún texto adicional.
 """
 
+def _composition_html(html: str, job: Job) -> str:
+    """Los recursos del nuevo layout se resuelven relativos a assets/."""
+    if job.artifacts.assets_dir is None or job.artifacts.assets_dir == job.artifacts.output_dir:
+        return html
+    import re
+    base = '<base href="assets/">'
+    if re.search(r"<head\b[^>]*>", html, flags=re.IGNORECASE):
+        return re.sub(r"(<head\b[^>]*>)", lambda match: match.group(1) + base, html, count=1, flags=re.IGNORECASE)
+    return base + html
+
+
 async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     if niche_cfg.pipeline_type == "config_driven_template":
         return await _run_config_driven(job, ai, niche_cfg)
@@ -56,10 +66,10 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     output_dir: Path = job.artifacts.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     html_path = output_dir / "index.html"
-    html_path.write_text(html_code, encoding="utf-8")
+    html_path.write_text(_composition_html(html_code, job), encoding="utf-8")
 
     # Audit logs
-    logs_dir = output_dir / "logs"
+    logs_dir = job.artifacts.log_dir or output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     (logs_dir / "04_html_generado.html").write_text(html_code, encoding="utf-8")
     (logs_dir / "04_html_log.json").write_bytes(
@@ -86,6 +96,17 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
 # ─────────────────────────────────────────────────────────────────────────────
 # pipeline_type == "config_driven_template"
 # ─────────────────────────────────────────────────────────────────────────────
+
+def _apply_locked_keys(config_dict: dict, config_path: Path | None, keys: list[str]) -> None:
+    """Pisa con el valor de la plantilla las claves que la plantilla decide (no la IA)."""
+    if config_path is None or not config_path.exists():
+        return
+    raw = json.loads(config_path.read_text(encoding="utf-8"))
+    template_config = raw["configs"][0] if isinstance(raw, dict) and isinstance(raw.get("configs"), list) and raw["configs"] else raw
+    for key in keys:
+        if isinstance(template_config, dict) and key in template_config:
+            config_dict[key] = template_config[key]
+
 
 async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     t_start = time.monotonic()
@@ -120,6 +141,8 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
             )
         system_prompt = system_prompt_path.read_text(encoding="utf-8")
         config_dict = await ai.complete_json(system_prompt, job.artifacts.prompt_text)
+        if isinstance(config_dict, dict) and niche_cfg.template.locked_config_keys:
+            _apply_locked_keys(config_dict, template_paths["config_json"], niche_cfg.template.locked_config_keys)
 
     if not isinstance(config_dict, dict):
         raise AIGenerationError(f"Config Mapper no devolvió un objeto JSON: {type(config_dict).__name__}")
@@ -189,10 +212,11 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
             f"Plantilla config-driven sin index.html: {niche_cfg.template.template_id}"
         )
     html_path = output_dir / "index.html"
-    shutil.copy2(index_html_src, html_path)
+    html_path.write_text(_composition_html(index_html_src.read_text(encoding="utf-8"), job), encoding="utf-8")
+    assets_dir = job.artifacts.content_dir
     copied_assets = copy_template_runtime_assets(
         niche_cfg.template.template_id,
-        output_dir,
+        assets_dir,
     )
 
     # Textos y medios que eligió el usuario (Estudio / Crear video) — después de
@@ -201,7 +225,7 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
         config_dict,
         job.input.template_inputs,
         niche_cfg.template.template_id,
-        output_dir,
+        assets_dir,
     )
 
     written_config = (
@@ -209,11 +233,11 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
         if niche_cfg.template.wrap_as_case_collection
         else config_dict
     )
-    config_path = output_dir / "config.json"
+    config_path = assets_dir / "config.json"
     config_json_text = json.dumps(written_config, indent=2, ensure_ascii=False)
     config_path.write_text(config_json_text, encoding="utf-8")
 
-    logs_dir = output_dir / "logs"
+    logs_dir = job.artifacts.log_dir or output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     (logs_dir / "04_config_generado.json").write_text(config_json_text, encoding="utf-8")
 

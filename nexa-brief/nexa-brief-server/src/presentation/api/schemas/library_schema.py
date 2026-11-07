@@ -16,6 +16,9 @@ TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 
 class ImageLibraryEntryResponse(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -39,6 +42,9 @@ class ImageLibraryEntryResponse(BaseModel):
 
 
 class MusicLibraryEntryResponse(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -66,6 +72,9 @@ class MusicLibraryEntryResponse(BaseModel):
 
 
 class VideoLibraryEntryResponse(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -87,11 +96,42 @@ class VideoLibraryEntryResponse(BaseModel):
     file_url: str = ""
 
 
+class SoundLibraryEntryResponse(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
+    schema_version: int = 1
+    asset_id: str
+    title: str
+    description: str = ""
+    category: str = "sound_effects"
+    source: str = "auto"
+    original_filename: str = ""
+    duration_seconds: float = 0
+    recommended_uses: list[str] = Field(default_factory=list)
+    tags: str = ""
+    tag_list: list[str] = Field(default_factory=list)
+    provider: str = ""
+    provider_sound_id: str = ""
+    original_url: str | None = None
+    license_note: str = "unknown"
+    license_url: str = ""
+    content_hash: str = ""
+    approval_status: Literal["pending", "approved", "rejected"] = "pending"
+    added_at: str = ""
+    usage_count: int = 0
+    last_used_at: str | None = None
+    file_url: str = ""
+
+
 class LibraryAssetPatch(BaseModel):
     """Cuerpo de PATCH /library/{kind}/{asset_id}. Todos opcionales: solo se
     aplica lo que viene. Los campos que no corresponden al kind se ignoran
     (ej. `artist` en una imagen). `tags` acepta lista o string con comas."""
 
+    title: str | None = Field(default=None, min_length=1, max_length=240)
+    recommended_uses: list[str] | None = None
+    approval_status: Literal["pending", "approved", "rejected"] | None = None
     category: str | None = None
     label: str | None = None
     track_name: str | None = None
@@ -105,7 +145,7 @@ class LibraryAssetPatch(BaseModel):
 
 
 class LibraryDeleteResponse(BaseModel):
-    kind: Literal["images", "music", "videos"]
+    kind: Literal["images", "music", "videos", "sounds"]
     asset_id: str
     deleted: bool = True
 

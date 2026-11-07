@@ -38,6 +38,7 @@ export function ResourcePicker(props: ResourcePickerProps) {
   const { kind, allowUpload, className } = props;
   const t = useTranslations("resources.picker");
   const apiKind = toApiKind(kind);
+  const isAudio = apiKind === "music" || apiKind === "sounds";
   const [query, setQuery] = useState("");
   const { data: assets, isLoading } = useLibraryList(apiKind, query);
   const selected = props.multiple ? props.value : props.value ? [props.value] : [];
@@ -88,7 +89,7 @@ export function ResourcePicker(props: ResourcePickerProps) {
         <ul
           className={cn(
             "grid max-h-[340px] gap-2 overflow-y-auto pr-0.5",
-            apiKind === "music" ? "grid-cols-1" : "grid-cols-[repeat(auto-fill,minmax(110px,1fr))]",
+            isAudio ? "grid-cols-1" : "grid-cols-[repeat(auto-fill,minmax(110px,1fr))]",
           )}
         >
           {assets.map((asset) => {
@@ -104,10 +105,10 @@ export function ResourcePicker(props: ResourcePickerProps) {
                     isSelected
                       ? "border-nb-green-dark ring-2 ring-nb-green"
                       : "border-nb-line hover:border-nb-green-dark",
-                    apiKind === "music" && "flex items-center gap-2.5 p-2.5",
+                    isAudio && "flex items-center gap-2.5 p-2.5",
                   )}
                 >
-                  {apiKind === "music" ? (
+                  {isAudio ? (
                     <>
                       <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-nb-bg-2">
                         <Music className="size-4 text-nb-mute" />
@@ -118,10 +119,12 @@ export function ResourcePicker(props: ResourcePickerProps) {
                         </span>
                         <span className="flex items-center gap-1.5 text-[11px] text-nb-mute">
                           {formatDuration(asset.durationSeconds)}
-                          <TranscriptionBadge
-                            status={asset.transcriptionStatus}
-                            error={asset.transcriptionError}
-                          />
+                          {apiKind === "music" && (
+                            <TranscriptionBadge
+                              status={asset.transcriptionStatus}
+                              error={asset.transcriptionError}
+                            />
+                          )}
                         </span>
                       </span>
                     </>

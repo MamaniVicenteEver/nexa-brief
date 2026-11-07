@@ -1,0 +1,34 @@
+{
+  "max_requests": 2,
+  "automatic_retries": 0,
+  "full_narration_generated": false,
+  "requests": [
+    {
+      "voice": "Algenib",
+      "model": "gemini-3.8-flash-tts",
+      "seconds": 15.68,
+      "state": "success",
+      "http_attempts": 1,
+      "started_utc": "2026-11-03T17:06:03.430213+00:00",
+      "sample_words": 27,
+      "sample_text_sha256": "c576db57f78f341a51a26423d49e058b59ca07b476e63072de79879981df5949",
+      "tokens": null,
+      "request_elapsed_seconds": 7.302,
+      "within_20_seconds": true
+    },
+    {
+      "voice": "Orus",
+      "model": "gemini-3.8-flash-tts",
+      "seconds": 14.44,
+      "state": "success",
+      "http_attempts": 1,
+      "started_utc": "2026-11-03T17:06:14.246433+00:00",
+      "sample_words": 27,
+      "sample_text_sha256": "c576db57f78f341a51a26423d49e058b59ca07b476e63072de79879981df5949",
+      "tokens": null,
+      "request_elapsed_seconds": 6.6,
+      "within_20_seconds": true
+    }
+  ],
+  "note": "El intento queda registrado antes de enviar. Coste desconocido si el proveedor no informa tokens."
+}

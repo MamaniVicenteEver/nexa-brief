@@ -1,0 +1,2143 @@
+{
+  "cases": [
+    {
+      "id": "ground-tank",
+      "type": "ground.tank",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-tank",
+            "type": "ground.tank",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "main",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2,
+              4.4
+            ],
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-apc",
+      "type": "ground.apc",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-apc",
+            "type": "ground.apc",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "normal",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-truck",
+      "type": "ground.truck",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-truck",
+            "type": "ground.truck",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "cargo",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-jeep",
+      "type": "ground.jeep",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-jeep",
+            "type": "ground.jeep",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "normal",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-artillery",
+      "type": "ground.artillery",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-artillery",
+            "type": "ground.artillery",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "towed",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2,
+              4.4
+            ],
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-launcher",
+      "type": "ground.launcher",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-launcher",
+            "type": "ground.launcher",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "normal",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2,
+              4.4
+            ],
+            "to": [
+              49.02,
+              31.55
+            ],
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-ambulance",
+      "type": "ground.ambulance",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-ambulance",
+            "type": "ground.ambulance",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "cross",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-convoy",
+      "type": "ground.convoy",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-convoy",
+            "type": "ground.convoy",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "count": 6,
+            "length": 92,
+            "spacing": 98,
+            "label": "",
+            "seed": 17,
+            "scale": 0.9
+          }
+        ]
+      }
+    },
+    {
+      "id": "fx-dust",
+      "type": "fx.dust",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "fx-dust",
+            "type": "fx.dust",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "length": 210,
+            "particles": 36,
+            "seed": 4,
+            "path": {
+              "via": [
+                [
+                  48.2,
+                  31
+                ],
+                [
+                  48.4,
+                  31.1
+                ],
+                [
+                  48.6,
+                  31.3
+                ]
+              ],
+              "t": 0,
+              "dur": 7,
+              "curve": "smooth"
+            },
+            "fade": 0.6
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-advance",
+      "type": "army.advance",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-advance",
+            "type": "army.advance",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 24,
+            "columns": 6,
+            "radius": 25,
+            "spacing": 59,
+            "wave": 5,
+            "label": "EJÉRCITO",
+            "date": "",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  30.98
+                ],
+                [
+                  48.48,
+                  31.18
+                ],
+                [
+                  48.6,
+                  31.38
+                ]
+              ],
+              "t": 0.5,
+              "dur": 7,
+              "curve": "smooth",
+              "ease": "inOut"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-retreat",
+      "type": "army.retreat",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-retreat",
+            "type": "army.retreat",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 24,
+            "columns": 6,
+            "radius": 25,
+            "spacing": 59,
+            "wave": 5,
+            "label": "EJÉRCITO",
+            "date": "",
+            "path": {
+              "via": [
+                [
+                  48.6,
+                  31.38
+                ],
+                [
+                  48.48,
+                  31.18
+                ],
+                [
+                  48.3,
+                  30.98
+                ]
+              ],
+              "t": 0.5,
+              "dur": 7,
+              "curve": "smooth",
+              "ease": "inOut"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-hold",
+      "type": "army.hold",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-hold",
+            "type": "army.hold",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 24,
+            "columns": 6,
+            "radius": 25,
+            "spacing": 59,
+            "wave": 5,
+            "label": "LÍNEA DEFENSIVA",
+            "date": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-encircle",
+      "type": "army.encircle",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-encircle",
+            "type": "army.encircle",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 16,
+            "columns": 4,
+            "radius": 25,
+            "spacing": 59,
+            "wave": 5,
+            "label": "EJÉRCITO",
+            "date": "",
+            "closeDur": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-clash",
+      "type": "army.clash",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-clash",
+            "type": "army.clash",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 24,
+            "columns": 6,
+            "radius": 25,
+            "spacing": 59,
+            "wave": 5,
+            "label": "CHOQUE DE FRENTES",
+            "date": "",
+            "opponentFlag": "IR",
+            "scale": 0.88
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-banner",
+      "type": "army.banner",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-banner",
+            "type": "army.banner",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 24,
+            "columns": 6,
+            "radius": 25,
+            "spacing": 59,
+            "wave": 5,
+            "label": "EJÉRCITO",
+            "date": "SEPTIEMBRE · 1980"
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-supply",
+      "type": "army.supply",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-supply",
+            "type": "army.supply",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 24,
+            "columns": 6,
+            "radius": 25,
+            "spacing": 59,
+            "wave": 5,
+            "label": "ABASTECIMIENTO",
+            "date": "",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  30.98
+                ],
+                [
+                  48.48,
+                  31.18
+                ],
+                [
+                  48.6,
+                  31.38
+                ]
+              ],
+              "t": 0.5,
+              "dur": 7,
+              "curve": "smooth",
+              "ease": "inOut"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-tank-light",
+      "type": "ground.tank",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-tank-light",
+            "type": "ground.tank",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "light",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2,
+              4.4
+            ],
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-truck-fuel",
+      "type": "ground.truck",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-truck-fuel",
+            "type": "ground.truck",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "fuel",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-artillery-self",
+      "type": "ground.artillery",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-artillery-self",
+            "type": "ground.artillery",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "self",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2,
+              4.4
+            ],
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-ambulance-crescent",
+      "type": "ground.ambulance",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-ambulance-crescent",
+            "type": "ground.ambulance",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "crescent",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-state-hit",
+      "type": "ground.tank",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-state-hit",
+            "type": "ground.tank",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "main",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2,
+              4.4
+            ],
+            "label": "",
+            "seed": 17,
+            "states": [
+              {
+                "at": 1,
+                "state": "hit",
+                "dur": 0.7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-state-burning",
+      "type": "ground.tank",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-state-burning",
+            "type": "ground.tank",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "main",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2,
+              4.4
+            ],
+            "label": "",
+            "seed": 17,
+            "states": [
+              {
+                "at": 1,
+                "state": "burning",
+                "dur": 0.7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-state-destroyed",
+      "type": "ground.tank",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-state-destroyed",
+            "type": "ground.tank",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "main",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2,
+              4.4
+            ],
+            "label": "",
+            "seed": 17,
+            "states": [
+              {
+                "at": 1,
+                "state": "destroyed",
+                "dur": 0.7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-fire-state",
+      "type": "ground.artillery",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-fire-state",
+            "type": "ground.artillery",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "towed",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [],
+            "label": "",
+            "seed": 17,
+            "states": [
+              {
+                "at": 3.24,
+                "state": "fire",
+                "dur": 0.2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ground-launch-fire",
+      "type": "ground.launcher",
+      "times": [
+        0.18,
+        2.65,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "ground-launch-fire",
+            "type": "ground.launcher",
+            "at": [
+              48.4,
+              31.1
+            ],
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "flag": "IQ",
+            "variant": "normal",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  31
+                ],
+                [
+                  48.42,
+                  31.13
+                ],
+                [
+                  48.65,
+                  31.22
+                ]
+              ],
+              "t": 0.6,
+              "dur": 6.5,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "fire": [
+              2.2
+            ],
+            "to": [
+              49.02,
+              31.55
+            ],
+            "label": "",
+            "seed": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-advance-40",
+      "type": "army.advance",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-advance-40",
+            "type": "army.advance",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 40,
+            "columns": 8,
+            "radius": 24,
+            "spacing": 54,
+            "wave": 5,
+            "label": "EJÉRCITO",
+            "date": "",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  30.98
+                ],
+                [
+                  48.48,
+                  31.18
+                ],
+                [
+                  48.6,
+                  31.38
+                ]
+              ],
+              "t": 0.5,
+              "dur": 7,
+              "curve": "smooth",
+              "ease": "inOut"
+            },
+            "scale": 0.88
+          }
+        ]
+      }
+    },
+    {
+      "id": "army-advance-8",
+      "type": "army.advance",
+      "times": [
+        0.18,
+        3.3,
+        8.3
+      ],
+      "scene": {
+        "format": "atlas-v1",
+        "duration": 9,
+        "lang": "es",
+        "planoLook": "tactico",
+        "defs": {
+          "fonts": {
+            "label": "Arial, sans-serif"
+          },
+          "palette": {
+            "background": "#081e2c",
+            "white": "#e9e3ba",
+            "gold": "#f6edb4",
+            "red": "#d1495b",
+            "green": "#399e58",
+            "cyan": "#66c6e3",
+            "steel": "#82949c",
+            "smoke": "#33424b",
+            "orange": "#e69b45"
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              48.45,
+              31.2
+            ],
+            "zoom": 8
+          }
+        ],
+        "items": [
+          {
+            "id": "army-advance-8",
+            "type": "army.advance",
+            "at": [
+              48.45,
+              31.2
+            ],
+            "flag": "IQ",
+            "t": 0,
+            "dur": 8,
+            "fade": 0.6,
+            "count": 8,
+            "columns": 4,
+            "radius": 25,
+            "spacing": 59,
+            "wave": 5,
+            "label": "EJÉRCITO",
+            "date": "",
+            "path": {
+              "via": [
+                [
+                  48.3,
+                  30.98
+                ],
+                [
+                  48.48,
+                  31.18
+                ],
+                [
+                  48.6,
+                  31.38
+                ]
+              ],
+              "t": 0.5,
+              "dur": 7,
+              "curve": "smooth",
+              "ease": "inOut"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

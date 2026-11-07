@@ -7,8 +7,8 @@ Duraciones:
     se registra como job empaquetado en job_tracker (así los horarios de la
     categoría lo recogen solos) y puede publicarse ahora.
 
-Formatos: se graba solo lo pedido (por defecto 16:9); publicar en una red agrega
-el formato que esa red necesita (TikTok → 9:16, YouTube/Facebook → 16:9).
+Formatos: en una grabación normal se guardan los formatos marcados; en publicación
+cada cuenta elige 16:9, 9:16 o ambos y se sube una publicación por formato.
 
 Renders simultáneos: EXPLAINER_MAX_CONCURRENT_RECORDINGS (por defecto 1; CPU pesada). Publicar es opt-in y, por defecto,
 en privado. El render y el publicador se inyectan para poder probar sin
@@ -18,13 +18,17 @@ renderizar ni subir nada real.
 from __future__ import annotations
 
 import asyncio
+import inspect
 import json
+import math
+import os
 import shutil
 import sys
 import time
+import tempfile
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any, Awaitable, Callable
@@ -33,9 +37,20 @@ import structlog
 
 from src.config.settings import settings
 from src.core.data import collection
+from src.core import notification_tracker
+from src.core.notification import Notification
+from src.core.schedule import queue_repository
+from src.core.explainer import thumbnails
+from src.core.explainer.render_cache import render_current, render_signature, stamp_render
+from src.core.explainer.publishing.store import read_publish
 from src.core.explainer.catalog import KIT_DIR, ExplainerVideo
 from src.core.job import JobStage
+from src.core.metadata.sanitize import strip_emojis
 from src.core.publish_log import record_published_video
+from src.modules.video_compressor import compress_for_publishing
+from src.config.profile_layout import layout_for_settings
+from src.config.media_paths import video_key
+from src.config.content_paths import preview_directory
 
 logger = structlog.get_logger(__name__)
 
@@ -45,12 +60,40 @@ DEFAULT_FORMATS = ("16x9",)   # desktop; 9:16 (móvil) solo si se pide
 PREVIEW_SECONDS = ("10", "20")
 DURATIONS = (*PREVIEW_SECONDS, "full")
 # TikTok necesita vertical; YouTube y Facebook usan horizontal.
-PLATFORM_FORMAT = {"tiktok": "9x16", "youtube": "16x9", "facebook": "16x9"}
+PLATFORM_FORMAT = {"tiktok": "9x16", "instagram": "9x16", "youtube": "16x9", "facebook": "16x9"}
 
 
 def render_filename(video_id: str, fmt: str, seconds: int | None) -> str:
     """Nombre que escribe `kit.py render` (ver cmd_render): '<id>-<fmt>.mp4' o '<id>-<fmt>-<N>s.mp4'."""
     return f"{video_id}-{fmt}-{seconds}s.mp4" if seconds else f"{video_id}-{fmt}.mp4"
+
+
+def _refresh_v3_manifest(video: ExplainerVideo, format_paths: dict[str, Path]) -> None:
+    """kit.py writes the manifest before managed renders leave the workspace."""
+    path = video.path / "manifest.json"
+    if not path.is_file():
+        return
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    formats = manifest.get("video_formats", [])
+    if not isinstance(formats, list):
+        raise ValueError("Manifest video_formats inválido")
+    from src.config.content_paths import content_key
+    for item in formats:
+        if isinstance(item, dict):
+            orientation = {"16:9": "16x9", "9:16": "9x16"}.get(item.get("aspect_ratio"))
+            if orientation in format_paths:
+                item["output_filename"] = content_key(format_paths[orientation])
+    from src.adapters.data.runtime_paths import assert_profile_path, temporary_dir
+    assert_profile_path(path)
+    fd, temp = tempfile.mkstemp(prefix=".manifest-", dir=temporary_dir(path))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            json.dump(manifest, stream, ensure_ascii=False, indent=2)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp, path)
+    finally:
+        Path(temp).unlink(missing_ok=True)
 
 
 class RecordState(str, Enum):
@@ -65,7 +108,44 @@ class RenderError(RuntimeError):
     pass
 
 
-RenderRunner = Callable[[str, int | None, tuple[str, ...]], Awaitable[None]]
+RenderRunner = Callable[..., Awaitable[None]]
+RenderOutputCallback = Callable[[str], None]
+
+
+def _consume_render_line(job: "RecordJob", line: str, render_started: float) -> None:
+    """Actualiza el progreso global a partir del protocolo de kit.py/render_promo.py."""
+    parts = line.split()
+    if parts[:1] == ["@@format"] and len(parts) >= 4:
+        fmt = parts[1]
+        if fmt in job.formats:
+            job.progress_format = fmt
+            job.progress_phase = "capturing"
+            job.progress = max(job.progress, job.formats.index(fmt) / len(job.formats))
+    elif parts[:1] == ["@@progress"] and len(parts) == 3 and job.progress_format in job.formats:
+        try:
+            frames_done, frames_total = int(parts[1]), int(parts[2])
+        except ValueError:
+            return
+        if frames_total <= 0:
+            return
+        fraction = min(1.0, max(0.0, frames_done / frames_total))
+        job.progress_phase = "capturing"
+        # Reserva un 5 % del formato para el paso de codificación, cuyo progreso
+        # ffmpeg no informa; el render completo marca 1 al terminar el proceso.
+        job.progress = max(
+            job.progress,
+            (job.formats.index(job.progress_format) + fraction * 0.95) / len(job.formats),
+        )
+    elif parts[:1] == ["@@phase"] and len(parts) == 2 and parts[1] == "encode":
+        job.progress_phase = "encoding"
+
+    if job.progress > 0:
+        elapsed = max(0.0, time.monotonic() - render_started)
+        job.eta_seconds = 0 if job.progress >= 1 else math.ceil(elapsed * (1 - job.progress) / job.progress)
+
+
+# Captura la miniatura de un video (thumbnails.render): (video, opciones) → {opción: archivo}
+ThumbnailRenderer = Callable[..., Awaitable[dict[str, Path]]]
 
 
 def resolve_formats(formats: list[str] | tuple[str, ...] | None, selectors: list[str]) -> tuple[str, ...]:
@@ -78,27 +158,56 @@ def resolve_formats(formats: list[str] | tuple[str, ...] | None, selectors: list
     return tuple(f for f in FORMATS if f in wanted)
 
 
-async def run_kit_render(video_id: str, seconds: int | None, formats: tuple[str, ...] = FORMATS) -> None:
-    """Llama a `kit.py render <id>`; con `seconds` hace un preview de ese largo."""
+async def run_kit_render(
+    video_id: str,
+    seconds: int | None,
+    formats: tuple[str, ...] = FORMATS,
+    on_output: RenderOutputCallback | None = None,
+    output_dir: Path | None = None,
+) -> None:
+    """Llama a `kit.py render <id>` leyendo su salida en vivo línea a línea."""
     cmd = [sys.executable, str(KIT_CLI), "render", video_id, "--formats", ",".join(formats)]
     if seconds:
         cmd += ["--seconds", str(seconds)]
-    proc = await asyncio.create_subprocess_exec(
-        *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT
+    env = os.environ.copy()
+    env["PYTHONUNBUFFERED"] = "1"
+    # El CLI administrado se respalda desde el job persistente de Biblioteca.
+    env["NEXA_RENDER_MANAGED"] = "1"
+    if output_dir is not None:
+        env["NEXA_RENDER_OUTPUT_DIR"] = str(output_dir)
+    from src.adapters.recorder.infrastructure.subprocess_progress import run_with_progress
+
+    def consume(line: str) -> None:
+        if on_output is not None:
+            on_output(line)
+        return None
+
+    result = await run_with_progress(
+        cmd, cwd=settings.templates_dir.parent.parent, timeout=None,
+        parse_progress=consume, env=env,
     )
-    out, _ = await proc.communicate()
-    if proc.returncode != 0:
-        tail = out.decode("utf-8", "replace")[-800:]
-        raise RenderError(f"kit.py render terminó con código {proc.returncode}: {tail}")
+    if result.returncode != 0:
+        raise RenderError(f"kit.py render terminó con código {result.returncode}: {result.stderr_tail or result.stdout_tail}")
+
+
+
+def _clean(text: str) -> str:
+    """Sin emojis (regla de los canales), conservando los saltos de línea de la descripción."""
+    return "\n".join(strip_emojis(line) for line in (text or "").split("\n"))
 
 
 def _copy_for(video: ExplainerVideo, platform: str) -> tuple[str, str, list[str]]:
     """Título, descripción y tags propios de cada red (publish.json), con YouTube de respaldo."""
     if platform == "tiktok" and video.tiktok_caption:
-        return video.tiktok_caption, video.tiktok_caption, video.tiktok_hashtags or video.youtube_tags
-    if platform == "facebook" and video.facebook_title:
-        return video.facebook_title, video.facebook_description or video.youtube_description, video.youtube_tags
-    return video.youtube_title, video.youtube_description, video.youtube_tags
+        title, description, tags = video.tiktok_caption, video.tiktok_caption, video.tiktok_hashtags or video.youtube_tags
+    elif platform in ("facebook", "instagram") and video.facebook_title:
+        title, description, tags = video.facebook_title, video.facebook_description or video.youtube_description, video.youtube_tags
+    else:
+        title, description, tags = video.youtube_title, video.youtube_description, video.youtube_tags
+    if platform in ("facebook", "instagram", "tiktok"):
+        from src.core.social_caption import social_video_parts
+        description, tags = social_video_parts(title, description, tags)
+    return _clean(title), _clean(description), [t for t in (strip_emojis(t) for t in tags) if t.strip("#")]
 
 
 @dataclass
@@ -111,15 +220,25 @@ class RecordJob:
     privacy: str
     account_selector: str | None
     account_selectors: list[str] = field(default_factory=list)   # varios canales a la vez
+    account_formats: dict[str, tuple[str, ...]] = field(default_factory=dict)
     formats: tuple[str, ...] = DEFAULT_FORMATS
     state: RecordState = RecordState.queued
     error: str | None = None
     outputs: list[str] = field(default_factory=list)
     output_dir: str | None = None
+    recording_id: str | None = None
+    log_id: str | None = None
     scheduled_job_id: str | None = None
     publish_result: dict[str, Any] | None = None            # el primero (compatibilidad)
     publish_results: list[dict[str, Any]] = field(default_factory=list)
     render_seconds: float | None = None   # cuánto tardó la grabación (render + copia)
+    thumbnail: str | None = None          # miniatura elegida ("A" introv1 / "B" introv2); None = la del paquete
+    progress: float = 0.0                  # fracción global de los formatos solicitados
+    progress_format: str | None = None
+    progress_phase: str | None = None      # capturing | encoding
+    started_at: datetime | None = None
+    eta_seconds: int | None = None
+    finished_at: datetime | None = None
 
     @property
     def seconds(self) -> int | None:
@@ -132,8 +251,11 @@ class ExplainerRecorder:
         render_runner: RenderRunner = run_kit_render,
         publisher_getter: Callable[[], Any] | None = None,
         output_root: Path | None = None,
+        thumbnail_renderer: ThumbnailRenderer | None = None,
     ) -> None:
         self._render = render_runner
+        # None = no se capturan miniaturas (tests); la API pasa thumbnails.render
+        self._render_thumbnail = thumbnail_renderer
         self._publisher_getter = publisher_getter
         self._output_root = output_root or settings.output_dir
         self._slots = asyncio.Semaphore(max(1, settings.explainer_max_concurrent_recordings))
@@ -147,6 +269,18 @@ class ExplainerRecorder:
         matches = [j for j in self._jobs.values() if j.video_id == video_id]
         return matches[-1] if matches else None
 
+    def list_jobs(self, *, active: bool = True) -> list[RecordJob]:
+        """Jobs activos y terminados en las últimas 24 h, o todos si active=False."""
+        jobs = list(self._jobs.values())
+        if not active:
+            return list(reversed(jobs))
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+        return [
+            job for job in reversed(jobs)
+            if job.state in (RecordState.queued, RecordState.rendering, RecordState.publishing)
+            or (job.finished_at is not None and job.finished_at >= cutoff)
+        ]
+
     def submit(
         self,
         video: ExplainerVideo,
@@ -157,6 +291,8 @@ class ExplainerRecorder:
         account_selector: str | None = None,
         account_selectors: list[str] | None = None,
         formats: list[str] | tuple[str, ...] | None = None,
+        account_formats: dict[str, list[str] | tuple[str, ...]] | None = None,
+        thumbnail: str | None = None,
     ) -> RecordJob:
         # un canal (account_selector) o varios (account_selectors), sin repetir
         selectors = list(dict.fromkeys([*(account_selectors or []), *([account_selector] if account_selector else [])]))
@@ -177,7 +313,29 @@ class ExplainerRecorder:
                 platform = selector.split(":", 1)[0]
                 if platform not in PLATFORM_FORMAT:
                     raise ValueError(f"plataforma no soportada: {platform}")
-        resolved_formats = resolve_formats(formats, selectors if publish else [])
+        resolved_account_formats: dict[str, tuple[str, ...]] = {}
+        if publish and account_formats is not None:
+            for selector in selectors:
+                selected = set(account_formats[selector] if selector in account_formats else ("16x9",))
+                unknown = selected - set(FORMATS)
+                if unknown:
+                    raise ValueError(f"formato inválido para {selector}: {', '.join(sorted(unknown))}")
+                if not selected:
+                    raise ValueError(f"elige al menos un formato para {selector}")
+                resolved_account_formats[selector] = tuple(fmt for fmt in FORMATS if fmt in selected)
+            resolved_formats = tuple(
+                fmt for fmt in FORMATS
+                if any(fmt in values for values in resolved_account_formats.values())
+            )
+        else:
+            resolved_formats = resolve_formats(formats, selectors if publish else [])
+            if publish:
+                resolved_account_formats = {
+                    selector: (PLATFORM_FORMAT[selector.split(":", 1)[0]],)
+                    for selector in selectors
+                }
+        if thumbnail is not None:
+            thumbnails.choose(video, thumbnail)   # ThumbnailError (ValueError) si no está disponible
 
         job = RecordJob(
             job_id=uuid.uuid4().hex[:12],
@@ -188,7 +346,9 @@ class ExplainerRecorder:
             privacy=privacy,
             account_selector=selectors[0] if selectors else None,
             account_selectors=selectors,
+            account_formats=resolved_account_formats,
             formats=resolved_formats,
+            thumbnail=thumbnail,
         )
         self._jobs[job.job_id] = job
         task = asyncio.create_task(self._run(job, video))
@@ -212,37 +372,161 @@ class ExplainerRecorder:
                 job.state = RecordState.failed
                 job.error = str(exc)[-800:]
                 logger.error("explainer_record_failed", video_id=job.video_id, error=job.error)
+            finally:
+                job.finished_at = datetime.now(timezone.utc)
+                if job.duration == "full":
+                    successful = sum(bool(r.get("url")) for r in job.publish_results)
+                    failed = len(job.publish_results) - successful
+                    if job.state == RecordState.failed:
+                        title, severity = "Falló la grabación o publicación", "error"
+                    elif failed:
+                        title, severity = "Publicación parcial", "warning"
+                    elif job.publish:
+                        title, severity = "Video publicado", "info"
+                    else:
+                        title, severity = "Video listo", "info"
+                    message = (
+                        f"{video.youtube_title or video.title}: {successful} publicación(es) realizadas, "
+                        f"{failed} fallidas."
+                        if job.publish else f"{video.youtube_title or video.title} terminó de grabarse."
+                    )
+                    try:
+                        await notification_tracker.create(Notification(
+                            type="video_failed" if job.state == RecordState.failed else "video_ready",
+                            severity=severity, title=title, message=message,
+                            job_id=job.scheduled_job_id,
+                        ))
+                    except Exception as exc:  # una notificación no debe alterar el resultado
+                        logger.warning("explainer_notification_failed", video_id=job.video_id, error=str(exc))
 
     async def _run_locked(self, job: RecordJob, video: ExplainerVideo) -> None:
         started = time.monotonic()
         render_dir = video.path / "render"
         seconds = job.seconds
         src_dir = render_dir / "preview" if seconds else render_dir
+        profile_layout = layout_for_settings(settings)
+        direct = profile_layout.schema_version >= 2
+        recording_id = uuid.uuid4().hex[:8]
+        job.recording_id = recording_id
+        log_path = None
+        if direct:
+            from src.core.content_registry import get_video, upsert_video
+            from src.core.execution_logs import register_execution_log
+            existing = get_video(video.video_id)
+            if existing is None:
+                await upsert_video(video.video_id, video.video_id, details={"title": video.title})
+                existing = get_video(video.video_id)
+            log_ref = await register_execution_log(
+                f"logs/videos/{video.video_id}/recordings/{recording_id}.log", kind="recording",
+                production_id=existing["production_id"], video_id=video.video_id,
+            )
+            job.log_id = log_ref.log_id
+            log_path = log_ref.path
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            log_path.touch(exist_ok=True)
+            src_dir = (profile_layout.runtime_dir / "recordings" / video.video_id / recording_id
+                       if profile_layout.schema_version >= 3 else
+                       self._output_root / video.video_id / (f"preview-{seconds}s" if seconds else recording_id))
+            if profile_layout.schema_version >= 3:
+                from src.adapters.data.runtime_paths import assert_profile_path
+                assert_profile_path(src_dir)
+            src_dir.mkdir(parents=True, exist_ok=True)
 
         job.state = RecordState.rendering
-        missing = tuple(f for f in job.formats if not (src_dir / render_filename(video.video_id, f, seconds)).exists())
+        signature = render_signature(video)
+        missing = tuple(f for f in job.formats if not render_current(
+            src_dir / render_filename(video.video_id, f, seconds), signature,
+        ))
         if missing:
-            await self._render(video.video_id, seconds, missing)
+            job.started_at = datetime.now(timezone.utc)
+            render_started = time.monotonic()
 
-        out_dir = self._output_root / video.category_path / video.design / video.video_id
-        if seconds:
-            out_dir = out_dir / f"preview-{seconds}s"
+            def on_output(line: str) -> None:
+                _consume_render_line(job, line, render_started)
+                if log_path is not None:
+                    with log_path.open("a", encoding="utf-8") as log:
+                        log.write(line.rstrip("\n") + "\n")
+
+            try:
+                parameters = list(inspect.signature(self._render).parameters.values())
+                supports_callback = any(
+                    parameter.name == "on_output" or parameter.kind == inspect.Parameter.VAR_KEYWORD
+                    for parameter in parameters
+                )
+            except (TypeError, ValueError):
+                supports_callback = False
+                parameters = []
+            kwargs = {"on_output": on_output} if supports_callback else {}
+            if direct:
+                if not any(p.name == "output_dir" or p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters):
+                    raise RenderError("El grabador no admite el destino del perfil v2")
+                kwargs["output_dir"] = src_dir
+            await self._render(video.video_id, seconds, missing, **kwargs)
+            for fmt in missing:
+                stamp_render(src_dir / render_filename(video.video_id, fmt, seconds), signature)
+        else:
+            job.started_at = datetime.now(timezone.utc)
+        job.progress = 1.0
+        job.eta_seconds = 0
+
+        out_dir = (video.path if profile_layout.schema_version >= 3 else
+                   src_dir if direct else self._output_root / video.category_path / video.design / video.video_id)
+        if not direct:
+            out_dir = out_dir / (f"preview-{seconds}s" if seconds else recording_id)
         out_dir.mkdir(parents=True, exist_ok=True)
         job.output_dir = str(out_dir)
+        format_paths = {}
+        render_category = (video.path.resolve().relative_to(profile_layout.productions_dir.resolve()).parts[0]
+                           if profile_layout.schema_version >= 3 else video.category_path)
         for fmt in job.formats:
             src = src_dir / render_filename(video.video_id, fmt, seconds)
             if not src.exists():
                 raise RenderError(f"falta el archivo renderizado: {src.name}")
-            dst = out_dir / src.name
-            shutil.copy2(src, dst)
+            dst = (profile_layout.renders_dir / video_key(render_category, video.video_id, recording_id, fmt, preview=bool(seconds))
+                   if profile_layout.schema_version >= 3 else out_dir / src.name)
+            if src.resolve() != dst.resolve():
+                if profile_layout.schema_version >= 3:
+                    assert_profile_path(dst)
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                if profile_layout.schema_version >= 3:
+                    assert_profile_path(dst)
+                    if dst.exists():
+                        raise FileExistsError("El render ya existe; no se reemplaza un máster")
+                    os.replace(src, dst)
+                    stamp_render(dst, signature)
+                else:
+                    shutil.copy2(src, dst)
             job.outputs.append(str(dst))
+            format_paths[fmt] = dst
 
-        job.render_seconds = round(time.monotonic() - started, 1)
         if seconds:
+            if direct:
+                from src.core.content_registry import register_recording
+                await register_recording(video.video_id, recording_id, outputs=[Path(p) for p in job.outputs],
+                                         log_id=job.log_id, duration=job.duration)
+            job.render_seconds = round(time.monotonic() - started, 1)
             job.state = RecordState.done
             return
+        if profile_layout.schema_version >= 3:
+            _refresh_v3_manifest(video, format_paths)
+        # En v1 se comprime una copia: el original sigue en render/.
+        # En v2 el único archivo es el máster; se conserva sin recomprimir.
+        if not direct:
+            for output in job.outputs:
+                await compress_for_publishing(Path(output), keep_master=False)
+        job.render_seconds = round(time.monotonic() - started, 1)
+        if direct:
+            from src.core.content_registry import register_recording
+            await register_recording(video.video_id, recording_id, outputs=[Path(p) for p in job.outputs],
+                                     log_id=job.log_id, duration=job.duration)
 
-        job.scheduled_job_id = await self._register_for_scheduling(video, out_dir, job.formats, job.render_seconds)
+        thumbnail_dir = preview_directory(video.path) if profile_layout.schema_version >= 3 else out_dir
+        thumbnail_dir.mkdir(parents=True, exist_ok=True)
+        thumbnail = await self._thumbnail(video, thumbnail_dir, job.formats)
+        job.scheduled_job_id = await self._register_for_scheduling(
+            video, out_dir, job.formats, job.render_seconds, thumbnail, recording_id=recording_id,
+            format_paths=format_paths if profile_layout.schema_version >= 3 else None,
+        )
 
         if not job.publish:
             job.state = RecordState.done
@@ -251,46 +535,114 @@ class ExplainerRecorder:
         job.state = RecordState.publishing
         facade = self._publisher_getter()
         failures: list[str] = []
-        for selector in job.account_selectors:
-            platform = selector.split(":", 1)[0]
+        pinned_comment = _clean(read_publish(video.path).get("pinned_comment") or "")
+        published_count = 0
+        async def publish_channel_locked(selector: str) -> None:
+            nonlocal published_count
+            platform, alias = selector.split(":", 1)
             title, description, tags = _copy_for(video, platform)
-            try:
-                result = await facade.publish_video(
-                    video_path=out_dir / f"{video.video_id}-{PLATFORM_FORMAT[platform]}.mp4",
-                    title=title,
-                    description=description,
-                    tags=tags,
-                    account_selector=selector,
-                    privacy=job.privacy,
+            selected_formats = job.account_formats.get(selector) or (PLATFORM_FORMAT[platform],)
+            for fmt in selected_formats:
+                extra = {"thumbnail_path": thumbnail} if platform == "youtube" and thumbnail else {}
+                if platform == "youtube" and pinned_comment:
+                    extra["comment_text"] = pinned_comment
+                queue_entry = await queue_repository.start_direct(
+                    job.scheduled_job_id, platform, alias, format=fmt
                 )
-            except Exception as exc:  # noqa: BLE001 - un canal caído no frena a los demás
-                failures.append(f"{selector}: {exc}")
-                job.publish_results.append({"account_selector": selector, "error": str(exc)[:300]})
-                logger.error("explainer_publish_failed", video_id=video.video_id, selector=selector, error=str(exc))
-                continue
-            entry = {
-                "account_selector": selector,
-                "post_id": result.post_id,
-                "url": result.url,
-                "platform": result.platform,
-                "account_alias": result.account_alias,
-            }
-            job.publish_results.append(entry)
-            job.publish_result = job.publish_result or entry
-            await record_published_video(
-                platform=result.platform,
-                alias=result.account_alias,
-                post_id=result.post_id,
-                url=result.url,
-                title=title,
-            )
-        if failures and len(failures) == len(job.account_selectors):
+                if platform == "tiktok":
+                    extra["idempotency_key"] = queue_entry.idempotency_key or f"schedule:{queue_entry.entry_id}"
+                try:
+                    result = await facade.publish_video(
+                        video_path=format_paths[fmt],
+                        title=title,
+                        description=description,
+                        tags=tags,
+                        account_selector=selector,
+                        privacy=job.privacy,
+                        **extra,
+                    )
+                except Exception as exc:  # noqa: BLE001 - un canal caído no frena a los demás
+                    failures.append(f"{selector} ({fmt}): {exc}")
+                    job.publish_results.append({
+                        "account_selector": selector, "format": fmt, "error": str(exc)[:300]
+                    })
+                    await queue_repository.mark_failed(queue_entry.entry_id, str(exc)[:500])
+                    logger.error(
+                        "explainer_publish_failed", video_id=job.video_id, selector=selector,
+                        format=fmt, error=str(exc),
+                    )
+                    continue
+                entry = {
+                    "account_selector": selector, "format": fmt,
+                    "post_id": result.post_id, "url": result.url,
+                    "platform": result.platform, "account_alias": result.account_alias,
+                }
+                if platform in ("youtube", "instagram", "facebook"):
+                    entry["thumbnail"] = (getattr(result, "raw_response", None) or {}).get("thumbnail")
+                published_count += 1
+                job.publish_results.append(entry)
+                job.publish_result = job.publish_result or entry
+                await queue_repository.mark_published(queue_entry.entry_id, result.post_id, result.url)
+                await record_published_video(
+                    platform=result.platform, alias=result.account_alias,
+                    post_id=result.post_id, url=result.url, title=title,
+                    job_id=job.scheduled_job_id,
+                )
+                if platform == "youtube" and pinned_comment and result.raw_response.get("comment_posted") is False:
+                    try:
+                        await notification_tracker.create(Notification(
+                            type="video_failed", severity="warning", title="Comentario de YouTube pendiente",
+                            message=f"El video se publicó en YouTube, pero no se pudo añadir el comentario: {result.url}",
+                            job_id=job.scheduled_job_id, account_alias=alias,
+                        ))
+                    except Exception as exc:
+                        logger.warning("explainer_comment_notification_failed", error=str(exc))
+        channel_slots = asyncio.Semaphore(settings.publish_max_concurrent_uploads)
+
+        async def publish_channel(selector: str) -> None:
+            async with channel_slots:
+                await publish_channel_locked(selector)
+
+        await asyncio.gather(*(publish_channel(selector) for selector in job.account_selectors))
+        if failures and published_count == 0:
             raise RuntimeError("no se publicó en ningún canal: " + "; ".join(failures))
         job.error = "; ".join(failures) or None
         job.state = RecordState.done
 
+    async def _thumbnail(
+        self, video: ExplainerVideo, out_dir: Path, formats: tuple[str, ...] = ("16x9",),
+    ) -> Path | None:
+        """Captura de nuevo la miniatura elegida (los textos pueden haber cambiado) y la copia a la salida.
+
+        Si el diseño no tiene intros o la captura falla, el video se graba igual, sin miniatura propia.
+        """
+        option = thumbnails.chosen_option(video)
+        if self._render_thumbnail is None or option not in thumbnails.intro_specs(video):
+            return None
+        try:
+            await self._render_thumbnail(video, (option,))
+        except thumbnails.ThumbnailError as exc:
+            logger.warning("explainer_thumbnail_failed", video_id=video.video_id, error=str(exc))
+            return None
+        dest = out_dir / "thumbnail.jpg"
+        shutil.copy2(thumbnails.thumbnail_file(video, option), dest)
+        shutil.copy2(dest, out_dir / "thumbnail-16x9.jpg")
+        if "9x16" in formats and "orientation" in inspect.signature(self._render_thumbnail).parameters:
+            try:
+                await self._render_thumbnail(video, (option,), orientation="9x16")
+                shutil.copy2(
+                    thumbnails.thumbnail_file(video, option, "9x16"), out_dir / "thumbnail-9x16.jpg",
+                )
+            except thumbnails.ThumbnailError as exc:
+                # La publicación obtiene un cuadro de la intro del MP4 si falla esta captura.
+                logger.warning("explainer_portrait_thumbnail_failed", video_id=video.video_id, error=str(exc))
+        return dest
+
     async def _register_for_scheduling(
-        self, video: ExplainerVideo, out_dir: Path, formats: tuple[str, ...], render_seconds: float
+        self, video: ExplainerVideo, out_dir: Path, formats: tuple[str, ...], render_seconds: float,
+        thumbnail: Path | None = None,
+        recording_id: str | None = None,
+        format_paths: dict[str, Path] | None = None,
     ) -> str:
         """Registra la grabación completa como job empaquetado en job_tracker.
 
@@ -298,30 +650,24 @@ class ExplainerRecorder:
         la encuentran con el mismo `_pick_oldest_ready_job` que los videos del
         pipeline, y `publish_entry` resuelve su archivo y su texto.
         """
-        job_id = f"explainer-{video.video_id}-{uuid.uuid4().hex[:8]}"
-        logs = out_dir / "logs"
+        job_id = f"explainer-{video.video_id}-{recording_id or uuid.uuid4().hex[:8]}"
+        layout = layout_for_settings(settings)
+        logs = (layout.logs_dir / "videos" / video.video_id / "recordings" / (recording_id or "unknown")
+                if layout.schema_version >= 3 else out_dir / "logs")
         logs.mkdir(parents=True, exist_ok=True)
-        copy = {
-            "title": video.youtube_title,
-            "description": video.youtube_description,
-            "tags": video.youtube_tags,
-        }
-        tiktok_text = video.tiktok_caption or video.youtube_title
+        # mismos textos (y misma limpieza) que la publicación inmediata
+        copies = {platform: _copy_for(video, platform) for platform in ("youtube", "facebook", "tiktok", "instagram")}
+        if not video.tiktok_caption:   # sin caption propio, TikTok lleva el título (no la descripción larga)
+            text = _clean(video.youtube_title)
+            tags = [h for h in (strip_emojis(h) for h in video.tiktok_hashtags or video.youtube_tags) if h.strip("#")]
+            copies["tiktok"] = (text, text, tags)
         summary = {
             "job_id": job_id,
             "video_id": video.video_id,
+            "pinned_comment": _clean(read_publish(video.path).get("pinned_comment") or ""),
             "platform_copies": {
-                "youtube": copy,
-                "facebook": {
-                    "title": video.facebook_title or video.youtube_title,
-                    "description": video.facebook_description or video.youtube_description,
-                    "tags": video.youtube_tags,
-                },
-                "tiktok": {
-                    "title": tiktok_text,
-                    "description": tiktok_text,
-                    "tags": video.tiktok_hashtags or video.youtube_tags,
-                },
+                platform: {"title": title, "description": description, "tags": tags}
+                for platform, (title, description, tags) in copies.items()
             },
         }
         (logs / "08_resumen_final.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -330,10 +676,14 @@ class ExplainerRecorder:
         # La Biblioteca muestra "Generado en …" con generation_seconds: acá es el tiempo de grabación.
         created = datetime.fromtimestamp(now.timestamp() - render_seconds, timezone.utc).isoformat()
         file_paths = {
-            platform: str(out_dir / f"{video.video_id}-{fmt}.mp4")
-            for platform, fmt in (("youtube", "16x9"), ("tiktok", "9x16"))
+            platform: str(format_paths[fmt] if format_paths is not None else out_dir / f"{video.video_id}-{fmt}.mp4")
+            for platform, fmt in (("youtube", "16x9"), ("tiktok", "9x16"), ("instagram", "9x16"))
             if fmt in formats
         }
+        if "9x16" in formats:
+            file_paths["reels"] = str(format_paths["9x16"] if format_paths is not None else out_dir / f"{video.video_id}-9x16.mp4")
+        if thumbnail:
+            file_paths["thumbnail"] = str(thumbnail)   # la sube publish_entry al publicar en YouTube
         await collection("jobs").insert({
             "job_id": job_id,
             "category": video.category_path,
@@ -346,7 +696,10 @@ class ExplainerRecorder:
             "generation_seconds": render_seconds,
             "duration_seconds": video.duration_seconds,
             "file_paths": file_paths,
-            "ready_formats": list(file_paths),
+            "format_paths": {
+                fmt: str(format_paths[fmt] if format_paths is not None else out_dir / f"{video.video_id}-{fmt}.mp4") for fmt in formats
+            },
+            "ready_formats": [k for k in file_paths if k != "thumbnail"],
             "formats": list(formats),
             "source": "explainer",
             "video_id": video.video_id,

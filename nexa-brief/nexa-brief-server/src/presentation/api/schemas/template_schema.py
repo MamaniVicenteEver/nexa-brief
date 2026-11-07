@@ -37,8 +37,10 @@ class TemplateMediaSlot(BaseModel):
     min: int = 1
     max: int = 1
     orientation: Literal["landscape", "portrait", "square"] | None = None
-    # "source" = va como imagen/video de fondo del job; "media" = reemplaza config.media.
-    target: Literal["source", "media"] = "source"
+    # "source" = va como imagen/video de fondo del job; "media" = reemplaza config.media;
+    # "config" = el archivo se escribe en la ruta `path` del config (fondo opcional).
+    target: Literal["source", "media", "config"] = "source"
+    path: str | None = None
     label: str
     hint: str = ""
 
@@ -123,12 +125,15 @@ class PreviewStatusResponse(BaseModel):
         files: list[PreviewFileInfo] = []
         if output_dir:
             out = Path(output_dir)
+            assets = Path(record["assets_dir"]) if record.get("assets_dir") else out
             for filename in sorted(PREVIEW_ALLOWED_FILENAMES):
-                if (out / filename).exists():
+                source = out if filename == "index.html" else assets
+                if (source / filename).exists():
+                    prefix = "assets/" if source != out else ""
                     files.append(
                         PreviewFileInfo(
                             filename=filename,
-                            url=f"/api/v1/templates/preview/{preview_id}/{filename}",
+                            url=f"/api/v1/templates/preview/{preview_id}/{prefix}{filename}",
                         )
                     )
 

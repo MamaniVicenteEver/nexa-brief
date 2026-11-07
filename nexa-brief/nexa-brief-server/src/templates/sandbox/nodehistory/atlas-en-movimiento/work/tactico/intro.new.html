@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atlas · intro y cierre</title><link rel="icon" href="data:,"><style>
+html,body{margin:0;height:100%;background:#081e2c;color:#e9e3ba;font:14px sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}#controls{position:fixed;bottom:2%;left:3%;right:3%;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px;background:#081e2cee}input{flex:1}button,select{padding:6px;background:#e9e3ba;color:#081e2c;border:0}#status{width:100%}body.shot #controls{display:none}
+</style></head><body><canvas></canvas><div id="controls"><button id="play">Reproducir</button><select id="style" aria-label="Variante de intro"><option>focus</option><option>trace</option><option>meridian</option></select><input id="time" aria-label="Tiempo" type="range" min="0" max="20" step=".01"><output id="clock"></output><span id="status">Cargando mapa…</span></div>
+<script type="module">
+import {create,Tactico} from '../../../_tactico/core.js';
+import {createView} from '../../../_atlas/plano/view.js';
+import {createTiles} from '../../../_atlas/plano/tiles.js';
+import {createTerritories} from '../../../_atlas/plano/territories.js';
+import {atlasURL} from '../../../_atlas/plano/paths.js';
+const qs=new URLSearchParams(location.search);if(qs.has('shot'))document.body.classList.add('shot');
+const canvas=document.querySelector('canvas'),g=canvas.getContext('2d',{willReadFrequently:true}),status=document.querySelector('#status');
+const get=async url=>{const r=await fetch(url);if(!r.ok)throw Error(`${r.status}: ${url}`);return r.json();};
+try {
+ const scene=await get('scene-intro.json');
+ scene.items[0].style=qs.get('style')||'focus';
+ const [look,providers,collection,inventory]=await Promise.all([get('../../../_atlas/looks/tactico.json'),get(atlasURL('providers.json')),get(atlasURL('data/geo/admin0.geojson')),get('cache-inventory.json')]);
+ const territories=createTerritories(collection),tiles=createTiles(providers.find(p=>p.id===scene.tiles.provider),look,territories,inventory);
+ const st={W:innerWidth,H:innerHeight,U:Math.min(innerWidth,innerHeight)/1080};
+ let view,background,runtime,t=Number(qs.get('t')||0),playing=false,last=0,resizeReady=Promise.resolve();
+ const c={st,look,scene,T:(x,f=0)=>typeof x==='number'?x:f};
+ async function resize(){
+   st.W=canvas.width=innerWidth;st.H=canvas.height=innerHeight;st.U=Math.min(st.W,st.H)/1080;
+   view=createView({lon:52,lat:22.6,zoom:4.7,bearing:0},st.W,st.H);
+   tiles.plan(view);await tiles.preload();
+   background=new OffscreenCanvas(st.W,st.H);const bg=background.getContext('2d',{willReadFrequently:true});bg.fillStyle=look.background;bg.fillRect(0,0,st.W,st.H);
+   tiles.draw(bg,view);territories.draw(bg,view,[],0,look);
+   runtime=await create(c,scene);window.__intro.runtime=runtime;window.__intro.view=view;
+   draw(t);
+ }
+ function draw(time){t=time;g.resetTransform();g.globalAlpha=1;g.clearRect(0,0,st.W,st.H);g.drawImage(background,0,0);runtime.draw(g,view,t);
+   g.textAlign='right';g.textBaseline='bottom';g.font=`${14*st.U}px sans-serif`;g.fillStyle=scene.defs.palette.paper;g.fillText('NASA GIBS / Blue Marble · Natural Earth',st.W-24*st.U,st.H-20*st.U);
+   document.querySelector('#time').value=t;document.querySelector('#clock').textContent=t.toFixed(2)+' s';return runtime.key(t);
+ }
+ window.__intro={scene,c,canvas,draw,Tactico,create,missing:()=>({tiles:tiles.missingTiles(),assets:runtime.missing()}),
+   setStyle:async style=>{scene.items[0].style=style;runtime=await create(c,scene);window.__intro.runtime=runtime;draw(t);},
+   resize:async()=>{await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));await resizeReady;},ready:false};
+ await resize();window.__intro.ready=true;status.textContent='Intro 0–6 s · cierre 12–20 s · mapa quieto';
+ document.querySelector('#style').value=scene.items[0].style;
+ document.querySelector('#style').onchange=e=>__intro.setStyle(e.target.value);
+ document.querySelector('#time').oninput=e=>draw(Number(e.target.value));
+ document.querySelector('#play').onclick=()=>{playing=!playing;last=0;document.querySelector('#play').textContent=playing?'Pausar':'Reproducir';if(playing)requestAnimationFrame(tick);};
+ function tick(now){if(!playing)return;const dt=last?(now-last)/1000:0;last=now;draw((t+dt)%scene.duration);requestAnimationFrame(tick);}
+ addEventListener('resize',()=>{resizeReady=resizeReady.then(resize).catch(e=>{window.__introError=String(e);console.error(e);});});
+} catch(error){status.textContent=error.stack;console.error(error);window.__introError=String(error);}
+</script></body></html>

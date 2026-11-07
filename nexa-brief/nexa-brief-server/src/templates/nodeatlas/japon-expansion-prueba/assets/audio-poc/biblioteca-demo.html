@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Japón · sonido por capas</title>
+<style>
+:root{font-family:Inter,system-ui,sans-serif;color:#22291f;background:#ece9de;color-scheme:light}*{box-sizing:border-box}body{margin:0}main{max-width:1440px;margin:auto;padding:40px clamp(20px,4vw,64px) 64px}a{color:#456633}header{padding:14px 0 32px}h1{font-size:clamp(30px,4vw,48px);letter-spacing:-.04em;max-width:900px;line-height:1.1;margin:16px 0}h2{font-size:23px;margin:0 0 14px}p{color:#626957;line-height:1.65;max-width:850px}.eyebrow{font-size:12px;letter-spacing:.14em;color:#64724b}.panel,.card{background:#faf9f3;border:1px solid #d7d8c8;border-radius:20px;padding:24px;box-shadow:0 5px 20px #45482a05}.panel{margin-bottom:28px}audio{width:100%;margin:16px 0}.bar{display:flex;gap:20px;align-items:center;flex-wrap:wrap}.switch{display:flex;gap:10px;align-items:center;font-weight:650;cursor:pointer}.switch input{width:20px;height:20px;accent-color:#59783c}.level{display:flex;align-items:center;gap:12px;color:#626957}input[type=range]{accent-color:#59783c}.status{font-size:13px;color:#687b4d;min-height:20px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:24px 0}.card h3{margin:8px 0;font-size:19px;line-height:1.3;overflow-wrap:anywhere}.card p{font-size:14px;min-height:70px}.tag{font-size:12px;color:#557040;background:#e9eedf;border-radius:12px;padding:5px 9px;display:inline-block}.card.active{border-color:#6c873e;box-shadow:0 0 0 2px #6c873e25}.time{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}.jump{border:1px solid #b7c0a5;background:#f3f5eb;color:#3d572e;border-radius:20px;padding:8px 14px;cursor:pointer}table{width:100%;border-collapse:collapse;text-align:left}th,td{padding:16px 12px;border-bottom:1px solid #e0e1d5;line-height:1.4}th{font-size:12px;color:#757d68;text-transform:uppercase;letter-spacing:.06em}td{font-size:14px}.scroll{overflow-x:auto}.links{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px}.note{font-size:13px}.jump:focus-visible,a:focus-visible{outline:3px solid #879f5b;outline-offset:4px}@media(max-width:800px){.cards{grid-template-columns:1fr}.card p{min-height:0}main{padding-top:20px}.panel,.card{padding:18px}table{min-width:620px}}
+</style></head><body><main>
+<header><span class="eyebrow">SANDBOX · SFXMINT / BIBLIOTECA</span><h1>La misma narración.<br>El sonido, en otra capa.</h1><p>Escucha los dos minutos completos, con los efectos un 5 % más altos que en la prueba anterior y ambiente suave en las fotos. Cada ambiente dura lo mismo que su video o imagen de apoyo. Activa y desactiva los efectos durante la reproducción: la voz sigue en el mismo punto, sin recargarse ni cambiar de archivo.</p></header>
+<section class="panel" aria-label="Escucha continua"><h2>Documental completo · voz original</h2>
+<audio id="narration" controls preload="metadata" aria-label="Narración original continua"></audio>
+<div class="bar"><label class="switch"><input id="enabled" type="checkbox" checked>Efectos de fondo</label><label class="level">Nivel de efectos <input id="level" aria-label="Nivel de efectos" type="range" min="0" max="150" value="100"><output id="level-value">100%</output></label></div>
+<p id="status" role="status" class="status">Preparando la biblioteca de sonidos…</p>
+<p class="note">El control de volumen del reproductor afecta también a los efectos. Los archivos de voz, escenas e imágenes de la plantilla original siguen intactos.</p>
+<div class="links"><a id="mix-link" href="#">Escuchar la mezcla completa exportada</a><a href="/recursos?kind=sounds">Abrir Recursos</a><a href="../../index.html?controls=1">Abrir la plantilla original</a></div></section>
+<section aria-label="Efectos de la biblioteca"><h2>Efectos reutilizados y sus entradas</h2><p>Cada sonido tiene su ficha y un identificador en Recursos. Estas tarjetas muestran cuándo entra en esta prueba.</p><div id="cards" class="cards"></div></section>
+<section class="panel"><h2>Momentos de entrada</h2><div class="scroll"><table><thead><tr><th>Efecto</th><th>Entrada</th><th>Salida</th><th>Duración del apoyo</th><th>Escena</th></tr></thead><tbody id="timeline"></tbody></table></div><p class="note">Los recortes y fundidos se aplican a los efectos. La narración conserva toda su duración.</p></section>
+</main><script>
+(async()=>{
+const voice=document.getElementById('narration'),status=document.getElementById('status'),enabled=document.getElementById('enabled'),level=document.getElementById('level');
+const time=t=>`${Math.floor(t/60)}:${(t%60).toFixed(2).padStart(5,'0')}`;
+let plan,ctx,bus,ready=false,sources=[],buffers=new Map(),cards=[];
+function stopEffects(){for(const s of sources){try{s.stop();}catch{}}sources=[];}
+function updateVolume(){if(bus)bus.gain.setTargetAtTime(enabled.checked&&!voice.muted?Number(level.value)/100*voice.volume:0,ctx.currentTime,.03);document.getElementById('level-value').textContent=level.value+'%';}
+async function prepare(){
+ if(ready)return;
+ if(!ctx){ctx=new AudioContext();bus=ctx.createGain();bus.connect(ctx.destination);}
+ if(plan.effects_url){const r=await fetch(plan.effects_url);if(!r.ok)throw new Error('No se pudo cargar la pista de efectos');buffers.set('__effects',await ctx.decodeAudioData(await r.arrayBuffer()));}else{await Promise.all(plan.cues.map(async c=>{if(buffers.has(c.asset_id))return;const r=await fetch(c.source_url);if(!r.ok)throw new Error('No se pudo cargar un efecto');buffers.set(c.asset_id,await ctx.decodeAudioData(await r.arrayBuffer()));}));}ready=true;updateVolume();
+}
+async function schedule(){
+ stopEffects();if(voice.paused||voice.ended)return;
+ try{await prepare();await ctx.resume();}catch{status.textContent='La voz está disponible. Algún efecto no terminó de cargar.';return;}
+ if(voice.paused||voice.ended)return;
+ stopEffects();const t=voice.currentTime,now=ctx.currentTime,rate=voice.playbackRate;
+ if(plan.effects_url){const src=ctx.createBufferSource();src.buffer=buffers.get('__effects');src.playbackRate.value=rate;src.connect(bus);if(t<src.buffer.duration){src.start(now,t);sources.push(src);}status.textContent=enabled.checked?'Voz continua · misma pista de efectos que la mezcla exportada':'Solo voz · los efectos están silenciados';return;}
+ for(const c of plan.cues){const end=c.start+c.duration;if(end<=t)continue;const elapsed=Math.max(0,t-c.start),remain=c.duration-elapsed,when=now+Math.max(0,c.start-t)/rate;
+ const src=ctx.createBufferSource(),g=ctx.createGain();src.buffer=buffers.get(c.asset_id);src.playbackRate.value=rate;const vol=10**(c.gain_db/20);
+ const fadeIn=c.fade_in||0,fadeOut=c.fade_out||0;let envelope=Math.min(1,fadeIn?elapsed/fadeIn:1,fadeOut?(c.duration-elapsed)/fadeOut:1);
+ g.gain.setValueAtTime(vol*Math.max(0,envelope),when);
+ if(elapsed<fadeIn)g.gain.linearRampToValueAtTime(vol,when+(fadeIn-elapsed)/rate);
+ const outAt=c.duration-fadeOut;if(elapsed<outAt)g.gain.setValueAtTime(vol,when+(outAt-elapsed)/rate);
+ g.gain.linearRampToValueAtTime(0,when+remain/rate);src.connect(g);g.connect(bus);src.start(when,c.source_in+elapsed,remain);sources.push(src);
+ }status.textContent=enabled.checked?'Voz continua · efectos sincronizados en otra capa':'Solo voz · los efectos están silenciados';
+}
+enabled.addEventListener('change',()=>{updateVolume();status.textContent=enabled.checked?'Efectos activados · la voz continúa':'Solo voz · la voz continúa';});level.addEventListener('input',updateVolume);voice.addEventListener('volumechange',updateVolume);
+voice.addEventListener('play',schedule);voice.addEventListener('playing',schedule);voice.addEventListener('pause',stopEffects);voice.addEventListener('waiting',stopEffects);voice.addEventListener('ended',stopEffects);voice.addEventListener('seeking',stopEffects);voice.addEventListener('seeked',schedule);voice.addEventListener('ratechange',schedule);
+try{
+ const r=await fetch('library-preview.json');if(!r.ok)throw new Error('plan');plan=await r.json();voice.src=plan.narration_url;document.getElementById('mix-link').href=plan.full_mix_url;
+ for(const c of plan.cues){const card=document.createElement('article');card.className='card';const tag=document.createElement('span');tag.className='tag';tag.textContent='SFXMint · guardado en Recursos';const h=document.createElement('h3');h.textContent=c.title;const p=document.createElement('p');p.textContent=c.description;const timing=document.createElement('p');timing.className='time';timing.textContent=`${time(c.start)} → ${time(c.start+c.duration)}`;const jump=document.createElement('button');jump.className='jump';jump.textContent='Ir a este momento';jump.onclick=()=>{voice.currentTime=Math.max(0,c.start-1);};card.append(tag,h,p,timing,jump);document.getElementById('cards').append(card);cards.push([card,c]);
+ const tr=document.createElement('tr');for(const v of [c.title,time(c.start),time(c.start+c.duration),`${c.duration.toFixed(2)} s`,c.scene]){const td=document.createElement('td');td.textContent=v;tr.append(td);}document.getElementById('timeline').append(tr);
+ }voice.addEventListener('timeupdate',()=>cards.forEach(([el,c])=>el.classList.toggle('active',voice.currentTime>=c.start&&voice.currentTime<c.start+c.duration)));
+ status.textContent='Listo para escuchar · narración original completa';
+}catch{status.textContent='No se pudo cargar el plan de escucha. Recarga esta página.';}
+})();
+</script></body></html>

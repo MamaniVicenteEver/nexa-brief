@@ -1,0 +1,696 @@
+{
+  "base": {
+    "format": "atlas-v1",
+    "duration": 6,
+    "lang": "es",
+    "planoLook": "tactico",
+    "intro": false,
+    "outro": false,
+    "captions": {
+      "enabled": false
+    },
+    "tiles": {
+      "provider": "gibs-bluemarble",
+      "manifest": "../bench/cache-inventory.json"
+    },
+    "motionBlur": false,
+    "defs": {
+      "palette": {
+        "text": "#f4f1da",
+        "dark": "#081e2c",
+        "accent": "#f5d86f",
+        "success": "#399e58",
+        "cyan": "#5be1e8",
+        "danger": "#ee695d"
+      },
+      "fonts": {
+        "display": "AtlasDisplay"
+      }
+    },
+    "camera": [
+      {
+        "t": 0,
+        "center": [
+          52.5,
+          29
+        ],
+        "zoom": 5.1
+      }
+    ],
+    "places": {
+      "Ormuz": [
+        56.4,
+        26.5
+      ],
+      "Bagdad": [
+        44.36,
+        33.31
+      ],
+      "Teheran": [
+        51.39,
+        35.69
+      ],
+      "Mascate": [
+        58.41,
+        23.59
+      ]
+    },
+    "layers": []
+  },
+  "components": [
+    {
+      "name": "territory.fill",
+      "family": "territory",
+      "item": {
+        "region": "IR",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.fill",
+        "color": "success",
+        "id": "demo-territory-0"
+      },
+      "sceneTime": 12,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "territory.flag",
+      "family": "territory",
+      "item": {
+        "region": "IR",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.flag",
+        "flag": "IR",
+        "flagMode": "both",
+        "id": "demo-territory-1"
+      },
+      "sceneTime": 18,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "flag.marker",
+      "family": "territory",
+      "item": {
+        "type": "flag.marker",
+        "at": [
+          53,
+          27
+        ],
+        "flag": "US",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "id": "demo-territory-2"
+      },
+      "sceneTime": 24,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "territory.hatch",
+      "family": "territory",
+      "item": {
+        "region": "IR",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.hatch",
+        "color": "accent",
+        "id": "demo-territory-3"
+      },
+      "sceneTime": 30,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "territory.glow",
+      "family": "territory",
+      "item": {
+        "region": "IR",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.glow",
+        "color": "cyan",
+        "id": "demo-territory-4"
+      },
+      "sceneTime": 36,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "territory.extrude",
+      "family": "territory",
+      "item": {
+        "region": "IQ",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.extrude",
+        "color": "danger",
+        "id": "demo-territory-5"
+      },
+      "sceneTime": 42,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "territory.state",
+      "family": "territory",
+      "item": {
+        "region": "IQ",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.state",
+        "states": [
+          {
+            "at": 1,
+            "state": "disputado",
+            "dur": 1
+          },
+          {
+            "at": 3,
+            "state": "ocupado",
+            "dur": 1
+          },
+          {
+            "at": 4.5,
+            "state": "liberado",
+            "dur": 0.8
+          }
+        ],
+        "transition": "wipe",
+        "note": "Estados sintéticos: no describen hechos históricos.",
+        "id": "demo-territory-6"
+      },
+      "sceneTime": 48,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "arrow.route",
+      "family": "routes",
+      "item": {
+        "via": [
+          [
+            50.5,
+            28.8
+          ],
+          [
+            53,
+            27
+          ],
+          [
+            56.4,
+            26.4
+          ],
+          [
+            58.5,
+            24.8
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "arrow.route",
+        "color": "accent",
+        "id": "demo-routes-0"
+      },
+      "sceneTime": 54,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "arrow.curve",
+      "family": "routes",
+      "item": {
+        "via": [
+          [
+            48,
+            33
+          ],
+          [
+            56,
+            27
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "arrow.curve",
+        "color": "text",
+        "width": 9,
+        "id": "demo-routes-1"
+      },
+      "sceneTime": 60,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "arrow.bolt",
+      "family": "routes",
+      "item": {
+        "via": [
+          [
+            48,
+            32
+          ],
+          [
+            58,
+            25
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "arrow.bolt",
+        "color": "accent",
+        "id": "demo-routes-2"
+      },
+      "sceneTime": 66,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "arrow.flow",
+      "family": "routes",
+      "item": {
+        "via": [
+          [
+            50.5,
+            28.8
+          ],
+          [
+            53,
+            27
+          ],
+          [
+            56.4,
+            26.4
+          ],
+          [
+            58.5,
+            24.8
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "arrow.flow",
+        "color": "accent",
+        "id": "demo-routes-3"
+      },
+      "sceneTime": 72,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "route.sea",
+      "family": "routes",
+      "item": {
+        "via": [
+          [
+            50,
+            28
+          ],
+          [
+            52,
+            27
+          ],
+          [
+            54.5,
+            26
+          ],
+          [
+            56.4,
+            26.5
+          ],
+          [
+            57.4,
+            25.3
+          ],
+          [
+            59,
+            24.5
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "route.sea",
+        "color": "text",
+        "id": "demo-routes-4"
+      },
+      "sceneTime": 78,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "route.lanes",
+      "family": "routes",
+      "item": {
+        "via": [
+          [
+            50.5,
+            28.8
+          ],
+          [
+            53,
+            27
+          ],
+          [
+            56.4,
+            26.4
+          ],
+          [
+            58.5,
+            24.8
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "route.lanes",
+        "text": "ESTRECHO DE ORMUZ",
+        "width": 1.5,
+        "id": "demo-routes-5"
+      },
+      "sceneTime": 84,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "front.line",
+      "family": "routes",
+      "item": {
+        "type": "front.line",
+        "via": [
+          [
+            47,
+            33
+          ],
+          [
+            48.5,
+            31.5
+          ],
+          [
+            49,
+            30
+          ]
+        ],
+        "states": [
+          {
+            "at": 1,
+            "state": "advance",
+            "via": [
+              [
+                48,
+                33
+              ],
+              [
+                49.5,
+                31.5
+              ],
+              [
+                50,
+                30
+              ]
+            ],
+            "dur": 1.5
+          },
+          {
+            "at": 3.5,
+            "state": "retreat",
+            "via": [
+              [
+                47.3,
+                33
+              ],
+              [
+                48.8,
+                31.5
+              ],
+              [
+                49.3,
+                30
+              ]
+            ],
+            "dur": 1
+          }
+        ],
+        "color": "danger",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "note": "Frente esquemático sin valor histórico.",
+        "id": "demo-routes-6"
+      },
+      "sceneTime": 90,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "range.ring",
+      "family": "routes",
+      "item": {
+        "type": "range.ring",
+        "at": [
+          53,
+          29
+        ],
+        "radiusKm": 180,
+        "color": "danger",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "id": "demo-routes-7"
+      },
+      "sceneTime": 96,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "label.callout",
+      "family": "labels",
+      "item": {
+        "type": "label.callout",
+        "at": [
+          53,
+          27
+        ],
+        "text": "Unidad de demostración",
+        "offset": [
+          100,
+          -120
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "id": "demo-labels-0"
+      },
+      "sceneTime": 102,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "label.neon",
+      "family": "labels",
+      "item": {
+        "type": "label.neon",
+        "at": [
+          54,
+          32
+        ],
+        "text": "IRÁN",
+        "color": "cyan",
+        "size": 78,
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "id": "demo-labels-1"
+      },
+      "sceneTime": 108,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "label.chip",
+      "family": "labels",
+      "item": {
+        "type": "label.chip",
+        "at": [
+          56.4,
+          26.5
+        ],
+        "text": "ESTRECHO DE ORMUZ",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "id": "demo-labels-2"
+      },
+      "sceneTime": 114,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "label.figure",
+      "family": "labels",
+      "item": {
+        "type": "label.figure",
+        "screen": [
+          0.5,
+          0.48
+        ],
+        "value": 4,
+        "unit": "países",
+        "source": "Los cuatro países de scene-territorios.json; dato de la demostración",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "id": "demo-labels-3"
+      },
+      "sceneTime": 120,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "text.year",
+      "family": "labels",
+      "item": {
+        "type": "text.year",
+        "screen": [
+          0.5,
+          0.24
+        ],
+        "text": "1987",
+        "size": 180,
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "note": "Año ilustrativo; no representa un cambio territorial.",
+        "id": "demo-labels-4"
+      },
+      "sceneTime": 126,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "badge.count",
+      "family": "labels",
+      "item": {
+        "type": "badge.count",
+        "screen": [
+          0.5,
+          0.35
+        ],
+        "value": 2,
+        "states": [
+          {
+            "at": 2,
+            "state": "count",
+            "value": 3,
+            "dur": 0.8
+          }
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "note": "Contador sintético para demostrar la animación.",
+        "id": "demo-labels-5"
+      },
+      "sceneTime": 132,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    },
+    {
+      "name": "icon.badge",
+      "family": "labels",
+      "item": {
+        "type": "icon.badge",
+        "screen": [
+          0.5,
+          0.4
+        ],
+        "icon": "ship",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "id": "demo-labels-6"
+      },
+      "sceneTime": 138,
+      "times": [
+        0.15,
+        2.4,
+        5.65
+      ]
+    }
+  ]
+}

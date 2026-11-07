@@ -1,0 +1,88 @@
+{
+  "id": "parque",
+  "title": "Parque · tarde dorada",
+  "plate": {
+    "file": "plate.png",
+    "w": 1536,
+    "h": 1024
+  },
+  "floorY": 960,
+  "charHeight": 560,
+  "walk": [
+    140,
+    1396
+  ],
+  "anchors": {
+    "bench-seat-left": {
+      "x": 670,
+      "y": 960,
+      "kind": "seat",
+      "facing": "right"
+    },
+    "bench-seat-right": {
+      "x": 910,
+      "y": 960,
+      "kind": "seat",
+      "facing": "left"
+    },
+    "enter-right": {
+      "x": 1396,
+      "y": 960,
+      "kind": "enter",
+      "facing": "left"
+    },
+    "path": {
+      "x": 1080,
+      "y": 960,
+      "kind": "spot",
+      "facing": "left"
+    },
+    "enter-left": {
+      "x": 140,
+      "y": 960,
+      "kind": "enter",
+      "facing": "right"
+    }
+  },
+  "props": [
+    {
+      "prop": "bench",
+      "x": 790,
+      "y": 960,
+      "w": 480,
+      "layer": "back",
+      "params": {
+        "h": 330,
+        "seatY": 816,
+        "color": "#bfa083"
+      },
+      "id": "bench-0"
+    },
+    {
+      "id": "planter",
+      "prop": "plant",
+      "x": 1265,
+      "y": 850,
+      "w": 120,
+      "layer": "back",
+      "params": {
+        "h": 190,
+        "color": "#99ae82"
+      }
+    }
+  ],
+  "light": {
+    "tint": "#fff0db",
+    "ambient": 0.96
+  },
+  "credits": {
+    "type": "ai-generated",
+    "adapter": "src.adapters.image_gen.cli",
+    "modelPreset": "luna-xhigh",
+    "prompt": "prompt.txt",
+    "reference": "sandbox/nodeaction/vida-en-escena/work/ref/v2-sheet.jpg (solo estilo del fondo)",
+    "status": "generated",
+    "note": "Original PNG copiado por el adaptador, sin recomprimir. Pendiente de revisión visual y calibración sobre la lámina. Calibración etapa 2 sobre PNG 1536×1024: suelo visible y≈683, apoyo 960, altura 560. Anclas y mobiliario ajustados; original intacto.",
+    "sha256": "858f1ee4503992013e6e4744466111411306c1c64c37dd7f0f00128766c2a981"
+  }
+}

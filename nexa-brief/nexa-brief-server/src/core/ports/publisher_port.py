@@ -1,6 +1,6 @@
 """Publisher Port — abstract contract for social-media publishing adapters.
 
-All platform-specific adapters (TikTok, YouTube, Facebook) must implement
+All platform-specific adapters (TikTok, YouTube, Facebook, Instagram) must implement
 this interface.  The pipeline and API layer depend only on this abstraction,
 never on concrete platform implementations.
 
@@ -26,7 +26,7 @@ class PublishVideoResult:
     """Returned by publish() on success."""
     post_id: str                        # Platform-assigned video ID
     url: str                            # Public URL to the video
-    platform: str                       # 'tiktok' | 'youtube' | 'facebook'
+    platform: str                       # 'tiktok' | 'youtube' | 'facebook' | 'instagram'
     account_alias: str                  # e.g. 'cuenta_1'
     raw_response: dict[str, Any] = field(default_factory=dict)  # Full API response for audit
 

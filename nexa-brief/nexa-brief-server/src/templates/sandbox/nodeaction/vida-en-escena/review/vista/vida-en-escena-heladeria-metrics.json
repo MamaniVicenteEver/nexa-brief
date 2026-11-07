@@ -1,0 +1,323 @@
+{
+  "warnings": [],
+  "head_overlaps": [],
+  "knees": {
+    "samples": 82,
+    "backward": 0
+  },
+  "subtitle_safe": {
+    "samples": 263,
+    "max_hand_bottom_px": 1113.9782788455914,
+    "max_object_bottom_px": 1122.6877346274377,
+    "violations": []
+  },
+  "conversation_stops": [
+    {
+      "actor": "valeria",
+      "to": "tomas",
+      "t": 1.35,
+      "center_distance_px": 289.2384000000002,
+      "minimum_center_distance_px": 289.23840000000007,
+      "edge_gap_in_head_widths": 1.2000000000000013
+    }
+  ],
+  "camera": {
+    "max_same_framing_seconds": 5.500000000000002,
+    "spans": [
+      {
+        "type": "wide",
+        "start": 0,
+        "end": 1.35
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 1.35,
+        "end": 1.9000000000000001
+      },
+      {
+        "type": "close",
+        "target": "valeria",
+        "start": 1.9000000000000001,
+        "end": 3
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 3,
+        "end": 4.805458
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 4.805458,
+        "end": 7.265458
+      },
+      {
+        "type": "insert",
+        "target": "helado",
+        "start": 7.265458,
+        "end": 9.265457999999999
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 9.265457999999999,
+        "end": 10.129125
+      },
+      {
+        "type": "insert",
+        "target": "helado",
+        "start": 10.129125,
+        "end": 12.329125000000001
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 12.329125000000001,
+        "end": 14.630459
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 14.630459,
+        "end": 20.130459000000002
+      },
+      {
+        "type": "close",
+        "target": "valeria",
+        "start": 20.130459000000002,
+        "end": 20.130459000000002
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 20.130459000000002,
+        "end": 25.630459000000002
+      },
+      {
+        "type": "close",
+        "target": "tomas",
+        "start": 25.630459000000002,
+        "end": 28.255376
+      },
+      {
+        "type": "close",
+        "target": "heladero",
+        "start": 28.255376,
+        "end": 29.555376
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 29.555376,
+        "end": 30.311251
+      }
+    ],
+    "insert_returns": [
+      {
+        "at": 9.265457999999999,
+        "previousAt": 7.265457,
+        "fit_adjusted": true,
+        "max_rect_error_px": 14.197287425025706
+      },
+      {
+        "at": 12.329125000000001,
+        "previousAt": 10.129124000000001,
+        "fit_adjusted": true,
+        "max_rect_error_px": 5.623804839121931
+      }
+    ]
+  },
+  "subtitles": {
+    "aligned_words": 42,
+    "fallbacks": []
+  },
+  "view": "portrait",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "framing_mode": "fit",
+  "actores_completos": {
+    "samples": 2178,
+    "failed_samples": 0,
+    "violations": []
+  },
+  "sin_zona_vacia": {
+    "passed": true,
+    "plates": {
+      "heladeria": {
+        "opaque_min_alpha": 255,
+        "plate_edge_max_alpha": 3,
+        "texture_colors": 9683,
+        "luminance_variance": 236.45719506869864,
+        "ok": true
+      }
+    }
+  },
+  "overrides_adjusted": [
+    "$.scenes[0].camera[0]",
+    "$.scenes[0].camera[2]"
+  ],
+  "composition": {
+    "sujeto_suficiente": {
+      "samples": 1992,
+      "min_ratio_by_shot": {
+        "wide": 0.27340687523646023,
+        "medium": 0.25938753201647297,
+        "close": 0.2911993256699954
+      },
+      "violations": [],
+      "failed_samples": 0
+    },
+    "sin_suelo_vacio": {
+      "samples": 890,
+      "max_ratio": 0,
+      "opening_wide_samples": 890,
+      "violations": [],
+      "failed_samples": 0
+    },
+    "objeto_no_tapa_cuerpo": {
+      "samples": 2888,
+      "max_ratio": 0,
+      "violations": [],
+      "failed_samples": 0
+    },
+    "transition_frames": 20
+  },
+  "episode": "vida-en-escena-heladeria",
+  "duration": 30.311251,
+  "fps": 30,
+  "foot_slip": {
+    "max_slip_px": 0.3730273580889318,
+    "samples": 5350,
+    "worst": {
+      "id": "heladero",
+      "side": "right",
+      "t": 28.433333333333334,
+      "contact": "mañana-en-la-heladería:heladero:initial:right",
+      "from": [
+        621.84,
+        720
+      ],
+      "to": [
+        621.8107670353819,
+        719.6281198530945
+      ]
+    }
+  },
+  "mouth": {
+    "silent_actor_frames": 2319,
+    "open_without_voice_frames": 0,
+    "percent": 0
+  },
+  "determinism": {
+    "frames": 30,
+    "resolution": [
+      540,
+      960
+    ],
+    "order": [
+      7,
+      24,
+      11,
+      28,
+      15,
+      2,
+      19,
+      6,
+      23,
+      10,
+      27,
+      14,
+      1,
+      18,
+      5,
+      22,
+      9,
+      26,
+      13,
+      0,
+      17,
+      4,
+      21,
+      8,
+      25,
+      12,
+      29,
+      16,
+      3,
+      20
+    ],
+    "mismatches": [],
+    "ok": true,
+    "hashes": [
+      "1ba562634809b6a1db9aa2160ae88680d646097d672831540b7018aa2d692ecf",
+      "1e01a76b2c9de2fdf5bb1a23732676662e573c710d56f2c9425827087c7ba438",
+      "ec3b0dbe341f8793ed2673f9248f303b6433e253e926816c6293733d9a457546",
+      "a325b60072e5d025c2e0beccdf421ef3fb1c9df47023096fb34ee5f800d6b7a2",
+      "181358f7ff114f7dff381de39c8133e7fb1a22ce0ba18f4c3fd87bea51a2d84c",
+      "e08c0b07f1f774513d7289ce3483fd6cf88b93e64bd4ab7e3ed99596d20caea6",
+      "fb726b02f485271ce434f973d9ea637abb1ff761e93f5587e6aa0768ddcfafcb",
+      "f42b88e7568d2c7997aadd27681a664b6c39a7ae278ad709243a247181cb2347",
+      "9203726abf710d68946edc4aa67456dc6dc45436c0215006421c9251f5f3f3f1",
+      "fe3e3c4ae14c43ee38929809f929fd92a5470908488ea73cf677cde617b88a31",
+      "205789794ad4bc2848b75955333e76bb6b3774851aae35bb8e6d78411ba31f88",
+      "1829286df1253a59b3e6fd7e32953f5f25c53760b915369ab53414aa83e5d356",
+      "86748ca55c8f2cb6269bbb1ca3dc0529c4a9ac5d0ad004a03a460577124ab8ad",
+      "fb5264f303a75ad7ddd12c4771d29700081eeab8fa30b62374c190e2cf65ef6e",
+      "8b55f1dc80ed0f4542dddf433b7819751a2ce8bd7a9bdf1fe479d5f9ae261a29",
+      "809b2e25f84bdde690d128dd800d40e412bd207f052dfd9aa73f57894be087af",
+      "c4ad60437e2a357a1d8c1f0149e9f350367fc7b7574f9679e1572427988e8e29",
+      "e98f08e35958472c310d5aa0866e30a5637eb815c1fef65b54066aa10a3c4ebc",
+      "d3809619a95ab6d90689ea589c5672b1a417fd2af59bf30affd36ae6a963b33c",
+      "deb8b1e7a88776f66e5c026c4b1f648ef0871fe7a026de92279d319f538bcc4f",
+      "1189b2303c878f4c00ea870a1b10c891400105f1a4a3f69ffdbf02a0e267f3ac",
+      "8359dd13e07bc526ab5be42561518f4eb84e9bb0691a3507b6eed9998e3f8ca4",
+      "22761ad4da5dee809c3325b3477bb50c33927092da8f4d1afb5b26e03d497d78",
+      "cca73c8c17da5342e27378b2e7203f23dd730014ddf62d4be95993e948e12159",
+      "dbdad00070ef422686391f45ccf41ca865501d204cb2585b1ac9e119dfdf2806",
+      "97c145bf2bb3c28901e0e8fa25343bce54085a08387929e14f1438a57403137f",
+      "958a0742195bf150a6aab20e2f766d72c796603fbdb1a452e06ea280e4738de3",
+      "36e3f996f8575cafc5ee5620c8dfb62bf00f3b508bfbbf62428b6a9277db5331",
+      "0c014a25185577793b5db5c06e836435c3099a4a7026746f521313f966503d3f",
+      "8c99015f220556b0db0d035a365ebc1f4bd76c46ddfe0a7d4fac4944c26c4ce4"
+    ]
+  },
+  "objects": {
+    "ownership_samples": 1820,
+    "max_grip_error_px": 0
+  },
+  "framing": {
+    "target_crop_frames": 0,
+    "target_crop_details": [],
+    "offscreen_non_targets": 300,
+    "whip_transition_frames": 60,
+    "intentional_body_crop_frames": 150,
+    "offscreen_set_objects": 0,
+    "hidden_objects": 0,
+    "object_crop_frames": 0,
+    "object_crop_details": []
+  },
+  "pose_motion": {
+    "max_boundary_jump_px": 0.0017153614755493797,
+    "boundary_epsilon_seconds": 0.000001,
+    "max_anchor_step_per_frame_px": 43.088704280126635,
+    "note": "Desplazamiento bruto a 30 fps; incluye gestos y caminata, no equivale por sí solo a un salto."
+  },
+  "passed": true,
+  "failed": [],
+  "views": [
+    {
+      "view": "landscape",
+      "passed": true,
+      "failed": []
+    },
+    {
+      "view": "portrait",
+      "passed": true,
+      "failed": []
+    }
+  ]
+}

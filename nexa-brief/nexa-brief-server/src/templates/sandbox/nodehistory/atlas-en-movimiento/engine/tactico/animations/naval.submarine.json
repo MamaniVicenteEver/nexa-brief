@@ -1,0 +1,156 @@
+{
+  "name": "naval.submarine",
+  "family": "naval",
+  "description": "Submarino opaco o azul translúcido, rótulo y línea guía. Úsala para representar flotas, navegación y cambios de estado de embarcaciones.",
+  "duration": 8.35,
+  "loop": true,
+  "layer": 40,
+  "states": [
+    "normal",
+    "detected",
+    "targeted",
+    "hit",
+    "burning",
+    "wrecked",
+    "sunk",
+    "flightops"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "kmLength": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Longitud geográfica en kilómetros para scaleMode geo."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "flag": {
+      "type": "string",
+      "default": "US",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "variant": {
+      "type": "enum",
+      "values": [
+        "normal",
+        "translucent"
+      ],
+      "default": "normal",
+      "range": [
+        "normal",
+        "translucent"
+      ],
+      "description": "Variante visual del componente."
+    },
+    "wake": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la estela naval."
+    },
+    "translucent": {
+      "type": "boolean",
+      "default": false,
+      "range": null,
+      "description": "Activa la representación translúcida."
+    }
+  },
+  "sfx": [
+    "naval-engine-low"
+  ],
+  "example": {
+    "id": "naval-submarine",
+    "t": 0,
+    "type": "naval.submarine",
+    "variant": "normal",
+    "at": [
+      58.4,
+      24.9
+    ],
+    "heading": "auto",
+    "label": "SUBMARINO",
+    "dur": 8,
+    "path": {
+      "via": [
+        [
+          58.4,
+          24.9
+        ],
+        [
+          58.18,
+          25.04
+        ],
+        [
+          57.95,
+          25.06
+        ]
+      ],
+      "t": 0.5,
+      "dur": 6,
+      "curve": "smooth"
+    },
+    "states": [
+      {
+        "at": 3,
+        "state": "detected"
+      },
+      {
+        "at": 5.5,
+        "state": "normal"
+      }
+    ]
+  },
+  "usedBy": [
+    "work/tactico/items-naval.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/naval.submarine.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

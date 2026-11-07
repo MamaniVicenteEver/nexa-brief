@@ -35,6 +35,17 @@ PY
     printf '%s=%s\n' "$key" "$value" >>"$file"
   fi
 }
+# Removes obsolete keys while preserving every unrelated environment setting.
+env_unset() {
+  local file="$1" key="$2"
+  [[ -f "$file" ]] || return 0
+  python3 - "$file" "$key" <<'PY'
+import sys, pathlib
+path, key = sys.argv[1:]
+p = pathlib.Path(path)
+p.write_text("\n".join(line for line in p.read_text().splitlines() if not line.startswith(f"{key}=")) + "\n")
+PY
+}
 
 step "Requisitos"
 command -v git >/dev/null || die "falta git"
@@ -54,6 +65,26 @@ step "Archivos de entorno"
 [[ -f "$ROOT/.env" ]] || { cp "$ROOT/.env.example" "$ROOT/.env"; ok "creado .env (puertos de Docker)"; }
 [[ -f "$SERVER/.env" ]] || { cp "$SERVER/.env.example" "$SERVER/.env"; ok "creado nexa-brief-server/.env"; }
 [[ -f "$WEB/.env.local" ]] || { cp "$WEB/.env.example" "$WEB/.env.local"; ok "creado nexa-brief-web/.env.local"; }
+
+# Migrate previous per-service URL settings into one canonical root variable.
+public_app_url="$(env_get "$ROOT/.env" PUBLIC_APP_URL)"
+if [[ -z "$public_app_url" ]]; then
+  public_app_url="$(env_get "$ROOT/.env" NEXT_PUBLIC_APP_URL)"
+fi
+if [[ -z "$public_app_url" ]]; then
+  public_app_url="$(env_get "$ROOT/.env" AUTH_URL)"
+fi
+if [[ -z "$public_app_url" ]]; then
+  public_app_url="http://localhost:3000"
+fi
+env_set "$ROOT/.env" PUBLIC_APP_URL "$public_app_url"
+env_unset "$ROOT/.env" NEXT_PUBLIC_APP_URL
+env_unset "$ROOT/.env" AUTH_URL
+env_unset "$SERVER/.env" FRONTEND_URL
+env_unset "$SERVER/.env" PUBLIC_APP_URL
+env_unset "$WEB/.env.local" NEXT_PUBLIC_APP_URL
+env_unset "$WEB/.env.local" AUTH_URL
+ok "PUBLIC_APP_URL configurada como origen público único"
 
 step "Backend (nexa-brief-server)"
 (cd "$SERVER" && uv sync --frozen)

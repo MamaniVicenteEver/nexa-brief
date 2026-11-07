@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "title": "Avatar · demo",
+  "summary": "Demo del motor de avatar: parte de un retrato en capas y anima cuerpo, gestos, expresiones y labios según el tiempo de la narración. El prototipo dura unos 49 segundos.",
+  "engine": "nodeaction/_avatar",
+  "based_on": null,
+  "is_new_design": true,
+  "status": "lista para revisar",
+  "created_at": "2026-10-23",
+  "libraries": [
+    {
+      "name": "Google Fonts: DM Sans",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía de rótulos"
+    }
+  ],
+  "inputs": [
+    "Audio y tiempos de palabra disponibles en assets/song.mp3 y assets/lyrics.json.",
+    "Escena de avatar en assets/scene.json y el rig compartido de sandbox/nodeaction/_avatar."
+  ],
+  "notes": [
+    "El avatar usa malla y huesos WebGL2 según nodeaction/AGENTS.md; WebGL2 es una API del navegador, no una librería externa.",
+    "Hay un render 16:9 y capturas de revisión en work."
+  ],
+  "usage_backfill": {
+    "estimated": true,
+    "source": "Estimación de ~/.codex/sessions/**/*.jsonl (Codex: 8 sesiones, 72 menciones de sandbox/nodeaction/avatar-demo) y /home/alfred/codex/nexa-brief/claude-sessions-usage.json (Claude: 2 sesiones, 222 sandbox_mentions). Repartí los tokens de cada sesión que toca varias plantillas proporcionalmente a sus menciones de ruta; los modelos de Claude se asignaron según el recuento de modelos del resumen. El resumen Claude no trae reasoning_tokens (registrado como 0, no disponible por separado). Revisé sandbox/nodemotion/_codex/*.log: no tenían contadores numéricos de tokens (0 campos encontrados), así que no los sumé.",
+    "by_model": [
+      {
+        "provider": "claude",
+        "model": "claude-opus-5-5",
+        "input_tokens": 203,
+        "cached_input_tokens": 20313951,
+        "output_tokens": 162609,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "codex",
+        "model": "gpt-6-luna",
+        "input_tokens": 1563189,
+        "cached_input_tokens": 1525684,
+        "output_tokens": 15159,
+        "reasoning_tokens": 9862
+      }
+    ]
+  }
+}

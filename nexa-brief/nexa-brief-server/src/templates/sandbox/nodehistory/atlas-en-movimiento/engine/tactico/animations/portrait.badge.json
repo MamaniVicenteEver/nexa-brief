@@ -1,0 +1,129 @@
+{
+  "name": "portrait.badge",
+  "family": "portrait",
+  "description": "Retrato circular u octogonal con cargo y fecha documentada. Úsala para presentar una persona con cargo, fecha y crédito.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 80,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "src": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Ruta del medio local relativa a la plantilla."
+    },
+    "credit": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Atribución visible del medio."
+    },
+    "date": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fecha documentada visible."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.2,
+      "max": 2,
+      "range": {
+        "min": 0.2,
+        "max": 2
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "offset": {
+      "type": "array",
+      "default": [
+        0,
+        -220
+      ],
+      "range": null,
+      "description": "Desplazamiento [x,y] en píxeles de diseño."
+    },
+    "appearance": {
+      "type": "object",
+      "default": {},
+      "doc": "Estilo 01 por defecto: tarjeta y marco #20252B, textos blancos neutros con contorno negro. Para oscurecer ambos usar appearance.cardColor (ejemplo #0F1216); appearance.photoBorderColor permite ajustar el borde de forma independiente. Conservar la jerarquía de letras salvo pedido explícito.",
+      "range": null,
+      "description": "Estilo 01 por defecto: tarjeta y marco #20252B, textos blancos neutros con contorno negro. Para oscurecer ambos usar appearance.cardColor (ejemplo #0F1216); appearance.photoBorderColor permite ajustar el borde de forma independiente. Conservar la jerarquía de letras salvo pedido explícito."
+    },
+    "name": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Nombre visible de la persona o elemento."
+    },
+    "role": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Cargo o función documentada de la persona."
+    },
+    "focus": {
+      "type": "array",
+      "default": [
+        0.5,
+        0.38
+      ],
+      "range": null,
+      "description": "Punto focal normalizado [x,y] del recorte de imagen."
+    },
+    "shape": {
+      "type": "enum",
+      "values": [
+        "circle",
+        "octagon"
+      ],
+      "default": "octagon",
+      "range": [
+        "circle",
+        "octagon"
+      ],
+      "description": "Forma del marco del retrato."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-portrait-badge",
+    "t": 0,
+    "type": "portrait.badge",
+    "at": [
+      51,
+      28
+    ],
+    "src": "assets/media/P01.png",
+    "name": "Ruhollah Jomeini",
+    "role": "Líder supremo de Irán",
+    "date": "Foto: 6 may 1981",
+    "credit": "Ali Kaveh · PD-Iran · Commons",
+    "shape": "octagon",
+    "offset": [
+      0,
+      -100
+    ],
+    "dur": 8,
+    "out": 7
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/scene-editorial.json",
+    "work/tactico/scene-portraits.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/portrait.badge.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/fonts/AtlasEditorial.ttf",
+    "assets/media/P01.png"
+  ]
+}

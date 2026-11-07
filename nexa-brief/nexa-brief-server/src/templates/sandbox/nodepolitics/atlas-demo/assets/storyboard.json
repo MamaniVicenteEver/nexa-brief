@@ -1,0 +1,477 @@
+{
+ "version": 1,
+ "family": "atlas",
+ "title": "La noche que cayó el Muro",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0,
+   "use": "atlas.title",
+   "params": {
+    "text": "",
+    "region": "world",
+    "dim": 0
+   },
+   "dur": 1.4
+  },
+  {
+   "t": 1.4,
+   "dur": 9.0,
+   "use": "atlas.route",
+   "params": {
+    "items": [
+     {
+      "country": "Canada",
+      "label": "Canada",
+      "pin": [
+       -106,
+       56
+      ],
+      "at": 0.9
+     },
+     {
+      "country": "United States of America",
+      "label": "USA",
+      "pin": [
+       -96,
+       38
+      ],
+      "at": 2.6
+     },
+     {
+      "country": "Mexico",
+      "label": "México",
+      "pin": [
+       -102,
+       23.5
+      ],
+      "at": 3.9
+     },
+     {
+      "country": "Honduras",
+      "label": "Honduras",
+      "pin": [
+       -86.8,
+       14.8
+      ],
+      "at": 5.6
+     },
+     {
+      "country": "El Salvador",
+      "label": "El Salvador",
+      "pin": [
+       -88.9,
+       13.7
+      ],
+      "at": 6.6
+     },
+     {
+      "country": "Costa Rica",
+      "label": "Costa Rica",
+      "pin": [
+       -84,
+       9.9
+      ],
+      "at": 7.6
+     }
+    ],
+    "zoom": 1.25
+   }
+  },
+  {
+   "at": "a punto",
+   "use": "atlas.route",
+   "params": {
+    "clear": true,
+    "items": [
+     {
+      "country": "Germany",
+      "label": "Berlín",
+      "pin": [
+       13.4,
+       52.52
+      ]
+     }
+    ],
+    "first": 0.5
+   }
+  },
+  {
+   "at": "derribar el muro",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Muro de Berlín",
+    "pin": [
+     13.38,
+     52.5
+    ]
+   }
+  },
+  {
+   "at": "Durante 28 años",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "1961 - 1989",
+    "pin": [
+     13.43,
+     52.54
+    ]
+   }
+  },
+  {
+   "at": "En agosto de 1961",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Agosto de 1961",
+    "pin": [
+     13.36,
+     52.52
+    ],
+    "src": "assets/media/mauerbau.jpg",
+    "focus": [
+     0.5,
+     0.45
+    ]
+   }
+  },
+  {
+   "at": "Al menos 140",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "140 muertos",
+    "pin": [
+     13.45,
+     52.49
+    ]
+   }
+  },
+  {
+   "at": "Pero en el otoño",
+   "use": "atlas.route",
+   "params": {
+    "items": [
+     {
+      "country": "Poland",
+      "label": "Polonia"
+     },
+     {
+      "country": "Czechia",
+      "label": "Checoslovaquia"
+     },
+     {
+      "country": "Hungary",
+      "label": "Hungría"
+     }
+    ],
+    "state": "gray",
+    "stagger": 0.8
+   }
+  },
+  {
+   "at": "Miles de alemanes",
+   "use": "atlas.route",
+   "params": {
+    "items": [
+     {
+      "country": "Germany",
+      "label": "RDA",
+      "pin": [
+       12.6,
+       51.6
+      ],
+      "at": 0.45
+     },
+     {
+      "country": "Hungary",
+      "label": "Hungría",
+      "at": 2.75
+     },
+     {
+      "country": "Czechia",
+      "label": "Checoslovaquia",
+      "at": 3.45
+     }
+    ],
+    "line": true,
+    "stagger": 1.0
+   }
+  },
+  {
+   "at": "Y cada lunes",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Leipzig",
+    "pin": [
+     12.37,
+     51.34
+    ],
+    "src": "assets/media/leipzig.jpg"
+   }
+  },
+  {
+   "at": "El gobierno decidió",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "RDA",
+    "pin": [
+     13.4,
+     52.52
+    ]
+   }
+  },
+  {
+   "at": "los ciudadanos podrían",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Al Oeste",
+    "pin": [
+     8.7,
+     50.1
+    ]
+   }
+  },
+  {
+   "at": "El encargado de contarlo",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Günter Schabowski",
+    "pin": [
+     13.41,
+     52.52
+    ],
+    "src": "assets/media/schabowski.jpg",
+    "focus": [
+     0.5,
+     0.4
+    ]
+   }
+  },
+  {
+   "at": "Entonces llegó la pregunta",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "¿Cuándo?",
+    "pin": [
+     13.42,
+     52.53
+    ]
+   }
+  },
+  {
+   "at": "Schabowski revolvió",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "De inmediato",
+    "pin": [
+     13.4,
+     52.51
+    ],
+    "src": "assets/media/nota.jpg",
+    "focus": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "La televisión del Oeste",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "TV del Oeste",
+    "pin": [
+     8.7,
+     50.1
+    ]
+   }
+  },
+  {
+   "at": "las fronteras están abiertas",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Fronteras abiertas",
+    "pin": [
+     13.4,
+     52.52
+    ]
+   }
+  },
+  {
+   "at": "Miles de personas salieron",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Bornholmer Strasse",
+    "pin": [
+     13.39,
+     52.555
+    ],
+    "src": "assets/media/bornholmer.jpg"
+   }
+  },
+  {
+   "at": "el oficial Harald",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Harald Jäger",
+    "pin": [
+     13.39,
+     52.56
+    ]
+   }
+  },
+  {
+   "at": "Abrió la barrera",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Barrera abierta",
+    "pin": [
+     13.39,
+     52.555
+    ]
+   }
+  },
+  {
+   "at": "Esa noche los berlineses",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Puerta de Brandeburgo",
+    "pin": [
+     13.377,
+     52.516
+    ],
+    "src": "assets/media/muro-gente.jpg"
+   }
+  },
+  {
+   "at": "con martillos",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Martillos",
+    "pin": [
+     13.375,
+     52.51
+    ],
+    "src": "assets/media/mauerspecht.jpg",
+    "focus": [
+     0.5,
+     0.45
+    ]
+   }
+  },
+  {
+   "at": "Menos de un año",
+   "use": "atlas.world",
+   "params": {
+    "region": "europe",
+    "clear": true
+   }
+  },
+  {
+   "at": "Alemania volvió",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Alemania",
+    "pin": [
+     10.4,
+     51.2
+    ],
+    "state": "both",
+    "whiteAt": "@país"
+   }
+  },
+  {
+   "at": "La historia suele contar",
+   "use": "atlas.route",
+   "params": {
+    "items": [
+     "France",
+     "United Kingdom",
+     "Russia",
+     "United States of America"
+    ],
+    "camera": "fit",
+    "state": "gray",
+    "stagger": 0.45,
+    "first": 0.4
+   }
+  },
+  {
+   "at": "cayó por un papel",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Un papel",
+    "pin": [
+     13.4,
+     52.52
+    ],
+    "src": "assets/media/nota.jpg",
+    "focus": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "at": "y por un oficial",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "Un oficial",
+    "pin": [
+     13.39,
+     52.555
+    ]
+   }
+  },
+  {
+   "at": "Porque a veces",
+   "use": "atlas.world",
+   "params": {
+    "region": "world"
+   }
+  },
+  {
+   "at": "De inmediato",
+   "use": "atlas.country",
+   "params": {
+    "country": "Germany",
+    "label": "De inmediato",
+    "pin": [
+     13.4,
+     52.52
+    ]
+   }
+  },
+  {
+   "t": 205.35,
+   "use": "atlas.outro",
+   "params": {
+    "likeAt": 5.16,
+    "subscribeAt": 5.54,
+    "bellAt": 7.84,
+    "supportAt": 8.94
+   },
+   "offset": 0
+  }
+ ]
+}

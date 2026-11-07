@@ -1,0 +1,87 @@
+{
+  "A": {
+    "name": "referencia",
+    "voice_first": "Algenib",
+    "voice_direction": "Narración oral en español, cercana y clara. Reproduce la organización temporal medida, sin imitar la identidad de una persona: 203–224 palabras por minuto sobre el relato con sus pausas internas. Articula con fluidez, acelera en enumeraciones y afloja antes de la idea decisiva. En las comas que realmente separan cláusulas, deja aproximadamente 140 ms; al cerrar una oración, aproximadamente 200 ms. No conviertas cada coma en un silencio. Reserva uno o dos descansos mayores para giros del relato. Varía el tono en palabras importantes y deja caer las conclusiones, manteniendo las preguntas abiertas. La energía crece en la idea clave y vuelve a una voz cercana. Respira discretamente sin añadir suspiros dramáticos. No copies el texto de la referencia.",
+    "targets": {
+      "total_narration_wpm": [
+        203,
+        224
+      ],
+      "f0_median_hz_measured": 108.18163085396637,
+      "f0_p10_p90_span_semitones": 6.8426524255625045,
+      "comma_pause_ms_conditional": 140,
+      "sentence_pause_ms_conditional": 200,
+      "long_pauses_ge800ms_per_minute_measured": 0.5676201107805249,
+      "speech_p90_p10_db_measured": 20.886145050890295
+    },
+    "note": "La altura absoluta describe esta grabación, no una identidad que deba clonarse. Respiraciones: usar solo la tasa de candidatos como hipótesis, no como conteo confirmado."
+  },
+  "B": {
+    "name": "veterano áspero",
+    "voice_first": "Algenib",
+    "voice_second": "Orus",
+    "voice_direction": "Narrador masculino de edad madura, grave y ligeramente ronco, con una aspereza orgánica discreta. Español latinoamericano neutro, dicción nítida. Cansado pero firme, cercano y sobrio, como alguien que carga recuerdos difíciles. Ritmo de 100 a 115 palabras por minuto sobre la narración completa, incluidas sus pausas internas; articulación fluida, sin arrastrar sílabas. Separa ideas con aire y deja que cada dato se asiente. Antes de una fecha decisiva o un hecho duro, una pausa larga medida. Respira bajo entre ideas; uno o dos suspiros pequeños por minuto, nunca un jadeo teatral. Empieza contenido. En el momento clave sube brevemente el tono y endurece la intención, con un pequeño aumento de energía, sin gritar; después vuelve a bajar y cierra en descenso. Respeta a las víctimas, sin triunfo, arenga ni voz de tráiler. No imites la identidad de una persona real; toma únicamente los patrones de ritmo, contraste y cierre estudiados.",
+    "targets": {
+      "total_narration_wpm": [
+        100,
+        115
+      ],
+      "articulation_wpm_approx": [
+        130,
+        150
+      ],
+      "f0_median_hz_editorial": [
+        90,
+        115
+      ],
+      "f0_p10_p90_span_semitones_editorial": [
+        6,
+        9
+      ],
+      "comma_pause_ms": [
+        180,
+        300
+      ],
+      "sentence_pause_ms": [
+        350,
+        600
+      ],
+      "long_pause_ms": [
+        700,
+        1100
+      ],
+      "long_pauses_per_minute": [
+        4,
+        6
+      ],
+      "breaths_per_minute": [
+        4,
+        6
+      ],
+      "sighs_subset_per_minute": [
+        1,
+        2
+      ],
+      "breath_duration_ms": [
+        180,
+        550
+      ],
+      "climax_delta_semitones": [
+        2,
+        4
+      ],
+      "climax_delta_db": [
+        2,
+        3
+      ],
+      "climax_duration_s": [
+        2,
+        4
+      ],
+      "integrated_lufs": -16,
+      "true_peak_dbTP_max": -1.5
+    },
+    "target_note": "Objetivos de dirección y control posterior, no mediciones de una voz aún no generada. PPM total incluye las pausas y respiraciones dentro del relato; no incluye lead/tail del kit. Los suspiros forman parte de las 4–6 respiraciones, no se suman."
+  }
+}

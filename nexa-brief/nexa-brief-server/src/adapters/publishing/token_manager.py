@@ -60,6 +60,14 @@ class TokenManager:
 
     # ── Public API ────────────────────────────────────────────────────────────
 
+    def target_id(self, platform: str, alias: str) -> str:
+        """Id de la cuenta en su plataforma (canal, página o usuario IG); '' si no hay."""
+        return self._storage.get_state(platform, alias).target_id
+
+    def instagram_deletion_token(self, alias: str) -> str | None:
+        """El borrado IG requiere token de usuario de Facebook, distinto del token de Página."""
+        return self._storage.get_instagram_deletion_token(alias)
+
     async def get_valid_token(self, platform: str, alias: str) -> str:
         """Return a valid, decrypted access token.
 
@@ -68,8 +76,10 @@ class TokenManager:
         Raises:
             TokenExpiredError: Account is marked requires_reauth or refresh exhausted.
         """
+        if self._storage.get_mode(platform, alias) in {"browser", "service"}:
+            raise TokenExpiredError(f"Account {platform}:{alias} uses a browser session and has no OAuth token.")
         lock = self._locks[self._lock_key(platform, alias)]
-        async with lock:
+        async with lock, self._storage.refresh_lock(platform, alias):
             state = self._storage.get_state(platform, alias)
 
             if state.requires_reauth:
@@ -109,6 +119,8 @@ class TokenManager:
 
         Idempotent: does nothing if token is still fresh.
         """
+        if self._storage.get_mode(platform, alias) in {"browser", "service"}:
+            return
         try:
             await self.get_valid_token(platform, alias)
         except TokenExpiredError:
@@ -168,6 +180,8 @@ class TokenManager:
             await self._refresh_youtube(alias, state)
         elif platform == "facebook":
             await self._refresh_facebook(alias, state)
+        elif platform == "instagram":
+            await self._refresh_facebook(alias, state)
         else:
             raise TokenRefreshError(f"Unknown platform: {platform}")
 
@@ -184,6 +198,29 @@ class TokenManager:
             raise TokenRefreshError(f"TikTok:{alias} — no refresh_token stored. Re-auth required.")
 
         refresh_token = self._storage.decrypt(state.encrypted_refresh_token)
+
+        if self._storage.get_api_provider("tiktok", alias) == "tiktok_business":
+            from src.adapters.publishing.tiktok_business_client import TikTokBusinessClient, TikTokBusinessError
+
+            try:
+                async with httpx.AsyncClient(timeout=30) as client:
+                    data = await TikTokBusinessClient(client).refresh(
+                        app_id=settings.tiktok_business_app_id,
+                        secret=settings.tiktok_business_secret,
+                        refresh_token=refresh_token,
+                    )
+                new_access = data.get("access_token")
+                if not new_access:
+                    raise TokenRefreshError("TikTok Business did not return an access token")
+                self._storage.save_tokens(
+                    "tiktok", alias, access_token=new_access,
+                    refresh_token=data.get("refresh_token"), expires_in=data.get("expires_in", 86400),
+                    refresh_expires_in=data.get("refresh_token_expires_in"),
+                    api_provider="tiktok_business",
+                )
+                return
+            except TikTokBusinessError as exc:
+                raise TokenRefreshError("TikTok Business token refresh failed") from exc
 
         async with httpx.AsyncClient(timeout=30) as client:
             response = await client.post(
@@ -243,9 +280,9 @@ class TokenManager:
         client_id = settings.youtube_client_id
         client_secret = settings.youtube_client_secret
         if not client_id or not client_secret:
-            account_entry = self._storage._data.get("youtube", {}).get(alias, {})
-            client_id     = account_entry.get("client_id", client_id)
-            client_secret = account_entry.get("client_secret", client_secret)
+            saved_id, saved_secret = self._storage.get_client_credentials("youtube", alias)
+            client_id = saved_id or client_id
+            client_secret = saved_secret or client_secret
 
         if not client_id or not client_secret:
             raise TokenRefreshError(

@@ -1,0 +1,89 @@
+{
+  "id": "title_alarmista_v1",
+  "piece": "title",
+  "name": "ALARMISTA: alarma que todos entienden, 3 opciones para Test & Compare",
+  "description": "Título que suena a alarma pero se entiende sin saber del tema: nada de siglas ni jerga en las primeras ~40 letras («el día que el mundo…», no «Y2K»). La alarma tiene que ser verdadera y el video tiene que cumplirla: si el desastre no pasó, se dice «pudo», «casi» o se pregunta; nunca se afirma algo que el guion desmiente. Tres títulos con emociones distintas. Se pueden mezclar las 10 estrategias de ancla+tensión con las 4 alarmistas (11-14).",
+  "options": 3,
+  "max_chars": 60,
+  "distinct_emotions": true,
+  "hook_strategies": {
+    "1": {
+      "name": "Paradoja",
+      "emotion": "Asombro",
+      "template": "{Algo malo} que {resultado bueno}"
+    },
+    "2": {
+      "name": "Reloj en marcha",
+      "emotion": "Tensión",
+      "template": "{N} segundos para {acción}"
+    },
+    "3": {
+      "name": "Causa pequeña, efecto gigante",
+      "emotion": "Asombro",
+      "template": "{Objeto mínimo} {consecuencia enorme}"
+    },
+    "4": {
+      "name": "Casi no pasa",
+      "emotion": "Ansiedad → alivio",
+      "template": "{Hecho} estuvo a {X} de no pasar"
+    },
+    "5": {
+      "name": "Protagonista castigado u olvidado",
+      "emotion": "Injusticia",
+      "template": "{Logro} y {castigo u olvido}"
+    },
+    "6": {
+      "name": "Puente a tu vida",
+      "emotion": "Relevancia",
+      "template": "{Hecho viejo} que hoy {te afecta}"
+    },
+    "7": {
+      "name": "Apuesta imposible",
+      "emotion": "Ironía",
+      "template": "Creyeron que {X} en {tiempo corto}"
+    },
+    "8": {
+      "name": "Mito revisado",
+      "emotion": "Curiosidad",
+      "template": "¿{Mito conocido}?"
+    },
+    "9": {
+      "name": "Decisión bajo presión",
+      "emotion": "Tensión",
+      "template": "Tenía {edad} y {segundos} para decidir {X}"
+    },
+    "10": {
+      "name": "Generosidad sorprendente",
+      "emotion": "Asombro positivo",
+      "template": "{Logro enorme} y {renuncia}"
+    },
+    "11": {
+      "name": "El día que…",
+      "emotion": "Alarma",
+      "template": "El día que {algo que todos usan} pudo {colapsar}"
+    },
+    "12": {
+      "name": "Amenaza invisible",
+      "emotion": "Miedo",
+      "template": "El error {pequeño} que pudo {catástrofe global}"
+    },
+    "13": {
+      "name": "El mundo en vilo",
+      "emotion": "Tensión",
+      "template": "{Momento concreto}: {todos} contuvieron el aliento"
+    },
+    "14": {
+      "name": "Fin de una era",
+      "emotion": "Inquietud",
+      "template": "{Algo que dábamos por seguro} ya cambió: ¿{pregunta}?"
+    }
+  },
+  "wow_filter": [
+    "¿Lo entiende alguien que nunca oyó del tema? (sin siglas ni jerga al inicio)",
+    "¿Suena a alarma: riesgo, colapso, fin o cuenta regresiva?",
+    "¿La alarma es verdadera y el video la cumple con datos del guion?",
+    "¿Lo importante está en las primeras ~40 letras?",
+    "¿Hay un detalle concreto: fecha, cifra, objeto?",
+    "¿La miniatura agrega algo que el título no dice?"
+  ]
+}

@@ -815,7 +815,6 @@
   html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: pointer; }
 
   #world { position: fixed; inset: 0; transition: filter 1.8s ease, opacity 1.8s ease; }
-  body.outroActive #world { filter: brightness(0.22) blur(3px); }
   .scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
   .scene.on { visibility: visible; }
   /* columna vertical centrada: todo lo tipográfico vive acá, los fondos ocupan toda la pantalla */
@@ -897,7 +896,7 @@
   .p-chunk.pair { flex-direction: row; align-items: center; gap: 0.05em; }
   .p-rest { display: flex; flex-direction: column; align-items: flex-start; }
   .p-w {
-    display: block; font-family: var(--display); font-stretch: extra-condensed; font-weight: 500;
+    display: block; font-family: var(--display); font-stretch: normal; font-weight: 700;
     line-height: 0.88; text-transform: uppercase; white-space: nowrap; padding: 0 0.03em;
     background: linear-gradient(180deg, var(--textTop) 18%, var(--textBottom) 96%);
     -webkit-background-clip: text; background-clip: text; color: transparent; will-change: transform, filter, opacity;
@@ -982,21 +981,33 @@
     text-align: center; gap: calc(var(--fw) * 0.02); transition: opacity 1.2s ease, filter 1.2s ease; pointer-events: none; }
   .cardScreen .sub { font: 600 calc(var(--fw) * 0.03) var(--ui); letter-spacing: 0.42em; padding-left: 0.42em; text-transform: uppercase; color: rgba(255,236,214,0.7); }
   .cardScreen .title { font-family: var(--display); font-stretch: extra-condensed; font-weight: 500; font-size: calc(var(--fw) * 0.34); line-height: 0.86;
-    text-transform: uppercase; padding: 0 0.04em; max-width: 94vw;
-    background: linear-gradient(180deg, #FFF3DC 15%, #F0955A 95%); -webkit-background-clip: text; background-clip: text; color: transparent;
-    filter: drop-shadow(0 0 calc(var(--fw) * 0.035) rgba(255,140,60,0.45)); }
+    text-transform: uppercase; padding: 0 0.04em; max-width: 94vw; white-space: nowrap;
+    background: linear-gradient(180deg, #FFF8E8 8%, #FFC178 52%, #F07737 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 calc(var(--fw) * 0.035) rgba(255,164,82,0.62)); -webkit-text-stroke: 1px rgba(255,241,220,0.22); }
   .cardScreen .artist { font: 700 calc(var(--fw) * 0.045) var(--ui); color: #fff; }
   .cardScreen .feats { font: 500 calc(var(--fw) * 0.028) var(--ui); letter-spacing: 0.16em; color: rgba(255,236,214,0.6); margin-top: calc(var(--fw) * 0.02); }
   #intro { background: radial-gradient(ellipse 70% 50% at 50% 52%, rgba(60,22,6,0.55), rgba(4,2,1,0.94) 75%); }
   #intro.gone { opacity: 0; filter: blur(12px); }
-  #outro { opacity: 0; background: radial-gradient(ellipse 70% 50% at 50% 52%, rgba(60,22,6,0.5), rgba(4,2,1,0.92) 75%); }
+  #outro { opacity: 0; background: transparent; transition: none; }
   #outro.show { opacity: 1; }
+  body.outroActive #world .c-lines,
+  body.outroActive #world .p-words,
+  body.outroActive #world .p-ghost,
+  body.outroActive #world .m-persp,
+  body.outroActive #world .t-drum,
+  body.outroActive #world .t-echo,
+  body.outroActive #world .pp-g {
+    opacity: 0 !important;
+    transition: opacity .35s ease !important;
+  }
   #hint { position: fixed; bottom: 6vh; left: 0; right: 0; text-align: center; z-index: 9; pointer-events: none;
     font: 600 1.5vh var(--ui); letter-spacing: 0.5em; color: rgba(255,236,214,0.8); animation: hintPulse 2s ease infinite; }
   @keyframes hintPulse { 0%,100% { opacity: 0.25; } 50% { opacity: 0.8; } }
   #hud { position: fixed; top: 8px; left: 8px; z-index: 10; font: 12px/1.4 monospace; color: #0f0; background: rgba(0,0,0,0.6); padding: 4px 8px; display: none; white-space: pre; }
 
 </style>
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
 </head>
 <body>
 <!-- desenfoques de movimiento horizontales (túnel) -->
@@ -1063,7 +1074,7 @@ const DEFAULT_CONFIG = { "activeId": "default", "configs": [{
     { "type": "paper", "weight": 0.14, "palette": { "bg": "#F7E83C", "ink": "#28260E", "shade": "#8F8623" } }
   ],
   "intro": { "artist": "", "title": "", "sub": "Ahora suena", "feats": "" },
-  "outro": { "leadSec": 8, "songTitle": "", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NEXA BRIEF" },
+  "outro": { "leadSec": 8, "songTitle": "", "title": "Gracias", "sub": "Por ver", "feats": "Suscribite | NodeMotion" },
   "debug": { "enabled": false },
   "layout": {
     "splitLineWords": 9, "splitLineSec": 7,
@@ -1160,13 +1171,25 @@ function buildScreen(id, cfg, fallbackTitle, fallbackArtist) {
   const s = $(id);
   s.querySelector(".sub").textContent = cfg.sub || "";
   const title = cfg.title || fallbackTitle || "";
-  s.querySelector(".title").textContent = title;
-  s.querySelector(".title").style.fontSize = `calc(var(--fw) * ${Math.min(0.34, 0.9 / (Math.max(2, title.length) * 0.5)).toFixed(4)})`;
+  const titleEl = s.querySelector(".title");
+  titleEl.textContent = title;
+  titleEl.style.whiteSpace = "nowrap";
+  const fitTitle = () => {
+    const size = Math.min(0.34, 0.9 / (Math.max(2, title.length) * 0.5)) * (cfg.titleScale || 1);
+    titleEl.style.fontSize = `calc(var(--fw) * ${size.toFixed(4)})`;
+    const maxWidth = innerWidth * 0.92;
+    if (titleEl.scrollWidth > maxWidth) {
+      titleEl.style.fontSize = `calc(var(--fw) * ${(size * maxWidth / titleEl.scrollWidth).toFixed(4)})`;
+    }
+  };
+  fitTitle();
+  if (doc.fonts?.ready) doc.fonts.ready.then(fitTitle);
+  window.addEventListener("resize", fitTitle);
   s.querySelector(".artist").textContent = cfg.artist || cfg.songTitle || fallbackArtist || "";
   s.querySelector(".feats").textContent = cfg.feats || "";
 }
-buildScreen("intro", C.intro || {}, C.song?.title, C.song?.artist);
-buildScreen("outro", C.outro || {}, "Gracias", C.song?.title);
+buildScreen("intro", window.NexaTemplateIntro.apply(C.intro || {}, C.song), C.song?.title, "");
+const outroUI = window.NexaNightJourneyOutro.mount({ root: $("outro"), config: C.outro || {} });
 
 /* ---- letra: Whisper → líneas (las muy largas se parten en el hueco más grande del medio) ---- */
 let audioDurationHint = 0;
@@ -1739,17 +1762,10 @@ async function begin() {
 addEventListener("pointerdown", begin, { once: true });
 
 const songDuration = () => (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (audioDurationHint || 0);
-let outroShown = false;
 function maybeOutro(t) {
-  if (outroShown) return;
-  const dur = songDuration();
-  if (!dur) return;
-  if (audio.ended || dur - t <= (C.outro?.leadSec ?? 8)) {
-    outroShown = true;
-    doc.body.classList.add("outroActive");
-    $("intro").classList.add("gone");
-    $("outro").classList.add("show");
-  }
+  const active = outroUI.update(t, songDuration(), audio.ended);
+  if (active) $("intro").classList.add("gone");
+  return active;
 }
 audio.addEventListener("ended", () => maybeOutro(Infinity));
 
@@ -1779,8 +1795,8 @@ function frame(now) {
   rafNow = now;
   if (rafT0 === null) rafT0 = now;
   const t = clock();
-  maybeOutro(t);
-  if (window.__firstLine != null && t >= window.__firstLine - 0.35) $("intro").classList.add("gone");
+  const outroActive = maybeOutro(t);
+  if (outroActive || (window.__firstLine != null && t >= window.__firstLine - 0.35)) $("intro").classList.add("gone");
   else if (FREEZE === null) $("intro").classList.remove("gone");
 
   for (let i = 0; i < SC.length; i++) {

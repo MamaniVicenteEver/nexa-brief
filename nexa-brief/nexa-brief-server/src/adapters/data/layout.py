@@ -12,34 +12,53 @@ from __future__ import annotations
 # name → (archivo relativo a data/, campo clave o None si no tiene PK)
 COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "jobs": ("jobs/jobs.json", "job_id"),
+    "execution_logs": ("logs/index.json", "log_id"),
+    "content_videos": ("content/videos.json", "video_id"),
+    "content_resources": ("content/resources.json", "asset_id"),
+    "showcase_designs": ("showcase/designs-collection.json", "id"),
+    "sandbox_showcase": ("showcase/sandbox-projects.json", "id"),
     "history_events": ("jobs/history_events.json", "event_id"),
     "notifications": ("notifications/notifications.json", "notification_id"),
     "schedule_slots": ("schedule/slots.json", "slot_id"),
     "queue_entries": ("schedule/queue.json", "entry_id"),
     "image_assets": ("library/images.json", "asset_id"),
     "music_assets": ("library/music.json", "asset_id"),
+    "sound_assets": ("library/sounds.json", "asset_id"),
     "video_assets": ("library/videos.json", "asset_id"),
     "template_configs": ("library/template_configs.json", "job_id"),
     # Creación interactiva (ver docs/investigaciones/estudio-creacion-interactiva-2026-09.md)
     "drafts": ("studio/drafts.json", "draft_id"),
     "media_plans": ("studio/media_plans.json", "plan_id"),
     # Explainer (NodeTech/History/Politics/Economy): producciones con agente local
+    "explainer_runtime": ("explainer/runtime.json", "id"),
+    "explainer_batches": ("explainer/batches.json", "batch_id"),
     "explainer_productions": ("explainer/productions.json", "production_id"),
+    # Fábrica: ejecuciones del agente líder para prototipos del sandbox
+    "prototype_runs": ("prototypes/runs.json", "run_id"),
     # Plan de contenido semanal (planificador con IA en Programación)
     "content_plan": ("schedule/content_plan.json", "item_id"),
     # canales/ ya tiene datos reales (cuentas conectadas): se conserva su ruta.
     "channels": ("canales/channels.json", None),
+    "channel_categories": ("canales/categories.json", "category_id"),
+    "channel_publications": ("canales/publications.json", None),
     "published_videos": ("canales/published_videos.json", None),
+    # Archivo de publicaciones de imagen: esta lista es una proyección derivada.
+    "publication_index": ("publicaciones/index.json", "publication_id"),
 }
 
 # name → carpeta relativa a data/ (un .json por clave)
 DOCUMENTS: dict[str, str] = {
+    "content_video_details": "content/video_details",
+    "media_aliases": "content/media_aliases",
+    "legacy_path_aliases": "content/legacy_path_aliases",
+    "content_catalog_snapshots": "catalog/snapshots",
     "image_vision": "library/cache/image_vision",
     "video_vision": "library/cache/video_vision",
     "lyrics": "library/cache/lyrics",
     "template_config_files": "library/template_config_files",
     "progress": "progress",
     "draft_jobs": "studio/draft_jobs",          # Job serializado de cada draft (para retomarlo)
+    "template_originals": "studio/template_originals",  # medios del «Video original» de cada plantilla
     "stock_search_cache": "library/cache/stock_search",
 }
 
@@ -47,5 +66,12 @@ DOCUMENTS: dict[str, str] = {
 FILES: dict[str, str] = {
     "images": "library/files/images",
     "music": "library/files/music",
+    "sounds": "library/files/sounds",
     "videos": "library/files/videos",
+    # Medios inmutables de publicaciones aprobadas.
+    "publication_media": "publicaciones",
 }
+
+# Raíz del archivo de publicaciones. Los adapters de publicaciones son los
+# únicos que resuelven rutas por debajo de este namespace.
+PUBLICATIONS_ROOT = "publicaciones"

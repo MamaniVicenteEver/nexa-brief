@@ -1,0 +1,3267 @@
+{
+  "schema_version": 1,
+  "design_id": "pop",
+  "revision": "e9d6c678913744b736273a873024e9f21682f6224f005dedb8637a9031a6da14",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "pop.logo",
+      "name": "pop.logo",
+      "label": "pop.logo",
+      "kind": "component",
+      "summary": "Apertura de marca (ref. 44,9 s): la marca del canal escala desde 0, un arco fino se dibuja antihorario, la marca parpadea en rosa, un anillo de trazos rotos gira y se cierra en un círculo fino; al final el círculo se borra. Kicker chico opcional debajo.",
+      "tags": [
+        "intro",
+        "marca",
+        "transición"
+      ],
+      "params": {
+        "mark": {
+          "type": "string",
+          "default": "",
+          "doc": "Monograma (1–2 letras). Vacío = gota geométrica del canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico (Archivo extendida) debajo del círculo; vacío = nada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "mark": "",
+        "kicker": "BERLÍN · 9 NOV 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.logo",
+      "data": {
+        "native_name": "pop.logo"
+      }
+    },
+    {
+      "id": "pop.kaleido",
+      "name": "pop.kaleido",
+      "label": "pop.kaleido",
+      "kind": "component",
+      "summary": "Objeto 3D orgánico (blob relleno con la foto en duotono, sombreado, con esquirlas) con rótulo '/RUTA/TIPO' (ref. 46,4 s); en `split` se parte en un CALEIDOSCOPIO hexagonal con 6 copias, rótulos rotados y bordes violeta gruesos, y aparece un marco violeta (ref. 46,95 s).",
+      "tags": [
+        "intro",
+        "objeto",
+        "foto",
+        "caleidoscopio"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto que rellena el objeto (vacío = violeta sombreado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "/DESIGN/BW",
+          "doc": "Rótulo chico arriba a la izquierda del objeto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo que se repite rotado en el caleidoscopio (vacío = primera parte de label).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "split": {
+          "type": "number",
+          "default": 0.55,
+          "doc": "Segundos hasta partir en caleidoscopio (<0 = nunca).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerspecht.jpg",
+        "label": "/BERLÍN/1989",
+        "tag": "/MURO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.kaleido",
+      "data": {
+        "native_name": "pop.kaleido"
+      }
+    },
+    {
+      "id": "pop.kanji",
+      "name": "pop.kanji",
+      "label": "pop.kanji",
+      "kind": "component",
+      "summary": "Texto diagonal isométrico (ref. 49,85 s): renglón grande (japonés u otro) + subrenglón chico, rotado −28°, chico en el centro sobre menta; en `split` pasa a GRANDE sobre una foto cortada por un triángulo menta, con el texto que cambia de color según la región (menta sobre foto, violeta sobre menta) y deriva en diagonal (ref. 50,4 s). Esquina superior derecha: 4 renglones chicos que se escriben.",
+      "tags": [
+        "texto",
+        "diagonal",
+        "foto",
+        "japonés",
+        "título"
+      ],
+      "params": {
+        "big": {
+          "type": "string",
+          "default": "時者埼",
+          "doc": "Renglón grande (japonés/chino en Noto Sans JP; latín en Archivo extendida).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "RANDOM PHRASE",
+          "doc": "Subrenglón chico debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de la fase grande (vacío = siempre fase chica).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "split": {
+          "type": "number",
+          "default": 0.55,
+          "doc": "Segundos hasta la fase grande sobre la foto (0 = empieza grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "corner": {
+          "type": "array",
+          "default": [
+            "STD.",
+            "TRA",
+            "NSM",
+            "AXX"
+          ],
+          "doc": "Renglones chicos de la esquina superior derecha (el 1º en violeta).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "big": "ベルリンの壁",
+        "sub": "BERLIN WALL · 1961",
+        "src": "assets/media/bornholmer.jpg",
+        "corner": [
+          "9 NOV",
+          "19",
+          "89",
+          "DDR"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.kanji",
+      "data": {
+        "native_name": "pop.kanji"
+      }
+    },
+    {
+      "id": "pop.word",
+      "name": "pop.word",
+      "label": "pop.word",
+      "kind": "component",
+      "summary": "Palabra GIGANTE menta sobre foto a sangre en duotono oscuro con zoom lento (ref. 47,55 'BLACK'): entra creciendo 0,75→1 y deslizando a la izquierda en 5 cuadros; repetición chica glitcheada abajo a la derecha y '=' abajo a la izquierda.",
+      "tags": [
+        "texto",
+        "foto",
+        "impacto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Palabra o frase corta (1 renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "small": {
+          "type": "string",
+          "default": "",
+          "doc": "Repetición chica abajo a la derecha (vacío = el mismo texto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tone": {
+          "type": "enum",
+          "default": "dark",
+          "doc": "Duotono: dark = domina el violeta (como la referencia).",
+          "required": false,
+          "options": [
+            "dark",
+            "normal",
+            "light",
+            "inv"
+          ],
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "28 AÑOS",
+        "src": "assets/media/mauerbau.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.word",
+      "data": {
+        "native_name": "pop.word"
+      }
+    },
+    {
+      "id": "pop.hatch",
+      "name": "pop.hatch",
+      "label": "pop.hatch",
+      "kind": "component",
+      "summary": "Palabra gigante menta sobre foto violeta (ref. 49,35 'FOREVER'): entra con glitch de bloques y 6 cuadros de parpadeo de paleta con letras que faltan; algunas letras quedan RAYADAS en diagonal, '★★★' y tiras glitch de la palabra estiradas arriba.",
+      "tags": [
+        "texto",
+        "foto",
+        "glitch",
+        "impacto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Palabra (1 renglón, ideal 4–9 letras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": [],
+          "doc": "Índices de letras rayadas (vacío = automático: 2ª y antepenúltima).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stars": {
+          "type": "bool",
+          "default": true,
+          "doc": "Dibuja '★★★' sobre la penúltima letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "flicker",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "1961",
+        "src": "assets/media/mauerbau.jpg",
+        "hatch": [
+          1,
+          3
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.hatch",
+      "data": {
+        "native_name": "pop.hatch"
+      }
+    },
+    {
+      "id": "pop.stack",
+      "name": "pop.stack",
+      "label": "pop.stack",
+      "kind": "component",
+      "summary": "Renglones apilados menta en grotesca extendida sobre foto (ref. 50,98 'NEW WAY TO PROMOTE'): entra con cortina líquida violeta, cada renglón aparece aplastado y se asienta (uno cada 2 cuadros, o cuando la voz dice la palabra si text está vacío), cruz violeta + flecha-pentágono menta que crecen; en `phase2` re-encuadre más grande con eco en contorno, tira glitch, círculo con cruz y chevrones rosas (ref. 51,45).",
+      "tags": [
+        "texto",
+        "foto",
+        "título",
+        "letra",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Renglones con '\\n'. Vacío = modo LETRA: las palabras narradas en el beat aparecen al decirse (páginas de 4 renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tone": {
+          "type": "enum",
+          "default": "dark",
+          "doc": "Duotono de la foto (dark = domina el violeta: el texto menta se lee).",
+          "required": false,
+          "options": [
+            "dark",
+            "normal",
+            "light",
+            "inv"
+          ],
+          "min": null,
+          "max": null
+        },
+        "shapes": {
+          "type": "bool",
+          "default": true,
+          "doc": "Cruz violeta + flecha-pentágono menta a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "phase2": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundos hasta el re-encuadre grande (<0 = nunca).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "liquid",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "LA NOCHE\nQUE CAYÓ\nEL MURO",
+        "src": "assets/media/muro-gente.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.stack",
+      "data": {
+        "native_name": "pop.stack"
+      }
+    },
+    {
+      "id": "pop.letters",
+      "name": "pop.letters",
+      "label": "pop.letters",
+      "kind": "component",
+      "summary": "2–3 letras/cifras GIGANTES (ref. 53,05 'OE'): la 1ª rellena con la foto en duotono, la 2ª con ondas op-art que se deforman, bordes suaves y deriva lenta; etiqueta paralelogramo violeta que entra con borde dentado (sierra) con texto menta; marca chica abajo-izq. y línea punteada arriba-izq.",
+      "tags": [
+        "texto",
+        "foto",
+        "op-art",
+        "cifra"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "2–3 caracteres (letras o cifras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto que rellena la 1ª letra.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de la etiqueta violeta (\\n = 2 renglones; vacío = sin etiqueta).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "89",
+        "src": "assets/media/muro-gente.jpg",
+        "tag": "LA NOCHE QUE\nCAMBIÓ TODO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.letters",
+      "data": {
+        "native_name": "pop.letters"
+      }
+    },
+    {
+      "id": "pop.band",
+      "name": "pop.band",
+      "label": "pop.band",
+      "kind": "component",
+      "summary": "Texto grande que pasa de negro a foto (ref. 53,59 '2 COLOURS'): cuadro negro con el texto menta → cae una banda de rayas diagonales → la foto se abre como banda hacia abajo (doble exposición desplazada con costura negra) mientras el texto parpadea rosa/menta y las rayas se afinan.",
+      "tags": [
+        "texto",
+        "foto",
+        "transición",
+        "cifra"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto (1 renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de la banda.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "140 VIDAS",
+        "src": "assets/media/mauerbau.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.band",
+      "data": {
+        "native_name": "pop.band"
+      }
+    },
+    {
+      "id": "pop.arrow",
+      "name": "pop.arrow",
+      "label": "pop.arrow",
+      "kind": "component",
+      "summary": "Flecha gruesa que entra desde la izquierda en 4 cuadros parpadeando violeta→rosa→gris→rosa→violeta, con un rótulo de 1–2 renglones que se DECODIFICA letra por letra (ref. 54,12 'NEXT GENERATION').",
+      "tags": [
+        "flecha",
+        "texto",
+        "consecuencia",
+        "transición"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Rótulo (\\n = 2 renglones).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "AL DÍA\nSIGUIENTE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.arrow",
+      "data": {
+        "native_name": "pop.arrow"
+      }
+    },
+    {
+      "id": "pop.minimal",
+      "name": "pop.minimal",
+      "label": "pop.minimal",
+      "kind": "component",
+      "summary": "Texto mínimo y aireado sobre gris claro (ref. 63,5 'USE ANY MEDIA / PHOTOS OR VIDEO'): kicker diminuto muy espaciado + línea en Montserrat espaciada que aparece letra a letra; o variante 'small' (ref. 21 s, 'YOU CAN SET ANY COLORS') de una línea chica con las primeras palabras en rosa.",
+      "tags": [
+        "texto",
+        "pausa",
+        "dato",
+        "cierre"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Línea principal.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea diminuta arriba (solo style=spaced).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "style": {
+          "type": "enum",
+          "default": "spaced",
+          "doc": "spaced = Montserrat muy espaciada · small = una línea chica Archivo extendida.",
+          "required": false,
+          "options": [
+            "spaced",
+            "small"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "number",
+          "default": 2,
+          "doc": "style=small: cuántas palabras iniciales van en rosa.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "paper",
+          "doc": "Fondo gris claro (paper) o menta.",
+          "required": false,
+          "options": [
+            "paper",
+            "mint"
+          ],
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "kicker": "9 DE NOVIEMBRE",
+        "text": "BERLÍN · 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.minimal",
+      "data": {
+        "native_name": "pop.minimal"
+      }
+    },
+    {
+      "id": "pop.title",
+      "name": "pop.title",
+      "label": "pop.title",
+      "kind": "component",
+      "summary": "Título de apertura en 3 tiempos como el comienzo de la referencia: marca del canal con círculo fino que se dibuja (+ kicker), objeto 3D con la foto que se parte en caleidoscopio (opcional, si hay `object`) y el TÍTULO en renglones apilados menta sobre la foto con cortina líquida, cruz y flecha (re-encuadre en `phase2`).",
+      "tags": [
+        "intro",
+        "título",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título; '\\n' parte renglones (2–4 renglones cortos).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo del título.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico bajo el círculo de la marca.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mark": {
+          "type": "string",
+          "default": "",
+          "doc": "Monograma de la marca (vacío = gota del canal).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "object": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto del objeto/caleidoscopio (vacío = se salta esa parte).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo '/RUTA/TIPO' del objeto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "intro": {
+          "type": "number",
+          "default": 1.7,
+          "doc": "Segundos de la marca con círculo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "objectDur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Segundos del objeto/caleidoscopio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "phase2": {
+          "type": "number",
+          "default": 1.6,
+          "doc": "Segundos (desde que aparece el título) hasta el re-encuadre grande (<0 = nunca).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Foco de la foto del título [x,y].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "LA NOCHE\nQUE CAYÓ\nEL MURO",
+        "src": "assets/media/muro-gente.jpg",
+        "kicker": "BERLÍN · 9 NOV 1989",
+        "object": "assets/media/mauerspecht.jpg",
+        "label": "/BERLÍN/1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.title",
+      "data": {
+        "native_name": "pop.title"
+      }
+    },
+    {
+      "id": "pop.circles",
+      "name": "pop.circles",
+      "label": "pop.circles",
+      "kind": "component",
+      "summary": "Dos círculos con la MISMA foto en duotono que crecen desde 0 (el izquierdo primero) y una palabra violeta gigante encima cuya interletra se abre, con letras que faltan al entrar y una letra que parpadea rosa; barra menta, '× × ×' uno por uno y escuadra (ref. 48,1 'STYLE').",
+      "tags": [
+        "foto",
+        "texto",
+        "persona",
+        "lugar"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Palabra (ideal 4–7 letras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se ve a través de los dos círculos).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "ESTE",
+        "src": "assets/media/leipzig.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.circles",
+      "data": {
+        "native_name": "pop.circles"
+      }
+    },
+    {
+      "id": "pop.stripes",
+      "name": "pop.stripes",
+      "label": "pop.stripes",
+      "kind": "component",
+      "summary": "Caja de marco fino con la foto lavada y RAYAS diagonales violeta que entran gruesas y se afinan hasta pelos; palabra violeta con eco rosa desplazado (letras que faltan), '|||' antes, flechas ↑↓; todo el grupo se desliza a la izquierda (ref. 48,65 'STYLE' en caja).",
+      "tags": [
+        "foto",
+        "texto",
+        "documento"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Palabra corta.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto dentro de la caja.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "LA NOTA",
+        "src": "assets/media/nota.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.stripes",
+      "data": {
+        "native_name": "pop.stripes"
+      }
+    },
+    {
+      "id": "pop.split",
+      "name": "pop.split",
+      "label": "pop.split",
+      "kind": "component",
+      "summary": "Tríptico (ref. 51,95 'STRONG'): columna con 2 fotos chicas entre bandas rayadas, panel menta con letras GIGANTES en contorno fino que se dibujan y la palabra con letras en ola que rebotan al entrar, foto grande a la derecha que se desliza a la izquierda con rótulo menta glitcheado.",
+      "tags": [
+        "foto",
+        "persona",
+        "texto",
+        "collage"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Palabra (ideal 5–8 letras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto grande (derecha / abajo).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de las 2 chicas (vacío = la misma).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo menta sobre la foto grande.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "outline": {
+          "type": "string",
+          "default": "",
+          "doc": "Letras gigantes en contorno (vacío = 2 primeras de text).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "VOCERO",
+        "src": "assets/media/schabowski.jpg",
+        "tag": "GÜNTER SCHABOWSKI · SED"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.split",
+      "data": {
+        "native_name": "pop.split"
+      }
+    },
+    {
+      "id": "pop.frame",
+      "name": "pop.frame",
+      "label": "pop.frame",
+      "kind": "component",
+      "summary": "Foto muy desenfocada que se enfoca; un marco paralelogramo menta GRUESO rota (−35°→0), crece y se afina hasta ser un marco rectangular fino con esquinas en triángulo; título menta con ecos en contorno que se abren a los lados (ref. 52,52 'THE POWER').",
+      "tags": [
+        "foto",
+        "texto",
+        "título",
+        "lugar"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título (1 renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BORNHOLMER STRASSE",
+        "src": "assets/media/bornholmer.jpg",
+        "sub": "PASO FRONTERIZO · BERLÍN"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.frame",
+      "data": {
+        "native_name": "pop.frame"
+      }
+    },
+    {
+      "id": "pop.duo",
+      "name": "pop.duo",
+      "label": "pop.duo",
+      "kind": "component",
+      "summary": "Dos círculos-foto enormes en los bordes que crecen, flecha gruesa al centro, '×' rosa, flechitas, rótulo de 2 renglones y línea superior con texto mínimo (ref. 54,75 'NEXT GENERATION'). Entra con esquirlas.",
+      "tags": [
+        "foto",
+        "comparación",
+        "consecuencia",
+        "multitud"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto del círculo derecho (grande).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto del círculo izquierdo (vacío = la misma).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (\\n = 2 renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto mínimo bajo la línea superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "shards",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/bornholmer.jpg",
+        "src2": "assets/media/leipzig.jpg",
+        "text": "MILES\nDE PERSONAS",
+        "kicker": "9 NOV 1989 · 23:30"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.duo",
+      "data": {
+        "native_name": "pop.duo"
+      }
+    },
+    {
+      "id": "pop.posters",
+      "name": "pop.posters",
+      "label": "pop.posters",
+      "kind": "component",
+      "summary": "Columnas verticales de foto (ref. 55,26 'NICE / POSTERS'): una columna entra barriendo desde la derecha en 2 cuadros y deriva; en `p2` aparece la 2ª columna y la cámara panea; en `p3` todo se aleja al 35 % con regla y texto mínimo debajo. Arcos grises gruesos que giran y triángulo ◄.",
+      "tags": [
+        "foto",
+        "texto",
+        "collage",
+        "lugar"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de la 1ª columna.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Palabra de la 1ª columna.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de la 2ª columna (vacío = la misma con otro encuadre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text2": {
+          "type": "string",
+          "default": "",
+          "doc": "Palabra de la 2ª columna.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto mínimo bajo la regla (fase alejada).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "p2": {
+          "type": "number",
+          "default": 0.55,
+          "doc": "Segundos hasta la 2ª columna.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "p3": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundos hasta el alejamiento (<0 = nunca).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/muro-gente.jpg",
+        "text": "BERLÍN",
+        "src2": "assets/media/mauerspecht.jpg",
+        "text2": "ESTE",
+        "caption": "LAS DOS MITADES DE UNA CIUDAD"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.posters",
+      "data": {
+        "native_name": "pop.posters"
+      }
+    },
+    {
+      "id": "pop.triangle",
+      "name": "pop.triangle",
+      "label": "pop.triangle",
+      "kind": "component",
+      "summary": "Un triángulo ◄ chico crece en 4 cuadros hasta un TRIÁNGULO grande con foto a la izquierda (ref. 56,85), junto a las columnas alejadas, la regla con texto mínimo y los arcos grises que giran.",
+      "tags": [
+        "foto",
+        "persona",
+        "transición"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto del triángulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de las columnas chicas (vacío = la misma).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Palabra en la columna chica.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto mínimo bajo la regla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tone": {
+          "type": "enum",
+          "default": "normal",
+          "doc": "Duotono del triángulo (fotos muy claras: dark).",
+          "required": false,
+          "options": [
+            "dark",
+            "normal",
+            "light",
+            "inv"
+          ],
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/schabowski.jpg",
+        "src2": "assets/media/nota.jpg",
+        "text": "PRENSA",
+        "caption": "CONFERENCIA · 18:00"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.triangle",
+      "data": {
+        "native_name": "pop.triangle"
+      }
+    },
+    {
+      "id": "pop.book",
+      "name": "pop.book",
+      "label": "pop.book",
+      "kind": "component",
+      "summary": "Libro 3D isométrico sobre menta apagada (ref. 57,4 s): tapa violeta con la foto en duotono que se desplaza y el título en renglones menta, lomo violeta, cantos rosa, sombra rosada difusa; deriva y se achica lento; en `swapAt` la tapa cambia a la marca del canal.",
+      "tags": [
+        "objeto",
+        "documento",
+        "foto",
+        "libro",
+        "historia"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de la tapa.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título de la tapa (\\n = renglones, 2–5 cortos).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto mínimo de la tapa.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "swapAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundos hasta que la tapa cambia a la marca (<0 = nunca).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mark": {
+          "type": "string",
+          "default": "",
+          "doc": "Monograma para la tapa final (vacío = gota del canal).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/nota.jpg",
+        "title": "LA NOTA\nDE SCHA-\nBOWSKI",
+        "note": "9 NOV 1989 · 18:53"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.book",
+      "data": {
+        "native_name": "pop.book"
+      }
+    },
+    {
+      "id": "pop.tiles",
+      "name": "pop.tiles",
+      "label": "pop.tiles",
+      "kind": "component",
+      "summary": "Marca menta grande sobre violeta (ref. 60,16) que corta a un MOSAICO de cuadrados violeta con la marca, filas desfasadas que se deslizan y parpadean de brillo (ref. 60,6).",
+      "tags": [
+        "marca",
+        "transición",
+        "patrón"
+      ],
+      "params": {
+        "mark": {
+          "type": "string",
+          "default": "",
+          "doc": "Monograma (vacío = gota del canal).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "solo": {
+          "type": "number",
+          "default": 0.25,
+          "doc": "Segundos de la marca sola sobre violeta antes del mosaico.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "mark": ""
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.tiles",
+      "data": {
+        "native_name": "pop.tiles"
+      }
+    },
+    {
+      "id": "pop.name",
+      "name": "pop.name",
+      "label": "pop.name",
+      "kind": "component",
+      "summary": "Texto chico centrado sobre menta (ref. 61,2 'ENVATO.COM' → nombre del canal/lugar): aparece, pasa por 3 cuadros de itálica con letras que se decodifican, se achica al final y se apaga parpadeando a gris.",
+      "tags": [
+        "marca",
+        "texto",
+        "dato",
+        "cierre"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto (1 renglón corto).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea mínima debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.045,
+          "doc": "Alto de letra (fracción del lado corto).",
+          "required": false,
+          "options": null,
+          "min": 0.02,
+          "max": 0.12
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (la transición de la referencia): cut = corte seco · glitch = bloques sobre negro · flicker = glitch + parpadeo de paleta · shards = esquirlas violeta/menta · liquid = cortina líquida violeta.",
+          "required": false,
+          "options": [
+            "cut",
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BERLÍN · 9.11.1989",
+        "sub": ""
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.name",
+      "data": {
+        "native_name": "pop.name"
+      }
+    },
+    {
+      "id": "pop.glitch",
+      "name": "pop.glitch",
+      "label": "pop.glitch",
+      "kind": "component",
+      "summary": "Glitch de transición encima de cualquier plano (capa overlay): bloques desplazados sobre negro, parpadeo de paleta o esquirlas (ref. 49,25 · 54,65). Usar con 'dur' corto (0,15–0,35 s).",
+      "tags": [
+        "transición",
+        "glitch",
+        "golpe"
+      ],
+      "params": {
+        "kind": {
+          "type": "enum",
+          "default": "glitch",
+          "doc": "Tipo (ver fx).",
+          "required": false,
+          "options": [
+            "glitch",
+            "flicker",
+            "shards",
+            "liquid"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "kind": "glitch"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.glitch",
+      "data": {
+        "native_name": "pop.glitch"
+      }
+    },
+    {
+      "id": "pop.introv1",
+      "name": "pop.introv1",
+      "label": "pop.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura (lo primero que se ve). Titular GIGANTE apilado en tiras violeta que golpea palabra por palabra: cada palabra entra APLASTADA en rosa, se rebana en bloques glitch y se asienta en menta con sacudida; la '^palabra^' va en caja menta con op-art animado (o la foto en duotono) DENTRO de las letras. En glitchAt el cuadro se rompe en bloques + parpadeo de paleta, salta la sombra rosa de las tiras y salen anillos. Fondo adaptable (bg: columns | opart | shapes | kanji | tiles | image con src | component con use/useParams); por defecto columnas de mosaicos que se deslizan.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "título",
+        "impacto",
+        "glitch"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho, corto (2–6 palabras). '\\n' = renglón; '^x^' = palabra destacada (caja menta con op-art/foto dentro de las letras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (lugar · fecha), se decodifica.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo del titular (placa menta).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.4,
+          "doc": "Segundo del primer golpe de palabra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.28,
+          "doc": "Segundos entre palabra y palabra.",
+          "required": false,
+          "options": null,
+          "min": 0.08,
+          "max": null
+        },
+        "glitchAt": {
+          "type": "number",
+          "default": 2.3,
+          "doc": "Segundo del IMPACTO: glitch de bloques + parpadeo de paleta, sombra rosa y anillos (-1 = sin impacto). Acepta '@palabra'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: columns, opart, shapes, kanji, tiles; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "columns",
+            "opart",
+            "shapes",
+            "kanji",
+            "tiles",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
+        "kicker": "Berlín · 9 nov 1989",
+        "sub": "la noche que nadie vio venir",
+        "glitchAt": 2.3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.introv1",
+      "data": {
+        "native_name": "pop.introv1"
+      }
+    },
+    {
+      "id": "pop.introv2",
+      "name": "pop.introv2",
+      "label": "pop.introv2",
+      "kind": "component",
+      "summary": "GANCHO pregunta + revelación. Una cortina líquida violeta baja y la pregunta GIGANTE se DECODIFICA letra por letra (letras al azar en rosa que se resuelven en menta, con cursor); en stampAt la respuesta golpea como CINTA menta inclinada con glitch de bloques, sombra rosa, flecha gruesa que entra parpadeando y anillos; la pregunta pierde letras un instante. Fondo adaptable (bg: opart | columns | shapes | kanji | tiles | image con src | component con use/useParams); por defecto ondas op-art del duotono.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "pregunta",
+        "revelación",
+        "cinta"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Respuesta que golpea en la cinta (vacío = sin cinta).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundo de la cinta (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundo en que empieza a decodificarse la pregunta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 18,
+          "doc": "Letras por segundo.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: columns, opart, shapes, kanji, tiles; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "columns",
+            "opart",
+            "shapes",
+            "kanji",
+            "tiles",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+        "kicker": "Berlín · 1989",
+        "stamp": "NADIE DIO LA ORDEN",
+        "stampAt": 2.4
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.introv2",
+      "data": {
+        "native_name": "pop.introv2"
+      }
+    },
+    {
+      "id": "pop.outro",
+      "name": "pop.outro",
+      "label": "pop.outro",
+      "kind": "component",
+      "summary": "Cierre del canal SIN recuadro, en lenguaje DUOTONO (bg: tiles | columns | opart | shapes | kanji | image con src | component con use/useParams; por defecto mosaico de marcas del canal que se desliza). GRACIAS POR VER que se decodifica → nombre del canal GIGANTE en tira violeta con letras que caen aplastadas en rosa y se asientan en menta → botón LIKE menta que se PRESIONA (se hunde en su sombra, se invierte y estalla en cruces) → flecha gruesa que crece parpadeando → placa rosa SUSCRÍBETE que golpea + campana que suena → apoyo en tira violeta → youtube.com/@canal. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "mosaico"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte el video.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: tiles, columns, opart, shapes, kanji; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "tiles",
+            "columns",
+            "opart",
+            "shapes",
+            "kanji",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.66,
+          "doc": "Oscurecido del fondo foto/componente (el cierre tiene mucho texto).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "DUOTONO",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo nos ayuda a seguir creando y traer más contenido.",
+        "handle": "youtube.com/@duotono"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pop&c=pop.outro",
+      "data": {
+        "native_name": "pop.outro"
+      }
+    }
+  ]
+}

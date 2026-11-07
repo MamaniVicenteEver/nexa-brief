@@ -45,3 +45,6 @@ nexa-brief-server/src/templates/sandbox
 *.pem
 *.key
 accounts.json
+
+# Shared credentials and private backups never enter the build context
+.runtime/

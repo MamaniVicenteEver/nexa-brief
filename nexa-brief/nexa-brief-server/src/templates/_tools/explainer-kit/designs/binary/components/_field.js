@@ -6,7 +6,7 @@
        points(ctx, p) → { x, y, a, s, g }   (Float32Array/Uint8Array, longitud n)
    y el campo se encarga de la transición (dispersión → reagrupación) con el
    reloj: cada cuadro es función pura de t (sin estado acumulado) → buscable.
-   Utilidades exportadas en Kit.binary: sampleImage, sampleShape, sampleText,
+   Utilidades exportadas en Kit.binary: sampleImage, samplePortrait, sampleShape, sampleText,
    glyphText, label, ring… para que los componentes no repitan código.
    ========================================================================== */
 (function () {
@@ -80,8 +80,8 @@
       const prev = prevList[prevList.length - 1] || null;
       const prevVisible = prev && curMain && (curMain === prev || prev.t1 >= curMain.t0 - 0.01) ? prev : null;
 
-      const A = cur ? pointsFor(ctx, F, cur) : null;
-      const P = prevVisible ? pointsFor(ctx, F, prevVisible) : null;
+      const A = cur ? pointsFor(ctx, F, cur, t) : null;
+      const P = prevVisible ? pointsFor(ctx, F, prevVisible, t) : null;
       const morph = cur ? (cur.params?.morph ?? C.binary?.morph ?? 1.1) : 0.9;
       const p = curMain ? clamp((t - curMain.t0) / morph) : 1;
       const tfA = cur ? transformFor(cur, t - cur.t0) : null;
@@ -95,7 +95,16 @@
     },
   });
 
-  function pointsFor(ctx, F, b) {
+  function pointsFor(ctx, F, b, t) {
+    const def = K.registry.get(b.use);
+    if (def.dynamicPoints && b.params?.video) {
+      const params = K.resolveParams(def, b.params, ctx.C);
+      try {
+        const pts = def.points({ ...ctx, beat: b, rng: rng(hash(b.i + b.use)) }, params, Math.max(0, t - b.t0));
+        if (pts && pts.n) pts.params = params;
+        return pts && pts.n ? pts : { n: 0 };
+      } catch (e) { console.error("[binary] points", b.use, e); return { n: 0 }; }
+    }
     const key = b.i + ":" + ctx.stage.W + "x" + ctx.stage.H;
     if (!F.cache.has(key)) {
       const def = K.registry.get(b.use), params = K.resolveParams(def, b.params, ctx.C);
@@ -213,6 +222,52 @@
     }
     return out;
   }
+  /**
+   * Retrato en glifos con el tratamiento estándar de las miniaturas (binary.introv2 y cualquier
+   * componente nuevo que muestre una persona). La foto se amplía sobre su foco para que el rostro
+   * llene la caja, se muestrea con contraste alto y SIN la viñeta de sampleImage (que apaga el rostro
+   * entero) y se funde en el negro con un óvalo que solo toca el borde. Si el campo no alcanza
+   * (o.max = partículas libres), se quedan las celdas más luminosas: el rostro conserva el detalle.
+   *   o: zoom (1 = entera), focusX/focusY (0–1), cell, contrast, gamma, threshold, max
+   */
+  const portraitCrops = new Map();
+  function portraitCrop(img, zoom, fx, fy) {
+    if (zoom <= 1) return img;
+    const key = `${img.src || img.width + "x" + img.height}|${zoom}|${fx}|${fy}`;
+    if (img.tagName === "VIDEO") {
+      const w = img.width / zoom, h = img.height / zoom;
+      const x = clamp(img.width * fx - w / 2, 0, img.width - w), y = clamp(img.height * fy - h / 2, 0, img.height - h);
+      const cv = document.createElement("canvas"); cv.width = Math.round(w); cv.height = Math.round(h);
+      cv.getContext("2d").drawImage(img, x, y, w, h, 0, 0, cv.width, cv.height);
+      return cv;
+    }
+    if (!portraitCrops.has(key)) {
+      const w = img.width / zoom, h = img.height / zoom;
+      const x = clamp(img.width * fx - w / 2, 0, img.width - w), y = clamp(img.height * fy - h / 2, 0, img.height - h);
+      const cv = document.createElement("canvas"); cv.width = Math.round(w); cv.height = Math.round(h);
+      cv.getContext("2d").drawImage(img, x, y, w, h, 0, 0, cv.width, cv.height);
+      portraitCrops.set(key, cv);
+    }
+    return portraitCrops.get(key);
+  }
+  function samplePortrait(img, box, o = {}) {
+    if (!img) return [];
+    const src = portraitCrop(img, o.zoom ?? 1.2, o.focusX ?? 0.5, o.focusY ?? 0.5);
+    /* rectángulo real de la foto en la caja (encajada sin recortar, como la dibuja sampleImage) */
+    const ar = src.width / src.height, fw = Math.min(box.w, box.h * ar), fh = fw / ar;
+    const cx = box.x + box.w / 2, cy = box.y + box.h / 2, inner = 0.62;
+    const pts = [];
+    for (const q of sampleImage(src, box, {
+      cell: o.cell, contrast: o.contrast ?? 1.9, brightness: 1.1, gamma: o.gamma ?? 1,
+      threshold: o.threshold ?? 0.14, keyBackground: true, autoLevels: true, vignette: false, seed: o.seed,
+    })) {
+      const r = Math.hypot((q.x - cx) / (fw / 2), (q.y - cy) / (fh / 2)), k = clamp((1 - r) / (1 - inner));
+      const a = q.a * k * k * (3 - 2 * k);
+      if (a > 0.04) pts.push({ ...q, a });
+    }
+    if (o.max == null || pts.length <= o.max) return pts;
+    return pts.sort((p1, p2) => p2.a - p1.a).slice(0, Math.max(0, o.max));
+  }
   /** rasteriza una forma (callback de dibujo en canvas) y la llena de glifos */
   function sampleShape(draw, box, o = {}) {
     const res = o.res ?? 220, sc = res / Math.max(box.w, box.h);
@@ -315,5 +370,5 @@
     G.beginPath(); G.arc(cx, cy, r, o.a0 ?? 0, o.a1 ?? Math.PI * 2); G.stroke(); G.restore();
   }
 
-  K.binary = { pack, sampleImage, sampleShape, sampleText, textLayout, glyphText, drawPts, tag, mono, ring, ALPHA_LEVELS, SIZES, get textScale() { return TEXT; } };
+  K.binary = { pack, sampleImage, samplePortrait, sampleShape, sampleText, textLayout, glyphText, drawPts, tag, mono, ring, ALPHA_LEVELS, SIZES, get textScale() { return TEXT; } };
 })();

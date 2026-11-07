@@ -1,0 +1,163 @@
+{
+  "format": "atlas-v1",
+  "duration": 42,
+  "lang": "es",
+  "planoLook": "tactico",
+  "intro": false,
+  "outro": false,
+  "captions": {
+    "enabled": false
+  },
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "motionBlur": false,
+  "defs": {
+    "palette": {
+      "text": "#f4f1da",
+      "dark": "#081e2c",
+      "accent": "#f5d86f",
+      "success": "#399e58",
+      "cyan": "#5be1e8",
+      "danger": "#ee695d"
+    },
+    "fonts": {
+      "display": "AtlasDisplay"
+    }
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        52.5,
+        29
+      ],
+      "zoom": 5.1
+    }
+  ],
+  "places": {
+    "Ormuz": [
+      56.4,
+      26.5
+    ],
+    "Bagdad": [
+      44.36,
+      33.31
+    ],
+    "Teheran": [
+      51.39,
+      35.69
+    ],
+    "Mascate": [
+      58.41,
+      23.59
+    ]
+  },
+  "layers": [],
+  "items": [
+    {
+      "type": "label.callout",
+      "at": [
+        53,
+        27
+      ],
+      "text": "Unidad de demostración",
+      "offset": [
+        100,
+        -120
+      ],
+      "t": 0,
+      "dur": 6,
+      "out": 5.5,
+      "id": "gallery-labels-0"
+    },
+    {
+      "type": "label.neon",
+      "at": [
+        54,
+        32
+      ],
+      "text": "IRÁN",
+      "color": "cyan",
+      "size": 78,
+      "t": 6,
+      "dur": 6,
+      "out": 11.5,
+      "id": "gallery-labels-1"
+    },
+    {
+      "type": "label.chip",
+      "at": [
+        56.4,
+        26.5
+      ],
+      "text": "ESTRECHO DE ORMUZ",
+      "t": 12,
+      "dur": 6,
+      "out": 17.5,
+      "id": "gallery-labels-2"
+    },
+    {
+      "type": "label.figure",
+      "screen": [
+        0.5,
+        0.48
+      ],
+      "value": 4,
+      "unit": "países",
+      "source": "Los cuatro países de scene-territorios.json; dato de la demostración",
+      "t": 18,
+      "dur": 6,
+      "out": 23.5,
+      "id": "gallery-labels-3"
+    },
+    {
+      "type": "text.year",
+      "screen": [
+        0.5,
+        0.24
+      ],
+      "text": "1987",
+      "size": 180,
+      "t": 24,
+      "dur": 6,
+      "out": 29.5,
+      "note": "Año ilustrativo; no representa un cambio territorial.",
+      "id": "gallery-labels-4"
+    },
+    {
+      "type": "badge.count",
+      "screen": [
+        0.5,
+        0.35
+      ],
+      "value": 2,
+      "states": [
+        {
+          "at": 32,
+          "state": "count",
+          "value": 3,
+          "dur": 0.8
+        }
+      ],
+      "t": 30,
+      "dur": 6,
+      "out": 35.5,
+      "note": "Contador sintético para demostrar la animación.",
+      "id": "gallery-labels-5"
+    },
+    {
+      "type": "icon.badge",
+      "screen": [
+        0.5,
+        0.4
+      ],
+      "icon": "ship",
+      "t": 36,
+      "dur": 6,
+      "out": 41.5,
+      "id": "gallery-labels-6"
+    }
+  ]
+}

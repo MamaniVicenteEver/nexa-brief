@@ -1,0 +1,70 @@
+{
+  "name": "label.unit",
+  "family": "label",
+  "description": "Nombre con el mismo helper que naval (22 px), air (21 px) y unidades (24 px). Úsala para identificar lugares y objetos.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "screen": {
+      "type": "array",
+      "default": [
+        0.5,
+        0.45
+      ],
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    },
+    "text": {
+      "type": "string",
+      "default": "USS Samuel B. Roberts",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "size": {
+      "type": "number",
+      "default": 22,
+      "range": null,
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "#e6e6e6",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "outlineColor": {
+      "type": "string",
+      "default": "#000000",
+      "range": null,
+      "description": "Color del contorno."
+    },
+    "font": {
+      "type": "string",
+      "default": "AtlasDisplay, sans-serif",
+      "range": null,
+      "description": "Familia tipográfica declarada para el texto."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-label-unit",
+    "t": 0,
+    "dur": 6,
+    "out": 5.5,
+    "screen": [
+      0.5,
+      0.45
+    ],
+    "type": "label.unit",
+    "text": "USS Samuel B. Roberts"
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/label.unit.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

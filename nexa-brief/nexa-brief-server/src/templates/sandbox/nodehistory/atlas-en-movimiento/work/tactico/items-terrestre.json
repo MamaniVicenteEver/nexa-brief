@@ -1,0 +1,560 @@
+{
+  "format": "atlas-v1",
+  "duration": 161,
+  "lang": "es",
+  "planoLook": "tactico",
+  "defs": {
+    "fonts": {
+      "label": "Arial, sans-serif"
+    },
+    "palette": {
+      "background": "#081e2c",
+      "white": "#e9e3ba",
+      "gold": "#f6edb4",
+      "red": "#d1495b",
+      "green": "#399e58",
+      "cyan": "#66c6e3",
+      "steel": "#82949c",
+      "smoke": "#33424b",
+      "orange": "#e69b45"
+    }
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        48.45,
+        31.2
+      ],
+      "zoom": 8
+    }
+  ],
+  "items": [
+    {
+      "id": "terrestre-gallery-0",
+      "type": "ground.tank",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 0,
+      "dur": 8,
+      "fade": 0.6,
+      "flag": "IQ",
+      "variant": "main",
+      "path": {
+        "via": [
+          [
+            48.3,
+            31
+          ],
+          [
+            48.42,
+            31.13
+          ],
+          [
+            48.65,
+            31.22
+          ]
+        ],
+        "t": 0.6,
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "fire": [
+        2.2,
+        4.4
+      ],
+      "label": "",
+      "seed": 17
+    },
+    {
+      "id": "terrestre-gallery-1",
+      "type": "ground.apc",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 10,
+      "dur": 8,
+      "fade": 0.6,
+      "flag": "IQ",
+      "variant": "normal",
+      "path": {
+        "via": [
+          [
+            48.3,
+            31
+          ],
+          [
+            48.42,
+            31.13
+          ],
+          [
+            48.65,
+            31.22
+          ]
+        ],
+        "t": 10.6,
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "label": "",
+      "seed": 17
+    },
+    {
+      "id": "terrestre-gallery-2",
+      "type": "ground.truck",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 20,
+      "dur": 8,
+      "fade": 0.6,
+      "flag": "IQ",
+      "variant": "cargo",
+      "path": {
+        "via": [
+          [
+            48.3,
+            31
+          ],
+          [
+            48.42,
+            31.13
+          ],
+          [
+            48.65,
+            31.22
+          ]
+        ],
+        "t": 20.6,
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "label": "",
+      "seed": 17
+    },
+    {
+      "id": "terrestre-gallery-3",
+      "type": "ground.jeep",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 30,
+      "dur": 8,
+      "fade": 0.6,
+      "flag": "IQ",
+      "variant": "normal",
+      "path": {
+        "via": [
+          [
+            48.3,
+            31
+          ],
+          [
+            48.42,
+            31.13
+          ],
+          [
+            48.65,
+            31.22
+          ]
+        ],
+        "t": 30.6,
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "label": "",
+      "seed": 17
+    },
+    {
+      "id": "terrestre-gallery-4",
+      "type": "ground.artillery",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 40,
+      "dur": 8,
+      "fade": 0.6,
+      "flag": "IQ",
+      "variant": "towed",
+      "path": {
+        "via": [
+          [
+            48.3,
+            31
+          ],
+          [
+            48.42,
+            31.13
+          ],
+          [
+            48.65,
+            31.22
+          ]
+        ],
+        "t": 40.6,
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "fire": [
+        42.2,
+        44.4
+      ],
+      "label": "",
+      "seed": 17
+    },
+    {
+      "id": "terrestre-gallery-5",
+      "type": "ground.launcher",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 50,
+      "dur": 8,
+      "fade": 0.6,
+      "flag": "IQ",
+      "variant": "normal",
+      "path": {
+        "via": [
+          [
+            48.3,
+            31
+          ],
+          [
+            48.42,
+            31.13
+          ],
+          [
+            48.65,
+            31.22
+          ]
+        ],
+        "t": 50.6,
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "fire": [
+        52.2,
+        54.4
+      ],
+      "to": [
+        49.02,
+        31.55
+      ],
+      "label": "",
+      "seed": 17
+    },
+    {
+      "id": "terrestre-gallery-6",
+      "type": "ground.ambulance",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 60,
+      "dur": 8,
+      "fade": 0.6,
+      "flag": "IQ",
+      "variant": "cross",
+      "path": {
+        "via": [
+          [
+            48.3,
+            31
+          ],
+          [
+            48.42,
+            31.13
+          ],
+          [
+            48.65,
+            31.22
+          ]
+        ],
+        "t": 60.6,
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "label": "",
+      "seed": 17
+    },
+    {
+      "id": "terrestre-gallery-7",
+      "type": "ground.convoy",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 70,
+      "dur": 8,
+      "fade": 0.6,
+      "flag": "IQ",
+      "path": {
+        "via": [
+          [
+            48.3,
+            31
+          ],
+          [
+            48.42,
+            31.13
+          ],
+          [
+            48.65,
+            31.22
+          ]
+        ],
+        "t": 70.6,
+        "dur": 6.5,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "count": 6,
+      "length": 92,
+      "spacing": 98,
+      "label": "",
+      "seed": 17
+    },
+    {
+      "id": "terrestre-gallery-8",
+      "type": "fx.dust",
+      "at": [
+        48.4,
+        31.1
+      ],
+      "t": 80,
+      "dur": 8,
+      "length": 210,
+      "particles": 36,
+      "seed": 4,
+      "path": {
+        "via": [
+          [
+            48.2,
+            31
+          ],
+          [
+            48.4,
+            31.1
+          ],
+          [
+            48.6,
+            31.3
+          ]
+        ],
+        "t": 80.6,
+        "dur": 7,
+        "curve": "smooth"
+      },
+      "fade": 0.6
+    },
+    {
+      "id": "terrestre-gallery-9",
+      "type": "army.advance",
+      "at": [
+        48.45,
+        31.2
+      ],
+      "flag": "IQ",
+      "t": 90,
+      "dur": 8,
+      "fade": 0.6,
+      "count": 24,
+      "columns": 6,
+      "radius": 25,
+      "spacing": 59,
+      "wave": 5,
+      "label": "EJÉRCITO",
+      "date": "",
+      "path": {
+        "via": [
+          [
+            48.3,
+            30.98
+          ],
+          [
+            48.48,
+            31.18
+          ],
+          [
+            48.6,
+            31.38
+          ]
+        ],
+        "t": 90.6,
+        "dur": 7,
+        "curve": "smooth",
+        "ease": "inOut"
+      }
+    },
+    {
+      "id": "terrestre-gallery-10",
+      "type": "army.retreat",
+      "at": [
+        48.45,
+        31.2
+      ],
+      "flag": "IQ",
+      "t": 100,
+      "dur": 8,
+      "fade": 0.6,
+      "count": 24,
+      "columns": 6,
+      "radius": 25,
+      "spacing": 59,
+      "wave": 5,
+      "label": "EJÉRCITO",
+      "date": "",
+      "path": {
+        "via": [
+          [
+            48.6,
+            31.38
+          ],
+          [
+            48.48,
+            31.18
+          ],
+          [
+            48.3,
+            30.98
+          ]
+        ],
+        "t": 100.6,
+        "dur": 7,
+        "curve": "smooth",
+        "ease": "inOut"
+      }
+    },
+    {
+      "id": "terrestre-gallery-11",
+      "type": "army.hold",
+      "at": [
+        48.45,
+        31.2
+      ],
+      "flag": "IQ",
+      "t": 110,
+      "dur": 8,
+      "fade": 0.6,
+      "count": 24,
+      "columns": 6,
+      "radius": 25,
+      "spacing": 59,
+      "wave": 5,
+      "label": "LÍNEA DEFENSIVA",
+      "date": ""
+    },
+    {
+      "id": "terrestre-gallery-12",
+      "type": "army.encircle",
+      "at": [
+        48.45,
+        31.2
+      ],
+      "flag": "IQ",
+      "t": 120,
+      "dur": 8,
+      "fade": 0.6,
+      "count": 16,
+      "columns": 4,
+      "radius": 25,
+      "spacing": 59,
+      "wave": 5,
+      "label": "EJÉRCITO",
+      "date": "",
+      "closeDur": 5
+    },
+    {
+      "id": "terrestre-gallery-13",
+      "type": "army.clash",
+      "at": [
+        48.45,
+        31.2
+      ],
+      "flag": "IQ",
+      "t": 130,
+      "dur": 8,
+      "fade": 0.6,
+      "count": 24,
+      "columns": 6,
+      "radius": 25,
+      "spacing": 59,
+      "wave": 5,
+      "label": "CHOQUE DE FRENTES",
+      "date": "",
+      "opponentFlag": "IR"
+    },
+    {
+      "id": "terrestre-gallery-14",
+      "type": "army.banner",
+      "at": [
+        48.45,
+        31.2
+      ],
+      "flag": "IQ",
+      "t": 140,
+      "dur": 8,
+      "fade": 0.6,
+      "count": 24,
+      "columns": 6,
+      "radius": 25,
+      "spacing": 59,
+      "wave": 5,
+      "label": "EJÉRCITO",
+      "date": "SEPTIEMBRE · 1980"
+    },
+    {
+      "id": "terrestre-gallery-15",
+      "type": "army.supply",
+      "at": [
+        48.45,
+        31.2
+      ],
+      "flag": "IQ",
+      "t": 150,
+      "dur": 8,
+      "fade": 0.6,
+      "count": 24,
+      "columns": 6,
+      "radius": 25,
+      "spacing": 59,
+      "wave": 5,
+      "label": "ABASTECIMIENTO",
+      "date": "",
+      "path": {
+        "via": [
+          [
+            48.3,
+            30.98
+          ],
+          [
+            48.48,
+            31.18
+          ],
+          [
+            48.6,
+            31.38
+          ]
+        ],
+        "t": 150.6,
+        "dur": 7,
+        "curve": "smooth",
+        "ease": "inOut"
+      }
+    }
+  ]
+}

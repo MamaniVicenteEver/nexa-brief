@@ -1,0 +1,61 @@
+{
+  "estado": "borrador_no_ejecutable",
+  "schema_version": 1,
+  "descripcion": "Política visual de ejemplo; no son estilos de runtime ni asignaciones de categorías.",
+  "origen": "Derivar tokens y marca confirmada de diseño y manifiesto de identidad, con hash y versión.",
+  "paleta_alerta": {
+    "rojo": "#B74A42",
+    "amarillo": "#D3B35A"
+  },
+  "elementos_permitidos": [
+    "cinta ALERTA o DATO",
+    "una palabra marcada",
+    "subrayado",
+    "flecha"
+  ],
+  "fondo_completo_permitido": false,
+  "superficie_maxima_fraccion": 0.2,
+  "superficie_definicion": "Unión de máscaras de elementos de alerta / área de lámina; excluir foto y colores propios de marca.",
+  "contraste_texto_normal_minimo": 4.5,
+  "niveles": {
+    "basico": {
+      "area_max": 0.02,
+      "opacidad_min": 0.55,
+      "opacidad_max": 0.65
+    },
+    "medio": {
+      "area_max": 0.05,
+      "opacidad_min": 0.6,
+      "opacidad_max": 0.7
+    },
+    "alto": {
+      "area_max": 0.1,
+      "opacidad_min": 0.65,
+      "opacidad_max": 0.8
+    },
+    "negro": {
+      "area_max": 0.2,
+      "opacidad_min": 0.75,
+      "opacidad_max": 0.9,
+      "cinta_mas_visible": true
+    }
+  },
+  "ejemplo_identidad_derivada": {
+    "category_id": "node_tech",
+    "design_id": "rough",
+    "fuente": "src/templates/_tools/explainer-kit/designs/rough/design.json",
+    "paleta": {
+      "bg": "#0a0a0b",
+      "bg2": "#121314",
+      "ink": "#ededea",
+      "muted": "#90918d",
+      "accent": "#c8ff2e",
+      "accentInk": "#10120b"
+    },
+    "headline": "Inter",
+    "body": "Inter",
+    "mono": "JetBrains Mono",
+    "fuente_roles_imagen": "src/skills/image_posts/styles/node_tech.json",
+    "marca_por_plataforma": "pendiente de confirmar; no copiar handle de video automáticamente"
+  }
+}

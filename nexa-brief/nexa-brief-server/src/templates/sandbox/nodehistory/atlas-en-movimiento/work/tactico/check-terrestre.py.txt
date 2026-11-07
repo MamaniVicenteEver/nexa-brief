@@ -1,0 +1,206 @@
+"""QA secuencial; ejecutar la copia de /tmp para no activar uvicorn --reload."""
+import sys
+sys.dont_write_bytecode = True
+import argparse, base64, fcntl, functools, hashlib, importlib.util, io, json, socketserver, threading
+from pathlib import Path
+from PIL import Image, ImageDraw
+from playwright.sync_api import sync_playwright
+
+ROOT = Path.cwd()
+OUT = ROOT / 'work/tactico'
+FLAGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--renderer-process-limit=1', '--num-raster-threads=1']
+spec = importlib.util.spec_from_file_location('smoke', ROOT.parent / '_atlas/test/smoke.py')
+smoke = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(smoke)
+class Handler(smoke.Handler):
+    def log_message(self, *args): pass
+class Server(socketserver.ThreadingTCPServer):
+    daemon_threads = True
+    allow_reuse_address = True
+parser = argparse.ArgumentParser()
+parser.add_argument('--stage', choices=['quick', 'captures', 'motion', 'perf', 'gallery', 'focused', 'verify'], required=True)
+parser.add_argument('--only', default='', help='IDs de casos separados por coma; conserva otros casos ya comprobados.')
+args = parser.parse_args()
+report = {'stage': args.stage, 'viewport': [1080, 1920], 'flags': FLAGS, 'errors': [], 'failedRequests': []}
+previous = OUT / f'terrestre-{args.stage}-qa.json'
+if args.only and previous.exists():
+    report = json.loads(previous.read_text())
+    report.pop('complete', None)
+def save():
+    (OUT / f'terrestre-{args.stage}-qa.json').write_text(json.dumps(report, indent=2) + '\n')
+lock = open('/tmp/atlas-tactico-chromium.lock', 'w')
+print('Esperando turno único de Chromium', flush=True)
+fcntl.flock(lock, fcntl.LOCK_EX)
+server = Server(('127.0.0.1', 0), functools.partial(Handler, directory=str(ROOT.parents[2])))
+threading.Thread(target=server.serve_forever, daemon=True).start()
+url = f'http://127.0.0.1:{server.server_address[1]}/sandbox/nodehistory/atlas-en-movimiento/work/tactico/'
+shots = OUT / 'shots/terrestre'
+shots.mkdir(parents=True, exist_ok=True)
+(OUT / 'sheets').mkdir(exist_ok=True)
+def crop(raw, bounds):
+    full = Image.open(io.BytesIO(raw)).convert('RGB')
+    cx, cy = (bounds['left'] + bounds['right']) / 2, (bounds['top'] + bounds['bottom']) / 2
+    left, top = max(0, min(540, round(cx - 270))), max(0, min(1380, round(cy - 270)))
+    return full, full.crop((left, top, left + 540, top + 540)), [left, top, 540, 540]
+try:
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True, args=FLAGS)
+        try:
+            report['browser'] = browser.version
+            page = browser.new_page(viewport={'width': 1080, 'height': 1920}, device_scale_factor=1)
+            page.set_default_timeout(120000)
+            page.on('pageerror', lambda e: report['errors'].append(str(e)))
+            page.on('requestfailed', lambda r: report['failedRequests'].append(r.url))
+            page.route('**/*', lambda r: r.continue_() if r.request.url.startswith(('http://127.0.0.1:', 'data:', 'blob:')) else r.abort())
+            page.goto(url + 'terrestre.new.html?headless=1', timeout=120000)
+            page.wait_for_function('window.__terrestreReady')
+            page.evaluate('__terrestreReady')
+            capture = lambda: base64.b64decode(page.evaluate("document.querySelector('canvas').toDataURL('image/png').split(',')[1]"))
+            cases = json.loads((OUT / 'cases-terrestre.json').read_text())['cases']
+            if args.stage == 'verify':
+                baseline = {c['id']: c for c in json.loads((OUT / 'terrestre-captures-qa.json').read_text())['cases']}
+                report['cases'] = []
+                report['changedCases'] = []
+                for case in cases:
+                    page.evaluate('scene => __terrestre.setup(scene)', case['scene'])
+                    hashes = []
+                    for t in case['times']:
+                        page.evaluate('({t, label}) => __terrestre.draw(t, {label})', {'t': t, 'label': case['id']})
+                        hashes.append(page.evaluate('__terrestre.hash()'))
+                    equal = hashes == [f['hash'] for f in baseline[case['id']]['frames']]
+                    report['cases'].append({'id': case['id'], 'identicalToCaptures': equal, 'hashes': hashes})
+                    if not equal: report['changedCases'].append(case['id'])
+                    save()
+                    print(case['id'] + ': igual=' + str(equal), flush=True)
+            if args.stage == 'focused':
+                report['benchmark'] = page.evaluate("__terrestre.benchmark('army.advance', 1, 40)")
+                report['probes'] = page.evaluate('__terrestre.probes()')
+                assert report['probes']['spriteDraws'] == 3
+                assert report['probes']['ambulanceBeaconsAnimateWithSprite']
+                assert report['probes']['spriteSeekStable']
+                print(json.dumps(report), flush=True)
+            if args.stage in ['quick', 'captures']:
+                chosen = cases if args.stage == 'captures' else [c for c in cases if c['id'] in ['ground-tank', 'ground-artillery', 'ground-convoy', 'army-advance', 'army-encircle', 'army-clash']]
+                if args.only: chosen = [c for c in chosen if c['id'] in args.only.split(',')]
+                rows = []
+                if not args.only: report['cases'] = []
+                for case in chosen:
+                    resources = page.evaluate('scene => __terrestre.setup(scene)', case['scene'])
+                    times = case['times'] if args.stage == 'captures' else [3.3]
+                    row = Image.new('RGB', (810 if args.stage == 'captures' else 540, 300 if args.stage == 'captures' else 570), '#081e2c')
+                    dr = ImageDraw.Draw(row)
+                    dr.text((10, 6), case['id'], fill='#e9e3ba')
+                    hashes, frames = [], []
+                    for index, t in enumerate(times):
+                        page.evaluate('({t, label}) => __terrestre.draw(t, {label})', {'t': t, 'label': case['id']})
+                        raw = capture()
+                        h = page.evaluate('__terrestre.hash()')
+                        bounds = page.evaluate('t => __terrestre.bounds(t)', t)
+                        full, subject, region = crop(raw, bounds)
+                        suffix = f'{case["id"]}-{index}' if args.stage == 'captures' else f'terrestre-quick-{case["id"]}'
+                        full.save(shots / f'{suffix}-full.png')
+                        subject.save(shots / f'{suffix}.png')
+                        im = subject.copy()
+                        if args.stage == 'captures': im.thumbnail((270, 270))
+                        row.paste(im, (index * 270 if args.stage == 'captures' else 0, 30))
+                        hashes.append(h)
+                        frames.append({'time': t, 'hash': h, 'bounds': bounds, 'crop': region, 'full': f'shots/terrestre/{suffix}-full.png', 'subject': f'shots/terrestre/{suffix}.png'})
+                    reverse = []
+                    for t in reversed(times):
+                        page.evaluate('({t, label}) => __terrestre.draw(t, {label})', {'t': t, 'label': case['id']})
+                        reverse.append(page.evaluate('__terrestre.hash()'))
+                    deterministic = hashes == list(reversed(reverse))
+                    report['cases'] = [c for c in report['cases'] if c['id'] != case['id']]
+                    report['cases'].append({'id': case['id'], 'frames': frames, 'deterministic': deterministic, 'resources': resources})
+                    rows.append(row)
+                    save()
+                    print(f'{case["id"]}: determinista={deterministic}', flush=True)
+                if args.only:
+                    rows = []
+                    for case in cases:
+                        if not any(c['id'] == case['id'] for c in report['cases']): continue
+                        row = Image.new('RGB', (810, 300), '#081e2c')
+                        ImageDraw.Draw(row).text((10, 6), case['id'], fill='#e9e3ba')
+                        for j in range(3):
+                            im = Image.open(shots / f'{case["id"]}-{j}.png').convert('RGB')
+                            im.thumbnail((270, 270))
+                            row.paste(im, (j * 270, 30))
+                        rows.append(row)
+                columns = 2 if args.stage == 'captures' else 3
+                sheet = Image.new('RGB', (rows[0].width * columns, ((len(rows) + columns - 1) // columns) * rows[0].height), '#081e2c')
+                for i, row in enumerate(rows): sheet.paste(row, ((i % columns) * row.width, (i // columns) * row.height))
+                sheet.save(OUT / 'sheets' / ('terrestre.jpg' if args.stage == 'captures' else 'terrestre-quick.jpg'), quality=93)
+            if args.stage == 'motion':
+                frames = []
+                report['tracks'] = []
+                for case_id in ['army-advance-40', 'ground-convoy']:
+                    case = next(c for c in cases if c['id'] == case_id)
+                    source = case['scene']
+                    # Follow the route center with the camera, retaining native vehicle/token sizes.
+                    source['camera'] = [{'t': 0, 'center': [48.4, 31.1], 'zoom': 8}, {'t': .5, 'follow': source['items'][0]['id'], 'dur': 7, 'zoom': 8}]
+                    resources = page.evaluate('scene => __terrestre.setup(scene)', source)
+                    hashes, subject_hashes = [], []
+                    for i in range(40):
+                        t = 1.5 + i / 10
+                        page.evaluate('({t, label}) => __terrestre.draw(t, {label})', {'t': t, 'label': case_id + ' / 10 FPS'})
+                        raw = capture()
+                        hashes.append(page.evaluate('__terrestre.hash()'))
+                        bounds = page.evaluate('t => __terrestre.bounds(t)', t)
+                        full, subject, region = crop(raw, bounds)
+                        subject_hashes.append(hashlib.sha256(subject.tobytes()).hexdigest())
+                        subject.save(shots / f'terrestre-motion-{case_id}-{i:02d}.png')
+                        subject.thumbnail((180, 180))
+                        tile = Image.new('RGB', (180, 204), '#081e2c')
+                        ImageDraw.Draw(tile).text((5, 5), f'{case_id} / {t:.1f}s', fill='#e9e3ba')
+                        tile.paste(subject, (0, 24))
+                        frames.append(tile)
+                    report['tracks'].append({'id': case_id, 'fps': 10, 'start': 1.5, 'end': 5.4, 'frames': 40, 'uniqueFrames': len(set(hashes)), 'uniqueSubjectFrames': len(set(subject_hashes)), 'hashes': hashes, 'subjectHashes': subject_hashes, 'resources': resources})
+                    save()
+                    print('Tira completa: ' + case_id, flush=True)
+                sheet = Image.new('RGB', (1800, 8 * 204), '#081e2c')
+                for i, frame in enumerate(frames): sheet.paste(frame, ((i % 10) * 180, (i // 10) * 204))
+                sheet.save(OUT / 'sheets/army-tira-10fps.jpg', quality=94)
+            if args.stage == 'perf':
+                report['benchmarks'] = []
+                tasks = [('army.advance', 1, 40), ('ground', 20, None), ('army', 20, None)]
+                tasks += [(c['type'], 20, None) for c in cases[:16] if c['type'] not in ['fx.dust']]
+                for kind, instances, tokens in tasks:
+                    result = page.evaluate('({kind, instances, tokens}) => __terrestre.benchmark(kind, instances, tokens)', {'kind': kind, 'instances': instances, 'tokens': tokens})
+                    report['benchmarks'].append(result)
+                    save()
+                    print(json.dumps(result), flush=True)
+            if args.stage == 'gallery':
+                report['gallery'] = []
+                for items, t in [('items-terrestre.json', 93.3), ('scene-terrestre.json', 3.3)]:
+                    page.goto(url + f'demo.new.html?items={items}&headless=1&t={t}', timeout=120000)
+                    page.wait_for_function('window.__tacticoContext?.tactico')
+                    page.evaluate('async t => {await __atlas.ready;await __promo.seek(t)}', t)
+                    page.screenshot(path=str(shots / f'terrestre-gallery-{items[:-5]}.png'))
+                    report['gallery'].append({'items': items, 'time': t, 'missing': page.evaluate('__tacticoContext.tactico.missing()'), 'missingTiles': page.evaluate('__atlas.missingTiles()')})
+                    if items == 'items-terrestre.json':
+                        checks = []
+                        for index in range(16):
+                            stamp = index * 10 + 3.3
+                            page.evaluate('async t => {await __promo.seek(t)}', stamp)
+                            checks.append({'time': stamp, 'type': page.evaluate('i => __tacticoContext.scene.items[i].type', index), 'key': page.evaluate('t => __tacticoContext.tactico.key(t)', stamp)})
+                        report['allGalleryComponents'] = checks
+                    save()
+                    print('Galería: ' + items, flush=True)
+                page.goto(url + 'terrestre.new.html?case=army-advance-40', timeout=120000)
+                page.wait_for_function('window.__terrestreReady')
+                page.evaluate('__terrestreReady')
+                page.locator('label').filter(has_text='count').locator('input').evaluate("input => {input.value = '8';input.dispatchEvent(new Event('change'));}")
+                page.wait_for_timeout(300)
+                report['interactiveCount'] = page.evaluate('__terrestre.context.scene.items[0].count')
+                assert report['interactiveCount'] == 8
+            report['complete'] = True
+            save()
+            assert not report['errors'], report['errors']
+            assert all(c.get('deterministic', True) for c in report.get('cases', [])), 'Seek no determinista'
+        finally:
+            browser.close()
+finally:
+    server.shutdown()
+    server.server_close()
+    lock.close()
+print('Etapa completa: ' + args.stage, flush=True)

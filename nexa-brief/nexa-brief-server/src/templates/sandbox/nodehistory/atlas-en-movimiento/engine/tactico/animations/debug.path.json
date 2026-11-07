@@ -1,0 +1,61 @@
+{
+  "name": "debug.path",
+  "family": "debug",
+  "description": "Trayectoria Mercator con cabeza y tramo recorrido; línea, arco o Catmull-Rom. Úsala para comprobar posiciones, trayectorias y rótulos.",
+  "duration": 9.35,
+  "loop": true,
+  "layer": 15,
+  "states": [
+    "normal",
+    "hit"
+  ],
+  "params": {
+    "width": {
+      "type": "number",
+      "default": 4,
+      "min": 0.1,
+      "max": 30,
+      "range": {
+        "min": 0.1,
+        "max": 30
+      },
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "core-path",
+    "t": 0,
+    "type": "debug.path",
+    "dur": 9,
+    "path": {
+      "via": [
+        [
+          56.25,
+          26.65
+        ],
+        [
+          56.45,
+          26.5
+        ],
+        [
+          56.75,
+          26.35
+        ]
+      ],
+      "t": 1,
+      "dur": 6,
+      "curve": "smooth",
+      "ease": "inOut"
+    }
+  },
+  "usedBy": [
+    "work/tactico/scene-core.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/debug.path.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

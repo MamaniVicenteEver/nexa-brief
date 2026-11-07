@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "title": "La expansión del Imperio japonés · 2 min",
+  "summary": "Prueba de 2 minutos (1868–1942) en estilo imperio: apertura con la bandera de Japón en video fundida con el atlas y un solo plano de mapa continuo donde flechas gruesas salen del sol de Japón y llegan, en la palabra exacta de la voz, a cada destino; el territorio se marca en carmesí y aparece su bandera con el año. Incluye 4 clips de 8 a 16 segundos, 2 fotogramas de 6 a 12 segundos y efectos SFXMint de fondo sobre la narración original.",
+  "engine": "explainer-kit:imperio",
+  "based_on": "imperio-demo",
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-10-31",
+  "libraries": [
+    {
+      "name": "d3-array",
+      "version": "3.2.4",
+      "purpose": "utilidades geográficas del motor"
+    },
+    {
+      "name": "d3-geo",
+      "version": "3.1.1",
+      "purpose": "proyección cartográfica del motor"
+    },
+    {
+      "name": "topojson-client",
+      "version": "3.1.0",
+      "purpose": "lectura de fronteras del atlas"
+    },
+    {
+      "name": "world-atlas countries-50m.js",
+      "version": "sin versión indicada",
+      "purpose": "geometría de países"
+    },
+    {
+      "name": "Google Fonts: Fjalla One, Montserrat, Noto Sans JP",
+      "version": "remota",
+      "purpose": "tipografía del diseño imperio"
+    }
+  ],
+  "inputs": [
+    "Guion original de 13 segmentos (254 palabras) con cronología 1868–1942 y fuentes en PLAN.md §3.",
+    "Narración original Charon de 120,12 s en assets/song.mp3, conservada sin cambios, y transcripción Whisper en assets/lyrics.json (220 palabras). La reproducción usa assets/sound-design/75dcca1a349146aeaa9cc7d109658800/mix.mp3: mezcla completa de 120,12 s con efectos SFXMint al 115,5 % de la base inicial (×1,10 y después ×1,05), como capa de fondo; voz al mismo nivel y sin insertar pausas.",
+    "Componentes propios assets/components/japon.js: imperio.campaign e imperio.footage (sobre el atlas del diseño imperio).",
+    "11 banderas SVG locales en assets/flags. 4 clips de video: bandera 10,23–19,79 s (9,56 s), ejército 52,17–60,17 s (8 s), China 61,27–69,27 s (8 s) y Java 92,37–101,37 s (9 s). Cada archivo fuente dura 10 s; no se repite para alargarlo.",
+    "2 fotogramas de archivo acreditados en assets/media/CREDITS.md: camiones del Ejército Imperial 70,00–77,00 s (7 s) y tropas en Java, 1942, 103,50–111,50 s (8 s). Ambos llevan ambiente bajo: motor en camiones y pasos en tropas."
+  ],
+  "notes": [
+    "Los haces/flechas marcan dirección de campañas, no fronteras. China nunca aparece rayada como conquistada: solo la costa y ciudades con flechas y la bandera de la República de China.",
+    "Territorios aproximados de trabajo: Manchuria, Sajalín sur y las islas del Pacífico están dibujadas con polígonos y puntos aproximados, no catastrales.",
+    "Faltan clips de la Armada, Pearl Harbor y Malaya (sin licencia libre usable): se usan noticieros japoneses de Java 1942–43 con rótulo honesto.",
+    "Sandbox: no se renderizó ni se publicó video. Las capturas son del navegador (kit.py sheet y shoot.py).",
+    "El kit check avisa de planos largos y de 0 letras grandes: es el estilo de plano continuo de mapa. Versión anterior de 47 s guardada en work/v1/.",
+    "imperio.campaign es UN solo beat (de «1895» al final): cámara con vuelos (`cameras`), destinos con `time: \"@palabra\"`, tramos de video y fotogramas (`plates`). Cumple la política de repetición de componentes propios del kit. Candidato a promoverse al diseño imperio.",
+    "Fluidez: los tirones de cámara y las pausas venían del motor (reloj de audio a escalones, cola de llaves sin ejecutarse, precalentado corto). Corregido en engine/kit.js y _imperio.js: ver designs/imperio/DESIGN.md «Fluidez de la reproducción».",
+    "Los fotogramas nuevos se rotulan como material ilustrativo; no se atribuyen a Indochina ni a otro acontecimiento distinto de su procedencia. Los efectos permanecen por debajo de la voz y la narración conserva su duración y sincronía originales.",
+    "Cada ambiente cubre exactamente su apoyo visual: ejército 52,17–60,17 s (8 s), China 61,27–69,27 s (8 s), camiones 70–77 s (7 s), Java 92,37–101,37 s (9 s), foto de tropas 103,50–111,50 s (8 s). Se reutilizan sonidos con uniones suaves a velocidad original, sin pausas en la voz ni otra subida de volumen.",
+    "Último ajuste: sonidos de apoyo +5 % respecto a la mezcla anterior; voz, escenas y duración de todos los ambientes conservadas."
+  ],
+  "reference": "referencias/nodepolitics/japon-expansion"
+}

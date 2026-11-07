@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "title": "El primer día del Somme · versión 3D",
+  "summary": "Variante del Somme que activa render 3D para dar volumen a los personajes del mismo relato y escena. Reutiliza los datos y medios del proyecto base, pero todavía no tiene un MP4 final.",
+  "engine": "nodeaction/_engine",
+  "based_on": "somme-1916",
+  "is_new_design": false,
+  "status": "en progreso",
+  "created_at": "2026-10-18",
+  "libraries": [
+    {
+      "name": "Google Fonts: Inter, JetBrains Mono",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía del reproductor NodeAction"
+    }
+  ],
+  "inputs": [
+    "Assets de voz, letra y escena del proyecto El primer día del Somme.",
+    "Módulo rig3d.js del motor NodeAction para representar personajes con volumen."
+  ],
+  "notes": [
+    "La escena marca render: 3d y carga rig3d.js; hay capturas de revisión en work, pero el endpoint no encuentra render/*.mp4.",
+    "Es una extensión del mismo motor _engine, no un motor independiente."
+  ],
+  "usage_backfill": {
+    "estimated": true,
+    "source": "Estimación de ~/.codex/sessions/**/*.jsonl (Codex: 6 sesiones, 42 menciones de sandbox/nodeaction/somme-1916-3d) y /home/alfred/codex/nexa-brief/claude-sessions-usage.json (Claude: 4 sesiones, 188 sandbox_mentions). Repartí los tokens de cada sesión que toca varias plantillas proporcionalmente a sus menciones de ruta; los modelos de Claude se asignaron según el recuento de modelos del resumen. El resumen Claude no trae reasoning_tokens (registrado como 0, no disponible por separado). Revisé sandbox/nodemotion/_codex/*.log: no tenían contadores numéricos de tokens (0 campos encontrados), así que no los sumé.",
+    "by_model": [
+      {
+        "provider": "claude",
+        "model": "claude-opus-5-5",
+        "input_tokens": 658,
+        "cached_input_tokens": 155337045,
+        "output_tokens": 300107,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "codex",
+        "model": "gpt-6-luna",
+        "input_tokens": 713209,
+        "cached_input_tokens": 686533,
+        "output_tokens": 9481,
+        "reasoning_tokens": 5964
+      }
+    ]
+  }
+}

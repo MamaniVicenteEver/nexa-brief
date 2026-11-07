@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Igual que Make: los archivos compartidos pertenecen al usuario del host.
+export APP_UID="${APP_UID:-$(id -u)}"
+export APP_GID="${APP_GID:-$(id -g)}"
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
+source "./scripts/profile-env.sh"
 WEB_URL="http://localhost:${WEB_PORT:-3000}"
 API_URL="http://localhost:${API_PORT:-8000}"
 
@@ -36,4 +41,5 @@ PY
 
 docker compose exec -T api python -c 'import shutil; assert shutil.which("ffmpeg"); assert shutil.which("node")'
 docker compose ps
+bash ./scripts/docker-clean-images.sh
 echo "Docker verification completed successfully."

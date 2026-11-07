@@ -1,0 +1,56 @@
+import json,fcntl,time
+from pathlib import Path
+from PIL import Image,ImageDraw
+import base64,io
+from playwright.sync_api import sync_playwright
+root=Path.cwd();out=root/'work/texto';lock=open('/tmp/atlas-tactico-chromium.lock','w');fcntl.flock(lock,fcntl.LOCK_EX)
+base='http://127.0.0.1:8000/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/'
+r={'errors':[],'httpErrors':[]}
+with sync_playwright() as p:
+ b=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2'])
+ try:
+  page=b.new_page(viewport={'width':1440,'height':1100},device_scale_factor=1);page.on('pageerror',lambda e:r['errors'].append(str(e)));page.on('response',lambda q:r['httpErrors'].append({'status':q.status,'url':q.url}) if q.status>=400 else None)
+  start=time.monotonic();page.goto(base+'diseno-textos.html',wait_until='domcontentloaded');page.wait_for_function('window.__textos?.ready || !document.querySelector("#error").hidden',timeout=60000)
+  r['ready']=page.evaluate('!!window.__textos?.ready');r['loadSeconds']=time.monotonic()-start
+  if not r['ready']:raise RuntimeError(page.locator('#error').inner_text())
+  page.evaluate('__textos.seek(3)');page.wait_for_timeout(150);page.screenshot(path=str(out/'capturas/01-indice-satelital.png'))
+  page.select_option('#filter','dislikes');page.wait_for_timeout(100);page.evaluate('__textos.seek(3)');page.screenshot(path=str(out/'capturas/02-desagrada.png'))
+  page.select_option('#filter','all');page.select_option('#background','light');page.evaluate('__textos.seek(2.1)');page.screenshot(path=str(out/'capturas/03-fondo-claro.png'))
+  page.select_option('#background','dark')
+  for name,component in [('04-frente','label.front'),('05-resolucion','editorial.press'),('06-titulo','intro.title'),('07-cierre','outro.channel'),('08-complementos','portrait.cutout')]:
+   c=page.evaluate('(type)=>__textos.data.cards.filter(c=>c.type===type).at(-1)',component);page.locator('#'+c['id']).scroll_into_view_if_needed();page.wait_for_timeout(120);page.evaluate('__textos.seek(6.7)' if component=='outro.channel' else '__textos.seek(3)');page.screenshot(path=str(out/f'capturas/{name}.png'))
+  r['cards']=page.locator('article').count();r['instances']=page.evaluate('__textos.stats()');r['catalog']=page.evaluate('async()=>{const c=await(await fetch("engine/tactico/components.json")).json();return {count:c.components.length,withoutDemo:c.components.filter(c=>!c.demo).map(c=>c.name)}}')
+  r['lazy']=page.evaluate('({iframes:document.querySelectorAll("iframe").length,visible:__textos.stats().visible})')
+  # Every sample must paint actual non-background pixels on a plain background.
+  r['samplePixels']=[]
+  for c in page.evaluate('__textos.data.cards.map(c=>({id:c.id,type:c.type}))'):
+   page.locator('#'+c['id']).scroll_into_view_if_needed();page.wait_for_timeout(70);page.evaluate('__textos.seek(3)')
+   entry=page.evaluate('id=>{const c=document.querySelector("#"+id+" canvas"),p=c.getContext("2d").getImageData(0,0,c.width,c.height).data;let count=0;for(let n=0;n<p.length;n+=4)if(p[n]!==8||p[n+1]!==30||p[n+2]!==44)count++;return {id,pixels:count}}',c['id']);entry['type']=c['type'];r['samplePixels'].append(entry)
+  # Actual source functions, exposed only in this test's JS memory.
+  r['parity']=page.evaluate('''async()=>{
+   const src=await(await fetch('../../_proto/proto.js')).text();
+   (0,eval)(src.replace('window.Proto = { run, U, makeTimer, loadImg, outroTimes };','window.__protoCaptionReference={buildCaptions,drawCaption};'));
+   const {drawTranscript,buildTranscript}=await import('./engine/tactico/components/captions.js');
+   const lyr=await(await fetch('assets/lyrics.json')).json(),words=lyr.segments.flatMap(s=>s.words||[]).filter(w=>w&&isFinite(w.start));
+   const cfg={maxWords:3,size:45,y:.9,font:'AtlasDisplay, sans-serif',color:'#f6edb4'},st={W:1080,H:1920,U:1};
+   const caps=__protoCaptionReference.buildCaptions(words,262.84,cfg),own=buildTranscript(words,262.84,cfg),result=[];
+   for(const t of [1.23,13.5,233.9]){
+    const a=new OffscreenCanvas(1080,1920),b=new OffscreenCanvas(1080,1920),ga=a.getContext('2d',{willReadFrequently:true}),gb=b.getContext('2d',{willReadFrequently:true});
+    __protoCaptionReference.drawCaption(ga,st,caps,t,cfg);drawTranscript(gb,st,own,t,cfg);
+    const x=ga.getImageData(0,0,1080,1920).data,y=gb.getImageData(0,0,1080,1920).data;let diff=0,max=0,ink=0;for(let n=0;n<x.length;n+=4){if(x[n+3])ink++;let changed=false;for(let c=0;c<4;c++){const d=Math.abs(x[n+c]-y[n+c]);max=Math.max(max,d);if(d)changed=true;}if(changed)diff++;}
+    result.push({t,pixelsDifferent:diff,maxChannelDifference:max,inkPixels:ink,reference:a.convertToBlob?null:null});
+   }return {groups:caps.length,sameGroups:JSON.stringify(caps)===JSON.stringify(own.map(({words,...c})=>c)),frames:result};
+  }''')
+  # Speed, restart, seek, responsive, all three backgrounds.
+  page.locator('header').scroll_into_view_if_needed();page.select_option('#speed','2');page.click('#restart');page.click('#play');page.wait_for_timeout(350);r['speed2Time']=page.locator('#time').input_value();page.click('#play');page.click('#restart');r['restartTime']=page.locator('#time').input_value()
+  page.set_viewport_size({'width':390,'height':844});page.evaluate('__textos.seek(3)');page.wait_for_timeout(120);page.screenshot(path=str(out/'capturas/09-movil.png'));r['mobileOverflow']=page.evaluate('document.documentElement.scrollWidth>innerWidth')
+  page.set_viewport_size({'width':1440,'height':1100});page.select_option('#background','dark');page.select_option('#filter','all')
+  r['phaseSamples']=[]
+  for name in ['caption.transcript','label.front','label.route','label.unit','label.site','text.attribution']:
+   c=page.evaluate('(name)=>__textos.data.cards.find(c=>c.type===name)',name);page.locator('#'+c['id']).scroll_into_view_if_needed();page.wait_for_timeout(100);sheet=Image.new('RGB',(1080,570),'#10171d');d=ImageDraw.Draw(sheet)
+   for n,t in enumerate([1.23,3,13.9] if name=='caption.transcript' else [.06,3,14.15]):
+    page.evaluate('__textos.seek('+str(t)+')');uri=page.locator('#'+c['id']+' canvas').evaluate('(c)=>c.toDataURL()');im=Image.open(io.BytesIO(base64.b64decode(uri.split(',')[1]))).convert('RGB');im.thumbnail((1080,160));sheet.paste(im,((1080-im.width)//2,n*190+25));d.text((10,n*190+4),name+' / '+str(t)+' s',fill='white')
+   sheet.save(out/f'capturas/fases-{name}.jpg',quality=88);r['phaseSamples'].append(name)
+  r['ok']=r['ready'] and not r['errors'] and not r['httpErrors'] and all(e['pixels']>0 for e in r['samplePixels']) and r['parity']['sameGroups'] and all(e['pixelsDifferent']==0 for e in r['parity']['frames']) and not r['mobileOverflow']
+ except Exception as e:r['exception']=str(e)
+ finally:(out/'qa-index.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2),flush=True);b.close()

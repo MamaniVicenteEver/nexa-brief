@@ -20,12 +20,16 @@ import re
 import unicodedata
 from pathlib import Path
 
-from pydantic import BaseModel, Field, ValidationError, field_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 
 from src.config.exceptions import AIValidationError
 from src.core.categories import get_category, strategy_for
+from src.core.explainer import narrative
 from src.core.explainer.catalog import video_roots
 from src.core.explainer.designs import KitDesign
+from src.core.explainer.lengths import chapters_range, clamp_minutes
+from src.core.explainer.publishing.store import PUBLISH_FILE, is_package, read_publish
+from src.core.metadata.sanitize import strip_emojis
 from src.core.ports.ai_port import AIPort
 
 YOUTUBE_TITLE_MAX = 100
@@ -74,6 +78,9 @@ class TikTokCopy(BaseModel):
 
 class ExplainerBrief(BaseModel):
     video_id: str
+    # Los completa el servidor (no el modelo): la narrativa y el nivel de título con que se escribió.
+    narrative_id: str | None = None
+    title_level: str | None = None
     working_title: str
     hook: str
     angle: str
@@ -84,6 +91,20 @@ class ExplainerBrief(BaseModel):
     tiktok: TikTokCopy
     thumbnail_text: str = ""
     media_suggestions: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _no_emojis(self) -> ExplainerBrief:
+        """Ningún texto de publicación lleva emojis (aunque el modelo los ponga)."""
+        clean = strip_emojis
+        self.working_title, self.hook, self.thumbnail_text = clean(self.working_title), clean(self.hook), clean(self.thumbnail_text)
+        self.youtube.title = clean(self.youtube.title)
+        self.youtube.title_alternatives = [clean(t) for t in self.youtube.title_alternatives]
+        self.youtube.description = "\n".join(clean(line) for line in self.youtube.description.split("\n"))
+        self.facebook.title = clean(self.facebook.title)
+        self.facebook.description = "\n".join(clean(line) for line in self.facebook.description.split("\n"))
+        self.tiktok.caption = clean(self.tiktok.caption)
+        self.tiktok.hashtags = [h for h in (clean(h) for h in self.tiktok.hashtags) if h.strip("#")]
+        return self
 
     def to_publish_json(self) -> dict:
         """Formato de publish.json del explainer-kit (+ campos de Facebook)."""
@@ -117,8 +138,9 @@ def unique_video_id(base: str, videos_dir: Path | None = None) -> str:
     return candidate
 
 
-SYSTEM_PROMPT = """Eres el estratega editorial de una red de canales de documentales cortos narrados
-(3 a 4,5 minutos, vertical 9:16 y horizontal 16:9) en español latinoamericano.
+SYSTEM_PROMPT = """Eres el estratega editorial de una red de canales de documentales narrados
+(de 5 a 30 minutos o más; la duración pedida viene en pedido.duracion_minutos; vertical 9:16 y
+horizontal 16:9) en español latinoamericano.
 Tu trabajo: convertir un TEMA en un ángulo que la gente quiera ver y en los textos
 de publicación para YouTube, Facebook y TikTok.
 
@@ -127,8 +149,9 @@ Reglas de títulos (lo más importante):
   o "Así se hizo tan potente la IA (y casi nadie lo vio venir)": contraste, tensión, una pregunta abierta.
 - Nunca mentir: el título promete solo lo que el video cuenta.
 - Lo importante en los primeros 40 caracteres; máximo 70 caracteres en YouTube.
-- Sin MAYÚSCULAS sostenidas ni emojis de relleno.
-- Un solo momento decisivo (el punto crítico), no una biografía ni una enciclopedia.
+- Sin MAYÚSCULAS sostenidas. Sin emojis en NINGÚN campo (títulos, descripciones, caption, hashtags).
+- Un solo momento decisivo (el punto crítico), no una biografía ni una enciclopedia. En videos
+  largos el punto crítico sigue siendo la columna: los capítulos son el camino hacia él y su consecuencia.
 
 Devuelve SOLO este JSON:
 {
@@ -137,7 +160,7 @@ Devuelve SOLO este JSON:
   "hook": "primera frase del video: abre una pregunta en menos de 25 palabras",
   "angle": "el punto crítico elegido (un momento, una decisión, un error)",
   "thesis": "la idea que el espectador se lleva, en una frase",
-  "outline": ["5 a 8 momentos del arco narrativo, en orden"],
+  "outline": ["un capítulo por elemento (cantidad: pedido.capitulos), en orden; cada uno con la pregunta que responde"],
   "youtube": {
     "title": "título principal",
     "title_alternatives": ["2 alternativas con otra fórmula"],
@@ -189,19 +212,33 @@ async def generate_brief(
     description: str = "",
     design: KitDesign | None = None,
     media_names: list[str] | None = None,
+    minutes: float | None = None,
+    narrative_id: str | None = None,
+    title_level: str | None = None,
 ) -> ExplainerBrief:
     if not topic.strip():
         raise ValueError("el tema es obligatorio")
+    category_id = category_path.split("/", 1)[0]
+    story = narrative.get_service().resolve(category_id, narrative_id)   # NarrativeError (400) si no existe
+    level = story.title_level(title_level) if story else None
+    target = clamp_minutes(minutes)
+    lo, hi = chapters_range(target)
     payload = {
         **_context(category_path, design),
         "pedido": {
             "tema": topic.strip(),
             "descripcion": description.strip() or None,
             "medios_del_usuario": media_names or [],
+            "duracion_minutos": target,
+            "capitulos": f"{lo} a {hi}",
         },
     }
+    if (ctx := narrative.brief_context(story, category_id, level)) is not None:
+        payload["narrativa"] = ctx
     brief = await _ask(ai, payload)
     brief.video_id = slugify(brief.video_id or topic)
+    brief.narrative_id = story.id if story else None
+    brief.title_level = level
     return brief
 
 
@@ -225,16 +262,32 @@ async def generate_publish_texts(ai: AIPort, video_dir: Path, *, category_path: 
         },
         "instruccion": "El video ya está hecho: los textos deben describir ESTE guion, sin prometer nada que no diga.",
     }
+    recorded = narrative.recorded(video_dir)
+    story = None
+    if recorded.narrative_id:
+        try:
+            story = narrative.get_service().get(recorded.narrative_id)
+        except narrative.NarrativeError:
+            story = None   # narrativa borrada: textos con las reglas generales
+    category_id = category_path.split("/", 1)[0]
+    if (ctx := narrative.brief_context(story, category_id, recorded.title_level)) is not None:
+        payload["narrativa"] = ctx
     brief = await _ask(ai, payload)
     brief.video_id = video_dir.name
+    brief.narrative_id = story.id if story else recorded.narrative_id
+    brief.title_level = recorded.title_level
     return brief
 
 
 def write_publish_json(video_dir: Path, brief: ExplainerBrief, *, overwrite: bool = False) -> bool:
-    """Escribe publish.json; no pisa títulos existentes salvo overwrite=True."""
-    path = video_dir / "publish.json"
-    current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    if current.get("youtube_title") and not overwrite:
+    """Escribe publish.json (v1); no pisa títulos existentes salvo overwrite=True.
+
+    Nunca pisa un paquete v2 (src/core/explainer/publishing): sus campos planos se
+    derivan del paquete y mezclarle textos v1 lo dejaría inconsistente.
+    """
+    path = video_dir / PUBLISH_FILE
+    current = read_publish(video_dir)
+    if is_package(current) or (current.get("youtube_title") and not overwrite):
         return False
     path.write_text(json.dumps({**current, **brief.to_publish_json()}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return True

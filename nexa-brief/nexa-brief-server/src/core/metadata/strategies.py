@@ -6,7 +6,10 @@ examples per language, (2) output templates that assemble those pieces into
 the final text, with fallbacks when a piece or fact is missing, and (3) fixed
 phrases that rotate between videos. `active.json` picks one strategy per
 platform — switching strategy is editing one name there; old strategies stay
-on disk, versioned (…_v1, …_v2), ready to switch back to.
+on disk, versioned (…_v1, …_v2), ready to switch back to. `active.json` →
+`profiles.<perfil>` overrides that selection for a kind of video (e.g.
+"commercial": promos get their own strategies and their own voice,
+voice_commercial.md). See src/modules/copy_writer.copy_profile.
 
 Files are re-read when they change on disk, so editing a strategy takes
 effect on the next video without restarting the server.
@@ -23,8 +26,8 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from src.config.settings import settings
 
-Platform = Literal["youtube", "tiktok", "facebook"]
-PLATFORMS: tuple[Platform, ...] = ("youtube", "tiktok", "facebook")
+Platform = Literal["youtube", "tiktok", "facebook", "instagram"]
+PLATFORMS: tuple[Platform, ...] = ("youtube", "tiktok", "facebook", "instagram")
 LANGUAGES = ("es", "en")
 
 # Always available to templates: song identity (asked once for all platforms)
@@ -68,6 +71,8 @@ class StrategyOutput(BaseModel):
     title: OutputSpec
     description: OutputSpec
     tags: TagsSpec
+    # Comentario fijado (YouTube): solo frases de `rotating`, así nunca se sale de lo aprobado.
+    pinned_comment: OutputSpec | None = None
 
 
 class CopyStrategy(BaseModel):
@@ -82,7 +87,10 @@ class CopyStrategy(BaseModel):
     @model_validator(mode="after")
     def _check_consistency(self) -> CopyStrategy:
         known = set(self.fields) | set(self.rotating) | COMMON_PLACEHOLDERS
-        for name, spec in (("title", self.output.title), ("description", self.output.description)):
+        outputs = [("title", self.output.title), ("description", self.output.description)]
+        if self.output.pinned_comment is not None:
+            outputs.append(("pinned_comment", self.output.pinned_comment))
+        for name, spec in outputs:
             if spec.same_as:
                 continue
             for lang in LANGUAGES:
@@ -144,9 +152,17 @@ def list_strategies() -> list[CopyStrategy]:
     return [load_strategy(p.stem) for p in sorted((copy_dir() / "strategies").glob("*.json"))]
 
 
-def active_strategies(overrides: dict[str, str] | None = None) -> dict[Platform, CopyStrategy]:
-    """Strategy per platform from active.json; `overrides` ({"youtube": "yt_…"}) wins, for previews/tests."""
-    selection: dict[str, str] = dict(_read_cached(copy_dir() / "active.json", json.loads))
+def active_strategies(
+    overrides: dict[str, str] | None = None, profile: str | None = None
+) -> dict[Platform, CopyStrategy]:
+    """Strategy per platform from active.json, then `profiles[profile]` (kind of video, e.g.
+    "commercial"), then `overrides` ({"youtube": "yt_…"}) for previews/tests."""
+    active: dict[str, Any] = dict(_read_cached(copy_dir() / "active.json", json.loads))
+    profiles = active.pop("profiles", {}) or {}
+    if profile and profile not in profiles:
+        raise StrategyError(f"Unknown copy profile '{profile}' (active.json → profiles)")
+    selection: dict[str, str] = {k: v for k, v in active.items() if isinstance(v, str)}
+    selection.update(profiles.get(profile, {}) if profile else {})
     selection.update(overrides or {})
     result: dict[Platform, CopyStrategy] = {}
     for platform in PLATFORMS:
@@ -160,5 +176,9 @@ def active_strategies(overrides: dict[str, str] | None = None) -> dict[Platform,
     return result
 
 
-def load_voice() -> str:
-    return _read_cached(copy_dir() / "voice.md", str)
+def load_voice(profile: str | None = None) -> str:
+    """voice.md, or voice_<profile>.md when that kind of video has its own voice."""
+    path = copy_dir() / f"voice_{profile}.md" if profile else copy_dir() / "voice.md"
+    if profile and not path.exists():
+        path = copy_dir() / "voice.md"
+    return _read_cached(path, str)

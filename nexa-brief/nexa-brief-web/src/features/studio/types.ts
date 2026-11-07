@@ -25,13 +25,49 @@ export const EMPTY_STUDIO_VALUE: StudioValue = {
 };
 
 export type RecorderEngine = "remotion" | "hyperframes" | "playwright";
+export type RecordFormat = "16x9" | "9x16";
 
 export interface RenderOptions {
   recorderEngine?: RecorderEngine;
   publishAccounts: string[];
+  /** Formatos a grabar: 16:9 siempre; 9:16 se suma. */
+  formats?: RecordFormat[];
+  /** Un formato por cuenta ("platform:alias"). */
+  accountFormats?: Record<string, RecordFormat>;
 }
 
-export type DraftStatus = "previewing" | "preview_ready" | "rendering" | "rendered" | "failed";
+export type DraftStatus =
+  | "previewing"
+  | "preview_ready"
+  | "preparing"
+  | "prepared"
+  | "rendering"
+  | "rendered"
+  | "failed";
+
+export type DetailsPlatform = "youtube" | "facebook" | "instagram" | "tiktok";
+export const DETAILS_PLATFORMS: DetailsPlatform[] = ["youtube", "facebook", "instagram", "tiktok"];
+
+export interface PlatformDetails {
+  title: string;
+  description: string;
+  tags: string[];
+  strategy: string;
+  /** YouTube: el comentario que se publica y se fija. */
+  pinned_comment?: string;
+}
+
+/** Textos de publicación de un prototipo (Preparar → Detalles). */
+export interface DraftDetails {
+  songName: string;
+  artist: string;
+  language: string | null;
+  copies: Partial<Record<DetailsPlatform, PlatformDetails>>;
+  generatedAt: string | null;
+  edited: boolean;
+  /** Investigación previa: lo que la IA ordenó de la información de la canción. */
+  research: string;
+}
 
 export interface TemplateInputsPayload {
   media: Record<string, string[]>;
@@ -41,6 +77,7 @@ export interface TemplateInputsPayload {
 
 export interface DraftRequest {
   template_id: string;
+  name?: string;
   music_asset_id?: string;
   image_asset_id?: string;
   video_asset_id?: string;
@@ -51,6 +88,12 @@ export interface DraftRequest {
 export interface Draft {
   draftId: string;
   templateId: string;
+  /** Nombre del prototipo en el Sandbox. */
+  name: string;
+  /** «Video original»: la plantilla tal cual, con su canción y su fondo. */
+  original: boolean;
+  /** «Información de la canción» que se le pasó a la IA al preparar (opcional). */
+  songNotes: string;
   status: DraftStatus;
   stage: JobStage;
   errors: string[];
@@ -64,6 +107,8 @@ export interface Draft {
   previewUrl: string | null;
   jobId: string | null;
   recoverable: boolean;
+  details: DraftDetails | null;
+  createdAt: string;
   updatedAt: string;
 }
 

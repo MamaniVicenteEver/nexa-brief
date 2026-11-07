@@ -1,0 +1,747 @@
+{
+  "version": 1,
+  "design": "imperio",
+  "source": "Kit.catalog() → tools/components.mjs build",
+  "referenceVideo": "nodeatlas/japon-expansion-prueba",
+  "production": {
+    "renderer": "imperio",
+    "usesMap": true,
+    "coordinateSystem": "WGS84 longitude-latitude",
+    "note": "El showcase omite solo el mapa base. Los JSON de producción mantienen coordenadas, cámara y capas sobre el mapa."
+  },
+  "workflow": [
+    "Buscar un componente por nombre y descripción.",
+    "Leer únicamente su contracts/<nombre>.json.",
+    "Copiar el ejemplo y cambiar textos, medios, destinos y tiempos.",
+    "Usar imperio.campaign para combinar varias capas en la misma cámara.",
+    "Validar el episodio con kit.py check antes de producir."
+  ],
+  "recipes": "recipes.json",
+  "components": [
+    {
+      "name": "imperio.title",
+      "summary": "Apertura (ref 0–11 s): atlas físico con el país foco rayado y el SOL carmesí que late; la cámara se aleja y gira apenas; nacen los RAYOS translúcidos en abanico hacia `dir` con barquitos; el título en su IDIOMA ORIGINAL (kanji, alemán, ruso…) entra carácter por carácter con su traducción tipeada debajo y se borra de derecha a izquierda; después el título condensado blanco SUBE desde abajo con degradé",
+      "layer": "main",
+      "inputs": "contracts/imperio.title.json",
+      "example": {
+        "use": "imperio.title",
+        "params": {
+          "country": "Japan",
+          "hatch": [
+            "Japan"
+          ],
+          "from": [
+            150,
+            36,
+            95,
+            0
+          ],
+          "to": [
+            145,
+            35,
+            125,
+            3
+          ],
+          "sunSize": 3.6,
+          "native": "南進論",
+          "nativeSub": "SOUTHERN EXPANSION DOCTRINE",
+          "nativeAt": 5,
+          "nativeOut": 9.2,
+          "text": "JAPANESE\nEMPIRE",
+          "textPortrait": "JAPANESE\nEMPIRE",
+          "textAt": 10,
+          "rays": 28,
+          "raysAt": 4,
+          "dir": 180,
+          "spread": 0.72,
+          "rayFloor": 0.02,
+          "rayAlpha": 0.56,
+          "rayLen": 0.46,
+          "ships": 2,
+          "labels": [
+            {
+              "t": "Mar del\nJapón",
+              "at": [
+                134.5,
+                40.2
+              ]
+            },
+            {
+              "t": "Mar\nAmarillo",
+              "at": [
+                123.6,
+                35.4
+              ]
+            },
+            {
+              "t": "Océano\nPacífico",
+              "at": [
+                150,
+                31
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "imperio.map",
+      "summary": "Atlas físico en movimiento lento (zoom y giro leve) sobre un país o región: territorio rayado, sol que late, rótulos de mares, rayos opcionales y PINES (punto carmesí + nombre) para lugares concretos (una base, una ciudad, un puerto)",
+      "layer": "main",
+      "inputs": "contracts/imperio.map.json",
+      "example": {
+        "use": "imperio.map",
+        "params": {
+          "country": "United Kingdom",
+          "from": "United Kingdom*1.5",
+          "to": "United Kingdom*3.2",
+          "pins": [
+            {
+              "t": "Bletchley Park",
+              "at": [
+                -0.74,
+                51.99
+              ]
+            },
+            {
+              "t": "Londres",
+              "at": [
+                -0.12,
+                51.5
+              ]
+            }
+          ],
+          "labels": [
+            {
+              "t": "Mar del\nNorte",
+              "at": [
+                3.5,
+                56
+              ]
+            },
+            {
+              "t": "Océano\nAtlántico",
+              "at": [
+                -15,
+                52
+              ]
+            }
+          ],
+          "compass": true
+        }
+      }
+    },
+    {
+      "name": "imperio.expansion",
+      "summary": "Expansión: desde el sol del país foco salen HACES carmesí translúcidos hacia cada región destino, uno tras otro; al llegar, la región se raya (territorio ocupado) y aparece su nombre en condensada blanca",
+      "layer": "main",
+      "inputs": "contracts/imperio.expansion.json",
+      "example": {
+        "use": "imperio.expansion",
+        "params": {
+          "country": "Japan",
+          "targets": [
+            {
+              "at": "Philippines",
+              "t": "Filipinas"
+            },
+            {
+              "at": "Indonesia",
+              "t": "Indias Orientales"
+            },
+            {
+              "at": "Malaysia",
+              "t": "Malasia"
+            },
+            {
+              "at": "Myanmar",
+              "t": "Birmania"
+            }
+          ],
+          "hatch": [
+            "Japan",
+            "South Korea",
+            "North Korea",
+            "Taiwan"
+          ],
+          "labels": [
+            {
+              "t": "Océano\nPacífico",
+              "at": [
+                150,
+                15
+              ]
+            },
+            {
+              "t": "Mar de la\nChina Meridional",
+              "at": [
+                114,
+                13
+              ]
+            }
+          ],
+          "compass": true
+        }
+      }
+    },
+    {
+      "name": "imperio.archive",
+      "summary": "Material de archivo (ref 11.5–27.7 s): el atlas se DESATURA a gris, baja humo oscuro desde arriba y la foto en blanco y negro se FUNDE en multiplicar con el mapa (lo claro deja ver el mapa, lo oscuro lo tapa); los rayos carmesí siguen encima, rosa de los vientos fina abajo a la derecha, grano y polvo; la cámara sigue alejándose",
+      "layer": "main",
+      "inputs": "contracts/imperio.archive.json",
+      "example": {
+        "use": "imperio.archive",
+        "params": {
+          "src": "../designs/imperio/assets/uboat.jpg",
+          "country": "Japan",
+          "from": [
+            145,
+            35,
+            125,
+            3
+          ],
+          "to": [
+            135,
+            32,
+            165,
+            6
+          ],
+          "rays": 28,
+          "dir": 180,
+          "spread": 0.72,
+          "rayFloor": 0.02,
+          "rayAlpha": 0.56,
+          "rayLen": 0.46,
+          "ships": 2,
+          "compass": true,
+          "photoAt": 0,
+          "photoDur": 0.9,
+          "labels": [
+            {
+              "t": "MAR DE JAPÓN",
+              "at": [
+                135,
+                40
+              ]
+            },
+            {
+              "t": "OCÉANO PACÍFICO",
+              "at": [
+                151,
+                23
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "imperio.word",
+      "summary": "Título condensado BLANCO (Fjalla One) sobre el plano en curso: cada renglón SUBE desde abajo con degradé de opacidad (arriba aparece primero) y desenfoque, y después el título se ACHICA lento y exponencial (rápido al principio) mientras el mapa sigue moviéndose (ref 10–27 s: 'JAPANESE EMPIRE')",
+      "layer": "overlay",
+      "inputs": "contracts/imperio.word.json",
+      "example": {
+        "use": "imperio.word",
+        "params": {
+          "text": "JAPANESE\nEMPIRE",
+          "at": 0.2,
+          "shrinkAt": 2.8,
+          "shrinkTo": 0.18,
+          "tau": 2.8
+        }
+      }
+    },
+    {
+      "name": "imperio.native",
+      "summary": "Nombre en su IDIOMA ORIGINAL (kanji, alemán, ruso, árabe latinizado…) en gris grande: cada carácter entra con escala y desenfoque escalonados, la traducción en mayúsculas negras se tipea debajo, y al final se borra de derecha a izquierda (ref 4.9–9.9 s: '南進論 · SOUTHERN EXPANSION DOCTRINE')",
+      "layer": "overlay",
+      "inputs": "contracts/imperio.native.json",
+      "example": {
+        "use": "imperio.native",
+        "params": {
+          "text": "南進論",
+          "sub": "DOCTRINA DE EXPANSIÓN AL SUR"
+        }
+      }
+    },
+    {
+      "name": "imperio.introv1",
+      "summary": "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida",
+      "layer": "main",
+      "inputs": "contracts/imperio.introv1.json",
+      "example": {
+        "use": "imperio.introv1",
+        "params": {
+          "text": "EL IMPERIO QUE\nMIRÓ AL ^SUR^",
+          "kicker": "Tokio · 1940",
+          "sub": "la doctrina que llevó a la guerra del Pacífico",
+          "country": "Japan"
+        }
+      }
+    },
+    {
+      "name": "imperio.introv2",
+      "summary": "GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé",
+      "layer": "main",
+      "inputs": "contracts/imperio.introv2.json",
+      "example": {
+        "use": "imperio.introv2",
+        "params": {
+          "text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?",
+          "kicker": "Pacífico · 1940",
+          "stamp": "PETRÓLEO",
+          "stampAt": 2.6,
+          "country": "Japan",
+          "bg": "archivo"
+        }
+      }
+    },
+    {
+      "name": "imperio.outro",
+      "summary": "Cierre v1 con mapa del mundo completo que se aleja y oscurece, en los colores de Imperio",
+      "layer": "main",
+      "inputs": "contracts/imperio.outro.json",
+      "example": {
+        "use": "imperio.outro",
+        "params": {
+          "thanks": "GRACIAS POR VER",
+          "channel": "NODEPOLITICS",
+          "cta": "SUSCRÍBETE",
+          "support": "Apoya el canal y comparte el video.",
+          "handle": "youtube.com/@nodepolitics"
+        }
+      }
+    },
+    {
+      "name": "imperio.outrov2",
+      "summary": "Outro v2: GRACIAS POR VER un 45 % más grande, letras en negrita y fondos rojo sangre oscuro en LIKE y SUSCRÍBETE",
+      "layer": "main",
+      "inputs": "contracts/imperio.outrov2.json",
+      "example": {
+        "use": "imperio.outrov2",
+        "params": {
+          "thanks": "GRACIAS POR VER",
+          "channel": "NODEPOLITICS",
+          "cta": "SUSCRÍBETE",
+          "support": "Apoya el canal y comparte el video.",
+          "handle": "youtube.com/@nodepolitics",
+          "thanksScale": 1.45,
+          "textWeight": 800,
+          "actionColor": "#700B1B"
+        }
+      }
+    },
+    {
+      "name": "imperio.campaign",
+      "summary": "Campaña en UN plano continuo: la cámara vuela entre destinos (`cameras`); desde el país foco salen flechas gruesas hacia cada destino y llegan justo cuando la voz lo nombra (`time: \"@palabra\"`)",
+      "layer": "main",
+      "inputs": "contracts/imperio.campaign.json",
+      "example": {
+        "use": "imperio.campaign",
+        "params": {
+          "from": [
+            132,
+            32,
+            75,
+            0
+          ],
+          "to": [
+            132,
+            32,
+            75,
+            0
+          ],
+          "country": "Japan",
+          "hatch": [
+            "Japan"
+          ],
+          "sunSize": 1.4,
+          "f1": "assets/flags/qing.svg",
+          "f2": "assets/flags/korean-empire.svg",
+          "cameras": [],
+          "targets": [
+            {
+              "at": "Taiwan",
+              "region": "Taiwan",
+              "label": "TAIWÁN",
+              "year": "1895",
+              "flag": "f1",
+              "time": 2
+            },
+            {
+              "at": [
+                127.8,
+                36.5
+              ],
+              "region": [
+                "South Korea",
+                "North Korea"
+              ],
+              "label": "COREA",
+              "year": "1910",
+              "flag": "f2",
+              "time": 3.2
+            }
+          ],
+          "labels": [
+            {
+              "t": "Mar de\nChina Oriental",
+              "at": [
+                124,
+                29
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "imperio.footage",
+      "summary": "Material de archivo en VIDEO (en vez de foto): el atlas se desatura a gris, baja humo oscuro y el clip mudo se funde en blanco y negro, en multiplicar, con el mapa; el sol y los rayos carmesí siguen encima",
+      "layer": "main",
+      "inputs": "contracts/imperio.footage.json",
+      "example": {
+        "use": "imperio.footage",
+        "params": {
+          "video": "samples/imperio-archive.mp4",
+          "country": "Japan",
+          "from": [
+            145,
+            35,
+            125,
+            3
+          ],
+          "to": [
+            135,
+            32,
+            165,
+            6
+          ],
+          "rays": 28,
+          "dir": 180,
+          "spread": 0.72,
+          "rayFloor": 0.02,
+          "rayAlpha": 0.56,
+          "rayLen": 0.46,
+          "compass": true,
+          "caption": "ARCHIVO"
+        }
+      }
+    },
+    {
+      "name": "imperio.date",
+      "summary": "Fecha o rango de años blanco con subrayado carmesí; es el sello de la esquina del video, ahora reutilizable por JSON.",
+      "layer": "overlay",
+      "inputs": "contracts/imperio.date.json",
+      "example": {
+        "use": "imperio.date",
+        "params": {
+          "text": "1940–41"
+        }
+      }
+    },
+    {
+      "name": "imperio.country",
+      "summary": "País del video: territorio marcado, bandera circular, nombre y fecha",
+      "layer": "main",
+      "inputs": "contracts/imperio.country.json",
+      "example": {
+        "use": "imperio.country",
+        "params": {
+          "from": [
+            132,
+            32,
+            55,
+            0
+          ],
+          "to": [
+            132,
+            32,
+            55,
+            0
+          ],
+          "time": 0.5,
+          "hold": 8,
+          "target": "Taiwan",
+          "label": "TAIWÁN",
+          "year": "1895",
+          "flag": "assets/flags/qing.svg",
+          "size": 1.6
+        }
+      }
+    },
+    {
+      "name": "imperio.flag",
+      "summary": "Bandera circular con aro, rebote y chapa con el nombre del país; se retira después de hold segundos",
+      "layer": "main",
+      "inputs": "contracts/imperio.flag.json",
+      "example": {
+        "use": "imperio.flag",
+        "params": {
+          "from": [
+            132,
+            32,
+            55,
+            0
+          ],
+          "to": [
+            132,
+            32,
+            55,
+            0
+          ],
+          "time": 0.5,
+          "hold": 8,
+          "target": "Taiwan",
+          "label": "TAIWÁN",
+          "flag": "assets/flags/qing.svg",
+          "size": 1.8
+        }
+      }
+    },
+    {
+      "name": "imperio.city",
+      "summary": "Punto de ciudad con pulso y nombre en chapa carmesí, como Pekín, Shanghái o Singapur en el video",
+      "layer": "main",
+      "inputs": "contracts/imperio.city.json",
+      "example": {
+        "use": "imperio.city",
+        "params": {
+          "from": [
+            120,
+            36,
+            35,
+            0
+          ],
+          "to": [
+            120,
+            36,
+            35,
+            0
+          ],
+          "time": 0.5,
+          "hold": 8,
+          "target": [
+            116.4,
+            39.9
+          ],
+          "label": "PEKÍN"
+        }
+      }
+    },
+    {
+      "name": "imperio.arrow",
+      "summary": "Flecha gruesa de avance con degradado y borde blanco",
+      "layer": "main",
+      "inputs": "contracts/imperio.arrow.json",
+      "example": {
+        "use": "imperio.arrow",
+        "params": {
+          "from": [
+            132,
+            32,
+            55,
+            0
+          ],
+          "to": [
+            132,
+            32,
+            55,
+            0
+          ],
+          "time": 2.5,
+          "country": "Japan",
+          "origin": [
+            139,
+            36
+          ],
+          "target": [
+            121,
+            24
+          ]
+        }
+      }
+    },
+    {
+      "name": "imperio.territory",
+      "summary": "Territorio que aparece en carmesí con borde y pulso",
+      "layer": "main",
+      "inputs": "contracts/imperio.territory.json",
+      "example": {
+        "use": "imperio.territory",
+        "params": {
+          "from": [
+            128,
+            37.5,
+            40,
+            0
+          ],
+          "to": [
+            128,
+            37.5,
+            40,
+            0
+          ],
+          "time": 0.5,
+          "target": [
+            127.6,
+            36.6
+          ],
+          "region": [
+            "South Korea",
+            "North Korea"
+          ]
+        }
+      }
+    },
+    {
+      "name": "imperio.caption",
+      "summary": "Pie de archivo en Montserrat itálica con fundido; mismo rótulo de lugar y año de las fotografías y clips del video.",
+      "layer": "overlay",
+      "inputs": "contracts/imperio.caption.json",
+      "example": {
+        "use": "imperio.caption",
+        "params": {
+          "text": "ARCHIVO · 1931",
+          "x": 0.1,
+          "y": 0.55,
+          "size": 2
+        }
+      }
+    },
+    {
+      "name": "imperio.sun",
+      "summary": "Sol carmesí que late sobre el país o las coordenadas elegidas; comparte el sol y los colores de bandera de imperio.map.",
+      "layer": "main",
+      "inputs": "contracts/imperio.sun.json",
+      "example": {
+        "use": "imperio.sun",
+        "params": {
+          "from": [
+            139,
+            33,
+            50,
+            0
+          ],
+          "to": [
+            139,
+            33,
+            50,
+            0
+          ],
+          "hatch": [],
+          "country": "Japan",
+          "sunSize": 5
+        }
+      }
+    },
+    {
+      "name": "imperio.rays",
+      "summary": "Abanico de rayos sobre el mar: rumbo, apertura, cantidad, longitud y entrada por voz",
+      "layer": "main",
+      "inputs": "contracts/imperio.rays.json",
+      "example": {
+        "use": "imperio.rays",
+        "params": {
+          "from": [
+            139,
+            33,
+            50,
+            0
+          ],
+          "to": [
+            139,
+            33,
+            50,
+            0
+          ],
+          "hatch": [],
+          "country": "Japan",
+          "rays": 28,
+          "rayFloor": 0.02,
+          "raysAt": 0.2
+        }
+      }
+    },
+    {
+      "name": "imperio.ships",
+      "summary": "Barcos pequeños que avanzan sobre las rutas del abanico",
+      "layer": "main",
+      "inputs": "contracts/imperio.ships.json",
+      "example": {
+        "use": "imperio.ships",
+        "params": {
+          "from": [
+            139,
+            33,
+            50,
+            0
+          ],
+          "to": [
+            139,
+            33,
+            50,
+            0
+          ],
+          "hatch": [],
+          "country": "Japan",
+          "ships": 5,
+          "rayLen": 0.35,
+          "raysAt": 0.1
+        }
+      }
+    },
+    {
+      "name": "imperio.compass",
+      "summary": "Rosa de los vientos de línea fina que acompaña el giro del mapa; es la del archivo original.",
+      "layer": "main",
+      "inputs": "contracts/imperio.compass.json",
+      "example": {
+        "use": "imperio.compass",
+        "params": {
+          "from": [
+            139,
+            33,
+            50,
+            0
+          ],
+          "to": [
+            139,
+            33,
+            50,
+            0
+          ],
+          "hatch": [],
+          "country": "Japan"
+        }
+      }
+    },
+    {
+      "name": "common.flash",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "layer": "overlay",
+      "inputs": "contracts/common.flash.json",
+      "example": {
+        "use": "common.flash",
+        "params": {
+          "color": "palette.ink"
+        }
+      }
+    },
+    {
+      "name": "common.lyric",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "layer": "main",
+      "inputs": "contracts/common.lyric.json",
+      "example": {
+        "use": "common.lyric",
+        "params": {
+          "accent": [
+            "vidas"
+          ],
+          "size": 0.9
+        }
+      }
+    }
+  ]
+}

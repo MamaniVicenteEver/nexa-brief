@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     approveTokenExpiresAt: expiresAt,
   });
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.PUBLIC_APP_URL ?? "http://localhost:3000";
   const approveUrl = `${appUrl}/api/access-requests/${accessRequest.id}/approve?token=${token}`;
   const adminEmail = process.env.ADMIN_EMAIL;
 

@@ -1,0 +1,29 @@
+import bpy,bmesh,json,math
+sprite=SPRITE
+coll=bpy.data.collections['AEM_M3_'+sprite]
+dg=bpy.context.evaluated_depsgraph_get()
+report={'sprite':sprite,'meshes':0,'triangles':0,'boundary_edges':0,'nonmanifold_edges':0,'loose_vertices':0,'degenerate_faces':0,'duplicate_faces':0,'nonunit_scales':0,'negative_volumes':0,'bad_normals':0,'materials':{}}
+for ob in coll.objects:
+    if ob.type!='MESH': continue
+    report['meshes']+=1
+    ev=ob.evaluated_get(dg); me=ev.to_mesh(); bm=bmesh.new()
+    try:
+        bm.from_mesh(me); bm.verts.index_update(); signatures=set()
+        report['triangles']+=sum(len(f.verts)-2 for f in bm.faces)
+        report['boundary_edges']+=sum(e.is_boundary for e in bm.edges)
+        report['nonmanifold_edges']+=sum(not e.is_manifold and not e.is_boundary for e in bm.edges)
+        report['loose_vertices']+=sum(not v.link_edges for v in bm.verts)
+        report['degenerate_faces']+=sum(f.calc_area()<1e-10 for f in bm.faces)
+        for f in bm.faces:
+            sig=tuple(sorted(v.index for v in f.verts))
+            report['duplicate_faces']+=sig in signatures; signatures.add(sig)
+            report['bad_normals']+=not all(math.isfinite(c) for c in f.normal) or f.normal.length<.9
+        report['negative_volumes']+=bm.calc_volume(signed=True)<-1e-8
+        report['nonunit_scales']+=any(abs(s-1)>1e-6 for s in ob.scale)
+    finally:
+        bm.free(); ev.to_mesh_clear()
+    for mat in ob.data.materials:
+        if mat.name in report['materials']: continue
+        sh=next((n for n in mat.node_tree.nodes if n.type=='BSDF_PRINCIPLED'),None)
+        report['materials'][mat.name]={'principled':sh is not None,'metallic':round(sh.inputs['Metallic'].default_value,3),'roughness':round(sh.inputs['Roughness'].default_value,3),'base_color':list(sh.inputs['Base Color'].default_value),'images':[(n.image.name,n.image.colorspace_settings.name) for n in mat.node_tree.nodes if n.type=='TEX_IMAGE' and n.image]}
+print(json.dumps(report,separators=(',',':')))

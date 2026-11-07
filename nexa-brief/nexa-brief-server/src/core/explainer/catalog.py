@@ -22,12 +22,27 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from src.config.settings import BASE_DIR
+from src.config.content_paths import production_root, preview_directory
+from src.core.explainer import narrative
+from src.core.explainer.render_paths import full_render_files, render_label
 from src.core.categories import category_for_design, explainer_folders, get_category
 
 TEMPLATES_DIR: Path = BASE_DIR / "src" / "templates"
 KIT_DIR: Path = TEMPLATES_DIR / "_tools" / "explainer-kit"
 READY_STATUSES = frozenset({"listo", "renderizado"})
 UNCATEGORIZED = "sin_categoria"
+
+
+@dataclass
+class ThumbnailVariant:
+    option: str
+    label: str
+    mode: str
+    lines: list[str] = field(default_factory=list)
+    text: str = ""
+    highlight: str = ""
+    image_path: str | None = None
+    paired_title: str = "A"
 
 
 @dataclass
@@ -47,9 +62,18 @@ class ExplainerVideo:
     facebook_description: str = ""
     tiktok_caption: str = ""
     tiktok_hashtags: list[str] = field(default_factory=list)
+    thumbnail_variants: list[ThumbnailVariant] = field(default_factory=list)
     topic: str = ""
+    narrative_id: str | None = None      # estrategia narrativa del guion (None = videos anteriores)
+    narrative_label: str | None = None
     has_poster: bool = False
     demo: bool = False      # demo de un diseño (mismo guion que otro video): ojo al publicar
+    quality_issues: list[str] = field(default_factory=list)
+    shared_categories: list[str] = field(default_factory=list)
+
+    @property
+    def category_paths(self) -> list[str]:
+        return list(dict.fromkeys([self.category_path, *self.shared_categories]))
 
     @property
     def ready(self) -> bool:
@@ -63,7 +87,12 @@ class ExplainerVideo:
 def _read_json(path: Path) -> dict:
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        return value if isinstance(value, dict) else {}
+    except (ValueError, OSError):
+        # Parallel agents may be replacing an incomplete draft during catalogue reads.
+        return {}
 
 
 def load_video(video_dir: Path) -> ExplainerVideo | None:
@@ -71,6 +100,21 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
     if not manifest:
         return None
     publish = _read_json(video_dir / "publish.json")
+    story = narrative.recorded(video_dir)
+    thumbnail_variants = [
+        ThumbnailVariant(
+            option=str(item.get("option", "")),
+            label=str(item.get("label", "")),
+            mode=str(item.get("mode", "text")),
+            lines=[str(line) for line in item.get("lines", []) if isinstance(line, str)],
+            text=str(item.get("text", "")),
+            highlight=str(item.get("highlight", "")),
+            image_path=str(item["image_path"]) if item.get("image_path") else None,
+            paired_title=str(item.get("paired_title", "A")),
+        )
+        for item in publish.get("thumbnail_variants", [])
+        if isinstance(item, dict) and item.get("option") in {"A", "B", "C"}
+    ]
     design = manifest.get("design") or "binary"
     override = manifest.get("category")
     if override and get_category(override) is not None:
@@ -87,7 +131,7 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         title=manifest.get("title") or video_dir.name,
         status=manifest.get("status", "en progreso"),
         duration_seconds=manifest.get("duration_seconds"),
-        rendered=sorted(p.name for p in (video_dir / "render").glob("*.mp4")),
+        rendered=sorted({render_label(video_dir, p) for p in full_render_files(video_dir)}),
         youtube_title=publish.get("youtube_title", "") or "",
         youtube_description=publish.get("youtube_description", "") or "",
         youtube_tags=list(publish.get("youtube_tags", []) or []),
@@ -95,30 +139,44 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         facebook_description=publish.get("facebook_description", "") or "",
         tiktok_caption=publish.get("tiktok_caption", "") or "",
         tiktok_hashtags=list(publish.get("tiktok_hashtags", []) or []),
+        thumbnail_variants=thumbnail_variants,
         topic=manifest.get("topic", "") or "",
+        narrative_id=story.narrative_id,
+        narrative_label=story.label,
         demo=bool(manifest.get("demo")),
-        has_poster=(video_dir / "render" / "poster.jpg").exists(),
+        shared_categories=[c for c in manifest.get("shared_categories", [])
+                           if isinstance(c, str) and get_category(c) is not None],
+        quality_issues=[str(issue) for issue in manifest.get("quality_issues", []) if isinstance(issue, str)],
+        has_poster=(preview_directory(video_dir) / "poster.jpg").exists(),
     )
 
 
 def video_roots() -> list[Path]:
     """Carpetas de video de las categorías explainer que existen en disco."""
-    return [TEMPLATES_DIR / folder for folder in explainer_folders()]
+    roots = [production_root() / folder for folder in explainer_folders()]
+    return roots
 
 
 def list_videos(root: Path | None = None) -> list[ExplainerVideo]:
     """Videos de todas las carpetas de categoría (o de una sola `root`)."""
     roots = [root] if root is not None else video_roots()
-    return [
+    videos = [
         v
         for r in roots
         if r.exists()
         for v in (load_video(d) for d in sorted(r.iterdir()) if d.is_dir())
         if v
     ]
+    # Samples are catalogued separately and never become mutable productions.
+    unique = {}
+    for video in videos:
+        unique.setdefault(video.video_id, video)
+    return list(unique.values())
 
 
 def find_video_dir(video_id: str, root: Path | None = None) -> Path | None:
+    if not video_id or Path(video_id).name != video_id or video_id in {".", ".."}:
+        return None
     for r in [root] if root is not None else video_roots():
         if (r / video_id).is_dir():
             return r / video_id

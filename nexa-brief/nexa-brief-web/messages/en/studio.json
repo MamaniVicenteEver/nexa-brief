@@ -10,7 +10,10 @@
       "song": "Song",
       "media": "Media",
       "texts": "Texts",
-      "render": "Record"
+      "render": "Record",
+      "original": "Original video",
+      "sandbox": "Sandbox",
+      "record": "Record"
     },
     "actions": {
       "preview": "Preview",
@@ -44,7 +47,9 @@
         "publishing": "publishing",
         "published": "published",
         "failed": "failed"
-      }
+      },
+      "preparing": "Preparing the publishing texts…",
+      "prepared": "Prepared: review the Details or record it."
     },
     "song": {
       "title": "Song",
@@ -112,6 +117,127 @@
       "publishHint": "Optional: pick connected accounts. If you pick none, the video stays in the Library.",
       "loadingAccounts": "Loading accounts…",
       "noAccounts": "No connected accounts."
+    },
+    "original": {
+      "hint": "This is the template as is. To make your version, create a prototype in the Sandbox.",
+      "needs": "What it needs",
+      "song": "Song",
+      "songLyrics": "lyrics are transcribed automatically",
+      "songOnly": "no lyrics on screen",
+      "kind": {
+        "image": "image",
+        "video": "video",
+        "any": "image or video"
+      },
+      "count": "{min, plural, =0 {up to {max}} other {{min} to {max}}}",
+      "texts": "Texts",
+      "textsCount": "{n, plural, one {# editable text} other {# editable texts}}",
+      "records": "How it records",
+      "default": "default: {engine}",
+      "formats": "16:9 always; 9:16 optional when recording.",
+      "flowTitle": "How a video is made",
+      "flow1": "Sandbox: create a prototype with your song and media.",
+      "flow2": "Preview it in the player.",
+      "flow3": "Prepare: the song name, titles, descriptions and tags for each network are generated (editable in Details).",
+      "flow4": "Record: pick the prototype, engine, formats and channels.",
+      "newPrototype": "New prototype",
+      "openSandbox": "See prototypes ({n})",
+      "sectionDetails": "Details",
+      "sectionPublication": "Publishing",
+      "recordOriginal": "Record the original",
+      "publicationHint": "What would be published on each network if you record the template as is, with its song and background.",
+      "editPublication": "Edit texts",
+      "preparing": "Preparing (previewing and writing the texts)…",
+      "preparePublication": "Prepare the publishing",
+      "prepareAgain": "Prepare again with this information"
+    },
+    "sandbox": {
+      "title": "Prototypes",
+      "count": "{n, plural, =0 {none} one {# prototype} other {# prototypes}}",
+      "hint": "Each prototype is a version of this template with its song, background video or image, and texts.",
+      "loading": "Loading prototypes…",
+      "empty": "No prototypes yet. Create the first one with your song.",
+      "new": "New prototype",
+      "defaultName": "Prototype {n}",
+      "noSongName": "Not prepared",
+      "delete": "Delete prototype",
+      "deleteConfirm": "Delete this prototype? If it was recorded, the video stays in the Library.",
+      "back": "Back to the list",
+      "name": "Prototype name",
+      "status": {
+        "new": "Not prepared",
+        "previewing": "Previewing",
+        "preview_ready": "To prepare",
+        "preparing": "Preparing",
+        "prepared": "Prepared",
+        "rendering": "Recording",
+        "rendered": "Recorded",
+        "failed": "Failed"
+      },
+      "actions": {
+        "preview": "Preview",
+        "previewAgain": "Preview again",
+        "working": "Working…",
+        "preparing": "Preparing texts…",
+        "prepare": "Prepare",
+        "prepareHint": "Prepare generates the song name and the titles, descriptions and tags for YouTube, Facebook, Instagram and TikTok.",
+        "details": "Details",
+        "hideDetails": "Back to media",
+        "goRecord": "Go to record",
+        "prepareAgain": "Prepare the texts again",
+        "prepareAgainConfirm": "You edited the details: preparing again replaces them. Continue?",
+        "missingSong": "Pick a song to preview.",
+        "missingMedia": "Fill the highlighted media to preview."
+      }
+    },
+    "details": {
+      "title": "Details",
+      "edited": "Edited",
+      "song": "Song",
+      "songName": "Song name",
+      "artist": "Artist",
+      "noSong": "No song name",
+      "platforms": "Texts per network",
+      "platformsHint": "They are published as is. Review them and change anything you want.",
+      "postTitle": "Title",
+      "description": "Description",
+      "tags": "Tags",
+      "tagsPlaceholder": "comma separated",
+      "close": "Close",
+      "save": "Save changes",
+      "pinned": "Pinned comment",
+      "research": "Prior research",
+      "songHint": "It's also what the video's intro card shows."
+    },
+    "record": {
+      "empty": "No prepared prototypes. In the Sandbox, preview one and tap “Prepare”.",
+      "goSandbox": "Create a prototype in the Sandbox",
+      "prototype": "Prototype",
+      "prototypeHint": "The original video or one of your prepared prototypes.",
+      "formats": "Formats",
+      "formatsHint": "16:9 is always recorded. Add 9:16 for Reels, TikTok or Shorts.",
+      "publish": "Publish when done",
+      "publishHint": "Optional. Each account publishes in one format. If you pick none, the video stays in the Library.",
+      "record": "Record",
+      "recording": "Recording…",
+      "recordAndPublish": "{count, plural, one {Record and publish to # channel} other {Record and publish to # channels}}",
+      "original": "Original video",
+      "originalHint": "The template as is: its song and background",
+      "originalNotPrepared": "The original has no publishing texts yet. Prepare it (takes a few seconds) and then record it.",
+      "prepareOriginal": "Prepare the original video"
+    },
+    "songNotes": {
+      "label": "About the song",
+      "optional": "Optional",
+      "placeholder": "Name, artist, what it is about, who it speaks to, when people listen to it…",
+      "hint": "If you write it, the AI researches with it before writing the texts. If not, it identifies the song by its name or lyrics."
+    },
+    "introSong": {
+      "title": "Song in the intro",
+      "hint": "It's what the opening card of the video says. Change it before recording if needed.",
+      "song": "Song name",
+      "artist": "Artist",
+      "save": "Save"
     }
   }
 }

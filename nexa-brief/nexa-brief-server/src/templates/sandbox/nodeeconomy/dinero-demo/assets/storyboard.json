@@ -1,0 +1,668 @@
+{
+ "version": 1,
+ "family": "dinero",
+ "title": "2 MESES PARA CREAR LA IA",
+ "defaults": {
+  "offset": -0.12
+ },
+ "beats": [
+  {
+   "t": 0.0,
+   "offset": 0,
+   "use": "dinero.title",
+   "params": {
+    "text": "MONEY",
+    "src": "assets/media/fajos.jpg",
+    "src2": "assets/media/contando.jpg"
+   }
+  },
+  {
+   "t": 1.07,
+   "offset": 0,
+   "use": "dinero.cash",
+   "params": {
+    "src1": "assets/media/billete100.jpg",
+    "src2": "assets/media/dolar1957.jpg",
+    "src3": "assets/media/monedas.jpg"
+   }
+  },
+  {
+   "t": 1.95,
+   "offset": 0,
+   "use": "dinero.neon",
+   "params": {
+    "text": "MONEY",
+    "sub": "TALKS"
+   }
+  },
+  {
+   "t": 3.15,
+   "offset": 0,
+   "use": "dinero.count",
+   "params": {
+    "src": "assets/media/abanico.jpg",
+    "text": "MONEY"
+   }
+  },
+  {
+   "t": 3.8,
+   "offset": 0,
+   "use": "dinero.spin",
+   "params": {
+    "words": [
+     "Dirty",
+     "^Cash^",
+     "Want",
+     "^YOU^",
+     "Dirty",
+     "^Cash^",
+     "Need",
+     "Dirty",
+     "^HuH^"
+    ],
+    "lensAt": 1.5,
+    "coins": 6
+   }
+  },
+  {
+   "t": 8.4,
+   "offset": 0,
+   "use": "dinero.block",
+   "params": {
+    "text": "MONEY\nTALKS",
+    "pole": true
+   }
+  },
+  {
+   "t": 9.5,
+   "offset": 0,
+   "use": "dinero.head",
+   "params": {
+    "word": "LONG",
+    "text": "TRY UNTIL SUCCESS",
+    "split": 0.55
+   }
+  },
+  {
+   "t": 10.6,
+   "offset": 0,
+   "use": "dinero.note",
+   "params": {
+    "text": "MONEY\nTALKS!",
+    "bg": "white",
+    "size": 0.8
+   }
+  },
+  {
+   "t": 11.55,
+   "offset": 0,
+   "use": "dinero.pin",
+   "params": {
+    "label": ""
+   }
+  },
+  {
+   "t": 12.25,
+   "offset": 0,
+   "use": "dinero.outline",
+   "params": {
+    "words": [
+     "dirty",
+     "cash",
+     "want",
+     "i",
+     "^you^"
+    ],
+    "ghost": "dirty"
+   }
+  },
+  {
+   "t": 14.25,
+   "offset": 0,
+   "use": "dinero.eye",
+   "params": {
+    "text": "DIRTY\nCASH"
+   }
+  },
+  {
+   "t": 15.25,
+   "offset": 0,
+   "use": "dinero.eyes",
+   "params": {
+    "text": "NEED\nYOU",
+    "count": 6
+   }
+  },
+  {
+   "t": 16.0,
+   "offset": 0,
+   "use": "dinero.note",
+   "params": {
+    "text": "HUH!",
+    "bg": "black",
+    "size": 0.65
+   },
+   "dur": 0.77
+  },
+  {
+   "at": "ninguna",
+   "use": "dinero.note",
+   "params": {
+    "text": "NINGUNA",
+    "bg": "white"
+   }
+  },
+  {
+   "at": "Todo había",
+   "use": "dinero.neon",
+   "params": {
+    "text": "TODO HABÍA",
+    "sub": "EMPEZADO"
+   }
+  },
+  {
+   "at": "empezado un año antes",
+   "use": "dinero.note",
+   "params": {
+    "text": "UNA CARTA",
+    "bg": "white"
+   }
+  },
+  {
+   "at": "En 1955",
+   "use": "dinero.count",
+   "params": {
+    "src": "assets/media/dartmouth.jpg",
+    "text": "1955",
+    "sub": "DARTMOUTH"
+   }
+  },
+  {
+   "at": "cuatro investigadores",
+   "use": "dinero.outline",
+   "params": {
+    "words": [
+     "CUATRO",
+     "NOMBRES"
+    ]
+   }
+  },
+  {
+   "at": "Prometen algo",
+   "use": "dinero.head",
+   "params": {
+    "word": "PROMESA",
+    "text": "2 MESES · 10 PERSONAS",
+    "split": 0.55
+   }
+  },
+  {
+   "at": "Dicen que",
+   "use": "dinero.spin",
+   "params": {
+    "words": [
+     "2 MESES",
+     "10 PERSONAS",
+     "^IMPOSIBLE^"
+    ],
+    "accent": [
+     "IMPOSIBLE"
+    ]
+   }
+  },
+  {
+   "at": "resolver",
+   "use": "dinero.outline",
+   "params": {
+    "words": [
+     "APRENDER",
+     "Y RAZONAR"
+    ]
+   }
+  },
+  {
+   "at": "Su apuesta",
+   "use": "dinero.head",
+   "params": {
+    "word": "IDEA",
+    "text": "UNA SOLA FRASE",
+    "split": 0.55
+   }
+  },
+  {
+   "at": "cualquier rasgo",
+   "use": "dinero.eye",
+   "params": {
+    "text": "INTELIGENCIA"
+   }
+  },
+  {
+   "at": "Los nombres",
+   "use": "dinero.eyes",
+   "params": {
+    "text": "CUATRO\nNOMBRES",
+    "count": 6
+   }
+  },
+  {
+   "at": "John McCarthy",
+   "use": "dinero.count",
+   "params": {
+    "src": "assets/media/mccarthy.jpg",
+    "text": "JOHN MCCARTHY",
+    "sub": "1956"
+   }
+  },
+  {
+   "at": "Claude Shannon",
+   "use": "dinero.count",
+   "params": {
+    "src": "assets/media/shannon.jpg",
+    "text": "CLAUDE SHANNON",
+    "sub": "1956"
+   }
+  },
+  {
+   "at": "Pidieron",
+   "use": "dinero.note",
+   "params": {
+    "text": "13.500\nDÓLARES",
+    "bg": "white"
+   }
+  },
+  {
+   "at": "Les dieron",
+   "use": "dinero.block",
+   "params": {
+    "text": "7.500\nDÓLARES",
+    "pole": true
+   }
+  },
+  {
+   "at": "Con eso",
+   "use": "dinero.neon",
+   "params": {
+    "text": "UN CAMPO",
+    "sub": "ENTERO"
+   }
+  },
+  {
+   "at": "Pero había",
+   "use": "dinero.pin",
+   "params": {
+    "label": "PROBLEMA"
+   }
+  },
+  {
+   "at": "No existía",
+   "use": "dinero.eye",
+   "params": {
+    "text": "NO EXISTE"
+   }
+  },
+  {
+   "at": "máquina capaz",
+   "use": "dinero.note",
+   "params": {
+    "text": "NINGUNA\nMÁQUINA",
+    "bg": "white"
+   }
+  },
+  {
+   "at": "No había pruebas",
+   "use": "dinero.outline",
+   "params": {
+    "words": [
+     "SIN",
+     "PRUEBAS",
+     "NI TEORÍA"
+    ]
+   }
+  },
+  {
+   "at": "Ahí entra McCarthy",
+   "use": "dinero.head",
+   "params": {
+    "word": "MCCARTHY",
+    "text": "UNA BANDERA PROPIA",
+    "sub": "DARTMOUTH · 1956",
+    "split": 0.55
+   }
+  },
+  {
+   "at": "Quería separarse",
+   "use": "dinero.pin",
+   "params": {
+    "label": "SEPARARSE"
+   }
+  },
+  {
+   "at": "matemáticas puras",
+   "use": "dinero.spin",
+   "params": {
+    "words": [
+     "MATEMÁTICAS",
+     "CIBERNÉTICA"
+    ]
+   }
+  },
+  {
+   "at": "Necesitaba",
+   "use": "dinero.neon",
+   "params": {
+    "text": "UNA BANDERA",
+    "sub": "PROPIA"
+   }
+  },
+  {
+   "at": "Entonces eligió",
+   "use": "dinero.outline",
+   "params": {
+    "words": [
+     "DOS",
+     "PALABRAS"
+    ]
+   }
+  },
+  {
+   "at": "Las escribió",
+   "use": "dinero.neon",
+   "params": {
+    "text": "INTELIGENCIA",
+    "sub": "ARTIFICIAL"
+   }
+  },
+  {
+   "at": "inteligencia artificial",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "inteligencia",
+     "artificial"
+    ],
+    "size": 0.84,
+    "y": 0.2
+   },
+   "dur": 1.8,
+   "layer": "overlay"
+  },
+  {
+   "at": "Un nombre para una ciencia",
+   "use": "dinero.note",
+   "params": {
+    "text": "UN NOMBRE",
+    "bg": "white"
+   }
+  },
+  {
+   "at": "Y el nombre",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "nombre",
+     "cosa"
+    ],
+    "size": 0.88,
+    "y": 0.2
+   },
+   "dur": 2.3,
+   "layer": "overlay"
+  },
+  {
+   "at": "Ese verano",
+   "use": "dinero.block",
+   "params": {
+    "text": "UN CAMPO\nENTERO",
+    "pole": false
+   }
+  },
+  {
+   "at": "Una idea sin máquina",
+   "use": "dinero.head",
+   "params": {
+    "word": "IDEA",
+    "text": "YA TENÍA FUTURO",
+    "split": 0.55
+   }
+  },
+  {
+   "at": "La euforia",
+   "use": "dinero.spin",
+   "params": {
+    "words": [
+     "EUFORIA",
+     "FUTURO"
+    ]
+   }
+  },
+  {
+   "at": "programa llamado",
+   "use": "dinero.block",
+   "params": {
+    "text": "LOGIC\nTHEORIST",
+    "pole": false
+   }
+  },
+  {
+   "at": "Una máquina razonaba",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "máquina",
+     "razonaba"
+    ],
+    "size": 0.86,
+    "y": 0.2
+   },
+   "dur": 1.7,
+   "layer": "overlay"
+  },
+  {
+   "at": "Todos creyeron",
+   "use": "dinero.eyes",
+   "params": {
+    "text": "EL FUTURO\nLLEGÓ",
+    "count": 6
+   }
+  },
+  {
+   "at": "Pero las promesas",
+   "use": "dinero.outline",
+   "params": {
+    "words": [
+     "PROMESAS",
+     "DEMASIADO",
+     "GRANDES"
+    ]
+   }
+  },
+  {
+   "at": "Pasaban los años",
+   "use": "dinero.note",
+   "params": {
+    "text": "NO APARECÍA",
+    "bg": "black"
+   }
+  },
+  {
+   "at": "Entonces llegó",
+   "use": "dinero.eye",
+   "params": {
+    "text": "EL FRÍO"
+   }
+  },
+  {
+   "at": "En los años 70",
+   "use": "dinero.neon",
+   "params": {
+    "text": "AÑOS 70",
+    "sub": "DINERO CONGELADO"
+   }
+  },
+  {
+   "at": "Lo llamaron",
+   "use": "dinero.note",
+   "params": {
+    "text": "INVIERNO\nDE LA IA",
+    "bg": "black"
+   }
+  },
+  {
+   "at": "Lo llamaron",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "invierno"
+    ],
+    "size": 0.86,
+    "y": 0.2
+   },
+   "dur": 2.1,
+   "layer": "overlay"
+  },
+  {
+   "at": "Llegó uno",
+   "use": "dinero.spin",
+   "params": {
+    "words": [
+     "UNO",
+     "Y LUEGO",
+     "OTRO"
+    ]
+   }
+  },
+  {
+   "at": "La vieja idea",
+   "use": "dinero.pin",
+   "params": {
+    "label": "NO MURIÓ"
+   }
+  },
+  {
+   "at": "Solo esperó",
+   "use": "dinero.note",
+   "params": {
+    "text": "SOLO\nESPERÓ",
+    "bg": "white"
+   }
+  },
+  {
+   "at": "Esperó a que llegaran",
+   "use": "dinero.block",
+   "params": {
+    "text": "TRES\nCOSAS",
+    "pole": false
+   }
+  },
+  {
+   "at": "montañas de datos",
+   "use": "dinero.outline",
+   "params": {
+    "words": [
+     "DATOS",
+     "POTENCIA",
+     "REDES"
+    ]
+   }
+  },
+  {
+   "at": "En 2012",
+   "use": "dinero.note",
+   "params": {
+    "text": "2012",
+    "bg": "white",
+    "size": 1.4
+   }
+  },
+  {
+   "at": "Una red neuronal",
+   "use": "dinero.head",
+   "params": {
+    "word": "RED",
+    "text": "RECONOCE IMÁGENES",
+    "sub": "2012",
+    "split": 0.55
+   }
+  },
+  {
+   "at": "La vieja promesa",
+   "use": "dinero.block",
+   "params": {
+    "text": "LA PROMESA\nSE CUMPLE",
+    "pole": false
+   }
+  },
+  {
+   "at": "Hoy esa misma idea",
+   "use": "dinero.eyes",
+   "params": {
+    "text": "EN TU\nBOLSILLO",
+    "count": 6
+   }
+  },
+  {
+   "at": "Hoy esa",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "bolsillo"
+    ],
+    "size": 0.86,
+    "y": 0.2
+   },
+   "dur": 2.1,
+   "layer": "overlay"
+  },
+  {
+   "at": "Decide qué video",
+   "use": "dinero.eye",
+   "params": {
+    "text": "QUÉ VIDEO\nVES"
+   }
+  },
+  {
+   "at": "La frase que inventaron",
+   "use": "dinero.outline",
+   "params": {
+    "words": [
+     "LA FRASE",
+     "CADA HORA",
+     "CONTIGO"
+    ]
+   }
+  },
+  {
+   "at": "La inteligencia artificial",
+   "use": "dinero.neon",
+   "params": {
+    "text": "INTELIGENCIA",
+    "sub": "ARTIFICIAL"
+   }
+  },
+  {
+   "at": "Empezó con una apuesta",
+   "use": "dinero.head",
+   "params": {
+    "word": "APUESTA",
+    "text": "PONERLE NOMBRE",
+    "sub": "DARTMOUTH · 1956",
+    "split": 0.55
+   },
+   "dur": 7.9
+  },
+  {
+   "at": "Con el valor",
+   "use": "common.lyric",
+   "params": {
+    "accent": [
+     "valor",
+     "nombre"
+    ],
+    "size": 0.84,
+    "y": 0.2
+   },
+   "dur": 4.0,
+   "layer": "overlay"
+  }
+ ]
+}

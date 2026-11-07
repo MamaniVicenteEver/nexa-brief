@@ -1,0 +1,53 @@
+# Auditoría histórica del benchmark v2: hashes y ganchos pertenecen al motor original conservado.
+"""Puertas reproducibles de la entrega; la de rendimiento puede quedar pendiente."""
+import hashlib
+import json
+from pathlib import Path
+
+root = Path.cwd()
+bench = root / 'work/bench'
+def read(name):
+    return json.loads((bench / name).read_text())
+
+metrics = read('results/metrics-v2.json')
+b = metrics['bases']['plano']
+diff = read('results/difference-v2.json')
+qa = read('results/qa-v2.json')
+exact = read('results/exact-v2-validation.json')
+frames = read('results/v2/plano-frames.json')
+initial = read('results/v2-initial/plano-frames.json')
+hooks = lambda path: [line for line in path.read_text().splitlines() if 'tactico' in line]
+source_ok = all(hashlib.sha256((root/'engine/plano'/name).read_bytes()).hexdigest() == digest
+                for name, digest in metrics['sourceSHA256'].items())
+reference_ok = all(hashlib.sha256((bench/'reference'/name).read_bytes()).hexdigest() == digest
+                   for name, digest in read('reference-hashes.json').items())
+checks = {
+    'full751Frames': len(frames) == b['timingMs']['frames'] == 751 and not metrics['quick'],
+    'fiveSeeks': len(b['determinism']) == 5 and all(r['equal'] for r in b['determinism']),
+    'noConsoleOrHttpErrors': not b['consoleErrors'] and not b['httpErrors'],
+    'noUnexpectedLoads': b['resourceEntriesDuringFrames'] == 0 and b['stats']['unplanned'] == 0,
+    'noMovingDuplicates': b['movingPairs'] == 399 and not b['movingDuplicates'],
+    'exactReference12of12': exact['allEqual'] and exact['frames'] == 12,
+    'all88PixelComparisons': diff['frames'] == 88 and not diff['missingPairs'],
+    'qaPassed': qa['ok'],
+    'hooksUnchanged': hooks(root/'engine/plano/plano.js') == hooks(bench/'reference/plano.js'),
+    'measuredSourceUnchanged': source_ok,
+    'referenceUnchanged': reference_ok,
+    'optionalInfoFixPreservesAll751Hashes': [r['hash'] for r in frames] == [r['hash'] for r in initial],
+    'atlasTests': 'pass 27' in (bench/'atlas-tests-v2.txt').read_text() and 'fail 0' in (bench/'atlas-tests-v2.txt').read_text(),
+    'ownTests': 'pass 8' in (bench/'unit-tests-v2.txt').read_text() and 'fail 0' in (bench/'unit-tests-v2.txt').read_text(),
+}
+historical = read('results/metrics.json')['bases']['plano']
+gates = {
+    'meanAtMost150ms': b['timingMs']['mean'] <= 150,
+    'p95AtMost350ms': b['timingMs']['p95'] <= 350,
+    'preloadAtMostTwiceHistorical': b['preloadSeconds'] <= 2 * historical['preloadSeconds'],
+    'completeTiles': not b['missingTiles'],
+}
+result = {'checks': checks, 'checksPassed': all(checks.values()), 'promotionGates': gates,
+          'readyForPromotion': all(checks.values()) and all(gates.values()),
+          'qualityMetrics': {k: v for k, v in diff.items() if k != 'framesMetrics'},
+          'note': 'PSNR/SSIM se complementan con inspección visual; no certifican otras escenas.'}
+(bench/'results/verification-v2.json').write_text(json.dumps(result, indent=2) + '\n')
+print(json.dumps(result, indent=2))
+assert result['checksPassed'], 'Una comprobación funcional falló; revisar verification-v2.json'

@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "idioma": "es",
+  "base_rutas": "Todas las rutas son relativas a sandbox/nodeaction/_vida salvo que se indique lo contrario.",
+  "objetivo": "Orientar al agente con lectura selectiva; las fuentes y validadores son la autoridad si cambian. No asumir que documentar una capacidad la implementa.",
+  "id": "animaciones",
+  "titulo": "Crear o ampliar animaciones",
+  "resumen": "Reutiliza acciones, gestos y expresiones existentes cuando alcancen; amplía el motor solo si la capacidad solicitada falta.",
+  "decision": [
+    {
+      "si": "El movimiento ya existe",
+      "leer": [
+        "catalog.json: actions, expressions, fx y sus params",
+        "docs/EPISODIO.md: steps, actions, parallel y anclas",
+        "../vida-en-escena/assets/episodes/catalogo-acciones.json",
+        "../vida-en-escena/assets/episodes/capacidades.json"
+      ],
+      "hacer": [
+        "Añade acciones al episodio con who, action y parámetros admitidos. Usa pasos secuenciales o parallel según corresponda.",
+        "Para gestos usa action=gesture y su kind; para reacción usa action=react y su kind; no confundas gestos con nuevas acciones.",
+        "Ejecuta el validador sobre el episodio y revisa la animación. No modifiques el motor solo para combinar capacidades existentes."
+      ]
+    },
+    {
+      "si": "Falta un gesto, una acción o comportamiento compartido",
+      "leer": [
+        "VIDA.md: secciones «API de acciones», «Añadir una acción sin romper episodios» y «Cuando falta una acción»",
+        "engine/act/index.js: ACTIONS, reg y actionLayers; leer solo acciones análogas",
+        "engine/act/gestures.js: solo si se amplían gestos automáticos al hablar",
+        "engine/core/sample.js y engine/core/compile.js: solo si hay persistencia, interacción u objetos",
+        "tools/build-schema.mjs y schema/episode.schema.json: definición correspondiente",
+        "tools/catalog-stage2.mjs: actions y selección de ejemplos",
+        "showcase.js: sección actions",
+        "test/episode.test.mjs y test/capabilities.test.mjs: casos análogos"
+      ],
+      "hacer": [
+        "Define nombre estable, parámetros, tipos, rangos, defaults, campos requeridos, duración mínima y capas afectadas.",
+        "Para una acción nueva registra ACTIONS con plan(ctx) y sample(state,tLocal) puros; plan resuelve datos estáticos y sample reconstruye el estado desde el tiempo. Para un nuevo kind de gesture amplía GESTURE_NAMES y su caso de sample.",
+        "Respeta mezcla de capas, manos ocupadas, estado sentado, locomoción y prioridad de voz. Conserva compatibilidad con episodios existentes.",
+        "Si se transfieren objetos, modela reserva de manos, alcance, continuidad del grip y dueño único en compile/sample; una acción persistente exige reconstrucción al hacer seek.",
+        "Sincroniza validación y schema: ajusta el generador y el esquema generado, y comprueba que no se pierdan capacidades existentes. Ver precaución sobre build-schema.",
+        "Añade un ejemplo ejecutable a ../vida-en-escena/assets/episodes/capacidades.json o un episodio de demostración apropiado y verifica que catalog-stage2.mjs lo encuentra. Una entrada sin demo de episodio cae en VIDA.md y no sirve como vista animada de Showcase.",
+        "Regenera catálogo y Showcase; comprueba el frame y la reproducción de la tarjeta en ambas orientaciones."
+      ]
+    }
+  ],
+  "ejemplo_uso_existente": {
+    "descripcion": "Fragmentos de steps para saludar y luego expresar sorpresa; requieren actor lucia en la escena.",
+    "steps": [
+      {
+        "do": {
+          "who": "lucia",
+          "action": "wave",
+          "hand": "right",
+          "dur": 1.2
+        }
+      },
+      {
+        "do": {
+          "who": "lucia",
+          "action": "react",
+          "kind": "surprise",
+          "dur": 1.1
+        }
+      }
+    ]
+  },
+  "contrato_y_limites": [
+    "Las acciones comunes usan who, action, dur opcional; el resto depende de ACTIONS y schema. Consulta el catálogo vigente para valores exactos.",
+    "El motor es determinista: no uses reloj real, DOM, acumulación entre cuadros ni random global. La misma entrada y tiempo deben producir el mismo cuadro.",
+    "Dos acciones explícitas incompatibles en el mismo canal fallan; blend:true es una mezcla intencional, no elimina restricciones de locomoción o propiedad.",
+    "Modificar la pose común afecta potencialmente a todos los personajes. Para una personalidad propia define cómo se selecciona y prueba su configuración; no afirmes que el motor ya la asigna automáticamente.",
+    "No se genera voz ni se graba video al añadir una acción."
+  ],
+  "precaucion_generador": "El generador conserva el contrato vigente de cámara y acepta una ruta opcional: node tools/build-schema.mjs /tmp/vida-schema.json. Después de ampliar acciones, actualiza el generador y el esquema juntos, revisa la diferencia y ejecuta node --test test/schema-generation.test.mjs test/camera-contract.test.mjs. No edites solo el schema generado ni pierdas capacidades preexistentes.",
+  "validacion": {
+    "directorio": "sandbox/nodeaction/_vida",
+    "comandos": [
+      "node --test test/schema-generation.test.mjs test/camera-contract.test.mjs",
+      "node tools/validate.mjs ../vida-en-escena/assets/episodes/capacidades.json --view both",
+      "node --test test/episode.test.mjs test/capabilities.test.mjs",
+      "node --test test/*.test.mjs",
+      "node tools/catalog.mjs",
+      "node tools/showcase.mjs",
+      "node tools/showcase-thumbs.mjs"
+    ],
+    "comprobar": [
+      "El episodio de prueba usa realmente la capacidad nueva y el validador acepta entradas válidas y rechaza las inválidas.",
+      "Muestrea inicio, pico, final y límites ±1 µs; compara seek secuencial y aleatorio y rasters.",
+      "Si hay contacto, verifica alcance, manos ocupadas, transferencia continua y dueño único; si hay pies o asiento, contacto estable.",
+      "Revisa siluetas y recortes en portrait y landscape, y playback/stop y miniatura de la tarjeta. Las pruebas numéricas no sustituyen observación visual."
+    ],
+    "efectos": "catalog.mjs y showcase.mjs escriben archivos generados compartidos; showcase.mjs también actualiza sprites y los dos posters. showcase-thumbs.mjs captura toda la biblioteca usando Chromium instalado. No ejecutarlos si hay otra generación simultánea; revisa los cambios antes de entregarlos."
+  }
+}

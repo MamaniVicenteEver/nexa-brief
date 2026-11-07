@@ -7,7 +7,7 @@ import {
   QueryClientProvider,
   useQueryClient,
 } from "@tanstack/react-query";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useRealtimeStatus } from "@/features/realtime";
@@ -47,6 +47,11 @@ function RealtimeCacheSync() {
   return null;
 }
 
+function AuthenticatedRealtimeCacheSync() {
+  const { status } = useSession();
+  return status === "authenticated" ? <RealtimeCacheSync /> : null;
+}
+
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
@@ -60,7 +65,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        <RealtimeCacheSync />
+        <AuthenticatedRealtimeCacheSync />
         {children}
         <Toaster richColors position="top-right" />
       </QueryClientProvider>

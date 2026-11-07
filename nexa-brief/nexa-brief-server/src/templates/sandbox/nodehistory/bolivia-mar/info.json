@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "title": "Cómo Bolivia perdió su mar",
+  "summary": "Video explicativo con mapas satelitales sobre la pérdida de la costa soberana boliviana y el Tratado de 1904. El guion distingue la soberanía territorial del derecho de tránsito comercial hacia puertos del Pacífico.",
+  "engine": "nodehistory/_mapas",
+  "based_on": null,
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-10-23",
+  "libraries": [
+    {
+      "name": "d3-array",
+      "version": "3.2.4",
+      "purpose": "utilidades de datos geográficos"
+    },
+    {
+      "name": "d3-geo",
+      "version": "3.1.1",
+      "purpose": "proyecciones y geometría de mapas"
+    },
+    {
+      "name": "topojson-client",
+      "version": "3.1.0",
+      "purpose": "lectura de topología de países"
+    },
+    {
+      "name": "world-atlas countries-50m.js",
+      "version": "sin versión indicada en el archivo",
+      "purpose": "datos de fronteras de países"
+    },
+    {
+      "name": "Google Fonts: Montserrat",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía de mapas y rótulos"
+    }
+  ],
+  "inputs": [
+    "Voz sintetizada con Gemini 3.8 Flash TTS (dos iteraciones registradas) y transcripción Whisper.",
+    "NASA Blue Marble de julio de 2004 y escena cartográfica propia.",
+    "Ventanas de medio (assets/overlays.json): 13 fotos (Commons: PD, CC0, CC BY 2.0, CC BY-SA 4.0) y 1 clip de 12 s del noticiero Polygoon de 1946 (CC BY-SA 3.0 NL); créditos en assets/media/CREDITS.md."
+  ],
+  "notes": [
+    "PLAN.md pide neutralidad entre Bolivia, Chile y Perú; las regiones dibujadas son aproximaciones de trabajo, no una reconstrucción catastral.",
+    "Usa el motor compartido nodehistory/_mapas, ya estrenado por fronteras-demo; el render disponible es 9:16.",
+    "2026-10-26 · Ventanas de medio: componente reutilizable proto.media-window en sandbox/_proto/proto.js (registrado en _proto/components.json, doc en _mapas/ESCENA.md). La plantilla solo declara assets/overlays.json; sin ese archivo se ve igual que antes.",
+    "Uso: cada ítem lleva at (ancla de voz o segundos), dur, kind photo|video, src, aspect, caption, credit, context, corner (auto elige la esquina que no tapa pins/rótulos del mapa), w/x/y/h en %, opacity 0.78, focus, kenburns (1.06 por defecto en fotos), start (videos). Prueba rápida con ?overlays=<ruta>.",
+    "Videos: sin sonido, cargados como blob y siempre manejados por el reloj del motor: __promo.seek, ?t= y ?controls=1 esperan el seeked antes de dibujar (cuadro exacto, verificado con seek fuera de orden). En vivo siguen al audio con corrección de deriva > 0,25 s.",
+    "Ventanas existentes: salitre 109,4 s · Antofagasta 156,9 s · Abaroa 210,7 s · Día del Mar 222,3 s · Tratado 1904 312,3 s · ferrocarril 382,6 s · CIJ 425,6 s (video). Añadidas: acuerdo de 1866 34,76 s · puerto de Cobija 57,44 s · guano 69,86 s · tratado de 1874 83,76 s · Calama 195,96 s · Tratado de Ancón 259,83 s · Tratado de Lima 397,53 s. Las piezas retrospectivas, de otro periodo o lugar se rotulan imagen de contexto. Ningún material fue generado con IA.",
+    "Pendiente previo (no tocado): en 9:16 el pin «EDUARDO ABAROA» de scene.json se sale por el borde derecho. El render 9:16 de render/ es anterior a las ventanas: hay que volver a grabarlo."
+  ],
+  "usage_backfill": {
+    "estimated": true,
+    "source": "Estimación de ~/.codex/sessions/**/*.jsonl (Codex: 7 sesiones, 79 menciones de sandbox/nodehistory/bolivia-mar) y /home/alfred/codex/nexa-brief/claude-sessions-usage.json (Claude: 2 sesiones, 230 sandbox_mentions). Repartí los tokens de cada sesión que toca varias plantillas proporcionalmente a sus menciones de ruta; los modelos de Claude se asignaron según el recuento de modelos del resumen. El resumen Claude no trae reasoning_tokens (registrado como 0, no disponible por separado). Revisé sandbox/nodemotion/_codex/*.log: no tenían contadores numéricos de tokens (0 campos encontrados), así que no los sumé.",
+    "by_model": [
+      {
+        "provider": "claude",
+        "model": "claude-opus-5-5",
+        "input_tokens": 110,
+        "cached_input_tokens": 16771615,
+        "output_tokens": 69142,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "codex",
+        "model": "gpt-6-luna",
+        "input_tokens": 1407578,
+        "cached_input_tokens": 1369424,
+        "output_tokens": 15107,
+        "reasoning_tokens": 9626
+      }
+    ]
+  }
+}

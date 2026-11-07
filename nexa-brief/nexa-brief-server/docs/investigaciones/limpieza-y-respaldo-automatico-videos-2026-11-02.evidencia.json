@@ -1,0 +1,44 @@
+{
+  "completed_at_utc": "2026-11-03T01:32:53.403914+00:00",
+  "smoke": {
+    "real_render_seconds": 1,
+    "real_render_mp4_bytes": 462219,
+    "render_scratch_remaining": 0,
+    "backup_verified": true,
+    "restore_verified_files": 4,
+    "idempotent_second_poll": true,
+    "qa_frames_excluded": true,
+    "hdd_checked_by_real_uuid": true,
+    "qa_backup_removed": true,
+    "production_library_modified": false,
+    "finished_at": "2026-11-03T01:24:05.374966+00:00"
+  },
+  "backup_status": {
+    "updated_at": "2026-11-03T01:32:47.429396+00:00",
+    "active_since": "2026-11-03T01:19:10.718839+00:00",
+    "counts": {},
+    "errors": [],
+    "backup_failures": [],
+    "worker_error": null,
+    "enqueued": 0,
+    "scratch_removed": 0,
+    "backup_root": "/home/alfred/.local/mnt/nexa-backups/nexa-brief/producciones"
+  },
+  "services": "nexa-brief-api-1 Up 3 minutes (healthy)\nnexa-brief-web-1 Up 6 hours (healthy)\nnexa-brief-cloudflared Up 2 days\n",
+  "worker_enabled": "enabled",
+  "worker_active": "active",
+  "root_df": "Filesystem                           1B-blocks        Used    Available Use% Mounted on\n/dev/mapper/ubuntu--vg-ubuntu--lv 464422191104 83845107712 360567595008  19% /\n",
+  "hdd_df": "Filesystem        1B-blocks        Used    Available Use% Mounted on\n/dev/sdb3      496832081920 24086073344 472746008576   5% /home/alfred/.local/mnt/nexa-backups\n",
+  "runtime_user": "uid=1000(nexa) gid=1000(nexa) groups=1000(nexa)",
+  "source_hashes": {
+    "scripts/video_storage/storage_worker.py": "0d11f4807298094b8eca7603709f68fec78e0cc1cf986a88e10c31f2df332b57",
+    "scripts/video_storage/storage_discovery.py": "152e687e5415d960240ae97ea459e175b7b6f7908b6d2c6708f5df96cbb4fae6",
+    "scripts/video_storage/storage_supervisor.py": "cc4ef582eb35473f139f2af519a943d42b153189abaf40d553a3ba8b01508925",
+    "scripts/video_storage/restore_video.py": "cb22b4a681b53121a52bc8d1fb9badfac2895de1355bb4697a3782de95cdd9b9",
+    "nexa-brief-server/src/core/explainer/backup_event.py": "7d44e1e29db1a0b9c3fe76b9a4b029d2c912d6f934f9c4b79621641e9da23b3f",
+    "nexa-brief-server/src/core/explainer/recorder.py": "8aa103988e43caad0b493de7de490579256649ec8d9bc890a02f8c6180cee8fe",
+    "nexa-brief-server/src/adapters/recorder/infrastructure/render_workspace.py": "2dde6922fc2c35a63e7aa4a344c3ec0096e1d14f362c2a5e65e728ccc166f058",
+    "nexa-brief-server/src/adapters/recorder/infrastructure/subprocess_progress.py": "69b7d58ed736524c2eecdb0204bfacd2d28c386a3a75d3b2c79078125cbcdb7e",
+    "nexa-brief-server/src/templates/_tools/commercial/render_promo.py": "35618b47be613465c3c6253b4c7f5fe9618ed414a2273e753148329767e84c11"
+  }
+}

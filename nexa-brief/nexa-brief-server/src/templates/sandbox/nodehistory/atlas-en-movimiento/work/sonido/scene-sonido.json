@@ -1,0 +1,92 @@
+{
+  "duration": 30,
+  "end": 30,
+  "lang": "es",
+  "planoLook": "tactico",
+  "motionBlur": false,
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        56.5,
+        26.5
+      ],
+      "zoom": 5
+    }
+  ],
+  "layers": [],
+  "items": [
+    {
+      "id": "cargo",
+      "type": "naval.cargo",
+      "variant": "tanker",
+      "at": [
+        56.5,
+        26.5
+      ],
+      "t": 0,
+      "dur": 8,
+      "sfx": "naval-engine-low"
+    },
+    {
+      "id": "jet",
+      "type": "air.jet",
+      "at": [
+        56.5,
+        26.5
+      ],
+      "t": 8,
+      "dur": 3,
+      "sfx": false
+    },
+    {
+      "id": "impact",
+      "type": "fx.explosion",
+      "at": [
+        56.5,
+        26.5
+      ],
+      "t": 12,
+      "dur": 1.8,
+      "seed": 7
+    },
+    {
+      "id": "water",
+      "type": "fx.impact",
+      "variant": "water",
+      "at": [
+        56.6,
+        26.5
+      ],
+      "t": 18,
+      "dur": 1.5,
+      "seed": 9
+    }
+  ],
+  "sound": {
+    "mix": "../../assets/mix.test.mp3",
+    "cues": [
+      {
+        "sfx": "ship-horn",
+        "at": 2,
+        "dur": 2
+      },
+      {
+        "sfx": "jet-pass",
+        "at": 8,
+        "dur": 3
+      },
+      {
+        "sfx": "helicopter",
+        "at": 21,
+        "dur": 4,
+        "gain_db": -27
+      },
+      {
+        "sfx": "whoosh",
+        "at": 28,
+        "dur": 1.4
+      }
+    ]
+  }
+}

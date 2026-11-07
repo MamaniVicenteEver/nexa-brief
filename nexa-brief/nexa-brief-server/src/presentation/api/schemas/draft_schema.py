@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from src.core.draft_details import DraftDetails
 from src.core.drafts import Draft, RenderOptions
 from src.core.job import SongInfo
 from src.core.template_inputs import TemplateInputs
@@ -22,6 +23,7 @@ class DraftRenderRequest(RenderOptions):
 
 class DraftCreateRequest(BaseModel):
     template_id: str
+    name: str = Field(default="", max_length=120)
     music_asset_id: str | None = None
     image_asset_id: str | None = None
     video_asset_id: str | None = None
@@ -31,6 +33,19 @@ class DraftCreateRequest(BaseModel):
     # Crear video en un paso: si viene, apenas el preview queda listo se graba
     # con estas opciones (validadas acá, al crear, no recién al encadenar).
     auto_render: RenderOptions | None = None
+
+
+class DraftPrepareRequest(BaseModel):
+    """POST /drafts/{id}/prepare y /templates/{id}/original-draft — información de la canción, opcional."""
+    song_notes: str | None = Field(default=None, max_length=2000)
+
+
+class DraftUpdateRequest(BaseModel):
+    """PATCH /drafts/{id} — por ahora, el nombre del prototipo."""
+    name: str = Field(..., min_length=1, max_length=120)
+
+
+DraftDetailsRequest = DraftDetails
 
 
 class DraftListResponse(BaseModel):

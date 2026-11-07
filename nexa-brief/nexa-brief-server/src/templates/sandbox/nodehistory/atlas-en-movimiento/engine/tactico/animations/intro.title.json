@@ -1,0 +1,108 @@
+{
+  "name": "intro.title",
+  "family": "intro",
+  "description": "Título Atlas: anillo geográfico que enfoca el mapa, año, rótulo neón y tres entradas propias. Úsala al comenzar un episodio.",
+  "duration": 6,
+  "loop": true,
+  "layer": 90,
+  "states": [],
+  "params": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "EL GOLFO\nBAJO PRESIÓN",
+      "range": null,
+      "description": "Título principal visible."
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Subtítulo visible."
+    },
+    "kicker": {
+      "type": "string",
+      "default": "ATLAS EN MOVIMIENTO",
+      "range": null,
+      "description": "Antetítulo de contexto."
+    },
+    "year": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Año mostrado."
+    },
+    "focus": {
+      "type": "place",
+      "default": [
+        52,
+        26.8
+      ],
+      "range": null,
+      "description": "Punto focal normalizado [x,y] del recorte de imagen."
+    },
+    "style": {
+      "type": "enum",
+      "values": [
+        "focus",
+        "trace",
+        "meridian"
+      ],
+      "default": "focus",
+      "range": [
+        "focus",
+        "trace",
+        "meridian"
+      ],
+      "description": "Opciones visuales del componente."
+    },
+    "dur": {
+      "type": "number",
+      "default": 6,
+      "min": 2,
+      "max": 6,
+      "range": {
+        "min": 2,
+        "max": 6
+      },
+      "description": "Duración en segundos."
+    },
+    "fade": {
+      "type": "number",
+      "default": 0,
+      "range": null,
+      "description": "Duración de entrada y salida en segundos."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "intro-atlas",
+    "t": 0,
+    "type": "intro.title",
+    "title": "EL GOLFO\nBAJO PRESIÓN",
+    "subtitle": "Una ruta. Un punto de tensión.",
+    "kicker": "ATLAS EN MOVIMIENTO",
+    "year": "1987",
+    "focus": [
+      52,
+      26.8
+    ],
+    "style": "focus",
+    "dur": 6,
+    "fade": 0
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/scene-intro.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/intro.title.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/fonts/AtlasIntroTitle.ttf",
+    "assets/fonts/AtlasIntroUI.ttf"
+  ]
+}

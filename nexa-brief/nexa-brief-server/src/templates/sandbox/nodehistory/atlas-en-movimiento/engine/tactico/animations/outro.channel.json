@@ -1,0 +1,130 @@
+{
+  "name": "outro.channel",
+  "family": "outro",
+  "description": "Cierre Atlas ≤8 s: gracias, canal, me gusta, suscribirse y campana, apoyo y handle sin recuadro. Úsala para cerrar un episodio y presentar el canal.",
+  "duration": 8,
+  "loop": true,
+  "layer": 90,
+  "states": [],
+  "params": {
+    "channel": {
+      "type": "string",
+      "default": "NODEHISTORY",
+      "range": null,
+      "description": "Nombre del canal en el cierre."
+    },
+    "thanks": {
+      "type": "string",
+      "default": "GRACIAS POR VER",
+      "range": null,
+      "description": "Texto de agradecimiento del cierre."
+    },
+    "support": {
+      "type": "string",
+      "default": "Apoya el canal. Comparte esta historia.",
+      "range": null,
+      "description": "Texto de apoyo al canal."
+    },
+    "handle": {
+      "type": "string",
+      "default": "youtube.com/@nodehistory",
+      "range": null,
+      "description": "Dirección pública o identificador del canal."
+    },
+    "dim": {
+      "type": "number",
+      "default": 0.2,
+      "min": 0,
+      "max": 1,
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "description": "Opacidad del oscurecimiento del cierre."
+    },
+    "bg": {
+      "type": "enum",
+      "values": [
+        "world",
+        "none"
+      ],
+      "default": "world",
+      "range": [
+        "world",
+        "none"
+      ],
+      "description": "Valor de bg para la composición de outro.channel."
+    },
+    "titleColor": {
+      "type": "string",
+      "default": "#e8e8e8",
+      "range": null,
+      "description": "Valor de titleColor para la composición de outro.channel."
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#f1f1f1",
+      "range": null,
+      "description": "Valor de textColor para la composición de outro.channel."
+    },
+    "secondaryColor": {
+      "type": "string",
+      "default": "#d6d6d6",
+      "range": null,
+      "description": "Valor de secondaryColor para la composición de outro.channel."
+    },
+    "cta": {
+      "type": "string",
+      "default": "SUSCRÍBETE",
+      "range": null,
+      "description": "Valor de cta para la composición de outro.channel."
+    },
+    "arrow": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la flecha de dirección."
+    },
+    "dur": {
+      "type": "number",
+      "default": 8,
+      "min": 4,
+      "max": 8,
+      "range": {
+        "min": 4,
+        "max": 8
+      },
+      "description": "Duración en segundos."
+    },
+    "fade": {
+      "type": "number",
+      "default": 0,
+      "range": null,
+      "description": "Duración de entrada y salida en segundos."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "outro-atlas",
+    "t": 6,
+    "type": "outro.channel",
+    "dur": 8,
+    "fade": 0,
+    "channel": "NODEHISTORY",
+    "handle": "youtube.com/@nodehistory"
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/scene-intro.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/outro.channel.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/fonts/AtlasIntroTitle.ttf",
+    "assets/fonts/AtlasIntroUI.ttf"
+  ]
+}

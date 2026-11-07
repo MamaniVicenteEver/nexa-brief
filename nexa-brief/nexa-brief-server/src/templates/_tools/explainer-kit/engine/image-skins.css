@@ -1,0 +1,30 @@
+/* Pieles por diseño. Solo decoración: nada de posiciones ni tamaños de la estructura. */
+
+/* rough · NodeTech */
+.skin-rough .rough-grid {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(color-mix(in srgb, var(--accent) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 6%, transparent) 1px, transparent 1px);
+  background-size: calc(90px * var(--s)) calc(90px * var(--s));
+  mask-image: linear-gradient(180deg, #000 0%, transparent 70%);
+}
+.skin-rough .rough-underline { position: absolute; z-index: 3; pointer-events: none; overflow: visible; }
+.skin-rough .ie-photo { outline: calc(3px * var(--s)) solid var(--accent); box-shadow: calc(14px * var(--s)) calc(14px * var(--s)) 0 color-mix(in srgb, var(--accent) 18%, transparent); }
+
+/* binary · NodeHistory */
+.skin-binary .binary-field {
+  position: absolute; top: 14%; right: 0; width: 46%; height: 34%; z-index: 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between; padding: calc(24px * var(--s));
+  color: var(--muted); opacity: .16; pointer-events: none;
+  mask-image: radial-gradient(ellipse at 100% 40%, #000 10%, transparent 68%);
+}
+.skin-binary .binary-row { font: 600 calc(17px * var(--s))/1 var(--mono); letter-spacing: .16em; white-space: nowrap; text-align: right; }
+.skin-binary .ie-kicker { font: italic 400 calc(34px * var(--s))/1.15 var(--decorative); text-transform: none; letter-spacing: 0; color: var(--ink); }
+.skin-binary .ie-stat { color: var(--ink); padding-bottom: calc(.14em + 14px * var(--s)); border-bottom: calc(3px * var(--s)) solid var(--ink); width: fit-content; max-width: 100%; }
+.skin-binary .ie-step { color: var(--ink); }
+.skin-binary .ie-swipe { color: var(--ink); }
+.skin-binary .ie-dots i.on { background: var(--ink); }
+.skin-binary .ie-recap li::before { color: var(--muted); }
+.skin-binary .ie-photo { outline: calc(2px * var(--s)) solid var(--ink); }
+.skin-binary .ie-cta { background: var(--ink); color: var(--bg); }
+.skin-binary .ie-cta svg { fill: var(--bg); }

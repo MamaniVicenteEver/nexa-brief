@@ -1,0 +1,551 @@
+{
+ "version": 1,
+ "shots": [
+  {
+   "t": 3.2,
+   "items": [
+    {
+     "type": "man",
+     "id": "m",
+     "x": 1430,
+     "y": 1010,
+     "h": 820,
+     "poses": [
+      {
+       "at": 0,
+       "pose": "wave",
+       "face": "grin"
+      }
+     ]
+    },
+    {
+     "type": "type",
+     "x": 560,
+     "y": 470,
+     "size": 120,
+     "weight": 800,
+     "text": "1940",
+     "at": "@1940",
+     "maxW": 1500
+    }
+   ]
+  },
+  {
+   "t": "@Cada-0.1",
+   "items": [
+    {
+     "type": "man",
+     "id": "m",
+     "x": 760,
+     "y": 1010,
+     "h": 760,
+     "poses": [
+      {
+       "at": "@Cada",
+       "pose": "hold",
+       "face": "worried"
+      },
+      {
+       "at": "@cambiaba",
+       "pose": "shock",
+       "face": "shock"
+      }
+     ]
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "hold": "m:R",
+     "dx": 40,
+     "dy": -20,
+     "s": 150,
+     "rot": 8,
+     "out": "@cambiaba",
+     "enter": "none"
+    },
+    {
+     "type": "prop",
+     "name": "clock",
+     "x": 1560,
+     "y": 250,
+     "s": 220,
+     "hour": 11.6,
+     "spin": 0.06,
+     "at": "@medianoche"
+    },
+    {
+     "type": "prop",
+     "name": "lock",
+     "x": 1230,
+     "y": 560,
+     "s": 200,
+     "at": "@seguro"
+    },
+    {
+     "type": "type",
+     "x": 1230,
+     "y": 780,
+     "size": 46,
+     "text": "el código más seguro",
+     "at": "@código",
+     "step": 0.14,
+     "maxW": 1500
+    },
+    {
+     "type": "prop",
+     "name": "x",
+     "x": 1230,
+     "y": 330,
+     "s": 120,
+     "at": "@completo"
+    }
+   ]
+  },
+  {
+   "t": "@matemático-0.3",
+   "items": [
+    {
+     "type": "man",
+     "id": "m",
+     "x": 1000,
+     "y": 1010,
+     "h": 780,
+     "poses": [
+      {
+       "at": "@matemático-0.3",
+       "pose": "think",
+       "face": "think"
+      },
+      {
+       "at": "@podía",
+       "pose": "point",
+       "face": "grin"
+      }
+     ]
+    },
+    {
+     "type": "prop",
+     "name": "bulb",
+     "x": 1120,
+     "y": 175,
+     "s": 190,
+     "at": "@convencido"
+    },
+    {
+     "type": "type",
+     "x": 470,
+     "y": 440,
+     "size": 64,
+     "weight": 800,
+     "words": [
+      {
+       "text": "28",
+       "at": "@28"
+      },
+      {
+       "text": "años",
+       "at": "@años"
+      }
+     ],
+     "maxW": 1500
+    },
+    {
+     "type": "rule",
+     "x": 470,
+     "y": 500,
+     "w": 220,
+     "at": "@años+0.2",
+     "enter": "fade"
+    }
+   ]
+  },
+  {
+   "t": "@Se",
+   "items": [
+    {
+     "type": "man",
+     "id": "m",
+     "x": 960,
+     "y": 1020,
+     "h": 600,
+     "poses": [
+      {
+       "at": "@Se",
+       "pose": "wave",
+       "face": "grin"
+      }
+     ]
+    },
+    {
+     "type": "arc",
+     "x": 960,
+     "y": 250,
+     "size": 104,
+     "radius": 900,
+     "text": "ALAN TURING",
+     "at": "@Alan",
+     "dur": 0.7
+    },
+    {
+     "type": "script",
+     "x": 960,
+     "y": 400,
+     "size": 62,
+     "text": "matemático",
+     "tilt": -3,
+     "at": "@Turing:end"
+    }
+   ]
+  },
+  {
+   "t": "@La",
+   "items": [
+    {
+     "type": "man",
+     "id": "m",
+     "x": 400,
+     "y": 1010,
+     "h": 720,
+     "poses": [
+      {
+       "at": "@La",
+       "pose": "talk",
+       "face": "talk"
+      },
+      {
+       "at": "@máquina",
+       "pose": "point",
+       "face": "smile"
+      }
+     ]
+    },
+    {
+     "type": "prop",
+     "name": "envelope",
+     "x": 760,
+     "y": 520,
+     "s": 110,
+     "at": "@enviaba",
+     "move": {
+      "to": [
+       1300,
+       470
+      ],
+      "at": "@órdenes",
+      "dur": 0.7
+     },
+     "out": "@máquina"
+    },
+    {
+     "type": "prop",
+     "name": "enigma",
+     "x": 1260,
+     "y": 640,
+     "s": 330,
+     "spin": 1.5,
+     "lit": true,
+     "at": "@máquina"
+    },
+    {
+     "type": "arc",
+     "x": 1260,
+     "y": 240,
+     "size": 92,
+     "radius": 700,
+     "text": "ENIGMA",
+     "at": "@Enigma",
+     "dur": 0.5
+    }
+   ]
+  },
+  {
+   "t": "@Parecía",
+   "items": [
+    {
+     "type": "type",
+     "x": 960,
+     "y": 200,
+     "size": 58,
+     "text": "Parecía una máquina de escribir",
+     "at": "@Parecía",
+     "step": 0.18,
+     "maxW": 1500
+    },
+    {
+     "type": "prop",
+     "name": "letter",
+     "x": 330,
+     "y": 560,
+     "s": 150,
+     "text": "A",
+     "at": "@letra"
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "x": 560,
+     "y": 560,
+     "s": 90,
+     "len": 230,
+     "curly": true,
+     "color": "#d2453a",
+     "at": "@pasaba"
+    },
+    {
+     "type": "prop",
+     "name": "rotor",
+     "x": 830,
+     "y": 560,
+     "s": 220,
+     "spin": 3,
+     "at": "@rotores"
+    },
+    {
+     "type": "prop",
+     "name": "rotor",
+     "x": 960,
+     "y": 560,
+     "s": 220,
+     "spin": 4,
+     "at": "@rotores+0.15"
+    },
+    {
+     "type": "prop",
+     "name": "rotor",
+     "x": 1090,
+     "y": 560,
+     "s": 220,
+     "spin": 5,
+     "at": "@rotores+0.3"
+    },
+    {
+     "type": "label",
+     "x": 960,
+     "y": 730,
+     "text": "rotores y cables",
+     "at": "@cables",
+     "size": 36
+    },
+    {
+     "type": "prop",
+     "name": "arrow",
+     "x": 1360,
+     "y": 560,
+     "s": 90,
+     "len": 230,
+     "curly": true,
+     "color": "#d2453a",
+     "at": "@convertían"
+    },
+    {
+     "type": "prop",
+     "name": "letter",
+     "x": 1590,
+     "y": 560,
+     "s": 150,
+     "text": "Q",
+     "color": "#1f9d47",
+     "at": "@otra"
+    }
+   ]
+  },
+  {
+   "t": "@Las",
+   "items": [
+    {
+     "type": "arc",
+     "x": 960,
+     "y": 230,
+     "size": 78,
+     "radius": 820,
+     "text": "COMBINACIONES POSIBLES",
+     "at": "@combinaciones",
+     "dur": 0.9
+    },
+    {
+     "type": "type",
+     "x": 820,
+     "y": 500,
+     "size": 132,
+     "weight": 800,
+     "words": [
+      {
+       "text": "159",
+       "at": "@159"
+      },
+      {
+       "text": "TRILLONES",
+       "at": "@trillones"
+      }
+     ],
+     "maxW": 1500
+    },
+    {
+     "type": "type",
+     "x": 820,
+     "y": 700,
+     "size": 58,
+     "weight": 700,
+     "step": 0.11,
+     "text": "159. 000. 000. 000. 000. 000. 000",
+     "at": "@número",
+     "maxW": 1500
+    },
+    {
+     "type": "label",
+     "x": 820,
+     "y": 800,
+     "size": 34,
+     "text": "21 cifras",
+     "at": "@cifras"
+    },
+    {
+     "type": "man",
+     "id": "m",
+     "x": 1640,
+     "y": 1010,
+     "h": 560,
+     "at": "@159",
+     "poses": [
+      {
+       "at": "@159",
+       "pose": "stand",
+       "face": "smile"
+      },
+      {
+       "at": "@trillones",
+       "pose": "shock",
+       "face": "shock"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t": "@Probarlas",
+   "items": [
+    {
+     "type": "man",
+     "id": "m",
+     "x": 560,
+     "y": 1010,
+     "h": 700,
+     "poses": [
+      {
+       "at": "@Probarlas",
+       "pose": "write",
+       "face": "worried"
+      }
+     ]
+    },
+    {
+     "type": "prop",
+     "name": "paper",
+     "hold": "m:L",
+     "dx": 10,
+     "dy": -30,
+     "s": 130,
+     "rot": -12,
+     "enter": "none"
+    },
+    {
+     "type": "prop",
+     "name": "papers",
+     "x": 870,
+     "y": 900,
+     "s": 300,
+     "from": 1,
+     "to": 16,
+     "grow": 3.2,
+     "at": "@todas"
+    },
+    {
+     "type": "vs",
+     "x": 1180,
+     "y": 560,
+     "h": 560,
+     "at": "@tiempo"
+    },
+    {
+     "type": "prop",
+     "name": "universe",
+     "x": 1540,
+     "y": 520,
+     "s": 380,
+     "at": "@universo"
+    },
+    {
+     "type": "label",
+     "x": 1540,
+     "y": 860,
+     "size": 34,
+     "text": "la edad del universo",
+     "at": "@edad"
+    }
+   ]
+  },
+  {
+   "t": "@aunque",
+   "items": [
+    {
+     "type": "man",
+     "id": "m",
+     "x": 620,
+     "y": 1010,
+     "h": 740,
+     "poses": [
+      {
+       "at": "@aunque",
+       "pose": "cheer",
+       "face": "grin"
+      },
+      {
+       "at": "@medianoche#2",
+       "pose": "stand",
+       "face": "worried"
+      },
+      {
+       "at": "@cero",
+       "pose": "shrug",
+       "face": "worried"
+      }
+     ]
+    },
+    {
+     "type": "prop",
+     "name": "clock",
+     "x": 1380,
+     "y": 470,
+     "s": 360,
+     "hour": 11.85,
+     "spin": 0.08,
+     "at": "@medianoche#2"
+    },
+    {
+     "type": "prop",
+     "name": "x",
+     "x": 1380,
+     "y": 190,
+     "s": 120,
+     "at": "@cambiaba#2"
+    },
+    {
+     "type": "script",
+     "x": 640,
+     "y": 190,
+     "size": 92,
+     "text": "De cero",
+     "tilt": -5,
+     "at": "@empezar"
+    }
+   ]
+  }
+ ],
+ "intro": {
+  "style": "v2",
+  "question": "¿Se podía romper el código más seguro del mundo?",
+  "answer": "Sí",
+  "revealAt": 2.6,
+  "dur": 3.2
+ }
+}

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Tiempos sintéticos (sin voz) para previsualizar un storyboard antes de grabar la narración.
 
-Reparte las palabras del guion a ~2,3 palabras/s (pausas en puntuación) y escribe un
+Reparte las palabras del guion a ~130 palabras/min (pausas en puntuación) y escribe un
 lyrics.json Whisper + un mp3 en silencio de la misma duración. Sirve para revisar ritmo y
 diseño; se reemplaza por narrate.py + transcribe.py cuando hay audio real.
-Uso: fake_timing.py SCRIPT.json OUT_lyrics.json OUT_song.mp3 [--lead 1.2] [--wps 2.3]
+Uso: fake_timing.py SCRIPT.json OUT_lyrics.json OUT_song.mp3 [--lead 1.2] [--wps 2.1667]
 """
 import argparse, json, pathlib, re, subprocess
 ap = argparse.ArgumentParser(); ap.add_argument("script"); ap.add_argument("lyrics"); ap.add_argument("mp3")
-ap.add_argument("--lead", type=float, default=1.2); ap.add_argument("--wps", type=float, default=2.3)
+ap.add_argument("--lead", type=float, default=1.2); ap.add_argument("--wps", type=float, default=130 / 60)
 a = ap.parse_args()
 sc = json.loads(pathlib.Path(a.script).read_text()); t = a.lead; segs = []
 for s in sc["segments"]:

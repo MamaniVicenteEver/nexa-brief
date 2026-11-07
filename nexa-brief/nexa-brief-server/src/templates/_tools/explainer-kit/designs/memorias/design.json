@@ -1,0 +1,125 @@
+{
+  "id": "memorias",
+  "family": "memorias",
+  "name": "MEMORIAS",
+  "tagline": "Historia en acuarela: cada lugar nace como boceto a lápiz y se colorea con manchas de tinta y salpicaduras de acuarela",
+  "topics": [
+    "historia",
+    "lugares históricos",
+    "monumentos",
+    "ciudades",
+    "viajes en el tiempo",
+    "biografías",
+    "patrimonio"
+  ],
+  "channel": {
+    "name": "MEMORIAS",
+    "handle": "@memorias",
+    "language": "es-419",
+    "note": "nombre provisional: cambiar aquí y se actualiza en todos los videos"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Mr+Dafoe&family=Barlow:wght@600;700&family=Quicksand:wght@500;700&family=Old+Standard+TT:wght@400;700&display=swap",
+  "scripts": [
+    "designs/common/text.js",
+    "designs/memorias/components/_memorias.js",
+    "designs/memorias/components/scenes.js",
+    "designs/common/hook.js",
+    "designs/common/logo.js",
+    "designs/common/clip.js",
+    "designs/memorias/components/intros.js",
+    "designs/memorias/components/outro.js",
+    "designs/common/tabloid.js",
+    "designs/common/question.js"
+  ],
+  "defaults": {
+    "family": "memorias",
+    "palette": {
+      "bg": "#d8d5cf",
+      "paper": "#d8d5cf",
+      "paperHi": "#ebe8e2",
+      "paperLo": "#9d9a95",
+      "ink": "#141313",
+      "pencil": "#2c2b2a",
+      "script": "#1b1a1a",
+      "ghost": "#4a4744",
+      "splash": "#2f5a9c",
+      "splashDeep": "#1d3d72",
+      "smoke": "#7c7a77",
+      "flash": "#c9d3e2",
+      "night": "#000000",
+      "nightInk": "#f2f0ec",
+      "accent": "#2f5a9c",
+      "muted": "#6f6c68"
+    },
+    "fonts": {
+      "main": "Barlow",
+      "load": [
+        "400 40px 'Mr Dafoe'",
+        "700 40px Barlow",
+        "600 40px Barlow",
+        "700 20px Quicksand",
+        "500 20px Quicksand",
+        "400 20px 'Old Standard TT'",
+        "700 20px 'Old Standard TT'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 6,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "memorias": {
+      "grain": 0.045,
+      "ghostText": true,
+      "drift": 0.07,
+      "smoke": true
+    },
+    "transition": {
+      "overlap": 0.9
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 6,
+      "thanks": "gracias por ver",
+      "channel": "Memorias",
+      "cta": "Suscríbete",
+      "support": "Apoya el canal y comparte la historia",
+      "handle": "youtube.com/@nodehistory",
+      "use": "memorias.outro"
+    },
+    "clip": {
+      "filter": "saturate(0.9)",
+      "frame": "palette.ink",
+      "dim": 0.18
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Sadaltager",
+      "Algenib",
+      "Orus"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 125 palabras por minuto: deja respirar el final de cada oración.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos A COLOR de lugares, monumentos, edificios y objetos (cielo visible ayuda: la salpicadura de acuarela se mezcla con él); retratos y archivo B/N van con tone=bw y mancha negra",
+    "portrait_tip": "la foto ocupa todo el cuadro (cover) recortada por la mancha: usar focus=[x,y] (0..1) para apuntar el encuadre; el boceto a lápiz sale de la misma foto",
+    "per_video": [
+      6,
+      12
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "money.stack",
+  "family": "money",
+  "description": "Fajos simbólicos que se deslizan y apilan; sin moneda ni cifra económica implícita. Úsala para explicar recursos, pagos y cambios económicos.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 30,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "count": {
+      "type": "number",
+      "default": 8,
+      "min": 1,
+      "max": 36,
+      "range": {
+        "min": 1,
+        "max": 36
+      },
+      "description": "Cantidad de elementos."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.2,
+      "max": 4,
+      "range": {
+        "min": 0.2,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "buildDur": {
+      "type": "number",
+      "default": 1.8,
+      "min": 0,
+      "max": 10,
+      "range": {
+        "min": 0,
+        "max": 10
+      },
+      "description": "Duración del armado progresivo en segundos."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-money-stack",
+    "t": 0,
+    "type": "money.stack",
+    "at": [
+      51,
+      28
+    ],
+    "count": 12,
+    "dur": 8,
+    "out": 7
+  },
+  "usedBy": [
+    "work/tactico/scene-economy.json",
+    "work/tactico/scene-editorial.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/money.stack.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

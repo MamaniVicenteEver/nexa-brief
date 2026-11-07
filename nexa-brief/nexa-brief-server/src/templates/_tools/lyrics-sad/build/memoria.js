@@ -189,23 +189,19 @@ B.dateCard = (sc, X) => {
 /* intro / cierre */
 B.intro = (sc, X) => {
   const { W, H } = X, L = div(X.root, "lay", { background: "#050302" });
-  const f = footage(X, L, 0, "sepia", { opacity: 0.5 }); weave(X, f.m.box, 0.8); oldFilm(X, L);
+  const f = footage(X, L, 0, "sepia", { opacity: 0.64 }); weave(X, f.m.box, 0.8); oldFilm(X, L);
   const [a, b] = sc.words;
-  if (a) { const t = word(X, L, a.text, { cls: hw, fs: 0.16 * H, x: W / 2, y: 0.46 * H, color: P.cream }); reveal(X, t.el, a.rt + 0.6, "blur", 2.2); leave(X, t.box, "blur"); }
+  if (a) {
+    const baseFs = Math.min(0.16 * H, fit(a.text, hw, 0, 0.9 * W, 0.16 * H));
+    const fs = Math.min(baseFs * 1.15, fit(a.text, hw, 0, 0.94 * W, 0.22 * H));
+    const t = word(X, L, a.text, { cls: hw, fs, x: W / 2, y: 0.46 * H, color: P.cream });
+    t.el.style.whiteSpace = "nowrap";
+    reveal(X, t.el, a.rt + 0.12, "blur", 0.75); leave(X, t.box, "blur");
+  }
   if (b) { const t = word(X, L, U(b.text), { cls: tw, fs: 0.035 * H, x: W / 2, y: 0.6 * H, color: P.sepia, ls: 0.3 }); reveal(X, t.el, b.rt + 1.2, "fade", 1.5); }
   enterFx(X, "fade", 1.2);
 };
-B.outro = (sc, X) => {
-  const { W, H } = X, L = div(X.root, "lay", { background: "#050302" });
-  const p = polaroid(X, L, 0, 0.5 * W, 0.42 * H, 0.26 * W, -3);
-  X.T(p.card, "opacity", "0").to(0.2, 1.2, "1");
-  oldFilm(X, L);
-  const [a, b, c] = sc.words;
-  if (a) { const t = word(X, L, a.text, { cls: hw, fs: (p.h - p.w) * 0.55, x: p.w / 2, y: p.w + (p.h - p.w) / 2, color: P.ink }); p.card.appendChild(t.box); reveal(X, t.el, a.rt + 0.5, "fade", 1); }
-  if (b) { const t = word(X, L, U(b.text), { cls: tw, fs: 0.035 * H, x: W / 2, y: 0.84 * H, color: P.cream, ls: 0.3 }); reveal(X, t.el, b.rt + 0.6, "fade", 1); }
-  if (c) { const t = word(X, L, c.text, { cls: tw, fs: 0.025 * H, x: W / 2, y: 0.9 * H, color: P.sepia, ls: 0.15 }); reveal(X, t.el, c.rt + 0.6, "fade", 1); }
-  enterFx(X, "burn", OV() * 1.6);
-};
+B.outro = (sc, X) => window.NexaMemoriaOutro.render(sc, X, { P, hw, tw, div, footage, word, fit, reveal, config: C.outro || {} });
 
 const FITS = {
   polaroid: sc => J(sc.words).length <= 36,

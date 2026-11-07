@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.native",
+  "description": "Nombre en su IDIOMA ORIGINAL (kanji, alemán, ruso, árabe latinizado…) en gris grande: cada carácter entra con escala y desenfoque escalonados, la traducción en mayúsculas negras se tipea debajo, y al final se borra de derecha a izquierda (ref 4.9–9.9 s: '南進論 · SOUTHERN EXPANSION DOCTRINE'). Overlay sobre un plano con mapa claro (imperio.map / imperio.title).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Texto en el idioma original (corto: 1–3 palabras o 2–6 caracteres CJK).",
+      "default": null
+    },
+    "sub": {
+      "type": "string",
+      "description": "Traducción (mayúsculas automáticas).",
+      "default": ""
+    },
+    "at": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo en que entra el primer carácter (acepta '@palabra').",
+      "default": 0.2
+    },
+    "outAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo en que se borra (−1 = 1 s antes del final del beat).",
+      "default": -1
+    },
+    "x": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Borde izquierdo (fracción del ancho) en 16:9. En 9:16 va centrado.",
+      "default": 0.64
+    },
+    "y": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 0.9,
+      "description": "Línea base (fracción del alto).",
+      "default": 0.6
+    },
+    "width": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 0.9,
+      "description": "Ancho máximo (fracción del ancho) en 16:9; en 9:16 se usa 0.7.",
+      "default": 0.3
+    },
+    "tilt": {
+      "type": "number",
+      "minimum": -15,
+      "maximum": 15,
+      "description": "Giro en grados.",
+      "default": 0
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "$defs": {},
+  "examples": [
+    {
+      "text": "南進論",
+      "sub": "DOCTRINA DE EXPANSIÓN AL SUR"
+    }
+  ],
+  "x-layer": "overlay",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

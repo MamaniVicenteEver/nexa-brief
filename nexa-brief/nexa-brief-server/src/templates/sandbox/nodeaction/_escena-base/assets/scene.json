@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "seed": 1,
+  "arena": { "x": [-2.0, 3.5], "z": [4.4, 10.0] },
+  "teams": {
+    "a": { "name": "Equipo A", "body": "#171717", "paint": "#ff2d8f", "accent": "#ff2d8f", "style": "ink" },
+    "b": { "name": "Equipo B" }
+  },
+  "cast": [
+    { "id": "heroe", "team": "a", "style": "hero", "hero": true, "pos": [-0.4, 4.8], "face": 1 },
+    { "id": "rival-1", "team": "b", "color": "#19c3ee", "pos": [2.2, 6.2], "face": -1 },
+    { "id": "rival-2", "team": "b", "color": "#ff8a1f", "pos": [1.2, 8.4], "face": -1 }
+  ],
+  "plan": { "mode": "skirmish", "hero": "heroe", "start": 1.2, "victory": 2.5 },
+  "timeline": [],
+  "camera": {
+    "horizon": { "landscape": 0.40, "portrait": 0.55 },
+    "portraitZoom": 1.45,
+    "keys": [
+      { "t": 0, "x": 0.6, "y": 1.0, "z": 1.3, "zoom": 1.1, "follow": "heroe", "followX": 0.85, "focus": 0.4, "label": "" },
+      { "t": "end-2.5", "blend": 2.0, "x": 0.8, "y": 1.05, "z": 2.4, "zoom": 1.4, "follow": "heroe", "followX": 1.0, "focus": 0 }
+    ]
+  }
+}

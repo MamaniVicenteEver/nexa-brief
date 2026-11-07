@@ -1,66 +1,78 @@
 # adapters/data — persistencia intercambiable
 
-Todo lo que el backend guarda (jobs, historial, notificaciones, cola de
-publicación, librería de imágenes/música/videos, cachés, canales) pasa por el
-**DataStore**. Hoy el backend es JSON dentro de `data/`; cambiar a Supabase,
-Postgres, etc. es escribir **un adapter** acá, sin tocar el resto del código.
+El dominio usa `core/data.py` y los contratos de `core/ports/data_port.py`:
+colecciones de registros, documentos JSON y archivos binarios. Las claves y
+nombres lógicos se declaran en `layout.py`. Una operación compuesta que debe
+coordinar workers usa `coordination(name)` del proveedor de registros; el
+dominio no conoce locks ni rutas del adapter.
 
-```
-core/ports/data_port.py    contrato: RecordCollection, DocumentStore, FileStorage, DataStore
-core/data.py               get_data_store() / collection() / documents() / files()
-adapters/data/
-  layout.py                nombres lógicos → rutas dentro de data/ (único lugar que las conoce)
-  json_store.py            backend JSON (lock por archivo + escritura atómica)
-  local_file_storage.py    archivos binarios con su nombre original
-  factory.py               elige el backend según DATA_BACKEND
-```
+En perfiles v1 (y sin perfil seleccionado) se conservan las rutas originales:
+registros y documentos en `data/`, binarios de biblioteca en
+`data/library/files/<tipo>/`, y archivo de publicaciones en `data/publicaciones/`.
+En perfiles v2, los registros y documentos siguen en `data/`, mientras que los
+binarios nuevos de biblioteca se guardan en `resources/<tipo>/<categoría>/<clave>`
+y los medios y trazas de publicaciones en `productions/_publicaciones/`.
+Los locks y temporales de estos adapters se guardan en `.system/runtime/`.
+La lectura de claves antiguas busca solo en `data/` del mismo perfil; al borrar
+una clave se eliminan sus representaciones actual y legacy. No se importa nada
+de otro perfil. Las claves lógicas existentes `categoría/nombre` se conservan.
 
-## Qué se guarda y dónde (backend JSON)
+`factory.py` compone los proveedores de registros y archivos de forma
+independiente. `records:json` y `files:filesystem` son locales; proveedores
+externos se registran mediante `register_provider`. El kind `files` implementa
+`FileStorageProvider` para biblioteca; el kind `media` existente corresponde al
+puerto de medios de publicaciones, que tiene un contrato distinto. Un proveedor
+no instalado falla explícitamente y no recurre silenciosamente a otro perfil o
+backend. Un proveedor remoto de registros debe implementar también
+`coordination` con exclusión entre procesos para las operaciones de cola.
 
-| Nombre lógico | Tipo | Archivo en `data/` |
-|---|---|---|
-| `jobs` | colección | `jobs/jobs.json` |
-| `history_events` | colección | `jobs/history_events.json` |
-| `notifications` | colección | `notifications/notifications.json` |
-| `schedule_slots`, `queue_entries` | colección | `schedule/slots.json`, `schedule/queue.json` |
-| `image_assets`, `music_assets`, `video_assets` | colección | `library/images.json`, `library/music.json`, `library/videos.json` |
-| `template_configs` | colección | `library/template_configs.json` |
-| `channels`, `published_videos` | colección | `canales/channels.json`, `canales/published_videos.json` |
-| `image_vision`, `video_vision`, `lyrics` | documentos | `library/cache/<nombre>/<asset_id>.json` |
-| `template_config_files` | documentos | `library/template_config_files/<job_id>.json` |
-| `progress` | documentos | `progress/step_durations.json` |
-| `images`, `music`, `videos` | archivos | `library/files/<tipo>/<categoría>/<nombre original>` |
+Los archivos locales se escriben primero en un temporal y se sustituyen de forma
+atómica. El directorio técnico y el destino deben estar en el mismo sistema de
+archivos para que la sustitución atómica sea posible.
 
-Las carpetas se crean solas la primera vez que se escribe algo.
+## Ubicaciones de metadata
 
-Fuera del DataStore quedan, a propósito:
-- `accounts.json` (tokens OAuth cifrados, en la raíz del server): son
-  credenciales, las maneja `adapters/publishing/token_storage.py`.
-- `output/<job_id>/`: artefactos de trabajo del pipeline (HTML, mp4,
-  logs), no datos de la aplicación.
+Las rutas siguientes son relativas a `data/` en v1 y v2. El mapa completo está
+en `layout.py`; no repetir estas rutas en servicios del dominio.
 
-## Nombres de archivo
+| Nombre lógico | Ubicación local |
+| --- | --- |
+| `jobs`, `history_events` | `jobs/jobs.json`, `jobs/history_events.json` |
+| `content_videos`, `content_resources` | `content/videos.json`, `content/resources.json` |
+| `content_video_details` | `content/video_details/<video_id>.json` |
+| `execution_logs` | `logs/index.json`, referencias sin el contenido real |
+| `content_catalog_snapshots` | `catalog/snapshots/<version>.json`, derivados del código |
+| `image_assets`, `music_assets`, `sound_assets`, `video_assets` | `library/<images,music,sounds,videos>.json` |
+| `template_configs`, `template_config_files` | índice `library/template_configs.json` y documentos `library/template_config_files/` |
+| `image_vision`, `video_vision`, `lyrics`, `stock_search_cache` | documentos JSON en `library/cache/<nombre>/` |
+| `drafts`, `draft_jobs`, `media_plans`, `template_originals` | índices y documentos JSON en `studio/` |
+| `explainer_productions`, `explainer_batches`, `explainer_runtime` | estado JSON en `explainer/` |
+| `prototype_runs` | `prototypes/runs.json` |
+| `queue_entries`, `schedule_slots`, `content_plan` | cola y planificación en `schedule/` |
+| `channels`, `channel_categories`, `channel_publications`, `published_videos` | información de canales y publicaciones en `canales/` |
+| `publication_index` | `publicaciones/index.json`, proyección del archivo de publicaciones |
+| `notifications`, `progress` | `notifications/`, `progress/` |
 
-`FileStorage.save()` conserva el nombre con el que se subió el archivo
-(`Mi Canción - Artista.mp3`). Solo quita caracteres inválidos (`<>:"/\|?*` y
-de control) y, si ya existe uno igual en esa categoría, agrega ` (2)`, ` (3)`…
-El `asset_id` sigue siendo el identificador estable; el nombre real queda en
-`relative_path` y `original_filename` del registro.
+Para añadir un backend, implementar los contratos de registros, documentos y
+coordinación, registrar el proveedor y ejecutar sus pruebas de contrato. Los
+archivos usan otro proveedor; `local_path()` debe materializar una copia técnica
+cuando el renderizador necesite acceso en disco. La transición futura está en
+`docs/future-supabase.md`; no basta con cambiar una variable a `supabase`.
 
-## Agregar otro backend (ej. Supabase)
+### Perfiles v3: secciones JSON
 
-1. Crear `adapters/data/supabase_store.py` con una clase que implemente
-   `DataStore` (ver `core/ports/data_port.py`):
-   - `collection(name)` → una tabla por nombre lógico (`jobs`, `queue_entries`…),
-     PK = el `key_field` que figura en `layout.COLLECTIONS`.
-   - `documents(name)` → tabla `key text primary key, body jsonb` (o Storage).
-   - `files(name)` → un bucket de Storage; `local_path()` descarga a un caché local
-     (ffmpeg, Whisper y los recorders necesitan el archivo en disco).
-2. Sumarlo en `factory.py` y en el `Literal` de `settings.data_backend`.
-3. Correr `tests/unit/test_data_store.py` contra el backend nuevo: es el
-   contrato que cualquier implementación tiene que cumplir.
-4. Migrar datos: leer cada colección con el store JSON e insertarla en el nuevo.
+Las colecciones y documentos se agrupan en `data/json/<sección>.json` con una
+revisión por archivo, bloqueo entre procesos y escritura atómica. Las rutas y
+nombres de los namespaces están declarados en `section_store.py`. El archivo
+`publicaciones.json` conserva las publicaciones y recibos idempotentes como
+fuente única. `image-posts.json` contiene un índice **derivado y reconstruible**:
+`rebuild_image_post_index()` lo reconcilia desde las publicaciones y guarda la
+revisión de origen en `index_metadata.source_revision`; puede quedar atrasado
+entre reconciliaciones y no se usa como fuente para modificar publicaciones.
 
-Los filtros del contrato son por igualdad; orden y paginación los resuelven los
-repositorios. Si una consulta se vuelve lenta, se optimiza dentro del adapter
-sin cambiar el contrato.
+Para migración offline se ofrece `import_legacy_data(source_data_dir,
+destination_data_dir)` desde `import_legacy_sections.py`. Se ejecuta únicamente
+sobre staging saneado, no sobrescribe secciones existentes y conserva sus
+archivos fuente. Rechaza recibos idempotentes desconocidos o referencias a
+publicaciones faltantes. No abre archivos de conexiones, sesiones ni contenidos
+de logs; importa sus índices JSON y la metadata de canales ya saneada.

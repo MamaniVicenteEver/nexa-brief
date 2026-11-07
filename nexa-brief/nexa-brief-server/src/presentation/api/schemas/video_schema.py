@@ -126,16 +126,24 @@ class JobSummaryInfo(BaseModel):
     tiktok_caption: str = ""
     tiktok_hashtags: list[str] = []
     language: str | None = None     # "es" | "en"; None en jobs anteriores a este campo
+    pinned_comment: str = ""
+    platform_copies: dict = {}
 
     @classmethod
     def from_raw(cls, raw: dict) -> "JobSummaryInfo":
+        # Explainer jobs store per-platform copy; pipeline jobs store flat fields.
+        copies = raw.get("platform_copies") or {}
+        youtube = copies.get("youtube") or {}
+        tiktok = copies.get("tiktok") or {}
         return cls(
-            youtube_title=raw["youtube_title"],
-            youtube_description=raw["youtube_description"],
-            youtube_tags=raw.get("youtube_tags", []),
-            tiktok_caption=raw.get("tiktok_caption", ""),
-            language=raw.get("language"),
-            tiktok_hashtags=raw.get("tiktok_hashtags", []),
+            youtube_title=raw.get("youtube_title") or youtube.get("title", ""),
+            youtube_description=raw.get("youtube_description") or youtube.get("description", ""),
+            youtube_tags=raw.get("youtube_tags") or youtube.get("tags", []),
+            tiktok_caption=raw.get("tiktok_caption") or tiktok.get("description", ""),
+            language=raw.get("language") or youtube.get("language"),
+            tiktok_hashtags=raw.get("tiktok_hashtags") or tiktok.get("tags", []),
+            pinned_comment=raw.get("pinned_comment") or "",
+            platform_copies=copies,
         )
 
 
@@ -153,6 +161,8 @@ class JobDetailResponse(BaseModel):
     # Segundos que tardó en generarse (aceptado → listo/falló); None si sigue en curso.
     generation_seconds: float | None = None
     files: list[JobFileInfo] = []
+    # Relaciones de aspecto grabadas ("16x9", "9x16") — para elegir formato al publicar.
+    formats: list[str] = []
     summary: JobSummaryInfo | None = None
     # Live progress (queue position, % and ETA) — only for jobs this server
     # process is running or ran recently; also pushed as `job_progress` events.
@@ -163,6 +173,9 @@ class JobDetailResponse(BaseModel):
         stage = record["stage"]
         job_id = record["job_id"]
         ready_formats = set(record.get("ready_formats", []))
+        # Older explainer records saved the vertical file as "instagram".
+        if record.get("source") == "explainer" and "instagram" in ready_formats:
+            ready_formats.add("reels")
         files = [
             JobFileInfo(
                 format=fmt,
@@ -184,6 +197,7 @@ class JobDetailResponse(BaseModel):
             duration_seconds=record.get("duration_seconds"),
             generation_seconds=job_tracker.generation_seconds(record),
             files=files,
+            formats=sorted(job_tracker.format_paths(record)),
             summary=JobSummaryInfo.from_raw(summary) if summary else None,
             progress=get_progress(job_id),
         )
@@ -221,3 +235,48 @@ class JobListResponse(BaseModel):
     limit: int
     offset: int
     jobs: list[JobListItem]
+
+
+# ── Ficha técnica (pestaña "Info técnica" de Biblioteca) ──────────────────────
+
+class JobTechnicalFile(BaseModel):
+    """Un MP4 del job, medido con ffprobe. None = ffprobe no lo informó."""
+    key: str                                  # "16x9" | "9x16" | "tiktok" | "instagram"
+    file_name: str                            # relativo a la carpeta de salida
+    size_mb: float | None = None
+    width: int | None = None
+    height: int | None = None
+    fps: float | None = None
+    video_codec: str | None = None
+    video_bitrate_kbps: int | None = None
+    total_bitrate_kbps: int | None = None
+    audio_codec: str | None = None
+    audio_bitrate_kbps: int | None = None
+    audio_sample_rate_khz: float | None = None
+    audio_channels: int | None = None
+    duration_seconds: float | None = None
+
+
+class JobTechnicalResponse(BaseModel):
+    """GET /videos/jobs/{job_id}/technical — ver `src.core.job_technical`."""
+    job_id: str
+    source: Literal["pipeline", "explainer"]
+    category: str | None = None
+    title: str | None = None
+    stage: str | None = None
+    template: str | None = None               # template_id (pipeline) o diseño (explainer)
+    template_label: str | None = None
+    engine: str | None = None                 # hyperframes | remotion | playwright | explainer-kit
+    engine_target: str | None = None          # local | aws
+    render_seconds: float | None = None
+    render_passes: list[str] = []
+    duration_seconds: float | None = None
+    generation_seconds: float | None = None
+    formats: list[str] = []
+    files: list[JobTechnicalFile] = []
+    language: str | None = None
+    # Estrategia de copy por plataforma (pipeline) o por pieza del paquete (explainer).
+    strategies: dict[str, str] = {}
+    created_at: str | None = None
+    updated_at: str | None = None
+    output_dir: str | None = None

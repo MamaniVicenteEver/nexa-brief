@@ -287,12 +287,7 @@ B.strike = (sc, X) => {
   smear(X, L);
 };
 
-B.outro = (sc, X) => {
-  const { W, H } = X, L = bgLayer(X), [a, b, c] = sc.words;
-  if (a) { const t = word(X, L, a.text, { cls: "cd", fs: 0.2 * H, x: W / 2, y: 0.42 * H, color: P.red }); slamIn(X, t, a.rt); later(X, t, bx => doodle(X, L, "crown", bx, a.rt + 0.3)); }
-  if (b) { const t = word(X, L, b.text, { cls: "cd", fs: 0.09 * H, x: W / 2, y: 0.58 * H, color: P.white, ls: 0.05 }); show(X, t.box, b.rt); }
-  if (c) { const t = word(X, L, c.text, { cls: "ex", fs: 0.035 * H, x: W / 2, y: 0.68 * H, color: P.white, ls: 0.2 }); show(X, t.box, c.rt); later(X, t, bx => doodle(X, L, "underline", bx, c.rt + 0.2)); }
-};
+B.outro = (sc, X) => window.NexaGrungeOutro.render(sc, X, {P, bgLayer, word, show, slamIn, doodle, fit, EASE_OUT, config: C.outro || {}});
 B.intro = B.slam;
 
 const FITS = {

@@ -102,6 +102,8 @@ def build(name):
 {BASE_CSS}{spec['css']}
   body.headless #hint {{ display: none !important; }}
 </style>
+{f'<script src="./components/intro.js"></script>' if spec.get("introScript") else ""}
+{f'<script src="./components/outro.js"></script>' if spec.get("outroScript") else ""}
 </head>
 <body>
 <div id="stage"></div>

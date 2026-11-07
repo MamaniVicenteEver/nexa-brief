@@ -38,6 +38,16 @@
       const vg = G.createRadialGradient(stage.W / 2, stage.H / 2, Math.min(stage.W, stage.H) * 0.35, stage.W / 2, stage.H / 2, Math.max(stage.W, stage.H) * 0.75);
       vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,.55)");
       G.fillStyle = vg; G.fillRect(0, 0, stage.W, stage.H);
+      /* bordes a negro puro: YouTube/Reels rellenan con #000 cuando la pantalla no es del mismo
+         formato que el video; sin esto se ve el corte del fondo gris (franja a los costados) */
+      const ex = stage.W * 0.06, ey = stage.H * 0.06;
+      for (const [x0, y0, x1, y1, rx, ry, rw, rh] of [
+        [0, 0, ex, 0, 0, 0, ex, stage.H], [stage.W, 0, stage.W - ex, 0, stage.W - ex, 0, ex, stage.H],
+        [0, 0, 0, ey, 0, 0, stage.W, ey], [0, stage.H, 0, stage.H - ey, 0, stage.H - ey, stage.W, ey]]) {
+        const eg = G.createLinearGradient(x0, y0, x1, y1);
+        eg.addColorStop(0, "#000"); eg.addColorStop(1, "rgba(0,0,0,0)");
+        G.fillStyle = eg; G.fillRect(rx, ry, rw, rh);
+      }
     },
   });
 

@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "title": "El primer día del Somme",
+  "summary": "Escena narrada sobre el primer día de la batalla del Somme, con dos bandos, trincheras, bombardeos, avances y cámara de dron. La plantilla usa el motor de personajes 2.5D de NodeAction.",
+  "engine": "nodeaction/_engine",
+  "based_on": null,
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-10-17",
+  "libraries": [
+    {
+      "name": "Google Fonts: Inter, JetBrains Mono",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía del reproductor NodeAction"
+    }
+  ],
+  "inputs": [
+    "Guion y voz Charon; la lección de NodeAction registra 48 personajes y voz a 94 ppm.",
+    "Tiempos de palabra en assets/lyrics.json y efectos de escena sintetizados en assets/sfx.wav."
+  ],
+  "notes": [
+    "Render disponible en 16:9 y 9:16.",
+    "Comparte nodeaction/_engine con paintwick-demo; la escena es datos y el motor se mantiene dentro del sandbox."
+  ],
+  "usage_backfill": {
+    "estimated": true,
+    "source": "Estimación de ~/.codex/sessions/**/*.jsonl (Codex: 7 sesiones, 73 menciones de sandbox/nodeaction/somme-1916) y /home/alfred/codex/nexa-brief/claude-sessions-usage.json (Claude: 5 sesiones, 1301 sandbox_mentions). Repartí los tokens de cada sesión que toca varias plantillas proporcionalmente a sus menciones de ruta; los modelos de Claude se asignaron según el recuento de modelos del resumen. El resumen Claude no trae reasoning_tokens (registrado como 0, no disponible por separado). Revisé sandbox/nodemotion/_codex/*.log: no tenían contadores numéricos de tokens (0 campos encontrados), así que no los sumé.",
+    "by_model": [
+      {
+        "provider": "claude",
+        "model": "claude-haiku-4-5-20251001",
+        "input_tokens": 0,
+        "cached_input_tokens": 5427,
+        "output_tokens": 35,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "claude",
+        "model": "claude-opus-5-5",
+        "input_tokens": 1030,
+        "cached_input_tokens": 255538606,
+        "output_tokens": 537705,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "codex",
+        "model": "gpt-6-luna",
+        "input_tokens": 1669484,
+        "cached_input_tokens": 1631263,
+        "output_tokens": 15716,
+        "reasoning_tokens": 10260
+      }
+    ]
+  }
+}

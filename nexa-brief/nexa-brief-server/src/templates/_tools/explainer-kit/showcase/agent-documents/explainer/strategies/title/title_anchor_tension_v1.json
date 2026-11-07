@@ -1,0 +1,29 @@
+{
+  "id": "title_anchor_tension_v1",
+  "piece": "title",
+  "name": "ANCLA + TENSIÓN + DETALLE, 3 opciones para Test & Compare",
+  "description": "Ancla: algo que todos conocen. Tensión: una contradicción, un riesgo o un «casi». Detalle: un dato concreto que el video confirma. Tres títulos con emociones distintas (titulos-gancho-categorias-node-2026-10.md, secciones 3 y 4).",
+  "options": 3,
+  "max_chars": 60,
+  "distinct_emotions": true,
+  "hook_strategies": {
+    "1": { "name": "Paradoja", "emotion": "Asombro", "template": "{Algo malo} que {resultado bueno}" },
+    "2": { "name": "Reloj en marcha", "emotion": "Tensión", "template": "{N} segundos para {acción}" },
+    "3": { "name": "Causa pequeña, efecto gigante", "emotion": "Asombro", "template": "{Objeto mínimo} {consecuencia enorme}" },
+    "4": { "name": "Casi no pasa", "emotion": "Ansiedad → alivio", "template": "{Hecho} estuvo a {X} de no pasar" },
+    "5": { "name": "Protagonista castigado u olvidado", "emotion": "Injusticia", "template": "{Logro} y {castigo u olvido}" },
+    "6": { "name": "Puente a tu vida", "emotion": "Relevancia", "template": "{Hecho viejo} que hoy {te afecta}" },
+    "7": { "name": "Apuesta imposible", "emotion": "Ironía", "template": "Creyeron que {X} en {tiempo corto}" },
+    "8": { "name": "Mito revisado", "emotion": "Curiosidad", "template": "¿{Mito conocido}?" },
+    "9": { "name": "Decisión bajo presión", "emotion": "Tensión", "template": "Tenía {edad} y {segundos} para decidir {X}" },
+    "10": { "name": "Generosidad sorprendente", "emotion": "Asombro positivo", "template": "{Logro enorme} y {renuncia}" }
+  },
+  "wow_filter": [
+    "¿Se entiende el tema en 3 segundos? (ancla)",
+    "¿Hay una contradicción, un riesgo o una pregunta sin cerrar?",
+    "¿Hay un detalle concreto: cifra, edad, segundos, objeto?",
+    "¿Lo importante está en las primeras ~40 letras?",
+    "¿El video lo cumple con datos del guion?",
+    "¿La miniatura agrega algo que el título no dice?"
+  ]
+}

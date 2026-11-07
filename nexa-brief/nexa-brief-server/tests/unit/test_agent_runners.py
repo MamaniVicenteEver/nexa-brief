@@ -20,7 +20,7 @@ FAKE = """#!{py}
 import json, os, sys, time
 args = sys.argv[1:]
 prompt = sys.stdin.read()
-open(os.environ.get("FAKE_ARGS", "/dev/null"), "w").write(json.dumps({{"args": args, "prompt": prompt, "cwd": os.getcwd(), "claudecode": os.environ.get("CLAUDECODE")}}))
+open(os.environ.get("FAKE_ARGS", "/dev/null"), "w").write(json.dumps({{"args": args, "prompt": prompt, "cwd": os.getcwd(), "claudecode": os.environ.get("CLAUDECODE"), "pipeline_agent": os.environ.get("NEXA_EXPLAINER_PIPELINE_AGENT")}}))
 if "SLEEP" in prompt:
     time.sleep(30)
 reply = os.environ.get("FAKE_REPLY", "hola")
@@ -50,6 +50,15 @@ def _args(args_file: Path) -> dict:
     return json.loads(args_file.read_text())
 
 
+@pytest.mark.parametrize("runner", [ClaudeCodeRunner, CodexRunner])
+async def test_pipeline_scope_environment_reaches_both_agents(fake_cli, tmp_path, runner):
+    binary, args_file = fake_cli
+    scope = AgentScope(writable_dir=str(tmp_path), extra_env={"NEXA_EXPLAINER_PIPELINE_AGENT": "1"})
+    result = await runner(str(binary)).run("test", cwd=tmp_path, log_path=tmp_path / "a.log",
+                                           timeout_seconds=20, scope=scope)
+    assert result.ok and _args(args_file)["pipeline_agent"] == "1"
+
+
 async def test_claude_read_only_mode_disallows_writes(fake_cli, tmp_path: Path, monkeypatch):
     binary, args_file = fake_cli
     monkeypatch.setenv("FAKE_REPLY", '{"ok": true}')
@@ -71,11 +80,37 @@ async def test_claude_scoped_mode_only_allows_scoped_tools(fake_cli, tmp_path: P
     assert result.last_message == "terminé"
     args = _args(args_file)["args"]
     assert "Edit(videos/x/**)" in args and "Write(videos/x/**)" in args
-    assert "Bash(/py /kit.py:*)" in args
+    assert "Bash(/py /kit.py *)" in args
     assert "Bash" not in args  # nunca Bash sin restricción
     assert "Read(**/.env)" in args[args.index("--disallowedTools"):]
     assert "--dangerously-skip-permissions" not in args and "acceptEdits" not in args
     assert '"type": "assistant"' in (tmp_path / "p.log").read_text()  # el log muestra el progreso
+
+
+async def test_claude_scope_uses_model_and_only_explicit_bash_prefixes(fake_cli, tmp_path: Path):
+    binary, args_file = fake_cli
+    scope = AgentScope(
+        writable_dir="src/templates/sandbox",
+        commands=(".venv/bin/python src/templates/_tools/sandbox/", "src/templates/_tools/sandbox/delegate.sh"),
+        extra_writable=("/tmp",),
+        model="claude-opus-5-5",
+        reasoning_effort="high",
+    )
+    await ClaudeCodeRunner(str(binary)).run(
+        "creá un prototipo", cwd=tmp_path, log_path=tmp_path / "leader.log", timeout_seconds=20, scope=scope
+    )
+    args = _args(args_file)["args"]
+    assert "--model" in args and args[args.index("--model") + 1] == "claude-opus-5-5"
+    assert "--effort" in args and args[args.index("--effort") + 1] == "high"
+    assert "Edit(src/templates/sandbox/**)" in args
+    assert "Write(src/templates/sandbox/**)" in args
+    assert "Edit(//tmp/**)" in args and "Write(//tmp/**)" in args
+    bash_tools = [item for item in args if item.startswith("Bash")]
+    assert bash_tools == [
+        "Bash(.venv/bin/python src/templates/_tools/sandbox/*)",
+        "Bash(src/templates/_tools/sandbox/delegate.sh *)",
+    ]
+    assert "acceptEdits" not in args and "--dangerously-skip-permissions" not in args
 
 
 async def test_codex_scoped_runs_inside_sandbox_dir(fake_cli, tmp_path: Path, monkeypatch):
@@ -89,6 +124,24 @@ async def test_codex_scoped_runs_inside_sandbox_dir(fake_cli, tmp_path: Path, mo
     assert args[args.index("-C") + 1] == str(tmp_path / "sandbox")
     assert args[args.index("-s") + 1] == "workspace-write"
     assert "--dangerously-bypass-approvals-and-sandbox" not in args
+
+
+async def test_codex_scope_overrides_role_model_and_effort(fake_cli, tmp_path: Path):
+    binary, args_file = fake_cli
+    (tmp_path / "sandbox").mkdir()
+    scope = AgentScope(
+        writable_dir="sandbox/template",
+        os_sandbox_dir="sandbox",
+        model="gpt-6-sol",
+        reasoning_effort="high",
+    )
+    await CodexRunner(str(binary)).run(
+        "producí", cwd=tmp_path, log_path=tmp_path / "scoped-codex.log", timeout_seconds=20, scope=scope
+    )
+    args = _args(args_file)["args"]
+    assert args[args.index("-m") + 1] == "gpt-6-sol"
+    config_args = [args[index + 1] for index, item in enumerate(args[:-1]) if item == "-c"]
+    assert 'model_reasoning_effort="high"' in config_args
 
 
 async def test_codex_read_only(fake_cli, tmp_path: Path):

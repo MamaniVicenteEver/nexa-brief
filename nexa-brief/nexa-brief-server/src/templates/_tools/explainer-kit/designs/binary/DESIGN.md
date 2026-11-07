@@ -35,3 +35,14 @@
 - ✓ Siluetas llenas y simples (llave, manzana, candado). ✗ Detalles finos de < 2 celdas.
 - ✓ Retratos frontales con fondo liso. ✗ Fotos de grupo o caras chicas como `portrait` (usar `frame`).
 - ✓ Un texto corto por plano. ✗ Párrafos: para eso están los subtítulos.
+
+## Reglas automáticas del diseño (design.json → defaults)
+
+- **Clips**: `clip.layout = "frame"`, `clip.size = 0.92` → centrados, un poco más grandes que las fotos, rótulo
+  debajo. En el storyboard no se pone `layout` ni `size`.
+- **Duración mínima**: `minDur = {"common.clip": 6}` → el motor alarga el clip a 6 s y corre los beats siguientes.
+  Bajar clips de 6–8 s.
+- **Overlays**: `overlay = {"endWithScene": true, "min": 2.5, "max": 8}` → una marca sin `dur`/`until` desaparece
+  cuando cambia la escena de debajo.
+- **Bordes**: El fondo ya es `#000`, así que no hace falta degradar los bordes.
+- Si hay que cambiar uno de estos criterios, se cambia aquí (design.json), nunca video por video.

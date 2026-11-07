@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.arrow",
+  "description": "Flecha gruesa de avance con degradado y borde blanco. Admite origen, destino, curvatura, grosor y llegada por voz; reutiliza la flecha del video.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "from": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+      "default": null
+    },
+    "to": {
+      "$ref": "#/$defs/camera",
+      "description": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+      "default": null
+    },
+    "zoom": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 6,
+      "description": "Si no hay `to`: cuánto se aleja la cámara.",
+      "default": 1
+    },
+    "tilt": {
+      "type": "number",
+      "minimum": -20,
+      "maximum": 20,
+      "description": "Si no hay `to`: grados que gira el mapa.",
+      "default": 0
+    },
+    "ease": {
+      "enum": [
+        "auto",
+        "out",
+        "in",
+        "inOut",
+        "linear",
+        "expo"
+      ],
+      "description": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+      "default": "expo"
+    },
+    "country": {
+      "type": "string",
+      "description": "País foco: pone el sol y el rayado.",
+      "default": "Japan"
+    },
+    "target": {
+      "$ref": "#/$defs/place",
+      "description": "País o punto [longitud, latitud] del destino; nunca píxeles.",
+      "default": "Taiwan"
+    },
+    "time": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo local de llegada. Acepta @palabra de la narración.",
+      "default": 0.5
+    },
+    "origin": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Origen de la flecha [lon,lat]; vacío = centro de country.",
+      "default": null
+    },
+    "bow": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1,
+      "description": "Curvatura de la flecha. 0 = recta; el signo cambia el lado del arco.",
+      "default": 0.16
+    },
+    "travel": {
+      "type": "number",
+      "minimum": 0.3,
+      "maximum": 3,
+      "description": "Segundos que tarda cada flecha en cruzar el mar antes de llegar a su `time`.",
+      "default": 1.1
+    },
+    "beam": {
+      "type": "number",
+      "minimum": 0.4,
+      "maximum": 2.5,
+      "description": "Grosor de las flechas (multiplicador).",
+      "default": 1
+    }
+  },
+  "required": [],
+  "$defs": {
+    "camera": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 4,
+          "items": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "place": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coordinate"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    }
+  },
+  "examples": [
+    {
+      "from": [
+        132,
+        32,
+        55,
+        0
+      ],
+      "to": [
+        132,
+        32,
+        55,
+        0
+      ],
+      "time": 2.5,
+      "country": "Japan",
+      "origin": [
+        139,
+        36
+      ],
+      "target": [
+        121,
+        24
+      ]
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

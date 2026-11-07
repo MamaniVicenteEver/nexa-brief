@@ -2,46 +2,51 @@ import { useTranslations } from "next-intl";
 import { PlatformIcon } from "@/features/channels/components/PlatformIcon";
 import { PLATFORM_META } from "@/features/channels/constants/platforms";
 import type { PublicationStats } from "@/features/stats";
-import { Panel } from "./Panel";
+import styles from "./dashboard.module.css";
+import { EmptyNote, Panel } from "./Panel";
 
 export function PublicationsPanel({ publications }: { publications: PublicationStats }) {
   const t = useTranslations("dashboard.publications");
   const max = Math.max(1, ...publications.byPlatform.map((p) => p.total));
   return (
-    <Panel title={t("title")}>
-      <div className="flex items-baseline gap-2">
-        <span className="font-nb-sans text-[40px] leading-none font-extrabold tracking-[-0.04em] text-nb-ink tabular-nums">
-          {publications.total}
-        </span>
-        <span className="text-[12.5px] text-nb-mute">
+    <Panel title={t("title")} description={t("description")}>
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <strong className={styles.bigNumber}>{publications.total}</strong>
+        <span className={styles.description}>
           {t("last30", { count: publications.last30Days })}
         </span>
       </div>
-      <ul className="mt-5 flex flex-col gap-4">
-        {publications.byPlatform.map(({ platform, total, last7Days }) => (
-          <li key={platform} className="flex items-center gap-3">
-            <PlatformIcon platform={platform} className="size-8 shrink-0" />
-            <div className="min-w-0 flex-1">
-              <div className="flex items-baseline justify-between text-[12.5px]">
-                <span className="font-semibold text-nb-ink">{PLATFORM_META[platform].label}</span>
-                <span className="text-nb-mute">
-                  <span className="font-bold text-nb-ink tabular-nums">{total}</span>
-                  {last7Days > 0 && ` · +${last7Days} ${t("thisWeek")}`}
-                </span>
-              </div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-nb-bg-2">
-                <div
-                  className="h-full rounded-full"
+      {publications.byPlatform.length === 0 ? (
+        <EmptyNote>{t("empty")}</EmptyNote>
+      ) : (
+        <ul className="mt-3">
+          {publications.byPlatform.map(({ platform, total, last7Days }) => (
+            <li className={styles.platformRow} key={platform}>
+              <PlatformIcon
+                platform={platform}
+                tone="neutral"
+                className="size-6"
+                rounded="rounded-md"
+              />
+              <span className="text-xs font-medium">
+                {PLATFORM_META[platform]?.label ?? platform}
+              </span>
+              <span className="text-xs tabular-nums">
+                <strong className="font-semibold">{total}</strong>
+                <span className="text-nb-mute"> · {t("weekly", { count: last7Days })}</span>
+              </span>
+              <span className={styles.bar}>
+                <span
                   style={{
-                    width: `${total ? Math.max(6, (total / max) * 100) : 0}%`,
-                    background: PLATFORM_META[platform].color,
+                    width: `${(total / max) * 100}%`,
+                    background: PLATFORM_META[platform]?.color,
                   }}
                 />
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </Panel>
   );
 }

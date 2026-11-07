@@ -1,0 +1,82 @@
+---
+import { medallionUrl } from '@/shared/lib/images';
+import type { Channel, Platform } from '@/features/channels/model/types';
+import { text, type Locale } from '@/shared/lib/locale';
+import SocialIcon from '@/shared/ui/SocialIcon.astro';
+interface Props {
+  channel: Channel;
+  platform: Platform;
+  locale: Locale;
+}
+const { channel, platform, locale } = Astro.props;
+const social = channel.socials[platform];
+const name = { youtube: 'YouTube', instagram: 'Instagram', facebook: 'Facebook', tiktok: 'TikTok' }[
+  platform
+];
+---
+
+<div
+  class:list={['profile-preview', `profile-preview--${platform}`]}
+  style={`--channel-accent:${channel.accent}`}
+>
+  <div class="profile-preview__service">
+    <SocialIcon platform={platform} size={21} />
+    <span>{name}</span>
+    <small>{text(locale, 'Vista de identidad', 'Identity preview')}</small>
+  </div>
+  {(platform === 'youtube' || platform === 'facebook') && (
+    <div class="profile-preview__banner">
+      <span>NODE MEDIA NETWORK</span>
+      <strong>{channel.name}</strong>
+      <p>{channel.category[locale]}</p>
+    </div>
+  )}
+  <div class="profile-preview__head">
+    <img
+      class="profile-preview__avatar"
+      src={medallionUrl(channel.id)}
+      alt=""
+      width="96"
+      height="96"
+    />
+    <div>
+      <h3>{channel.name}</h3>
+      <p class="profile-preview__handle">
+        {social.handle || text(locale, 'Perfil en preparación', 'Profile in preparation')}
+      </p>
+      <p class="profile-preview__bio">{channel.description[locale]}</p>
+    </div>
+  </div>
+  <div class="profile-preview__nav" aria-hidden="true">
+    <span>
+      {platform === 'instagram'
+        ? text(locale, 'Publicaciones', 'Posts')
+        : platform === 'tiktok'
+          ? text(locale, 'Videos', 'Videos')
+          : text(locale, 'Inicio', 'Home')}
+    </span>
+    <span>{platform === 'youtube' ? 'Videos' : text(locale, 'Acerca de', 'About')}</span>
+    <span>{platform === 'youtube' ? 'Shorts' : text(locale, 'Comunidad', 'Community')}</span>
+  </div>
+  <div class="profile-preview__editorial">
+    <span class="eyebrow">{text(locale, 'LÍNEA EDITORIAL', 'EDITORIAL DIRECTION')}</span>
+    <div class="editorial-tiles">
+      {channel.topics[locale].map((topic, i) => (
+        <div class="editorial-tile">
+          <span>0{i + 1}</span>
+          <strong>{topic}</strong>
+          <span class="editorial-tile__brand">{channel.name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+  {!social.url && (
+    <p class="profile-preview__pending">
+      {text(
+        locale,
+        'La identidad está preparada. El enlace público se incorporará cuando esté confirmado.',
+        'The identity is ready. The public link will be added once confirmed.',
+      )}
+    </p>
+  )}
+</div>

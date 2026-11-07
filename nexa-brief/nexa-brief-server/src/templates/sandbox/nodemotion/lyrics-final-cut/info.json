@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "title": "Lyrics · Final Cut",
+  "summary": "Prototipo de letra musical que adapta una referencia grunge a la canción Caution, con frases sincronizadas, palabras héroe, fotos en blanco y negro, texturas y tomas de alto contraste. El reloj de la pieza es el audio.",
+  "engine": "nodemotion/lyrics-final-cut",
+  "based_on": "lyrics-caution",
+  "is_new_design": true,
+  "status": "lista para revisar",
+  "created_at": "2026-10-15",
+  "libraries": [
+    {
+      "name": "Google Fonts: Archivo, Oswald",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía del diseño grunge"
+    }
+  ],
+  "inputs": [
+    "song.mp3 y lyrics.json reutilizados de lyrics-caution.",
+    "Fotografías de Pixabay y texturas locales; NOTAS.md identifica referencias y créditos.",
+    "Referencia Klickpin del opener grunge en assets/_ref."
+  ],
+  "notes": [
+    "NOTAS.md indica que Claude reescribió la versión el 2026-10-15.",
+    "La revisión consta de capturas en _build/capturas; no hay MP4 en render. La página es una implementación propia, sin motor JavaScript externo compartido."
+  ],
+  "usage_backfill": {
+    "estimated": true,
+    "source": "Estimación de ~/.codex/sessions/**/*.jsonl (Codex: 6 sesiones, 274 menciones de sandbox/nodemotion/lyrics-final-cut) y /home/alfred/codex/nexa-brief/claude-sessions-usage.json (Claude: 5 sesiones, 245 sandbox_mentions). Repartí los tokens de cada sesión que toca varias plantillas proporcionalmente a sus menciones de ruta; los modelos de Claude se asignaron según el recuento de modelos del resumen. El resumen Claude no trae reasoning_tokens (registrado como 0, no disponible por separado). Revisé sandbox/nodemotion/_codex/*.log: no tenían contadores numéricos de tokens (0 campos encontrados), así que no los sumé.",
+    "by_model": [
+      {
+        "provider": "claude",
+        "model": "claude-haiku-4-5-20251001",
+        "input_tokens": 2,
+        "cached_input_tokens": 45222,
+        "output_tokens": 291,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "claude",
+        "model": "claude-opus-5-5",
+        "input_tokens": 770,
+        "cached_input_tokens": 175276904,
+        "output_tokens": 597200,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "codex",
+        "model": "gpt-6-luna",
+        "input_tokens": 2300508,
+        "cached_input_tokens": 2227230,
+        "output_tokens": 28156,
+        "reasoning_tokens": 17891
+      }
+    ]
+  }
+}

@@ -124,7 +124,8 @@ async def test_overview_reports_funnel_and_gaps(videos, monkeypatch):
     assert tech["schedule"]["next_at"].startswith("2026-10-12T15:00")
     assert "autopublish_off" in tech["missing"] and "no_schedule" not in tech["missing"]
     assert "no_schedule" in data["node_history"]["missing"]
-    assert "empty_category" in data["node_politics"]["missing"]
+    assert "empty_category" not in data["node_politics"]["missing"]
+    assert "no_content" in data["node_politics"]["missing"]
     assert data["node_motion"]["content"]["templates"] == 35
 
 

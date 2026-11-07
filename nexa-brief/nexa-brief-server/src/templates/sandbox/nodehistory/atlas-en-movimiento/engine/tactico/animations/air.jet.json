@@ -1,0 +1,152 @@
+{
+  "name": "air.jet",
+  "family": "air",
+  "description": "Avión de ataque o caza. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+  "duration": 8.35,
+  "loop": true,
+  "layer": 50,
+  "states": [
+    "normal",
+    "active",
+    "hit",
+    "destroyed"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Multiplicador del tamaño visual."
+    },
+    "scaleMode": {
+      "type": "enum",
+      "values": [
+        "screen",
+        "geo"
+      ],
+      "default": "screen",
+      "range": [
+        "screen",
+        "geo"
+      ],
+      "description": "screen mantiene el tamaño en pantalla; geo lo calcula desde la longitud geográfica."
+    },
+    "kmLength": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Longitud geográfica en kilómetros para scaleMode geo."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "flag": {
+      "type": "string",
+      "default": "US",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "variant": {
+      "type": "enum",
+      "values": [
+        "attack",
+        "fighter"
+      ],
+      "default": "attack",
+      "range": [
+        "attack",
+        "fighter"
+      ],
+      "description": "Variante visual del componente."
+    },
+    "altitude": {
+      "type": "number",
+      "default": 2,
+      "min": 0,
+      "max": 20,
+      "range": {
+        "min": 0,
+        "max": 20
+      },
+      "description": "Altitud visual del vuelo."
+    },
+    "contrail": {
+      "type": "boolean",
+      "default": false,
+      "range": null,
+      "description": "Activa la estela de condensación."
+    }
+  },
+  "sfx": [
+    "air-jet-pass"
+  ],
+  "example": {
+    "id": "air-jet",
+    "t": 0,
+    "type": "air.jet",
+    "at": [
+      58.4,
+      24.9
+    ],
+    "variant": "attack",
+    "scale": 4,
+    "heading": "auto",
+    "altitude": 2,
+    "contrail": true,
+    "dur": 8,
+    "label": "CAZA",
+    "path": {
+      "via": [
+        [
+          58.4,
+          24.9
+        ],
+        [
+          58.14,
+          25.02
+        ],
+        [
+          57.95,
+          25.06
+        ]
+      ],
+      "t": 0.3,
+      "dur": 6.5,
+      "curve": "smooth"
+    }
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-air.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/air.jet.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

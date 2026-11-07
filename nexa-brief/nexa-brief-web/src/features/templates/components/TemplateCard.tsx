@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 import { TemplateStudioModal } from "@/features/studio/components/TemplateStudioModal";
+import { cn } from "@/lib/utils";
 import { MediaPlayerModal } from "@/shared/components/media/MediaPlayerModal";
 import type { Template } from "../types";
 
@@ -27,21 +27,19 @@ const FALLBACK_PREVIEW_IMAGE: Record<string, string> = {
   "lyrics-romantic": "/images/templates/lyrics.png",
 };
 
-const PREVIEW_VIDEO: Record<string, string> = {
-  "motion-backdrop": "/videos/sample-publication.mp4",
-};
-
 const DEFAULT_PREVIEW_VOLUME = 0.05;
 
 export function TemplateCard({
   template,
   hideRecorder = false,
+  showDemoBadge = false,
   className,
 }: {
   template: Template;
   /** Vista de solo lectura (landing): sin Estudio en el modal y sin el motor
    * de grabación que trae cada plantilla (#rec-btn). */
   hideRecorder?: boolean;
+  showDemoBadge?: boolean;
   className?: string;
 }) {
   const t = useTranslations("templates");
@@ -49,16 +47,14 @@ export function TemplateCard({
     template.previewImageUrl ??
     FALLBACK_PREVIEW_IMAGE[template.id] ??
     "/images/templates/lyrics.png";
-  const previewVideo = template.previewVideoUrl ?? PREVIEW_VIDEO[template.id];
+  // Letras de Neon conserva su clip original como vista animada de la tarjeta.
+  const previewVideo = template.id === "lyrics-neon" ? template.previewVideoUrl : null;
   const [showcaseOpen, setShowcaseOpen] = useState(false);
   const [showcaseActive, setShowcaseActive] = useState(false);
-  // El iframe en vivo (motor + video + audio de la plantilla) se monta recién al
-  // primer hover/foco. Con las ~30 tarjetas montadas de entrada, el navegador
-  // abría decenas de descargas de video a la vez contra la API y el reproductor
-  // del modal quedaba esperando conexión (sobre todo por Tailscale/LAN).
+  // La plantilla completa solo se renderiza en el iframe durante hover/foco;
+  // las cards quietas cargan la portada sin iniciar su showcase.
   const [showcaseLive, setShowcaseLive] = useState(false);
   const showcaseFrameRef = useRef<HTMLIFrameElement>(null);
-  const fallbackVideoRef = useRef<HTMLVideoElement>(null);
   const recorderParam = hideRecorder ? "&norec=1" : "";
   const showcasePreviewUrl = template.showcaseUrl
     ? `${template.showcaseUrl}?muted=1&preview=card${recorderParam}`
@@ -84,10 +80,8 @@ export function TemplateCard({
       "*",
     );
 
-    const fallbackVideo = fallbackVideoRef.current;
-    if (!fallbackVideo) return;
-    fallbackVideo.pause();
-    fallbackVideo.currentTime = 0;
+    // Al salir, desmontar el iframe libera su render, decodificador y conexiones.
+    setShowcaseLive(false);
   };
 
   useEffect(() => {
@@ -95,22 +89,11 @@ export function TemplateCard({
       { type: "nexa-template-preview", playing: showcaseActive },
       "*",
     );
-
-    const fallbackVideo = fallbackVideoRef.current;
-    if (!fallbackVideo) return;
-    if (showcaseActive) {
-      void fallbackVideo.play().catch(() => {});
-    } else {
-      fallbackVideo.pause();
-      fallbackVideo.currentTime = 0;
-    }
   }, [showcaseActive]);
 
   const handleShowcaseOpenChange = (open: boolean) => {
     setShowcaseOpen(open);
     resetShowcase();
-    // La vista previa de la tarjeta seguiría bajando medios detrás del modal.
-    if (open) setShowcaseLive(false);
   };
 
   const trigger = (
@@ -150,17 +133,18 @@ export function TemplateCard({
             }}
             className="pointer-events-none size-full border-0 bg-black"
           />
-        ) : previewVideo && !showcasePreviewUrl ? (
+        ) : !showcaseOpen && previewVideo ? (
           <video
-            ref={fallbackVideoRef}
             src={previewVideo}
             poster={previewSrc}
+            autoPlay
             muted
             loop
             playsInline
             preload="metadata"
-            aria-label={template.displayName}
-            className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
+            aria-hidden="true"
+            tabIndex={-1}
+            className="pointer-events-none size-full object-cover"
           />
         ) : previewSrc ? (
           <Image
@@ -174,6 +158,11 @@ export function TemplateCard({
         ) : (
           <span className="text-[13px] font-semibold">
             {t(ORIENTATION_LABEL_KEY[template.nativeOrientation])}
+          </span>
+        )}
+        {showDemoBadge && modalPreviewUrl && (
+          <span className="absolute top-2 left-2 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-bold text-black uppercase">
+            {t("prep.demo")}
           </span>
         )}
       </div>

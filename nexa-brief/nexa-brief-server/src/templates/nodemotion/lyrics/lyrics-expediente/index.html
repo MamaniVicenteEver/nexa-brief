@@ -964,10 +964,6 @@
   #intro.gone { opacity: 0; pointer-events: none; }
   #outro { opacity: 0; pointer-events: none; }
   #outro.show { opacity: 1; pointer-events: auto; }
-  /* al cerrar el caso, el muro se apaga detrás de la carpeta */
-  body.outroActive #viewport, body.outroActive #wall, body.outroActive #bg {
-    opacity: 0.10; transition: opacity 1.8s ease;
-  }
   #hint {
     position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
     font-family: "Special Elite", monospace; font-size: 1.7vh; letter-spacing: 0.5em;
@@ -1019,6 +1015,8 @@
 <div id="hint">CLICK PARA ABRIR EL CASO</div>
 <audio id="audio" preload="auto"></audio>
 
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
 <script type="module">
 /* ================================ CONFIG ================================
    EXPEDIENTE: la letra es un muro de detective true-crime. Cada palabra se
@@ -1050,8 +1048,8 @@ const DEFAULT_CONFIG = { "activeId": "default", "configs": [{
   "audio": { "src": "assets/song.mp3" },
   "lyricsUrl": "assets/lyrics.json",
   "bg": {},
-  "intro": { "artist": "Expediente Nº 084", "title": "Hilo Rojo", "sub": "", "feats": "Material clasificado · NEXA BRIEF" },
-  "outro": { "leadSec": 8, "songTitle": "Hilo Rojo", "title": "Caso cerrado", "sub": "Gracias por ver", "feats": "Suscríbete · NEXA BRIEF" },
+  "intro": { "artist": "Yasuha · Expediente Nº 084", "title": "Flyday\nChinatown", "sub": "", "feats": "Material clasificado · NODEMOTION" },
+  "outro": { "leadSec": 8, "songTitle": "Flyday Chinatown", "title": "Gracias", "sub": "Por ver", "feats": "Suscríbete · NODEMOTION" },
   "debug": { "enabled": false },
   "board": {
     "clusterGapVw": 58, "clusterGapVh": 76,
@@ -1087,6 +1085,11 @@ const CONFIG = DB.configs.find(c => c.id === DB.activeId) || DB.configs[0];
 
 const doc = document, $ = id => doc.getElementById(id);
 const C = CONFIG, world = $("world"), threadsSvg = $("threads"), audio = $("audio");
+let introDurationSeconds = window.NexaHiloRojoIntro.DEFAULT_DURATION_SECONDS;
+const introController = window.NexaHiloRojoIntro.createDOMIntro({
+  root: $("intro"),
+  config: C.intro || {},
+});
 let vw = innerWidth, vh = innerHeight;
 addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; sizeDust(); });
 
@@ -1097,16 +1100,17 @@ function mulberry32(a) { return function() {
   return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 const rng = mulberry32(C.seed);
 
-/* ---- intro / outro: misma carpeta (.folder), textos distintos ---- */
-function buildCard(id, cfg) {
-  const i = $(id);
-  i.querySelector(".artist").textContent = cfg.artist ?? cfg.songTitle ?? "";
-  i.querySelector(".title").textContent = cfg.title;
-  i.querySelector(".sub").textContent = cfg.sub;
-  i.querySelector(".feats").textContent = cfg.feats;
-}
-buildCard("intro", C.intro);
-buildCard("outro", C.outro);
+/* ---- salida con el componente propio de esta plantilla ---- */
+const outroController = window.NexaHiloRojoOutro.createDOMOutro({
+  root: $("outro"),
+  config: C.outro || {},
+  onShow: () => {
+    doc.body.classList.add("outroActive");
+    doc.body.classList.remove("introActive");
+    $("intro").classList.add("gone");
+    for (const p of placed) p.el.classList.add("cold");
+  },
+});
 
 /* ---- lyrics: 100% desde lyricsUrl (JSON de Whisper) ---- */
 async function loadLyrics() {
@@ -1262,10 +1266,9 @@ function placeWord(w) {
 }
 
 /* ---- reloj: audio si suena; si no, rAF ---- */
-let rafT0 = null, rafNow = 0, started = false;
-const clock = () => (!audio.paused && audio.currentTime > 0.05)
-  ? audio.currentTime
-  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+let started = false;
+/* La escena sigue al audio: si está pausado, intro y letra se quedan en su tiempo actual. */
+const clock = () => Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
 
 async function begin() {
   if (started) return;
@@ -1278,16 +1281,7 @@ addEventListener("pointerdown", begin, { once: true });
 /* ---- outro: se dispara por el FINAL REAL del audio, no por la letra ---- */
 let outroShown = false;
 function maybeOutro() {
-  if (outroShown) return;
-  const dur = audio.duration;
-  if (!isFinite(dur) || dur <= 0) return;
-  if (audio.ended || (dur - audio.currentTime) <= C.outro.leadSec) {
-    outroShown = true;
-    doc.body.classList.add("outroActive");
-    $("intro").classList.add("gone");
-    $("outro").classList.add("show");
-    for (const p of placed) p.el.classList.add("cold");
-  }
+  outroShown = outroController.update(audio.currentTime, audio.duration, audio.ended).active;
 }
 audio.addEventListener("ended", maybeOutro);
 
@@ -1314,15 +1308,13 @@ function drawDust(now) {
 }
 
 /* ---- main ---- */
-let words = [], ptr = 0, introGone = false;
+let words = [], ptr = 0;
 function frame(now) {
-  rafNow = now;
-  if (rafT0 === null) rafT0 = now;
   const t = clock();
   maybeOutro();
+  introController.update(t, introDurationSeconds, outroShown);
   if (!outroShown) {
     while (ptr < words.length && t >= words[ptr].t) {
-      if (!introGone) { $("intro").classList.add("gone"); introGone = true; }
       placeWord(words[ptr]);
       ptr++;
     }
@@ -1345,7 +1337,10 @@ function frame(now) {
 if (C.bg.src) { const b = $("bg"); b.src = C.bg.src; b.style.display = "block"; b.style.opacity = 0.5; }
 sizeDust();
 audio.src = encodeURI(C.audio.src);
-loadLyrics().then(w => { words = w; });
+loadLyrics().then(w => {
+  words = w;
+  if (w.length && Number.isFinite(w[0].t)) introDurationSeconds = Math.max(0, w[0].t);
+});
 begin();
 requestAnimationFrame(frame);
 </script>

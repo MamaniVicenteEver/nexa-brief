@@ -14,11 +14,21 @@
    antes eran ~15 pedidos en cadena y, por red (LAN/Tailscale), el video tardaba
    ~5 s en arrancar. Mientras bajan los scripts se adelantan config.json, el audio
    y lyrics/storyboard del video, y se le pasan a Kit.boot() ya cargados.
+
+   Componentes propios del video: `components` del config.json del video (rutas
+   relativas a la página, p. ej. "assets/components/ajedrez.js") se cargan después
+   de los del diseño y antes de arrancar (guides/components.md §6).
    ========================================================================== */
 (function () {
   const me = document.currentScript;
   const KIT = me.src.replace(/engine\/loader\.js.*$/, "");
   const design = me.dataset.design || "binary";
+  const query = new URLSearchParams(location.search);
+  const livePreview = query.get("controls") === "1" && query.get("clock") !== "synthetic" && !query.has("t");
+  if (livePreview) {
+    const audio = document.getElementById("audio");
+    if (audio) audio.preload = "none";
+  }
 
   const css = href => new Promise(res => { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = href; l.onload = l.onerror = res; document.head.appendChild(l); });
   /* async=false: se descargan todos a la vez y se ejecutan en el orden en que se agregan */
@@ -59,7 +69,10 @@
 
     await loaded;
     window.Kit.design = D;
-    if (!noboot) await window.Kit.boot({ design: D, ...(await dataP) });
+    const data = await dataP;
+    const C0 = data.config && (data.config.configs ? data.config.configs[0] : data.config);
+    for (const src of (C0 && C0.components) || []) await js(src);
+    if (!noboot) await window.Kit.boot({ design: D, ...data });
     return D;
   })();
 })();

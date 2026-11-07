@@ -1,0 +1,13 @@
+[Unit]
+Description=Nexa Branding static Astro site
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/alfred/Projects/Git-Projects/nexa-brief/nexa-branding
+ExecStart=/usr/local/bin/npm start
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

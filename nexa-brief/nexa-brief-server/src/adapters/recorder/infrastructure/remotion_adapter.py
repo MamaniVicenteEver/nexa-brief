@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -39,6 +40,7 @@ from src.config.exceptions import RecordingError
 from src.config.settings import settings
 from src.adapters.recorder.infrastructure.subprocess_progress import parse_remotion_event, run_with_progress
 from src.core.ports.recorder_port import RecorderPort, RecordingResult
+from src.adapters.recorder.infrastructure.render_workspace import render_workspace
 from src.core.progress import report_step_progress
 
 if TYPE_CHECKING:
@@ -132,7 +134,9 @@ class RemotionAdapter(RecorderPort):
         if niche_cfg is None:
             raise RecordingError("RemotionAdapter requiere niche_cfg (necesita template.media_src_filename).")
 
-        config_path = output_dir / "config.json"
+        # El audio acompaña a config/lyrics en assets/ para jobs v2 nuevos.
+        input_dir = audio_path.parent if (audio_path.parent / "config.json").is_file() else html_path.parent
+        config_path = input_dir / "config.json"
         if not config_path.exists():
             raise RecordingError(
                 f"RemotionAdapter: falta config.json en {output_dir} "
@@ -160,7 +164,7 @@ class RemotionAdapter(RecorderPort):
         if niche_cfg.template.requires_lyrics:
             # Camino existente (neon/impact/romantic): estos templates SÍ
             # dependen de lyrics.json, preservado tal cual.
-            lyrics_path = output_dir / "lyrics.json"
+            lyrics_path = input_dir / "lyrics.json"
             if not lyrics_path.exists():
                 raise RecordingError(
                     f"RemotionAdapter: falta lyrics.json en {output_dir} "
@@ -199,89 +203,94 @@ class RemotionAdapter(RecorderPort):
                     original_duration_seconds=duration_seconds,
                 )
             props["durationSeconds"] = effective_duration_seconds
-        props_path = output_dir / "_remotion_props.json"
-        props_path.write_text(json.dumps(props), encoding="utf-8")
+        with render_workspace(output_dir, "remotion") as workspace:
+            props_path = workspace / "_remotion_props.json"
+            props_path.write_text(json.dumps(props), encoding="utf-8")
 
-        video_format = niche_cfg.get_16x9_format()
-        output_filename = video_format.output_filename if video_format else "youtube_video.mp4"
-        youtube_path = output_dir / output_filename
+            video_format = niche_cfg.get_16x9_format()
+            output_filename = video_format.output_filename if video_format else "youtube_video.mp4"
+            youtube_path = workspace / output_filename
 
-        common_args = [
-            f"--props={props_path}",
-            f"--composition={composition_id}",
-            f"--output={youtube_path}",
-            f"--codec={settings.remotion_codec}",
-            f"--crf={settings.remotion_crf}",
-            f"--timeout-ms={settings.remotion_render_timeout_seconds * 1000}",
-        ]
-
-        if effective_render_target == "aws":
-            if not settings.remotion_aws_function_name or not settings.remotion_aws_serve_url:
-                raise RecordingError(
-                    "RemotionAdapter: render_target='aws' pero falta "
-                    "REMOTION_AWS_FUNCTION_NAME/REMOTION_AWS_SERVE_URL — correr "
-                    "scripts/lambda-deploy.sh primero (ver guia_migracion_remotion_lambda.md)."
-                )
-            render_script = settings.remotion_project_dir / "scripts" / "render-lambda.mjs"
-            cmd = [
-                "node",
-                str(render_script),
-                *common_args,
-                f"--asset-dir={output_dir}",
-                f"--job-id={output_dir.name}",
-                f"--region={settings.remotion_aws_region}",
-                f"--function-name={settings.remotion_aws_function_name}",
-                f"--serve-url={settings.remotion_aws_serve_url}",
-                f"--frames-per-lambda={settings.remotion_aws_frames_per_lambda}",
-            ]
-        else:
-            render_script = settings.remotion_project_dir / "scripts" / "render-node.mjs"
-            cmd = [
-                "node",
-                str(render_script),
-                *common_args,
-                f"--public-dir={output_dir}",
-                f"--concurrency={settings.remotion_concurrency}",
+            common_args = [
+                f"--props={props_path}",
+                f"--composition={composition_id}",
+                f"--output={youtube_path}",
+                f"--codec={settings.remotion_codec}",
+                f"--crf={settings.remotion_crf}",
+                f"--timeout-ms={settings.remotion_render_timeout_seconds * 1000}",
             ]
 
-        logger.info(
-            "remotion_render_start",
-            engine_target=effective_render_target,
-            composition=composition_id,
-            output=str(youtube_path),
-            duration_seconds=effective_duration_seconds,
-        )
-
-        try:
-            report_step_progress(0.0)  # waiting for the render slot is not progress
-            async with _get_render_semaphore():
-                try:
-                    result = await run_with_progress(
-                        cmd,
-                        cwd=settings.remotion_project_dir,
-                        timeout=settings.remotion_render_timeout_seconds,
-                        parse_progress=parse_remotion_event,
-                    )
-                except asyncio.TimeoutError:
+            if effective_render_target == "aws":
+                if not settings.remotion_aws_function_name or not settings.remotion_aws_serve_url:
                     raise RecordingError(
-                        f"Remotion render timed out after {settings.remotion_render_timeout_seconds}s "
-                        f"(composition={composition_id})"
+                        "RemotionAdapter: render_target='aws' pero falta "
+                        "REMOTION_AWS_FUNCTION_NAME/REMOTION_AWS_SERVE_URL — correr "
+                        "scripts/lambda-deploy.sh primero (ver guia_migracion_remotion_lambda.md)."
                     )
-        finally:
-            props_path.unlink(missing_ok=True)
+                render_script = settings.remotion_project_dir / "scripts" / "render-lambda.mjs"
+                cmd = [
+                    "node",
+                    str(render_script),
+                    *common_args,
+                    f"--asset-dir={input_dir}",
+                    f"--job-id={output_dir.name}",
+                    f"--region={settings.remotion_aws_region}",
+                    f"--function-name={settings.remotion_aws_function_name}",
+                    f"--serve-url={settings.remotion_aws_serve_url}",
+                    f"--frames-per-lambda={settings.remotion_aws_frames_per_lambda}",
+                ]
+            else:
+                render_script = settings.remotion_project_dir / "scripts" / "render-node.mjs"
+                cmd = [
+                    "node",
+                    str(render_script),
+                    *common_args,
+                    f"--public-dir={input_dir}",
+                    f"--concurrency={settings.remotion_concurrency}",
+                ]
 
-        if result.returncode != 0:
-            err = result.stderr_tail[-500:] or "no stderr"
-            logger.error(
-                "remotion_render_failed",
-                returncode=result.returncode,
-                last_progress=_last_json_line(result.stdout_tail),
-                stderr_tail=err,
+            logger.info(
+                "remotion_render_start",
+                engine_target=effective_render_target,
+                composition=composition_id,
+                output=str(youtube_path),
+                duration_seconds=effective_duration_seconds,
             )
-            raise RecordingError(f"Remotion render failed (exit {result.returncode}): {err}")
 
-        if not youtube_path.exists():
-            raise RecordingError(f"Remotion render exited 0 pero {youtube_path} no fue creado")
+            try:
+                report_step_progress(0.0)  # waiting for the render slot is not progress
+                async with _get_render_semaphore():
+                    try:
+                        result = await run_with_progress(
+                            cmd,
+                            cwd=settings.remotion_project_dir,
+                            timeout=settings.remotion_render_timeout_seconds,
+                            parse_progress=parse_remotion_event,
+                        )
+                    except asyncio.TimeoutError:
+                        raise RecordingError(
+                            f"Remotion render timed out after {settings.remotion_render_timeout_seconds}s "
+                            f"(composition={composition_id})"
+                        )
+            finally:
+                props_path.unlink(missing_ok=True)
+
+            if result.returncode != 0:
+                err = result.stderr_tail[-500:] or "no stderr"
+                logger.error(
+                    "remotion_render_failed",
+                    returncode=result.returncode,
+                    last_progress=_last_json_line(result.stdout_tail),
+                    stderr_tail=err,
+                )
+                raise RecordingError(f"Remotion render failed (exit {result.returncode}): {err}")
+
+            if not youtube_path.exists():
+                raise RecordingError(f"Remotion render exited 0 pero {youtube_path} no fue creado")
+
+            destination = output_dir / output_filename
+            os.replace(youtube_path, destination)
+        youtube_path = destination
 
         logger.info("remotion_render_done", output=str(youtube_path))
 

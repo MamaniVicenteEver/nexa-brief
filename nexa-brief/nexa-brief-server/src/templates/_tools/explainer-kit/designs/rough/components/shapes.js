@@ -128,11 +128,13 @@
       ar: { type: "number", default: 0, doc: "Proporción del recorte (0 = la de la foto; en 9:16 conviene 0.8)." },
       tilt: { type: "number", default: -1.5, doc: "Inclinación del marco en grados." },
       focus: { type: "array", default: [0.5, 0.4], doc: "Punto [x,y] 0..1 hacia donde se acerca el zoom." },
+      ...K.brandLogo.params,
     },
     create(ctx, p) {
       const P = pal(ctx), g = R.root(ctx), { u, cx, portrait } = ctx.stage, im = ctx.img(p.src);
       const ar = p.ar || (im ? clamp(im.width / im.height, 0.6, 1.9) : 1.3);
       const bx = R.boxIn(ctx, p.size, ar, -u * 3), id = "rph" + (++FID);
+      const logo = K.brandLogo.attach(ctx, p, bx, p.focus);
       const hex = c => [1, 3, 5].map(k => parseInt(c.slice(k, k + 2), 16) / 255);
       const [b0, b1] = [hex(P.bg), hex(p.tone === "lime" ? P.accent : P.ink)];
       const defs = R.svg("defs", null, g);
@@ -163,9 +165,10 @@
           R.draw(tapes, lt, { start: 0.9, dur: 0.35, t });
           if (cap) R.type(cap, p.caption, prog(lt, 1.0, 0.7, "linear"));
           if (sub) sub.setAttribute("opacity", prog(lt, 1.5, 0.5));
+          if (logo) logo.render(lt);
           if (lt > b.dur) R.exitFx(g, ctx, lt, b);
         },
-        dispose() { g.remove(); },
+        dispose() { if (logo) logo.dispose(); g.remove(); },
       };
     },
   });

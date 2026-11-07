@@ -1,659 +1,655 @@
 {
- "version": 1,
- "family": "pop",
- "title": "La noche que cayó el Muro",
- "defaults": {
-  "offset": -0.12
- },
- "beats": [
-  {
-   "t": 0,
-   "use": "pop.introv1",
-   "params": {
-    "text": "LA NOCHE QUE\nCAYÓ EL ^MURO^",
-    "kicker": "Berlín · 9 nov 1989",
-    "sub": "la noche que nadie vio venir",
-    "glitchAt": "@1989",
-    "wordAt": 0.35,
-    "stagger": 0.26
-   },
-   "until": "Casi las 7",
-   "_alt": {
-    "use": "pop.introv2",
-    "params": {
-     "text": "¿QUIÉN ABRIÓ\nEL MURO?",
-     "kicker": "Berlín · 1989",
-     "stamp": "NADIE DIO LA ORDEN",
-     "stampAt": "@1989"
+  "version": 1,
+  "family": "pop",
+  "title": "La noche que cayó el Muro",
+  "defaults": {
+    "offset": -0.12
+  },
+  "beats": [
+    {
+      "t": 0,
+      "use": "pop.introv1",
+      "params": {
+        "text": "DE INMEDIATO\n^SIN DEMORA^\nLA NOCHE CAMBIÓ",
+        "kicker": "BERLÍN · 9 NOV 1989"
+      },
+      "until": "Casi las 7",
+      "_alt": {
+        "use": "pop.introv2",
+        "params": {
+          "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+          "kicker": "Berlín · 1989",
+          "stamp": "NADIE DIO LA ORDEN",
+          "stampAt": "@1989"
+        }
+      }
+    },
+    {
+      "at": "Casi las 7",
+      "use": "pop.hatch",
+      "params": {
+        "text": "19:00",
+        "src": "assets/media/leipzig.jpg",
+        "focus": [
+          0.6,
+          0.5
+        ]
+      },
+      "_note": "puente entre el gancho y 'Un funcionario lee' (antes lo cubría pop.title)"
+    },
+    {
+      "at": "Un funcionario lee",
+      "use": "pop.stripes",
+      "params": {
+        "text": "UN PAPEL",
+        "src": "assets/media/nota.jpg",
+        "focus": [
+          0.5,
+          0.2
+        ]
+      }
+    },
+    {
+      "t": 9.4,
+      "offset": 0,
+      "use": "pop.triangle",
+      "params": {
+        "src": "assets/media/schabowski.jpg",
+        "src2": "assets/media/nota.jpg",
+        "text": "PAPEL",
+        "caption": "LEÍDO EN VOZ ALTA",
+        "focus": [
+          0.75,
+          0.4
+        ]
+      }
+    },
+    {
+      "t": 12.2,
+      "offset": 0,
+      "use": "pop.arrow",
+      "params": {
+        "text": "SIN\nSABERLO",
+        "fx": "shards"
+      }
+    },
+    {
+      "at": "derribar el muro",
+      "use": "pop.word",
+      "params": {
+        "text": "EL MURO",
+        "small": "1961—1989",
+        "src": "assets/media/mauerspecht.jpg",
+        "focus": [
+          0.5,
+          0.4
+        ]
+      }
+    },
+    {
+      "at": "Durante 28 años",
+      "use": "pop.letters",
+      "params": {
+        "text": "28",
+        "src": "assets/media/mauerbau.jpg",
+        "tag": "AÑOS DE UNA\nCIUDAD PARTIDA"
+      }
+    },
+    {
+      "at": "En agosto de 1961",
+      "use": "pop.hatch",
+      "params": {
+        "text": "1961",
+        "src": "assets/media/mauerbau.jpg"
+      }
+    },
+    {
+      "t": 24.2,
+      "offset": 0,
+      "use": "pop.kanji",
+      "params": {
+        "big": "ベルリンの壁",
+        "sub": "AGOSTO 1961 · RDA",
+        "src": "assets/media/mauerbau.jpg",
+        "split": 1.1,
+        "corner": [
+          "13.",
+          "AGO",
+          "19",
+          "61"
+        ]
+      }
+    },
+    {
+      "at": "un muro de hormigón",
+      "use": "pop.band",
+      "params": {
+        "text": "HORMIGÓN",
+        "src": "assets/media/mauerspecht.jpg",
+        "focus": [
+          0.4,
+          0.5
+        ]
+      }
+    },
+    {
+      "at": "Familias separadas",
+      "use": "pop.circles",
+      "params": {
+        "text": "FAMILIAS",
+        "src": "assets/media/muro-gente.jpg",
+        "focus": [
+          0.5,
+          0.4
+        ]
+      }
+    },
+    {
+      "t": 34.0,
+      "offset": 0,
+      "use": "pop.duo",
+      "params": {
+        "src": "assets/media/leipzig.jpg",
+        "src2": "assets/media/bornholmer.jpg",
+        "text": "VECINOS\nSEPARADOS",
+        "kicker": "PARA SIEMPRE"
+      }
+    },
+    {
+      "at": "Al menos 140",
+      "use": "pop.word",
+      "params": {
+        "text": "140",
+        "small": "AL MENOS",
+        "src": "assets/media/mauerbau.jpg",
+        "focus": [
+          0.6,
+          0.5
+        ]
+      }
+    },
+    {
+      "at": "Pero en el otoño",
+      "use": "pop.hatch",
+      "params": {
+        "text": "1989",
+        "src": "assets/media/leipzig.jpg"
+      }
+    },
+    {
+      "t": 44.9,
+      "offset": 0,
+      "use": "pop.stack",
+      "params": {
+        "text": "ALGO SE\nESTABA\nROMPIENDO",
+        "src": "assets/media/leipzig.jpg",
+        "phase2": 1.3
+      }
+    },
+    {
+      "at": "Miles de alemanes",
+      "use": "pop.posters",
+      "params": {
+        "src": "assets/media/bornholmer.jpg",
+        "text": "HUNGRÍA",
+        "src2": "assets/media/leipzig.jpg",
+        "text2": "ESCAPAN",
+        "caption": "MILES DE ALEMANES DEL ESTE · 1989",
+        "p2": 1.2,
+        "p3": 2.6
+      }
+    },
+    {
+      "at": "y cada lunes",
+      "use": "pop.frame",
+      "params": {
+        "text": "LEIPZIG, 1989",
+        "sub": "LAS MARCHAS DE LOS LUNES",
+        "src": "assets/media/leipzig.jpg"
+      }
+    },
+    {
+      "t": 55.0,
+      "offset": 0,
+      "use": "pop.minimal",
+      "params": {
+        "text": "LIBERTAD PARA VIAJAR",
+        "kicker": "CIENTOS DE MILES PEDÍAN"
+      }
+    },
+    {
+      "at": "El gobierno decidió",
+      "use": "pop.arrow",
+      "params": {
+        "text": "SOLTAR UN POCO\nLA CUERDA"
+      }
+    },
+    {
+      "t": 61.6,
+      "offset": 0,
+      "use": "pop.stripes",
+      "params": {
+        "text": "NUEVA REGLA",
+        "src": "assets/media/nota.jpg",
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "fx": "glitch"
+      }
+    },
+    {
+      "at": "Los ciudadanos podrían",
+      "use": "pop.split",
+      "params": {
+        "text": "VIAJAR",
+        "src": "assets/media/bornholmer.jpg",
+        "src2": "assets/media/leipzig.jpg",
+        "tag": "PERMISO PARA VIAJAR AL OESTE"
+      }
+    },
+    {
+      "at": "Iba a anunciarse",
+      "use": "pop.name",
+      "params": {
+        "text": "10 · NOV · 1989",
+        "sub": "AL DÍA SIGUIENTE"
+      }
+    },
+    {
+      "t": 70.0,
+      "offset": 0,
+      "use": "pop.minimal",
+      "params": {
+        "text": "CON CALMA, CON TRÁMITES Y CON ORDEN",
+        "style": "small",
+        "accent": 2
+      }
+    },
+    {
+      "at": "El encargado de contarlo",
+      "use": "pop.circles",
+      "params": {
+        "text": "VOCERO",
+        "src": "assets/media/schabowski.jpg",
+        "focus": [
+          0.75,
+          0.3
+        ]
+      }
+    },
+    {
+      "t": 75.3,
+      "offset": 0,
+      "use": "pop.frame",
+      "params": {
+        "text": "GÜNTER SCHABOWSKI",
+        "sub": "VOCERO DEL PARTIDO",
+        "src": "assets/media/schabowski.jpg",
+        "focus": [
+          0.8,
+          0.3
+        ]
+      }
+    },
+    {
+      "at": "le entregaron la nota",
+      "use": "pop.book",
+      "params": {
+        "src": "assets/media/nota.jpg",
+        "title": "LA NOTA\nQUE NADIE\nEXPLICÓ",
+        "note": "9 NOV 1989 · 18:00"
+      }
+    },
+    {
+      "at": "La conferencia fue larga",
+      "use": "pop.posters",
+      "params": {
+        "src": "assets/media/schabowski.jpg",
+        "text": "PRENSA",
+        "text2": "18:00",
+        "caption": "CASI UNA HORA DE ANUNCIOS",
+        "p2": 1.3,
+        "p3": 3.0
+      }
+    },
+    {
+      "at": "Al final Schabowski",
+      "use": "pop.stripes",
+      "params": {
+        "text": "TAL CUAL",
+        "src": "assets/media/nota.jpg",
+        "focus": [
+          0.5,
+          0.7
+        ],
+        "fx": "glitch"
+      }
+    },
+    {
+      "at": "Los periodistas se miraron",
+      "use": "pop.band",
+      "params": {
+        "text": "¿SIN REQUISITOS?",
+        "src": "assets/media/schabowski.jpg"
+      }
+    },
+    {
+      "at": "Entonces llegó la pregunta",
+      "use": "pop.stack",
+      "params": {
+        "text": "",
+        "src": "assets/media/schabowski.jpg",
+        "tone": "dark"
+      },
+      "until": "Schabowski revolvió"
+    },
+    {
+      "at": "Schabowski revolvió",
+      "use": "pop.kaleido",
+      "params": {
+        "src": "assets/media/nota.jpg",
+        "label": "/BUSCA/LA RESPUESTA",
+        "tag": "/PAPELES",
+        "split": 1.3
+      }
+    },
+    {
+      "t": 107.0,
+      "offset": 0,
+      "use": "pop.arrow",
+      "params": {
+        "text": "NO LA\nENCONTRÓ",
+        "fx": "shards"
+      }
+    },
+    {
+      "at": "De inmediato",
+      "use": "pop.stack",
+      "params": {
+        "text": "",
+        "src": "assets/media/schabowski.jpg",
+        "tone": "dark",
+        "fx": "flicker"
+      },
+      "until": "Dos palabras"
+    },
+    {
+      "at": "De inmediato",
+      "use": "pop.glitch",
+      "params": {
+        "kind": "glitch"
+      },
+      "dur": 0.2,
+      "layer": "overlay"
+    },
+    {
+      "at": "Dos palabras que",
+      "use": "pop.letters",
+      "params": {
+        "text": "DOS",
+        "src": "assets/media/schabowski.jpg",
+        "tag": "PALABRAS QUE NADIE\nHABÍA AUTORIZADO"
+      }
+    },
+    {
+      "at": "La televisión del Oeste",
+      "use": "pop.duo",
+      "params": {
+        "src": "assets/media/bornholmer.jpg",
+        "src2": "assets/media/schabowski.jpg",
+        "text": "TV DEL\nOESTE",
+        "kicker": "ESA MISMA NOCHE"
+      }
+    },
+    {
+      "at": "Las fronteras están abiertas",
+      "use": "pop.hatch",
+      "params": {
+        "text": "ABIERTAS",
+        "src": "assets/media/bornholmer.jpg"
+      }
+    },
+    {
+      "at": "Miles de personas salieron",
+      "use": "pop.circles",
+      "params": {
+        "text": "MILES",
+        "src": "assets/media/leipzig.jpg"
+      }
+    },
+    {
+      "t": 129.0,
+      "offset": 0,
+      "use": "pop.word",
+      "params": {
+        "text": "FRONTERA",
+        "small": "PUESTOS FRONTERIZOS",
+        "src": "assets/media/bornholmer.jpg",
+        "focus": [
+          0.3,
+          0.6
+        ]
+      }
+    },
+    {
+      "at": "En el cruce de",
+      "use": "pop.kanji",
+      "params": {
+        "big": "BORNHOLMER",
+        "sub": "STRASSE · PASO FRONTERIZO",
+        "src": "assets/media/bornholmer.jpg",
+        "split": 0.8,
+        "corner": [
+          "23:00",
+          "BER",
+          "LIN",
+          "RDA"
+        ]
+      }
+    },
+    {
+      "at": "el oficial Harald",
+      "use": "pop.split",
+      "params": {
+        "text": "JÄGER",
+        "src": "assets/media/bornholmer.jpg",
+        "src2": "assets/media/muro-gente.jpg",
+        "tag": "HARALD JÄGER · OFICIAL",
+        "focus": [
+          0.3,
+          0.7
+        ]
+      }
+    },
+    {
+      "at": "Llamó a sus superiores",
+      "use": "pop.arrow",
+      "params": {
+        "text": "SIN RESPUESTA\nCLARA"
+      }
+    },
+    {
+      "at": "La gente gritaba",
+      "use": "pop.stack",
+      "params": {
+        "text": "",
+        "src": "assets/media/bornholmer.jpg"
+      },
+      "until": "A las once"
+    },
+    {
+      "at": "A las once",
+      "use": "pop.letters",
+      "params": {
+        "text": "23",
+        "src": "assets/media/bornholmer.jpg",
+        "tag": "Y TREINTA: LA DECISIÓN\nQUE NADIE QUISO TOMAR"
+      }
+    },
+    {
+      "t": 150.7,
+      "offset": 0,
+      "use": "pop.hatch",
+      "params": {
+        "text": "ABRIÓ",
+        "src": "assets/media/bornholmer.jpg"
+      }
+    },
+    {
+      "at": "la barrera",
+      "use": "pop.glitch",
+      "params": {
+        "kind": "shards"
+      },
+      "dur": 0.12,
+      "layer": "overlay"
+    },
+    {
+      "at": "Esa noche los berlineses",
+      "use": "pop.frame",
+      "params": {
+        "text": "PUERTA DE BRANDEBURGO",
+        "sub": "NOVIEMBRE DE 1989",
+        "src": "assets/media/muro-gente.jpg",
+        "focus": [
+          0.5,
+          0.3
+        ]
+      }
+    },
+    {
+      "at": "con martillos",
+      "use": "pop.triangle",
+      "params": {
+        "src": "assets/media/mauerspecht.jpg",
+        "src2": "assets/media/muro-gente.jpg",
+        "text": "MURO",
+        "caption": "MARTILLOS Y CINCELES",
+        "tone": "dark"
+      }
+    },
+    {
+      "at": "Desconocidos se abrazaban",
+      "use": "pop.duo",
+      "params": {
+        "src": "assets/media/muro-gente.jpg",
+        "src2": "assets/media/leipzig.jpg",
+        "text": "DESCONOCIDOS\nSE ABRAZABAN"
+      }
+    },
+    {
+      "at": "Personas que llevaban",
+      "use": "pop.posters",
+      "params": {
+        "src": "assets/media/muro-gente.jpg",
+        "text": "CIUDAD",
+        "src2": "assets/media/mauerspecht.jpg",
+        "text2": "28 AÑOS",
+        "caption": "POR SU PROPIA CIUDAD",
+        "p2": 1.6,
+        "p3": 4.4
+      }
+    },
+    {
+      "at": "Menos de un año",
+      "use": "pop.kanji",
+      "params": {
+        "big": "統一",
+        "sub": "3 OCT 1990 · ALEMANIA",
+        "src": "assets/media/muro-gente.jpg",
+        "split": 1.6,
+        "corner": [
+          "3",
+          "OCT",
+          "19",
+          "90"
+        ]
+      }
+    },
+    {
+      "t": 174.0,
+      "offset": 0,
+      "use": "pop.word",
+      "params": {
+        "text": "UN SOLO PAÍS",
+        "small": "3·10·1990",
+        "src": "assets/media/muro-gente.jpg"
+      }
+    },
+    {
+      "at": "La historia suele contar",
+      "use": "pop.book",
+      "params": {
+        "src": "assets/media/mauerbau.jpg",
+        "title": "GRANDES\nBATALLAS,\nGRANDES\nLÍDERES",
+        "note": "LA HISTORIA SUELE CONTAR"
+      }
+    },
+    {
+      "at": "pero este muro",
+      "use": "pop.split",
+      "params": {
+        "text": "UN PAPEL",
+        "src": "assets/media/schabowski.jpg",
+        "src2": "assets/media/nota.jpg",
+        "tag": "LEÍDO ANTES DE TIEMPO",
+        "focus": [
+          0.8,
+          0.3
+        ]
+      }
+    },
+    {
+      "t": 187.3,
+      "offset": 0,
+      "use": "pop.stripes",
+      "params": {
+        "text": "ABRIR",
+        "src": "assets/media/bornholmer.jpg",
+        "fx": "glitch"
+      }
+    },
+    {
+      "at": "Porque a veces",
+      "use": "pop.arrow",
+      "params": {
+        "text": "NO LA MUEVE\nUN EJÉRCITO"
+      }
+    },
+    {
+      "at": "la mueven dos palabras",
+      "use": "pop.stack",
+      "params": {
+        "text": "",
+        "src": "assets/media/schabowski.jpg"
+      },
+      "until": "de inmediato sin demora"
+    },
+    {
+      "at": "de inmediato sin demora",
+      "use": "pop.stack",
+      "dur": 4.28,
+      "params": {
+        "text": "DE INMEDIATO\nSIN DEMORA",
+        "src": "assets/media/bornholmer.jpg",
+        "tone": "dark",
+        "phase2": 1.6,
+        "fx": "flicker"
+      },
+      "hideCaptions": true
+    },
+    {
+      "t": 203.72898,
+      "offset": 0,
+      "dur": 13.68,
+      "use": "pop.outro",
+      "params": {
+        "likeAt": 5.16,
+        "subscribeAt": 5.54,
+        "bellAt": 7.84,
+        "supportAt": 8.94
+      }
     }
-   }
-  },
-  {
-   "at": "Casi las 7",
-   "use": "pop.hatch",
-   "params": {
-    "text": "19:00",
-    "src": "assets/media/leipzig.jpg",
-    "focus": [
-     0.6,
-     0.5
-    ]
-   },
-   "_note": "puente entre el gancho y 'Un funcionario lee' (antes lo cubría pop.title)"
-  },
-  {
-   "at": "Un funcionario lee",
-   "use": "pop.stripes",
-   "params": {
-    "text": "UN PAPEL",
-    "src": "assets/media/nota.jpg",
-    "focus": [
-     0.5,
-     0.2
-    ]
-   }
-  },
-  {
-   "t": 9.4,
-   "offset": 0,
-   "use": "pop.triangle",
-   "params": {
-    "src": "assets/media/schabowski.jpg",
-    "src2": "assets/media/nota.jpg",
-    "text": "PAPEL",
-    "caption": "LEÍDO EN VOZ ALTA",
-    "focus": [
-     0.75,
-     0.4
-    ]
-   }
-  },
-  {
-   "t": 12.2,
-   "offset": 0,
-   "use": "pop.arrow",
-   "params": {
-    "text": "SIN\nSABERLO",
-    "fx": "shards"
-   }
-  },
-  {
-   "at": "derribar el muro",
-   "use": "pop.word",
-   "params": {
-    "text": "EL MURO",
-    "small": "1961—1989",
-    "src": "assets/media/mauerspecht.jpg",
-    "focus": [
-     0.5,
-     0.4
-    ]
-   }
-  },
-  {
-   "at": "Durante 28 años",
-   "use": "pop.letters",
-   "params": {
-    "text": "28",
-    "src": "assets/media/mauerbau.jpg",
-    "tag": "AÑOS DE UNA\nCIUDAD PARTIDA"
-   }
-  },
-  {
-   "at": "En agosto de 1961",
-   "use": "pop.hatch",
-   "params": {
-    "text": "1961",
-    "src": "assets/media/mauerbau.jpg"
-   }
-  },
-  {
-   "t": 24.2,
-   "offset": 0,
-   "use": "pop.kanji",
-   "params": {
-    "big": "ベルリンの壁",
-    "sub": "AGOSTO 1961 · RDA",
-    "src": "assets/media/mauerbau.jpg",
-    "split": 1.1,
-    "corner": [
-     "13.",
-     "AGO",
-     "19",
-     "61"
-    ]
-   }
-  },
-  {
-   "at": "un muro de hormigón",
-   "use": "pop.band",
-   "params": {
-    "text": "HORMIGÓN",
-    "src": "assets/media/mauerspecht.jpg",
-    "focus": [
-     0.4,
-     0.5
-    ]
-   }
-  },
-  {
-   "at": "Familias separadas",
-   "use": "pop.circles",
-   "params": {
-    "text": "FAMILIAS",
-    "src": "assets/media/muro-gente.jpg",
-    "focus": [
-     0.5,
-     0.4
-    ]
-   }
-  },
-  {
-   "t": 34.0,
-   "offset": 0,
-   "use": "pop.duo",
-   "params": {
-    "src": "assets/media/leipzig.jpg",
-    "src2": "assets/media/bornholmer.jpg",
-    "text": "VECINOS\nSEPARADOS",
-    "kicker": "PARA SIEMPRE"
-   }
-  },
-  {
-   "at": "Al menos 140",
-   "use": "pop.word",
-   "params": {
-    "text": "140",
-    "small": "AL MENOS",
-    "src": "assets/media/mauerbau.jpg",
-    "focus": [
-     0.6,
-     0.5
-    ]
-   }
-  },
-  {
-   "at": "Pero en el otoño",
-   "use": "pop.hatch",
-   "params": {
-    "text": "1989",
-    "src": "assets/media/leipzig.jpg"
-   }
-  },
-  {
-   "t": 44.9,
-   "offset": 0,
-   "use": "pop.stack",
-   "params": {
-    "text": "ALGO SE\nESTABA\nROMPIENDO",
-    "src": "assets/media/leipzig.jpg",
-    "phase2": 1.3
-   }
-  },
-  {
-   "at": "Miles de alemanes",
-   "use": "pop.posters",
-   "params": {
-    "src": "assets/media/bornholmer.jpg",
-    "text": "HUNGRÍA",
-    "src2": "assets/media/leipzig.jpg",
-    "text2": "ESCAPAN",
-    "caption": "MILES DE ALEMANES DEL ESTE · 1989",
-    "p2": 1.2,
-    "p3": 2.6
-   }
-  },
-  {
-   "at": "y cada lunes",
-   "use": "pop.frame",
-   "params": {
-    "text": "LEIPZIG, 1989",
-    "sub": "LAS MARCHAS DE LOS LUNES",
-    "src": "assets/media/leipzig.jpg"
-   }
-  },
-  {
-   "t": 55.0,
-   "offset": 0,
-   "use": "pop.minimal",
-   "params": {
-    "text": "LIBERTAD PARA VIAJAR",
-    "kicker": "CIENTOS DE MILES PEDÍAN"
-   }
-  },
-  {
-   "at": "El gobierno decidió",
-   "use": "pop.arrow",
-   "params": {
-    "text": "SOLTAR UN POCO\nLA CUERDA"
-   }
-  },
-  {
-   "t": 61.6,
-   "offset": 0,
-   "use": "pop.stripes",
-   "params": {
-    "text": "NUEVA REGLA",
-    "src": "assets/media/nota.jpg",
-    "focus": [
-     0.5,
-     0.5
-    ],
-    "fx": "glitch"
-   }
-  },
-  {
-   "at": "Los ciudadanos podrían",
-   "use": "pop.split",
-   "params": {
-    "text": "VIAJAR",
-    "src": "assets/media/bornholmer.jpg",
-    "src2": "assets/media/leipzig.jpg",
-    "tag": "PERMISO PARA VIAJAR AL OESTE"
-   }
-  },
-  {
-   "at": "Iba a anunciarse",
-   "use": "pop.name",
-   "params": {
-    "text": "10 · NOV · 1989",
-    "sub": "AL DÍA SIGUIENTE"
-   }
-  },
-  {
-   "t": 70.0,
-   "offset": 0,
-   "use": "pop.minimal",
-   "params": {
-    "text": "CON CALMA, CON TRÁMITES Y CON ORDEN",
-    "style": "small",
-    "accent": 2
-   }
-  },
-  {
-   "at": "El encargado de contarlo",
-   "use": "pop.circles",
-   "params": {
-    "text": "VOCERO",
-    "src": "assets/media/schabowski.jpg",
-    "focus": [
-     0.75,
-     0.3
-    ]
-   }
-  },
-  {
-   "t": 75.3,
-   "offset": 0,
-   "use": "pop.frame",
-   "params": {
-    "text": "GÜNTER SCHABOWSKI",
-    "sub": "VOCERO DEL PARTIDO",
-    "src": "assets/media/schabowski.jpg",
-    "focus": [
-     0.8,
-     0.3
-    ]
-   }
-  },
-  {
-   "at": "le entregaron la nota",
-   "use": "pop.book",
-   "params": {
-    "src": "assets/media/nota.jpg",
-    "title": "LA NOTA\nQUE NADIE\nEXPLICÓ",
-    "note": "9 NOV 1989 · 18:00"
-   }
-  },
-  {
-   "at": "La conferencia fue larga",
-   "use": "pop.posters",
-   "params": {
-    "src": "assets/media/schabowski.jpg",
-    "text": "PRENSA",
-    "text2": "18:00",
-    "caption": "CASI UNA HORA DE ANUNCIOS",
-    "p2": 1.3,
-    "p3": 3.0
-   }
-  },
-  {
-   "at": "Al final Schabowski",
-   "use": "pop.stripes",
-   "params": {
-    "text": "TAL CUAL",
-    "src": "assets/media/nota.jpg",
-    "focus": [
-     0.5,
-     0.7
-    ],
-    "fx": "glitch"
-   }
-  },
-  {
-   "at": "Los periodistas se miraron",
-   "use": "pop.band",
-   "params": {
-    "text": "¿SIN REQUISITOS?",
-    "src": "assets/media/schabowski.jpg"
-   }
-  },
-  {
-   "at": "Entonces llegó la pregunta",
-   "use": "pop.stack",
-   "params": {
-    "text": "",
-    "src": "assets/media/schabowski.jpg",
-    "tone": "dark"
-   },
-   "until": "Schabowski revolvió"
-  },
-  {
-   "at": "Schabowski revolvió",
-   "use": "pop.kaleido",
-   "params": {
-    "src": "assets/media/nota.jpg",
-    "label": "/BUSCA/LA RESPUESTA",
-    "tag": "/PAPELES",
-    "split": 1.3
-   }
-  },
-  {
-   "t": 107.0,
-   "offset": 0,
-   "use": "pop.arrow",
-   "params": {
-    "text": "NO LA\nENCONTRÓ",
-    "fx": "shards"
-   }
-  },
-  {
-   "at": "De inmediato",
-   "use": "pop.stack",
-   "params": {
-    "text": "",
-    "src": "assets/media/schabowski.jpg",
-    "tone": "dark",
-    "fx": "flicker"
-   },
-   "until": "Dos palabras"
-  },
-  {
-   "at": "De inmediato",
-   "use": "pop.glitch",
-   "params": {
-    "kind": "glitch"
-   },
-   "dur": 0.2,
-   "layer": "overlay"
-  },
-  {
-   "at": "Dos palabras que",
-   "use": "pop.letters",
-   "params": {
-    "text": "DOS",
-    "src": "assets/media/schabowski.jpg",
-    "tag": "PALABRAS QUE NADIE\nHABÍA AUTORIZADO"
-   }
-  },
-  {
-   "at": "La televisión del Oeste",
-   "use": "pop.duo",
-   "params": {
-    "src": "assets/media/bornholmer.jpg",
-    "src2": "assets/media/schabowski.jpg",
-    "text": "TV DEL\nOESTE",
-    "kicker": "ESA MISMA NOCHE"
-   }
-  },
-  {
-   "at": "Las fronteras están abiertas",
-   "use": "pop.hatch",
-   "params": {
-    "text": "ABIERTAS",
-    "src": "assets/media/bornholmer.jpg"
-   }
-  },
-  {
-   "at": "Miles de personas salieron",
-   "use": "pop.circles",
-   "params": {
-    "text": "MILES",
-    "src": "assets/media/leipzig.jpg"
-   }
-  },
-  {
-   "t": 129.0,
-   "offset": 0,
-   "use": "pop.word",
-   "params": {
-    "text": "FRONTERA",
-    "small": "PUESTOS FRONTERIZOS",
-    "src": "assets/media/bornholmer.jpg",
-    "focus": [
-     0.3,
-     0.6
-    ]
-   }
-  },
-  {
-   "at": "En el cruce de",
-   "use": "pop.kanji",
-   "params": {
-    "big": "BORNHOLMER",
-    "sub": "STRASSE · PASO FRONTERIZO",
-    "src": "assets/media/bornholmer.jpg",
-    "split": 0.8,
-    "corner": [
-     "23:00",
-     "BER",
-     "LIN",
-     "RDA"
-    ]
-   }
-  },
-  {
-   "at": "el oficial Harald",
-   "use": "pop.split",
-   "params": {
-    "text": "JÄGER",
-    "src": "assets/media/bornholmer.jpg",
-    "src2": "assets/media/muro-gente.jpg",
-    "tag": "HARALD JÄGER · OFICIAL",
-    "focus": [
-     0.3,
-     0.7
-    ]
-   }
-  },
-  {
-   "at": "Llamó a sus superiores",
-   "use": "pop.arrow",
-   "params": {
-    "text": "SIN RESPUESTA\nCLARA"
-   }
-  },
-  {
-   "at": "La gente gritaba",
-   "use": "pop.stack",
-   "params": {
-    "text": "",
-    "src": "assets/media/bornholmer.jpg"
-   },
-   "until": "A las once"
-  },
-  {
-   "at": "A las once",
-   "use": "pop.letters",
-   "params": {
-    "text": "23",
-    "src": "assets/media/bornholmer.jpg",
-    "tag": "Y TREINTA: LA DECISIÓN\nQUE NADIE QUISO TOMAR"
-   }
-  },
-  {
-   "t": 150.7,
-   "offset": 0,
-   "use": "pop.hatch",
-   "params": {
-    "text": "ABRIÓ",
-    "src": "assets/media/bornholmer.jpg"
-   }
-  },
-  {
-   "at": "la barrera",
-   "use": "pop.glitch",
-   "params": {
-    "kind": "shards"
-   },
-   "dur": 0.12,
-   "layer": "overlay"
-  },
-  {
-   "at": "Esa noche los berlineses",
-   "use": "pop.frame",
-   "params": {
-    "text": "PUERTA DE BRANDEBURGO",
-    "sub": "NOVIEMBRE DE 1989",
-    "src": "assets/media/muro-gente.jpg",
-    "focus": [
-     0.5,
-     0.3
-    ]
-   }
-  },
-  {
-   "at": "con martillos",
-   "use": "pop.triangle",
-   "params": {
-    "src": "assets/media/mauerspecht.jpg",
-    "src2": "assets/media/muro-gente.jpg",
-    "text": "MURO",
-    "caption": "MARTILLOS Y CINCELES",
-    "tone": "dark"
-   }
-  },
-  {
-   "at": "Desconocidos se abrazaban",
-   "use": "pop.duo",
-   "params": {
-    "src": "assets/media/muro-gente.jpg",
-    "src2": "assets/media/leipzig.jpg",
-    "text": "DESCONOCIDOS\nSE ABRAZABAN"
-   }
-  },
-  {
-   "at": "Personas que llevaban",
-   "use": "pop.posters",
-   "params": {
-    "src": "assets/media/muro-gente.jpg",
-    "text": "CIUDAD",
-    "src2": "assets/media/mauerspecht.jpg",
-    "text2": "28 AÑOS",
-    "caption": "POR SU PROPIA CIUDAD",
-    "p2": 1.6,
-    "p3": 4.4
-   }
-  },
-  {
-   "at": "Menos de un año",
-   "use": "pop.kanji",
-   "params": {
-    "big": "統一",
-    "sub": "3 OCT 1990 · ALEMANIA",
-    "src": "assets/media/muro-gente.jpg",
-    "split": 1.6,
-    "corner": [
-     "3",
-     "OCT",
-     "19",
-     "90"
-    ]
-   }
-  },
-  {
-   "t": 174.0,
-   "offset": 0,
-   "use": "pop.word",
-   "params": {
-    "text": "UN SOLO PAÍS",
-    "small": "3·10·1990",
-    "src": "assets/media/muro-gente.jpg"
-   }
-  },
-  {
-   "at": "La historia suele contar",
-   "use": "pop.book",
-   "params": {
-    "src": "assets/media/mauerbau.jpg",
-    "title": "GRANDES\nBATALLAS,\nGRANDES\nLÍDERES",
-    "note": "LA HISTORIA SUELE CONTAR"
-   }
-  },
-  {
-   "at": "pero este muro",
-   "use": "pop.split",
-   "params": {
-    "text": "UN PAPEL",
-    "src": "assets/media/schabowski.jpg",
-    "src2": "assets/media/nota.jpg",
-    "tag": "LEÍDO ANTES DE TIEMPO",
-    "focus": [
-     0.8,
-     0.3
-    ]
-   }
-  },
-  {
-   "t": 187.3,
-   "offset": 0,
-   "use": "pop.stripes",
-   "params": {
-    "text": "ABRIR",
-    "src": "assets/media/bornholmer.jpg",
-    "fx": "glitch"
-   }
-  },
-  {
-   "at": "Porque a veces",
-   "use": "pop.arrow",
-   "params": {
-    "text": "NO LA MUEVE\nUN EJÉRCITO"
-   }
-  },
-  {
-   "at": "la mueven dos palabras",
-   "use": "pop.stack",
-   "params": {
-    "text": "",
-    "src": "assets/media/schabowski.jpg"
-   },
-   "until": "de inmediato sin demora"
-  },
-  {
-   "at": "de inmediato sin demora",
-   "use": "pop.stack",
-   "dur": 4.28,
-   "params": {
-    "text": "DE INMEDIATO\nSIN DEMORA",
-    "src": "assets/media/bornholmer.jpg",
-    "tone": "dark",
-    "phase2": 1.6,
-    "fx": "flicker"
-   },
-   "hideCaptions": true
-  },
-  {
-   "t": 203.72898,
-   "offset": 0,
-   "dur": 13.68,
-   "use": "pop.outro",
-   "params": {
-    "likeAt": 5.16,
-    "subscribeAt": 5.54,
-    "bellAt": 7.84,
-    "supportAt": 8.94
-   }
-  }
- ]
+  ]
 }

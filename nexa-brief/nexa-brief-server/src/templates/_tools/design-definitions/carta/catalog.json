@@ -1,0 +1,3373 @@
+{
+  "schema_version": 1,
+  "design_id": "carta",
+  "revision": "18c283b64310993b8b6a623e2e83a8362d0f40f59875cf21fed6ac6cb48f354b",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "carta.retrato",
+      "name": "carta.retrato",
+      "label": "carta.retrato",
+      "kind": "component",
+      "summary": "Retrato con borde de pincel a la izquierda; a la derecha rótulo en caja crema, sello de correo, fechas, título enorme con regla y subtítulo; la foto se repite fantasma detrás de los textos (panel 'THE BEST WISHES / HISTORICAL').",
+      "tags": [
+        "foto",
+        "persona",
+        "retrato",
+        "presentación"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo corto de máquina de escribir (p. ej. 'LOS MEJORES DESEOS').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello circular 'ARRIBA|CENTRO|ABAJO' (vacío = sin sello).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "label": "VOCERO DEL PARTIDO",
+        "stamp": "ARCHIVO|1989|BERLÍN",
+        "years": "9 - 11 - 1989",
+        "title": "SCHABOWSKI",
+        "sub": "GÜNTER"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.retrato",
+      "data": {
+        "native_name": "carta.retrato"
+      }
+    },
+    {
+      "id": "carta.sello",
+      "name": "carta.sello",
+      "label": "carta.sello",
+      "kind": "component",
+      "summary": "Variante del retrato: foto a la izquierda, rótulo en caja, sello, título grande al centro-derecha, fechas, regla y subtítulo grueso debajo (panel 'PHOTOGRAPHY 1945-1948 HISTORICAL').",
+      "tags": [
+        "foto",
+        "persona",
+        "documento"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo corto de máquina de escribir (p. ej. 'LOS MEJORES DESEOS').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello circular 'ARRIBA|CENTRO|ABAJO' (vacío = sin sello).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "label": "LA NOTA",
+        "stamp": "ARCHIVO|1989|BERLÍN",
+        "title": "INMEDIATO",
+        "years": "9 - 11 - 1989",
+        "sub": "SIN DEMORA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.sello",
+      "data": {
+        "native_name": "carta.sello"
+      }
+    },
+    {
+      "id": "carta.postal",
+      "name": "carta.postal",
+      "label": "carta.postal",
+      "kind": "component",
+      "summary": "Postal de un lugar: rótulo y fechas arriba a la izquierda, caja de texto tipeado con doble borde, foto ancha a la derecha, título gigante abajo con segundo renglón corrido y regla (panel 'VENEZIA / ITALY').",
+      "tags": [
+        "foto",
+        "lugar",
+        "ciudad",
+        "contexto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo corto de máquina de escribir (p. ej. 'LOS MEJORES DESEOS').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "label": "AGOSTO DE 1961",
+        "years": "1961 - 1989",
+        "body": "De un día para otro el gobierno del Este levantó un muro de hormigón y alambre en medio de la ciudad.",
+        "title": "BERLÍN",
+        "sub": "ALEMANIA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.postal",
+      "data": {
+        "native_name": "carta.postal"
+      }
+    },
+    {
+      "id": "carta.familia",
+      "name": "carta.familia",
+      "label": "carta.familia",
+      "kind": "component",
+      "summary": "Foto de grupo abajo a la izquierda; arriba rótulo, firma manuscrita y caja de texto; a la derecha fechas y título de dos renglones alineado a la derecha (panel 'MY FAMILY / LOVELY').",
+      "tags": [
+        "foto",
+        "personas",
+        "grupo",
+        "familia"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo corto de máquina de escribir (p. ej. 'LOS MEJORES DESEOS').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sign": {
+          "type": "string",
+          "default": "",
+          "doc": "Firma manuscrita.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "label": "FAMILIAS SEPARADAS",
+        "sign": "Elsa",
+        "body": "Una calle bastaba para no volver a verse.",
+        "years": "1961 - 1989",
+        "title": "VECINOS",
+        "sub": "SEPARADOS"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.familia",
+      "data": {
+        "native_name": "carta.familia"
+      }
+    },
+    {
+      "id": "carta.memoria",
+      "name": "carta.memoria",
+      "label": "carta.memoria",
+      "kind": "component",
+      "summary": "Foto a la izquierda; rótulo en caja crema a la derecha, fechas, título grande que pisa la foto y subtítulo corto con firma (panel 'OUR HISTORY / DO NOT FORGET / ABOUT IT').",
+      "tags": [
+        "foto",
+        "personas",
+        "recuerdo",
+        "memoria"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo corto de máquina de escribir (p. ej. 'LOS MEJORES DESEOS').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sign": {
+          "type": "string",
+          "default": "",
+          "doc": "Firma manuscrita.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "label": "AL MENOS 140",
+        "years": "1961 - 1989",
+        "title": "NO OLVIDAR",
+        "sub": "A LOS QUE CAYERON",
+        "sign": "Berlín"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.memoria",
+      "data": {
+        "native_name": "carta.memoria"
+      }
+    },
+    {
+      "id": "carta.recuerdo",
+      "name": "carta.recuerdo",
+      "label": "carta.recuerdo",
+      "kind": "component",
+      "summary": "Dos rótulos grandes apilados a la izquierda entre reglas, fechas, foto a la derecha y título grueso abajo a la derecha (panel 'OUR HISTORY / FAST RENDERING / ABOUT IT').",
+      "tags": [
+        "foto",
+        "personas",
+        "época"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo corto de máquina de escribir (p. ej. 'LOS MEJORES DESEOS').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label2": {
+          "type": "string",
+          "default": "",
+          "doc": "Segundo rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "label": "OTOÑO",
+        "label2": "DE 1989",
+        "years": "1989",
+        "title": "ALGO SE ROMPE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.recuerdo",
+      "data": {
+        "native_name": "carta.recuerdo"
+      }
+    },
+    {
+      "id": "carta.album",
+      "name": "carta.album",
+      "label": "carta.album",
+      "kind": "component",
+      "summary": "Foto grande a la izquierda; arriba a la derecha fechas, caja de texto tipeado y título de dos tamaños abajo a la derecha (panel '1950-1968 / MY LIFE / MY FAMILY').",
+      "tags": [
+        "foto",
+        "personas",
+        "grupo",
+        "multitud"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "years": "1989",
+        "body": "Cada lunes, cientos de miles marchaban por las calles pidiendo libertad para viajar.",
+        "title": "LEIPZIG",
+        "sub": "LOS LUNES"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.album",
+      "data": {
+        "native_name": "carta.album"
+      }
+    },
+    {
+      "id": "carta.nota",
+      "name": "carta.nota",
+      "label": "carta.nota",
+      "kind": "component",
+      "summary": "Rótulo en caja arriba a la izquierda, caja de texto debajo, título grande con regla, fechas y foto vertical a la derecha (panel 'EASY TO EDIT / HISTORICAL / 1945-1948').",
+      "tags": [
+        "foto",
+        "documento",
+        "dato"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo corto de máquina de escribir (p. ej. 'LOS MEJORES DESEOS').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "label": "NUEVA REGLA",
+        "body": "Los ciudadanos podrían pedir permiso para viajar al Oeste.",
+        "title": "PERMISO",
+        "years": "10 - 11 - 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.nota",
+      "data": {
+        "native_name": "carta.nota"
+      }
+    },
+    {
+      "id": "carta.ficha",
+      "name": "carta.ficha",
+      "label": "carta.ficha",
+      "kind": "component",
+      "summary": "Ficha de persona: retrato a la izquierda; a la derecha título, subtítulo y fechas apilados a la derecha, caja de texto y regla (panel 'HISTORICAL / MAYR KETMAN / 1945-1948').",
+      "tags": [
+        "foto",
+        "persona",
+        "ficha",
+        "biografía"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "title": "HARALD JÄGER",
+        "sub": "OFICIAL DE FRONTERA",
+        "years": "9 - 11 - 1989",
+        "body": "Tenía una multitud frente a él y ninguna orden."
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.ficha",
+      "data": {
+        "native_name": "carta.ficha"
+      }
+    },
+    {
+      "id": "carta.ciudad",
+      "name": "carta.ciudad",
+      "label": "carta.ciudad",
+      "kind": "component",
+      "summary": "Título enorme con regla, subtítulo y fechas a la izquierda; paisaje ancho a la derecha revelado con salpicaduras de tinta alrededor (panel 'OUR CITY / HAPPY DAYS').",
+      "tags": [
+        "foto",
+        "lugar",
+        "paisaje",
+        "ciudad"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "title": "BERLÍN",
+        "sub": "UNA CIUDAD PARTIDA",
+        "years": "1961 - 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.ciudad",
+      "data": {
+        "native_name": "carta.ciudad"
+      }
+    },
+    {
+      "id": "carta.proyecto",
+      "name": "carta.proyecto",
+      "label": "carta.proyecto",
+      "kind": "component",
+      "summary": "Foto vertical a la izquierda; título enorme arriba, subtítulo, caja de texto tipeado y fechas abajo (panel 'CS 5 PROJECT / HAPPY DAYS').",
+      "tags": [
+        "foto",
+        "persona",
+        "dato",
+        "texto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "title": "LA PREGUNTA",
+        "sub": "¿CUÁNDO ENTRA EN VIGOR?",
+        "body": "Schabowski revolvió sus papeles. Buscó la respuesta. No la encontró.",
+        "years": "18:53"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.proyecto",
+      "data": {
+        "native_name": "carta.proyecto"
+      }
+    },
+    {
+      "id": "carta.dato",
+      "name": "carta.dato",
+      "label": "carta.dato",
+      "kind": "component",
+      "summary": "Dato: título con regla, cifra destacada, texto tipeado suelto, fechas entre reglas y foto a la derecha (panel 'HIGH RESOLUTION / 1920X1080').",
+      "tags": [
+        "foto",
+        "dato",
+        "número",
+        "cifra"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "figure": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra destacada (p. ej. '28 AÑOS').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "title": "DURANTE",
+        "figure": "28 AÑOS",
+        "body": "Berlín estuvo partida en dos.",
+        "years": "1961 - 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.dato",
+      "data": {
+        "native_name": "carta.dato"
+      }
+    },
+    {
+      "id": "carta.perfil",
+      "name": "carta.perfil",
+      "label": "carta.perfil",
+      "kind": "component",
+      "summary": "Perfil: retrato a la izquierda, nombre, ciudad y fechas escalonados, texto tipeado suelto y un segundo título abajo con regla (panel 'JESICA VRUBLER / PARIS / BIG FAMILY').",
+      "tags": [
+        "foto",
+        "persona",
+        "biografía"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title2": {
+          "type": "string",
+          "default": "",
+          "doc": "Segundo título, abajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "title": "GÜNTER SCHABOWSKI",
+        "sub": "BERLÍN ESTE",
+        "years": "1989",
+        "body": "El encargado de contarlo a la prensa.",
+        "title2": "EL VOCERO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.perfil",
+      "data": {
+        "native_name": "carta.perfil"
+      }
+    },
+    {
+      "id": "carta.frente",
+      "name": "carta.frente",
+      "label": "carta.frente",
+      "kind": "component",
+      "summary": "Título con regla arriba a la izquierda, subtítulo, fechas tenues, caja de texto, segundo título abajo y foto ancha a la derecha (panel 'EASY TO EDIT / GERMANY / WORLD WAR').",
+      "tags": [
+        "foto",
+        "lugar",
+        "frontera",
+        "conflicto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto (se vira a sepia y se revela con tinta).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título grande (máquina de escribir gruesa).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "years": {
+          "type": "string",
+          "default": "",
+          "doc": "Fechas finas, p. ej. '1961 - 1989'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo tipeado (6–9 renglones de ~29 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title2": {
+          "type": "string",
+          "default": "",
+          "doc": "Segundo título, abajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "title": "LA FRONTERA",
+        "sub": "BORNHOLMER",
+        "years": "23:30",
+        "body": "Abrió la barrera. Y la gente cruzó.",
+        "title2": "LA DECISIÓN"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.frente",
+      "data": {
+        "native_name": "carta.frente"
+      }
+    },
+    {
+      "id": "carta.title",
+      "name": "carta.title",
+      "label": "carta.title",
+      "kind": "component",
+      "summary": "Portada: título de máquina de escribir enorme + subtítulo alineado a su derecha dentro de una caja crema, bajada pequeña, y letras fantasma gigantes al fondo. Por defecto entra volando desde el lente (apertura y cierre de la referencia).",
+      "tags": [
+        "apertura",
+        "título",
+        "cierre"
+      ],
+      "params": {
+        "title": {
+          "type": "string",
+          "default": null,
+          "doc": "Palabra/frase grande (corta: 1–2 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Segundo renglón, más chico, alineado a la derecha del título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Bajada pequeña bajo la caja.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ghost": {
+          "type": "string",
+          "default": "",
+          "doc": "Letras fantasma gigantes del fondo (vacío = 3 primeras letras del título).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "fly",
+          "doc": "Cómo llega el panel: paneo de cámara (left = el panel nuevo entra desde la derecha y todo se corre a la izquierda; right, up, down, upleft, upright, downleft, downright) · fly = los elementos llegan desde delante del lente desenfocados · ink = fly con la foto entrando en manchas de tinta.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "down",
+            "upleft",
+            "upright",
+            "downleft",
+            "downright",
+            "fly",
+            "ink"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mirror": {
+          "type": "bool",
+          "default": false,
+          "doc": "Espeja el diagramado (foto del otro lado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto [x,y] (0..1) de la foto que queda en el centro del recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Zoom del recorte de la foto.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 3
+        }
+      },
+      "example": {
+        "title": "EL MURO",
+        "sub": "LA NOCHE QUE CAYÓ",
+        "kicker": "BERLÍN · 9 NOV 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.title",
+      "data": {
+        "native_name": "carta.title"
+      }
+    },
+    {
+      "id": "carta.introv1",
+      "name": "carta.introv1",
+      "label": "carta.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura (lo primero que se ve). La cámara vuela desde el lente hasta la gran hoja de papel viejo (bg: hoja | sobre | bokeh | image con src | component con use/useParams). Por defecto 'hoja': la cámara viaja por la hoja, dos fotos sepia se revelan con borde de pincel quemado, una carta se escribe sola, estampilla con matasellos y firma. El titular GIGANTE de máquina de escribir llega palabra por palabra desde delante del lente (escala, desenfoque y sacudida); '^palabra^' va en un rótulo crema de doble borde con subrayado de pluma. Momento de impacto: un MATASELLOS golpea encima (sealAt) con salpicadura de tinta. Sale volando hacia el lente.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "título",
+        "carta",
+        "impacto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho, corto (2–6 palabras). '\\n' = renglón; '^x^' = palabra destacada (rótulo crema + subrayado de pluma).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba, tipeado (lugar · fecha).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea manuscrita debajo del titular (se escribe con pluma).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "CORREO|★|ARCHIVO",
+          "doc": "Matasellos 'ARRIBA|CENTRO|ABAJO' que golpea (vacío = sin matasellos).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sealAt": {
+          "type": "number",
+          "default": 2.3,
+          "doc": "Segundo en que golpea el matasellos (-1 = no golpea; acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo en que llega la primera palabra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Segundos entre palabra y palabra.",
+          "required": false,
+          "options": null,
+          "min": 0.08,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: hoja, sobre, bokeh; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "hoja",
+            "sobre",
+            "bokeh",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Lavado de papel sobre el fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "LA NOCHE QUE\nCAYÓ EL ^MURO^",
+        "kicker": "Berlín · 9 de noviembre de 1989",
+        "sub": "la historia que nadie esperaba",
+        "seal": "BERLÍN|1989|ARCHIVO",
+        "sealAt": 2.3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.introv1",
+      "data": {
+        "native_name": "carta.introv1"
+      }
+    },
+    {
+      "id": "carta.introv2",
+      "name": "carta.introv2",
+      "label": "carta.introv2",
+      "kind": "component",
+      "summary": "GANCHO pregunta + revelación. Una hoja de carta entra a la máquina y la pregunta se TIPEA tecla a tecla (cada golpe sacude la hoja, cursor de tipos); después un SELLO de goma entintado golpea encima con la respuesta, con salpicadura y sacudida. Fondo adaptable (bg: sobre | hoja | bokeh | image con src | component con use/useParams); por defecto un sobre lacrado que se abre y deja salir la carta escrita.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "pregunta",
+        "sello",
+        "máquina de escribir"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba de la hoja.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Respuesta del sello de goma que golpea (vacío = sin sello).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2.6,
+          "doc": "Segundo del sello (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundo en que empieza a tipearse la pregunta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 16,
+          "doc": "Letras por segundo del tipeo.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "sobre",
+          "doc": "Fondo: auto = el del diseño; presets: hoja, sobre, bokeh; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "hoja",
+            "sobre",
+            "bokeh",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Lavado de papel sobre el fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+        "kicker": "Berlín · 9 de noviembre de 1989",
+        "stamp": "NADIE DIO LA ORDEN",
+        "stampAt": 2.6
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.introv2",
+      "data": {
+        "native_name": "carta.introv2"
+      }
+    },
+    {
+      "id": "carta.outro",
+      "name": "carta.outro",
+      "label": "carta.outro",
+      "kind": "component",
+      "summary": "Cierre del canal SIN recuadro sobre la gran hoja de papel viejo (bg: hoja | sobre | image con src | component con use/useParams). 'gracias por ver' manuscrito con pluma → nombre del canal que llega volando desde el lente entre dos reglas y con rúbrica → estampilla LIKE que recibe un matasellos (queda marcada y el pulgar se entinta) → flecha a pluma → sello de goma SUSCRÍBETE + campana de tinta que suena → mensaje de apoyo tipeado → youtube.com/@canal. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "carta"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "gracias por ver",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte esta historia.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: hoja, sobre; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "hoja",
+            "sobre",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.66,
+          "doc": "Lavado de papel sobre el fondo foto/componente (el cierre tiene mucho texto).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "thanks": "gracias por ver",
+        "channel": "NODETECH",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo nos ayuda a seguir creando y traer más historias.",
+        "handle": "youtube.com/@nodetech"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=carta&c=carta.outro",
+      "data": {
+        "native_name": "carta.outro"
+      }
+    }
+  ]
+}

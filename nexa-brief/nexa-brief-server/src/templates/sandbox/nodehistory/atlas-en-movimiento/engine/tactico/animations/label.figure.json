@@ -1,0 +1,102 @@
+{
+  "name": "label.figure",
+  "family": "label",
+  "description": "Cifra grande con unidad y procedencia obligatoria; no genera valores. Úsala para identificar lugares y objetos.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "size": {
+      "type": "number",
+      "default": 96,
+      "range": null,
+      "description": "Tamaño base en píxeles de diseño."
+    },
+    "width": {
+      "type": "number",
+      "default": 650,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "height": {
+      "type": "number",
+      "default": 220,
+      "range": null,
+      "description": "Alto del elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "fit": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Modo de ajuste del contenido al espacio disponible."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    },
+    "value": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Valor numérico mostrado."
+    },
+    "unit": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Tipo y variante de la unidad que se despliega."
+    },
+    "source": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fuente documental de la cifra o contenido."
+    },
+    "rotation": {
+      "type": "number",
+      "default": -8,
+      "range": null,
+      "description": "Rotación de la figura en grados."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-label-figure",
+    "t": 0,
+    "type": "label.figure",
+    "screen": [
+      0.5,
+      0.48
+    ],
+    "value": 4,
+    "unit": "países",
+    "source": "Los cuatro países de scene-territorios.json; dato de la demostración",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "work/tactico/items-labels.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/label.figure.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

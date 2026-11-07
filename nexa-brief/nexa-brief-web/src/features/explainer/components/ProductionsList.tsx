@@ -75,6 +75,9 @@ function ProductionRow({ production }: { production: Production }) {
           <p className="text-[11.5px] text-nb-mute">
             {production.videoId} · {formatRelativeTime(production.updatedAt)}
           </p>
+          {production.phase && ["guion", "voice", "transcribe", "storyboard", "finishing", "ready"].includes(production.phase) && (
+            <p className="text-[11.5px] text-nb-mute">{t(`productionPhase.${production.phase}`)}</p>
+          )}
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {active && <span className="size-2 animate-pulse rounded-full bg-nb-accent-blue" />}

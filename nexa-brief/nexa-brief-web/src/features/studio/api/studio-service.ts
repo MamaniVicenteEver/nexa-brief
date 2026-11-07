@@ -2,6 +2,7 @@ import type { JobStage } from "@/features/create-video/types";
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
 import type {
   Draft,
+  DraftDetails,
   DraftRequest,
   DraftStatus,
   MediaPlan,
@@ -18,9 +19,22 @@ const SLOW_TIMEOUT_MS = 60_000;
 
 // ── Drafts ──────────────────────────────────────────────────────────────────
 
+interface DraftDetailsDto {
+  song_name: string;
+  artist: string;
+  language: string | null;
+  copies: Record<string, { title: string; description: string; tags: string[]; strategy: string }>;
+  generated_at: string | null;
+  edited: boolean;
+  research?: string;
+}
+
 interface DraftDto {
   draft_id: string;
   template_id: string;
+  name?: string;
+  original?: boolean;
+  song_notes?: string;
   status: DraftStatus;
   stage: JobStage;
   errors: string[];
@@ -33,13 +47,42 @@ interface DraftDto {
   preview_url: string | null;
   job_id: string | null;
   recoverable: boolean;
+  details?: DraftDetailsDto | null;
+  created_at: string;
   updated_at: string;
+}
+
+function mapDetails(dto: DraftDetailsDto): DraftDetails {
+  return {
+    songName: dto.song_name ?? "",
+    artist: dto.artist ?? "",
+    language: dto.language ?? null,
+    copies: dto.copies ?? {},
+    generatedAt: dto.generated_at ?? null,
+    edited: Boolean(dto.edited),
+    research: dto.research ?? "",
+  };
+}
+
+function detailsDto(details: DraftDetails): DraftDetailsDto {
+  return {
+    song_name: details.songName,
+    artist: details.artist,
+    language: details.language,
+    copies: details.copies as DraftDetailsDto["copies"],
+    generated_at: details.generatedAt,
+    edited: details.edited,
+    research: details.research,
+  };
 }
 
 export function mapDraft(dto: DraftDto): Draft {
   return {
     draftId: dto.draft_id,
     templateId: dto.template_id,
+    name: dto.name ?? "",
+    original: Boolean(dto.original),
+    songNotes: dto.song_notes ?? "",
     status: dto.status,
     stage: dto.stage,
     errors: dto.errors ?? [],
@@ -52,6 +95,8 @@ export function mapDraft(dto: DraftDto): Draft {
     previewUrl: dto.preview_url ? resolveApiUrl(dto.preview_url) : null,
     jobId: dto.job_id,
     recoverable: dto.recoverable,
+    details: dto.details ? mapDetails(dto.details) : null,
+    createdAt: dto.created_at,
     updatedAt: dto.updated_at,
   };
 }
@@ -85,9 +130,56 @@ export async function renderDraft(draftId: string, options: RenderOptions) {
       body: {
         recorder_engine: options.recorderEngine,
         publish_accounts: options.publishAccounts,
+        formats: options.formats,
+        account_formats: options.accountFormats ?? {},
       },
       timeoutMs: SLOW_TIMEOUT_MS,
     },
+  );
+}
+
+/** «Video original»: crea (o devuelve el vigente) el prototipo con la canción y el fondo de la
+ * plantilla; se previsualiza y se prepara solo. */
+export async function createOriginalDraft(templateId: string, songNotes = ""): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(
+      `/api/v1/templates/${encodeURIComponent(templateId)}/original-draft`,
+      {
+        method: "POST",
+        body: { song_notes: songNotes.trim() || null },
+        timeoutMs: SLOW_TIMEOUT_MS,
+      },
+    ),
+  );
+}
+
+export async function renameDraft(draftId: string, name: string): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}`, { method: "PATCH", body: { name } }),
+  );
+}
+
+export async function deleteDraft(draftId: string): Promise<void> {
+  await httpClient(`/api/v1/drafts/${draftId}`, { method: "DELETE" });
+}
+
+/** Genera los textos de publicación (responde enseguida; el resultado llega por draft_changed). */
+/** Genera los textos; `songNotes` = información de la canción para la IA (opcional). */
+export async function prepareDraft(draftId: string, songNotes = ""): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}/prepare`, {
+      method: "POST",
+      body: { song_notes: songNotes.trim() },
+    }),
+  );
+}
+
+export async function saveDraftDetails(draftId: string, details: DraftDetails): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}/details`, {
+      method: "PUT",
+      body: detailsDto(details),
+    }),
   );
 }
 

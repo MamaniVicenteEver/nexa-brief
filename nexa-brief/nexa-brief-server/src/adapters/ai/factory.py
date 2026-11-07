@@ -19,6 +19,20 @@ def get_codegen_ai() -> AIPort:
     return DeepSeekGeminiFallbackAdapter()
 
 
+def get_copy_ai() -> AIPort:
+    """Textos de publicación (títulos, descripciones, tags; Preparar del Sandbox y la etapa
+    result_summarizer). COPY_AI_PROVIDER: "deepseek" (por defecto: DeepSeek, con Gemini de
+    respaldo si falla) o "gemini"."""
+    from src.config.settings import settings
+
+    if settings.copy_ai_provider == "gemini":
+        return get_analysis_ai()
+    from src.adapters.ai.infrastructure.deepseek_gemini_fallback_adapter import (
+        DeepSeekGeminiFallbackAdapter,
+    )
+    return DeepSeekGeminiFallbackAdapter()
+
+
 TEXT_PROVIDERS = ("claude", "codex", "deepseek")
 
 

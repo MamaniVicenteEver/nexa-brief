@@ -1,0 +1,21 @@
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #b4ad9f transparent;
+  overscroll-behavior: contain;
+}
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #b4ad9f;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #80796d;
+}

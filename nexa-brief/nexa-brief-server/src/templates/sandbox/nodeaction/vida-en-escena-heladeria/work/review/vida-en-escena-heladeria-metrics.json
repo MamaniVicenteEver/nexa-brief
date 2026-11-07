@@ -1,0 +1,248 @@
+{
+  "warnings": [],
+  "head_overlaps": [],
+  "knees": {
+    "samples": 82,
+    "backward": 0
+  },
+  "subtitle_safe": {
+    "samples": 323,
+    "max_hand_bottom_px": 1160.0593841666612,
+    "max_object_bottom_px": 1162.5338218089835,
+    "violations": []
+  },
+  "conversation_stops": [
+    {
+      "actor": "valeria",
+      "to": "tomas",
+      "t": 1.35,
+      "center_distance_px": 289.2384000000002,
+      "minimum_center_distance_px": 289.23840000000007,
+      "edge_gap_in_head_widths": 1.2000000000000013
+    }
+  ],
+  "camera": {
+    "max_same_framing_seconds": 5.500000000000002,
+    "spans": [
+      {
+        "type": "wide",
+        "start": 0,
+        "end": 1.35
+      },
+      {
+        "type": "two",
+        "start": 1.35,
+        "end": 1.9000000000000001
+      },
+      {
+        "type": "close",
+        "target": "valeria",
+        "start": 1.9000000000000001,
+        "end": 3
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 3,
+        "end": 4.805458
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 4.805458,
+        "end": 7.265458
+      },
+      {
+        "type": "insert",
+        "target": "helado",
+        "start": 7.265458,
+        "end": 9.265457999999999
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 9.265457999999999,
+        "end": 10.129125
+      },
+      {
+        "type": "insert",
+        "target": "helado",
+        "start": 10.129125,
+        "end": 12.329125000000001
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 12.329125000000001,
+        "end": 14.630459
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 14.630459,
+        "end": 20.130459000000002
+      },
+      {
+        "type": "two",
+        "start": 20.130459000000002,
+        "end": 24.557543
+      },
+      {
+        "type": "medium",
+        "target": "tomas",
+        "start": 24.557543,
+        "end": 28.255376
+      },
+      {
+        "type": "close",
+        "target": "heladero",
+        "start": 28.255376,
+        "end": 29.555376
+      },
+      {
+        "type": "medium",
+        "target": "valeria",
+        "start": 29.555376,
+        "end": 30.311251
+      }
+    ],
+    "insert_returns": [
+      {
+        "at": 9.265457999999999,
+        "previousAt": 7.265457,
+        "max_rect_error_px": 0
+      },
+      {
+        "at": 12.329125000000001,
+        "previousAt": 10.129124000000001,
+        "max_rect_error_px": 0
+      }
+    ]
+  },
+  "subtitles": {
+    "aligned_words": 42,
+    "fallbacks": []
+  },
+  "episode": "vida-en-escena-heladeria",
+  "duration": 30.311251,
+  "fps": 30,
+  "foot_slip": {
+    "max_slip_px": 0.3730273580889318,
+    "samples": 5350,
+    "worst": {
+      "id": "heladero",
+      "side": "right",
+      "t": 28.433333333333334,
+      "contact": "mañana-en-la-heladería:heladero:initial:right",
+      "from": [
+        591.84,
+        720
+      ],
+      "to": [
+        591.8107670353819,
+        719.6281198530945
+      ]
+    }
+  },
+  "mouth": {
+    "silent_actor_frames": 2319,
+    "open_without_voice_frames": 0,
+    "percent": 0
+  },
+  "determinism": {
+    "frames": 30,
+    "resolution": [
+      540,
+      960
+    ],
+    "order": [
+      7,
+      24,
+      11,
+      28,
+      15,
+      2,
+      19,
+      6,
+      23,
+      10,
+      27,
+      14,
+      1,
+      18,
+      5,
+      22,
+      9,
+      26,
+      13,
+      0,
+      17,
+      4,
+      21,
+      8,
+      25,
+      12,
+      29,
+      16,
+      3,
+      20
+    ],
+    "mismatches": [],
+    "ok": true,
+    "hashes": [
+      "abfb03076a6ad3ea82718a8cd89ac37c9f29dd0bf32d58c132e681e65abf99c5",
+      "d6309f3efe4283069f61822ea9c3e48f63c63f48a63396648a708c70f126f8d7",
+      "6686d6a5f1f8d0f642a9a894c8bb26f67c45610da98e3f737b7fb1b9fdbfee5f",
+      "c08f0fdeca0cf30b8e51b1b8e3915ad913fcdd74f715a9d045d92be8cddb3e02",
+      "8e19943c07f7e2b7792d72ef6168f9977fff857c18eb780ae0933cfee6420a19",
+      "9caa05d149a7dd74a1878df86a02f260f52cea647f540ba206cf5b84876e3bd1",
+      "340a4f9d206bc569ded1c325a557972b95ebc764fc812313d2c1ed5fbb8b7636",
+      "199b616ca0147203f863642d02769f6b591021ef0ca1342ea1e7fbf4a19e7f6d",
+      "60df3317ce279252104e679c2b14d7bcaa20fd5f87a961c3ffd30902bce2d8bb",
+      "6a3c86f88a159badbecabd8653b67cd9692c84f57d0b052c8c76f9623cc90947",
+      "15f33ecbc549e940bbfacb851ac306b66ce33120f00a76da2021d10cc39763aa",
+      "baa9e0b9eca390a628171b5444361d161b314ff41231499a84dabf48d69ad1a1",
+      "7d9234fdf66e4c441daceb46b73035bc3e5db1a1275ea6bdef676aa43cb5550c",
+      "0f8fd211a2ad94a2c8b6f73989705cdd00c2a51f2a41f84b7c862ee7630799f8",
+      "fb9b01779232793d789c59e20fb55ccb60d4ab07cf3140963b209945e9eb5fe1",
+      "a51f4115324aae8d5056f5094f7be966cbaf0003fe2a626b71f12c33f3ce493d",
+      "df2e810dc9fd234b7c9a63e86d29f49d226ca7bbea82304e55dc22c9032f6ce5",
+      "317d0205c6c201182090986fa66b7e232be45e10d22c5a520ae33fc2b0723217",
+      "26afcad64d6b38353665dec34b8c020171b1810479656ccddee28f0dccd9acca",
+      "acbc009a771a6a2abd327721349446e2fa6e3102acf40915df52035c78b408c5",
+      "9024466cc7e661772675ae01a62cf28048abb1e9e8fd1a314f90fd258081e4e8",
+      "b34d9c847ad6ffb3483c23d59228b860e47edf981d81da5f7eef0c18d11540ef",
+      "3b1cee37c1d616438135d5ee2220bbe0fca25e903f3c2f975b52275d2ba97012",
+      "4029ef50e0a60c4055733d91ad6220fc05567d7cac3a095848f76f9afe29d8d2",
+      "4b0d54430fa81ef6199652dea72c71b0c6702cb2694244dd068778b113455546",
+      "cc37bb06ffb7680af6fbb36b0579fbf74d589188f37156496dd8402992cc3117",
+      "a970ad853e3ad5f5287f68f2ebff84574da0b3577251da0f7f2d9673b12cf00a",
+      "8d03196fc25e2cb2a936ad78710798c6c4b22e1b7bfd6126847c9bd6f5109fab",
+      "1be56c5eca488aaae10381931e9b2542ca1e0a23ff6739d5563c064f4b8953c3",
+      "896e4505b3981ec65d66828581a8715e35f505445c50052ff80eee5c24c531d8"
+    ]
+  },
+  "objects": {
+    "ownership_samples": 1820,
+    "max_grip_error_px": 0
+  },
+  "framing": {
+    "target_crop_frames": 0,
+    "target_crop_details": [],
+    "offscreen_non_targets": 1146,
+    "whip_transition_frames": 60,
+    "intentional_body_crop_frames": 573,
+    "offscreen_set_objects": 0,
+    "hidden_objects": 0,
+    "object_crop_frames": 0,
+    "object_crop_details": []
+  },
+  "pose_motion": {
+    "max_boundary_jump_px": 0.0017153614755493797,
+    "boundary_epsilon_seconds": 0.000001,
+    "max_anchor_step_per_frame_px": 43.088704280126635,
+    "note": "Desplazamiento bruto a 30 fps; incluye gestos y caminata, no equivale por sí solo a un salto."
+  },
+  "passed": true,
+  "failed": []
+}

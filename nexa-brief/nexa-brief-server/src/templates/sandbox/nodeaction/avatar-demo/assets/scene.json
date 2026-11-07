@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "seed": 5,
+  "labels": true,
+  "avatar": { "character": "chica", "x": 0.5, "portraitX": 0.5, "shot": "full" },
+  "background": { "type": "color", "color": "#f3f1ee" },
+  "captions": { "enabled": true, "maxWords": 4 },
+  "camera": [
+    { "t": "@matemático", "shot": "medium", "x": 0.42, "smooth": 1.2 },
+    { "t": "@Alemania", "shot": "full", "x": 0.5, "smooth": 1.2 },
+    { "t": "@combinaciones", "shot": "close", "smooth": 1.0 },
+    { "t": "@trillones", "shot": "full", "smooth": 1.0 },
+    { "t": "@universo", "shot": "medium", "x": 0.5, "smooth": 1.2 },
+    { "t": "@cero-1.2", "shot": "full", "smooth": 1.0 }
+  ],
+  "timeline": [
+    { "t": 0.1, "do": "saludar", "side": "R", "dur": 2.8 },
+    { "t": "@medianoche", "do": "contar", "side": "L", "dur": 2.2 },
+    { "t": "@seguro", "do": "presentar", "side": "R", "dur": 2.6 },
+    { "t": "@convencido", "do": "si" },
+    { "t": "@romperlo-0.3", "do": "pulgar", "side": "R", "dur": 2.0 },
+    { "t": "@Alan-0.4", "do": "presentar", "side": "L", "dur": 2.4 },
+    { "t": "@Turing", "do": "sonreir", "dur": 1.6 },
+    { "t": "@Enigma-0.5", "do": "senalar", "side": "R", "dur": 2.4 },
+    { "t": "@escribir-0.4", "do": "explicar", "dur": 4.6 },
+    { "t": "@combinaciones-0.2", "do": "sorpresa", "dur": 1.8 },
+    { "t": "@trillones-0.3", "do": "bienvenida", "dur": 2.6 },
+    { "t": "@Probarlas", "do": "alto", "side": "L", "dur": 1.8 },
+    { "t": "@universo-0.6", "do": "pensar", "side": "R", "dur": 3.0 },
+    { "t": "@aunque-0.3", "do": "encoger", "dur": 2.2 },
+    { "t": "@clave", "do": "idea", "side": "R", "dur": 2.0 },
+    { "t": "@cero-0.5", "do": "no", "dur": 1.4 },
+    { "t": "@cero", "do": "guino", "side": "L", "dur": 0.8 }
+  ]
+}

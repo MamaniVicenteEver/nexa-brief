@@ -1,0 +1,160 @@
+{
+  "name": "ground.ambulance",
+  "family": "ground",
+  "description": "Ambulancia con cruz o media luna, balizas alternas y rumbo de ruta. Úsala para movimientos y estados de fuerzas terrestres.",
+  "duration": 8.6,
+  "loop": true,
+  "layer": 30,
+  "states": [
+    "normal",
+    "hit",
+    "burning",
+    "destroyed"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.2,
+      "max": 4,
+      "step": 0.05,
+      "range": {
+        "min": 0.2,
+        "max": 4
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "length": {
+      "type": "number",
+      "default": 154,
+      "min": 40,
+      "max": 360,
+      "step": 2,
+      "range": {
+        "min": 40,
+        "max": 360
+      },
+      "description": "Longitud visual del objeto en píxeles de diseño."
+    },
+    "flag": {
+      "type": "string",
+      "default": "IQ",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "dust": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa la nube de polvo asociada al movimiento."
+    },
+    "tracks": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Activa las huellas y marcas de movimiento."
+    },
+    "particles": {
+      "type": "number",
+      "default": 14,
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "range": {
+        "min": 0,
+        "max": 48
+      },
+      "description": "Número de partículas del efecto."
+    },
+    "seed": {
+      "default": 1,
+      "type": "number|string",
+      "range": null,
+      "description": "Semilla para que las partículas y variaciones sean reproducibles."
+    },
+    "variant": {
+      "type": "enum",
+      "values": [
+        "cross",
+        "crescent"
+      ],
+      "default": "cross",
+      "range": [
+        "cross",
+        "crescent"
+      ],
+      "description": "Variante visual del componente."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "ground-ambulance",
+    "t": 0,
+    "type": "ground.ambulance",
+    "at": [
+      48.4,
+      31.1
+    ],
+    "dur": 8,
+    "fade": 0.6,
+    "flag": "IQ",
+    "variant": "cross",
+    "path": {
+      "via": [
+        [
+          48.3,
+          31
+        ],
+        [
+          48.42,
+          31.13
+        ],
+        [
+          48.65,
+          31.22
+        ]
+      ],
+      "t": 0.6,
+      "dur": 6.5,
+      "curve": "smooth",
+      "ease": "inOut"
+    },
+    "label": "",
+    "seed": 17
+  },
+  "usedBy": [
+    "work/tactico/items-terrestre.json"
+  ],
+  "preview": {
+    "bg": "white",
+    "poster": "work/tactico/thumbs/ground.ambulance.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

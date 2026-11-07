@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "title": "Por qué olvidas lo que estudias",
+  "summary": "Video de pizarra que explica el olvido al estudiar mediante la situación ficticia de Inés y estrategias de recuperación y práctica espaciada. El guion documenta sus fuentes en PLAN.md.",
+  "engine": "nodeaction/_pizarra",
+  "based_on": "pizarra-demo",
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-10-23",
+  "libraries": [
+    {
+      "name": "Google Fonts: DM Sans, Fraunces",
+      "version": "remota, sin versión fijada",
+      "purpose": "tipografía del estilo pizarra"
+    }
+  ],
+  "inputs": [
+    "Guion investigado, con voz Gemini 3.8 Flash TTS (dos iteraciones registradas) y transcripción Whisper.",
+    "Escena ilustrada con el personaje Inés, sin fotografías."
+  ],
+  "notes": [
+    "El guion aclara que Inés es ficticia y que la voz fuera de campo ocupa el rol del profesor.",
+    "Render completo disponible en 16:9; usa el motor modular nodeaction/_pizarra y el reproductor común _proto."
+  ],
+  "usage_backfill": {
+    "estimated": true,
+    "source": "Estimación de ~/.codex/sessions/**/*.jsonl (Codex: 8 sesiones, 67 menciones de sandbox/nodeaction/pizarra-olvido) y /home/alfred/codex/nexa-brief/claude-sessions-usage.json (Claude: 2 sesiones, 200 sandbox_mentions). Repartí los tokens de cada sesión que toca varias plantillas proporcionalmente a sus menciones de ruta; los modelos de Claude se asignaron según el recuento de modelos del resumen. El resumen Claude no trae reasoning_tokens (registrado como 0, no disponible por separado). Revisé sandbox/nodemotion/_codex/*.log: no tenían contadores numéricos de tokens (0 campos encontrados), así que no los sumé.",
+    "by_model": [
+      {
+        "provider": "claude",
+        "model": "claude-opus-5-5",
+        "input_tokens": 97,
+        "cached_input_tokens": 14666600,
+        "output_tokens": 60565,
+        "reasoning_tokens": 0
+      },
+      {
+        "provider": "codex",
+        "model": "gpt-6-luna",
+        "input_tokens": 3325996,
+        "cached_input_tokens": 3261003,
+        "output_tokens": 24866,
+        "reasoning_tokens": 15992
+      }
+    ]
+  }
+}

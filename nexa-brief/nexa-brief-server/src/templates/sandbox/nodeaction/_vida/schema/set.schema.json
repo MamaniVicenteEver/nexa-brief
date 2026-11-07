@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/vida/set.schema.json",
+  "title": "Vida · escenario reutilizable",
+  "description": "Coordenadas absolutas en píxeles de la lámina, origen superior izquierdo. Comprobar relaciones geométricas y archivos con sets/REVISAR.sh.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "plate",
+    "floorY",
+    "charHeight",
+    "walk",
+    "anchors",
+    "props",
+    "light",
+    "credits"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "w",
+        "h"
+      ],
+      "properties": {
+        "file": {
+          "const": "plate.png"
+        },
+        "w": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "h": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "floorY": {
+      "type": "number",
+      "minimum": 0
+    },
+    "charHeight": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "walk": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "number",
+          "minimum": 0
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "depth": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "y",
+          "scale"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0
+          },
+          "scale": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    },
+    "anchors": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/anchor"
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/prop"
+      }
+    },
+    "light": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tint",
+        "ambient"
+      ],
+      "properties": {
+        "tint": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "ambient": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "credits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "adapter",
+        "modelPreset",
+        "prompt",
+        "reference",
+        "status",
+        "note"
+      ],
+      "properties": {
+        "type": {
+          "const": "ai-generated"
+        },
+        "adapter": {
+          "const": "src.adapters.image_gen.cli"
+        },
+        "modelPreset": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prompt": {
+          "const": "prompt.txt"
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "generated",
+            "reviewed"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y",
+        "kind",
+        "facing"
+      ],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0
+        },
+        "kind": {
+          "enum": [
+            "stand",
+            "seat",
+            "door",
+            "table",
+            "spot",
+            "enter",
+            "exit"
+          ]
+        },
+        "facing": {
+          "enum": [
+            "left",
+            "right",
+            "front"
+          ]
+        },
+        "behind": {
+          "type": "string"
+        }
+      }
+    },
+    "prop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prop",
+        "x",
+        "y",
+        "w",
+        "layer",
+        "params"
+      ],
+      "properties": {
+        "prop": {
+          "enum": [
+            "school-gate",
+            "desk",
+            "chair",
+            "bench",
+            "table",
+            "door",
+            "lamp",
+            "plant",
+            "wall-clock",
+            "frame",
+            "shelf",
+            "rug",
+            "poster",
+            "counter"
+          ]
+        },
+        "x": {
+          "type": "number",
+          "minimum": 0
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0
+        },
+        "w": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "layer": {
+          "enum": [
+            "back",
+            "front"
+          ]
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "h": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "seatY": {
+              "type": "number",
+              "minimum": 0
+            },
+            "surfaceY": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

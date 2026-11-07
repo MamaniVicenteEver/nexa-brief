@@ -1,0 +1,266 @@
+{
+  "video": "bolivia-mar",
+  "updated_at": "2026-10-28T22:56:20+00:00",
+  "note": "Tokens tal como los informa cada proveedor. Codex y Claude corren con la suscripción (CLI local, sin costo por token); DeepSeek y Gemini se pagan por token (api).",
+  "totals": {
+    "calls": 10,
+    "failed": 0,
+    "seconds": 103.23,
+    "input_tokens": 16817365,
+    "cached_input_tokens": 17954880,
+    "output_tokens": 170664,
+    "reasoning_tokens": 90332
+  },
+  "api_tokens": {
+    "gemini_tts": {
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    }
+  },
+  "by_provider": {
+    "gemini_tts": {
+      "calls": 2,
+      "failed": 0,
+      "seconds": 103.23,
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    },
+    "codex": {
+      "calls": 7,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 16667365,
+      "cached_input_tokens": 14954880,
+      "output_tokens": 130664,
+      "reasoning_tokens": 90332
+    },
+    "claude": {
+      "calls": 1,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 150000,
+      "cached_input_tokens": 3000000,
+      "output_tokens": 40000,
+      "reasoning_tokens": 0
+    }
+  },
+  "by_model": {
+    "gemini_tts:gemini-3.8-flash-tts": {
+      "calls": 2,
+      "failed": 0,
+      "seconds": 103.23,
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    },
+    "codex:gpt-6-luna": {
+      "calls": 7,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 16667365,
+      "cached_input_tokens": 14954880,
+      "output_tokens": 130664,
+      "reasoning_tokens": 90332
+    },
+    "claude:claude-opus-5-5": {
+      "calls": 1,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 150000,
+      "cached_input_tokens": 3000000,
+      "output_tokens": 40000,
+      "reasoning_tokens": 0
+    }
+  },
+  "by_role": {
+    "voice": {
+      "calls": 2,
+      "failed": 0,
+      "seconds": 103.23,
+      "input_tokens": 0,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    },
+    "agente": {
+      "calls": 5,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 1101243,
+      "cached_input_tokens": 0,
+      "output_tokens": 0,
+      "reasoning_tokens": 0
+    },
+    "ventana-motor": {
+      "calls": 1,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 6807215,
+      "cached_input_tokens": 6439168,
+      "output_tokens": 70478,
+      "reasoning_tokens": 43850
+    },
+    "lider-ventanas": {
+      "calls": 1,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 150000,
+      "cached_input_tokens": 3000000,
+      "output_tokens": 40000,
+      "reasoning_tokens": 0
+    },
+    "medios": {
+      "calls": 1,
+      "failed": 0,
+      "seconds": 0.0,
+      "input_tokens": 8758907,
+      "cached_input_tokens": 8515712,
+      "output_tokens": 60186,
+      "reasoning_tokens": 46482
+    }
+  },
+  "iterations": {
+    "agente:sandbox": 5,
+    "lider-ventanas:sandbox": 1,
+    "medios:sandbox": 1,
+    "ventana-motor:sandbox": 1,
+    "voice:gemini-3.8-flash-tts": 2
+  },
+  "timeline": [
+    {
+      "ts": "2026-10-23T13:24:05+00:00",
+      "provider": "gemini_tts",
+      "model": "gemini-3.8-flash-tts",
+      "role": "voice",
+      "step": "gemini-3.8-flash-tts",
+      "iteration": 1,
+      "ok": true,
+      "seconds": 56.39,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "note": "16 bloques"
+    },
+    {
+      "ts": "2026-10-23T13:24:51+00:00",
+      "provider": "gemini_tts",
+      "model": "gemini-3.8-flash-tts",
+      "role": "voice",
+      "step": "gemini-3.8-flash-tts",
+      "iteration": 2,
+      "ok": true,
+      "seconds": 46.84,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "note": "16 bloques"
+    },
+    {
+      "ts": "2026-10-26T13:06:30+00:00",
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "role": "agente",
+      "step": "sandbox",
+      "iteration": 1,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 290308,
+      "output_tokens": 0,
+      "note": "Total combinado informado por codex exec; el log no separa entrada, salida ni razonamiento."
+    },
+    {
+      "ts": "2026-10-26T13:11:21+00:00",
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "role": "ventana-motor",
+      "step": "sandbox",
+      "iteration": 1,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 6807215,
+      "output_tokens": 70478,
+      "note": "bm-ventana-motor (cortada por bucle; conteo de la sesión Codex)"
+    },
+    {
+      "ts": "2026-10-26T13:11:21+00:00",
+      "provider": "claude",
+      "model": "claude-opus-5-5",
+      "role": "lider-ventanas",
+      "step": "sandbox",
+      "iteration": 1,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 150000,
+      "output_tokens": 40000,
+      "note": "estimación: líder, briefs, revisión, ajustes y verificación de ventanas"
+    },
+    {
+      "ts": "2026-10-28T21:16:29+00:00",
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "role": "agente",
+      "step": "sandbox",
+      "iteration": 2,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 163831,
+      "output_tokens": 0,
+      "note": "Total combinado informado por codex exec; el log no separa entrada, salida ni razonamiento."
+    },
+    {
+      "ts": "2026-10-28T21:25:45+00:00",
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "role": "medios",
+      "step": "sandbox",
+      "iteration": 1,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 8758907,
+      "output_tokens": 60186,
+      "note": "bm-mas-medios interrumpida por aviso de bucle; datos de sesión"
+    },
+    {
+      "ts": "2026-10-28T21:44:54+00:00",
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "role": "agente",
+      "step": "sandbox",
+      "iteration": 3,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 180899,
+      "output_tokens": 0,
+      "note": "Total combinado informado por codex exec; el log no separa entrada, salida ni razonamiento."
+    },
+    {
+      "ts": "2026-10-28T21:47:04+00:00",
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "role": "agente",
+      "step": "sandbox",
+      "iteration": 4,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 47398,
+      "output_tokens": 0,
+      "note": "Total combinado informado por codex exec; el log no separa entrada, salida ni razonamiento."
+    },
+    {
+      "ts": "2026-10-28T22:56:20+00:00",
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "role": "agente",
+      "step": "sandbox",
+      "iteration": 5,
+      "ok": true,
+      "seconds": 0.0,
+      "input_tokens": 418807,
+      "output_tokens": 0,
+      "note": "Total combinado informado por codex exec; el log no separa entrada, salida ni razonamiento."
+    }
+  ]
+}

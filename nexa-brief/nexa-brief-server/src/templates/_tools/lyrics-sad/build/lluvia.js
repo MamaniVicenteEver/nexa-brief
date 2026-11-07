@@ -126,8 +126,11 @@ B.split = (sc, X) => {
 B.whisper = (sc, X) => {
   const { W, H, u } = X, L = div(X.root, "lay", { background: P.night });
   fog(X, L, 3, 0.1);
-  const s = U(J(sc.words)), fs = Math.min(fit(s, sans, 0.5, 0.86 * W, 1e9), 0.068 * H);
+  const s = U(J(sc.words));
+  const baseFs = Math.min(fit(s, sans, 0.5, 0.86 * W, 1e9), 0.068 * H);
+  const fs = Math.min(baseFs * 1.25, fit(s, sans, 0.5, 0.94 * W, 0.085 * H));
   const t = word(X, L, s, { cls: sans, fs, x: W / 2, y: H / 2, color: P.pale, ls: 0.5, split: "chars" });
+  t.el.style.whiteSpace = "nowrap";
   let wi = 0; t.chars.forEach((c, k) => { if (c.textContent === " ") { wi++; return; } reveal(X, c, Math.max(0.02, sc.words[wi]?.rt ?? 0) + (k % 4) * 0.04, "blur", 0.9); });
   X.T(t.el, "letterSpacing", "0.5em").to(0, X.dur + OV(), "0.75em");
   rainFx(X, L, 25, { color: "180,195,210" });
@@ -159,17 +162,20 @@ B.dropWords = (sc, X) => {
 };
 
 /* intro / cierre */
-B.intro = (sc, X) => B.whisper(sc, X);
-B.outro = (sc, X) => {
-  const { W, H, u } = X, L = div(X.root, "lay", { background: P.slate });
-  footage(X, L, 0, "rain", { opacity: 0.6 }); wet(X, L); fog(X, L, 2, 0.12);
-  const [a, b, c] = sc.words;
-  if (a) { const t = word(X, L, a.text, { cls: ser, fs: 0.16 * H, x: W / 2, y: 0.42 * H, color: P.pale }); reveal(X, t.el, a.rt, "blur", 1.2); }
-  if (b) { const t = word(X, L, U(b.text), { cls: sans, fs: 0.035 * H, x: W / 2, y: 0.55 * H, color: P.steel, ls: 0.6 }); reveal(X, t.el, b.rt, "fade", 1); }
-  if (c) { const t = word(X, L, U(c.text), { cls: sans, fs: 0.025 * H, x: W / 2, y: 0.62 * H, color: P.steel, ls: 0.4 }); reveal(X, t.el, c.rt, "fade", 1); }
-  rainFx(X, L, 60);
-  enterFx(X, "blur", OV() * 1.6);
+B.intro = (sc, X) => {
+  const { W, H } = X, L = div(X.root, "lay", { background: P.night });
+  fog(X, L, 3, 0.1);
+  const s = U(J(sc.words));
+  const baseFs = Math.min(fit(s, sans, 0.5, 0.86 * W, 1e9), 0.068 * H);
+  const fs = Math.min(baseFs * 1.25, fit(s, sans, 0.5, 0.94 * W, 0.085 * H));
+  const t = word(X, L, s, { cls: sans, fs, x: W / 2, y: H / 2, color: P.pale, ls: 0.5, split: "chars" });
+  t.el.style.whiteSpace = "nowrap";
+  t.chars.forEach((c, k) => reveal(X, c, 0.02 + k * 0.012, "blur", 0.18));
+  rainFx(X, L, 25, { color: "180,195,210" });
+  leave(X, t.box, "fade");
+  enterFx(X, pickTrans(X), OV());
 };
+B.outro = (sc, X) => window.NexaLluviaOutro.render(sc, X, { P, ser, sans, div, footage, rainFx, word, fit, reveal, config: C.outro || {} });
 
 const FITS = {
   window: sc => J(sc.words).length <= 46,

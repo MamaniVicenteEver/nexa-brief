@@ -1,0 +1,111 @@
+{
+  "name": "arrow.flow",
+  "family": "arrow",
+  "description": "Flujo ondulado con flechas que recorren la curva según tiempo absoluto. Úsala para dirigir la atención o representar un desplazamiento.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 15,
+  "states": [],
+  "params": {
+    "via": {
+      "type": "array",
+      "default": [
+        [
+          49,
+          28
+        ],
+        [
+          56.3,
+          26.5
+        ],
+        [
+          59,
+          24
+        ]
+      ],
+      "range": null,
+      "description": "Waypoints de la trayectoria en orden."
+    },
+    "width": {
+      "type": "number",
+      "default": 4,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Duración del revelado progresivo en segundos."
+    },
+    "amplitude": {
+      "type": "number",
+      "default": 14,
+      "range": null,
+      "description": "Amplitud de la oscilación o del rayo."
+    },
+    "wavelength": {
+      "type": "number",
+      "default": 150,
+      "range": null,
+      "description": "Longitud de onda en píxeles de diseño."
+    },
+    "heads": {
+      "type": "number",
+      "default": 5,
+      "range": null,
+      "description": "Número de puntas que recorren la flecha."
+    },
+    "speed": {
+      "type": "number",
+      "default": 0.13,
+      "range": null,
+      "description": "Velocidad del desplazamiento o flujo visual."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-arrow-flow",
+    "t": 0,
+    "via": [
+      [
+        50.5,
+        28.8
+      ],
+      [
+        53,
+        27
+      ],
+      [
+        56.4,
+        26.4
+      ],
+      [
+        58.5,
+        24.8
+      ]
+    ],
+    "dur": 6,
+    "out": 5.5,
+    "type": "arrow.flow",
+    "color": "accent"
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.json",
+    "work/tactico/items-routes.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/arrow.flow.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

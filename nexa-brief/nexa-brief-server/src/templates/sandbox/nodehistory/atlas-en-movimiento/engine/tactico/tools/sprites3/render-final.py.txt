@@ -1,0 +1,60 @@
+"""Render de una COPIA ya modelada por MCP; nunca construye geometría de vehículo."""
+import bpy,sys,json,time,math,argparse
+from pathlib import Path
+from mathutils import Vector
+p=argparse.ArgumentParser(); p.add_argument('--sprite',required=True); p.add_argument('--output',required=True); p.add_argument('--blend',required=True); a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
+started=time.perf_counter(); target=bpy.data.collections['AEM_M3_'+a.sprite]; keep=set(target.objects)
+# Limpieza EXCLUSIVA del proceso headless: quita datos ajenos de la copia, no de la sesión viva.
+for sc in bpy.data.scenes:
+ for ob in list(sc.objects):
+  if ob not in keep: bpy.data.objects.remove(ob,do_unlink=True)
+scene=bpy.data.scenes.new('AEM_M3_'+a.sprite)
+scene.collection.children.link(target)
+bpy.context.window.scene=scene
+for sc in list(bpy.data.scenes):
+ if sc!=scene:bpy.data.scenes.remove(sc)
+for col in list(bpy.data.collections):
+ if col!=target:bpy.data.collections.remove(col)
+scene.render.use_freestyle=False
+scene.render.use_compositing=False
+scene.render.use_sequencer=False
+root=bpy.data.objects['AEM_M3_'+a.sprite+'_ROOT']; root.location=(0,0,0)
+bpy.context.view_layer.update()
+points=[ob.matrix_world@Vector(v) for ob in target.objects if ob.type=='MESH' for v in ob.bound_box]
+lo=Vector(tuple(min(p[i] for p in points) for i in range(3))); hi=Vector(tuple(max(p[i] for p in points) for i in range(3)))
+# Centro longitudinal del volumen completo; estable para todos los estados.
+cx=(hi.x+lo.x)/2; cy=(hi.y+lo.y)/2; extent=max(hi.x-lo.x,hi.y-lo.y)*1.15
+scene.render.engine='CYCLES'; scene.cycles.device='CPU'; scene.cycles.samples=8; scene.cycles.use_denoising=True; scene.cycles.seed=581; scene.cycles.max_bounces=3
+scene.render.threads_mode='FIXED';scene.render.threads=1
+scene.render.film_transparent=True; scene.render.image_settings.file_format='PNG';scene.render.image_settings.color_mode='RGBA';scene.render.image_settings.color_depth='8';scene.render.image_settings.compression=80
+scene.view_settings.view_transform='AgX'
+try: scene.view_settings.look='AgX - Medium High Contrast'
+except TypeError: pass
+world=bpy.data.worlds.new('AEM_World');world.use_nodes=True
+bg=next(n for n in world.node_tree.nodes if n.type=='BACKGROUND');bg.inputs['Color'].default_value=(.65,.65,.65,1);bg.inputs['Strength'].default_value=.45;scene.world=world
+sun=bpy.data.lights.new('AEM_Sol','SUN');sun.energy=2.2;sun.angle=math.radians(9)
+ob=bpy.data.objects.new('AEM_Sol',sun);scene.collection.objects.link(ob);ob.rotation_euler=Vector((75,-100,-145)).to_track_quat('-Z','Y').to_euler()
+cam=bpy.data.cameras.new('AEM_Cenital');cam.type='ORTHO';cam.ortho_scale=extent
+ob=bpy.data.objects.new('AEM_Cenital',cam);scene.collection.objects.link(ob);ob.location=(cx,cy,hi.z+extent*2);scene.camera=ob
+# Elimina referencias y scripts ajenos de la COPIA. Archivo final sólo contiene el sprite y su estudio.
+for items in [bpy.data.texts,bpy.data.actions,bpy.data.armatures,bpy.data.images,bpy.data.node_groups]:
+ for item in list(items):items.remove(item,do_unlink=True)
+for mat in list(bpy.data.materials):
+ if not mat.name.startswith('AEM_M3_'+a.sprite+'_'):bpy.data.materials.remove(mat,do_unlink=True)
+for world in list(bpy.data.worlds):
+ if world!=scene.world:bpy.data.worlds.remove(world,do_unlink=True)
+for items in [bpy.data.meshes,bpy.data.curves,bpy.data.cameras,bpy.data.lights,bpy.data.materials]:
+ for item in list(items):
+  if item.use_fake_user:item.use_fake_user=False
+bpy.data.orphans_purge(do_recursive=True)
+bpy.context.preferences.filepaths.save_version=0
+scene.render.resolution_x=1152;scene.render.resolution_y=1152;scene.render.resolution_percentage=100
+bpy.ops.wm.save_as_mainfile(filepath=a.blend,compress=True)
+out=Path(a.output);out.mkdir(parents=True,exist_ok=True)
+scene.render.resolution_x=256;scene.render.resolution_y=256;scene.render.filepath=str(out/(a.sprite+'-preview.png'))
+t=time.perf_counter();bpy.ops.render.render(write_still=True); preview=time.perf_counter()-t
+# La revisión 256 se conserva en /tmp; render final usa la misma cámara, materiales e iluminación.
+scene.render.resolution_x=1152;scene.render.resolution_y=1152;scene.render.filepath=str(out/(a.sprite+'.png'))
+t=time.perf_counter();bpy.ops.render.render(write_still=True);elapsed=time.perf_counter()-t
+record=dict(id=a.sprite,blender=bpy.app.version_string,engine='Cycles CPU',threads=1,samples=8,source_size=[1152,1152],ortho_scale=extent,camera_center=[cx,cy],model_seconds=0,preview_seconds=round(preview,3),render_seconds=round(elapsed,3),total_seconds=round(time.perf_counter()-started,3),sun_from=[-75,100,145],model_source='Blender MCP live',freestyle=False,compositing=False,save='save_as_mainfile(copy=True); fresh isolated render scene')
+(out/(a.sprite+'.json')).write_text(json.dumps(record,indent=2)+'\n');print('SPRITE_DONE '+json.dumps(record),flush=True)

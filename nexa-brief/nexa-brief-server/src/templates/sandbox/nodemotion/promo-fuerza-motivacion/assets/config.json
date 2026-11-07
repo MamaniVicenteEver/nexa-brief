@@ -1,0 +1,169 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Réplicas cíclicas de las escenas y el ritmo del MP4 de referencia Klickpin; solo cambian las frases y los clips.",
+      "audio": {
+        "src": "song.mp3"
+      },
+      "lyricsUrl": "lyrics.json",
+      "lyricsFilter": {
+        "minLogprob": -0.6,
+        "drop": [
+          "gracias por ver",
+          "subt[ií]tulos",
+          "amara\\.org",
+          "audio ?jungle",
+          "suscr[ií]bete"
+        ]
+      },
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap"
+      },
+      "palette": {
+        "red": "#C8102E",
+        "cream": "#F3F0EA",
+        "ink": "#141418",
+        "grey": "#4A4446",
+        "pink": "#FF5A8C",
+        "violet": "#6A2BFF",
+        "cyan": "#18B4FF"
+      },
+      "timing": {
+        "burstSec": 1.1,
+        "burstMaxFrac": 0.5,
+        "exitSec": 0.18
+      },
+      "media": [
+        {
+          "id": "boxer-gloves",
+          "src": "media/boxer-gloves.mp4",
+          "poster": "media/boxer-gloves.jpg"
+        },
+        {
+          "id": "rope-woman",
+          "src": "media/rope-woman.mp4",
+          "poster": "media/rope-woman.jpg"
+        },
+        {
+          "id": "boxer-dark",
+          "src": "media/boxer-dark.mp4",
+          "poster": "media/boxer-dark.jpg"
+        },
+        {
+          "id": "dyn-boxing",
+          "src": "media/dyn-boxing.mp4",
+          "poster": "media/dyn-boxing.jpg"
+        },
+        {
+          "id": "gym-woman",
+          "src": "media/gym-woman.mp4",
+          "poster": "media/gym-woman.jpg"
+        },
+        {
+          "id": "ropes-man",
+          "src": "media/ropes-man.mp4",
+          "poster": "media/ropes-man.jpg"
+        },
+        {
+          "id": "pulldown",
+          "src": "media/pulldown.mp4",
+          "poster": "media/pulldown.jpg"
+        },
+        {
+          "id": "barbell",
+          "src": "media/barbell.mp4",
+          "poster": "media/barbell.jpg"
+        },
+        {
+          "id": "dyn-ropes",
+          "src": "media/dyn-ropes.mp4",
+          "poster": "media/dyn-ropes.jpg"
+        }
+      ],
+      "scenes": [
+        {
+          "type": "stamp",
+          "at": 0,
+          "media": "gym-woman",
+          "hold": "italic",
+          "burstSec": 1.1,
+          "burstMaxFrac": 0.5
+        },
+        {
+          "type": "frames",
+          "at": 3.0,
+          "media": "rope-woman",
+          "hold": "upright",
+          "burstSec": 1.3,
+          "burstMaxFrac": 0.55
+        },
+        {
+          "type": "rows",
+          "at": 5.55,
+          "intro": "drips",
+          "ink": "white",
+          "media": "boxer-dark",
+          "burstSec": 2.42,
+          "burstMaxFrac": 0.98,
+          "milestones": {
+            "dripsStart": 0.62,
+            "dripsEnd": 0.95,
+            "rowsStart": 0.95,
+            "rowsEnd": 1.62,
+            "greyEnd": 1.78,
+            "giantStart": 1.95
+          },
+          "hold": "upright"
+        },
+        {
+          "type": "hold",
+          "at": 8.08,
+          "media": "dyn-boxing",
+          "hold": "italic"
+        },
+        {
+          "type": "giant",
+          "at": 10.0,
+          "media": "dyn-boxing",
+          "hold": "italic",
+          "burstSec": 2.33,
+          "burstMaxFrac": 1
+        },
+        {
+          "type": "rows",
+          "at": 12.33,
+          "intro": "pixel",
+          "ink": "black",
+          "media": "barbell",
+          "hold": "upright",
+          "burstSec": 2.47,
+          "burstMaxFrac": 1
+        },
+        {
+          "type": "chalk",
+          "at": 15.65,
+          "media": "gym-woman",
+          "hold": "italic",
+          "burstSec": 1.35,
+          "burstMaxFrac": 1
+        },
+        {
+          "type": "hold",
+          "at": 17.0,
+          "media": "gym-woman",
+          "hold": "italic"
+        }
+      ],
+      "debug": {
+        "enabled": false
+      },
+      "seed": 23,
+      "duration": 43.5,
+      "reference": {
+        "duration": 19.033
+      }
+    }
+  ]
+}
