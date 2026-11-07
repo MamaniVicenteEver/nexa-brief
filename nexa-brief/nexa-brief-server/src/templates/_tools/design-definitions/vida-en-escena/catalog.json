@@ -1,0 +1,7021 @@
+{
+  "design_id": "vida-en-escena",
+  "schema_version": 1,
+  "revision": "3a0784af288f24576f9b728f66b596faf8f126b2b157fff76bbcaba046c7b759",
+  "entries": [
+    {
+      "id": "characters.heladero",
+      "name": "characters.heladero",
+      "label": "characters.heladero",
+      "kind": "character",
+      "summary": "Heladero: buzz, apron. Voz tomas.",
+      "tags": [],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 0.84,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.17,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 672041
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smile",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "characters.heladero"
+      }
+    },
+    {
+      "id": "characters.mama",
+      "name": "characters.mama",
+      "label": "characters.mama",
+      "kind": "character",
+      "summary": "Rosa: curly, apron. Voz mama.",
+      "tags": [],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 1.08,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.163,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 5337
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smile",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "characters.mama"
+      }
+    },
+    {
+      "id": "characters.nico",
+      "name": "characters.nico",
+      "label": "characters.nico",
+      "kind": "character",
+      "summary": "Nico: buzz, tshirt. Voz nico.",
+      "tags": [],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 0.93,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.174,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 1289
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smile",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "characters.nico"
+      }
+    },
+    {
+      "id": "characters.tomas",
+      "name": "characters.tomas",
+      "label": "characters.tomas",
+      "kind": "character",
+      "summary": "Tomás: spiky, hoodie. Voz tomas.",
+      "tags": [],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 1,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.166,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 7401
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smirk",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "characters.tomas"
+      }
+    },
+    {
+      "id": "characters.valeria",
+      "name": "characters.valeria",
+      "label": "characters.valeria",
+      "kind": "character",
+      "summary": "Valeria: ponytail, dress. Voz valeria.",
+      "tags": [],
+      "params": {
+        "height": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.3,
+          "default": 0.98,
+          "summary": "Altura relativa al elenco.",
+          "doc": "Altura relativa al elenco."
+        },
+        "ink.width": {
+          "type": "number",
+          "min": 0.006,
+          "max": 0.025,
+          "default": 0.012,
+          "summary": "Fracción de altura; tinta exterior y extremidades.",
+          "doc": "Fracción de altura; tinta exterior y extremidades."
+        },
+        "head.radius": {
+          "type": "number",
+          "min": 0.15,
+          "max": 0.19,
+          "default": 0.166,
+          "summary": "Radio en unidades de altura.",
+          "doc": "Radio en unidades de altura."
+        },
+        "seed": {
+          "type": "integer",
+          "min": 0,
+          "max": 4294967295,
+          "default": 9032
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "face.expression": {
+          "type": "string",
+          "enum": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ],
+          "default": "smile",
+          "values": [
+            "neutral",
+            "smile",
+            "smirk",
+            "grin",
+            "laugh",
+            "sad",
+            "worry",
+            "surprise",
+            "shock",
+            "annoyed",
+            "skeptical",
+            "shy",
+            "love",
+            "think"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "characters.valeria"
+      }
+    },
+    {
+      "id": "expressions.neutral",
+      "name": "expressions.neutral",
+      "label": "expressions.neutral",
+      "kind": "component",
+      "summary": "Reposo atento.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.neutral"
+      }
+    },
+    {
+      "id": "expressions.smile",
+      "name": "expressions.smile",
+      "label": "expressions.smile",
+      "kind": "component",
+      "summary": "Sonrisa suave; mejillas levantan el párpado inferior.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.smile"
+      }
+    },
+    {
+      "id": "expressions.smirk",
+      "name": "expressions.smirk",
+      "label": "expressions.smirk",
+      "kind": "component",
+      "summary": "Sonrisa ladeada y cejas asimétricas.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.smirk"
+      }
+    },
+    {
+      "id": "expressions.grin",
+      "name": "expressions.grin",
+      "label": "expressions.grin",
+      "kind": "component",
+      "summary": "Sonrisa amplia con dientes y ojos entrecerrados desde abajo.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.grin"
+      }
+    },
+    {
+      "id": "expressions.laugh",
+      "name": "expressions.laugh",
+      "label": "expressions.laugh",
+      "kind": "component",
+      "summary": "Carcajada, ojos en arco, lengua y lágrimas.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.laugh"
+      }
+    },
+    {
+      "id": "expressions.sad",
+      "name": "expressions.sad",
+      "label": "expressions.sad",
+      "kind": "component",
+      "summary": "Comisuras caídas, cejas internas elevadas, mirada baja y lágrimas.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.sad"
+      }
+    },
+    {
+      "id": "expressions.worry",
+      "name": "expressions.worry",
+      "label": "expressions.worry",
+      "kind": "component",
+      "summary": "Tensión, cejas oblicuas y gota de sudor.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.worry"
+      }
+    },
+    {
+      "id": "expressions.surprise",
+      "name": "expressions.surprise",
+      "label": "expressions.surprise",
+      "kind": "component",
+      "summary": "Ojos grandes, cejas altas y boca redonda.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.surprise"
+      }
+    },
+    {
+      "id": "expressions.shock",
+      "name": "expressions.shock",
+      "label": "expressions.shock",
+      "kind": "component",
+      "summary": "Ojos muy abiertos, pupilas pequeñas y mandíbula caída.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.shock"
+      }
+    },
+    {
+      "id": "expressions.annoyed",
+      "name": "expressions.annoyed",
+      "label": "expressions.annoyed",
+      "kind": "component",
+      "summary": "Cejas hacia el centro y párpados superiores bajos.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.annoyed"
+      }
+    },
+    {
+      "id": "expressions.skeptical",
+      "name": "expressions.skeptical",
+      "label": "expressions.skeptical",
+      "kind": "component",
+      "summary": "Un ojo entrecerrado y una ceja levantada.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.skeptical"
+      }
+    },
+    {
+      "id": "expressions.shy",
+      "name": "expressions.shy",
+      "label": "expressions.shy",
+      "kind": "component",
+      "summary": "Mirada baja, sonrisa pequeña y rubor.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.shy"
+      }
+    },
+    {
+      "id": "expressions.love",
+      "name": "expressions.love",
+      "label": "expressions.love",
+      "kind": "component",
+      "summary": "Pupilas de corazón, mejillas rosadas y sonrisa.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.love"
+      }
+    },
+    {
+      "id": "expressions.think",
+      "name": "expressions.think",
+      "label": "expressions.think",
+      "kind": "component",
+      "summary": "Mirada arriba y al lado; boca y cejas asimétricas.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Mezcla desde neutral.",
+          "doc": "Mezcla desde neutral."
+        },
+        "eyeScale": {
+          "type": "number",
+          "min": 0.7,
+          "max": 1.4,
+          "default": 1,
+          "summary": "Multiplicador del tamaño expresivo.",
+          "doc": "Multiplicador del tamaño expresivo."
+        },
+        "mix.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Mezcla entre dos expresiones; ver VIDA.md.",
+          "doc": "Mezcla entre dos expresiones; ver VIDA.md."
+        },
+        "blink": {
+          "type": "boolean|number|string",
+          "default": "auto",
+          "min": 0,
+          "max": 1,
+          "enum": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ],
+          "values": [
+            "auto",
+            "off",
+            false,
+            0,
+            1
+          ]
+        },
+        "lookAt": {
+          "type": "point|null",
+          "default": null,
+          "units": "world pixels"
+        },
+        "closeUp": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "expressions.think"
+      }
+    },
+    {
+      "id": "visemes.X",
+      "name": "visemes.X",
+      "label": "visemes.X",
+      "kind": "component",
+      "summary": "Boca cerrada de reposo.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.X"
+      }
+    },
+    {
+      "id": "visemes.A",
+      "name": "visemes.A",
+      "label": "visemes.A",
+      "kind": "component",
+      "summary": "Vocal abierta con lengua.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.A"
+      }
+    },
+    {
+      "id": "visemes.E",
+      "name": "visemes.E",
+      "label": "visemes.E",
+      "kind": "component",
+      "summary": "Vocal ancha con dientes.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.E"
+      }
+    },
+    {
+      "id": "visemes.I",
+      "name": "visemes.I",
+      "label": "visemes.I",
+      "kind": "component",
+      "summary": "Vocal estirada de apertura pequeña.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.I"
+      }
+    },
+    {
+      "id": "visemes.O",
+      "name": "visemes.O",
+      "label": "visemes.O",
+      "kind": "component",
+      "summary": "Vocal redondeada amplia.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.O"
+      }
+    },
+    {
+      "id": "visemes.U",
+      "name": "visemes.U",
+      "label": "visemes.U",
+      "kind": "component",
+      "summary": "Vocal redondeada estrecha.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.U"
+      }
+    },
+    {
+      "id": "visemes.MBP",
+      "name": "visemes.MBP",
+      "label": "visemes.MBP",
+      "kind": "component",
+      "summary": "Labios en contacto.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.MBP"
+      }
+    },
+    {
+      "id": "visemes.FV",
+      "name": "visemes.FV",
+      "label": "visemes.FV",
+      "kind": "component",
+      "summary": "Incisivos sobre el labio inferior.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.FV"
+      }
+    },
+    {
+      "id": "visemes.L",
+      "name": "visemes.L",
+      "label": "visemes.L",
+      "kind": "component",
+      "summary": "Lengua elevada; también r/n/d/t.",
+      "tags": [],
+      "params": {
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Energía de la apertura; cero cierra la boca.",
+          "doc": "Energía de la apertura; cero cierra la boca."
+        },
+        "speechWeight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1,
+          "summary": "Peso sobre la boca de expresión.",
+          "doc": "Peso sobre la boca de expresión."
+        },
+        "viseme.mix": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "summary": "Interpolación smoothstep entre from y to.",
+          "doc": "Interpolación smoothstep entre from y to."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "visemes.L"
+      }
+    },
+    {
+      "id": "hands.open",
+      "name": "hands.open",
+      "label": "hands.open",
+      "kind": "component",
+      "summary": "Mitón relajado con pulgar.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "open",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.open"
+      }
+    },
+    {
+      "id": "hands.fist",
+      "name": "hands.fist",
+      "label": "hands.fist",
+      "kind": "component",
+      "summary": "Puño cerrado.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "fist",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.fist"
+      }
+    },
+    {
+      "id": "hands.point",
+      "name": "hands.point",
+      "label": "hands.point",
+      "kind": "component",
+      "summary": "Índice extendido.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "point",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.point"
+      }
+    },
+    {
+      "id": "hands.thumb",
+      "name": "hands.thumb",
+      "label": "hands.thumb",
+      "kind": "component",
+      "summary": "Pulgar arriba.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "thumb",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.thumb"
+      }
+    },
+    {
+      "id": "hands.hold",
+      "name": "hands.hold",
+      "label": "hands.hold",
+      "kind": "component",
+      "summary": "Pinza curva para un objeto.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "hold",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.hold"
+      }
+    },
+    {
+      "id": "hands.wave",
+      "name": "hands.wave",
+      "label": "hands.wave",
+      "kind": "component",
+      "summary": "Palma abierta con dedos separados.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "wave",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.wave"
+      }
+    },
+    {
+      "id": "hands.flat",
+      "name": "hands.flat",
+      "label": "hands.flat",
+      "kind": "component",
+      "summary": "Mano plana extendida.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "flat",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.flat"
+      }
+    },
+    {
+      "id": "hands.two",
+      "name": "hands.two",
+      "label": "hands.two",
+      "kind": "component",
+      "summary": "Dos dedos para contar.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "two",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.two"
+      }
+    },
+    {
+      "id": "hands.three",
+      "name": "hands.three",
+      "label": "hands.three",
+      "kind": "component",
+      "summary": "Tres dedos para contar.",
+      "tags": [],
+      "params": {
+        "handShapes.right": {
+          "type": "string",
+          "enum": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ],
+          "default": "three",
+          "values": [
+            "open",
+            "fist",
+            "point",
+            "thumb",
+            "hold",
+            "wave",
+            "flat",
+            "two",
+            "three"
+          ]
+        },
+        "handAngles.right": {
+          "type": "number|null",
+          "min": -3.141592653589793,
+          "max": 3.141592653589793,
+          "default": null,
+          "summary": "Radianes; null sigue el antebrazo.",
+          "doc": "Radianes; null sigue el antebrazo."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hands.three"
+      }
+    },
+    {
+      "id": "hair.spiky",
+      "name": "hair.spiky",
+      "label": "hair.spiky",
+      "kind": "component",
+      "summary": "Mechones castaños en punta y sombra plana.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#61412c"
+        },
+        "secondary.at": {
+          "type": "number",
+          "min": 0,
+          "max": 7200,
+          "default": 0,
+          "summary": "Instante del impulso.",
+          "doc": "Instante del impulso."
+        },
+        "secondary.amplitude": {
+          "type": "number",
+          "min": -0.6,
+          "max": 0.6,
+          "default": 0.15,
+          "summary": "Desplazamiento angular inicial.",
+          "doc": "Desplazamiento angular inicial."
+        },
+        "secondary.frequency": {
+          "type": "number",
+          "min": 0.1,
+          "max": 8,
+          "default": 2.6,
+          "summary": "Frecuencia natural en Hz.",
+          "doc": "Frecuencia natural en Hz."
+        },
+        "secondary.damping": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.48,
+          "summary": "Amortiguación.",
+          "doc": "Amortiguación."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hair.spiky"
+      }
+    },
+    {
+      "id": "hair.ponytail",
+      "name": "hair.ponytail",
+      "label": "hair.ponytail",
+      "kind": "component",
+      "summary": "Coleta larga con moño; movimiento secundario.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#493331"
+        },
+        "secondary.at": {
+          "type": "number",
+          "min": 0,
+          "max": 7200,
+          "default": 0,
+          "summary": "Instante del impulso.",
+          "doc": "Instante del impulso."
+        },
+        "secondary.amplitude": {
+          "type": "number",
+          "min": -0.6,
+          "max": 0.6,
+          "default": 0.15,
+          "summary": "Desplazamiento angular inicial.",
+          "doc": "Desplazamiento angular inicial."
+        },
+        "secondary.frequency": {
+          "type": "number",
+          "min": 0.1,
+          "max": 8,
+          "default": 2.6,
+          "summary": "Frecuencia natural en Hz.",
+          "doc": "Frecuencia natural en Hz."
+        },
+        "secondary.damping": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.48,
+          "summary": "Amortiguación.",
+          "doc": "Amortiguación."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hair.ponytail"
+      }
+    },
+    {
+      "id": "hair.curly",
+      "name": "hair.curly",
+      "label": "hair.curly",
+      "kind": "component",
+      "summary": "Rulos cortos con una sola silueta continua.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#3c3033"
+        },
+        "secondary.at": {
+          "type": "number",
+          "min": 0,
+          "max": 7200,
+          "default": 0,
+          "summary": "Instante del impulso.",
+          "doc": "Instante del impulso."
+        },
+        "secondary.amplitude": {
+          "type": "number",
+          "min": -0.6,
+          "max": 0.6,
+          "default": 0.15,
+          "summary": "Desplazamiento angular inicial.",
+          "doc": "Desplazamiento angular inicial."
+        },
+        "secondary.frequency": {
+          "type": "number",
+          "min": 0.1,
+          "max": 8,
+          "default": 2.6,
+          "summary": "Frecuencia natural en Hz.",
+          "doc": "Frecuencia natural en Hz."
+        },
+        "secondary.damping": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.48,
+          "summary": "Amortiguación.",
+          "doc": "Amortiguación."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hair.curly"
+      }
+    },
+    {
+      "id": "hair.buzz",
+      "name": "hair.buzz",
+      "label": "hair.buzz",
+      "kind": "component",
+      "summary": "Pelo rapado, compatible con gorra.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#493b37"
+        },
+        "secondary.at": {
+          "type": "number",
+          "min": 0,
+          "max": 7200,
+          "default": 0,
+          "summary": "Instante del impulso.",
+          "doc": "Instante del impulso."
+        },
+        "secondary.amplitude": {
+          "type": "number",
+          "min": -0.6,
+          "max": 0.6,
+          "default": 0.15,
+          "summary": "Desplazamiento angular inicial.",
+          "doc": "Desplazamiento angular inicial."
+        },
+        "secondary.frequency": {
+          "type": "number",
+          "min": 0.1,
+          "max": 8,
+          "default": 2.6,
+          "summary": "Frecuencia natural en Hz.",
+          "doc": "Frecuencia natural en Hz."
+        },
+        "secondary.damping": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.48,
+          "summary": "Amortiguación.",
+          "doc": "Amortiguación."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "hair.buzz"
+      }
+    },
+    {
+      "id": "outfits.tshirt",
+      "name": "outfits.tshirt",
+      "label": "outfits.tshirt",
+      "kind": "component",
+      "summary": "Camiseta de manga corta.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#f3cc5d"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#d9ac45"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "outfits.tshirt"
+      }
+    },
+    {
+      "id": "outfits.hoodie",
+      "name": "outfits.hoodie",
+      "label": "outfits.hoodie",
+      "kind": "component",
+      "summary": "Buzo con capucha, abertura, cordones y bolsillo canguro.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#efefea"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#c6d1d6"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "outfits.hoodie"
+      }
+    },
+    {
+      "id": "outfits.dress",
+      "name": "outfits.dress",
+      "label": "outfits.dress",
+      "kind": "component",
+      "summary": "Vestido de manga corta con falda acampanada.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#cbb6e4"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#ae93c9"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "outfits.dress"
+      }
+    },
+    {
+      "id": "outfits.skirt",
+      "name": "outfits.skirt",
+      "label": "outfits.skirt",
+      "kind": "component",
+      "summary": "Camiseta con falda.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#cbb6e4"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#ae93c9"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "outfits.skirt"
+      }
+    },
+    {
+      "id": "outfits.pants",
+      "name": "outfits.pants",
+      "label": "outfits.pants",
+      "kind": "component",
+      "summary": "Camiseta y pantalones articulados.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#cbb6e4"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#ae93c9"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "outfits.pants"
+      }
+    },
+    {
+      "id": "outfits.apron",
+      "name": "outfits.apron",
+      "label": "outfits.apron",
+      "kind": "component",
+      "summary": "Blusa y delantal con bolsillo.",
+      "tags": [],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "#6aa99a"
+        },
+        "shadow": {
+          "type": "color",
+          "default": "#4b8379"
+        },
+        "body.width": {
+          "type": "number",
+          "min": 0.8,
+          "max": 1.25,
+          "default": 1,
+          "summary": "Ancho relativo; se estrecha al girar.",
+          "doc": "Ancho relativo; se estrecha al girar."
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "outfits.apron"
+      }
+    },
+    {
+      "id": "actions.idle",
+      "name": "actions.idle",
+      "label": "actions.idle",
+      "kind": "action",
+      "summary": "Acción del personaje: idle.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.idle"
+      }
+    },
+    {
+      "id": "actions.walk",
+      "name": "actions.walk",
+      "label": "actions.walk",
+      "kind": "action",
+      "summary": "Acción del personaje: walk.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        },
+        "speed": {
+          "type": "number",
+          "min": 0.1,
+          "max": 3,
+          "default": 1
+        },
+        "ease": {
+          "type": "string",
+          "enum": [
+            "smooth",
+            "smoother",
+            "linear"
+          ],
+          "default": "smooth",
+          "values": [
+            "smooth",
+            "smoother",
+            "linear"
+          ]
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "summary": "Vista final: hereda la vista del plano si se omite.",
+          "doc": "Vista final: hereda la vista del plano si se omite.",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "spacing": {
+          "type": "number",
+          "min": 0,
+          "max": 2,
+          "default": 1.15
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.walk"
+      }
+    },
+    {
+      "id": "actions.stop",
+      "name": "actions.stop",
+      "label": "actions.stop",
+      "kind": "action",
+      "summary": "Acción del personaje: stop.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "breath": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.stop"
+      }
+    },
+    {
+      "id": "actions.talk",
+      "name": "actions.talk",
+      "label": "actions.talk",
+      "kind": "action",
+      "summary": "Acción del personaje: talk.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "intent": {
+          "type": "string",
+          "enum": [
+            "explain",
+            "ask",
+            "exclaim",
+            "deny",
+            "whisper",
+            "list"
+          ],
+          "default": "explain",
+          "values": [
+            "explain",
+            "ask",
+            "exclaim",
+            "deny",
+            "whisper",
+            "list"
+          ]
+        },
+        "line": {
+          "type": "string",
+          "required": true
+        },
+        "face": {
+          "type": "string"
+        },
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.talk"
+      }
+    },
+    {
+      "id": "actions.listen",
+      "name": "actions.listen",
+      "label": "actions.listen",
+      "kind": "action",
+      "summary": "Acción del personaje: listen.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        },
+        "line": {
+          "type": "string"
+        },
+        "reactions": {
+          "type": "array"
+        },
+        "react": {
+          "type": "reaction"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.listen"
+      }
+    },
+    {
+      "id": "actions.react",
+      "name": "actions.react",
+      "label": "actions.react",
+      "kind": "action",
+      "summary": "Acción del personaje: react.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "surprise",
+            "laugh",
+            "shy",
+            "worry",
+            "annoyed",
+            "relief",
+            "shock"
+          ],
+          "default": "surprise",
+          "required": true,
+          "values": [
+            "surprise",
+            "laugh",
+            "shy",
+            "worry",
+            "annoyed",
+            "relief",
+            "shock"
+          ]
+        },
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.react"
+      }
+    },
+    {
+      "id": "actions.look",
+      "name": "actions.look",
+      "label": "actions.look",
+      "kind": "action",
+      "summary": "Acción del personaje: look.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.look"
+      }
+    },
+    {
+      "id": "actions.point",
+      "name": "actions.point",
+      "label": "actions.point",
+      "kind": "action",
+      "summary": "Acción del personaje: point.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.point"
+      }
+    },
+    {
+      "id": "actions.turn",
+      "name": "actions.turn",
+      "label": "actions.turn",
+      "kind": "action",
+      "summary": "Acción del personaje: turn.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "default": "front",
+          "required": true,
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.turn"
+      }
+    },
+    {
+      "id": "actions.wave",
+      "name": "actions.wave",
+      "label": "actions.wave",
+      "kind": "action",
+      "summary": "Acción del personaje: wave.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.wave"
+      }
+    },
+    {
+      "id": "actions.cross-arms",
+      "name": "actions.cross-arms",
+      "label": "actions.cross-arms",
+      "kind": "action",
+      "summary": "Acción del personaje: cross-arms.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.cross-arms"
+      }
+    },
+    {
+      "id": "actions.hands-hips",
+      "name": "actions.hands-hips",
+      "label": "actions.hands-hips",
+      "kind": "action",
+      "summary": "Acción del personaje: hands-hips.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.hands-hips"
+      }
+    },
+    {
+      "id": "actions.touch-head",
+      "name": "actions.touch-head",
+      "label": "actions.touch-head",
+      "kind": "action",
+      "summary": "Acción del personaje: touch-head.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.touch-head"
+      }
+    },
+    {
+      "id": "actions.sit",
+      "name": "actions.sit",
+      "label": "actions.sit",
+      "kind": "action",
+      "summary": "Acción del personaje: sit.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "seat": {
+          "type": "target",
+          "required": true
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ],
+          "summary": "Default: 3q hacia el interlocutor según facing del asiento.",
+          "doc": "Default: 3q hacia el interlocutor según facing del asiento.",
+          "values": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.sit"
+      }
+    },
+    {
+      "id": "actions.stand",
+      "name": "actions.stand",
+      "label": "actions.stand",
+      "kind": "action",
+      "summary": "Acción del personaje: stand.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "seat": {
+          "type": "target"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.stand"
+      }
+    },
+    {
+      "id": "actions.pick",
+      "name": "actions.pick",
+      "label": "actions.pick",
+      "kind": "action",
+      "summary": "Acción del personaje: pick.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.pick"
+      }
+    },
+    {
+      "id": "actions.take",
+      "name": "actions.take",
+      "label": "actions.take",
+      "kind": "action",
+      "summary": "Acción del personaje: take.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.take"
+      }
+    },
+    {
+      "id": "actions.hold",
+      "name": "actions.hold",
+      "label": "actions.hold",
+      "kind": "action",
+      "summary": "Acción del personaje: hold.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        },
+        "carry": {
+          "type": "string",
+          "enum": [
+            "side",
+            "chest",
+            "front",
+            "behind"
+          ],
+          "default": "side",
+          "values": [
+            "side",
+            "chest",
+            "front",
+            "behind"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.hold"
+      }
+    },
+    {
+      "id": "actions.give",
+      "name": "actions.give",
+      "label": "actions.give",
+      "kind": "action",
+      "summary": "Acción del personaje: give.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.give"
+      }
+    },
+    {
+      "id": "actions.put",
+      "name": "actions.put",
+      "label": "actions.put",
+      "kind": "action",
+      "summary": "Acción del personaje: put.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.put"
+      }
+    },
+    {
+      "id": "actions.wear",
+      "name": "actions.wear",
+      "label": "actions.wear",
+      "kind": "action",
+      "summary": "Acción del personaje: wear.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.wear"
+      }
+    },
+    {
+      "id": "actions.unwear",
+      "name": "actions.unwear",
+      "label": "actions.unwear",
+      "kind": "action",
+      "summary": "Acción del personaje: unwear.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.unwear"
+      }
+    },
+    {
+      "id": "actions.stow",
+      "name": "actions.stow",
+      "label": "actions.stow",
+      "kind": "action",
+      "summary": "Acción del personaje: stow.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.stow"
+      }
+    },
+    {
+      "id": "actions.unstow",
+      "name": "actions.unstow",
+      "label": "actions.unstow",
+      "kind": "action",
+      "summary": "Acción del personaje: unstow.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "to": {
+          "type": "target"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "hug": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.unstow"
+      }
+    },
+    {
+      "id": "actions.highfive",
+      "name": "actions.highfive",
+      "label": "actions.highfive",
+      "kind": "action",
+      "summary": "Acción del personaje: highfive.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "to": {
+          "type": "target",
+          "required": true
+        },
+        "recipientHand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "left",
+          "values": [
+            "left",
+            "right"
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.highfive"
+      }
+    },
+    {
+      "id": "actions.eat",
+      "name": "actions.eat",
+      "label": "actions.eat",
+      "kind": "action",
+      "summary": "Acción del personaje: eat.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string"
+        },
+        "item": {
+          "type": "string",
+          "summary": "Alias de object; cuchara con plate u objeto de mano.",
+          "doc": "Alias de object; cuchara con plate u objeto de mano."
+        },
+        "plate": {
+          "type": "string"
+        },
+        "cycles": {
+          "type": "number",
+          "min": 1,
+          "max": 8,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.eat"
+      }
+    },
+    {
+      "id": "actions.gesture",
+      "name": "actions.gesture",
+      "label": "actions.gesture",
+      "kind": "action",
+      "summary": "Acción del personaje: gesture.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "shrug",
+            "open-arms",
+            "facepalm",
+            "count-fingers",
+            "thumbs-up",
+            "nod",
+            "shake-head"
+          ],
+          "default": "shrug",
+          "required": true,
+          "values": [
+            "shrug",
+            "open-arms",
+            "facepalm",
+            "count-fingers",
+            "thumbs-up",
+            "nod",
+            "shake-head"
+          ]
+        },
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.gesture"
+      }
+    },
+    {
+      "id": "actions.fx",
+      "name": "actions.fx",
+      "label": "actions.fx",
+      "kind": "action",
+      "summary": "Acción del personaje: fx.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "shock",
+            "?",
+            "!",
+            "sweat",
+            "blush",
+            "tears",
+            "sparkle",
+            "hearts",
+            "motion"
+          ],
+          "default": "shock",
+          "required": true,
+          "values": [
+            "shock",
+            "?",
+            "!",
+            "sweat",
+            "blush",
+            "tears",
+            "sparkle",
+            "hearts",
+            "motion"
+          ]
+        },
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ]
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.fx"
+      }
+    },
+    {
+      "id": "actions.open",
+      "name": "actions.open",
+      "label": "actions.open",
+      "kind": "action",
+      "summary": "Acción del personaje: open.",
+      "tags": [],
+      "params": {
+        "hand": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "default": "right",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "fade": {
+          "type": "number",
+          "min": 0.04,
+          "max": 1,
+          "default": 0.18
+        },
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "amount": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "actions.open"
+      }
+    },
+    {
+      "id": "props.backpack",
+      "name": "props.backpack",
+      "label": "props.backpack",
+      "kind": "component",
+      "summary": "Objeto: backpack.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 110
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 155
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.backpack"
+      }
+    },
+    {
+      "id": "props.notebook",
+      "name": "props.notebook",
+      "label": "props.notebook",
+      "kind": "component",
+      "summary": "Objeto: notebook.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 108
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 138
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.notebook"
+      }
+    },
+    {
+      "id": "props.icecream",
+      "name": "props.icecream",
+      "label": "props.icecream",
+      "kind": "component",
+      "summary": "Objeto: icecream.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 62
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 120
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.icecream"
+      }
+    },
+    {
+      "id": "props.phone",
+      "name": "props.phone",
+      "label": "props.phone",
+      "kind": "component",
+      "summary": "Objeto: phone.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 50
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 90
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.phone"
+      }
+    },
+    {
+      "id": "props.spoon",
+      "name": "props.spoon",
+      "label": "props.spoon",
+      "kind": "component",
+      "summary": "Objeto: spoon.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 23
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 92
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.spoon"
+      }
+    },
+    {
+      "id": "props.plate",
+      "name": "props.plate",
+      "label": "props.plate",
+      "kind": "component",
+      "summary": "Objeto: plate.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 115
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 35
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.plate"
+      }
+    },
+    {
+      "id": "props.cup",
+      "name": "props.cup",
+      "label": "props.cup",
+      "kind": "component",
+      "summary": "Objeto: cup.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 64
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 75
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.cup"
+      }
+    },
+    {
+      "id": "props.school-gate",
+      "name": "props.school-gate",
+      "label": "props.school-gate",
+      "kind": "component",
+      "summary": "Objeto: school-gate.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 300
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 400
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.school-gate"
+      }
+    },
+    {
+      "id": "props.desk",
+      "name": "props.desk",
+      "label": "props.desk",
+      "kind": "component",
+      "summary": "Objeto: desk.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 220
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 280
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.desk"
+      }
+    },
+    {
+      "id": "props.counter",
+      "name": "props.counter",
+      "label": "props.counter",
+      "kind": "component",
+      "summary": "Objeto: counter.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 360
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 220
+        },
+        "color": {
+          "type": "color",
+          "default": "#f0bd8d"
+        },
+        "topColor": {
+          "type": "color",
+          "default": "#f7dcc0"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.counter"
+      }
+    },
+    {
+      "id": "props.chair",
+      "name": "props.chair",
+      "label": "props.chair",
+      "kind": "component",
+      "summary": "Objeto: chair.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 155
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 300
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.chair"
+      }
+    },
+    {
+      "id": "props.bench",
+      "name": "props.bench",
+      "label": "props.bench",
+      "kind": "component",
+      "summary": "Objeto: bench.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 440
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 300
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.bench"
+      }
+    },
+    {
+      "id": "props.table",
+      "name": "props.table",
+      "label": "props.table",
+      "kind": "component",
+      "summary": "Objeto: table.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 450
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 280
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.table"
+      }
+    },
+    {
+      "id": "props.door",
+      "name": "props.door",
+      "label": "props.door",
+      "kind": "component",
+      "summary": "Objeto: door.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 250
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 600
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.door"
+      }
+    },
+    {
+      "id": "props.lamp",
+      "name": "props.lamp",
+      "label": "props.lamp",
+      "kind": "component",
+      "summary": "Objeto: lamp.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 130
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 440
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.lamp"
+      }
+    },
+    {
+      "id": "props.plant",
+      "name": "props.plant",
+      "label": "props.plant",
+      "kind": "component",
+      "summary": "Objeto: plant.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 145
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 220
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.plant"
+      }
+    },
+    {
+      "id": "props.wall-clock",
+      "name": "props.wall-clock",
+      "label": "props.wall-clock",
+      "kind": "component",
+      "summary": "Objeto: wall-clock.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 94
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 94
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.wall-clock"
+      }
+    },
+    {
+      "id": "props.frame",
+      "name": "props.frame",
+      "label": "props.frame",
+      "kind": "component",
+      "summary": "Objeto: frame.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 150
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 120
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.frame"
+      }
+    },
+    {
+      "id": "props.shelf",
+      "name": "props.shelf",
+      "label": "props.shelf",
+      "kind": "component",
+      "summary": "Objeto: shelf.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 210
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 80
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.shelf"
+      }
+    },
+    {
+      "id": "props.rug",
+      "name": "props.rug",
+      "label": "props.rug",
+      "kind": "component",
+      "summary": "Objeto: rug.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 460
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 100
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.rug"
+      }
+    },
+    {
+      "id": "props.poster",
+      "name": "props.poster",
+      "label": "props.poster",
+      "kind": "component",
+      "summary": "Objeto: poster.",
+      "tags": [],
+      "params": {
+        "w": {
+          "type": "number",
+          "min": 10,
+          "max": 800,
+          "default": 150
+        },
+        "h": {
+          "type": "number",
+          "min": 10,
+          "max": 900,
+          "default": 210
+        },
+        "color": {
+          "type": "color",
+          "default": "#cba383"
+        },
+        "open": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0
+        },
+        "seatY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 816
+        },
+        "surfaceY": {
+          "type": "number",
+          "min": 0,
+          "max": 1024,
+          "default": 675
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "props.poster"
+      }
+    },
+    {
+      "id": "sets.aula",
+      "name": "sets.aula",
+      "label": "sets.aula",
+      "kind": "set",
+      "summary": "Escenario: Aula · luz de día.",
+      "tags": [],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 560
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sets.aula"
+      }
+    },
+    {
+      "id": "sets.casa-comedor",
+      "name": "sets.casa-comedor",
+      "label": "sets.casa-comedor",
+      "kind": "set",
+      "summary": "Escenario: Casa · comedor de noche.",
+      "tags": [],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 560
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sets.casa-comedor"
+      }
+    },
+    {
+      "id": "sets.escuela-entrada",
+      "name": "sets.escuela-entrada",
+      "label": "sets.escuela-entrada",
+      "kind": "set",
+      "summary": "Escenario: Escuela · entrada por la mañana.",
+      "tags": [],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 560
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sets.escuela-entrada"
+      }
+    },
+    {
+      "id": "sets.heladeria",
+      "name": "sets.heladeria",
+      "label": "sets.heladeria",
+      "kind": "set",
+      "summary": "Escenario: Heladería · mañana soleada.",
+      "tags": [],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 400
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sets.heladeria"
+      }
+    },
+    {
+      "id": "sets.parque",
+      "name": "sets.parque",
+      "label": "sets.parque",
+      "kind": "set",
+      "summary": "Escenario: Parque · tarde dorada.",
+      "tags": [],
+      "params": {
+        "floorY": {
+          "type": "number",
+          "min": 700,
+          "max": 1000,
+          "default": 960
+        },
+        "charHeight": {
+          "type": "number",
+          "min": 200,
+          "max": 1000,
+          "default": 560
+        },
+        "walk": {
+          "type": "range",
+          "default": [
+            140,
+            1396
+          ]
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sets.parque"
+      }
+    },
+    {
+      "id": "shots.wide",
+      "name": "shots.wide",
+      "label": "shots.wide",
+      "kind": "component",
+      "summary": "Plano de cámara: wide.",
+      "tags": [],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "shots.wide"
+      }
+    },
+    {
+      "id": "shots.two",
+      "name": "shots.two",
+      "label": "shots.two",
+      "kind": "component",
+      "summary": "Plano de cámara: two.",
+      "tags": [],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "shots.two"
+      }
+    },
+    {
+      "id": "shots.medium",
+      "name": "shots.medium",
+      "label": "shots.medium",
+      "kind": "component",
+      "summary": "Plano de cámara: medium.",
+      "tags": [],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "shots.medium"
+      }
+    },
+    {
+      "id": "shots.close",
+      "name": "shots.close",
+      "label": "shots.close",
+      "kind": "component",
+      "summary": "Plano de cámara: close.",
+      "tags": [],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "shots.close"
+      }
+    },
+    {
+      "id": "shots.insert",
+      "name": "shots.insert",
+      "label": "shots.insert",
+      "kind": "component",
+      "summary": "Plano de cámara: insert.",
+      "tags": [],
+      "params": {
+        "move": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ],
+          "default": "fixed",
+          "values": [
+            "fixed",
+            "follow",
+            "dolly",
+            "pan",
+            "punch",
+            "move",
+            "push",
+            "pull",
+            "drift",
+            "track",
+            "reveal",
+            "hold",
+            "whip"
+          ]
+        },
+        "ease": {
+          "type": "curve",
+          "names": [
+            "smooth",
+            "smoother",
+            "linear",
+            "gentle",
+            "ease-in-out",
+            "ease-in",
+            "ease-out"
+          ],
+          "bezier": "[x1,y1,x2,y2] monótona en [0,1]",
+          "default": "smoother"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ],
+          "default": "cut",
+          "values": [
+            "cut",
+            "move",
+            "whip",
+            "dissolve"
+          ]
+        },
+        "zoomFrom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "zoomTo": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "fromTarget": {
+          "type": "string",
+          "summary": "Pan continuo desde este objetivo hacia target.",
+          "doc": "Pan continuo desde este objetivo hacia target."
+        },
+        "zoom": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "locked": {
+          "type": "boolean",
+          "default": false,
+          "summary": "Fija el override; two sin locked permite cobertura del director.",
+          "doc": "Fija el override; two sin locked permite cobertura del director."
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true,
+          "summary": "false conserva explícitamente el recorte del override; locked no desactiva fit.",
+          "doc": "false conserva explícitamente el recorte del override; locked no desactiva fit."
+        },
+        "lens": {
+          "type": "number",
+          "min": 0.5,
+          "max": 3
+        },
+        "ramp": {
+          "type": "number",
+          "min": 0.001,
+          "max": 120
+        },
+        "settle": {
+          "type": "number",
+          "min": 0,
+          "max": 30
+        },
+        "hold": {
+          "type": "number",
+          "min": 0,
+          "max": 120
+        },
+        "headroom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "leadRoom": {
+          "type": "number",
+          "min": 0,
+          "max": 0.35
+        },
+        "eyeLine": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.8
+        },
+        "amount": {
+          "type": "number",
+          "min": 0.01,
+          "max": 0.2
+        },
+        "handheld": {
+          "type": "number",
+          "min": 0,
+          "max": 1
+        },
+        "from": {
+          "type": "object",
+          "summary": "zoom/offset/target iniciales",
+          "doc": "zoom/offset/target iniciales"
+        },
+        "to": {
+          "type": "object",
+          "summary": "zoom/offset/target finales",
+          "doc": "zoom/offset/target finales"
+        },
+        "preset": {
+          "enum": [
+            "natural",
+            "tercios",
+            "retrato"
+          ],
+          "values": [
+            "natural",
+            "tercios",
+            "retrato"
+          ]
+        },
+        "thirds": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "shots.insert"
+      }
+    },
+    {
+      "id": "fx.shock",
+      "name": "fx.shock",
+      "label": "fx.shock",
+      "kind": "component",
+      "summary": "Efecto expresivo: shock.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.shock"
+      }
+    },
+    {
+      "id": "fx.symbol-question",
+      "name": "fx.?",
+      "label": "fx.?",
+      "kind": "component",
+      "summary": "Efecto expresivo: ?.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.?"
+      }
+    },
+    {
+      "id": "fx.symbol-exclamation",
+      "name": "fx.!",
+      "label": "fx.!",
+      "kind": "component",
+      "summary": "Efecto expresivo: !.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.!"
+      }
+    },
+    {
+      "id": "fx.sweat",
+      "name": "fx.sweat",
+      "label": "fx.sweat",
+      "kind": "component",
+      "summary": "Efecto expresivo: sweat.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.sweat"
+      }
+    },
+    {
+      "id": "fx.blush",
+      "name": "fx.blush",
+      "label": "fx.blush",
+      "kind": "component",
+      "summary": "Efecto expresivo: blush.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.blush"
+      }
+    },
+    {
+      "id": "fx.tears",
+      "name": "fx.tears",
+      "label": "fx.tears",
+      "kind": "component",
+      "summary": "Efecto expresivo: tears.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.tears"
+      }
+    },
+    {
+      "id": "fx.sparkle",
+      "name": "fx.sparkle",
+      "label": "fx.sparkle",
+      "kind": "component",
+      "summary": "Efecto expresivo: sparkle.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.sparkle"
+      }
+    },
+    {
+      "id": "fx.hearts",
+      "name": "fx.hearts",
+      "label": "fx.hearts",
+      "kind": "component",
+      "summary": "Efecto expresivo: hearts.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.hearts"
+      }
+    },
+    {
+      "id": "fx.motion",
+      "name": "fx.motion",
+      "label": "fx.motion",
+      "kind": "component",
+      "summary": "Efecto expresivo: motion.",
+      "tags": [],
+      "params": {
+        "intensity": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 1
+        },
+        "offset": {
+          "type": "point",
+          "default": [
+            0.19,
+            -0.14
+          ],
+          "units": "fracciones de altura del actor desde cabeza"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.25,
+          "max": 3,
+          "default": 1
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "fx.motion"
+      }
+    },
+    {
+      "id": "ui.subtitles",
+      "name": "ui.subtitles",
+      "label": "ui.subtitles",
+      "kind": "component",
+      "summary": "Texto en pantalla: subtitles.",
+      "tags": [],
+      "params": {
+        "maxWords": {
+          "type": "integer",
+          "min": 1,
+          "max": 3,
+          "default": 3
+        },
+        "x": {
+          "type": "number",
+          "min": 60,
+          "max": 1020,
+          "default": 540
+        },
+        "y": {
+          "type": "number",
+          "min": 1360,
+          "max": 1450,
+          "default": 1430
+        },
+        "size": {
+          "type": "number",
+          "min": 30,
+          "max": 110,
+          "default": 78
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "ui.subtitles"
+      }
+    },
+    {
+      "id": "ui.title",
+      "name": "ui.title",
+      "label": "ui.title",
+      "kind": "component",
+      "summary": "Texto en pantalla: title.",
+      "tags": [],
+      "params": {
+        "text": {
+          "type": "string"
+        },
+        "dur": {
+          "type": "number",
+          "min": 0.2,
+          "max": 10,
+          "default": 1.2
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "ui.title"
+      }
+    },
+    {
+      "id": "ui.end",
+      "name": "ui.end",
+      "label": "ui.end",
+      "kind": "component",
+      "summary": "Texto en pantalla: end.",
+      "tags": [],
+      "params": {
+        "text": {
+          "type": "string"
+        },
+        "dur": {
+          "type": "number",
+          "min": 0.2,
+          "max": 10,
+          "default": 1.5
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "ui.end"
+      }
+    },
+    {
+      "id": "castModes.offscreen",
+      "name": "castModes.offscreen",
+      "label": "castModes.offscreen",
+      "kind": "component",
+      "summary": "Voz sin cuerpo, listeners ni miradas; subtítulos en cursiva.",
+      "tags": [],
+      "params": {
+        "offscreen": {
+          "type": "boolean",
+          "default": false
+        },
+        "voice": {
+          "type": "string"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "castModes.offscreen"
+      }
+    },
+    {
+      "id": "sceneTransitions.cut",
+      "name": "sceneTransitions.cut",
+      "label": "sceneTransitions.cut",
+      "kind": "component",
+      "summary": "Transición entrante de dos cuadros completos, incluida UI; exige resources.createCanvas. No desplaza tiempo ni audio.",
+      "tags": [],
+      "params": {
+        "dur": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "exclusiveMinimum": true,
+          "default": 0.6
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sceneTransitions.cut"
+      }
+    },
+    {
+      "id": "sceneTransitions.fade",
+      "name": "sceneTransitions.fade",
+      "label": "sceneTransitions.fade",
+      "kind": "component",
+      "summary": "Transición entrante de dos cuadros completos, incluida UI; exige resources.createCanvas. No desplaza tiempo ni audio.",
+      "tags": [],
+      "params": {
+        "dur": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "exclusiveMinimum": true,
+          "default": 0.6
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sceneTransitions.fade"
+      }
+    },
+    {
+      "id": "sceneTransitions.wipe",
+      "name": "sceneTransitions.wipe",
+      "label": "sceneTransitions.wipe",
+      "kind": "component",
+      "summary": "Transición entrante de dos cuadros completos, incluida UI; exige resources.createCanvas. No desplaza tiempo ni audio.",
+      "tags": [],
+      "params": {
+        "dur": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "exclusiveMinimum": true,
+          "default": 0.6
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sceneTransitions.wipe"
+      }
+    },
+    {
+      "id": "sceneTransitions.dip-white",
+      "name": "sceneTransitions.dip-white",
+      "label": "sceneTransitions.dip-white",
+      "kind": "component",
+      "summary": "Transición entrante de dos cuadros completos, incluida UI; exige resources.createCanvas. No desplaza tiempo ni audio.",
+      "tags": [],
+      "params": {
+        "dur": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "exclusiveMinimum": true,
+          "default": 0.6
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "sceneTransitions.dip-white"
+      }
+    },
+    {
+      "id": "initialState.start",
+      "name": "initialState.start",
+      "label": "initialState.start",
+      "kind": "component",
+      "summary": "Estado en el primer cuadro, sin animación. Asigna dueño si no se declara; contradicciones son error.",
+      "tags": [],
+      "params": {
+        "seated": {
+          "type": "string",
+          "summary": "Ancla seat.",
+          "doc": "Ancla seat."
+        },
+        "holding": {
+          "type": "object",
+          "example": {
+            "right": {
+              "object": "cuaderno",
+              "carry": "chest",
+              "hug": true
+            }
+          }
+        },
+        "wearing": {
+          "type": "string",
+          "summary": "Id de mochila.",
+          "doc": "Id de mochila."
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "3q-left",
+            "3q-right",
+            "side-left",
+            "side-right"
+          ]
+        },
+        "expression": {
+          "type": "string"
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/_vida/showcase.html",
+      "data": {
+        "native_name": "initialState.start"
+      }
+    }
+  ]
+}

@@ -2,14 +2,10 @@ import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { mkdir, open, readFile, rename, unlink } from "node:fs/promises";
 import path from "node:path";
-import { profileDirectory } from "./storage-profile";
+import { profileWebDataDirectory } from "./storage-profile";
 
 function dataDirectory() {
-  const profile = profileDirectory();
-  return (
-    process.env.NEXA_WEB_DATA_DIR ||
-    (profile ? path.join(profile, "web-data") : path.join(process.cwd(), "data"))
-  );
+  return profileWebDataDirectory() || path.join(process.cwd(), "data");
 }
 function target(fileName: string) {
   if (path.basename(fileName) !== fileName || !/^[a-zA-Z0-9_.-]+$/.test(fileName))

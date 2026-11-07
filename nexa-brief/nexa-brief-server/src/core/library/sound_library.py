@@ -13,12 +13,14 @@ import uuid
 
 from pydantic import BaseModel, Field
 
-from src.config.exceptions import AssetNotFoundError
 from src.core.data import collection, files
 
 ApprovalStatus = Literal["pending", "approved", "rejected"]
 
 class SoundLibraryEntry(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     schema_version: int = 1
     asset_id: str
     category: str = "sound_effects"
@@ -47,18 +49,20 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 def get_sound(asset_id: str) -> SoundLibraryEntry:
-    raw = collection("sound_assets").get(asset_id)
-    if raw is None:
-        raise AssetNotFoundError(f"Sound asset_id '{asset_id}' not found in the local library.")
-    return SoundLibraryEntry(**raw)
+    from src.core.library.asset_library import get_entry
+    return get_entry("sound", asset_id)
+
 
 def resolve_sound_path(asset_id: str) -> Path:
-    return files("sounds").local_path(get_sound(asset_id).relative_path)
+    from src.core.library.asset_library import resolve_asset_path
+    return resolve_asset_path("sound", asset_id)
+
 
 def search_sounds(q: str | None = None, category: str | None = None, approved_only: bool = False) -> list[SoundLibraryEntry]:
-    from src.core.library.asset_library import search_assets
+    from src.core.library.asset_library import search_assets, resolve_asset_path
     entries = search_assets("sound", q=q, category=category)
-    return [e for e in entries if (not approved_only or e.approval_status == "approved") and files("sounds").local_path(e.relative_path).is_file()]
+    return [e for e in entries if (not approved_only or e.approval_status == "approved")
+            and resolve_asset_path("sound", e.asset_id).is_file()]
 
 async def register_sound(source_path: Path, *, title: str, description: str = "", recommended_uses: list[str] | None = None,
                          tags: str | list[str] = "", provider: str = "", provider_sound_id: str = "", original_url: str | None = None,
@@ -87,7 +91,12 @@ async def register_sound(source_path: Path, *, title: str, description: str = ""
                 candidate = entry.model_copy(update={"original_filename": source_path.name})
             else:
                 return entry
-        key = files("sounds").save(source_path, folder=candidate.category, filename=candidate.original_filename)
+        storage = files("sounds")
+        from src.config.profile_layout import layout_for_settings
+        from src.config.settings import settings
+        key = (storage.save_asset(source_path, asset_id=candidate.asset_id, filename=candidate.original_filename)
+               if layout_for_settings(settings).schema_version >= 3 and hasattr(storage, "save_asset") else
+               storage.save(source_path, folder=candidate.category, filename=candidate.original_filename))
         candidate = candidate.model_copy(update={"relative_path": key})
         try:
             await records.upsert(candidate.model_dump(), match=("asset_id",))
@@ -102,7 +111,6 @@ def find_sound_by_hash(content_hash: str) -> SoundLibraryEntry | None:
     return SoundLibraryEntry(**raw) if raw else None
 
 async def mark_sound_used(asset_id: str) -> SoundLibraryEntry:
-    updated = await collection("sound_assets").increment(asset_id, "usage_count", patch={"last_used_at": _now()})
-    if updated is None:
-        raise AssetNotFoundError(f"Sound asset_id '{asset_id}' not found in the local library.")
-    return SoundLibraryEntry(**updated)
+    from src.core.library.asset_library import touch_usage
+    await touch_usage(asset_id, "sound")
+    return get_sound(asset_id)

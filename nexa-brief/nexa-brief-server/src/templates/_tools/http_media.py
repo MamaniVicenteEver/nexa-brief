@@ -5,6 +5,29 @@ import http.server
 import os
 
 
+class ProfileContentMixin:
+    """Expose only template/content roots on local recorder servers."""
+
+    def translate_path(self, path):
+        from urllib.parse import unquote, urlsplit
+        from src.config.content_paths import resolve_content_key, is_private_content_key
+        from src.config.settings import settings
+        from src.config.profile_layout import layout_for_settings
+        try:
+            key = unquote(urlsplit(path).path).lstrip("/")
+            if is_private_content_key(key):
+                raise ValueError("Private file")
+            if layout_for_settings(settings).schema_version < 2:
+                return super().translate_path(path)
+            return str(resolve_content_key(key))
+        except ValueError:
+            return str(settings.templates_dir / ".not-found")
+
+    def list_directory(self, path):
+        self.send_error(403, "Directory listing disabled")
+        return None
+
+
 class MediaRequestHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *args, **kwargs):
         pass

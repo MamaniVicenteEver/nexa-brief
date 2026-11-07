@@ -201,7 +201,8 @@ async def describe_files(record: dict[str, Any]) -> list[dict[str, Any]]:
 # ── Metadatos por origen ─────────────────────────────────────────────────────
 
 def _pipeline_details(record: dict[str, Any], output_dir: Path | None) -> dict[str, Any]:
-    stats = _read_json(output_dir / "logs" / "07_grabacion_stats.json") if output_dir else {}
+    log_dir = Path(record["log_dir"]) if record.get("log_dir") else (output_dir / "logs" if output_dir else None)
+    stats = _read_json(log_dir / "07_grabacion_stats.json") if log_dir else {}
     manifest = _read_json(output_dir / "manifest.json") if output_dir else {}
     pass_seconds = [s for s in (stats.get("pass_seconds") or []) if isinstance(s, (int, float))]
     return {

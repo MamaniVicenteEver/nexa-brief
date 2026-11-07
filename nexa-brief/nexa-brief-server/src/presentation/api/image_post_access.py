@@ -35,6 +35,10 @@ def require_image_session(
 
 
 def _policy_path(data_dir: Path | None = None) -> Path:
+    from src.config.profile_layout import layout_for_settings
+    layout = layout_for_settings(settings)
+    if layout.schema_version >= 2 and (data_dir is None or Path(data_dir) == layout.data_dir):
+        return layout.connections_dir / "image-posts" / "access.json"
     return (data_dir or settings.data_dir) / "image_posts" / "access.json"
 
 

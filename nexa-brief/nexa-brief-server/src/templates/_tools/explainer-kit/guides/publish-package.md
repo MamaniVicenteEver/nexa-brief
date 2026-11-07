@@ -23,7 +23,7 @@ Las demás categorías siguen con
 - Reglas y límites (todas con números): `nexa-brief-server/src/skills/explainer/strategies/*/*.json`
   + el perfil de la categoría (`categories/node_tech.json`: anclas, estrategias de gancho preferidas,
   hashtags fijos). Fundamentos: `docs/investigaciones/paquete-publicacion-node-2026-10.md`.
-- Ejemplo completo y aprobado: `src/templates/nodetech/apolo-1202/publish.json`.
+- Ejemplo completo y aprobado: `src/templates/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/publish.json`.
 
 ## Cuándo y cómo
 

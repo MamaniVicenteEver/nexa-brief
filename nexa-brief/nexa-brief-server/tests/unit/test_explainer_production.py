@@ -419,7 +419,7 @@ async def test_routes_designs_options_and_files(api_client):
     opts = (await api_client.get("/api/v1/explainer/options")).json()
     assert {a["name"] for a in opts["agents"]} == {"claude", "codex"}
     # files: sirve el kit y las carpetas de categoría, nunca otras plantillas ni ocultos
-    assert await file_status("nodehistory/turing-enigma/index.html") == 200
+    assert await file_status("nodehistory/muro-de-berlin/index.html") == 200
     assert await file_status("nodemotion/lyrics/lyrics-neon/index.html") == 404
     assert await file_status("_tools/hyperframes/optimize.py") == 404
     assert await file_status("_tools/explainer-kit/engine/loader.js") == 200
@@ -459,22 +459,22 @@ def test_real_videos_live_in_category_folders():
     from src.core.explainer.catalog import TEMPLATES_DIR, list_videos
 
     videos = {v.video_id: v for v in list_videos()}
-    assert videos["apolo-1202"].path == TEMPLATES_DIR / "nodetech" / "apolo-1202"
-    assert videos["apolo-1202"].category_path == "node_tech"            # rough → NodeTech
-    assert videos["turing-enigma"].category_path == "node_history"      # binary → NodeHistory
+    assert videos["lo-que-le-contas-a-la-ia-no-es-privado-tus-chats"].path == TEMPLATES_DIR / "nodetech" / "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats"
+    assert videos["lo-que-le-contas-a-la-ia-no-es-privado-tus-chats"].category_path == "node_tech"            # rough → NodeTech
+    assert videos["muro-de-berlin"].category_path == "node_history"      # binary → NodeHistory
     assert videos["pop-demo"].demo and videos["pop-demo"].category_path == "node_history"
     # El catálogo también incluye producciones en progreso.
-    assert videos["apolo-1202"].ready and videos["turing-enigma"].ready
+    assert videos["lo-que-le-contas-a-la-ia-no-es-privado-tus-chats"].ready and videos["muro-de-berlin"].ready
 
 
 async def test_route_video_has_poster_and_texts(api_client):
     from src.core.explainer.catalog import TEMPLATES_DIR
 
     body = {v["video_id"]: v for v in (await api_client.get("/api/v1/explainer/videos")).json()}
-    apolo = body["apolo-1202"]
-    assert apolo["preview_url"] == "/api/v1/explainer/files/nodetech/apolo-1202/index.html"
-    assert apolo["poster_url"].startswith("/api/v1/explainer/files/nodetech/apolo-1202/render/poster.jpg?v=")
-    assert (TEMPLATES_DIR / "nodetech" / "apolo-1202" / "render" / "poster.jpg").is_file()
+    apolo = body["lo-que-le-contas-a-la-ia-no-es-privado-tus-chats"]
+    assert apolo["preview_url"] == "/api/v1/explainer/files/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/index.html"
+    assert apolo["poster_url"].startswith("/api/v1/explainer/files/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/render/poster.jpg?v=")
+    assert (TEMPLATES_DIR / "nodetech" / "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats" / "render" / "poster.jpg").is_file()
     assert apolo["facebook_title"] and apolo["tiktok_hashtags"] and apolo["design_name"] == "PROTOTIPO"
     assert body["acuarela-demo"]["demo"] is True
 
@@ -483,7 +483,7 @@ def test_kit_finds_videos_in_category_folders():
     import subprocess
     import sys
 
-    out = subprocess.run([sys.executable, "src/templates/_tools/explainer-kit/tools/kit.py", "status", "apolo-1202"],
+    out = subprocess.run([sys.executable, "src/templates/_tools/explainer-kit/tools/kit.py", "status", "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats"],
                          capture_output=True, text=True)
     assert out.returncode == 0 and "diseño rough" in out.stdout
 
@@ -503,16 +503,69 @@ async def test_route_design_groups_current_category_first(api_client):
     assert [d["design_id"] for d in groups[0]["designs"]] == ["rough"]
     assert len(groups[1]["designs"]) == 10 and groups[1]["designs"][0]["poster_url"]
     rough = groups[0]["designs"][0]
-    render_dir = TEMPLATES_DIR / "nodetech" / "apolo-1202" / "render"
+    assert rough["preview_url"] == "/api/v1/explainer/files/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/index.html"
+    render_dir = TEMPLATES_DIR / "nodetech" / "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats" / "render"
     assert rough["video_url"] == (
-        "/api/v1/explainer/files/nodetech/apolo-1202/render/apolo-1202-16x9.mp4"
-        if (render_dir / "apolo-1202-16x9.mp4").is_file()
+        "/api/v1/explainer/files/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/render/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats-16x9.mp4"
+        if (render_dir / "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats-16x9.mp4").is_file()
         else None
     )
     assert rough["video_portrait_url"] == (
-        "/api/v1/explainer/files/nodetech/apolo-1202/render/apolo-1202-9x16.mp4"
-        if (render_dir / "apolo-1202-9x16.mp4").is_file()
+        "/api/v1/explainer/files/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/render/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats-9x16.mp4"
+        if (render_dir / "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats-9x16.mp4").is_file()
         else None
     )
     groups = (await api_client.get("/api/v1/explainer/design-groups", params={"first": "node_history"})).json()
     assert groups[0]["category_path"] == "node_history"
+
+
+async def test_v2_production_indexes_assets_and_recording_without_copy(tmp_path, monkeypatch):
+    from src.config.settings import settings
+    from src.core.content_registry import get_video
+    from src.core.library.asset_library import search_assets
+    from src.core.explainer import recorder as recorder_mod
+
+    monkeypatch.setattr(settings, "storage_profile_dir", tmp_path)
+    monkeypatch.setattr(settings, "storage_layout_version", 2)
+    monkeypatch.setattr(settings, "data_dir", tmp_path / "data")
+    monkeypatch.setattr(settings, "output_dir", tmp_path / "renders")
+    videos = tmp_path / "productions" / "nodehistory"
+    videos.mkdir(parents=True)
+    agent = _FakeAgent(videos)
+    kit = _FakeKit(videos)
+    photo = tmp_path / "foto.jpg"
+    photo.write_bytes(b"image")
+
+    async def fake_render(video_id, seconds, formats, on_output=None, output_dir=None):
+        if on_output:
+            on_output("@@format 16x9 1 1")
+        for fmt in formats:
+            (output_dir / recorder_mod.render_filename(video_id, fmt, seconds)).write_bytes(b"dummy-mp4")
+
+    async def fake_compress(*args, **kwargs):
+        raise AssertionError("v2 must not compress its only master")
+    monkeypatch.setattr(recorder_mod, "compress_for_publishing", fake_compress)
+    recorder = ExplainerRecorder(render_runner=fake_render, output_root=tmp_path / "renders")
+    producer = ExplainerProducer(agent_getter=lambda _: agent, kit_runner=kit,
+                                  recorder_getter=lambda: recorder, videos_dir=videos,
+                                  uploads_dir=tmp_path / "uploads", publish_checker=_fake_publish_check)
+    rec = await producer.submit(category_path="node_tech", design="rough", topic="Historia de pruebas",
+                                media_files=[photo], auto_record=True)
+    final = await producer.wait(rec["production_id"])
+    assert final["state"] == "done", final.get("error")
+    result = get_video(rec["video_id"])
+    assert result["details"]["status"] == "done"
+    assert {r["kind"] for r in result["resources"]} >= {"music", "image", "video"}
+    assert any(e.video_id == rec["video_id"] for e in search_assets("image"))
+    recordings = result["details"]["recordings"]
+    recording = next(iter(recordings.values()))
+    assert any(row["log_id"] == recording["log_id"] for row in result["logs"])
+    from src.core.content_registry import resolve_resource, index_production_assets
+    output = resolve_resource(recording["asset_ids"][0])
+    assert output.read_bytes() == b"dummy-mp4"
+    assert output.is_relative_to(tmp_path / "renders")
+    before = {r["asset_id"] for r in result["resources"]}
+    from src.adapters.content.local_inventory import LocalContentInventory
+    await index_production_assets(rec["video_id"], videos / rec["video_id"], LocalContentInventory())
+    assert {r["asset_id"] for r in get_video(rec["video_id"])["resources"]} == before
+    assert not list((videos / rec["video_id"] / "render").glob("*.mp4"))

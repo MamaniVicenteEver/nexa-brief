@@ -6,6 +6,7 @@ import { useState } from "react";
 import { NewIdeaDialog } from "@/features/prototypes";
 import { cn } from "@/lib/utils";
 import { SANDBOX_QUERY_KEY, useSandbox } from "../hooks/useSandbox";
+import { useSandboxShowcase } from "../hooks/useSandboxShowcase";
 import { countSandboxItems, selectSandboxItems } from "../lib/sandbox-items";
 import { SandboxItemCard } from "./SandboxItemCard";
 
@@ -61,6 +62,10 @@ export function SandboxWindow() {
   const t = useTranslations("sandbox");
   const queryClient = useQueryClient();
   const { data: folders = [], isLoading, isError } = useSandbox();
+  const visibility = useSandboxShowcase();
+  const showcaseStates = new Map(
+    (visibility.data ?? []).map((state) => [`${state.folder}/${state.project_id}`, state]),
+  );
   const [filter, setFilter] = useState("all");
   const [referenceFilter, setReferenceFilter] = useState<"all" | ReferenceCategory>("all");
   const projectFolders = folders.filter((entry) => entry.role !== "references");
@@ -99,10 +104,10 @@ export function SandboxWindow() {
         </h2>
         <span className="text-xs text-nb-mute">{total}</span>
       </div>
-      <p className="mb-5 text-sm text-nb-mute">{t("intro")}</p>
+      <p className="sr-only">{t("intro")}</p>
 
       {folders.length > 0 && (
-        <fieldset className="mb-6 flex flex-wrap gap-2">
+        <fieldset className="mb-4 flex flex-wrap gap-2">
           <legend className="sr-only">{t("folderFiltersLabel")}</legend>
           <FolderFilter
             id="all"
@@ -173,6 +178,17 @@ export function SandboxWindow() {
 
       {isLoading && <p className="py-6 text-sm text-nb-mute">{t("loading")}</p>}
       {isError && <p className="py-6 text-sm text-nb-mute">{t("loadError")}</p>}
+      {!isReferences && visibility.isError && (
+        <div
+          role="alert"
+          className="mb-4 flex flex-wrap items-center gap-2 text-xs text-nb-ink-soft"
+        >
+          <span>{t("showcase.loadError")}</span>
+          <button type="button" className="underline" onClick={() => void visibility.refetch()}>
+            {t("showcase.retry")}
+          </button>
+        </div>
+      )}
       {!isLoading && !isError && items.length === 0 && (
         <p className="py-6 text-sm text-nb-mute">
           {isReferences ? t("referenceEmpty") : filter === "all" ? t("empty") : t("emptyFolder")}
@@ -184,6 +200,7 @@ export function SandboxWindow() {
           <SandboxItemCard
             key={`${item.folder}:${item.subcategory ?? "otros"}:${item.id}`}
             item={item}
+            showcaseState={showcaseStates.get(`${item.folder}/${item.id}`)}
             folderLabel={
               isReferences
                 ? referenceCategoryLabels[referenceCategory(item.subcategory)]

@@ -61,8 +61,15 @@ def test_image_queue_entry_does_not_require_video_job_and_slots_require_category
     assert slot.timezone == "UTC"
 
 
-def test_account_alias_never_implies_category_and_delivery_key_is_stable():
-    mapping = LocalImagePostResources()
+def test_account_alias_never_implies_category_and_delivery_key_is_stable(tmp_path):
+    import json
+    account_map = tmp_path / "image_posts/account_map.json"
+    account_map.parent.mkdir(parents=True)
+    account_map.write_text(json.dumps({"schema_version": 1, "accounts": [{
+        "category_id": "node_economy", "platform": "facebook", "account_alias": "nodatech",
+        "name": "NodeEconomy", "active": True,
+    }]}))
+    mapping = LocalImagePostResources(data_dir=tmp_path)
     assert mapping.resolve_account("node_economy", "facebook", "nodatech")["name"] == "NodeEconomy"
     with pytest.raises(LookupError):
         mapping.resolve_account("node_tech", "facebook", "nodatech")

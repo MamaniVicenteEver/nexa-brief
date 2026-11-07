@@ -51,7 +51,11 @@ export function runAtlas(options = {}) { return Proto.run({
  async setup(c){
   const {scene,T}=c;if(scene.duration!=null&&scene.end==null)scene.end=scene.duration;
   const names=new Set([scene.look||'satelite-realista',...(scene.looks||[]).map(e=>e.look)].filter(v=>typeof v==='string'));
-  const [providers,resolved,...results]=await Promise.all([json(BASE+'providers.json'),optional('assets/geo.resolved.json',{}),...['admin0','admin1','admin2-US'].map(n=>json(BASE+'data/geo/'+n+'.geojson')),...[...names].map(n=>json(BASE+'looks/'+encodeURIComponent(n)+'.json'))]);
+  const showcaseGeo=options.showcase&&QS.get('geo');
+  if(showcaseGeo&&!/^assets\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_.-]+\.json$/.test(showcaseGeo))throw Error('Ruta de geometría de showcase inválida');
+  const [providers,resolved,...results]=await Promise.all([json(BASE+'providers.json'),options.showcase&&!showcaseGeo ? Promise.resolve({}) : optional(showcaseGeo||'assets/geo.resolved.json',{}),...['admin0','admin1','admin2-US'].map(n=>json(BASE+'data/geo/'+n+'.geojson')),...[...names].map(n=>json(BASE+'looks/'+encodeURIComponent(n)+'.json'))]);
+  // Showcase examples supply their own scene and have no episode media windows.
+  if(options.showcase&&!QS.has('overlays')&&!c.C.overlaysUrl)c.mediaWindows={items:[]};
   c.providers=providers;const collections=results.slice(0,3),looks=Object.fromEntries([...names].map((n,i)=>[n,results[i+3]]));c.geo=createGeo(scene,resolved,collections);c.camera=createCamera(cameraKeys(scene,c.geo,T,c.st.W));c.lookAt=createLookAt(scene,looks,T);c.base=BASE;c.online=QS.get('online')==='1';c.highlights=[];
   for(const id of ['world',...(scene.datasets?.vector?['detail-'+scene.datasets.vector]:[])]){const url=new URL(`cache/vector/${id}.pmtiles`,BASE).href;protocol.add(new PMTiles(new ArchiveSource(url)));}
   const first=c.lookAt(0),detailProviders=[...new Set([first,...Object.values(looks),...(scene.looks||[]).map(e=>c.lookAt(T(e.t,0)+(e.dur||0)))].map(l=>l.sat?.detail).filter(Boolean))];const style=composeStyle(first,{base:BASE,online:QS.get('online')==='1',providers,detail:scene.datasets?.vector,lang:scene.lang||'es',detailProviders,width:c.st.W});c.satIds=['sat-bm','sat-viirs',...detailProviders.map(id=>'sat-detail-'+id)];

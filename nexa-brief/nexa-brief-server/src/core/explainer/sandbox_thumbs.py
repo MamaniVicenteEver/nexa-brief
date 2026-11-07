@@ -12,8 +12,16 @@ from urllib.parse import quote
 from playwright.async_api import async_playwright
 
 from src.config.settings import settings
+from src.config.profile_layout import layout_for_settings
 
-THUMB_CACHE_DIR = settings.data_dir / "sandbox-thumbs"
+THUMB_CACHE_DIR: Path | None = None  # Optional override for callers/tests.
+
+
+def _thumb_cache_dir() -> Path:
+    if THUMB_CACHE_DIR is not None:
+        return THUMB_CACHE_DIR
+    layout = layout_for_settings(settings)
+    return (layout.cache_dir if layout.schema_version >= 2 else settings.data_dir) / "sandbox-thumbs"
 _GENERATION_LOCK = threading.Lock()
 
 
@@ -78,7 +86,7 @@ def ensure_thumbnail(
     if not item_dir.is_dir() or not index_path.is_file():
         raise FileNotFoundError("el elemento no tiene index.html")
 
-    output_dir = (cache_dir or THUMB_CACHE_DIR) / folder
+    output_dir = (cache_dir or _thumb_cache_dir()) / folder
     output_path = output_dir / f"{item_id}.jpg"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -118,7 +126,7 @@ def ensure_reference_thumbnail(
     if not item_dir.is_dir() or not videos:
         raise FileNotFoundError("la referencia no tiene videos MP4")
 
-    output_dir = (cache_dir or THUMB_CACHE_DIR) / "referencias" / subcategory
+    output_dir = (cache_dir or _thumb_cache_dir()) / "referencias" / subcategory
     output_path = output_dir / f"{item_id}.jpg"
     source = videos[0]
     output_dir.mkdir(parents=True, exist_ok=True)

@@ -462,7 +462,9 @@ function mapPublicationDelivery(
 		})),
 		scheduledAt: nullableText(get(value, "scheduled_at", "scheduledAt")),
 		timezone: nullableText(get(value, "timezone")),
-		lastError: nullableText(get(value, "last_error", "lastError")),
+		lastError:
+			nullableText(get(value, "last_error", "lastError")) ??
+			nullableText(get(get(value, "last_error", "lastError"), "message")),
 		remote: mapRemote(get(value, "remote")),
 		targetId: nullableText(get(value, "target_id", "targetId")),
 		removedAt: nullableText(get(value, "removed_at", "removedAt")),
@@ -738,7 +740,7 @@ function mapPublicationDetail(
 						bytes: number(get(get(technical, "reel"), "bytes")),
 						sha256: nullableText(get(get(technical, "reel"), "sha256")),
 						durationSec: number(
-							get(get(technical, "reel"), "duration_seconds", "durationSec"),
+							get(get(technical, "reel"), "duration_sec", "duration_seconds", "durationSec"),
 						),
 						codec: nullableText(get(get(technical, "reel"), "codec")),
 						audioCodec: nullableText(
@@ -822,12 +824,20 @@ export async function getImagePostDetail(
 	const raw = await fetchImagePost(postId, signal);
 	const post = mapImagePost(raw);
 	const detail = mapPublicationDetail(raw);
+	let reel = detail.technical.reel;
+	if (reel && !reel.previewUrl && reel.assetId && detail.publicationId) {
+		reel = {
+			...reel,
+			previewUrl: await resolveGalleryAsset(detail.publicationId, reel.assetId, signal),
+		};
+	}
 	return {
 		...detail,
 		format: post.format,
 		slides: post.slides,
 		coverAssetId: post.slides[0]?.assetId ?? null,
 		coverUrl: post.slides[0]?.previewUrl ?? null,
+		technical: { ...detail.technical, reel },
 	};
 }
 

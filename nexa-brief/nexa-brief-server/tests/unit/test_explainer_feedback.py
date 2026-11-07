@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import shutil
 
 import pytest
 
@@ -13,18 +14,83 @@ from src.core.explainer import producer
 KIT_TOOLS = Path(producer.KIT_DIR) / "tools"
 
 
-@pytest.mark.parametrize("video_id", ["apolo-1202", "ia-despidos-programadores-amazon", "clonan-tu-voz-con-3-segundos-de-audio-las-llamad"])
-def test_approved_legacy_storyboard_has_no_new_blockers(tmp_path, monkeypatch, capsys, video_id):
+@pytest.fixture
+def legacy_storyboard(tmp_path, monkeypatch):
     monkeypatch.syspath_prepend(str(KIT_TOOLS))
     import check_storyboard as checker
 
-    source = Path(producer.KIT_DIR).parents[1] / "nodetech" / video_id
-    video = tmp_path / "nodetech" / video_id
-    video.mkdir(parents=True)
-    (video / "assets").symlink_to(source / "assets", target_is_directory=True)
-    (video / "manifest.json").write_bytes((source / "manifest.json").read_bytes())
+    def create(video_id):
+        source = Path(producer.KIT_DIR).parents[1] / "nodetech" / video_id
+        video = tmp_path / "nodetech" / video_id
+        video.mkdir(parents=True)
+        # Los medios y audios de producción no forman parte de la fixture versionada.
+        # Copiamos únicamente definiciones JSON y fabricamos archivos vacíos en tmp.
+        for name in ("manifest.json", "assets/config.json", "assets/lyrics.json",
+                     "assets/storyboard.json", "assets/script.json", "assets/components/catalog.json"):
+            source_file = source / name
+            if source_file.is_file():
+                target = video / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source_file, target)
+        config_path = video / "assets/config.json"
+        config_data = json.loads(config_path.read_text())
+        config = config_data["configs"][0] if "configs" in config_data else config_data
+        config["quality_policy_version"] = 1
+        config_path.write_text(json.dumps(config_data))
+        lyrics = json.loads((video / config["lyricsUrl"]).read_text())
+        storyboard = json.loads((video / config["storyboardUrl"]).read_text())
+        total = lyrics["metadata"]["duration"]
+
+        def prepare_media(value):
+            if isinstance(value, dict):
+                for child in value.values():
+                    prepare_media(child)
+            elif isinstance(value, list):
+                for child in value:
+                    prepare_media(child)
+            elif isinstance(value, str) and value.startswith("assets/media/"):
+                target = (video / value).resolve()
+                assert target.is_relative_to((video / "assets/media").resolve())
+                target.parent.mkdir(parents=True, exist_ok=True)
+                original = source / value
+                if original.is_file():
+                    shutil.copyfile(original, target)
+                else:
+                    target.touch()
+
+        prepare_media(storyboard)
+        audio = video / config["audio"]["src"]
+        audio.parent.mkdir(parents=True, exist_ok=True)
+        audio.touch()
+        monkeypatch.setattr(checker, "clip_seconds", lambda path: total if path == audio else None)
+        return checker, video
+
+    return create
+
+
+def test_approved_legacy_storyboard_has_no_new_blockers(legacy_storyboard, capsys):
+    checker, video = legacy_storyboard("lo-que-le-contas-a-la-ia-no-es-privado-tus-chats")
     assert checker.main(video) == 0
     assert "legado aprobado:" in capsys.readouterr().out
+
+
+def test_unapproved_legacy_storyboard_keeps_new_policy_blockers(legacy_storyboard, capsys):
+    checker, video = legacy_storyboard("lo-que-le-contas-a-la-ia-no-es-privado-tus-chats")
+    manifest = video / "manifest.json"
+    data = json.loads(manifest.read_text())
+    data["status"] = "en progreso"
+    manifest.write_text(json.dumps(data))
+    assert checker.main(video) == 1
+    assert "legado aprobado:" not in capsys.readouterr().out
+
+
+def test_approved_legacy_storyboard_still_requires_audio(legacy_storyboard, capsys):
+    checker, video = legacy_storyboard("lo-que-le-contas-a-la-ia-no-es-privado-tus-chats")
+    config = json.loads((video / "assets/config.json").read_text())
+    config = config["configs"][0] if "configs" in config else config
+    (video / config["audio"]["src"]).unlink()
+    assert checker.main(video) == 1
+    assert "audio configurado inexistente" in capsys.readouterr().out
 
 
 def test_audio_end_requires_full_outro_and_question(tmp_path, monkeypatch):

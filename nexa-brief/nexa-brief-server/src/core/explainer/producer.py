@@ -40,10 +40,13 @@ from typing import Any, Awaitable, Callable
 import structlog
 
 from src.config.settings import BASE_DIR, settings
+from src.config.content_paths import production_root
+from src.config.profile_layout import layout_for_settings
+from src.core.execution_logs import register_execution_log
 from src.core.categories import get_category, top_level_of
 from src.core.data import collection
 from src.core.explainer.briefs import ExplainerBrief, unique_video_id, write_publish_json
-from src.core.explainer.catalog import TEMPLATES_DIR, load_video
+from src.core.explainer.catalog import load_video
 from src.core.explainer.designs import KIT_DIR, available_design_ids
 from src.core.explainer.lengths import agent_timeout_seconds, clamp_minutes, host_timeout_seconds
 from src.core.explainer import narrative
@@ -316,6 +319,8 @@ READING = {
 
 
 def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, phase: str = "guion", qc: str = "") -> str:
+    if layout_for_settings(settings).schema_version >= 3:
+        return _isolated_agent_prompt(record, phase=phase, resume=resume, qc=qc)
     vid = record["video_id"]
     py = sys.executable
     category = get_category(record["category_path"])
@@ -372,7 +377,7 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
         *(
             [
                 "Paso 9 en NodeTech: publish.json es el PAQUETE v2 (guides/publish-package.md, ejemplo",
-                "src/templates/nodetech/apolo-1202/publish.json): intro, 3 títulos, miniaturas A/B/C con su foto,",
+                "src/templates/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/publish.json): intro, 3 títulos, miniaturas A/B/C con su foto,",
                 "descripción por bloques con los capítulos de manifest.chapters, fuentes, créditos, tags y comentario",
                 "fijado. Después `publishing build` si no hay renders MP4 (puede borrarlos) y `publishing check` con 0 errores. Parte del brief que ya está en",
                 "publish.json (v1): úsalo como punto de partida.",
@@ -436,6 +441,71 @@ def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, p
     return "\n".join(lines)
 
 
+def _isolated_agent_prompt(record: dict, *, phase: str, resume: bool, qc: str) -> str:
+    """A file-only agent works with its local copy of the public design contract."""
+    if phase == 'media_seleccion':
+        return (
+            'FASE SELECCIÓN DE IMÁGENES: lee work/agent-context/media-candidates.json y observa cada '
+            'imagen local candidata. Elige como máximo una por request_id solo si representa fielmente '
+            'la frase y el sujeto; descarta las que no sean pertinentes. No inventes lo que muestran. '
+            'Escribe work/media-selection.json con {"version":1,"selections":[{"request_id":"id",'
+            '"candidate_id":"id opaco mostrado en el catálogo","depiction":"qué se ve"}]}. '
+            'Usa una lista vacía si ninguna sirve. No edites otros archivos ni ejecutes comandos. '
+            'El host copiará las seleccionadas y guardará sus créditos.'
+        )
+    lines = [
+        f"Prepara el video {record['video_id']} con el diseño {record['design']}.",
+        f"Tema: {record['topic']}. Categoría: {record['category_path']}.",
+        "Trabaja exclusivamente en esta carpeta. Usa herramientas de lectura y escritura de archivos.",
+        "Lee BRIEF.md, PLAN.md, assets/config.json y work/agent-context/QUICK.md. "
+        "El catálogo está en work/agent-context/index.json; consulta entries/<id>.json para parámetros y ejemplos.",
+        "La hoja QUICK es una referencia de componentes: ignora sus indicaciones de ejecutar comandos o delegar.",
+        "No puedes ejecutar CLI, buscar o descargar medios, delegar, acceder a otras producciones ni renderizar. "
+        "El host puede buscar imágenes según solicitudes declarativas; no inventes contenidos ni fuentes.",
+        "Para afirmaciones factuales usa únicamente fuentes que ya estén en el brief o se hayan entregado; "
+        "si faltan, anota la falta y no afirmes haber investigado ni inventes citas.",
+        "El host genera y valida voz, transcripción, manifiesto, carteles y comprobaciones. "
+        "No inventes resultados de esas operaciones ni cambies el audio o la transcripción.",
+        "Conserva el esquema y los metadatos existentes; guarda JSON válido y usa anclas exactas de la voz.",
+    ]
+    if record.get('description'):
+        lines.append(f"Descripción: {record['description']}")
+    if record.get('target_minutes'):
+        lines.append(f"Duración objetivo: {record['target_minutes']:g} minutos; conserva target_minutes y apunta a unas 130 palabras por minuto.")
+    if record.get('narrative_id'):
+        story = narrative.get_service().get(record['narrative_id'])
+        lines.append(f"Narrativa: {story.label}. Cada segmento lleva act, en este orden: " + ', '.join(act.id for act in story.spoken_acts) + '.')
+        for act in story.spoken_acts:
+            tones = story.voice.allowed_tones.get(act.id, [])
+            lines.append(f"Acto {act.id}: {act.function} {'; '.join(act.rules)}. "
+                         + (f"Tonos permitidos: {', '.join(tones)}." if tones else ''))
+    if resume:
+        lines.append('Retoma los archivos existentes y conserva lo ya válido.')
+    if phase == 'guion':
+        lines.extend([
+            'FASE GUION: completa PLAN.md y assets/script.json: cada segmento requiere id único, text y tone; usa act cuando corresponda. No escribas el cierre de voz.',
+            'Solicita imágenes escribiendo work/media-requests.json con {"version":1,"requests":['
+            '{"id":"identificador","anchor":"frase exacta de un segmento","shows":"sujeto concreto visible",'
+            '"queries":["búsqueda concreta en inglés", "otra búsqueda"]}]}. Hasta 16 solicitudes y una imagen elegida por solicitud, '
+            'sin URLs ni rutas. Si el material aportado es suficiente usa requests: [].',
+            'Al terminar escribe work/phase.json con {"phase":"script_ready"}. El host validará el guion antes de generar la voz.',
+        ])
+    else:
+        lines.extend([
+            'FASE STORYBOARD: completa assets/storyboard.json usando el guion y assets/lyrics.json existentes. Cada beat usa un componente del catálogo, parámetros válidos y anclas exactas.',
+            'Consulta work/agent-context/media-imported.json si existe: usa solo imágenes que hayas revisado y conserva sus créditos.',
+            'Si cambias texto o dirección de voz en el guion, escribe work/phase.json con {"phase":"script_ready"} y termina para que el host regenere el audio.',
+            'El host revisará el resultado; no marques comprobaciones como aprobadas sin haberlas realizado.',
+        ])
+        if qc:
+            lines.append('Observaciones del host para atender:\n' + qc)
+        if phase == 'reparacion':
+            lines.append('Corrige únicamente las observaciones indicadas sin cambiar el guion cuando sea posible.')
+        elif phase == 'storyboard_rescate':
+            lines.append('El storyboard está vacío: crea uno completo con componentes existentes.')
+    return '\n'.join(lines)
+
+
 def brief_markdown(record: dict, brief: dict | None) -> str:
     out = [
         f"# Brief · {record['topic']}",
@@ -495,7 +565,11 @@ class ExplainerProducer:
 
     @property
     def uploads_dir(self) -> Path:
-        return self._uploads_dir or settings.data_dir / "explainer" / "uploads"
+        if self._uploads_dir:
+            return self._uploads_dir
+        layout = layout_for_settings(settings)
+        return (layout.system_dir / "uploads" / "explainer" if layout.schema_version >= 2
+                else settings.data_dir / "explainer" / "uploads")
 
     @staticmethod
     def _col():
@@ -625,6 +699,9 @@ class ExplainerProducer:
             top = get_category(top_level_of(category_path))
             folder = (top.folder if top else None) or "nodehistory"
             video_id = unique_video_id(brief.video_id if brief else topic, self._videos_dir)
+            layout = layout_for_settings(settings)
+            if layout.schema_version >= 2 and self._videos_dir is None:
+                video_id = uuid.uuid4().hex
             reserved = {r["video_id"] for r in self._col().list() if r.get("video_id")}
             base, suffix = video_id, 2
             while video_id in reserved:
@@ -641,6 +718,12 @@ class ExplainerProducer:
                     shutil.copy2(src, dst)
                     staged.append(dst.name)
 
+            log_ref = None
+            if layout.schema_version >= 2:
+                log_ref = await register_execution_log(
+                    f"logs/videos/{video_id}/{production_id}.log", kind="production",
+                    production_id=production_id, video_id=video_id,
+                )
             record = {
                 "production_id": production_id,
                 "video_id": video_id,
@@ -667,11 +750,18 @@ class ExplainerProducer:
                 "error": None,
                 "video_status": None,
                 "record_job_id": None,
-                "log_path": str(settings.data_dir / "explainer" / "logs" / f"{production_id}.log"),
+                "log_path": str(log_ref.path if log_ref else settings.data_dir / "explainer" / "logs" / f"{production_id}.log"),
+                "log_id": log_ref.log_id if log_ref else None,
                 "created_at": _now(),
                 "updated_at": _now(),
             }
             await self._col().insert(record)
+            if layout.schema_version >= 2:
+                from src.core.content_registry import upsert_video
+                await upsert_video(video_id, production_id, details={
+                    "category_id": category_path, "design_id": design, "title": topic.strip(),
+                    "folder_key": f"productions/{folder}/{video_id}", "status": "queued",
+                })
             if not batch_id and (not not_before or datetime.fromisoformat(not_before) <= datetime.now(timezone.utc)):
                 self._start(production_id)
             logger.info("explainer_production_submitted", production_id=production_id, video_id=video_id, agent=agent_name)
@@ -704,10 +794,17 @@ class ExplainerProducer:
 
     def _root(self, rec: dict) -> Path:
         """Carpeta donde vive el video de esta producción."""
-        return self._videos_dir or TEMPLATES_DIR / (rec.get("folder") or "nodehistory")
+        return self._videos_dir or production_root() / (rec.get("folder") or "nodehistory")
 
     async def _update(self, production_id: str, **patch: Any) -> None:
-        await self._col().update(production_id, {**patch, "updated_at": _now()})
+        rec = await self._col().update(production_id, {**patch, "updated_at": _now()})
+        if rec and layout_for_settings(settings).schema_version >= 2 and ("state" in patch or "phase" in patch):
+            from src.core.content_registry import update_video_details
+            if collection("content_videos").get(rec["video_id"]) is not None:
+                fields = {name: patch[name] for name in ("state", "phase") if name in patch}
+                if "state" in fields:
+                    fields["status"] = fields.pop("state")
+                await update_video_details(rec["video_id"], fields)
 
     # ── ejecución ────────────────────────────────────────────────────────────
     async def _run(self, production_id: str, resume: bool) -> None:
@@ -747,13 +844,23 @@ class ExplainerProducer:
             self._prepare_video(rec, video_dir)
 
         kit_commands = ("status", "components", "check", "sheet", "manifest", "delegate", "usage")
-        scope = AgentScope(
+        if layout_for_settings(settings).schema_version >= 3:
+            from src.core.explainer.agent_context import ensure_private_workspace, prepare_design_context
+
+            prepare_design_context(video_dir, rec['design'])
+            ensure_private_workspace(video_dir)
+            scope = AgentScope(writable_dir=str(video_dir.resolve()), os_sandbox_dir=str(video_dir.resolve()))
+        else:
+            scope = AgentScope(
             writable_dir=_rel(video_dir),
             commands=tuple(f"{sys.executable} {KIT_CLI} {cmd}" for cmd in kit_commands)
             + (f"{sys.executable} {MEDIA_CLI}", f"{sys.executable} -m src.core.explainer.publishing"),
-            os_sandbox_dir=_rel(video_dir), extra_writable=(str(KIT_DIR / ".state"), str(settings.data_dir / "runtime" / "task-leases")),
+            os_sandbox_dir=_rel(video_dir),
+            extra_writable=((str(layout_for_settings(settings).logs_dir / "videos" / video_dir.name),)
+                            if layout_for_settings(settings).schema_version >= 2 else
+                            (str(KIT_DIR / ".state"), str(layout_for_settings(settings).runtime_dir / "runtime/task-leases"))),
             extra_env={"NEXA_EXPLAINER_PIPELINE_AGENT": "1"},
-        )
+            )
         timeout = max(settings.agent_production_timeout_seconds, agent_timeout_seconds(rec.get("target_minutes")))
         marker = _read_phase(video_dir)
         # Un marcador sin huella es una petición del agente; nunca prueba que el audio sea vigente.
@@ -790,6 +897,36 @@ class ExplainerProducer:
 
         # El presupuesto acota también las pasadas que solicitan regenerar el guion.
         while True:
+            # Host-mediated images use the same run budget and do not grant the agent network access.
+            if layout_for_settings(settings).schema_version >= 3 and phase == 'script_ready':
+                from src.core.explainer import host_media
+
+                try:
+                    host_media.initialize_legacy_requests(video_dir, rec.get('media') or [],
+                                                          allow_existing_references=resume)
+                    media_state = await asyncio.wait_for(host_media.prepare(video_dir, production_id), timeout=150)
+                    if media_state['request_count'] and not media_state['candidates'] and not rec.get('media'):
+                        raise host_media.MediaBrokerError('No hay imágenes candidatas; revisa la solicitud y retoma')
+                    if media_state['candidates']:
+                        if not media_state.get('applied'):
+                            try:
+                                host_media.apply_selection(video_dir, production_id, media_state,
+                                                           require_nonempty=not bool(rec.get('media')))
+                            except host_media.MediaBrokerError:
+                                script_digest = _script_hash(video_dir)
+                                result = await self._run_agent(rec, video_dir, log_path, scope, timeout, 'media_seleccion', resume=True)
+                                if not result.ok:
+                                    raise host_media.MediaBrokerError('La selección de imágenes falló; retoma la producción')
+                                if _script_hash(video_dir) != script_digest:
+                                    raise host_media.MediaBrokerError('El guion cambió durante la selección; revísalo y retoma')
+                                host_media.apply_selection(video_dir, production_id, media_state,
+                                                           require_nonempty=not bool(rec.get('media')))
+                        else:
+                            host_media.apply_selection(video_dir, production_id, media_state,
+                                                       require_nonempty=not bool(rec.get('media')))
+                except (host_media.MediaBrokerError, BudgetExhausted, asyncio.TimeoutError) as exc:
+                    raise RuntimeError(f'Medios pendientes: {exc or "tiempo de búsqueda agotado"}; usa Retomar') from exc
+
             if phase in ("script_ready", "voice_ready"):
                 errors = _validate_script(video_dir, rec.get("narrative_id"), rec.get("target_minutes"))
                 if errors:
@@ -904,6 +1041,10 @@ class ExplainerProducer:
             manifest["status"] = "en progreso"
         manifest["quality_issues"] = list(dict.fromkeys(issues))
         manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if layout_for_settings(settings).schema_version >= 2:
+            from src.adapters.content.local_inventory import LocalContentInventory
+            from src.core.content_registry import index_production_assets
+            await index_production_assets(vid, video_dir, LocalContentInventory())
         if blocking:
             await self._update(production_id, video_status="en progreso", state=ProductionState.incomplete.value,
                                phase="review", error="; ".join(manifest["quality_issues"])[:800] or "manifest incompleto")
@@ -965,9 +1106,14 @@ class ExplainerProducer:
         agent_log = log_path.with_name(f"{log_path.stem}.{uuid.uuid4().hex}.agent.log")
         await self._update(rec["production_id"], agent_log_path=str(agent_log))
         try:
+            if layout_for_settings(settings).schema_version >= 3:
+                from src.core.explainer.agent_context import ensure_private_workspace
+
+                ensure_private_workspace(video_dir)
             result = await self._agent_getter(rec["agent"]).run(
                 build_agent_prompt(rec, video_dir, resume=resume, phase=phase, qc=qc),
-                cwd=BASE_DIR, log_path=agent_log, timeout_seconds=timeout, scope=scope,
+                cwd=video_dir if layout_for_settings(settings).schema_version >= 3 else BASE_DIR,
+                log_path=agent_log, timeout_seconds=timeout, scope=scope,
             )
         finally:
             if agent_log.exists():
@@ -985,6 +1131,8 @@ class ExplainerProducer:
             await self._update(rec["production_id"], agent_failure=None)
         try:
             record_agent_run(video_dir, rec["agent"], result, step=phase)
+            if layout_for_settings(settings).schema_version >= 2:
+                await _tool().register_reference(video_dir)
             latest = summarize(video_dir)["totals"]
             await self._update(rec["production_id"], usage_totals=_merge_usage(
                 self.get(rec["production_id"]).get("usage_totals") or {}, latest, before_tokens))
@@ -1016,6 +1164,8 @@ class ExplainerProducer:
             try:
                 _tool().record(video_dir, provider="kit", role="host", step=step,
                                seconds=time.monotonic() - started, ok=ok)
+                if layout_for_settings(settings).schema_version >= 2:
+                    await _tool().register_reference(video_dir)
                 latest = summarize(video_dir)["totals"]
                 await self._update(rec["production_id"], usage_totals=_merge_usage(
                     self.get(rec["production_id"]).get("usage_totals") or {}, latest, before_tokens))

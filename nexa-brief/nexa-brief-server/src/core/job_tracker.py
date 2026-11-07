@@ -130,6 +130,12 @@ async def update(job: Job) -> None:
     if job.stage in (JobStage.PACKAGED, JobStage.FAILED) and record.get("generation_seconds") is None:
         patch["generation_seconds"] = _seconds_between(record.get("created_at"), _now_iso())
 
+    if artifacts.assets_dir is not None:
+        patch["assets_dir"] = str(artifacts.assets_dir)
+    if artifacts.render_dir is not None:
+        patch["render_dir"] = str(artifacts.render_dir)
+    if artifacts.log_dir is not None:
+        patch["log_dir"] = str(artifacts.log_dir)
     await _jobs().update(job.job_id, {
         **patch,
         "stage": job.stage.value,
@@ -230,7 +236,7 @@ def get_summary(job_id: str) -> dict[str, Any] | None:
     output_dir = record.get("output_dir")
     if not output_dir:
         return None
-    summary_path = Path(output_dir) / "logs" / "08_resumen_final.json"
+    summary_path = Path(record.get("log_dir") or (Path(output_dir) / "logs")) / "08_resumen_final.json"
     if not summary_path.exists():
         return None
     raw = summary_path.read_text(encoding="utf-8").strip()

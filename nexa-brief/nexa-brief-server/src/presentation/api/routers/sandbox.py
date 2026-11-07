@@ -60,7 +60,7 @@ async def get_explainer_sandbox() -> list[SandboxFolderResponse]:
 async def get_sandbox_components():
     """Lista los prototipos y sus componentes sin generar vistas previas."""
     from src.core.explainer.sandbox_components import list_components
-    return list_components(sandbox_catalog.SANDBOX_DIR)
+    return list_components(sandbox_catalog.get_sandbox_dir())
 
 
 @router.get(
@@ -73,7 +73,7 @@ async def get_reference_info(subcategory: str, video_id: str) -> SandboxInfoResp
         raise HTTPException(status_code=404, detail="referencia no encontrada")
     try:
         data = sandbox_info.get_sandbox_info(
-            sandbox_catalog.SANDBOX_DIR,
+            sandbox_catalog.get_sandbox_dir(),
             "referencias",
             video_id,
             subcategory=subcategory,
@@ -92,7 +92,7 @@ async def get_explainer_sandbox_info(folder: str, video_id: str) -> SandboxInfoR
     if not _valid_sandbox_segment(folder) or not _valid_sandbox_segment(video_id):
         raise HTTPException(status_code=404, detail=f"No existe sandbox/{folder}/{video_id}")
     try:
-        data = sandbox_info.get_sandbox_info(sandbox_catalog.SANDBOX_DIR, folder, video_id)
+        data = sandbox_info.get_sandbox_info(sandbox_catalog.get_sandbox_dir(), folder, video_id)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     return SandboxInfoResponse.model_validate(data)
@@ -111,8 +111,8 @@ async def get_sandbox_thumbnail(folder: str, video_id: str) -> FileResponse:
     if not _valid_sandbox_segment(folder) or not _valid_sandbox_segment(video_id):
         raise HTTPException(status_code=404, detail="miniatura no encontrada")
 
-    sandbox_root = sandbox_catalog.SANDBOX_DIR.resolve()
-    item_dir = (sandbox_catalog.SANDBOX_DIR / folder / video_id).resolve()
+    sandbox_root = sandbox_catalog.get_sandbox_dir().resolve()
+    item_dir = (sandbox_catalog.get_sandbox_dir() / folder / video_id).resolve()
     if not item_dir.is_relative_to(sandbox_root) or not item_dir.is_dir() or not (item_dir / "index.html").is_file():
         raise HTTPException(status_code=404, detail="miniatura no encontrada")
 
@@ -149,8 +149,8 @@ async def get_reference_thumbnail(subcategory: str, video_id: str) -> FileRespon
     if subcategory not in sandbox_catalog.REFERENCE_CATEGORIES or not _valid_sandbox_segment(video_id):
         raise HTTPException(status_code=404, detail="miniatura no encontrada")
 
-    sandbox_root = sandbox_catalog.SANDBOX_DIR.resolve()
-    item_dir = (sandbox_catalog.SANDBOX_DIR / "referencias" / subcategory / video_id).resolve()
+    sandbox_root = sandbox_catalog.get_sandbox_dir().resolve()
+    item_dir = (sandbox_catalog.get_sandbox_dir() / "referencias" / subcategory / video_id).resolve()
     if not item_dir.is_relative_to(sandbox_root) or not item_dir.is_dir():
         raise HTTPException(status_code=404, detail="miniatura no encontrada")
 
@@ -187,9 +187,12 @@ async def promote_sandbox_video(folder: str, video_id: str) -> SandboxPromotionR
     if video_id in _busy_video_ids():
         raise HTTPException(status_code=409, detail=BUSY_MESSAGE)
 
-    source = sandbox_catalog.SANDBOX_DIR / folder / video_id
+    source = sandbox_catalog.get_sandbox_dir() / folder / video_id
     try:
-        plan = promotion.promote(source, templates_dir=sandbox_catalog.SANDBOX_DIR.parent)
+        from src.config.profile_layout import layout_for_settings
+        from src.config.settings import settings
+        override = None if layout_for_settings(settings).schema_version >= 2 else sandbox_catalog.get_sandbox_dir().parent
+        plan = promotion.promote(source, templates_dir=override)
     except promotion.PromoteError as exc:
         status_code = 404 if exc.code == "not_found" else 409
         raise HTTPException(status_code=status_code, detail=exc.message) from exc
@@ -198,7 +201,9 @@ async def promote_sandbox_video(folder: str, video_id: str) -> SandboxPromotionR
     if video is None:
         raise HTTPException(status_code=404, detail=f"No existe {plan.destination}")
     from_path = Path("sandbox") / folder / video_id
-    to_path = Path(folder) / video_id
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    to_path = Path("productions") / plan.destination.parent.name / video_id if layout_for_settings(settings).schema_version >= 2 else Path(plan.destination.parent.name) / video_id
     logger.info(
         "explainer_sandbox_promoted",
         video_id=video_id,

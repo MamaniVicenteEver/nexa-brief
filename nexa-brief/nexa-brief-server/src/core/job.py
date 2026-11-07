@@ -299,10 +299,19 @@ class JobArtifacts(BaseModel):
     thumbnail_path: Path | None = None
     summary: VideoSummary | None = None
     output_dir: Path | None = None
+    assets_dir: Path | None = None
+    render_dir: Path | None = None
+    log_dir: Path | None = None
+    recording_log_id: str | None = None
     recording_stats: dict[str, Any] = Field(default_factory=dict)
     # Stage 9 — populated only when ENABLE_AUTO_PUBLISHING=true
     publish_result: PublishResult | None = None
     publish_results: dict[str, PublishResult] = Field(default_factory=dict)
+
+    @property
+    def content_dir(self) -> Path | None:
+        """Recursos del job; jobs antiguos los conservan junto al HTML."""
+        return self.assets_dir or self.output_dir
 
     model_config = {"arbitrary_types_allowed": True}
 

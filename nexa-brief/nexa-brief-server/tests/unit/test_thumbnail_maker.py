@@ -12,6 +12,44 @@ import pytest
 from src.modules.thumbnail_maker import capture_at, declared_at, make_thumbnail, pick_stable, stable_time
 
 
+async def test_v3_lazy_thumbnail_belongs_to_production_recording(tmp_path, monkeypatch):
+    from src.config.settings import settings
+    from src.modules import thumbnail_maker
+
+    root = tmp_path / "profile"
+    monkeypatch.setattr(settings, "storage_profile_dir", root)
+    monkeypatch.setattr(settings, "storage_layout_version", 3)
+    production = root / "productions/nodetech/movie"
+    production.mkdir(parents=True)
+    (production / "manifest.json").write_text('{"template_id":"lyrics-neon"}')
+    recorded = []
+
+    async def capture(video, folder, at):
+        recorded.append((video, folder, at))
+        thumbnail = folder / "thumbnail.jpg"
+        thumbnail.write_bytes(b"synthetic thumbnail")
+        return thumbnail
+
+    monkeypatch.setattr(thumbnail_maker, "make_thumbnail", capture)
+    for recording in ("first-16x9", "second-16x9"):
+        video = root / "renders/videos/nodetech/movie" / recording / "video.mp4"
+        video.parent.mkdir(parents=True)
+        video.write_bytes(b"synthetic render")
+        result = await thumbnail_maker.ensure_for_job({"youtube": str(video)})
+        assert result == production / "assets/thumbnails" / recording / "thumbnail.jpg"
+        assert not list(video.parent.glob("*.jpg"))
+        assert await thumbnail_maker.ensure_for_job({"youtube": str(video)}) == result
+    assert len(recorded) == 2
+    assert all(call[2] == 2.0 for call in recorded)
+    outside = tmp_path / "other-profile/thumbnail.jpg"
+    outside.parent.mkdir()
+    outside.write_bytes(b"private")
+    assert await thumbnail_maker.ensure_for_job({"thumbnail": str(outside), "youtube": str(outside)}) is None
+    linked = production / "assets/linked.jpg"
+    linked.symlink_to(outside)
+    assert await thumbnail_maker.ensure_for_job({"thumbnail": str(linked)}) is None
+
+
 def test_each_lyrics_intro_declares_its_moment():
     assert capture_at("lyrics-caution") == 0.45   # el cartel dura 0,3–0,8 s; después viene «STOP»
     assert capture_at("lyrics-neon") == 2.0

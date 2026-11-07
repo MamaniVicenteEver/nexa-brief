@@ -316,8 +316,10 @@ class HyperframesAdapter(RecorderPort):
                     "(nombre del bucket S3 del stack, ver Outputs de `hyperframes lambda deploy`)."
                 )
 
-        config_path = output_dir / "config.json"
-        bg_source = output_dir / niche_cfg.template.media_src_filename
+        # El audio acompaña a config/lyrics en assets/ para jobs v2 nuevos.
+        input_dir = audio_path.parent if (audio_path.parent / "config.json").is_file() else html_path.parent
+        config_path = input_dir / "config.json"
+        bg_source = input_dir / niche_cfg.template.media_src_filename
         needs_media = niche_cfg.template.requires_image or niche_cfg.template.requires_video
         if not bg_source.exists() and (composition_dir is not None or needs_media):
             raise RecordingError(f"HyperframesAdapter: falta la imagen de fondo {bg_source}.")
@@ -355,7 +357,7 @@ class HyperframesAdapter(RecorderPort):
                         pass_dir.mkdir()
                         site_dir = pass_dir / "site"
                         self._stage_generic_site(
-                            site_dir, template_dir, output_dir, audio_path, bg_source, rp, duration_seconds
+                            site_dir, template_dir, input_dir, audio_path, bg_source, rp, duration_seconds
                         )
                         t0 = time.monotonic()
                         staged_output = pass_dir / Path(rp.filenames[0]).name
@@ -477,6 +479,13 @@ class HyperframesAdapter(RecorderPort):
         for data_file in ("config.json", "lyrics.json", "manifest.json"):
             if (output_dir / data_file).exists():
                 shutil.copy(output_dir / data_file, site_dir / data_file)
+        # Las entradas de usuario se referencian como assets/inputs/... dentro
+        # del config, y deben estar presentes también en el sitio efímero.
+        extra_assets = output_dir / "assets"
+        if extra_assets.is_dir() and not extra_assets.is_symlink():
+            def ignore_links(directory, names):
+                return [name for name in names if (Path(directory) / name).is_symlink()]
+            shutil.copytree(extra_assets, site_dir / "assets", dirs_exist_ok=True, ignore=ignore_links)
         index_path = site_dir / "index.html"
         index_path.write_text(
             _prepare_generic_html(index_path.read_text(encoding="utf-8"), rp, duration_seconds, audio_path.name),

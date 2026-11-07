@@ -16,6 +16,7 @@ from typing import Protocol, Sequence
 
 from PIL import Image, ImageOps
 
+from src.adapters.agent.isolation_policy import require_legacy_agent_launch_allowed
 from src.adapters.image_gen.presets import get_preset
 from src.adapters.image_gen.roles import edit_prompt, generate_prompt
 from src.core.ports.image_generation_port import ImageGenerationResult
@@ -33,6 +34,7 @@ class Runner(Protocol):
 class SubprocessRunner:
     def run(self, cmd: list[str], prompt: str, cwd: Path, env: dict[str, str], timeout: float) -> tuple[int, str, float]:
         """Mata el grupo completo si el agente supera el límite."""
+        require_legacy_agent_launch_allowed()
         started = time.monotonic()
         proc = subprocess.Popen(cmd, cwd=cwd, env=env, stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -135,6 +137,7 @@ class CodexCLIImageAdapter:
                 for index in range(n)]
 
     def _native(self, task: str, prompt: str, refs: Sequence[Path], size: tuple[int, int]) -> ImageGenerationResult:
+        require_legacy_agent_launch_allowed()
         self.work_root.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(prefix="run-", dir=self.work_root) as temp:
             work = Path(temp)

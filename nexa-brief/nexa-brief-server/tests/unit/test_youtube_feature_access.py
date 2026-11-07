@@ -139,7 +139,7 @@ async def test_get_projects_access_separately_from_connection(api_client):
     await record_feature_access('one','UC1','eligible')
     facade=MagicMock()
     facade.list_accounts.return_value=[{'platform':'youtube','alias':'one','target_id':'UC1','name':'One','status':'ok','expires_in_seconds':100,'has_refresh_token':True}]
-    with patch.object(publisher,'_get_facade',return_value=facade),patch.object(publisher,'_register_service_accounts',new=AsyncMock()):
+    with patch.object(publisher,'_get_facade',return_value=facade):
         response=await api_client.get('/api/v1/publish/accounts')
     assert response.status_code==200
     account=response.json()[0]

@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Iterator, Mapping
 
 from src.adapters.data.layout import PUBLICATIONS_ROOT
+from src.adapters.data.runtime_paths import assert_profile_path, data_directory, lock_path, temporary_dir
 from src.config.settings import settings
 from src.core.image_posts.models import PublicationRecord, migrate_publication_record
 from src.core.image_posts.security import redact_persisted_value
@@ -39,7 +40,9 @@ class JsonPublicationRepository:
 
     @property
     def root(self) -> Path:
-        return (self._data_dir or settings.data_dir) / PUBLICATIONS_ROOT
+        path = (self._data_dir or data_directory()) / PUBLICATIONS_ROOT
+        assert_profile_path(path)
+        return path
 
     @property
     def index_path(self) -> Path:
@@ -47,6 +50,7 @@ class JsonPublicationRepository:
 
     @contextmanager
     def _locked(self, path: Path) -> Iterator[None]:
+        path = lock_path(path, path)
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("a+b") as lock_file:
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
@@ -59,7 +63,7 @@ class JsonPublicationRepository:
     def _write_atomic(path: Path, value: Any) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         payload = json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True).encode()
-        fd, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+        fd, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=temporary_dir(path))
         try:
             with os.fdopen(fd, "wb") as stream:
                 stream.write(payload)
@@ -77,6 +81,7 @@ class JsonPublicationRepository:
 
     @staticmethod
     def _read_json(path: Path, default: Any) -> Any:
+        assert_profile_path(path)
         try:
             return json.loads(path.read_text(encoding="utf-8"))
         except FileNotFoundError:
@@ -547,7 +552,6 @@ class JsonPublicationRepository:
                 (path.parent / "plan.json").unlink(missing_ok=True)
                 entries = [item for item in self._read_index() if item["publication_id"] != publication_id]
                 self._write_atomic(self.index_path, entries)
-            path.with_suffix(".lock").unlink(missing_ok=True)
             return True
 
     def repair_index(self) -> int:

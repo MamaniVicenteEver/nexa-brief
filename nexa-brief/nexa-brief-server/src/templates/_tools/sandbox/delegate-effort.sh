@@ -5,6 +5,15 @@ set -u
 TOOL_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATES_DIR="$(cd -- "$TOOL_DIR/../.." && pwd)"
 SERVER_DIR="$(cd -- "$TOOL_DIR/../../../.." && pwd)"
+
+# No ejecutar CLIs legacy para perfiles v2. Si no puede comprobarse la
+# configuración, fallar cerrado antes de crear logs o iniciar subprocesos.
+GUARD_PYTHON="$SERVER_DIR/.venv/bin/python"
+[[ -x "$GUARD_PYTHON" ]] || GUARD_PYTHON=python3
+if ! PYTHONPATH="$SERVER_DIR" "$GUARD_PYTHON" -c 'from src.adapters.agent.isolation_policy import require_legacy_agent_launch_allowed; require_legacy_agent_launch_allowed()' 2>/dev/null; then
+  echo "Error: agente CLI no disponible; el aislamiento del perfil no está verificado." >&2
+  exit 1
+fi
 SANDBOX_DIR="$TEMPLATES_DIR/sandbox"
 INFO_SCRIPT="$TOOL_DIR/info.py"
 ROLES_FILE="$SERVER_DIR/src/skills/models/roles.json"

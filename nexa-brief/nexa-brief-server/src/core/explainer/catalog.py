@@ -22,7 +22,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from src.config.settings import BASE_DIR
+from src.config.content_paths import production_root, preview_directory
 from src.core.explainer import narrative
+from src.core.explainer.render_paths import full_render_files, render_label
 from src.core.categories import category_for_design, explainer_folders, get_category
 
 TEMPLATES_DIR: Path = BASE_DIR / "src" / "templates"
@@ -129,7 +131,7 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         title=manifest.get("title") or video_dir.name,
         status=manifest.get("status", "en progreso"),
         duration_seconds=manifest.get("duration_seconds"),
-        rendered=sorted(p.name for p in (video_dir / "render").glob("*.mp4")),
+        rendered=sorted({render_label(video_dir, p) for p in full_render_files(video_dir)}),
         youtube_title=publish.get("youtube_title", "") or "",
         youtube_description=publish.get("youtube_description", "") or "",
         youtube_tags=list(publish.get("youtube_tags", []) or []),
@@ -145,28 +147,36 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         shared_categories=[c for c in manifest.get("shared_categories", [])
                            if isinstance(c, str) and get_category(c) is not None],
         quality_issues=[str(issue) for issue in manifest.get("quality_issues", []) if isinstance(issue, str)],
-        has_poster=(video_dir / "render" / "poster.jpg").exists(),
+        has_poster=(preview_directory(video_dir) / "poster.jpg").exists(),
     )
 
 
 def video_roots() -> list[Path]:
     """Carpetas de video de las categorías explainer que existen en disco."""
-    return [TEMPLATES_DIR / folder for folder in explainer_folders()]
+    roots = [production_root() / folder for folder in explainer_folders()]
+    return roots
 
 
 def list_videos(root: Path | None = None) -> list[ExplainerVideo]:
     """Videos de todas las carpetas de categoría (o de una sola `root`)."""
     roots = [root] if root is not None else video_roots()
-    return [
+    videos = [
         v
         for r in roots
         if r.exists()
         for v in (load_video(d) for d in sorted(r.iterdir()) if d.is_dir())
         if v
     ]
+    # Samples are catalogued separately and never become mutable productions.
+    unique = {}
+    for video in videos:
+        unique.setdefault(video.video_id, video)
+    return list(unique.values())
 
 
 def find_video_dir(video_id: str, root: Path | None = None) -> Path | None:
+    if not video_id or Path(video_id).name != video_id or video_id in {".", ".."}:
+        return None
     for r in [root] if root is not None else video_roots():
         if (r / video_id).is_dir():
             return r / video_id

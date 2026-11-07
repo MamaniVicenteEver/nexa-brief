@@ -19,7 +19,7 @@
 1. Este archivo.
 2. `src/templates/_tools/explainer-kit/designs/<diseño>/QUICK.md` — componentes del diseño, parámetros y un
    ejemplo por componente (~70 líneas). **No leas `CATALOG.md`, `engine/`, `designs/*/components/*.js`.**
-3. Un storyboard de ejemplo del MISMO diseño: `src/templates/nodetech/vago-pero-emocionante/assets/storyboard.json`
+3. Un storyboard de ejemplo del MISMO diseño: `src/templates/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/assets/storyboard.json`
    (rough) o `src/templates/nodehistory/muro-de-berlin/assets/storyboard.json` (binary). Mirá 30 beats, no todo.
 4. La estrategia de la categoría: `src/skills/explainer/categories/<categoría>.json` (título, tono, hashtags).
 5. Solo si el paso lo pide: la sección puntual de la guía (`guides/storytelling.md §4–7` para el guion,
@@ -71,7 +71,7 @@ K=src/templates/_tools/explainer-kit/tools/kit.py; M=src/templates/_tools/explai
 6. **Validar**: `kit.py check <id>` → 0 errores · `kit.py sheet <id> --orient both` en primer plano → mirar las dos hojas.
    En cada beat con foto/clip completá `shows`, `query` y `media_review` después de mirar la hoja: confirmá por escrito qué muestra según la narración. Si hay foto y video en un beat, escribí una revisión por ruta (`guides/media.md §6`). `manifest.media_review` guarda una línea por medio y `manifest.quality.media_relevance` resume el control. El check avisa si un recurso coincide con otra producción y bloquea el exceso configurable de clips genéricos.
 7. **Cierre**: `kit.py manifest <id>` · `kit.py usage <id>`.
-8. **Publicación v2** `publish.json` (copiar la forma de `nodetech/vago-pero-emocionante/publish.json`) →
+8. **Publicación v2** `publish.json` (copiar la forma de `nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/publish.json`) →
    `.venv/bin/python -m src.core.explainer.publishing check <id>` en 0 errores (no `build` si hay `render/*.mp4`).
 
 **No renderizar.** La revisión humana es en vivo: `src/templates/<categoría>/<id>/index.html` servido por
@@ -85,8 +85,8 @@ HTTP (la app lo muestra en `/plantillas?cat=<categoría>`). `kit.py render` solo
 - Un componente propio conserva el límite de 6 usos y 15 % de los beats (desde la segunda aparición). Con política v5, cada foto o clip tiene un máximo de 2 usos; los videos anteriores conservan sus límites.
 - `common.lyric` y `common.punch`: terminá la ventana en fin de oración o usá `params.text` de hasta 7 palabras.
 - Copiá la forma de un componente real del mismo diseño, sin leer el motor:
-  `src/templates/nodetech/programadores-nueva-era/assets/components/rough-review-lens.js` (rough) ·
-  `src/templates/nodehistory/y2k-medianoche/assets/components/y2kfield.js` (binary).
+  `src/templates/_tools/explainer-kit/component-library/sources/rough/rough-review-lens.js` (rough) ·
+  `src/templates/_tools/explainer-kit/component-library/sources/binary/y2kfield.js` (binary).
 - Nombre `<familia>.<camelCase>`, archivo en `assets/components/`, registrado en `components` del `config.json`.
 - `kit.py components <id>` registra automáticamente los componentes válidos en la biblioteca; en Imperio genera sus fotogramas aislados para el showcase. Declarar `example` y parámetros JSON representativos; los medios propios usan rutas `assets/...`. No editar el showcase para registrarlos. → mirar `work/components/<nombre>.png`. Máximo 2 rondas por componente; si no aprueba, descartalo y usá el catálogo, aunque no se alcance el mínimo.
 - Se puede delegar el borrador a DeepSeek (`kit.py delegate <id> component_draft --prompt-file work/pedido-<n>.md`).

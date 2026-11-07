@@ -12,10 +12,13 @@ from __future__ import annotations
 
 import json
 import pathlib
+import sys
 
 KIT = pathlib.Path(__file__).resolve().parents[1]
 TEMPLATES = KIT.parents[1]                  # src/templates/
 SERVER = KIT.parents[3]                     # nexa-brief-server/
+if str(SERVER) not in sys.path:
+    sys.path.insert(0, str(SERVER))
 DEFAULT_FOLDER = "nodehistory"
 
 
@@ -41,12 +44,23 @@ def folder_for_design(design: str) -> str:
 
 def find_video(video_id: str) -> pathlib.Path | None:
     """Busca primero en producción y después en la casa de pruebas (sandbox/)."""
-    for folder in [*folders(), *(f"sandbox/{f}" for f in folders())]:
-        d = TEMPLATES / folder / video_id
+    if not video_id or pathlib.Path(video_id).name != video_id or video_id in {".", ".."}:
+        return None
+    from src.config.content_paths import production_root, sandbox_root
+    roots = [production_root() / f for f in folders()]
+    roots += [sandbox_root() / f for f in folders()]
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    if layout_for_settings(settings).schema_version < 2:
+        roots += [TEMPLATES / f for f in folders()]
+        roots += [TEMPLATES / "sandbox" / f for f in folders()]
+    for root in dict.fromkeys(roots):
+        d = root / video_id
         if d.exists():
             return d
     return None
 
 
 def is_sandbox(video_dir: pathlib.Path) -> bool:
-    return (TEMPLATES / "sandbox") in video_dir.parents
+    from src.config.content_paths import sandbox_root
+    return sandbox_root() in video_dir.parents or (TEMPLATES / "sandbox") in video_dir.parents

@@ -156,8 +156,12 @@ class FFmpegSoundMixer:
             # Limitador SOLO de efectos. La rama de voz nunca se comprime ni se pausa.
             limit = min(1, max(0.0625, headroom))
             scale = min(1, headroom / limit)
+            # El lookahead de 5 ms a 48 kHz introduce 239 muestras de demora;
+            # rellenar y recortar conserva ambos extremos también en FFmpeg antiguo.
             filters.append(
-                f"[{'ducked' if ducking else 'effects'}]alimiter=limit={limit:.9f}:level=false:latency=true,volume={scale:.9f},asplit=2[safe][stem]"
+                f"[{'ducked' if ducking else 'effects'}]apad=pad_len=239,"
+                f"alimiter=limit={limit:.9f}:attack=5:level=false,atrim=start_sample=239,asetpts=PTS-STARTPTS,"
+                f"volume={scale:.9f},asplit=2[safe][stem]"
             )
             filters.append(
                 f"[voice][safe]amix=inputs=2:duration=first:normalize=0,atrim=duration={voice.duration_seconds:.9f}[out]"

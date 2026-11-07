@@ -15,6 +15,7 @@ export function SandboxPreviewModal({
   folder,
   id,
   showInfo = true,
+  showComponents = true,
   children,
 }: {
   target: MediaSource | null;
@@ -22,6 +23,7 @@ export function SandboxPreviewModal({
   folder: string;
   id: string;
   showInfo?: boolean;
+  showComponents?: boolean;
   children: ReactNode;
 }) {
   const t = useTranslations("sandbox");
@@ -60,15 +62,19 @@ export function SandboxPreviewModal({
       sidebar={
         showInfo ? (
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-            {open && target.kind === "iframe" && components && components.length > 0 && (
-              <SandboxComponentsPicker
-                key={`${folder}:${id}`}
-                folder={folder}
-                id={id}
-                components={components}
-                onPreview={setPreviewUrl}
-              />
-            )}
+            {showComponents &&
+              open &&
+              target.kind === "iframe" &&
+              components &&
+              components.length > 0 && (
+                <SandboxComponentsPicker
+                  key={`${folder}:${id}`}
+                  folder={folder}
+                  id={id}
+                  components={components}
+                  onPreview={setPreviewUrl}
+                />
+              )}
             <SandboxInfoSidebar
               title={title}
               data={info.data}

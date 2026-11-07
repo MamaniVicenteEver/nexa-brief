@@ -1,7 +1,6 @@
 import json
 import threading
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import replace
 from urllib.error import HTTPError
 from unittest.mock import patch
 
@@ -14,19 +13,25 @@ from src.adapters.maps.vector import extract, latest_build
 
 def test_registry_and_tile_urls():
     providers = load_providers()
-    assert len(providers) == 8
+    assert set(providers) == {
+        'gibs-bluemarble', 'gibs-viirs', 'usgs-imagery', 'terrain-aws', 'terrain-land',
+        'eox-s2cloudless-2016', 'eox-s2cloudless-2024', 'esri-world-imagery', 'protomaps-pmtiles',
+    }
     assert providers['gibs-bluemarble'].tile_url(3, 2, 4).endswith('/3/4/2.jpeg')
     assert providers['terrain-aws'].tile_url(3, 2, 4).endswith('/3/2/4.png')
     assert all(p.attribution and p.license and not p.requires_key for p in providers.values())
-    with pytest.raises(ValueError): providers['terrain-aws'].tile_url(3, 8, 0)
-    with pytest.raises(ValueError): providers['protomaps-pmtiles'].tile_url(0, 0, 0)
+    with pytest.raises(ValueError):
+        providers['terrain-aws'].tile_url(3, 8, 0)
+    with pytest.raises(ValueError):
+        providers['protomaps-pmtiles'].tile_url(0, 0, 0)
 
 
 def test_license_enforced_even_if_cached(tmp_path):
     p = load_providers()['esri-world-imagery']
     cache = TileCache(tmp_path)
     cache.put(p, 0, 0, 0, b'image')
-    with pytest.raises(LicenseBlocked): cache.get_or_fetch(p, 0, 0, 0)
+    with pytest.raises(LicenseBlocked):
+        cache.get_or_fetch(p, 0, 0, 0)
     assert cache.get_or_fetch(p, 0, 0, 0, allow_noncommercial=True) == b'image'
 
 
@@ -35,7 +40,8 @@ def test_atomic_write_and_missing(tmp_path, monkeypatch):
     cache = TileCache(tmp_path)
     cache.put(p, 0, 0, 0, b'old')
     with patch('src.adapters.maps.cache.os.replace', side_effect=OSError('failure')):
-        with pytest.raises(OSError): cache.put(p, 0, 0, 0, b'new')
+        with pytest.raises(OSError):
+            cache.put(p, 0, 0, 0, b'new')
     assert cache.get(p, 0, 0, 0) == b'old'
     assert not list(tmp_path.rglob('*.tmp'))
     def absent(*args, **kwargs): raise HTTPError('https://secret?key=secret',404,'missing',{},None)
@@ -61,7 +67,8 @@ def test_parallel_limit(tmp_path, monkeypatch):
             return self
         def __exit__(self, *args):
             nonlocal active
-            with lock: active -= 1
+            with lock:
+                active -= 1
         def read(self): return b'image'
     monkeypatch.setattr('src.adapters.maps.cache.urlopen', lambda *a, **k: Response())
     with ThreadPoolExecutor(max_workers=12) as pool:
@@ -82,7 +89,8 @@ def test_mercator_conversions():
 def test_latest_build_and_validation(monkeypatch, tmp_path):
     monkeypatch.setattr('src.adapters.maps.vector._json', lambda _: [{'key':'20250102.pmtiles'}, {'key':'20260101.pmtiles'}, {'key':'latest.pmtiles'}])
     assert latest_build() == '20260101.pmtiles'
-    with pytest.raises(ValueError): extract((0,0,1,1),6,tmp_path/'x',build='../bad')
+    with pytest.raises(ValueError):
+        extract((0,0,1,1),6,tmp_path/'x',build='../bad')
 
 
 def test_vector_failure_preserves_existing_archive(monkeypatch, tmp_path):

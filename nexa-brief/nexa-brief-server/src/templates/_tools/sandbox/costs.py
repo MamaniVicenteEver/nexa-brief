@@ -8,6 +8,7 @@ ya es entrada nueva. La caché siempre se muestra aparte y no suma al total.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 from pathlib import Path
 
@@ -82,10 +83,20 @@ def _from_ledger(path: Path) -> dict[tuple[str, str], dict[str, int]]:
 
 def _model_totals(item_dir: Path) -> dict[tuple[str, str], dict[str, int]]:
     """Carga usage.json y usa el ledger si el resumen aún no tiene modelos."""
-    summary = _from_usage_json(item_dir / "usage.json")
+    # Resolve through the kit: v1 stays alongside the prototype, v2 uses its
+    # selected profile log directory. No profile data or credentials are read.
+    tool = Path(__file__).resolve().parent.parent / "explainer-kit" / "tools" / "usage.py"
+    try:
+        spec = importlib.util.spec_from_file_location("sandbox_usage_paths", tool)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        summary_path, ledger = module.summary_path(item_dir), module.ledger_path(item_dir)
+    except (OSError, ValueError, ImportError):
+        return {}
+    summary = _from_usage_json(summary_path)
     if summary:
         return summary
-    return _from_ledger(item_dir / "work" / "usage.jsonl")
+    return _from_ledger(ledger)
 
 
 def fresh_input(provider: str, row: dict) -> int:

@@ -6,12 +6,15 @@ import fcntl
 import hashlib
 import os
 from src.config.settings import settings
+from src.config.profile_layout import layout_for_settings
 
 
 class TaskLease:
     def __init__(self, kind: str, task_id: str):
         digest = hashlib.sha256(f"{kind}:{task_id}".encode()).hexdigest()
-        self.path = settings.data_dir / "runtime/task-leases" / (digest + ".lock")
+        layout = layout_for_settings(settings)
+        runtime = layout.runtime_dir if layout.schema_version >= 2 else settings.data_dir / "runtime"
+        self.path = runtime / "task-leases" / (digest + ".lock")
         self.fd: int | None = None
 
     def acquire(self) -> bool:

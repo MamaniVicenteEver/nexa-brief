@@ -17,6 +17,8 @@ const extraDevOrigins = (process.env.DEV_ALLOWED_ORIGINS ?? "")
   .filter(Boolean);
 
 const nextConfig: NextConfig = {
+  // Keep Turbopack's resolution and filesystem watch rooted in this frontend.
+  turbopack: { root: __dirname },
   // The device link carries the secret in its query string; keep Next's dev
   // request logger from copying that URL into the terminal log.
   logging: {

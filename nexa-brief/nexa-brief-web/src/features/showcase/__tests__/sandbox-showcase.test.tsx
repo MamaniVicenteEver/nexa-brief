@@ -319,7 +319,7 @@ describe("Biblioteca Sandbox", () => {
         },
       },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Volver a cargar sprites" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Volver a cargar sprites" }));
     const image = await screen.findByRole("img", { name: "Sprite carrier" });
     expect(image.getAttribute("src")).toBe(
       "/api/v1/explainer/files/sandbox/historia/atlas/engine/tactico/sprites/carrier.png",

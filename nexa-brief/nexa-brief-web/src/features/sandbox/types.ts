@@ -24,6 +24,7 @@ export interface SandboxItem {
   hasPoster: boolean;
   hasInfo: boolean;
   hasComponents?: boolean;
+  demo?: boolean;
   totalTokens: number | null;
   thumbnailUrl: string | null;
   player: SandboxPlayer;

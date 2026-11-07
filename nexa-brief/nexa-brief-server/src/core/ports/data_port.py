@@ -30,7 +30,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, AsyncContextManager, Protocol
 
 Record = dict[str, Any]
 Where = Mapping[str, Any]
@@ -102,8 +102,18 @@ class FileStorage(Protocol):
     def delete(self, key: str) -> bool: ...
 
 
+class FileStorageProvider(Protocol):
+    """Resuelve namespaces binarios independientemente del backend de registros."""
+
+    def files(self, name: str) -> FileStorage: ...
+
+
 class DataStore(Protocol):
     """Punto de entrada: entrega colecciones/documentos/archivos por nombre lógico."""
+
+    def coordination(self, name: str) -> AsyncContextManager[None]:
+        """Serializa una operación compuesta entre workers del mismo perfil."""
+        ...
 
     def collection(self, name: str) -> RecordCollection: ...
 

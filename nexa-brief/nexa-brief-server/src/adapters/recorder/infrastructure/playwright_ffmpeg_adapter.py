@@ -155,7 +155,7 @@ class PlaywrightFFmpegAdapter(RecorderPort):
         # Serve original assets, but write captures and incomplete videos into a
         # private workspace so failure never replaces previous deliverables.
         with render_workspace(output_dir, "playwright") as workspace:
-            with _serve_directory(output_dir) as base_url:
+            with _serve_directory(html_path.parent) as base_url:
                 page_url = f"{base_url}/{html_path.name}"
                 result = await self._record_all_formats(
                     page_url, audio_path, workspace, duration_seconds, niche_cfg

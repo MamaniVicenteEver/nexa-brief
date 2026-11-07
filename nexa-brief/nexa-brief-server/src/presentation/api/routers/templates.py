@@ -305,9 +305,18 @@ async def get_preview_status(preview_id: str) -> PreviewStatusResponse:
     return PreviewStatusResponse.from_record(record)
 
 
-@router.get("/templates/preview/{preview_id}/{filename}")
+@router.get("/templates/preview/{preview_id}/{filename:path}")
 async def get_preview_file(preview_id: str, filename: str, request: Request) -> Response:
-    if filename not in PREVIEW_ALLOWED_FILENAMES:
+    in_assets = filename.startswith("assets/")
+    name = filename.removeprefix("assets/") if in_assets else filename
+    from src.config.content_paths import is_private_content_key
+    media_suffixes = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".avif", ".bmp",
+                      ".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac", ".opus",
+                      ".mp4", ".mov", ".webm", ".mkv", ".m4v", ".js", ".css", ".woff", ".woff2", ".ttf", ".otf"}
+    valid_media = in_assets and Path(name).suffix.lower() in media_suffixes
+    if (is_private_content_key(filename) or "\\" in filename or
+            (name not in PREVIEW_ALLOWED_FILENAMES and not valid_media) or
+            (in_assets and name == "index.html")):
         raise HTTPException(status_code=404, detail=f"Unknown preview file '{filename}'")
 
     record = preview_tracker.get(preview_id)
@@ -319,8 +328,17 @@ async def get_preview_file(preview_id: str, filename: str, request: Request) -> 
         raise HTTPException(status_code=404, detail="Preview output not ready yet")
 
     output_dir = Path(output_dir_str).resolve()
-    path = (output_dir / filename).resolve()
-    if not path.is_relative_to(output_dir) or not path.exists():
+    assets_dir = Path(record.get("assets_dir") or output_dir).resolve()
+    if not assets_dir.is_relative_to(output_dir):
+        raise HTTPException(status_code=404, detail="Invalid preview assets")
+    if in_assets and assets_dir == output_dir:
+        raise HTTPException(status_code=404, detail="Unknown preview file")
+    source_dir = assets_dir if in_assets else output_dir
+    candidate = source_dir / name
+    if candidate.is_symlink() or any(part.is_symlink() for part in candidate.parents if part != source_dir and part.is_relative_to(source_dir)):
+        raise HTTPException(status_code=404, detail="Unknown preview file")
+    path = candidate.resolve()
+    if not path.is_relative_to(source_dir) or not path.is_file():
         raise HTTPException(status_code=404, detail=f"'{filename}' not available for this preview")
 
     if filename == "index.html":

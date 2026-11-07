@@ -245,11 +245,27 @@ def designs_for_category(category_path: str, available: list[str]) -> tuple[list
 def output_dir_for_niche(output_root: Path, niche_id: str) -> Path:
     """output/<ruta de categoría>/ para un nicho; output/ si no tiene categoría."""
     path = category_for_niche(niche_id)
+    from src.config.profile_layout import layout_for_settings
+    from src.config.media_paths import category_folder
+    from src.config.settings import settings
+    layout = layout_for_settings(settings)
+    if layout.schema_version >= 3 and output_root.resolve() == layout.renders_dir.resolve():
+        return layout.productions_dir / category_folder(path or "otros")
     return output_root / path if path else output_root
 
 
 def ensure_output_dirs(output_root: Path) -> list[Path]:
     """Crea output/<categoría>/<subcategoría>/ para todo el árbol."""
+    from src.config.profile_layout import layout_for_settings
+    from src.config.media_paths import category_folder
+    from src.config.settings import settings
+    layout = layout_for_settings(settings)
+    if layout.schema_version >= 3 and output_root.resolve() == layout.renders_dir.resolve():
+        targets = {output_root / kind / category_folder(path)
+                   for path, _ in _walk(list_categories()) for kind in ("videos", "images")}
+        for target in sorted(targets):
+            target.mkdir(parents=True, exist_ok=True)
+        return sorted(targets)
     created = []
     for path, _ in _walk(list_categories()):
         target = output_root / path
@@ -261,3 +277,10 @@ def ensure_output_dirs(output_root: Path) -> list[Path]:
 def explainer_folders() -> dict[str, str]:
     """{carpeta: categoría} de las categorías principales que guardan videos en src/templates/."""
     return {node.folder: cat_id for cat_id, node in list_categories().items() if node.folder}
+
+
+def production_folders() -> set[str]:
+    """Carpetas canónicas de todas las categorías y el destino de migraciones sin categoría."""
+    from src.config.media_paths import category_folder
+
+    return {category_folder(path) for path, _ in _walk(list_categories())} | set(explainer_folders()) | {"otros"}

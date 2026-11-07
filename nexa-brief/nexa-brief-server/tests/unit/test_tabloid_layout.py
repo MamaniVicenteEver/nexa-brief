@@ -21,7 +21,7 @@ TITLES = [
     "HOY", "1929: EL MERCADO SE DERRUMBÓ", "JAPÓN MIRÓ AL SUR",
     "LA NOCHE QUE CAYÓ EL MURO", "¿POR QUÉ PERDIÓ ESPAÑA?", "EL ÚLTIMO AÑO DE PODER",
 ]
-PHOTO = "/nodetech/ia-despidos-programadores-amazon/assets/media/oficina-estres.jpg"
+PHOTO = "/_tools/explainer-kit/showcase/samples/hamilton.jpg"
 
 
 def intersects(a, b):
@@ -124,10 +124,10 @@ async def _check_layouts(design, palette):
 
 @pytest.mark.parametrize("design,title,accent,src,focus", [
     ("rough", "TÚ ERES EL SIGUIENTE", "SIGUIENTE", PHOTO, [.7, .43, .07]),
-    ("binary", "EL CÓDIGO CEDIÓ", "CÓDIGO", "/nodehistory/turing-enigma/assets/media/turing.jpg", [.5, .27, .14]),
-    ("cronica", "EL CÓDIGO CEDIÓ", "CÓDIGO", "/nodehistory/turing-enigma/assets/media/turing.jpg", [.5, .27, .14]),
-    ("memorias", "EL CÓDIGO CEDIÓ", "CÓDIGO", "/nodehistory/turing-enigma/assets/media/turing.jpg", [.5, .27, .14]),
-    ("rough", "CASI ABORTAN LA LUNA", "LUNA", "/nodetech/apolo-1202/assets/media/hamilton-rostro.jpg", [.49, .34, .15]),
+    ("binary", "EL CÓDIGO CEDIÓ", "CÓDIGO", "/_tools/explainer-kit/showcase/samples/turing.jpg", [.5, .27, .14]),
+    ("cronica", "EL CÓDIGO CEDIÓ", "CÓDIGO", "/_tools/explainer-kit/showcase/samples/turing.jpg", [.5, .27, .14]),
+    ("memorias", "EL CÓDIGO CEDIÓ", "CÓDIGO", "/_tools/explainer-kit/showcase/samples/turing.jpg", [.5, .27, .14]),
+    ("rough", "CASI ABORTAN LA LUNA", "LUNA", "/_tools/explainer-kit/showcase/samples/hamilton.jpg", [.49, .34, .15]),
 ])
 def test_brand_portrait_headline_fills_half_frame(design, title, accent, src, focus):
     async def check():

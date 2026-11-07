@@ -4,6 +4,12 @@ import pytest
 from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
 from src.adapters.publishing.tiktok_service.client import TikTokServiceClient
 from src.config.exceptions import PublisherError
+from src.config.settings import settings as app_settings
+
+
+@pytest.fixture(autouse=True)
+def synthetic_public_origin(monkeypatch):
+    monkeypatch.setattr(app_settings, "public_app_url", "https://nexa.example")
 
 
 @pytest.mark.asyncio
@@ -85,35 +91,40 @@ async def test_polling_deadline_does_not_resubmit():
 
 @pytest.mark.parametrize('method,path,payload', [
     ('POST','/api/v1/publish/browser/tiktok/qr/start',{'alias':'test'}),
-    ('GET','/api/v1/publish/browser/sessions/test',None),
     ('POST','/api/v1/publish/browser/sessions/test/cancel',None),
 ])
-async def test_qr_proxy_translates_unavailable_service(api_client, monkeypatch, method, path, payload):
-    from src.adapters.publishing.tiktok_service.client import TikTokServiceError
-    async def unavailable(*args, **kwargs):
-        raise TikTokServiceError('service_unavailable')
-    monkeypatch.setattr(TikTokServiceClient, 'request', unavailable)
+async def test_retired_qr_proxy_routes_are_not_exposed(api_client, method, path, payload):
     response = await api_client.request(method, path, json=payload)
-    assert response.status_code == 502
-    assert 'service_unavailable' in response.json()['detail']
+    assert response.status_code == 404
+
+
+async def test_retired_session_get_matches_only_generic_video_route(api_client, monkeypatch):
+    from types import SimpleNamespace
+    from unittest.mock import AsyncMock
+    from src.config.exceptions import UnsupportedOperationError
+    from src.presentation.api.routers import publisher
+    lookup = AsyncMock(side_effect=UnsupportedOperationError("unsupported platform"))
+    monkeypatch.setattr(publisher, "_get_facade", lambda: SimpleNamespace(get_video=lookup))
+    response = await api_client.get("/api/v1/publish/browser/sessions/test")
+    assert response.status_code == 422
+    lookup.assert_awaited_once_with(video_id="test", account_selector="browser:sessions")
 
 
 @pytest.mark.parametrize('method,path,payload', [
     ('POST','/api/v1/publish/browser/tiktok/pair',{'alias':'test'}),
     ('POST','/api/v1/publish/browser/tiktok/qr/start',{'alias':'test'}),
-    ('GET','/api/v1/publish/browser/sessions/test',None),
     ('POST','/api/v1/publish/browser/sessions/test/cancel',None),
     ('POST','/api/v1/publish/accounts/tiktok/test/check-session',None),
 ])
-async def test_qr_management_requires_internal_auth(api_client, monkeypatch, method, path, payload):
+async def test_retired_qr_management_is_not_exposed_in_production(api_client, monkeypatch, method, path, payload):
     from src.config.settings import settings
     monkeypatch.setattr(settings, 'app_env', 'production')
     monkeypatch.setattr(settings, 'nexa_internal_token', 'synthetic-key')
     response = await api_client.request(method, path, json=payload)
-    assert response.status_code == 403
+    assert response.status_code in {404, 405}
 
 
-async def test_service_outage_does_not_expire_account(api_client, monkeypatch):
+async def test_retired_session_check_does_not_expire_account(api_client, monkeypatch):
     from types import SimpleNamespace
     from unittest.mock import AsyncMock
     from src.presentation.api.routers import publisher
@@ -128,7 +139,7 @@ async def test_service_outage_does_not_expire_account(api_client, monkeypatch):
         raise TikTokServiceError('service_unavailable')
     monkeypatch.setattr(TikTokServiceClient, 'request', unavailable)
     response = await api_client.post('/api/v1/publish/accounts/tiktok/test/check-session')
-    assert response.status_code == 502
+    assert response.status_code == 404
     storage.mark_requires_reauth.assert_not_awaited()
 
 
@@ -179,7 +190,7 @@ async def test_oauth_callbacks_stay_public(api_client, monkeypatch, platform):
     assert response.status_code == 400  # Missing OAuth code, not an internal-auth rejection.
 
 
-async def test_signed_import_stays_public_and_one_use(api_client, monkeypatch):
+async def test_retired_signed_import_does_not_accept_cookies(api_client, monkeypatch):
     from types import SimpleNamespace
     from unittest.mock import Mock
     from src.config.settings import settings
@@ -199,10 +210,9 @@ async def test_signed_import_stays_public_and_one_use(api_client, monkeypatch):
     pairing_id, url = pairing.create_pairing('test', 'http://test')
     try:
         payload = {'cookies': [{'name': 'sessionid', 'value': 'synthetic', 'domain': '.tiktok.com'}], 'expected_username': 'test'}
-        assert (await api_client.post(url.split('?')[0], json=payload)).status_code == 401
-        assert (await api_client.post(url, json=payload)).status_code == 200
-        assert (await api_client.post(url, json=payload)).status_code == 401
-        saved.assert_called_once()
+        assert (await api_client.post(url.split('?')[0], json=payload)).status_code == 404
+        assert (await api_client.post(url, json=payload)).status_code == 404
+        saved.assert_not_called()
     finally:
         with pairing._lock:
             pairing._pairings.pop(pairing_id, None)

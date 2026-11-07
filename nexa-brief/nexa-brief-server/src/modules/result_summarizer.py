@@ -49,7 +49,7 @@ def _to_summary(result: CopyResult, language: str) -> VideoSummary:
 def _write_prepared(job: Job) -> Job:
     """Textos preparados en el Sandbox (src/core/draft_details.py): se usan tal cual, sin IA."""
     summary = job.artifacts.summary
-    logs_dir = job.artifacts.output_dir / "logs"
+    logs_dir = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
     final_summary = {
         **summary.model_dump(),
@@ -77,7 +77,7 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
         raise AIValidationError(f"Copy generation failed: {exc}") from exc
     summary = _to_summary(result, language_code)
 
-    logs_dir = job.artifacts.output_dir / "logs"
+    logs_dir = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
     (logs_dir / "08_prompt_metadata.txt").write_text(
         f"=== SYSTEM ===\n{result.system_prompt}\n\n=== USER ===\n{result.user_prompt}", encoding="utf-8"

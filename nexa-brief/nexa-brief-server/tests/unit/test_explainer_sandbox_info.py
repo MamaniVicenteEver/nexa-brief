@@ -163,6 +163,7 @@ async def test_item_without_info_returns_null_and_unknown_item_is_not_found(tmp_
     assert response.status_code == 200
     assert response.json() == {
         "info": None,
+        "components": [],
         "totals_by_model": [],
         "fresh_input_tokens": 0,
         "total_tokens": 0,

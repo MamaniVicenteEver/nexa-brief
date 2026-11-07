@@ -1,0 +1,2523 @@
+{
+  "schema_version": 1,
+  "design_id": "dinero",
+  "revision": "4a146f0bb19d86ba641a169dd2884cac9a6c6aadd42e2ed46f045abf84194f94",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "dinero.serif",
+      "name": "dinero.serif",
+      "label": "dinero.serif",
+      "kind": "component",
+      "summary": "Palabra GIGANTE en didona condensada verde oscuro sobre pared gris verdosa (ref. 0,0 s 'MONEY'): las letras se paran una por una con sombra proyectada mientras la cámara las sigue; la foto entra desde la izquierda con desenfoque de movimiento; al terminar, la cámara se aleja de golpe y revela todo; sale con un barrido. Para la palabra/cifra que abre un tema.",
+      "tags": [
+        "texto",
+        "impacto",
+        "foto",
+        "cámara"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Palabra o frase corta (MAYÚSCULAS automáticas). '\\n' parte renglones; 1 palabra = el plano de la referencia.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Renglones para 9:16 (vacío = se reparten solos, ≤ 8 letras).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Objeto/escena de abajo (foto en plata verdosa que entra desde la izquierda).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto (figuras) que aparece a la derecha al alejarse la cámara.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "reveal": {
+          "type": "number",
+          "default": 0.075,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": 0.02,
+          "max": 0.3
+        },
+        "pull": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo del alejamiento de cámara (-1 = al terminar las letras).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "DINERO",
+        "src": "../designs/dinero/samples/billete100.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.serif",
+      "data": {
+        "native_name": "dinero.serif"
+      }
+    },
+    {
+      "id": "dinero.title",
+      "name": "dinero.title",
+      "label": "dinero.title",
+      "kind": "component",
+      "summary": "Título de apertura (t = 0) con el plano 1 de la referencia: el TÍTULO en didona condensada gigante verde oscuro, letra por letra con la cámara siguiéndolas, foto que entra desde la izquierda, alejamiento brusco y rótulo fino (kicker) que se escribe debajo. Sin subtítulos.",
+      "tags": [
+        "intro",
+        "título",
+        "apertura"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título (2–4 renglones cortos con '\\n').",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Renglones para 9:16 (vacío = se reparten solos, ≤ 8 letras).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Objeto/escena de abajo (foto en plata verdosa que entra desde la izquierda).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto (figuras) que aparece a la derecha al alejarse la cámara.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "reveal": {
+          "type": "number",
+          "default": 0.075,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": 0.02,
+          "max": 0.3
+        },
+        "pull": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo del alejamiento de cámara (-1 = al terminar las letras).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo fino (Montserrat 200) que se escribe al alejarse la cámara.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "EL PRECIO\nDE UNA IDEA",
+        "kicker": "DARTMOUTH · 1956",
+        "src": "../designs/dinero/samples/contando.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.title",
+      "data": {
+        "native_name": "dinero.title"
+      }
+    },
+    {
+      "id": "dinero.cash",
+      "name": "dinero.cash",
+      "label": "dinero.cash",
+      "kind": "component",
+      "summary": "Ráfaga de fotos de billetes en teal frío (ref. 1,1 s): la 1ª entra desenfocada y oscura y se enfoca, cortes rápidos a la 2ª girada y re-encuadrada, un cuadro oscuro con líneas de barrido y la última queda con empuje lento. Para el momento en que aparece el dinero (cifras, presupuesto, pago).",
+      "tags": [
+        "foto",
+        "dinero",
+        "ráfaga",
+        "billetes"
+      ],
+      "params": {
+        "src1": {
+          "type": "image",
+          "default": null,
+          "doc": "Primera foto (entra desenfocada).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto (girada; vacío = src1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto final que queda (vacío = src2 o src1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pace": {
+          "type": "number",
+          "default": 1,
+          "doc": "Multiplica la duración de los cortes (1 = ritmo de la referencia: 0,63 s de ráfaga).",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 3
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "whip",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src1": "../designs/dinero/samples/billete100.jpg",
+        "src2": "../designs/dinero/samples/abanico.jpg",
+        "src3": "../designs/dinero/samples/dolar1957.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.cash",
+      "data": {
+        "native_name": "dinero.cash"
+      }
+    },
+    {
+      "id": "dinero.count",
+      "name": "dinero.count",
+      "label": "dinero.count",
+      "kind": "component",
+      "summary": "Foto en teal frío con empuje y paneo lentos y luz cálida en la esquina (ref. 3,2 s, mano contando billetes); encima, un rótulo FINO en mayúsculas y una línea en minúsculas que se DECODIFICAN letra por letra con una raya fina a la izquierda. Para nombrar una cifra, un trámite o una pregunta sobre la foto.",
+      "tags": [
+        "foto",
+        "texto",
+        "decodificar",
+        "dinero"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Rótulo principal (MAYÚSCULAS finas, ≤ 18 caracteres).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Segunda línea en minúsculas (≤ 22 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 12,
+          "doc": "Letras por segundo que se resuelven.",
+          "required": false,
+          "options": null,
+          "min": 3,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de la foto que queda al centro del recorte [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "whip",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "../designs/dinero/samples/abanico.jpg",
+        "text": "13.500 DÓLARES",
+        "sub": "pidieron"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.count",
+      "data": {
+        "native_name": "dinero.count"
+      }
+    },
+    {
+      "id": "dinero.neon",
+      "name": "dinero.neon",
+      "label": "dinero.neon",
+      "kind": "component",
+      "summary": "Palabra en MAYÚSCULAS finas blancas con brillo y sombra larga sobre fieltro verde con viñeta (ref. 2,0 s 'MONEY'): las letras aparecen desenfocadas y se enfocan, un cuadro oscuro, líneas finas de cursor, barrido con destello y re-encuadre más chico con la 2ª línea en minúsculas, anillo de chispa y subrayado que se dibuja con punta brillante; ornamento de billete en los bordes. Para nombrar un concepto con elegancia.",
+      "tags": [
+        "texto",
+        "palabra",
+        "brillo",
+        "elegante"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Palabra o frase corta (≤ 14 caracteres en MAYÚSCULAS).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Segunda línea en minúsculas que llega en el re-encuadre (vacío = sin 2ª fase).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subAt": {
+          "type": "number",
+          "default": 0.75,
+          "doc": "Segundo del barrido y re-encuadre (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "blob",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "PRESUPUESTO",
+        "sub": "la apuesta"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.neon",
+      "data": {
+        "native_name": "dinero.neon"
+      }
+    },
+    {
+      "id": "dinero.spin",
+      "name": "dinero.spin",
+      "label": "dinero.spin",
+      "kind": "component",
+      "summary": "Palabras 3D que GIRAN con desenfoque de movimiento sobre gris claro con viñeta mientras caen monedas doradas (ref. 3,8–8,4 s 'Dirty Cash I Want YOU'): cada palabra entra volteándose (la 1ª se tipea), la cámara gira y salta de una a otra, las anteriores quedan desenfocadas; en `lensAt` un lente OJO DE PEZ encierra el cuadro en un rectángulo redondeado que rebota y la palabra verde parpadea. Para frases de impacto y momentos de tensión con el dinero.",
+      "tags": [
+        "texto",
+        "3D",
+        "cinético",
+        "monedas",
+        "clímax"
+      ],
+      "params": {
+        "words": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras/frases cortas en orden ('^x^' = verde billete). Vacío = las palabras narradas en el beat (≥ 3 letras, máx. 6).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras narradas que van en verde (modo automático).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "lensAt": {
+          "type": "number",
+          "default": -2,
+          "doc": "Segundo del lente ojo de pez (-2 = cuando entra la última palabra; -1 = sin lente). Acepta '@palabra'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "coins": {
+          "type": "number",
+          "default": 14,
+          "doc": "Monedas que caen.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 40
+        },
+        "fx": {
+          "type": "enum",
+          "default": "leak",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "words": [
+          "Dinero",
+          "^sucio^",
+          "lo quiero",
+          "^YA^"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.spin",
+      "data": {
+        "native_name": "dinero.spin"
+      }
+    },
+    {
+      "id": "dinero.block",
+      "name": "dinero.block",
+      "label": "dinero.block",
+      "kind": "component",
+      "summary": "Frase en BLOQUE gigante Open Sans 800 verde oscuro sobre salvia (ref. 8,5 s 'MONEY TALKS'): las letras aparecen mientras la cámara panea, una barra verde sube con un billete arriba y garabatos que saltan, el 2º renglón sube con desenfoque y la cámara se aleja hasta llenar el cuadro de borde a borde. Para la frase-tesis o el dato que lo cambia todo.",
+      "tags": [
+        "texto",
+        "impacto",
+        "bloque",
+        "gigante"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "1–2 renglones cortos con '\\n' (en 9:16 se reparten ≤ 7 letras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pole": {
+          "type": "bool",
+          "default": true,
+          "doc": "Barra verde con billete arriba que sube entre las letras.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "pixel",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "EL DINERO\nMANDA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.block",
+      "data": {
+        "native_name": "dinero.block"
+      }
+    },
+    {
+      "id": "dinero.head",
+      "name": "dinero.head",
+      "label": "dinero.head",
+      "kind": "component",
+      "summary": "Ilustración plana sobre verde salvia (ref. 9,5–10,5 s): primero una palabra 3D chica con ojo de dibujo animado, sonrisa y rayitas; después una CABEZA negra de perfil con un ojo blanco que mira una TARJETA con degradé, marcador, ojo con destello, barra oscura con el lema y fila de rótulos chicos; todo se desliza lento. Para una idea, un plan, una decisión o la mente de alguien.",
+      "tags": [
+        "idea",
+        "persona",
+        "mente",
+        "tarjeta",
+        "plano"
+      ],
+      "params": {
+        "word": {
+          "type": "string",
+          "default": "",
+          "doc": "Palabra 3D del primer tiempo (vacío = sin primer tiempo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Lema de la tarjeta (≤ 24 caracteres).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico debajo del lema.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "chips": {
+          "type": "array",
+          "default": [],
+          "doc": "Hasta 4 rótulos mínimos en fila (cifras, palabras).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "split": {
+          "type": "number",
+          "default": 0.55,
+          "doc": "Segundo del corte a la cabeza (si hay word).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "word": "IDEA",
+        "text": "INTENTA HASTA LOGRARLO",
+        "sub": "LA APUESTA DE DARTMOUTH",
+        "chips": [
+          "1956",
+          "10",
+          "2 MESES",
+          "IA"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.head",
+      "data": {
+        "native_name": "dinero.head"
+      }
+    },
+    {
+      "id": "dinero.note",
+      "name": "dinero.note",
+      "label": "dinero.note",
+      "kind": "component",
+      "summary": "Texto MÍNIMO en Open Sans 800 sobre blanco, negro o salvia (ref. 10,6 s 'MONEY / TALKS!' y 16,0 s 'HUH!'): los renglones se tipean escalonados hacia la derecha y el grupo salta a la izquierda y vuelve (en blanco) o queda quieto (en negro). Para una pausa, una reacción corta o un dato aireado.",
+      "tags": [
+        "texto",
+        "mínimo",
+        "pausa",
+        "respiro"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "1–3 renglones muy cortos con '\\n' (cada uno se corre a la derecha).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "white",
+          "doc": "Fondo: white = tarjeta blanca (texto verde oscuro), black = negro verdoso (texto blanco), salvia.",
+          "required": false,
+          "options": [
+            "white",
+            "black",
+            "sage"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala del texto (1 = legible en celular; la referencia es más chica).",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 2.5
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "¿Y AHORA?",
+        "bg": "black"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.note",
+      "data": {
+        "native_name": "dinero.note"
+      }
+    },
+    {
+      "id": "dinero.pin",
+      "name": "dinero.pin",
+      "label": "dinero.pin",
+      "kind": "component",
+      "summary": "Sobre negro verdoso, un ALFILER-PERSONA verde (cono con cabeza) sube desde abajo con un anillo blanco alrededor de la cabeza; a mitad del plano la cámara se aleja de golpe y el anillo se cierra sobre la cabeza; el rótulo se tipea al lado (ref. 11,6 s). Para señalar a una persona, un 'tú' o 'uno solo'.",
+      "tags": [
+        "persona",
+        "uno",
+        "foco",
+        "individuo"
+      ],
+      "params": {
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo blanco que se tipea junto al alfiler (≤ 16 caracteres).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoomAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo del alejamiento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "label": "UNO SOLO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.pin",
+      "data": {
+        "native_name": "dinero.pin"
+      }
+    },
+    {
+      "id": "dinero.outline",
+      "name": "dinero.outline",
+      "label": "dinero.outline",
+      "kind": "component",
+      "summary": "La frase NARRADA sobre negro verdoso (ref. 12,3–14,2 s 'dirty cash want i you'): cada palabra se tipea cuando la voz la dice, en blanco Open Sans 800 con tamaños escalonados (la 1ª del renglón grande, las siguientes chicas y corridas), detrás la 1ª palabra GIGANTE solo en contorno, una estrella verde, la palabra clave en verde grande con un ojito y rayos verdes tenues. Es la 'letra grande' del diseño (reemplaza a common.lyric).",
+      "tags": [
+        "letra",
+        "frase",
+        "karaoke",
+        "texto",
+        "clímax"
+      ],
+      "params": {
+        "words": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras a mostrar ('^x^' = clave en verde). Vacío = las palabras NARRADAS en el beat, a su tiempo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras narradas que van en verde grande (modo automático).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ghost": {
+          "type": "string",
+          "default": "",
+          "doc": "Palabra gigante en contorno detrás (vacío = la 1ª de cada página).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "words": [
+          "el",
+          "dinero",
+          "se",
+          "^congeló^"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.outline",
+      "data": {
+        "native_name": "dinero.outline"
+      }
+    },
+    {
+      "id": "dinero.eye",
+      "name": "dinero.eye",
+      "label": "dinero.eye",
+      "kind": "component",
+      "summary": "OJO gigante plano (almendra blanca con borde verde e iris verde) sobre negro verdoso (ref. 14,3 s): primero muy cerca, cortado por el borde, mientras el texto en mayúsculas blancas se tipea a la izquierda; en `split` la cámara se aleja de golpe y queda el ojo entero, inclinado, mirando, con el texto al costado. Para 'alguien mira', vigilancia, atención o deseo.",
+      "tags": [
+        "mirada",
+        "vigilancia",
+        "atención",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "1–2 renglones cortos ('\\n').",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "split": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo del alejamiento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TODOS\nMIRABAN"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.eye",
+      "data": {
+        "native_name": "dinero.eye"
+      }
+    },
+    {
+      "id": "dinero.eyes",
+      "name": "dinero.eyes",
+      "label": "dinero.eyes",
+      "kind": "component",
+      "summary": "OJOS de dibujo animado (esferas blancas con pupila) de distintos tamaños que aparecen, flotan y miran para todos lados sobre negro verdoso, con un texto corto verde al centro (ref. 15,5 s 'NEED YOU'). Para 'todos miran', la presión del público o una sensación de ser observado.",
+      "tags": [
+        "mirada",
+        "miedo",
+        "todos",
+        "público",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto corto central (1–2 renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "count": {
+          "type": "number",
+          "default": 6,
+          "doc": "Cantidad de ojos.",
+          "required": false,
+          "options": null,
+          "min": 2,
+          "max": 7
+        },
+        "fx": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano (transición de la referencia): cut = corte seco · whip = barrido con desenfoque · blob = manchas verdes que destapan sobre el plano anterior · leak = fuga de luz roja · pixel = disolución en píxeles desde abajo · scan = líneas de barrido · zoom = alejamiento brusco · flash = destello.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "blob",
+            "leak",
+            "pixel",
+            "scan",
+            "zoom",
+            "flash"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TODOS\nQUIEREN"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.eyes",
+      "data": {
+        "native_name": "dinero.eyes"
+      }
+    },
+    {
+      "id": "dinero.introv1",
+      "name": "dinero.introv1",
+      "label": "dinero.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura (lo primero que se ve). Titular en BLOQUE Open Sans 800 que entra palabra por palabra VOLTEÁNDOSE en 3D con desenfoque de movimiento (como 'Dirty Cash' de la referencia); la '^palabra^' va en verde billete y estalla en monedas; en glitchAt el cuadro se ABOMBA con el lente ojo de pez dentro de un rectángulo redondeado, tiembla y destella. Fondo adaptable (bg: paper | felt | sage | black | fog | image con src | component con use/useParams); por defecto gris claro con monedas que caen.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "título",
+        "impacto",
+        "3D"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho corto (2–6 palabras). '\\n' = renglón; '^x^' = palabra en verde con monedas.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo fino arriba (se decodifica).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo del titular.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Segundo de la primera palabra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.26,
+          "doc": "Segundos entre palabras.",
+          "required": false,
+          "options": null,
+          "min": 0.08,
+          "max": null
+        },
+        "glitchAt": {
+          "type": "number",
+          "default": 2.2,
+          "doc": "Segundo del IMPACTO: lente ojo de pez + temblor + destello (-1 = sin impacto). Acepta '@palabra'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "paper",
+            "felt",
+            "sage",
+            "black",
+            "fog",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿QUIÉN PAGA\nLA ^CUENTA^?",
+        "kicker": "Economía · 2026",
+        "sub": "nadie lo dice en voz alta",
+        "glitchAt": 2.2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.introv1",
+      "data": {
+        "native_name": "dinero.introv1"
+      }
+    },
+    {
+      "id": "dinero.introv2",
+      "name": "dinero.introv2",
+      "label": "dinero.introv2",
+      "kind": "component",
+      "summary": "GANCHO pregunta + revelación. La pregunta en MAYÚSCULAS finas blancas con brillo y sombra larga se DECODIFICA letra por letra sobre fieltro verde (como 'MONEY' de la referencia); en stampAt barrido con destello, la pregunta se achica arriba con un subrayado de punta brillante y la RESPUESTA cae gigante en Open Sans 800 verde volteándose en 3D con desenfoque, con anillo de chispa. Fondo adaptable (bg: felt | paper | sage | black | fog | image con src | component con use/useParams); por defecto fieltro verde.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "pregunta",
+        "revelación",
+        "neón"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo fino arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Respuesta que cae (vacío = sin revelación).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundo de la revelación (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Segundo en que empieza a decodificarse la pregunta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 16,
+          "doc": "Letras por segundo.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "paper",
+            "felt",
+            "sage",
+            "black",
+            "fog",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿CUÁNTO VALE\nUNA IDEA?",
+        "kicker": "Dartmouth · 1956",
+        "stamp": "7.500 DÓLARES",
+        "stampAt": 2.4
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.introv2",
+      "data": {
+        "native_name": "dinero.introv2"
+      }
+    },
+    {
+      "id": "dinero.outro",
+      "name": "dinero.outro",
+      "label": "dinero.outro",
+      "kind": "component",
+      "summary": "Cierre del canal SIN recuadro en lenguaje NODECONOMY (bg: black | paper | felt | sage | fog | image con src | component con use/useParams; por defecto negro verdoso con rayos verdes): GRACIAS POR VER fina que se decodifica → nombre del canal GIGANTE con contorno fantasma detrás y relleno blanco que se tipea → botón LIKE verde que se presiona y suelta chispas (dos ojos lo miran) → flecha fina con punta brillante → SUSCRÍBETE en billete verde que golpea + campana que suena → apoyo → youtube.com/@canal. Tiempos sincronizables (likeAt, subscribeAt, bellAt, supportAt).",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODECONOMY",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte el video.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodeconomy",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "black",
+          "doc": "Fondo: auto = el del diseño; presets: paper, felt, sage, black, fog; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "paper",
+            "felt",
+            "sage",
+            "black",
+            "fog",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.66,
+          "doc": "Oscurecido del fondo foto/componente.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODECONOMY",
+        "cta": "SUSCRÍBETE",
+        "support": "Apoya el canal y comparte el video.",
+        "handle": "youtube.com/@nodeconomy"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=dinero&c=dinero.outro",
+      "data": {
+        "native_name": "dinero.outro"
+      }
+    }
+  ]
+}

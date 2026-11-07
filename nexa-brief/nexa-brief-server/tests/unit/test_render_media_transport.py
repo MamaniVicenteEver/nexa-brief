@@ -170,3 +170,28 @@ async def _check_cover(base,width,height):
                         assert shown==base_box
         finally:
             await browser.close()
+
+
+def test_v2_server_uses_profile_roots_not_injected_directory(tmp_path, monkeypatch):
+    from src.config.settings import settings
+    profile = tmp_path / 'profile'
+    production = profile / 'productions/nodetech/demo'
+    production.mkdir(parents=True)
+    (production / 'clip.mp4').write_bytes(bytes(range(64)))
+    unrelated = tmp_path / 'unrelated'
+    unrelated.mkdir()
+    (unrelated / 'secret.mp4').write_bytes(b'synthetic external content')
+    monkeypatch.setattr(settings, 'storage_profile_dir', profile)
+    monkeypatch.setattr(settings, 'storage_layout_version', 2)
+    server = renderer.serve(unrelated)
+    try:
+        base = f'http://127.0.0.1:{server.server_port}'
+        req = urllib.request.Request(base + '/productions/nodetech/demo/clip.mp4', headers={'Range': 'bytes=2-5'})
+        with urllib.request.urlopen(req) as response:
+            assert response.status == 206 and response.read() == bytes(range(2, 6))
+        with pytest.raises(urllib.error.HTTPError) as exc:
+            urllib.request.urlopen(base + '/secret.mp4')
+        assert exc.value.code == 404
+    finally:
+        server.shutdown()
+        server.server_close()

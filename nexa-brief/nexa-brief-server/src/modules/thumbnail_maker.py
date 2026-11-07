@@ -171,20 +171,65 @@ async def make_thumbnail(
 async def ensure_for_job(file_paths: dict[str, str]) -> Path | None:
     """La miniatura de un video ya grabado; si no tiene (grabado antes de esto), la saca de su 16:9
     en el segundo que declara la intro de su plantilla (manifest.json → template_id)."""
-    existing = file_paths.get("thumbnail")
-    if existing and Path(existing).exists() and Path(existing).suffix.lower() in (".jpg", ".jpeg", ".png"):
-        return Path(existing)
-    landscape = file_paths.get("youtube")
-    if not landscape or not Path(landscape).exists():
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+
+    layout = layout_for_settings(settings)
+
+    def selected_path(value: str | None) -> Path | None:
+        if not value:
+            return None
+        path = Path(value)
+        if layout.schema_version >= 3:
+            from src.adapters.data.runtime_paths import assert_profile_path
+
+            if not path.is_absolute():
+                path = layout.root / path
+            try:
+                assert_profile_path(path)
+            except ValueError:
+                return None
+            if not any(path.is_relative_to(root) for root in (
+                layout.productions_dir, layout.renders_dir, layout.resources_dir, layout.cache_dir,
+            )):
+                return None
+        return path if path.is_file() else None
+
+    existing = selected_path(file_paths.get("thumbnail"))
+    if existing and existing.suffix.lower() in (".jpg", ".jpeg", ".png"):
+        return existing
+    landscape = selected_path(file_paths.get("youtube"))
+    if landscape is None:
         return None
-    out_dir = Path(landscape).parent
+    out_dir = landscape.parent
+    manifest = out_dir / "manifest.json"
+    if layout.schema_version >= 3:
+        try:
+            parts = landscape.relative_to(layout.renders_dir).parts
+        except ValueError:
+            return None
+        if len(parts) != 5 or parts[0] != "videos" or parts[-1] != "video.mp4":
+            return None
+        production = layout.productions_dir / parts[1] / parts[2]
+        if not production.is_dir():
+            return None
+        from src.adapters.data.runtime_paths import assert_profile_path
+
+        out_dir = production / "assets" / "thumbnails" / parts[3]
+        try:
+            assert_profile_path(out_dir)
+            assert_profile_path(out_dir / "thumbnail.jpg")
+            assert_profile_path(out_dir / "thumbnail.webp")
+        except ValueError:
+            return None
+        out_dir.mkdir(parents=True, exist_ok=True)
+        manifest = production / "manifest.json"
     if (out_dir / "thumbnail.jpg").exists():   # ya se sacó antes (descarga o publicación)
         return out_dir / "thumbnail.jpg"
     template_id = None
-    manifest = out_dir / "manifest.json"
     try:
         template_id = json.loads(manifest.read_text(encoding="utf-8")).get("template_id") if manifest.exists() else None
     except (OSError, ValueError):
         template_id = None
-    return await make_thumbnail(Path(landscape), out_dir, capture_at(template_id))
+    return await make_thumbnail(landscape, out_dir, capture_at(template_id))
 

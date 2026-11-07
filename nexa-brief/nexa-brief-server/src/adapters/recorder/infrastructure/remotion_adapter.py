@@ -134,7 +134,9 @@ class RemotionAdapter(RecorderPort):
         if niche_cfg is None:
             raise RecordingError("RemotionAdapter requiere niche_cfg (necesita template.media_src_filename).")
 
-        config_path = output_dir / "config.json"
+        # El audio acompaña a config/lyrics en assets/ para jobs v2 nuevos.
+        input_dir = audio_path.parent if (audio_path.parent / "config.json").is_file() else html_path.parent
+        config_path = input_dir / "config.json"
         if not config_path.exists():
             raise RecordingError(
                 f"RemotionAdapter: falta config.json en {output_dir} "
@@ -162,7 +164,7 @@ class RemotionAdapter(RecorderPort):
         if niche_cfg.template.requires_lyrics:
             # Camino existente (neon/impact/romantic): estos templates SÍ
             # dependen de lyrics.json, preservado tal cual.
-            lyrics_path = output_dir / "lyrics.json"
+            lyrics_path = input_dir / "lyrics.json"
             if not lyrics_path.exists():
                 raise RecordingError(
                     f"RemotionAdapter: falta lyrics.json en {output_dir} "
@@ -230,7 +232,7 @@ class RemotionAdapter(RecorderPort):
                     "node",
                     str(render_script),
                     *common_args,
-                    f"--asset-dir={output_dir}",
+                    f"--asset-dir={input_dir}",
                     f"--job-id={output_dir.name}",
                     f"--region={settings.remotion_aws_region}",
                     f"--function-name={settings.remotion_aws_function_name}",
@@ -243,7 +245,7 @@ class RemotionAdapter(RecorderPort):
                     "node",
                     str(render_script),
                     *common_args,
-                    f"--public-dir={output_dir}",
+                    f"--public-dir={input_dir}",
                     f"--concurrency={settings.remotion_concurrency}",
                 ]
 

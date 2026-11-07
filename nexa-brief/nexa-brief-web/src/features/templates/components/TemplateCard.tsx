@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 import { TemplateStudioModal } from "@/features/studio/components/TemplateStudioModal";
+import { cn } from "@/lib/utils";
 import { MediaPlayerModal } from "@/shared/components/media/MediaPlayerModal";
 import type { Template } from "../types";
 
@@ -32,12 +32,14 @@ const DEFAULT_PREVIEW_VOLUME = 0.05;
 export function TemplateCard({
   template,
   hideRecorder = false,
+  showDemoBadge = false,
   className,
 }: {
   template: Template;
   /** Vista de solo lectura (landing): sin Estudio en el modal y sin el motor
    * de grabación que trae cada plantilla (#rec-btn). */
   hideRecorder?: boolean;
+  showDemoBadge?: boolean;
   className?: string;
 }) {
   const t = useTranslations("templates");
@@ -156,6 +158,11 @@ export function TemplateCard({
         ) : (
           <span className="text-[13px] font-semibold">
             {t(ORIENTATION_LABEL_KEY[template.nativeOrientation])}
+          </span>
+        )}
+        {showDemoBadge && modalPreviewUrl && (
+          <span className="absolute top-2 left-2 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-bold text-black uppercase">
+            {t("prep.demo")}
           </span>
         )}
       </div>

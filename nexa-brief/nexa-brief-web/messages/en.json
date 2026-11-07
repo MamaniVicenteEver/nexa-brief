@@ -712,9 +712,30 @@
       "empty": "Nothing archived yet.",
       "chooseButton": "Choose"
     },
-    "subtitle": "All your videos in one place: review, filter and publish the ones still pending.",
+    "subtitle": "Your videos and images in one place: review, filter and follow their progress.",
     "emptyLibrary": "You haven't generated any video yet.",
     "createVideo": "Create video",
+    "mediaType": {
+      "label": "Content type",
+      "videos": "Videos",
+      "images": "Images"
+    },
+    "images": {
+      "label": "Image library",
+      "search": "Search images",
+      "category": "Category",
+      "allCategories": "All",
+      "loading": "Loading images…",
+      "empty": "There are no images in this category yet.",
+      "noResults": "No images match this search.",
+      "error": "Images could not be loaded.",
+      "retry": "Retry",
+      "chooseCategory": "Choose a category you can access to see its images.",
+      "count": "{count, plural, one {# image} other {# images}}",
+      "slides": "{count, plural, one {# slide} other {# slides}}",
+      "openPost": "View {title}",
+      "view": "View"
+    },
     "loadError": "The library could not be loaded.",
     "resultsCount": "{count, plural, one {# video} other {# videos}}",
     "tabs": {
@@ -821,7 +842,7 @@
       "renderedIntro": "Full videos that already have a final render. Open a card to review formats, copy, and publishing options.",
       "tabRendered": "Rendered",
       "tabPreparation": "To record",
-      "viewTabsLabel": "Video status",
+      "viewTabsLabel": "Content status",
       "renderedHeading": "Rendered",
       "intro": "Videos with all components ready, waiting for a full recording. Open a card to review or record one.",
       "loading": "Loading videos…",
@@ -864,7 +885,8 @@
       "filterAll": "All",
       "filterDemos": "Design demos",
       "demo": "Demo",
-      "demoNote": "design demo: same script as “The night the Wall fell”; publishing several duplicates content",
+      "designDemos": "Design demos",
+      "demoNote": "design sample; review its content before publishing",
       "tagPublishable": "Publishable",
       "publishTexts": "Publishing texts",
       "format": {
@@ -873,10 +895,15 @@
       },
       "contentTabsLabel": "Content type in preparation",
       "videosTab": "Videos",
-      "postsTab": "Posts"
+      "postsTab": "Images",
+      "videoCount": "{count, plural, one {# video} other {# videos}}",
+      "imageCount": "{count, plural, one {# image} other {# images}}",
+      "emptyImagesRendered": "There are no rendered images in this category yet."
     },
     "windows": {
       "label": "Main categories",
+      "previousCategory": "Scroll categories left",
+      "nextCategory": "Scroll categories right",
       "loading": "Loading categories…",
       "loadError": "Couldn't load the categories.",
       "status": {
@@ -1543,6 +1570,16 @@
       "hyperframes": "HyperFrames",
       "reference": "Reference",
       "other": "Other"
+    },
+    "showcase": {
+      "show": "Show components in Showcase",
+      "hide": "Hide components from Showcase",
+      "open": "Open Showcase",
+      "saving": "Saving…",
+      "pending": "Individual components have not been declared yet.",
+      "saveError": "Could not save. Try again.",
+      "loadError": "Could not load project visibility in Showcase.",
+      "retry": "Retry"
     }
   },
   "createVideo": {

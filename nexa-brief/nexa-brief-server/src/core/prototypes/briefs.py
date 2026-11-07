@@ -9,6 +9,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from src.config.settings import settings
+from src.config.content_paths import content_key, sandbox_root
 from src.core.prototypes.ideas import Idea, get_idea
 
 PROTOTIPO_URL_PATH = "/api/v1/agent/prototipo"
@@ -22,18 +23,19 @@ def _read_info(path: Path) -> dict:
     return data if isinstance(data, dict) else {}
 
 
-def _similar_templates(idea: Idea, templates_dir: Path) -> list[tuple[str, dict]]:
-    sandbox = templates_dir / "sandbox"
+def _similar_templates(idea: Idea, sandbox: Path) -> list[tuple[str, dict]]:
     candidates: list[tuple[int, str, dict]] = []
     if not sandbox.is_dir():
         return []
     for category_dir in sandbox.iterdir():
-        if not category_dir.is_dir() or category_dir.name.startswith(("_", ".")) or category_dir.name == "referencias":
+        if (not category_dir.is_dir() or not category_dir.resolve().is_relative_to(sandbox.resolve())
+                or category_dir.name.startswith(("_", ".")) or category_dir.name == "referencias"):
             continue
         same_category = category_dir.name == idea.category
         for item_dir in category_dir.iterdir():
             info_path = item_dir / "info.json"
-            if not item_dir.is_dir() or not info_path.is_file():
+            if (not item_dir.is_dir() or not item_dir.resolve().is_relative_to(sandbox.resolve())
+                    or not info_path.is_file() or info_path.is_symlink()):
                 continue
             info = _read_info(info_path)
             if not info:
@@ -127,7 +129,8 @@ def compose_brief(
 ) -> str:
     """Compone y guarda `BRIEF.md` con notas, archivos y plantillas similares."""
     root = (templates_dir or settings.templates_dir).resolve()
-    idea = get_idea(category, idea_slug, templates_dir=root)
+    idea = get_idea(category, idea_slug, templates_dir=templates_dir)
+    profile_sandbox = root / "sandbox" if templates_dir is not None else sandbox_root()
     public_base = settings.public_base_url.rstrip("/")
     date_label = (today or date.today()).isoformat()
     lines = [
@@ -147,7 +150,8 @@ def compose_brief(
     ]
     if idea.files:
         for attached in idea.files:
-            relative = attached.path.relative_to(root).as_posix()
+            relative = (attached.path.relative_to(root).as_posix() if templates_dir is not None
+                        else content_key(attached.path))
             encoded_path = "/".join(quote(part, safe="") for part in relative.split("/"))
             url = f"{PROTOTIPO_URL_PATH.replace('/agent/prototipo', '/explainer/files')}/{encoded_path}"
             metadata = f"; {_video_metadata(attached.path)}" if attached.is_video else ""
@@ -165,7 +169,7 @@ def compose_brief(
 
     lines.extend(
         [
-            _template_section(idea, root),
+            _template_section(idea, profile_sandbox),
             "",
             "## Instrucciones",
             "",

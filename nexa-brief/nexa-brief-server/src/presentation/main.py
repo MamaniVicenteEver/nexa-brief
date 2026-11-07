@@ -6,12 +6,15 @@ import asyncio
 import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from src.core.ports.agent_port import AgentIsolationUnavailableError
 
 from src.config.logging_config import setup_logging
 from src.config.settings import settings
 from src.presentation.api.routers import sound_design
 from src.presentation.api.routers import (
     categories,
+    content,
     history,
     library,
     niches,
@@ -32,6 +35,7 @@ from src.presentation.api.routers import (
     voice,
     image_posts,
     publications,
+    showcase,
 )
 
 
@@ -43,8 +47,10 @@ _scheduler = None  # Holds the APScheduler instance during the app lifetime
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_logging(settings.log_level)
+    from src.config.profile_layout import layout_for_settings
+    startup_layout = layout_for_settings(settings)
     settings.output_dir.mkdir(parents=True, exist_ok=True)
-    (settings.output_dir / "logs").mkdir(exist_ok=True)
+    (startup_layout.logs_dir if startup_layout.schema_version >= 3 else settings.output_dir / "logs").mkdir(parents=True, exist_ok=True)
     # output/node_tech, output/node_history, output/node_motion/letras, …
     from src.core.categories import ensure_output_dirs
     ensure_output_dirs(settings.output_dir)
@@ -69,7 +75,9 @@ async def lifespan(app: FastAPI):
     if settings.storage_profile_dir is not None:
         from src.adapters.realtime.shared_events import SharedEventRelay
         from src.core.realtime.event_bus import get_event_bus
-        relay = SharedEventRelay(settings.data_dir, get_event_bus())
+        from src.config.profile_layout import layout_for_settings
+        layout = layout_for_settings(settings)
+        relay = SharedEventRelay(layout.system_dir if layout.schema_version >= 2 else settings.data_dir, get_event_bus())
         relay.start()
 
     # A profile has one scheduler owner even if both APIs are running.
@@ -187,6 +195,14 @@ app = FastAPI(
     openapi_tags=openapi_tags,
 )
 
+
+@app.exception_handler(AgentIsolationUnavailableError)
+async def agent_isolation_unavailable(_request, _error):
+    return JSONResponse(status_code=503, content={
+        "detail": "Este perfil requiere un agente aislado; el backend de aislamiento aún no está disponible.",
+        "code": "agent_isolation_unavailable",
+    })
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_allow_origins,
@@ -204,6 +220,8 @@ def current_storage_profile():
                           "credentials": settings.credentials_backend, "media": settings.media_backend}}
 
 
+app.include_router(content.router, prefix="/api/v1")
+app.include_router(showcase.router, prefix="/api/v1")
 app.include_router(videos.router, prefix="/api/v1")
 app.include_router(niches.router, prefix="/api/v1")
 # Publisher router is always registered; auth is managed via accounts.json

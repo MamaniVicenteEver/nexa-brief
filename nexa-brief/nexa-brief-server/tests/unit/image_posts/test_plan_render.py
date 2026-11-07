@@ -144,7 +144,7 @@ def test_new_plan_default_does_not_change_legacy_plan_format() -> None:
     from src.core.image_posts.profiles import DEFAULT_IMAGE_FORMAT
 
     style = load_style("node_tech")
-    legacy = make_plan(style)
+    legacy = replace(make_plan(style), format="9:16")
     fresh = build_image_plan(
         category_id=legacy.category_id,
         source_video_id=legacy.source_video_id,
@@ -153,9 +153,9 @@ def test_new_plan_default_does_not_change_legacy_plan_format() -> None:
         slides=[slide.to_dict() for slide in legacy.slides],
         style=style,
     )
-    assert fresh.format == DEFAULT_IMAGE_FORMAT == "9:16"
-    assert ImagePlan.from_dict(legacy.to_dict()).format == "4:5"
-    assert plan_hash(legacy, style) != plan_hash(replace(legacy, format="9:16"), style)
+    assert fresh.format == DEFAULT_IMAGE_FORMAT == "4:5"
+    assert ImagePlan.from_dict(legacy.to_dict()).format == "9:16"
+    assert plan_hash(legacy, style) != plan_hash(replace(legacy, format="4:5"), style)
 
 
 @pytest.mark.parametrize("format,size", [("4:5", (1080, 1350)), ("3:5", (1080, 1800)), ("9:16", (1080, 1920))])

@@ -23,6 +23,7 @@ from urllib.parse import unquote, urlsplit
 
 from src.adapters.data.file_locks import AsyncFileLock
 from src.config.settings import BASE_DIR
+from src.config.content_paths import preview_directory, resolve_content_key
 from src.core.explainer.catalog import KIT_DIR, TEMPLATES_DIR, ExplainerVideo
 from src.core.explainer.publishing import service
 from src.core.explainer.publishing.opening import (
@@ -51,7 +52,7 @@ def thumbnail_file(video: ExplainerVideo, option: Option | None = None, orientat
     if orientation not in ("16x9", "9x16"):
         raise ThumbnailError(f"orientación inválida: {orientation}")
     suffix = "-9x16" if orientation == "9x16" else ""
-    return video.path / "render" / f"thumbnail-{option or chosen_option(video)}{suffix}.jpg"
+    return preview_directory(video.path) / f"thumbnail-{option or chosen_option(video)}{suffix}.jpg"
 
 
 def _capture_digest(video: ExplainerVideo, spec: dict) -> str:
@@ -73,8 +74,17 @@ def _capture_digest(video: ExplainerVideo, spec: dict) -> str:
         if parsed.scheme or parsed.netloc:
             continue
         relative = unquote(parsed.path)
-        path = TEMPLATES_DIR / relative.lstrip("/") if relative.startswith("/") else video.path / relative
-        if path.resolve().is_relative_to(TEMPLATES_DIR.resolve()) and path.is_file():
+        try:
+            if relative.startswith("/"):
+                from src.config.profile_layout import layout_for_settings
+                from src.config.settings import settings
+                path = (resolve_content_key(relative.lstrip("/")) if layout_for_settings(settings).schema_version >= 2
+                        else TEMPLATES_DIR / relative.lstrip("/"))
+            else:
+                path = video.path / relative
+        except ValueError:
+            continue
+        if (path.resolve().is_relative_to(TEMPLATES_DIR.resolve()) or path.resolve().is_relative_to(video.path.resolve())) and path.is_file():
             stat = path.stat()
             digest.update(f"{source}:{stat.st_mtime_ns}:{stat.st_size}".encode())
     return digest.hexdigest()
@@ -154,7 +164,7 @@ async def render(
     only_missing: bool = False,
 ) -> dict[str, Path]:
     """Captura las miniaturas pedidas (las que el video puede tener) → {opción: archivo}."""
-    async with AsyncFileLock(video.path / "render" / ".thumbnails.lock"):
+    async with AsyncFileLock(preview_directory(video.path) / ".thumbnails.lock"):
         if "C" in options:
             _validate_c(video)
         specs = intro_specs(video)

@@ -24808,6 +24808,15 @@
      "options": null,
      "min": 0,
      "max": 1
+    },
+    "fadeOut": {
+     "type": "bool",
+     "default": true,
+     "doc": "Fundido a negro al final del cierre.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
     }
    },
    "example": {
@@ -24996,6 +25005,15 @@
      "options": null,
      "min": 0,
      "max": 1
+    },
+    "fadeOut": {
+     "type": "bool",
+     "default": true,
+     "doc": "Fundido a negro al final del cierre.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
     },
     "thanksScale": {
      "type": "number",

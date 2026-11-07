@@ -18,6 +18,8 @@ from urllib.parse import quote
 from PIL import Image
 
 from src.adapters.data.layout import PUBLICATIONS_ROOT
+from src.adapters.data.runtime_paths import assert_profile_path, temporary_dir
+from src.config.profile_layout import layout_for_settings
 from src.config.settings import settings
 from src.core.image_posts.profiles import IMAGE_FORMAT_PROFILES
 from src.core.ports.media_storage_port import MediaObject
@@ -33,27 +35,106 @@ class LocalPublicationMedia:
     def __init__(self, data_dir: Path | None = None) -> None:
         self._data_dir = data_dir
 
+    def _uses_profile_layout(self, layout) -> bool:
+        return (self._data_dir is None or
+                layout.schema_version >= 2 and self._data_dir.absolute() == layout.data_dir.absolute())
+
     @property
     def root(self) -> Path:
-        return (self._data_dir or settings.data_dir) / PUBLICATIONS_ROOT
+        layout = layout_for_settings(settings)
+        if not self._uses_profile_layout(layout) or layout.schema_version == 1:
+            path = (self._data_dir or layout.data_dir) / PUBLICATIONS_ROOT
+        elif layout.schema_version == 2:
+            path = layout.productions_dir / "_publicaciones"
+        else:
+            path = layout.renders_dir
+        assert_profile_path(path)
+        return path
 
-    def _path(self, key: str) -> Path:
+    @property
+    def _legacy_root(self) -> Path | None:
+        layout = layout_for_settings(settings)
+        if not self._uses_profile_layout(layout) or layout.schema_version == 1:
+            return None
+        return layout.data_dir / PUBLICATIONS_ROOT
+
+    @property
+    def _legacy_roots(self) -> list[Path]:
+        layout = layout_for_settings(settings)
+        roots = [self._legacy_root] if self._legacy_root is not None else []
+        if self._uses_profile_layout(layout) and layout.schema_version >= 3:
+            roots.insert(0, layout.productions_dir / "_publicaciones")
+        return roots
+
+    @property
+    def trace_root(self) -> Path:
+        layout = layout_for_settings(settings)
+        if self._uses_profile_layout(layout) and layout.schema_version >= 3:
+            return layout.logs_dir / "publications"
+        return self.root
+
+    def _path(self, key: str, *, legacy: bool = False, root: Path | None = None) -> Path:
+        storage_root = root if root is not None else self._legacy_root if legacy else self.root
+        if storage_root is None:
+            raise ValueError("No legacy publication root")
         parts = Path(key).parts
         if not parts or Path(key).is_absolute() or any(part in {"", ".", ".."} for part in parts):
             raise ValueError("Clave de medios inválida")
         if any(not _SAFE_PART.fullmatch(part) for part in parts):
             raise ValueError("Clave de medios inválida")
-        root = self.root.resolve()
-        path = self.root.joinpath(*parts)
+        layout = layout_for_settings(settings)
+        boundary = (layout.root if self._uses_profile_layout(layout) and layout.schema_version >= 2
+                    else storage_root.parent)
+        path = storage_root.joinpath(*parts)
         for parent in (path, *path.parents):
-            if parent == self.root.parent:
-                break
             if parent.is_symlink():
                 raise ValueError("No se permiten symlinks en medios de publicación")
+            if parent == boundary:
+                break
+        root = storage_root.resolve()
+        if boundary == layout.root and not root.is_relative_to(layout.root.resolve()):
+            raise ValueError("La raíz de medios sale del perfil")
         resolved = path.resolve(strict=False)
         if not resolved.is_relative_to(root):
             raise ValueError("La clave escapa del archivo de publicaciones")
         return resolved
+
+    def _read_path(self, key: str) -> Path:
+        path = self._path(key)
+        layout = layout_for_settings(settings)
+        if not path.exists() and self._uses_profile_layout(layout) and layout.schema_version >= 3:
+            from src.core.data import documents
+            alias = documents("media_aliases").get(hashlib.sha256(key.encode()).hexdigest())
+            if alias is not None:
+                if not isinstance(alias, dict) or alias.get("legacy_key") != key:
+                    raise ValueError("Alias de medios inválido")
+                target = alias.get("storage_key")
+                if not isinstance(target, str) or not target.startswith(("images/", "videos/")):
+                    raise ValueError("Destino de alias inválido")
+                candidate = self._path(target)
+                expected = alias.get("sha256")
+                if expected and (not candidate.is_file() or hashlib.sha256(candidate.read_bytes()).hexdigest() != expected):
+                    raise ValueError("El medio del alias no coincide con su hash")
+                return candidate
+        for root in self._legacy_roots:
+            if path.exists():
+                break
+            old_path = self._path(key, root=root)
+            if old_path.exists():
+                return old_path
+        return path
+
+    def read_trace(self, key: str) -> dict | None:
+        from src.core.image_posts.trace import read as read_trace
+
+        if self.trace_root != self.root:
+            parts = Path(key).parts
+            if len(parts) < 2 or parts[-1] != "trace.json":
+                raise ValueError("Clave de traza inválida")
+            path = self._path(f"{parts[-2]}/trace.json", root=self.trace_root)
+            if path.is_file():
+                return read_trace(path)
+        return read_trace(self._read_path(key))
 
     @staticmethod
     def _read(stream: BinaryIO | bytes) -> bytes:
@@ -94,6 +175,19 @@ class LocalPublicationMedia:
                 or mime == "video/mp4" and not key.lower().endswith(".mp4")):
             raise ValueError("La extensión y el MIME no coinciden")
         path = self._path(key)
+        existing_alias = self._read_path(key)
+        if existing_alias != path and existing_alias.is_file():
+            existing = existing_alias.read_bytes()
+            if hashlib.sha256(existing).hexdigest() != digest or len(existing) != len(data):
+                raise FileExistsError("La clave de almacenamiento ya contiene otros bytes")
+            return MediaObject(key=key, bytes=len(data), sha256=digest, mime=mime)
+        for legacy_root in self._legacy_roots:
+            legacy = self._path(key, root=legacy_root)
+            if legacy.exists():
+                existing = legacy.read_bytes()
+                if hashlib.sha256(existing).hexdigest() != digest or len(existing) != len(data):
+                    raise FileExistsError("La clave de almacenamiento ya contiene otros bytes")
+                return MediaObject(key=key, bytes=len(data), sha256=digest, mime=mime)
         path.parent.mkdir(parents=True, exist_ok=True)
         self._path(key)  # Revalidar tras crear los directorios para detectar symlinks.
         if path.exists():
@@ -102,7 +196,7 @@ class LocalPublicationMedia:
             if existing_hash != digest or len(existing) != len(data):
                 raise FileExistsError("La clave de almacenamiento ya contiene otros bytes")
             return MediaObject(key=key, bytes=len(data), sha256=digest, mime=mime)
-        fd, temp_name = tempfile.mkstemp(prefix=".media-", suffix=".tmp", dir=path.parent)
+        fd, temp_name = tempfile.mkstemp(prefix=".media-", suffix=".tmp", dir=temporary_dir(path))
         try:
             with os.fdopen(fd, "wb") as output:
                 output.write(data)
@@ -126,7 +220,7 @@ class LocalPublicationMedia:
         return MediaObject(key=key, bytes=len(data), sha256=digest, mime=mime)
 
     def get(self, key: str, byte_range: tuple[int, int] | None = None) -> BinaryIO:
-        path = self._path(key)
+        path = self._read_path(key)
         if not path.is_file():
             raise FileNotFoundError(key)
         data = path.read_bytes()
@@ -142,7 +236,7 @@ class LocalPublicationMedia:
             raise ValueError("Audiencia no permitida")
         if ttl <= 0 or ttl > 3600:
             raise ValueError("TTL fuera del rango permitido")
-        path = self._path(key)
+        path = self._read_path(key)
         if not path.is_file():
             raise FileNotFoundError(key)
         content = path.read_bytes()
@@ -184,7 +278,7 @@ class LocalPublicationMedia:
             raise ValueError("Token inválido") from exc
         if expires < int(time.time()) or audience and token_audience != audience:
             raise ValueError("Token vencido o de otra audiencia")
-        path = self._path(str(key))
+        path = self._read_path(str(key))
         if not path.is_file() or token_audience not in {"meta", "gallery"}:
             raise ValueError("Medio no encontrado")
         content = path.read_bytes()
@@ -197,10 +291,15 @@ class LocalPublicationMedia:
         return path, mime
 
     def delete(self, key: str, expected_sha256: str | None = None) -> bool:
-        path = self._path(key)
-        if not path.exists():
-            return False
-        if expected_sha256 and hashlib.sha256(path.read_bytes()).hexdigest() != expected_sha256.lower():
-            raise ValueError("El SHA-256 no coincide; no se elimina el archivo")
-        path.unlink()
-        return True
+        paths = [self._path(key)]
+        alias_path = self._read_path(key)
+        if alias_path not in paths:
+            paths.append(alias_path)
+        paths.extend(self._path(key, root=root) for root in self._legacy_roots)
+        existing = list(dict.fromkeys(path for path in paths if path.is_file()))
+        for path in existing:
+            if expected_sha256 and hashlib.sha256(path.read_bytes()).hexdigest() != expected_sha256.lower():
+                raise ValueError("El SHA-256 no coincide; no se elimina el archivo")
+        for path in existing:
+            path.unlink()
+        return bool(existing)

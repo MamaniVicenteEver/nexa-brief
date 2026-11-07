@@ -15,17 +15,12 @@ import json
 import hashlib
 import uuid
 import asyncio
-from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from typing import Any
-from pathlib import Path
 
 import structlog
 
-from src.adapters.data.layout import COLLECTIONS
-from src.adapters.data.file_locks import AsyncFileLock
-from src.config.settings import settings
-from src.core.data import collection
+from src.core.data import collection, coordination
 from src.core.realtime.event_bus import get_event_bus
 from src.core.realtime.events import RealtimeEvent
 from src.core.schedule import slot_repository
@@ -63,14 +58,6 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-@asynccontextmanager
-async def _queue_claim_lock():
-    """Serializa alta/reclamo de imágenes entre workers con JSON compartido."""
-    relative_path, _ = COLLECTIONS["queue_entries"]
-    lock_path = settings.data_dir / Path(relative_path).parent / ".queue-claim.lock"
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
-    async with AsyncFileLock(lock_path):
-        yield
 
 
 # ── Create ───────────────────────────────────────────────────────────────────
@@ -80,7 +67,7 @@ async def create_immediate_once(
 ) -> tuple[QueueEntry, bool]:
     """Persist the client attempt before scheduling any remote operation."""
     async with _immediate_lock:
-        async with _queue_claim_lock():
+        async with coordination("queue_claim"):
             existing = _entries().first({"idempotency_key": key})
             if existing:
                 entry = QueueEntry(**existing)
@@ -141,7 +128,7 @@ async def create(
         delivery_id=delivery_id,
     )
     if delivery_id:
-        async with _queue_claim_lock():
+        async with coordination("queue_claim"):
             existing = _entries().first({"delivery_id": delivery_id})
             if existing:
                 return QueueEntry(**existing)
@@ -238,7 +225,7 @@ async def _update_status(
 
 
 async def mark_publishing(entry_id: str) -> QueueEntry | None:
-    async with _queue_claim_lock():
+    async with coordination("queue_claim"):
         entry = await _update_status(
             entry_id, QueueStatus.PUBLISHING,
             only_if={"status": QueueStatus.QUEUED.value},
@@ -308,7 +295,7 @@ async def cancel(entry_id: str) -> QueueEntry:
 
 async def reschedule(entry_id: str, scheduled_at: str | None) -> QueueEntry | None:
     """Cambia la hora de una entrada pendiente, incluida la publicación inmediata."""
-    async with _queue_claim_lock():
+    async with coordination("queue_claim"):
         record = await _entries().update(
             entry_id,
             {"scheduled_at": scheduled_at, "updated_at": _now_iso()},
@@ -347,7 +334,7 @@ async def delete_for_job(job_id: str) -> int:
 
 async def delete_for_delivery(delivery_id: str) -> int:
     """Purga la referencia local de cola tras asegurar que no está publicando."""
-    async with _queue_claim_lock():
+    async with coordination("queue_claim"):
         entry = find_for_delivery(delivery_id)
         if entry is None:
             return 0

@@ -132,6 +132,7 @@ class SandboxItemResponse(BaseModel):
     has_poster: bool
     has_info: bool = False
     has_components: bool = False
+    demo: bool = False
     total_tokens: int | None = None
     thumbnail_url: str | None = None
     player: Literal["protocol", "video", "none"] = "none"

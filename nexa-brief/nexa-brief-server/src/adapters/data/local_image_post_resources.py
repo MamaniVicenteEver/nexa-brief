@@ -8,6 +8,7 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+from src.adapters.data.runtime_paths import assert_profile_path
 from src.config.settings import settings
 from src.core.image_posts.style import StyleSystem, parse_style
 from src.core.ports.image_post_resources import VerifiedImageMaterial
@@ -101,7 +102,14 @@ class LocalImagePostResources:
 
     def _account_rows(self) -> list[dict[str, Any]]:
         path = self.data_dir / "image_posts" / "account_map.json"
+        from src.config.profile_layout import layout_for_settings
+        layout = layout_for_settings(settings)
+        if layout.schema_version >= 2 and self.data_dir == layout.data_dir:
+            path = layout.connections_dir / "image-posts" / "account_map.json"
+        assert_profile_path(path)
         if not path.is_file():
+            if settings.storage_profile_dir is not None:
+                return []
             path = self.server_dir / "data" / "image_posts" / "account_map.json"
         raw = json.loads(path.read_text(encoding="utf-8"))
         if raw.get("schema_version") != 1 or not isinstance(raw.get("accounts"), list):

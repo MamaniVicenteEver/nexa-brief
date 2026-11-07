@@ -44,8 +44,8 @@ logger = structlog.get_logger(__name__)
 
 async def run(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
     t_start = time.monotonic()
-    output_dir = job.artifacts.output_dir
-    logs_dir = output_dir / "logs"
+    output_dir = job.artifacts.content_dir
+    logs_dir = job.artifacts.log_dir or job.artifacts.output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc).isoformat()
 

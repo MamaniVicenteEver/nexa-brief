@@ -415,25 +415,42 @@ def test_slot_filter_follows_category_tree(tmp_path: Path, niche_filter, picked)
 
 # ── comando real que se ejecuta ─────────────────────────────────────────────
 
+class _FakePipe:
+    def __init__(self, chunks=()):
+        self.chunks = list(chunks)
+
+    async def read(self, _size):
+        return self.chunks.pop(0) if self.chunks else b""
+
+
+@pytest.fixture
+def fake_render_process(monkeypatch):
+    """Emula los dos pipes y la sesión del proceso sin lanzar CLI real."""
+    from src.adapters.recorder.infrastructure import subprocess_progress
+
+    def no_process_group(_pid, _signal):
+        raise ProcessLookupError
+
+    monkeypatch.setattr(subprocess_progress.os, "killpg", no_process_group)
+    def make(*, stdout=(), stderr=(), returncode=0):
+        class Process:
+            pid = 99999999
+            async def wait(self):
+                return self.returncode
+        process = Process()
+        process.stdout = _FakePipe(stdout)
+        process.stderr = _FakePipe(stderr)
+        process.returncode = returncode
+        return process
+    return make
+
+
 @pytest.mark.parametrize(("seconds", "expected_tail"), [(10, ["--seconds", "10"]), (None, ["--formats", "9x16,16x9"])])
-def test_kit_render_command(monkeypatch, seconds, expected_tail):
-    captured: list[tuple] = []
-
-    class _Stdout:
-        async def readline(self):
-            return b""
-
-    class _Proc:
-        returncode = 0
-        stdout = _Stdout()
-
-        async def wait(self):
-            return 0
-
+def test_kit_render_command(monkeypatch, fake_render_process, seconds, expected_tail):
+    captured = []
     async def fake_exec(*cmd, **kwargs):
         captured.append(cmd)
-        return _Proc()
-
+        return fake_render_process()
     monkeypatch.setattr(recorder_mod.asyncio, "create_subprocess_exec", fake_exec)
     asyncio.run(recorder_mod.run_kit_render("codex-titanic", seconds))
     cmd = list(captured[0])
@@ -443,53 +460,22 @@ def test_kit_render_command(monkeypatch, seconds, expected_tail):
     assert Path(cmd[1]).exists()
 
 
-def test_kit_render_failure_raises(monkeypatch):
-    class _Stdout:
-        def __init__(self):
-            self.lines = [b"Traceback: boom\n", b""]
-
-        async def readline(self):
-            return self.lines.pop(0)
-
-    class _Proc:
-        returncode = 2
-        stdout = _Stdout()
-
-        async def wait(self):
-            return 2
-
+def test_kit_render_failure_raises(monkeypatch, fake_render_process):
     async def fake_exec(*cmd, **kwargs):
-        return _Proc()
-
+        return fake_render_process(stderr=[b"Traceback: boom\n"], returncode=2)
     monkeypatch.setattr(recorder_mod.asyncio, "create_subprocess_exec", fake_exec)
-    with pytest.raises(recorder_mod.RenderError, match="código 2"):
+    with pytest.raises(recorder_mod.RenderError, match="código 2.*boom"):
         asyncio.run(recorder_mod.run_kit_render("x", 10))
 
 
-def test_kit_render_forwards_output_as_it_arrives(monkeypatch):
-    class _Stdout:
-        def __init__(self):
-            self.lines = [b"@@format 16x9 1 1\n", b"@@progress 3 5\n", b""]
-
-        async def readline(self):
-            return self.lines.pop(0)
-
-    class _Proc:
-        returncode = 0
-        stdout = _Stdout()
-
-        async def wait(self):
-            return 0
-
+def test_kit_render_forwards_output_as_it_arrives(monkeypatch, fake_render_process):
     captured = {}
-
     async def fake_exec(*cmd, **kwargs):
         captured["cmd"] = cmd
         captured.update(kwargs)
-        return _Proc()
-
+        return fake_render_process(stdout=[b"@@format 16x9 1 1\n", b"@@progress 3 5\n"])
     monkeypatch.setattr(recorder_mod.asyncio, "create_subprocess_exec", fake_exec)
-    received: list[str] = []
+    received = []
     asyncio.run(recorder_mod.run_kit_render("x", None, ("16x9",), on_output=received.append))
     assert received == ["@@format 16x9 1 1", "@@progress 3 5"]
     assert captured["env"]["PYTHONUNBUFFERED"] == "1"
@@ -582,14 +568,16 @@ async def test_design_picker_offers_imperio_in_both_categories(api_client):
 @pytest.mark.parametrize(
     ("body", "status"),
     [
-        ({"publish": True, "duration": "full"}, 400),                                   # falta cuenta
-        ({"publish": True, "duration": "10", "account_selector": "youtube:c"}, 400),    # preview no se publica
+        ({"publish": True, "duration": "full"}, 422),                                   # falta cuenta
+        ({"publish": True, "duration": "10", "account_selector": "youtube:c"}, 422),    # preview no se publica
         ({"duration": "30"}, 422),                                                      # duración inválida
         ({"privacy": "secreto"}, 422),                                                  # privacidad inválida
     ],
 )
-async def test_api_record_validation(body, status, api_client):
-    response = await api_client.post("/api/v1/explainer/videos/codex-titanic/record", json=body)
+async def test_api_record_validation(body, status, api_client, monkeypatch, videos_root):
+    # El endpoint traduce ValueError del recorder a 422; usa un video de fixture.
+    monkeypatch.setattr("src.presentation.api.routers.explainer.get_video", lambda _: load_video(videos_root / "tech-1"))
+    response = await api_client.post("/api/v1/explainer/videos/tech-1/record", json=body)
     assert response.status_code == status, response.text
 
 
@@ -667,6 +655,42 @@ def test_kit_cli_stops_when_render_fails(tmp_path: Path, monkeypatch):
     with pytest.raises(SystemExit) as exc:
         kit.cmd_render(SimpleNamespace(id="vid", formats="9x16", seconds=10))
     assert exc.value.code == 3
+
+
+def test_kit_cli_v3_stages_managed_and_commits_standalone_renders(tmp_path: Path, monkeypatch):
+    from src.config.profile_layout import resolve_profile_layout
+
+    layout = resolve_profile_layout(tmp_path / "profile", 3)
+    monkeypatch.setattr(settings, "storage_profile_dir", layout.root)
+    monkeypatch.setattr(settings, "storage_layout_version", 3)
+    monkeypatch.setattr(settings, "data_dir", layout.data_dir)
+    monkeypatch.setattr(settings, "output_dir", layout.renders_dir)
+    monkeypatch.delenv("NEXA_RENDER_MANAGED", raising=False)
+    monkeypatch.delenv("NEXA_RENDER_OUTPUT_DIR", raising=False)
+    video = layout.productions_dir / "nodetech" / "vid"
+    video.mkdir(parents=True)
+    (video / "index.html").write_text("<html></html>")
+    kit = _load_kit_module()
+    monkeypatch.setattr(kit, "vdir", lambda _id: video)
+    monkeypatch.setattr(kit, "cmd_manifest", lambda a: None)
+    def fake_run(cmd, **kwargs):
+        Path(cmd[3]).write_bytes(b"synthetic video")
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(kit, "run", fake_run)
+    kit.cmd_render(SimpleNamespace(id="vid", formats="9x16,16x9", seconds=0))
+    outputs = list((layout.renders_dir / "videos/nodetech/vid").glob("*/video.mp4"))
+    assert len(outputs) == 2
+    assert all(path.read_bytes() == b"synthetic video" for path in outputs)
+    event = next((layout.runtime_dir / "video_backups/events").glob("*.json"))
+    assert set(json.loads(event.read_text())["outputs"]) == {"9x16", "16x9"}
+    staging = layout.runtime_dir / "recordings/vid/managed"
+    monkeypatch.setenv("NEXA_RENDER_MANAGED", "1")
+    monkeypatch.setenv("NEXA_RENDER_OUTPUT_DIR", str(staging))
+    kit.cmd_render(SimpleNamespace(id="vid", formats="16x9", seconds=10))
+    assert (staging / "vid-16x9-10s.mp4").is_file()
+    monkeypatch.setenv("NEXA_RENDER_OUTPUT_DIR", str(tmp_path / "elsewhere"))
+    with pytest.raises(SystemExit):
+        kit.cmd_render(SimpleNamespace(id="vid", formats="16x9", seconds=10))
 
 
 def test_publish_to_several_channels_with_own_texts(videos_root: Path, make_recorder, monkeypatch):

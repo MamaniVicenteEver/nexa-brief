@@ -436,7 +436,7 @@ def test_repeat_limits_count_custom_components_and_photos(tmp_path):
 def test_repeat_limits_do_not_flag_approved_videos():
     import check_storyboard as checker
     from pathlib import Path
-    for name in ("ia-despidos-programadores-amazon", "apolo-1202"):
+    for name in ("lo-que-le-contas-a-la-ia-no-es-privado-tus-chats",):
         video = Path("src/templates/nodetech") / name
         board = json.loads((video / "assets/storyboard.json").read_text())
         beats = [{"i": i, "use": b["use"], "layer": "main", "t0": i, "t1": i+1, "b": b}

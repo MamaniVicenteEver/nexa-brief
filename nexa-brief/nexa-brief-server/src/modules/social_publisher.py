@@ -264,7 +264,7 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
     elapsed = round(time.monotonic() - t_start, 2)
 
     # ── 4. Write audit JSON ───────────────────────────────────────────────────
-    logs_dir = job.artifacts.output_dir / "logs"
+    logs_dir = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     audit_data = {

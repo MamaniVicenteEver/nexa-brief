@@ -78,3 +78,22 @@ it("actualiza el iframe con la URL de la API", async () => {
   fireEvent.click(screen.getByRole("radio", { name: "Dos" }));
   await waitFor(() => expect(screen.getByTitle("Vista").getAttribute("src")).toBe("/otra"));
 });
+
+it("la tarjeta de Plantillas abre el video principal sin selector de componentes", () => {
+  mocks.components = [{ name: "atlas.uno", label: "Uno", summary: "Primero", default: true }];
+  render(
+    <SandboxPreviewModal
+      target={{ kind: "iframe", url: "/principal" }}
+      title="Atlas"
+      folder="nodehistory"
+      id="atlas"
+      showComponents={false}
+    >
+      <button type="button">Principal</button>
+    </SandboxPreviewModal>,
+  );
+  fireEvent.click(screen.getByText("Abrir modal"));
+  expect(screen.queryByLabelText("Componentes")).toBeNull();
+  expect(mocks.request).not.toHaveBeenCalled();
+  expect(screen.getByTitle("Vista").getAttribute("src")).toBe("/principal");
+});

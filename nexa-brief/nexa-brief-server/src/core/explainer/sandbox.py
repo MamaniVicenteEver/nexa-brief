@@ -8,11 +8,19 @@ from pathlib import Path
 from urllib.parse import quote
 
 from src.core.categories import explainer_folders, list_categories
+from src.config.content_paths import sandbox_root
+from src.config.profile_layout import layout_for_settings
+from src.config.settings import settings
 from src.core.explainer.catalog import TEMPLATES_DIR, _read_json
 from src.core.explainer import promote as promotion
 from src.core.explainer import sandbox_info
 
 SANDBOX_DIR = TEMPLATES_DIR / "sandbox"
+def get_sandbox_dir() -> Path:
+    """Selected profile sandbox, preserving the legacy override for tests and tools."""
+    return sandbox_root() if layout_for_settings(settings).schema_version >= 2 else SANDBOX_DIR
+
+
 BUSY_MESSAGE = "Hay una producción o grabación en curso para este video"
 REFERENCE_CATEGORIES = (
     "nodetech",
@@ -59,6 +67,7 @@ class SandboxItem:
     promote_blocker: str | None = None
     subcategory: str | None = None
     has_components: bool = False
+    demo: bool = False
 
 
 @dataclass
@@ -205,7 +214,9 @@ def load_item(
     promote_blocker = PROMOTE_BLOCKER_BY_KIND[kind]
     promotable = False
     if kind == "explainer_kit":
-        promote_blocker = promotion.promotion_blocker(item_dir, templates_dir=item_dir.parents[2])
+        selected = get_sandbox_dir().resolve()
+        template_override = None if layout_for_settings(settings).schema_version >= 2 and item_dir.resolve().is_relative_to(selected) else item_dir.parents[2]
+        promote_blocker = promotion.promotion_blocker(item_dir, templates_dir=template_override)
         promotable = promote_blocker is None
         if item_dir.name in busy_ids:
             promote_blocker = BUSY_MESSAGE
@@ -236,6 +247,7 @@ def load_item(
         promotable=promotable,
         promote_blocker=promote_blocker,
         subcategory=subcategory,
+        demo=manifest.get("demo") is True,
     )
 
 
@@ -258,10 +270,11 @@ def _folder_details(folder: str) -> tuple[str, str | None]:
 
 def list_sandbox(root: Path | None = None, busy_ids: set[str] = frozenset()) -> list[SandboxFolder]:
     """Lista las carpetas del sandbox y ordena sus elementos por fecha."""
-    sandbox_root = root or SANDBOX_DIR
+    selected_sandbox = root or get_sandbox_dir()
     folder_categories = explainer_folders()
     category_order = {category_id: index for index, category_id in enumerate(folder_categories.values())}
-    folders = _visible_directories(sandbox_root)
+    # Reusable design bundles have their own registry; this list is episodes.
+    folders = [path for path in _visible_directories(selected_sandbox) if path.name != "designs"]
 
     def folder_order(path: Path) -> tuple[int, int | str]:
         if path.name in {"referencias", "nuevos"}:

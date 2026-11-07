@@ -8,6 +8,8 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from src.adapters.data.runtime_paths import assert_profile_path
+from src.config.profile_layout import layout_for_settings
 from src.config.settings import settings
 from src.core.image_posts.models import MusicOption
 
@@ -21,9 +23,13 @@ class LicensedTrack:
 class LicensedReelMusic:
     def __init__(self, data_dir: Path | None = None) -> None:
         self.root = (data_dir or settings.data_dir) / "media-cache" / "reel_music"
+        layout = layout_for_settings(settings)
+        self._media_root = (layout.resources_dir / "reel_music"
+                            if layout.schema_version == 2 and (data_dir is None or Path(data_dir).absolute() == layout.data_dir.absolute()) else self.root)
 
     def list(self) -> list[dict]:
         path = self.root / "catalog.json"
+        assert_profile_path(path)
         if not path.is_file():
             return []
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -58,7 +64,11 @@ class LicensedReelMusic:
         name = row.get("file", "")
         if not name or Path(name).name != name or not name.endswith(".mp3"):
             raise ValueError("Archivo musical inválido")
-        path = self.root / name
+        path = self._media_root / name
+        assert_profile_path(path)
+        if not path.exists() and self._media_root != self.root:
+            path = self.root / name  # v1 media, only in this profile
+            assert_profile_path(path)
         if not path.is_file() or path.is_symlink():
             raise ValueError("La pista no está disponible")
         if hashlib.sha256(path.read_bytes()).hexdigest() != row["source_sha256"]:

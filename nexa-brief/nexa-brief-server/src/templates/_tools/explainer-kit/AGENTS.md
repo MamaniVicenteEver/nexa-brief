@@ -31,7 +31,7 @@ visuales, cada uno pensado como un canal):
 El kit (`explainer-kit/`) NO pertenece a ningún video: es la fábrica. Cada video vive en
 `src/templates/<carpeta>/<video-id>/` (carpeta de su categoría: `nodetech/`, `nodehistory/`, `nodepolitics/`, `nodeeconomy/`) y es **solo datos** (guion, voz, transcripción, storyboard,
 fotos). Referencias terminadas para imitar el nivel: `nodehistory/turing-enigma` (binary),
-`nodetech/apolo-1202` (rough).
+`nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats` (rough, demo).
 
 ## 1. Reglas no negociables
 
@@ -86,8 +86,10 @@ Para borradores de texto o diálogo, el productor puede elegir `text_draft` o `d
 `gpt-6.1-terra`, esfuerzo `medium`) cuando una primera versión ayude. Son delegaciones optativas: no
 cambian el modelo habitual del productor, la voz Gemini ni los roles DeepSeek.
 
-Qué modelo cumple cada rol: `src/skills/models/roles.json`. Todo uso de modelos (tokens, vueltas) queda
-en `work/usage.jsonl` solo; `kit.py usage <id>` arma `usage.json` (ver `guides/orquestacion.md §4`).
+Qué modelo cumple cada rol: `src/skills/models/roles.json`. En perfiles v1 el uso de modelos queda
+en `work/usage.jsonl` y `kit.py usage <id>` arma `usage.json`. En perfiles v2 el registro y su resumen
+van a `logs/videos/<video-id>/` del perfil; el host registra la referencia en el índice de logs.
+El agente solo escribe el directorio de logs de su propio video (ver `guides/orquestacion.md §4`).
 
 ## 3. Pipeline (pasos 1–10)
 
@@ -176,7 +178,7 @@ con 0 errores. Las demás categorías:
   `thumbnail_image` (la foto de la miniatura B, `guides/manifest.md`).
   **Sin emojis** en ningún texto (el backend igual los borra al publicar).
 - `.venv/bin/python $K manifest <video-id>` → `status: "listo"`.
-- `.venv/bin/python $K usage <video-id>` → `usage.json` (modelos, tokens e iteraciones del video).
+- `.venv/bin/python $K usage <video-id>` → resumen de modelos, tokens e iteraciones (ubicación según perfil).
 
 ### Paso 10 · Render (solo si te lo piden)
 - `.venv/bin/python $K render <video-id> --formats 9x16,16x9 --background`, luego repetí `kit.py render <video-id> --wait --timeout 20` hasta éxito (cuadro a cuadro, ~15–20 min por formato).

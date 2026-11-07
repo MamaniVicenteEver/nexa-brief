@@ -11,6 +11,9 @@ from pathlib import Path
 
 from src.core.explainer.catalog import READY_STATUSES, TEMPLATES_DIR
 from src.core.categories import get_category
+from src.config.content_paths import production_root, sandbox_root
+from src.config.profile_layout import layout_for_settings
+from src.config.settings import settings
 
 MESSAGE_NOT_FOUND = "No existe {path}"
 MESSAGE_NOT_SANDBOX = "{id} ya está en producción"
@@ -50,11 +53,12 @@ def plan_promotion(
     item_dir: Path,
     *,
     force: bool = False,
-    templates_dir: Path = TEMPLATES_DIR,
+    templates_dir: Path | None = None,
 ) -> PromotePlan:
     """Valida una promoción sin modificar archivos."""
     item_path = Path(item_dir)
-    templates_root = Path(templates_dir).resolve()
+    templates_root = Path(templates_dir or TEMPLATES_DIR).resolve()
+    use_profile = templates_dir is None and layout_for_settings(settings).schema_version >= 2
     if not item_path.is_dir():
         raise PromoteError(
             "not_found",
@@ -62,9 +66,9 @@ def plan_promotion(
         )
 
     source = item_path.resolve()
-    sandbox_root = (templates_root / "sandbox").resolve()
+    source_root = sandbox_root().resolve() if use_profile else (templates_root / "sandbox").resolve()
     try:
-        relative_source = source.relative_to(sandbox_root)
+        relative_source = source.relative_to(source_root)
     except ValueError as exc:
         raise PromoteError("not_sandbox", MESSAGE_NOT_SANDBOX.format(id=source.name)) from exc
 
@@ -86,7 +90,10 @@ def plan_promotion(
         if category is None or category.engine != "explainer_kit" or not category.folder:
             raise PromoteError("invalid_category", f"Categoría de producción inválida: {category_id}")
         folder = category.folder
-    destination = templates_root / folder / video_id
+    destination = (production_root() if use_profile else templates_root) / folder / video_id
+    destination_base = (production_root() if use_profile else templates_root).resolve()
+    if not destination.resolve().is_relative_to(destination_base):
+        raise PromoteError("invalid_destination", "La carpeta de destino sale de producción")
     status = manifest.get("status")
     if status not in READY_STATUSES and not force:
         raise PromoteError(
@@ -102,7 +109,7 @@ def plan_promotion(
     return PromotePlan(source=source, destination=destination)
 
 
-def promotion_blocker(item_dir: Path, *, templates_dir: Path = TEMPLATES_DIR) -> str | None:
+def promotion_blocker(item_dir: Path, *, templates_dir: Path | None = None) -> str | None:
     """Devuelve el motivo que impide promover, si existe."""
     try:
         plan_promotion(item_dir, templates_dir=templates_dir)
@@ -111,8 +118,10 @@ def promotion_blocker(item_dir: Path, *, templates_dir: Path = TEMPLATES_DIR) ->
     return None
 
 
-def _rewrite_kit_paths(html: str, destination: Path) -> str:
+def _rewrite_kit_paths(html: str, destination: Path, *, external: bool = False) -> str:
     """Ajusta las rutas relativas al kit para la ubicación de producción."""
+    if external:
+        return _KIT_PATH_RE.sub("/_tools/explainer-kit/", html)
     templates_root = destination.parent.parent
     kit_dir = templates_root / "_tools" / "explainer-kit"
     kit_path = Path(os.path.relpath(kit_dir, destination)).as_posix()
@@ -123,7 +132,7 @@ def promote(
     item_dir: Path,
     *,
     force: bool = False,
-    templates_dir: Path = TEMPLATES_DIR,
+    templates_dir: Path | None = None,
 ) -> PromotePlan:
     """Mueve un video validado y corrige las rutas de su página."""
     plan = plan_promotion(item_dir, force=force, templates_dir=templates_dir)
@@ -133,6 +142,6 @@ def promote(
     index_path = plan.destination / "index.html"
     if index_path.is_file():
         html = index_path.read_text(encoding="utf-8")
-        index_path.write_text(_rewrite_kit_paths(html, plan.destination), encoding="utf-8")
+        index_path.write_text(_rewrite_kit_paths(html, plan.destination, external=templates_dir is None and layout_for_settings(settings).schema_version >= 2), encoding="utf-8")
 
     return plan

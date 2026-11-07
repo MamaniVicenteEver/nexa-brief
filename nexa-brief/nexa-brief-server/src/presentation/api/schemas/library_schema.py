@@ -16,6 +16,9 @@ TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 
 class ImageLibraryEntryResponse(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -39,6 +42,9 @@ class ImageLibraryEntryResponse(BaseModel):
 
 
 class MusicLibraryEntryResponse(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -66,6 +72,9 @@ class MusicLibraryEntryResponse(BaseModel):
 
 
 class VideoLibraryEntryResponse(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -88,6 +97,9 @@ class VideoLibraryEntryResponse(BaseModel):
 
 
 class SoundLibraryEntryResponse(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     schema_version: int = 1
     asset_id: str
     title: str

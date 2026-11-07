@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Biblioteca táctica · galería</title><link rel="icon" href="data:,">
+<style>
+html,body{margin:0;height:100%;background:#081e2c;color:#eee8d0;font:14px sans-serif;overflow:hidden}#stage,#stage>canvas{position:fixed;inset:0;display:block}
+#controls{position:fixed;left:3%;right:3%;bottom:3%;background:#081e2cee;border:1px solid #748d99;border-radius:8px;padding:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}select{max-width:70vw}button,select{background:#163749;color:inherit;border:1px solid #748d99;border-radius:4px;padding:6px}input{flex:1;min-width:120px}#status{width:100%;font-size:12px}body[data-headless] #controls,body[data-bare] #controls{display:none}
+body[data-aspect] #stage{display:flex;align-items:center;justify-content:center}body[data-aspect] #stage>canvas{position:static;inset:auto}#error{position:fixed;inset:10% 5% auto;padding:16px;background:#081e2c;color:#eee8d0;z-index:10}
+</style></head><body><audio id="audio" preload="none"></audio><div id="stage"></div>
+<div id="controls"><select id="catalog" aria-label="Componente"><option value="">Escena núcleo</option></select><button id="play">Reproducir</button><input id="time" type="range" min="0" max="14" step="0.01" value="0" aria-label="Tiempo"><output id="stamp">0.00 s</output><span id="status">Preparando…</span></div>
+<p id="error" role="alert" hidden></p>
+<script>function showGalleryError(){const output=document.querySelector('#error');if(parent!==window)parent.postMessage({type:'nexa-animation-error'},'*');output.hidden=false;output.textContent='No se pudo cargar la vista previa del componente. Revisá el nombre y los recursos de la galería.';}addEventListener('error',showGalleryError);addEventListener('unhandledrejection',showGalleryError);</script>
+<script type="module">
+import {PROTO} from '../../engine/plano/paths.js';
+import {loadComponents,Tactico} from '../../engine/tactico/core.js';
+import {timerFromWords} from '../../engine/tactico/tools/anchors.js';
+const query=new URLSearchParams(location.search),picker=document.querySelector('#catalog'),status=document.querySelector('#status');
+if(!query.has('bg'))query.set('bg','white');
+const only=query.get('only'),loop=query.get('loop')==='1',bare=query.get('bare')==='1',aspect=query.get('aspect');
+if(query.has('headless'))document.body.dataset.headless='';
+if(bare||loop)document.body.dataset.bare='';
+if(['9x16','16x9'].includes(aspect))document.body.dataset.aspect=aspect;
+await loadComponents();
+const declaredResponse=await fetch(new URL('../../engine/tactico/components.json',import.meta.url));
+if(!declaredResponse.ok)throw Error(`Catálogo: ${declaredResponse.status}`);
+const declared=new Set((await declaredResponse.json()).components.map(component=>component.name));
+for(const def of Tactico.list().sort((a,b)=>a.name.localeCompare(b.name))){if(!def.demo||!declared.has(def.name))continue;const option=document.createElement('option');option.value=def.name;option.textContent=def.name;picker.append(option);}
+picker.value=only||query.get('component')||'';
+if(only&&(!declared.has(only)||!Tactico.get(only)?.demo))throw Error(`Componente sin demo: ${only}`);
+picker.onchange=()=>{const next=new URL(location);next.searchParams.delete('items');picker.value?next.searchParams.set('component',picker.value):next.searchParams.delete('component');location.href=next;};
+let alternate;
+if(!only&&query.has('items')){const response=await fetch(new URL(query.get('items'),location.href));if(!response.ok)throw Error(`Items: ${response.status}`);alternate=await response.json();}
+else if(picker.value){
+  const def=Tactico.get(picker.value),items=[],added=new Set(),demos=new Map(Tactico.list().filter(d=>d.demo?.id).map(d=>[d.demo.id,d.demo]));
+  function include(item){
+    const id=item.id||'gallery-item';if(added.has(id))return;added.add(id);
+    for(const ref of [item.at,item.carrier,item.from,item.to,item.follow,item.target,...(item.path?.via||[])]){
+      if(typeof ref!=='string'||added.has(ref))continue;
+      // Los demos de despegue/recuperación usan demo-carrier como alias del portaaviones.
+      if(!demos.has(ref)&&ref.startsWith('demo-')){const match=Tactico.list().find(d=>d.demo&&d.name.split('.').at(-1)===ref.slice(5));if(match)demos.set(ref,{...match.demo,id:ref});}
+      if(demos.has(ref))include(demos.get(ref));
+    }
+    items.push({id,type:def.name,t:0,dur:12,...structuredClone(item)});
+  }
+  include(def.demo);alternate={duration:14,items};
+  if(only){
+    const points=items.flatMap(item=>[item.at,item.from,item.to,...(item.via||[]),...(item.path?.via||[])]).filter(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite));
+    const camera=def.demo.region?[{t:0,focus:def.demo.region,pad:.2}]:points.length?[{t:0,reframe:points,pad:.8}]:[{t:0,center:[56.5,26.5],zoom:6.5}];
+    // Una unidad aislada necesita contexto alrededor de su icono y espacio para rótulos.
+    if(points.length&&camera[0].reframe&&points.every(p=>Math.abs(p[0]-points[0][0])<1&&Math.abs(p[1]-points[0][1])<1))camera[0]={t:0,center:points[0],span:5};
+    alternate.camera=camera;
+    alternate.duration=Math.max(.5,...items.map(item=>Math.max((item.t||0)+(item.dur??12),item.out??0)+(item.fade??.35)));
+  }
+}
+if(['white','dark','checker'].includes(query.get('bg'))){
+  const {preview}=await import('./animation-preview.js');
+  await preview({query,alternate});
+  const missing=window.__animationPreview?.missing?.length||0;
+  status.textContent=missing?`Vista lista · ${missing} recursos tácticos faltantes`:'Vista previa lista';
+}else{
+const proto=document.createElement('script');proto.src=PROTO;
+const loaded=new Promise((resolve,reject)=>{proto.onload=resolve;proto.onerror=reject;});document.head.appendChild(proto);await loaded;
+const run=Proto.run;
+Proto.run=options=>{
+  const setup=options.setup,ready=options.onReady,resize=options.resize;
+  function fit(c){
+    if(!document.body.dataset.aspect)return;
+    const ratio=aspect==='9x16'?9/16:16/9,W=Math.round(Math.min(innerWidth,innerHeight*ratio)),H=Math.round(W/ratio),canvas=c.g.canvas;
+    c.st.W=canvas.width=W;c.st.H=canvas.height=H;c.st.U=Math.min(W,H)/1080;canvas.style.width=`${W}px`;canvas.style.height=`${H}px`;
+  }
+  options.resize=c=>{fit(c);resize?.(c);};
+  options.setup=async c=>{
+    fit(c);
+    if(alternate){const alt=Array.isArray(alternate)?{items:alternate}:alternate;c.scene.camera=[{t:0,center:[56.5,26.5],zoom:6.5}];Object.assign(c.scene,alt);c.scene.end=alt.end??alt.duration??c.scene.end;c.scene.items=c.scene.items.map((item,i)=>({id:`gallery-${i}`,t:0,...item}));if(alt.words?.length){c.words=alt.words;c.T=timerFromWords(alt.words);}}
+    await setup(c);
+  };
+  options.onReady=c=>{window.__tacticoContext=c;ready?.(c);status.textContent=`${c.scene.items.length} items · ${Tactico.list().length} componentes · ${c.tactico.missing().length} recursos tácticos faltantes`;};
+  return run(options);
+};
+await import('../../engine/plano/plano.js');
+await window.__atlas.ready;
+const slider=document.querySelector('#time'),stamp=document.querySelector('#stamp'),play=document.querySelector('#play');
+slider.max=__promo.total;let playing=loop||query.get('autoplay')==='1',last;
+async function seek(t){slider.value=t;stamp.textContent=`${Number(t).toFixed(2)} s`;await __promo.seek(Number(t));}
+slider.oninput=()=>{playing=false;play.textContent='Reproducir';seek(slider.value);};
+play.onclick=()=>{playing=!playing;last=null;play.textContent=playing?'Pausa':'Reproducir';};
+let busy=false;
+async function frame(now){if(playing&&!busy){const dt=last==null?0:(now-last)/1000;last=now;busy=true;try{await seek((Number(slider.value)+dt)%__promo.total);}finally{busy=false;}}requestAnimationFrame(frame);}
+await seek(Number(query.get('t')||0));requestAnimationFrame(frame);
+}
+</script></body></html>

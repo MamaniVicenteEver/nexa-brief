@@ -12,6 +12,11 @@ from __future__ import annotations
 # name → (archivo relativo a data/, campo clave o None si no tiene PK)
 COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "jobs": ("jobs/jobs.json", "job_id"),
+    "execution_logs": ("logs/index.json", "log_id"),
+    "content_videos": ("content/videos.json", "video_id"),
+    "content_resources": ("content/resources.json", "asset_id"),
+    "showcase_designs": ("showcase/designs-collection.json", "id"),
+    "sandbox_showcase": ("showcase/sandbox-projects.json", "id"),
     "history_events": ("jobs/history_events.json", "event_id"),
     "notifications": ("notifications/notifications.json", "notification_id"),
     "schedule_slots": ("schedule/slots.json", "slot_id"),
@@ -43,6 +48,10 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
 
 # name → carpeta relativa a data/ (un .json por clave)
 DOCUMENTS: dict[str, str] = {
+    "content_video_details": "content/video_details",
+    "media_aliases": "content/media_aliases",
+    "legacy_path_aliases": "content/legacy_path_aliases",
+    "content_catalog_snapshots": "catalog/snapshots",
     "image_vision": "library/cache/image_vision",
     "video_vision": "library/cache/video_vision",
     "lyrics": "library/cache/lyrics",

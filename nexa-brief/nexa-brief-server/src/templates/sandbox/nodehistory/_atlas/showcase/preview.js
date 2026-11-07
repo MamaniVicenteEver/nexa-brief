@@ -30,7 +30,7 @@ try {
   else if(component.name==='atlas.animation')scene.layers=[{type:'metric',x:.5,y:.3,label:'ENTRADA Y SALIDA',value:25,unit:'%',sub:'Ejemplo ilustrativo',t:.5,...demo}];
   else if(component.target==='config.audio')scene.layers=[{type:'title',text:'NARRACIÓN + MAPAS',sub:'Entrada: song.mp3 + lyrics.json',t:0,y:.2,size:45}];
   const words='Los subtítulos siguen las palabras de la narración'.split(' ').map((word,i)=>({word,start:i*.65,end:(i+1)*.65}));
-  await runAtlas({loadData:async()=>({scene,config:{configs:[{}]},lyrics:{segments:[{words}]}})});
+  await runAtlas({showcase:true,loadData:async()=>({scene,config:{configs:[{}]},lyrics:{segments:[{words}]}})});
   // The gallery owns its loop; Proto starts frozen so only one clock draws it.
   const total=window.__promo.total;
   const position=query.get("framePosition");

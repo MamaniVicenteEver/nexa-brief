@@ -1,7 +1,8 @@
 """Registro de uso de modelos de un video: qué modelo hizo qué, cuántos tokens y cuántas vueltas.
 
-  <video>/work/usage.jsonl   una línea por llamada (la escriben el kit, el backend y los agentes)
-  <video>/usage.json         resumen (kit.py usage <id>): totales por proveedor, modelo, rol y paso
+  Perfil v1: <video>/work/usage.jsonl y <video>/usage.json.
+  Perfil v2: logs/videos/<video-id>/usage-<key>.jsonl y su resumen en ese directorio.
+  El proceso anfitrión registra la referencia del ledger en el índice del perfil.
 
 Una línea:
   {"ts", "provider", "model", "role", "step", "iteration", "input_tokens", "cached_input_tokens",
@@ -14,14 +15,86 @@ El backend escribe el mismo formato (src/core/explainer/usage.py): este archivo 
 from __future__ import annotations
 
 import datetime
+import hashlib
 import json
 import pathlib
+import re
 
 LEDGER = "work/usage.jsonl"
 SUMMARY = "usage.json"
 TOKEN_FIELDS = ("input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens")
 BILLING = {"codex": "suscripción", "claude": "suscripción", "deepseek": "api", "gemini": "api",
            "gemini_tts": "api", "whisper": "local", "kit": "local"}
+
+
+def _profile_paths(video_dir):
+    """Return v2 ledger/summary paths, or None for the legacy layout.
+
+    This resolver only reads the profile manifest through settings; it never reads
+    data/ or session files. The agent can write its own video log directory.
+    """
+    import sys
+    server = pathlib.Path(__file__).resolve().parents[5]
+    if str(server) not in sys.path:
+        sys.path.insert(0, str(server))
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+
+    layout = layout_for_settings(settings)
+    if layout.schema_version < 2:
+        return None
+    video = pathlib.Path(video_dir).resolve()
+    for root, namespace in ((layout.productions_dir, "productions"), (layout.sandbox_dir, "sandbox")):
+        resolved = root.resolve()
+        if video != resolved and video.is_relative_to(resolved):
+            rel = video.relative_to(resolved)
+            if len(rel.parts) != 2 or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", video.name):
+                raise ValueError("Invalid video path for usage log")
+            key = f"{namespace}/{rel.as_posix()}"
+            ident = hashlib.sha256(key.encode()).hexdigest()[:24]
+            log_root = layout.logs_dir.resolve()
+            log_dir = layout.logs_dir / "videos" / video.name
+            if not log_root.is_relative_to(layout.root.resolve()) or not log_dir.resolve().is_relative_to(log_root):
+                raise ValueError("Usage log directory escapes selected profile")
+            ledger, summary = log_dir / f"usage-{ident}.jsonl", log_dir / f"usage-{ident}.summary.json"
+            if any(not path.resolve().is_relative_to(log_root) for path in (ledger, summary)):
+                raise ValueError("Usage path escapes selected profile")
+            return ledger, summary
+    raise ValueError("Video is outside selected profile")
+
+
+def ledger_path(video_dir):
+    paths = _profile_paths(video_dir)
+    return paths[0] if paths else pathlib.Path(video_dir) / LEDGER
+
+
+def summary_path(video_dir):
+    paths = _profile_paths(video_dir)
+    return paths[1] if paths else pathlib.Path(video_dir) / SUMMARY
+
+
+async def register_reference(video_dir):
+    """Host only: idempotently register the existing usage ledger in profile data."""
+    paths = _profile_paths(video_dir)
+    if not paths or not paths[0].is_file():
+        return None
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    from src.core.data import collection, coordination
+    from src.core.execution_logs import register_execution_log
+
+    layout = layout_for_settings(settings)
+    ledger = paths[0].resolve()
+    if not ledger.is_relative_to(layout.logs_dir.resolve()):
+        raise ValueError("Usage ledger escapes profile logs")
+    key = ledger.relative_to(layout.root.resolve()).as_posix()
+    ident = hashlib.sha256(key.encode()).hexdigest()
+    async with coordination("content-video-usage-" + ident):
+        previous = collection("execution_logs").first({"key": key})
+        if previous:
+            return previous["log_id"]
+        ref = await register_execution_log(key, kind="usage", video_id=pathlib.Path(video_dir).name)
+        return ref.log_id
 
 
 def record(video_dir, *, provider: str, model: str = "", role: str = "", step: str = "",
@@ -37,17 +110,20 @@ def record(video_dir, *, provider: str, model: str = "", role: str = "", step: s
         "billing": BILLING.get(provider, ""), "note": note[:300],
     }
     try:
-        path = pathlib.Path(video_dir) / LEDGER
+        path = ledger_path(video_dir)
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
-    except OSError:
+    except (OSError, ValueError):
         pass
     return entry
 
 
 def entries(video_dir) -> list[dict]:
-    path = pathlib.Path(video_dir) / LEDGER
+    try:
+        path = ledger_path(video_dir)
+    except (OSError, ValueError):
+        return []
     if not path.exists():
         return []
     out = []
@@ -77,7 +153,7 @@ def _add(bucket: dict, e: dict) -> None:
 
 
 def summarize(video_dir) -> dict:
-    """Resumen del registro → <video>/usage.json (y lo devuelve)."""
+    """Calcula y guarda un resumen en la ubicación del perfil, y lo devuelve."""
     rows = entries(video_dir)
     total, by_provider, by_model, by_role, iterations = _bucket(), {}, {}, {}, {}
     for e in rows:
@@ -103,5 +179,7 @@ def summarize(video_dir) -> dict:
         "timeline": [{k: e.get(k) for k in ("ts", "provider", "model", "role", "step", "iteration", "ok", "seconds",
                                              "input_tokens", "output_tokens", "note")} for e in rows],
     }
-    (pathlib.Path(video_dir) / SUMMARY).write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    target = summary_path(video_dir)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return summary

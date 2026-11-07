@@ -6,13 +6,14 @@ import { Suspense, useEffect, useState } from "react";
 import { useCategories } from "@/features/categories";
 import { ExplainerCategoryWindow } from "@/features/explainer";
 import { PublicationsSection } from "@/features/image-posts";
+import { SamplesSection } from "@/features/samples/components/SamplesSection";
 import { SandboxWindow } from "@/features/sandbox";
 import { useTemplates } from "../hooks/useTemplates";
 import { CategoryWindowTabs, SANDBOX_CATEGORY_ID } from "./CategoryWindowTabs";
 import { groupMotionTemplates, MotionCategoryWindow } from "./MotionCategoryWindow";
 
 const DEFAULT_CATEGORY = "node_tech";
-const CONTAINER_CLASS = "relative z-5 mx-auto w-full max-w-[1440px] px-4 pt-22 sm:px-10 pb-25";
+const CONTAINER_CLASS = "relative z-5 mx-auto w-full max-w-[1440px] px-4 pt-22 sm:px-6 pb-16";
 
 /** /plantillas: una "ventana" por categoría principal; solo se muestra una a la vez.
  * La elegida vive en `?cat=` (se actualiza con history.replaceState, sin navegar). */
@@ -81,6 +82,7 @@ function CategoryWindows() {
         <ExplainerCategoryWindow
           key={selected.id}
           category={selected}
+          samples={<SamplesSection category={selected.id} />}
           posts={<PublicationsSection category={selected} categories={categories} embedded />}
         />
       )}

@@ -221,3 +221,86 @@ def test_spec_accepted_by_worker_and_idempotent_enqueue(tmp_path):
     db = tmp_path / "db" / "queue.db"
     assert storage_worker.enqueue(db, specs[0])
     assert not storage_worker.enqueue(db, specs[0])
+
+
+def test_v3_pipeline_separate_production_renders_and_resources(tmp_path):
+    profile = tmp_path / "profile"
+    renders, production = profile / "renders", profile / "productions/nodemotion/job1"
+    templates, jobs = tmp_path / "templates", profile / "data/json/jobs.json"
+    video = put(renders / "videos/nodemotion/job1/job1-youtube-16x9/video.mp4", "video")
+    audio = put(production / "assets/song.mp3", "audio")
+    thumbnail = put(production / "assets/thumbnails/thumbnail.jpg", "thumb")
+    put(production / "index.html", "<html></html>")
+    resource = put(profile / "resources/music/asset1/original.mp3", "music")
+    put(production / "manifest.json", json.dumps({
+        "files": {"index.html": "1", "song.mp3": "1", "youtube_video.mp4": "1"},
+        "video_formats": [{"id": "youtube", "aspect_ratio": "16:9", "output_filename": "youtube_video.mp4"}],
+        "music": {"path": "resources/music/asset1/original.mp3"},
+    }))
+    row = {"job_id": "job1", "stage": "packaged", "updated_at": NOW,
+           "output_dir": str(production), "file_paths": {"youtube": str(video), "thumbnail": str(thumbnail)},
+           "format_paths": {"16x9": str(video)}}
+    put(jobs, json.dumps({"schema_version": 1, "collections": {"jobs": [row]}}))
+    specs, errors = discover(jobs, renders, templates, ACT, profile_root=profile)
+    assert not errors and len(specs) == 1
+    targets = {f["target"] for f in specs[0]["files"]}
+    assert "output/videos/nodemotion/job1/job1-youtube-16x9/video.mp4" in targets
+    assert "output/assets/song.mp3" in targets
+    assert "output/assets/thumbnails/thumbnail.jpg" in targets
+    assert "project/profile/resources/music/asset1/original.mp3" in targets
+    assert specs[0]["metadata"]["file_paths"]["thumbnail"] in targets
+    assert audio.is_file() and resource.is_file()
+    import storage_worker
+    assert storage_worker.enqueue(tmp_path / "queue/db.sqlite", specs[0])
+    row["format_paths"]["16x9"] = str(put(renders / "videos/nodemotion/other/other-16x9/video.mp4", "other"))
+    put(jobs, json.dumps({"schema_version": 1, "collections": {"jobs": [row]}}))
+    specs, errors = discover(jobs, renders, templates, ACT, profile_root=profile)
+    assert not specs and errors
+
+
+def test_cli_v3_two_formats_and_rejects_tampering(tmp_path):
+    profile = tmp_path / "profile"
+    production = profile / "productions/nodetech/sample"
+    templates, jobs, events = tmp_path / "templates", tmp_path / "jobs.json", tmp_path / "events"
+    put(production / "manifest.json", json.dumps({"video_id": "sample", "design": "rough"}))
+    put(production / "index.html", "<html></html>")
+    put(jobs, "[]")
+    source_key = "productions/nodetech/sample"
+    event_id = hashlib.sha256(source_key.encode()).hexdigest()[:32]
+    outputs = {}
+    for fmt in ("9x16", "16x9"):
+        key = f"renders/videos/nodetech/sample/recording-{fmt}/video.mp4"
+        path = put(profile / key, "video-" + fmt)
+        stat = path.stat()
+        outputs[fmt] = {"storage_key": key, "size": stat.st_size, "mtime_ns": stat.st_mtime_ns}
+    event = {"schema_version": 3, "event_id": event_id, "video_id": "sample", "source_key": source_key,
+             "formats": ["9x16", "16x9"], "outputs": outputs, "finished_at": NOW}
+    put(events / (event_id + ".json"), json.dumps(event))
+    specs, errors = discover(jobs, profile / "renders", templates, ACT, events, profile)
+    assert not errors and len(specs) == 1
+    targets = {f["target"] for f in specs[0]["files"]}
+    assert {"output/sample-9x16.mp4", "output/sample-16x9.mp4"} <= targets
+    outputs["9x16"]["size"] += 1
+    put(events / (event_id + ".json"), json.dumps(event))
+    assert discover(jobs, profile / "renders", templates, ACT, events, profile)[1]
+    outputs["9x16"]["size"] -= 1
+    outputs["9x16"]["storage_key"] = outputs["16x9"]["storage_key"]
+    put(events / (event_id + ".json"), json.dumps(event))
+    assert discover(jobs, profile / "renders", templates, ACT, events, profile)[1]
+
+
+def test_v3_explainer_job_preserves_thumbnail_reference(tmp_path):
+    profile = tmp_path / "profile"
+    production = profile / "productions/nodetech/sample"
+    templates, jobs = tmp_path / "templates", tmp_path / "jobs.json"
+    put(production / "manifest.json", json.dumps({"video_id": "sample", "design": "rough"}))
+    put(production / "index.html")
+    thumbnail = put(production / "assets/thumbnails/thumbnail.jpg", "thumb")
+    video = put(profile / "renders/videos/nodetech/sample/recording-16x9/video.mp4", "video")
+    put(jobs, json.dumps([{"job_id": "explainer-sample-recording", "source": "explainer", "video_id": "sample",
+                           "stage": "packaged", "updated_at": NOW, "output_dir": str(production),
+                           "file_paths": {"youtube": str(video), "thumbnail": str(thumbnail)}}]))
+    specs, errors = discover(jobs, profile / "renders", templates, ACT, profile_root=profile)
+    assert not errors and len(specs) == 1
+    targets = {item["target"] for item in specs[0]["files"]}
+    assert specs[0]["metadata"]["file_paths"]["thumbnail"] in targets

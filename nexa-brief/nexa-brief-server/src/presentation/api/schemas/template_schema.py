@@ -125,12 +125,15 @@ class PreviewStatusResponse(BaseModel):
         files: list[PreviewFileInfo] = []
         if output_dir:
             out = Path(output_dir)
+            assets = Path(record["assets_dir"]) if record.get("assets_dir") else out
             for filename in sorted(PREVIEW_ALLOWED_FILENAMES):
-                if (out / filename).exists():
+                source = out if filename == "index.html" else assets
+                if (source / filename).exists():
+                    prefix = "assets/" if source != out else ""
                     files.append(
                         PreviewFileInfo(
                             filename=filename,
-                            url=f"/api/v1/templates/preview/{preview_id}/{filename}",
+                            url=f"/api/v1/templates/preview/{preview_id}/{prefix}{filename}",
                         )
                     )
 

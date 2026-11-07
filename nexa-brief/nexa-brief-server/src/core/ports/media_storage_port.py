@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import BinaryIO, Protocol
+from typing import Any, BinaryIO, Protocol
 
 
 @dataclass(frozen=True)
@@ -15,6 +15,9 @@ class MediaObject:
 
 
 class MediaStoragePort(Protocol):
+    def read_trace(self, key: str) -> dict[str, Any] | None:
+        """Lee una traza de producción por clave."""
+        ...
     def put(
         self, key: str, stream: BinaryIO | bytes, mime: str, expected_sha256: str,
         if_absent: bool = True,

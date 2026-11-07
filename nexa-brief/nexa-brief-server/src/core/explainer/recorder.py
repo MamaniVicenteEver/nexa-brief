@@ -25,6 +25,7 @@ import os
 import shutil
 import sys
 import time
+import tempfile
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -47,6 +48,9 @@ from src.core.job import JobStage
 from src.core.metadata.sanitize import strip_emojis
 from src.core.publish_log import record_published_video
 from src.modules.video_compressor import compress_for_publishing
+from src.config.profile_layout import layout_for_settings
+from src.config.media_paths import video_key
+from src.config.content_paths import preview_directory
 
 logger = structlog.get_logger(__name__)
 
@@ -62,6 +66,34 @@ PLATFORM_FORMAT = {"tiktok": "9x16", "instagram": "9x16", "youtube": "16x9", "fa
 def render_filename(video_id: str, fmt: str, seconds: int | None) -> str:
     """Nombre que escribe `kit.py render` (ver cmd_render): '<id>-<fmt>.mp4' o '<id>-<fmt>-<N>s.mp4'."""
     return f"{video_id}-{fmt}-{seconds}s.mp4" if seconds else f"{video_id}-{fmt}.mp4"
+
+
+def _refresh_v3_manifest(video: ExplainerVideo, format_paths: dict[str, Path]) -> None:
+    """kit.py writes the manifest before managed renders leave the workspace."""
+    path = video.path / "manifest.json"
+    if not path.is_file():
+        return
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    formats = manifest.get("video_formats", [])
+    if not isinstance(formats, list):
+        raise ValueError("Manifest video_formats inválido")
+    from src.config.content_paths import content_key
+    for item in formats:
+        if isinstance(item, dict):
+            orientation = {"16:9": "16x9", "9:16": "9x16"}.get(item.get("aspect_ratio"))
+            if orientation in format_paths:
+                item["output_filename"] = content_key(format_paths[orientation])
+    from src.adapters.data.runtime_paths import assert_profile_path, temporary_dir
+    assert_profile_path(path)
+    fd, temp = tempfile.mkstemp(prefix=".manifest-", dir=temporary_dir(path))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            json.dump(manifest, stream, ensure_ascii=False, indent=2)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp, path)
+    finally:
+        Path(temp).unlink(missing_ok=True)
 
 
 class RecordState(str, Enum):
@@ -131,6 +163,7 @@ async def run_kit_render(
     seconds: int | None,
     formats: tuple[str, ...] = FORMATS,
     on_output: RenderOutputCallback | None = None,
+    output_dir: Path | None = None,
 ) -> None:
     """Llama a `kit.py render <id>` leyendo su salida en vivo línea a línea."""
     cmd = [sys.executable, str(KIT_CLI), "render", video_id, "--formats", ",".join(formats)]
@@ -140,6 +173,8 @@ async def run_kit_render(
     env["PYTHONUNBUFFERED"] = "1"
     # El CLI administrado se respalda desde el job persistente de Biblioteca.
     env["NEXA_RENDER_MANAGED"] = "1"
+    if output_dir is not None:
+        env["NEXA_RENDER_OUTPUT_DIR"] = str(output_dir)
     from src.adapters.recorder.infrastructure.subprocess_progress import run_with_progress
 
     def consume(line: str) -> None:
@@ -191,6 +226,8 @@ class RecordJob:
     error: str | None = None
     outputs: list[str] = field(default_factory=list)
     output_dir: str | None = None
+    recording_id: str | None = None
+    log_id: str | None = None
     scheduled_job_id: str | None = None
     publish_result: dict[str, Any] | None = None            # el primero (compatibilidad)
     publish_results: list[dict[str, Any]] = field(default_factory=list)
@@ -367,6 +404,33 @@ class ExplainerRecorder:
         render_dir = video.path / "render"
         seconds = job.seconds
         src_dir = render_dir / "preview" if seconds else render_dir
+        profile_layout = layout_for_settings(settings)
+        direct = profile_layout.schema_version >= 2
+        recording_id = uuid.uuid4().hex[:8]
+        job.recording_id = recording_id
+        log_path = None
+        if direct:
+            from src.core.content_registry import get_video, upsert_video
+            from src.core.execution_logs import register_execution_log
+            existing = get_video(video.video_id)
+            if existing is None:
+                await upsert_video(video.video_id, video.video_id, details={"title": video.title})
+                existing = get_video(video.video_id)
+            log_ref = await register_execution_log(
+                f"logs/videos/{video.video_id}/recordings/{recording_id}.log", kind="recording",
+                production_id=existing["production_id"], video_id=video.video_id,
+            )
+            job.log_id = log_ref.log_id
+            log_path = log_ref.path
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            log_path.touch(exist_ok=True)
+            src_dir = (profile_layout.runtime_dir / "recordings" / video.video_id / recording_id
+                       if profile_layout.schema_version >= 3 else
+                       self._output_root / video.video_id / (f"preview-{seconds}s" if seconds else recording_id))
+            if profile_layout.schema_version >= 3:
+                from src.adapters.data.runtime_paths import assert_profile_path
+                assert_profile_path(src_dir)
+            src_dir.mkdir(parents=True, exist_ok=True)
 
         job.state = RecordState.rendering
         signature = render_signature(video)
@@ -379,20 +443,25 @@ class ExplainerRecorder:
 
             def on_output(line: str) -> None:
                 _consume_render_line(job, line, render_started)
+                if log_path is not None:
+                    with log_path.open("a", encoding="utf-8") as log:
+                        log.write(line.rstrip("\n") + "\n")
 
             try:
-                parameters = inspect.signature(self._render).parameters.values()
+                parameters = list(inspect.signature(self._render).parameters.values())
                 supports_callback = any(
                     parameter.name == "on_output" or parameter.kind == inspect.Parameter.VAR_KEYWORD
                     for parameter in parameters
                 )
             except (TypeError, ValueError):
                 supports_callback = False
-            if supports_callback:
-                await self._render(video.video_id, seconds, missing, on_output=on_output)
-            else:
-                # Compatibilidad con RenderRunner inyectados antes del callback.
-                await self._render(video.video_id, seconds, missing)
+                parameters = []
+            kwargs = {"on_output": on_output} if supports_callback else {}
+            if direct:
+                if not any(p.name == "output_dir" or p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters):
+                    raise RenderError("El grabador no admite el destino del perfil v2")
+                kwargs["output_dir"] = src_dir
+            await self._render(video.video_id, seconds, missing, **kwargs)
             for fmt in missing:
                 stamp_render(src_dir / render_filename(video.video_id, fmt, seconds), signature)
         else:
@@ -400,36 +469,63 @@ class ExplainerRecorder:
         job.progress = 1.0
         job.eta_seconds = 0
 
-        out_dir = self._output_root / video.category_path / video.design / video.video_id
-        if seconds:
-            out_dir = out_dir / f"preview-{seconds}s"
-        else:
-            # una carpeta por grabación: grabar de nuevo no pisa (ni borrar uno se lleva) los archivos
-            # de una grabación anterior que sigue en la Biblioteca
-            recording_id = uuid.uuid4().hex[:8]
-            out_dir = out_dir / recording_id
+        out_dir = (video.path if profile_layout.schema_version >= 3 else
+                   src_dir if direct else self._output_root / video.category_path / video.design / video.video_id)
+        if not direct:
+            out_dir = out_dir / (f"preview-{seconds}s" if seconds else recording_id)
         out_dir.mkdir(parents=True, exist_ok=True)
         job.output_dir = str(out_dir)
+        format_paths = {}
+        render_category = (video.path.resolve().relative_to(profile_layout.productions_dir.resolve()).parts[0]
+                           if profile_layout.schema_version >= 3 else video.category_path)
         for fmt in job.formats:
             src = src_dir / render_filename(video.video_id, fmt, seconds)
             if not src.exists():
                 raise RenderError(f"falta el archivo renderizado: {src.name}")
-            dst = out_dir / src.name
-            shutil.copy2(src, dst)
+            dst = (profile_layout.renders_dir / video_key(render_category, video.video_id, recording_id, fmt, preview=bool(seconds))
+                   if profile_layout.schema_version >= 3 else out_dir / src.name)
+            if src.resolve() != dst.resolve():
+                if profile_layout.schema_version >= 3:
+                    assert_profile_path(dst)
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                if profile_layout.schema_version >= 3:
+                    assert_profile_path(dst)
+                    if dst.exists():
+                        raise FileExistsError("El render ya existe; no se reemplaza un máster")
+                    os.replace(src, dst)
+                    stamp_render(dst, signature)
+                else:
+                    shutil.copy2(src, dst)
             job.outputs.append(str(dst))
+            format_paths[fmt] = dst
 
         if seconds:
+            if direct:
+                from src.core.content_registry import register_recording
+                await register_recording(video.video_id, recording_id, outputs=[Path(p) for p in job.outputs],
+                                         log_id=job.log_id, duration=job.duration)
             job.render_seconds = round(time.monotonic() - started, 1)
             job.state = RecordState.done
             return
-        # La copia que se publica va comprimida; el original sigue en render/ (no hace falta master).
-        for output in job.outputs:
-            await compress_for_publishing(Path(output), keep_master=False)
+        if profile_layout.schema_version >= 3:
+            _refresh_v3_manifest(video, format_paths)
+        # En v1 se comprime una copia: el original sigue en render/.
+        # En v2 el único archivo es el máster; se conserva sin recomprimir.
+        if not direct:
+            for output in job.outputs:
+                await compress_for_publishing(Path(output), keep_master=False)
         job.render_seconds = round(time.monotonic() - started, 1)
+        if direct:
+            from src.core.content_registry import register_recording
+            await register_recording(video.video_id, recording_id, outputs=[Path(p) for p in job.outputs],
+                                     log_id=job.log_id, duration=job.duration)
 
-        thumbnail = await self._thumbnail(video, out_dir, job.formats)
+        thumbnail_dir = preview_directory(video.path) if profile_layout.schema_version >= 3 else out_dir
+        thumbnail_dir.mkdir(parents=True, exist_ok=True)
+        thumbnail = await self._thumbnail(video, thumbnail_dir, job.formats)
         job.scheduled_job_id = await self._register_for_scheduling(
-            video, out_dir, job.formats, job.render_seconds, thumbnail, recording_id=recording_id
+            video, out_dir, job.formats, job.render_seconds, thumbnail, recording_id=recording_id,
+            format_paths=format_paths if profile_layout.schema_version >= 3 else None,
         )
 
         if not job.publish:
@@ -457,7 +553,7 @@ class ExplainerRecorder:
                     extra["idempotency_key"] = queue_entry.idempotency_key or f"schedule:{queue_entry.entry_id}"
                 try:
                     result = await facade.publish_video(
-                        video_path=out_dir / f"{video.video_id}-{fmt}.mp4",
+                        video_path=format_paths[fmt],
                         title=title,
                         description=description,
                         tags=tags,
@@ -546,6 +642,7 @@ class ExplainerRecorder:
         self, video: ExplainerVideo, out_dir: Path, formats: tuple[str, ...], render_seconds: float,
         thumbnail: Path | None = None,
         recording_id: str | None = None,
+        format_paths: dict[str, Path] | None = None,
     ) -> str:
         """Registra la grabación completa como job empaquetado en job_tracker.
 
@@ -554,7 +651,9 @@ class ExplainerRecorder:
         pipeline, y `publish_entry` resuelve su archivo y su texto.
         """
         job_id = f"explainer-{video.video_id}-{recording_id or uuid.uuid4().hex[:8]}"
-        logs = out_dir / "logs"
+        layout = layout_for_settings(settings)
+        logs = (layout.logs_dir / "videos" / video.video_id / "recordings" / (recording_id or "unknown")
+                if layout.schema_version >= 3 else out_dir / "logs")
         logs.mkdir(parents=True, exist_ok=True)
         # mismos textos (y misma limpieza) que la publicación inmediata
         copies = {platform: _copy_for(video, platform) for platform in ("youtube", "facebook", "tiktok", "instagram")}
@@ -577,12 +676,12 @@ class ExplainerRecorder:
         # La Biblioteca muestra "Generado en …" con generation_seconds: acá es el tiempo de grabación.
         created = datetime.fromtimestamp(now.timestamp() - render_seconds, timezone.utc).isoformat()
         file_paths = {
-            platform: str(out_dir / f"{video.video_id}-{fmt}.mp4")
+            platform: str(format_paths[fmt] if format_paths is not None else out_dir / f"{video.video_id}-{fmt}.mp4")
             for platform, fmt in (("youtube", "16x9"), ("tiktok", "9x16"), ("instagram", "9x16"))
             if fmt in formats
         }
         if "9x16" in formats:
-            file_paths["reels"] = str(out_dir / f"{video.video_id}-9x16.mp4")
+            file_paths["reels"] = str(format_paths["9x16"] if format_paths is not None else out_dir / f"{video.video_id}-9x16.mp4")
         if thumbnail:
             file_paths["thumbnail"] = str(thumbnail)   # la sube publish_entry al publicar en YouTube
         await collection("jobs").insert({
@@ -598,7 +697,7 @@ class ExplainerRecorder:
             "duration_seconds": video.duration_seconds,
             "file_paths": file_paths,
             "format_paths": {
-                fmt: str(out_dir / f"{video.video_id}-{fmt}.mp4") for fmt in formats
+                fmt: str(format_paths[fmt] if format_paths is not None else out_dir / f"{video.video_id}-{fmt}.mp4") for fmt in formats
             },
             "ready_formats": [k for k in file_paths if k != "thumbnail"],
             "formats": list(formats),

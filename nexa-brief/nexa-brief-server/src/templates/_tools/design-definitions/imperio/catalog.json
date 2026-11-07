@@ -1,0 +1,5251 @@
+{
+  "schema_version": 1,
+  "design_id": "imperio",
+  "revision": "d7a060517dab8e7ba45503b913d71447a498f7988b393a11834c8e535db989a2",
+  "entries": [
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "imperio.title",
+      "name": "imperio.title",
+      "label": "imperio.title",
+      "kind": "component",
+      "summary": "Apertura (ref 0–11 s): atlas físico con el país foco rayado y el SOL carmesí que late; la cámara se aleja y gira apenas; nacen los RAYOS translúcidos en abanico hacia `dir` con barquitos; el título en su IDIOMA ORIGINAL (kanji, alemán, ruso…) entra carácter por carácter con su traducción tipeada debajo y se borra de derecha a izquierda; después el título condensado blanco SUBE desde abajo con degradé. Primer beat del video.",
+      "tags": [
+        "apertura",
+        "título",
+        "mapa",
+        "imperio",
+        "sol",
+        "idioma original"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sun": {
+          "type": "bool",
+          "default": true,
+          "doc": "Círculo carmesí que late sobre el país foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 3.6,
+          "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 3,
+          "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 28,
+          "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.72,
+          "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.02,
+          "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0.56,
+          "doc": "Opacidad de los rayos carmesí.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 4,
+          "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 2,
+          "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "",
+          "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "native": {
+          "type": "string",
+          "default": "",
+          "doc": "Título en su idioma original (p. ej. '南進論', 'Geheime Kommandosache', 'Перестройка'). Vacío = sin este paso.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "nativeSub": {
+          "type": "string",
+          "default": "",
+          "doc": "Traducción chica en mayúsculas que se tipea debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "nativeAt": {
+          "type": "number",
+          "default": 5,
+          "doc": "Segundo en que entra el título original (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "nativeOut": {
+          "type": "number",
+          "default": 9.2,
+          "doc": "Segundo en que se borra (de derecha a izquierda). −1 = se queda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Título condensado blanco (Fjalla One); '\\n' parte renglones. Vacío = sin título grande.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Versión del título para 9:16 (más renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textAt": {
+          "type": "number",
+          "default": 10,
+          "doc": "Segundo en que sube el título condensado (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "from": [
+          150,
+          36,
+          95,
+          0
+        ],
+        "to": [
+          145,
+          35,
+          125,
+          3
+        ],
+        "sunSize": 3.6,
+        "native": "南進論",
+        "nativeSub": "SOUTHERN EXPANSION DOCTRINE",
+        "nativeAt": 5,
+        "nativeOut": 9.2,
+        "text": "JAPANESE\nEMPIRE",
+        "textPortrait": "JAPANESE\nEMPIRE",
+        "textAt": 10,
+        "rays": 28,
+        "raysAt": 4,
+        "dir": 180,
+        "spread": 0.72,
+        "rayFloor": 0.02,
+        "rayAlpha": 0.56,
+        "rayLen": 0.46,
+        "ships": 2,
+        "labels": [
+          {
+            "t": "Mar del\nJapón",
+            "at": [
+              134.5,
+              40.2
+            ]
+          },
+          {
+            "t": "Mar\nAmarillo",
+            "at": [
+              123.6,
+              35.4
+            ]
+          },
+          {
+            "t": "Océano\nPacífico",
+            "at": [
+              150,
+              31
+            ]
+          }
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.title",
+      "data": {
+        "native_name": "imperio.title"
+      }
+    },
+    {
+      "id": "imperio.map",
+      "name": "imperio.map",
+      "label": "imperio.map",
+      "kind": "component",
+      "summary": "Atlas físico en movimiento lento (zoom y giro leve) sobre un país o región: territorio rayado, sol que late, rótulos de mares, rayos opcionales y PINES (punto carmesí + nombre) para lugares concretos (una base, una ciudad, un puerto). Para situar la historia y para respirar entre momentos fuertes.",
+      "tags": [
+        "mapa",
+        "lugar",
+        "país",
+        "geografía",
+        "atlas"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sun": {
+          "type": "bool",
+          "default": true,
+          "doc": "Círculo carmesí que late sobre el país foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "inOut",
+          "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 0,
+          "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Opacidad de los rayos carmesí.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 0.4,
+          "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 0,
+          "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "",
+          "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pins": {
+          "type": "array",
+          "default": [],
+          "doc": "Lugares: [{\"t\":\"Bletchley Park\", \"at\":[-0.74, 51.99]}] (punto carmesí + nombre). Entran escalonados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pinAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo en que entra el primer pin (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "country": "United Kingdom",
+        "from": "United Kingdom*1.5",
+        "to": "United Kingdom*3.2",
+        "pins": [
+          {
+            "t": "Bletchley Park",
+            "at": [
+              -0.74,
+              51.99
+            ]
+          },
+          {
+            "t": "Londres",
+            "at": [
+              -0.12,
+              51.5
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "t": "Mar del\nNorte",
+            "at": [
+              3.5,
+              56
+            ]
+          },
+          {
+            "t": "Océano\nAtlántico",
+            "at": [
+              -15,
+              52
+            ]
+          }
+        ],
+        "compass": true
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.map",
+      "data": {
+        "native_name": "imperio.map"
+      }
+    },
+    {
+      "id": "imperio.expansion",
+      "name": "imperio.expansion",
+      "label": "imperio.expansion",
+      "kind": "component",
+      "summary": "Expansión: desde el sol del país foco salen HACES carmesí translúcidos hacia cada región destino, uno tras otro; al llegar, la región se raya (territorio ocupado) y aparece su nombre en condensada blanca. Para invasiones, zonas de influencia, rutas de ataque o alcance de una doctrina.",
+      "tags": [
+        "expansión",
+        "conquista",
+        "invasión",
+        "influencia",
+        "mapa",
+        "rayos"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sun": {
+          "type": "bool",
+          "default": true,
+          "doc": "Círculo carmesí que late sobre el país foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "inOut",
+          "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "targets": {
+          "type": "array",
+          "default": [],
+          "doc": "Destinos: países o puntos: [\"Philippines\", {\"at\":\"Indonesia\", \"t\":\"Indias Orientales\"}, {\"at\":[151, -9], \"t\":\"Nueva Guinea\"}].",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Segundo del primer haz (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundos entre haz y haz.",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": null
+        },
+        "conquer": {
+          "type": "bool",
+          "default": true,
+          "doc": "Rayar cada país destino cuando llega su haz.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 1,
+          "doc": "Barquitos por haz.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 3
+        },
+        "beam": {
+          "type": "number",
+          "default": 1,
+          "doc": "Ancho de los haces (multiplicador).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 3
+        }
+      },
+      "example": {
+        "country": "Japan",
+        "targets": [
+          {
+            "at": "Philippines",
+            "t": "Filipinas"
+          },
+          {
+            "at": "Indonesia",
+            "t": "Indias Orientales"
+          },
+          {
+            "at": "Malaysia",
+            "t": "Malasia"
+          },
+          {
+            "at": "Myanmar",
+            "t": "Birmania"
+          }
+        ],
+        "hatch": [
+          "Japan",
+          "South Korea",
+          "North Korea",
+          "Taiwan"
+        ],
+        "labels": [
+          {
+            "t": "Océano\nPacífico",
+            "at": [
+              150,
+              15
+            ]
+          },
+          {
+            "t": "Mar de la\nChina Meridional",
+            "at": [
+              114,
+              13
+            ]
+          }
+        ],
+        "compass": true
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.expansion",
+      "data": {
+        "native_name": "imperio.expansion"
+      }
+    },
+    {
+      "id": "imperio.archive",
+      "name": "imperio.archive",
+      "label": "imperio.archive",
+      "kind": "component",
+      "summary": "Material de archivo (ref 11.5–27.7 s): el atlas se DESATURA a gris, baja humo oscuro desde arriba y la foto en blanco y negro se FUNDE en multiplicar con el mapa (lo claro deja ver el mapa, lo oscuro lo tapa); los rayos carmesí siguen encima, rosa de los vientos fina abajo a la derecha, grano y polvo; la cámara sigue alejándose. Para mostrar una foto histórica sin salir del mapa.",
+      "tags": [
+        "archivo",
+        "foto",
+        "blanco y negro",
+        "mapa",
+        "guerra",
+        "barco"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de archivo (se pasa a B/N contrastado).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photoFocus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto de interés de la foto [x,y] 0..1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sun": {
+          "type": "bool",
+          "default": true,
+          "doc": "Círculo carmesí que late sobre el país foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": true,
+          "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.35,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 3,
+          "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 28,
+          "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.72,
+          "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.02,
+          "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0.56,
+          "doc": "Opacidad de los rayos carmesí.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 3,
+          "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "#b3122f",
+          "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "grayDur": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Segundos en que el atlas pasa de color a gris (0 = ya gris).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "photoAt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo en que empieza a aparecer la foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "photoDur": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Duración del fundido de la foto.",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": null
+        },
+        "photo": {
+          "type": "number",
+          "default": 0.95,
+          "doc": "Intensidad de la foto (multiplicar).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "smoke": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Humo oscuro desde arriba.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico en itálica (lugar · año de la foto), abajo a la izquierda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "../designs/imperio/assets/uboat.jpg",
+        "country": "Japan",
+        "from": [
+          145,
+          35,
+          125,
+          3
+        ],
+        "to": [
+          135,
+          32,
+          165,
+          6
+        ],
+        "rays": 28,
+        "dir": 180,
+        "spread": 0.72,
+        "rayFloor": 0.02,
+        "rayAlpha": 0.56,
+        "rayLen": 0.46,
+        "ships": 2,
+        "compass": true,
+        "photoAt": 0,
+        "photoDur": 0.9,
+        "labels": [
+          {
+            "t": "MAR DE JAPÓN",
+            "at": [
+              135,
+              40
+            ]
+          },
+          {
+            "t": "OCÉANO PACÍFICO",
+            "at": [
+              151,
+              23
+            ]
+          }
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.archive",
+      "data": {
+        "native_name": "imperio.archive"
+      }
+    },
+    {
+      "id": "imperio.word",
+      "name": "imperio.word",
+      "label": "imperio.word",
+      "kind": "component",
+      "summary": "Título condensado BLANCO (Fjalla One) sobre el plano en curso: cada renglón SUBE desde abajo con degradé de opacidad (arriba aparece primero) y desenfoque, y después el título se ACHICA lento y exponencial (rápido al principio) mientras el mapa sigue moviéndose (ref 10–27 s: 'JAPANESE EMPIRE'). Usalo como overlay sobre imperio.archive / imperio.map para el nombre del imperio, la doctrina o el tema del bloque.",
+      "tags": [
+        "título",
+        "texto",
+        "nombre",
+        "imperio",
+        "condensada"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto ('\\n' parte renglones). Mayúsculas automáticas.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Versión para 9:16.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number",
+          "default": 0.2,
+          "doc": "Segundo en que sube (acepta '@palabra'). −1 = ya está (continúa el título de imperio.title sin volver a entrar).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "shrinkAt": {
+          "type": "number",
+          "default": 2.8,
+          "doc": "Segundo en que empieza a achicarse (−1 = nunca).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "shrinkTo": {
+          "type": "number",
+          "default": 0.18,
+          "doc": "Escala final a la que tiende.",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "tau": {
+          "type": "number",
+          "default": 2.8,
+          "doc": "Constante de tiempo del achique (s): más chico = más rápido.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.68,
+          "doc": "Centro vertical (fracción del alto) en 16:9.",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 0.9
+        },
+        "size": {
+          "type": "number",
+          "default": 0.62,
+          "doc": "Ancho del renglón más largo (fracción del ancho) en 16:9; en 9:16 se usa 0.86.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.95
+        },
+        "rise": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Mientras se achica sube hacia el centro (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": -0.3,
+          "max": 0.3
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Giro inicial en grados.",
+          "required": false,
+          "options": null,
+          "min": -15,
+          "max": 15
+        },
+        "spin": {
+          "type": "number",
+          "default": 0.25,
+          "doc": "Grados por segundo que gira (acompaña al mapa).",
+          "required": false,
+          "options": null,
+          "min": -3,
+          "max": 3
+        }
+      },
+      "example": {
+        "text": "JAPANESE\nEMPIRE",
+        "at": 0.2,
+        "shrinkAt": 2.8,
+        "shrinkTo": 0.18,
+        "tau": 2.8
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.word",
+      "data": {
+        "native_name": "imperio.word"
+      }
+    },
+    {
+      "id": "imperio.native",
+      "name": "imperio.native",
+      "label": "imperio.native",
+      "kind": "component",
+      "summary": "Nombre en su IDIOMA ORIGINAL (kanji, alemán, ruso, árabe latinizado…) en gris grande: cada carácter entra con escala y desenfoque escalonados, la traducción en mayúsculas negras se tipea debajo, y al final se borra de derecha a izquierda (ref 4.9–9.9 s: '南進論 · SOUTHERN EXPANSION DOCTRINE'). Overlay sobre un plano con mapa claro (imperio.map / imperio.title).",
+      "tags": [
+        "título",
+        "idioma original",
+        "kanji",
+        "doctrina",
+        "cita",
+        "traducción"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto en el idioma original (corto: 1–3 palabras o 2–6 caracteres CJK).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Traducción (mayúsculas automáticas).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number",
+          "default": 0.2,
+          "doc": "Segundo en que entra el primer carácter (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "outAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo en que se borra (−1 = 1 s antes del final del beat).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "x": {
+          "type": "number",
+          "default": 0.64,
+          "doc": "Borde izquierdo (fracción del ancho) en 16:9. En 9:16 va centrado.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "y": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Línea base (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 0.9
+        },
+        "width": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Ancho máximo (fracción del ancho) en 16:9; en 9:16 se usa 0.7.",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 0.9
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Giro en grados.",
+          "required": false,
+          "options": null,
+          "min": -15,
+          "max": 15
+        }
+      },
+      "example": {
+        "text": "南進論",
+        "sub": "DOCTRINA DE EXPANSIÓN AL SUR"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.native",
+      "data": {
+        "native_name": "imperio.native"
+      }
+    },
+    {
+      "id": "imperio.introv1",
+      "name": "imperio.introv1",
+      "label": "imperio.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "título",
+        "impacto",
+        "sol"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho (2–7 palabras). '\\n' = renglón; '^x^' = palabras sobre franja carmesí.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (lugar · fecha).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica en itálica debajo del titular.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "number",
+          "default": 0.15,
+          "doc": "Segundo en que cae el sol.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundo de la primera palabra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.2,
+          "doc": "Segundos entre palabras.",
+          "required": false,
+          "options": null,
+          "min": 0.06,
+          "max": null
+        },
+        "burstAt": {
+          "type": "number",
+          "default": 2.6,
+          "doc": "Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "atlas",
+            "archivo",
+            "papel",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Oscurecido del fondo foto/componente.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "EL IMPERIO QUE\nMIRÓ AL ^SUR^",
+        "kicker": "Tokio · 1940",
+        "sub": "la doctrina que llevó a la guerra del Pacífico",
+        "country": "Japan"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.introv1",
+      "data": {
+        "native_name": "imperio.introv1"
+      }
+    },
+    {
+      "id": "imperio.introv2",
+      "name": "imperio.introv2",
+      "label": "imperio.introv2",
+      "kind": "component",
+      "summary": "GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "pregunta",
+        "revelación",
+        "sol naciente"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Respuesta (1–3 palabras) que sube con el sol (vacío = sin revelación).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2.6,
+          "doc": "Segundo de la revelación (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Segundo en que empieza a escribirse la pregunta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 18,
+          "doc": "Caracteres por segundo.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco del fondo atlas/archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "atlas",
+            "archivo",
+            "papel",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Oscurecido del fondo foto/componente.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?",
+        "kicker": "Pacífico · 1940",
+        "stamp": "PETRÓLEO",
+        "stampAt": 2.6,
+        "country": "Japan",
+        "bg": "archivo"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.introv2",
+      "data": {
+        "native_name": "imperio.introv2"
+      }
+    },
+    {
+      "id": "imperio.outro",
+      "name": "imperio.outro",
+      "label": "imperio.outro",
+      "kind": "component",
+      "summary": "Cierre v1 con mapa del mundo completo que se aleja y oscurece, en los colores de Imperio. GRACIAS POR VER → canal en blanco ante el sol carmesí y sus rayos → alfiler LIKE → flecha → SUSCRÍBETE y campana → apoyo tipeado y dirección. Fondo alternativo con bg; tiempos sincronizables con likeAt, subscribeAt, bellAt y supportAt.",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "sol",
+        "mapa"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODEPOLITICS",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte el video.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodepolitics",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco cuando bg es archivo; el mundo de auto/atlas/world muestra todos los continentes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "auto, atlas o world: mapa mundial ligero; dark: fondo oscuro; archivo: atlas histórico; papel: textura; image: foto en src; component: componente en use; none: liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "atlas",
+            "world",
+            "dark",
+            "archivo",
+            "papel",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Oscurecido del fondo foto/componente.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "fadeOut": {
+          "type": "bool",
+          "default": true,
+          "doc": "Fundido a negro al final del cierre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODEPOLITICS",
+        "cta": "SUSCRÍBETE",
+        "support": "Apoya el canal y comparte el video.",
+        "handle": "youtube.com/@nodepolitics"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.outro",
+      "data": {
+        "native_name": "imperio.outro"
+      }
+    },
+    {
+      "id": "imperio.outrov2",
+      "name": "imperio.outrov2",
+      "label": "imperio.outrov2",
+      "kind": "component",
+      "summary": "Outro v2: GRACIAS POR VER un 45 % más grande, letras en negrita y fondos rojo sangre oscuro en LIKE y SUSCRÍBETE. Conserva el sol naciente, los rayos, la flecha, la campana y los tiempos sincronizables del cierre original. Textos, fondo, tamaño, peso y color editables por JSON; funciona en 9:16 y 16:9.",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "sol",
+        "v2",
+        "negrita",
+        "rojo sangre"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODEPOLITICS",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte el video.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodepolitics",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco del fondo atlas (vacío = mundo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "atlas",
+            "archivo",
+            "papel",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Oscurecido del fondo foto/componente.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "fadeOut": {
+          "type": "bool",
+          "default": true,
+          "doc": "Fundido a negro al final del cierre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "thanksScale": {
+          "type": "number",
+          "default": 1.45,
+          "doc": "Escala de GRACIAS POR VER respecto al cierre original (1.45 = 45 % más grande).",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 2
+        },
+        "textWeight": {
+          "type": "number",
+          "default": 800,
+          "doc": "Peso tipográfico del nombre del canal, SUSCRÍBETE y el apoyo. 800 = negrita gruesa; GRACIAS y LIKE usan Montserrat 800.",
+          "required": false,
+          "options": null,
+          "min": 400,
+          "max": 900
+        },
+        "actionColor": {
+          "type": "color",
+          "default": "#700B1B",
+          "doc": "Color de relleno de LIKE y SUSCRÍBETE; por defecto rojo sangre oscuro. No cambia el sol ni los rayos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODEPOLITICS",
+        "cta": "SUSCRÍBETE",
+        "support": "Apoya el canal y comparte el video.",
+        "handle": "youtube.com/@nodepolitics",
+        "thanksScale": 1.45,
+        "textWeight": 800,
+        "actionColor": "#700B1B"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.outrov2",
+      "data": {
+        "native_name": "imperio.outrov2"
+      }
+    },
+    {
+      "id": "imperio.campaign",
+      "name": "imperio.campaign",
+      "label": "imperio.campaign",
+      "kind": "component",
+      "summary": "Campaña en UN plano continuo: la cámara vuela entre destinos (`cameras`); desde el país foco salen flechas gruesas hacia cada destino y llegan justo cuando la voz lo nombra (`time: \"@palabra\"`). Al llegar, el territorio queda marcado en carmesí y aparece su bandera en un círculo con nombre y año (después se retira; el territorio sigue marcado). Tramos de video y fotos de archivo (`plates`) se funden en blanco y negro con el atlas. Para anexiones, ocupaciones y avances militares a lo largo del tiempo.",
+      "tags": [
+        "expansión",
+        "flechas",
+        "banderas",
+        "mapa",
+        "invasión",
+        "imperio",
+        "japón",
+        "video"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países ya ocupados (rayado fijo). Va acumulando de plano en plano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 1.15,
+          "doc": "Radio del sol en grados de mapa.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares: [{\"t\":\"Mar de\\nChina\", \"at\":[120,20]}].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rosa de los vientos fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "parts": {
+          "type": "array",
+          "default": [
+            "territories",
+            "arrows",
+            "sun",
+            "badges",
+            "dates",
+            "plates",
+            "captions"
+          ],
+          "doc": "Capas reutilizables: territories, arrows, sun, badges (países/ciudades), dates (año), plates (archivo), captions. Omitir = composición original completa.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Solo para encuadrar planos vecinos: cámara final. Vacío = la de la última entrada de `cameras`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.08,
+          "doc": "Si no hay cámaras: cuánto se aleja.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Giro de las cámaras automáticas.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "linear",
+          "doc": "Solo para planos vecinos (la cámara de este plano la dan `cameras`).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "fit": {
+          "type": "number",
+          "default": 1.9,
+          "doc": "Margen del encuadre automático de `cameras[].focus` (más alto = más mapa alrededor).",
+          "required": false,
+          "options": null,
+          "min": 1.1,
+          "max": 4
+        },
+        "cameras": {
+          "type": "array",
+          "default": [],
+          "doc": "Vuelos de cámara en orden: [{\"t\":\"@Sajalín-1.8\", \"focus\":[\"sun\", [142.8,48.5]], \"k\":1.9}] o {\"t\":..,\"to\":[lon,lat,span,giro]}. Opcional `dur`, `ease`, `tilt`. Cada vuelo parte de donde esté la cámara. Con `\"cut\": true` (o `dur: 0`) la cámara salta al encuadre sin moverse: así el plano no tiene movimientos de cámara.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "targets": {
+          "type": "array",
+          "default": [],
+          "doc": "Destinos: [{\"at\":\"Taiwan\", \"region\":\"Taiwan\"|[\"A\",\"B\"]|{\"poly\":[[lon,lat]…],\"within\":\"China\"}|{\"dots\":[[lon,lat]…]}|null, \"label\":\"TAIWÁN\", \"year\":\"1895\", \"flag\":\"f1\", \"time\":\"@Taiwán\", \"kind\":\"badge|city\", \"arrow\":true, \"from\":[lon,lat], \"badgeAt\":[lon,lat], \"bow\":0.16, \"size\":1, \"hold\":4.5, \"side\":\"left|right\", \"dy\":0}]. `time` = cuándo la voz lo nombra: la flecha llega en ese instante.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "plates": {
+          "type": "array",
+          "default": [],
+          "doc": "Tramos de archivo: video 8–16 s o imagen 6–12 s; para fotos usar image:p1/p2 en vez de video. Ejemplo: [{\"video\":\"v1\", \"at\":\"@Manchuria-1\", \"dur\":8, \"start\":0, \"rate\":1, \"strength\":0.9, \"focus\":[0.5,0.45], \"caption\":\"ARCHIVO · 1931\"}]. El atlas se pone gris y el clip se funde en multiplicar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "held": {
+          "type": "array",
+          "default": [],
+          "doc": "Territorios ya ocupados al empezar, siempre marcados (mismas formas que `region`).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "travel": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundos que tarda cada flecha en cruzar el mar antes de llegar a su `time`.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 3
+        },
+        "hold": {
+          "type": "number",
+          "default": 4.5,
+          "doc": "Segundos que se queda la bandera con su rótulo tras llegar (el territorio sigue marcado).",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 20
+        },
+        "beam": {
+          "type": "number",
+          "default": 1,
+          "doc": "Grosor de las flechas (multiplicador).",
+          "required": false,
+          "options": null,
+          "min": 0.4,
+          "max": 2.5
+        },
+        "badge": {
+          "type": "number",
+          "default": 1,
+          "doc": "Tamaño de las banderas redondas (multiplicador).",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 2
+        },
+        "stamp": {
+          "type": "bool",
+          "default": true,
+          "doc": "Sello grande con el año del último destino, arriba a la izquierda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "smoke": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Humo oscuro sobre los tramos de archivo.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "f1": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f1 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f1\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f2": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f2 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f2\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f3": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f3 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f3\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f4": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f4 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f4\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f5": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f5 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f5\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f6": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f6 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f6\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f7": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f7 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f7\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f8": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f8 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f8\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f9": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f9 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f9\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f10": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f10 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f10\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f11": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f11 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f11\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "f12": {
+          "type": "image",
+          "default": "",
+          "doc": "Bandera f12 (SVG/PNG de assets/flags). Un destino la usa con \"flag\": \"f12\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "v1": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo v1 (assets/media). Un tramo de archivo lo usa con \"video\": \"v1\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "v2": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo v2 (assets/media). Un tramo de archivo lo usa con \"video\": \"v2\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "v3": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo v3 (assets/media). Un tramo de archivo lo usa con \"video\": \"v3\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "v4": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo v4 (assets/media). Un tramo de archivo lo usa con \"video\": \"v4\".",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "p1": {
+          "type": "image",
+          "default": "",
+          "doc": "Fotografía o fotograma p1 (assets/media). Un tramo ilustrativo lo usa con \"image\": \"p1\" durante 6–12 s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "p2": {
+          "type": "image",
+          "default": "",
+          "doc": "Fotografía o fotograma p2 (assets/media). Un tramo ilustrativo lo usa con \"image\": \"p2\" durante 6–12 s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": [
+          132,
+          32,
+          75,
+          0
+        ],
+        "to": [
+          132,
+          32,
+          75,
+          0
+        ],
+        "country": "Japan",
+        "hatch": [
+          "Japan"
+        ],
+        "sunSize": 1.4,
+        "f1": "assets/flags/qing.svg",
+        "f2": "assets/flags/korean-empire.svg",
+        "cameras": [],
+        "targets": [
+          {
+            "at": "Taiwan",
+            "region": "Taiwan",
+            "label": "TAIWÁN",
+            "year": "1895",
+            "flag": "f1",
+            "time": 2
+          },
+          {
+            "at": [
+              127.8,
+              36.5
+            ],
+            "region": [
+              "South Korea",
+              "North Korea"
+            ],
+            "label": "COREA",
+            "year": "1910",
+            "flag": "f2",
+            "time": 3.2
+          }
+        ],
+        "labels": [
+          {
+            "t": "Mar de\nChina Oriental",
+            "at": [
+              124,
+              29
+            ]
+          }
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.campaign",
+      "data": {
+        "native_name": "imperio.campaign"
+      }
+    },
+    {
+      "id": "imperio.footage",
+      "name": "imperio.footage",
+      "label": "imperio.footage",
+      "kind": "component",
+      "summary": "Material de archivo en VIDEO (en vez de foto): el atlas se desatura a gris, baja humo oscuro y el clip mudo se funde en blanco y negro, en multiplicar, con el mapa; el sol y los rayos carmesí siguen encima. Como imperio.archive pero con movimiento real.",
+      "tags": [
+        "archivo",
+        "video",
+        "blanco y negro",
+        "mapa",
+        "guerra",
+        "imperio"
+      ],
+      "params": {
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip mudo de assets/media (se pasa a B/N contrastado). Vacío = solo atlas gris, humo y rayos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip (bajar si es corto).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repetir el clip si es más corto que el plano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.45
+          ],
+          "doc": "Punto de interés del clip [x,y] 0..1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países ya ocupados (rayado fijo). Va acumulando de plano en plano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 3,
+          "doc": "Radio del sol en grados de mapa.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares: [{\"t\":\"Mar de\\nChina\", \"at\":[120,20]}].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": true,
+          "doc": "Rosa de los vientos fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 3,
+          "doc": "Si no hay `to`: grados que gira el mapa.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 28,
+          "doc": "Rayos del sol.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo del abanico (0 = norte, 180 = sur).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.72,
+          "doc": "Cierre del abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.02,
+          "doc": "Largo residual de los rayos opuestos.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0.56,
+          "doc": "Opacidad de los rayos.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Largo de los rayos (fracción del lado largo).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo en que nacen los rayos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "",
+          "doc": "Color hex de los rayos en multiplicar (el demo usa un carmesí vivo). Vacío = granate grisáceo del mapa.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 2,
+          "doc": "Barquitos sobre los rayos.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "grayDur": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Segundos en que el atlas pasa a gris.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "videoAt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo en que empieza a aparecer el clip.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "videoDur": {
+          "type": "number",
+          "default": 1,
+          "doc": "Duración del fundido del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.95,
+          "doc": "Intensidad del clip (multiplicar).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "smoke": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Humo oscuro desde arriba.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico en itálica abajo a la izquierda (lugar · año del metraje).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "video": "samples/imperio-archive.mp4",
+        "country": "Japan",
+        "from": [
+          145,
+          35,
+          125,
+          3
+        ],
+        "to": [
+          135,
+          32,
+          165,
+          6
+        ],
+        "rays": 28,
+        "dir": 180,
+        "spread": 0.72,
+        "rayFloor": 0.02,
+        "rayAlpha": 0.56,
+        "rayLen": 0.46,
+        "compass": true,
+        "caption": "ARCHIVO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.footage",
+      "data": {
+        "native_name": "imperio.footage"
+      }
+    },
+    {
+      "id": "imperio.country",
+      "name": "imperio.country",
+      "label": "imperio.country",
+      "kind": "component",
+      "summary": "País del video: territorio marcado, bandera circular, nombre y fecha. Entradas geográficas y llegada sincronizable; comparte el dibujo de imperio.campaign.",
+      "tags": [
+        "imperio",
+        "pieza",
+        "territories",
+        "badges",
+        "dates"
+      ],
+      "params": {
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Si no hay `to`: grados que gira el mapa.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "expo",
+          "doc": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": "Taiwan",
+          "doc": "País o punto [longitud, latitud] del destino; nunca píxeles.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "region": {
+          "type": "object",
+          "default": null,
+          "doc": "Territorio: nombre de país, lista de países, {poly:[[lon,lat]…],within:'País'} o {dots:[[lon,lat]…]}. Vacío = el país de target.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "TAIWÁN",
+          "doc": "Nombre mostrado en la chapa del país o la ciudad.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "year": {
+          "type": "string",
+          "default": "1895",
+          "doc": "Fecha del sello (puede incluir un rango).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flag": {
+          "type": "image",
+          "default": "",
+          "doc": "Archivo SVG/PNG de bandera con licencia, relativo al episodio; no se deduce ni se inventa la bandera histórica.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "time": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo local de llegada. Acepta @palabra de la narración.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "hold": {
+          "type": "number",
+          "default": 4.5,
+          "doc": "Segundos que se queda la bandera con su rótulo tras llegar (el territorio sigue marcado).",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 20
+        },
+        "size": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la bandera circular.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 2
+        }
+      },
+      "example": {
+        "from": [
+          132,
+          32,
+          55,
+          0
+        ],
+        "to": [
+          132,
+          32,
+          55,
+          0
+        ],
+        "time": 0.5,
+        "hold": 8,
+        "target": "Taiwan",
+        "label": "TAIWÁN",
+        "year": "1895",
+        "flag": "assets/flags/qing.svg",
+        "size": 1.6
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.country",
+      "data": {
+        "native_name": "imperio.country"
+      }
+    },
+    {
+      "id": "imperio.flag",
+      "name": "imperio.flag",
+      "label": "imperio.flag",
+      "kind": "component",
+      "summary": "Bandera circular con aro, rebote y chapa con el nombre del país; se retira después de hold segundos. Es la misma bandera de la campaña.",
+      "tags": [
+        "imperio",
+        "pieza",
+        "badges"
+      ],
+      "params": {
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Si no hay `to`: grados que gira el mapa.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "expo",
+          "doc": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": "Taiwan",
+          "doc": "País o punto [longitud, latitud] del destino; nunca píxeles.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "TAIWÁN",
+          "doc": "Nombre mostrado en la chapa del país o la ciudad.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flag": {
+          "type": "image",
+          "default": "",
+          "doc": "Archivo SVG/PNG de bandera con licencia, relativo al episodio; no se deduce ni se inventa la bandera histórica.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "time": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo local de llegada. Acepta @palabra de la narración.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "hold": {
+          "type": "number",
+          "default": 4.5,
+          "doc": "Segundos que se queda la bandera con su rótulo tras llegar (el territorio sigue marcado).",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 20
+        },
+        "size": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la bandera circular.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 2
+        }
+      },
+      "example": {
+        "from": [
+          132,
+          32,
+          55,
+          0
+        ],
+        "to": [
+          132,
+          32,
+          55,
+          0
+        ],
+        "time": 0.5,
+        "hold": 8,
+        "target": "Taiwan",
+        "label": "TAIWÁN",
+        "flag": "assets/flags/qing.svg",
+        "size": 1.8
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.flag",
+      "data": {
+        "native_name": "imperio.flag"
+      }
+    },
+    {
+      "id": "imperio.city",
+      "name": "imperio.city",
+      "label": "imperio.city",
+      "kind": "component",
+      "summary": "Punto de ciudad con pulso y nombre en chapa carmesí, como Pekín, Shanghái o Singapur en el video. Se ubica por [longitud,latitud].",
+      "tags": [
+        "imperio",
+        "pieza",
+        "badges"
+      ],
+      "params": {
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Si no hay `to`: grados que gira el mapa.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "expo",
+          "doc": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": "Taiwan",
+          "doc": "País o punto [longitud, latitud] del destino; nunca píxeles.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "TAIWÁN",
+          "doc": "Nombre mostrado en la chapa del país o la ciudad.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "time": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo local de llegada. Acepta @palabra de la narración.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "hold": {
+          "type": "number",
+          "default": 4.5,
+          "doc": "Segundos que se queda la bandera con su rótulo tras llegar (el territorio sigue marcado).",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 20
+        },
+        "side": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado del rótulo de ciudad.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": [
+          120,
+          36,
+          35,
+          0
+        ],
+        "to": [
+          120,
+          36,
+          35,
+          0
+        ],
+        "time": 0.5,
+        "hold": 8,
+        "target": [
+          116.4,
+          39.9
+        ],
+        "label": "PEKÍN"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.city",
+      "data": {
+        "native_name": "imperio.city"
+      }
+    },
+    {
+      "id": "imperio.arrow",
+      "name": "imperio.arrow",
+      "label": "imperio.arrow",
+      "kind": "component",
+      "summary": "Flecha gruesa de avance con degradado y borde blanco. Admite origen, destino, curvatura, grosor y llegada por voz; reutiliza la flecha del video.",
+      "tags": [
+        "imperio",
+        "pieza",
+        "arrows"
+      ],
+      "params": {
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Si no hay `to`: grados que gira el mapa.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "expo",
+          "doc": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": "Taiwan",
+          "doc": "País o punto [longitud, latitud] del destino; nunca píxeles.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "time": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo local de llegada. Acepta @palabra de la narración.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "origin": {
+          "type": "array",
+          "default": null,
+          "doc": "Origen de la flecha [lon,lat]; vacío = centro de country.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bow": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Curvatura de la flecha. 0 = recta; el signo cambia el lado del arco.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "travel": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundos que tarda cada flecha en cruzar el mar antes de llegar a su `time`.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 3
+        },
+        "beam": {
+          "type": "number",
+          "default": 1,
+          "doc": "Grosor de las flechas (multiplicador).",
+          "required": false,
+          "options": null,
+          "min": 0.4,
+          "max": 2.5
+        }
+      },
+      "example": {
+        "from": [
+          132,
+          32,
+          55,
+          0
+        ],
+        "to": [
+          132,
+          32,
+          55,
+          0
+        ],
+        "time": 2.5,
+        "country": "Japan",
+        "origin": [
+          139,
+          36
+        ],
+        "target": [
+          121,
+          24
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.arrow",
+      "data": {
+        "native_name": "imperio.arrow"
+      }
+    },
+    {
+      "id": "imperio.territory",
+      "name": "imperio.territory",
+      "label": "imperio.territory",
+      "kind": "component",
+      "summary": "Territorio que aparece en carmesí con borde y pulso. Admite países, varios países, polígonos recortados dentro de un país o islas mediante puntos.",
+      "tags": [
+        "imperio",
+        "pieza",
+        "territories"
+      ],
+      "params": {
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\". Vacío = encuadra el sol y todos los destinos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Si no hay `to`: grados que gira el mapa.",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "expo",
+          "doc": "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados).",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "Japan",
+          "doc": "País foco: pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": "Taiwan",
+          "doc": "País o punto [longitud, latitud] del destino; nunca píxeles.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "region": {
+          "type": "object",
+          "default": null,
+          "doc": "Territorio: nombre de país, lista de países, {poly:[[lon,lat]…],within:'País'} o {dots:[[lon,lat]…]}. Vacío = el país de target.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "time": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo local de llegada. Acepta @palabra de la narración.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        }
+      },
+      "example": {
+        "from": [
+          128,
+          37.5,
+          40,
+          0
+        ],
+        "to": [
+          128,
+          37.5,
+          40,
+          0
+        ],
+        "time": 0.5,
+        "target": [
+          127.6,
+          36.6
+        ],
+        "region": [
+          "South Korea",
+          "North Korea"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.territory",
+      "data": {
+        "native_name": "imperio.territory"
+      }
+    },
+    {
+      "id": "imperio.date",
+      "name": "imperio.date",
+      "label": "imperio.date",
+      "kind": "component",
+      "summary": "Fecha o rango de años blanco con subrayado carmesí; es el sello de la esquina del video, ahora reutilizable por JSON.",
+      "tags": [
+        "imperio",
+        "texto",
+        "date"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto de la fecha o del pie de archivo; puede ser un rango de años.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number",
+          "default": 0.2,
+          "doc": "Segundo de entrada, relativo al beat; acepta @palabra.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala respecto al tamaño del video original.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 2
+        },
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "Posición horizontal normalizada; vacío = la posición original del diseño.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Posición vertical normalizada; vacío = la posición original del diseño.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "1940–41"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.date",
+      "data": {
+        "native_name": "imperio.date"
+      }
+    },
+    {
+      "id": "imperio.caption",
+      "name": "imperio.caption",
+      "label": "imperio.caption",
+      "kind": "component",
+      "summary": "Pie de archivo en Montserrat itálica con fundido; mismo rótulo de lugar y año de las fotografías y clips del video.",
+      "tags": [
+        "imperio",
+        "texto",
+        "caption"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto de la fecha o del pie de archivo; puede ser un rango de años.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "number",
+          "default": 0.2,
+          "doc": "Segundo de entrada, relativo al beat; acepta @palabra.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala respecto al tamaño del video original.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 2
+        },
+        "x": {
+          "type": "number",
+          "default": null,
+          "doc": "Posición horizontal normalizada; vacío = la posición original del diseño.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "doc": "Posición vertical normalizada; vacío = la posición original del diseño.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "ARCHIVO · 1931",
+        "x": 0.1,
+        "y": 0.55,
+        "size": 2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.caption",
+      "data": {
+        "native_name": "imperio.caption"
+      }
+    },
+    {
+      "id": "imperio.sun",
+      "name": "imperio.sun",
+      "label": "imperio.sun",
+      "kind": "component",
+      "summary": "Sol carmesí que late sobre el país o las coordenadas elegidas; comparte el sol y los colores de bandera de imperio.map.",
+      "tags": [
+        "imperio",
+        "pieza",
+        "sun"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sun": {
+          "type": "bool",
+          "default": true,
+          "doc": "Círculo carmesí que late sobre el país foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "inOut",
+          "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 0,
+          "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Opacidad de los rayos carmesí.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 0.4,
+          "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 0,
+          "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "",
+          "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pins": {
+          "type": "array",
+          "default": [],
+          "doc": "Lugares: [{\"t\":\"Bletchley Park\", \"at\":[-0.74, 51.99]}] (punto carmesí + nombre). Entran escalonados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pinAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo en que entra el primer pin (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": [
+          139,
+          33,
+          50,
+          0
+        ],
+        "to": [
+          139,
+          33,
+          50,
+          0
+        ],
+        "hatch": [],
+        "country": "Japan",
+        "sunSize": 5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.sun",
+      "data": {
+        "native_name": "imperio.sun"
+      }
+    },
+    {
+      "id": "imperio.rays",
+      "name": "imperio.rays",
+      "label": "imperio.rays",
+      "kind": "component",
+      "summary": "Abanico de rayos sobre el mar: rumbo, apertura, cantidad, longitud y entrada por voz. Mismo efecto de la apertura original.",
+      "tags": [
+        "imperio",
+        "pieza",
+        "rays"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sun": {
+          "type": "bool",
+          "default": false,
+          "doc": "Círculo carmesí que late sobre el país foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "inOut",
+          "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 28,
+          "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Opacidad de los rayos carmesí.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 0.4,
+          "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 0,
+          "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "",
+          "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pins": {
+          "type": "array",
+          "default": [],
+          "doc": "Lugares: [{\"t\":\"Bletchley Park\", \"at\":[-0.74, 51.99]}] (punto carmesí + nombre). Entran escalonados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pinAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo en que entra el primer pin (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": [
+          139,
+          33,
+          50,
+          0
+        ],
+        "to": [
+          139,
+          33,
+          50,
+          0
+        ],
+        "hatch": [],
+        "country": "Japan",
+        "rays": 28,
+        "rayFloor": 0.02,
+        "raysAt": 0.2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.rays",
+      "data": {
+        "native_name": "imperio.rays"
+      }
+    },
+    {
+      "id": "imperio.ships",
+      "name": "imperio.ships",
+      "label": "imperio.ships",
+      "kind": "component",
+      "summary": "Barcos pequeños que avanzan sobre las rutas del abanico. Reutiliza los barcos del mapa; la ruta conserva sus coordenadas geográficas.",
+      "tags": [
+        "imperio",
+        "pieza",
+        "ships"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sun": {
+          "type": "bool",
+          "default": false,
+          "doc": "Círculo carmesí que late sobre el país foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "inOut",
+          "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 12,
+          "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0,
+          "doc": "Opacidad de los rayos carmesí.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 0.4,
+          "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 5,
+          "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "",
+          "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pins": {
+          "type": "array",
+          "default": [],
+          "doc": "Lugares: [{\"t\":\"Bletchley Park\", \"at\":[-0.74, 51.99]}] (punto carmesí + nombre). Entran escalonados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pinAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo en que entra el primer pin (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": [
+          139,
+          33,
+          50,
+          0
+        ],
+        "to": [
+          139,
+          33,
+          50,
+          0
+        ],
+        "hatch": [],
+        "country": "Japan",
+        "ships": 5,
+        "rayLen": 0.35,
+        "raysAt": 0.1
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.ships",
+      "data": {
+        "native_name": "imperio.ships"
+      }
+    },
+    {
+      "id": "imperio.compass",
+      "name": "imperio.compass",
+      "label": "imperio.compass",
+      "kind": "component",
+      "summary": "Rosa de los vientos de línea fina que acompaña el giro del mapa; es la del archivo original.",
+      "tags": [
+        "imperio",
+        "pieza",
+        "compass"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "array",
+          "default": null,
+          "doc": "Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sun": {
+          "type": "bool",
+          "default": false,
+          "doc": "Círculo carmesí que late sobre el país foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunAt": {
+          "type": "array",
+          "default": null,
+          "doc": "[lon, lat] del sol (vacío = centro del país foco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sunSize": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Radio del sol en grados de mapa (se achica al alejarse la cámara).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos de mares/regiones en itálica: [{\"t\":\"Mar del\\nJapón\", \"at\":[134,40]}] ('at' también acepta un país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "compass": {
+          "type": "bool",
+          "default": true,
+          "doc": "Rosa de los vientos de línea fina abajo a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desaturación del atlas (1 = gris, como el tramo de archivo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "enter": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundos de fundido de entrada sobre el plano anterior (0 = corte).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara inicial [lon, lat, span°, giro°] o \"País*k\". Vacío = donde terminó el plano con mapa anterior (plano continuo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "array",
+          "default": null,
+          "doc": "Cámara final [lon, lat, span°, giro°] o \"País*k\" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.3,
+          "doc": "Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 6
+        },
+        "tilt": {
+          "type": "number",
+          "default": 2,
+          "doc": "Si no hay `to`: grados que gira el mapa durante el plano (la referencia rota apenas).",
+          "required": false,
+          "options": null,
+          "min": -20,
+          "max": 20
+        },
+        "ease": {
+          "type": "enum",
+          "default": "inOut",
+          "doc": "Curva del movimiento de cámara. auto = sin frenar entre planos encadenados (lineal), out después de un corte.",
+          "required": false,
+          "options": [
+            "auto",
+            "out",
+            "in",
+            "inOut",
+            "linear",
+            "expo"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rays": {
+          "type": "number",
+          "default": 0,
+          "doc": "Cantidad de rayos del sol (0 = sin rayos; la referencia usa ~28).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 60
+        },
+        "dir": {
+          "type": "number",
+          "default": 180,
+          "doc": "Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayFloor": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "rayAlpha": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Opacidad de los rayos carmesí.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "rayLen": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Largo máximo de los rayos (fracción del lado largo del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.1,
+          "max": 1
+        },
+        "raysAt": {
+          "type": "number",
+          "default": 0.4,
+          "doc": "Segundo en que nacen los rayos (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ships": {
+          "type": "number",
+          "default": 0,
+          "doc": "Barquitos que avanzan sobre los rayos hacia el abanico.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 10
+        },
+        "rayColor": {
+          "type": "string",
+          "default": "",
+          "doc": "Color de los rayos en multiplicar. Vacío = granate grisáceo del tramo de mapa (#a8606e); el tramo de archivo usa carmesí #b3122f.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pins": {
+          "type": "array",
+          "default": [],
+          "doc": "Lugares: [{\"t\":\"Bletchley Park\", \"at\":[-0.74, 51.99]}] (punto carmesí + nombre). Entran escalonados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pinAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo en que entra el primer pin (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": [
+          139,
+          33,
+          50,
+          0
+        ],
+        "to": [
+          139,
+          33,
+          50,
+          0
+        ],
+        "hatch": [],
+        "country": "Japan"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.compass",
+      "data": {
+        "native_name": "imperio.compass"
+      }
+    }
+  ]
+}

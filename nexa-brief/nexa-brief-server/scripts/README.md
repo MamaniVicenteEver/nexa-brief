@@ -1,67 +1,77 @@
-# Nexa Brief — Scripts de Utilidad y Configuración
+# Scripts del servidor
 
-Esta carpeta contiene todos los scripts auxiliares de la aplicación Nexa Brief, organizados según su propósito.
+Los scripts son entradas operativas; las reglas de negocio y la persistencia
+permanecen en los servicios y adapters. Ejecutar desde la raíz del servidor.
 
----
+| Script | Uso |
+| --- | --- |
+| `youtube_auth_once.py --alias canal_1` | Autorizar YouTube y guardar tokens mediante el almacenamiento de conexiones. |
+| `facebook_setup.py` | Preparar una conexión de página de Facebook. |
+| `youtube_oauth_setup.py` | Configuración OAuth web heredada. |
+| `tiktok_setup.py` | Preparación de TikTok; revisar su ayuda antes de usar. |
+| `test_publisher_tokens.py` | Diagnóstico interactivo que puede publicar realmente; no forma parte de las pruebas aisladas. |
+| `scrape_backgrounds_v3.py` | Descarga de imágenes y música para recursos. |
+| `scrape_backgrounds.py` | Descargador de fondos heredado. |
+| `scrape_anime.py` | Descarga de recursos de anime y arte. |
+| `nexa_brief_ds_scraper.py` | Preparación de datasets. |
 
-## 🔑 1. Autenticación y Credenciales (OAuth / API)
+## Migración vigente: layout v3
 
-Estos scripts se utilizan para realizar el flujo de autorización OAuth 2.0 y guardar los tokens cifrados en `accounts.json` de manera autónoma.
+Usa `migrate-profile-layout.py --local-plan`, `--local-prepare` y
+`--local-activate`, con mantenimiento exclusivo y diario de recuperación.
+El destino predeterminado es v3. Consulta
+[`docs/profile-layout-v3-2026-11.md`](../docs/profile-layout-v3-2026-11.md)
+antes de operar sobre un perfil existente.
 
-*   ### [`youtube_auth_once.py`](youtube_auth_once.py)
-    *   **Propósito:** Inicia el flujo de autenticación local para la YouTube Data API v3 usando credenciales de tipo *Desktop/Installed App*.
-    *   **Uso:**
-        ```bash
-        uv run scripts/youtube_auth_once.py --alias canal_1
-        ```
-    *   **Salida:** Genera y guarda de manera encriptada el `refresh_token` y el `access_token` en `accounts.json`.
+## Preparación heredada por copias para v2
 
-*   ### [`facebook_setup.py`](facebook_setup.py)
-    *   **Propósito:** Intercambia un token temporal de usuario de Meta (obtenido en Graph Explorer) por un **Page Access Token permanente** de larga duración que nunca expira.
-    *   **Uso:**
-        ```bash
-        uv run scripts/facebook_setup.py
-        ```
-    *   **Salida:** Permite seleccionar la página de Facebook a vincular y guarda su token cifrado en `accounts.json` bajo el alias `pagina_1`.
+`migrate-profile-layout.py` prepara copias locales verificadas; **no activa v2**,
+no elimina el origen y no modifica `profile.json`. Usar solo con rutas revisadas
+por el operador. Sin opciones de aplicación presenta rutas de origen/destino y
+conteos, incluidos orígenes ausentes, exclusiones y conflictos:
 
-*   ### [`youtube_oauth_setup.py`](youtube_oauth_setup.py)
-    *   **Propósito:** Script heredado (Legacy) para configuración de redirección OAuth web. Mantener solo para propósitos de referencia o depuración avanzada.
+```sh
+python scripts/migrate-profile-layout.py --profile-dir /ruta/perfil --templates-dir /ruta/plantillas
+```
 
----
+Detener todos los procesos que usen el perfil, también en otros hosts, y verificar
+que las producciones bajo las plantillas elegidas pertenecen a este perfil. La
+herramienta no puede demostrar ninguna de esas condiciones. Luego, solo tras
+revisar el plan:
 
-## 🔬 2. Pruebas y Diagnóstico
+```sh
+python scripts/migrate-profile-layout.py --profile-dir /ruta/perfil --templates-dir /ruta/plantillas --apply --confirm-maintenance --confirm-templates-owned
+```
 
-Herramientas para validar la integridad de los tokens y probar publicaciones individuales sin ejecutar todo el pipeline de producción.
+Copia las categorías de plantillas a `productions`, `sandbox` a `sandbox`,
+`output` a `renders`, los archivos de biblioteca y música licenciada a `resources`, medios de
+publicaciones a `productions/_publicaciones`, logs de modelos/prototipos a
+`logs`, y miniaturas a `.system/cache`. Las claves relativas de biblioteca y
+publicación se conservan; los JSON permanecen en `data`. El estado de runtime,
+los locks, los leases y los eventos se dejan atrás para que se regeneren.
+Orígenes ausentes se informan, no se crean datos inventados.
 
-*   ### [`test_publisher_tokens.py`](test_publisher_tokens.py)
-    *   **Propósito:** Suite interactiva de verificación de tokens. Permite realizar subidas reales de prueba a tus cuentas configuradas en YouTube y Facebook utilizando el video más reciente que se encuentre en la carpeta `output/`.
-    *   **Uso:**
-        ```bash
-        uv run scripts/test_publisher_tokens.py
-        ```
+No se incluyen conexiones, credenciales ni rutas con nombres habitualmente
+usados para secretos. La exclusión por nombre no puede detectar credenciales
+embebidas en contenidos arbitrarios: hay que revisar las producciones y logs
+antes de copiar o compartirlos. No se exploran ni imprimen contenidos durante
+el plan. Se rechazan symlinks y archivos especiales, y no se sobrescribe ningún
+destino. El directorio de staging y los destinos deben compartir un filesystem
+para instalar cada archivo con enlace atómico. La confirmación de mantenimiento
+es imprescindible porque la aplicación podría crear archivos o modificar
+orígenes después de inspeccionarlos.
 
----
+El manifiesto privado `.system/migrations/<id>/manifest.json` contiene rutas,
+hashes SHA-256, tamaños y estados de cada copia. Una interrupción puede dejar
+archivos creados o un staging temporal: conservar el manifiesto e inspeccionar
+sus estados `planned`, `verified` y `created`. `verified` puede significar que
+el archivo final ya se enlazó antes de una interrupción; comprobar su hash y
+revisar su pertenencia antes de retirar manualmente cualquier destino. Nunca
+borrar el origen como parte de la recuperación. Si un destino ya existía, la
+herramienta se detiene sin sobrescribirlo; no hay rollback automático.
 
-## 🌐 3. Scraping y Descargas de Recursos (Assets)
-
-Scripts dedicados a descargar música, videos o imágenes de fondo para alimentar el motor de renderizado de Nexa Brief.
-
-*   ### [`scrape_backgrounds_v3.py`](scrape_backgrounds_v3.py)
-    *   **Propósito:** El scraper principal del sistema para obtener imágenes de fondo y música libre de derechos de autor de fuentes como Pexels, Pixabay y Jamendo.
-    *   **Uso:**
-        ```bash
-        uv run scripts/scrape_backgrounds_v3.py
-        ```
-
-*   ### [`scrape_backgrounds.py`](scrape_backgrounds.py)
-    *   **Propósito:** Versión heredada y simplificada del scraper de fondos.
-
-*   ### [`scrape_anime.py`](scrape_anime.py)
-    *   **Propósito:** Scraper especializado para descargar recursos visuales con temática de anime o arte digital para categorías específicas de videos.
-    *   **Uso:**
-        ```bash
-        uv run scripts/scrape_anime.py
-        ```
-
-*   ### [`nexa_brief_ds_scraper.py`](nexa_brief_ds_scraper.py)
-    *   **Propósito:** Utilidad de raspado de datos y scraping dirigida para recopilación y formateo de datasets de Nexa Brief.
+Antes de activar v2 todavía se deben revisar las rutas absolutas guardadas en
+JSON, el traslado seguro de conexiones/credenciales, los orígenes ausentes,
+los resultados excluidos, el espacio y los permisos. Estos pasos y la activación
+son deliberadamente manuales; la preparación no equivale a una migración
+completa ni garantiza que archivos arbitrarios estén libres de secretos.

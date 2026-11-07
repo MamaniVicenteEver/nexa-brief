@@ -82,7 +82,7 @@ K=src/templates/_tools/explainer-kit/tools/kit.py; M=src/templates/_tools/explai
 
 ## 6. Lecciones de NodeTech
 
-- **Referencias**: `nodetech/apolo-1202` (rough, la vara de calidad) y `nodetech/nacimiento-ia-dartmouth`
+- **Referencias**: `nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats` (rough, demo) y `productions/nodetech/nacimiento-ia-dartmouth` del perfil activo
   (binary, producido por Claude Code vía backend: leé su `PLAN.md` y su `agent_report` en
   `data/explainer/productions.json`). También `vago-pero-emocionante` (rough, Claude) y
   `codex-ariane-501` (rough, Codex).

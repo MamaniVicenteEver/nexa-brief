@@ -65,9 +65,53 @@ Entrá a la web con **admin@nexabrief.com / admin123**. Cambiala con
 | --- | --- | --- |
 | Claves de servicios (Gemini, Pexels, YouTube…) | `nexa-brief-server/.env` | Pedilas al equipo. La API arranca sin ellas; cada función avisa qué clave falta. |
 | Audios y videos de las plantillas (~3,6 GB) | `nexa-brief-server/src/templates/**` | `make media-pull` con `MEDIA_REMOTE` en `.env` (acceso SSH al servidor del equipo). |
-| Cuentas conectadas (tokens cifrados) | `.runtime/connections/accounts.json` | Se crean al conectar una red desde la web (**Canales**), o desde `ACCOUNTS_JSON_B64` en el `.env`. |
-| Datos de la app (jobs, cola, biblioteca) | `nexa-brief-server/data/` | Se crean solos. Cada máquina tiene los suyos. |
-| Usuarios de la web | `nexa-brief-web/data/users.json` | `make setup` / `make seed-admin`. |
+| Cuentas conectadas (tokens cifrados) | `<perfil>/.system/connections/` en v2/v3; `<perfil>/connections/` en v1 | Se crean al conectar una red desde la web (**Canales**), o desde `ACCOUNTS_JSON_B64` en el `.env`. |
+| Datos de la app (jobs, cola, biblioteca) | `<perfil>/data/` | Se crean solos. Cada máquina tiene los suyos. |
+| Usuarios de la web | `<perfil>/.system/web-data/` en v2/v3; `<perfil>/web-data/` en v1 | `make setup` / `make seed-admin`. |
+
+### Perfiles de almacenamiento
+
+El layout vigente para altas nuevas es v3. Profesional permanece en v1 mientras
+se resuelve el aislamiento de agentes. Los agentes CLI se rechazan en v2/v3 hasta disponer de un ejecutor con
+aislamiento verificado; los perfiles v1 conservan su funcionamiento actual.
+Consulta el [layout, estado real y límites de la refactorización](nexa-brief-server/docs/profile-layout-v3-2026-11.md).
+
+Cada perfil es independiente. `init` crea un perfil v3 vacío con las categorías y
+estilos predeterminados del producto, sin importar usuarios, cuentas ni contenido
+de otros perfiles. El directorio predeterminado es
+`~/.local/share/nexa-brief/profiles/<nombre>/`:
+
+```bash
+python3 scripts/storage-profile.py init equipo --tiktok-port 8101
+python3 scripts/storage-profile.py show equipo
+make seed-admin NEXA_DATA_PROFILE=equipo EMAIL=tu@correo PASSWORD=tu-clave
+make dev NEXA_DATA_PROFILE=equipo
+```
+
+Un perfil nuevo necesita su propio administrador y sus conexiones. El puerto
+TikTok debe ser distinto para servicios que corran simultáneamente. En v3,
+`data/json/` contiene un archivo por sección; `productions/`, los proyectos;
+`renders/videos/` y `renders/images/`, los resultados por categoría e ID;
+`resources/` los medios, `sandbox/` los prototipos y `logs/` las trazas;
+`.system/` contiene estado técnico, caché, conexiones y datos de la web.
+Los perfiles v1 conservan sus rutas hasta una migración explícita.
+
+`NEXA_DATA_PROFILE` selecciona el perfil para `make` y sus procesos hijos;
+`NEXA_PROFILE_DIR` permite indicar una ruta absoluta. En v2/v3, los overrides de
+rutas deben apuntar al mismo árbol del perfil seleccionado; en v1 siguen siendo
+independientes, por lo que variables heredadas pueden apuntar a otro perfil.
+`storage-profile.py
+activate equipo` guarda un selector para procesos que no reciben esa variable;
+`make` usa por defecto `profesional`. Cambiar el selector no cambia procesos
+ya iniciados: detené y reiniciá la API y la web con el mismo perfil.
+
+Para usar Compose directamente con un perfil, cargá primero las rutas y el UID/GID:
+
+```bash
+export NEXA_DATA_PROFILE=equipo APP_UID=$(id -u) APP_GID=$(id -g)
+source scripts/profile-env.sh
+docker compose up -d
+```
 
 ### Comandos
 

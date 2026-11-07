@@ -86,7 +86,7 @@ Se capturaron los componentes en `showcase/stage.html` con `tools/shoot.py --ori
 
 ## Demo con narración existente
 
-`sandbox/nodeeconomy/dinero-demo/` conserva la canción, el guion y la transcripción del video de producción `nodetech/nacimiento-ia-dartmouth` (el ángulo asignado con cifras de financiación de la propuesta de Dartmouth). El storyboard tiene 69 beats: los primeros 16,77 s fijan los cortes medidos de la referencia; desde el remate `HUH!`, el resto sigue las anclas de `lyrics.json`. Seis momentos `common.lyric` quedan como overlays karaoke y el runtime agrega `dinero.outro` durante los últimos 6 s.
+`sandbox/nodeeconomy/dinero-demo/` conserva la canción, el guion y la transcripción del video de producción `productions/nodetech/nacimiento-ia-dartmouth` del perfil activo (el ángulo asignado con cifras de financiación de la propuesta de Dartmouth). El storyboard tiene 69 beats: los primeros 16,77 s fijan los cortes medidos de la referencia; desde el remate `HUH!`, el resto sigue las anclas de `lyrics.json`. Seis momentos `common.lyric` quedan como overlays karaoke y el runtime agrega `dinero.outro` durante los últimos 6 s.
 
 Las fotos sustituyen al auto de la referencia por fajos y conteo de dinero, y luego incorporan Dartmouth, McCarthy y Shannon cuando la narración los nombra. Se usan nueve fotos; `minsky.jpg` permanece descargada y acreditada, pero no se usa. El material de voz no tiene `song-with-outro.mp3`: el cierre es visual y cae sobre el audio existente, sin voz nueva. Esta carpeta es una demo de estilo, no una pieza lista para publicar, porque conserva la narración de historia de la IA bajo los primeros planos tipográficos sobre dinero.
 

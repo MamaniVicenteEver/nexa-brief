@@ -212,6 +212,21 @@ def decode(path):
 
 @pytest.mark.asyncio
 @pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg no disponible")
+async def test_limiter_preserves_effect_at_start_and_end(tmp_path):
+    voice, fx, dest = tmp_path / "voice.wav", tmp_path / "fx.wav", tmp_path / "mix.wav"
+    write_audio(voice, 1, 300, 0.1)
+    write_audio(fx, 1, 70, 0.1)
+    cue = ResolvedSoundCue("s", fx, 0, 0, 1, 0, 0.01, 0.01)
+    await FFmpegSoundMixer().mix(voice, [cue], dest, ducking=False)
+    source, stem = decode(fx), decode(tmp_path / "mix-effects.wav")
+    assert source.shape == stem.shape
+    assert np.max(np.abs(source[480:-480] - stem[480:-480])) < 0.00001
+    assert np.max(np.abs(stem[1:480])) > 0.01
+    assert np.max(np.abs(stem[-480:])) > 0.01
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg no disponible")
 async def test_mixer_preserves_continuous_voice_and_exports_identical_fx_layer(tmp_path):
     voice, fx, dest = tmp_path / "voice.wav", tmp_path / "fx.wav", tmp_path / "mix.wav"
     write_audio(voice, 3, 300, 0.5)

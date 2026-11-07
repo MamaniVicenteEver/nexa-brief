@@ -1,0 +1,3225 @@
+{
+  "schema_version": 1,
+  "design_id": "enmienda",
+  "revision": "19f42a2d755b112e20aced4630e7b009a0cf950cb67a7e1411be938e1d7ef0f5",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "enmienda.word",
+      "name": "enmienda.word",
+      "label": "enmienda.word",
+      "kind": "component",
+      "summary": "Golpe de texto del documental: palabra/frase en condensada MUY gruesa con textura de tipo móvil gastado sobre negro. Entradas: erosión (polvo por vetas), desenfoque, barrido, volteo con destello, golpe seco. Salidas: erosión, desenfoque, 'palomas' (se rompe en recortes que vuelan) o corte. Marcas a pincel (cruz, círculo, garabato, subrayado) o mira telescópica.",
+      "tags": [
+        "título",
+        "golpe",
+        "texto",
+        "impacto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto ('\\n' parte renglones). Mayúsculas recomendadas.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "font": {
+          "type": "enum",
+          "default": "grot",
+          "doc": "grot = condensada gruesa (Oswald), heavy = Anton, stencil = esténcil con serifa, serif = titular victoriano condensado, wide = extendida (Archivo).",
+          "required": false,
+          "options": [
+            "grot",
+            "heavy",
+            "stencil",
+            "serif",
+            "wide"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Fracción del ancho que ocupa el renglón más largo (en 9:16 se agranda solo).",
+          "required": false,
+          "options": null,
+          "min": 0.15,
+          "max": 0.98
+        },
+        "in": {
+          "type": "enum",
+          "default": "erode",
+          "doc": "Entrada.",
+          "required": false,
+          "options": [
+            "erode",
+            "blur",
+            "swipe",
+            "tumble",
+            "slam",
+            "cut"
+          ],
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "enum",
+          "default": "erode",
+          "doc": "Salida (durante el solape con el beat siguiente).",
+          "required": false,
+          "options": [
+            "erode",
+            "blur",
+            "birds",
+            "cut"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mark": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Marca a pincel o mira sobre el texto.",
+          "required": false,
+          "options": [
+            "none",
+            "x",
+            "circle",
+            "scribble",
+            "underline",
+            "crosshair"
+          ],
+          "min": null,
+          "max": null
+        },
+        "markAt": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundos desde el inicio del beat en que se dibuja la marca (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ghost": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto tenue de documentos detrás ('|' separa piezas). Vacío = nada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.47,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tilt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Inclinación final en grados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "captions": {
+          "type": "bool",
+          "default": true,
+          "doc": "false = oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "ALGO SE\nROMPE",
+        "font": "grot",
+        "in": "erode",
+        "mark": "x",
+        "markAt": 0.7
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.word",
+      "data": {
+        "native_name": "enmienda.word"
+      }
+    },
+    {
+      "id": "enmienda.slats",
+      "name": "enmienda.slats",
+      "label": "enmienda.slats",
+      "kind": "component",
+      "summary": "Numeral gigante (romano o cifra) armado con listones de papel que entran deslizándose en vertical sobre un documento manuscrito tenue con marcas de conteo (||||/); al final la cámara gira y se zambulle en los listones (empalma con enmienda.plaque in:'dive').",
+      "tags": [
+        "numeral",
+        "título",
+        "fecha",
+        "apertura"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "XXVIII",
+          "doc": "Numeral o palabra corta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico debajo (condensada con tracking).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tally": {
+          "type": "bool",
+          "default": true,
+          "doc": "Marcas de conteo arriba a la derecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "doc": {
+          "type": "string",
+          "default": "Congreso · sesión del día · acta",
+          "doc": "Texto manuscrito tenue de fondo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "enum",
+          "default": "dive",
+          "doc": "dive = gira y entra en los listones (últimos 0,5 s del beat).",
+          "required": false,
+          "options": [
+            "dive",
+            "erode",
+            "cut"
+          ],
+          "min": null,
+          "max": null
+        },
+        "buildSec": {
+          "type": "number",
+          "default": 1.4,
+          "doc": "Segundos que tarda en armarse.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "XXVIII",
+        "sub": "AÑOS"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.slats",
+      "data": {
+        "native_name": "enmienda.slats"
+      }
+    },
+    {
+      "id": "enmienda.plaque",
+      "name": "enmienda.plaque",
+      "label": "enmienda.plaque",
+      "kind": "component",
+      "summary": "Tablero de listones blancos con letras negras de esténcil gastado (tipo 'ABOLITION OF SLAVERY'), iluminado al centro. Entra girando desde muy cerca (empalme con slats) y se aleja despacio; puede tachar renglones con cinta negra que se pega en stop-motion.",
+      "tags": [
+        "título",
+        "cartel",
+        "tachar",
+        "cinta"
+      ],
+      "params": {
+        "lines": {
+          "type": "array",
+          "default": [
+            "LA NOCHE",
+            "QUE CAYÓ",
+            "EL MURO"
+          ],
+          "doc": "Renglones (uno por listón). Las palabras cortas quedan en listones más bajos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "in": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "dive = llega girando desde muy cerca.",
+          "required": false,
+          "options": [
+            "dive",
+            "cut",
+            "fade"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strike": {
+          "type": "array",
+          "default": [],
+          "doc": "Índices de renglones a tachar con cinta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strikeAt": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Segundo (o '@palabra') en que se pega la primera cinta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "enum",
+          "default": "smear",
+          "doc": "smear = barrido desenfocado horizontal en el solape.",
+          "required": false,
+          "options": [
+            "smear",
+            "cut"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "lines": [
+          "LA NOCHE",
+          "QUE CAYÓ",
+          "EL MURO"
+        ],
+        "in": "dive"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.plaque",
+      "data": {
+        "native_name": "enmienda.plaque"
+      }
+    },
+    {
+      "id": "enmienda.cards",
+      "name": "enmienda.cards",
+      "label": "enmienda.cards",
+      "kind": "component",
+      "summary": "Cartulinas blancas con palabras en tinta negra de rodillo, pegadas con cinta negra sobre papel gris arrugado; aparecen una por una en stop-motion (como 'KEEP THESE PRISONS FILLED'). Puede tachar con cinta o, en modo 'pile', llover hojas que se apilan.",
+      "tags": [
+        "cartel",
+        "palabras",
+        "stop-motion",
+        "papel",
+        "tachar"
+      ],
+      "params": {
+        "words": {
+          "type": "array",
+          "default": null,
+          "doc": "Una palabra (o dos cortas) por cartulina.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "array",
+          "default": [],
+          "doc": "Segundos de aparición de cada cartulina (vacío = repartidas en el primer 60 % del beat).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strike": {
+          "type": "array",
+          "default": [],
+          "doc": "Índices de cartulinas a tachar con cinta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strikeAt": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Segundo (o '@palabra') de la primera cinta que tacha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "words",
+          "doc": "pile = hojas que caen y se apilan (palabras como membretes).",
+          "required": false,
+          "options": [
+            "words",
+            "pile"
+          ],
+          "min": null,
+          "max": null
+        },
+        "count": {
+          "type": "number",
+          "default": 16,
+          "doc": "Hojas en modo pile.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "words": [
+          "ABRAN",
+          "LA",
+          "PUERTA"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.cards",
+      "data": {
+        "native_name": "enmienda.cards"
+      }
+    },
+    {
+      "id": "enmienda.letter",
+      "name": "enmienda.letter",
+      "label": "enmienda.letter",
+      "kind": "component",
+      "summary": "Aviso de diario en papel blanco con viñeta: titular en serif condensada negra; barrido rápido (latigazo con desenfoque) hasta el cuerpo del texto y una nota manuscrita que se escribe sobre la línea de firma.",
+      "tags": [
+        "documento",
+        "diario",
+        "firma",
+        "nota"
+      ],
+      "params": {
+        "headline": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular ('\\n' renglones).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "doc": "Cuerpo chico (serif).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hand": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota manuscrita que se escribe sobre la línea.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sign": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo bajo la línea de firma.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "whipAt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del latigazo al cuerpo (0 = 50 % del beat).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "headline": "ESPERAR\nHASTA LA\nMAÑANA.",
+        "body": "La regla se anunciaría al día siguiente,\ncon calma, con trámites y con orden.",
+        "hand": "no antes del 10/11",
+        "sign": "Oficina de prensa · 9 nov 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.letter",
+      "data": {
+        "native_name": "enmienda.letter"
+      }
+    },
+    {
+      "id": "enmienda.document",
+      "name": "enmienda.document",
+      "label": "enmienda.document",
+      "kind": "component",
+      "summary": "Documento oscuro: párrafo en condensada gris cuyas palabras aparecen en desorden (parpadeando) sobre una imagen fantasma; después una frase se resalta con caja blanca y texto negro (como 'EXCEPT AS A PUNISHMENT FOR CRIME').",
+      "tags": [
+        "documento",
+        "ley",
+        "cita",
+        "resaltado"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Párrafo (se pasa a mayúsculas).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "highlight": {
+          "type": "string",
+          "default": "",
+          "doc": "Fragmento exacto del texto a resaltar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "highlightAt": {
+          "type": "number",
+          "default": 1.6,
+          "doc": "Segundo (o '@palabra') del resaltado.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (p. ej. 'SECCIÓN 1').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen fantasma de fondo (muy tenue, opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "Un muro de hormigón y alambre en medio de la ciudad",
+        "highlight": "hormigón y alambre",
+        "highlightAt": 1.6
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.document",
+      "data": {
+        "native_name": "enmienda.document"
+      }
+    },
+    {
+      "id": "enmienda.wordcloud",
+      "name": "enmienda.wordcloud",
+      "label": "enmienda.wordcloud",
+      "kind": "component",
+      "summary": "Nube de palabras condensadas en profundidad: decenas de términos de distintos tamaños sobre un plano inclinado que la cámara atraviesa; las lejanas desenfocadas y tenues, las cercanas nítidas; garabatos a pincel encima.",
+      "tags": [
+        "lista",
+        "derechos",
+        "nube",
+        "palabras"
+      ],
+      "params": {
+        "words": {
+          "type": "array",
+          "default": null,
+          "doc": "Términos (se repiten para llenar la nube).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "count": {
+          "type": "number",
+          "default": 18,
+          "doc": "Cantidad de instancias.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "words": [
+          "HUNGRÍA",
+          "CHECOSLOVAQUIA",
+          "ESCAPAR",
+          "FRONTERA",
+          "VIAJAR",
+          "LIBERTAD"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.wordcloud",
+      "data": {
+        "native_name": "enmienda.wordcloud"
+      }
+    },
+    {
+      "id": "enmienda.finale",
+      "name": "enmienda.finale",
+      "label": "enmienda.finale",
+      "kind": "component",
+      "summary": "Título de cierre: letras gigantes (numeral romano) que desbordan el cuadro y barren lento de derecha a izquierda bajo una franja de luz; un rótulo chico impreso en tinta oscura sobre la primera letra. Entra con una cuña oscura que barre la escena anterior y termina fundiendo a negro.",
+      "tags": [
+        "cierre",
+        "título",
+        "numeral"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "MCMLXXXIX",
+          "doc": "Letras gigantes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo impreso sobre una letra ('\\n' renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "labelOn": {
+          "type": "number",
+          "default": 0,
+          "doc": "Índice de la letra que lleva el rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del barrido (1 ≈ 6,5 % del ancho por segundo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MCMLXXXIX",
+        "label": "9 NOV\n1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.finale",
+      "data": {
+        "native_name": "enmienda.finale"
+      }
+    },
+    {
+      "id": "enmienda.map",
+      "name": "enmienda.map",
+      "label": "enmienda.map",
+      "kind": "component",
+      "summary": "Mapa de tinta sobre negro (siluetas de papel gastado): el mundo aparece parpadeando con un país resaltado; un barrido de vetas disuelve el resto y el país viaja al centro. Opciones: barras negras que gotean (barrotes), mitad oscura del país con frontera punteada (que se funde al unirse), puntos dispersos, ciudad con rótulo en caja negra y texto extendido encima.",
+      "tags": [
+        "mapa",
+        "país",
+        "lugar",
+        "apertura",
+        "geografía"
+      ],
+      "params": {
+        "from": {
+          "type": "enum",
+          "default": "world",
+          "doc": "world = empieza con el planisferio.",
+          "required": false,
+          "options": [
+            "world",
+            "country"
+          ],
+          "min": null,
+          "max": null
+        },
+        "zoomAt": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundo en que el mundo se disuelve y el país viaja al centro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "enum",
+          "default": "DE",
+          "doc": "País (geometría incluida en assets/geo.js).",
+          "required": false,
+          "options": [
+            "DE"
+          ],
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Ciudad con rótulo (clave de ENM_GEO.cities, p. ej. 'BERLÍN').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "labelAt": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Segundo del rótulo (después del viaje).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bars": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo en que gotean las barras negras (-1 = no).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "split": {
+          "type": "bool",
+          "default": false,
+          "doc": "Oscurece el Este con frontera punteada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mergeAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo en que el Este se aclara y la frontera se borra (-1 = no).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dots": {
+          "type": "number",
+          "default": 0,
+          "doc": "Cantidad de puntos dispersos sobre el país.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto extendido encima ('\\n' renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo del texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "from": "world",
+        "zoomAt": 2.4,
+        "label": "BERLÍN"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.map",
+      "data": {
+        "native_name": "enmienda.map"
+      }
+    },
+    {
+      "id": "enmienda.title",
+      "name": "enmienda.title",
+      "label": "enmienda.title",
+      "kind": "component",
+      "summary": "Apertura en frío del documental: planisferio de tinta que aparece parpadeando con el país resaltado, barrido de vetas que deja solo el país en el centro y barras negras que gotean sobre él (barrotes). Rótulo chico extendido arriba y título opcional encima.",
+      "tags": [
+        "apertura",
+        "título",
+        "mapa"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Título encima (extendida; vacío = sin título, como la referencia).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "enum",
+          "default": "DE",
+          "doc": "País resaltado.",
+          "required": false,
+          "options": [
+            "DE"
+          ],
+          "min": null,
+          "max": null
+        },
+        "zoomAt": {
+          "type": "number",
+          "default": 1.9,
+          "doc": "Segundo del barrido mundo → país.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bars": {
+          "type": "number",
+          "default": 3.3,
+          "doc": "Segundo en que gotean los barrotes (-1 = no).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textAt": {
+          "type": "number",
+          "default": 0.4,
+          "doc": "Segundo del título (después del viaje).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "kicker": "BERLÍN · 9 NOV 1989",
+        "zoomAt": 1.9,
+        "bars": 3.3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.title",
+      "data": {
+        "native_name": "enmienda.title"
+      }
+    },
+    {
+      "id": "enmienda.flag",
+      "name": "enmienda.flag",
+      "label": "enmienda.flag",
+      "kind": "component",
+      "summary": "Bandera de tela ondeando en blanco y negro (la cámara se aleja desde un primer plano girado) con texto de tamaños mezclados encima: palabras chicas condensadas a los lados y una palabra ENORME extendida al medio (como 'TO ALL AMERICANS').",
+      "tags": [
+        "bandera",
+        "nación",
+        "título"
+      ],
+      "params": {
+        "bands": {
+          "type": "enum",
+          "default": "de",
+          "doc": "de = tres franjas horizontales; stripes = rayas con cantón de estrellas.",
+          "required": false,
+          "options": [
+            "de",
+            "stripes"
+          ],
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto; '^PALABRA^' es la grande del medio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textAt": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundo del texto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "bands": "de",
+        "text": "EL ^MURO^ MÁS FAMOSO"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.flag",
+      "data": {
+        "native_name": "enmienda.flag"
+      }
+    },
+    {
+      "id": "enmienda.archive",
+      "name": "enmienda.archive",
+      "label": "enmienda.archive",
+      "kind": "component",
+      "summary": "Foto de archivo en blanco y negro contrastado a pantalla completa (o dentro de un marco de película proyectada), empuje lento de cámara, lower-third de entrevista (NOMBRE / cargo / institución en Barlow Condensed) y, opcional, barrotes desenfocados en primer plano que entran de golpe.",
+      "tags": [
+        "foto",
+        "archivo",
+        "persona",
+        "lugar",
+        "entrevista"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.45
+          ],
+          "doc": "Punto de interés [x,y] 0..1 para el encuadre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1.04,
+          "doc": "Zoom inicial (≥1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "push": {
+          "type": "number",
+          "default": 0.02,
+          "doc": "Empuje por segundo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "frame": {
+          "type": "enum",
+          "default": "full",
+          "doc": "film = cuadro de película con esquinas redondeadas sobre negro.",
+          "required": false,
+          "options": [
+            "full",
+            "film"
+          ],
+          "min": null,
+          "max": null
+        },
+        "in": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "fade = sube desde negro.",
+          "required": false,
+          "options": [
+            "cut",
+            "fade"
+          ],
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": "Lower-third: nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "role": {
+          "type": "string",
+          "default": "",
+          "doc": "Lower-third: cargo (gris).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "org": {
+          "type": "string",
+          "default": "",
+          "doc": "Lower-third: institución / lugar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bars": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo en que entran barrotes desenfocados (-1 = no).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/schabowski.jpg",
+        "name": "Günter Schabowski",
+        "role": "Vocero del partido",
+        "org": "SED · RDA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.archive",
+      "data": {
+        "native_name": "enmienda.archive"
+      }
+    },
+    {
+      "id": "enmienda.cutout",
+      "name": "enmienda.cutout",
+      "label": "enmienda.cutout",
+      "kind": "component",
+      "summary": "Figuras recortadas de fotos de archivo que aparecen una a una sobre negro: primero una silueta blanca sobreexpuesta con brillo y después se 'revela' la foto (como los presos de 1900 que se van sumando).",
+      "tags": [
+        "personas",
+        "fotos",
+        "revelado",
+        "grupo"
+      ],
+      "params": {
+        "src1": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto 1.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 2.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 3.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src4": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 4.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundos entre figura y figura.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": "Lower-third opcional: nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "role": {
+          "type": "string",
+          "default": "",
+          "doc": "Lower-third: cargo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src1": "assets/media/muro-gente.jpg",
+        "src2": "assets/media/mauerspecht.jpg",
+        "src3": "assets/media/leipzig.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.cutout",
+      "data": {
+        "native_name": "enmienda.cutout"
+      }
+    },
+    {
+      "id": "enmienda.tapes",
+      "name": "enmienda.tapes",
+      "label": "enmienda.tapes",
+      "kind": "component",
+      "summary": "Pared de tiras de cinta negra con textos manuscritos en blanco (nombre / fecha / lugar), bajo un foco que se enciende y deriva; opcionalmente la cámara se aleja y las tiras se vuelven los ladrillos de un muro con una placa en el centro.",
+      "tags": [
+        "lista",
+        "nombres",
+        "memoria",
+        "cinta",
+        "muro"
+      ],
+      "params": {
+        "items": {
+          "type": "array",
+          "default": null,
+          "doc": "Textos de cada tira ('\\n' = renglón, hasta 3).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "toWall": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo en que se aleja y se vuelve muro de ladrillos (-1 = no).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "plaque": {
+          "type": "string",
+          "default": "",
+          "doc": "Placa del muro ('\\n' renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "items": [
+          "MADRE\nBERLÍN ESTE\nSEPARADA",
+          "HERMANO\nBERLÍN OESTE\nSEPARADO"
+        ],
+        "toWall": 3,
+        "plaque": "UNA CALLE\nDOS MUNDOS"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.tapes",
+      "data": {
+        "native_name": "enmienda.tapes"
+      }
+    },
+    {
+      "id": "enmienda.wall",
+      "name": "enmienda.wall",
+      "label": "enmienda.wall",
+      "kind": "component",
+      "summary": "Muro de ladrillos gris bajo un foco, con una placa negra chica en el centro; puede ABRIRSE: los ladrillos del centro caen uno a uno (stop-motion) dejando pasar una luz blanca.",
+      "tags": [
+        "muro",
+        "placa",
+        "barrera",
+        "apertura"
+      ],
+      "params": {
+        "plaque": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de la placa ('\\n' renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "openAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo (o '@palabra') en que empiezan a caer ladrillos (-1 = no).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "openSec": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundos que tarda en abrirse el hueco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "plaque": "23:30\nLA DECISIÓN",
+        "openAt": 2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.wall",
+      "data": {
+        "native_name": "enmienda.wall"
+      }
+    },
+    {
+      "id": "enmienda.inmates",
+      "name": "enmienda.inmates",
+      "label": "enmienda.inmates",
+      "kind": "component",
+      "summary": "Fila de siluetas con uniforme a rayas sobre pared de papel gris, desenfocadas, que la cámara recorre; un latigazo lleva a un primer plano de una figura con una placa negra en el pecho: CIFRA grande + rótulo + nota (como '878,400').",
+      "tags": [
+        "cifra",
+        "personas",
+        "dato",
+        "presos"
+      ],
+      "params": {
+        "number": {
+          "type": "string",
+          "default": null,
+          "doc": "Cifra de la placa.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo bajo la cifra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota chica.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "whipAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del latigazo al primer plano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "number": "140",
+        "label": "MURIERON EN EL MURO",
+        "sub": "1961 — 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.inmates",
+      "data": {
+        "native_name": "enmienda.inmates"
+      }
+    },
+    {
+      "id": "enmienda.bars",
+      "name": "enmienda.bars",
+      "label": "enmienda.bars",
+      "kind": "component",
+      "summary": "Barrotes: palabra gastada sobre negro con barras de luz desenfocadas que pasan en primer plano; la cámara se aleja y la palabra queda dentro de una celdita dibujada; las palabras siguientes llegan letra por letra desde lejos, sobre un fondo de rayas verticales tenues.",
+      "tags": [
+        "encierro",
+        "palabras",
+        "barrotes",
+        "celda"
+      ],
+      "params": {
+        "texts": {
+          "type": "array",
+          "default": null,
+          "doc": "Palabras/frases en orden (la 1ª va con barrotes).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "array",
+          "default": [],
+          "doc": "Segundos de cada cambio (vacío = repartidos).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "texts": [
+          "LARGA",
+          "Y ABURRIDA",
+          "UNA HORA"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.bars",
+      "data": {
+        "native_name": "enmienda.bars"
+      }
+    },
+    {
+      "id": "enmienda.graph",
+      "name": "enmienda.graph",
+      "label": "enmienda.graph",
+      "kind": "component",
+      "summary": "Gráfico de línea fino sobre negro con puntos y líneas verticales al eje: la cámara arranca pegada e inclinada sobre el primer punto, recorre la línea mientras se dibuja y se aleja; el título se estampa con parpadeo y al final la cámara se zambulle en el último punto.",
+      "tags": [
+        "gráfico",
+        "datos",
+        "evolución",
+        "tiempo"
+      ],
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título (3 renglones cortos).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "points": {
+          "type": "array",
+          "default": null,
+          "doc": "Etiquetas del eje X.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "values": {
+          "type": "array",
+          "default": [],
+          "doc": "Valores 0..1 (vacío = crecimiento exponencial).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dive": {
+          "type": "bool",
+          "default": true,
+          "doc": "Zambullida final en el último punto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "title": "SALIDAS\nHACIA EL\nOESTE",
+        "points": [
+          "ENE",
+          "MAR",
+          "MAY",
+          "JUL",
+          "AGO",
+          "SEP",
+          "OCT",
+          "NOV"
+        ],
+        "values": [
+          0.05,
+          0.07,
+          0.1,
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          1
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.graph",
+      "data": {
+        "native_name": "enmienda.graph"
+      }
+    },
+    {
+      "id": "enmienda.pictogram",
+      "name": "enmienda.pictogram",
+      "label": "enmienda.pictogram",
+      "kind": "component",
+      "summary": "Infografía sobre negro: título extendido chico con etiqueta en caja, fila de figuras humanas grises que suben desde el piso con UNA a rayas resaltada y la proporción debajo ('1 DE 3'); después la cámara entra en la figura rayada y aparece una grilla de figuras con la cifra grande arriba ('40,2 %').",
+      "tags": [
+        "infografía",
+        "proporción",
+        "dato",
+        "personas",
+        "porcentaje"
+      ],
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Título (extendida chica).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta en caja bajo el título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ratio": {
+          "type": "string",
+          "default": "",
+          "doc": "Proporción bajo la fila (p. ej. '1 DE 17').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "row": {
+          "type": "number",
+          "default": 17,
+          "doc": "Figuras en la fila.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "big": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra grande de la grilla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "note": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota bajo la grilla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gridAt": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del pase a la grilla (0 = 45 % del beat; -1 = sin grilla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cols": {
+          "type": "number",
+          "default": 22,
+          "doc": "Columnas de la grilla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "rows": {
+          "type": "number",
+          "default": 5,
+          "doc": "Filas de la grilla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "title": "PROBABILIDAD DE CRUZAR",
+        "tag": "BERLÍN ESTE",
+        "ratio": "1 DE 3",
+        "big": "MILES",
+        "note": "EN LOS PUESTOS FRONTERIZOS"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.pictogram",
+      "data": {
+        "native_name": "enmienda.pictogram"
+      }
+    },
+    {
+      "id": "enmienda.collage",
+      "name": "enmienda.collage",
+      "label": "enmienda.collage",
+      "kind": "component",
+      "summary": "Constelación de recortes (fotos, rótulos, numerales) que nace de un punto girando y se abre; después se oscurece y aparece un bloque de dato al centro: rótulo chico, CIFRA que cuenta hacia arriba y nota, entre filetes.",
+      "tags": [
+        "resumen",
+        "cifra",
+        "fecha",
+        "constelación"
+      ],
+      "params": {
+        "src1": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 2.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 3.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src4": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 4.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "words": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos sueltos del collage.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo sobre la cifra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "big": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra (si es número, cuenta hacia arriba).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Nota bajo la cifra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "number",
+          "default": 0,
+          "doc": "Valor inicial del conteo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src1": "assets/media/mauerbau.jpg",
+        "src2": "assets/media/leipzig.jpg",
+        "words": [
+          "IX·XI",
+          "1961",
+          "RDA"
+        ],
+        "kicker": "3 DE OCTUBRE",
+        "big": "1990",
+        "sub": "ALEMANIA · UN SOLO PAÍS"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.collage",
+      "data": {
+        "native_name": "enmienda.collage"
+      }
+    },
+    {
+      "id": "enmienda.flicker",
+      "name": "enmienda.flicker",
+      "label": "enmienda.flicker",
+      "kind": "component",
+      "summary": "Golpe de proyector sobre la escena: destello blanco de 2 cuadros que se apaga, caída a negro, o parpadeo de exposición irregular (lámpara inestable).",
+      "tags": [
+        "transición",
+        "golpe",
+        "corte"
+      ],
+      "params": {
+        "kind": {
+          "type": "enum",
+          "default": "white",
+          "doc": "Tipo de golpe.",
+          "required": false,
+          "options": [
+            "white",
+            "black",
+            "exposure"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Intensidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "kind": "white",
+        "dur": 0.4
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.flicker",
+      "data": {
+        "native_name": "enmienda.flicker"
+      }
+    },
+    {
+      "id": "enmienda.introv1",
+      "name": "enmienda.introv1",
+      "label": "enmienda.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura (lo primero que se ve). Fondo adaptable al tema (bg: wall | map | world | dark | image con src | component con use/useParams); por defecto el Muro de noche — losas de hormigón con tubo, torre de vigilancia, reflectores que barren y una fila de gente en silueta bloqueando adelante — y un titular GIGANTE desgastado que golpea palabra por palabra con sacudida de cámara ('^palabra^' va en cartulina blanca). El muro se raja y entra luz por la grieta. Sale borrándose con barrido.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "título",
+        "muro",
+        "impacto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho, corto (2–6 palabras). '\\n' = renglón; '^x^' = palabra en cartulina blanca.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (lugar · fecha).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo del titular.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: wall, map, world, dark; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "wall",
+            "map",
+            "world",
+            "dark",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "crowd": {
+          "type": "bool",
+          "default": true,
+          "doc": "Fila de gente en silueta bloqueando en primer plano (sobre cualquier fondo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "crackAt": {
+          "type": "number",
+          "default": 2.3,
+          "doc": "Segundo en que el muro se raja (-1 = no se raja).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundo del primer golpe de palabra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Segundos entre palabra y palabra.",
+          "required": false,
+          "options": null,
+          "min": 0.08,
+          "max": null
+        },
+        "country": {
+          "type": "enum",
+          "default": "DE",
+          "doc": "País (bg=map).",
+          "required": false,
+          "options": [
+            "DE"
+          ],
+          "min": null,
+          "max": null
+        },
+        "city": {
+          "type": "string",
+          "default": "BERLÍN",
+          "doc": "Ciudad marcada (bg=map).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
+        "kicker": "Berlín · 9 nov 1989",
+        "sub": "la noche que nadie vio venir",
+        "crackAt": 2.3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.introv1",
+      "data": {
+        "native_name": "enmienda.introv1"
+      }
+    },
+    {
+      "id": "enmienda.introv2",
+      "name": "enmienda.introv2",
+      "label": "enmienda.introv2",
+      "kind": "component",
+      "summary": "GANCHO tipo expediente. Fondo adaptable al tema (bg: map | wall | world | dark | image con src | component con use/useParams); por defecto el mapa del país con cuadrícula y vecinos, una mira que se fija sobre la ciudad con ondas de radar y barrido de vigilancia, gente en silueta al pie. La pregunta gigante se tipea letra a letra y un SELLO de tinta golpea encima con sacudida (p. ej. 'NADIE DIO LA ORDEN').",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "mapa",
+        "pregunta",
+        "sello"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto del sello que golpea (vacío = sin sello).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundo del sello (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Segundo en que empieza a tipearse la pregunta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 20,
+          "doc": "Letras por segundo del tipeo.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "country": {
+          "type": "enum",
+          "default": "DE",
+          "doc": "País del mapa.",
+          "required": false,
+          "options": [
+            "DE"
+          ],
+          "min": null,
+          "max": null
+        },
+        "city": {
+          "type": "string",
+          "default": "BERLÍN",
+          "doc": "Ciudad donde se fija la mira (clave de ENM_GEO.cities).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "crowd": {
+          "type": "bool",
+          "default": true,
+          "doc": "Gente en silueta al pie.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: map, wall, world, dark; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "map",
+            "wall",
+            "world",
+            "dark",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+        "kicker": "Expediente · Berlín 1989",
+        "stamp": "NADIE DIO LA ORDEN",
+        "stampAt": 2.4
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.introv2",
+      "data": {
+        "native_name": "enmienda.introv2"
+      }
+    },
+    {
+      "id": "enmienda.outro",
+      "name": "enmienda.outro",
+      "label": "enmienda.outro",
+      "kind": "component",
+      "summary": "Cierre del canal SIN recuadro (bg: map | wall | image con src | component con use/useParams): por defecto mapamundi de tinta que se desplaza con alfileres y rutas de hilo (o el Muro de noche). GRACIAS POR VER → nombre del canal GIGANTE desgastado que se revela por erosión → tarjeta LIKE marcada con un círculo a pincel → flecha a pincel → placa blanca SUSCRÍBETE + campana que suena → mensaje de apoyo tipeado → youtube.com/@canal. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "mapa"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte el expediente.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: map, wall; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "map",
+            "wall",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.66,
+          "doc": "Oscurecido del fondo foto/componente (el cierre tiene mucho texto).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODETECH",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo nos ayuda a seguir creando y traer más contenido.",
+        "handle": "youtube.com/@nodetech"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=enmienda&c=enmienda.outro",
+      "data": {
+        "native_name": "enmienda.outro"
+      }
+    }
+  ]
+}

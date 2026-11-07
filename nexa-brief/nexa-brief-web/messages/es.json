@@ -712,9 +712,30 @@
       "empty": "Todavía no hay nada archivado.",
       "chooseButton": "Elegir"
     },
-    "subtitle": "Todos tus videos en un solo lugar: revisalos, filtralos y publicá los que faltan.",
+    "subtitle": "Tus videos e imágenes en un solo lugar: revisalos, filtralos y seguí su estado.",
     "emptyLibrary": "Todavía no generaste ningún video.",
     "createVideo": "Crear video",
+    "mediaType": {
+      "label": "Tipo de contenido",
+      "videos": "Videos",
+      "images": "Imágenes"
+    },
+    "images": {
+      "label": "Biblioteca de imágenes",
+      "search": "Buscar imágenes",
+      "category": "Categoría",
+      "allCategories": "Todas",
+      "loading": "Cargando imágenes…",
+      "empty": "Todavía no hay imágenes en esta categoría.",
+      "noResults": "No se encontraron imágenes para esta búsqueda.",
+      "error": "No se pudieron cargar las imágenes.",
+      "retry": "Reintentar",
+      "chooseCategory": "Elegí una categoría a la que tengas acceso para ver sus imágenes.",
+      "count": "{count, plural, one {# imagen} other {# imágenes}}",
+      "slides": "{count, plural, one {# lámina} other {# láminas}}",
+      "openPost": "Visualizar {title}",
+      "view": "Visualizar"
+    },
     "loadError": "No se pudo cargar la biblioteca.",
     "resultsCount": "{count, plural, one {# video} other {# videos}}",
     "tabs": {
@@ -821,7 +842,7 @@
       "renderedIntro": "Videos completos que ya tienen un render final. Abrí una tarjeta para revisar sus formatos, textos y opciones de publicación.",
       "tabRendered": "Renderizados",
       "tabPreparation": "Por grabar",
-      "viewTabsLabel": "Estado de los videos",
+      "viewTabsLabel": "Estado del contenido",
       "renderedHeading": "Renderizados",
       "intro": "Videos con todos sus componentes listos, pendientes de grabación completa. Abrí una tarjeta para revisarlos o grabarlos.",
       "loading": "Cargando videos…",
@@ -864,7 +885,8 @@
       "filterAll": "Todos",
       "filterDemos": "Demos de diseño",
       "demo": "Demo",
-      "demoNote": "demo del diseño: mismo guion que «La noche que cayó el Muro»; publicar varios duplica contenido",
+      "designDemos": "Demos de diseño",
+      "demoNote": "muestra del diseño; revisa su contenido antes de publicar",
       "tagPublishable": "Publicable",
       "publishTexts": "Textos de publicación",
       "format": {
@@ -873,10 +895,15 @@
       },
       "contentTabsLabel": "Tipo de contenido en preparación",
       "videosTab": "Videos",
-      "postsTab": "Posts"
+      "postsTab": "Imágenes",
+      "videoCount": "{count, plural, one {# video} other {# videos}}",
+      "imageCount": "{count, plural, one {# imagen} other {# imágenes}}",
+      "emptyImagesRendered": "Todavía no hay imágenes renderizadas en esta categoría."
     },
     "windows": {
       "label": "Categorías principales",
+      "previousCategory": "Desplazar categorías a la izquierda",
+      "nextCategory": "Desplazar categorías a la derecha",
       "loading": "Cargando categorías…",
       "loadError": "No se pudieron cargar las categorías.",
       "status": {
@@ -1543,6 +1570,16 @@
       "hyperframes": "HyperFrames",
       "reference": "Referencia",
       "other": "Otro"
+    },
+    "showcase": {
+      "show": "Mostrar componentes en Showcase",
+      "hide": "Ocultar componentes de Showcase",
+      "open": "Ver en Showcase",
+      "saving": "Guardando…",
+      "pending": "Todavía no tiene componentes individuales declarados.",
+      "saveError": "No se pudo guardar. Inténtalo de nuevo.",
+      "loadError": "No se pudo consultar qué proyectos aparecen en Showcase.",
+      "retry": "Reintentar"
     }
   },
   "createVideo": {

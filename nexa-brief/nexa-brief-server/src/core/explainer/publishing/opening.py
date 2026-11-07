@@ -77,7 +77,10 @@ def design_of(video_dir: Path) -> str:
 
 def media_src(video_dir: Path, image: str) -> str:
     """Ruta de una foto del video para el escenario y el motor (absoluta desde src/templates/)."""
-    return "/" + (video_dir / "assets" / "media" / image).relative_to(TEMPLATES_DIR).as_posix()
+    from src.config.content_paths import content_key
+    path = video_dir / "assets" / "media" / image
+    relative = path.relative_to(TEMPLATES_DIR).as_posix() if path.is_relative_to(TEMPLATES_DIR) else content_key(path)
+    return "/" + relative
 
 
 def validate_tabloid_photo(package: PublishPackage, video_dir: Path) -> None:

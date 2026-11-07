@@ -21,7 +21,7 @@ def test_tabloid_capture_works_with_external_network_blocked(tmp_path):
     out = tmp_path / "mini.jpg"
     errors = asyncio.run(thumbnail.capture(out, "rough", "common.tabloid", {
         "text": "UN DÍA\nDESPUÉS", "accent": "DESPUÉS",
-        "src": "/nodetech/ia-despidos-programadores-amazon/assets/media/oficina-estres.jpg",
+        "src": "/_tools/explainer-kit/showcase/samples/hamilton.jpg",
     }, 4.5, "16x9"))
     assert errors == [] and out.exists()
     image = Image.open(out).convert("RGB")

@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from src.adapters.data.json_publication_repository import JsonPublicationRepository
 from src.adapters.data.provider_registry import build_provider
 from src.config.settings import settings
+from src.config.profile_layout import layout_for_settings
 from src.core.ports.publication_repository import PublicationRepository
 from src.adapters.data.local_image_media_cache import LocalImageMediaCache
 from src.adapters.data.local_image_post_resources import LocalImagePostResources
@@ -33,8 +34,15 @@ _components: PublicationComponents | None = None
 def build_publication_components(
     *, data_dir=None, plan_builder=None, renderer=None, publisher=None, account_provider=None
 ) -> PublicationComponents:
-    port = (JsonPublicationRepository(data_dir=data_dir) if settings.publication_backend == "json"
-            else build_provider("publications", settings.publication_backend, data_dir=data_dir))
+    if settings.publication_backend == "json":
+        if layout_for_settings(settings).schema_version >= 3:
+            from src.adapters.data.section_publication_repository import SectionPublicationRepository
+
+            port = SectionPublicationRepository(data_dir=data_dir)
+        else:
+            port = JsonPublicationRepository(data_dir=data_dir)
+    else:
+        port = build_provider("publications", settings.publication_backend, data_dir=data_dir)
     media = (LocalPublicationMedia(data_dir=data_dir) if settings.media_backend == "filesystem"
              else build_provider("media", settings.media_backend, data_dir=data_dir))
     image_cache = LocalImageMediaCache(data_dir=data_dir)

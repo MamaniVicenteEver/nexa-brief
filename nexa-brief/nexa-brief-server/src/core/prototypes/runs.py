@@ -6,6 +6,7 @@ from src.core.task_ownership import start_owned_task, task_is_owned
 
 import asyncio
 import json
+import os
 import re
 import shutil
 import sys
@@ -18,7 +19,10 @@ from typing import Any, Callable
 import structlog
 
 from src.adapters.models.hub import roles_config
+from src.core.execution_logs import register_execution_log
 from src.config.settings import BASE_DIR, settings
+from src.config.profile_layout import layout_for_settings
+from src.config.content_paths import sandbox_root
 from src.core.data import collection
 from src.core.explainer.producer import readable_log
 from src.core.prototypes import briefs, ideas
@@ -101,10 +105,13 @@ class PrototypeRunService:
 
     @property
     def sandbox_dir(self) -> Path:
-        return settings.templates_dir / "sandbox"
+        return sandbox_root()
 
     @property
     def log_dir(self) -> Path:
+        layout = layout_for_settings(settings)
+        if layout.schema_version >= 2:
+            return layout.logs_dir / "prototypes"
         return settings.data_dir / "prototypes" / "logs"
 
     async def recover_interrupted(self) -> int:
@@ -182,6 +189,8 @@ class PrototypeRunService:
         model, effort = _leader_model(agent)
         run_id = uuid.uuid4().hex[:12]
         log_path = self.log_dir / f"{run_id}.log"
+        layout = layout_for_settings(settings)
+        registered_log = await register_execution_log(log_path.relative_to(layout.root), kind="prototype")
         record = {
             "run_id": run_id,
             "category": category,
@@ -197,7 +206,8 @@ class PrototypeRunService:
             "codex_usage": None,
             "tokens": None,
             "usage_recorded": False,
-            "log_path": str(log_path),
+            "log_path": str(registered_log.path),
+            "log_id": registered_log.log_id,
             "created_at": _now(),
             "started_at": None,
             "finished_at": None,
@@ -254,17 +264,44 @@ class PrototypeRunService:
     def _scope(self, rec: dict) -> AgentScope:
         # Claude Code recibe herramientas de escritura y comandos con prefijos
         # explícitos. No se habilitan Bash libre ni acceptEdits global.
+        version = layout_for_settings(settings).schema_version
+        if version >= 3:
+            from src.core.explainer.agent_context import _safe
+
+            writable = str(_safe(self.sandbox_dir, rec['category'], rec['template_id']).absolute())
+            return AgentScope(writable_dir=writable, os_sandbox_dir=writable,
+                              model=rec.get('model') or None, reasoning_effort=rec.get('reasoning_effort') or None)
+        is_v2 = version >= 2
+        writable = str(self.sandbox_dir.resolve()) if is_v2 else "src/templates/sandbox"
         return AgentScope(
-            writable_dir="src/templates/sandbox",
+            writable_dir=writable,
             commands=LEAD_COMMANDS,
-            os_sandbox_dir="src/templates/sandbox",
-            extra_writable=("/tmp",),
+            os_sandbox_dir=writable,
+            extra_env={"NEXA_SANDBOX_DIR": writable} if is_v2 else {},
+            extra_writable=("/tmp", str(layout_for_settings(settings).logs_dir / "videos" / rec["template_id"])) if is_v2 else ("/tmp",),
             model=rec.get("model") or None,
             reasoning_effort=rec.get("reasoning_effort") or None,
         )
 
     def _prompt(self, rec: dict) -> str:
-        proto = (self.sandbox_dir / "PROTOTIPO.md").resolve()
+        if layout_for_settings(settings).schema_version >= 3:
+            return (
+                f"Crea el prototipo {rec['template_id']} de la categoría {rec['category']} "
+                f"en esta carpeta. Modo: {rec['mode']}. Lee work/agent-context/BRIEF.md "
+                "y work/agent-context/COMPONENTES.md; usa las referencias en work/agent-context/references/. "
+                "Trabaja solo con herramientas de lectura y escritura en esta carpeta. "
+                "Crea index.html y los archivos del prototipo; declara componentes en info.json según el contrato. "
+                f"En info.json conserva reference=referencias/{rec['category']}/{rec['idea_id']}, "
+                "version=1, title y summary no vacíos, engine relativo, based_on (texto o null), "
+                "is_new_design (booleano), status ('idea', 'en progreso' o 'lista para revisar'), "
+                f"created_at='{datetime.now(timezone.utc):%Y-%m-%d}', libraries, inputs y notes (listas). "
+                "No afirmes que un motor inexistente funciona. "
+                "Conserva los recursos de referencia y no modifiques motores ni otros proyectos. "
+                "No puedes ejecutar comandos, delegar ni realizar pruebas de navegador o render. "
+                "Anota en work/results/validacion-pendiente.md qué comprobaciones quedan pendientes; "
+                "no afirmes que se hicieron. Si falta una referencia necesaria, explica el bloqueo."
+            )
+        proto = (settings.templates_dir / "sandbox" / "PROTOTIPO.md").resolve()
         brief = (self.sandbox_dir / "referencias" / rec["category"] / rec["idea_id"] / "BRIEF.md").resolve()
         return (
             "Sos el agente líder. Tu cwd ya es la raíz de nexa-brief-server; no hagas cd. "
@@ -274,6 +311,7 @@ class PrototypeRunService:
             "no registres manualmente el rol prototype_lead con info.py. "
             "Leé "
             f"{proto} y el brief {brief}.\n"
+            f"Sandbox de este perfil: {self.sandbox_dir.resolve()}\n"
             f"template_id={rec['template_id']}\nmode={rec['mode']}"
         )
 
@@ -316,11 +354,15 @@ class PrototypeRunService:
         try:
             await self._update(run_id, state=PrototypeRunState.running.value, started_at=_now())
             # El brief siempre refleja el estado actual de las notas y adjuntos al momento de lanzar.
-            briefs.compose_brief(rec["category"], rec["idea_id"])
+            if layout_for_settings(settings).schema_version >= 3:
+                cwd = self._prepare_isolated_workspace(rec)
+            else:
+                briefs.compose_brief(rec["category"], rec["idea_id"])
+                cwd = BASE_DIR
             agent = self._agent_getter(rec["agent"])
             result = await agent.run(
                 self._prompt(rec),
-                cwd=BASE_DIR,
+                cwd=cwd,
                 log_path=log_path,
                 timeout_seconds=self._timeout_seconds,
                 scope=self._scope(rec),
@@ -330,8 +372,23 @@ class PrototypeRunService:
                 "el agente agotó el tiempo de ejecución" if result.timed_out
                 else f"el agente terminó con código {result.exit_code}"
             )
+            v3 = layout_for_settings(settings).schema_version >= 3
+            if state == PrototypeRunState.done.value and v3 and rec['mode'] != 'smoke':
+                artifact_error = self._isolated_artifact_failure(rec)
+                if artifact_error:
+                    state = PrototypeRunState.failed.value
+                    error = artifact_error
             if state == PrototypeRunState.done.value and rec["mode"] == "smoke":
-                smoke_error = self._smoke_failure(rec)
+                if v3:
+                    from src.core.prototypes.smoke import validate_smoke
+
+                    smoke_error = await validate_smoke(self.sandbox_dir, rec['category'], rec['template_id'],
+                                                       rec['idea_id'], settings.templates_dir)
+                    with log_path.open('a', encoding='utf-8') as log:
+                        log.write('\n[host smoke estático] ' + (smoke_error or
+                            'Ficha y HTML verificados; sin navegador, render ni ejecución del prototipo.') + '\n')
+                else:
+                    smoke_error = self._smoke_failure(rec)
                 if smoke_error:
                     state = PrototypeRunState.failed.value
                     error = smoke_error
@@ -347,6 +404,49 @@ class PrototypeRunService:
             if self._active_run_id == run_id:
                 self._active_run_id = None
             self._start_next()
+
+    def _prepare_isolated_workspace(self, rec: dict) -> Path:
+        from src.core.explainer.agent_context import _safe, ensure_private_workspace
+
+        idea = ideas.get_idea(rec['category'], rec['idea_id'])
+        target = _safe(self.sandbox_dir, rec['category'], rec['template_id'])
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.mkdir(exist_ok=False)
+        context = _safe(target, 'work', 'agent-context')
+        refs = _safe(context, 'references')
+        refs.mkdir(parents=True)
+        contract = _safe(settings.templates_dir, 'sandbox', '_proto', 'COMPONENTES.md')
+        _safe(context, 'COMPONENTES.md').write_text(contract.read_text(encoding='utf-8'), encoding='utf-8')
+        names = []
+        for attachment in idea.files:
+            source = _safe(idea.path, attachment.name)
+            if source != attachment.path or not source.is_file():
+                raise ValueError('Referencia de prototipo inválida')
+            destination = _safe(refs, attachment.name)
+            shutil.copy2(source, destination, follow_symlinks=False)
+            names.append(attachment.name)
+        description = '\n'.join(f'- references/{name}' for name in names) or '- Sin archivos adjuntos.'
+        brief = (f"# {idea.title}\n\nCategoría: {idea.category}\nReferencia: {idea.slug}\n\n"
+                 f"## Notas\n\n{idea.notes or 'Sin notas adicionales.'}\n\n## Archivos\n\n{description}\n")
+        _safe(context, 'BRIEF.md').write_text(brief, encoding='utf-8')
+        ensure_private_workspace(target)
+        return target
+
+    def _isolated_artifact_failure(self, rec: dict) -> str | None:
+        from src.core.explainer.agent_context import _safe
+
+        try:
+            root = _safe(self.sandbox_dir, rec['category'], rec['template_id'])
+            index = _safe(root, 'index.html')
+            info_path = _safe(root, 'info.json')
+            if not index.is_file() or not info_path.is_file():
+                return 'prototipo incompleto: faltan index.html o info.json'
+            info = json.loads(info_path.read_text(encoding='utf-8'))
+            if not isinstance(info, dict) or info.get('reference') != f"referencias/{rec['category']}/{rec['idea_id']}":
+                return 'prototipo incompleto: referencia de origen inválida'
+        except (OSError, ValueError):
+            return 'prototipo incompleto: archivos inválidos o no seguros'
+        return None
 
     def _usage_from_log(self, rec: dict, log_path: Path) -> tuple[dict, str]:
         try:
@@ -393,7 +493,8 @@ class PrototypeRunService:
 
         template_dir = self.sandbox_dir / rec["category"] / rec["template_id"]
         usage_recorded = False
-        if (template_dir / "info.json").is_file():
+        if ((layout_for_settings(settings).schema_version < 3 or state == PrototypeRunState.done.value)
+                and (template_dir / "info.json").is_file()):
             usage_recorded = await self._record_template_usage(rec, template_dir, tokens)
         if rec["mode"] == "smoke":
             self._cleanup_smoke(rec, template_dir)
@@ -424,18 +525,22 @@ class PrototypeRunService:
             proc = await asyncio.create_subprocess_exec(
                 *args,
                 cwd=str(BASE_DIR),
+                env={**os.environ, "NEXA_SANDBOX_DIR": str(self.sandbox_dir.resolve())},
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.STDOUT,
             )
             output, _ = await asyncio.wait_for(proc.communicate(), timeout=30)
             if proc.returncode == 0:
+                if layout_for_settings(settings).schema_version >= 2:
+                    from src.core.explainer.usage import _tool
+                    await _tool().register_reference(template_dir)
                 return True
             logger.warning(
                 "prototype_usage_record_failed",
                 run_id=rec["run_id"],
                 output=output.decode("utf-8", "replace")[-600:],
             )
-        except (OSError, asyncio.TimeoutError) as exc:
+        except Exception as exc:  # A missing log reference must not fail the finished prototype.
             logger.warning("prototype_usage_record_failed", run_id=rec["run_id"], error=str(exc))
         return False
 
@@ -450,8 +555,14 @@ class PrototypeRunService:
                 or not template_dir.name.startswith("zz-smoke-")
             ):
                 return
-            info = json.loads((resolved / "info.json").read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+            if layout_for_settings(settings).schema_version >= 3:
+                from src.core.explainer.agent_context import _safe
+                from src.core.prototypes.smoke import _read_file
+
+                info = json.loads(_read_file(_safe(resolved, 'info.json')))
+            else:
+                info = json.loads((resolved / "info.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
             return
         expected_reference = f"referencias/{rec['category']}/{rec['idea_id']}"
         if info.get("reference") == expected_reference:

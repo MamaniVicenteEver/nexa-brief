@@ -38,7 +38,7 @@ cuentan las vueltas (check, components, sheet…) y los tokens de la voz y lo de
 Los pasos 2 (investigación + PLAN.md), 3 (guion), 3b (medios) y 6 (storyboard) los hace el agente
 siguiendo AGENTS.md y guides/; este script no "piensa", solo ejecuta y verifica.
 """
-import argparse, datetime, hashlib, json, os, pathlib, re, shutil, subprocess, sys, wave
+import argparse, datetime, hashlib, json, os, pathlib, re, shutil, subprocess, sys, uuid
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from places import KIT, SERVER, TEMPLATES, find_video, folder_for_design  # noqa: E402
@@ -52,6 +52,10 @@ import transcribe_job  # noqa: E402
 import job  # noqa: E402
 import kit_job  # noqa: E402
 import component_library  # noqa: E402
+from src.config.content_paths import content_key, production_root, sandbox_root  # noqa: E402
+from src.config.profile_layout import layout_for_settings  # noqa: E402
+from src.config.settings import settings  # noqa: E402
+from src.core.explainer.render_paths import full_render_files, latest_render  # noqa: E402
 PY = sys.executable
 TOOLS = KIT / "tools"
 
@@ -70,23 +74,47 @@ def run(cmd, **kw):
     return subprocess.run([str(c) for c in cmd], **kw)
 def design_of(d): return (jload(d / "assets" / "config.json", {}) or {}).get("design") or (jload(d / "manifest.json", {}) or {}).get("design", "binary")
 
+def rendered_files(d):
+    return full_render_files(d)
+
+def render_reference(d, orientation):
+    if layout_for_settings(settings).schema_version < 2:
+        return f"render/{d.name}-{orientation}.mp4"
+    rendered = latest_render(d, orientation)
+    return content_key(rendered) if rendered else None
+
 # ---------------------------------------------------------------- new
 def cmd_new(a):
     D = jload(KIT / "designs" / a.design / "design.json")
     if not D: sys.exit(f"diseño desconocido: {a.design} (ver designs/index.json)")
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]{2,60}", a.id): sys.exit("video-id: minúsculas, números y guiones (p. ej. muro-de-berlin)")
     # carpeta de la categoría: --folder (la elige el backend) o la del diseño en niches.json
-    d = find_video(a.id) or TEMPLATES / (a.folder or folder_for_design(a.design)) / a.id
+    folder = a.folder or folder_for_design(a.design)
+    parts = pathlib.PurePosixPath(folder).parts
+    if folder.startswith("/") or "\\" in folder or any(p.startswith(".") for p in folder.split("/")):
+        sys.exit("carpeta inválida: usá una categoría o sandbox/<categoría>")
+    root = sandbox_root().joinpath(*parts[1:]) if parts[0] == "sandbox" else production_root().joinpath(*parts)
+    d = find_video(a.id) or root / a.id
     if d.exists() and not a.force: sys.exit(f"ya existe {d} (usar --force para regenerar SOLO las plantillas faltantes)")
-    for sub in ["assets/media", "work", "render"]: (d / sub).mkdir(parents=True, exist_ok=True)
+    preview = "assets/thumbnails" if layout_for_settings(settings).schema_version >= 2 else "render"
+    for sub in ["assets/media", "work/results/test", preview]: (d / sub).mkdir(parents=True, exist_ok=True)
     T = KIT / "templates"
     title = a.title or a.id.replace("-", " ").capitalize()
     def put(rel, text):
         p = d / rel
         if not p.exists() or rel == "index.html": p.write_text(text)
-    kit_rel = os.path.relpath(KIT, d)   # p. ej. ../../_tools/explainer-kit (producción) o ../../../… (sandbox)
+    kit_rel = "/_tools/explainer-kit" if layout_for_settings(settings).schema_version >= 2 else os.path.relpath(KIT, d)
     put("index.html", (T / "index.html").read_text().replace("{{DESIGN}}", a.design).replace("{{TITLE}}", title).replace("{{KIT}}", kit_rel))
     put("PLAN.md", (T / "PLAN.md").read_text().replace("{{TITLE}}", title).replace("{{DESIGN}}", f"{a.design} ({D['name']})"))
+    guide = (f"# Producción {a.id}\n\nDiseño: {a.design} ({D['name']}).\n"
+             "Lee PLAN.md y assets/config.json; el guion está en assets/script.json y la composición en assets/storyboard.json.\n"
+             "Mantén los recursos necesarios en assets/. Agrupa capturas, scripts y reportes temporales en work/results/test/.\n"
+             "No disperses archivos de prueba por la raíz ni por assets/. No modifiques motores compartidos.\n"
+             "Los comandos del kit se ejecutan mediante el CLI _tools/explainer-kit/tools/kit.py del repositorio.\n"
+             "El servidor registra metadatos y logs: no abras data/ ni .system/ ni sesiones de cuentas.\n"
+             "No publiques ni borres originales durante una revisión visual. Conserva el ID del video.\n")
+    put("AGENTS.md", guide)
+    put("CLAUDE.md", guide)
     put("assets/media/CREDITS.md", f"# Créditos de medios · {title}\n\narchivo — título — autor — licencia — URL de la fuente\n")
     if not (d / "assets/config.json").exists():
         config = {"id": a.id, "design": a.design, "title": title, "quality_policy_version": 5,
@@ -108,8 +136,8 @@ def cmd_new(a):
     if not (d / "manifest.json").exists():
         jsave(d / "manifest.json", {"video_id": a.id, "design": a.design, "design_name": D["name"], "channel": D["channel"]["name"],
               "status": "nuevo", "created": datetime.date.today().isoformat(), "title": title})
-    (d / "render" / ".gitignore").write_text("*.mp4\n"); (d / "work" / ".gitignore").write_text("*\n!.gitignore\n")
-    print(f"✓ {d.relative_to(TEMPLATES)} listo. Siguiente: completar PLAN.md (AGENTS.md, paso 2).")
+    (d / preview / ".gitignore").write_text("*.mp4\n"); (d / "work" / ".gitignore").write_text("*\n!.gitignore\n")
+    print(f"✓ {content_key(d)} listo. Siguiente: completar PLAN.md (AGENTS.md, paso 2).")
 
 # ---------------------------------------------------------------- status
 def cmd_status(a):
@@ -136,9 +164,9 @@ def cmd_status(a):
         ("5 transcripción (lyrics.json)", bool(ly.get("segments")) and not (ly.get("metadata") or {}).get("fake")),
         ("5b cierre con voz del canal (kit.py outro)", outro_tool.spec_for(d) is None or bool((ly.get("metadata") or {}).get("outro"))),
         (f"6 storyboard ({len(sb.get('beats', []))} beats; ≥ {max(15, T['beats'][0])} momentos narrados)", storyboard_moments(sb, ly) >= max(15, T["beats"][0])),
-        ("8 hoja de revisión", any((d / "work").glob("sheet-*.png"))),
+        ("8 hoja de revisión", any((d / "work/results/test").glob("sheet-*.png")) or any((d / "work").glob("sheet-*.png"))),
         ("9 manifest", (jload(d / "manifest.json", {}) or {}).get("status") in ("listo", "renderizado")),
-        ("10 render", any((d / "render").glob("*.mp4"))),
+        ("10 render", bool(rendered_files(d))),
     ]
     target = "formato corto anterior (3–4,5 min)" if T["legacy"] else f"objetivo {T['minutes']:g} min"
     print(f"{a.id} · diseño {design_of(d)} · {target}")
@@ -191,10 +219,11 @@ def cmd_check(a):
 def cmd_sheet(a):
     d = vdir(a.id)
     for o in (["9x16", "16x9"] if a.orient == "both" else [a.orient]):
-        out = d / "work" / f"sheet-{o}.png"
-        result = run([PY, TOOLS / "shoot.py", out, a.id, "--page", os.path.relpath(d / "index.html", KIT), "--times", "beats", "--orient", o, "--thumb", "330" if o == "9x16" else "220"])
+        out = d / "work/results/test" / f"sheet-{o}.png"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        result = run([PY, TOOLS / "shoot.py", out, a.id, "--page", "/" + content_key(d / "index.html"), "--times", "beats", "--orient", o, "--thumb", "330" if o == "9x16" else "220"])
         if result.returncode: sys.exit(result.returncode)
-        print(f"✓ {out.relative_to(TEMPLATES)} — MIRARLA: un cuadro por plano (AGENTS.md, paso 8)")
+        print(f"✓ {out} — MIRARLA: un cuadro por plano (AGENTS.md, paso 8)")
 
 # ---------------------------------------------------------------- manifest
 def audio_dur(p):
@@ -228,8 +257,8 @@ def cmd_manifest(a):
         "transcript": {"words": sum(len(s.get("words", [])) for s in ly.get("segments", [])), "fake": bool((ly.get("metadata") or {}).get("fake"))},
         "storyboard": {"beats": len(sb.get("beats", [])), "moments": storyboard_moments(sb, ly), "components": uses, "lyrics_moments": uses.get("common.lyric", 0)},
         "media": credits,
-        "video_formats": [{"id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": f"render/{a.id}-9x16.mp4"},
-                          {"id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": f"render/{a.id}-16x9.mp4"}],
+        "video_formats": [{"id": "reels", "aspect_ratio": "9:16", "width": 1080, "height": 1920, "output_filename": render_reference(d, "9x16")},
+                          {"id": "youtube", "aspect_ratio": "16:9", "width": 1920, "height": 1080, "output_filename": render_reference(d, "16x9")}],
         "files": files, "updated": datetime.datetime.now().isoformat(timespec="seconds"),
     })
     M["target_minutes"] = sc.get("target_minutes")
@@ -255,7 +284,7 @@ def cmd_manifest(a):
             for line in result.stdout.splitlines():
                 if "✗" in line: print(line)
             if result.stderr: print(result.stderr.strip())
-    M["status"] = ("renderizado" if any((d / "render").glob("*.mp4")) else "listo") if ok and quality_ok else "en progreso"
+    M["status"] = ("renderizado" if rendered_files(d) else "listo") if ok and quality_ok else "en progreso"
     jsave(d / "manifest.json", M)
     print(f"✓ manifest.json · estado: {M['status']} · {M['duration_seconds']} s · {M['storyboard']['beats']} beats · {len(credits)} medios")
 
@@ -292,24 +321,53 @@ def chapter_times(sc, ly):
 def cmd_render(a):
     # --seconds N: preview corto (0..N s) en render/preview/ — no cuenta como "renderizado" en el manifest.
     d = vdir(a.id); sizes = {"9x16": "1080x1920", "16x9": "1920x1080"}
-    out_dir = d / "render" / "preview" if a.seconds else d / "render"
+    layout = layout_for_settings(settings)
+    external_out = os.environ.get("NEXA_RENDER_OUTPUT_DIR")
+    recording_id = uuid.uuid4().hex[:8]
+    managed = os.environ.get("NEXA_RENDER_MANAGED") == "1"
+    if not external_out and layout.schema_version >= 3:
+        external_out = str(layout.runtime_dir / "recordings" / a.id / recording_id)
+    elif not external_out and layout.schema_version >= 2:
+        external_out = str(layout.renders_dir / a.id / (f"preview-{a.seconds:g}s" if a.seconds else recording_id))
+    out_dir = pathlib.Path(external_out) if external_out else (d / "render" / "preview" if a.seconds else d / "render")
+    allowed_root = layout.runtime_dir / "recordings" if layout.schema_version >= 3 else layout.renders_dir
+    if external_out and not out_dir.resolve().is_relative_to(allowed_root.resolve()):
+        sys.exit("La grabación debe quedar dentro de renders del perfil seleccionado")
+    if layout.schema_version >= 3:
+        from src.adapters.data.runtime_paths import assert_profile_path
+        assert_profile_path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     suffix = f"-{a.seconds:g}s" if a.seconds else ""
     formats = a.formats.split(",")
+    final_paths = {}
     for i, f in enumerate(formats, start=1):
         print(f"@@format {f} {i} {len(formats)}", flush=True)
-        cmd = [PY, TEMPLATES / "_tools/commercial/render_promo.py", os.path.relpath(d / "index.html", TEMPLATES), out_dir / f"{a.id}-{f}{suffix}.mp4", "--size", sizes[f], "--workers", "4"]
+        page = (content_key(d / "index.html") if layout_for_settings(settings).schema_version >= 2
+                else os.path.relpath(d / "index.html", TEMPLATES))
+        cmd = [PY, TEMPLATES / "_tools/commercial/render_promo.py", page, out_dir / f"{a.id}-{f}{suffix}.mp4", "--size", sizes[f], "--workers", "4"]
         if a.seconds: cmd += ["--to", str(a.seconds)]
         env = dict(os.environ)
         env["PYTHONUNBUFFERED"] = "1"
         r = run(cmd, cwd=TEMPLATES, env=env)
         if r.returncode: sys.exit(r.returncode)
+        if layout.schema_version >= 3 and not managed:
+            from src.config.media_paths import video_key
+            category = d.resolve().relative_to(layout.productions_dir.resolve()).parts[0]
+            destination = layout.renders_dir / video_key(category, a.id, recording_id, f, preview=bool(a.seconds))
+            assert_profile_path(destination)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            assert_profile_path(destination)
+            if destination.exists():
+                sys.exit("El render ya existe; no se reemplaza un máster")
+            os.replace(out_dir / f"{a.id}-{f}{suffix}.mp4", destination)
+            final_paths[f] = destination
     if not a.seconds:
         cmd_manifest(a)
         try:
-            from src.config.settings import settings
             from src.core.explainer.backup_event import write_render_event
-            write_render_event(d, TEMPLATES, settings.data_dir, a.id, formats)
+            if layout.schema_version < 3 or not managed:
+                write_render_event(d, TEMPLATES, settings.data_dir, a.id, formats, output_dir=out_dir,
+                                   format_paths=final_paths if layout.schema_version >= 3 else None)
         except Exception as exc:
             # El video terminado sigue disponible; avisar si el marcador no pudo persistirse.
             print(f"⚠ Respaldo pendiente: no se pudo registrar ({type(exc).__name__})", file=sys.stderr)
@@ -329,8 +387,8 @@ def cmd_promote(a):
     except PromoteError as exc:
         sys.exit(exc.message)
     print(
-        f"✓ {plan.source.relative_to(TEMPLATES)} → "
-        f"{plan.destination.relative_to(TEMPLATES)} · ya aparece en la app (/plantillas)"
+        f"✓ {content_key(plan.source)} → "
+        f"{content_key(plan.destination)} · ya aparece en la app (/plantillas)"
     )
 
 def cmd_catalog(a):
@@ -342,9 +400,10 @@ def cmd_delegate(a):
     delegate.run(vdir(a.id), a.role, a.prompt_file, a.out, a.context)
 
 def cmd_usage(a):
-    s = usage.summarize(vdir(a.id))
+    directory = vdir(a.id)
+    s = usage.summarize(directory)
     t = s["totals"]
-    print(f"✓ {s['video']}/usage.json · {t['calls']} llamadas · entrada {t['input_tokens']:,} (caché {t['cached_input_tokens']:,})"
+    print(f"✓ {usage.summary_path(directory)} · {t['calls']} llamadas · entrada {t['input_tokens']:,} (caché {t['cached_input_tokens']:,})"
           f" · salida {t['output_tokens']:,} · razonamiento {t['reasoning_tokens']:,}")
     for name, b in s["by_provider"].items():
         print(f"  {name:<11} {b['calls']:>4} llamadas · {b['input_tokens']:>10,} entrada · {b['output_tokens']:>8,} salida · {b['seconds']:>8.0f} s")

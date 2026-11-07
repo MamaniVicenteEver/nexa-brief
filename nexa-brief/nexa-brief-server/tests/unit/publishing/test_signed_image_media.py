@@ -113,6 +113,7 @@ async def test_public_route_streams_signed_jpeg_with_range(api_client, tmp_path,
     monkeypatch.setattr(settings, "data_dir", data_dir)
     monkeypatch.setattr(settings, "publisher_encryption_key", "test-signing-key")
     monkeypatch.setattr(settings, "public_base_url", "https://nexa.example")
+    monkeypatch.setattr(settings, "public_app_url", "https://nexa.example")
     key = "node_history/2026/10/post/slides/01.jpg"
     content = _write_jpeg(data_dir / "publicaciones" / key)
     url = LocalPublicationMedia().signed_url(key, audience="meta", ttl=900)
@@ -133,6 +134,7 @@ def test_resolves_signed_token_created_by_publication_media_port(tmp_path, monke
     monkeypatch.setattr(settings, "data_dir", data_dir)
     monkeypatch.setattr(settings, "publisher_encryption_key", "test-signing-key")
     monkeypatch.setattr(settings, "public_base_url", "https://nexa.example")
+    monkeypatch.setattr(settings, "public_app_url", "https://nexa.example")
     image_data = BytesIO()
     Image.new("RGB", (1080, 1350), color=(240, 240, 240)).save(image_data, format="JPEG")
     content = image_data.getvalue()

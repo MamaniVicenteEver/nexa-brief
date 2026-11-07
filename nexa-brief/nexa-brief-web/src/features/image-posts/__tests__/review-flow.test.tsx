@@ -14,6 +14,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { CategoryNode } from "@/features/categories";
 import messages from "../../../../messages/es.json";
 import { PublicationsSection } from "../components/PublicationsSection";
+import { PreparationViewContext, type PreparationView } from "../../templates/lib/preparation-view";
 
 vi.mock("@/features/explainer", () => ({
 	useExplainerVideos: () => ({ data: [], isError: false }),
@@ -95,7 +96,7 @@ function record(id: string, index: number) {
 	};
 }
 const records = ids.map(record);
-function mount() {
+function mount(view?: PreparationView) {
 	const requests: string[] = [];
 	vi.stubGlobal(
 		"fetch",
@@ -138,7 +139,9 @@ function mount() {
 	render(
 		<QueryClientProvider client={client}>
 			<NextIntlClientProvider locale="es" messages={messages}>
-				<PublicationsSection category={category} categories={[category]} />
+				<PreparationViewContext.Provider value={view ?? null}>
+					<PublicationsSection category={category} categories={[category]} embedded={Boolean(view)} />
+				</PreparationViewContext.Provider>
 			</NextIntlClientProvider>
 		</QueryClientProvider>,
 	);
@@ -247,4 +250,19 @@ describe("revisión desde Editor y entregas", () => {
 			}),
 		).toBeTruthy();
 	});
+});
+
+
+it("separa las imágenes pendientes de las renderizadas en la sección compartida", async () => {
+	mount("preparation");
+	expect(await screen.findByRole("button", { name: "Ver detalle de Post 2" })).toBeTruthy();
+	expect(screen.queryByRole("button", { name: "Ver detalle de Post 0" })).toBeNull();
+	expect(screen.queryByText("1 imagen")).toBeNull();
+	cleanup();
+	vi.unstubAllGlobals();
+	mount("rendered");
+	expect(await screen.findByRole("button", { name: "Ver detalle de Post 0" })).toBeTruthy();
+	expect(screen.getByRole("button", { name: "Ver detalle de Post 1" })).toBeTruthy();
+	expect(screen.queryByRole("button", { name: "Ver detalle de Post 2" })).toBeNull();
+	expect(screen.queryByText("2 imágenes")).toBeNull();
 });

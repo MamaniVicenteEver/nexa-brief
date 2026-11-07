@@ -4,13 +4,23 @@ import { Film, Play } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { ReferenceChatActions } from "@/features/prototypes";
 import { resolveApiUrl } from "@/infrastructure/api/http-client";
+import type { SandboxShowcaseState } from "../api/showcase-visibility";
 import { formatRelativeDate } from "../lib/relative-date";
 import { previewTarget, sandboxFileUrl } from "../lib/urls";
 import type { SandboxItem } from "../types";
 import { PromoteButton } from "./PromoteButton";
 import { SandboxPreviewModal } from "./SandboxPreviewModal";
+import { SandboxShowcaseToggle } from "./SandboxShowcaseToggle";
 
-export function SandboxItemCard({ item, folderLabel }: { item: SandboxItem; folderLabel: string }) {
+export function SandboxItemCard({
+  item,
+  folderLabel,
+  showcaseState,
+}: {
+  item: SandboxItem;
+  folderLabel: string;
+  showcaseState?: SandboxShowcaseState;
+}) {
   const t = useTranslations("sandbox");
   const locale = useLocale();
   const target = previewTarget(item);
@@ -27,6 +37,7 @@ export function SandboxItemCard({ item, folderLabel }: { item: SandboxItem; fold
         folder={item.folder}
         id={item.id}
         showInfo={item.kind !== "reference"}
+        showComponents={false}
       >
         <button
           type="button"
@@ -117,7 +128,10 @@ export function SandboxItemCard({ item, folderLabel }: { item: SandboxItem; fold
           />
         </>
       ) : (
-        <PromoteButton item={item} folderLabel={folderLabel} />
+        <>
+          <PromoteButton item={item} folderLabel={folderLabel} />
+          {showcaseState && <SandboxShowcaseToggle state={showcaseState} />}
+        </>
       )}
     </article>
   );

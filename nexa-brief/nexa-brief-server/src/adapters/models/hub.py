@@ -23,6 +23,8 @@ from functools import lru_cache
 from pathlib import Path
 
 from src.config.settings import BASE_DIR, settings
+from src.config.profile_layout import layout_for_settings
+from src.core.execution_logs import register_execution_log
 from src.core.ports.agent_port import AgentRunnerPort
 from src.core.ports.ai_port import AIPort
 
@@ -134,9 +136,18 @@ async def _role_json(role, spec, system, prompt, *, schema, usage_out):
     from src.core.ports.agent_port import AgentScope
     from src.config.exceptions import AIValidationError
 
-    root = call_log_dir.get() or settings.data_dir / "model-calls"
+    layout = layout_for_settings(settings)
+    root = call_log_dir.get() or (layout.logs_dir / "model-calls" if layout.schema_version >= 2
+                                  else settings.data_dir / "model-calls")
     folder = root / (role + "-" + uuid.uuid4().hex[:12])
     folder.mkdir(parents=True, exist_ok=True)
+    log_id = None
+    try:
+        usage_key = (folder / "usage.json").resolve().relative_to(layout.root.resolve())
+    except ValueError:
+        pass  # La traza explícita puede vivir fuera del perfil.
+    else:
+        log_id = (await register_execution_log(usage_key, kind="model")).log_id
     schema_path = folder / "schema.json"
     if schema is not None:
         schema_path.write_text(json.dumps(schema, ensure_ascii=False), encoding="utf-8")
@@ -163,7 +174,7 @@ async def _role_json(role, spec, system, prompt, *, schema, usage_out):
                       "fallback": bool(index), "fallback_reason": fallback_reason,
                       "input_tokens": None, "cached_input_tokens": None, "output_tokens": None,
                       "total_tokens": None, "reasoning_tokens": None,
-                      "log_dir": str(folder)}
+                      "log_dir": str(folder), "log_id": log_id}
             tick = time.monotonic()
             failure = None
             try:

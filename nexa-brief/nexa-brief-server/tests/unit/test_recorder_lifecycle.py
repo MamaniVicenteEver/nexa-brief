@@ -181,3 +181,52 @@ def test_workspace_lock_lives_until_crash_and_can_then_be_reclaimed(tmp_path):
         assert not path.exists()
     finally:
         if proc.poll() is None: proc.kill(); proc.wait()
+
+
+async def test_recorders_read_inputs_from_html_directory_and_write_elsewhere(tmp_path, monkeypatch):
+    from src.adapters.recorder.infrastructure import remotion_adapter as rm
+    inputs = tmp_path / 'production'
+    outputs = tmp_path / 'renders'
+    inputs.mkdir()
+    outputs.mkdir()
+    (inputs / 'config.json').write_text('{}')
+    (inputs / 'index.html').write_text('<html></html>')
+    (inputs / 'song.mp3').write_bytes(b'audio')
+    config = cfg('final.mp4')
+    config.template.requires_lyrics = False
+    monkeypatch.setattr(rm, '_resolve_composition_id', lambda _: 'test')
+    monkeypatch.setattr(rm, '_get_render_semaphore', lambda: asyncio.Semaphore(1))
+    async def run(cmd, **kwargs):
+        assert f'--public-dir={inputs}' in cmd
+        Path(next(x.split('=', 1)[1] for x in cmd if x.startswith('--output='))).write_bytes(b'r')
+        return SimpleNamespace(returncode=0, stderr_tail='', stdout_tail='')
+    monkeypatch.setattr(rm, 'run_with_progress', run)
+    result = await rm.RemotionAdapter().record(inputs/'index.html', inputs/'song.mp3', outputs, 1, config)
+    assert result.youtube_path == outputs/'final.mp4'
+
+    monkeypatch.setattr(pw.shutil, 'which', lambda _: '/bin/ffmpeg')
+    @contextlib.contextmanager
+    def serve(directory):
+        assert directory == inputs
+        yield 'http://127.0.0.1'
+    monkeypatch.setattr(pw, '_serve_directory', serve)
+    async def capture(self, url, audio, workspace, *args):
+        (workspace/'final.mp4').write_bytes(b'p')
+        return RecordingResult(youtube_path=workspace/'final.mp4')
+    monkeypatch.setattr(pw.PlaywrightFFmpegAdapter, '_record_all_formats', capture)
+    result = await pw.PlaywrightFFmpegAdapter().record(inputs/'index.html', inputs/'song.mp3', outputs, 1, config)
+    assert result.youtube_path == outputs/'final.mp4'
+
+    monkeypatch.setattr(hf, '_hyperframes_bin', lambda: Path(sys.executable))
+    monkeypatch.setattr(hf, '_resolve_composition_dir', lambda _: None)
+    monkeypatch.setattr(hf, '_resolve_template_dir', lambda _: inputs)
+    monkeypatch.setattr(hf, '_render_passes', lambda c, **kw: [hf._RenderPass(1920, 1080, 1, ('final.mp4',))])
+    monkeypatch.setattr(hf, '_get_render_semaphore', lambda: asyncio.Semaphore(1))
+    def stage(site, template, input_dir, *args):
+        assert input_dir == inputs
+        site.mkdir()
+    async def render(self, binary, site, out, *args, **kwargs): out.write_bytes(b'h')
+    monkeypatch.setattr(hf.HyperframesAdapter, '_stage_generic_site', staticmethod(stage))
+    monkeypatch.setattr(hf.HyperframesAdapter, '_render', render)
+    result = await hf.HyperframesAdapter().record(inputs/'index.html', inputs/'song.mp3', outputs, 1, config)
+    assert result.youtube_path == outputs/'final.mp4'

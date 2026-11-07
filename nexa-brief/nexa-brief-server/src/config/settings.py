@@ -20,6 +20,17 @@ class Settings(BaseSettings):
     storage_profile_dir: Path | None = Field(default=None, alias="NEXA_PROFILE_DIR")
     storage_profile_id: str = "legacy"
     storage_profile_label: str = "Local"
+    storage_layout_version: int = 1
+    logs_dir: Path | None = None
+    productions_dir: Path | None = None
+    renders_dir: Path | None = None
+    resources_dir: Path | None = None
+    sandbox_dir: Path | None = None
+    system_dir: Path | None = None
+    runtime_dir: Path | None = None
+    cache_dir: Path | None = None
+    tiktok_dir: Path | None = None
+    web_data_dir: Path | None = None
     publication_backend: str = Field(default="json", alias="PUBLICATION_BACKEND")
     credentials_backend: str = Field(default="encrypted_json", alias="CREDENTIALS_BACKEND")
     media_backend: str = Field(default="filesystem", alias="MEDIA_BACKEND")

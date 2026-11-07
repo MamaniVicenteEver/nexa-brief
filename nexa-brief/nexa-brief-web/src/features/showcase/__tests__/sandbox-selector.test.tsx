@@ -3,177 +3,115 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ShowcaseView } from "../components/ShowcaseView";
 
-Element.prototype.scrollIntoView = vi.fn();
-
-const fixtures = [
-  {
-    id: "atlas",
-    folder: "historia",
-    path: "sandbox/historia/atlas",
-    title: "Atlas",
-    status: "listo",
-    summary: "Un mapa animado",
-    updated_at: new Date(Date.now() - 8 * 3600000).toISOString(),
-    has_index: true,
-    thumbnail_url: null,
-    components: [{ name: "atlas.uno", label: "Uno", summary: "Primero", group: "cierre" }],
-  },
-  {
-    id: "otro",
-    folder: "accion",
-    path: "sandbox/accion/otro",
-    title: "Otro",
-    status: null,
-    summary: null,
-    updated_at: null,
-    has_index: true,
-    thumbnail_url: null,
-    components: [],
-  },
-];
-vi.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
+const design = (id: string, name: string, category: string, state: "prueba" | "produccion") => ({
+  id,
+  name,
+  category,
+  state,
+  family: id,
+  engine_id: "engine",
+  description: `${name} descripción`,
+  revision: "1",
+  catalog_url: `/api/v1/showcase/designs/${id}/catalog`,
+  preview_url: null,
+  promotable: false,
+  promote_blocker: "No preparado",
+  episodes: [],
+});
+const entry = (id: string, label: string, kind: string) => ({
+  id,
+  name: id,
+  label,
+  kind,
+  summary: label,
+  tags: [kind],
+  params: {},
+  example: {},
+  preview_url: `/api/v1/showcase/designs/atlas/preview?entry=${id}`,
+  preview_kind: "iframe",
+});
+const catalogs: Record<string, ReturnType<typeof entry>[]> = {
+  atlas: [
+    entry("ring", "Anillo", "component"),
+    entry("arrow", "Flecha", "action"),
+    entry("flow", "Flujo", "action"),
+  ],
+  otro: [],
+  kit: [entry("kit.one", "Componente Kit", "component")],
+};
+const requests: string[] = [];
+vi.mock("@/features/samples/components/SamplesSection", () => ({ SamplesSection: () => null }));
+vi.mock("../components/LegacyShowcaseView", () => ({
+  LegacyShowcaseView: () => <div>Biblioteca</div>,
+}));
 vi.mock("@/infrastructure/api/http-client", () => ({
-  httpClient: async () => fixtures,
+  httpClient: async (path: string) => {
+    requests.push(path);
+    if (path === "/api/v1/showcase/designs")
+      return {
+        schema_version: 1,
+        designs: [
+          design("kit", "Kit", "historia", "produccion"),
+          design("atlas", "Atlas", "historia", "prueba"),
+          design("otro", "Otro", "accion", "prueba"),
+        ],
+      };
+    const match = path.match(/^\/api\/v1\/showcase\/designs\/([^/]+)\/catalog$/);
+    if (match)
+      return { schema_version: 1, design_id: match[1], revision: "1", entries: catalogs[match[1]] };
+    throw new Error(`Solicitud inesperada: ${path}`);
+  },
   resolveApiUrl: (url: string) => url,
-}));
-vi.mock("../hooks/useShowcaseData", () => ({
-  useShowcaseDesigns: () => ({
-    data: [{ id: "kit", name: "Kit", tagline: "Diseño original", family: "kit", scripts: [] }],
-    isPending: false,
-  }),
-  useShowcaseData: () => ({
-    items: [],
-    catalog: { isPending: false },
-    library: { isPending: false },
-    retryActive: vi.fn(),
-  }),
-}));
-vi.mock("../components/ShowcaseGrid", () => ({
-  ShowcaseGrid: () => <div>Cuadrícula del kit</div>,
-}));
-vi.mock("../components/ShowcaseModal", () => ({ ShowcaseModal: () => null }));
-vi.mock("@/features/explainer/api/component-preview-service", () => ({
-  requestComponentPreviews: async () => [{ previewUrl: "/preview" }],
 }));
 
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
-  vi.unstubAllGlobals();
+  requests.length = 0;
 });
-
-async function choose(name: RegExp) {
-  fireEvent.click(await screen.findByRole("button", { name }));
-}
-
 function mount() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const result = render(
+  return render(
     <QueryClientProvider client={client}>
       <ShowcaseView />
     </QueryClientProvider>,
   );
-  fireEvent.click(screen.getByRole("button", { name: "Diseños" }));
-  return result;
+}
+async function choose(id: string) {
+  fireEvent.click(
+    await screen.findByRole("button", { name: id === "kit" ? /^Producción/ : /^Sandbox/ }),
+  );
+  const name = { kit: /Kit.*kit/, atlas: /Atlas.*atlas/, otro: /Otro.*otro/ }[id];
+  if (!name) throw new Error("Diseño de prueba desconocido");
+  fireEvent.click(await screen.findByRole("button", { name }));
 }
 
-describe("selector Sandbox", () => {
-  it("cuenta los componentes de la biblioteca y sus filtros en lugar de las variantes del prototipo", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async (input: string) => ({
-        ok: true,
-        status: 200,
-        json: async () =>
-          input.endsWith("info.json")
-            ? {
-                catalog: {
-                  components: "components.json",
-                  gallery: "showcase/index.html",
-                  defaultTab: "library",
-                },
-              }
-            : {
-                components: [
-                  { name: "atlas.ring", family: "mapa" },
-                  { name: "atlas.arrow", family: "rutas" },
-                  { name: "atlas.flow", family: "rutas" },
-                ],
-              },
-      })),
-    );
+describe("selector de diseños estándar", () => {
+  it("filtra componentes del catálogo por tipo y búsqueda", async () => {
     mount();
-    await choose(/Atlas · historia/);
-    expect(await screen.findByText("3 componentes")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "mapa" }));
-    expect(screen.getByText("1 componente")).toBeTruthy();
-    expect(screen.getAllByRole("article")).toHaveLength(1);
+    await choose("atlas");
+    await screen.findByTitle("Vista previa de Anillo");
+    fireEvent.click(screen.getByRole("button", { name: "action" }));
+    expect(screen.queryByTitle("Vista previa de Anillo")).toBeNull();
+    expect(screen.getByTitle("Vista previa de Flecha")).toBeTruthy();
+    fireEvent.change(screen.getByRole("searchbox", { name: "Buscar componentes" }), {
+      target: { value: "flujo" },
+    });
+    expect(screen.queryByText("Flecha")).toBeNull();
+    expect(screen.getByTitle("Vista previa de Flujo")).toBeTruthy();
   });
-  it("selecciona prototipos, filtra tarjetas y desmonta las vistas al cambiar", async () => {
+  it("cambia de diseño, desmonta la vista previa y consulta el catálogo estándar", async () => {
     mount();
-    expect(screen.getByRole("button", { name: "Kit · kit" }).getAttribute("aria-pressed")).toBe(
-      "true",
-    );
-    expect(await screen.findByRole("group", { name: "Diseños Sandbox" })).toBeTruthy();
-    await choose(/Atlas · historia/);
-    expect(
-      screen.getByRole("button", { name: /Atlas · historia/ }).getAttribute("aria-pressed"),
-    ).toBe("true");
-    await screen.findByRole("tab", { name: "Prototipo" });
-    await waitFor(() =>
-      expect(screen.getAllByRole("status")[0].textContent).toContain("1 tarjeta"),
-    );
-    expect(screen.getAllByText(/Un mapa animado/).length).toBeGreaterThan(0);
-    expect(screen.getByText(/hace 8 horas/)).toBeTruthy();
-    expect(screen.queryByText(/common\.\*/)).toBeNull();
-    expect(
-      screen
-        .getByRole("article", { name: "Prototipo completo" })
-        .querySelector("[data-preview-frame]")
-        ?.getAttribute("style"),
-    ).toContain("9 / 16");
-    fireEvent.click(screen.getByRole("button", { name: "Reproducir Prototipo completo" }));
-    expect(await screen.findByTitle("Vista previa de Prototipo completo")).toBeTruthy();
-    await choose(/Otro · accion/);
-    expect(screen.queryByTitle(/Vista previa/)).toBeNull();
-    await screen.findByRole("tab", { name: "Prototipo" });
-    await waitFor(() =>
-      expect(screen.getAllByRole("status")[0].textContent).toContain("1 tarjeta"),
-    );
-    expect(screen.getByRole("button", { name: /Otro · accion/ }).getAttribute("aria-pressed")).toBe(
-      "true",
-    );
-    await choose(/Atlas · historia/);
-    expect(screen.queryByTitle(/Vista previa/)).toBeNull();
-    fireEvent.click(await screen.findByRole("tab", { name: "Biblioteca (1)" }));
-    fireEvent.change(screen.getByRole("searchbox", { name: "Buscar componentes" }), {
-      target: { value: "Primero" },
-    });
-    await waitFor(() =>
-      expect(screen.getAllByRole("status")[0].textContent).toContain("1 componente"),
-    );
-    expect(screen.getByText("Uno")).toBeTruthy();
-    fireEvent.change(screen.getByRole("searchbox", { name: "Buscar componentes" }), {
-      target: { value: "" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: "16:9" }));
-    expect(
-      screen
-        .getByRole("article", { name: "Uno" })
-        .querySelector("[data-preview-frame]")
-        ?.getAttribute("style"),
-    ).toContain("16 / 9");
-    fireEvent.click(screen.getByRole("tab", { name: "Prototipo" }));
-    fireEvent.click(screen.getByRole("button", { name: "Reproducir Prototipo completo" }));
-    expect(await screen.findByTitle(/Vista previa/)).toBeTruthy();
-    await choose(/Kit · kit/);
-    expect(screen.queryByTitle(/Vista previa/)).toBeNull();
-    expect(screen.getByText(/common\.\*/)).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Kit · kit" }).getAttribute("aria-pressed")).toBe(
-      "true",
-    );
+    await choose("atlas");
+    await screen.findByTitle("Vista previa de Anillo");
+    await choose("otro");
+    expect(screen.queryByTitle("Vista previa de Anillo")).toBeNull();
+    await screen.findByText("No hay entradas para estos filtros.");
+    await choose("kit");
+    await screen.findByTitle("Vista previa de Componente Kit");
+    expect(requests).toContain("/api/v1/showcase/designs/kit/catalog");
+    expect(requests.some((path) => path.includes("/sandbox/components"))).toBe(false);
   });
-
   it("funciona con localStorage bloqueado", async () => {
     vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
       throw new Error("bloqueado");
@@ -182,19 +120,15 @@ describe("selector Sandbox", () => {
       throw new Error("bloqueado");
     });
     mount();
-    await choose(/Atlas · historia/);
-    await screen.findByRole("tab", { name: "Prototipo" });
-    await waitFor(() =>
-      expect(screen.getAllByRole("status")[0].textContent).toContain("1 tarjeta"),
-    );
+    await choose("atlas");
+    await screen.findByTitle("Vista previa de Anillo");
     fireEvent.click(screen.getByRole("button", { name: "16:9" }));
-    expect(
-      screen
-        .getByRole("article", { name: "Prototipo completo" })
-        .querySelector("[data-preview-frame]")
-        ?.getAttribute("style"),
-    ).toContain("16 / 9");
-    await choose(/Kit · kit/);
-    expect(screen.getByText("Cuadrícula del kit")).toBeTruthy();
+    await waitFor(() =>
+      expect(screen.getByTitle("Vista previa de Anillo").getAttribute("src")).toContain(
+        "format=16x9",
+      ),
+    );
+    await choose("kit");
+    expect(await screen.findByTitle("Vista previa de Componente Kit")).toBeTruthy();
   });
 });

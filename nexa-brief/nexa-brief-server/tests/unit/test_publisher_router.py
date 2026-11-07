@@ -1,12 +1,21 @@
 from __future__ import annotations
 
 from unittest.mock import AsyncMock, MagicMock, patch
+import hashlib
+import hmac
+import time
 import pytest
 from fastapi.testclient import TestClient
 
 from src.presentation.main import app
+from src.config.settings import settings as app_settings
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def synthetic_public_origin(monkeypatch):
+    monkeypatch.setattr(app_settings, "public_app_url", "https://nexa.example")
 
 
 @pytest.fixture
@@ -17,8 +26,7 @@ def mock_facade():
         yield facade
 
 
-@patch("src.presentation.api.routers.publisher._register_service_accounts", new_callable=AsyncMock)
-def test_list_accounts_api(mock_register, mock_facade):
+def test_list_accounts_api(mock_facade):
     mock_facade.list_accounts.return_value = [
         {
             "platform": "youtube",
@@ -86,60 +94,59 @@ def test_facebook_oauth_start(mock_settings):
 
 
 @patch("src.presentation.api.routers.publisher.settings")
-@patch("src.presentation.api.routers.publisher.TokenStorage")
-@patch("httpx.AsyncClient")
-def test_tiktok_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tmp_path):
-    from unittest.mock import AsyncMock
-    mock_settings.tiktok_client_id = "tiktok_id"
-    mock_settings.tiktok_client_secret = "tiktok_secret"
-    mock_settings.publisher_encryption_key = "a" * 44
+def test_tiktok_oauth_callback(mock_settings, tmp_path):
+    mock_settings.tiktok_business_app_id = "tiktok_id"
+    mock_settings.tiktok_business_secret = "synthetic"
+    mock_settings.tiktok_business_redirect_uri = "https://example.test/callback"
+    mock_settings.publisher_encryption_key = "synthetic-signing-key"
     mock_settings.accounts_json_path = tmp_path / "accounts.json"
-
-    mock_storage = MagicMock()
-    mock_storage_cls.return_value = mock_storage
-
-    mock_client = MagicMock()
-    mock_httpx.return_value.__aenter__.return_value = mock_client
-
-    mock_resp = MagicMock()
-    mock_resp.status_code = 200
-    mock_resp.json.return_value = {
-        "data": {
-            "access_token": "tk_access_val",
-            "refresh_token": "tk_refresh_val",
-            "expires_in": 3600,
-            "open_id": "open_id_123",
-        }
-    }
-    mock_client.post = AsyncMock(return_value=mock_resp)
-
-    response = client.get("/api/v1/publish/auth/tiktok/callback?code=mock_code&state=cuenta_custom")
+    storage = MagicMock()
+    storage._data = {}
+    payload = f"tiktok:cuenta_custom:{int(time.time()) + 600}:synthetic-nonce"
+    signature = hmac.new(b"synthetic-signing-key", payload.encode(), hashlib.sha256).hexdigest()
+    with patch("src.presentation.api.routers.publisher.build_credential_store", return_value=storage), \
+         patch("src.presentation.api.routers.publisher._update_channels_json", new_callable=AsyncMock), \
+         patch("src.presentation.api.routers.publisher.TikTokBusinessClient.exchange_code", new_callable=AsyncMock, return_value={
+             "access_token": "tk_access_val", "refresh_token": "tk_refresh_val", "expires_in": 3600, "open_id": "open_id_123"}), \
+         patch("src.presentation.api.routers.publisher.TikTokBusinessClient.get_profile", new_callable=AsyncMock, return_value=None):
+        response = client.get("/api/v1/publish/auth/tiktok/callback", params={"code": "mock_code", "state": f"{payload}:{signature}"},
+                              cookies={"nexa_tiktok_oauth_state": "synthetic-nonce"})
     assert response.status_code == 200
     assert "Cuenta conectada" in response.text
     assert "TikTok" in response.text
 
-    mock_storage.save_tokens.assert_called_once_with(
+    storage.save_tokens.assert_called_once_with(
         platform="tiktok",
         alias="cuenta_custom",
         access_token="tk_access_val",
         refresh_token="tk_refresh_val",
         expires_in=3600,
-        refresh_expires_in=31536000,
+        refresh_expires_in=None,
+        api_provider="tiktok_business",
+        target_id="open_id_123",
     )
+
+
+@patch("src.presentation.api.routers.publisher.settings")
+def test_tiktok_oauth_callback_rejects_unsigned_state(mock_settings):
+    mock_settings.publisher_encryption_key = "synthetic-signing-key"
+    with patch("src.presentation.api.routers.publisher.build_credential_store") as store:
+        response = client.get("/api/v1/publish/auth/tiktok/callback?code=mock_code&state=cuenta_custom")
+    assert response.status_code == 400
+    store.assert_not_called()
 
 
 @patch("src.presentation.api.routers.publisher._load_google_credentials")
 @patch("src.presentation.api.routers.publisher.settings")
-@patch("src.presentation.api.routers.publisher.TokenStorage")
 @patch("httpx.AsyncClient")
-def test_youtube_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, mock_load_creds, tmp_path):
+def test_youtube_oauth_callback(mock_httpx, mock_settings, mock_load_creds, tmp_path):
     from unittest.mock import AsyncMock
     mock_load_creds.return_value = ("yt_id", "yt_secret")
     mock_settings.publisher_encryption_key = "a" * 44
     mock_settings.accounts_json_path = tmp_path / "accounts.json"
 
     mock_storage = MagicMock()
-    mock_storage_cls.return_value = mock_storage
+    mock_storage.list_accounts.return_value = []
 
     mock_client = MagicMock()
     mock_httpx.return_value.__aenter__.return_value = mock_client
@@ -169,7 +176,9 @@ def test_youtube_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, moc
     mock_client.post = AsyncMock(return_value=mock_token_resp)
     mock_client.get = AsyncMock(return_value=mock_channel_resp)
 
-    response = client.get("/api/v1/publish/auth/youtube/callback?code=mock_code&state=canal_custom")
+    with patch("src.presentation.api.routers.publisher.build_credential_store", return_value=mock_storage), \
+         patch("src.presentation.api.routers.publisher._update_channels_json", new_callable=AsyncMock):
+        response = client.get("/api/v1/publish/auth/youtube/callback?code=mock_code&state=canal_custom")
     assert response.status_code == 200
     assert "Cuenta conectada" in response.text
     assert "YouTube" in response.text
@@ -184,9 +193,8 @@ def test_youtube_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, moc
 
 
 @patch("src.presentation.api.routers.publisher.settings")
-@patch("src.presentation.api.routers.publisher.TokenStorage")
 @patch("httpx.AsyncClient")
-def test_facebook_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tmp_path):
+def test_facebook_oauth_callback(mock_httpx, mock_settings, tmp_path):
     from unittest.mock import AsyncMock
     mock_settings.facebook_client_id = "fb_id"
     mock_settings.facebook_client_secret = "fb_secret"
@@ -194,7 +202,8 @@ def test_facebook_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tm
     mock_settings.accounts_json_path = tmp_path / "accounts.json"
 
     mock_storage = MagicMock()
-    mock_storage_cls.return_value = mock_storage
+    mock_storage.list_accounts.return_value = []
+    mock_storage._data = {}
 
     mock_client = MagicMock()
     mock_httpx.return_value.__aenter__.return_value = mock_client
@@ -221,7 +230,9 @@ def test_facebook_oauth_callback(mock_httpx, mock_storage_cls, mock_settings, tm
 
     mock_client.get = AsyncMock(side_effect=[mock_user_tok_resp, mock_long_tok_resp, mock_pages_resp])
 
-    response = client.get("/api/v1/publish/auth/facebook/callback?code=mock_code&state=pagina_custom")
+    with patch("src.presentation.api.routers.publisher.build_credential_store", return_value=mock_storage), \
+         patch("src.presentation.api.routers.publisher._update_channels_json", new_callable=AsyncMock):
+        response = client.get("/api/v1/publish/auth/facebook/callback?code=mock_code&state=pagina_custom")
     assert response.status_code == 200
     assert "Cuenta conectada" in response.text
     assert "Facebook" in response.text

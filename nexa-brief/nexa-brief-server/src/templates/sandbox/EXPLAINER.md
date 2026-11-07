@@ -120,14 +120,16 @@ Galería de componentes: `python3 -m http.server -d src/templates 8800` →
 
 ### Videos de referencia (todos en producción)
 
+Las rutas de videos de esta tabla se refieren a `productions/` del perfil activo, salvo las demos que siguen expresamente en el repositorio.
+
 | video | diseño | por qué mirarlo |
 |---|---|---|
 | `nodehistory/turing-enigma` | binary | el primer video de nivel referencia (Claude). Arco completo con duelo y reparación (17 seg., 517 palabras) |
 | `nodehistory/muro-de-berlin` | binary | Claude siguiendo AGENTS.md; renderizado 9:16 y 16:9; clímax en 0,6 del video; voz partida en 3 sin perder calidad |
-| `nodetech/apolo-1202` | rough | dispositivos propios de la historia (`rough.dsky`, `rough.rope`, `rough.load`, `rough.choice` con ✓ en "Go", `rough.descent`) y eventos internos sincronizados con `"@palabra"` |
+| `productions/nodetech/apolo-1202` (perfil activo) | rough | dispositivos propios de la historia (`rough.dsky`, `rough.rope`, `rough.load`, `rough.choice` con ✓ en "Go", `rough.descent`) y eventos internos sincronizados con `"@palabra"` |
 | `nodetech/nacimiento-ia-dartmouth` | binary (para NodeTech) | producido por Claude Code **vía backend** el 2026-10-10 en ~50 min: `check` 0 errores / 0 avisos, 54 beats (4,2 s/plano), 6 letras grandes, voz Charon 124 ppm, WER ≈ 0,014. Leé su `PLAN.md` (sección "mitos que NO vamos a decir") y el `agent_report` en `nexa-brief-server/data/explainer/productions.json` |
-| `nodetech/vago-pero-emocionante` | rough | Claude siguiendo AGENTS.md, renderizado 9:16 |
-| `nodehistory/codex-titanic`, `nodetech/codex-ariane-501` | binary / rough | Codex solo con AGENTS.md (~75–80 % del nivel). Investigación excelente; errores editoriales documentados en `_tools/explainer-kit/lab/codex-review-2026-10-07.md` |
+| `productions/nodetech/vago-pero-emocionante` (perfil activo) | rough | Claude siguiendo AGENTS.md, renderizado 9:16 |
+| `nodehistory/codex-titanic`, `productions/nodetech/codex-ariane-501` (perfil activo) | binary / rough | Codex solo con AGENTS.md (~75–80 % del nivel). Investigación excelente; errores editoriales documentados en `_tools/explainer-kit/lab/codex-review-2026-10-07.md` |
 | `nodehistory/*-demo` (9) | los 9 diseños nuevos | **el MISMO guion del Muro de Berlín** en cada diseño (`demo: true`). Sirven para ver cada diseño, NO para copiar su storyboard: repiten 7 fotos a propósito |
 
 ### Lo que funcionó

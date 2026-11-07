@@ -6,12 +6,19 @@ import httpx
 import pytest
 from PIL import Image
 
+from src.config.settings import settings as app_settings
+
 from src.adapters.publishing.youtube_adapter import YouTubeAdapter
 from src.config.exceptions import PlatformAPIError
 from src.core.data import collection
 from src.core.youtube_capabilities import (
     record_thumbnail_result, reset_thumbnail_capability, thumbnail_capability,
 )
+
+
+@pytest.fixture(autouse=True)
+def synthetic_public_origin(monkeypatch):
+    monkeypatch.setattr(app_settings, "public_app_url", "https://nexa.example")
 
 
 async def test_capabilities_are_isolated_by_channel_and_reconnection_resets():
@@ -153,7 +160,7 @@ async def test_five_channels_are_listed_without_a_four_channel_limit(api_client)
     facade = MagicMock()
     facade.list_accounts.return_value = [{"platform": "youtube", "alias": f"channel_{i}", "name": f"Channel {i}", "target_id": f"UC{i}", "status": "ok", "expires_in_seconds": None, "has_refresh_token": True} for i in range(5)]
     facade.catalog_for.return_value = None
-    with patch("src.presentation.api.routers.publisher._get_facade", return_value=facade), patch("src.presentation.api.routers.publisher._register_service_accounts", new=AsyncMock()):
+    with patch("src.presentation.api.routers.publisher._get_facade", return_value=facade):
         response = await api_client.get("/api/v1/publish/accounts")
     assert response.status_code == 200
     assert len(response.json()) == 5

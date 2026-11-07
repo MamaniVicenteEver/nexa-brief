@@ -7,9 +7,9 @@ services:
       sh -c 'mkdir -p /data /output /accounts /web-data && chown -R ${APP_UID:-10001}:${APP_GID:-10001} /data /output /accounts && chown -R ${APP_UID:-10001}:${APP_GID:-10001} /web-data && chmod 2770 /web-data && find /web-data -type f -exec chmod 660 {} \;'
     volumes:
       - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/data:/data
-      - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/output:/output
-      - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/connections:/accounts
-      - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/web-data:/web-data
+      - ${NEXA_RENDERS_DIR:-${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/output}:/output
+      - ${NEXA_CONNECTIONS_DIR:-${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/connections}:/accounts
+      - ${NEXA_WEB_DATA_DIR:-${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/web-data}:/web-data
     networks:
       - nexa_private
     restart: "no"
@@ -25,7 +25,7 @@ services:
       - path: ./nexa-brief-server/.env
         required: false
       # Only this one service key is exported, without unrelated root secrets.
-      - path: ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/connections/tiktok-service.env
+      - path: ${NEXA_CONNECTIONS_DIR:-${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/connections}/tiktok-service.env
         required: false
         format: raw
     environment:
@@ -58,8 +58,8 @@ services:
     volumes:
       - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}:${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}
       - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/data:/app/data
-      - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/output:/app/output
-      - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/connections:/app/accounts
+      - ${NEXA_RENDERS_DIR:-${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/output}:/app/output
+      - ${NEXA_CONNECTIONS_DIR:-${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/connections}:/app/accounts
       # Plantillas con sus medios (make media-pull) y grabaciones, desde el disco del host.
       - ./nexa-brief-server/src/templates:/app/src/templates
       - ${NEXA_PROJECT_ROOT:-${PWD}}/nexa-brief-server/src/templates:${NEXA_PROJECT_ROOT:-${PWD}}/nexa-brief-server/src/templates
@@ -103,7 +103,7 @@ services:
       - "${WEB_PORT:-3000}:3000"
     volumes:
       # Usuarios y solicitudes de acceso (data/users.json): sobreviven a los rebuilds.
-      - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/web-data:/app/data
+      - ${NEXA_WEB_DATA_DIR:-${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/web-data}:/app/data
       - ${NEXA_PROFILE_DIR:-${HOME}/.local/share/nexa-brief/profiles/profesional}/profile.json:/app/profile.json:ro
     depends_on:
       volume-init:

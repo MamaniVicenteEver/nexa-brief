@@ -17,9 +17,11 @@ from pathlib import Path
 import structlog
 
 from src.adapters.agent.infrastructure.binaries import find_binary
+from src.adapters.agent.isolation_policy import require_legacy_agent_launch_allowed
 from src.config.settings import settings
 from src.core.ports.agent_port import (
     AgentRunnerPort,
+    AgentIsolationUnavailableError,
     AgentRunResult,
     AgentScope,
     AgentUnavailableError,
@@ -148,6 +150,7 @@ async def run_cli(
 
     Devuelve (exit_code, timed_out, segundos).
     """
+    require_legacy_agent_launch_allowed()
     log_path.parent.mkdir(parents=True, exist_ok=True)
     env = {k: v for k, v in os.environ.items() if k not in _STRIP_ENV + strip_env} | (extra_env or {})
     started = time.monotonic()
@@ -189,6 +192,10 @@ class ClaudeCodeRunner(AgentRunnerPort):
         self._binary = binary if binary is not None else find_binary("claude", settings.agent_claude_bin)
 
     def available(self) -> bool:
+        try:
+            require_legacy_agent_launch_allowed()
+        except AgentIsolationUnavailableError:
+            return False
         return bool(self._binary)
 
     async def run(
@@ -200,6 +207,7 @@ class ClaudeCodeRunner(AgentRunnerPort):
         timeout_seconds: float,
         scope: AgentScope | None = None,
     ) -> AgentRunResult:
+        require_legacy_agent_launch_allowed()
         if not self._binary:
             raise AgentUnavailableError("No se encontró el CLI `claude` (definir AGENT_CLAUDE_BIN).")
         # El prompt va por stdin: los prompts largos no entran bien como argumento.
@@ -253,6 +261,10 @@ class CodexRunner(AgentRunnerPort):
         self._binary = binary if binary is not None else find_binary("codex", settings.agent_codex_bin)
 
     def available(self) -> bool:
+        try:
+            require_legacy_agent_launch_allowed()
+        except AgentIsolationUnavailableError:
+            return False
         return bool(self._binary)
 
     async def run(
@@ -264,6 +276,7 @@ class CodexRunner(AgentRunnerPort):
         timeout_seconds: float,
         scope: AgentScope | None = None,
     ) -> AgentRunResult:
+        require_legacy_agent_launch_allowed()
         if not self._binary:
             raise AgentUnavailableError("No se encontró el CLI `codex` (definir AGENT_CODEX_BIN).")
         last_path = log_path.with_suffix(".last.txt")

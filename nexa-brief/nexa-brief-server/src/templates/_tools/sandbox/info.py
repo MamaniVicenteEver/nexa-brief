@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import importlib.util
 import json
+import os
 import re
 import sys
 import warnings
@@ -15,7 +16,9 @@ from pathlib import Path, PurePosixPath
 from costs import TOKEN_FIELDS, calculate_costs
 
 TEMPLATES_ROOT = Path(__file__).resolve().parents[2]
-SANDBOX_ROOT = TEMPLATES_ROOT / "sandbox"
+SANDBOX_ROOT = Path(os.environ["NEXA_SANDBOX_DIR"]) if os.environ.get("NEXA_SANDBOX_DIR") else TEMPLATES_ROOT / "sandbox"
+if not SANDBOX_ROOT.is_absolute():
+    raise ValueError("NEXA_SANDBOX_DIR debe ser absoluta")
 USAGE_SCRIPT = TEMPLATES_ROOT / "_tools" / "explainer-kit" / "tools" / "usage.py"
 STATUSES = {"idea", "en progreso", "lista para revisar", "aprobada", "descartada"}
 

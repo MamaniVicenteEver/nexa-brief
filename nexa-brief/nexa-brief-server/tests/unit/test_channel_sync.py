@@ -76,6 +76,7 @@ async def test_sync_imports_updates_without_duplicates_and_saves_stats():
         "video_count": 8,
         "followers": 900,
         "views": 12_000,
+        "likes": None,
         "extra": {},
     }
     assert collection("channels").first({"platform": "facebook", "alias": "pagina_1"})["synced_at"] == second.synced_at

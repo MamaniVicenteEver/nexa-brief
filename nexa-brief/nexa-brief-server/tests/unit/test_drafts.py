@@ -43,6 +43,7 @@ def fake_stages(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     calls: list[str] = []
     monkeypatch.setattr(pipeline, "get_analysis_ai", lambda: None)
     monkeypatch.setattr(pipeline, "get_codegen_ai", lambda: None)
+    monkeypatch.setattr(pipeline, "get_copy_ai", lambda: None)
 
     def fake(name: str, stage: JobStage):
         async def run(job: Job, *_args, **_kwargs) -> Job:

@@ -456,8 +456,12 @@ async def delete_job(job_id: str, remote: bool = False) -> video_deletion.JobDel
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-def _resolve_job_output_file(stored_path: str) -> Path:
+def _resolve_job_output_file(stored_path: str) -> Path | None:
     """Rebase a persisted absolute output path when jobs came from another host."""
+    from src.config.profile_layout import layout_for_settings
+    if layout_for_settings(settings).schema_version >= 3:
+        from src.adapters.data.job_output_paths import resolve_v3_job_output
+        return resolve_v3_job_output(stored_path)
     path = Path(stored_path)
     if path.is_file():
         return path
@@ -489,11 +493,17 @@ async def get_job_file(job_id: str, format: str, request: Request) -> Response:
     file_path_str = file_paths.get(format)
     if not file_path_str and format == "reels" and record.get("source") == "explainer":
         file_path_str = file_paths.get("instagram")
-    if format == "thumbnail" and (not file_path_str or not _resolve_job_output_file(file_path_str).is_file()):
+    thumbnail = _resolve_job_output_file(file_path_str) if file_path_str and format == "thumbnail" else None
+    if format == "thumbnail" and (not thumbnail or not thumbnail.is_file()):
         # Videos grabados antes de la miniatura automática: se saca ahora del final de su intro.
         from src.modules.thumbnail_maker import ensure_for_job
 
-        resolved = {k: str(_resolve_job_output_file(v)) for k, v in file_paths.items() if v}
+        resolved = {}
+        for key, value in file_paths.items():
+            if value:
+                safe = _resolve_job_output_file(value)
+                if safe is not None and safe.is_file():
+                    resolved[key] = str(safe)
         made = await ensure_for_job(resolved)
         file_path_str = str(made) if made else None
     if not file_path_str:
@@ -502,7 +512,7 @@ async def get_job_file(job_id: str, format: str, request: Request) -> Response:
             detail=f"File not ready for job '{job_id}' (stage={record['stage']}).",
         )
     path = _resolve_job_output_file(file_path_str)
-    if not path.is_file():
+    if path is None or not path.is_file():
         raise HTTPException(status_code=404, detail="File no longer exists on disk.")
 
     media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"

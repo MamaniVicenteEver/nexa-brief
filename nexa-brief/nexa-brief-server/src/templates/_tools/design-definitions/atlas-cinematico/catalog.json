@@ -1,0 +1,3528 @@
+{
+  "design_id": "atlas-cinematico",
+  "schema_version": 1,
+  "revision": "754df1f4e3620c53a7ce5d10f85981c3672fe21e9758ad79183b6861659c9f9f",
+  "entries": [
+    {
+      "id": "atlas.highlight",
+      "name": "atlas.highlight",
+      "label": "atlas.highlight",
+      "kind": "component",
+      "summary": "Resaltar países, estados o regiones con su geometría. Se puede repetir para cada miembro de una unión.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Instante de retirada del resaltado."
+        },
+        "region": {
+          "type": "string",
+          "default": "US",
+          "doc": "ID geográfico o región declarada; no inventar fronteras.",
+          "required": true
+        },
+        "style": {
+          "type": "string|object",
+          "default": "olive",
+          "doc": "Clave de highlight.styles del look u objeto fill/opacity/line/width."
+        },
+        "border": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Mostrar borde de la región."
+        }
+      },
+      "example": {
+        "type": "highlight",
+        "region": "US",
+        "t": 0,
+        "dur": 0.8,
+        "out": 6,
+        "border": true,
+        "style": "olive"
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.highlight&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.highlight"
+      }
+    },
+    {
+      "id": "atlas.ring",
+      "name": "atlas.ring",
+      "label": "atlas.ring",
+      "kind": "component",
+      "summary": "Anillo geográfico con pulso.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "at": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "r": {
+          "type": "number",
+          "default": 42,
+          "doc": "Radio en píxeles de diseño.",
+          "min": 1
+        },
+        "pulse": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Pulso repetido determinista."
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffffff",
+          "doc": "Color CSS."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "ring",
+        "at": [
+          2.35,
+          48.86
+        ],
+        "t": 0,
+        "r": 42,
+        "pulse": true
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.ring&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.ring"
+      }
+    },
+    {
+      "id": "atlas.dot",
+      "name": "atlas.dot",
+      "label": "atlas.dot",
+      "kind": "component",
+      "summary": "Punto geográfico para marcar una ciudad o destino.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "at": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "r": {
+          "type": "number",
+          "default": 7,
+          "doc": "Radio del pulso en píxeles de diseño.",
+          "min": 1
+        },
+        "pulse": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Pulso repetido."
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffffff",
+          "doc": "Color CSS."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "dot",
+        "at": [
+          2.35,
+          48.86
+        ],
+        "t": 0,
+        "r": 7
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.dot&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.dot"
+      }
+    },
+    {
+      "id": "atlas.polePhoto",
+      "name": "atlas.polePhoto",
+      "label": "atlas.polePhoto",
+      "kind": "component",
+      "summary": "Foto circular con poste y rótulo; un renderizador para todas las imágenes.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "src": {
+          "type": "string",
+          "default": "media/example.jpg",
+          "doc": "Archivo relativo a assets/ del episodio. Registrar su licencia en media/credits.json.",
+          "required": true
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Centro del recorte cover: x,y entre cero y uno."
+        },
+        "size": {
+          "type": "number",
+          "default": 74,
+          "doc": "Radio de la fotografía en px de diseño.",
+          "min": 1
+        },
+        "poleH": {
+          "type": "number",
+          "default": 155,
+          "doc": "Altura del poste en px de diseño.",
+          "min": 1
+        },
+        "side": {
+          "type": "string",
+          "default": "right",
+          "doc": "Lado del texto.",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "at": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "label": {
+          "type": "string",
+          "default": "CIUDAD",
+          "doc": "Título junto a la foto."
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Segunda línea."
+        },
+        "ring": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Anillo alrededor de la foto."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "pole-photo",
+        "at": [
+          -97.74,
+          30.27
+        ],
+        "src": "media/austin.jpg",
+        "label": "CIUDAD",
+        "sub": "Ejemplo de ficha",
+        "t": 0,
+        "enter": {
+          "style": "rise",
+          "dur": 0.6
+        }
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.polePhoto&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.polePhoto"
+      }
+    },
+    {
+      "id": "atlas.hexPhoto",
+      "name": "atlas.hexPhoto",
+      "label": "atlas.hexPhoto",
+      "kind": "component",
+      "summary": "Foto hexagonal con revelado y descripción.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "src": {
+          "type": "string",
+          "default": "media/example.jpg",
+          "doc": "Archivo relativo a assets/ del episodio. Registrar su licencia en media/credits.json.",
+          "required": true
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Centro del recorte cover: x,y entre cero y uno."
+        },
+        "size": {
+          "type": "number",
+          "default": 74,
+          "doc": "Radio de la fotografía en px de diseño.",
+          "min": 1
+        },
+        "poleH": {
+          "type": "number",
+          "default": 155,
+          "doc": "Altura del poste en px de diseño.",
+          "min": 1
+        },
+        "side": {
+          "type": "string",
+          "default": "right",
+          "doc": "Lado del texto.",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "at": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "default": "DESTINO",
+          "doc": "Título."
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Descripción hasta cuatro líneas."
+        },
+        "fillAt": {
+          "type": "time",
+          "default": 1,
+          "doc": "Instante del revelado de la foto."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "hex-photo",
+        "at": [
+          -97.74,
+          30.27
+        ],
+        "src": "media/austin.jpg",
+        "title": "DESTINO",
+        "text": "Una misma ficha admite cualquier fotografía.",
+        "t": 0,
+        "fillAt": 1
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.hexPhoto&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.hexPhoto"
+      }
+    },
+    {
+      "id": "atlas.panel",
+      "name": "atlas.panel",
+      "label": "atlas.panel",
+      "kind": "component",
+      "summary": "Panel rectangular con foto, descripción y línea al mapa.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "at": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "src": {
+          "type": "string",
+          "default": "media/example.jpg",
+          "doc": "Archivo relativo a assets/ del episodio. Registrar su licencia en media/credits.json.",
+          "required": true
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Centro del recorte cover: x,y entre cero y uno."
+        },
+        "title": {
+          "type": "string",
+          "default": "COMERCIO",
+          "doc": "Título."
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Descripción."
+        },
+        "anchor": {
+          "type": "string",
+          "default": "right",
+          "doc": "Lado del panel.",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "accent": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Color de la franja."
+        },
+        "blankFor": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Espera previa al revelado.",
+          "min": 0
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "panel",
+        "at": [
+          -97.74,
+          30.27
+        ],
+        "src": "media/austin.jpg",
+        "title": "COMERCIO",
+        "text": "Panel reutilizable con imagen.",
+        "t": 0,
+        "blankFor": 0.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.panel&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.panel"
+      }
+    },
+    {
+      "id": "atlas.tag",
+      "name": "atlas.tag",
+      "label": "atlas.tag",
+      "kind": "component",
+      "summary": "Etiqueta de color vinculada a una ubicación.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "at": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "default": "DESTINO",
+          "doc": "Texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "#a3126f",
+          "doc": "Color de fondo."
+        },
+        "up": {
+          "type": "number",
+          "default": 115,
+          "doc": "Separación vertical en px de diseño.",
+          "min": 1
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "tag",
+        "at": [
+          -97.74,
+          30.27
+        ],
+        "text": "DESTINO",
+        "t": 0
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.tag&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.tag"
+      }
+    },
+    {
+      "id": "atlas.bars",
+      "name": "atlas.bars",
+      "label": "atlas.bars",
+      "kind": "component",
+      "summary": "Rótulo con barras que se despliegan desde el lugar.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "at": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "default": "INTERCAMBIO",
+          "doc": "Texto del rótulo."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "bars",
+        "at": [
+          -97.74,
+          30.27
+        ],
+        "text": "INTERCAMBIO",
+        "t": 0
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.bars&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.bars"
+      }
+    },
+    {
+      "id": "atlas.arc",
+      "name": "atlas.arc",
+      "label": "atlas.arc",
+      "kind": "component",
+      "summary": "Arco elevado con cabeza luminosa; mismo componente de la demo.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundos en completar el recorrido.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "from": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "to": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "doc": "Trayectoria geográfica o de pantalla.",
+          "values": [
+            "great-circle",
+            "straight",
+            "curve"
+          ]
+        },
+        "style": {
+          "type": "string",
+          "default": "cyan",
+          "doc": "Color heredado cuando color no se declara.",
+          "values": [
+            "cyan",
+            "magenta"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Color CSS explícito."
+        },
+        "width": {
+          "type": "number",
+          "default": 9,
+          "doc": "Grosor en px de diseño; no implica cantidad económica.",
+          "min": 0.1
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "doc": "Curvatura vertical en pantalla. No es altura geográfica real."
+        },
+        "head": {
+          "type": "string",
+          "default": "dot",
+          "doc": "Cabeza de la ruta.",
+          "values": [
+            "dot",
+            "arrow",
+            "none"
+          ]
+        },
+        "headSize": {
+          "type": "number",
+          "default": 17,
+          "doc": "Tamaño de cabeza flecha.",
+          "min": 1
+        },
+        "keep": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Conservar ruta trazada hasta out."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Longitud normalizada de la cola cuando keep=false.",
+          "min": 0,
+          "max": 1
+        },
+        "dashed": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Trazo discontinuo."
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Flechas en ambos extremos; si valores difieren usar dos rutas."
+        },
+        "flow": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Marcadores en movimiento a lo largo de la ruta."
+        },
+        "flowSpeed": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Vueltas por segundo de los marcadores.",
+          "min": 0
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto junto al centro de la ruta."
+        },
+        "value": {
+          "type": "number",
+          "default": null,
+          "doc": "Dato numérico. Para cifras documentales usar dataRef con fuente y alcance."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad, por ejemplo % o M€."
+        },
+        "dataRef": {
+          "type": "string",
+          "default": "",
+          "doc": "ID de scene.data: valor, unidad, fuente, año y scope (denominador)."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "arc",
+        "from": [
+          -97.74,
+          30.27
+        ],
+        "to": [
+          -52,
+          -4
+        ],
+        "t": 0,
+        "dur": 2,
+        "keep": true,
+        "out": 6
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.arc&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.arc"
+      }
+    },
+    {
+      "id": "atlas.arrow",
+      "name": "atlas.arrow",
+      "label": "atlas.arrow",
+      "kind": "component",
+      "summary": "Flecha con punta y rótulo para conectar países.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundos en completar el recorrido.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "from": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "to": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "doc": "Trayectoria geográfica o de pantalla.",
+          "values": [
+            "great-circle",
+            "straight",
+            "curve"
+          ]
+        },
+        "style": {
+          "type": "string",
+          "default": "cyan",
+          "doc": "Color heredado cuando color no se declara.",
+          "values": [
+            "cyan",
+            "magenta"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Color CSS explícito."
+        },
+        "width": {
+          "type": "number",
+          "default": 9,
+          "doc": "Grosor en px de diseño; no implica cantidad económica.",
+          "min": 0.1
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "doc": "Curvatura vertical en pantalla. No es altura geográfica real."
+        },
+        "head": {
+          "type": "string",
+          "default": "dot",
+          "doc": "Cabeza de la ruta.",
+          "values": [
+            "dot",
+            "arrow",
+            "none"
+          ]
+        },
+        "headSize": {
+          "type": "number",
+          "default": 17,
+          "doc": "Tamaño de cabeza flecha.",
+          "min": 1
+        },
+        "keep": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Conservar ruta trazada hasta out."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Longitud normalizada de la cola cuando keep=false.",
+          "min": 0,
+          "max": 1
+        },
+        "dashed": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Trazo discontinuo."
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Flechas en ambos extremos; si valores difieren usar dos rutas."
+        },
+        "flow": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Marcadores en movimiento a lo largo de la ruta."
+        },
+        "flowSpeed": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Vueltas por segundo de los marcadores.",
+          "min": 0
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto junto al centro de la ruta."
+        },
+        "value": {
+          "type": "number",
+          "default": null,
+          "doc": "Dato numérico. Para cifras documentales usar dataRef con fuente y alcance."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad, por ejemplo % o M€."
+        },
+        "dataRef": {
+          "type": "string",
+          "default": "",
+          "doc": "ID de scene.data: valor, unidad, fuente, año y scope (denominador)."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "arrow",
+        "from": [
+          -97.74,
+          30.27
+        ],
+        "to": [
+          -52,
+          -4
+        ],
+        "t": 0,
+        "dur": 2,
+        "keep": true,
+        "out": 6,
+        "head": "arrow",
+        "label": "RUTA DE EJEMPLO"
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.arrow&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.arrow"
+      }
+    },
+    {
+      "id": "atlas.arrowStraight",
+      "name": "atlas.arrowStraight",
+      "label": "atlas.arrowStraight",
+      "kind": "component",
+      "summary": "Flecha recta entre dos puntos proyectados.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundos en completar el recorrido.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "from": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "to": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "doc": "Trayectoria geográfica o de pantalla.",
+          "values": [
+            "great-circle",
+            "straight",
+            "curve"
+          ]
+        },
+        "style": {
+          "type": "string",
+          "default": "cyan",
+          "doc": "Color heredado cuando color no se declara.",
+          "values": [
+            "cyan",
+            "magenta"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Color CSS explícito."
+        },
+        "width": {
+          "type": "number",
+          "default": 9,
+          "doc": "Grosor en px de diseño; no implica cantidad económica.",
+          "min": 0.1
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "doc": "Curvatura vertical en pantalla. No es altura geográfica real."
+        },
+        "head": {
+          "type": "string",
+          "default": "dot",
+          "doc": "Cabeza de la ruta.",
+          "values": [
+            "dot",
+            "arrow",
+            "none"
+          ]
+        },
+        "headSize": {
+          "type": "number",
+          "default": 17,
+          "doc": "Tamaño de cabeza flecha.",
+          "min": 1
+        },
+        "keep": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Conservar ruta trazada hasta out."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Longitud normalizada de la cola cuando keep=false.",
+          "min": 0,
+          "max": 1
+        },
+        "dashed": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Trazo discontinuo."
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Flechas en ambos extremos; si valores difieren usar dos rutas."
+        },
+        "flow": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Marcadores en movimiento a lo largo de la ruta."
+        },
+        "flowSpeed": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Vueltas por segundo de los marcadores.",
+          "min": 0
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto junto al centro de la ruta."
+        },
+        "value": {
+          "type": "number",
+          "default": null,
+          "doc": "Dato numérico. Para cifras documentales usar dataRef con fuente y alcance."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad, por ejemplo % o M€."
+        },
+        "dataRef": {
+          "type": "string",
+          "default": "",
+          "doc": "ID de scene.data: valor, unidad, fuente, año y scope (denominador)."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "arrow",
+        "from": [
+          -97.74,
+          30.27
+        ],
+        "to": [
+          -52,
+          -4
+        ],
+        "t": 0,
+        "dur": 2,
+        "keep": true,
+        "out": 6,
+        "path": "straight"
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.arrowStraight&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.arrowStraight"
+      }
+    },
+    {
+      "id": "atlas.arrowCurved",
+      "name": "atlas.arrowCurved",
+      "label": "atlas.arrowCurved",
+      "kind": "component",
+      "summary": "Flecha curva con altura configurable.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundos en completar el recorrido.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "from": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "to": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "doc": "Trayectoria geográfica o de pantalla.",
+          "values": [
+            "great-circle",
+            "straight",
+            "curve"
+          ]
+        },
+        "style": {
+          "type": "string",
+          "default": "cyan",
+          "doc": "Color heredado cuando color no se declara.",
+          "values": [
+            "cyan",
+            "magenta"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Color CSS explícito."
+        },
+        "width": {
+          "type": "number",
+          "default": 9,
+          "doc": "Grosor en px de diseño; no implica cantidad económica.",
+          "min": 0.1
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "doc": "Curvatura vertical en pantalla. No es altura geográfica real."
+        },
+        "head": {
+          "type": "string",
+          "default": "dot",
+          "doc": "Cabeza de la ruta.",
+          "values": [
+            "dot",
+            "arrow",
+            "none"
+          ]
+        },
+        "headSize": {
+          "type": "number",
+          "default": 17,
+          "doc": "Tamaño de cabeza flecha.",
+          "min": 1
+        },
+        "keep": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Conservar ruta trazada hasta out."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Longitud normalizada de la cola cuando keep=false.",
+          "min": 0,
+          "max": 1
+        },
+        "dashed": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Trazo discontinuo."
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Flechas en ambos extremos; si valores difieren usar dos rutas."
+        },
+        "flow": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Marcadores en movimiento a lo largo de la ruta."
+        },
+        "flowSpeed": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Vueltas por segundo de los marcadores.",
+          "min": 0
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto junto al centro de la ruta."
+        },
+        "value": {
+          "type": "number",
+          "default": null,
+          "doc": "Dato numérico. Para cifras documentales usar dataRef con fuente y alcance."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad, por ejemplo % o M€."
+        },
+        "dataRef": {
+          "type": "string",
+          "default": "",
+          "doc": "ID de scene.data: valor, unidad, fuente, año y scope (denominador)."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "arrow",
+        "from": [
+          -97.74,
+          30.27
+        ],
+        "to": [
+          -52,
+          -4
+        ],
+        "t": 0,
+        "dur": 2,
+        "keep": true,
+        "out": 6,
+        "path": "curve",
+        "lift": 180
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.arrowCurved&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.arrowCurved"
+      }
+    },
+    {
+      "id": "atlas.arrowDashed",
+      "name": "atlas.arrowDashed",
+      "label": "atlas.arrowDashed",
+      "kind": "component",
+      "summary": "Flecha discontinua, con la misma entrada y salida.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundos en completar el recorrido.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "from": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "to": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "doc": "Trayectoria geográfica o de pantalla.",
+          "values": [
+            "great-circle",
+            "straight",
+            "curve"
+          ]
+        },
+        "style": {
+          "type": "string",
+          "default": "cyan",
+          "doc": "Color heredado cuando color no se declara.",
+          "values": [
+            "cyan",
+            "magenta"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Color CSS explícito."
+        },
+        "width": {
+          "type": "number",
+          "default": 9,
+          "doc": "Grosor en px de diseño; no implica cantidad económica.",
+          "min": 0.1
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "doc": "Curvatura vertical en pantalla. No es altura geográfica real."
+        },
+        "head": {
+          "type": "string",
+          "default": "dot",
+          "doc": "Cabeza de la ruta.",
+          "values": [
+            "dot",
+            "arrow",
+            "none"
+          ]
+        },
+        "headSize": {
+          "type": "number",
+          "default": 17,
+          "doc": "Tamaño de cabeza flecha.",
+          "min": 1
+        },
+        "keep": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Conservar ruta trazada hasta out."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Longitud normalizada de la cola cuando keep=false.",
+          "min": 0,
+          "max": 1
+        },
+        "dashed": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Trazo discontinuo."
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Flechas en ambos extremos; si valores difieren usar dos rutas."
+        },
+        "flow": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Marcadores en movimiento a lo largo de la ruta."
+        },
+        "flowSpeed": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Vueltas por segundo de los marcadores.",
+          "min": 0
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto junto al centro de la ruta."
+        },
+        "value": {
+          "type": "number",
+          "default": null,
+          "doc": "Dato numérico. Para cifras documentales usar dataRef con fuente y alcance."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad, por ejemplo % o M€."
+        },
+        "dataRef": {
+          "type": "string",
+          "default": "",
+          "doc": "ID de scene.data: valor, unidad, fuente, año y scope (denominador)."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "arrow",
+        "from": [
+          -97.74,
+          30.27
+        ],
+        "to": [
+          -52,
+          -4
+        ],
+        "t": 0,
+        "dur": 2,
+        "keep": true,
+        "out": 6,
+        "dashed": true
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.arrowDashed&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.arrowDashed"
+      }
+    },
+    {
+      "id": "atlas.arrowBidirectional",
+      "name": "atlas.arrowBidirectional",
+      "label": "atlas.arrowBidirectional",
+      "kind": "component",
+      "summary": "Intercambio entre dos destinos con flechas en ambos extremos.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundos en completar el recorrido.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "from": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "to": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "doc": "Trayectoria geográfica o de pantalla.",
+          "values": [
+            "great-circle",
+            "straight",
+            "curve"
+          ]
+        },
+        "style": {
+          "type": "string",
+          "default": "cyan",
+          "doc": "Color heredado cuando color no se declara.",
+          "values": [
+            "cyan",
+            "magenta"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Color CSS explícito."
+        },
+        "width": {
+          "type": "number",
+          "default": 9,
+          "doc": "Grosor en px de diseño; no implica cantidad económica.",
+          "min": 0.1
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "doc": "Curvatura vertical en pantalla. No es altura geográfica real."
+        },
+        "head": {
+          "type": "string",
+          "default": "dot",
+          "doc": "Cabeza de la ruta.",
+          "values": [
+            "dot",
+            "arrow",
+            "none"
+          ]
+        },
+        "headSize": {
+          "type": "number",
+          "default": 17,
+          "doc": "Tamaño de cabeza flecha.",
+          "min": 1
+        },
+        "keep": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Conservar ruta trazada hasta out."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Longitud normalizada de la cola cuando keep=false.",
+          "min": 0,
+          "max": 1
+        },
+        "dashed": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Trazo discontinuo."
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Flechas en ambos extremos; si valores difieren usar dos rutas."
+        },
+        "flow": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Marcadores en movimiento a lo largo de la ruta."
+        },
+        "flowSpeed": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Vueltas por segundo de los marcadores.",
+          "min": 0
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto junto al centro de la ruta."
+        },
+        "value": {
+          "type": "number",
+          "default": null,
+          "doc": "Dato numérico. Para cifras documentales usar dataRef con fuente y alcance."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad, por ejemplo % o M€."
+        },
+        "dataRef": {
+          "type": "string",
+          "default": "",
+          "doc": "ID de scene.data: valor, unidad, fuente, año y scope (denominador)."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "arrow",
+        "from": [
+          -97.74,
+          30.27
+        ],
+        "to": [
+          -52,
+          -4
+        ],
+        "t": 0,
+        "dur": 2,
+        "keep": true,
+        "out": 6,
+        "bidirectional": true
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.arrowBidirectional&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.arrowBidirectional"
+      }
+    },
+    {
+      "id": "atlas.flow",
+      "name": "atlas.flow",
+      "label": "atlas.flow",
+      "kind": "component",
+      "summary": "Ruta con marcadores animados y un dato ilustrativo.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundos en completar el recorrido.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "from": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "to": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "doc": "Trayectoria geográfica o de pantalla.",
+          "values": [
+            "great-circle",
+            "straight",
+            "curve"
+          ]
+        },
+        "style": {
+          "type": "string",
+          "default": "cyan",
+          "doc": "Color heredado cuando color no se declara.",
+          "values": [
+            "cyan",
+            "magenta"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Color CSS explícito."
+        },
+        "width": {
+          "type": "number",
+          "default": 9,
+          "doc": "Grosor en px de diseño; no implica cantidad económica.",
+          "min": 0.1
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "doc": "Curvatura vertical en pantalla. No es altura geográfica real."
+        },
+        "head": {
+          "type": "string",
+          "default": "dot",
+          "doc": "Cabeza de la ruta.",
+          "values": [
+            "dot",
+            "arrow",
+            "none"
+          ]
+        },
+        "headSize": {
+          "type": "number",
+          "default": 17,
+          "doc": "Tamaño de cabeza flecha.",
+          "min": 1
+        },
+        "keep": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Conservar ruta trazada hasta out."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Longitud normalizada de la cola cuando keep=false.",
+          "min": 0,
+          "max": 1
+        },
+        "dashed": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Trazo discontinuo."
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Flechas en ambos extremos; si valores difieren usar dos rutas."
+        },
+        "flow": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Marcadores en movimiento a lo largo de la ruta."
+        },
+        "flowSpeed": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Vueltas por segundo de los marcadores.",
+          "min": 0
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto junto al centro de la ruta."
+        },
+        "value": {
+          "type": "number",
+          "default": null,
+          "doc": "Dato numérico. Para cifras documentales usar dataRef con fuente y alcance."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad, por ejemplo % o M€."
+        },
+        "dataRef": {
+          "type": "string",
+          "default": "",
+          "doc": "ID de scene.data: valor, unidad, fuente, año y scope (denominador)."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "arrow",
+        "from": [
+          -97.74,
+          30.27
+        ],
+        "to": [
+          -52,
+          -4
+        ],
+        "t": 0,
+        "dur": 2,
+        "keep": true,
+        "out": 6,
+        "flow": true,
+        "label": "DATO ILUSTRATIVO",
+        "value": 25,
+        "unit": "%"
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.flow&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.flow"
+      }
+    },
+    {
+      "id": "atlas.metric",
+      "name": "atlas.metric",
+      "label": "atlas.metric",
+      "kind": "component",
+      "summary": "Tarjeta de cifra o porcentaje en pantalla o vinculada al mapa.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "at": {
+          "type": "place",
+          "default": null,
+          "doc": "Lugar opcional; al omitirlo usa x,y de pantalla."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro horizontal como fracción de pantalla.",
+          "min": 0,
+          "max": 1
+        },
+        "y": {
+          "type": "number",
+          "default": 0.25,
+          "doc": "Centro vertical como fracción de pantalla.",
+          "min": 0,
+          "max": 1
+        },
+        "label": {
+          "type": "string",
+          "default": "DATO",
+          "doc": "Nombre de la magnitud."
+        },
+        "value": {
+          "type": "number",
+          "default": null,
+          "doc": "Dato numérico. Para cifras documentales usar dataRef con fuente y alcance."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "doc": "Unidad, por ejemplo % o M€."
+        },
+        "dataRef": {
+          "type": "string",
+          "default": "",
+          "doc": "ID de scene.data: valor, unidad, fuente, año y scope (denominador)."
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Pie, período o fuente abreviada."
+        },
+        "width": {
+          "type": "number",
+          "default": 420,
+          "doc": "Ancho en px de diseño.",
+          "min": 1
+        },
+        "color": {
+          "type": "string",
+          "default": "#18b4f0",
+          "doc": "Acento."
+        },
+        "background": {
+          "type": "string",
+          "default": "rgba(7,20,32,.9)",
+          "doc": "Fondo de la tarjeta."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        }
+      },
+      "example": {
+        "type": "metric",
+        "x": 0.5,
+        "y": 0.25,
+        "label": "DATO ILUSTRATIVO",
+        "value": 25,
+        "unit": "%",
+        "sub": "No es una cifra real",
+        "t": 0,
+        "enter": {
+          "style": "scale",
+          "dur": 0.6
+        }
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.metric&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.metric"
+      }
+    },
+    {
+      "id": "atlas.title",
+      "name": "atlas.title",
+      "label": "atlas.title",
+      "kind": "component",
+      "summary": "Título de pantalla con revelado de texto.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración de la entrada; segundos.",
+          "min": 0.001
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida. Sin exit se retira en ese instante; con exit termina out+exit.dur."
+        },
+        "enter": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "exit": {
+          "type": "object",
+          "default": {
+            "style": "fade",
+            "dur": 0.6
+          },
+          "doc": "Entrada o salida compartida. style: fade, rise, scale, slide-left, slide-right; dur en segundos; distance en px de diseño."
+        },
+        "text": {
+          "type": "string",
+          "default": "UN MUNDO CONECTADO",
+          "doc": "Título."
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Altura normalizada.",
+          "min": 0,
+          "max": 1
+        },
+        "size": {
+          "type": "number",
+          "default": 65,
+          "doc": "Tamaño de tipografía en px de diseño.",
+          "min": 1
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Convertir texto a mayúsculas."
+        }
+      },
+      "example": {
+        "type": "title",
+        "text": "UN MUNDO CONECTADO",
+        "sub": "Atlas Cinemático",
+        "y": 0.2,
+        "size": 56,
+        "t": 0,
+        "dur": 1
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.title&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.title"
+      }
+    },
+    {
+      "id": "atlas.cameraFly",
+      "name": "atlas.cameraFly",
+      "label": "atlas.cameraFly",
+      "kind": "component",
+      "summary": "Vuelo continuo entre regiones.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 3,
+          "doc": "Segundos del vuelo desde la pose anterior.",
+          "min": 0.001
+        },
+        "focus": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "span": {
+          "type": "number",
+          "default": 62,
+          "doc": "Ancho del encuadre en grados de longitud.",
+          "min": 0.001
+        },
+        "zoom": {
+          "type": "number",
+          "default": null,
+          "doc": "Zoom MapLibre opcional; prevalece sobre span."
+        },
+        "pitch": {
+          "type": "number",
+          "default": 60,
+          "doc": "Inclinación en grados.",
+          "min": 0,
+          "max": 85
+        },
+        "bearing": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rumbo en grados."
+        },
+        "lift": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desplazar centro hacia abajo: fracción de altura.",
+          "min": 0,
+          "max": 0.9
+        },
+        "arc": {
+          "type": "number",
+          "default": 0,
+          "doc": "Alejamiento adicional durante un vuelo largo."
+        },
+        "ease": {
+          "type": "string",
+          "default": "out",
+          "doc": "Curva de velocidad: out o inOut."
+        },
+        "drift": {
+          "type": "object",
+          "default": {
+            "z": 0.01
+          },
+          "doc": "Deriva posterior a la llegada; ver ESCENA.md."
+        },
+        "settle": {
+          "type": "number",
+          "default": 5,
+          "doc": "Amortiguación de la deriva."
+        },
+        "through": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Continuar trayectoria sin detenerse."
+        }
+      },
+      "example": {
+        "t": 1,
+        "focus": [
+          -97,
+          34
+        ],
+        "span": 60,
+        "pitch": 58,
+        "bearing": 4,
+        "dur": 3
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.cameraFly&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.cameraFly"
+      }
+    },
+    {
+      "id": "atlas.cameraZoom",
+      "name": "atlas.cameraZoom",
+      "label": "atlas.cameraZoom",
+      "kind": "component",
+      "summary": "Acercamiento con encuadre y deriva.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 3,
+          "doc": "Segundos del vuelo desde la pose anterior.",
+          "min": 0.001
+        },
+        "focus": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "span": {
+          "type": "number",
+          "default": 62,
+          "doc": "Ancho del encuadre en grados de longitud.",
+          "min": 0.001
+        },
+        "zoom": {
+          "type": "number",
+          "default": null,
+          "doc": "Zoom MapLibre opcional; prevalece sobre span."
+        },
+        "pitch": {
+          "type": "number",
+          "default": 60,
+          "doc": "Inclinación en grados.",
+          "min": 0,
+          "max": 85
+        },
+        "bearing": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rumbo en grados."
+        },
+        "lift": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desplazar centro hacia abajo: fracción de altura.",
+          "min": 0,
+          "max": 0.9
+        },
+        "arc": {
+          "type": "number",
+          "default": 0,
+          "doc": "Alejamiento adicional durante un vuelo largo."
+        },
+        "ease": {
+          "type": "string",
+          "default": "out",
+          "doc": "Curva de velocidad: out o inOut."
+        },
+        "drift": {
+          "type": "object",
+          "default": {
+            "z": 0.01
+          },
+          "doc": "Deriva posterior a la llegada; ver ESCENA.md."
+        },
+        "settle": {
+          "type": "number",
+          "default": 5,
+          "doc": "Amortiguación de la deriva."
+        },
+        "through": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Continuar trayectoria sin detenerse."
+        }
+      },
+      "example": {
+        "t": 1,
+        "focus": [
+          -97.74,
+          30.27
+        ],
+        "span": 35,
+        "pitch": 58,
+        "dur": 3
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.cameraZoom&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.cameraZoom"
+      }
+    },
+    {
+      "id": "atlas.cameraOrbit",
+      "name": "atlas.cameraOrbit",
+      "label": "atlas.cameraOrbit",
+      "kind": "component",
+      "summary": "Giro suave manteniendo la región en foco.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "dur": {
+          "type": "number",
+          "default": 3,
+          "doc": "Segundos del vuelo desde la pose anterior.",
+          "min": 0.001
+        },
+        "focus": {
+          "type": "place",
+          "default": [
+            2.35,
+            48.86
+          ],
+          "doc": "Coordenadas [longitud,latitud] o clave de scene.places / región resuelta.",
+          "required": true
+        },
+        "span": {
+          "type": "number",
+          "default": 62,
+          "doc": "Ancho del encuadre en grados de longitud.",
+          "min": 0.001
+        },
+        "zoom": {
+          "type": "number",
+          "default": null,
+          "doc": "Zoom MapLibre opcional; prevalece sobre span."
+        },
+        "pitch": {
+          "type": "number",
+          "default": 60,
+          "doc": "Inclinación en grados.",
+          "min": 0,
+          "max": 85
+        },
+        "bearing": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rumbo en grados."
+        },
+        "lift": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desplazar centro hacia abajo: fracción de altura.",
+          "min": 0,
+          "max": 0.9
+        },
+        "arc": {
+          "type": "number",
+          "default": 0,
+          "doc": "Alejamiento adicional durante un vuelo largo."
+        },
+        "ease": {
+          "type": "string",
+          "default": "out",
+          "doc": "Curva de velocidad: out o inOut."
+        },
+        "drift": {
+          "type": "object",
+          "default": {
+            "z": 0.01
+          },
+          "doc": "Deriva posterior a la llegada; ver ESCENA.md."
+        },
+        "settle": {
+          "type": "number",
+          "default": 5,
+          "doc": "Amortiguación de la deriva."
+        },
+        "through": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Continuar trayectoria sin detenerse."
+        }
+      },
+      "example": {
+        "t": 1,
+        "focus": [
+          -97,
+          34
+        ],
+        "span": 60,
+        "pitch": 58,
+        "bearing": 35,
+        "dur": 4
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.cameraOrbit&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.cameraOrbit"
+      }
+    },
+    {
+      "id": "atlas.lookSateliteRealista",
+      "name": "atlas.lookSateliteRealista",
+      "label": "atlas.lookSateliteRealista",
+      "kind": "component",
+      "summary": "Estilo de mapa: satelite-realista.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "look": {
+          "type": "string",
+          "default": "satelite-realista",
+          "doc": "Nombre de look local.",
+          "values": [
+            "satelite-realista",
+            "satelite-etiquetado",
+            "satelite-noticiero",
+            "oscuro",
+            "claro",
+            "politico",
+            "historico-papel",
+            "espacio"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duración de interpolación.",
+          "min": 0
+        },
+        "overrides": {
+          "type": "object",
+          "default": {},
+          "doc": "Tokens que reemplazan al look: terreno, etiquetas, fronteras, satélite, proyección."
+        }
+      },
+      "example": {
+        "t": 1,
+        "look": "satelite-realista",
+        "dur": 1.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.lookSateliteRealista&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.lookSateliteRealista"
+      }
+    },
+    {
+      "id": "atlas.lookSateliteEtiquetado",
+      "name": "atlas.lookSateliteEtiquetado",
+      "label": "atlas.lookSateliteEtiquetado",
+      "kind": "component",
+      "summary": "Estilo de mapa: satelite-etiquetado.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "look": {
+          "type": "string",
+          "default": "satelite-etiquetado",
+          "doc": "Nombre de look local.",
+          "values": [
+            "satelite-realista",
+            "satelite-etiquetado",
+            "satelite-noticiero",
+            "oscuro",
+            "claro",
+            "politico",
+            "historico-papel",
+            "espacio"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duración de interpolación.",
+          "min": 0
+        },
+        "overrides": {
+          "type": "object",
+          "default": {},
+          "doc": "Tokens que reemplazan al look: terreno, etiquetas, fronteras, satélite, proyección."
+        }
+      },
+      "example": {
+        "t": 1,
+        "look": "satelite-etiquetado",
+        "dur": 1.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.lookSateliteEtiquetado&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.lookSateliteEtiquetado"
+      }
+    },
+    {
+      "id": "atlas.lookSateliteNoticiero",
+      "name": "atlas.lookSateliteNoticiero",
+      "label": "atlas.lookSateliteNoticiero",
+      "kind": "component",
+      "summary": "Estilo de mapa: satelite-noticiero.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "look": {
+          "type": "string",
+          "default": "satelite-noticiero",
+          "doc": "Nombre de look local.",
+          "values": [
+            "satelite-realista",
+            "satelite-etiquetado",
+            "satelite-noticiero",
+            "oscuro",
+            "claro",
+            "politico",
+            "historico-papel",
+            "espacio"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duración de interpolación.",
+          "min": 0
+        },
+        "overrides": {
+          "type": "object",
+          "default": {},
+          "doc": "Tokens que reemplazan al look: terreno, etiquetas, fronteras, satélite, proyección."
+        }
+      },
+      "example": {
+        "t": 1,
+        "look": "satelite-noticiero",
+        "dur": 1.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.lookSateliteNoticiero&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.lookSateliteNoticiero"
+      }
+    },
+    {
+      "id": "atlas.lookOscuro",
+      "name": "atlas.lookOscuro",
+      "label": "atlas.lookOscuro",
+      "kind": "component",
+      "summary": "Estilo de mapa: oscuro.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "look": {
+          "type": "string",
+          "default": "oscuro",
+          "doc": "Nombre de look local.",
+          "values": [
+            "satelite-realista",
+            "satelite-etiquetado",
+            "satelite-noticiero",
+            "oscuro",
+            "claro",
+            "politico",
+            "historico-papel",
+            "espacio"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duración de interpolación.",
+          "min": 0
+        },
+        "overrides": {
+          "type": "object",
+          "default": {},
+          "doc": "Tokens que reemplazan al look: terreno, etiquetas, fronteras, satélite, proyección."
+        }
+      },
+      "example": {
+        "t": 1,
+        "look": "oscuro",
+        "dur": 1.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.lookOscuro&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.lookOscuro"
+      }
+    },
+    {
+      "id": "atlas.lookClaro",
+      "name": "atlas.lookClaro",
+      "label": "atlas.lookClaro",
+      "kind": "component",
+      "summary": "Estilo de mapa: claro.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "look": {
+          "type": "string",
+          "default": "claro",
+          "doc": "Nombre de look local.",
+          "values": [
+            "satelite-realista",
+            "satelite-etiquetado",
+            "satelite-noticiero",
+            "oscuro",
+            "claro",
+            "politico",
+            "historico-papel",
+            "espacio"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duración de interpolación.",
+          "min": 0
+        },
+        "overrides": {
+          "type": "object",
+          "default": {},
+          "doc": "Tokens que reemplazan al look: terreno, etiquetas, fronteras, satélite, proyección."
+        }
+      },
+      "example": {
+        "t": 1,
+        "look": "claro",
+        "dur": 1.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.lookClaro&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.lookClaro"
+      }
+    },
+    {
+      "id": "atlas.lookPolitico",
+      "name": "atlas.lookPolitico",
+      "label": "atlas.lookPolitico",
+      "kind": "component",
+      "summary": "Estilo de mapa: politico.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "look": {
+          "type": "string",
+          "default": "politico",
+          "doc": "Nombre de look local.",
+          "values": [
+            "satelite-realista",
+            "satelite-etiquetado",
+            "satelite-noticiero",
+            "oscuro",
+            "claro",
+            "politico",
+            "historico-papel",
+            "espacio"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duración de interpolación.",
+          "min": 0
+        },
+        "overrides": {
+          "type": "object",
+          "default": {},
+          "doc": "Tokens que reemplazan al look: terreno, etiquetas, fronteras, satélite, proyección."
+        }
+      },
+      "example": {
+        "t": 1,
+        "look": "politico",
+        "dur": 1.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.lookPolitico&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.lookPolitico"
+      }
+    },
+    {
+      "id": "atlas.lookHistoricoPapel",
+      "name": "atlas.lookHistoricoPapel",
+      "label": "atlas.lookHistoricoPapel",
+      "kind": "component",
+      "summary": "Estilo de mapa: historico-papel.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "look": {
+          "type": "string",
+          "default": "historico-papel",
+          "doc": "Nombre de look local.",
+          "values": [
+            "satelite-realista",
+            "satelite-etiquetado",
+            "satelite-noticiero",
+            "oscuro",
+            "claro",
+            "politico",
+            "historico-papel",
+            "espacio"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duración de interpolación.",
+          "min": 0
+        },
+        "overrides": {
+          "type": "object",
+          "default": {},
+          "doc": "Tokens que reemplazan al look: terreno, etiquetas, fronteras, satélite, proyección."
+        }
+      },
+      "example": {
+        "t": 1,
+        "look": "historico-papel",
+        "dur": 1.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.lookHistoricoPapel&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.lookHistoricoPapel"
+      }
+    },
+    {
+      "id": "atlas.lookEspacio",
+      "name": "atlas.lookEspacio",
+      "label": "atlas.lookEspacio",
+      "kind": "component",
+      "summary": "Estilo de mapa: espacio.",
+      "tags": [],
+      "params": {
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo de inicio o ancla de voz @palabra / @frase#2 / @palabra:end+0.2."
+        },
+        "look": {
+          "type": "string",
+          "default": "espacio",
+          "doc": "Nombre de look local.",
+          "values": [
+            "satelite-realista",
+            "satelite-etiquetado",
+            "satelite-noticiero",
+            "oscuro",
+            "claro",
+            "politico",
+            "historico-papel",
+            "espacio"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 1.5,
+          "doc": "Duración de interpolación.",
+          "min": 0
+        },
+        "overrides": {
+          "type": "object",
+          "default": {},
+          "doc": "Tokens que reemplazan al look: terreno, etiquetas, fronteras, satélite, proyección."
+        }
+      },
+      "example": {
+        "t": 1,
+        "look": "espacio",
+        "dur": 1.5
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.lookEspacio&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.lookEspacio"
+      }
+    },
+    {
+      "id": "atlas.introv1",
+      "name": "atlas.introv1",
+      "label": "atlas.introv1",
+      "kind": "component",
+      "summary": "Entrada de título con golpe.",
+      "tags": [],
+      "params": {
+        "style": {
+          "type": "string",
+          "default": "v1",
+          "doc": "Variante de apertura.",
+          "values": [
+            "v1",
+            "v2"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto principal."
+        },
+        "dur": {
+          "type": "number",
+          "default": 3,
+          "doc": "Duración de apertura.",
+          "min": 0.1
+        },
+        "hideCaptions": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Ocultar subtítulos durante apertura."
+        }
+      },
+      "example": {
+        "style": "v1",
+        "text": "¿CÓMO SE CONECTA EL MUNDO?",
+        "dur": 3
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.introv1&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.introv1"
+      }
+    },
+    {
+      "id": "atlas.introv2",
+      "name": "atlas.introv2",
+      "label": "atlas.introv2",
+      "kind": "component",
+      "summary": "Entrada de título con pregunta y revelación.",
+      "tags": [],
+      "params": {
+        "style": {
+          "type": "string",
+          "default": "v2",
+          "doc": "Variante de apertura.",
+          "values": [
+            "v1",
+            "v2"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto principal."
+        },
+        "dur": {
+          "type": "number",
+          "default": 3,
+          "doc": "Duración de apertura.",
+          "min": 0.1
+        },
+        "hideCaptions": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Ocultar subtítulos durante apertura."
+        }
+      },
+      "example": {
+        "style": "v2",
+        "text": "¿CÓMO SE CONECTA EL MUNDO?",
+        "dur": 3
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.introv2&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.introv2"
+      }
+    },
+    {
+      "id": "atlas.outrov1",
+      "name": "atlas.outrov1",
+      "label": "atlas.outrov1",
+      "kind": "component",
+      "summary": "Cierre con Tierra grande y giro rápido.",
+      "tags": [],
+      "params": {
+        "duration": {
+          "type": "number",
+          "default": 8,
+          "doc": "Duración del fragmento. Al insertar, desplazar todos sus tiempos al cierre del episodio."
+        },
+        "camera": {
+          "type": "array",
+          "default": [
+            {
+              "t": 0,
+              "focus": [
+                24,
+                -2
+              ],
+              "span": 112,
+              "pitch": 0,
+              "lift": 0
+            },
+            {
+              "t": 0,
+              "focus": [
+                90,
+                -2
+              ],
+              "span": 112,
+              "pitch": 0,
+              "lift": 0,
+              "dur": 8
+            }
+          ],
+          "doc": "Poses de globo; conservar encuadre y desplazar t."
+        },
+        "layers": {
+          "type": "array",
+          "default": [
+            {
+              "type": "title",
+              "text": "UN MUNDO CONECTADO",
+              "sub": "Atlas Cinemático",
+              "t": 1.2,
+              "y": 0.3,
+              "size": 56
+            }
+          ],
+          "doc": "Título final configurable."
+        },
+        "look": {
+          "type": "string",
+          "default": "espacio",
+          "doc": "Look del cierre."
+        }
+      },
+      "example": {
+        "duration": 8,
+        "look": "espacio",
+        "lookOverrides": {
+          "terrain": {
+            "exaggeration": 0
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "focus": [
+              24,
+              -2
+            ],
+            "span": 112,
+            "pitch": 0,
+            "lift": 0
+          },
+          {
+            "t": 0,
+            "focus": [
+              90,
+              -2
+            ],
+            "span": 112,
+            "pitch": 0,
+            "lift": 0,
+            "dur": 8
+          }
+        ],
+        "layers": [
+          {
+            "type": "title",
+            "text": "UN MUNDO CONECTADO",
+            "sub": "Atlas Cinemático",
+            "t": 1.2,
+            "y": 0.3,
+            "size": 56
+          }
+        ]
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.outrov1&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.outrov1"
+      }
+    },
+    {
+      "id": "atlas.outrov2",
+      "name": "atlas.outrov2",
+      "label": "atlas.outrov2",
+      "kind": "component",
+      "summary": "Cierre con Tierra abajo y título en la franja superior.",
+      "tags": [],
+      "params": {
+        "duration": {
+          "type": "number",
+          "default": 8,
+          "doc": "Duración del fragmento. Al insertar, desplazar todos sus tiempos al cierre del episodio."
+        },
+        "camera": {
+          "type": "array",
+          "default": [
+            {
+              "t": 0,
+              "focus": [
+                24,
+                -2
+              ],
+              "span": 132,
+              "pitch": 0,
+              "lift": 0.3
+            },
+            {
+              "t": 0,
+              "focus": [
+                90,
+                -2
+              ],
+              "span": 132,
+              "pitch": 0,
+              "lift": 0.3,
+              "dur": 8
+            }
+          ],
+          "doc": "Poses de globo; conservar encuadre y desplazar t."
+        },
+        "layers": {
+          "type": "array",
+          "default": [
+            {
+              "type": "title",
+              "text": "UN MUNDO CONECTADO",
+              "sub": "Atlas Cinemático",
+              "t": 1.2,
+              "y": 0.18,
+              "size": 56
+            }
+          ],
+          "doc": "Título final configurable."
+        },
+        "look": {
+          "type": "string",
+          "default": "espacio",
+          "doc": "Look del cierre."
+        }
+      },
+      "example": {
+        "duration": 8,
+        "look": "espacio",
+        "lookOverrides": {
+          "terrain": {
+            "exaggeration": 0
+          }
+        },
+        "camera": [
+          {
+            "t": 0,
+            "focus": [
+              24,
+              -2
+            ],
+            "span": 132,
+            "pitch": 0,
+            "lift": 0.3
+          },
+          {
+            "t": 0,
+            "focus": [
+              90,
+              -2
+            ],
+            "span": 132,
+            "pitch": 0,
+            "lift": 0.3,
+            "dur": 8
+          }
+        ],
+        "layers": [
+          {
+            "type": "title",
+            "text": "UN MUNDO CONECTADO",
+            "sub": "Atlas Cinemático",
+            "t": 1.2,
+            "y": 0.18,
+            "size": 56
+          }
+        ]
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.outrov2&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.outrov2"
+      }
+    },
+    {
+      "id": "atlas.captions",
+      "name": "atlas.captions",
+      "label": "atlas.captions",
+      "kind": "component",
+      "summary": "Subtítulos sincronizados con la transcripción por palabra.",
+      "tags": [],
+      "params": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "doc": "Activar subtítulos. Requiere config.lyricsUrl."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.885,
+          "doc": "Altura en vertical.",
+          "min": 0,
+          "max": 1
+        },
+        "yLandscape": {
+          "type": "number",
+          "default": 0.915,
+          "doc": "Altura en horizontal.",
+          "min": 0,
+          "max": 1
+        },
+        "maxWords": {
+          "type": "number",
+          "default": 4,
+          "doc": "Máximo de palabras por bloque.",
+          "min": 1
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffd21a",
+          "doc": "Color del texto."
+        }
+      },
+      "example": {
+        "enabled": true,
+        "y": 0.885,
+        "yLandscape": 0.915,
+        "maxWords": 4
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.captions&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.captions"
+      }
+    },
+    {
+      "id": "atlas.audio",
+      "name": "atlas.audio",
+      "label": "atlas.audio",
+      "kind": "component",
+      "summary": "Narración principal: reloj de animación y pista de exportación.",
+      "tags": [],
+      "params": {
+        "src": {
+          "type": "string",
+          "default": "assets/song.mp3",
+          "doc": "Archivo local de la mezcla principal. Conservar narración limpia separada si hay música.",
+          "required": true
+        }
+      },
+      "example": {
+        "src": "assets/song.mp3"
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.audio&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.audio"
+      }
+    },
+    {
+      "id": "atlas.animation",
+      "name": "atlas.animation",
+      "label": "atlas.animation",
+      "kind": "component",
+      "summary": "Entrada y salida compartidas para fotos, textos, métricas y rutas.",
+      "tags": [],
+      "params": {
+        "style": {
+          "type": "string",
+          "default": "fade",
+          "doc": "Efecto.",
+          "values": [
+            "fade",
+            "rise",
+            "scale",
+            "slide-left",
+            "slide-right"
+          ]
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Duración en segundos.",
+          "min": 0.001
+        },
+        "distance": {
+          "type": "number",
+          "default": 65,
+          "doc": "Desplazamiento en px de diseño.",
+          "min": 0
+        }
+      },
+      "example": {
+        "enter": {
+          "style": "rise",
+          "dur": 0.6,
+          "distance": 65
+        },
+        "exit": {
+          "style": "fade",
+          "dur": 0.4
+        },
+        "out": 6
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.animation&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.animation"
+      }
+    },
+    {
+      "id": "atlas.data",
+      "name": "atlas.data",
+      "label": "atlas.data",
+      "kind": "component",
+      "summary": "Registrar un dato una sola vez y reutilizarlo por dataRef en rutas e indicadores.",
+      "tags": [],
+      "params": {
+        "id": {
+          "type": "string",
+          "default": "dato-demo",
+          "required": true,
+          "doc": "Identificador único para dataRef en flechas y métricas."
+        },
+        "value": {
+          "type": "number",
+          "default": 25,
+          "required": true,
+          "doc": "Valor numérico investigado; 25 es ilustrativo."
+        },
+        "unit": {
+          "type": "string",
+          "default": "%",
+          "required": true,
+          "doc": "Unidad (% para participación)."
+        },
+        "label": {
+          "type": "string",
+          "default": "DATO ILUSTRATIVO",
+          "required": true,
+          "doc": "Texto visible junto a la cifra."
+        },
+        "year": {
+          "type": "string",
+          "default": "AÑO",
+          "required": true,
+          "doc": "Año o período de la estadística."
+        },
+        "source": {
+          "type": "string",
+          "default": "fuente-1",
+          "required": true,
+          "doc": "ID de research.sources o URL de la tabla primaria."
+        },
+        "scope": {
+          "type": "string",
+          "default": "Definir flujo, bienes/servicios y denominador",
+          "required": true,
+          "doc": "Flujo, alcance y denominador del porcentaje."
+        },
+        "illustrative": {
+          "type": "boolean",
+          "default": true,
+          "required": true,
+          "doc": "true para demos; sólo poner false después de verificar la cifra y su fuente."
+        }
+      },
+      "example": {
+        "id": "dato-demo",
+        "value": 25,
+        "unit": "%",
+        "label": "DATO ILUSTRATIVO",
+        "year": "AÑO",
+        "source": "fuente-1",
+        "scope": "Definir flujo, bienes/servicios y denominador",
+        "illustrative": true
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.data&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "atlas.data"
+      }
+    }
+  ]
+}

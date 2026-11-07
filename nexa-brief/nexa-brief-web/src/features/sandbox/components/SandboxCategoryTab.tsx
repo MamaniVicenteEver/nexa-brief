@@ -22,33 +22,32 @@ export function SandboxCategoryTab({
       type="button"
       role="tab"
       aria-selected={selected}
+      data-category-id="sandbox"
+      tabIndex={selected ? 0 : -1}
       onClick={onSelect}
       className={cn(
-        "flex min-w-0 flex-col gap-2 rounded-2xl border p-4 text-left transition-colors",
+        "flex w-max min-w-[196px] max-w-[260px] shrink-0 snap-start flex-col gap-1 rounded-xl border px-3 py-2.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
         selected
           ? "border-nb-ink bg-nb-ink text-[#fafaf7]"
           : "border-nb-line bg-nb-surface text-nb-ink hover:border-nb-ink",
       )}
     >
-      <div className="flex items-start justify-between gap-2">
-        <span className="truncate text-[15px] font-extrabold tracking-[-0.01em]">
+      <div className="flex items-center justify-between gap-1.5">
+        <span className="truncate text-[14px] font-extrabold tracking-[-0.01em]">
           {t("tabTitle")}
         </span>
         <span
           className={cn(
-            "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
+            "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase",
             selected ? "bg-nb-accent-gold text-[#7a5a10]" : "bg-nb-accent-gold/40 text-[#7a5a10]",
           )}
         >
           {t("tabBadge")}
         </span>
       </div>
-      <span className={cn("line-clamp-2 text-[12px]", selected ? "opacity-80" : "text-nb-mute")}>
-        {t("tabDescription")}
-      </span>
       <div
         className={cn(
-          "mt-auto flex flex-wrap items-center gap-x-2 text-[11px] font-semibold",
+          "flex items-center gap-x-1.5 whitespace-nowrap text-[11px] font-medium",
           selected ? "opacity-75" : "text-nb-ink-soft",
         )}
       >

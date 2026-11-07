@@ -105,7 +105,16 @@ def reap_workspaces(roots, min_age=600):
 
 def cycle(config):
     profile = Path(config["profile"])
-    queue = profile / "data/video_backups"
+    legacy_queue = profile / "data/video_backups"
+    queue = legacy_queue
+    manifest = profile / "profile.json"
+    version = json.loads(manifest.read_text()).get("schema_version") if manifest.exists() else 1
+    if type(version) is not int or version not in (1, 2, 3):
+        raise ValueError("unsupported profile schema")
+    output_root = profile / ("renders" if version >= 2 else "output")
+    db_queue = profile / ".system/runtime/video_backups" if version >= 2 else queue
+    if version >= 3:
+        queue = db_queue
     queue.mkdir(parents=True, exist_ok=True, mode=0o700)
     activation_path = queue / "activation.json"
     if not activation_path.exists():
@@ -114,18 +123,22 @@ def cycle(config):
         )
     activation = json.loads(activation_path.read_text())["started_at"]
     errors = []
+    if version >= 2 and (legacy_queue / "queue.sqlite3").exists():
+        errors.append({"kind": "legacy_queue", "error": "requires explicit migration"})
     enqueued = 0
     try:
-        specs, errors = discover(
-            profile / "data/jobs/jobs.json",
-            profile / "output",
+        specs, discovery_errors = discover(
+            profile / ("data/json/jobs.json" if version >= 3 else "data/jobs/jobs.json"),
+            output_root,
             Path(config["templates"]),
             activation,
             queue / "events",
+            profile_root=profile if version >= 2 else None,
         )
+        errors.extend(discovery_errors)
         for spec in specs:
             try:
-                enqueued += bool(enqueue_spec(queue / "queue.sqlite3", spec))
+                enqueued += bool(enqueue_spec(db_queue / "queue.sqlite3", spec))
             except Exception as exc:
                 errors.append(
                     {
@@ -139,17 +152,19 @@ def cycle(config):
     worker_error = None
     try:
         process_pending(
-            queue,
+            db_queue,
             Path(config["mount"]),
             config["uuid"],
-            [profile / "output", profile / "data", Path(config["templates"])],
+            [output_root, profile / "data", Path(config["templates"])] +
+            ([profile / "productions", profile / "resources"] if version >= 2 else []),
         )
     except BlockingIOError:
         pass
     except Exception as exc:
         worker_error = type(exc).__name__
-    removed = reap_workspaces([profile / "output", Path(config["templates"])])
-    with contextlib.closing(init_db(queue / "queue.sqlite3")) as db:
+    removed = reap_workspaces([output_root, Path(config["templates"])] +
+                              ([profile / ".system/runtime"] if version >= 2 else []))
+    with contextlib.closing(init_db(db_queue / "queue.sqlite3")) as db:
         counts = dict(db.execute("SELECT status,count(*) FROM backups GROUP BY status"))
         failures = [
             {"job_id": r[0], "attempts": r[1], "error": r[2]}
@@ -179,6 +194,9 @@ def main():
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
     queue = Path(config["profile"]) / "data/video_backups"
+    manifest = Path(config["profile"]) / "profile.json"
+    if manifest.exists() and json.loads(manifest.read_text()).get("schema_version", 1) >= 3:
+        queue = Path(config["profile"]) / ".system/runtime/video_backups"
     queue.mkdir(parents=True, exist_ok=True, mode=0o700)
     with (queue / "supervisor.lock").open("a") as lock:
         try:

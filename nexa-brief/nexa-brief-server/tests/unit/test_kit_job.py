@@ -1,5 +1,4 @@
 import importlib.util
-import json
 import os
 from pathlib import Path
 import shutil
@@ -57,6 +56,8 @@ def test_voice_failure_interruption_and_independent_locks(video, monkeypatch):
 
 
 def test_voice_cli_passes_options_and_wait_does_not_run(video, monkeypatch):
+    # main() normalmente termina el proceso; aquí debe restaurarse su entorno.
+    monkeypatch.setenv("NEXA_EXPLAINER_RESOURCE_BUDGET", "0")
     spec = importlib.util.spec_from_file_location('kit_cli_test', TOOLS / 'kit.py')
     kit = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(kit)
@@ -76,6 +77,7 @@ def test_voice_cli_passes_options_and_wait_does_not_run(video, monkeypatch):
 
 
 def test_timeout_validation(monkeypatch):
+    monkeypatch.setenv("NEXA_EXPLAINER_RESOURCE_BUDGET", "0")
     spec = importlib.util.spec_from_file_location('kit_cli_validation', TOOLS / 'kit.py')
     kit = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(kit)

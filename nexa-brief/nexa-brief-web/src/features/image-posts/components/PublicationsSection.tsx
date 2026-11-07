@@ -11,9 +11,11 @@ import {
 	Send,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CategoryNode } from "@/features/categories";
 import { useExplainerVideos } from "@/features/explainer";
+import { usePreparationView } from "@/features/templates/lib/preparation-view";
+import { isRenderedImage } from "@/features/templates/lib/preparation-items";
 import { cn } from "@/lib/utils";
 import {
 	Dialog,
@@ -50,6 +52,8 @@ export function PublicationsSection({
 	embedded?: boolean;
 }) {
 	const t = useTranslations("imagePosts");
+	const prep = useTranslations("templates.prep");
+	const view = usePreparationView();
 	const [tab, setTab] = useState<SectionTab>("posts");
 	const [editorOpen, setEditorOpen] = useState(false);
 	const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
@@ -67,6 +71,12 @@ export function PublicationsSection({
 	const [reconcileError, setReconcileError] = useState<string | null>(null);
 	const [remoteIds, setRemoteIds] = useState<Record<string, string>>({});
 	const posts = postsQuery.data ?? [];
+	const visiblePosts = embedded && view
+		? posts.filter((post) => view === "rendered" ? isRenderedImage(post) : !isRenderedImage(post))
+		: posts;
+	useEffect(() => {
+		if (embedded && view) setTab("posts");
+	}, [embedded, view]);
 	const realSources = (videosQuery.data ?? [])
 		.filter((video) => video.ready && video.publishReady && !video.demo)
 		.map((video) => ({
@@ -144,7 +154,7 @@ export function PublicationsSection({
 			</div>
 
 			<div className="flex flex-wrap items-center justify-between gap-3">
-				<div
+				{!embedded && <div
 					role="tablist"
 					aria-label={t("section.tabsLabel")}
 					className="flex gap-1 rounded-full border border-nb-line bg-white/70 p-1"
@@ -179,7 +189,13 @@ export function PublicationsSection({
 						<Images className="mr-1.5 inline size-3.5" aria-hidden />
 						{t("section.galleryTab")}
 					</button>
-				</div>
+				</div>}
+				{embedded && (
+					<button type="button" onClick={() => setTab(tab === "posts" ? "gallery" : "posts")}
+						className="text-xs font-semibold text-nb-ink-soft underline underline-offset-2">
+						{tab === "posts" ? t("section.galleryTab") : t("section.postsTab")}
+					</button>
+				)}
 				<div className="flex flex-wrap items-center gap-4">
 					{embedded && tab === "posts" && (
 						<button
@@ -252,9 +268,9 @@ export function PublicationsSection({
 						>
 							{t("section.loadError")}
 						</div>
-					) : posts.length ? (
+					) : visiblePosts.length ? (
 						<div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,220px),1fr))] items-start gap-3">
-							{posts.map((post) => (
+							{visiblePosts.map((post) => (
 								<article
 									key={post.postId}
 									className="group flex min-w-0 flex-col overflow-hidden rounded-[10px] border border-black/5 bg-nb-surface shadow-[0_8px_20px_-16px_rgba(40,30,10,0.16)] transition-transform hover:-translate-y-0.5"
@@ -457,6 +473,8 @@ export function PublicationsSection({
 								</article>
 							))}
 						</div>
+					) : embedded && view === "rendered" ? (
+						<p className="py-6 text-sm text-nb-mute">{prep("emptyImagesRendered")}</p>
 					) : (
 						<div className="rounded-2xl border border-dashed border-nb-line bg-white/60 p-9 text-center">
 							<Images className="mx-auto size-7 text-nb-mute/50" aria-hidden />

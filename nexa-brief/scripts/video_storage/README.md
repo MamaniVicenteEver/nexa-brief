@@ -5,10 +5,24 @@ empaquetados/publicados del perfil compartido y los eventos de grabación comple
 del CLI. Funciona para la API local y Docker sin montar el HDD dentro del contenedor.
 
 Los MP4 operativos y los índices de Biblioteca permanecen en el perfil `.local`.
-La cola y su estado están en `data/video_backups/{queue.sqlite3,status.json}`.
+En v1, la cola y su estado están en `data/video_backups/{queue.sqlite3,status.json}`.
+En v2, los eventos y el estado JSON permanecen en `data/video_backups/`, y la cola
+SQLite está en `.system/runtime/video_backups/queue.sqlite3`. Los eventos v2
+referencian producciones y renders del perfil; no duplican el MP4 operativo.
+Si existe una cola v1 al seleccionar v2, el estado informa que requiere una
+migración explícita; no se mueve ni se descarta automáticamente.
 Una indisponibilidad del HDD deja el respaldo pendiente de reintento y no cambia
 el resultado del video. El servicio comprueba el punto de montaje y su UUID real
 antes de escribir y publicar; no crea copias de respaldo en el SSD.
+
+Esta regla también se aplica a respaldos completos, copias de migración y copias
+manuales hechas por agentes. El montaje configurado en este servidor es
+`/home/alfred/.local/mnt/nexa-backups`, UUID `6E2621FB2621C4C5`. Una carpeta con ese
+nombre en el SSD no sirve como destino: debe estar montado el volumen correcto.
+Si falta, el respaldo queda pendiente y no se inventa una ruta local alternativa.
+Los índices, colas y recibos pequeños de operación pueden seguir en el perfil;
+no son un segundo respaldo de sus medios. Véase
+[`almacenamiento-respaldos-limpieza-2026-11.md`](../../nexa-brief-server/docs/almacenamiento-respaldos-limpieza-2026-11.md).
 
 Cada paquete del HDD contiene las salidas finales, fuentes, recursos y metadatos.
 Excluye frames, capturas QA, directorios `work`, cachés y dependencias regenerables.

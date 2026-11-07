@@ -99,7 +99,7 @@ NODETECH (ver `../EXPLAINER.md` §4). Pedile al usuario el nombre y el handle re
 
 - 2026-10-15 · diseño **`dinero`** (réplica de la referencia Klickpin "MONEY" verde de esta carpeta): tipografía
   cinética, fotos en teal, plano verde, ojo de cerradura, ojos. Demo `dinero-demo` con la voz de
-  `nodetech/nacimiento-ia-dartmouth` (sólo prueba visual). Revisión con hoja densa (3 fps) referencia vs render:
+  `productions/nodetech/nacimiento-ia-dartmouth` del perfil activo (sólo prueba visual). Revisión con hoja densa (3 fps) referencia vs render:
   el orden de planos ya coincidía; lo que faltaba estaba DENTRO de los componentes (giro 3D continuo y
   desenfoque de movimiento en `dinero.spin`, tono partido medido en `dinero.count` (sombras cálidas #753f1e, medios #798e85, luces menta #b1d6c6; `keep` 0,04), ojo de cerradura
   centrado sin alejarse, `dinero.outline` en minúsculas con dos palabras por renglón). Comparar siempre a

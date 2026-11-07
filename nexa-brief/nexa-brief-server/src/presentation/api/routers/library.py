@@ -216,7 +216,9 @@ async def transcribe_music(asset_id: str, body: TranscribeRequest | None = None)
     """Re-encola la transcripción (aunque ya tenga letra: es el "reintentar" /
     "volver a transcribir" de la UI). La letra anterior sigue disponible hasta
     que la nueva la reemplaza."""
-    _get_or_404("music", asset_id)
+    entry = _get_or_404("music", asset_id)
+    if entry.source == "production":
+        raise HTTPException(status_code=409, detail="El recurso pertenece a una producción")
     if body and body.language is not None:
         await asset_library.update_asset_metadata("music", asset_id, {"language": body.language})
     entry = await transcription.enqueue(asset_id, get_lyrics_transcriber, force=True)
@@ -436,6 +438,8 @@ async def update_asset(kind: ApiKind, asset_id: str, body: LibraryAssetPatch) ->
         )
     except AssetNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except asset_library.LinkedProductionAssetError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     await asset_library.publish_asset_changed(
         internal, asset_id, action="updated",
         transcription_status=getattr(entry, "transcription_status", None),
@@ -451,6 +455,8 @@ async def delete_asset(kind: ApiKind, asset_id: str) -> LibraryDeleteResponse:
         await asset_library.delete_asset(internal, asset_id)
     except AssetNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except asset_library.LinkedProductionAssetError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     await asset_library.publish_asset_changed(internal, asset_id, action="deleted")
     return LibraryDeleteResponse(kind=kind, asset_id=asset_id)
 

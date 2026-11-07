@@ -21,6 +21,8 @@ from zoneinfo import ZoneInfo
 
 import structlog
 from src.config.settings import settings
+from src.config.profile_layout import layout_for_settings
+from src.config.media_paths import image_key, reel_key
 
 from src.core.image_posts.models import (
     Delivery, DeliverySpec, DeliveryStatus, EditorialRecord, EditorialReview,
@@ -295,7 +297,9 @@ class ImagePostService:
             raise ImagePostError("INVALID_REEL", _safe_error(exc), 422) from exc
         digest = hashlib.sha256(content).hexdigest()
         created = record.created_at.astimezone(timezone.utc)
-        key = f"{record.editorial.category_id}/{created:%Y/%m}/{record.publication_id}/reels/{digest}.mp4"
+        key = (reel_key(record.editorial.category_id, record.post_id, record.publication_id, digest)
+               if layout_for_settings(settings).schema_version >= 3 else
+               f"{record.editorial.category_id}/{created:%Y/%m}/{record.publication_id}/reels/{digest}.mp4")
         media_object = self.media.put(key, content, "video/mp4", digest, if_absent=True)
         return ReelManifest(
             asset_id=f"reel_{digest[:24]}", storage_key=media_object.key,
@@ -397,7 +401,6 @@ class ImagePostService:
             except ValueError as exc:
                 raise ImagePostError("SOURCE_NOT_VERIFIED", str(exc), 422) from None
         elif strategy.id == "amarillista":
-            from .strategies.amarillista import CONFIG
             def approved_role(usage):
                 match = re.search(r'rol=([a-z_]+[0-9]*)\b', usage)
                 return match.group(1) if match else ''
@@ -502,11 +505,14 @@ class ImagePostService:
             raise ImagePostError("META_ADAPTER_UNAVAILABLE", "El publicador de imágenes todavía no está configurado.", 503) from None
 
     def trace_folder(self, record: PublicationRecord) -> Path:
-        root = Path(getattr(self.media, "root", settings.data_dir / "publicaciones"))
+        root = Path(getattr(self.media, "trace_root", getattr(self.media, "root", settings.data_dir / "publicaciones")))
+        if layout_for_settings(settings).schema_version >= 3 and hasattr(self.media, "trace_root"):
+            return root / record.publication_id
         return root / record.editorial.category_id / record.created_at.strftime("%Y/%m") / record.publication_id
 
     def get_trace(self, record: PublicationRecord) -> dict[str, Any] | None:
-        return read_trace(self.trace_folder(record) / "trace.json")
+        key = f"{record.editorial.category_id}/{record.created_at:%Y/%m}/{record.publication_id}/trace.json"
+        return self.media.read_trace(key)
 
     async def create_plan(self, request: dict[str, Any], idempotency_key: str | None = None) -> tuple[EngineImagePlan, PublicationRecord]:
         from src.adapters.models.hub import call_log_dir
@@ -536,8 +542,10 @@ class ImagePostService:
                 return _parse_plan(previous.technical.composition_plan), previous
         created = _now()
         publication_id, post_id = _id("pub"), _id("img")
-        root = Path(getattr(self.media, "root", settings.data_dir / "publicaciones"))
-        trace = Trace(root/category/created.strftime("%Y/%m")/publication_id, {
+        root = Path(getattr(self.media, "trace_root", getattr(self.media, "root", settings.data_dir / "publicaciones")))
+        trace_path = (root / publication_id if layout_for_settings(settings).schema_version >= 3
+                      and hasattr(self.media, "trace_root") else root/category/created.strftime("%Y/%m")/publication_id)
+        trace = Trace(trace_path, {
             "publication_id": publication_id, "post_id": post_id, "category": category,
             "strategy": strategy.id, "narrative": request["narrative"] if strategy.id == "amarillista" else None,
             "level": request["level"] if strategy.id == "amarillista" else None,
@@ -966,7 +974,8 @@ class ImagePostService:
                 raise ImagePostError("INVALID_IMAGE", "El hash del manifiesto no coincide")
             slide_id = str(_field(asset, "slide_id") or plan.slides[index - 1].slide_id)
             asset_id = str(_field(asset, "asset_id") or _id("asset"))
-            key = f"{prefix}/slides/{index:02}.jpg"
+            key = (image_key(record.editorial.category_id, record.post_id, record.publication_id, asset_id)
+                   if layout_for_settings(settings).schema_version >= 3 else f"{prefix}/slides/{index:02}.jpg")
             media_object = self.media.put(key, content, "image/jpeg", digest, if_absent=True)
             stored_slides.append(RenderedSlide(
                 slide_id=slide_id, order=index, asset_id=asset_id, storage_key=media_object.key,

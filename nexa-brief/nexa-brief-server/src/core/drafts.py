@@ -280,7 +280,7 @@ def _sync_intro(draft_id: str, details: DraftDetails | None) -> None:
 
     job = load_job(draft_id)
     if details is not None and job is not None:
-        draft_details.apply_to_intro(job.artifacts.output_dir, details)
+        draft_details.apply_to_intro(job.artifacts.content_dir, details)
 
 
 async def save_details(draft_id: str, details: DraftDetails, *, edited: bool = True) -> Draft | None:

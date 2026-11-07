@@ -14,7 +14,7 @@ Uso (rutas de página relativas a src/templates/):
   python3 _tools/commercial/render_promo.py nodemotion/lyrics/lyrics-grunge/index.html out.mp4 [--fps 30] [--size 1920x1080] [--from 0] [--to END] [--workers 3]
 Requiere: playwright (chromium) y ffmpeg. Levanta su propio servidor HTTP.
 """
-import argparse, asyncio, functools, http.server, json, pathlib, subprocess, threading
+import argparse, asyncio, functools, http.server, json, pathlib, threading
 import os
 import sys
 import signal
@@ -26,12 +26,17 @@ CHROMIUM = os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH") or None
 HERE = pathlib.Path(__file__).resolve().parents[2]   # src/templates/
 
 sys.path.insert(0, str(HERE / "_tools"))
-from http_media import MediaRequestHandler as _Quiet
+from http_media import MediaRequestHandler as _Quiet, ProfileContentMixin
 sys.path.insert(0, str(HERE.parent.parent))
 from src.adapters.recorder.infrastructure.render_workspace import render_workspace
+from src.config.content_paths import resolve_content_key  # noqa: E402
+
+
+class ContentHandler(ProfileContentMixin, _Quiet):
+    pass
 
 def serve(root):
-    handler = functools.partial(_Quiet, directory=str(root))
+    handler = functools.partial(ContentHandler, directory=str(root))
     httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     return httpd
@@ -59,7 +64,7 @@ async def render(args):
     output = pathlib.Path(args.out).resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     page = pathlib.Path(args.page)
-    folder = HERE / page.parent
+    folder = resolve_content_key(args.page).parent
     cands = [folder / "assets" / (page.stem + ".config.json"), folder / "assets" / "config.json"]
     cfg_file = next(c for c in cands if c.exists())
     cfg = json.loads(cfg_file.read_text())["configs"][0]

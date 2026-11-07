@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from typing import Literal
 
 from src.config.settings import settings
+from src.config.content_paths import sandbox_root
 from src.core.prototypes import briefs, ideas, runs
 from src.presentation.api.security import require_internal, sign_link, verify_link
 
@@ -37,7 +38,7 @@ def _run_response(record: dict, *, with_log: bool = False) -> dict:
         if key not in {"log_path", "prompt"}
     }
     template_path = (
-        settings.templates_dir / "sandbox" / record["category"] / record["template_id"] / "index.html"
+        sandbox_root() / record["category"] / record["template_id"] / "index.html"
     )
     result["template_url"] = (
         f"/api/v1/explainer/files/sandbox/{record['category']}/{record['template_id']}/index.html?controls=1"

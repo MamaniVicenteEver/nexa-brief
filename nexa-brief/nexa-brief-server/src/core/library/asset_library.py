@@ -34,6 +34,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from src.config.exceptions import AssetDownloadError, AssetNotFoundError
 from src.config.settings import settings
+from src.config.profile_layout import layout_for_settings
 from src.core.data import collection, documents, files
 from src.core.library.sound_library import SoundLibraryEntry
 from src.core.realtime.event_bus import get_event_bus
@@ -49,6 +50,9 @@ def _now_iso() -> str:
 # ── Entry models ──────────────────────────────────────────────────────────────
 
 class ImageLibraryEntry(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "images" ({categoría}/{archivo})
@@ -84,6 +88,9 @@ TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 
 class MusicLibraryEntry(BaseModel):
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "music" ({categoría}/{archivo})
@@ -126,6 +133,9 @@ class MusicLibraryEntry(BaseModel):
 class VideoLibraryEntry(BaseModel):
     """Video de fondo (ej. motion-backdrop) — solo LIBRARY/URL/UPLOAD, no hay
     proveedor de stock de video integrado (a diferencia de imagen/música)."""
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "videos" ({categoría}/{archivo})
@@ -206,7 +216,12 @@ def _store_file(kind: str, path: Path, category: str, filename: str | None, fall
             original += path.suffix
     else:
         original = f"{fallback_stem or asset_id}{path.suffix}"
-    key = _storage(kind).save(path, folder=category, filename=original)
+    storage = _storage(kind)
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    key = (storage.save_asset(path, asset_id=asset_id, filename=original)
+           if layout_for_settings(settings).schema_version >= 3 and hasattr(storage, "save_asset") else
+           storage.save(path, folder=category, filename=original))
     return asset_id, key, original
 
 
@@ -268,7 +283,7 @@ async def register_image(
 
 
 def get_image_entry(asset_id: str) -> ImageLibraryEntry:
-    return ImageLibraryEntry(**_find("image", asset_id))
+    return get_entry("image", asset_id)
 
 
 def list_images(category: str | None = None) -> list[ImageLibraryEntry]:
@@ -276,7 +291,7 @@ def list_images(category: str | None = None) -> list[ImageLibraryEntry]:
 
 
 def resolve_image_path(asset_id: str) -> Path:
-    return _storage("image").local_path(get_image_entry(asset_id).relative_path)
+    return resolve_asset_path("image", asset_id)
 
 
 # ── Music ─────────────────────────────────────────────────────────────────────
@@ -326,7 +341,7 @@ async def register_music(
 
 
 def get_music_entry(asset_id: str) -> MusicLibraryEntry:
-    return MusicLibraryEntry(**_find("music", asset_id))
+    return get_entry("music", asset_id)
 
 
 def list_music(category: str | None = None) -> list[MusicLibraryEntry]:
@@ -334,7 +349,7 @@ def list_music(category: str | None = None) -> list[MusicLibraryEntry]:
 
 
 def resolve_music_path(asset_id: str) -> Path:
-    return _storage("music").local_path(get_music_entry(asset_id).relative_path)
+    return resolve_asset_path("music", asset_id)
 
 
 def _normalize_track_name(text: str) -> str:
@@ -419,7 +434,7 @@ async def register_video(
 
 
 def get_video_entry(asset_id: str) -> VideoLibraryEntry:
-    return VideoLibraryEntry(**_find("video", asset_id))
+    return get_entry("video", asset_id)
 
 
 def list_videos(category: str | None = None) -> list[VideoLibraryEntry]:
@@ -427,7 +442,7 @@ def list_videos(category: str | None = None) -> list[VideoLibraryEntry]:
 
 
 def resolve_video_path(asset_id: str) -> Path:
-    return _storage("video").local_path(get_video_entry(asset_id).relative_path)
+    return resolve_asset_path("video", asset_id)
 
 
 # ── Usage tracking (shared by images, music and video) ────────────────────────
@@ -437,9 +452,10 @@ async def touch_usage(asset_id: str, kind: str) -> None:
 
     kind: "image" | "music" | "video"
     """
-    updated = await _records(kind).increment(
-        asset_id, "usage_count", patch={"last_used_at": _now_iso()}
-    )
+    records = _records(kind)
+    if records.get(asset_id) is None and _production_record(kind, asset_id) is not None:
+        records = collection("content_resources")
+    updated = await records.increment(asset_id, "usage_count", patch={"last_used_at": _now_iso()})
     if updated is None:
         raise AssetNotFoundError(f"{kind} asset_id '{asset_id}' not found — cannot record usage.")
 
@@ -454,7 +470,10 @@ def _get_cache(store: str, asset_id: str) -> dict[str, Any] | None:
 
 async def _save_cache(store: str, kind: str, flag: str, asset_id: str, body: dict[str, Any]) -> None:
     documents(store).put(asset_id, body)
-    await _records(kind).update(asset_id, {flag: True})
+    records = _records(kind)
+    if records.get(asset_id) is None and _production_record(kind, asset_id) is not None:
+        records = collection("content_resources")
+    await records.update(asset_id, {flag: True})
     logger.info("asset_library_cache_saved", store=store, asset_id=asset_id)
 
 
@@ -492,7 +511,10 @@ async def update_image_label(asset_id: str, label: str) -> None:
     """
     if not label:
         return
-    await _records("image").update(asset_id, {"label": label})
+    records = _records("image")
+    if records.get(asset_id) is None and _production_record("image", asset_id) is not None:
+        records = collection("content_resources")
+    await records.update(asset_id, {"label": label})
     logger.info("asset_library_image_label_updated", asset_id=asset_id)
 
 
@@ -617,13 +639,60 @@ def _fold(text: str) -> str:
     return "".join(c for c in decomposed if not unicodedata.combining(c)).casefold()
 
 
+class LinkedProductionAssetError(ValueError):
+    """El recurso pertenece a una producción y no se puede editar o borrar aquí."""
+
+
+def _production_record(kind: str, asset_id: str) -> dict | None:
+    if layout_for_settings(settings).schema_version < 2:
+        return None
+    record = collection("content_resources").get(asset_id)
+    return record if record and record.get("kind") == kind else None
+
+
+def _production_entry(kind: str, record: dict) -> LibraryEntry:
+    video_id = record["video_id"]
+    video = collection("content_videos").get(video_id) or {}
+    details = documents("content_video_details").get(video_id) or {}
+    title = str(details.get("title") or video_id)
+    filename = Path(record["storage_key"]).name
+    data = {"asset_id": record["asset_id"], "relative_path": record["storage_key"],
+            "category": "production", "source": "production", "provider": "production",
+            "original_filename": filename, "video_id": video_id,
+            "production_id": video.get("production_id"), "production_name": title,
+            "description": f"{title} · {video_id}"}
+    data[{"image": "label", "video": "label", "music": "track_name", "sound": "title"}[kind]] = filename
+    # Solo metadata auxiliar, nunca rutas, identidad ni titularidad de la producción.
+    for field in ("usage_count", "last_used_at", "has_vision_cache", "has_lyrics_cache",
+                  "transcription_status", "transcription_error", "language", "label", "approval_status"):
+        if field in record:
+            data[field] = record[field]
+    return _MODELS[kind](**data)  # type: ignore[return-value]
+
+
 def get_entry(kind: str, asset_id: str) -> LibraryEntry:
-    return _MODELS[kind](**_find(kind, asset_id))  # type: ignore[return-value]
+    raw = _records(kind).get(asset_id)
+    if raw is not None:
+        return _MODELS[kind](**raw)  # type: ignore[return-value]
+    record = _production_record(kind, asset_id)
+    if record is None:
+        raise AssetNotFoundError(f"{kind.capitalize()} asset_id '{asset_id}' not found in the local library.")
+    return _production_entry(kind, record)
 
 
 def resolve_asset_path(kind: str, asset_id: str) -> Path:
-    """Ruta local del archivo de un asset (genérico para los tres kinds)."""
-    return _storage(kind).local_path(get_entry(kind, asset_id).relative_path)
+    """Ruta local validada; las referencias de producción nunca se copian."""
+    entry = get_entry(kind, asset_id)
+    if entry.source == "production" and _records(kind).get(asset_id) is None:
+        from src.core.content_registry import resolve_resource
+        try:
+            path = resolve_resource(asset_id)
+        except (ValueError, KeyError) as exc:
+            raise AssetNotFoundError("Ruta de recurso inválida") from exc
+        if path is None:
+            raise AssetNotFoundError("Recurso no encontrado")
+        return path
+    return _storage(kind).local_path(entry.relative_path)
 
 
 def search_assets(kind: str, q: str | None = None, category: str | None = None) -> list[LibraryEntry]:
@@ -636,10 +705,15 @@ def search_assets(kind: str, q: str | None = None, category: str | None = None) 
     filtros por igualdad (ver core/ports/data_port.py)."""
     model = _MODELS[kind]
     entries = [model(**d) for d in _records(kind).list({"category": category} if category else None)]
+    if layout_for_settings(settings).schema_version >= 2 and (not category or category == "production"):
+        existing = {entry.asset_id for entry in entries}
+        for record in collection("content_resources").list(where={"kind": kind}):
+            if record.get("asset_id") not in existing and _records(kind).get(record.get("asset_id")) is None:
+                entries.append(_production_entry(kind, record))
     terms = _fold(q).split() if q else []
     if not terms:
         return entries  # type: ignore[return-value]
-    fields = _SEARCH_FIELDS[kind]
+    fields = (*_SEARCH_FIELDS[kind], "video_id", "production_id", "production_name")
 
     def matches(entry: BaseModel) -> bool:
         haystack = " ".join(_fold(str(getattr(entry, f, "") or "")) for f in fields)
@@ -654,6 +728,15 @@ async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any])
     entero. Cambiar la categoría mueve también el archivo a la carpeta nueva,
     para que la clave siga siendo "{categoría}/{archivo}"."""
     current = get_entry(kind, asset_id)
+    if current.source == "production" and _records(kind).get(asset_id) is None:
+        changes = {k: v for k, v in patch.items() if k in EDITABLE_FIELDS[kind] and v is not None}
+        # La aprobación solo cambia metadata y permite usar efectos en el motor;
+        # no se cambia el archivo ni se concede aprobación implícita.
+        if kind == "sound" and changes and set(changes) == {"approval_status"}:
+            updated = await collection("content_resources").update(asset_id, changes)
+            if updated is not None:
+                return _production_entry(kind, updated)
+        raise LinkedProductionAssetError("El recurso pertenece a una producción")
     changes = {k: v for k, v in patch.items() if k in EDITABLE_FIELDS[kind] and v is not None}
     if "tags" in changes:
         changes["tags"] = normalize_tags(changes["tags"])
@@ -665,7 +748,9 @@ async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any])
             storage = _storage(kind)
             old_key = current.relative_path
             old_path = storage.local_path(old_key)
-            if old_path.exists():
+            from src.config.profile_layout import layout_for_settings
+            from src.config.settings import settings
+            if old_path.exists() and layout_for_settings(settings).schema_version < 3:
                 changes["relative_path"] = storage.save(
                     old_path, folder=new_category, filename=old_path.name
                 )
@@ -686,7 +771,22 @@ async def delete_asset(kind: str, asset_id: str) -> LibraryEntry:
     output/. Los config.json archivados que lo referencian quedan apuntando a
     un id inexistente, igual que cualquier referencia a un asset borrado."""
     entry = get_entry(kind, asset_id)
-    _storage(kind).delete(entry.relative_path)
+    if entry.source == "production" and _records(kind).get(asset_id) is None:
+        raise LinkedProductionAssetError("El recurso pertenece a una producción")
+    storage = _storage(kind)
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    shared = False
+    if layout_for_settings(settings).schema_version >= 3:
+        target = storage.local_path(entry.relative_path)
+        for other in _records(kind).list():
+            if other.get("asset_id") == asset_id or not other.get("relative_path"):
+                continue
+            if storage.local_path(other["relative_path"]) == target:
+                shared = True
+                break
+    if not shared:
+        storage.delete(entry.relative_path)
     for store in _CACHE_STORES[kind]:
         documents(store).delete(asset_id)
     await _records(kind).delete(asset_id)
@@ -699,10 +799,16 @@ async def set_transcription_status(
 ) -> MusicLibraryEntry | None:
     """Actualiza el estado de transcripción de una canción. None si ya no existe
     (la borraron mientras se transcribía) — el caller lo trata como no-op."""
-    updated = await _records("music").update(
+    records = _records("music")
+    linked = records.get(asset_id) is None and _production_record("music", asset_id) is not None
+    if linked:
+        records = collection("content_resources")
+    updated = await records.update(
         asset_id, {"transcription_status": status, "transcription_error": error, **extra}
     )
-    return MusicLibraryEntry(**updated) if updated else None
+    if updated is None:
+        return None
+    return _production_entry("music", updated) if linked else MusicLibraryEntry(**updated)
 
 
 async def publish_asset_changed(

@@ -228,32 +228,89 @@ async def resume_batch(batch_id: str) -> dict:
 
 
 async def delete_batch(batch_id: str, *, delete_files: bool = False) -> dict:
-    """Explicit, bounded cleanup after human review. Never follows user supplied paths."""
+    """Explicit cleanup, restricted to selected production and registered log paths."""
+    import re
     import shutil
+    from src.config.content_paths import production_root
+    from src.config.profile_layout import layout_for_settings
     from src.core.explainer.catalog import TEMPLATES_DIR
+
     batch = batch_status(batch_id)
     rows = batch["productions"]
-    if any(task_is_owned("explainer", r["production_id"]) for r in rows):
+    if any(task_is_owned("explainer", row["production_id"]) for row in rows):
         raise ValueError("el lote tiene tareas activas; espera a que terminen")
+    layout = layout_for_settings(settings)
+    root = (production_root() if layout.schema_version >= 2 else TEMPLATES_DIR).resolve()
+    paths: list[Path] = []
+    log_paths: list[Path] = []
+    refs: list[str] = []
+    if delete_files:
+        for row in rows:
+            folder_name, video_id, production_id = (row.get("folder"), row.get("video_id"), row.get("production_id"))
+            if any(not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", value)
+                   for value in (folder_name, video_id, production_id)):
+                raise ValueError("identificador de producción inválido")
+            folder = root / folder_name / video_id
+            if folder.is_symlink() or not folder.resolve().is_relative_to(root):
+                raise ValueError("carpeta fuera de las plantillas")
+            if folder.exists():
+                manifest_path = folder / "manifest.json"
+                if manifest_path.is_symlink() or not manifest_path.is_file():
+                    raise ValueError("la carpeta no pertenece a esta producción")
+                manifest = json.loads(manifest_path.read_text())
+                if manifest.get("production_id") != production_id:
+                    raise ValueError("la carpeta no pertenece a esta producción")
+                paths.append(folder)
+            if layout.schema_version >= 2:
+                log_root = layout.logs_dir.resolve()
+                if not log_root.is_relative_to(layout.root.resolve()):
+                    raise ValueError("la carpeta de logs sale del perfil")
+                for ref in collection("execution_logs").list(where={"production_id": production_id}):
+                    if ref.get("kind") != "production":
+                        continue
+                    key = Path(ref.get("key", ""))
+                    if key.is_absolute() or not key.parts or ".." in key.parts:
+                        raise ValueError("referencia de log inválida")
+                    log = layout.root / key
+                    if (not log.resolve().is_relative_to(log_root) or log.is_symlink()
+                            or log.parent.resolve() != (log_root / "videos" / video_id).resolve()
+                            or log.name != f"{production_id}.log"):
+                        raise ValueError("referencia de log fuera de la producción")
+                    log_paths.append(log)
+                    refs.append(ref["log_id"])
+            else:
+                log_paths.append(settings.data_dir / "explainer" / "logs" / f"{production_id}.log")
     async with named_lock("batch-admission"):
+        # Recheck ownership under the admission lock before any destructive step.
+        if any(task_is_owned("explainer", row["production_id"]) for row in rows):
+            raise ValueError("el lote tiene tareas activas; espera a que terminen")
         await collection("explainer_batches").update(batch_id, {"state": "deleting"})
-        if delete_files:
-            root = TEMPLATES_DIR.resolve()
+        for folder in paths:
+            shutil.rmtree(folder)
+        for log in log_paths:
+            if log.exists():
+                log.unlink()
+            for sidecar in log.parent.glob(f"{log.stem}.*"):
+                if sidecar.is_file() and not sidecar.is_symlink():
+                    sidecar.unlink()
+        for log_id in refs:
+            await collection("execution_logs").delete(log_id)
+        if delete_files and layout.schema_version >= 2:
+            from src.core.content_registry import update_video_details
+            videos = collection("content_videos")
+            resources = collection("content_resources")
             for row in rows:
-                folder = root / row["folder"] / row["video_id"]
-                if folder.exists():
-                    if folder.is_symlink() or not folder.resolve().is_relative_to(root):
-                        raise ValueError("carpeta fuera de las plantillas")
-                    import json
-                    manifest = json.loads((folder / "manifest.json").read_text())
-                    if manifest.get("production_id") != row["production_id"]:
-                        raise ValueError("la carpeta no pertenece a esta producción")
-                    shutil.rmtree(folder)
-                log = settings.data_dir / "explainer" / "logs" / f"{row['production_id']}.log"
-                log.unlink(missing_ok=True)
-                for sidecar in log.parent.glob(f"{row['production_id']}.*"):
-                    if sidecar.is_file() and not sidecar.is_symlink():
-                        sidecar.unlink()
+                video_id, production_id = row["video_id"], row["production_id"]
+                video = videos.get(video_id)
+                if not video or video.get("production_id") != production_id:
+                    continue
+                await videos.update(video_id, {"status": "deleted"})
+                await update_video_details(video_id, {"status": "deleted", "production_deleted": True,
+                                                       "source_missing": True})
+                prefix = f"productions/{row['folder']}/{video_id}/"
+                for resource in resources.list(where={"video_id": video_id}):
+                    if str(resource.get("storage_key", "")).startswith(prefix):
+                        await resources.update(resource["asset_id"], {"available": False})
         await collection("content_plan").delete_where({"batch_id": batch_id})
         await collection("explainer_productions").delete_where({"batch_id": batch_id})
         await collection("explainer_batches").delete(batch_id)

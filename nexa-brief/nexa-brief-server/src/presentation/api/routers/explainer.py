@@ -40,7 +40,9 @@ from src.adapters.ai.factory import TEXT_PROVIDERS, get_text_ai
 from src.adapters.publishing.factory import get_publisher_facade
 from src.config.exceptions import NexaBriefError
 from src.config.settings import settings
-from src.core.categories import explainer_folders, get_category, list_categories
+from src.config.content_paths import content_key, resolve_content_key, preview_directory, is_private_content_key
+from src.config.profile_layout import layout_for_settings
+from src.core.categories import explainer_folders, get_category, list_categories, production_folders
 from src.core.explainer.briefs import ExplainerBrief, generate_brief, generate_publish_texts, write_publish_json
 from src.core.explainer import lengths, narrative, thumbnails
 from src.core.explainer.publishing import review as review_package
@@ -85,7 +87,7 @@ logger = structlog.get_logger(__name__)
 
 FILES_PREFIX = "/api/v1/explainer/files"
 MAX_UPLOAD_BYTES = 300 * 1024 * 1024
-SANDBOX_SHARED_DIRS = frozenset({"_engine", "_mapas", "_pizarra", "_avatar", "_player", "_atlas", "_vida"})
+SANDBOX_SHARED_DIRS = frozenset({"_engine", "_mapas", "_pizarra", "_avatar", "_player", "_atlas", "_vida", "_tactico"})
 
 
 def is_servable(parts: tuple[str, ...]) -> bool:
@@ -94,6 +96,19 @@ def is_servable(parts: tuple[str, ...]) -> bool:
         return False
     if "_codex" in parts:
         return False
+    if is_private_content_key("/".join(parts)):
+        return False
+    if parts[0] == "bundled":
+        from src.config.content_paths import is_public_showcase_engine_key, is_shared_template_key
+        if layout_for_settings(settings).schema_version >= 3 and is_public_showcase_engine_key(parts[1:]):
+            return True
+        return (layout_for_settings(settings).schema_version >= 2 and len(parts) >= 3
+                and is_shared_template_key(parts[1:]) and is_servable(parts[1:]))
+    if parts[0] == "productions":
+        return (layout_for_settings(settings).schema_version >= 2 and len(parts) >= 4
+                and parts[1] in production_folders() and parts[3] not in {"work", "test"})
+    if parts[0] == "renders":
+        return layout_for_settings(settings).schema_version >= 2 and len(parts) >= 4
     if parts[:2] == ("_tools", "explainer-kit"):
         return len(parts) >= 3
     if parts[:2] == ("_tools", "player"):
@@ -122,25 +137,30 @@ def get_producer() -> ExplainerProducer:
 
 
 def _video_preview_url(video: ExplainerVideo) -> str:
-    rel = video.path.relative_to(TEMPLATES_DIR).as_posix()
+    rel = (content_key(video.path) if layout_for_settings(settings).schema_version >= 2
+           else video.path.relative_to(TEMPLATES_DIR).as_posix())
     return f"{FILES_PREFIX}/{rel}/index.html"
 
 
 def _poster_url(video: ExplainerVideo) -> str | None:
     """Portada render/poster.jpg (kit.py poster); ?v= cambia si se regenera."""
-    poster = video.path / "render" / "poster.jpg"
+    poster = preview_directory(video.path) / "poster.jpg"
     if not poster.exists():
         return None
-    base = _video_preview_url(video).replace("/index.html", "/render/poster.jpg")
+    if layout_for_settings(settings).schema_version >= 2:
+        base = f"{FILES_PREFIX}/{content_key(poster)}"
+    else:
+        base = _video_preview_url(video).replace("/index.html", "/render/poster.jpg")
     return f"{base}?v={int(poster.stat().st_mtime)}"
 
 
 def _render_video_url(video: ExplainerVideo, fmt: str) -> str | None:
     """render/<video>-<fmt>.mp4 del video, si ya se grabó."""
-    name = f"{video.path.name}-{fmt}.mp4"
-    if not (video.path / "render" / name).exists():
+    from src.core.explainer.render_paths import latest_render
+    path = latest_render(video.path, fmt)
+    if path is None:
         return None
-    return _video_preview_url(video).replace("/index.html", f"/render/{name}")
+    return f"{FILES_PREFIX}/{content_key(path)}"
 
 
 def _design_demo(design: KitDesign) -> ExplainerVideo | None:
@@ -150,7 +170,7 @@ def _design_demo(design: KitDesign) -> ExplainerVideo | None:
     if demo is not None:
         return demo
     ready = [v for v in list_videos() if v.design == design.design_id and v.ready]
-    ready.sort(key=lambda v: v.category_path != design.category_path)
+    ready.sort(key=lambda v: (v.category_path != design.category_path, not v.demo, v.video_id))
     return ready[0] if ready else None
 
 
@@ -188,7 +208,11 @@ def _valid_thumbnails(video: ExplainerVideo) -> ThumbnailsResponse:
     options = []
     for option, spec in specs.items():
         path = thumbnails.thumbnail_file(video, option)
-        url = f"{base}/{path.name}?v={int(path.stat().st_mtime)}" if thumbnails.capture_current(video, option, spec) else None
+        url = None
+        if thumbnails.capture_current(video, option, spec):
+            file_url = (f"{FILES_PREFIX}/{content_key(path)}"
+                        if layout_for_settings(settings).schema_version >= 2 else f"{base}/{path.name}")
+            url = f"{file_url}?v={int(path.stat().st_mtime)}"
         # la foto va con ruta desde src/templates/ ("/nodehistory/…"): para el navegador, por la API de archivos
         params = {k: (f"{FILES_PREFIX}{v}" if k in ("src", "srcAfter") and isinstance(v, str) and v.startswith("/") else v)
                   for k, v in spec["params"].items()}
@@ -702,8 +726,12 @@ async def get_explainer_file(file_path: str, request: Request) -> Response:
     parts = tuple(file_path.split("/"))
     if not is_servable(parts):
         raise HTTPException(status_code=404, detail="no encontrado")
-    target = root.joinpath(*parts).resolve()
-    if not target.is_relative_to(root):
+    try:
+        target = (resolve_content_key(file_path) if layout_for_settings(settings).schema_version >= 2
+                  else root.joinpath(*parts).resolve())
+    except ValueError:
+        raise HTTPException(status_code=404, detail="no encontrado")
+    if layout_for_settings(settings).schema_version < 2 and not target.is_relative_to(root):
         raise HTTPException(status_code=404, detail="no encontrado")
     if not target.is_file():
         raise HTTPException(status_code=404, detail="no encontrado")
@@ -712,6 +740,11 @@ async def get_explainer_file(file_path: str, request: Request) -> Response:
     stat = target.stat()
     response = FileResponse(target, stat_result=stat, headers={"Cache-Control": "no-cache"})
     body = None
+    if target.suffix.lower() == ".html" and layout_for_settings(settings).schema_version >= 2:
+        body = target.read_bytes().replace(b'src="/_tools/', f'src="{FILES_PREFIX}/_tools/'.encode())
+        response = Response(body, media_type="text/html", headers={
+            "Cache-Control": "no-cache", "ETag": '"' + hashlib.sha256(body).hexdigest() + '"',
+        })
     if target.suffix.lower() == ".json":
         body = await asyncio.to_thread(_translated_preview_json, target)
         if body is not None:

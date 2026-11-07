@@ -12,6 +12,10 @@ import dataclasses
 import hashlib
 from typing import TYPE_CHECKING, Any
 
+from src.config.media_paths import image_key
+from src.config.profile_layout import layout_for_settings
+from src.config.settings import settings
+
 from .errors import ImagePostError
 from .models import DeliveryStatus, EditorialReview, PostStatus, PublicationRecord, RenderedSlide, ValidationResult, FormatArtwork
 from .profiles import get_image_profile
@@ -203,12 +207,15 @@ class ImagePostArtwork:
             digest = hashlib.sha256(content).hexdigest()
             if _field(asset, "sha256") and _field(asset, "sha256") != digest:
                 raise ImagePostError("INVALID_IMAGE", "El hash de la exportación no coincide", 422)
-            saved = self.service.media.put(f"{prefix}/{index:02}.jpg", content, "image/jpeg", digest, if_absent=True)
+            asset_id = f"asset_{digest[:24]}"
+            key = (image_key(record.editorial.category_id, record.post_id, publication_id, asset_id)
+                   if layout_for_settings(settings).schema_version >= 3 else f"{prefix}/{index:02}.jpg")
+            saved = self.service.media.put(key, content, "image/jpeg", digest, if_absent=True)
             slides.append(
                 RenderedSlide(
                     slide_id=plan.slides[index - 1].slide_id,
                     order=index,
-                    asset_id=f"asset_{digest[:24]}",
+                    asset_id=asset_id,
                     storage_key=saved.key,
                     width=profile.width,
                     height=profile.height,

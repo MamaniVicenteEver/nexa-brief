@@ -22,6 +22,7 @@ interface SandboxItemDto {
   has_poster: boolean;
   has_info: boolean;
   has_components?: boolean;
+  demo?: boolean;
   total_tokens: number | null;
   thumbnail_url: string | null;
   player: SandboxPlayer;
@@ -90,6 +91,7 @@ function mapSandboxItem(dto: SandboxItemDto): SandboxItem {
     hasPoster: dto.has_poster,
     hasInfo: dto.has_info,
     hasComponents: dto.has_components ?? false,
+    demo: dto.demo ?? false,
     totalTokens: dto.total_tokens,
     thumbnailUrl: dto.thumbnail_url,
     player: dto.player,

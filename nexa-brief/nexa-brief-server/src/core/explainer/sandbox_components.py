@@ -44,6 +44,6 @@ def list_components(root: Path) -> list[dict]:
         except (OSError, ValueError, TypeError, OverflowError):
             return
     for folder in root.iterdir():
-        if folder.is_dir() and not folder.name.startswith(('.', '_')) and folder.name not in {'referencias', 'nuevos'}:
+        if folder.is_dir() and not folder.name.startswith(('.', '_')) and folder.name not in {'referencias', 'nuevos', 'designs'}:
             visit(folder, (folder.name,))
     return sorted(result, key=lambda item: item['updated_at'], reverse=True)

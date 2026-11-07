@@ -17,6 +17,7 @@ from pathlib import Path, PurePosixPath
 from typing import BinaryIO, Iterable
 
 from src.config.settings import settings
+from src.config.content_paths import sandbox_root
 
 REFERENCE_CATEGORIES = (
     "nodetech",
@@ -65,7 +66,8 @@ def _templates_dir(templates_dir: Path | None) -> Path:
 
 
 def _reference_dir(templates_dir: Path | None = None) -> Path:
-    return _templates_dir(templates_dir) / "sandbox" / "referencias"
+    root = _templates_dir(templates_dir) / "sandbox" if templates_dir is not None else sandbox_root()
+    return root / "referencias"
 
 
 def _safe_segment(value: str) -> bool:
@@ -130,20 +132,20 @@ def _write_upload(source: bytes | BinaryIO, destination: Path) -> None:
 def _load_idea(category: str, slug: str, item_dir: Path) -> Idea:
     info_path = item_dir / "info.json"
     try:
-        info = json.loads(info_path.read_text(encoding="utf-8")) if info_path.is_file() else {}
+        info = json.loads(info_path.read_text(encoding="utf-8")) if info_path.is_file() and not info_path.is_symlink() else {}
     except (OSError, json.JSONDecodeError):
         info = {}
     if not isinstance(info, dict):
         info = {}
     notes_path = item_dir / "NOTAS.md"
     notes = ""
-    if notes_path.is_file():
+    if notes_path.is_file() and not notes_path.is_symlink():
         content = notes_path.read_text(encoding="utf-8")
         notes = content.partition("\n")[2].lstrip("\n") if content.startswith("# ") else content
     files = tuple(
         IdeaFile(name=path.name, path=path)
         for path in sorted(item_dir.iterdir(), key=lambda item: item.name.casefold())
-        if path.is_file() and path.suffix.lower() in ALLOWED_EXTENSIONS
+        if path.is_file() and path.resolve().is_relative_to(item_dir.resolve()) and path.suffix.lower() in ALLOWED_EXTENSIONS
     )
     return Idea(
         category=category,
@@ -176,6 +178,8 @@ def create_idea(
     uploads = [(_upload_name(name), content) for name, content in files]
     reference_dir = _reference_dir(templates_dir)
     category_dir = reference_dir / category
+    if not category_dir.resolve().is_relative_to(reference_dir.resolve()):
+        raise IdeaInputError("La categoría sale del sandbox del perfil.")
     category_dir.mkdir(parents=True, exist_ok=True)
     base_slug = _slugify(clean_title)
     suffix = 1
@@ -227,7 +231,7 @@ def list_ideas(*, templates_dir: Path | None = None) -> list[Idea]:
         if not category_dir.is_dir():
             continue
         for item_dir in sorted(category_dir.iterdir(), key=lambda item: item.name.casefold()):
-            if item_dir.is_dir() and _safe_segment(item_dir.name):
+            if item_dir.is_dir() and item_dir.resolve().is_relative_to(root.resolve()) and _safe_segment(item_dir.name):
                 ideas.append(_load_idea(category, item_dir.name, item_dir))
     return ideas
 

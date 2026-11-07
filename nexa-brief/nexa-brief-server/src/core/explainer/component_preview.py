@@ -115,13 +115,13 @@ def build_component_previews(previews: list) -> list[dict[str, str]]:
 
 def _sandbox_preview(item) -> dict[str, str]:
     from src.core.explainer.sandbox_components import list_components
-    matches = [entry for entry in list_components(sandbox.SANDBOX_DIR) if entry["id"] == item.video_id]
+    matches = [entry for entry in list_components(sandbox.get_sandbox_dir()) if entry["id"] == item.video_id]
     if not matches:
         raise ComponentPreviewError(f"No existe el prototipo «{item.video_id}» en el Sandbox.")
     if len(matches) > 1:
         raise ComponentPreviewError(f"El prototipo «{item.video_id}» es ambiguo: aparece en varias categorías del Sandbox.")
     entry = matches[0]
-    info_path = sandbox.SANDBOX_DIR.joinpath(*entry["path"].split("/")[1:]) / "info.json"
+    info_path = sandbox.get_sandbox_dir().joinpath(*entry["path"].split("/")[1:]) / "info.json"
     declared = {component["name"]: component for component in sandbox_info.load_declared_components(info_path)}
     for name in [item.component, *(item.components or [])]:
         if name not in declared:

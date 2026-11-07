@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 root_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$root_dir/scripts/profile-env.sh"
-port=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["services"]["tiktok"]["port"])' "$NEXA_PROFILE_DIR/profile.json")
+port=$(python3 -c 'import json,sys; port=json.load(open(sys.argv[1], encoding="utf-8"))["services"]["tiktok"]["port"]; assert type(port) is int and 1024 <= port <= 65535; print(port)' "$NEXA_PROFILE_DIR/profile.json")
 unit="nexa-tiktok-$NEXA_DATA_PROFILE.service"
 sync_config() { "$root_dir/nexa-brief-server/.venv/bin/python" "$root_dir/scripts/sync-connection-config.py"; }
 if curl -fsS --max-time 3 "http://127.0.0.1:$port/health" >/dev/null 2>&1; then

@@ -102,6 +102,7 @@ def test_terra_delegate_passes_model_effort_scope_and_records_output(video: Path
 
 
 def test_kit_delegate_command_dispatches_to_codex(video: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("NEXA_EXPLAINER_RESOURCE_BUDGET", "0")
     monkeypatch.setattr(explainer_kit, "find_video", lambda _video_id: video)
     # El worker del kit vuelve a entrar en main con este descriptor heredado;
     # el test prueba el despacho dentro de ese proceso, sin buscar un video real.

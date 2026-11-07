@@ -77,10 +77,10 @@ K=src/templates/_tools/explainer-kit/tools/kit.py; M=src/templates/_tools/explai
 
 ## 6. Lecciones de NodeHistory
 
-- **Hay 12 videos en producción: 3 reales** (`turing-enigma`, `muro-de-berlin`, `codex-titanic`, todos
-  binary) **+ 9 demos** (`<diseño>-demo`, `demo: true`) que son **el mismo guion del Muro de Berlín**
-  con 7 fotos repetidas. No publiques más de uno de esa serie (riesgo "contenido no auténtico") ni copies
-  su práctica de repetir fotos: en un video real `check` lo marca y hay que justificarlo.
+- El perfil activo conserva las producciones en `productions/nodehistory/`; consultá su catálogo para
+  conocer los videos actuales. `muro-de-berlin` es la demo de Binary y los demás `<diseño>-demo`
+  comparten el guion del Muro. No publiques más de uno de esa serie ni copies su práctica de repetir
+  fotos: en un video real `check` lo marca y hay que justificarlo.
 - Para un tema nuevo, imitá el nivel de `turing-enigma` (arco con duelo y reparación) y `muro-de-berlin`
   (clímax 1.0 en s09 de 17, urgencia → alivio).
 - **Titanic (Codex)**: buena investigación, pero tono de informe, unidades en yardas, una frase con la

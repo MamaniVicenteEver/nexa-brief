@@ -15,7 +15,11 @@ from pathlib import Path
 
 
 class AgentUnavailableError(RuntimeError):
-    """El CLI del agente no está instalado o no se encontró."""
+    """El CLI del agente no está disponible."""
+
+
+class AgentIsolationUnavailableError(AgentUnavailableError):
+    """No hay ejecución aislada verificada para el perfil seleccionado."""
 
 
 @dataclass(frozen=True)
@@ -83,3 +87,12 @@ class AgentRunnerPort(ABC):
         scope=None: solo lectura (respuestas de texto/JSON). Con scope: escribe
         solo en `scope.writable_dir` y corre solo `scope.commands`.
         """
+
+
+class IsolatedAgentRunnerPort(AgentRunnerPort):
+    """Contrato reservado para un futuro runner aislado de verdad.
+
+    Su implementación deberá aislar lecturas, entorno, sockets y red y mediar
+    el acceso a inferencia sin exponer sesiones. Esta clase no habilita ningún
+    backend ni constituye una prueba de aislamiento; aún no hay implementación.
+    """

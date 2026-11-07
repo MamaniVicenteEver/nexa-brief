@@ -57,8 +57,18 @@ export NEXA_PROJECT_ROOT := $(CURDIR)
 export NEXA_DATA_HOME ?= $(HOME)/.local/share/nexa-brief
 export NEXA_DATA_PROFILE ?= profesional
 export NEXA_PROFILE_DIR ?= $(NEXA_DATA_HOME)/profiles/$(NEXA_DATA_PROFILE)
-export NEXA_WEB_DATA_DIR ?= $(NEXA_PROFILE_DIR)/web-data
-SHARED_CONNECTIONS_DIR ?= $(NEXA_PROFILE_DIR)/connections
+# Fail closed: $(shell) otherwise drops a failed resolver's exit code and exports an empty path.
+profile-quote = '$(subst ','"'"',$(1))'
+profile-path-result = $(shell python3 scripts/profile-path.py $(call profile-quote,$(NEXA_PROFILE_DIR)) $(1) || printf '__NEXA_PROFILE_ERROR__')
+profile-path = $(if $(findstring __NEXA_PROFILE_ERROR__,$(1)),$(error No se pudo resolver el perfil de almacenamiento),$(1))
+validated-profile-web-data := $(call profile-path,$(call profile-path-result,web_data))
+export NEXA_WEB_DATA_DIR ?= $(validated-profile-web-data)
+export NEXA_CONNECTIONS_DIR ?= $(call profile-path,$(call profile-path-result,connections))
+export NEXA_RENDERS_DIR ?= $(call profile-path,$(call profile-path-result,renders))
+# Validate explicit Make command-line overrides too; shell functions otherwise see only the parent environment.
+profile-overrides-check := $(shell NEXA_WEB_DATA_DIR=$(call profile-quote,$(NEXA_WEB_DATA_DIR)) NEXA_CONNECTIONS_DIR=$(call profile-quote,$(NEXA_CONNECTIONS_DIR)) NEXA_RENDERS_DIR=$(call profile-quote,$(NEXA_RENDERS_DIR)) NEXA_TIKTOK_DATA_DIR=$(call profile-quote,$(NEXA_TIKTOK_DATA_DIR)) python3 scripts/profile-path.py $(call profile-quote,$(NEXA_PROFILE_DIR)) web_data >/dev/null || printf '__NEXA_PROFILE_ERROR__')
+$(if $(findstring __NEXA_PROFILE_ERROR__,$(profile-overrides-check)),$(error Las rutas no corresponden al perfil seleccionado))
+SHARED_CONNECTIONS_DIR ?= $(NEXA_CONNECTIONS_DIR)
 dev api: export SHARED_CONNECTIONS_DIR := $(SHARED_CONNECTIONS_DIR)
 dev api: export ACCOUNTS_JSON_PATH := $(SHARED_CONNECTIONS_DIR)/accounts.json
 dev api: export TIKTOK_SERVICE_UPLOAD_MEDIA := true

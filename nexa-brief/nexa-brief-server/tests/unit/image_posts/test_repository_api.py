@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import AsyncMock
 from datetime import datetime, timedelta, timezone
 from io import BytesIO
+from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import urlsplit
 
@@ -57,6 +58,19 @@ from src.config.settings import settings
 
 
 NOW = datetime(2026, 10, 25, 10, 0, tzinfo=timezone.utc)
+
+
+@pytest.fixture
+def synthetic_account_map(tmp_path):
+    path = tmp_path / "image_posts/account_map.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"schema_version": 1, "accounts": [
+        {"category_id": "node_tech", "platform": "facebook", "account_alias": "pagina_3",
+         "name": "Página sintética", "active": True, "can_comment": True},
+        {"category_id": "node_tech", "platform": "instagram", "account_alias": "instagram_2",
+         "name": "Instagram sintético", "active": True, "can_comment": True},
+    ]}))
+    return path
 
 
 def test_mixed_copy_source_is_persisted_with_rules_provenance():
@@ -883,11 +897,11 @@ def test_image_posts_api_auth_and_idempotency(tmp_path):
         set_data_store(None)
 
 
-def test_image_post_session_acl_scopes_categories_and_accounts(tmp_path):
+def test_image_post_session_acl_scopes_categories_and_accounts(tmp_path, synthetic_account_map):
     old_env, old_token, old_data_dir = settings.app_env, settings.nexa_internal_token, settings.data_dir
     settings.app_env, settings.nexa_internal_token, settings.data_dir = "test", "", tmp_path
     policy_path = tmp_path / "image_posts" / "access.json"
-    policy_path.parent.mkdir(parents=True)
+    policy_path.parent.mkdir(parents=True, exist_ok=True)
     policy_path.write_text(json.dumps({
         "schema_version": 1,
         "users": [{
@@ -955,7 +969,7 @@ def test_image_post_session_acl_scopes_categories_and_accounts(tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_scheduler_recovers_archived_queued_delivery_missing_from_queue(tmp_path, monkeypatch):
+async def test_scheduler_recovers_archived_queued_delivery_missing_from_queue(tmp_path, monkeypatch, synthetic_account_map):
     from src.core.schedule import queue_repository
 
     old_data_dir = settings.data_dir
@@ -1246,7 +1260,7 @@ async def test_purge_cannot_delete_a_queue_entry_claimed_for_publication(tmp_pat
 
 
 @pytest.mark.asyncio
-async def test_long_image_publish_renews_persistent_lease_for_another_worker(tmp_path, monkeypatch):
+async def test_long_image_publish_renews_persistent_lease_for_another_worker(tmp_path, monkeypatch, synthetic_account_map):
     import src.core.image_posts.service as service_module
     from src.core.schedule import engine, queue_repository
 
@@ -1319,7 +1333,7 @@ class FakeMetaPublisher:
 
 
 @pytest.mark.asyncio
-async def test_publish_now_replay_launches_only_one_queue_task(tmp_path, monkeypatch):
+async def test_publish_now_replay_launches_only_one_queue_task(tmp_path, monkeypatch, synthetic_account_map):
     from src.core.schedule import engine, queue_repository
 
     old_data_dir = settings.data_dir
@@ -1361,7 +1375,7 @@ async def test_publish_now_replay_launches_only_one_queue_task(tmp_path, monkeyp
 
 
 @pytest.mark.asyncio
-async def test_queue_dispatches_image_delivery_through_fake_meta_port(tmp_path):
+async def test_queue_dispatches_image_delivery_through_fake_meta_port(tmp_path, synthetic_account_map):
     from src.core.schedule import queue_repository
     from src.core.schedule.engine import publish_entry
 
@@ -1407,7 +1421,7 @@ async def test_queue_dispatches_image_delivery_through_fake_meta_port(tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_plan_revision_cancels_pending_queue_and_gets_immutable_media_namespace(tmp_path):
+async def test_plan_revision_cancels_pending_queue_and_gets_immutable_media_namespace(tmp_path, synthetic_account_map):
     from src.core.schedule import queue_repository
 
     old_data_dir = settings.data_dir
@@ -1571,3 +1585,159 @@ async def test_tiktok_router_delivery_reaches_adapter(tmp_path, monkeypatch):
     assert result.status == DeliveryStatus.PUBLISHED
     publish.assert_awaited_once()
     assert publish.await_args.args[:3] == ([path], 'Texto IG', 'test')
+
+@pytest.mark.asyncio
+async def test_v3_publication_section_cas_and_idempotency(tmp_path, monkeypatch):
+    from src.adapters.data.section_publication_repository import SectionPublicationRepository
+    monkeypatch.setattr(settings, 'storage_profile_dir', tmp_path)
+    monkeypatch.setattr(settings, 'storage_layout_version', 3)
+    repo = build_publication_components().port
+    assert isinstance(repo, SectionPublicationRepository)
+    await repo.create(_record(), 'create-key', idempotency_request_hash='hash')
+    assert (await repo.create(_record('another'), 'create-key', idempotency_request_hash='hash'))['publication_id'] == 'pub_test'
+    await repo.update('pub_test', {'status': 'failed'}, 1)
+    with pytest.raises(RepositoryConflict):
+        await repo.update('pub_test', {'status': 'approved'}, 1)
+    assert repo.get('pub_test')['record_version'] == 2
+    assert repo.list().items[0]['publication_id'] == 'pub_test'
+    assert repo.repair_index() == 1
+    data = json.loads((tmp_path / 'data/json/publicaciones.json').read_text())
+    assert data['revision'] == 2
+    assert data['documents']['publication_idempotency']['create-key']['publication_id'] == 'pub_test'
+    assert not (tmp_path / 'data/publicaciones').exists()
+
+@pytest.mark.asyncio
+async def test_v3_import_publication_and_historical_idempotency(tmp_path, monkeypatch):
+    from src.adapters.data.import_legacy_sections import import_legacy_data
+    from src.adapters.data.section_publication_repository import SectionPublicationRepository
+
+    legacy = tmp_path / 'data'
+    monkeypatch.setattr(settings, 'storage_profile_dir', None)
+    monkeypatch.setattr(settings, 'storage_layout_version', 1)
+    old = JsonPublicationRepository(legacy)
+    await old.create(_record(), 'plan-key', idempotency_request_hash='hash')
+    old.store_request('receipt', 'request-hash', {'delivery_ids': ['del_one']})
+    result = import_legacy_data(legacy, legacy)
+    assert result['publications'] == 1
+    assert result['publication_idempotency'] == 2
+    assert (legacy / 'publicaciones/idempotency.json').exists()
+    monkeypatch.setattr(settings, 'storage_profile_dir', tmp_path)
+    monkeypatch.setattr(settings, 'storage_layout_version', 3)
+    repo = SectionPublicationRepository()
+    assert repo.get_idempotent('plan-key', 'hash')['publication_id'] == 'pub_test'
+    assert repo.get_request('receipt', 'request-hash') == {'delivery_ids': ['del_one']}
+    with pytest.raises(IdempotencyConflict):
+        repo.get_idempotent('plan-key', 'different')
+
+
+@pytest.mark.asyncio
+async def test_v3_claim_delivery_is_atomic_across_threads(tmp_path, monkeypatch):
+    from src.adapters.data.section_publication_repository import SectionPublicationRepository
+    monkeypatch.setattr(settings, 'storage_profile_dir', tmp_path)
+    monkeypatch.setattr(settings, 'storage_layout_version', 3)
+    repo = SectionPublicationRepository()
+    await repo.create(_record())
+    def claim(index):
+        delivery = Delivery(
+            delivery_id=f'del_{index}', revision=1, platform='facebook', account_alias='pagina_3',
+            target_id='page-test', placement='image', idempotency_key='same-delivery',
+            status=DeliveryStatus.QUEUED, created_at=NOW, updated_at=NOW,
+        ).model_dump(mode='json')
+        return asyncio.run(repo.claim_deliveries('pub_test', 'same-request', 'hash', 1, [delivery], 'approved'))
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results = list(pool.map(claim, range(2)))
+    assert results[0]['delivery_ids'] == results[1]['delivery_ids']
+    assert sorted(row['replayed'] for row in results) == [False, True]
+    assert len(repo.get('pub_test')['deliveries']) == 1
+
+@pytest.mark.asyncio
+async def test_v3_image_post_index_is_rebuilt_from_publications(tmp_path, monkeypatch):
+    from src.adapters.data.section_publication_repository import SectionPublicationRepository
+    monkeypatch.setattr(settings, 'storage_profile_dir', tmp_path)
+    monkeypatch.setattr(settings, 'storage_layout_version', 3)
+    repo = SectionPublicationRepository()
+    await repo.create(_record())
+    assert repo.rebuild_image_post_index() == 1
+    index = json.loads((tmp_path / 'data/json/image-posts.json').read_text())
+    row = index['collections']['image_posts_index'][0]
+    assert row['post_id'] == repo.get('pub_test')['post_id']
+    assert row['publication_ids'] == ['pub_test']
+    assert index['documents']['index_metadata']['source_revision'] == 1
+    await repo.update('pub_test', {'status': 'failed'}, 1)
+    assert repo.rebuild_image_post_index() == 1
+    index = json.loads((tmp_path / 'data/json/image-posts.json').read_text())
+    assert index['collections']['image_posts_index'][0]['status'] == 'failed'
+    assert index['documents']['index_metadata']['source_revision'] == 2
+
+@pytest.mark.asyncio
+async def test_v3_staging_transform_preserves_media_outputs_and_aliases(tmp_path, monkeypatch):
+    from scripts.profile_v3_migration import transform_staging
+    root = tmp_path / 'profile'
+    tx = root / '.system/migrations/synthetic'
+    data = tx / 'staged/data'
+    monkeypatch.setattr(settings, 'storage_profile_dir', None)
+    monkeypatch.setattr(settings, 'storage_layout_version', 1)
+    old_repo = JsonPublicationRepository(data)
+    await old_repo.create(_record(), 'legacy-key', idempotency_request_hash='hash')
+    for lock in data.rglob('*.lock'):
+        lock.unlink()
+    old_key = _record().technical.slides[0].storage_key
+    old_source = root / 'data/publicaciones' / old_key
+    old_source.parent.mkdir(parents=True)
+    old_source.write_bytes(b'synthetic-jpeg')
+    output = root / 'output/node_tech/demo/final.mp4'
+    output.parent.mkdir(parents=True)
+    output.write_bytes(b'synthetic-video')
+    second_output = root / 'output/node_tech/demo/portrait_video.mp4'
+    second_output.write_bytes(b'synthetic-other-format')
+    output_other = root / 'output/node_tech/demo/index.html'
+    output_other.write_text('synthetic')
+    master = tx / 'staged/render-import/video_test/legacy-template/master.mp4'
+    master.parent.mkdir(parents=True)
+    master.write_bytes(b'synthetic-master')
+    job = data / 'jobs/jobs.json'
+    job.parent.mkdir(parents=True)
+    job.write_text(json.dumps([{'job_id': 'job1', 'video_id': 'video_test',
+                                'file_paths': {'vertical': str(root / 'renders/node_tech/demo/final.mp4')}}]))
+    video = data / 'content/videos.json'
+    video.parent.mkdir(parents=True)
+    video.write_text(json.dumps([{'video_id': 'video_test', 'production_id': 'prod1'}]))
+    detail = data / 'content/video_details/video_test.json'
+    detail.parent.mkdir(parents=True)
+    detail.write_text(json.dumps({'category_id': 'node_tech'}))
+    extra = data / 'custom/extra.json'
+    extra.parent.mkdir(parents=True)
+    extra.write_text(json.dumps({'example': 'synthetic'}))
+    journal = {'mapping': {f'data/publicaciones/{old_key}': f'productions/_publicaciones/{old_key}', 'output': 'renders'}}
+    result = transform_staging(root, tx, journal)
+    assert result['v3_transform']['complete']
+    assert len(result['output_moves']) == 3
+    outputs = [Path(item['destination']) for item in result['output_moves']
+               if item['destination'].startswith('renders/videos/')]
+    assert len(outputs) == 2 and {path.parts[3] for path in outputs} == {'video_test'}
+    assert all('-unknown' in str(path) for path in outputs)
+    assert result['v3_transform']['unknown_orientation_count'] == 3
+    assert len(result['staged_render_moves']) == 1
+    assert old_source.read_bytes() == b'synthetic-jpeg' and output.exists() and master.exists()
+    assert sorted(path.name for path in data.iterdir()) == ['json']
+    pubs = json.loads((data / 'json/publicaciones.json').read_text())
+    key = pubs['documents']['publications']['pub_test']['technical']['slides'][0]['storage_key']
+    assert key.startswith('images/nodetech/img_test/pub_test/')
+    assert result['mapping'][f'data/publicaciones/{old_key}'] == 'renders/' + key
+    resources = json.loads((data / 'json/resources.json').read_text())
+    assert resources['documents']['media_aliases'][hashlib.sha256(old_key.encode()).hexdigest()]['storage_key'] == key
+    assert json.loads((data / 'json/legacy.json').read_text())['documents']['legacy_json']['custom/extra.json'] == {'example': 'synthetic'}
+    assert (tx / 'legacy/staged-json/custom/extra.json').exists()
+    assert transform_staging(root, tx, result) is result
+
+
+def test_v3_staging_transform_rejects_symlinks_without_mutation(tmp_path):
+    from scripts.profile_v3_migration import transform_staging
+    root = tmp_path / 'profile'
+    tx = root / '.system/migrations/synthetic'
+    data = tx / 'staged/data'
+    data.mkdir(parents=True)
+    (data / 'link').symlink_to(tmp_path, target_is_directory=True)
+    with pytest.raises(ValueError, match='Symlink'):
+        transform_staging(root, tx, {'mapping': {}})
+    assert not (data / 'json').exists()

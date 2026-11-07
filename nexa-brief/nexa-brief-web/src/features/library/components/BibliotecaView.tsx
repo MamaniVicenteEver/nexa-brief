@@ -1,11 +1,11 @@
 "use client";
 
 import { Plus, Search, SlidersHorizontal, X } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { ACTIVE_JOB_STATES, type ExplainerJob } from "@/features/explainer/types";
 import { useExplainerRecordings } from "@/features/explainer/hooks/useExplainer";
+import { ACTIVE_JOB_STATES, type ExplainerJob } from "@/features/explainer/types";
 import { type QueueEntry, useQueueEntries } from "@/features/schedule";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ import { useCategoryLabels } from "../hooks/useCategoryLabels";
 import { useJobs } from "../hooks/useJobs";
 import { deriveStatus, type LibraryStatus, type LibraryVideo } from "../library-status";
 import { ExplainerRecordingCard } from "./ExplainerRecordingCard";
+import { ImageLibrary } from "./ImageLibrary";
 import { VideoCard } from "./VideoCard";
 
 type Tab = "todos" | "pendientes" | "publicados" | "proceso" | "fallidos";
@@ -82,6 +83,7 @@ export function BibliotecaView() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
   const [page, setPage] = useState(1);
+  const [mediaType, setMediaType] = useState<"videos" | "images">("videos");
 
   const videos = useMemo<LibraryVideo[]>(() => {
     const published = groupByJob(queueEntries, ["published"]);
@@ -202,205 +204,232 @@ export function BibliotecaView() {
           </h1>
           <p className="mt-1 max-w-[560px] text-[13.5px] text-nb-mute">{t("subtitle")}</p>
         </div>
-        <Link
-          href="/crear-video"
-          className="nb-btn-pill inline-flex items-center gap-1.5 px-4.5 py-2.5 text-[13px] font-semibold"
-        >
-          <Plus className="size-4" />
-          {t("createVideo")}
-        </Link>
-      </header>
-
-      {/* Toolbar: búsqueda + orden */}
-      <div className="mt-7 flex flex-wrap items-center gap-3">
-        <div className="relative min-w-[240px] flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-nb-mute" />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => changeQuery(e.target.value)}
-            placeholder={t("filters.searchPlaceholder")}
-            aria-label={t("filters.searchPlaceholder")}
-            className="w-full rounded-full border border-nb-line bg-nb-surface py-2.5 pr-10 pl-10 text-[13.5px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark focus:ring-3 focus:ring-nb-green/30"
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={() => changeQuery("")}
-              aria-label={t("filters.clearFilters")}
-              className="absolute top-1/2 right-3 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-nb-mute hover:bg-nb-bg-2 hover:text-nb-ink"
-            >
-              <X className="size-3.5" />
-            </button>
-          )}
-        </div>
-        <label className="flex items-center gap-2 rounded-full border border-nb-line bg-nb-surface py-1 pr-1.5 pl-3.5 text-[12.5px] font-semibold text-nb-mute">
-          <SlidersHorizontal className="size-3.5" />
-          <span className="sr-only sm:not-sr-only">{t("filters.sortLabel")}</span>
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as Sort)}
-            className="cursor-pointer rounded-full bg-transparent py-1.5 pr-1 text-[13px] text-nb-ink outline-none"
-          >
-            {SORTS.map((s) => (
-              <option key={s} value={s}>
-                {t(`filters.sort.${s}`)}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-
-      {/* Categorías */}
-      {categories.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="mr-1 text-[11px] font-semibold tracking-[0.05em] text-nb-mute uppercase">
-            {t("filters.categoryLabel")}
-          </span>
-          <CategoryChip
-            label={t("filters.allCategories")}
-            count={items.length}
-            active={category === ""}
-            onClick={() => selectCategory("")}
-          />
-          {categories.map((c) => (
-            <CategoryChip
-              key={c.id}
-              label={c.label}
-              count={c.count}
-              active={category === c.id}
-              onClick={() => selectCategory(category === c.id ? "" : c.id)}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Pestañas de estado */}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-nb-line">
-        <div
-          role="tablist"
-          className="-mb-px flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {TAB_ORDER.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              role="tab"
-              aria-selected={activeTab === tab}
-              onClick={() => selectTab(tab)}
-              className={cn(
-                "flex shrink-0 items-center gap-2 border-b-2 border-transparent px-3.5 py-2.5 text-[13.5px] font-semibold whitespace-nowrap text-nb-mute transition-colors hover:text-nb-ink",
-                activeTab === tab && "border-nb-ink text-nb-ink",
-              )}
-            >
-              {t(`tabs.${tab}`)}
-              <span
+        <div className="flex flex-wrap items-center gap-3">
+          <fieldset className="inline-flex rounded-full border border-nb-line bg-nb-surface p-1">
+            <legend className="sr-only">{t("mediaType.label")}</legend>
+            {(["videos", "images"] as const).map((type) => (
+              <button
+                key={type}
+                type="button"
+                aria-pressed={mediaType === type}
+                onClick={() => setMediaType(type)}
                 className={cn(
-                  "min-w-6 rounded-full px-1.5 py-0.5 text-center text-[11px] tabular-nums",
-                  activeTab === tab ? "bg-nb-ink text-[#fafaf7]" : "bg-nb-bg-2 text-nb-ink-soft",
-                  tab === "pendientes" &&
-                    tabCounts[tab] > 0 &&
-                    activeTab !== tab &&
-                    "bg-nb-accent-gold text-nb-ink",
+                  "rounded-full px-4 py-2 text-[13px] font-semibold transition-colors",
+                  mediaType === type ? "bg-nb-ink text-white" : "text-nb-mute hover:text-nb-ink",
                 )}
               >
-                {libraryLoading ? "–" : tabCounts[tab]}
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-3 pb-2 text-[12.5px] text-nb-mute">
-          {!libraryLoading && <span>{t("resultsCount", { count: activeList.length })}</span>}
-          {filtersActive && (
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold text-nb-ink-soft hover:bg-nb-bg-2 hover:text-nb-ink"
-            >
-              <X className="size-3.5" />
-              {t("filters.clearFilters")}
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-6">
-        {libraryLoading ? (
-          <CardGrid>
-            {Array.from({ length: 8 }, (_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: skeletons estáticos sin identidad
-              <SkeletonCard key={i} />
+                {t(`mediaType.${type}`)}
+              </button>
             ))}
-          </CardGrid>
-        ) : isError ? (
-          <EmptyState message={t("loadError")} />
-        ) : items.length === 0 ? (
-          <EmptyState
-            message={t("emptyLibrary")}
-            action={
-              <Link
-                href="/crear-video"
-                className="nb-btn-pill px-4.5 py-2.5 text-[13px] font-semibold"
+          </fieldset>
+          <Link
+            href="/crear-video"
+            className="nb-btn-pill inline-flex items-center gap-1.5 px-4.5 py-2.5 text-[13px] font-semibold"
+          >
+            <Plus className="size-4" />
+            {t("createVideo")}
+          </Link>
+        </div>
+      </header>
+
+      {mediaType === "images" ? (
+        <ImageLibrary />
+      ) : (
+        <>
+          {/* Toolbar: búsqueda + orden */}
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <div className="relative min-w-[240px] flex-1">
+              <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-nb-mute" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => changeQuery(e.target.value)}
+                placeholder={t("filters.searchPlaceholder")}
+                aria-label={t("filters.searchPlaceholder")}
+                className="w-full rounded-full border border-nb-line bg-nb-surface py-2.5 pr-10 pl-10 text-[13.5px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark focus:ring-3 focus:ring-nb-green/30"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => changeQuery("")}
+                  aria-label={t("filters.clearFilters")}
+                  className="absolute top-1/2 right-3 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-nb-mute hover:bg-nb-bg-2 hover:text-nb-ink"
+                >
+                  <X className="size-3.5" />
+                </button>
+              )}
+            </div>
+            <label className="flex items-center gap-2 rounded-full border border-nb-line bg-nb-surface py-1 pr-1.5 pl-3.5 text-[12.5px] font-semibold text-nb-mute">
+              <SlidersHorizontal className="size-3.5" />
+              <span className="sr-only sm:not-sr-only">{t("filters.sortLabel")}</span>
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value as Sort)}
+                className="cursor-pointer rounded-full bg-transparent py-1.5 pr-1 text-[13px] text-nb-ink outline-none"
               >
-                {t("createVideo")}
-              </Link>
-            }
-          />
-        ) : pageItems.length === 0 ? (
-          <EmptyState
-            message={t("emptyState")}
-            action={
-              filtersActive && (
+                {SORTS.map((s) => (
+                  <option key={s} value={s}>
+                    {t(`filters.sort.${s}`)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          {/* Categorías */}
+          {categories.length > 0 && (
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <span className="mr-1 text-[11px] font-semibold tracking-[0.05em] text-nb-mute uppercase">
+                {t("filters.categoryLabel")}
+              </span>
+              <CategoryChip
+                label={t("filters.allCategories")}
+                count={items.length}
+                active={category === ""}
+                onClick={() => selectCategory("")}
+              />
+              {categories.map((c) => (
+                <CategoryChip
+                  key={c.id}
+                  label={c.label}
+                  count={c.count}
+                  active={category === c.id}
+                  onClick={() => selectCategory(category === c.id ? "" : c.id)}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Pestañas de estado */}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-nb-line">
+            <div
+              role="tablist"
+              className="-mb-px flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {TAB_ORDER.map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === tab}
+                  onClick={() => selectTab(tab)}
+                  className={cn(
+                    "flex shrink-0 items-center gap-2 border-b-2 border-transparent px-3.5 py-2.5 text-[13.5px] font-semibold whitespace-nowrap text-nb-mute transition-colors hover:text-nb-ink",
+                    activeTab === tab && "border-nb-ink text-nb-ink",
+                  )}
+                >
+                  {t(`tabs.${tab}`)}
+                  <span
+                    className={cn(
+                      "min-w-6 rounded-full px-1.5 py-0.5 text-center text-[11px] tabular-nums",
+                      activeTab === tab
+                        ? "bg-nb-ink text-[#fafaf7]"
+                        : "bg-nb-bg-2 text-nb-ink-soft",
+                      tab === "pendientes" &&
+                        tabCounts[tab] > 0 &&
+                        activeTab !== tab &&
+                        "bg-nb-accent-gold text-nb-ink",
+                    )}
+                  >
+                    {libraryLoading ? "–" : tabCounts[tab]}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-3 pb-2 text-[12.5px] text-nb-mute">
+              {!libraryLoading && <span>{t("resultsCount", { count: activeList.length })}</span>}
+              {filtersActive && (
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="nb-btn-secondary rounded-full px-4.5 py-2.5 text-[13px] font-semibold"
+                  className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold text-nb-ink-soft hover:bg-nb-bg-2 hover:text-nb-ink"
                 >
+                  <X className="size-3.5" />
                   {t("filters.clearFilters")}
                 </button>
-              )
-            }
-          />
-        ) : (
-          <CardGrid>
-            {pageItems.map((item) =>
-              item.kind === "video" ? (
-                <VideoCard key={item.key} video={item.video} />
-              ) : (
-                <ExplainerRecordingCard
-                  key={item.key}
-                  job={item.recording}
-                  categoryLabel={item.categoryLabel}
-                />
-              )
-            )}
-          </CardGrid>
-        )}
-
-        {totalPages > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-4">
-            <button
-              type="button"
-              disabled={currentPage === 1}
-              onClick={() => setPage(currentPage - 1)}
-              className="rounded-full border border-nb-line px-4 py-2 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink disabled:pointer-events-none disabled:opacity-40"
-            >
-              {t("pagination.previous")}
-            </button>
-            <span className="text-[12.5px] text-nb-mute">
-              {t("pagination.pageOf", { page: currentPage, total: totalPages })}
-            </span>
-            <button
-              type="button"
-              disabled={currentPage === totalPages}
-              onClick={() => setPage(currentPage + 1)}
-              className="rounded-full border border-nb-line px-4 py-2 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink disabled:pointer-events-none disabled:opacity-40"
-            >
-              {t("pagination.next")}
-            </button>
+              )}
+            </div>
           </div>
-        )}
-      </div>
+
+          <div className="mt-6">
+            {libraryLoading ? (
+              <CardGrid>
+                {Array.from({ length: 8 }, (_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: skeletons estáticos sin identidad
+                  <SkeletonCard key={i} />
+                ))}
+              </CardGrid>
+            ) : isError ? (
+              <EmptyState message={t("loadError")} />
+            ) : items.length === 0 ? (
+              <EmptyState
+                message={t("emptyLibrary")}
+                action={
+                  <Link
+                    href="/crear-video"
+                    className="nb-btn-pill px-4.5 py-2.5 text-[13px] font-semibold"
+                  >
+                    {t("createVideo")}
+                  </Link>
+                }
+              />
+            ) : pageItems.length === 0 ? (
+              <EmptyState
+                message={t("emptyState")}
+                action={
+                  filtersActive && (
+                    <button
+                      type="button"
+                      onClick={clearFilters}
+                      className="nb-btn-secondary rounded-full px-4.5 py-2.5 text-[13px] font-semibold"
+                    >
+                      {t("filters.clearFilters")}
+                    </button>
+                  )
+                }
+              />
+            ) : (
+              <CardGrid>
+                {pageItems.map((item) =>
+                  item.kind === "video" ? (
+                    <VideoCard key={item.key} video={item.video} />
+                  ) : (
+                    <ExplainerRecordingCard
+                      key={item.key}
+                      job={item.recording}
+                      categoryLabel={item.categoryLabel}
+                    />
+                  ),
+                )}
+              </CardGrid>
+            )}
+
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-center gap-4">
+                <button
+                  type="button"
+                  disabled={currentPage === 1}
+                  onClick={() => setPage(currentPage - 1)}
+                  className="rounded-full border border-nb-line px-4 py-2 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink disabled:pointer-events-none disabled:opacity-40"
+                >
+                  {t("pagination.previous")}
+                </button>
+                <span className="text-[12.5px] text-nb-mute">
+                  {t("pagination.pageOf", { page: currentPage, total: totalPages })}
+                </span>
+                <button
+                  type="button"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setPage(currentPage + 1)}
+                  className="rounded-full border border-nb-line px-4 py-2 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink disabled:pointer-events-none disabled:opacity-40"
+                >
+                  {t("pagination.next")}
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

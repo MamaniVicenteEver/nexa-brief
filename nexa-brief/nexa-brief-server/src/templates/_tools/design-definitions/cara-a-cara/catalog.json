@@ -1,0 +1,2843 @@
+{
+  "design_id": "cara-a-cara",
+  "schema_version": 1,
+  "revision": "bb173b2c8f2fd8969ce53ae863860d4b6c160b6626e6ad188c14fd69d11ddb00",
+  "entries": [
+    {
+      "id": "comparacion.dos-tarjetas",
+      "name": "comparacion.dos-tarjetas",
+      "label": "comparacion.dos-tarjetas",
+      "kind": "component",
+      "summary": "Dos tarjetas reutilizables: sus imágenes cambian por JSON y conservan el diseño y los bordes.",
+      "tags": [],
+      "params": {
+        "mode": {
+          "type": "string",
+          "default": "duo",
+          "doc": "Modo del plano en assets/scene.json.",
+          "values": [
+            "duo",
+            "single"
+          ]
+        },
+        "subjects": {
+          "type": "array",
+          "default": [],
+          "doc": "Sujetos base: id, title, src y fit. En shots[].subjects se puede cambiar src por id sin cambiar el marco."
+        },
+        "focus": {
+          "type": "string",
+          "default": "both",
+          "doc": "Foco del plano.",
+          "values": [
+            "both",
+            "left",
+            "right"
+          ]
+        }
+      },
+      "example": {
+        "end": 4,
+        "profile_id": "leo-comparaciones-v1",
+        "subjects": [
+          {
+            "id": "nasa",
+            "title": "NASA · EE. UU.",
+            "src": "assets/media/nasa.svg",
+            "fit": "contain"
+          },
+          {
+            "id": "urss",
+            "title": "UNIÓN SOVIÉTICA",
+            "src": "assets/media/urss.svg",
+            "fit": "contain"
+          }
+        ],
+        "shots": [
+          {
+            "t": 0,
+            "mode": "duo",
+            "focus": "both",
+            "headline": "COMPARACIÓN",
+            "pose": "question"
+          },
+          {
+            "t": 2,
+            "mode": "duo",
+            "focus": "both",
+            "headline": "COMPARACIÓN",
+            "pose": "question",
+            "subjects": [
+              {
+                "id": "nasa",
+                "src": "assets/media/aldrin.jpg",
+                "fit": "cover"
+              },
+              {
+                "id": "urss",
+                "src": "assets/media/gagarin.gif",
+                "fit": "cover"
+              }
+            ]
+          }
+        ],
+        "avatar": {
+          "timeline": []
+        }
+      },
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.dos-tarjetas&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "comparacion.dos-tarjetas"
+      }
+    },
+    {
+      "id": "comparacion.tarjeta-destacada",
+      "name": "comparacion.tarjeta-destacada",
+      "label": "comparacion.tarjeta-destacada",
+      "kind": "component",
+      "summary": "Una tarjeta ocupa el ancho de las dos columnas para destacar un sujeto.",
+      "tags": [],
+      "params": {
+        "mode": {
+          "type": "string",
+          "default": "single",
+          "doc": "Modo del plano en assets/scene.json."
+        },
+        "focus": {
+          "type": "string",
+          "default": "right",
+          "doc": "Sujeto que se amplía.",
+          "values": [
+            "left",
+            "right"
+          ]
+        },
+        "subjects": {
+          "type": "array",
+          "default": [],
+          "doc": "Datos y sobrescrituras opcionales de cada sujeto."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.tarjeta-destacada&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "comparacion.tarjeta-destacada"
+      }
+    },
+    {
+      "id": "comparacion.titular",
+      "name": "comparacion.titular",
+      "label": "comparacion.titular",
+      "kind": "component",
+      "summary": "Pregunta o titular superior que cambia con cada plano.",
+      "tags": [],
+      "params": {
+        "headline": {
+          "type": "string",
+          "default": "¿QUIÉN GANÓ LA CARRERA ESPACIAL?",
+          "doc": "Texto de shots[].headline en assets/scene.json."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.titular&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "comparacion.titular"
+      }
+    },
+    {
+      "id": "comparacion.subtitulos",
+      "name": "comparacion.subtitulos",
+      "label": "comparacion.subtitulos",
+      "kind": "component",
+      "summary": "Subtítulos agrupados y sincronizados con la voz mediante lyrics.json.",
+      "tags": [],
+      "params": {
+        "maxWords": {
+          "type": "number",
+          "default": 3,
+          "doc": "Máximo de palabras por grupo en el perfil aprobado."
+        },
+        "lyricsUrl": {
+          "type": "string",
+          "default": "assets/lyrics.json",
+          "doc": "Transcripción con tiempos por palabra en assets/config.json."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.subtitulos&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "comparacion.subtitulos"
+      }
+    },
+    {
+      "id": "comparacion.foto",
+      "name": "comparacion.foto",
+      "label": "comparacion.foto",
+      "kind": "component",
+      "summary": "Foto de apoyo asignada a un sujeto en overlays.json.",
+      "tags": [],
+      "params": {
+        "kind": {
+          "type": "string",
+          "default": "photo",
+          "doc": "Tipo de medio en assets/overlays.json."
+        },
+        "src": {
+          "type": "string",
+          "default": "assets/media/sputnik.jpg",
+          "doc": "Ruta de la imagen."
+        },
+        "subject": {
+          "type": "string",
+          "default": "urss",
+          "doc": "Id de la tarjeta que recibe el medio."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 9.3889,
+          "doc": "Tiempo de entrada o ancla de voz."
+        },
+        "dur": {
+          "type": "number",
+          "default": 8.9555,
+          "doc": "Duración en segundos."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.foto&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "comparacion.foto"
+      }
+    },
+    {
+      "id": "comparacion.video",
+      "name": "comparacion.video",
+      "label": "comparacion.video",
+      "kind": "component",
+      "summary": "Clip mudo sincronizado con la voz y asignado a la tarjeta de un sujeto.",
+      "tags": [],
+      "params": {
+        "kind": {
+          "type": "string",
+          "default": "video",
+          "doc": "Tipo de medio en assets/overlays.json."
+        },
+        "src": {
+          "type": "string",
+          "default": "assets/media/apollo-launch.mp4",
+          "doc": "Ruta del clip."
+        },
+        "subject": {
+          "type": "string",
+          "default": "nasa",
+          "doc": "Id de la tarjeta que recibe el clip."
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 26.5667,
+          "doc": "Tiempo de entrada o ancla de voz."
+        },
+        "dur": {
+          "type": "number",
+          "default": 7.8,
+          "doc": "Duración en segundos."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.video&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "comparacion.video"
+      }
+    },
+    {
+      "id": "personajes.crear-personaje",
+      "name": "personajes.crear-personaje",
+      "label": "personajes.crear-personaje",
+      "kind": "character",
+      "summary": "Crear e integrar un personaje compatible con Cara a Cara.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 2,
+        "tipo": "instrucciones-para-crear-personaje",
+        "titulo": "Crear un personaje para Cara a Cara",
+        "objetivo": "Crear un personaje original compatible con Cara a Cara, con identidad editorial, personalidad, propuesta de voz, recursos visuales y poses reutilizables; no reescribir el motor.",
+        "alcance": {
+          "plantilla": "sandbox/nodeaction/cara-a-cara",
+          "raiz_rutas": "Todas las rutas siguientes son relativas a src/templates/ salvo que se indique otro origen.",
+          "modo": "Este documento es una guía de trabajo, no un archivo que el motor cargue automáticamente. Sustituir los marcadores <id> y <descripcion> por los valores reales.",
+          "necesita": [
+            "Nombre, tema, objetivo, personalidad, aspecto y voz; cuando el usuario no los especifique, elegir una propuesta coherente y registrarla como tal.",
+            "Un id nuevo y único en minúsculas; no usar leo ni lia.",
+            "Herramienta de imagen o láminas suministradas, y medios para medir y revisar los recortes."
+          ],
+          "si_falta_informacion": "Una petición como crear un personaje es suficiente: inventar una identidad original coherente, sin afirmar aprobación humana. Preguntar solo cuando exista una decisión imprescindible que no pueda inferirse. Si no hay proveedor o recurso necesario, informar el bloqueo y no simular resultados."
+        },
+        "referencias": {
+          "estilo_y_poses": "sandbox/nodeaction/cara-a-cara/assets/avatar/sheet-original.png",
+          "prompt_original": "sandbox/nodeaction/cara-a-cara/assets/avatar/generation-prompt.txt",
+          "ejemplo_recortes": "sandbox/nodeaction/cara-a-cara/assets/avatar/poses-index.json",
+          "perfil_que_lee_el_motor": "sandbox/nodeaction/_pizarra/profiles/leo.json",
+          "escena_de_ejemplo": "sandbox/nodeaction/cara-a-cara/assets/scene.json",
+          "nota": "La cuadrícula 4×4 de referencia contiene dos personajes, ocho poses por personaje. Sus coordenadas pertenecen exclusivamente a esa imagen: nunca copiarlas para una imagen nueva."
+        },
+        "principios_visuales": [
+          "Mantener el lenguaje visual de Cara a Cara: ilustración 2D de dibujo limpio, contornos oscuros expresivos, ojos legibles, proporciones sencillas y apariencia cercana, adecuada para un video educativo.",
+          "El personaje debe ser original y coherente con la descripción o referencia autorizada; conservar identidad, rostro, peinado, ropa, colores, proporciones y calzado entre todas las poses.",
+          "Cada pose debe mostrar el cuerpo entero, de pie, con cabeza, manos y zapatos completos; dejar margen limpio para evitar cortes, mantener escala, cámara y línea de suelo compatibles.",
+          "Usar fondo blanco uniforme como la referencia aprobada, sin textos, números, logotipos, marcos, objetos ni sombras. Evitar transparencias o halos en el interior del personaje.",
+          "Las expresiones y gestos deben ser reconocibles y las manos anatómicamente plausibles. No añadir partes de cuerpo duplicadas ni elementos que invadan otra celda."
+        ],
+        "poses_obligatorias": [
+          {
+            "id": "talk",
+            "indicacion": "habla de forma amistosa y relajada"
+          },
+          {
+            "id": "point-left",
+            "indicacion": "señala hacia la izquierda de la pantalla"
+          },
+          {
+            "id": "point-right",
+            "indicacion": "señala hacia la derecha de la pantalla"
+          },
+          {
+            "id": "think",
+            "indicacion": "piensa con un dedo en la barbilla"
+          },
+          {
+            "id": "explain",
+            "indicacion": "explica con manos abiertas"
+          },
+          {
+            "id": "surprise",
+            "indicacion": "expresa sorpresa amistosa"
+          },
+          {
+            "id": "celebrate",
+            "indicacion": "sonríe y celebra con un gesto pequeño"
+          },
+          {
+            "id": "question",
+            "indicacion": "pregunta con los brazos abiertos"
+          }
+        ],
+        "generacion_de_imagen": {
+          "formato_recomendado": "Lámina 2×2 con cuatro poses, preferida para calidad y costo: mínimo 1024×1024 si las cuatro celdas son cuadradas de al menos 512×512. Para 4×4 usar al menos 2048×2048 y validar que cada celda y rostro conservan calidad; si el generador no alcanza esa resolución, usar varias láminas 2×2. Los tamaños son mínimos geométricos, no garantía de calidad visual.",
+          "prompt_base": "Crear una lámina 2×2 con cuatro poses de <descripcion> para un video educativo vertical, en este orden: <lista-de-cuatro-poses>. Es el mismo personaje original en las cuatro celdas: conservar rostro, piel, cabello, ropa, colores y proporciones. Dibujo 2D limpio con contorno oscuro, ojos legibles y expresiones amistosas, coherente con la lámina de referencia de Cara a Cara. Cuerpo completo centrado y margen blanco alrededor de cabeza, manos y pies; fondo blanco puro, sin texto, logotipos, marcos, accesorios ni sombras. Ninguna figura invade otra celda. Resolución final mínima 1024×1024, con al menos 512×512 por celda, sin ampliar material borroso. Para ocho poses usar dos láminas, manteniendo idéntica la identidad.",
+          "revisar_antes_de_usar": "Un generador puede alterar la cuadrícula, los dedos, la ropa o las proporciones. Examinar las ocho celdas y corregir o regenerar lo que no cumpla; no asumir que una instrucción de texto garantiza el resultado.",
+          "nota_lotes": "Un personaje inicial necesita ocho poses: se pueden generar en dos láminas 2×2 y registrar cada pose con su archivo y recorte. No producir una solicitud de imagen por pose. Véase crear-expresiones.json."
+        },
+        "contrato_de_integracion": {
+          "archivo_del_personaje": "sandbox/nodeaction/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+          "registro": "Agregar el personaje al perfil compartido solo después de validar identidad, láminas y recortes. El comando de registro y sincronización de tarjetas se documenta en assets/avatar/crear-expresiones.json; no reemplazar entradas existentes.",
+          "ruta_src": "La propiedad src se resuelve relativa a la URL de _pizarra/profiles/leo.json, no relativa a scene.json. Para la ubicación propuesta usar ../../cara-a-cara/assets/avatar/characters/<id>/sheet.png; verificar que la URL resuelta carga desde la aplicación.",
+          "forma_registro": {
+            "src": "../../cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+            "poses": {
+              "talk": "<recorte medido>",
+              "point-left": "<recorte medido>",
+              "point-right": "<recorte medido>",
+              "think": "<recorte medido>",
+              "explain": "<recorte medido>",
+              "surprise": "<recorte medido>",
+              "celebrate": "<recorte medido>",
+              "question": "<recorte medido>"
+            }
+          },
+          "nota_forma_registro": "La estructura anterior es un esquema con marcadores, no datos válidos para copiar al perfil. Cada <recorte medido> debe reemplazarse por un arreglo de cuatro números reales.",
+          "recortes": {
+            "formato": "[x, y, ancho, alto], normalizados respecto al ancho y alto completos de la imagen; no son píxeles ni coordenadas de la celda.",
+            "formula": "Para una caja medida en píxeles [izquierda, arriba, ancho, alto] y lámina de W×H píxeles: [izquierda/W, arriba/H, ancho/W, alto/H].",
+            "restricciones": "Los cuatro valores deben ser números finitos entre 0 y 1; ancho y alto mayores que 0; x+ancho ≤ 1 e y+alto ≤ 1. Medir cada pose sobre la imagen real con suficiente margen, sin abarcar otra pose, y revisar cuerpo completo y bordes.",
+            "advertencia": "No reutilizar coordenadas de Leo ni Lía y no suponer que todas las celdas generadas son idénticas. Un recorte ausente puede hacer que el motor dibuje la lámina completa."
+          },
+          "seleccion": "Para previsualizar sin cambiar el personaje predeterminado usar index.html?character=<id>&t=0. En una escena que debe usarlo, asignar shots[].character al id; verificar todos los planos que deban mostrarlo. El parámetro character de la URL tiene prioridad sobre el personaje de cada plano.",
+          "poses_en_escena": "Usar shots[].pose o eventos avatar.timeline: [{\"at\":0,\"pose\":\"talk\"}]. at acepta segundos o anclas de voz que existan en lyrics.json. La línea de tiempo se conserva al cargar el perfil, pero las definiciones y el personaje predeterminado provienen del perfil compartido.",
+          "voz": "La identidad visual y la voz son decisiones separadas. El perfil de voz Puck y el audio aprobado de Leo no deben cambiarse ni regenerarse automáticamente para un personaje nuevo.",
+          "preservacion": [
+            "No sobrescribir sheet-original.png, Leo, Lía, sus recortes o su perfil de voz.",
+            "No cambiar la distribución aprobada, las tipografías, la escena NASA/URSS ni el motor para crear una variante de personaje.",
+            "No modificar el personaje predeterminado compartido. Usar una copia de escena de prueba o un video nuevo para los cambios de shots.",
+            "Registrar la procedencia de imágenes y créditos cuando corresponda. No publicar ni renderizar un video final salvo petición expresa."
+          ],
+          "poses_desde_otras_laminas": "Cada pose puede ser [x,y,ancho,alto] sobre el src principal, o {\"src\":\"ruta relativa al perfil\",\"crop\":[x,y,ancho,alto]} para usar otra lámina. El motor resuelve src desde _pizarra/profiles/leo.json."
+        },
+        "pasos": [
+          "1. Elegir nombre e id únicos, tema, objetivo, personalidad, público y dirección de voz. Guardar identity.json en assets/avatar/characters/<id>/.",
+          "2. Preparar ocho poses en lotes 2×2 o una lámina 4×4 de resolución suficiente; usar la referencia del estilo y una única identidad visual.",
+          "3. Medir los recortes de cada pose y preparar un manifest.json con la identidad, la lámina principal y los recortes reales.",
+          "4. Verificar las láminas y el manifiesto; registrar el personaje sin reemplazar otros y sincronizar la biblioteca siguiendo assets/avatar/crear-expresiones.json.",
+          "5. Si se solicitó una muestra de voz y el proveedor está disponible, generarla en la carpeta propia; registrar proveedor, modelo y resultado real. No cambiar la voz de Leo.",
+          "6. Revisar cada pose en el Showcase y el video de prueba, en 9:16, pausa y seek. No publicar ni exportar el video final salvo solicitud."
+        ],
+        "criterios_de_aceptacion": [
+          "Los ocho nombres están presentes exactamente y cada recorte contiene una sola figura completa.",
+          "El personaje conserva rasgos, vestuario, escala y estilo entre poses; las poses son distinguibles y los gestos izquierda/derecha corresponden a la pantalla.",
+          "El PNG y todos los recortes son válidos y se cargan desde la aplicación, no solo desde el sistema de archivos.",
+          "El personaje seleccionado aparece en cada pose al reproducir y al saltar en el tiempo, sin errores de consola ni imágenes cortadas.",
+          "Leo y Lía siguen funcionando y el perfil predeterminado, la voz y el audio aprobados permanecen intactos.",
+          "Si un criterio falla, no afirmar que el personaje está integrado; corregir y volver a verificar o describir el bloqueo."
+        ],
+        "entrada_unica": {
+          "directorio": "sandbox/nodeaction/cara-a-cara/",
+          "leer_primero": [
+            "assets/avatar/crear-personaje.json",
+            "assets/avatar/crear-expresiones.json"
+          ],
+          "referencias_visuales": [
+            "assets/avatar/sheet-original.png",
+            "assets/avatar/generation-prompt.txt"
+          ],
+          "ejemplos_de_identidad": [
+            "assets/avatar/identities/leo.json",
+            "assets/avatar/identities/lia.json"
+          ],
+          "reglas": "Para una solicitud mínima como crear un personaje, decidir detalles no especificados con criterio; solo solicitar datos que sean esenciales y no se puedan inferir. Si un recurso o proveedor falla, indicarlo, nunca simular un resultado."
+        },
+        "identidad_requerida": {
+          "ruta": "assets/avatar/characters/<id>/identity.json",
+          "campos": [
+            "id",
+            "nombre",
+            "tema",
+            "objetivo",
+            "publico",
+            "personalidad",
+            "estilo",
+            "voz"
+          ],
+          "voz": "Incluir proveedor, nombre de voz, modelo, dirección vocal y estado (propuesta, muestra generada o aprobada). Si hay muestra y transcripción, guardar sus rutas relativas a la raíz de Cara a Cara como voz.muestra y voz.subtitulos (WebVTT). No presentar una voz como escuchada o aprobada si no lo está. Si se solicita una muestra y el proveedor funciona, guardarla en la carpeta del personaje; si falla, registrar el error sin repetir ciegamente.",
+          "ejemplo": "Consultar assets/avatar/identities/leo.json y lia.json. La voz aprobada de Leo no se cambia."
+        },
+        "entrega_para_registro": {
+          "carpeta": "assets/avatar/characters/<id>/",
+          "archivos": [
+            "identity.json",
+            "manifest.json",
+            "una o más láminas PNG; en el manifiesto usar solo el nombre de archivo."
+          ],
+          "manifiesto_ejemplo": {
+            "id": "<id>",
+            "sheets": [
+              {
+                "file": "poses-01.png",
+                "rows": 2,
+                "columns": 2
+              },
+              {
+                "file": "poses-02.png",
+                "rows": 2,
+                "columns": 2
+              }
+            ],
+            "poses": {
+              "talk": {
+                "sheet": "poses-01.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "point-left": {
+                "sheet": "poses-01.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "point-right": {
+                "sheet": "poses-01.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "think": {
+                "sheet": "poses-01.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "explain": {
+                "sheet": "poses-02.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "surprise": {
+                "sheet": "poses-02.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "celebrate": {
+                "sheet": "poses-02.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "question": {
+                "sheet": "poses-02.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              }
+            }
+          },
+          "advertencia": "El ejemplo contiene marcadores que deben reemplazarse por números reales medidos sobre cada imagen; no es válido como manifiesto final.",
+          "comandos": [
+            "node showcase/register-character.mjs <id> --check",
+            "node showcase/register-character.mjs <id> --apply"
+          ],
+          "condiciones": "El primer comando valida estructura, archivo PNG y resolución mínima de 512×512 por celda; no sustituye la revisión visual. El segundo registra el personaje y sincroniza sus tarjetas; no sobrescribe otro personaje."
+        }
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 2,
+        "tipo": "instrucciones-para-crear-personaje",
+        "titulo": "Crear un personaje para Cara a Cara",
+        "objetivo": "Crear un personaje original compatible con Cara a Cara, con identidad editorial, personalidad, propuesta de voz, recursos visuales y poses reutilizables; no reescribir el motor.",
+        "alcance": {
+          "plantilla": "sandbox/nodeaction/cara-a-cara",
+          "raiz_rutas": "Todas las rutas siguientes son relativas a src/templates/ salvo que se indique otro origen.",
+          "modo": "Este documento es una guía de trabajo, no un archivo que el motor cargue automáticamente. Sustituir los marcadores <id> y <descripcion> por los valores reales.",
+          "necesita": [
+            "Nombre, tema, objetivo, personalidad, aspecto y voz; cuando el usuario no los especifique, elegir una propuesta coherente y registrarla como tal.",
+            "Un id nuevo y único en minúsculas; no usar leo ni lia.",
+            "Herramienta de imagen o láminas suministradas, y medios para medir y revisar los recortes."
+          ],
+          "si_falta_informacion": "Una petición como crear un personaje es suficiente: inventar una identidad original coherente, sin afirmar aprobación humana. Preguntar solo cuando exista una decisión imprescindible que no pueda inferirse. Si no hay proveedor o recurso necesario, informar el bloqueo y no simular resultados."
+        },
+        "referencias": {
+          "estilo_y_poses": "sandbox/nodeaction/cara-a-cara/assets/avatar/sheet-original.png",
+          "prompt_original": "sandbox/nodeaction/cara-a-cara/assets/avatar/generation-prompt.txt",
+          "ejemplo_recortes": "sandbox/nodeaction/cara-a-cara/assets/avatar/poses-index.json",
+          "perfil_que_lee_el_motor": "sandbox/nodeaction/_pizarra/profiles/leo.json",
+          "escena_de_ejemplo": "sandbox/nodeaction/cara-a-cara/assets/scene.json",
+          "nota": "La cuadrícula 4×4 de referencia contiene dos personajes, ocho poses por personaje. Sus coordenadas pertenecen exclusivamente a esa imagen: nunca copiarlas para una imagen nueva."
+        },
+        "principios_visuales": [
+          "Mantener el lenguaje visual de Cara a Cara: ilustración 2D de dibujo limpio, contornos oscuros expresivos, ojos legibles, proporciones sencillas y apariencia cercana, adecuada para un video educativo.",
+          "El personaje debe ser original y coherente con la descripción o referencia autorizada; conservar identidad, rostro, peinado, ropa, colores, proporciones y calzado entre todas las poses.",
+          "Cada pose debe mostrar el cuerpo entero, de pie, con cabeza, manos y zapatos completos; dejar margen limpio para evitar cortes, mantener escala, cámara y línea de suelo compatibles.",
+          "Usar fondo blanco uniforme como la referencia aprobada, sin textos, números, logotipos, marcos, objetos ni sombras. Evitar transparencias o halos en el interior del personaje.",
+          "Las expresiones y gestos deben ser reconocibles y las manos anatómicamente plausibles. No añadir partes de cuerpo duplicadas ni elementos que invadan otra celda."
+        ],
+        "poses_obligatorias": [
+          {
+            "id": "talk",
+            "indicacion": "habla de forma amistosa y relajada"
+          },
+          {
+            "id": "point-left",
+            "indicacion": "señala hacia la izquierda de la pantalla"
+          },
+          {
+            "id": "point-right",
+            "indicacion": "señala hacia la derecha de la pantalla"
+          },
+          {
+            "id": "think",
+            "indicacion": "piensa con un dedo en la barbilla"
+          },
+          {
+            "id": "explain",
+            "indicacion": "explica con manos abiertas"
+          },
+          {
+            "id": "surprise",
+            "indicacion": "expresa sorpresa amistosa"
+          },
+          {
+            "id": "celebrate",
+            "indicacion": "sonríe y celebra con un gesto pequeño"
+          },
+          {
+            "id": "question",
+            "indicacion": "pregunta con los brazos abiertos"
+          }
+        ],
+        "generacion_de_imagen": {
+          "formato_recomendado": "Lámina 2×2 con cuatro poses, preferida para calidad y costo: mínimo 1024×1024 si las cuatro celdas son cuadradas de al menos 512×512. Para 4×4 usar al menos 2048×2048 y validar que cada celda y rostro conservan calidad; si el generador no alcanza esa resolución, usar varias láminas 2×2. Los tamaños son mínimos geométricos, no garantía de calidad visual.",
+          "prompt_base": "Crear una lámina 2×2 con cuatro poses de <descripcion> para un video educativo vertical, en este orden: <lista-de-cuatro-poses>. Es el mismo personaje original en las cuatro celdas: conservar rostro, piel, cabello, ropa, colores y proporciones. Dibujo 2D limpio con contorno oscuro, ojos legibles y expresiones amistosas, coherente con la lámina de referencia de Cara a Cara. Cuerpo completo centrado y margen blanco alrededor de cabeza, manos y pies; fondo blanco puro, sin texto, logotipos, marcos, accesorios ni sombras. Ninguna figura invade otra celda. Resolución final mínima 1024×1024, con al menos 512×512 por celda, sin ampliar material borroso. Para ocho poses usar dos láminas, manteniendo idéntica la identidad.",
+          "revisar_antes_de_usar": "Un generador puede alterar la cuadrícula, los dedos, la ropa o las proporciones. Examinar las ocho celdas y corregir o regenerar lo que no cumpla; no asumir que una instrucción de texto garantiza el resultado.",
+          "nota_lotes": "Un personaje inicial necesita ocho poses: se pueden generar en dos láminas 2×2 y registrar cada pose con su archivo y recorte. No producir una solicitud de imagen por pose. Véase crear-expresiones.json."
+        },
+        "contrato_de_integracion": {
+          "archivo_del_personaje": "sandbox/nodeaction/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+          "registro": "Agregar el personaje al perfil compartido solo después de validar identidad, láminas y recortes. El comando de registro y sincronización de tarjetas se documenta en assets/avatar/crear-expresiones.json; no reemplazar entradas existentes.",
+          "ruta_src": "La propiedad src se resuelve relativa a la URL de _pizarra/profiles/leo.json, no relativa a scene.json. Para la ubicación propuesta usar ../../cara-a-cara/assets/avatar/characters/<id>/sheet.png; verificar que la URL resuelta carga desde la aplicación.",
+          "forma_registro": {
+            "src": "../../cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+            "poses": {
+              "talk": "<recorte medido>",
+              "point-left": "<recorte medido>",
+              "point-right": "<recorte medido>",
+              "think": "<recorte medido>",
+              "explain": "<recorte medido>",
+              "surprise": "<recorte medido>",
+              "celebrate": "<recorte medido>",
+              "question": "<recorte medido>"
+            }
+          },
+          "nota_forma_registro": "La estructura anterior es un esquema con marcadores, no datos válidos para copiar al perfil. Cada <recorte medido> debe reemplazarse por un arreglo de cuatro números reales.",
+          "recortes": {
+            "formato": "[x, y, ancho, alto], normalizados respecto al ancho y alto completos de la imagen; no son píxeles ni coordenadas de la celda.",
+            "formula": "Para una caja medida en píxeles [izquierda, arriba, ancho, alto] y lámina de W×H píxeles: [izquierda/W, arriba/H, ancho/W, alto/H].",
+            "restricciones": "Los cuatro valores deben ser números finitos entre 0 y 1; ancho y alto mayores que 0; x+ancho ≤ 1 e y+alto ≤ 1. Medir cada pose sobre la imagen real con suficiente margen, sin abarcar otra pose, y revisar cuerpo completo y bordes.",
+            "advertencia": "No reutilizar coordenadas de Leo ni Lía y no suponer que todas las celdas generadas son idénticas. Un recorte ausente puede hacer que el motor dibuje la lámina completa."
+          },
+          "seleccion": "Para previsualizar sin cambiar el personaje predeterminado usar index.html?character=<id>&t=0. En una escena que debe usarlo, asignar shots[].character al id; verificar todos los planos que deban mostrarlo. El parámetro character de la URL tiene prioridad sobre el personaje de cada plano.",
+          "poses_en_escena": "Usar shots[].pose o eventos avatar.timeline: [{\"at\":0,\"pose\":\"talk\"}]. at acepta segundos o anclas de voz que existan en lyrics.json. La línea de tiempo se conserva al cargar el perfil, pero las definiciones y el personaje predeterminado provienen del perfil compartido.",
+          "voz": "La identidad visual y la voz son decisiones separadas. El perfil de voz Puck y el audio aprobado de Leo no deben cambiarse ni regenerarse automáticamente para un personaje nuevo.",
+          "preservacion": [
+            "No sobrescribir sheet-original.png, Leo, Lía, sus recortes o su perfil de voz.",
+            "No cambiar la distribución aprobada, las tipografías, la escena NASA/URSS ni el motor para crear una variante de personaje.",
+            "No modificar el personaje predeterminado compartido. Usar una copia de escena de prueba o un video nuevo para los cambios de shots.",
+            "Registrar la procedencia de imágenes y créditos cuando corresponda. No publicar ni renderizar un video final salvo petición expresa."
+          ],
+          "poses_desde_otras_laminas": "Cada pose puede ser [x,y,ancho,alto] sobre el src principal, o {\"src\":\"ruta relativa al perfil\",\"crop\":[x,y,ancho,alto]} para usar otra lámina. El motor resuelve src desde _pizarra/profiles/leo.json."
+        },
+        "pasos": [
+          "1. Elegir nombre e id únicos, tema, objetivo, personalidad, público y dirección de voz. Guardar identity.json en assets/avatar/characters/<id>/.",
+          "2. Preparar ocho poses en lotes 2×2 o una lámina 4×4 de resolución suficiente; usar la referencia del estilo y una única identidad visual.",
+          "3. Medir los recortes de cada pose y preparar un manifest.json con la identidad, la lámina principal y los recortes reales.",
+          "4. Verificar las láminas y el manifiesto; registrar el personaje sin reemplazar otros y sincronizar la biblioteca siguiendo assets/avatar/crear-expresiones.json.",
+          "5. Si se solicitó una muestra de voz y el proveedor está disponible, generarla en la carpeta propia; registrar proveedor, modelo y resultado real. No cambiar la voz de Leo.",
+          "6. Revisar cada pose en el Showcase y el video de prueba, en 9:16, pausa y seek. No publicar ni exportar el video final salvo solicitud."
+        ],
+        "criterios_de_aceptacion": [
+          "Los ocho nombres están presentes exactamente y cada recorte contiene una sola figura completa.",
+          "El personaje conserva rasgos, vestuario, escala y estilo entre poses; las poses son distinguibles y los gestos izquierda/derecha corresponden a la pantalla.",
+          "El PNG y todos los recortes son válidos y se cargan desde la aplicación, no solo desde el sistema de archivos.",
+          "El personaje seleccionado aparece en cada pose al reproducir y al saltar en el tiempo, sin errores de consola ni imágenes cortadas.",
+          "Leo y Lía siguen funcionando y el perfil predeterminado, la voz y el audio aprobados permanecen intactos.",
+          "Si un criterio falla, no afirmar que el personaje está integrado; corregir y volver a verificar o describir el bloqueo."
+        ],
+        "entrada_unica": {
+          "directorio": "sandbox/nodeaction/cara-a-cara/",
+          "leer_primero": [
+            "assets/avatar/crear-personaje.json",
+            "assets/avatar/crear-expresiones.json"
+          ],
+          "referencias_visuales": [
+            "assets/avatar/sheet-original.png",
+            "assets/avatar/generation-prompt.txt"
+          ],
+          "ejemplos_de_identidad": [
+            "assets/avatar/identities/leo.json",
+            "assets/avatar/identities/lia.json"
+          ],
+          "reglas": "Para una solicitud mínima como crear un personaje, decidir detalles no especificados con criterio; solo solicitar datos que sean esenciales y no se puedan inferir. Si un recurso o proveedor falla, indicarlo, nunca simular un resultado."
+        },
+        "identidad_requerida": {
+          "ruta": "assets/avatar/characters/<id>/identity.json",
+          "campos": [
+            "id",
+            "nombre",
+            "tema",
+            "objetivo",
+            "publico",
+            "personalidad",
+            "estilo",
+            "voz"
+          ],
+          "voz": "Incluir proveedor, nombre de voz, modelo, dirección vocal y estado (propuesta, muestra generada o aprobada). Si hay muestra y transcripción, guardar sus rutas relativas a la raíz de Cara a Cara como voz.muestra y voz.subtitulos (WebVTT). No presentar una voz como escuchada o aprobada si no lo está. Si se solicita una muestra y el proveedor funciona, guardarla en la carpeta del personaje; si falla, registrar el error sin repetir ciegamente.",
+          "ejemplo": "Consultar assets/avatar/identities/leo.json y lia.json. La voz aprobada de Leo no se cambia."
+        },
+        "entrega_para_registro": {
+          "carpeta": "assets/avatar/characters/<id>/",
+          "archivos": [
+            "identity.json",
+            "manifest.json",
+            "una o más láminas PNG; en el manifiesto usar solo el nombre de archivo."
+          ],
+          "manifiesto_ejemplo": {
+            "id": "<id>",
+            "sheets": [
+              {
+                "file": "poses-01.png",
+                "rows": 2,
+                "columns": 2
+              },
+              {
+                "file": "poses-02.png",
+                "rows": 2,
+                "columns": 2
+              }
+            ],
+            "poses": {
+              "talk": {
+                "sheet": "poses-01.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "point-left": {
+                "sheet": "poses-01.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "point-right": {
+                "sheet": "poses-01.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "think": {
+                "sheet": "poses-01.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "explain": {
+                "sheet": "poses-02.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "surprise": {
+                "sheet": "poses-02.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "celebrate": {
+                "sheet": "poses-02.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              },
+              "question": {
+                "sheet": "poses-02.png",
+                "crop": [
+                  "<x>",
+                  "<y>",
+                  "<ancho>",
+                  "<alto>"
+                ]
+              }
+            }
+          },
+          "advertencia": "El ejemplo contiene marcadores que deben reemplazarse por números reales medidos sobre cada imagen; no es válido como manifiesto final.",
+          "comandos": [
+            "node showcase/register-character.mjs <id> --check",
+            "node showcase/register-character.mjs <id> --apply"
+          ],
+          "condiciones": "El primer comando valida estructura, archivo PNG y resolución mínima de 512×512 por celda; no sustituye la revisión visual. El segundo registra el personaje y sincroniza sus tarjetas; no sobrescribe otro personaje."
+        }
+      }
+    },
+    {
+      "id": "personajes.crear-expresiones",
+      "name": "personajes.crear-expresiones",
+      "label": "personajes.crear-expresiones",
+      "kind": "character",
+      "summary": "Crear expresiones por lotes y añadirlas a la biblioteca.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "tipo": "instrucciones-para-ia",
+        "titulo": "Crear expresiones adicionales para un personaje",
+        "objetivo": "Crear poses adicionales por lotes, conservar la identidad y agregarlas al Showcase y al motor para usarlas desde JSON.",
+        "entrada": "Esta guía se lee junto a assets/avatar/crear-personaje.json y la identidad del personaje en assets/avatar/identities/<id>.json o assets/avatar/characters/<id>/identity.json. Todas las rutas son relativas a sandbox/nodeaction/cara-a-cara/.",
+        "formato": {
+          "predeterminado": {
+            "filas": 2,
+            "columnas": 2,
+            "expresiones_maximas": 4,
+            "tamano_minimo": "1024×1024 para celdas de al menos 512×512"
+          },
+          "alternativa": {
+            "filas": 4,
+            "columnas": 4,
+            "expresiones_maximas": 16,
+            "tamano_minimo": "2048×2048 para celdas de al menos 512×512",
+            "condicion": "Usar 4×4 solo si el generador entrega resolución y calidad suficientes. Si no, dividir en láminas 2×2."
+          },
+          "reglas": [
+            "No generar un archivo por expresión ni ampliar artificialmente una imagen borrosa para cumplir la resolución.",
+            "Comprobar nitidez, cuerpo entero, cara, manos, márgenes, identidad y consistencia. El mínimo geométrico no garantiza calidad.",
+            "Usar fondo blanco uniforme y recortes por pose; no reutilizar recortes de otra lámina."
+          ]
+        },
+        "prompt_estandar": "A partir de la referencia autorizada de <personaje>, crear una lámina de <filas>×<columnas> con <numero> poses de cuerpo entero. Mantener exactamente rostro, cabello, tono de piel, vestuario, proporciones y estilo de Cara a Cara en todas las celdas. Dibujar contornos oscuros, expresión clara y cuerpo íntegro con margen blanco. Fondo blanco puro; sin texto, marcos, accesorios ni figuras cortadas. Poses en orden de lectura: <lista-de-expresiones>. No inventar gestos no solicitados. Resolución final suficiente para que cada celda mida al menos 512×512; no estirar una imagen de menor calidad.",
+        "modelo_de_pose": {
+          "poses": {
+            "nombre-expresion": {
+              "src": "../../cara-a-cara/assets/avatar/characters/<id>/expresiones/<lamina>.png",
+              "crop": [
+                "x_normalizado",
+                "y_normalizado",
+                "ancho_normalizado",
+                "alto_normalizado"
+              ]
+            }
+          }
+        },
+        "notas_de_integracion": [
+          "En el perfil compartido _pizarra/profiles/leo.json, avatar.characters.<id>.poses acepta tanto el recorte original [x,y,w,h] como un objeto {src,crop} para una lámina nueva. src se resuelve respecto a la carpeta del perfil.",
+          "No reemplazar poses ni cambiar voz, identidad visual o configuración de otros personajes. Si el id de pose ya existe, usar otro id salvo solicitud explícita de reemplazo.",
+          "Cada crop se mide sobre la lámina real: [x/W,y/H,ancho/W,alto/H]; números finitos, valores dentro de 0..1, ancho y alto positivos, sin exceder el límite. Revisar visualmente cada recorte.",
+          "Después de registrar las poses, sincronizar el catálogo y sus miniaturas con node showcase/sync-character-assets.mjs. Cada pose se muestra como imagen estática, sin Play.",
+          "Para usar una pose en un video, referenciar su id en shots[].pose o avatar.timeline[].pose y comprobar el personaje en shots[].character."
+        ],
+        "validacion": [
+          "Revisar cada expresión individualmente y sus cuatro bordes; verificar tamaño, nitidez y que no incluya otra celda.",
+          "Probar cada tarjeta en Showcase y al menos una pose nueva en 9:16 con seek.",
+          "Confirmar que Leo, Lía y las poses anteriores siguen funcionando y que la imagen se carga por la API.",
+          "Si falta el proveedor o falla la validación, registrar el bloqueo: no declarar terminado ni inventar archivos."
+        ],
+        "registro_por_lotes": {
+          "carpeta": "assets/avatar/characters/<id>/",
+          "manifiesto": "Un archivo como manifest-expresiones-01.json en assets/avatar/characters/<id>/ con id, sheets [{file,rows,columns}] y poses {nombre:{sheet,crop}}. file es el nombre PNG de la carpeta y crop son cuatro números normalizados.",
+          "comandos": [
+            "node showcase/register-character.mjs <id> --check --extend --manifest manifest-expresiones-01.json",
+            "node showcase/register-character.mjs <id> --apply --extend --manifest manifest-expresiones-01.json"
+          ],
+          "reglas": [
+            "El personaje debe existir. Solo se añaden poses con ids nuevos; la herramienta rechaza nombres repetidos.",
+            "La herramienta valida resolución y geometría, registra las poses y genera miniaturas recortadas sin generar una imagen por expresión. La revisión visual sigue siendo obligatoria.",
+            "El manifiesto del lote contiene únicamente las poses y láminas nuevas; usar --manifest para conservar el manifiesto base."
+          ]
+        }
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "tipo": "instrucciones-para-ia",
+        "titulo": "Crear expresiones adicionales para un personaje",
+        "objetivo": "Crear poses adicionales por lotes, conservar la identidad y agregarlas al Showcase y al motor para usarlas desde JSON.",
+        "entrada": "Esta guía se lee junto a assets/avatar/crear-personaje.json y la identidad del personaje en assets/avatar/identities/<id>.json o assets/avatar/characters/<id>/identity.json. Todas las rutas son relativas a sandbox/nodeaction/cara-a-cara/.",
+        "formato": {
+          "predeterminado": {
+            "filas": 2,
+            "columnas": 2,
+            "expresiones_maximas": 4,
+            "tamano_minimo": "1024×1024 para celdas de al menos 512×512"
+          },
+          "alternativa": {
+            "filas": 4,
+            "columnas": 4,
+            "expresiones_maximas": 16,
+            "tamano_minimo": "2048×2048 para celdas de al menos 512×512",
+            "condicion": "Usar 4×4 solo si el generador entrega resolución y calidad suficientes. Si no, dividir en láminas 2×2."
+          },
+          "reglas": [
+            "No generar un archivo por expresión ni ampliar artificialmente una imagen borrosa para cumplir la resolución.",
+            "Comprobar nitidez, cuerpo entero, cara, manos, márgenes, identidad y consistencia. El mínimo geométrico no garantiza calidad.",
+            "Usar fondo blanco uniforme y recortes por pose; no reutilizar recortes de otra lámina."
+          ]
+        },
+        "prompt_estandar": "A partir de la referencia autorizada de <personaje>, crear una lámina de <filas>×<columnas> con <numero> poses de cuerpo entero. Mantener exactamente rostro, cabello, tono de piel, vestuario, proporciones y estilo de Cara a Cara en todas las celdas. Dibujar contornos oscuros, expresión clara y cuerpo íntegro con margen blanco. Fondo blanco puro; sin texto, marcos, accesorios ni figuras cortadas. Poses en orden de lectura: <lista-de-expresiones>. No inventar gestos no solicitados. Resolución final suficiente para que cada celda mida al menos 512×512; no estirar una imagen de menor calidad.",
+        "modelo_de_pose": {
+          "poses": {
+            "nombre-expresion": {
+              "src": "../../cara-a-cara/assets/avatar/characters/<id>/expresiones/<lamina>.png",
+              "crop": [
+                "x_normalizado",
+                "y_normalizado",
+                "ancho_normalizado",
+                "alto_normalizado"
+              ]
+            }
+          }
+        },
+        "notas_de_integracion": [
+          "En el perfil compartido _pizarra/profiles/leo.json, avatar.characters.<id>.poses acepta tanto el recorte original [x,y,w,h] como un objeto {src,crop} para una lámina nueva. src se resuelve respecto a la carpeta del perfil.",
+          "No reemplazar poses ni cambiar voz, identidad visual o configuración de otros personajes. Si el id de pose ya existe, usar otro id salvo solicitud explícita de reemplazo.",
+          "Cada crop se mide sobre la lámina real: [x/W,y/H,ancho/W,alto/H]; números finitos, valores dentro de 0..1, ancho y alto positivos, sin exceder el límite. Revisar visualmente cada recorte.",
+          "Después de registrar las poses, sincronizar el catálogo y sus miniaturas con node showcase/sync-character-assets.mjs. Cada pose se muestra como imagen estática, sin Play.",
+          "Para usar una pose en un video, referenciar su id en shots[].pose o avatar.timeline[].pose y comprobar el personaje en shots[].character."
+        ],
+        "validacion": [
+          "Revisar cada expresión individualmente y sus cuatro bordes; verificar tamaño, nitidez y que no incluya otra celda.",
+          "Probar cada tarjeta en Showcase y al menos una pose nueva en 9:16 con seek.",
+          "Confirmar que Leo, Lía y las poses anteriores siguen funcionando y que la imagen se carga por la API.",
+          "Si falta el proveedor o falla la validación, registrar el bloqueo: no declarar terminado ni inventar archivos."
+        ],
+        "registro_por_lotes": {
+          "carpeta": "assets/avatar/characters/<id>/",
+          "manifiesto": "Un archivo como manifest-expresiones-01.json en assets/avatar/characters/<id>/ con id, sheets [{file,rows,columns}] y poses {nombre:{sheet,crop}}. file es el nombre PNG de la carpeta y crop son cuatro números normalizados.",
+          "comandos": [
+            "node showcase/register-character.mjs <id> --check --extend --manifest manifest-expresiones-01.json",
+            "node showcase/register-character.mjs <id> --apply --extend --manifest manifest-expresiones-01.json"
+          ],
+          "reglas": [
+            "El personaje debe existir. Solo se añaden poses con ids nuevos; la herramienta rechaza nombres repetidos.",
+            "La herramienta valida resolución y geometría, registra las poses y genera miniaturas recortadas sin generar una imagen por expresión. La revisión visual sigue siendo obligatoria.",
+            "El manifiesto del lote contiene únicamente las poses y láminas nuevas; usar --manifest para conservar el manifiesto base."
+          ]
+        }
+      }
+    },
+    {
+      "id": "personajes.cambiar-vestuario",
+      "name": "personajes.cambiar-vestuario",
+      "label": "personajes.cambiar-vestuario",
+      "kind": "character",
+      "summary": "Crear una variante de vestuario conservando la identidad y las ocho poses.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "tipo": "guia-para-ia",
+        "titulo": "Cambiar el vestuario de un personaje",
+        "objetivo": "Preparar una variante de vestuario compatible con Cara a Cara conservando el personaje original y sus poses.",
+        "estado_actual": {
+          "capacidad": "La ropa está dibujada en cada pose de la lámina. El motor no tiene prendas intercambiables ni un parámetro de vestuario.",
+          "metodo": "Crear otra lámina del mismo personaje con las ocho poses y registrarla como una variante con id único. No se modifica la imagen original."
+        },
+        "entradas": [
+          "Personaje existente e id (por ejemplo leo o lia).",
+          "Descripción concreta de la nueva ropa o referencia visual autorizada.",
+          "Identificador nuevo para la variante, en minúsculas, por ejemplo leo-chaqueta-azul."
+        ],
+        "archivos_existentes": {
+          "referencia": "assets/avatar/sheet-original.png",
+          "guia_personaje": "assets/avatar/crear-personaje.json",
+          "perfil_compartido": "../_pizarra/profiles/leo.json",
+          "escena": "assets/scene.json",
+          "origen_rutas": "Rutas relativas a sandbox/nodeaction/cara-a-cara/."
+        },
+        "principios": [
+          "Conservar rostro, cabello, tono de piel, identidad, proporciones y estilo del personaje de referencia; variar únicamente la vestimenta solicitada y mantenerla idéntica en todas las poses.",
+          "Dibujo 2D limpio con contornos oscuros, cuerpo entero, fondo blanco uniforme y margen alrededor de cabeza, manos y zapatos.",
+          "Ocho poses en orden: talk, point-left, point-right, think, explain, surprise, celebrate, question. Cada pose debe ser legible, sin texto, marcas, objetos adicionales ni partes cortadas.",
+          "Un generador puede cambiar la cara o la ropa entre poses; revisar cada imagen y corregir antes de integrar."
+        ],
+        "pasos": [
+          "1. Confirmar personaje, ropa e id nuevo; consultar la referencia visual y la guía crear-personaje.json.",
+          "2. Generar o recibir una lámina PNG nueva con las ocho poses del mismo personaje, por ejemplo 4 columnas × 2 filas. La cuadrícula no sustituye la medición de los recortes.",
+          "3. Guardar la lámina en assets/avatar/characters/<id-variante>/sheet.png sin sobrescribir ninguna existente.",
+          "4. Medir las cajas reales de cada pose y normalizarlas como [x/W, y/H, ancho/W, alto/H]. Cada valor debe ser finito, los tamaños positivos y la caja debe quedar dentro de la imagen.",
+          "5. Añadir avatar.characters.<id-variante> al perfil compartido, con src relativo al perfil y los ocho recortes medidos, siguiendo crear-personaje.json. Conservar leo, lia, defaultCharacter y todos los demás campos.",
+          "6. Elegir la variante con ?character=<id-variante> para revisión o con shots[].character en una escena de prueba. La selección en la URL tiene prioridad.",
+          "7. Revisar las ocho poses y los cambios entre planos en 9:16, pausa y seek; confirmar que el personaje original continúa igual y que no hay errores de carga o consola."
+        ],
+        "no_hacer": [
+          "No modificar ropa mediante un campo inexistente ni dibujar prendas con código como si fueran una capa compatible.",
+          "No sobrescribir la lámina maestra ni redefinir leo o lia.",
+          "No cambiar automáticamente la voz Puck, el audio aprobado, los subtítulos o la composición.",
+          "No publicar ni producir un video final sin solicitud expresa."
+        ],
+        "resultado_esperado": [
+          "PNG de la variante y fuente o procedencia.",
+          "Una entrada nueva en el perfil y ocho recortes verificados.",
+          "Resumen de pruebas y cualquier limitación. Si no se puede probar alguna parte, indicarlo; no afirmar integración completa."
+        ]
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "tipo": "guia-para-ia",
+        "titulo": "Cambiar el vestuario de un personaje",
+        "objetivo": "Preparar una variante de vestuario compatible con Cara a Cara conservando el personaje original y sus poses.",
+        "estado_actual": {
+          "capacidad": "La ropa está dibujada en cada pose de la lámina. El motor no tiene prendas intercambiables ni un parámetro de vestuario.",
+          "metodo": "Crear otra lámina del mismo personaje con las ocho poses y registrarla como una variante con id único. No se modifica la imagen original."
+        },
+        "entradas": [
+          "Personaje existente e id (por ejemplo leo o lia).",
+          "Descripción concreta de la nueva ropa o referencia visual autorizada.",
+          "Identificador nuevo para la variante, en minúsculas, por ejemplo leo-chaqueta-azul."
+        ],
+        "archivos_existentes": {
+          "referencia": "assets/avatar/sheet-original.png",
+          "guia_personaje": "assets/avatar/crear-personaje.json",
+          "perfil_compartido": "../_pizarra/profiles/leo.json",
+          "escena": "assets/scene.json",
+          "origen_rutas": "Rutas relativas a sandbox/nodeaction/cara-a-cara/."
+        },
+        "principios": [
+          "Conservar rostro, cabello, tono de piel, identidad, proporciones y estilo del personaje de referencia; variar únicamente la vestimenta solicitada y mantenerla idéntica en todas las poses.",
+          "Dibujo 2D limpio con contornos oscuros, cuerpo entero, fondo blanco uniforme y margen alrededor de cabeza, manos y zapatos.",
+          "Ocho poses en orden: talk, point-left, point-right, think, explain, surprise, celebrate, question. Cada pose debe ser legible, sin texto, marcas, objetos adicionales ni partes cortadas.",
+          "Un generador puede cambiar la cara o la ropa entre poses; revisar cada imagen y corregir antes de integrar."
+        ],
+        "pasos": [
+          "1. Confirmar personaje, ropa e id nuevo; consultar la referencia visual y la guía crear-personaje.json.",
+          "2. Generar o recibir una lámina PNG nueva con las ocho poses del mismo personaje, por ejemplo 4 columnas × 2 filas. La cuadrícula no sustituye la medición de los recortes.",
+          "3. Guardar la lámina en assets/avatar/characters/<id-variante>/sheet.png sin sobrescribir ninguna existente.",
+          "4. Medir las cajas reales de cada pose y normalizarlas como [x/W, y/H, ancho/W, alto/H]. Cada valor debe ser finito, los tamaños positivos y la caja debe quedar dentro de la imagen.",
+          "5. Añadir avatar.characters.<id-variante> al perfil compartido, con src relativo al perfil y los ocho recortes medidos, siguiendo crear-personaje.json. Conservar leo, lia, defaultCharacter y todos los demás campos.",
+          "6. Elegir la variante con ?character=<id-variante> para revisión o con shots[].character en una escena de prueba. La selección en la URL tiene prioridad.",
+          "7. Revisar las ocho poses y los cambios entre planos en 9:16, pausa y seek; confirmar que el personaje original continúa igual y que no hay errores de carga o consola."
+        ],
+        "no_hacer": [
+          "No modificar ropa mediante un campo inexistente ni dibujar prendas con código como si fueran una capa compatible.",
+          "No sobrescribir la lámina maestra ni redefinir leo o lia.",
+          "No cambiar automáticamente la voz Puck, el audio aprobado, los subtítulos o la composición.",
+          "No publicar ni producir un video final sin solicitud expresa."
+        ],
+        "resultado_esperado": [
+          "PNG de la variante y fuente o procedencia.",
+          "Una entrada nueva en el perfil y ocho recortes verificados.",
+          "Resumen de pruebas y cualquier limitación. Si no se puede probar alguna parte, indicarlo; no afirmar integración completa."
+        ]
+      }
+    },
+    {
+      "id": "leo.talk",
+      "name": "leo.talk",
+      "label": "leo.talk",
+      "kind": "component",
+      "summary": "Leo: pose «hablar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "leo",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "talk",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "leo.talk"
+      }
+    },
+    {
+      "id": "leo.point-left",
+      "name": "leo.point-left",
+      "label": "leo.point-left",
+      "kind": "component",
+      "summary": "Leo: pose «señalar a la izquierda» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "leo",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-left",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "leo.point-left"
+      }
+    },
+    {
+      "id": "leo.point-right",
+      "name": "leo.point-right",
+      "label": "leo.point-right",
+      "kind": "component",
+      "summary": "Leo: pose «señalar a la derecha» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "leo",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-right",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "leo.point-right"
+      }
+    },
+    {
+      "id": "leo.think",
+      "name": "leo.think",
+      "label": "leo.think",
+      "kind": "component",
+      "summary": "Leo: pose «pensar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "leo",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "think",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "leo.think"
+      }
+    },
+    {
+      "id": "leo.explain",
+      "name": "leo.explain",
+      "label": "leo.explain",
+      "kind": "component",
+      "summary": "Leo: pose «explicar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "leo",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "explain",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "leo.explain"
+      }
+    },
+    {
+      "id": "leo.surprise",
+      "name": "leo.surprise",
+      "label": "leo.surprise",
+      "kind": "component",
+      "summary": "Leo: pose «sorpresa» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "leo",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "surprise",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "leo.surprise"
+      }
+    },
+    {
+      "id": "leo.celebrate",
+      "name": "leo.celebrate",
+      "label": "leo.celebrate",
+      "kind": "component",
+      "summary": "Leo: pose «celebrar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "leo",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "celebrate",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "leo.celebrate"
+      }
+    },
+    {
+      "id": "leo.question",
+      "name": "leo.question",
+      "label": "leo.question",
+      "kind": "component",
+      "summary": "Leo: pose «preguntar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "leo",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "question",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "leo.question"
+      }
+    },
+    {
+      "id": "lia.talk",
+      "name": "lia.talk",
+      "label": "lia.talk",
+      "kind": "component",
+      "summary": "Lía: pose «hablar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "lia",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "talk",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "lia.talk"
+      }
+    },
+    {
+      "id": "lia.point-left",
+      "name": "lia.point-left",
+      "label": "lia.point-left",
+      "kind": "component",
+      "summary": "Lía: pose «señalar a la izquierda» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "lia",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-left",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "lia.point-left"
+      }
+    },
+    {
+      "id": "lia.point-right",
+      "name": "lia.point-right",
+      "label": "lia.point-right",
+      "kind": "component",
+      "summary": "Lía: pose «señalar a la derecha» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "lia",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-right",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "lia.point-right"
+      }
+    },
+    {
+      "id": "lia.think",
+      "name": "lia.think",
+      "label": "lia.think",
+      "kind": "component",
+      "summary": "Lía: pose «pensar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "lia",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "think",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "lia.think"
+      }
+    },
+    {
+      "id": "lia.explain",
+      "name": "lia.explain",
+      "label": "lia.explain",
+      "kind": "component",
+      "summary": "Lía: pose «explicar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "lia",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "explain",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "lia.explain"
+      }
+    },
+    {
+      "id": "lia.surprise",
+      "name": "lia.surprise",
+      "label": "lia.surprise",
+      "kind": "component",
+      "summary": "Lía: pose «sorpresa» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "lia",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "surprise",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "lia.surprise"
+      }
+    },
+    {
+      "id": "lia.celebrate",
+      "name": "lia.celebrate",
+      "label": "lia.celebrate",
+      "kind": "component",
+      "summary": "Lía: pose «celebrar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "lia",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "celebrate",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "lia.celebrate"
+      }
+    },
+    {
+      "id": "lia.question",
+      "name": "lia.question",
+      "label": "lia.question",
+      "kind": "component",
+      "summary": "Lía: pose «preguntar» de la lámina compartida.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "lia",
+          "doc": "Personaje de previsualización. Leo es el predeterminado del perfil."
+        },
+        "pose": {
+          "type": "string",
+          "default": "question",
+          "doc": "Pose en shots[].pose o avatar.timeline[].pose de assets/scene.json."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Tiempo o ancla de voz para cambiar de pose."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "lia.question"
+      }
+    },
+    {
+      "id": "nara.talk",
+      "name": "nara.talk",
+      "label": "nara.talk",
+      "kind": "component",
+      "summary": "Nara: pose talk.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "talk",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.talk"
+      }
+    },
+    {
+      "id": "nara.point-left",
+      "name": "nara.point-left",
+      "label": "nara.point-left",
+      "kind": "component",
+      "summary": "Nara: pose point-left.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-left",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.point-left"
+      }
+    },
+    {
+      "id": "nara.point-right",
+      "name": "nara.point-right",
+      "label": "nara.point-right",
+      "kind": "component",
+      "summary": "Nara: pose point-right.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-right",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.point-right"
+      }
+    },
+    {
+      "id": "nara.think",
+      "name": "nara.think",
+      "label": "nara.think",
+      "kind": "component",
+      "summary": "Nara: pose think.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "think",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.think"
+      }
+    },
+    {
+      "id": "nara.explain",
+      "name": "nara.explain",
+      "label": "nara.explain",
+      "kind": "component",
+      "summary": "Nara: pose explain.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "explain",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.explain"
+      }
+    },
+    {
+      "id": "nara.surprise",
+      "name": "nara.surprise",
+      "label": "nara.surprise",
+      "kind": "component",
+      "summary": "Nara: pose surprise.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "surprise",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.surprise"
+      }
+    },
+    {
+      "id": "nara.celebrate",
+      "name": "nara.celebrate",
+      "label": "nara.celebrate",
+      "kind": "component",
+      "summary": "Nara: pose celebrate.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "celebrate",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.celebrate"
+      }
+    },
+    {
+      "id": "nara.question",
+      "name": "nara.question",
+      "label": "nara.question",
+      "kind": "component",
+      "summary": "Nara: pose question.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "question",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.question"
+      }
+    },
+    {
+      "id": "nara.esceptica",
+      "name": "nara.esceptica",
+      "label": "nara.esceptica",
+      "kind": "component",
+      "summary": "Nara: pose esceptica.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "esceptica",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.esceptica&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.esceptica"
+      }
+    },
+    {
+      "id": "nara.descubrimiento",
+      "name": "nara.descubrimiento",
+      "label": "nara.descubrimiento",
+      "kind": "component",
+      "summary": "Nara: pose descubrimiento.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "descubrimiento",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.descubrimiento&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.descubrimiento"
+      }
+    },
+    {
+      "id": "nara.preocupada",
+      "name": "nara.preocupada",
+      "label": "nara.preocupada",
+      "kind": "component",
+      "summary": "Nara: pose preocupada.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "preocupada",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.preocupada&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.preocupada"
+      }
+    },
+    {
+      "id": "nara.pulgar-arriba",
+      "name": "nara.pulgar-arriba",
+      "label": "nara.pulgar-arriba",
+      "kind": "component",
+      "summary": "Nara: pose pulgar-arriba.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nara",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "pulgar-arriba",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.pulgar-arriba&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nara.pulgar-arriba"
+      }
+    },
+    {
+      "id": "nora-vega.talk",
+      "name": "nora-vega.talk",
+      "label": "nora-vega.talk",
+      "kind": "component",
+      "summary": "Nora Vega: pose talk.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nora-vega",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "talk",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nora-vega.talk"
+      }
+    },
+    {
+      "id": "nora-vega.point-left",
+      "name": "nora-vega.point-left",
+      "label": "nora-vega.point-left",
+      "kind": "component",
+      "summary": "Nora Vega: pose point-left.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nora-vega",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-left",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nora-vega.point-left"
+      }
+    },
+    {
+      "id": "nora-vega.point-right",
+      "name": "nora-vega.point-right",
+      "label": "nora-vega.point-right",
+      "kind": "component",
+      "summary": "Nora Vega: pose point-right.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nora-vega",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-right",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nora-vega.point-right"
+      }
+    },
+    {
+      "id": "nora-vega.think",
+      "name": "nora-vega.think",
+      "label": "nora-vega.think",
+      "kind": "component",
+      "summary": "Nora Vega: pose think.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nora-vega",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "think",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nora-vega.think"
+      }
+    },
+    {
+      "id": "nora-vega.explain",
+      "name": "nora-vega.explain",
+      "label": "nora-vega.explain",
+      "kind": "component",
+      "summary": "Nora Vega: pose explain.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nora-vega",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "explain",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nora-vega.explain"
+      }
+    },
+    {
+      "id": "nora-vega.surprise",
+      "name": "nora-vega.surprise",
+      "label": "nora-vega.surprise",
+      "kind": "component",
+      "summary": "Nora Vega: pose surprise.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nora-vega",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "surprise",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nora-vega.surprise"
+      }
+    },
+    {
+      "id": "nora-vega.celebrate",
+      "name": "nora-vega.celebrate",
+      "label": "nora-vega.celebrate",
+      "kind": "component",
+      "summary": "Nora Vega: pose celebrate.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nora-vega",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "celebrate",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nora-vega.celebrate"
+      }
+    },
+    {
+      "id": "nora-vega.question",
+      "name": "nora-vega.question",
+      "label": "nora-vega.question",
+      "kind": "component",
+      "summary": "Nora Vega: pose question.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "nora-vega",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "question",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "nora-vega.question"
+      }
+    },
+    {
+      "id": "personajes.identidad-leo",
+      "name": "personajes.identidad-leo",
+      "label": "personajes.identidad-leo",
+      "kind": "character",
+      "summary": "Identidad editorial y voz de Leo.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "estado": "propuesta_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "notas": [
+          "La identidad editorial guía el guion; no modifica automáticamente el perfil visual ni genera una voz.",
+          "No cambiar imágenes, guiones ni audio aprobados de videos existentes."
+        ],
+        "id": "leo",
+        "nombre": "Leo",
+        "tema": "Comparaciones de tecnología, historia y decisiones cotidianas",
+        "objetivo": "Presentar dos opciones o perspectivas con hechos claros para que la audiencia forme su propia opinión.",
+        "publico": "Personas curiosas que prefieren explicaciones breves y comprensibles.",
+        "personalidad": [
+          "curioso",
+          "amable",
+          "claro",
+          "equilibrado"
+        ],
+        "estilo": "Conversación amistosa, preguntas directas y explicaciones con matices; evita solemnidad y conclusiones engañosas.",
+        "voz": {
+          "estado": "perfil_existente_aprobado",
+          "proveedor": "Gemini TTS",
+          "nombre": "Puck",
+          "modelo": "gemini-3.8-flash-tts",
+          "ritmo": 0.9,
+          "archivo_perfil": "../../_pizarra/profiles/leo.json",
+          "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
+          "muestra": "assets/song.mp3",
+          "subtitulos": "assets/avatar/identities/leo-muestra.vtt"
+        }
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "estado": "propuesta_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "notas": [
+          "La identidad editorial guía el guion; no modifica automáticamente el perfil visual ni genera una voz.",
+          "No cambiar imágenes, guiones ni audio aprobados de videos existentes."
+        ],
+        "id": "leo",
+        "nombre": "Leo",
+        "tema": "Comparaciones de tecnología, historia y decisiones cotidianas",
+        "objetivo": "Presentar dos opciones o perspectivas con hechos claros para que la audiencia forme su propia opinión.",
+        "publico": "Personas curiosas que prefieren explicaciones breves y comprensibles.",
+        "personalidad": [
+          "curioso",
+          "amable",
+          "claro",
+          "equilibrado"
+        ],
+        "estilo": "Conversación amistosa, preguntas directas y explicaciones con matices; evita solemnidad y conclusiones engañosas.",
+        "voz": {
+          "estado": "perfil_existente_aprobado",
+          "proveedor": "Gemini TTS",
+          "nombre": "Puck",
+          "modelo": "gemini-3.8-flash-tts",
+          "ritmo": 0.9,
+          "archivo_perfil": "../../_pizarra/profiles/leo.json",
+          "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
+          "muestra": "assets/song.mp3",
+          "subtitulos": "assets/avatar/identities/leo-muestra.vtt"
+        }
+      }
+    },
+    {
+      "id": "personajes.identidad-lia",
+      "name": "personajes.identidad-lia",
+      "label": "personajes.identidad-lia",
+      "kind": "character",
+      "summary": "Identidad editorial y voz de Lía.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "estado": "propuesta_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "notas": [
+          "La identidad editorial guía el guion; no modifica automáticamente el perfil visual ni genera una voz.",
+          "No cambiar imágenes, guiones ni audio aprobados de videos existentes."
+        ],
+        "id": "lia",
+        "nombre": "Lía",
+        "tema": "Moda, vestuario y estilo personal",
+        "objetivo": "Comparar prendas, estilos y elecciones de vestuario explicando sus características con respeto y claridad.",
+        "publico": "Personas interesadas en moda y en descubrir opciones de estilo.",
+        "personalidad": [
+          "creativa",
+          "cercana",
+          "curiosa",
+          "respetuosa"
+        ],
+        "estilo": "Conversación cálida y visual; explica opciones sin imponer estándares de apariencia ni afirmar una única forma correcta de vestir.",
+        "voz": {
+          "estado": "muestra_generada_pendiente_revision_humana",
+          "proveedor": "Gemini TTS",
+          "nombre": "Kore",
+          "modelo": "gemini-3.8-flash-tts",
+          "direccion": "Español latinoamericano, tono cercano y claro, curiosidad natural, energía moderada; no imitar personas reales.",
+          "nota": "Muestra generada; no evaluada por escucha humana ni aprobada. No sustituye el audio de Leo.",
+          "muestra": "assets/avatar/identities/lia-muestra.mp3",
+          "guion_muestra": "assets/avatar/identities/lia-muestra-script.json",
+          "config_muestra": "assets/avatar/identities/lia-muestra-design.json",
+          "subtitulos": "assets/avatar/identities/lia-muestra.vtt"
+        }
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "estado": "propuesta_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "notas": [
+          "La identidad editorial guía el guion; no modifica automáticamente el perfil visual ni genera una voz.",
+          "No cambiar imágenes, guiones ni audio aprobados de videos existentes."
+        ],
+        "id": "lia",
+        "nombre": "Lía",
+        "tema": "Moda, vestuario y estilo personal",
+        "objetivo": "Comparar prendas, estilos y elecciones de vestuario explicando sus características con respeto y claridad.",
+        "publico": "Personas interesadas en moda y en descubrir opciones de estilo.",
+        "personalidad": [
+          "creativa",
+          "cercana",
+          "curiosa",
+          "respetuosa"
+        ],
+        "estilo": "Conversación cálida y visual; explica opciones sin imponer estándares de apariencia ni afirmar una única forma correcta de vestir.",
+        "voz": {
+          "estado": "muestra_generada_pendiente_revision_humana",
+          "proveedor": "Gemini TTS",
+          "nombre": "Kore",
+          "modelo": "gemini-3.8-flash-tts",
+          "direccion": "Español latinoamericano, tono cercano y claro, curiosidad natural, energía moderada; no imitar personas reales.",
+          "nota": "Muestra generada; no evaluada por escucha humana ni aprobada. No sustituye el audio de Leo.",
+          "muestra": "assets/avatar/identities/lia-muestra.mp3",
+          "guion_muestra": "assets/avatar/identities/lia-muestra-script.json",
+          "config_muestra": "assets/avatar/identities/lia-muestra-design.json",
+          "subtitulos": "assets/avatar/identities/lia-muestra.vtt"
+        }
+      }
+    },
+    {
+      "id": "personajes.identidad-nara",
+      "name": "personajes.identidad-nara",
+      "label": "personajes.identidad-nara",
+      "kind": "character",
+      "summary": "Identidad editorial y voz de Nara.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "estado": "propuesta_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "id": "nara",
+        "nombre": "Nara",
+        "tema": "Ciencia cotidiana y decisiones ambientales",
+        "objetivo": "Comparar soluciones y explicar sus consecuencias con datos y matices, para que la audiencia decida informada.",
+        "publico": "Personas curiosas sin conocimientos técnicos previos.",
+        "personalidad": [
+          "curiosa",
+          "serena",
+          "ingeniosa",
+          "rigurosa",
+          "respetuosa"
+        ],
+        "estilo": "Conversación cálida y visual; plantea preguntas concretas, distingue evidencia de incertidumbre y evita culpabilizar o prometer soluciones perfectas.",
+        "apariencia": "Mujer adulta de piel morena, cabello oscuro rizado recogido alto, aros pequeños, sobrecamisa verde azulado, camiseta amarillo claro, pantalón azul marino y zapatillas blancas.",
+        "voz": {
+          "estado": "muestra_generada_sin_aprobacion",
+          "proveedor": "Gemini TTS",
+          "nombre": "Kore",
+          "modelo": "gemini-3.8-flash-tts",
+          "direccion": "Español latinoamericano, cálido y claro, curiosidad serena, energía moderada, pausas naturales; sin imitar a personas reales.",
+          "muestra": "assets/avatar/characters/nara/voice-sample.mp3",
+          "subtitulos": "assets/avatar/characters/nara/voice-sample.vtt"
+        }
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "estado": "propuesta_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "id": "nara",
+        "nombre": "Nara",
+        "tema": "Ciencia cotidiana y decisiones ambientales",
+        "objetivo": "Comparar soluciones y explicar sus consecuencias con datos y matices, para que la audiencia decida informada.",
+        "publico": "Personas curiosas sin conocimientos técnicos previos.",
+        "personalidad": [
+          "curiosa",
+          "serena",
+          "ingeniosa",
+          "rigurosa",
+          "respetuosa"
+        ],
+        "estilo": "Conversación cálida y visual; plantea preguntas concretas, distingue evidencia de incertidumbre y evita culpabilizar o prometer soluciones perfectas.",
+        "apariencia": "Mujer adulta de piel morena, cabello oscuro rizado recogido alto, aros pequeños, sobrecamisa verde azulado, camiseta amarillo claro, pantalón azul marino y zapatillas blancas.",
+        "voz": {
+          "estado": "muestra_generada_sin_aprobacion",
+          "proveedor": "Gemini TTS",
+          "nombre": "Kore",
+          "modelo": "gemini-3.8-flash-tts",
+          "direccion": "Español latinoamericano, cálido y claro, curiosidad serena, energía moderada, pausas naturales; sin imitar a personas reales.",
+          "muestra": "assets/avatar/characters/nara/voice-sample.mp3",
+          "subtitulos": "assets/avatar/characters/nara/voice-sample.vtt"
+        }
+      }
+    },
+    {
+      "id": "personajes.identidad-nora-vega",
+      "name": "personajes.identidad-nora-vega",
+      "label": "personajes.identidad-nora-vega",
+      "kind": "character",
+      "summary": "Identidad editorial y voz de Nora Vega.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "estado": "propuesta_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "id": "nora-vega",
+        "nombre": "Nora Vega",
+        "tema": "Astronomía cotidiana, observación del cielo y preguntas científicas.",
+        "objetivo": "Comparar modelos, observaciones y decisiones de exploración espacial con claridad; separar la evidencia de lo que todavía es hipótesis.",
+        "publico": "Personas curiosas, especialmente jóvenes y familias, que disfrutan explicaciones visuales breves.",
+        "personalidad": [
+          "curiosa",
+          "honesta ante la incertidumbre",
+          "cálida",
+          "analítica",
+          "juguetona sin infantilizar"
+        ],
+        "estilo": "Abre con una pregunta que conecte dos perspectivas. Traduce conceptos astronómicos a ejemplos cotidianos, explica qué sabemos y qué no, y anima a mirar los datos antes de decidir. Habla con entusiasmo sereno, evita el tono de autoridad absoluta y no presenta especulación como hecho.",
+        "apariencia": "Presentadora adulta joven de piel oliva oscura, rostro redondeado, ojos grandes y cabello negro corto rizado recogido en un pequeño moño alto. Usa gafas redondas color teal, chaqueta corta azul cobalto sobre camiseta mostaza, pantalón verde azulado oscuro y zapatillas coral. Ilustración 2D amable con contorno oscuro expresivo y proporciones sencillas.",
+        "voz": {
+          "estado": "muestra_generada_propuesta_no_aprobada",
+          "proveedor": "Google Gemini TTS mediante explainer-kit",
+          "nombre": "Kore",
+          "modelo": "gemini-3.8-flash-tts",
+          "direccion": "Voz adulta joven de registro medio cálido y claro, con curiosidad genuina y una sonrisa leve. Español latinoamericano natural y neutro, consonantes nítidas, ritmo conversacional moderado cercano a 130 palabras por minuto y pausas breves. Cercana, inteligente y paciente; nunca infantil, solemne ni publicitaria. Distingue observaciones de hipótesis. No imitar a ninguna persona real.",
+          "muestra": "assets/avatar/characters/nora-vega/voice-sample.mp3",
+          "duracion_segundos": 4.56,
+          "aprobada": false,
+          "nota": "Muestra propia para evaluación. No modifica ni reutiliza el perfil, la voz Puck o el audio aprobado de Leo.",
+          "subtitulos": "assets/avatar/characters/nora-vega/voice-sample.vtt"
+        },
+        "visual": {
+          "laminas": [
+            "poses-01.png",
+            "poses-02.png"
+          ],
+          "procedencia": "Ilustración original generada con image_gen el 2026-11-04. La segunda lámina usó la primera como referencia para mantener la identidad visual.",
+          "notas": [
+            "Las ocho poses cubren talk, point-left, point-right, think, explain, surprise, celebrate y question.",
+            "Los recortes se midieron sobre las láminas nuevas; no se copiaron coordenadas de Leo ni Lía."
+          ]
+        }
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "estado": "propuesta_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "id": "nora-vega",
+        "nombre": "Nora Vega",
+        "tema": "Astronomía cotidiana, observación del cielo y preguntas científicas.",
+        "objetivo": "Comparar modelos, observaciones y decisiones de exploración espacial con claridad; separar la evidencia de lo que todavía es hipótesis.",
+        "publico": "Personas curiosas, especialmente jóvenes y familias, que disfrutan explicaciones visuales breves.",
+        "personalidad": [
+          "curiosa",
+          "honesta ante la incertidumbre",
+          "cálida",
+          "analítica",
+          "juguetona sin infantilizar"
+        ],
+        "estilo": "Abre con una pregunta que conecte dos perspectivas. Traduce conceptos astronómicos a ejemplos cotidianos, explica qué sabemos y qué no, y anima a mirar los datos antes de decidir. Habla con entusiasmo sereno, evita el tono de autoridad absoluta y no presenta especulación como hecho.",
+        "apariencia": "Presentadora adulta joven de piel oliva oscura, rostro redondeado, ojos grandes y cabello negro corto rizado recogido en un pequeño moño alto. Usa gafas redondas color teal, chaqueta corta azul cobalto sobre camiseta mostaza, pantalón verde azulado oscuro y zapatillas coral. Ilustración 2D amable con contorno oscuro expresivo y proporciones sencillas.",
+        "voz": {
+          "estado": "muestra_generada_propuesta_no_aprobada",
+          "proveedor": "Google Gemini TTS mediante explainer-kit",
+          "nombre": "Kore",
+          "modelo": "gemini-3.8-flash-tts",
+          "direccion": "Voz adulta joven de registro medio cálido y claro, con curiosidad genuina y una sonrisa leve. Español latinoamericano natural y neutro, consonantes nítidas, ritmo conversacional moderado cercano a 130 palabras por minuto y pausas breves. Cercana, inteligente y paciente; nunca infantil, solemne ni publicitaria. Distingue observaciones de hipótesis. No imitar a ninguna persona real.",
+          "muestra": "assets/avatar/characters/nora-vega/voice-sample.mp3",
+          "duracion_segundos": 4.56,
+          "aprobada": false,
+          "nota": "Muestra propia para evaluación. No modifica ni reutiliza el perfil, la voz Puck o el audio aprobado de Leo.",
+          "subtitulos": "assets/avatar/characters/nora-vega/voice-sample.vtt"
+        },
+        "visual": {
+          "laminas": [
+            "poses-01.png",
+            "poses-02.png"
+          ],
+          "procedencia": "Ilustración original generada con image_gen el 2026-11-04. La segunda lámina usó la primera como referencia para mantener la identidad visual.",
+          "notas": [
+            "Las ocho poses cubren talk, point-left, point-right, think, explain, surprise, celebrate y question.",
+            "Los recortes se midieron sobre las láminas nuevas; no se copiaron coordenadas de Leo ni Lía."
+          ]
+        }
+      }
+    },
+    {
+      "id": "escenas.crear-escena",
+      "name": "escenas.crear-escena",
+      "label": "escenas.crear-escena",
+      "kind": "set",
+      "summary": "Preparar una comparación nueva con sujetos, planos y medios.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "tipo": "guia-para-ia",
+        "titulo": "Crear una escena de comparación",
+        "objetivo": "Preparar otra comparación usando el motor y perfil existentes, con nuevos sujetos, planos y medios.",
+        "estado_actual": {
+          "capacidad": "El motor carga la composición desde scene.json y los medios de apoyo desde overlays.json. Las imágenes y clips se asignan a tarjetas; no son fondos completos detrás del presentador.",
+          "reutilizacion": "Reutilizar Proto, comparacion.js y el perfil existente; un nuevo tema cambia datos y recursos del video, no exige escribir otro motor."
+        },
+        "entradas": [
+          "Tema y pregunta, uno o dos sujetos, hechos y fuentes verificables.",
+          "Guion definitivo, medios autorizados y créditos.",
+          "Duración y elección de personaje existente o variante registrada.",
+          "Si se pide narración, perfil de voz y audio autorizados; transcribir el audio final."
+        ],
+        "archivos": {
+          "config": "assets/config.json: conecta sceneUrl, lyricsUrl, audio.src y overlaysUrl.",
+          "escena": "assets/scene.json: subjects, shots, avatar.timeline y end.",
+          "medios": "assets/overlays.json: lista de imágenes y clips asignados a un sujeto.",
+          "guion_y_voz": "assets/script.json, assets/song.mp3 y assets/lyrics.json: contenido y sincronía de la narración.",
+          "creditos": "CREDITS.md o archivo de créditos del video.",
+          "nota": "Rutas relativas a la carpeta del video. Crear un video nuevo o una copia de prueba; no sobrescribir la muestra NASA/URSS."
+        },
+        "campos_reales": {
+          "sujeto": "subjects[]: id, title, src y fit (contain o cover); src se resuelve desde el HTML del video.",
+          "plano": "shots[]: t en segundos o ancla de voz, mode duo o single, focus left/right/both, headline, pose, character y opcionalmente subjects para sobreescribir datos.",
+          "poses": "avatar.timeline[]: at y pose. Se pueden sincronizar con segundos o frases de lyrics.json; la identidad y poses disponibles provienen del perfil compartido.",
+          "medios": "overlays.items[]: subject (id de subjects), kind photo o video, src, at y dur o until; start es el segundo inicial del clip. Videos mudos: el audio de la narración manda.",
+          "sincronizacion": "Usar frases únicas como anclas, probar que se resuelven; no reutilizar los tiempos de una voz si se genera otro audio."
+        },
+        "ejemplo_de_estructura": {
+          "aviso": "Ejemplo ilustrativo: sustituir rutas y tiempos por archivos reales y anclas presentes; no es un video completo.",
+          "scene": {
+            "end": 60,
+            "profile_id": "leo-comparaciones-v1",
+            "subjects": [
+              {
+                "id": "uno",
+                "title": "SUJETO UNO",
+                "src": "assets/media/uno.jpg",
+                "fit": "contain"
+              },
+              {
+                "id": "dos",
+                "title": "SUJETO DOS",
+                "src": "assets/media/dos.jpg",
+                "fit": "contain"
+              }
+            ],
+            "shots": [
+              {
+                "t": 0,
+                "mode": "duo",
+                "focus": "both",
+                "headline": "¿CUÁL ELEGIR?",
+                "pose": "question"
+              },
+              {
+                "t": 10,
+                "mode": "single",
+                "focus": "left",
+                "headline": "PRIMER SUJETO",
+                "pose": "point-left"
+              }
+            ],
+            "avatar": {
+              "timeline": [
+                {
+                  "at": 0,
+                  "pose": "question"
+                },
+                {
+                  "at": 10,
+                  "pose": "point-left"
+                }
+              ]
+            }
+          },
+          "overlays": {
+            "items": [
+              {
+                "subject": "uno",
+                "kind": "photo",
+                "src": "assets/media/uno.jpg",
+                "at": 10,
+                "dur": 5,
+                "opacity": 1
+              }
+            ]
+          }
+        },
+        "pasos": [
+          "1. Definir tesis, sujetos, fuentes y guion; preparar una carpeta de video nueva sin modificar la muestra aprobada.",
+          "2. Configurar subjects y shots, con tiempos numéricos o anclas verificables; registrar las poses y el personaje disponibles.",
+          "3. Guardar fotos o clips pertinentes en assets/media y asignarlos por subject en overlays.json; conservar sus créditos y comprobar duraciones.",
+          "4. Si se encarga una nueva voz, generar el audio con el perfil acordado y transcribir el MP3 final; si no hay voz autorizada, no generarla.",
+          "5. Ajustar end y comprobar que rutas, recursos, anclas y duración existen; revisar el paso de duo a single y viceversa.",
+          "6. Probar 9:16, lectura, subtítulos, poses, pausa, saltos y videos mudos sincronizados. Informar fallos o validaciones pendientes; no exportar ni publicar salvo petición."
+        ],
+        "limites": [
+          "El motor fija el lienzo a 1080×1920; el perfil aprobado controla colores, distribución y tipografía.",
+          "scene.background no reemplaza actualmente el fondo global del perfil; consultar crear-fondo.json si se necesita un escenario detrás del presentador.",
+          "No inventar búsqueda automática de recursos ni producir voz o medios si no se solicitaron."
+        ]
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "tipo": "guia-para-ia",
+        "titulo": "Crear una escena de comparación",
+        "objetivo": "Preparar otra comparación usando el motor y perfil existentes, con nuevos sujetos, planos y medios.",
+        "estado_actual": {
+          "capacidad": "El motor carga la composición desde scene.json y los medios de apoyo desde overlays.json. Las imágenes y clips se asignan a tarjetas; no son fondos completos detrás del presentador.",
+          "reutilizacion": "Reutilizar Proto, comparacion.js y el perfil existente; un nuevo tema cambia datos y recursos del video, no exige escribir otro motor."
+        },
+        "entradas": [
+          "Tema y pregunta, uno o dos sujetos, hechos y fuentes verificables.",
+          "Guion definitivo, medios autorizados y créditos.",
+          "Duración y elección de personaje existente o variante registrada.",
+          "Si se pide narración, perfil de voz y audio autorizados; transcribir el audio final."
+        ],
+        "archivos": {
+          "config": "assets/config.json: conecta sceneUrl, lyricsUrl, audio.src y overlaysUrl.",
+          "escena": "assets/scene.json: subjects, shots, avatar.timeline y end.",
+          "medios": "assets/overlays.json: lista de imágenes y clips asignados a un sujeto.",
+          "guion_y_voz": "assets/script.json, assets/song.mp3 y assets/lyrics.json: contenido y sincronía de la narración.",
+          "creditos": "CREDITS.md o archivo de créditos del video.",
+          "nota": "Rutas relativas a la carpeta del video. Crear un video nuevo o una copia de prueba; no sobrescribir la muestra NASA/URSS."
+        },
+        "campos_reales": {
+          "sujeto": "subjects[]: id, title, src y fit (contain o cover); src se resuelve desde el HTML del video.",
+          "plano": "shots[]: t en segundos o ancla de voz, mode duo o single, focus left/right/both, headline, pose, character y opcionalmente subjects para sobreescribir datos.",
+          "poses": "avatar.timeline[]: at y pose. Se pueden sincronizar con segundos o frases de lyrics.json; la identidad y poses disponibles provienen del perfil compartido.",
+          "medios": "overlays.items[]: subject (id de subjects), kind photo o video, src, at y dur o until; start es el segundo inicial del clip. Videos mudos: el audio de la narración manda.",
+          "sincronizacion": "Usar frases únicas como anclas, probar que se resuelven; no reutilizar los tiempos de una voz si se genera otro audio."
+        },
+        "ejemplo_de_estructura": {
+          "aviso": "Ejemplo ilustrativo: sustituir rutas y tiempos por archivos reales y anclas presentes; no es un video completo.",
+          "scene": {
+            "end": 60,
+            "profile_id": "leo-comparaciones-v1",
+            "subjects": [
+              {
+                "id": "uno",
+                "title": "SUJETO UNO",
+                "src": "assets/media/uno.jpg",
+                "fit": "contain"
+              },
+              {
+                "id": "dos",
+                "title": "SUJETO DOS",
+                "src": "assets/media/dos.jpg",
+                "fit": "contain"
+              }
+            ],
+            "shots": [
+              {
+                "t": 0,
+                "mode": "duo",
+                "focus": "both",
+                "headline": "¿CUÁL ELEGIR?",
+                "pose": "question"
+              },
+              {
+                "t": 10,
+                "mode": "single",
+                "focus": "left",
+                "headline": "PRIMER SUJETO",
+                "pose": "point-left"
+              }
+            ],
+            "avatar": {
+              "timeline": [
+                {
+                  "at": 0,
+                  "pose": "question"
+                },
+                {
+                  "at": 10,
+                  "pose": "point-left"
+                }
+              ]
+            }
+          },
+          "overlays": {
+            "items": [
+              {
+                "subject": "uno",
+                "kind": "photo",
+                "src": "assets/media/uno.jpg",
+                "at": 10,
+                "dur": 5,
+                "opacity": 1
+              }
+            ]
+          }
+        },
+        "pasos": [
+          "1. Definir tesis, sujetos, fuentes y guion; preparar una carpeta de video nueva sin modificar la muestra aprobada.",
+          "2. Configurar subjects y shots, con tiempos numéricos o anclas verificables; registrar las poses y el personaje disponibles.",
+          "3. Guardar fotos o clips pertinentes en assets/media y asignarlos por subject en overlays.json; conservar sus créditos y comprobar duraciones.",
+          "4. Si se encarga una nueva voz, generar el audio con el perfil acordado y transcribir el MP3 final; si no hay voz autorizada, no generarla.",
+          "5. Ajustar end y comprobar que rutas, recursos, anclas y duración existen; revisar el paso de duo a single y viceversa.",
+          "6. Probar 9:16, lectura, subtítulos, poses, pausa, saltos y videos mudos sincronizados. Informar fallos o validaciones pendientes; no exportar ni publicar salvo petición."
+        ],
+        "limites": [
+          "El motor fija el lienzo a 1080×1920; el perfil aprobado controla colores, distribución y tipografía.",
+          "scene.background no reemplaza actualmente el fondo global del perfil; consultar crear-fondo.json si se necesita un escenario detrás del presentador.",
+          "No inventar búsqueda automática de recursos ni producir voz o medios si no se solicitaron."
+        ]
+      }
+    },
+    {
+      "id": "escenarios.crear-fondo",
+      "name": "escenarios.crear-fondo",
+      "label": "escenarios.crear-fondo",
+      "kind": "set",
+      "summary": "Preparar medios de apoyo y entender los límites actuales de los fondos.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "tipo": "guia-para-ia",
+        "titulo": "Crear un escenario o fondo",
+        "objetivo": "Orientar a una IA sobre imágenes de apoyo y fondos de Cara a Cara sin presentar como existente una función que el motor todavía no tiene.",
+        "estado_actual": {
+          "soportado": "Fotos y videos dentro de las tarjetas: se configuran en assets/overlays.json con subject, kind, src y tiempos; se adaptan a los modos duo y single.",
+          "no_soportado": "Un fondo nuevo detrás del presentador y de toda la composición no se activa actualmente escribiendo scene.background: comparacion.js pinta video.background del perfil.",
+          "nota_personajes": "Las láminas originales tienen fondo blanco; un fondo global ilustrado podría quedar oculto por los rectángulos blancos de los recortes. Se necesitaría un tratamiento compatible de transparencia y comprobar sus bordes."
+        },
+        "si_solo_se_necesita_medio_en_tarjeta": [
+          "Preparar una imagen o video con procedencia y ruta local.",
+          "Asignar el recurso en overlays.items con subject, kind photo o video, src, at y dur o until; si es video, especificar start si corresponde y conservarlo mudo.",
+          "Comprobar que la tarjeta conserva el recurso al cambiar de duo a single, y que pausa y seek funcionan."
+        ],
+        "si_se_necesita_fondo_completo": {
+          "condicion": "Solicitar y ejecutar cambios al motor solo si el usuario pide expresamente un fondo global; esta guía no habilita esa capacidad.",
+          "propuesta_no_implementada": [
+            "Definir un contrato opt-in por escena con valores y rutas locales validadas, manteniendo el fondo del perfil como valor por defecto.",
+            "Cargar imagen y recursos antes de dibujar y usar tiempos compatibles con Proto; si hay video, mantenerlo mudo y sincronizado con el audio.",
+            "Dibujar el fondo detrás de tarjetas, subtítulos y personaje, y contemplar transparencia correcta de sus recortes sin alterar la lámina aprobada.",
+            "Verificar compatibilidad con 9:16, contraste de texto, márgenes seguros, pausa, seek, controles, recursos ausentes y las escenas existentes.",
+            "Documentar los campos realmente implementados y probarlos antes de indicar que se pueden configurar."
+          ],
+          "advertencia": "No registrar campos inventados como funcionales, no reemplazar el perfil compartido por un fondo de un video y no prometer integración sin pruebas."
+        },
+        "criterios_visuales": [
+          "Un escenario sirve al tema sin tapar ni reducir la legibilidad de tarjetas, subtítulos o personaje.",
+          "Usar imágenes de procedencia conocida, con derechos y créditos correspondientes.",
+          "Conservar el estilo y la identidad aprobados salvo que el usuario solicite otra cosa."
+        ],
+        "resultado_esperado": [
+          "Para medios en tarjetas: recursos, overlays.json, créditos y pruebas de vista previa.",
+          "Para un fondo global: contrato e implementación opt-in realmente probados, o explicar claramente que queda pendiente."
+        ]
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "tipo": "guia-para-ia",
+        "titulo": "Crear un escenario o fondo",
+        "objetivo": "Orientar a una IA sobre imágenes de apoyo y fondos de Cara a Cara sin presentar como existente una función que el motor todavía no tiene.",
+        "estado_actual": {
+          "soportado": "Fotos y videos dentro de las tarjetas: se configuran en assets/overlays.json con subject, kind, src y tiempos; se adaptan a los modos duo y single.",
+          "no_soportado": "Un fondo nuevo detrás del presentador y de toda la composición no se activa actualmente escribiendo scene.background: comparacion.js pinta video.background del perfil.",
+          "nota_personajes": "Las láminas originales tienen fondo blanco; un fondo global ilustrado podría quedar oculto por los rectángulos blancos de los recortes. Se necesitaría un tratamiento compatible de transparencia y comprobar sus bordes."
+        },
+        "si_solo_se_necesita_medio_en_tarjeta": [
+          "Preparar una imagen o video con procedencia y ruta local.",
+          "Asignar el recurso en overlays.items con subject, kind photo o video, src, at y dur o until; si es video, especificar start si corresponde y conservarlo mudo.",
+          "Comprobar que la tarjeta conserva el recurso al cambiar de duo a single, y que pausa y seek funcionan."
+        ],
+        "si_se_necesita_fondo_completo": {
+          "condicion": "Solicitar y ejecutar cambios al motor solo si el usuario pide expresamente un fondo global; esta guía no habilita esa capacidad.",
+          "propuesta_no_implementada": [
+            "Definir un contrato opt-in por escena con valores y rutas locales validadas, manteniendo el fondo del perfil como valor por defecto.",
+            "Cargar imagen y recursos antes de dibujar y usar tiempos compatibles con Proto; si hay video, mantenerlo mudo y sincronizado con el audio.",
+            "Dibujar el fondo detrás de tarjetas, subtítulos y personaje, y contemplar transparencia correcta de sus recortes sin alterar la lámina aprobada.",
+            "Verificar compatibilidad con 9:16, contraste de texto, márgenes seguros, pausa, seek, controles, recursos ausentes y las escenas existentes.",
+            "Documentar los campos realmente implementados y probarlos antes de indicar que se pueden configurar."
+          ],
+          "advertencia": "No registrar campos inventados como funcionales, no reemplazar el perfil compartido por un fondo de un video y no prometer integración sin pruebas."
+        },
+        "criterios_visuales": [
+          "Un escenario sirve al tema sin tapar ni reducir la legibilidad de tarjetas, subtítulos o personaje.",
+          "Usar imágenes de procedencia conocida, con derechos y créditos correspondientes.",
+          "Conservar el estilo y la identidad aprobados salvo que el usuario solicite otra cosa."
+        ],
+        "resultado_esperado": [
+          "Para medios en tarjetas: recursos, overlays.json, créditos y pruebas de vista previa.",
+          "Para un fondo global: contrato e implementación opt-in realmente probados, o explicar claramente que queda pendiente."
+        ]
+      }
+    },
+    {
+      "id": "sprite-5bc426e8d81e2f4136a562fa",
+      "name": "Leo",
+      "label": "Leo",
+      "kind": "character",
+      "summary": "",
+      "tags": [],
+      "params": {},
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase/thumbs/leo.talk.jpg",
+      "preview_kind": "image",
+      "data": {
+        "name": "Leo"
+      }
+    },
+    {
+      "id": "sprite-f85c4bcdcf7debc26ca49d90",
+      "name": "Lía",
+      "label": "Lía",
+      "kind": "character",
+      "summary": "",
+      "tags": [],
+      "params": {},
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase/thumbs/lia.talk.jpg",
+      "preview_kind": "image",
+      "data": {
+        "name": "Lía"
+      }
+    },
+    {
+      "id": "sprite-e90153ba2230457394f1afca",
+      "name": "Nara",
+      "label": "Nara",
+      "kind": "character",
+      "summary": "",
+      "tags": [],
+      "params": {},
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase/thumbs/nara.talk.jpg",
+      "preview_kind": "image",
+      "data": {
+        "name": "Nara"
+      }
+    },
+    {
+      "id": "sprite-81d7e1ff62bf60e4c09074e2",
+      "name": "Nora Vega",
+      "label": "Nora Vega",
+      "kind": "character",
+      "summary": "",
+      "tags": [],
+      "params": {},
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase/thumbs/nora-vega.talk.jpg",
+      "preview_kind": "image",
+      "data": {
+        "name": "Nora Vega"
+      }
+    }
+  ]
+}
